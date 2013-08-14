@@ -37,7 +37,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented everytime the API changes.
-#define ANGLE_SH_VERSION 110
+#define ANGLE_SH_VERSION 111
 
 //
 // The names of the following enums have been derived by replacing GL prefix
@@ -109,12 +109,20 @@ typedef enum {
 } ShDataType;
 
 typedef enum {
+  SH_PRECISION_HIGHP    = 0x5001,
+  SH_PRECISION_MEDIUMP  = 0x5002,
+  SH_PRECISION_LOWP     = 0x5003
+} ShPrecisionType;
+
+typedef enum {
   SH_INFO_LOG_LENGTH             =  0x8B84,
   SH_OBJECT_CODE_LENGTH          =  0x8B88,  // GL_SHADER_SOURCE_LENGTH
   SH_ACTIVE_UNIFORMS             =  0x8B86,
   SH_ACTIVE_UNIFORM_MAX_LENGTH   =  0x8B87,
   SH_ACTIVE_ATTRIBUTES           =  0x8B89,
   SH_ACTIVE_ATTRIBUTE_MAX_LENGTH =  0x8B8A,
+  SH_VARYINGS                    =  0x8BBB,
+  SH_VARYING_MAX_LENGTH          =  0x8BBC,
   SH_MAPPED_NAME_MAX_LENGTH      =  0x6000,
   SH_NAME_MAX_LENGTH             =  0x6001,
   SH_HASHED_NAME_MAX_LENGTH      =  0x6002,
@@ -128,7 +136,7 @@ typedef enum {
   SH_VALIDATE_LOOP_INDEXING  = 0x0001,
   SH_INTERMEDIATE_TREE       = 0x0002,
   SH_OBJECT_CODE             = 0x0004,
-  SH_ATTRIBUTES_UNIFORMS     = 0x0008,
+  SH_VARIABLES               = 0x0008,
   SH_LINE_DIRECTIVES         = 0x0010,
   SH_SOURCE_PATH             = 0x0020,
   SH_MAP_LONG_VARIABLE_NAMES = 0x0040,
@@ -294,9 +302,8 @@ COMPILER_EXPORT void ShDestruct(ShHandle handle);
 //                       Can be queried by calling ShGetInfoLog().
 // SH_OBJECT_CODE: Translates intermediate tree to glsl or hlsl shader.
 //                 Can be queried by calling ShGetObjectCode().
-// SH_ATTRIBUTES_UNIFORMS: Extracts attributes and uniforms.
-//                         Can be queried by calling ShGetActiveAttrib() and
-//                         ShGetActiveUniform().
+// SH_VARIABLES: Extracts attributes, uniforms, and varyings.
+//               Can be queried by calling ShGetVariableInfo().
 //
 COMPILER_EXPORT int ShCompile(
     const ShHandle handle,
@@ -322,6 +329,9 @@ COMPILER_EXPORT int ShCompile(
 // SH_ACTIVE_UNIFORM_MAX_LENGTH: the length of the longest active uniform
 //                               variable name including the null
 //                               termination character.
+// SH_VARYINGS: the number of varying variables.
+// SH_VARYING_MAX_LENGTH: the length of the longest varying variable name
+//                        including the null termination character.
 // SH_MAPPED_NAME_MAX_LENGTH: the length of the mapped variable name including
 //                            the null termination character.
 // SH_NAME_MAX_LENGTH: the max length of a user-defined name including the
@@ -355,59 +365,38 @@ COMPILER_EXPORT void ShGetInfoLog(const ShHandle handle, char* infoLog);
 //          ShGetInfo with SH_OBJECT_CODE_LENGTH.
 COMPILER_EXPORT void ShGetObjectCode(const ShHandle handle, char* objCode);
 
-// Returns information about an active attribute variable.
+// Returns information about a shader variable.
 // Parameters:
 // handle: Specifies the compiler
-// index: Specifies the index of the attribute variable to be queried.
+// variableType: Specifies the variable type; options include
+//               SH_ACTIVE_ATTRIBUTES, SH_ACTIVE_UNIFORMS, SH_VARYINGS.
+// index: Specifies the index of the variable to be queried.
 // length: Returns the number of characters actually written in the string
 //         indicated by name (excluding the null terminator) if a value other
 //         than NULL is passed.
-// size: Returns the size of the attribute variable.
-// type: Returns the data type of the attribute variable.
+// size: Returns the size of the variable.
+// type: Returns the data type of the variable.
+// precision: Returns the precision of the variable.
 // name: Returns a null terminated string containing the name of the
-//       attribute variable. It is assumed that name has enough memory to
-//       accomodate the attribute variable name. The size of the buffer
-//       required to store the attribute variable name can be obtained by
-//       calling ShGetInfo with SH_ACTIVE_ATTRIBUTE_MAX_LENGTH.
+//       variable. It is assumed that name has enough memory to accormodate
+//       the variable name. The size of the buffer required to store the
+//       variable name can be obtained by calling ShGetInfo with
+//       SH_ACTIVE_ATTRIBUTE_MAX_LENGTH, SH_ACTIVE_UNIFORM_MAX_LENGTH,
+//       SH_VARYING_MAX_LENGTH.
 // mappedName: Returns a null terminated string containing the mapped name of
-//             the attribute variable, It is assumed that mappedName has enough
-//             memory (SH_MAPPED_NAME_MAX_LENGTH), or NULL if don't care
-//             about the mapped name. If the name is not mapped, then name and
-//             mappedName are the same.
-COMPILER_EXPORT void ShGetActiveAttrib(const ShHandle handle,
+//             the variable, It is assumed that mappedName has enough memory
+//             (SH_MAPPED_NAME_MAX_LENGTH), or NULL if don't care about the
+//             mapped name. If the name is not mapped, then name and mappedName
+//             are the same.
+COMPILER_EXPORT void ShGetVariableInfo(const ShHandle handle,
+                                       ShShaderInfo variableType,
                                        int index,
                                        size_t* length,
                                        int* size,
                                        ShDataType* type,
+                                       ShPrecisionType* precision,
                                        char* name,
                                        char* mappedName);
-
-// Returns information about an active uniform variable.
-// Parameters:
-// handle: Specifies the compiler
-// index: Specifies the index of the uniform variable to be queried.
-// length: Returns the number of characters actually written in the string
-//         indicated by name (excluding the null terminator) if a value
-//         other than NULL is passed.
-// size: Returns the size of the uniform variable.
-// type: Returns the data type of the uniform variable.
-// name: Returns a null terminated string containing the name of the
-//       uniform variable. It is assumed that name has enough memory to
-//       accomodate the uniform variable name. The size of the buffer required
-//       to store the uniform variable name can be obtained by calling
-//       ShGetInfo with SH_ACTIVE_UNIFORMS_MAX_LENGTH.
-// mappedName: Returns a null terminated string containing the mapped name of
-//             the uniform variable, It is assumed that mappedName has enough
-//             memory (SH_MAPPED_NAME_MAX_LENGTH), or NULL if don't care
-//             about the mapped name. If the name is not mapped, then name and
-//             mappedName are the same.
-COMPILER_EXPORT void ShGetActiveUniform(const ShHandle handle,
-                                        int index,
-                                        size_t* length,
-                                        int* size,
-                                        ShDataType* type,
-                                        char* name,
-                                        char* mappedName);
 
 // Returns information about a name hashing entry from the latest compile.
 // Parameters:
