@@ -1048,8 +1048,10 @@ bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
         return false;   // Nothing to render
     }
 
+    float depthFront = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);
+
     bool viewportChanged = mForceSetViewport || memcmp(&actualViewport, &mCurViewport, sizeof(gl::Rectangle)) != 0 ||
-                           actualZNear != mCurNear || actualZFar != mCurFar;
+                           actualZNear != mCurNear || actualZFar != mCurFar || mCurDepthFront != depthFront;
     if (viewportChanged)
     {
         mDevice->SetViewport(&dxViewport);
@@ -1057,6 +1059,7 @@ bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
         mCurViewport = actualViewport;
         mCurNear = actualZNear;
         mCurFar = actualZFar;
+        mCurDepthFront = depthFront;
 
         dx_VertexConstants vc = {0};
         dx_PixelConstants pc = {0};
@@ -1073,7 +1076,7 @@ bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
 
         pc.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
         pc.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
-        pc.depthFront[2] = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);;
+        pc.depthFront[2] = depthFront;
 
         vc.depthRange[0] = actualZNear;
         vc.depthRange[1] = actualZFar;
