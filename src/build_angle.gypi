@@ -228,9 +228,12 @@
           'sources': [
             'third_party/murmurhash/MurmurHash3.h',
             'third_party/murmurhash/MurmurHash3.cpp',
+            'third_party/trace_event/trace_event.h',
             'common/angleutils.h',
             'common/debug.cpp',
             'common/debug.h',
+            'common/event_tracer.cpp',
+            'common/event_tracer.h',
             'common/RefCountObject.cpp',
             'common/RefCountObject.h',
             'common/version.h',
