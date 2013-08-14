@@ -298,6 +298,7 @@ class Renderer9 : public Renderer
     gl::Rectangle mCurViewport;
     float mCurNear;
     float mCurFar;
+    float mCurDepthFront;
 
     bool mForceSetBlendState;
     gl::BlendState mCurBlendState;
