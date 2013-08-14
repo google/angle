@@ -51,6 +51,7 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 %code requires {
 #define YYLTYPE TSourceLoc
 #define YYLTYPE_IS_DECLARED 1
+#define SH_MAX_TOKEN_LENGTH 256  // WebGL spec.
 }
 
 %union {

@@ -2930,6 +2930,7 @@ int glslang_scan(size_t count, const char* const string[], const int length[],
     // Initialize preprocessor.
     if (!context->preprocessor.init(count, string, length))
         return 1;
+    context->preprocessor.setMaxTokenLength(SH_MAX_TOKEN_LENGTH);
 
     // Define extension macros.
     const TExtensionBehavior& extBehavior = context->extensionBehavior();

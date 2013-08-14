@@ -44,6 +44,7 @@ extern int yydebug;
 
 #define YYLTYPE TSourceLoc
 #define YYLTYPE_IS_DECLARED 1
+#define SH_MAX_TOKEN_LENGTH 256  // WebGL spec.
 
 
 

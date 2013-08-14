@@ -81,6 +81,11 @@ void Preprocessor::predefineMacro(const char* name, int value)
     mImpl->macroSet[name] = macro;
 }
 
+void Preprocessor::setMaxTokenLength(size_t maxLength)
+{
+    mImpl->tokenizer.setMaxTokenLength(maxLength);
+}
+
 void Preprocessor::lex(Token* token)
 {
     bool validToken = false;
