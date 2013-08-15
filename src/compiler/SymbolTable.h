@@ -42,7 +42,7 @@
 class TSymbol {    
 public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TSymbol(const TString *n) :  name(n) { }
+    TSymbol(const TString* n) :  uniqueId(0), name(n) { }
     virtual ~TSymbol() { /* don't delete name, it's from the pool */ }
 
     const TString& getName() const { return *name; }
@@ -58,8 +58,8 @@ public:
 private:
     DISALLOW_COPY_AND_ASSIGN(TSymbol);
 
+    int uniqueId;      // For real comparing during code generation
     const TString *name;
-    unsigned int uniqueId;      // For real comparing during code generation
     TString extension;
 };
 
@@ -187,7 +187,6 @@ public:
     typedef const tLevel::value_type tLevelPair;
     typedef std::pair<tLevel::iterator, bool> tInsertResult;
 
-    POOL_ALLOCATOR_NEW_DELETE();
     TSymbolTableLevel() { }
     ~TSymbolTableLevel();
 
@@ -196,8 +195,7 @@ public:
         //
         // returning true means symbol was added to the table
         //
-        tInsertResult result;
-        result = level.insert(tLevelPair(name, &symbol));
+        tInsertResult result = level.insert(tLevelPair(name, &symbol));
 
         return result.second;
     }
@@ -244,13 +242,7 @@ public:
         // that the symbol table has not been preloaded with built-ins.
         //
     }
-
-    ~TSymbolTable()
-    {
-        // level 0 is always built In symbols, so we never pop that out
-        while (table.size() > 1)
-            pop();
-    }
+    ~TSymbolTable();
 
     //
     // When the symbol table is initialized with the built-ins, there should
@@ -263,13 +255,15 @@ public:
     void push()
     {
         table.push_back(new TSymbolTableLevel);
-        precisionStack.push_back( PrecisionStackLevel() );
+        precisionStack.push_back(new PrecisionStackLevel);
     }
 
     void pop()
-    { 
-        delete table[currentLevel()]; 
-        table.pop_back(); 
+    {
+        delete table.back();
+        table.pop_back();
+
+        delete precisionStack.back();
         precisionStack.pop_back();
     }
 
@@ -324,14 +318,9 @@ public:
         return symbol;
     }
 
-    TSymbol *findBuiltIn(const TString &name)
+    TSymbol* findBuiltIn(const TString &name)
     {
         return table[0]->find(name);
-    }
-
-    TSymbolTableLevel* getGlobalLevel() {
-        assert(table.size() >= 2);
-        return table[1];
     }
 
     TSymbolTableLevel* getOuterLevel() {
@@ -345,10 +334,9 @@ public:
     void relateToExtension(const char* name, const TString& ext) {
         table[0]->relateToExtension(name, ext);
     }
-    int getMaxSymbolId() { return uniqueId; }
     void dump(TInfoSink &infoSink) const;
 
-    bool setDefaultPrecision( const TPublicType& type, TPrecision prec ){
+    bool setDefaultPrecision(const TPublicType& type, TPrecision prec) {
         if (IsSampler(type.type))
             return true;  // Skip sampler types for the time being
         if (type.type != EbtFloat && type.type != EbtInt)
@@ -356,20 +344,22 @@ public:
         if (type.size != 1 || type.matrix || type.array)
             return false; // Not allowed to set for aggregate types
         int indexOfLastElement = static_cast<int>(precisionStack.size()) - 1;
-        precisionStack[indexOfLastElement][type.type] = prec; // Uses map operator [], overwrites the current value
+        (*precisionStack[indexOfLastElement])[type.type] = prec; // Uses map operator [], overwrites the current value
         return true;
     }
 
     // Searches down the precisionStack for a precision qualifier for the specified TBasicType
-    TPrecision getDefaultPrecision( TBasicType type){
-        if( type != EbtFloat && type != EbtInt ) return EbpUndefined;
+    TPrecision getDefaultPrecision(TBasicType type) {
+        if (type != EbtFloat && type != EbtInt)
+            return EbpUndefined;
+
         int level = static_cast<int>(precisionStack.size()) - 1;
-        assert( level >= 0); // Just to be safe. Should not happen.
+        assert(level >= 0); // Just to be safe. Should not happen.
         PrecisionStackLevel::iterator it;
         TPrecision prec = EbpUndefined; // If we dont find anything we return this. Should we error check this?
-        while( level >= 0 ){
-            it = precisionStack[level].find( type );
-            if( it != precisionStack[level].end() ){
+        while (level >= 0) {
+            it = precisionStack[level]->find(type);
+            if (it != precisionStack[level]->end()) {
                 prec = (*it).second;
                 break;
             }
@@ -378,13 +368,13 @@ public:
         return prec;
     }
 
-protected:    
+private:
     int currentLevel() const { return static_cast<int>(table.size()) - 1; }
 
-    std::vector<TSymbolTableLevel*> table;
-    typedef std::map< TBasicType, TPrecision > PrecisionStackLevel;
-    std::vector< PrecisionStackLevel > precisionStack;
     int uniqueId;     // for unique identification in code generation
+    std::vector<TSymbolTableLevel*> table;
+    typedef TMap<TBasicType, TPrecision> PrecisionStackLevel;
+    std::vector<PrecisionStackLevel*> precisionStack;
 };
 
 #endif // _SYMBOL_TABLE_INCLUDED_
