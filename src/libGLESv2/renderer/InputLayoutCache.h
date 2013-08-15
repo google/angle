@@ -38,11 +38,26 @@ class InputLayoutCache
   private:
     DISALLOW_COPY_AND_ASSIGN(InputLayoutCache);
 
+    struct InputLayoutElement
+    {
+        D3D11_INPUT_ELEMENT_DESC desc;
+        GLenum glslElementType;
+    };
+
     struct InputLayoutKey
     {
         unsigned int elementCount;
-        D3D11_INPUT_ELEMENT_DESC elements[gl::MAX_VERTEX_ATTRIBS];
-        GLenum glslElementType[gl::MAX_VERTEX_ATTRIBS];
+        InputLayoutElement elements[gl::MAX_VERTEX_ATTRIBS];
+
+        const char *begin() const
+        {
+            return reinterpret_cast<const char*>(&elementCount);
+        }
+
+        const char *end() const
+        {
+            return reinterpret_cast<const char*>(&elements[elementCount]);
+        }
     };
 
     struct InputLayoutCounterPair
