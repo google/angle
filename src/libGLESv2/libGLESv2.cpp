@@ -2861,85 +2861,159 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
 
         if (context)
         {
-            if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER_ANGLE && target != GL_READ_FRAMEBUFFER_ANGLE)
+            META_ASSERT(GL_DRAW_FRAMEBUFFER_ANGLE == GL_DRAW_FRAMEBUFFER && GL_READ_FRAMEBUFFER_ANGLE == GL_READ_FRAMEBUFFER);
+            if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER && target != GL_READ_FRAMEBUFFER)
             {
                 return gl::error(GL_INVALID_ENUM);
             }
 
-            gl::Framebuffer *framebuffer = NULL;
-            if (target == GL_READ_FRAMEBUFFER_ANGLE)
+            switch (pname)
             {
-                if(context->getReadFramebufferHandle() == 0)
+              case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE:
+              case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
+              case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL:
+              case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE:
+                break;
+              case GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE:
+              case GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE:
+              case GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE:
+              case GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE:
+              case GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE:
+              case GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE:
+              case GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE:
+              case GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING:
+              case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER:
+                if (context->getClientVersion() >= 3)
                 {
-                    return gl::error(GL_INVALID_OPERATION);
+                    break;
                 }
-
-                framebuffer = context->getReadFramebuffer();
+              default:
+                return gl::error(GL_INVALID_ENUM);
             }
-            else 
+
+            // Determine if the attachment is a valid enum
+            switch (attachment)
             {
-                if (context->getDrawFramebufferHandle() == 0)
+              case GL_BACK:
+              case GL_FRONT:
+              case GL_STENCIL:
+              case GL_DEPTH_STENCIL_ATTACHMENT:
+                if (context->getClientVersion() < 3)
                 {
-                    return gl::error(GL_INVALID_OPERATION);
+                    return gl::error(GL_INVALID_ENUM);
                 }
+                break;
 
-                framebuffer = context->getDrawFramebuffer();
+              case GL_DEPTH_ATTACHMENT:
+              case GL_STENCIL_ATTACHMENT:
+                break;
+
+              default:
+                if (attachment < GL_COLOR_ATTACHMENT0_EXT ||
+                    (attachment - GL_COLOR_ATTACHMENT0_EXT) >= context->getMaximumRenderTargets())
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                break;
             }
+
+            GLuint framebufferHandle = (target == GL_READ_FRAMEBUFFER) ? context->getReadFramebufferHandle()
+                                                                       : context->getDrawFramebufferHandle();
+
+            gl::Framebuffer *framebuffer = context->getFramebuffer(framebufferHandle);
 
             GLenum attachmentType;
             GLuint attachmentHandle;
             GLuint attachmentLevel;
             GLuint attachmentLayer;
+            gl::Renderbuffer *renderbuffer;
 
-            if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
+            if(framebufferHandle == 0)
             {
-                const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
-
-                if (colorAttachment >= context->getMaximumRenderTargets())
+                if(context->getClientVersion() < 3)
                 {
-                    return gl::error(GL_INVALID_ENUM);
+                    return gl::error(GL_INVALID_OPERATION);
                 }
 
-                attachmentType = framebuffer->getColorbufferType(colorAttachment);
-                attachmentHandle = framebuffer->getColorbufferHandle(colorAttachment);
-                attachmentLevel = framebuffer->getColorbufferMipLevel(colorAttachment);
-                attachmentLayer = framebuffer->getColorbufferLayer(colorAttachment);
-            }
-            else
-            {
                 switch (attachment)
                 {
-                  case GL_DEPTH_ATTACHMENT:
+                  case GL_BACK:
+                    attachmentType = framebuffer->getColorbufferType(0);
+                    attachmentHandle = framebuffer->getColorbufferHandle(0);
+                    attachmentLevel = framebuffer->getColorbufferMipLevel(0);
+                    attachmentLayer = framebuffer->getColorbufferLayer(0);
+                    renderbuffer = framebuffer->getColorbuffer(0);
+                    break;
+                  case GL_DEPTH:
                     attachmentType = framebuffer->getDepthbufferType();
                     attachmentHandle = framebuffer->getDepthbufferHandle();
                     attachmentLevel = framebuffer->getDepthbufferMipLevel();
                     attachmentLayer = framebuffer->getDepthbufferLayer();
+                    renderbuffer = framebuffer->getDepthbuffer();
                     break;
-                  case GL_STENCIL_ATTACHMENT:
+                  case GL_STENCIL:
                     attachmentType = framebuffer->getStencilbufferType();
                     attachmentHandle = framebuffer->getStencilbufferHandle();
                     attachmentLevel = framebuffer->getStencilbufferMipLevel();
                     attachmentLayer = framebuffer->getStencilbufferLayer();
+                    renderbuffer = framebuffer->getStencilbuffer();
                     break;
-                  case GL_DEPTH_STENCIL_ATTACHMENT:
-                    if (context->getClientVersion() < 3)
+                  default:
+                    return gl::error(GL_INVALID_OPERATION);
+                }
+            }
+            else
+            {
+                if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
+                {
+                    const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
+                    attachmentType = framebuffer->getColorbufferType(colorAttachment);
+                    attachmentHandle = framebuffer->getColorbufferHandle(colorAttachment);
+                    attachmentLevel = framebuffer->getColorbufferMipLevel(colorAttachment);
+                    attachmentLayer = framebuffer->getColorbufferLayer(colorAttachment);
+                    renderbuffer = framebuffer->getColorbuffer(colorAttachment);
+                }
+                else
+                {
+                    switch (attachment)
                     {
-                        return gl::error(GL_INVALID_ENUM);
-                    }
-                    if (framebuffer->getDepthbufferHandle() != framebuffer->getStencilbufferHandle())
-                    {
+                      case GL_DEPTH_ATTACHMENT:
+                        attachmentType = framebuffer->getDepthbufferType();
+                        attachmentHandle = framebuffer->getDepthbufferHandle();
+                        attachmentLevel = framebuffer->getDepthbufferMipLevel();
+                        attachmentLayer = framebuffer->getDepthbufferLayer();
+                        renderbuffer = framebuffer->getDepthbuffer();
+                        break;
+                      case GL_STENCIL_ATTACHMENT:
+                        attachmentType = framebuffer->getStencilbufferType();
+                        attachmentHandle = framebuffer->getStencilbufferHandle();
+                        attachmentLevel = framebuffer->getStencilbufferMipLevel();
+                        attachmentLayer = framebuffer->getStencilbufferLayer();
+                        renderbuffer = framebuffer->getStencilbuffer();
+                        break;
+                      case GL_DEPTH_STENCIL_ATTACHMENT:
+                        if (framebuffer->getDepthbufferHandle() != framebuffer->getStencilbufferHandle())
+                        {
+                            return gl::error(GL_INVALID_OPERATION);
+                        }
+                        attachmentType = framebuffer->getDepthStencilbufferType();
+                        attachmentHandle = framebuffer->getDepthStencilbufferHandle();
+                        attachmentLevel = framebuffer->getDepthStencilbufferMipLevel();
+                        attachmentLayer = framebuffer->getDepthStencilbufferLayer();
+                        renderbuffer = framebuffer->getDepthStencilBuffer();
+                        break;
+                      default:
                         return gl::error(GL_INVALID_OPERATION);
                     }
-                    attachmentType = framebuffer->getDepthStencilbufferType();
-                    attachmentHandle = framebuffer->getDepthStencilbufferHandle();
-                    attachmentLevel = framebuffer->getDepthStencilbufferMipLevel();
-                    attachmentLayer = framebuffer->getDepthStencilbufferLayer();
-                  default: return gl::error(GL_INVALID_ENUM);
                 }
             }
 
             GLenum attachmentObjectType;   // Type category
-            if (attachmentType == GL_NONE || attachmentType == GL_RENDERBUFFER)
+            if (framebufferHandle == 0)
+            {
+                attachmentObjectType = GL_FRAMEBUFFER_DEFAULT;
+            }
+            else if (attachmentType == GL_NONE || attachmentType == GL_RENDERBUFFER)
             {
                 attachmentObjectType = attachmentType;
             }
@@ -2953,64 +3027,124 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                 return;
             }
 
-            switch (pname)
+            if (attachmentObjectType == GL_NONE)
             {
-              case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE:
-                *params = attachmentObjectType;
-                break;
-              case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
-                if (attachmentObjectType == GL_RENDERBUFFER || attachmentObjectType == GL_TEXTURE)
+                // ES 2.0.25 spec pg 127 states that if the value of FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE
+                // is NONE, then querying any other pname will generate INVALID_ENUM.
+
+                // ES 3.0.2 spec pg 235 states that if the attachment type is none,
+                // GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME will return zero and be an
+                // INVALID_OPERATION for all other pnames
+
+                switch (pname)
                 {
-                    *params = attachmentHandle;
-                }
-                else
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL:
-                if (attachmentObjectType == GL_TEXTURE)
-                {
-                    *params = attachmentLevel;
-                }
-                else
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE:
-                if (attachmentObjectType == GL_TEXTURE)
-                {
-                    if (gl::IsCubemapTextureTarget(attachmentType))
+                  case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE:
+                    *params = attachmentObjectType;
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
+                    if (context->getClientVersion() < 3)
                     {
-                        *params = attachmentType;
+                        return gl::error(GL_INVALID_ENUM);
+                    }
+                    *params = 0;
+                    break;
+
+                  default:
+                    if (context->getClientVersion() < 3)
+                    {
+                        return gl::error(GL_INVALID_ENUM);
                     }
                     else
                     {
-                        *params = 0;
+                        gl::error(GL_INVALID_OPERATION);
                     }
                 }
-                else
+            }
+            else
+            {
+                ASSERT(attachmentObjectType == GL_RENDERBUFFER || attachmentObjectType == GL_TEXTURE ||
+                       attachmentObjectType == GL_FRAMEBUFFER_DEFAULT);
+                ASSERT(renderbuffer != NULL);
+
+                switch (pname)
                 {
-                    return gl::error(GL_INVALID_ENUM);
+                  case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE:
+                    *params = attachmentObjectType;
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
+                    if (attachmentObjectType != GL_RENDERBUFFER && attachmentObjectType != GL_TEXTURE)
+                    {
+                        return gl::error(GL_INVALID_ENUM);
+                    }
+                    *params = attachmentHandle;
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL:
+                    if (attachmentObjectType != GL_TEXTURE)
+                    {
+                        return gl::error(GL_INVALID_ENUM);
+                    }
+                    *params = attachmentLevel;
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE:
+                    if (attachmentObjectType != GL_TEXTURE)
+                    {
+                        return gl::error(GL_INVALID_ENUM);
+                    }
+                    *params = gl::IsCubemapTextureTarget(attachmentType) ? attachmentType : 0;
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE:
+                    *params = renderbuffer->getRedSize();
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE:
+                    *params = renderbuffer->getGreenSize();
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE:
+                    *params = renderbuffer->getBlueSize();
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE:
+                    *params = renderbuffer->getAlphaSize();
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE:
+                    *params = renderbuffer->getDepthSize();
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE:
+                    *params = renderbuffer->getStencilSize();
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE:
+                    if (attachment == GL_DEPTH_STENCIL)
+                    {
+                        gl::error(GL_INVALID_OPERATION);
+                    }
+                    *params = renderbuffer->getComponentType();
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING:
+                    *params = renderbuffer->getColorEncoding();
+                    break;
+
+                  case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER:
+                    if (attachmentObjectType != GL_TEXTURE)
+                    {
+                        return gl::error(GL_INVALID_ENUM);
+                    }
+                    *params = attachmentLayer;
+                    break;
+
+                  default:
+                    UNREACHABLE();
+                    break;
                 }
-                break;
-              case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER:
-                  if (context->getClientVersion() < 3)
-                  {
-                      return gl::error(GL_INVALID_ENUM);
-                  }
-                  if (attachmentObjectType == GL_TEXTURE)
-                  {
-                      *params = attachmentLayer;
-                  }
-                  else
-                  {
-                      return gl::error(GL_INVALID_ENUM);
-                  }
-                  break;
-              default:
-                return gl::error(GL_INVALID_ENUM);
             }
         }
     }

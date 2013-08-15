@@ -269,6 +269,11 @@ Renderbuffer *Framebuffer::getStencilbuffer() const
     return mStencilbuffer.get();
 }
 
+Renderbuffer *Framebuffer::getDepthStencilBuffer() const
+{
+    return (mDepthbuffer.id() == mStencilbuffer.id()) ? mDepthbuffer.get() : NULL;
+}
+
 Renderbuffer *Framebuffer::getDepthOrStencilbuffer() const
 {
     Renderbuffer *depthstencilbuffer = mDepthbuffer.get();

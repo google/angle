@@ -49,6 +49,7 @@ class Framebuffer
     Renderbuffer *getColorbuffer(unsigned int colorAttachment) const;
     Renderbuffer *getDepthbuffer() const;
     Renderbuffer *getStencilbuffer() const;
+    Renderbuffer *getDepthStencilBuffer() const;
     Renderbuffer *getDepthOrStencilbuffer() const;
     Renderbuffer *getReadColorbuffer() const;
     GLenum getReadColorbufferType() const;
