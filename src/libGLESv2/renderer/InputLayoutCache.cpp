@@ -103,15 +103,15 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
             // Record the type of the associated vertex shader vector in our key
             // This will prevent mismatched vertex shaders from using the same input layout
             GLint attributeSize;
-            programBinary->getActiveAttribute(ilKey.elementCount, 0, NULL, &attributeSize, &ilKey.glslElementType[ilKey.elementCount], NULL);
+            programBinary->getActiveAttribute(ilKey.elementCount, 0, NULL, &attributeSize, &ilKey.elements[ilKey.elementCount].glslElementType, NULL);
 
-            ilKey.elements[ilKey.elementCount].SemanticName = semanticName;
-            ilKey.elements[ilKey.elementCount].SemanticIndex = sortedSemanticIndices[i];
-            ilKey.elements[ilKey.elementCount].Format = attributes[i].attribute->mArrayEnabled ? vertexBuffer->getDXGIFormat(*attributes[i].attribute) : DXGI_FORMAT_R32G32B32A32_FLOAT;
-            ilKey.elements[ilKey.elementCount].InputSlot = i;
-            ilKey.elements[ilKey.elementCount].AlignedByteOffset = 0;
-            ilKey.elements[ilKey.elementCount].InputSlotClass = inputClass;
-            ilKey.elements[ilKey.elementCount].InstanceDataStepRate = attributes[i].divisor;
+            ilKey.elements[ilKey.elementCount].desc.SemanticName = semanticName;
+            ilKey.elements[ilKey.elementCount].desc.SemanticIndex = sortedSemanticIndices[i];
+            ilKey.elements[ilKey.elementCount].desc.Format = attributes[i].attribute->mArrayEnabled ? vertexBuffer->getDXGIFormat(*attributes[i].attribute) : DXGI_FORMAT_R32G32B32A32_FLOAT;
+            ilKey.elements[ilKey.elementCount].desc.InputSlot = i;
+            ilKey.elements[ilKey.elementCount].desc.AlignedByteOffset = 0;
+            ilKey.elements[ilKey.elementCount].desc.InputSlotClass = inputClass;
+            ilKey.elements[ilKey.elementCount].desc.InstanceDataStepRate = attributes[i].divisor;
             ilKey.elementCount++;
 
             vertexBuffers[i] = bufferStorage ? bufferStorage->getBuffer() : vertexBuffer->getBuffer();
@@ -133,7 +133,13 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
     {
         ShaderExecutable11 *shader = ShaderExecutable11::makeShaderExecutable11(programBinary->getVertexExecutable());
 
-        HRESULT result = mDevice->CreateInputLayout(ilKey.elements, ilKey.elementCount, shader->getFunction(), shader->getLength(), &inputLayout);
+        D3D11_INPUT_ELEMENT_DESC descs[gl::MAX_VERTEX_ATTRIBS];
+        for (unsigned int j = 0; j < ilKey.elementCount; ++j)
+        {
+            descs[j] = ilKey.elements[j].desc;
+        }
+
+        HRESULT result = mDevice->CreateInputLayout(descs, ilKey.elementCount, shader->getFunction(), shader->getLength(), &inputLayout);
         if (FAILED(result))
         {
             ERR("Failed to crate input layout, result: 0x%08x", result);
@@ -190,13 +196,18 @@ std::size_t InputLayoutCache::hashInputLayout(const InputLayoutKey &inputLayout)
     static const unsigned int seed = 0xDEADBEEF;
 
     std::size_t hash = 0;
-    MurmurHash3_x86_32(&inputLayout, sizeof(InputLayoutKey), seed, &hash);
+    MurmurHash3_x86_32(inputLayout.begin(), inputLayout.end() - inputLayout.begin(), seed, &hash);
     return hash;
 }
 
 bool InputLayoutCache::compareInputLayouts(const InputLayoutKey &a, const InputLayoutKey &b)
 {
-    return memcmp(&a, &b, sizeof(InputLayoutKey)) == 0;
+    if (a.elementCount != b.elementCount)
+    {
+        return false;
+    }
+
+    return std::equal(a.begin(), a.end(), b.begin());
 }
 
 }
