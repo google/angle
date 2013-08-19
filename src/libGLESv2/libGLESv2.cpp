@@ -7376,8 +7376,55 @@ void __stdcall glGetIntegeri_v(GLenum target, GLuint index, GLint* data)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetIntegeri_v
-            UNIMPLEMENTED();
+            switch (target)
+            {
+              case GL_TRANSFORM_FEEDBACK_BUFFER_START:
+              case GL_TRANSFORM_FEEDBACK_BUFFER_SIZE:
+              case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
+                if (index >= context->getMaxTransformFeedbackBufferBindings())
+                    return gl::error(GL_INVALID_VALUE);
+                break;
+              case GL_UNIFORM_BUFFER_START:
+              case GL_UNIFORM_BUFFER_SIZE:
+              case GL_UNIFORM_BUFFER_BINDING:
+                if (index >= context->getMaximumCombinedUniformBufferBindings())
+                    return gl::error(GL_INVALID_VALUE);
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (!(context->getIndexedIntegerv(target, index, data)))
+            {
+                GLenum nativeType;
+                unsigned int numParams = 0;
+                if (!context->getIndexedQueryParameterInfo(target, &nativeType, &numParams))
+                    return gl::error(GL_INVALID_ENUM);
+
+                if (numParams == 0)
+                    return; // it is known that pname is valid, but there are no parameters to return
+
+                if (nativeType == GL_INT_64_ANGLEX)
+                {
+                    GLint64 minIntValue = static_cast<GLint64>(std::numeric_limits<int>::min());
+                    GLint64 maxIntValue = static_cast<GLint64>(std::numeric_limits<int>::max());
+                    GLint64 *int64Params = new GLint64[numParams];
+
+                    context->getIndexedInteger64v(target, index, int64Params);
+
+                    for (unsigned int i = 0; i < numParams; ++i)
+                    {
+                        GLint64 clampedValue = std::max(std::min(int64Params[i], maxIntValue), minIntValue);
+                        data[i] = static_cast<GLint>(clampedValue);
+                    }
+
+                    delete [] int64Params;
+                }
+                else
+                {
+                    UNREACHABLE();
+                }
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -9133,8 +9180,52 @@ void __stdcall glGetInteger64i_v(GLenum target, GLuint index, GLint64* data)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetInteger64i_v
-            UNIMPLEMENTED();
+            switch (target)
+            {
+              case GL_TRANSFORM_FEEDBACK_BUFFER_START:
+              case GL_TRANSFORM_FEEDBACK_BUFFER_SIZE:
+              case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
+                if (index >= context->getMaxTransformFeedbackBufferBindings())
+                    return gl::error(GL_INVALID_VALUE);
+                break;
+              case GL_UNIFORM_BUFFER_START:
+              case GL_UNIFORM_BUFFER_SIZE:
+              case GL_UNIFORM_BUFFER_BINDING:
+                if (index >= context->getMaximumCombinedUniformBufferBindings())
+                    return gl::error(GL_INVALID_VALUE);
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (!(context->getIndexedInteger64v(target, index, data)))
+            {
+                GLenum nativeType;
+                unsigned int numParams = 0;
+                if (!context->getIndexedQueryParameterInfo(target, &nativeType, &numParams))
+                    return gl::error(GL_INVALID_ENUM);
+
+                if (numParams == 0)
+                    return; // it is known that pname is valid, but there are no parameters to return
+
+                if (nativeType == GL_INT)
+                {
+                    GLint *intParams = new GLint[numParams];
+
+                    context->getIndexedIntegerv(target, index, intParams);
+
+                    for (unsigned int i = 0; i < numParams; ++i)
+                    {
+                        data[i] = static_cast<GLint64>(intParams[i]);
+                    }
+
+                    delete [] intParams;
+                }
+                else
+                {
+                    UNREACHABLE();
+                }
+            }
         }
     }
     catch(std::bad_alloc&)
