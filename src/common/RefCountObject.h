@@ -110,6 +110,9 @@ class OffsetBindingPointer : public RefCountObjectBindingPointer
         mSize = size;
     }
 
+    GLintptr getOffset() const { return mOffset; }
+    GLsizeiptr getSize() const { return mSize; }
+
     ObjectType *get() const { return static_cast<ObjectType*>(RefCountObjectBindingPointer::get()); }
     ObjectType *operator->() const { return get(); }
 
