@@ -1934,6 +1934,64 @@ bool Context::getInteger64v(GLenum pname, GLint64 *params)
     return true;
 }
 
+bool Context::getIndexedIntegerv(GLenum target, GLuint index, GLint *data)
+{
+    switch (target)
+    {
+      case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
+        if (index < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS)
+        {
+            *data = mState.transformFeedbackBuffers[index].id();
+        }
+        break;
+      case GL_UNIFORM_BUFFER_BINDING:
+        if (index < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS)
+        {
+            *data = mState.uniformBuffers[index].id();
+        }
+        break;
+      default:
+        return false;
+    }
+
+    return true;
+}
+
+bool Context::getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data)
+{
+    switch (target)
+    {
+      case GL_TRANSFORM_FEEDBACK_BUFFER_START:
+        if (index < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS)
+        {
+            *data = mState.transformFeedbackBuffers[index].getOffset();
+        }
+        break;
+      case GL_TRANSFORM_FEEDBACK_BUFFER_SIZE:
+        if (index < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS)
+        {
+            *data = mState.transformFeedbackBuffers[index].getSize();
+        }
+        break;
+      case GL_UNIFORM_BUFFER_START:
+        if (index < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS)
+        {
+            *data = mState.uniformBuffers[index].getOffset();
+        }
+        break;
+      case GL_UNIFORM_BUFFER_SIZE:
+        if (index < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS)
+        {
+            *data = mState.uniformBuffers[index].getSize();
+        }
+        break;
+      default:
+        return false;
+    }
+
+    return true;
+}
+
 bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams)
 {
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
@@ -2162,6 +2220,35 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             *numParams = 1;
         }
         return true;
+    }
+
+    return false;
+}
+
+bool Context::getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams)
+{
+    if (mClientVersion < 3)
+    {
+        return false;
+    }
+
+    switch (target)
+    {
+      case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
+      case GL_UNIFORM_BUFFER_BINDING:
+        {
+            *type = GL_INT;
+            *numParams = 1;
+        }
+        return true;
+      case GL_TRANSFORM_FEEDBACK_BUFFER_START:
+      case GL_TRANSFORM_FEEDBACK_BUFFER_SIZE:
+      case GL_UNIFORM_BUFFER_START:
+      case GL_UNIFORM_BUFFER_SIZE:
+        {
+            *type = GL_INT_64_ANGLEX;
+            *numParams = 1;
+        }
     }
 
     return false;

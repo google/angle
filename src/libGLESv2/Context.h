@@ -357,7 +357,11 @@ class Context
     bool getIntegerv(GLenum pname, GLint *params);
     bool getInteger64v(GLenum pname, GLint64 *params);
 
+    bool getIndexedIntegerv(GLenum target, GLuint index, GLint *data);
+    bool getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data);
+
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
+    bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
 
     void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei *bufSize, void* pixels);
     void clear(GLbitfield mask);
