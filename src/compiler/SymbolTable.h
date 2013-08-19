@@ -337,10 +337,8 @@ public:
     void dump(TInfoSink &infoSink) const;
 
     bool setDefaultPrecision(const TPublicType& type, TPrecision prec) {
-        if (IsSampler(type.type))
-            return true;  // Skip sampler types for the time being
-        if (type.type != EbtFloat && type.type != EbtInt)
-            return false; // Only set default precision for int/float
+        if (!supportsPrecision(type.type))
+            return false;
         if (type.size != 1 || type.matrix || type.array)
             return false; // Not allowed to set for aggregate types
         int indexOfLastElement = static_cast<int>(precisionStack.size()) - 1;
@@ -350,9 +348,8 @@ public:
 
     // Searches down the precisionStack for a precision qualifier for the specified TBasicType
     TPrecision getDefaultPrecision(TBasicType type) {
-        if (type != EbtFloat && type != EbtInt)
+        if (!supportsPrecision(type))
             return EbpUndefined;
-
         int level = static_cast<int>(precisionStack.size()) - 1;
         assert(level >= 0); // Just to be safe. Should not happen.
         PrecisionStackLevel::iterator it;
@@ -370,6 +367,11 @@ public:
 
 private:
     int currentLevel() const { return static_cast<int>(table.size()) - 1; }
+
+    bool supportsPrecision(TBasicType type) {
+      // Only supports precision for int, float, and sampler types.
+      return type == EbtFloat || type == EbtInt || IsSampler(type);
+    }
 
     int uniqueId;     // for unique identification in code generation
     std::vector<TSymbolTableLevel*> table;

@@ -231,6 +231,11 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     floatingPoint.matrix = false;
     floatingPoint.array = false;
 
+    TPublicType sampler;
+    sampler.size = 1;
+    sampler.matrix = false;
+    sampler.array = false;
+
     switch(shaderType)
     {
       case SH_FRAGMENT_SHADER:
@@ -241,6 +246,13 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
         symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
         break;
       default: assert(false && "Language not supported");
+    }
+    // We set defaults for all the sampler types, even those that are
+    // only available if an extension exists.
+    for (int samplerType = EbtGuardSamplerBegin + 1;
+         samplerType < EbtGuardSamplerEnd; ++samplerType) {
+        sampler.type = static_cast<TBasicType>(samplerType);
+        symbolTable.setDefaultPrecision(sampler, EbpLow);
     }
 
     InsertBuiltInFunctions(shaderType, shaderSpec, resources, symbolTable);
