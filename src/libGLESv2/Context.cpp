@@ -3320,7 +3320,7 @@ void Context::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, in
         // Verified by the glDraw* functions
         ASSERT(count >= 0);
 
-        if (static_cast<unsigned short>(count) + 1 > (std::numeric_limits<unsigned short>::max() / sizeof(unsigned short)))
+        if (static_cast<unsigned short>(count) + 1u > (std::numeric_limits<unsigned short>::max() / sizeof(unsigned short)))
         {
             return error(GL_OUT_OF_MEMORY);
         }
