@@ -109,9 +109,10 @@ typedef enum {
 } ShDataType;
 
 typedef enum {
-  SH_PRECISION_HIGHP    = 0x5001,
-  SH_PRECISION_MEDIUMP  = 0x5002,
-  SH_PRECISION_LOWP     = 0x5003
+  SH_PRECISION_HIGHP     = 0x5001,
+  SH_PRECISION_MEDIUMP   = 0x5002,
+  SH_PRECISION_LOWP      = 0x5003,
+  SH_PRECISION_UNDEFINED = 0
 } ShPrecisionType;
 
 typedef enum {

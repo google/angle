@@ -284,7 +284,9 @@ void ShGetVariableInfo(const ShHandle handle,
         *precision = SH_PRECISION_HIGHP;
         break;
     default:
-        ASSERT(false);
+        // Some types does not support precision, for example, boolean.
+        *precision = SH_PRECISION_UNDEFINED;
+        break;
     }
 
     // This size must match that queried by
