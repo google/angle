@@ -30,6 +30,7 @@ class VertexDataManager;
 class IndexDataManager;
 class StreamingIndexBufferInterface;
 class Blit11;
+class Clear11;
 
 enum
 {
@@ -221,7 +222,6 @@ class Renderer11 : public Renderer
                          GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
                          GLint packAlignment, void *pixels);
 
-    void maskedClear(const gl::ClearParameters &clearParams, bool usingExtendedDrawBuffers);
     rx::Range getViewportBounds() const;
 
     bool blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
@@ -353,14 +353,7 @@ class Renderer11 : public Renderer
     Blit11 *mBlit;
 
     // Masked clear resources
-    bool mClearResourcesInitialized;
-    ID3D11Buffer *mClearVB;
-    ID3D11InputLayout *mClearIL;
-    ID3D11VertexShader *mClearVS;
-    ID3D11PixelShader *mClearSinglePS;
-    ID3D11PixelShader *mClearMultiplePS;
-    ID3D11RasterizerState *mClearScissorRS;
-    ID3D11RasterizerState *mClearNoScissorRS;
+    Clear11 *mClear;
 
     // Sync query
     ID3D11Query *mSyncQuery;

@@ -9,6 +9,8 @@
 #ifndef LIBGLESV2_ANGLETYPES_H_
 #define LIBGLESV2_ANGLETYPES_H_
 
+#include "libGLESv2/constants.h"
+
 namespace gl
 {
 
@@ -150,18 +152,25 @@ struct SamplerState
 
 struct ClearParameters
 {
-    GLbitfield mask;
-
-    ColorF colorClearValue;
+    bool clearColor[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
+    ColorF colorFClearValue;
+    ColorI colorIClearValue;
+    ColorUI colorUIClearValue;
+    GLenum colorClearType;
     bool colorMaskRed;
     bool colorMaskGreen;
     bool colorMaskBlue;
     bool colorMaskAlpha;
 
+    bool clearDepth;
     float depthClearValue;
 
+    bool clearStencil;
     GLint stencilClearValue;
     GLuint stencilWriteMask;
+
+    bool scissorEnabled;
+    Rectangle scissor;
 };
 
 }

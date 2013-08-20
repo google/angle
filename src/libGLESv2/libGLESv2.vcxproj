@@ -270,6 +270,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="RenderbufferProxySet.cpp" />
     <ClCompile Include="renderer\Blit11.cpp" />
     <ClCompile Include="renderer\Blit9.cpp" />
+    <ClCompile Include="renderer\Clear11.cpp" />
     <ClCompile Include="renderer\copyimage.cpp" />
     <ClCompile Include="renderer\Fence11.cpp" />
     <ClCompile Include="renderer\Fence9.cpp" />
@@ -353,6 +354,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="RenderbufferProxySet.h" />
     <ClInclude Include="renderer\Blit11.h" />
     <ClInclude Include="renderer\Blit9.h" />
+    <ClInclude Include="renderer\Clear11.h" />
     <ClInclude Include="renderer\copyimage.h" />
     <ClInclude Include="renderer\Fence11.h" />
     <ClInclude Include="renderer\Fence9.h" />
@@ -390,9 +392,12 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\ShaderExecutable.h" />
     <ClInclude Include="renderer\ShaderExecutable11.h" />
     <ClInclude Include="renderer\ShaderExecutable9.h" />
-    <ClInclude Include="renderer\shaders\compiled\clear11vs.h" />
-    <ClInclude Include="renderer\shaders\compiled\clearmultiple11ps.h" />
-    <ClInclude Include="renderer\shaders\compiled\clearsingle11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\clearfloat11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\clearfloat11vs.h" />
+    <ClInclude Include="renderer\shaders\compiled\clearsint11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\clearsint11vs.h" />
+    <ClInclude Include="renderer\shaders\compiled\clearuint11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\clearuint11vs.h" />
     <ClInclude Include="renderer\shaders\compiled\componentmaskps.h" />
     <ClInclude Include="renderer\shaders\compiled\flipyvs.h" />
     <ClInclude Include="renderer\shaders\compiled\luminanceps.h" />
@@ -405,6 +410,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\shaders\compiled\passthroughlumalpha2d11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\passthroughlumalpha3d11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\passthroughps.h" />
+    <ClInclude Include="renderer\shaders\compiled\passthroughr2d11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\passthroughr2di11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\passthroughr2dui11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\passthroughr3d11ps.h" />

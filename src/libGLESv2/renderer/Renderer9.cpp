@@ -1761,15 +1761,33 @@ void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, const GLint *v)
 
 void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
 {
-    D3DCOLOR color = D3DCOLOR_ARGB(gl::unorm<8>(clearParams.colorClearValue.alpha),
-                                   gl::unorm<8>(clearParams.colorClearValue.red),
-                                   gl::unorm<8>(clearParams.colorClearValue.green),
-                                   gl::unorm<8>(clearParams.colorClearValue.blue));
+    if (clearParams.colorClearType != GL_FLOAT)
+    {
+        // Clearing buffers with non-float values is not supported by Renderer9 and ES 2.0
+        UNREACHABLE();
+        return;
+    }
+
+    bool clearColor = clearParams.clearColor[0];
+    for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
+    {
+        if (clearParams.clearColor[i] != clearColor)
+        {
+            // Clearing individual buffers other than buffer zero is not supported by Renderer9 and ES 2.0
+            UNREACHABLE();
+            return;
+        }
+    }
+
+    D3DCOLOR color = D3DCOLOR_ARGB(gl::unorm<8>(clearParams.colorFClearValue.alpha),
+                                   gl::unorm<8>(clearParams.colorFClearValue.red),
+                                   gl::unorm<8>(clearParams.colorFClearValue.green),
+                                   gl::unorm<8>(clearParams.colorFClearValue.blue));
     float depth = gl::clamp01(clearParams.depthClearValue);
     int stencil = clearParams.stencilClearValue & 0x000000FF;
 
     unsigned int stencilUnmasked = 0x0;
-    if ((clearParams.mask & GL_STENCIL_BUFFER_BIT) && frameBuffer->hasStencil())
+    if (clearParams.clearStencil && frameBuffer->hasStencil())
     {
         unsigned int stencilSize = gl::GetStencilBits(frameBuffer->getStencilbuffer()->getActualFormat(),
                                                       getCurrentClientVersion());
@@ -1779,11 +1797,10 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
     bool alphaUnmasked = gl::GetAlphaBits(mRenderTargetDesc.format, getCurrentClientVersion()) == 0 ||
                          clearParams.colorMaskAlpha;
 
-    const bool needMaskedStencilClear = (clearParams.mask & GL_STENCIL_BUFFER_BIT) &&
+    const bool needMaskedStencilClear = clearParams.clearStencil &&
                                         (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
-    const bool needMaskedColorClear = (clearParams.mask & GL_COLOR_BUFFER_BIT) &&
-                                      !(clearParams.colorMaskRed && clearParams.colorMaskGreen &&
-                                        clearParams.colorMaskBlue && alphaUnmasked);
+    const bool needMaskedColorClear = clearColor && !(clearParams.colorMaskRed && clearParams.colorMaskGreen &&
+                                                      clearParams.colorMaskBlue && alphaUnmasked);
 
     if (needMaskedColorClear || needMaskedStencilClear)
     {
@@ -1844,7 +1861,7 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
         mDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
         mDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, 0);
 
-        if (clearParams.mask & GL_COLOR_BUFFER_BIT)
+        if (clearColor)
         {
             mDevice->SetRenderState(D3DRS_COLORWRITEENABLE,
                                     gl_d3d9::ConvertColorMask(clearParams.colorMaskRed,
@@ -1857,7 +1874,7 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
             mDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
         }
 
-        if (stencilUnmasked != 0x0 && (clearParams.mask & GL_STENCIL_BUFFER_BIT))
+        if (stencilUnmasked != 0x0 && clearParams.clearStencil)
         {
             mDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
             mDevice->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, FALSE);
@@ -1913,7 +1930,7 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
         startScene();
         mDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, quad, sizeof(float[4]));
 
-        if (clearParams.mask & GL_DEPTH_BUFFER_BIT)
+        if (clearParams.clearDepth)
         {
             mDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
             mDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
@@ -1925,18 +1942,18 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
             mMaskedClearSavedState->Apply();
         }
     }
-    else if (clearParams.mask)
+    else if (clearColor || clearParams.clearDepth || clearParams.clearStencil)
     {
         DWORD dxClearFlags = 0;
-        if (clearParams.mask & GL_COLOR_BUFFER_BIT)
+        if (clearColor)
         {
             dxClearFlags |= D3DCLEAR_TARGET;
         }
-        if (clearParams.mask & GL_DEPTH_BUFFER_BIT)
+        if (clearParams.clearDepth)
         {
             dxClearFlags |= D3DCLEAR_ZBUFFER;
         }
-        if (clearParams.mask & GL_STENCIL_BUFFER_BIT)
+        if (clearParams.clearStencil)
         {
             dxClearFlags |= D3DCLEAR_STENCIL;
         }

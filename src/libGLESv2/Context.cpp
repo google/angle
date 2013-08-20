@@ -2466,8 +2466,25 @@ void Context::clear(GLbitfield mask)
         return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
     }
 
-    DWORD flags = 0;
-    GLbitfield finalMask = 0;
+    ClearParameters clearParams = { 0 };
+
+    for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
+    {
+        clearParams.clearColor[i] = false;
+    }
+    clearParams.colorFClearValue = mState.colorClearValue;
+    clearParams.colorClearType = GL_FLOAT;
+    clearParams.colorMaskRed = mState.blend.colorMaskRed;
+    clearParams.colorMaskGreen = mState.blend.colorMaskGreen;
+    clearParams.colorMaskBlue = mState.blend.colorMaskBlue;
+    clearParams.colorMaskAlpha = mState.blend.colorMaskAlpha;
+    clearParams.clearDepth = false;
+    clearParams.depthClearValue = mState.depthClearValue;
+    clearParams.clearStencil = false;
+    clearParams.stencilClearValue = mState.stencilClearValue;
+    clearParams.stencilWriteMask = mState.depthStencil.stencilWritemask;
+    clearParams.scissorEnabled = mState.scissorTest;
+    clearParams.scissor = mState.scissor;
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
@@ -2475,7 +2492,10 @@ void Context::clear(GLbitfield mask)
 
         if (framebufferObject->hasEnabledColorAttachment())
         {
-            finalMask |= GL_COLOR_BUFFER_BIT;
+            for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
+            {
+                clearParams.clearColor[i] = true;
+            }
         }
     }
 
@@ -2484,7 +2504,7 @@ void Context::clear(GLbitfield mask)
         mask &= ~GL_DEPTH_BUFFER_BIT;
         if (mState.depthStencil.depthMask && framebufferObject->getDepthbufferType() != GL_NONE)
         {
-            finalMask |= GL_DEPTH_BUFFER_BIT;
+            clearParams.clearDepth = true;
         }
     }
 
@@ -2502,7 +2522,7 @@ void Context::clear(GLbitfield mask)
 
             if (gl::GetStencilBits(depthStencil->getActualFormat(), mClientVersion) > 0)
             {
-                finalMask |= GL_STENCIL_BUFFER_BIT;
+                clearParams.clearStencil = true;
             }
         }
     }
@@ -2516,17 +2536,6 @@ void Context::clear(GLbitfield mask)
     {
         return;
     }
-
-    ClearParameters clearParams;
-    clearParams.mask = finalMask;
-    clearParams.colorClearValue = mState.colorClearValue;
-    clearParams.colorMaskRed = mState.blend.colorMaskRed;
-    clearParams.colorMaskGreen = mState.blend.colorMaskGreen;
-    clearParams.colorMaskBlue = mState.blend.colorMaskBlue;
-    clearParams.colorMaskAlpha = mState.blend.colorMaskAlpha;
-    clearParams.depthClearValue = mState.depthClearValue;
-    clearParams.stencilClearValue = mState.stencilClearValue;
-    clearParams.stencilWriteMask = mState.depthStencil.stencilWritemask;
 
     mRenderer->clear(clearParams, framebufferObject);
 }

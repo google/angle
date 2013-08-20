@@ -237,18 +237,6 @@ void SetPositionLayerTexCoord3DVertex(PositionLayerTexCoord3DVertex* vertex, flo
     vertex->s = s;
 }
 
-void SetPositionDepthColorVertex(PositionDepthColorVertex* vertex, float x, float y, float z,
-                                 const gl::ColorF &color)
-{
-    vertex->x = x;
-    vertex->y = y;
-    vertex->z = z;
-    vertex->r = color.red;
-    vertex->g = color.green;
-    vertex->b = color.blue;
-    vertex->a = color.alpha;
-}
-
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 {
 #if defined(_DEBUG)

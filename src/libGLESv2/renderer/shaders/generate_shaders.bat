@@ -47,6 +47,11 @@ fxc /E PS_PassthroughR3DI /T ps_4_0 /Fh compiled/passthroughr3di11ps.h Passthrou
 fxc /E PS_PassthroughLum3D /T ps_4_0 /Fh compiled/passthroughlum3d11ps.h Passthrough3D11.hlsl
 fxc /E PS_PassthroughLumAlpha3D /T ps_4_0 /Fh compiled/passthroughlumalpha3d11ps.h Passthrough3D11.hlsl
 
-fxc /E VS_Clear /T vs_4_0 /Fh compiled/clear11vs.h Clear11.hlsl
-fxc /E PS_ClearSingle /T ps_4_0 /Fh compiled/clearsingle11ps.h Clear11.hlsl
-fxc /E PS_ClearMultiple /T ps_4_0 /Fh compiled/clearmultiple11ps.h Clear11.hlsl
+fxc /E VS_ClearFloat /T vs_4_0 /Fh compiled/clearfloat11vs.h Clear11.hlsl
+fxc /E PS_ClearFloat /T ps_4_0 /Fh compiled/clearfloat11ps.h Clear11.hlsl
+
+fxc /E VS_ClearUint /T vs_4_0 /Fh compiled/clearuint11vs.h Clear11.hlsl
+fxc /E PS_ClearUint /T ps_4_0 /Fh compiled/clearuint11ps.h Clear11.hlsl
+
+fxc /E VS_ClearSint /T vs_4_0 /Fh compiled/clearsint11vs.h Clear11.hlsl
+fxc /E PS_ClearSint /T ps_4_0 /Fh compiled/clearsint11ps.h Clear11.hlsl

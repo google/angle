@@ -55,13 +55,25 @@ struct PositionLayerTexCoord3DVertex
 void SetPositionLayerTexCoord3DVertex(PositionLayerTexCoord3DVertex* vertex, float x, float y,
                                       unsigned int layer, float u, float v, float s);
 
+template <typename T>
 struct PositionDepthColorVertex
 {
     float x, y, z;
-    float r, g, b, a;
+    T r, g, b, a;
 };
-void SetPositionDepthColorVertex(PositionDepthColorVertex* vertex, float x, float y, float z,
-                                 const gl::ColorF &color);
+
+template <typename T>
+void SetPositionDepthColorVertex(PositionDepthColorVertex<T>* vertex, float x, float y, float z,
+                                 const gl::Color<T> &color)
+{
+    vertex->x = x;
+    vertex->y = y;
+    vertex->z = z;
+    vertex->r = color.red;
+    vertex->g = color.green;
+    vertex->b = color.blue;
+    vertex->a = color.alpha;
+}
 
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
 
