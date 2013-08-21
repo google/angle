@@ -2214,7 +2214,7 @@ void Texture2DArray::setImage(GLint level, GLsizei width, GLsizei height, GLsize
 
     for (int i = 0; i < depth; i++)
     {
-        const void *layerPixels = reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i);
+        const void *layerPixels = pixels ? (reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i)) : NULL;
         Texture::setImage(unpackAlignment, type, layerPixels, mImageArray[level][i]);
     }
 }
@@ -2229,7 +2229,7 @@ void Texture2DArray::setCompressedImage(GLint level, GLenum format, GLsizei widt
 
     for (int i = 0; i < depth; i++)
     {
-        const void *layerPixels = reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i);
+        const void *layerPixels = pixels ? (reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i)) : NULL;
         Texture::setCompressedImage(imageSize, layerPixels, mImageArray[level][i]);
     }
 }
@@ -2243,7 +2243,7 @@ void Texture2DArray::subImage(GLint level, GLint xoffset, GLint yoffset, GLint z
     for (int i = 0; i < depth; i++)
     {
         int layer = zoffset + i;
-        const void *layerPixels = reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i);
+        const void *layerPixels = pixels ? (reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i)) : NULL;
 
         if (Texture::subImage(xoffset, yoffset, zoffset, width, height, 1, format, type, unpackAlignment, layerPixels, mImageArray[level][layer]))
         {
@@ -2260,7 +2260,7 @@ void Texture2DArray::subImageCompressed(GLint level, GLint xoffset, GLint yoffse
     for (int i = 0; i < depth; i++)
     {
         int layer = zoffset + i;
-        const void *layerPixels = reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i);
+        const void *layerPixels = pixels ? (reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i)) : NULL;
 
         if (Texture::subImageCompressed(xoffset, yoffset, zoffset, width, height, 1, format, imageSize, layerPixels, mImageArray[level][layer]))
         {
