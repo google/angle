@@ -8374,8 +8374,24 @@ void __stdcall glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* val
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glClearBufferiv
-            UNIMPLEMENTED();
+            switch (buffer)
+            {
+              case GL_COLOR:
+                if (drawbuffer < 0 || drawbuffer >= static_cast<GLint>(context->getMaximumRenderTargets()))
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+                break;
+              case GL_STENCIL:
+                if (drawbuffer != 0)
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            context->clearBufferiv(buffer, drawbuffer, value);
         }
     }
     catch(std::bad_alloc&)
@@ -8400,8 +8416,19 @@ void __stdcall glClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint* v
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glClearBufferuiv
-            UNIMPLEMENTED();
+            switch (buffer)
+            {
+              case GL_COLOR:
+                if (drawbuffer < 0 || drawbuffer >= static_cast<GLint>(context->getMaximumRenderTargets()))
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            context->clearBufferuiv(buffer, drawbuffer, value);
         }
     }
     catch(std::bad_alloc&)
@@ -8426,8 +8453,25 @@ void __stdcall glClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* v
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glClearBufferfv
-            UNIMPLEMENTED();
+            switch (buffer)
+            {
+              case GL_COLOR:
+                if (drawbuffer < 0 || drawbuffer >= static_cast<GLint>(context->getMaximumRenderTargets()))
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+                break;
+              case GL_DEPTH:
+                if (drawbuffer != 0)
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            context->clearBufferfv(buffer, drawbuffer, value);
         }
     }
     catch(std::bad_alloc&)
@@ -8452,8 +8496,19 @@ void __stdcall glClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, G
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glClearBufferfi
-            UNIMPLEMENTED();
+            switch (buffer)
+            {
+              case GL_DEPTH_STENCIL:
+                if (drawbuffer != 0)
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            context->clearBufferfi(buffer, drawbuffer, depth, stencil);
         }
     }
     catch(std::bad_alloc&)

@@ -2425,37 +2425,7 @@ bool Context::applyUniformBuffers()
     return programBinary->applyUniformBuffers(boundBuffers);
 }
 
-void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
-                         GLenum format, GLenum type, GLsizei *bufSize, void* pixels)
-{
-    Framebuffer *framebuffer = getReadFramebuffer();
 
-    if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
-    {
-        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
-    }
-
-    if (getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
-    {
-        return gl::error(GL_INVALID_OPERATION);
-    }
-
-    GLint sizedInternalFormat = IsSizedInternalFormat(format, mClientVersion) ? format
-                                                                              : GetSizedInternalFormat(format, type, mClientVersion);
-
-    GLsizei outputPitch = GetRowPitch(sizedInternalFormat, type, mClientVersion, width, getPackAlignment());
-    // sized query sanity check
-    if (bufSize)
-    {
-        int requiredSize = outputPitch * height;
-        if (requiredSize > *bufSize)
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-    }
-
-    mRenderer->readPixels(framebuffer, x, y, width, height, format, type, outputPitch, getPackReverseRowOrder(), getPackAlignment(), pixels);
-}
 
 void Context::clear(GLbitfield mask)
 {
@@ -2523,6 +2493,211 @@ void Context::clear(GLbitfield mask)
     }
 
     mRenderer->clear(clearParams, framebufferObject);
+}
+
+void Context::clearBufferfv(GLenum buffer, int drawbuffer, const float *values)
+{
+    // glClearBufferfv can be called to clear the color buffer or depth buffer
+
+    ClearParameters clearParams = { 0 };
+
+    if (buffer == GL_COLOR)
+    {
+        for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
+        {
+            clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
+        }
+        clearParams.colorFClearValue = ColorF(values[0], values[1], values[2], values[3]);
+        clearParams.colorClearType = GL_FLOAT;
+    }
+    else
+    {
+        for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
+        {
+            clearParams.clearColor[i] = false;
+        }
+        clearParams.colorFClearValue = mState.colorClearValue;
+        clearParams.colorClearType = GL_FLOAT;
+    }
+
+    clearParams.colorMaskRed = mState.blend.colorMaskRed;
+    clearParams.colorMaskGreen = mState.blend.colorMaskGreen;
+    clearParams.colorMaskBlue = mState.blend.colorMaskBlue;
+    clearParams.colorMaskAlpha = mState.blend.colorMaskAlpha;
+
+    if (buffer == GL_DEPTH)
+    {
+        clearParams.clearDepth = true;
+        clearParams.depthClearValue = values[0];
+    }
+    else
+    {
+        clearParams.clearDepth = false;
+        clearParams.depthClearValue = mState.depthClearValue;
+    }
+
+    clearParams.clearStencil = false;
+    clearParams.stencilClearValue = mState.stencilClearValue;
+    clearParams.stencilWriteMask = mState.depthStencil.stencilWritemask;
+    clearParams.scissorEnabled = mState.scissorTest;
+    clearParams.scissor = mState.scissor;
+
+    if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
+    {
+        return;
+    }
+
+    mRenderer->clear(clearParams, getDrawFramebuffer());
+}
+
+void Context::clearBufferuiv(GLenum buffer, int drawbuffer, const unsigned int *values)
+{
+    // glClearBufferuv can only be called to clear a color buffer
+
+    ClearParameters clearParams = { 0 };
+    for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
+    {
+        clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
+    }
+    clearParams.colorUIClearValue = ColorUI(values[0], values[1], values[2], values[3]);
+    clearParams.colorClearType = GL_UNSIGNED_INT;
+    clearParams.colorMaskRed = mState.blend.colorMaskRed;
+    clearParams.colorMaskGreen = mState.blend.colorMaskGreen;
+    clearParams.colorMaskBlue = mState.blend.colorMaskBlue;
+    clearParams.colorMaskAlpha = mState.blend.colorMaskAlpha;
+    clearParams.clearDepth = false;
+    clearParams.depthClearValue = mState.depthClearValue;
+    clearParams.clearStencil = false;
+    clearParams.stencilClearValue = mState.stencilClearValue;
+    clearParams.stencilWriteMask = mState.depthStencil.stencilWritemask;
+    clearParams.scissorEnabled = mState.scissorTest;
+    clearParams.scissor = mState.scissor;
+
+    if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
+    {
+        return;
+    }
+
+    mRenderer->clear(clearParams, getDrawFramebuffer());
+}
+
+void Context::clearBufferiv(GLenum buffer, int drawbuffer, const int *values)
+{
+    // glClearBufferfv can be called to clear the color buffer or stencil buffer
+
+    ClearParameters clearParams = { 0 };
+
+    if (buffer == GL_COLOR)
+    {
+        for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
+        {
+            clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
+        }
+        clearParams.colorIClearValue = ColorI(values[0], values[1], values[2], values[3]);
+        clearParams.colorClearType = GL_INT;
+    }
+    else
+    {
+        for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
+        {
+            clearParams.clearColor[i] = false;
+        }
+        clearParams.colorFClearValue = mState.colorClearValue;
+        clearParams.colorClearType = GL_FLOAT;
+    }
+
+    clearParams.colorMaskRed = mState.blend.colorMaskRed;
+    clearParams.colorMaskGreen = mState.blend.colorMaskGreen;
+    clearParams.colorMaskBlue = mState.blend.colorMaskBlue;
+    clearParams.colorMaskAlpha = mState.blend.colorMaskAlpha;
+
+    clearParams.clearDepth = false;
+    clearParams.depthClearValue = mState.depthClearValue;
+
+    if (buffer == GL_STENCIL)
+    {
+        clearParams.clearStencil = true;
+        clearParams.stencilClearValue = values[1];
+    }
+    else
+    {
+        clearParams.clearStencil = false;
+        clearParams.stencilClearValue = mState.stencilClearValue;
+    }
+    clearParams.stencilWriteMask = mState.depthStencil.stencilWritemask;
+
+    clearParams.scissorEnabled = mState.scissorTest;
+    clearParams.scissor = mState.scissor;
+
+    if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
+    {
+        return;
+    }
+
+    mRenderer->clear(clearParams, getDrawFramebuffer());
+}
+
+void Context::clearBufferfi(GLenum buffer, int drawbuffer, float depth, int stencil)
+{
+    // glClearBufferfi can only be called to clear a depth stencil buffer
+
+    ClearParameters clearParams = { 0 };
+    for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
+    {
+        clearParams.clearColor[i] = false;
+    }
+    clearParams.colorFClearValue = mState.colorClearValue;
+    clearParams.colorClearType = GL_FLOAT;
+    clearParams.colorMaskRed = mState.blend.colorMaskRed;
+    clearParams.colorMaskGreen = mState.blend.colorMaskGreen;
+    clearParams.colorMaskBlue = mState.blend.colorMaskBlue;
+    clearParams.colorMaskAlpha = mState.blend.colorMaskAlpha;
+    clearParams.clearDepth = true;
+    clearParams.depthClearValue = depth;
+    clearParams.clearStencil = true;
+    clearParams.stencilClearValue = stencil;
+    clearParams.stencilWriteMask = mState.depthStencil.stencilWritemask;
+    clearParams.scissorEnabled = mState.scissorTest;
+    clearParams.scissor = mState.scissor;
+
+    if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
+    {
+        return;
+    }
+
+    mRenderer->clear(clearParams, getDrawFramebuffer());
+}
+
+void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
+                         GLenum format, GLenum type, GLsizei *bufSize, void* pixels)
+{
+    Framebuffer *framebuffer = getReadFramebuffer();
+
+    if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
+    {
+        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
+    }
+
+    if (getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
+    {
+        return gl::error(GL_INVALID_OPERATION);
+    }
+
+    GLint sizedInternalFormat = IsSizedInternalFormat(format, mClientVersion) ? format
+        : GetSizedInternalFormat(format, type, mClientVersion);
+
+    GLsizei outputPitch = GetRowPitch(sizedInternalFormat, type, mClientVersion, width, getPackAlignment());
+    // sized query sanity check
+    if (bufSize)
+    {
+        int requiredSize = outputPitch * height;
+        if (requiredSize > *bufSize)
+        {
+            return gl::error(GL_INVALID_OPERATION);
+        }
+    }
+
+    mRenderer->readPixels(framebuffer, x, y, width, height, format, type, outputPitch, getPackReverseRowOrder(), getPackAlignment(), pixels);
 }
 
 void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances)
