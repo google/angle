@@ -825,6 +825,18 @@ void __stdcall glClear(GLbitfield mask)
 
         if (context)
         {
+            gl::Framebuffer *framebufferObject = context->getDrawFramebuffer();
+
+            if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
+            {
+                return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
+            }
+
+            if ((mask & ~(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT)) != 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
             context->clear(mask);
         }
     }

@@ -2459,15 +2459,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
 
 void Context::clear(GLbitfield mask)
 {
-    Framebuffer *framebufferObject = getDrawFramebuffer();
-
-    if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
-    {
-        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
-    }
-
     ClearParameters clearParams = { 0 };
-
     for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
     {
         clearParams.clearColor[i] = false;
@@ -2486,10 +2478,9 @@ void Context::clear(GLbitfield mask)
     clearParams.scissorEnabled = mState.scissorTest;
     clearParams.scissor = mState.scissor;
 
+    Framebuffer *framebufferObject = getDrawFramebuffer();
     if (mask & GL_COLOR_BUFFER_BIT)
     {
-        mask &= ~GL_COLOR_BUFFER_BIT;
-
         if (framebufferObject->hasEnabledColorAttachment())
         {
             for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
@@ -2501,7 +2492,6 @@ void Context::clear(GLbitfield mask)
 
     if (mask & GL_DEPTH_BUFFER_BIT)
     {
-        mask &= ~GL_DEPTH_BUFFER_BIT;
         if (mState.depthStencil.depthMask && framebufferObject->getDepthbufferType() != GL_NONE)
         {
             clearParams.clearDepth = true;
@@ -2510,7 +2500,6 @@ void Context::clear(GLbitfield mask)
 
     if (mask & GL_STENCIL_BUFFER_BIT)
     {
-        mask &= ~GL_STENCIL_BUFFER_BIT;
         if (framebufferObject->getStencilbufferType() != GL_NONE)
         {
             rx::RenderTarget *depthStencil = framebufferObject->getStencilbuffer()->getDepthStencil();
@@ -2527,10 +2516,6 @@ void Context::clear(GLbitfield mask)
         }
     }
 
-    if (mask != 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
 
     if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
     {
