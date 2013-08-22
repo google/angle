@@ -37,7 +37,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented everytime the API changes.
-#define ANGLE_SH_VERSION 111
+#define ANGLE_SH_VERSION 112
 
 //
 // The names of the following enums have been derived by replacing GL prefix
@@ -378,6 +378,10 @@ COMPILER_EXPORT void ShGetObjectCode(const ShHandle handle, char* objCode);
 // size: Returns the size of the variable.
 // type: Returns the data type of the variable.
 // precision: Returns the precision of the variable.
+// staticUse: Returns 1 if the variable is accessed in a statement after
+//            pre-processing, whether or not run-time flow of control will
+//            cause that statement to be executed.
+//            Returns 0 otherwise.
 // name: Returns a null terminated string containing the name of the
 //       variable. It is assumed that name has enough memory to accormodate
 //       the variable name. The size of the buffer required to store the
@@ -396,6 +400,7 @@ COMPILER_EXPORT void ShGetVariableInfo(const ShHandle handle,
                                        int* size,
                                        ShDataType* type,
                                        ShPrecisionType* precision,
+                                       int* staticUse,
                                        char* name,
                                        char* mappedName);
 

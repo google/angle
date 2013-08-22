@@ -6,15 +6,17 @@
 
 #include "compiler/VariableInfo.h"
 
-static TString arrayBrackets(int index)
+namespace {
+
+TString arrayBrackets(int index)
 {
     TStringStream stream;
     stream << "[" << index << "]";
     return stream.str();
 }
 
-// Returns the data type for an attribute or uniform.
-static ShDataType getVariableDataType(const TType& type)
+// Returns the data type for an attribute, uniform, or varying.
+ShDataType getVariableDataType(const TType& type)
 {
     switch (type.getBasicType()) {
       case EbtFloat:
@@ -70,22 +72,22 @@ static ShDataType getVariableDataType(const TType& type)
     return SH_NONE;
 }
 
-static void getBuiltInVariableInfo(const TType& type,
-                                   const TString& name,
-                                   const TString& mappedName,
-                                   TVariableInfoList& infoList);
-static void getUserDefinedVariableInfo(const TType& type,
-                                       const TString& name,
-                                       const TString& mappedName,
-                                       TVariableInfoList& infoList,
-                                       ShHashFunction64 hashFunction);
-
-// Returns info for an attribute or uniform.
-static void getVariableInfo(const TType& type,
+void getBuiltInVariableInfo(const TType& type,
                             const TString& name,
                             const TString& mappedName,
-                            TVariableInfoList& infoList,
-                            ShHashFunction64 hashFunction)
+                            TVariableInfoList& infoList);
+void getUserDefinedVariableInfo(const TType& type,
+                                const TString& name,
+                                const TString& mappedName,
+                                TVariableInfoList& infoList,
+                                ShHashFunction64 hashFunction);
+
+// Returns info for an attribute, uniform, or varying.
+void getVariableInfo(const TType& type,
+                     const TString& name,
+                     const TString& mappedName,
+                     TVariableInfoList& infoList,
+                     ShHashFunction64 hashFunction)
 {
     if (type.getBasicType() == EbtStruct) {
         if (type.isArray()) {
@@ -144,13 +146,37 @@ void getUserDefinedVariableInfo(const TType& type,
     }
 }
 
+TVariableInfo* findVariable(const TType& type,
+                            const TString& name,
+                            TVariableInfoList& infoList)
+{
+    // TODO(zmo): optimize this function.
+    TString myName = name;
+    if (type.isArray())
+        myName += "[0]";
+    for (size_t ii = 0; ii < infoList.size(); ++ii)
+    {
+        if (infoList[ii].name.c_str() == myName)
+            return &(infoList[ii]);
+    }
+    return NULL;
+}
+
+}  // namespace anonymous
+
 TVariableInfo::TVariableInfo()
+    : type(SH_NONE),
+      size(0),
+      precision(EbpUndefined),
+      staticUse(false)
 {
 }
 
 TVariableInfo::TVariableInfo(ShDataType type, int size)
     : type(type),
-      size(size)
+      size(size),
+      precision(EbpUndefined),
+      staticUse(false)
 {
 }
 
@@ -161,44 +187,85 @@ CollectVariables::CollectVariables(TVariableInfoList& attribs,
     : mAttribs(attribs),
       mUniforms(uniforms),
       mVaryings(varyings),
+      mPointCoordAdded(false),
+      mFrontFacingAdded(false),
+      mFragCoordAdded(false),
       mHashFunction(hashFunction)
 {
 }
 
-// We are only interested in attribute and uniform variable declaration.
-void CollectVariables::visitSymbol(TIntermSymbol*)
+// We want to check whether a uniform/varying is statically used
+// because we only count the used ones in packing computing.
+// Also, gl_FragCoord, gl_PointCoord, and gl_FrontFacing count
+// toward varying counting if they are statically used in a fragment
+// shader.
+void CollectVariables::visitSymbol(TIntermSymbol* symbol)
 {
-}
-
-void CollectVariables::visitConstantUnion(TIntermConstantUnion*)
-{
-}
-
-bool CollectVariables::visitBinary(Visit, TIntermBinary*)
-{
-    return false;
-}
-
-bool CollectVariables::visitUnary(Visit, TIntermUnary*)
-{
-    return false;
-}
-
-bool CollectVariables::visitSelection(Visit, TIntermSelection*)
-{
-    return false;
+    ASSERT(symbol != NULL);
+    TVariableInfo* var = NULL;
+    switch (symbol->getQualifier())
+    {
+    case EvqVaryingOut:
+    case EvqInvariantVaryingOut:
+    case EvqVaryingIn:
+    case EvqInvariantVaryingIn:
+        var = findVariable(symbol->getType(), symbol->getSymbol(), mVaryings);
+        break;
+    case EvqUniform:
+        var = findVariable(symbol->getType(), symbol->getSymbol(), mUniforms);
+        break;
+    case EvqFragCoord:
+        if (!mFragCoordAdded) {
+            TVariableInfo info;
+            info.name = "gl_FragCoord";
+            info.mappedName = "gl_FragCoord";
+            info.type = SH_FLOAT_VEC4;
+            info.size = 1;
+            info.precision = EbpMedium;  // Use mediump as it doesn't really matter.
+            info.staticUse = true;
+	    mVaryings.push_back(info);
+            mFragCoordAdded = true;
+        }
+        return;
+    case EvqFrontFacing:
+        if (!mFrontFacingAdded) {
+            TVariableInfo info;
+            info.name = "gl_FrontFacing";
+            info.mappedName = "gl_FrontFacing";
+            info.type = SH_BOOL;
+            info.size = 1;
+            info.precision = EbpUndefined;
+            info.staticUse = true;
+	    mVaryings.push_back(info);
+            mFrontFacingAdded = true;
+        }
+        return;
+    case EvqPointCoord:
+        if (!mPointCoordAdded) {
+            TVariableInfo info;
+            info.name = "gl_PointCoord";
+            info.mappedName = "gl_PointCoord";
+            info.type = SH_FLOAT_VEC2;
+            info.size = 1;
+            info.precision = EbpMedium;  // Use mediump as it doesn't really matter.
+            info.staticUse = true;
+	    mVaryings.push_back(info);
+            mPointCoordAdded = true;
+        }
+        return;
+    default:
+        break;
+    }
+    if (var)
+        var->staticUse = true;
 }
 
 bool CollectVariables::visitAggregate(Visit, TIntermAggregate* node)
 {
-    bool visitChildren = false;
+    bool visitChildren = true;
 
     switch (node->getOp())
     {
-    case EOpSequence:
-        // We need to visit sequence children to get to variable declarations.
-        visitChildren = true;
-        break;
     case EOpDeclaration: {
         const TIntermSequence& sequence = node->getSequence();
         TQualifier qualifier = sequence.front()->getAsTyped()->getQualifier();
@@ -214,9 +281,9 @@ bool CollectVariables::visitAggregate(Visit, TIntermAggregate* node)
                 const TIntermSymbol* variable = (*i)->getAsSymbolNode();
                 // The only case in which the sequence will not contain a
                 // TIntermSymbol node is initialization. It will contain a
-                // TInterBinary node in that case. Since attributes and unifroms
-                // cannot be initialized in a shader, we must have only
-                // TIntermSymbol nodes in the sequence.
+                // TInterBinary node in that case. Since attributes, uniforms,
+                // and varyings cannot be initialized in a shader, we must have
+                // only TIntermSymbol nodes in the sequence.
                 ASSERT(variable != NULL);
                 TString processedSymbol;
                 if (mHashFunction == NULL)
@@ -228,6 +295,7 @@ bool CollectVariables::visitAggregate(Visit, TIntermAggregate* node)
                                 processedSymbol,
                                 infoList,
                                 mHashFunction);
+                visitChildren = false;
             }
         }
         break;
@@ -236,15 +304,5 @@ bool CollectVariables::visitAggregate(Visit, TIntermAggregate* node)
     }
 
     return visitChildren;
-}
-
-bool CollectVariables::visitLoop(Visit, TIntermLoop*)
-{
-    return false;
-}
-
-bool CollectVariables::visitBranch(Visit, TIntermBranch*)
-{
-    return false;
 }
 

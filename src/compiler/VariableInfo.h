@@ -21,6 +21,7 @@ struct TVariableInfo {
     ShDataType type;
     int size;
     TPrecision precision;
+    bool staticUse;
 };
 typedef std::vector<TVariableInfo> TVariableInfoList;
 
@@ -33,18 +34,16 @@ public:
                      ShHashFunction64 hashFunction);
 
     virtual void visitSymbol(TIntermSymbol*);
-    virtual void visitConstantUnion(TIntermConstantUnion*);
-    virtual bool visitBinary(Visit, TIntermBinary*);
-    virtual bool visitUnary(Visit, TIntermUnary*);
-    virtual bool visitSelection(Visit, TIntermSelection*);
     virtual bool visitAggregate(Visit, TIntermAggregate*);
-    virtual bool visitLoop(Visit, TIntermLoop*);
-    virtual bool visitBranch(Visit, TIntermBranch*);
 
 private:
     TVariableInfoList& mAttribs;
     TVariableInfoList& mUniforms;
     TVariableInfoList& mVaryings;
+
+    bool mPointCoordAdded;
+    bool mFrontFacingAdded;
+    bool mFragCoordAdded;
 
     ShHashFunction64 mHashFunction;
 };
