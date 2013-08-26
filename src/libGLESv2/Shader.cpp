@@ -25,10 +25,6 @@ void *Shader::mVertexCompiler = NULL;
 Shader::Shader(ResourceManager *manager, const rx::Renderer *renderer, GLuint handle)
     : mHandle(handle), mRenderer(renderer), mResourceManager(manager)
 {
-    mSource = NULL;
-    mHlsl = NULL;
-    mInfoLog = NULL;
-
     uncompile();
     initializeCompiler();
 
@@ -39,9 +35,6 @@ Shader::Shader(ResourceManager *manager, const rx::Renderer *renderer, GLuint ha
 
 Shader::~Shader()
 {
-    delete[] mSource;
-    delete[] mHlsl;
-    delete[] mInfoLog;
 }
 
 GLuint Shader::getHandle() const
@@ -51,67 +44,29 @@ GLuint Shader::getHandle() const
 
 void Shader::setSource(GLsizei count, const char *const *string, const GLint *length)
 {
-    delete[] mSource;
-    int totalLength = 0;
+    std::ostringstream stream;
 
     for (int i = 0; i < count; i++)
     {
-        if (length && length[i] >= 0)
-        {
-            totalLength += length[i];
-        }
-        else
-        {
-            totalLength += (int)strlen(string[i]);
-        }
+        stream << string[i];
     }
 
-    mSource = new char[totalLength + 1];
-    char *code = mSource;
-
-    for (int i = 0; i < count; i++)
-    {
-        int stringLength;
-
-        if (length && length[i] >= 0)
-        {
-            stringLength = length[i];
-        }
-        else
-        {
-            stringLength = (int)strlen(string[i]);
-        }
-
-        strncpy(code, string[i], stringLength);
-        code += stringLength;
-    }
-
-    mSource[totalLength] = '\0';
+    mSource = stream.str();
 }
 
 int Shader::getInfoLogLength() const
 {
-    if (!mInfoLog)
-    {
-        return 0;
-    }
-    else
-    {
-       return strlen(mInfoLog) + 1;
-    }
+    return mInfoLog.empty() ? 0 : (mInfoLog.length() + 1);
 }
 
-void Shader::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
+void Shader::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
 {
     int index = 0;
 
     if (bufSize > 0)
     {
-        if (mInfoLog)
-        {
-            index = std::min(bufSize - 1, (int)strlen(mInfoLog));
-            memcpy(infoLog, mInfoLog, index);
-        }
+        index = std::min(bufSize - 1, static_cast<GLsizei>(mInfoLog.length()));
+        memcpy(infoLog, mInfoLog.c_str(), index);
 
         infoLog[index] = '\0';
     }
@@ -124,39 +79,22 @@ void Shader::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
 
 int Shader::getSourceLength() const
 {
-    if (!mSource)
-    {
-        return 0;
-    }
-    else
-    {
-       return strlen(mSource) + 1;
-    }
+    return mSource.empty() ? 0 : (mSource.length() + 1);
 }
 
 int Shader::getTranslatedSourceLength() const
 {
-    if (!mHlsl)
-    {
-        return 0;
-    }
-    else
-    {
-       return strlen(mHlsl) + 1;
-    }
+    return mHlsl.empty() ? 0 : (mHlsl.length() + 1);
 }
 
-void Shader::getSourceImpl(char *source, GLsizei bufSize, GLsizei *length, char *buffer)
+void Shader::getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *length, char *buffer) const
 {
     int index = 0;
 
     if (bufSize > 0)
     {
-        if (source)
-        {
-            index = std::min(bufSize - 1, (int)strlen(source));
-            memcpy(buffer, source, index);
-        }
+        index = std::min(bufSize - 1, static_cast<GLsizei>(source.length()));
+        memcpy(buffer, source.c_str(), index);
 
         buffer[index] = '\0';
     }
@@ -167,32 +105,32 @@ void Shader::getSourceImpl(char *source, GLsizei bufSize, GLsizei *length, char 
     }
 }
 
-void Shader::getSource(GLsizei bufSize, GLsizei *length, char *buffer)
+void Shader::getSource(GLsizei bufSize, GLsizei *length, char *buffer) const
 {
     getSourceImpl(mSource, bufSize, length, buffer);
 }
 
-void Shader::getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer)
+void Shader::getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const
 {
     getSourceImpl(mHlsl, bufSize, length, buffer);
 }
 
-const sh::ActiveUniforms &Shader::getUniforms()
+const sh::ActiveUniforms &Shader::getUniforms() const
 {
     return mActiveUniforms;
 }
 
-const sh::ActiveInterfaceBlocks &Shader::getInterfaceBlocks()
+const sh::ActiveInterfaceBlocks &Shader::getInterfaceBlocks() const
 {
     return mActiveInterfaceBlocks;
 }
 
-bool Shader::isCompiled()
+bool Shader::isCompiled() const
 {
-    return mHlsl != NULL;
+    return !mHlsl.empty();
 }
 
-const char *Shader::getHLSL()
+const std::string &Shader::getHLSL() const
 {
     return mHlsl;
 }
@@ -279,17 +217,22 @@ void Shader::releaseCompiler()
 
 void Shader::parseVaryings()
 {
-    if (mHlsl)
+    if (!mHlsl.empty())
     {
-        const char *input = strstr(mHlsl, "// Varyings") + 12;
+        const std::string varyingsTitle("// Varyings");
+        size_t input = mHlsl.find(varyingsTitle);
+        if (input != std::string::npos)
+        {
+            input += varyingsTitle.length() + 1;
+        }
 
-        while(true)
+        while(input != std::string::npos)
         {
             char string1[256];
             char string2[256];
             char string3[256];
 
-            int matches = sscanf(input, "static %255s %255s %255s", string1, string2, string3);
+            int matches = sscanf(mHlsl.c_str() + input, "static %255s %255s %255s", string1, string2, string3);
 
             char *interpolation = "linear";   // Default
             char *type = string1;
@@ -320,18 +263,23 @@ void Shader::parseVaryings()
 
             mVaryings.push_back(Varying(parseInterpolation(interpolation), parseType(type), name, size, array != NULL));
 
-            input = strstr(input, ";") + 2;
+            const std::string semiColon(";");
+            input = mHlsl.find(semiColon, input);
+            if (input != std::string::npos)
+            {
+                input += semiColon.length() + 1;
+            }
         }
 
-        mUsesMultipleRenderTargets = strstr(mHlsl, "GL_USES_MRT") != NULL;
-        mUsesFragColor = strstr(mHlsl, "GL_USES_FRAG_COLOR") != NULL;
-        mUsesFragData = strstr(mHlsl, "GL_USES_FRAG_DATA") != NULL;
-        mUsesFragCoord = strstr(mHlsl, "GL_USES_FRAG_COORD") != NULL;
-        mUsesFrontFacing = strstr(mHlsl, "GL_USES_FRONT_FACING") != NULL;
-        mUsesPointSize = strstr(mHlsl, "GL_USES_POINT_SIZE") != NULL;
-        mUsesPointCoord = strstr(mHlsl, "GL_USES_POINT_COORD") != NULL;
-        mUsesDepthRange = strstr(mHlsl, "GL_USES_DEPTH_RANGE") != NULL;
-        mUsesFragDepth = strstr(mHlsl, "GL_USES_FRAG_DEPTH") != NULL;
+        mUsesMultipleRenderTargets = mHlsl.find("GL_USES_MRT")          != std::string::npos;
+        mUsesFragColor             = mHlsl.find("GL_USES_FRAG_COLOR")   != std::string::npos;
+        mUsesFragData              = mHlsl.find("GL_USES_FRAG_DATA")    != std::string::npos;
+        mUsesFragCoord             = mHlsl.find("GL_USES_FRAG_COORD")   != std::string::npos;
+        mUsesFrontFacing           = mHlsl.find("GL_USES_FRONT_FACING") != std::string::npos;
+        mUsesPointSize             = mHlsl.find("GL_USES_POINT_SIZE")   != std::string::npos;
+        mUsesPointCoord            = mHlsl.find("GL_USES_POINT_COORD")  != std::string::npos;
+        mUsesDepthRange            = mHlsl.find("GL_USES_DEPTH_RANGE")  != std::string::npos;
+        mUsesFragDepth             = mHlsl.find("GL_USES_FRAG_DEPTH")   != std::string::npos;
     }
 }
 
@@ -348,10 +296,8 @@ void Shader::resetVaryingsRegisterAssignment()
 void Shader::uncompile()
 {
     // set by compileToHLSL
-    delete[] mHlsl;
-    mHlsl = NULL;
-    delete[] mInfoLog;
-    mInfoLog = NULL;
+    mHlsl.clear();
+    mInfoLog.clear();
 
     // set by parseVaryings
     mVaryings.clear();
@@ -373,13 +319,6 @@ void Shader::uncompile()
 
 void Shader::compileToHLSL(void *compiler)
 {
-    // ensure we don't pass a NULL source to the compiler
-    const char *source = "\0";
-    if (mSource)
-    {
-        source = mSource;
-    }
-
     // ensure the compiler is loaded
     initializeCompiler();
 
@@ -388,24 +327,29 @@ void Shader::compileToHLSL(void *compiler)
     if (perfActive())
     {
         sourcePath = getTempPath();
-        writeFile(sourcePath.c_str(), source, strlen(source));
+        writeFile(sourcePath.c_str(), mSource.c_str(), mSource.length());
         compileOptions |= SH_LINE_DIRECTIVES;
     }
 
     int result;
     if (sourcePath.empty())
     {
-        result = ShCompile(compiler, &source, 1, compileOptions);
+        const char* sourceStrings[] =
+        {
+            mSource.c_str(),
+        };
+
+        result = ShCompile(compiler, sourceStrings, ArraySize(sourceStrings), compileOptions);
     }
     else
     {
-        const char* sourceStrings[2] =
+        const char* sourceStrings[] =
         {
             sourcePath.c_str(),
-            source
+            mSource.c_str(),
         };
 
-        result = ShCompile(compiler, sourceStrings, 2, compileOptions | SH_SOURCE_PATH);
+        result = ShCompile(compiler, sourceStrings, ArraySize(sourceStrings), compileOptions | SH_SOURCE_PATH);
     }
 
     size_t shaderVersion = 100;
@@ -415,18 +359,18 @@ void Shader::compileToHLSL(void *compiler)
 
     if (shaderVersion == 300 && mRenderer->getCurrentClientVersion() < 3)
     {
-        const char versionError[] = "GLSL ES 3.00 is not supported by OpenGL ES 2.0 contexts";
-        mInfoLog = new char[sizeof(versionError) + 1];
-        strcpy(mInfoLog, versionError);
-
-        TRACE("\n%s", mInfoLog);
+        mInfoLog = "GLSL ES 3.00 is not supported by OpenGL ES 2.0 contexts";
+        TRACE("\n%s", mInfoLog.c_str());
     }
     else if (result)
     {
         size_t objCodeLen = 0;
         ShGetInfo(compiler, SH_OBJECT_CODE_LENGTH, &objCodeLen);
-        mHlsl = new char[objCodeLen];
-        ShGetObjectCode(compiler, mHlsl);
+
+        char* outputHLSL = new char[objCodeLen];
+        ShGetObjectCode(compiler, outputHLSL);
+        mHlsl = outputHLSL;
+        delete[] outputHLSL;
 
         void *activeUniforms;
         ShGetInfoPointer(compiler, SH_ACTIVE_UNIFORMS_ARRAY, &activeUniforms);
@@ -440,10 +384,12 @@ void Shader::compileToHLSL(void *compiler)
     {
         size_t infoLogLen = 0;
         ShGetInfo(compiler, SH_INFO_LOG_LENGTH, &infoLogLen);
-        mInfoLog = new char[infoLogLen];
-        ShGetInfoLog(compiler, mInfoLog);
 
-        TRACE("\n%s", mInfoLog);
+        char* infoLog = new char[infoLogLen];
+        ShGetInfoLog(compiler, infoLog);
+        mInfoLog = infoLog;
+
+        TRACE("\n%s", mInfoLog.c_str());
     }
 }
 
@@ -666,8 +612,8 @@ int VertexShader::getSemanticIndex(const std::string &attributeName)
 
 void VertexShader::parseAttributes()
 {
-    const char *hlsl = getHLSL();
-    if (hlsl)
+    const std::string &hlsl = getHLSL();
+    if (!hlsl.empty())
     {
         void *activeAttributes;
         ShGetInfoPointer(mVertexCompiler, SH_ACTIVE_ATTRIBUTES_ARRAY, &activeAttributes);
@@ -697,8 +643,8 @@ void FragmentShader::compile()
     parseVaryings();
     mVaryings.sort(compareVarying);
 
-    const char *hlsl = getHLSL();
-    if (hlsl)
+    const std::string &hlsl = getHLSL();
+    if (!hlsl.empty())
     {
         void *activeOutputVariables;
         ShGetInfoPointer(mFragmentCompiler, SH_ACTIVE_OUTPUT_VARIABLES_ARRAY, &activeOutputVariables);

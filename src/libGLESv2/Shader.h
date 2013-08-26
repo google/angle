@@ -72,18 +72,18 @@ class Shader
     void deleteSource();
     void setSource(GLsizei count, const char *const *string, const GLint *length);
     int getInfoLogLength() const;
-    void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
+    void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const;
     int getSourceLength() const;
-    void getSource(GLsizei bufSize, GLsizei *length, char *buffer);
+    void getSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
     int getTranslatedSourceLength() const;
-    void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer);
-    const sh::ActiveUniforms &getUniforms();
-    const sh::ActiveInterfaceBlocks &getInterfaceBlocks();
+    void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
+    const sh::ActiveUniforms &getUniforms() const;
+    const sh::ActiveInterfaceBlocks &getInterfaceBlocks() const;
 
     virtual void compile() = 0;
     virtual void uncompile();
-    bool isCompiled();
-    const char *getHLSL();
+    bool isCompiled() const;
+    const std::string &getHLSL() const;
 
     void addRef();
     void release();
@@ -100,7 +100,7 @@ class Shader
 
     void compileToHLSL(void *compiler);
 
-    void getSourceImpl(char *source, GLsizei bufSize, GLsizei *length, char *buffer);
+    void getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *length, char *buffer) const;
 
     static Interpolation parseInterpolation(const std::string &type);
     static GLenum parseType(const std::string &type);
@@ -133,9 +133,9 @@ class Shader
     unsigned int mRefCount;     // Number of program objects this shader is attached to
     bool mDeleteStatus;         // Flag to indicate that the shader can be deleted when no longer in use
 
-    char *mSource;
-    char *mHlsl;
-    char *mInfoLog;
+    std::string mSource;
+    std::string mHlsl;
+    std::string mInfoLog;
     sh::ActiveUniforms mActiveUniforms;
     sh::ActiveInterfaceBlocks mActiveInterfaceBlocks;
 
