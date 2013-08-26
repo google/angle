@@ -38,6 +38,20 @@ static int ElementsInBuffer(const gl::VertexAttribute &attribute, unsigned int s
     return (size - attribute.mOffset % stride + (stride - attribute.typeSize())) / stride;
 }
 
+static int StreamingBufferElementCount(const gl::VertexAttribute &attribute, int vertexDrawCount, int instanceDrawCount)
+{
+    // For instanced rendering, we draw "instanceDrawCount" sets of "vertexDrawCount" vertices.
+    //
+    // A vertex attribute with a positive divisor loads one instanced vertex for every set of
+    // non-instanced vertices, and the instanced vertex index advances once every "mDivisor" instances.
+    if (instanceDrawCount > 0 && attribute.mDivisor > 0)
+    {
+        return instanceDrawCount / attribute.mDivisor;
+    }
+
+    return vertexDrawCount;
+}
+
 static bool DirectStoragePossible(VertexBufferInterface *vb, const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue)
 {
     gl::Buffer *buffer = attrib.mBoundBuffer.get();
@@ -135,7 +149,16 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 }
                 else
                 {
-                    if (!mStreamingBuffer->reserveVertexSpace(attribs[i], count, instances))
+                    int totalCount = StreamingBufferElementCount(attribs[i], count, instances);
+
+                    // [OpenGL ES 3.0.2] section 2.9.4 page 40:
+                    // We can return INVALID_OPERATION if our vertex attribute does not have enough backing data.
+                    if (buffer && ElementsInBuffer(attribs[i], buffer->size()) < totalCount)
+                    {
+                        return GL_INVALID_OPERATION;
+                    }
+
+                    if (!mStreamingBuffer->reserveVertexSpace(attribs[i], totalCount, instances))
                     {
                         return GL_OUT_OF_MEMORY;
                     }
@@ -205,8 +228,9 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 }
                 else
                 {
+                    int totalCount = StreamingBufferElementCount(attribs[i], count, instances);
                     if (!mStreamingBuffer->getVertexBuffer()->getSpaceRequired(attribs[i], 1, 0, &outputElementSize) ||
-                        !mStreamingBuffer->storeVertexAttributes(attribs[i], currentValues[i], start, count, instances,
+                        !mStreamingBuffer->storeVertexAttributes(attribs[i], currentValues[i], start, totalCount, instances,
                                                                  &streamOffset))
                     {
                         return GL_OUT_OF_MEMORY;
