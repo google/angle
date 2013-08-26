@@ -2457,6 +2457,51 @@ TLayoutQualifier TParseContext::joinLayoutQualifiers(TLayoutQualifier leftQualif
     return joinedQualifier;
 }
 
+TPublicType TParseContext::joinInterpolationQualifiers(const TSourceLoc &interpolationLoc, TQualifier interpolationQualifier,
+                                                       const TSourceLoc &storageLoc, TQualifier storageQualifier)
+{
+    TQualifier mergedQualifier = EvqSmoothIn;
+
+    if (storageQualifier == EvqSmoothIn) {
+        if (interpolationQualifier == EvqSmooth)
+            mergedQualifier = EvqSmoothIn;
+        else if (interpolationQualifier == EvqFlat)
+            mergedQualifier = EvqFlatIn;
+        else UNREACHABLE();
+    }
+    else if (storageQualifier == EvqCentroidIn) {
+        if (interpolationQualifier == EvqSmooth)
+            mergedQualifier = EvqCentroidIn;
+        else if (interpolationQualifier == EvqFlat)
+            mergedQualifier = EvqFlatIn;
+        else UNREACHABLE();
+    }
+    else if (storageQualifier == EvqSmoothOut) {
+        if (interpolationQualifier == EvqSmooth)
+            mergedQualifier = EvqSmoothOut;
+        else if (interpolationQualifier == EvqFlat)
+            mergedQualifier = EvqFlatOut;
+        else UNREACHABLE();
+    }
+    else if (storageQualifier == EvqCentroidOut) {
+        if (interpolationQualifier == EvqSmooth)
+            mergedQualifier = EvqCentroidOut;
+        else if (interpolationQualifier == EvqFlat)
+            mergedQualifier = EvqFlatOut;
+        else UNREACHABLE();
+    }
+    else {
+        error(interpolationLoc, "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString(interpolationQualifier));
+        recover();
+
+        mergedQualifier = storageQualifier;
+    }
+
+    TPublicType type;
+    type.setBasic(EbtVoid, mergedQualifier, storageLoc);
+    return type;
+}
+
 TFieldList *TParseContext::addStructDeclaratorList(const TPublicType& typeSpecifier, TFieldList *fieldList)
 {
     if (voidErrorCheck(typeSpecifier.line, (*fieldList)[0]->name(), typeSpecifier)) {

@@ -1165,40 +1165,7 @@ type_qualifier
         $$.setBasic(EbtVoid, $1.qualifier, @1);
     }
     | interpolation_qualifier storage_qualifier {
-        if ($2.qualifier == EvqSmoothIn) {
-            if ($1.qualifier == EvqSmooth)
-                $$.setBasic(EbtVoid, EvqSmoothIn, @2);
-            else if ($1.qualifier == EvqFlat)
-                $$.setBasic(EbtVoid, EvqFlatIn, @2);
-            else UNREACHABLE();
-        }
-        else if ($2.qualifier == EvqCentroidIn) {
-            if ($1.qualifier == EvqSmooth)
-                $$.setBasic(EbtVoid, EvqCentroidIn, @2);
-            else if ($1.qualifier == EvqFlat)
-                $$.setBasic(EbtVoid, EvqFlatIn, @2);
-            else UNREACHABLE();
-        }
-        else if ($2.qualifier == EvqSmoothOut) {
-            if ($1.qualifier == EvqSmooth)
-                $$.setBasic(EbtVoid, EvqSmoothOut, @2);
-            else if ($1.qualifier == EvqFlat)
-                $$.setBasic(EbtVoid, EvqFlatOut, @2);
-            else UNREACHABLE();
-        }
-        else if ($2.qualifier == EvqCentroidOut) {
-            if ($1.qualifier == EvqSmooth)
-                $$.setBasic(EbtVoid, EvqCentroidOut, @2);
-            else if ($1.qualifier == EvqFlat)
-                $$.setBasic(EbtVoid, EvqFlatOut, @2);
-            else UNREACHABLE();
-        }
-        else {
-            context->error(@1, "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString($1.qualifier));
-            context->recover();
-
-            $$.setBasic(EbtVoid, $2.qualifier, @2);
-        }
+        $$ = context->joinInterpolationQualifiers(@1, $1.qualifier, @2, $2.qualifier);
     }
     | interpolation_qualifier {
         context->error(@1, "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString($1.qualifier));

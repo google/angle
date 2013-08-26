@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 2.7.  */
+/* A Bison parser, made by GNU Bison 2.7.12-4996.  */
 
 /* Bison implementation for Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989-1990, 2000-2012 Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.7"
+#define YYBISON_VERSION "2.7.12-4996"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -450,12 +450,21 @@ typedef short int yytype_int16;
 # endif
 #endif
 
+#ifndef __attribute__
+/* This feature is available in gcc versions 2.5 and later.  */
+# if (! defined __GNUC__ || __GNUC__ < 2 \
+      || (__GNUC__ == 2 && __GNUC_MINOR__ < 5))
+#  define __attribute__(Spec) /* empty */
+# endif
+#endif
+
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
 # define YYUSE(E) ((void) (E))
 #else
 # define YYUSE(E) /* empty */
 #endif
+
 
 /* Identity function, used to suppress warnings about constant conditions.  */
 #ifndef lint
@@ -796,21 +805,21 @@ static const yytype_uint16 yyrline[] =
      831,   838,   893,   896,   903,   911,   932,   953,   963,   991,
      996,  1006,  1011,  1021,  1024,  1027,  1030,  1036,  1043,  1046,
     1050,  1054,  1058,  1065,  1069,  1073,  1080,  1084,  1088,  1109,
-    1118,  1124,  1127,  1133,  1139,  1146,  1155,  1164,  1167,  1203,
-    1210,  1214,  1221,  1224,  1228,  1232,  1241,  1250,  1258,  1268,
-    1275,  1278,  1281,  1287,  1294,  1297,  1303,  1306,  1309,  1315,
-    1318,  1333,  1337,  1341,  1345,  1349,  1353,  1358,  1363,  1368,
-    1373,  1378,  1383,  1388,  1393,  1398,  1403,  1408,  1413,  1418,
-    1423,  1428,  1433,  1438,  1443,  1448,  1453,  1458,  1462,  1466,
-    1470,  1474,  1478,  1482,  1486,  1490,  1494,  1498,  1502,  1506,
-    1510,  1514,  1518,  1526,  1534,  1538,  1551,  1551,  1554,  1554,
-    1560,  1563,  1579,  1582,  1591,  1595,  1601,  1608,  1623,  1627,
-    1631,  1632,  1638,  1639,  1640,  1641,  1642,  1646,  1647,  1647,
-    1647,  1657,  1658,  1662,  1662,  1663,  1663,  1668,  1671,  1681,
-    1684,  1690,  1691,  1695,  1703,  1707,  1717,  1722,  1739,  1739,
-    1744,  1744,  1751,  1751,  1759,  1762,  1768,  1771,  1777,  1781,
-    1788,  1795,  1802,  1809,  1820,  1829,  1833,  1840,  1843,  1849,
-    1849
+    1118,  1124,  1127,  1133,  1139,  1146,  1155,  1164,  1167,  1170,
+    1177,  1181,  1188,  1191,  1195,  1199,  1208,  1217,  1225,  1235,
+    1242,  1245,  1248,  1254,  1261,  1264,  1270,  1273,  1276,  1282,
+    1285,  1300,  1304,  1308,  1312,  1316,  1320,  1325,  1330,  1335,
+    1340,  1345,  1350,  1355,  1360,  1365,  1370,  1375,  1380,  1385,
+    1390,  1395,  1400,  1405,  1410,  1415,  1420,  1425,  1429,  1433,
+    1437,  1441,  1445,  1449,  1453,  1457,  1461,  1465,  1469,  1473,
+    1477,  1481,  1485,  1493,  1501,  1505,  1518,  1518,  1521,  1521,
+    1527,  1530,  1546,  1549,  1558,  1562,  1568,  1575,  1590,  1594,
+    1598,  1599,  1605,  1606,  1607,  1608,  1609,  1613,  1614,  1614,
+    1614,  1624,  1625,  1629,  1629,  1630,  1630,  1635,  1638,  1648,
+    1651,  1657,  1658,  1662,  1670,  1674,  1684,  1689,  1706,  1706,
+    1711,  1711,  1718,  1718,  1726,  1729,  1735,  1738,  1744,  1748,
+    1755,  1762,  1769,  1776,  1787,  1796,  1800,  1807,  1810,  1816,
+    1816
 };
 #endif
 
@@ -1810,11 +1819,7 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep, yylocationp, context)
 # else
   YYUSE (yyoutput);
 # endif
-  switch (yytype)
-    {
-      default:
-        break;
-    }
+  YYUSE (yytype);
 }
 
 
@@ -2214,12 +2219,7 @@ yydestruct (yymsg, yytype, yyvaluep, yylocationp, context)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
-  switch (yytype)
-    {
-
-      default:
-        break;
-    }
+  YYUSE (yytype);
 }
 
 
@@ -3810,40 +3810,7 @@ yyreduce:
   case 118:
 
     {
-        if ((yyvsp[(2) - (2)].interm.type).qualifier == EvqSmoothIn) {
-            if ((yyvsp[(1) - (2)].interm.type).qualifier == EvqSmooth)
-                (yyval.interm.type).setBasic(EbtVoid, EvqSmoothIn, (yylsp[(2) - (2)]));
-            else if ((yyvsp[(1) - (2)].interm.type).qualifier == EvqFlat)
-                (yyval.interm.type).setBasic(EbtVoid, EvqFlatIn, (yylsp[(2) - (2)]));
-            else UNREACHABLE();
-        }
-        else if ((yyvsp[(2) - (2)].interm.type).qualifier == EvqCentroidIn) {
-            if ((yyvsp[(1) - (2)].interm.type).qualifier == EvqSmooth)
-                (yyval.interm.type).setBasic(EbtVoid, EvqCentroidIn, (yylsp[(2) - (2)]));
-            else if ((yyvsp[(1) - (2)].interm.type).qualifier == EvqFlat)
-                (yyval.interm.type).setBasic(EbtVoid, EvqFlatIn, (yylsp[(2) - (2)]));
-            else UNREACHABLE();
-        }
-        else if ((yyvsp[(2) - (2)].interm.type).qualifier == EvqSmoothOut) {
-            if ((yyvsp[(1) - (2)].interm.type).qualifier == EvqSmooth)
-                (yyval.interm.type).setBasic(EbtVoid, EvqSmoothOut, (yylsp[(2) - (2)]));
-            else if ((yyvsp[(1) - (2)].interm.type).qualifier == EvqFlat)
-                (yyval.interm.type).setBasic(EbtVoid, EvqFlatOut, (yylsp[(2) - (2)]));
-            else UNREACHABLE();
-        }
-        else if ((yyvsp[(2) - (2)].interm.type).qualifier == EvqCentroidOut) {
-            if ((yyvsp[(1) - (2)].interm.type).qualifier == EvqSmooth)
-                (yyval.interm.type).setBasic(EbtVoid, EvqCentroidOut, (yylsp[(2) - (2)]));
-            else if ((yyvsp[(1) - (2)].interm.type).qualifier == EvqFlat)
-                (yyval.interm.type).setBasic(EbtVoid, EvqFlatOut, (yylsp[(2) - (2)]));
-            else UNREACHABLE();
-        }
-        else {
-            context->error((yylsp[(1) - (2)]), "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString((yyvsp[(1) - (2)].interm.type).qualifier));
-            context->recover();
-
-            (yyval.interm.type).setBasic(EbtVoid, (yyvsp[(2) - (2)].interm.type).qualifier, (yylsp[(2) - (2)]));
-        }
+        (yyval.interm.type) = context->joinInterpolationQualifiers((yylsp[(1) - (2)]), (yyvsp[(1) - (2)].interm.type).qualifier, (yylsp[(2) - (2)]), (yyvsp[(2) - (2)].interm.type).qualifier);
     }
     break;
 
