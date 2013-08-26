@@ -72,7 +72,7 @@ rx::BufferStorage *Buffer::getStorage() const
     return mBufferStorage;
 }
 
-unsigned int Buffer::size()
+unsigned int Buffer::size() const
 {
     return mBufferStorage->getSize();
 }
