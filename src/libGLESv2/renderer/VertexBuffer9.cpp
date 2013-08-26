@@ -483,7 +483,7 @@ bool VertexBuffer9::spaceRequired(const gl::VertexAttribute &attrib, std::size_t
 {
     unsigned int elementSize = formatConverter(attrib).outputElementSize;
 
-    if (instances == 0 || attrib.mDivisor == 0)
+    if (attrib.mArrayEnabled)
     {
         unsigned int elementCount = 0;
         if (instances == 0 || attrib.mDivisor == 0)
