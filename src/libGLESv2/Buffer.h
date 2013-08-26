@@ -40,7 +40,7 @@ class Buffer : public RefCountObject
     GLenum usage() const;
 
     rx::BufferStorage *getStorage() const;
-    unsigned int size();
+    unsigned int size() const;
 
     rx::StaticVertexBufferInterface *getStaticVertexBuffer();
     rx::StaticIndexBufferInterface *getStaticIndexBuffer();
