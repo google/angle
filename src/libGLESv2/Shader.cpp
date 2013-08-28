@@ -369,7 +369,29 @@ void Shader::compileToHLSL(void *compiler)
 
         char* outputHLSL = new char[objCodeLen];
         ShGetObjectCode(compiler, outputHLSL);
+
+#ifdef _DEBUG
+        std::ostringstream hlslStream;
+        hlslStream << "// GLSL\n";
+        hlslStream << "//\n";
+
+        size_t curPos = 0;
+        while (curPos != std::string::npos)
+        {
+            size_t nextLine = mSource.find("\n", curPos);
+            size_t len = (nextLine == std::string::npos) ? std::string::npos : (nextLine - curPos + 1);
+
+            hlslStream << "// " << mSource.substr(curPos, len);
+
+            curPos = (nextLine == std::string::npos) ? std::string::npos : (nextLine + 1);
+        }
+        hlslStream << "\n\n";
+        hlslStream << outputHLSL;
+        mHlsl = hlslStream.str();
+#else
         mHlsl = outputHLSL;
+#endif
+
         delete[] outputHLSL;
 
         void *activeUniforms;
