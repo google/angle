@@ -15,6 +15,7 @@
 #include "compiler/preprocessor/length_limits.h"
 #include "compiler/ShHandle.h"
 #include "compiler/TranslatorHLSL.h"
+#include "compiler/VariablePacker.h"
 
 //
 // This is the platform independent interface between an OGL driver
@@ -367,4 +368,20 @@ void ShGetInfoPointer(const ShHandle handle, ShShaderInfo pname, void** params)
         break;
     default: UNREACHABLE();
     }
+}
+
+int ShCheckVariablesWithinPackingLimits(
+    int maxVectors, ShVariableInfo* varInfoArray, size_t varInfoArraySize)
+{
+    if (varInfoArraySize == 0)
+        return 1;
+    ASSERT(varInfoArray);
+    TVariableInfoList variables;
+    for (size_t ii = 0; ii < varInfoArraySize; ++ii)
+    {
+        TVariableInfo var(varInfoArray[ii].type, varInfoArray[ii].size);
+        variables.push_back(var);
+    }
+    VariablePacker packer;
+    return packer.CheckVariablesWithinPackingLimits(maxVectors, variables) ? 1 : 0;
 }
