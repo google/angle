@@ -802,6 +802,8 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 static yy_size_t string_input(char* buf, yy_size_t max_size, yyscan_t yyscanner);
 static int check_type(yyscan_t yyscanner);
 static int reserved_word(yyscan_t yyscanner);
+static int int_constant(yyscan_t yyscanner);
+static int float_constant(yyscan_t yyscanner);
 
 #define INITIAL 0
 
@@ -1500,27 +1502,27 @@ YY_RULE_SETUP
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-{ yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
+{ return int_constant(yyscanner); }
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-{ yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
+{ return int_constant(yyscanner); }
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-{ yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
+{ return int_constant(yyscanner); }
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-{ yylval->lex.f = static_cast<float>(atof_dot(yytext)); return FLOATCONSTANT; }
+{ return float_constant(yyscanner); }
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-{ yylval->lex.f = static_cast<float>(atof_dot(yytext)); return FLOATCONSTANT; }
+{ return float_constant(yyscanner); }
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-{ yylval->lex.f = static_cast<float>(atof_dot(yytext)); return FLOATCONSTANT; }
+{ return float_constant(yyscanner); }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
@@ -2900,6 +2902,22 @@ int reserved_word(yyscan_t yyscanner) {
 void yyerror(YYLTYPE* lloc, TParseContext* context, const char* reason) {
     context->error(*lloc, reason, yyget_text(context->scanner));
     context->recover();
+}
+
+int int_constant(yyscan_t yyscanner) {
+    struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
+
+    if (!atoi_clamp(yytext, &(yylval->lex.i)))
+        yyextra->warning(*yylloc, "Integer overflow", yytext, "");
+    return INTCONSTANT;
+}
+
+int float_constant(yyscan_t yyscanner) {
+    struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
+
+    if (!atof_clamp(yytext, &(yylval->lex.f)))
+        yyextra->warning(*yylloc, "Float overflow", yytext, "");
+    return FLOATCONSTANT;
 }
 
 int glslang_initialize(TParseContext* context) {
