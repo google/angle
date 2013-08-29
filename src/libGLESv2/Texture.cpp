@@ -15,7 +15,6 @@
 #include "common/mathutil.h"
 #include "common/utilities.h"
 #include "libGLESv2/formatutils.h"
-#include "libGLESv2/renderer/Blit9.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/renderer/Image.h"
 #include "libGLESv2/renderer/Renderer.h"

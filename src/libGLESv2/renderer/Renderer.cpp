@@ -11,14 +11,14 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/renderer/Renderer9.h"
-#include "libGLESv2/renderer/Renderer11.h"
+#include "libGLESv2/renderer/d3d9/Renderer9.h"
+#include "libGLESv2/renderer/d3d11/Renderer11.h"
 #include "common/utilities.h"
 #include "third_party/trace_event/trace_event.h"
 
 #if !defined(ANGLE_ENABLE_D3D11)
 // Enables use of the Direct3D 11 API for a default display, when available
-#define ANGLE_ENABLE_D3D11 0
+#define ANGLE_ENABLE_D3D11 1
 #endif
 
 namespace rx
