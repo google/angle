@@ -59,6 +59,7 @@
             'MinimalRebuild': 'false',
             'PreprocessorDefinitions': [
               '_CRT_SECURE_NO_DEPRECATE',
+              '_SCL_SECURE_NO_WARNINGS',
               '_HAS_EXCEPTIONS=0',
               '_WIN32_WINNT=0x0600',
               '_WINDOWS',
@@ -82,6 +83,9 @@
             'AdditionalLibraryDirectories': [
               '$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86',
             ],
+            'AdditionalDependencies': [
+              '%(AdditionalDependencies)',
+            ]
           },
           'VCLibrarianTool': {
             'AdditionalLibraryDirectories': [

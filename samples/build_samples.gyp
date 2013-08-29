@@ -8,7 +8,7 @@
       'target_name': 'essl_to_glsl',
       'type': 'executable',
       'dependencies': [
-        '../src/build_angle.gyp:translator',
+        '../src/angle.gyp:translator',
       ],
       'include_dirs': [
         '../include',
@@ -25,7 +25,7 @@
           'target_name': 'essl_to_hlsl',
           'type': 'executable',
           'dependencies': [
-            '../src/build_angle.gyp:translator',
+            '../src/angle.gyp:translator',
           ],
           'include_dirs': [
             '../include',
@@ -45,8 +45,8 @@
           'target_name': 'es_util',
           'type': 'static_library',
           'dependencies': [
-            '../src/build_angle.gyp:libEGL',
-            '../src/build_angle.gyp:libGLESv2',
+            '../src/angle.gyp:libEGL',
+            '../src/angle.gyp:libGLESv2',
           ],
           'include_dirs': [
             'gles2_book/Common',

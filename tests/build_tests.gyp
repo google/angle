@@ -31,7 +31,7 @@
       'target_name': 'preprocessor_tests',
       'type': 'executable',
       'dependencies': [
-        '../src/build_angle.gyp:preprocessor',
+        '../src/angle.gyp:preprocessor',
         'gtest',
         'gmock',
       ],
@@ -67,7 +67,7 @@
       'target_name': 'compiler_tests',
       'type': 'executable',
       'dependencies': [
-        '../src/build_angle.gyp:translator',
+        '../src/angle.gyp:translator',
         'gtest',
         'gmock',
       ],
