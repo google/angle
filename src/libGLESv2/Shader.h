@@ -19,7 +19,7 @@
 #include <list>
 #include <vector>
 
-#include "compiler/ShaderVariable.h"
+#include "compiler/translator/ShaderVariable.h"
 #include "common/angleutils.h"
 
 namespace rx

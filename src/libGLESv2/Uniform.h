@@ -16,7 +16,7 @@
 
 #include "common/debug.h"
 #include "angletypes.h"
-#include "compiler/ShaderVariable.h"
+#include "compiler/translator/ShaderVariable.h"
 
 namespace gl
 {

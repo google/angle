@@ -24,7 +24,7 @@
 #include "libGLESv2/Context.h"
 #include "libGLESv2/Buffer.h"
 
-#include "compiler/HLSLLayoutEncoder.h"
+#include "compiler/translator/HLSLLayoutEncoder.h"
 
 #undef near
 #undef far

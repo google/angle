@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,6 +7,7 @@
 // mathutil.cpp: Math and bit manipulation functions.
 
 #include "common/mathutil.h"
+#include <algorithm>
 
 namespace gl
 {

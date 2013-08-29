@@ -67,7 +67,7 @@
       'target_name': 'compiler_tests',
       'type': 'executable',
       'dependencies': [
-        '../src/build_angle.gyp:translator_glsl',
+        '../src/build_angle.gyp:translator',
         'gtest',
         'gmock',
       ],
