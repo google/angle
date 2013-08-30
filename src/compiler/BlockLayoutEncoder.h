@@ -27,10 +27,10 @@ class BlockLayoutEncoder
     void encodeInterfaceBlockFields(const std::vector<InterfaceBlockField> &fields);
     void encodeInterfaceBlockField(const InterfaceBlockField &field);
     void encodeType(GLenum type, unsigned int arraySize, bool isRowMajorMatrix);
-    size_t getBlockSize() { return mCurrentOffset * ComponentSize; }
+    size_t getBlockSize() { return mCurrentOffset * BytesPerComponent; }
 
-    static const size_t ComponentSize = 4u;
-    static const unsigned int RegisterSize = 4u;
+    static const size_t BytesPerComponent = 4u;
+    static const unsigned int ComponentsPerRegister = 4u;
 
   protected:
     size_t mCurrentOffset;

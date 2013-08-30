@@ -29,7 +29,7 @@ void HLSLBlockEncoder::exitAggregateType()
 void HLSLBlockEncoder::getBlockLayoutInfo(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int *arrayStrideOut, int *matrixStrideOut)
 {
     // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
-    ASSERT(gl::UniformComponentSize(gl::UniformComponentType(type)) == ComponentSize);
+    ASSERT(gl::UniformComponentSize(gl::UniformComponentType(type)) == BytesPerComponent);
 
     int matrixStride = 0;
     int arrayStride = 0;
@@ -37,23 +37,23 @@ void HLSLBlockEncoder::getBlockLayoutInfo(GLenum type, unsigned int arraySize, b
     if (gl::IsMatrixType(type))
     {
         nextRegister();
-        matrixStride = RegisterSize;
+        matrixStride = ComponentsPerRegister;
 
         if (arraySize > 0)
         {
             const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
-            arrayStride = RegisterSize * numRegisters;
+            arrayStride = ComponentsPerRegister * numRegisters;
         }
     }
     else if (arraySize > 0)
     {
         nextRegister();
-        arrayStride = RegisterSize;
+        arrayStride = ComponentsPerRegister;
     }
     else
     {
         int numComponents = gl::UniformComponentCount(type);
-        if ((numComponents + (mCurrentOffset % RegisterSize)) > RegisterSize)
+        if ((numComponents + (mCurrentOffset % ComponentsPerRegister)) > ComponentsPerRegister)
         {
             nextRegister();
         }
@@ -72,10 +72,10 @@ void HLSLBlockEncoder::advanceOffset(GLenum type, unsigned int arraySize, bool i
 
     if (gl::IsMatrixType(type))
     {
-        ASSERT(matrixStride == RegisterSize);
+        ASSERT(matrixStride == ComponentsPerRegister);
         const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
         const int numComponents = gl::MatrixComponentCount(type, isRowMajorMatrix);
-        mCurrentOffset += RegisterSize * (numRegisters - 1);
+        mCurrentOffset += ComponentsPerRegister * (numRegisters - 1);
         mCurrentOffset += numComponents;
     }
     else
