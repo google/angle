@@ -31,6 +31,10 @@ class HLSLBlockEncoder : public BlockLayoutEncoder
     virtual void advanceOffset(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int arrayStride, int matrixStride);
 };
 
+// This method assigns values to the variable's "registerIndex" and "elementIndex" fields.
+// "elementIndex" is only used for structures.
+void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, Uniform *variable);
+
 // This method returns the number of used registers for a ShaderVariable. It is dependent on the HLSLBlockEncoder
 // class to count the number of used registers in a struct (which are individually packed according to the same rules).
 unsigned int HLSLVariableRegisterCount(const Varying &variable);

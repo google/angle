@@ -39,9 +39,11 @@ struct ShaderVariable
 struct Uniform : public ShaderVariable
 {
     unsigned int registerIndex;
+    unsigned int elementIndex;     // For struct varyings
     std::vector<Uniform> fields;
 
-    Uniform(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, unsigned int registerIndexIn);
+    Uniform(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn,
+            unsigned int registerIndexIn, unsigned int elementIndexIn);
 
     bool isStruct() const { return !fields.empty(); }
 };

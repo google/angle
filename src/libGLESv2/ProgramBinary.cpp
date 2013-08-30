@@ -2385,7 +2385,8 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
                 {
                     const sh::Uniform &field = constant.fields[fieldIndex];
                     const std::string &uniformName = constant.name + arrayString(elementIndex) + "." + field.name;
-                    const sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, elementRegisterIndex);
+                    const sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize,
+                                                   elementRegisterIndex, field.elementIndex);
                     if (!defineUniform(shader, fieldUniform, infoLog))
                     {
                         return false;
@@ -2396,21 +2397,20 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
         }
         else
         {
-            unsigned int fieldRegisterIndex = constant.registerIndex;
-
             for (size_t fieldIndex = 0; fieldIndex < constant.fields.size(); fieldIndex++)
             {
                 const sh::Uniform &field = constant.fields[fieldIndex];
                 const std::string &uniformName = constant.name + "." + field.name;
 
-                sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, fieldRegisterIndex);
+                sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize,
+                                         field.registerIndex, field.elementIndex);
+
                 fieldUniform.fields = field.fields;
 
                 if (!defineUniform(shader, fieldUniform, infoLog))
                 {
                     return false;
                 }
-                fieldRegisterIndex += sh::HLSLVariableRegisterCount(field);
             }
         }
 
@@ -2470,6 +2470,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
     else
     {
         uniform = new Uniform(constant.type, constant.precision, constant.name, constant.arraySize, -1, sh::BlockMemberInfo::defaultBlockInfo);
+        uniform->registerElement = constant.elementIndex;
     }
 
     if (!uniform)

@@ -3596,16 +3596,16 @@ Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &name,
     {
         const bool isRowMajorMatrix = (type.isMatrix() && type.getLayoutQualifier().matrixPacking == EmpRowMajor);
         Uniform uniform(glVariableType(type), glVariablePrecision(type), name.c_str(),
-                        (unsigned int)type.getArraySize(), (unsigned int)registerIndex);
+                        (unsigned int)type.getArraySize(), (unsigned int)registerIndex, 0);
         output.push_back(uniform);
 
         return uniform;
    }
     else
     {
-        Uniform structUniform(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)registerIndex);
+        Uniform structUniform(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(),
+                              (unsigned int)registerIndex, GL_INVALID_INDEX);
 
-        int fieldRegister = registerIndex;
         const TFieldList &fields = structure->fields();
 
         for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
@@ -3613,9 +3613,11 @@ Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &name,
             TField *field = fields[fieldIndex];
             TType *fieldType = field->type();
 
-            const Uniform &fieldVariable = declareUniformToList(*fieldType, field->name(), fieldRegister, structUniform.fields);
-            fieldRegister += HLSLVariableRegisterCount(fieldVariable);
+            declareUniformToList(*fieldType, field->name(), GL_INVALID_INDEX, structUniform.fields);
         }
+
+        // assign register offset information -- this will override the information in any sub-structures.
+        HLSLVariableGetRegisterInfo(registerIndex, &structUniform);
 
         output.push_back(structUniform);
 

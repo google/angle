@@ -84,6 +84,39 @@ void HLSLBlockEncoder::advanceOffset(GLenum type, unsigned int arraySize, bool i
     }
 }
 
+void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, Uniform *variable, HLSLBlockEncoder *encoder, const std::vector<BlockMemberInfo> &blockInfo)
+{
+    // because this method computes offsets (element indexes) instead of any total sizes,
+    // we can ignore the array size of the variable
+
+    if (variable->isStruct())
+    {
+        encoder->enterAggregateType();
+
+        for (size_t fieldIndex = 0; fieldIndex < variable->fields.size(); fieldIndex++)
+        {
+            HLSLVariableGetRegisterInfo(baseRegisterIndex, &variable->fields[fieldIndex], encoder, blockInfo);
+        }
+
+        encoder->exitAggregateType();
+    }
+    else
+    {
+        encoder->encodeType(variable->type, variable->arraySize, false);
+
+        const size_t registerBytes = (encoder->BytesPerComponent * encoder->ComponentsPerRegister);
+        variable->registerIndex = baseRegisterIndex + (blockInfo.back().offset / registerBytes);
+        variable->elementIndex = (blockInfo.back().offset % registerBytes) / sizeof(float);
+    }
+}
+
+void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, Uniform *variable)
+{
+    std::vector<BlockMemberInfo> blockInfo;
+    HLSLBlockEncoder encoder(&blockInfo);
+    HLSLVariableGetRegisterInfo(baseRegisterIndex, variable, &encoder, blockInfo);
+}
+
 template <class ShaderVarType>
 void HLSLVariableRegisterCount(const ShaderVarType &variable, HLSLBlockEncoder *encoder)
 {

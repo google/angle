@@ -17,9 +17,10 @@ ShaderVariable::ShaderVariable(GLenum typeIn, GLenum precisionIn, const char *na
 {
 }
 
-Uniform::Uniform(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, unsigned int registerIndexIn)
+Uniform::Uniform(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, unsigned int registerIndexIn, unsigned int elementIndexIn)
     : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
-      registerIndex(registerIndexIn)
+      registerIndex(registerIndexIn),
+      elementIndex(elementIndexIn)
 {
 }
 
