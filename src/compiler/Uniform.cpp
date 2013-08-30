@@ -9,31 +9,36 @@
 namespace sh
 {
 
-ShaderVariable::ShaderVariable()
-    : type(GL_NONE),
-      precision(GL_NONE),
-      arraySize(0),
+ShaderVariable::ShaderVariable(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn)
+    : type(typeIn),
+      precision(precisionIn),
+      name(nameIn),
+      arraySize(arraySizeIn)
+{
+}
+
+Uniform::Uniform(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, unsigned int registerIndexIn)
+    : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
+      registerIndex(registerIndexIn)
+{
+}
+
+Attribute::Attribute()
+    : ShaderVariable(GL_NONE, GL_NONE, "", 0),
       location(-1)
 {
 }
 
-ShaderVariable::ShaderVariable(GLenum type, GLenum precision, const char *name, unsigned int arraySize, int location)
-    : type(type),
-      precision(precision),
-      name(name),
-      arraySize(arraySize),
-      location(location)
+Attribute::Attribute(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, int locationIn)
+    : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
+      location(locationIn)
 {
 }
 
-Uniform::Uniform(GLenum type, GLenum precision, const char *name, unsigned int arraySize, unsigned int registerIndex, bool isRowMajorMatrix)
+InterfaceBlockField::InterfaceBlockField(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, bool isRowMajorMatrix)
+    : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
+      isRowMajorMatrix(isRowMajorMatrix)
 {
-    this->type = type;
-    this->precision = precision;
-    this->name = name;
-    this->arraySize = arraySize;
-    this->registerIndex = registerIndex;
-    this->isRowMajorMatrix = isRowMajorMatrix;
 }
 
 BlockMemberInfo::BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)

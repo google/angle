@@ -185,7 +185,7 @@ TInfoSinkBase &OutputHLSL::getBodyStream()
     return mBody;
 }
 
-const ActiveUniforms &OutputHLSL::getUniforms()
+const std::vector<Uniform> &OutputHLSL::getUniforms()
 {
     return mActiveUniforms;
 }
@@ -195,12 +195,12 @@ const ActiveInterfaceBlocks &OutputHLSL::getInterfaceBlocks() const
     return mActiveInterfaceBlocks;
 }
 
-const ActiveShaderVariables &OutputHLSL::getOutputVariables() const
+const std::vector<Attribute> &OutputHLSL::getOutputVariables() const
 {
     return mActiveOutputVariables;
 }
 
-const ActiveShaderVariables &OutputHLSL::getAttributes() const
+const std::vector<Attribute> &OutputHLSL::getAttributes() const
 {
     return mActiveAttributes;
 }
@@ -444,7 +444,7 @@ void setBlockLayout(InterfaceBlock *interfaceBlock, BlockLayoutType newLayout)
       case BLOCKLAYOUT_PACKED:
         {
             HLSLBlockEncoder hlslEncoder(&interfaceBlock->blockInfo);
-            hlslEncoder.encodeFields(interfaceBlock->activeUniforms);
+            hlslEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
             interfaceBlock->dataSize = hlslEncoder.getBlockSize();
         }
         break;
@@ -452,7 +452,7 @@ void setBlockLayout(InterfaceBlock *interfaceBlock, BlockLayoutType newLayout)
       case BLOCKLAYOUT_STANDARD:
         {
             Std140BlockEncoder stdEncoder(&interfaceBlock->blockInfo);
-            stdEncoder.encodeFields(interfaceBlock->activeUniforms);
+            stdEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
             interfaceBlock->dataSize = stdEncoder.getBlockSize();
         }
         break;
@@ -559,7 +559,7 @@ void OutputHLSL::header()
         {
             const TField &field = *fieldList[typeIndex];
             const TString &fullUniformName = interfaceBlockFieldString(interfaceBlock, field);
-            declareUniformToList(*field.type(), fullUniformName, typeIndex, activeBlock.activeUniforms);
+            declareInterfaceBlockField(*field.type(), fullUniformName, activeBlock.fields);
         }
 
         mInterfaceBlockRegister += std::max(1u, arraySize);
@@ -621,9 +621,9 @@ void OutputHLSL::header()
 
         attributes += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
 
-        ShaderVariable shaderVar(glVariableType(type), glVariablePrecision(type), name.c_str(),
-                                 (unsigned int)type.getArraySize(), type.getLayoutQualifier().location);
-        mActiveAttributes.push_back(shaderVar);
+        Attribute attributeVar(glVariableType(type), glVariablePrecision(type), name.c_str(),
+                               (unsigned int)type.getArraySize(), type.getLayoutQualifier().location);
+        mActiveAttributes.push_back(attributeVar);
     }
 
     for (StructDeclarations::iterator structDeclaration = mStructDeclarations.begin(); structDeclaration != mStructDeclarations.end(); structDeclaration++)
@@ -656,8 +656,8 @@ void OutputHLSL::header()
                 out << "static " + typeString(variableType) + " out_" + variableName + arrayString(variableType) +
                        " = " + initializer(variableType) + ";\n";
 
-                ShaderVariable outputVar(glVariableType(variableType), glVariablePrecision(variableType), variableName.c_str(),
-                                         (unsigned int)variableType.getArraySize(), layoutQualifier.location);
+                Attribute outputVar(glVariableType(variableType), glVariablePrecision(variableType), variableName.c_str(),
+                                    (unsigned int)variableType.getArraySize(), layoutQualifier.location);
                 mActiveOutputVariables.push_back(outputVar);
             }
         }
@@ -3570,18 +3570,52 @@ int OutputHLSL::uniformRegister(TIntermSymbol *uniform)
     return index;
 }
 
-void OutputHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, ActiveUniforms& output)
+void OutputHLSL::declareInterfaceBlockField(const TType &type, const TString &name, std::vector<InterfaceBlockField>& output)
 {
     const TStructure *structure = type.getStruct();
 
     if (!structure)
     {
         const bool isRowMajorMatrix = (type.isMatrix() && type.getLayoutQualifier().matrixPacking == EmpRowMajor);
-        output.push_back(Uniform(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)registerIndex, isRowMajorMatrix));
-    }
+        InterfaceBlockField field(glVariableType(type), glVariablePrecision(type), name.c_str(),
+                        (unsigned int)type.getArraySize(), isRowMajorMatrix);
+        output.push_back(field);
+   }
     else
     {
-        Uniform structUniform(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)registerIndex, false);
+        InterfaceBlockField structField(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), false);
+
+        const TFieldList &fields = structure->fields();
+
+        for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
+        {
+            TField *field = fields[fieldIndex];
+            TType *fieldType = field->type();
+
+            // make sure to copy matrix packing information
+            fieldType->setLayoutQualifier(type.getLayoutQualifier());
+
+            declareInterfaceBlockField(*fieldType, field->name(), structField.fields);
+        }
+
+        output.push_back(structField);
+    }
+}
+
+void OutputHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform>& output)
+{
+    const TStructure *structure = type.getStruct();
+
+    if (!structure)
+    {
+        const bool isRowMajorMatrix = (type.isMatrix() && type.getLayoutQualifier().matrixPacking == EmpRowMajor);
+        Uniform uniform(glVariableType(type), glVariablePrecision(type), name.c_str(),
+                        (unsigned int)type.getArraySize(), (unsigned int)registerIndex);
+        output.push_back(uniform);
+   }
+    else
+    {
+        Uniform structUniform(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)registerIndex);
 
         int fieldRegister = registerIndex;
         const TFieldList &fields = structure->fields();

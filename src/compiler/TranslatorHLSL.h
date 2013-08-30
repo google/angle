@@ -15,18 +15,18 @@ public:
     TranslatorHLSL(ShShaderType type, ShShaderSpec spec, ShShaderOutput output);
 
     virtual TranslatorHLSL *getAsTranslatorHLSL() { return this; }
-    const sh::ActiveUniforms &getUniforms() { return mActiveUniforms; }
+    const std::vector<sh::Uniform> &getUniforms() { return mActiveUniforms; }
     const sh::ActiveInterfaceBlocks &getInterfaceBlocks() const { return mActiveInterfaceBlocks; }
-    const sh::ActiveShaderVariables &getOutputVariables() { return mActiveOutputVariables; }
-    const sh::ActiveShaderVariables &getAttributes() { return mActiveAttributes; }
+    const std::vector<sh::Attribute> &getOutputVariables() { return mActiveOutputVariables; }
+    const std::vector<sh::Attribute> &getAttributes() { return mActiveAttributes; }
 
 protected:
     virtual void translate(TIntermNode* root);
 
-    sh::ActiveUniforms mActiveUniforms;
+    std::vector<sh::Uniform> mActiveUniforms;
     sh::ActiveInterfaceBlocks mActiveInterfaceBlocks;
-    sh::ActiveShaderVariables mActiveOutputVariables;
-    sh::ActiveShaderVariables mActiveAttributes;
+    std::vector<sh::Attribute> mActiveOutputVariables;
+    std::vector<sh::Attribute> mActiveAttributes;
     ShShaderOutput mOutputType;
 };
 

@@ -15,7 +15,8 @@
 namespace sh
 {
 
-struct Uniform;
+struct ShaderVariable;
+struct InterfaceBlockField;
 struct BlockMemberInfo;
 
 class BlockLayoutEncoder
@@ -23,8 +24,8 @@ class BlockLayoutEncoder
   public:
     BlockLayoutEncoder(std::vector<BlockMemberInfo> *blockInfoOut);
 
-    void encodeFields(const std::vector<Uniform> &fields);
-    void encodeType(const Uniform &uniform);
+    void encodeInterfaceBlockFields(const std::vector<InterfaceBlockField> &fields);
+    void encodeInterfaceBlockField(const InterfaceBlockField &field);
     void encodeType(GLenum type, unsigned int arraySize, bool isRowMajorMatrix);
     size_t getBlockSize() { return mCurrentOffset * ComponentSize; }
 

@@ -158,12 +158,17 @@ class ProgramBinary : public RefCountObject
 
     typedef sh::BlockMemberInfoArray::const_iterator BlockInfoItr;
 
-    bool areMatchingUniforms(InfoLog &infoLog, const std::string& uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform);
-    bool linkUniforms(InfoLog &infoLog, const sh::ActiveUniforms &vertexUniforms, const sh::ActiveUniforms &fragmentUniforms);
+    template <class ShaderVarType>
+    bool linkValidateFields(InfoLog &infoLog, const std::string &varName, const ShaderVarType &vertexVar, const ShaderVarType &fragmentVar);
+    bool linkValidateVariablesBase(InfoLog &infoLog, const std::string &variableName, const sh::ShaderVariable &vertexVariable, const sh::ShaderVariable &fragmentVariable);
+
+    bool linkValidateVariables(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform);
+    bool linkValidateVariables(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
+    bool linkUniforms(InfoLog &infoLog, const std::vector<sh::Uniform> &vertexUniforms, const std::vector<sh::Uniform> &fragmentUniforms);
     bool defineUniform(GLenum shader, const sh::Uniform &constant, InfoLog &infoLog);
     bool areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::InterfaceBlock &vertexInterfaceBlock, const sh::InterfaceBlock &fragmentInterfaceBlock);
     bool linkUniformBlocks(InfoLog &infoLog, const sh::ActiveInterfaceBlocks &vertexUniformBlocks, const sh::ActiveInterfaceBlocks &fragmentUniformBlocks);
-    void defineUniformBlockMembers(const sh::ActiveUniforms &uniforms, const std::string &prefix, int blockIndex, BlockInfoItr *blockInfoItr, std::vector<unsigned int> *blockUniformIndexes);
+    void defineUniformBlockMembers(const std::vector<sh::InterfaceBlockField> &fields, const std::string &prefix, int blockIndex, BlockInfoItr *blockInfoItr, std::vector<unsigned int> *blockUniformIndexes);
     bool defineUniformBlock(InfoLog &infoLog, GLenum shader, const sh::InterfaceBlock &interfaceBlock);
     bool assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex);
     void defineOutputVariables(FragmentShader *fragmentShader);
@@ -188,7 +193,7 @@ class ProgramBinary : public RefCountObject
     rx::ShaderExecutable *mVertexExecutable;
     rx::ShaderExecutable *mGeometryExecutable;
 
-    sh::ShaderVariable mLinkedAttribute[MAX_VERTEX_ATTRIBS];
+    sh::Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];
 
     struct Sampler

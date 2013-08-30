@@ -1078,11 +1078,11 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
 
 void ProgramBinary::defineOutputVariables(FragmentShader *fragmentShader)
 {
-    const sh::ActiveShaderVariables &outputVars = fragmentShader->getOutputVariables();
+    const std::vector<sh::Attribute> &outputVars = fragmentShader->getOutputVariables();
 
     for (unsigned int outputVariableIndex = 0; outputVariableIndex < outputVars.size(); outputVariableIndex++)
     {
-        const sh::ShaderVariable &outputVariable = outputVars[outputVariableIndex];
+        const sh::Attribute &outputVariable = outputVars[outputVariableIndex];
         const int baseLocation = outputVariable.location == -1 ? 0 : outputVariable.location;
 
         if (outputVariable.arraySize > 0)
@@ -1208,10 +1208,10 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                   "{\n";
 
     int semanticIndex = 0;
-    const sh::ActiveShaderVariables &activeAttributes = vertexShader->mActiveAttributes;
+    const std::vector<sh::Attribute> &activeAttributes = vertexShader->mActiveAttributes;
     for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
     {
-        const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
+        const sh::Attribute &attribute = activeAttributes[attributeIndex];
         vertexHLSL += "    " + gl_d3d::TypeString(TransposeMatrixType(attribute.type)) + " ";
         vertexHLSL += decorateAttribute(attribute.name) + " : TEXCOORD" + str(semanticIndex) + ";\n";
 
@@ -1416,7 +1416,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     {
         defineOutputVariables(fragmentShader);
 
-        const sh::ActiveShaderVariables &outputVars = fragmentShader->getOutputVariables();
+        const std::vector<sh::Attribute> &outputVars = fragmentShader->getOutputVariables();
         for (auto locationIt = mOutputVariables.begin(); locationIt != mOutputVariables.end(); locationIt++)
         {
             const VariableLocation &outputLocation = locationIt->second;
@@ -2068,12 +2068,12 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
     unsigned int usedLocations = 0;
-    const sh::ActiveShaderVariables &activeAttributes = vertexShader->mActiveAttributes;
+    const std::vector<sh::Attribute> &activeAttributes = vertexShader->mActiveAttributes;
 
     // Link attributes that have a binding location
     for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
     {
-        const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
+        const sh::Attribute &attribute = activeAttributes[attributeIndex];
         const int location = attribute.location == -1 ? attributeBindings.getAttributeBinding(attribute.name) : attribute.location;
 
         if (location != -1)   // Set by glBindAttribLocation or by location layout qualifier
@@ -2112,7 +2112,7 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     // Link attributes that don't have a binding location
     for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
     {
-        const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
+        const sh::Attribute &attribute = activeAttributes[attributeIndex];
         const int location = attribute.location == -1 ? attributeBindings.getAttributeBinding(attribute.name) : attribute.location;
 
         if (location == -1)   // Not set by glBindAttribLocation or by location layout qualifier
@@ -2145,48 +2145,50 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     return true;
 }
 
-bool ProgramBinary::areMatchingUniforms(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform)
+bool ProgramBinary::linkValidateVariablesBase(InfoLog &infoLog, const std::string &variableName, const sh::ShaderVariable &vertexVariable, const sh::ShaderVariable &fragmentVariable)
 {
-    if (vertexUniform.type != fragmentUniform.type)
+    if (vertexVariable.type != fragmentVariable.type)
     {
-        infoLog.append("Types for %s differ between vertex and fragment shaders", uniformName.c_str());
+        infoLog.append("Types for %s differ between vertex and fragment shaders", variableName.c_str());
         return false;
     }
-    else if (vertexUniform.arraySize != fragmentUniform.arraySize)
+    if (vertexVariable.arraySize != fragmentVariable.arraySize)
     {
-        infoLog.append("Array sizes for %s differ between vertex and fragment shaders", uniformName.c_str());
+        infoLog.append("Array sizes for %s differ between vertex and fragment shaders", variableName.c_str());
         return false;
     }
-    else if (vertexUniform.precision != fragmentUniform.precision)
+    if (vertexVariable.precision != fragmentVariable.precision)
     {
-        infoLog.append("Precisions for %s differ between vertex and fragment shaders", uniformName.c_str());
-        return false;
-    }
-    else if (vertexUniform.fields.size() != fragmentUniform.fields.size())
-    {
-        infoLog.append("Structure lengths for %s differ between vertex and fragment shaders", uniformName.c_str());
-    }
-    else if (vertexUniform.isRowMajorMatrix != fragmentUniform.isRowMajorMatrix)
-    {
-        infoLog.append("Matrix packings for %s differ between vertex and fragment shaders", uniformName.c_str());
+        infoLog.append("Precisions for %s differ between vertex and fragment shaders", variableName.c_str());
         return false;
     }
 
-    const unsigned int numMembers = vertexUniform.fields.size();
+    return true;
+}
+
+template <class ShaderVarType>
+bool ProgramBinary::linkValidateFields(InfoLog &infoLog, const std::string &varName, const ShaderVarType &vertexVar, const ShaderVarType &fragmentVar)
+{
+    if (vertexVar.fields.size() != fragmentVar.fields.size())
+    {
+        infoLog.append("Structure lengths for %s differ between vertex and fragment shaders", varName.c_str());
+        return false;
+    }
+    const unsigned int numMembers = vertexVar.fields.size();
     for (unsigned int memberIndex = 0; memberIndex < numMembers; memberIndex++)
     {
-        const sh::Uniform &vertexMember = vertexUniform.fields[memberIndex];
-        const sh::Uniform &fragmentMember = fragmentUniform.fields[memberIndex];
+        const ShaderVarType &vertexMember = vertexVar.fields[memberIndex];
+        const ShaderVarType &fragmentMember = fragmentVar.fields[memberIndex];
 
         if (vertexMember.name != fragmentMember.name)
         {
             infoLog.append("Name mismatch for field %d of %s: (in vertex: '%s', in fragment: '%s')",
-                           memberIndex, uniformName.c_str(), vertexMember.name.c_str(), fragmentMember.name.c_str());
+                           memberIndex, varName.c_str(), vertexVar.name.c_str(), fragmentVar.name.c_str());
             return false;
         }
 
-        const std::string memberName = uniformName + "." + vertexUniform.name;
-        if (!areMatchingUniforms(infoLog, memberName, vertexMember, fragmentMember))
+        const std::string memberName = varName + "." + vertexVar.name;
+        if (!linkValidateVariables(infoLog, memberName, vertexMember, fragmentMember))
         {
             return false;
         }
@@ -2195,7 +2197,43 @@ bool ProgramBinary::areMatchingUniforms(InfoLog &infoLog, const std::string &uni
     return true;
 }
 
-bool ProgramBinary::linkUniforms(InfoLog &infoLog, const sh::ActiveUniforms &vertexUniforms, const sh::ActiveUniforms &fragmentUniforms)
+bool ProgramBinary::linkValidateVariables(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform)
+{
+    if (!linkValidateVariablesBase(infoLog, uniformName, vertexUniform, fragmentUniform))
+    {
+        return false;
+    }
+
+    if (!linkValidateFields<sh::Uniform>(infoLog, uniformName, vertexUniform, fragmentUniform))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ProgramBinary::linkValidateVariables(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform)
+{
+    if (!linkValidateVariablesBase(infoLog, uniformName, vertexUniform, fragmentUniform))
+    {
+        return false;
+    }
+
+    if (vertexUniform.isRowMajorMatrix != fragmentUniform.isRowMajorMatrix)
+    {
+        infoLog.append("Matrix packings for %s differ between vertex and fragment shaders", uniformName.c_str());
+        return false;
+    }
+
+    if (!linkValidateFields<sh::InterfaceBlockField>(infoLog, uniformName, vertexUniform, fragmentUniform))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ProgramBinary::linkUniforms(InfoLog &infoLog, const std::vector<sh::Uniform> &vertexUniforms, const std::vector<sh::Uniform> &fragmentUniforms)
 {
     // Check that uniforms defined in the vertex and fragment shaders are identical
     typedef std::map<std::string, const sh::Uniform*> UniformMap;
@@ -2215,7 +2253,7 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const sh::ActiveUniforms &ver
         {
             const sh::Uniform &vertexUniform = *entry->second;
             const std::string &uniformName = "uniform " + vertexUniform.name;
-            if (!areMatchingUniforms(infoLog, uniformName, vertexUniform, fragmentUniform))
+            if (!linkValidateVariables(infoLog, uniformName, vertexUniform, fragmentUniform))
             {
                 return false;
             }
@@ -2306,7 +2344,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
                 {
                     const sh::Uniform &field = constant.fields[fieldIndex];
                     const std::string &uniformName = constant.name + arrayString(elementIndex) + "." + field.name;
-                    const sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, elementRegisterIndex, field.isRowMajorMatrix);
+                    const sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, elementRegisterIndex);
                     if (!defineUniform(shader, fieldUniform, infoLog))
                     {
                         return false;
@@ -2324,7 +2362,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
                 const sh::Uniform &field = constant.fields[fieldIndex];
                 const std::string &uniformName = constant.name + "." + field.name;
 
-                sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, fieldRegisterIndex, field.isRowMajorMatrix);
+                sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, fieldRegisterIndex);
                 fieldUniform.fields = field.fields;
 
                 if (!defineUniform(shader, fieldUniform, infoLog))
@@ -2447,7 +2485,7 @@ bool ProgramBinary::areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::Inter
     const char* blockName = vertexInterfaceBlock.name.c_str();
 
     // validate blocks for the same member types
-    if (vertexInterfaceBlock.activeUniforms.size() != fragmentInterfaceBlock.activeUniforms.size())
+    if (vertexInterfaceBlock.fields.size() != fragmentInterfaceBlock.fields.size())
     {
         infoLog.append("Types for interface block '%s' differ between vertex and fragment shaders", blockName);
         return false;
@@ -2465,11 +2503,11 @@ bool ProgramBinary::areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::Inter
         return false;
     }
 
-    const unsigned int numBlockMembers = vertexInterfaceBlock.activeUniforms.size();
+    const unsigned int numBlockMembers = vertexInterfaceBlock.fields.size();
     for (unsigned int blockMemberIndex = 0; blockMemberIndex < numBlockMembers; blockMemberIndex++)
     {
-        const sh::Uniform &vertexMember = vertexInterfaceBlock.activeUniforms[blockMemberIndex];
-        const sh::Uniform &fragmentMember = fragmentInterfaceBlock.activeUniforms[blockMemberIndex];
+        const sh::InterfaceBlockField &vertexMember = vertexInterfaceBlock.fields[blockMemberIndex];
+        const sh::InterfaceBlockField &fragmentMember = fragmentInterfaceBlock.fields[blockMemberIndex];
 
         if (vertexMember.name != fragmentMember.name)
         {
@@ -2479,7 +2517,7 @@ bool ProgramBinary::areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::Inter
         }
 
         std::string uniformName = "interface block " + vertexInterfaceBlock.name + " member " + vertexMember.name;
-        if (!areMatchingUniforms(infoLog, uniformName, vertexMember, fragmentMember))
+        if (!linkValidateVariables(infoLog, uniformName, vertexMember, fragmentMember))
         {
             return false;
         }
@@ -2533,31 +2571,31 @@ bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const sh::ActiveInterfac
     return true;
 }
 
-void ProgramBinary::defineUniformBlockMembers(const sh::ActiveUniforms &uniforms, const std::string &prefix, int blockIndex, BlockInfoItr *blockInfoItr, std::vector<unsigned int> *blockUniformIndexes)
+void ProgramBinary::defineUniformBlockMembers(const std::vector<sh::InterfaceBlockField> &fields, const std::string &prefix, int blockIndex, BlockInfoItr *blockInfoItr, std::vector<unsigned int> *blockUniformIndexes)
 {
-    for (unsigned int uniformIndex = 0; uniformIndex < uniforms.size(); uniformIndex++)
+    for (unsigned int uniformIndex = 0; uniformIndex < fields.size(); uniformIndex++)
     {
-        const sh::Uniform &uniform = uniforms[uniformIndex];
-        const std::string &uniformName = (prefix.empty() ? uniform.name : prefix + "." + uniform.name);
+        const sh::InterfaceBlockField &field = fields[uniformIndex];
+        const std::string &fieldName = (prefix.empty() ? field.name : prefix + "." + field.name);
 
-        if (!uniform.fields.empty())
+        if (!field.fields.empty())
         {
-            if (uniform.arraySize > 0)
+            if (field.arraySize > 0)
             {
-                for (unsigned int arrayElement = 0; arrayElement < uniform.arraySize; arrayElement++)
+                for (unsigned int arrayElement = 0; arrayElement < field.arraySize; arrayElement++)
                 {
-                    const std::string uniformElementName = uniformName + arrayString(arrayElement);
-                    defineUniformBlockMembers(uniform.fields, uniformElementName, blockIndex, blockInfoItr, blockUniformIndexes);
+                    const std::string uniformElementName = fieldName + arrayString(arrayElement);
+                    defineUniformBlockMembers(field.fields, uniformElementName, blockIndex, blockInfoItr, blockUniformIndexes);
                 }
             }
             else
             {
-                defineUniformBlockMembers(uniform.fields, uniformName, blockIndex, blockInfoItr, blockUniformIndexes);
+                defineUniformBlockMembers(field.fields, fieldName, blockIndex, blockInfoItr, blockUniformIndexes);
             }
         }
         else
         {
-            Uniform *newUniform = new Uniform(uniform.type, uniform.precision, uniformName, uniform.arraySize,
+            Uniform *newUniform = new Uniform(field.type, field.precision, fieldName, field.arraySize,
                                               blockIndex, **blockInfoItr);
 
             // add to uniform list, but not index, since uniform block uniforms have no location
@@ -2578,7 +2616,7 @@ bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, GLenum shader, const sh
 
         // define member uniforms
         BlockInfoItr blockInfoItr = interfaceBlock.blockInfo.cbegin();
-        defineUniformBlockMembers(interfaceBlock.activeUniforms, "", blockIndex, &blockInfoItr, &blockUniformIndexes);
+        defineUniformBlockMembers(interfaceBlock.fields, "", blockIndex, &blockInfoItr, &blockUniformIndexes);
 
         // create all the uniform blocks
         if (interfaceBlock.arraySize > 0)

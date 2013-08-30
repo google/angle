@@ -19,34 +19,41 @@ namespace sh
 
 struct ShaderVariable
 {
-    ShaderVariable();
-    ShaderVariable(GLenum type, GLenum precision, const char *name, unsigned int arraySize, int location);
-
     GLenum type;
     GLenum precision;
     std::string name;
     unsigned int arraySize;
-    int location;
+
+    ShaderVariable(GLenum type, GLenum precision, const char *name, unsigned int arraySize);
 };
 
-typedef std::vector<ShaderVariable> ActiveShaderVariables;
-
-struct Uniform
+struct Uniform : public ShaderVariable
 {
-    Uniform(GLenum type, GLenum precision, const char *name, unsigned int arraySize, unsigned int registerIndex, bool isRowMajorMatrix);
-
-    GLenum type;
-    GLenum precision;
-    std::string name;
-    unsigned int arraySize;
-
     unsigned int registerIndex;
-    bool isRowMajorMatrix;
-
     std::vector<Uniform> fields;
+
+    Uniform(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, unsigned int registerIndexIn);
+
+    bool isStruct() const { return !fields.empty(); }
 };
 
-typedef std::vector<Uniform> ActiveUniforms;
+struct Attribute : public ShaderVariable
+{
+    int location;
+
+    Attribute();
+    Attribute(GLenum type, GLenum precision, const char *name, unsigned int arraySize, int location);
+};
+
+struct InterfaceBlockField : public ShaderVariable
+{
+    bool isRowMajorMatrix;
+    std::vector<InterfaceBlockField> fields;
+
+    InterfaceBlockField(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, bool isRowMajorMatrix);
+
+    bool isStruct() const { return !fields.empty(); }
+};
 
 struct BlockMemberInfo
 {
@@ -75,11 +82,11 @@ struct InterfaceBlock
 
     std::string name;
     unsigned int arraySize;
-    ActiveUniforms activeUniforms;
     size_t dataSize;
-    std::vector<BlockMemberInfo> blockInfo;
     BlockLayoutType layout;
     bool isRowMajorLayout;
+    std::vector<InterfaceBlockField> fields;
+    std::vector<BlockMemberInfo> blockInfo;
 
     unsigned int registerIndex;
 };

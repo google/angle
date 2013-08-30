@@ -32,10 +32,10 @@ class OutputHLSL : public TIntermTraverser
     void output();
 
     TInfoSinkBase &getBodyStream();
-    const ActiveUniforms &getUniforms();
+    const std::vector<Uniform> &getUniforms();
     const ActiveInterfaceBlocks &getInterfaceBlocks() const;
-    const ActiveShaderVariables &getOutputVariables() const;
-    const ActiveShaderVariables &getAttributes() const;
+    const std::vector<Attribute> &getOutputVariables() const;
+    const std::vector<Attribute> &getAttributes() const;
 
     TString typeString(const TType &type);
     TString textureString(const TType &type);
@@ -176,7 +176,8 @@ class OutputHLSL : public TIntermTraverser
     TString registerString(TIntermSymbol *operand);
     int samplerRegister(TIntermSymbol *sampler);
     int uniformRegister(TIntermSymbol *uniform);
-    void declareUniformToList(const TType &type, const TString &name, int registerIndex, ActiveUniforms& output);
+    void declareInterfaceBlockField(const TType &type, const TString &name, std::vector<InterfaceBlockField>& output);
+    void declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform>& output);
     void declareUniform(const TType &type, const TString &name, int index);
 
     TString interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, const TField &field);
@@ -197,10 +198,10 @@ class OutputHLSL : public TIntermTraverser
     static bool isVaryingOut(TQualifier qualifier);
     static bool isVarying(TQualifier qualifier);
 
-    ActiveUniforms mActiveUniforms;
+    std::vector<Uniform> mActiveUniforms;
     ActiveInterfaceBlocks mActiveInterfaceBlocks;
-    ActiveShaderVariables mActiveOutputVariables;
-    ActiveShaderVariables mActiveAttributes;
+    std::vector<Attribute> mActiveOutputVariables;
+    std::vector<Attribute> mActiveAttributes;
     std::map<TString, int> mStd140StructElementIndexes;
     std::map<TIntermTyped*, TString> mFlaggedStructMappedNames;
     std::map<TIntermTyped*, TString> mFlaggedStructOriginalNames;

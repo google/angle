@@ -115,7 +115,7 @@ void Shader::getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer)
     getSourceImpl(mHlsl, bufSize, length, buffer);
 }
 
-const sh::ActiveUniforms &Shader::getUniforms() const
+const std::vector<sh::Uniform> &Shader::getUniforms() const
 {
     return mActiveUniforms;
 }
@@ -396,7 +396,7 @@ void Shader::compileToHLSL(void *compiler)
 
         void *activeUniforms;
         ShGetInfoPointer(compiler, SH_ACTIVE_UNIFORMS_ARRAY, &activeUniforms);
-        mActiveUniforms = *(sh::ActiveUniforms*)activeUniforms;
+        mActiveUniforms = *(std::vector<sh::Uniform>*)activeUniforms;
 
         void *activeInterfaceBlocks;
         ShGetInfoPointer(compiler, SH_ACTIVE_INTERFACE_BLOCKS_ARRAY, &activeInterfaceBlocks);
@@ -655,7 +655,7 @@ void VertexShader::parseAttributes()
     {
         void *activeAttributes;
         ShGetInfoPointer(mVertexCompiler, SH_ACTIVE_ATTRIBUTES_ARRAY, &activeAttributes);
-        mActiveAttributes = *(sh::ActiveShaderVariables*)activeAttributes;
+        mActiveAttributes = *(std::vector<sh::Attribute>*)activeAttributes;
     }
 }
 
@@ -686,7 +686,7 @@ void FragmentShader::compile()
     {
         void *activeOutputVariables;
         ShGetInfoPointer(mFragmentCompiler, SH_ACTIVE_OUTPUT_VARIABLES_ARRAY, &activeOutputVariables);
-        mActiveOutputVariables = *(sh::ActiveShaderVariables*)activeOutputVariables;
+        mActiveOutputVariables = *(std::vector<sh::Attribute>*)activeOutputVariables;
     }
 }
 
@@ -697,7 +697,7 @@ void FragmentShader::uncompile()
     mActiveOutputVariables.clear();
 }
 
-const sh::ActiveShaderVariables &FragmentShader::getOutputVariables() const
+const std::vector<sh::Attribute> &FragmentShader::getOutputVariables() const
 {
     return mActiveOutputVariables;
 }

@@ -77,7 +77,7 @@ class Shader
     void getSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
     int getTranslatedSourceLength() const;
     void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
-    const sh::ActiveUniforms &getUniforms() const;
+    const std::vector<sh::Uniform> &getUniforms() const;
     const sh::ActiveInterfaceBlocks &getInterfaceBlocks() const;
 
     virtual void compile() = 0;
@@ -136,7 +136,7 @@ class Shader
     std::string mSource;
     std::string mHlsl;
     std::string mInfoLog;
-    sh::ActiveUniforms mActiveUniforms;
+    std::vector<sh::Uniform> mActiveUniforms;
     sh::ActiveInterfaceBlocks mActiveInterfaceBlocks;
 
     ResourceManager *mResourceManager;
@@ -161,7 +161,7 @@ class VertexShader : public Shader
 
     void parseAttributes();
 
-    sh::ActiveShaderVariables mActiveAttributes;
+    std::vector<sh::Attribute> mActiveAttributes;
 };
 
 class FragmentShader : public Shader
@@ -174,12 +174,12 @@ class FragmentShader : public Shader
     virtual GLenum getType();
     virtual void compile();
     virtual void uncompile();
-    const sh::ActiveShaderVariables &getOutputVariables() const;
+    const std::vector<sh::Attribute> &getOutputVariables() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(FragmentShader);
 
-    sh::ActiveShaderVariables mActiveOutputVariables;
+    std::vector<sh::Attribute> mActiveOutputVariables;
 };
 }
 
