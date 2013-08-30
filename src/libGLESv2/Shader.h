@@ -60,8 +60,6 @@ struct Varying
     int col;    // First register element, assigned during link
 };
 
-typedef std::list<Varying> VaryingList;
-
 class Shader
 {
     friend class ProgramBinary;
@@ -111,7 +109,7 @@ class Shader
 
     const rx::Renderer *const mRenderer;
 
-    VaryingList mVaryings;
+    std::vector<Varying> mVaryings;
 
     bool mUsesMultipleRenderTargets;
     bool mUsesFragColor;

@@ -241,10 +241,11 @@ void Shader::parseVaryings(void *compiler)
 
 void Shader::resetVaryingsRegisterAssignment()
 {
-    for (VaryingList::iterator var = mVaryings.begin(); var != mVaryings.end(); var++)
+    for (unsigned int varyingIndex = 0; varyingIndex < mVaryings.size(); varyingIndex++)
     {
-        var->reg = -1;
-        var->col = -1;
+        Varying *varying = &mVaryings[varyingIndex];
+        varying->reg = -1;
+        varying->col = -1;
     }
 }
 
@@ -525,7 +526,7 @@ void FragmentShader::compile()
 
     compileToHLSL(mFragmentCompiler);
     parseVaryings(mFragmentCompiler);
-    mVaryings.sort(compareVarying);
+    std::sort(mVaryings.begin(), mVaryings.end(), compareVarying);
 
     const std::string &hlsl = getHLSL();
     if (!hlsl.empty())

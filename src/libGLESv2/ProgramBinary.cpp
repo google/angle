@@ -932,8 +932,9 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
 
     fragmentShader->resetVaryingsRegisterAssignment();
 
-    for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
+    for (unsigned int varyingIndex = 0; varyingIndex < fragmentShader->mVaryings.size(); varyingIndex++)
     {
+        Varying *varying = &fragmentShader->mVaryings[varyingIndex];
         GLenum transposedType = TransposeMatrixType(varying->type);
         int n = VariableRowCount(transposedType) * varying->size;
         int m = VariableColumnCount(transposedType);
@@ -1141,12 +1142,14 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
 
     vertexShader->resetVaryingsRegisterAssignment();
 
-    for (VaryingList::iterator input = fragmentShader->mVaryings.begin(); input != fragmentShader->mVaryings.end(); input++)
+    for (unsigned int fragVaryingIndex = 0; fragVaryingIndex < fragmentShader->mVaryings.size(); fragVaryingIndex++)
     {
+        Varying *input = &fragmentShader->mVaryings[fragVaryingIndex];
         bool matched = false;
 
-        for (VaryingList::iterator output = vertexShader->mVaryings.begin(); output != vertexShader->mVaryings.end(); output++)
+        for (unsigned int vertVaryingIndex = 0; vertVaryingIndex < vertexShader->mVaryings.size(); vertVaryingIndex++)
         {
+            Varying *output = &vertexShader->mVaryings[vertVaryingIndex];
             if (output->name == input->name)
             {
                 if (output->type != input->type || output->size != input->size || output->interpolation != input->interpolation)
@@ -1296,8 +1299,9 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         vertexHLSL += "    output.gl_FragCoord = gl_Position;\n";
     }
 
-    for (VaryingList::iterator varying = vertexShader->mVaryings.begin(); varying != vertexShader->mVaryings.end(); varying++)
+    for (unsigned int vertVaryingIndex = 0; vertVaryingIndex < vertexShader->mVaryings.size(); vertVaryingIndex++)
     {
+        Varying *varying = &vertexShader->mVaryings[vertVaryingIndex];
         if (varying->reg >= 0)
         {
             for (int i = 0; i < varying->size; i++)
@@ -1494,8 +1498,9 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         }
     }
 
-    for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
+    for (unsigned int varyingIndex = 0; varyingIndex < fragmentShader->mVaryings.size(); varyingIndex++)
     {
+        Varying *varying = &fragmentShader->mVaryings[varyingIndex];
         if (varying->reg >= 0)
         {
             for (int i = 0; i < varying->size; i++)
@@ -1574,8 +1579,9 @@ std::string ProgramBinary::generateVaryingHLSL(FragmentShader *fragmentShader, c
 {
     std::string varyingHLSL;
 
-    for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
+    for (unsigned int varyingIndex = 0; varyingIndex < fragmentShader->mVaryings.size(); varyingIndex++)
     {
+        Varying *varying = &fragmentShader->mVaryings[varyingIndex];
         if (varying->reg >= 0)
         {
             for (int i = 0; i < varying->size; i++)
