@@ -51,7 +51,11 @@ void BlockLayoutEncoder::encodeInterfaceBlockField(const InterfaceBlockField &fi
     getBlockLayoutInfo(field.type, field.arraySize, field.isRowMajorMatrix, &arrayStride, &matrixStride);
 
     const BlockMemberInfo memberInfo(mCurrentOffset * ComponentSize, arrayStride * ComponentSize, matrixStride * ComponentSize, field.isRowMajorMatrix);
-    mBlockInfoOut->push_back(memberInfo);
+
+    if (mBlockInfoOut)
+    {
+        mBlockInfoOut->push_back(memberInfo);
+    }
 
     advanceOffset(field.type, field.arraySize, field.isRowMajorMatrix, arrayStride, matrixStride);
 }
@@ -64,7 +68,11 @@ void BlockLayoutEncoder::encodeType(GLenum type, unsigned int arraySize, bool is
     getBlockLayoutInfo(type, arraySize, isRowMajorMatrix, &arrayStride, &matrixStride);
 
     const BlockMemberInfo memberInfo(mCurrentOffset * ComponentSize, arrayStride * ComponentSize, matrixStride * ComponentSize, isRowMajorMatrix);
-    mBlockInfoOut->push_back(memberInfo);
+
+    if (mBlockInfoOut)
+    {
+        mBlockInfoOut->push_back(memberInfo);
+    }
 
     advanceOffset(type, arraySize, isRowMajorMatrix, arrayStride, matrixStride);
 }
