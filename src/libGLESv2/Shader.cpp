@@ -525,54 +525,70 @@ GLenum Shader::parseType(const std::string &type)
     return GL_NONE;
 }
 
-typedef std::map<GLenum, int> VaryingPriorityMap;
-static VaryingPriorityMap varyingPriorities;
-
-static void makeVaryingPriorityMap()
+// [OpenGL ES SL 3.00.4] Section 11 p. 120
+// Vertex Outs/Fragment Ins packing priorities
+static const GLenum varyingPriorityList[] =
 {
-    varyingPriorities[GL_FLOAT_MAT4]    = 0;
-    varyingPriorities[GL_FLOAT_MAT3x4]  = 10;
-    varyingPriorities[GL_FLOAT_MAT4x3]  = 20;
-    varyingPriorities[GL_FLOAT_MAT2x4]  = 30;
-    varyingPriorities[GL_FLOAT_MAT4x2]  = 40;
-    varyingPriorities[GL_FLOAT_MAT2]    = 50;
-    varyingPriorities[GL_FLOAT_VEC4]    = 60;
-    varyingPriorities[GL_INT_VEC4]      = 61;
-    varyingPriorities[GL_UNSIGNED_INT_VEC4] = 62;
-    varyingPriorities[GL_FLOAT_MAT3]    = 70;
-    varyingPriorities[GL_FLOAT_MAT2x3]  = 80;
-    varyingPriorities[GL_FLOAT_MAT3x2]  = 90;
-    varyingPriorities[GL_FLOAT_VEC3]    = 100;
-    varyingPriorities[GL_INT_VEC3]      = 101;
-    varyingPriorities[GL_UNSIGNED_INT_VEC3] = 102;
-    varyingPriorities[GL_FLOAT_VEC2]    = 110;
-    varyingPriorities[GL_INT_VEC2]      = 111;
-    varyingPriorities[GL_UNSIGNED_INT_VEC2] = 112;
-    varyingPriorities[GL_FLOAT]         = 120;
-    varyingPriorities[GL_INT]           = 125;
-    varyingPriorities[GL_UNSIGNED_INT]  = 130;
-}
+    // 1. Arrays of mat4 and mat4
+    GL_FLOAT_MAT4,
+
+    // Non-square matrices of type matCxR consume the same space as a square
+    // matrix of type matN where N is the greater of C and R
+    GL_FLOAT_MAT3x4,
+    GL_FLOAT_MAT4x3,
+    GL_FLOAT_MAT2x4,
+    GL_FLOAT_MAT4x2,
+
+    // 2. Arrays of mat2 and mat2 (since they occupy full rows)
+    GL_FLOAT_MAT2,
+
+    // 3. Arrays of vec4 and vec4
+    GL_FLOAT_VEC4,
+    GL_INT_VEC4,
+    GL_UNSIGNED_INT_VEC4,
+
+    // 4. Arrays of mat3 and mat3
+    GL_FLOAT_MAT3,
+    GL_FLOAT_MAT2x3,
+    GL_FLOAT_MAT3x2,
+
+    // 5. Arrays of vec3 and vec3
+    GL_FLOAT_VEC3,
+    GL_INT_VEC3,
+    GL_UNSIGNED_INT_VEC3,
+
+    // 6. Arrays of vec2 and vec2
+    GL_FLOAT_VEC2,
+    GL_INT_VEC2,
+    GL_UNSIGNED_INT_VEC2,
+
+    // 7. Arrays of float and float
+    GL_FLOAT,
+    GL_INT,
+    GL_UNSIGNED_INT,
+};
 
 // true if varying x has a higher priority in packing than y
 bool Shader::compareVarying(const Varying &x, const Varying &y)
 {
-    if (varyingPriorities.empty())
-    {
-        makeVaryingPriorityMap();
-    }
-
-    if(x.type == y.type)
+    if (x.type == y.type)
     {
         return x.size > y.size;
     }
 
-    VaryingPriorityMap::iterator xPriority = varyingPriorities.find(x.type);
-    VaryingPriorityMap::iterator yPriority = varyingPriorities.find(y.type);
+    unsigned int xPriority = GL_INVALID_INDEX;
+    unsigned int yPriority = GL_INVALID_INDEX;
 
-    ASSERT(xPriority != varyingPriorities.end());
-    ASSERT(yPriority != varyingPriorities.end());
+    for (unsigned int priorityIndex = 0; priorityIndex < ArraySize(varyingPriorityList); priorityIndex++)
+    {
+        if (varyingPriorityList[priorityIndex] == x.type) xPriority = priorityIndex;
+        if (varyingPriorityList[priorityIndex] == y.type) yPriority = priorityIndex;
+        if (xPriority != GL_INVALID_INDEX && yPriority != GL_INVALID_INDEX) break;
+    }
 
-    return xPriority->second <= yPriority->second;
+    ASSERT(xPriority != GL_INVALID_INDEX && yPriority != GL_INVALID_INDEX);
+
+    return xPriority <= yPriority;
 }
 
 int Shader::getShaderVersion() const
