@@ -17,6 +17,13 @@
 namespace sh
 {
 
+enum InterpolationType
+{
+    INTERPOLATION_SMOOTH,
+    INTERPOLATION_CENTROID,
+    INTERPOLATION_FLAT
+};
+
 struct ShaderVariable
 {
     GLenum type;
@@ -57,9 +64,10 @@ struct InterfaceBlockField : public ShaderVariable
 
 struct Varying : public ShaderVariable
 {
+    InterpolationType interpolation;
     std::vector<Varying> fields;
 
-    Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn);
+    Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, InterpolationType interpolationIn);
 
     bool isStruct() const { return !fields.empty(); }
 };

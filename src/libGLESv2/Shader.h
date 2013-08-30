@@ -31,33 +31,34 @@ namespace gl
 {
 class ResourceManager;
 
-enum Interpolation
-{
-    Smooth,
-    Centroid,
-    Flat
-};
-
 struct Varying
 {
-    Varying(const sh::ShaderVariable &shaderVar)
-        : interpolation(Smooth),
+    Varying(const sh::Varying &shaderVar)
+        : interpolation(shaderVar.interpolation),
           type(shaderVar.type),
-          name("_" + shaderVar.name),
-          size(std::max((int)shaderVar.arraySize, 1)),
-          array(shaderVar.arraySize > 0),
-          reg(-1),
-          col(-1)
+          name(shaderVar.name),
+          arraySize(shaderVar.arraySize),
+          registerIndex(GL_INVALID_INDEX),
+          elementIndex(GL_INVALID_INDEX)
     {}
 
-    Interpolation interpolation;
+    sh::InterpolationType interpolation;
     GLenum type;
     std::string name;
-    int size;   // Number of 'type' elements
-    bool array;
+    unsigned int arraySize;
 
-    int reg;    // First varying register, assigned during link
-    int col;    // First register element, assigned during link
+    bool isArray() const { return arraySize > 0; }
+    unsigned int elementCount() const { return std::max(1u, arraySize); }
+    bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }
+
+    void resetRegisterAssignment()
+    {
+        registerIndex = GL_INVALID_INDEX;
+        elementIndex = GL_INVALID_INDEX;
+    }
+
+    unsigned int registerIndex;    // First varying register, assigned during link
+    unsigned int elementIndex;     // First register element, assigned during link
 };
 
 class Shader

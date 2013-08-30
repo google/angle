@@ -219,7 +219,7 @@ void Shader::parseVaryings(void *compiler)
 {
     if (!mHlsl.empty())
     {
-        std::vector<sh::ShaderVariable> *activeVaryings;
+        std::vector<sh::Varying> *activeVaryings;
         ShGetInfoPointer(compiler, SH_ACTIVE_VARYINGS_ARRAY, reinterpret_cast<void**>(&activeVaryings));
 
         for (unsigned int varyingIndex = 0; varyingIndex < activeVaryings->size(); varyingIndex++)
@@ -243,9 +243,7 @@ void Shader::resetVaryingsRegisterAssignment()
 {
     for (unsigned int varyingIndex = 0; varyingIndex < mVaryings.size(); varyingIndex++)
     {
-        Varying *varying = &mVaryings[varyingIndex];
-        varying->reg = -1;
-        varying->col = -1;
+        mVaryings[varyingIndex].resetRegisterAssignment();
     }
 }
 
@@ -420,7 +418,7 @@ bool Shader::compareVarying(const Varying &x, const Varying &y)
 {
     if (x.type == y.type)
     {
-        return x.size > y.size;
+        return x.arraySize > y.arraySize;
     }
 
     unsigned int xPriority = GL_INVALID_INDEX;

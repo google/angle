@@ -41,8 +41,9 @@ InterfaceBlockField::InterfaceBlockField(GLenum typeIn, GLenum precisionIn, cons
 {
 }
 
-Varying::Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn)
-    : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn)
+Varying::Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, InterpolationType interpolationIn)
+    : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
+      interpolation(interpolationIn)
 {
 }
 

@@ -936,7 +936,7 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
     {
         Varying *varying = &fragmentShader->mVaryings[varyingIndex];
         GLenum transposedType = TransposeMatrixType(varying->type);
-        int n = VariableRowCount(transposedType) * varying->size;
+        int n = VariableRowCount(transposedType) * varying->elementCount();
         int m = VariableColumnCount(transposedType);
         bool success = false;
 
@@ -959,8 +959,8 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
 
                 if (available)
                 {
-                    varying->reg = r;
-                    varying->col = 0;
+                    varying->registerIndex = r;
+                    varying->elementIndex = 0;
 
                     for (int y = 0; y < n; y++)
                     {
@@ -993,8 +993,8 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
 
                     if (available)
                     {
-                        varying->reg = r;
-                        varying->col = 2;
+                        varying->registerIndex = r;
+                        varying->elementIndex = 2;
 
                         for (int y = 0; y < n; y++)
                         {
@@ -1037,7 +1037,7 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
                 {
                     if (!packing[r][column])
                     {
-                        varying->reg = r;
+                        varying->registerIndex = r;
 
                         for (int y = r; y < r + n; y++)
                         {
@@ -1048,7 +1048,7 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
                     }
                 }
 
-                varying->col = column;
+                varying->elementIndex = column;
 
                 success = true;
             }
@@ -1152,15 +1152,15 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
             Varying *output = &vertexShader->mVaryings[vertVaryingIndex];
             if (output->name == input->name)
             {
-                if (output->type != input->type || output->size != input->size || output->interpolation != input->interpolation)
+                if (output->type != input->type || output->arraySize != input->arraySize || output->interpolation != input->interpolation)
                 {
                     infoLog.append("Type of vertex varying %s does not match that of the fragment varying", output->name.c_str());
 
                     return false;
                 }
 
-                output->reg = input->reg;
-                output->col = input->col;
+                output->registerIndex = input->registerIndex;
+                output->elementIndex = input->elementIndex;
 
                 matched = true;
                 break;
@@ -1302,15 +1302,15 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     for (unsigned int vertVaryingIndex = 0; vertVaryingIndex < vertexShader->mVaryings.size(); vertVaryingIndex++)
     {
         Varying *varying = &vertexShader->mVaryings[vertVaryingIndex];
-        if (varying->reg >= 0)
+        if (varying->registerAssigned())
         {
-            for (int i = 0; i < varying->size; i++)
+            for (unsigned int elementIndex = 0; elementIndex < varying->elementCount(); elementIndex++)
             {
-                int rows = VariableRowCount(TransposeMatrixType(varying->type));
+                int variableRows = VariableRowCount(TransposeMatrixType(varying->type));
 
-                for (int j = 0; j < rows; j++)
+                for (int row = 0; row < variableRows; row++)
                 {
-                    int r = varying->reg + i * rows + j;
+                    int r = varying->registerIndex + elementIndex * variableRows + row;
                     vertexHLSL += "    output.v" + str(r);
 
                     bool sharedRegister = false;   // Register used by multiple varyings
@@ -1343,16 +1343,16 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                         }
                     }
 
-                    vertexHLSL += " = " + varying->name;
+                    vertexHLSL += " = _" + varying->name;
                     
-                    if (varying->array)
+                    if (varying->isArray())
                     {
-                        vertexHLSL += arrayString(i);
+                        vertexHLSL += arrayString(elementIndex);
                     }
 
-                    if (rows > 1)
+                    if (variableRows > 1)
                     {
-                        vertexHLSL += arrayString(j);
+                        vertexHLSL += arrayString(row);
                     }
                     
                     vertexHLSL += ";\n";
@@ -1501,25 +1501,25 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     for (unsigned int varyingIndex = 0; varyingIndex < fragmentShader->mVaryings.size(); varyingIndex++)
     {
         Varying *varying = &fragmentShader->mVaryings[varyingIndex];
-        if (varying->reg >= 0)
+        if (varying->registerAssigned())
         {
-            for (int i = 0; i < varying->size; i++)
+            for (unsigned int elementIndex = 0; elementIndex < varying->elementCount(); elementIndex++)
             {
                 GLenum transposedType = TransposeMatrixType(varying->type);
-                int rows = VariableRowCount(transposedType);
-                for (int j = 0; j < rows; j++)
+                int variableRows = VariableRowCount(transposedType);
+                for (int row = 0; row < variableRows; row++)
                 {
-                    std::string n = str(varying->reg + i * rows + j);
-                    pixelHLSL += "    " + varying->name;
+                    std::string n = str(varying->registerIndex + elementIndex * variableRows + row);
+                    pixelHLSL += "    _" + varying->name;
 
-                    if (varying->array)
+                    if (varying->isArray())
                     {
-                        pixelHLSL += arrayString(i);
+                        pixelHLSL += arrayString(elementIndex);
                     }
 
-                    if (rows > 1)
+                    if (variableRows > 1)
                     {
-                        pixelHLSL += arrayString(j);
+                        pixelHLSL += arrayString(row);
                     }
 
                     switch (VariableColumnCount(transposedType))
@@ -1582,23 +1582,23 @@ std::string ProgramBinary::generateVaryingHLSL(FragmentShader *fragmentShader, c
     for (unsigned int varyingIndex = 0; varyingIndex < fragmentShader->mVaryings.size(); varyingIndex++)
     {
         Varying *varying = &fragmentShader->mVaryings[varyingIndex];
-        if (varying->reg >= 0)
+        if (varying->registerAssigned())
         {
-            for (int i = 0; i < varying->size; i++)
+            for (unsigned int elementIndex = 0; elementIndex < varying->elementCount(); elementIndex++)
             {
                 GLenum transposedType = TransposeMatrixType(varying->type);
-                int rows = VariableRowCount(transposedType);
-                for (int j = 0; j < rows; j++)
+                int variableRows = VariableRowCount(transposedType);
+                for (int row = 0; row < variableRows; row++)
                 {
                     switch (varying->interpolation)
                     {
-                      case Smooth:   varyingHLSL += "    ";                 break;
-                      case Flat:     varyingHLSL += "    nointerpolation "; break;
-                      case Centroid: varyingHLSL += "    centroid ";        break;
+                      case sh::INTERPOLATION_SMOOTH:   varyingHLSL += "    ";                 break;
+                      case sh::INTERPOLATION_FLAT:     varyingHLSL += "    nointerpolation "; break;
+                      case sh::INTERPOLATION_CENTROID: varyingHLSL += "    centroid ";        break;
                       default:  UNREACHABLE();
                     }
 
-                    std::string n = str(varying->reg + i * rows + j);
+                    std::string n = str(varying->registerIndex + elementIndex * variableRows + row);
                     std::string typeString = gl_d3d::TypeString(UniformComponentType(transposedType)) + str(VariableColumnCount(transposedType));
 
                     varyingHLSL += typeString + " v" + n + " : " + varyingSemantic + n + ";\n";

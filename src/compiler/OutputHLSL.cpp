@@ -3643,18 +3643,42 @@ void OutputHLSL::declareUniformToList(const TType &type, const TString &name, in
     }
 }
 
+InterpolationType getInterpolationType(TQualifier qualifier)
+{
+    switch (qualifier)
+    {
+      case EvqFlatIn:
+      case EvqFlatOut:
+        return INTERPOLATION_FLAT;
+
+      case EvqSmoothIn:
+      case EvqSmoothOut:
+      case EvqVertexOut:
+      case EvqFragmentIn:
+        return INTERPOLATION_SMOOTH;
+
+      case EvqCentroidIn:
+      case EvqCentroidOut:
+        return INTERPOLATION_CENTROID;
+
+      default: UNREACHABLE();
+        return INTERPOLATION_SMOOTH;
+    }
+}
+
 void OutputHLSL::declareVaryingToList(const TType &type, const TString &name, std::vector<Varying>& fieldsOut)
 {
     const TStructure *structure = type.getStruct();
 
+    InterpolationType interpolation = getInterpolationType(type.getQualifier());
     if (!structure)
     {
-        Varying varying(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize());
+        Varying varying(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), interpolation);
         fieldsOut.push_back(varying);
     }
     else
     {
-        Varying structVarying(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize());
+        Varying structVarying(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), interpolation);
         const TFieldList &fields = structure->fields();
 
         for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
