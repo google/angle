@@ -67,5 +67,6 @@ void SafeDeleteArray(T*& resource)
 #define GL_BGRA4_ANGLEX 0x6ABC
 #define GL_BGR5_A1_ANGLEX 0x6ABD
 #define GL_INT_64_ANGLEX 0x6ABE
+#define GL_STRUCT_ANGLEX 0x6ABF
 
 #endif // COMMON_ANGLEUTILS_H_

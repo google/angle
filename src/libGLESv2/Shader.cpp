@@ -417,6 +417,12 @@ bool Shader::compareVarying(const sh::ShaderVariable &x, const sh::ShaderVariabl
         return x.arraySize > y.arraySize;
     }
 
+    // Special case for handling structs: we sort these to the end of the list
+    if (x.type == GL_STRUCT_ANGLEX)
+    {
+        return false;
+    }
+
     unsigned int xPriority = GL_INVALID_INDEX;
     unsigned int yPriority = GL_INVALID_INDEX;
 

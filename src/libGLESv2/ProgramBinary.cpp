@@ -938,19 +938,21 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const sh::ShaderVariable *pack
     {
         sh::Varying *varying = &fragmentShader->mVaryings[varyingIndex];
         GLenum transposedType = TransposeMatrixType(varying->type);
-        int n = VariableRowCount(transposedType) * varying->elementCount();
-        int m = VariableColumnCount(transposedType);
+
+        // matrices within varying structs are not transposed
+        int registers = (varying->isStruct() ? sh::HLSLVariableRegisterCount(*varying) : gl::VariableRowCount(transposedType)) * varying->elementCount();
+        int elements = (varying->isStruct() ? 4 : VariableColumnCount(transposedType));
         bool success = false;
 
-        if (m == 2 || m == 3 || m == 4)
+        if (elements == 2 || elements == 3 || elements == 4)
         {
-            for (int r = 0; r <= maxVaryingVectors - n && !success; r++)
+            for (int r = 0; r <= maxVaryingVectors - registers && !success; r++)
             {
                 bool available = true;
 
-                for (int y = 0; y < n && available; y++)
+                for (int y = 0; y < registers && available; y++)
                 {
-                    for (int x = 0; x < m && available; x++)
+                    for (int x = 0; x < elements && available; x++)
                     {
                         if (packing[r + y][x])
                         {
@@ -964,9 +966,9 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const sh::ShaderVariable *pack
                     varying->registerIndex = r;
                     varying->elementIndex = 0;
 
-                    for (int y = 0; y < n; y++)
+                    for (int y = 0; y < registers; y++)
                     {
-                        for (int x = 0; x < m; x++)
+                        for (int x = 0; x < elements; x++)
                         {
                             packing[r + y][x] = &*varying;
                         }
@@ -976,13 +978,13 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const sh::ShaderVariable *pack
                 }
             }
 
-            if (!success && m == 2)
+            if (!success && elements == 2)
             {
-                for (int r = maxVaryingVectors - n; r >= 0 && !success; r--)
+                for (int r = maxVaryingVectors - registers; r >= 0 && !success; r--)
                 {
                     bool available = true;
 
-                    for (int y = 0; y < n && available; y++)
+                    for (int y = 0; y < registers && available; y++)
                     {
                         for (int x = 2; x < 4 && available; x++)
                         {
@@ -998,7 +1000,7 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const sh::ShaderVariable *pack
                         varying->registerIndex = r;
                         varying->elementIndex = 2;
 
-                        for (int y = 0; y < n; y++)
+                        for (int y = 0; y < registers; y++)
                         {
                             for (int x = 2; x < 4; x++)
                             {
@@ -1011,7 +1013,7 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const sh::ShaderVariable *pack
                 }
             }
         }
-        else if (m == 1)
+        else if (elements == 1)
         {
             int space[4] = {0};
 
@@ -1027,13 +1029,13 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const sh::ShaderVariable *pack
 
             for (int x = 0; x < 4; x++)
             {
-                if (space[x] >= n && space[x] < space[column])
+                if (space[x] >= registers && space[x] < space[column])
                 {
                     column = x;
                 }
             }
 
-            if (space[column] >= n)
+            if (space[column] >= registers)
             {
                 for (int r = 0; r < maxVaryingVectors; r++)
                 {
@@ -1041,7 +1043,7 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const sh::ShaderVariable *pack
                     {
                         varying->registerIndex = r;
 
-                        for (int y = r; y < r + n; y++)
+                        for (int y = r; y < r + registers; y++)
                         {
                             packing[y][column] = &*varying;
                         }
@@ -1154,10 +1156,8 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const sh::Shad
             sh::Varying *output = &vertexShader->mVaryings[vertVaryingIndex];
             if (output->name == input->name)
             {
-                if (output->type != input->type || output->arraySize != input->arraySize || output->interpolation != input->interpolation)
+                if (!linkValidateVariables(infoLog, output->name, *input, *output))
                 {
-                    infoLog.append("Type of vertex varying %s does not match that of the fragment varying", output->name.c_str());
-
                     return false;
                 }
 
@@ -1308,7 +1308,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const sh::Shad
         {
             for (unsigned int elementIndex = 0; elementIndex < varying->elementCount(); elementIndex++)
             {
-                int variableRows = VariableRowCount(TransposeMatrixType(varying->type));
+                int variableRows = (varying->isStruct() ? 1 : VariableRowCount(TransposeMatrixType(varying->type)));
 
                 for (int row = 0; row < variableRows; row++)
                 {
@@ -1508,7 +1508,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const sh::Shad
             for (unsigned int elementIndex = 0; elementIndex < varying->elementCount(); elementIndex++)
             {
                 GLenum transposedType = TransposeMatrixType(varying->type);
-                int variableRows = VariableRowCount(transposedType);
+                int variableRows = (varying->isStruct() ? 1 : VariableRowCount(transposedType));
                 for (int row = 0; row < variableRows; row++)
                 {
                     std::string n = str(varying->registerIndex + elementIndex * variableRows + row);
@@ -1524,13 +1524,20 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const sh::Shad
                         pixelHLSL += arrayString(row);
                     }
 
-                    switch (VariableColumnCount(transposedType))
+                    if (varying->isStruct())
                     {
-                      case 1: pixelHLSL += " = input.v" + n + ".x;\n";   break;
-                      case 2: pixelHLSL += " = input.v" + n + ".xy;\n";  break;
-                      case 3: pixelHLSL += " = input.v" + n + ".xyz;\n"; break;
-                      case 4: pixelHLSL += " = input.v" + n + ";\n";     break;
-                      default: UNREACHABLE();
+                        pixelHLSL += " = input.v" + n + ";\n";   break;
+                    }
+                    else
+                    {
+                        switch (VariableColumnCount(transposedType))
+                        {
+                          case 1: pixelHLSL += " = input.v" + n + ".x;\n";   break;
+                          case 2: pixelHLSL += " = input.v" + n + ".xy;\n";  break;
+                          case 3: pixelHLSL += " = input.v" + n + ".xyz;\n"; break;
+                          case 4: pixelHLSL += " = input.v" + n + ";\n";     break;
+                          default: UNREACHABLE();
+                        }
                     }
                 }
             }
@@ -1589,7 +1596,7 @@ std::string ProgramBinary::generateVaryingHLSL(FragmentShader *fragmentShader, c
             for (unsigned int elementIndex = 0; elementIndex < varying->elementCount(); elementIndex++)
             {
                 GLenum transposedType = TransposeMatrixType(varying->type);
-                int variableRows = VariableRowCount(transposedType);
+                int variableRows = (varying->isStruct() ? 1 : VariableRowCount(transposedType));
                 for (int row = 0; row < variableRows; row++)
                 {
                     switch (varying->interpolation)
@@ -1601,7 +1608,10 @@ std::string ProgramBinary::generateVaryingHLSL(FragmentShader *fragmentShader, c
                     }
 
                     std::string n = str(varying->registerIndex + elementIndex * variableRows + row);
-                    std::string typeString = gl_d3d::TypeString(UniformComponentType(transposedType)) + str(VariableColumnCount(transposedType));
+
+                    // matrices within structs are not transposed, hence we do not use the special struct prefix "rm"
+                    std::string typeString = varying->isStruct() ? "_" + varying->structName :
+                                             gl_d3d::TypeString(UniformComponentType(transposedType)) + str(VariableColumnCount(transposedType));
 
                     varyingHLSL += typeString + " v" + n + " : " + varyingSemantic + n + ";\n";
                 }
@@ -2153,7 +2163,7 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     return true;
 }
 
-bool ProgramBinary::linkValidateVariablesBase(InfoLog &infoLog, const std::string &variableName, const sh::ShaderVariable &vertexVariable, const sh::ShaderVariable &fragmentVariable)
+bool ProgramBinary::linkValidateVariablesBase(InfoLog &infoLog, const std::string &variableName, const sh::ShaderVariable &vertexVariable, const sh::ShaderVariable &fragmentVariable, bool validatePrecision)
 {
     if (vertexVariable.type != fragmentVariable.type)
     {
@@ -2165,7 +2175,7 @@ bool ProgramBinary::linkValidateVariablesBase(InfoLog &infoLog, const std::strin
         infoLog.append("Array sizes for %s differ between vertex and fragment shaders", variableName.c_str());
         return false;
     }
-    if (vertexVariable.precision != fragmentVariable.precision)
+    if (validatePrecision && vertexVariable.precision != fragmentVariable.precision)
     {
         infoLog.append("Precisions for %s differ between vertex and fragment shaders", variableName.c_str());
         return false;
@@ -2190,12 +2200,12 @@ bool ProgramBinary::linkValidateFields(InfoLog &infoLog, const std::string &varN
 
         if (vertexMember.name != fragmentMember.name)
         {
-            infoLog.append("Name mismatch for field %d of %s: (in vertex: '%s', in fragment: '%s')",
-                           memberIndex, varName.c_str(), vertexVar.name.c_str(), fragmentVar.name.c_str());
+            infoLog.append("Name mismatch for field '%d' of %s: (in vertex: '%s', in fragment: '%s')",
+                           memberIndex, varName.c_str(), vertexMember.name.c_str(), fragmentMember.name.c_str());
             return false;
         }
 
-        const std::string memberName = varName + "." + vertexVar.name;
+        const std::string memberName = varName.substr(0, varName.length()-1) + "." + vertexVar.name + "'";
         if (!linkValidateVariables(infoLog, memberName, vertexMember, fragmentMember))
         {
             return false;
@@ -2207,7 +2217,7 @@ bool ProgramBinary::linkValidateFields(InfoLog &infoLog, const std::string &varN
 
 bool ProgramBinary::linkValidateVariables(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform)
 {
-    if (!linkValidateVariablesBase(infoLog, uniformName, vertexUniform, fragmentUniform))
+    if (!linkValidateVariablesBase(infoLog, uniformName, vertexUniform, fragmentUniform, true))
     {
         return false;
     }
@@ -2220,9 +2230,30 @@ bool ProgramBinary::linkValidateVariables(InfoLog &infoLog, const std::string &u
     return true;
 }
 
+bool ProgramBinary::linkValidateVariables(InfoLog &infoLog, const std::string &varyingName, const sh::Varying &vertexVarying, const sh::Varying &fragmentVarying)
+{
+    if (!linkValidateVariablesBase(infoLog, varyingName, vertexVarying, fragmentVarying, false))
+    {
+        return false;
+    }
+
+    if (vertexVarying.interpolation != fragmentVarying.interpolation)
+    {
+        infoLog.append("Interpolation types for %s differ between vertex and fragment shaders", varyingName.c_str());
+        return false;
+    }
+
+    if (!linkValidateFields<sh::Varying>(infoLog, varyingName, vertexVarying, fragmentVarying))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool ProgramBinary::linkValidateVariables(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform)
 {
-    if (!linkValidateVariablesBase(infoLog, uniformName, vertexUniform, fragmentUniform))
+    if (!linkValidateVariablesBase(infoLog, uniformName, vertexUniform, fragmentUniform, true))
     {
         return false;
     }
@@ -2260,7 +2291,7 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const std::vector<sh::Uniform
         if (entry != linkedUniforms.end())
         {
             const sh::Uniform &vertexUniform = *entry->second;
-            const std::string &uniformName = "uniform " + vertexUniform.name;
+            const std::string &uniformName = "uniform '" + vertexUniform.name + "'";
             if (!linkValidateVariables(infoLog, uniformName, vertexUniform, fragmentUniform))
             {
                 return false;
@@ -2519,12 +2550,12 @@ bool ProgramBinary::areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::Inter
 
         if (vertexMember.name != fragmentMember.name)
         {
-            infoLog.append("Name mismatch for field %d of interface block %s: (in vertex: '%s', in fragment: '%s')",
+            infoLog.append("Name mismatch for field %d of interface block '%s': (in vertex: '%s', in fragment: '%s')",
                            blockMemberIndex, blockName, vertexMember.name.c_str(), fragmentMember.name.c_str());
             return false;
         }
 
-        std::string uniformName = "interface block " + vertexInterfaceBlock.name + " member " + vertexMember.name;
+        std::string uniformName = "interface block '" + vertexInterfaceBlock.name + "' member '" + vertexMember.name + "'";
         if (!linkValidateVariables(infoLog, uniformName, vertexMember, fragmentMember))
         {
             return false;

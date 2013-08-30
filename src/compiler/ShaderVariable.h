@@ -70,6 +70,7 @@ struct Varying : public ShaderVariable
     std::vector<Varying> fields;
     unsigned int registerIndex;    // Assigned during link
     unsigned int elementIndex;     // First register element for varyings, assigned during link
+    std::string structName;
 
     Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, InterpolationType interpolationIn);
 

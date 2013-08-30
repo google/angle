@@ -3569,7 +3569,7 @@ void OutputHLSL::declareInterfaceBlockField(const TType &type, const TString &na
    }
     else
     {
-        InterfaceBlockField structField(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), false);
+        InterfaceBlockField structField(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), false);
 
         const TFieldList &fields = structure->fields();
 
@@ -3603,7 +3603,7 @@ Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &name,
    }
     else
     {
-        Uniform structUniform(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)registerIndex);
+        Uniform structUniform(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)registerIndex);
 
         int fieldRegister = registerIndex;
         const TFieldList &fields = structure->fields();
@@ -3658,8 +3658,10 @@ void OutputHLSL::declareVaryingToList(const TType &type, TQualifier baseTypeQual
     }
     else
     {
-        Varying structVarying(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), interpolation);
+        Varying structVarying(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), interpolation);
         const TFieldList &fields = structure->fields();
+
+        structVarying.structName = structure->name().c_str();
 
         for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
         {
