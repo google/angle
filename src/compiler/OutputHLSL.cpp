@@ -205,6 +205,11 @@ const std::vector<Attribute> &OutputHLSL::getAttributes() const
     return mActiveAttributes;
 }
 
+const std::vector<Varying> &OutputHLSL::getVaryings() const
+{
+    return mActiveVaryings;
+}
+
 int OutputHLSL::vectorSize(const TType &type) const
 {
     int elementSize = type.isMatrix() ? type.getCols() : 1;
@@ -612,6 +617,8 @@ void OutputHLSL::header()
         // Program linking depends on this exact format
         varyings += "static " + interpolationString(type.getQualifier()) + " " + typeString(type) + " " +
                     decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+
+        declareVaryingToList(type, name, mActiveVaryings);
     }
 
     for (ReferencedSymbols::const_iterator attribute = mReferencedAttributes.begin(); attribute != mReferencedAttributes.end(); attribute++)
@@ -3633,6 +3640,30 @@ void OutputHLSL::declareUniformToList(const TType &type, const TString &name, in
         }
 
         output.push_back(structUniform);
+    }
+}
+
+void OutputHLSL::declareVaryingToList(const TType &type, const TString &name, std::vector<Varying>& fieldsOut)
+{
+    const TStructure *structure = type.getStruct();
+
+    if (!structure)
+    {
+        Varying varying(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize());
+        fieldsOut.push_back(varying);
+    }
+    else
+    {
+        Varying structVarying(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize());
+        const TFieldList &fields = structure->fields();
+
+        for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
+        {
+            const TField &field = *fields[fieldIndex];
+            declareVaryingToList(*field.type(), field.name(), structVarying.fields);
+        }
+
+        fieldsOut.push_back(structVarying);
     }
 }
 

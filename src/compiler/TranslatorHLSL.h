@@ -19,6 +19,7 @@ public:
     const sh::ActiveInterfaceBlocks &getInterfaceBlocks() const { return mActiveInterfaceBlocks; }
     const std::vector<sh::Attribute> &getOutputVariables() { return mActiveOutputVariables; }
     const std::vector<sh::Attribute> &getAttributes() { return mActiveAttributes; }
+    const std::vector<sh::Varying> &getVaryings() { return mActiveVaryings; }
 
 protected:
     virtual void translate(TIntermNode* root);
@@ -27,6 +28,7 @@ protected:
     sh::ActiveInterfaceBlocks mActiveInterfaceBlocks;
     std::vector<sh::Attribute> mActiveOutputVariables;
     std::vector<sh::Attribute> mActiveAttributes;
+    std::vector<sh::Varying> mActiveVaryings;
     ShShaderOutput mOutputType;
 };
 

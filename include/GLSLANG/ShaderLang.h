@@ -37,7 +37,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 119
+#define ANGLE_SH_VERSION 120
 
 //
 // The names of the following enums have been derived by replacing GL prefix
@@ -132,21 +132,22 @@ typedef enum {
 } ShDataType;
 
 typedef enum {
-  SH_INFO_LOG_LENGTH             =  0x8B84,
-  SH_OBJECT_CODE_LENGTH          =  0x8B88,  // GL_SHADER_SOURCE_LENGTH
-  SH_ACTIVE_UNIFORMS             =  0x8B86,
-  SH_ACTIVE_UNIFORM_MAX_LENGTH   =  0x8B87,
-  SH_ACTIVE_ATTRIBUTES           =  0x8B89,
-  SH_ACTIVE_ATTRIBUTE_MAX_LENGTH =  0x8B8A,
-  SH_MAPPED_NAME_MAX_LENGTH      =  0x6000,
-  SH_NAME_MAX_LENGTH             =  0x6001,
-  SH_HASHED_NAME_MAX_LENGTH      =  0x6002,
-  SH_HASHED_NAMES_COUNT          =  0x6003,
-  SH_ACTIVE_UNIFORMS_ARRAY       =  0x6004,
-  SH_SHADER_VERSION              =  0x6005,
-  SH_ACTIVE_INTERFACE_BLOCKS_ARRAY =  0x6006,
-  SH_ACTIVE_OUTPUT_VARIABLES_ARRAY =  0x6007,
-  SH_ACTIVE_ATTRIBUTES_ARRAY     = 0x6008,
+  SH_INFO_LOG_LENGTH                = 0x8B84,
+  SH_OBJECT_CODE_LENGTH             = 0x8B88,  // GL_SHADER_SOURCE_LENGTH
+  SH_ACTIVE_UNIFORMS                = 0x8B86,
+  SH_ACTIVE_UNIFORM_MAX_LENGTH      = 0x8B87,
+  SH_ACTIVE_ATTRIBUTES              = 0x8B89,
+  SH_ACTIVE_ATTRIBUTE_MAX_LENGTH    = 0x8B8A,
+  SH_MAPPED_NAME_MAX_LENGTH         = 0x6000,
+  SH_NAME_MAX_LENGTH                = 0x6001,
+  SH_HASHED_NAME_MAX_LENGTH         = 0x6002,
+  SH_HASHED_NAMES_COUNT             = 0x6003,
+  SH_ACTIVE_UNIFORMS_ARRAY          = 0x6004,
+  SH_SHADER_VERSION                 = 0x6005,
+  SH_ACTIVE_INTERFACE_BLOCKS_ARRAY  = 0x6006,
+  SH_ACTIVE_OUTPUT_VARIABLES_ARRAY  = 0x6007,
+  SH_ACTIVE_ATTRIBUTES_ARRAY        = 0x6008,
+  SH_ACTIVE_VARYINGS_ARRAY          = 0x6009,
 } ShShaderInfo;
 
 // Compile options.

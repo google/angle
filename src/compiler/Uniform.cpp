@@ -41,6 +41,11 @@ InterfaceBlockField::InterfaceBlockField(GLenum typeIn, GLenum precisionIn, cons
 {
 }
 
+Varying::Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn)
+    : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn)
+{
+}
+
 BlockMemberInfo::BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
     : offset(offset),
       arrayStride(arrayStride),

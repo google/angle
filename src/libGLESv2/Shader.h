@@ -40,10 +40,15 @@ enum Interpolation
 
 struct Varying
 {
-    Varying(Interpolation interpolation, GLenum type, const std::string &name, int size, bool array)
-        : interpolation(interpolation), type(type), name(name), size(size), array(array), reg(-1), col(-1)
-    {
-    }
+    Varying(const sh::ShaderVariable &shaderVar)
+        : interpolation(Smooth),
+          type(shaderVar.type),
+          name("_" + shaderVar.name),
+          size(std::max((int)shaderVar.arraySize, 1)),
+          array(shaderVar.arraySize > 0),
+          reg(-1),
+          col(-1)
+    {}
 
     Interpolation interpolation;
     GLenum type;
@@ -95,15 +100,13 @@ class Shader
     static void releaseCompiler();
 
   protected:
-    void parseVaryings();
+    void parseVaryings(void *compiler);
     void resetVaryingsRegisterAssignment();
 
     void compileToHLSL(void *compiler);
 
     void getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *length, char *buffer) const;
 
-    static Interpolation parseInterpolation(const std::string &type);
-    static GLenum parseType(const std::string &type);
     static bool compareVarying(const Varying &x, const Varying &y);
 
     const rx::Renderer *const mRenderer;

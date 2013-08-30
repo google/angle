@@ -55,6 +55,15 @@ struct InterfaceBlockField : public ShaderVariable
     bool isStruct() const { return !fields.empty(); }
 };
 
+struct Varying : public ShaderVariable
+{
+    std::vector<Varying> fields;
+
+    Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn);
+
+    bool isStruct() const { return !fields.empty(); }
+};
+
 struct BlockMemberInfo
 {
     BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix);

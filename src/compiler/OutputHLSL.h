@@ -36,6 +36,7 @@ class OutputHLSL : public TIntermTraverser
     const ActiveInterfaceBlocks &getInterfaceBlocks() const;
     const std::vector<Attribute> &getOutputVariables() const;
     const std::vector<Attribute> &getAttributes() const;
+    const std::vector<Varying> &getVaryings() const;
 
     TString typeString(const TType &type);
     TString textureString(const TType &type);
@@ -179,6 +180,7 @@ class OutputHLSL : public TIntermTraverser
     void declareInterfaceBlockField(const TType &type, const TString &name, std::vector<InterfaceBlockField>& output);
     void declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform>& output);
     void declareUniform(const TType &type, const TString &name, int index);
+    void declareVaryingToList(const TType &type, const TString &name, std::vector<Varying>& fieldsOut);
 
     TString interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, const TField &field);
     TString decoratePrivate(const TString &privateText);
@@ -202,6 +204,7 @@ class OutputHLSL : public TIntermTraverser
     ActiveInterfaceBlocks mActiveInterfaceBlocks;
     std::vector<Attribute> mActiveOutputVariables;
     std::vector<Attribute> mActiveAttributes;
+    std::vector<Varying> mActiveVaryings;
     std::map<TString, int> mStd140StructElementIndexes;
     std::map<TIntermTyped*, TString> mFlaggedStructMappedNames;
     std::map<TIntermTyped*, TString> mFlaggedStructOriginalNames;

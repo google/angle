@@ -215,60 +215,16 @@ void Shader::releaseCompiler()
     ShFinalize();
 }
 
-void Shader::parseVaryings()
+void Shader::parseVaryings(void *compiler)
 {
     if (!mHlsl.empty())
     {
-        const std::string varyingsTitle("// Varyings");
-        size_t input = mHlsl.find(varyingsTitle);
-        if (input != std::string::npos)
+        std::vector<sh::ShaderVariable> *activeVaryings;
+        ShGetInfoPointer(compiler, SH_ACTIVE_VARYINGS_ARRAY, reinterpret_cast<void**>(&activeVaryings));
+
+        for (unsigned int varyingIndex = 0; varyingIndex < activeVaryings->size(); varyingIndex++)
         {
-            input += varyingsTitle.length() + 1;
-        }
-
-        while(input != std::string::npos)
-        {
-            char string1[256];
-            char string2[256];
-            char string3[256];
-
-            int matches = sscanf(mHlsl.c_str() + input, "static %255s %255s %255s", string1, string2, string3);
-
-            char *interpolation = "linear";   // Default
-            char *type = string1;
-            char *name = string2;
-
-            if (matches == 0)
-            {
-                break;
-            }
-            else if (matches == 3)
-            {
-                if (string3[0] != '=')   // Explicit interpolation qualifier
-                {
-                    type = string2;
-                    name = string3;
-                }
-            }
-            else UNREACHABLE();
-
-            char *array = strstr(name, "[");
-            int size = 1;
-
-            if (array)
-            {
-                size = atoi(array + 1);
-                *array = '\0';
-            }
-
-            mVaryings.push_back(Varying(parseInterpolation(interpolation), parseType(type), name, size, array != NULL));
-
-            const std::string semiColon(";");
-            input = mHlsl.find(semiColon, input);
-            if (input != std::string::npos)
-            {
-                input += semiColon.length() + 1;
-            }
+            mVaryings.push_back(Varying((*activeVaryings)[varyingIndex]));
         }
 
         mUsesMultipleRenderTargets = mHlsl.find("GL_USES_MRT")          != std::string::npos;
@@ -415,116 +371,6 @@ void Shader::compileToHLSL(void *compiler)
     }
 }
 
-Interpolation Shader::parseInterpolation(const std::string &type)
-{
-    if (type == "linear")
-    {
-        return Smooth;
-    }
-    else if (type == "centroid")
-    {
-        return Centroid;
-    }
-    else if (type == "nointerpolation")
-    {
-        return Flat;
-    }
-    else UNREACHABLE();
-
-    return Smooth;
-}
-
-GLenum Shader::parseType(const std::string &type)
-{
-    if (type == "float")
-    {
-        return GL_FLOAT;
-    }
-    else if (type == "float2")
-    {
-        return GL_FLOAT_VEC2;
-    }
-    else if (type == "float3")
-    {
-        return GL_FLOAT_VEC3;
-    }
-    else if (type == "float4")
-    {
-        return GL_FLOAT_VEC4;
-    }
-    else if (type == "float2x2")
-    {
-        return GL_FLOAT_MAT2;
-    }
-    else if (type == "float3x3")
-    {
-        return GL_FLOAT_MAT3;
-    }
-    else if (type == "float4x4")
-    {
-        return GL_FLOAT_MAT4;
-    }
-    else if (type == "float2x3")
-    {
-        return GL_FLOAT_MAT2x3;
-    }
-    else if (type == "float3x2")
-    {
-        return GL_FLOAT_MAT3x2;
-    }
-    else if (type == "float2x4")
-    {
-        return GL_FLOAT_MAT2x4;
-    }
-    else if (type == "float4x2")
-    {
-        return GL_FLOAT_MAT4x2;
-    }
-    else if (type == "float3x4")
-    {
-        return GL_FLOAT_MAT3x4;
-    }
-    else if (type == "float4x3")
-    {
-        return GL_FLOAT_MAT4x3;
-    }
-    else if (type == "int")
-    {
-        return GL_INT;
-    }
-    else if (type == "int2")
-    {
-        return GL_INT_VEC2;
-    }
-    else if (type == "int3")
-    {
-        return GL_INT_VEC3;
-    }
-    else if (type == "int4")
-    {
-        return GL_INT_VEC4;
-    }
-    else if (type == "uint")
-    {
-        return GL_UNSIGNED_INT;
-    }
-    else if (type == "uint2")
-    {
-        return GL_UNSIGNED_INT_VEC2;
-    }
-    else if (type == "uint3")
-    {
-        return GL_UNSIGNED_INT_VEC3;
-    }
-    else if (type == "uint4")
-    {
-        return GL_UNSIGNED_INT_VEC4;
-    }
-    else UNREACHABLE();
-
-    return GL_NONE;
-}
-
 // [OpenGL ES SL 3.00.4] Section 11 p. 120
 // Vertex Outs/Fragment Ins packing priorities
 static const GLenum varyingPriorityList[] =
@@ -624,7 +470,7 @@ void VertexShader::compile()
 
     compileToHLSL(mVertexCompiler);
     parseAttributes();
-    parseVaryings();
+    parseVaryings(mVertexCompiler);
 }
 
 int VertexShader::getSemanticIndex(const std::string &attributeName)
@@ -678,7 +524,7 @@ void FragmentShader::compile()
     uncompile();
 
     compileToHLSL(mFragmentCompiler);
-    parseVaryings();
+    parseVaryings(mFragmentCompiler);
     mVaryings.sort(compareVarying);
 
     const std::string &hlsl = getHLSL();
