@@ -24,6 +24,8 @@
 #include "libGLESv2/Context.h"
 #include "libGLESv2/Buffer.h"
 
+#include "compiler/HLSLLayoutEncoder.h"
+
 #undef near
 #undef far
 
@@ -2375,7 +2377,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
                 {
                     return false;
                 }
-                fieldRegisterIndex += totalRegisterCount(field);
+                fieldRegisterIndex += sh::HLSLVariableRegisterCount(field);
             }
         }
 

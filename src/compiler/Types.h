@@ -179,42 +179,6 @@ public:
     // Full size of single instance of type
     size_t getObjectSize() const;
 
-    int elementRegisterCount() const
-    {
-        if (structure)
-        {
-            const TFieldList& fields = structure->fields();
-            int registerCount = 0;
-
-            for (size_t i = 0; i < fields.size(); i++)
-            {
-                registerCount += fields[i]->type()->totalRegisterCount();
-            }
-
-            return registerCount;
-        }
-        else if (isMatrix())
-        {
-            return getRows();
-        }
-        else
-        {
-            return 1;
-        }
-    }
-
-    int totalRegisterCount() const
-    {
-        if (array)
-        {
-            return arraySize * elementRegisterCount();
-        }
-        else
-        {
-            return elementRegisterCount();
-        }
-    }
-
     bool isMatrix() const { return primarySize > 1 && secondarySize > 1; }
     bool isArray() const  { return array ? true : false; }
     int getArraySize() const { return arraySize; }

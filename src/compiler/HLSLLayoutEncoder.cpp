@@ -84,4 +84,32 @@ void HLSLBlockEncoder::advanceOffset(GLenum type, unsigned int arraySize, bool i
     }
 }
 
+template <class ShaderVarType>
+unsigned int HLSLRegisterCount(const ShaderVarType &variable)
+{
+    if (variable.isStruct())
+    {
+        unsigned int totalCount = 0;
+        for (size_t fieldIndex = 0; fieldIndex < variable.fields.size(); fieldIndex++)
+        {
+            totalCount += HLSLVariableRegisterCount(variable.fields[fieldIndex]);
+        }
+        return totalCount * variable.elementCount();
+    }
+    else
+    {
+        return gl::VariableRowCount(variable.type) * variable.elementCount();
+    }
+}
+
+unsigned int HLSLVariableRegisterCount(const Varying &variable)
+{
+    return HLSLRegisterCount(variable);
+}
+
+unsigned int HLSLVariableRegisterCount(const Uniform &variable)
+{
+    return HLSLRegisterCount(variable);
+}
+
 }

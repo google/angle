@@ -66,6 +66,18 @@ TString OutputHLSL::TextureFunction::name() const
     return name + "(";
 }
 
+const char *RegisterPrefix(const TType &type)
+{
+    if (IsSampler(type.getBasicType()))
+    {
+        return "s";
+    }
+    else
+    {
+        return "c";
+    }
+}
+
 bool OutputHLSL::TextureFunction::operator<(const TextureFunction &rhs) const
 {
     if (sampler < rhs.sampler) return true;
@@ -530,25 +542,30 @@ void OutputHLSL::header()
     TString attributes;
     TString flaggedStructs;
 
-    for (ReferencedSymbols::const_iterator uniform = mReferencedUniforms.begin(); uniform != mReferencedUniforms.end(); uniform++)
+    for (ReferencedSymbols::const_iterator uniformIt = mReferencedUniforms.begin(); uniformIt != mReferencedUniforms.end(); uniformIt++)
     {
-        const TType &type = uniform->second->getType();
-        const TString &name = uniform->second->getSymbol();
+        const TIntermSymbol &uniform = *uniformIt->second;
+        const TType &type = uniform.getType();
+        const TString &name = uniform.getSymbol();
+
+        int registerIndex = declareUniformAndAssignRegister(type, name);
 
         if (mOutputType == SH_HLSL11_OUTPUT && IsSampler(type.getBasicType()))   // Also declare the texture
         {
-            int index = samplerRegister(mReferencedUniforms[name]);
-
             uniforms += "uniform " + samplerString(type) + " sampler_" + decorateUniform(name, type) + arrayString(type) + 
-                        " : register(s" + str(index) + ");\n";
+                        " : register(s" + str(registerIndex) + ");\n";
 
             uniforms += "uniform " + textureString(type) + " texture_" + decorateUniform(name, type) + arrayString(type) +
-                        " : register(t" + str(index) + ");\n";
+                        " : register(t" + str(registerIndex) + ");\n";
         }
         else
         {
-            uniforms += "uniform " + typeString(type) + " " + decorateUniform(name, type) + arrayString(type) + 
-                        " : register(" + registerString(mReferencedUniforms[name]) + ");\n";
+            const TStructure *structure = type.getStruct();
+            const TString &typeName = (structure ? structureTypeName(*structure, false, false) : typeString(type));
+
+            const TString &registerString = TString("register(") + RegisterPrefix(type) + str(registerIndex) + ")";
+
+            uniforms += "uniform " + typeName + " " + decorateUniform(name, type) + arrayString(type) + " : " + registerString + ";\n";
         }
     }
 
@@ -3539,44 +3556,6 @@ TString OutputHLSL::decorateField(const TString &string, const TStructure &struc
     return string;
 }
 
-TString OutputHLSL::registerString(TIntermSymbol *operand)
-{
-    ASSERT(operand->getQualifier() == EvqUniform);
-
-    if (IsSampler(operand->getBasicType()))
-    {
-        return "s" + str(samplerRegister(operand));
-    }
-
-    return "c" + str(uniformRegister(operand));
-}
-
-int OutputHLSL::samplerRegister(TIntermSymbol *sampler)
-{
-    const TType &type = sampler->getType();
-    ASSERT(IsSampler(type.getBasicType()));
-
-    int index = mSamplerRegister;
-    mSamplerRegister += sampler->totalRegisterCount();
-
-    declareUniform(type, sampler->getSymbol(), index);
-
-    return index;
-}
-
-int OutputHLSL::uniformRegister(TIntermSymbol *uniform)
-{
-    const TType &type = uniform->getType();
-    ASSERT(!IsSampler(type.getBasicType()));
-
-    int index = mUniformRegister;
-    mUniformRegister += uniform->totalRegisterCount();
-
-    declareUniform(type, uniform->getSymbol(), index);
-
-    return index;
-}
-
 void OutputHLSL::declareInterfaceBlockField(const TType &type, const TString &name, std::vector<InterfaceBlockField>& output)
 {
     const TStructure *structure = type.getStruct();
@@ -3609,7 +3588,7 @@ void OutputHLSL::declareInterfaceBlockField(const TType &type, const TString &na
     }
 }
 
-void OutputHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform>& output)
+Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform>& output)
 {
     const TStructure *structure = type.getStruct();
 
@@ -3619,6 +3598,8 @@ void OutputHLSL::declareUniformToList(const TType &type, const TString &name, in
         Uniform uniform(glVariableType(type), glVariablePrecision(type), name.c_str(),
                         (unsigned int)type.getArraySize(), (unsigned int)registerIndex);
         output.push_back(uniform);
+
+        return uniform;
    }
     else
     {
@@ -3632,14 +3613,13 @@ void OutputHLSL::declareUniformToList(const TType &type, const TString &name, in
             TField *field = fields[fieldIndex];
             TType *fieldType = field->type();
 
-            // make sure to copy matrix packing information
-            fieldType->setLayoutQualifier(type.getLayoutQualifier());
-
-            declareUniformToList(*fieldType, field->name(), fieldRegister, structUniform.fields);
-            fieldRegister += fieldType->totalRegisterCount();
+            const Uniform &fieldVariable = declareUniformToList(*fieldType, field->name(), fieldRegister, structUniform.fields);
+            fieldRegister += HLSLVariableRegisterCount(fieldVariable);
         }
 
         output.push_back(structUniform);
+
+        return structUniform;
     }
 }
 
@@ -3691,9 +3671,22 @@ void OutputHLSL::declareVaryingToList(const TType &type, const TString &name, st
     }
 }
 
-void OutputHLSL::declareUniform(const TType &type, const TString &name, int index)
+int OutputHLSL::declareUniformAndAssignRegister(const TType &type, const TString &name)
 {
-    declareUniformToList(type, name, index, mActiveUniforms);
+    int registerIndex = (IsSampler(type.getBasicType()) ? mSamplerRegister : mUniformRegister);
+
+    const Uniform &uniform = declareUniformToList(type, name, registerIndex, mActiveUniforms);
+
+    if (IsSampler(type.getBasicType()))
+    {
+        mSamplerRegister += HLSLVariableRegisterCount(uniform);
+    }
+    else
+    {
+        mUniformRegister += HLSLVariableRegisterCount(uniform);
+    }
+
+    return registerIndex;
 }
 
 GLenum OutputHLSL::glVariableType(const TType &type)

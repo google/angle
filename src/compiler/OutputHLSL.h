@@ -178,9 +178,12 @@ class OutputHLSL : public TIntermTraverser
     int samplerRegister(TIntermSymbol *sampler);
     int uniformRegister(TIntermSymbol *uniform);
     void declareInterfaceBlockField(const TType &type, const TString &name, std::vector<InterfaceBlockField>& output);
-    void declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform>& output);
+    Uniform declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform>& output);
     void declareUniform(const TType &type, const TString &name, int index);
     void declareVaryingToList(const TType &type, const TString &name, std::vector<Varying>& fieldsOut);
+
+    // Returns the uniform's register index
+    int declareUniformAndAssignRegister(const TType &type, const TString &name);
 
     TString interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, const TField &field);
     TString decoratePrivate(const TString &privateText);
