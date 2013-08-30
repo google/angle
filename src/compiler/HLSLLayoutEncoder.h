@@ -23,9 +23,10 @@ class HLSLBlockEncoder : public BlockLayoutEncoder
   public:
     HLSLBlockEncoder(std::vector<BlockMemberInfo> *blockInfoOut);
 
-  protected:
     virtual void enterAggregateType();
     virtual void exitAggregateType();
+
+  protected:
     virtual void getBlockLayoutInfo(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int *arrayStrideOut, int *matrixStrideOut);
     virtual void advanceOffset(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int arrayStride, int matrixStride);
 };

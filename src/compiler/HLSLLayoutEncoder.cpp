@@ -85,31 +85,45 @@ void HLSLBlockEncoder::advanceOffset(GLenum type, unsigned int arraySize, bool i
 }
 
 template <class ShaderVarType>
-unsigned int HLSLRegisterCount(const ShaderVarType &variable)
+void HLSLVariableRegisterCount(const ShaderVarType &variable, HLSLBlockEncoder *encoder)
 {
     if (variable.isStruct())
     {
-        unsigned int totalCount = 0;
-        for (size_t fieldIndex = 0; fieldIndex < variable.fields.size(); fieldIndex++)
+        for (size_t arrayElement = 0; arrayElement < variable.elementCount(); arrayElement++)
         {
-            totalCount += HLSLVariableRegisterCount(variable.fields[fieldIndex]);
+            encoder->enterAggregateType();
+
+            for (size_t fieldIndex = 0; fieldIndex < variable.fields.size(); fieldIndex++)
+            {
+                HLSLVariableRegisterCount(variable.fields[fieldIndex], encoder);
+            }
+
+            encoder->exitAggregateType();
         }
-        return totalCount * variable.elementCount();
     }
     else
     {
-        return gl::VariableRowCount(variable.type) * variable.elementCount();
+        // We operate only on varyings and uniforms, which do not have matrix layout qualifiers
+        encoder->encodeType(variable.type, variable.arraySize, false);
     }
 }
 
 unsigned int HLSLVariableRegisterCount(const Varying &variable)
 {
-    return HLSLRegisterCount(variable);
+    HLSLBlockEncoder encoder(NULL);
+    HLSLVariableRegisterCount(variable, &encoder);
+
+    const size_t registerBytes = (encoder.BytesPerComponent * encoder.ComponentsPerRegister);
+    return rx::roundUp(encoder.getBlockSize(), registerBytes) / registerBytes;
 }
 
 unsigned int HLSLVariableRegisterCount(const Uniform &variable)
 {
-    return HLSLRegisterCount(variable);
+    HLSLBlockEncoder encoder(NULL);
+    HLSLVariableRegisterCount(variable, &encoder);
+
+    const size_t registerBytes = (encoder.BytesPerComponent * encoder.ComponentsPerRegister);
+    return rx::roundUp(encoder.getBlockSize(), registerBytes) / registerBytes;
 }
 
 }
