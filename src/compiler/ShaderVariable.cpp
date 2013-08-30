@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/Uniform.h"
+#include "compiler/ShaderVariable.h"
 
 namespace sh
 {

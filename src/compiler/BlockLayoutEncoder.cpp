@@ -5,7 +5,7 @@
 //
 
 #include "compiler/BlockLayoutEncoder.h"
-#include "compiler/Uniform.h"
+#include "compiler/ShaderVariable.h"
 #include "common/mathutil.h"
 #include "common/utilities.h"
 

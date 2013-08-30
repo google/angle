@@ -29,13 +29,13 @@
     <ClCompile Include="UnfoldShortCircuit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Uniform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="HLSLLayoutEncoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FlagStd140Structs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderVariable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -55,13 +55,13 @@
     <ClInclude Include="UnfoldShortCircuit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Uniform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="HLSLLayoutEncoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FlagStd140Structs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderVariable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

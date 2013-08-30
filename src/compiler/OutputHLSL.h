@@ -17,7 +17,7 @@
 
 #include "compiler/intermediate.h"
 #include "compiler/ParseHelper.h"
-#include "compiler/Uniform.h"
+#include "compiler/ShaderVariable.h"
 
 namespace sh
 {

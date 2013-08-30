@@ -150,7 +150,7 @@
     <ClCompile Include="SearchSymbol.cpp" />
     <ClCompile Include="TranslatorHLSL.cpp" />
     <ClCompile Include="UnfoldShortCircuit.cpp" />
-    <ClCompile Include="Uniform.cpp" />
+    <ClCompile Include="ShaderVariable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FlagStd140Structs.h" />
@@ -160,7 +160,7 @@
     <ClInclude Include="SearchSymbol.h" />
     <ClInclude Include="TranslatorHLSL.h" />
     <ClInclude Include="UnfoldShortCircuit.h" />
-    <ClInclude Include="Uniform.h" />
+    <ClInclude Include="ShaderVariable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,7 +8,7 @@
 #define COMPILER_TRANSLATORHLSL_H_
 
 #include "compiler/ShHandle.h"
-#include "compiler/Uniform.h"
+#include "compiler/ShaderVariable.h"
 
 class TranslatorHLSL : public TCompiler {
 public:
