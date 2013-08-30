@@ -1725,6 +1725,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         stream.read(&mUniforms[i]->psRegisterIndex);
         stream.read(&mUniforms[i]->vsRegisterIndex);
         stream.read(&mUniforms[i]->registerCount);
+        stream.read(&mUniforms[i]->registerElement);
     }
 
     stream.read(&size);
@@ -1898,6 +1899,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         stream.write(uniform.psRegisterIndex);
         stream.write(uniform.vsRegisterIndex);
         stream.write(uniform.registerCount);
+        stream.write(uniform.registerElement);
     }
 
     stream.write(mUniformBlocks.size());

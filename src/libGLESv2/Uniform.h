@@ -33,6 +33,7 @@ struct Uniform
     bool isReferencedByVertexShader() const;
     bool isReferencedByFragmentShader() const;
     bool isInDefaultBlock() const;
+    size_t dataSize() const;
 
     const GLenum type;
     const GLenum precision;
@@ -47,6 +48,10 @@ struct Uniform
     unsigned int psRegisterIndex;
     unsigned int vsRegisterIndex;
     unsigned int registerCount;
+
+    // Register "elements" are used for uniform structs in ES3, to appropriately identify single uniforms
+    // inside aggregate types, which are packed according C-like structure rules.
+    unsigned int registerElement;
 };
 
 typedef std::vector<Uniform*> UniformArray;

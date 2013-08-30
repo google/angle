@@ -23,13 +23,14 @@ Uniform::Uniform(GLenum type, GLenum precision, const std::string &name, unsigne
       dirty(true),
       psRegisterIndex(GL_INVALID_INDEX),
       vsRegisterIndex(GL_INVALID_INDEX),
-      registerCount(0)
+      registerCount(0),
+      registerElement(0)
 {
     // We use data storage for default block uniforms to cache values that are sent to D3D during rendering
     // Uniform blocks/buffers are treated separately by the Renderer (ES3 path only)
     if (isInDefaultBlock())
     {
-        size_t bytes = UniformInternalSize(type) * elementCount();
+        size_t bytes = dataSize();
         data = new unsigned char[bytes];
         memset(data, 0, bytes);
         registerCount = VariableRowCount(type) * elementCount();
@@ -64,6 +65,11 @@ bool Uniform::isReferencedByFragmentShader() const
 bool Uniform::isInDefaultBlock() const
 {
     return blockIndex == -1;
+}
+
+size_t Uniform::dataSize() const
+{
+    return UniformInternalSize(type) * elementCount();
 }
 
 UniformBlock::UniformBlock(const std::string &name, unsigned int elementIndex, unsigned int dataSize)

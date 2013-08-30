@@ -1442,20 +1442,31 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
         mapPS = (float(*)[4])map.pData;
     }
 
-    for (gl::UniformArray::iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
+    for (size_t uniformIndex = 0; uniformIndex < uniformArray->size(); uniformIndex++)
     {
-        gl::Uniform *uniform = *uniform_iterator;
+        gl::Uniform *uniform = (*uniformArray)[uniformIndex];
 
         if (!gl::IsSampler(uniform->type))
         {
+            unsigned int componentCount = (4 - uniform->registerElement);
+
+            // we always assume that uniforms from structs are arranged in struct order in our uniforms list. otherwise we would
+            // overwrite previously written regions of memory.
+            if (uniformIndex > 0)
+            {
+                gl::Uniform *previousUniform = (*uniformArray)[uniformIndex-1];
+                ASSERT(!uniform->isReferencedByVertexShader() || previousUniform->vsRegisterIndex != uniform->vsRegisterIndex || uniform->registerElement > previousUniform->registerElement);
+                ASSERT(!uniform->isReferencedByFragmentShader() || previousUniform->psRegisterIndex != uniform->psRegisterIndex || uniform->registerElement > previousUniform->registerElement);
+            }
+
             if (uniform->isReferencedByVertexShader() && mapVS)
             {
-                memcpy(mapVS + uniform->vsRegisterIndex, uniform->data, uniform->registerCount * sizeof(float[4]));
+                memcpy(&mapVS[uniform->vsRegisterIndex][uniform->registerElement], uniform->data, uniform->registerCount * sizeof(float) * componentCount);
             }
 
             if (uniform->isReferencedByFragmentShader() && mapPS)
             {
-                memcpy(mapPS + uniform->psRegisterIndex, uniform->data, uniform->registerCount * sizeof(float[4]));
+                memcpy(&mapPS[uniform->psRegisterIndex][uniform->registerElement], uniform->data, uniform->registerCount * sizeof(float) * componentCount);
             }
         }
 
