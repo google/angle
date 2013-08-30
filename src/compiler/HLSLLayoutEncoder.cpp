@@ -26,35 +26,33 @@ void HLSLBlockEncoder::exitAggregateType()
 {
 }
 
-void HLSLBlockEncoder::getBlockLayoutInfo(const sh::Uniform &uniform, int *arrayStrideOut, int *matrixStrideOut)
+void HLSLBlockEncoder::getBlockLayoutInfo(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int *arrayStrideOut, int *matrixStrideOut)
 {
-    ASSERT(uniform.fields.empty());
-
     // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
-    ASSERT(gl::UniformComponentSize(gl::UniformComponentType(uniform.type)) == ComponentSize);
+    ASSERT(gl::UniformComponentSize(gl::UniformComponentType(type)) == ComponentSize);
 
     int matrixStride = 0;
     int arrayStride = 0;
 
-    if (gl::IsMatrixType(uniform.type))
+    if (gl::IsMatrixType(type))
     {
         nextRegister();
         matrixStride = RegisterSize;
 
-        if (uniform.arraySize > 0)
+        if (arraySize > 0)
         {
-            const int numRegisters = gl::MatrixRegisterCount(uniform.type, uniform.isRowMajorMatrix);
+            const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
             arrayStride = RegisterSize * numRegisters;
         }
     }
-    else if (uniform.arraySize > 0)
+    else if (arraySize > 0)
     {
         nextRegister();
         arrayStride = RegisterSize;
     }
     else
     {
-        int numComponents = gl::UniformComponentCount(uniform.type);
+        int numComponents = gl::UniformComponentCount(type);
         if ((numComponents + (mCurrentOffset % RegisterSize)) > RegisterSize)
         {
             nextRegister();
@@ -65,24 +63,24 @@ void HLSLBlockEncoder::getBlockLayoutInfo(const sh::Uniform &uniform, int *array
     *arrayStrideOut = arrayStride;
 }
 
-void HLSLBlockEncoder::advanceOffset(const sh::Uniform &uniform, int arrayStride, int matrixStride)
+void HLSLBlockEncoder::advanceOffset(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int arrayStride, int matrixStride)
 {
-    if (uniform.arraySize > 0)
+    if (arraySize > 0)
     {
-        mCurrentOffset += arrayStride * (uniform.arraySize - 1);
+        mCurrentOffset += arrayStride * (arraySize - 1);
     }
 
-    if (gl::IsMatrixType(uniform.type))
+    if (gl::IsMatrixType(type))
     {
         ASSERT(matrixStride == RegisterSize);
-        const int numRegisters = gl::MatrixRegisterCount(uniform.type, uniform.isRowMajorMatrix);
-        const int numComponents = gl::MatrixComponentCount(uniform.type, uniform.isRowMajorMatrix);
+        const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
+        const int numComponents = gl::MatrixComponentCount(type, isRowMajorMatrix);
         mCurrentOffset += RegisterSize * (numRegisters - 1);
         mCurrentOffset += numComponents;
     }
     else
     {
-        mCurrentOffset += gl::UniformComponentCount(uniform.type);
+        mCurrentOffset += gl::UniformComponentCount(type);
     }
 }
 

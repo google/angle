@@ -8,6 +8,9 @@
 #define TRANSLATOR_COMMON_BLOCKLAYOUTENCODER_H_
 
 #include <vector>
+#define GL_APICALL
+#include <GLES3/gl3.h>
+#include <GLES2/gl2.h>
 
 namespace sh
 {
@@ -22,6 +25,7 @@ class BlockLayoutEncoder
 
     void encodeFields(const std::vector<Uniform> &fields);
     void encodeType(const Uniform &uniform);
+    void encodeType(GLenum type, unsigned int arraySize, bool isRowMajorMatrix);
     size_t getBlockSize() { return mCurrentOffset * ComponentSize; }
 
     static const size_t ComponentSize = 4u;
@@ -34,8 +38,8 @@ class BlockLayoutEncoder
 
     virtual void enterAggregateType() = 0;
     virtual void exitAggregateType() = 0;
-    virtual void getBlockLayoutInfo(const Uniform &uniform, int *arrayStrideOut, int *matrixStrideOut) = 0;
-    virtual void advanceOffset(const Uniform &uniform, int arrayStride, int matrixStride) = 0;
+    virtual void getBlockLayoutInfo(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int *arrayStrideOut, int *matrixStrideOut) = 0;
+    virtual void advanceOffset(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int arrayStride, int matrixStride) = 0;
 
   private:
     std::vector<BlockMemberInfo> *mBlockInfoOut;
@@ -52,8 +56,8 @@ class Std140BlockEncoder : public BlockLayoutEncoder
   protected:
     virtual void enterAggregateType();
     virtual void exitAggregateType();
-    virtual void getBlockLayoutInfo(const Uniform &uniform, int *arrayStrideOut, int *matrixStrideOut);
-    virtual void advanceOffset(const Uniform &uniform, int arrayStride, int matrixStride);
+    virtual void getBlockLayoutInfo(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int *arrayStrideOut, int *matrixStrideOut);
+    virtual void advanceOffset(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int arrayStride, int matrixStride);
 };
 
 }

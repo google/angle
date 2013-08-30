@@ -23,8 +23,8 @@ class HLSLBlockEncoder : public BlockLayoutEncoder
   protected:
     virtual void enterAggregateType();
     virtual void exitAggregateType();
-    virtual void getBlockLayoutInfo(const sh::Uniform &uniform, int *arrayStrideOut, int *matrixStrideOut);
-    virtual void advanceOffset(const sh::Uniform &uniform, int arrayStride, int matrixStride);
+    virtual void getBlockLayoutInfo(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int *arrayStrideOut, int *matrixStrideOut);
+    virtual void advanceOffset(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int arrayStride, int matrixStride);
 };
 
 }
