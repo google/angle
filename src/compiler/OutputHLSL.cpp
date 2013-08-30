@@ -635,7 +635,7 @@ void OutputHLSL::header()
         varyings += "static " + interpolationString(type.getQualifier()) + " " + typeString(type) + " " +
                     decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
 
-        declareVaryingToList(type, name, mActiveVaryings);
+        declareVaryingToList(type, type.getQualifier(), name, mActiveVaryings);
     }
 
     for (ReferencedSymbols::const_iterator attribute = mReferencedAttributes.begin(); attribute != mReferencedAttributes.end(); attribute++)
@@ -3646,11 +3646,11 @@ InterpolationType getInterpolationType(TQualifier qualifier)
     }
 }
 
-void OutputHLSL::declareVaryingToList(const TType &type, const TString &name, std::vector<Varying>& fieldsOut)
+void OutputHLSL::declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<Varying>& fieldsOut)
 {
     const TStructure *structure = type.getStruct();
 
-    InterpolationType interpolation = getInterpolationType(type.getQualifier());
+    InterpolationType interpolation = getInterpolationType(baseTypeQualifier);
     if (!structure)
     {
         Varying varying(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), interpolation);
@@ -3664,7 +3664,7 @@ void OutputHLSL::declareVaryingToList(const TType &type, const TString &name, st
         for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
         {
             const TField &field = *fields[fieldIndex];
-            declareVaryingToList(*field.type(), field.name(), structVarying.fields);
+            declareVaryingToList(*field.type(), baseTypeQualifier, field.name(), structVarying.fields);
         }
 
         fieldsOut.push_back(structVarying);
