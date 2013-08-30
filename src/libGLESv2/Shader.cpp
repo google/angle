@@ -221,11 +221,7 @@ void Shader::parseVaryings(void *compiler)
     {
         std::vector<sh::Varying> *activeVaryings;
         ShGetInfoPointer(compiler, SH_ACTIVE_VARYINGS_ARRAY, reinterpret_cast<void**>(&activeVaryings));
-
-        for (unsigned int varyingIndex = 0; varyingIndex < activeVaryings->size(); varyingIndex++)
-        {
-            mVaryings.push_back(Varying((*activeVaryings)[varyingIndex]));
-        }
+        mVaryings = *activeVaryings;
 
         mUsesMultipleRenderTargets = mHlsl.find("GL_USES_MRT")          != std::string::npos;
         mUsesFragColor             = mHlsl.find("GL_USES_FRAG_COLOR")   != std::string::npos;
@@ -414,7 +410,7 @@ static const GLenum varyingPriorityList[] =
 };
 
 // true if varying x has a higher priority in packing than y
-bool Shader::compareVarying(const Varying &x, const Varying &y)
+bool Shader::compareVarying(const sh::ShaderVariable &x, const sh::ShaderVariable &y)
 {
     if (x.type == y.type)
     {

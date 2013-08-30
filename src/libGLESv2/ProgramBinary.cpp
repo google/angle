@@ -926,7 +926,7 @@ bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuff
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
 // Returns the number of used varying registers, or -1 if unsuccesful
-int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], FragmentShader *fragmentShader)
+int ProgramBinary::packVaryings(InfoLog &infoLog, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader)
 {
     const int maxVaryingVectors = mRenderer->getMaxVaryingVectors();
 
@@ -934,7 +934,7 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
 
     for (unsigned int varyingIndex = 0; varyingIndex < fragmentShader->mVaryings.size(); varyingIndex++)
     {
-        Varying *varying = &fragmentShader->mVaryings[varyingIndex];
+        sh::Varying *varying = &fragmentShader->mVaryings[varyingIndex];
         GLenum transposedType = TransposeMatrixType(varying->type);
         int n = VariableRowCount(transposedType) * varying->elementCount();
         int m = VariableColumnCount(transposedType);
@@ -1103,7 +1103,7 @@ void ProgramBinary::defineOutputVariables(FragmentShader *fragmentShader)
     }
 }
 
-bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying *packing[][4],
+bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const sh::ShaderVariable *packing[][4],
                                  std::string& pixelHLSL, std::string& vertexHLSL,
                                  FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
@@ -1144,12 +1144,12 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
 
     for (unsigned int fragVaryingIndex = 0; fragVaryingIndex < fragmentShader->mVaryings.size(); fragVaryingIndex++)
     {
-        Varying *input = &fragmentShader->mVaryings[fragVaryingIndex];
+        sh::Varying *input = &fragmentShader->mVaryings[fragVaryingIndex];
         bool matched = false;
 
         for (unsigned int vertVaryingIndex = 0; vertVaryingIndex < vertexShader->mVaryings.size(); vertVaryingIndex++)
         {
-            Varying *output = &vertexShader->mVaryings[vertVaryingIndex];
+            sh::Varying *output = &vertexShader->mVaryings[vertVaryingIndex];
             if (output->name == input->name)
             {
                 if (output->type != input->type || output->arraySize != input->arraySize || output->interpolation != input->interpolation)
@@ -1301,7 +1301,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
 
     for (unsigned int vertVaryingIndex = 0; vertVaryingIndex < vertexShader->mVaryings.size(); vertVaryingIndex++)
     {
-        Varying *varying = &vertexShader->mVaryings[vertVaryingIndex];
+        sh::Varying *varying = &vertexShader->mVaryings[vertVaryingIndex];
         if (varying->registerAssigned())
         {
             for (unsigned int elementIndex = 0; elementIndex < varying->elementCount(); elementIndex++)
@@ -1500,7 +1500,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
 
     for (unsigned int varyingIndex = 0; varyingIndex < fragmentShader->mVaryings.size(); varyingIndex++)
     {
-        Varying *varying = &fragmentShader->mVaryings[varyingIndex];
+        sh::Varying *varying = &fragmentShader->mVaryings[varyingIndex];
         if (varying->registerAssigned())
         {
             for (unsigned int elementIndex = 0; elementIndex < varying->elementCount(); elementIndex++)
@@ -1581,7 +1581,7 @@ std::string ProgramBinary::generateVaryingHLSL(FragmentShader *fragmentShader, c
 
     for (unsigned int varyingIndex = 0; varyingIndex < fragmentShader->mVaryings.size(); varyingIndex++)
     {
-        Varying *varying = &fragmentShader->mVaryings[varyingIndex];
+        sh::Varying *varying = &fragmentShader->mVaryings[varyingIndex];
         if (varying->registerAssigned())
         {
             for (unsigned int elementIndex = 0; elementIndex < varying->elementCount(); elementIndex++)
@@ -2004,7 +2004,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     std::string vertexHLSL = vertexShader->getHLSL();
 
     // Map the varyings to the register file
-    const Varying *packing[IMPLEMENTATION_MAX_VARYING_VECTORS][4] = {NULL};
+    const sh::ShaderVariable *packing[IMPLEMENTATION_MAX_VARYING_VECTORS][4] = {NULL};
     int registers = packVaryings(infoLog, packing, fragmentShader);
 
     if (registers < 0)
@@ -2691,14 +2691,14 @@ bool ProgramBinary::assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *u
     return true;
 }
 
-std::string ProgramBinary::generateGeometryShaderHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const
+std::string ProgramBinary::generateGeometryShaderHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const
 {
     // for now we only handle point sprite emulation
     ASSERT(usesPointSpriteEmulation());
     return generatePointSpriteHLSL(registers, packing, fragmentShader, vertexShader);
 }
 
-std::string ProgramBinary::generatePointSpriteHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const
+std::string ProgramBinary::generatePointSpriteHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const
 {
     ASSERT(registers >= 0);
     ASSERT(vertexShader->mUsesPointSize);

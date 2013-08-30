@@ -43,8 +43,16 @@ InterfaceBlockField::InterfaceBlockField(GLenum typeIn, GLenum precisionIn, cons
 
 Varying::Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, InterpolationType interpolationIn)
     : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
-      interpolation(interpolationIn)
+      interpolation(interpolationIn),
+      registerIndex(GL_INVALID_INDEX),
+      elementIndex(GL_INVALID_INDEX)
 {
+}
+
+void Varying::resetRegisterAssignment()
+{
+    registerIndex = GL_INVALID_INDEX;
+    elementIndex = GL_INVALID_INDEX;
 }
 
 BlockMemberInfo::BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)

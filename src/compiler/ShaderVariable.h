@@ -32,6 +32,8 @@ struct ShaderVariable
     unsigned int arraySize;
 
     ShaderVariable(GLenum type, GLenum precision, const char *name, unsigned int arraySize);
+    bool isArray() const { return arraySize > 0; }
+    unsigned int elementCount() const { return std::max(1u, arraySize); }
 };
 
 struct Uniform : public ShaderVariable
@@ -66,10 +68,15 @@ struct Varying : public ShaderVariable
 {
     InterpolationType interpolation;
     std::vector<Varying> fields;
+    unsigned int registerIndex;    // Assigned during link
+    unsigned int elementIndex;     // First register element for varyings, assigned during link
 
     Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, InterpolationType interpolationIn);
 
     bool isStruct() const { return !fields.empty(); }
+    bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }
+
+    void resetRegisterAssignment();
 };
 
 struct BlockMemberInfo

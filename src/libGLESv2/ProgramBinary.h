@@ -39,7 +39,6 @@ class FragmentShader;
 class VertexShader;
 class InfoLog;
 class AttributeBindings;
-struct Varying;
 class Buffer;
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
@@ -148,8 +147,8 @@ class ProgramBinary : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(ProgramBinary);
 
-    int packVaryings(InfoLog &infoLog, const Varying *packing[][4], FragmentShader *fragmentShader);
-    bool linkVaryings(InfoLog &infoLog, int registers, const Varying *packing[][4],
+    int packVaryings(InfoLog &infoLog, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader);
+    bool linkVaryings(InfoLog &infoLog, int registers, const sh::ShaderVariable *packing[][4],
                       std::string& pixelHLSL, std::string& vertexHLSL,
                       FragmentShader *fragmentShader, VertexShader *vertexShader);
     std::string generateVaryingHLSL(FragmentShader *fragmentShader, const std::string &varyingSemantic) const;
@@ -173,8 +172,8 @@ class ProgramBinary : public RefCountObject
     bool assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex);
     void defineOutputVariables(FragmentShader *fragmentShader);
 
-    std::string generateGeometryShaderHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
-    std::string generatePointSpriteHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
+    std::string generateGeometryShaderHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
+    std::string generatePointSpriteHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
 
     template <typename T>
     bool setUniform(GLint location, GLsizei count, const T* v, GLenum targetUniformType);

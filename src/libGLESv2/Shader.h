@@ -31,36 +31,6 @@ namespace gl
 {
 class ResourceManager;
 
-struct Varying
-{
-    Varying(const sh::Varying &shaderVar)
-        : interpolation(shaderVar.interpolation),
-          type(shaderVar.type),
-          name(shaderVar.name),
-          arraySize(shaderVar.arraySize),
-          registerIndex(GL_INVALID_INDEX),
-          elementIndex(GL_INVALID_INDEX)
-    {}
-
-    sh::InterpolationType interpolation;
-    GLenum type;
-    std::string name;
-    unsigned int arraySize;
-
-    bool isArray() const { return arraySize > 0; }
-    unsigned int elementCount() const { return std::max(1u, arraySize); }
-    bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }
-
-    void resetRegisterAssignment()
-    {
-        registerIndex = GL_INVALID_INDEX;
-        elementIndex = GL_INVALID_INDEX;
-    }
-
-    unsigned int registerIndex;    // First varying register, assigned during link
-    unsigned int elementIndex;     // First register element, assigned during link
-};
-
 class Shader
 {
     friend class ProgramBinary;
@@ -106,11 +76,11 @@ class Shader
 
     void getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *length, char *buffer) const;
 
-    static bool compareVarying(const Varying &x, const Varying &y);
+    static bool compareVarying(const sh::ShaderVariable &x, const sh::ShaderVariable &y);
 
     const rx::Renderer *const mRenderer;
 
-    std::vector<Varying> mVaryings;
+    std::vector<sh::Varying> mVaryings;
 
     bool mUsesMultipleRenderTargets;
     bool mUsesFragColor;
