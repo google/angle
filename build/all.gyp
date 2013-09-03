@@ -12,7 +12,7 @@
         # as soon as we can get rid of manually-maintained sln files.
         # Otherwise auto-generated sln files will overwrite/conflict the
         # manually maintained ones.
-        '../samples/build_samples.gyp:*',
+        '../samples/samples.gyp:*',
         '../src/angle.gyp:*',
         '../tests/build_tests.gyp:*',
       ],
