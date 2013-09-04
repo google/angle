@@ -571,7 +571,9 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
     ID3D11Resource *sourceStaging = createStagingTexture(device, deviceContext, source, sourceSubresource, sourceSize, D3D11_CPU_ACCESS_READ);
-    ID3D11Resource *destStaging = createStagingTexture(device, deviceContext, dest, destSubresource, destSize, D3D11_CPU_ACCESS_WRITE);
+    // HACK: Create the destination staging buffer as a read/write texture so ID3D11DevicContext::UpdateSubresource can be called
+    //       using it's mapped data as a source
+    ID3D11Resource *destStaging = createStagingTexture(device, deviceContext, dest, destSubresource, destSize, D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE);
 
     if (!sourceStaging || !destStaging)
     {
@@ -678,10 +680,16 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
         }
     }
 
+    // HACK: Use ID3D11DevicContext::UpdateSubresource which causes an extra copy compared to ID3D11DevicContext::CopySubresourceRegion
+    //       according to MSDN.
+    deviceContext->UpdateSubresource(dest, destSubresource, NULL, destMapping.pData, destMapping.RowPitch, destMapping.DepthPitch);
+
     deviceContext->Unmap(sourceStaging, 0);
     deviceContext->Unmap(destStaging, 0);
 
-    deviceContext->CopySubresourceRegion(dest, destSubresource, 0, 0, 0, destStaging, 0, NULL);
+    // TODO: Determine why this call to ID3D11DevicContext::CopySubresourceRegion causes a TDR timeout on some
+    //       systems when called repeatedly.
+    // deviceContext->CopySubresourceRegion(dest, destSubresource, 0, 0, 0, destStaging, 0, NULL);
 
     SafeRelease(sourceStaging);
     SafeRelease(destStaging);
