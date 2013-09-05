@@ -8,13 +8,9 @@
       'target_name': 'all',
       'type': 'none',
       'dependencies': [
-        # TODO(alokp): build_ prefix should be removed from the gyp files
-        # as soon as we can get rid of manually-maintained sln files.
-        # Otherwise auto-generated sln files will overwrite/conflict the
-        # manually maintained ones.
         '../samples/samples.gyp:*',
         '../src/angle.gyp:*',
-        '../tests/build_tests.gyp:*',
+        '../tests/tests.gyp:*',
       ],
     },
   ],
