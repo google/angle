@@ -246,15 +246,6 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
             return gl::error(GL_INVALID_OPERATION, false);
         }
 
-        if (format != GL_NONE)
-        {
-            GLenum internalformat = gl::GetSizedInternalFormat(format, type, context->getClientVersion());
-            if (internalformat != textureInternalFormat)
-            {
-                return gl::error(GL_INVALID_OPERATION, false);
-            }
-        }
-
         if (isCompressed)
         {
             if ((width % 4 != 0 && width != textureLevelWidth) ||
