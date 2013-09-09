@@ -65,7 +65,7 @@ class Blit11
                                         void *outVertices, unsigned int *outStride, unsigned int *outVertexCount,
                                         D3D11_PRIMITIVE_TOPOLOGY *outTopology);
 
-    struct BlitShader
+    struct Shader
     {
         WriteVertexFunction mVertexWriteFunction;
         ID3D11InputLayout *mInputLayout;
@@ -75,11 +75,11 @@ class Blit11
     };
 
     typedef bool (*BlitParametersComparisonFunction)(const BlitParameters&, const BlitParameters &);
-    typedef std::map<BlitParameters, BlitShader, BlitParametersComparisonFunction> BlitShaderMap;
-    BlitShaderMap mShaderMap;
+    typedef std::map<BlitParameters, Shader, BlitParametersComparisonFunction> BlitShaderMap;
+    BlitShaderMap mBlitShaderMap;
 
-    void add2DShaderToMap(GLenum destFormat, bool signedInteger, ID3D11PixelShader *ps);
-    void add3DShaderToMap(GLenum destFormat, bool signedInteger, ID3D11PixelShader *ps);
+    void add2DBlitShaderToMap(GLenum destFormat, bool signedInteger, ID3D11PixelShader *ps);
+    void add3DBlitShaderToMap(GLenum destFormat, bool signedInteger, ID3D11PixelShader *ps);
 
     void buildShaderMap();
     void clearShaderMap();
