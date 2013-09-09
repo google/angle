@@ -109,6 +109,7 @@ FormatMap BuildES3FormatMap()
     InsertFormatMapping(&map, GL_RGBA_INTEGER,       GL_SHORT,                          GL_RGBA16I,                WriteColor<R16G16B16A16S, GLint>  );
     InsertFormatMapping(&map, GL_RGBA_INTEGER,       GL_UNSIGNED_INT,                   GL_RGBA32UI,               WriteColor<R32G32B32A32, GLuint>  );
     InsertFormatMapping(&map, GL_RGBA_INTEGER,       GL_INT,                            GL_RGBA32I,                WriteColor<R32G32B32A32S, GLint>  );
+    InsertFormatMapping(&map, GL_RGBA_INTEGER,       GL_UNSIGNED_INT_2_10_10_10_REV,    GL_RGB10_A2UI,             WriteColor<R10G10B10A2, GLuint>   );
 
     InsertFormatMapping(&map, GL_RGB,                GL_UNSIGNED_BYTE,                  GL_RGB8,                   WriteColor<R8G8B8, GLfloat>       );
     InsertFormatMapping(&map, GL_RGB,                GL_BYTE,                           GL_RGB8_SNORM,             WriteColor<R8G8B8S, GLfloat>      );
@@ -665,7 +666,7 @@ static InternalFormatInfoMap BuildES3InternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_RGBA8,             InternalFormatInfo::RGBAFormat( 8,  8,  8,  8, 0, GL_RGBA,         GL_UNSIGNED_BYTE,                GL_UNSIGNED_NORMALIZED, false, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGBA8_SNORM,       InternalFormatInfo::RGBAFormat( 8,  8,  8,  8, 0, GL_RGBA,         GL_BYTE,                         GL_SIGNED_NORMALIZED,   false, NeverSupported,  AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGB10_A2,          InternalFormatInfo::RGBAFormat(10, 10, 10,  2, 0, GL_RGBA,         GL_UNSIGNED_INT_2_10_10_10_REV,  GL_UNSIGNED_NORMALIZED, false, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
-    map.insert(InternalFormatInfoPair(GL_RGB10_A2UI,        InternalFormatInfo::RGBAFormat(10, 10, 10,  2, 0, GL_RGBA,         GL_UNSIGNED_INT_2_10_10_10_REV,  GL_UNSIGNED_INT,        false, AlwaysSupported, NeverSupported,  AlwaysSupported     )));
+    map.insert(InternalFormatInfoPair(GL_RGB10_A2UI,        InternalFormatInfo::RGBAFormat(10, 10, 10,  2, 0, GL_RGBA_INTEGER, GL_UNSIGNED_INT_2_10_10_10_REV,  GL_UNSIGNED_INT,        false, AlwaysSupported, NeverSupported,  AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_SRGB8,             InternalFormatInfo::RGBAFormat( 8,  8,  8,  0, 0, GL_RGB,          GL_UNSIGNED_BYTE,                GL_UNSIGNED_NORMALIZED, true,  NeverSupported,  AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_SRGB8_ALPHA8,      InternalFormatInfo::RGBAFormat( 8,  8,  8,  8, 0, GL_RGBA,         GL_UNSIGNED_BYTE,                GL_UNSIGNED_NORMALIZED, true,  AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_R11F_G11F_B10F,    InternalFormatInfo::RGBAFormat(11, 11, 10,  0, 0, GL_RGB,          GL_UNSIGNED_INT_10F_11F_11F_REV, GL_FLOAT,               false, NeverSupported,  AlwaysSupported, AlwaysSupported     )));
