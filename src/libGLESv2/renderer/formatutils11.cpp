@@ -85,8 +85,8 @@ static D3D11ES3FormatMap BuildD3D11ES3FormatMap()
     map.insert(D3D11ES3FormatPair(GL_RGB8UI,            D3D11ES3FormatInfo(DXGI_FORMAT_R8G8B8A8_UINT,        DXGI_FORMAT_R8G8B8A8_UINT,       DXGI_FORMAT_R8G8B8A8_UINT,       DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_RGB16I,            D3D11ES3FormatInfo(DXGI_FORMAT_R16G16B16A16_SINT,    DXGI_FORMAT_R16G16B16A16_SINT,   DXGI_FORMAT_R16G16B16A16_SINT,   DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_RGB16UI,           D3D11ES3FormatInfo(DXGI_FORMAT_R16G16B16A16_UINT,    DXGI_FORMAT_R16G16B16A16_UINT,   DXGI_FORMAT_R16G16B16A16_UINT,   DXGI_FORMAT_UNKNOWN)));
-    map.insert(D3D11ES3FormatPair(GL_RGB32I,            D3D11ES3FormatInfo(DXGI_FORMAT_R32G32B32_SINT,       DXGI_FORMAT_R32G32B32_SINT,      DXGI_FORMAT_R32G32B32_SINT,      DXGI_FORMAT_UNKNOWN)));
-    map.insert(D3D11ES3FormatPair(GL_RGB32UI,           D3D11ES3FormatInfo(DXGI_FORMAT_R32G32B32_UINT,       DXGI_FORMAT_R32G32B32_UINT,      DXGI_FORMAT_R32G32B32_UINT,      DXGI_FORMAT_UNKNOWN)));
+    map.insert(D3D11ES3FormatPair(GL_RGB32I,            D3D11ES3FormatInfo(DXGI_FORMAT_R32G32B32A32_SINT,    DXGI_FORMAT_R32G32B32A32_SINT,   DXGI_FORMAT_R32G32B32A32_SINT,   DXGI_FORMAT_UNKNOWN)));
+    map.insert(D3D11ES3FormatPair(GL_RGB32UI,           D3D11ES3FormatInfo(DXGI_FORMAT_R32G32B32A32_UINT,    DXGI_FORMAT_R32G32B32A32_UINT,   DXGI_FORMAT_R32G32B32A32_UINT,   DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_RGBA8I,            D3D11ES3FormatInfo(DXGI_FORMAT_R8G8B8A8_SINT,        DXGI_FORMAT_R8G8B8A8_SINT,       DXGI_FORMAT_R8G8B8A8_SINT,       DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_RGBA8UI,           D3D11ES3FormatInfo(DXGI_FORMAT_R8G8B8A8_UINT,        DXGI_FORMAT_R8G8B8A8_UINT,       DXGI_FORMAT_R8G8B8A8_UINT,       DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_RGBA16I,           D3D11ES3FormatInfo(DXGI_FORMAT_R16G16B16A16_SINT,    DXGI_FORMAT_R16G16B16A16_SINT,   DXGI_FORMAT_R16G16B16A16_SINT,   DXGI_FORMAT_UNKNOWN)));
@@ -243,8 +243,8 @@ D3D11LoadFunctionMap buildD3D11LoadFunctionMap()
     insertLoadFunction(&map, GL_RGB8I,              GL_BYTE,                           loadToNative3To4<GLbyte, 0x01>       );
     insertLoadFunction(&map, GL_RGB16UI,            GL_UNSIGNED_SHORT,                 loadToNative3To4<GLushort, 0x0001>   );
     insertLoadFunction(&map, GL_RGB16I,             GL_SHORT,                          loadToNative3To4<GLshort, 0x0001>    );
-    insertLoadFunction(&map, GL_RGB32UI,            GL_UNSIGNED_INT,                   loadToNative<GLuint, 3>              );
-    insertLoadFunction(&map, GL_RGB32I,             GL_INT,                            loadToNative<GLint, 3>               );
+    insertLoadFunction(&map, GL_RGB32UI,            GL_UNSIGNED_INT,                   loadToNative3To4<GLuint, 0x00000001> );
+    insertLoadFunction(&map, GL_RGB32I,             GL_INT,                            loadToNative3To4<GLint, 0x00000001>  );
     insertLoadFunction(&map, GL_RG8,                GL_UNSIGNED_BYTE,                  loadToNative<GLubyte, 2>             );
     insertLoadFunction(&map, GL_RG8_SNORM,          GL_BYTE,                           loadToNative<GLbyte, 2>              );
     insertLoadFunction(&map, GL_RG16F,              GL_HALF_FLOAT,                     loadToNative<GLhalf, 2>              );
