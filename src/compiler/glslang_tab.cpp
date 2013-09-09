@@ -2298,14 +2298,6 @@ yyreduce:
   case 6:
 
     {
-        //
-        // INT_TYPE is only 16-bit plus sign bit for vertex/fragment shaders,
-        // check for overflow for constants
-        //
-        if (abs((yyvsp[(1) - (1)].lex).i) >= (1 << 16)) {
-            context->error((yylsp[(1) - (1)]), " integer constant overflow", "");
-            context->recover();
-        }
         ConstantUnion *unionArray = new ConstantUnion[1];
         unionArray->setIConst((yyvsp[(1) - (1)].lex).i);
         (yyval.interm.intermTypedNode) = context->intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), (yylsp[(1) - (1)]));

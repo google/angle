@@ -228,14 +228,6 @@ primary_expression
         $$ = $1;
     }
     | INTCONSTANT {
-        //
-        // INT_TYPE is only 16-bit plus sign bit for vertex/fragment shaders,
-        // check for overflow for constants
-        //
-        if (abs($1.i) >= (1 << 16)) {
-            context->error(@1, " integer constant overflow", "");
-            context->recover();
-        }
         ConstantUnion *unionArray = new ConstantUnion[1];
         unionArray->setIConst($1.i);
         $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), @1);
