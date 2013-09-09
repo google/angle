@@ -186,6 +186,7 @@ int VariableRowCount(GLenum type)
     switch (type)
     {
       case GL_NONE:
+      case GL_STRUCT_ANGLEX:
         return 0;
       case GL_BOOL:
       case GL_FLOAT:
@@ -243,6 +244,7 @@ int VariableColumnCount(GLenum type)
     switch (type)
     {
       case GL_NONE:
+      case GL_STRUCT_ANGLEX:
         return 0;
       case GL_BOOL:
       case GL_FLOAT:
