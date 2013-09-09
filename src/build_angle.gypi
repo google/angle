@@ -93,6 +93,8 @@
         'compiler/InitializeDll.cpp',
         'compiler/InitializeDll.h',
         'compiler/InitializeGlobals.h',
+        'compiler/InitializeGLPosition.cpp',
+        'compiler/InitializeGLPosition.h',
         'compiler/InitializeParseContext.cpp',
         'compiler/InitializeParseContext.h',
         'compiler/Intermediate.cpp',

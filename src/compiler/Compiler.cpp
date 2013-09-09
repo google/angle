@@ -8,6 +8,7 @@
 #include "compiler/DetectCallDepth.h"
 #include "compiler/ForLoopUnroll.h"
 #include "compiler/Initialize.h"
+#include "compiler/InitializeGLPosition.h"
 #include "compiler/InitializeParseContext.h"
 #include "compiler/MapLongVariableNames.h"
 #include "compiler/ParseHelper.h"
@@ -187,6 +188,11 @@ bool TCompiler::compile(const char* const shaderStrings[],
         // Also, if we hash all the names, then no need to do this for long names.
         if (success && (compileOptions & SH_MAP_LONG_VARIABLE_NAMES) && hashFunction == NULL)
             mapLongVariableNames(root);
+
+        if (success && shaderType == SH_VERTEX_SHADER && (compileOptions & SH_INIT_GL_POSITION)) {
+            InitializeGLPosition initGLPosition;
+            root->traverse(&initGLPosition);
+        }
 
         if (success && (compileOptions & SH_VARIABLES)) {
             collectVariables(root);

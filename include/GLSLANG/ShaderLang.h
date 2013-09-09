@@ -183,6 +183,12 @@ typedef enum {
 
   // This flag limits the depth of the call stack.
   SH_LIMIT_CALL_STACK_DEPTH = 0x4000,
+
+  // This flag initializes gl_Position to vec4(0.0, 0.0, 0.0, 1.0) at
+  // the beginning of the vertex shader, and has no effect in the
+  // fragment shader. It is intended as a workaround for drivers which
+  // incorrectly fail to link programs if gl_Position is not written.
+  SH_INIT_GL_POSITION = 0x8000,
 } ShCompileOptions;
 
 // Defines alternate strategies for implementing array index clamping.
