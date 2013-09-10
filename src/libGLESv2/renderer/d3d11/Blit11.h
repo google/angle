@@ -28,6 +28,9 @@ class Blit11
     explicit Blit11(Renderer11 *renderer);
     ~Blit11();
 
+    bool swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTargetView *dest, const gl::Extents &size,
+                        GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
+
     bool copyTexture(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,
                      ID3D11RenderTargetView *dest, const gl::Box &destArea, const gl::Extents &destSize,
                      const gl::Rectangle *scissor, GLenum destFormat, GLenum filter);
@@ -81,6 +84,20 @@ class Blit11
     void add2DBlitShaderToMap(GLenum destFormat, bool signedInteger, ID3D11PixelShader *ps);
     void add3DBlitShaderToMap(GLenum destFormat, bool signedInteger, ID3D11PixelShader *ps);
 
+    struct SwizzleParameters
+    {
+        GLenum mDestinationType;
+        D3D11_SRV_DIMENSION mViewDimension;
+    };
+
+    static bool compareSwizzleParameters(const SwizzleParameters &a, const SwizzleParameters &b);
+
+    typedef bool (*SwizzleParametersComparisonFunction)(const SwizzleParameters&, const SwizzleParameters &);
+    typedef std::map<SwizzleParameters, Shader, SwizzleParametersComparisonFunction> SwizzleShaderMap;
+    SwizzleShaderMap mSwizzleShaderMap;
+
+    void addSwizzleShaderToMap(GLenum destType, D3D11_SRV_DIMENSION viewDimension, ID3D11PixelShader *ps);
+
     void buildShaderMap();
     void clearShaderMap();
 
@@ -99,8 +116,11 @@ class Blit11
     ID3D11VertexShader *mQuad3DVS;
     ID3D11GeometryShader *mQuad3DGS;
 
+    ID3D11Buffer *mSwizzleCB;
+
     DISALLOW_COPY_AND_ASSIGN(Blit11);
 };
+
 }
 
 #endif   // LIBGLESV2_BLIT11_H_

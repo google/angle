@@ -55,6 +55,18 @@ call:BuildShader Passthrough3D11.hlsl PS_PassthroughR3DI       ps_4_0 compiled\p
 call:BuildShader Passthrough3D11.hlsl PS_PassthroughLum3D      ps_4_0 compiled\passthroughlum3d11ps.h      %debug%
 call:BuildShader Passthrough3D11.hlsl PS_PassthroughLumAlpha3D ps_4_0 compiled\passthroughlumalpha3d11ps.h %debug%
 
+call:BuildShader Swizzle11.hlsl       PS_SwizzleF2D            ps_4_0 compiled\swizzlef2dps.h              %debug%
+call:BuildShader Swizzle11.hlsl       PS_SwizzleI2D            ps_4_0 compiled\swizzlei2dps.h              %debug%
+call:BuildShader Swizzle11.hlsl       PS_SwizzleUI2D           ps_4_0 compiled\swizzleui2dps.h             %debug%
+
+call:BuildShader Swizzle11.hlsl       PS_SwizzleF3D            ps_4_0 compiled\swizzlef3dps.h              %debug%
+call:BuildShader Swizzle11.hlsl       PS_SwizzleI3D            ps_4_0 compiled\swizzlei3dps.h              %debug%
+call:BuildShader Swizzle11.hlsl       PS_SwizzleUI3D           ps_4_0 compiled\swizzleui3dps.h             %debug%
+
+call:BuildShader Swizzle11.hlsl       PS_SwizzleF2DArray       ps_4_0 compiled\swizzlef2darrayps.h         %debug%
+call:BuildShader Swizzle11.hlsl       PS_SwizzleI2DArray       ps_4_0 compiled\swizzlei2darrayps.h         %debug%
+call:BuildShader Swizzle11.hlsl       PS_SwizzleUI2DArray      ps_4_0 compiled\swizzleui2darrayps.h        %debug%
+
 call:BuildShader Clear11.hlsl         VS_ClearFloat            vs_4_0 compiled\clearfloat11vs.h            %debug%
 call:BuildShader Clear11.hlsl         PS_ClearFloat            ps_4_0 compiled\clearfloat11ps.h            %debug%
 
