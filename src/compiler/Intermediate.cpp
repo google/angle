@@ -1262,12 +1262,12 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
                     return 0;
                 }
 
-                const char leftCols = getCols();
-                const char leftRows = getRows();
-                const char rightCols = constantNode->getType().getCols();
-                const char rightRows = constantNode->getType().getRows();
-                const char resultCols = rightCols;
-                const char resultRows = leftRows;
+                const int leftCols = getCols();
+                const int leftRows = getRows();
+                const int rightCols = constantNode->getType().getCols();
+                const int rightRows = constantNode->getType().getRows();
+                const int resultCols = rightCols;
+                const int resultRows = leftRows;
 
                 tempConstArray = new ConstantUnion[resultCols*resultRows];
                 for (int row = 0; row < resultRows; row++)
@@ -1347,8 +1347,8 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
                     return 0;
                 }
 
-                const char matrixCols = getCols();
-                const char matrixRows = getRows();
+                const int matrixCols = getCols();
+                const int matrixRows = getRows();
 
                 tempConstArray = new ConstantUnion[matrixRows];
 
@@ -1378,8 +1378,8 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
                     return 0;
                 }
 
-                const char matrixCols = constantNode->getType().getCols();
-                const char matrixRows = constantNode->getType().getRows();
+                const int matrixCols = constantNode->getType().getCols();
+                const int matrixRows = constantNode->getType().getRows();
 
                 tempConstArray = new ConstantUnion[matrixCols];
 
