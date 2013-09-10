@@ -1478,7 +1478,7 @@ GLuint GetRowPitch(GLint internalFormat, GLenum type, GLuint clientVersion, GLsi
 
 GLuint GetDepthPitch(GLint internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLsizei height, GLint alignment)
 {
-    return (GetBlockSize(internalFormat, type, clientVersion, width, height) + alignment - 1) & ~(alignment - 1);
+    return GetRowPitch(internalFormat, type, clientVersion, width, alignment) * height;
 }
 
 GLuint GetBlockSize(GLint internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLsizei height)
