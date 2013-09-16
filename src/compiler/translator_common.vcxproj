@@ -148,6 +148,7 @@
     <ClCompile Include="InfoSink.cpp" />
     <ClCompile Include="Initialize.cpp" />
     <ClCompile Include="InitializeDll.cpp" />
+    <ClCompile Include="InitializeGLPosition.cpp" />
     <ClCompile Include="InitializeParseContext.cpp" />
     <ClCompile Include="Intermediate.cpp" />
     <ClCompile Include="intermOut.cpp" />
@@ -240,6 +241,7 @@
     <ClInclude Include="Initialize.h" />
     <ClInclude Include="InitializeDll.h" />
     <ClInclude Include="InitializeGlobals.h" />
+    <ClInclude Include="InitializeGLPosition.h" />
     <ClInclude Include="InitializeParseContext.h" />
     <ClInclude Include="intermediate.h" />
     <ClInclude Include="localintermediate.h" />
