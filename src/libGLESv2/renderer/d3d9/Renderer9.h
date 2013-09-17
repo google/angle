@@ -69,6 +69,7 @@ class Renderer9 : public Renderer
     void applyShaders();
     void applyConstants();
 #endif
+    virtual void generateSwizzle(gl::Texture *texture);
     virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
     virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 

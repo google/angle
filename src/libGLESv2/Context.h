@@ -447,9 +447,9 @@ class Context
 
     bool applyRenderTarget(GLenum drawMode, bool ignoreViewport);
     void applyState(GLenum drawMode);
-    void applyShaders();
-    void applyTextures();
-    void applyTextures(SamplerType type);
+    void applyShaders(ProgramBinary *programBinary);
+    void applyTextures(ProgramBinary *programBinary);
+    void applyTextures(ProgramBinary *programBinary, SamplerType type);
     bool applyUniformBuffers();
 
     void detachBuffer(GLuint buffer);
@@ -459,6 +459,10 @@ class Context
     void detachVertexArray(GLuint vertexArray);
     void detachSampler(GLuint sampler);
 
+    void generateSwizzles(ProgramBinary *programBinary);
+    void generateSwizzles(ProgramBinary *programBinary, SamplerType type);
+    bool getCurrentTextureAndSamplerState(ProgramBinary *programBinary, SamplerType type, int index, Texture **outTexture,
+                                   TextureType *outTextureType, SamplerState *outSampler);
     Texture *getIncompleteTexture(TextureType type);
 
     bool skipDraw(GLenum drawMode);

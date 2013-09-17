@@ -521,6 +521,11 @@ SwapChain *Renderer11::createSwapChain(HWND window, HANDLE shareHandle, GLenum b
     return new rx::SwapChain11(this, window, shareHandle, backBufferFormat, depthBufferFormat);
 }
 
+void Renderer11::generateSwizzle(gl::Texture *texture)
+{
+    UNIMPLEMENTED();
+}
+
 void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
 {
     if (type == gl::SAMPLER_PIXEL)

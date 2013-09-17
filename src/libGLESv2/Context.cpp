@@ -2347,33 +2347,88 @@ void Context::applyState(GLenum drawMode)
 }
 
 // Applies the shaders and shader constants to the Direct3D 9 device
-void Context::applyShaders()
+void Context::applyShaders(ProgramBinary *programBinary)
 {
-    ProgramBinary *programBinary = getCurrentProgramBinary();
-
     mRenderer->applyShaders(programBinary);
     
     programBinary->applyUniforms();
 }
 
-// Applies the textures and sampler states to the Direct3D 9 device
-void Context::applyTextures()
+bool Context::getCurrentTextureAndSamplerState(ProgramBinary *programBinary, SamplerType type, int index, Texture **outTexture,
+                                               TextureType *outTextureType, SamplerState *outSampler)
 {
-    applyTextures(SAMPLER_PIXEL);
+    int textureUnit = programBinary->getSamplerMapping(type, index);   // OpenGL texture image unit index
 
-    if (mSupportsVertexTexture)
+    if (textureUnit != -1)
     {
-        applyTextures(SAMPLER_VERTEX);
+        TextureType textureType = programBinary->getSamplerTextureType(type, index);
+        Texture *texture = getSamplerTexture(textureUnit, textureType);
+
+        SamplerState samplerState;
+        texture->getSamplerState(&samplerState);
+
+        if (mState.samplers[textureUnit] != 0)
+        {
+            Sampler *samplerObject = getSampler(mState.samplers[textureUnit]);
+            samplerObject->getState(&samplerState);
+        }
+
+        *outTexture = texture;
+        *outTextureType = textureType;
+        *outSampler = samplerState;
+
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
-// For each Direct3D 9 sampler of either the pixel or vertex stage,
+void Context::generateSwizzles(ProgramBinary *programBinary)
+{
+    generateSwizzles(programBinary, SAMPLER_PIXEL);
+
+    if (mSupportsVertexTexture)
+    {
+        generateSwizzles(programBinary, SAMPLER_VERTEX);
+    }
+}
+
+void Context::generateSwizzles(ProgramBinary *programBinary, SamplerType type)
+{
+    // Range of Direct3D samplers of given sampler type
+    int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : mRenderer->getMaxVertexTextureImageUnits();
+    int samplerRange = programBinary->getUsedSamplerRange(type);
+
+    for (int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
+    {
+        Texture *texture = NULL;
+        TextureType textureType;
+        SamplerState samplerState;
+        if (getCurrentTextureAndSamplerState(programBinary, type, samplerIndex, &texture, &textureType, &samplerState) && texture->isSwizzled())
+        {
+            mRenderer->generateSwizzle(texture);
+        }
+    }
+}
+
+// Applies the textures and sampler states to the Direct3D 9 device
+void Context::applyTextures(ProgramBinary *programBinary)
+{
+    applyTextures(programBinary, SAMPLER_PIXEL);
+
+    if (mSupportsVertexTexture)
+    {
+        applyTextures(programBinary, SAMPLER_VERTEX);
+    }
+}
+
+// For each Direct3D sampler of either the pixel or vertex stage,
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).
-void Context::applyTextures(SamplerType type)
+void Context::applyTextures(ProgramBinary *programBinary, SamplerType type)
 {
-    ProgramBinary *programBinary = getCurrentProgramBinary();
-
     FramebufferTextureSerialSet boundFramebufferTextures = getBoundFramebufferTextureSerials();
 
     // Range of Direct3D samplers of given sampler type
@@ -2382,29 +2437,16 @@ void Context::applyTextures(SamplerType type)
 
     for (int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
-        int textureUnit = programBinary->getSamplerMapping(type, samplerIndex);   // OpenGL texture image unit index
-
-        if (textureUnit != -1)
+        Texture *texture = NULL;
+        TextureType textureType;
+        SamplerState samplerState;
+        if (getCurrentTextureAndSamplerState(programBinary, type, samplerIndex, &texture, &textureType, &samplerState))
         {
-            TextureType textureType = programBinary->getSamplerTextureType(type, samplerIndex);
-            Texture *texture = getSamplerTexture(textureUnit, textureType);
-
-            SamplerState samplerState;
-            texture->getSamplerState(&samplerState);
-
-            if ((mState.samplers[textureUnit] != 0) &&
-                (boundFramebufferTextures.find(texture->getTextureSerial()) == boundFramebufferTextures.end()))
-            {
-                Sampler *samplerObject = getSampler(mState.samplers[textureUnit]);
-                samplerObject->getState(&samplerState);
-            }
-
-            if (texture->isSamplerComplete(samplerState))
+            if (texture->isSamplerComplete(samplerState) &&
+                boundFramebufferTextures.find(texture->getTextureSerial()) == boundFramebufferTextures.end())
             {
                 mRenderer->setSamplerState(type, samplerIndex, samplerState);
-
                 mRenderer->setTexture(type, samplerIndex, texture);
-
                 texture->resetDirty();
             }
             else
@@ -2733,6 +2775,11 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
         return gl::error(GL_INVALID_OPERATION);
     }
 
+    ProgramBinary *programBinary = getCurrentProgramBinary();
+    programBinary->applyUniforms();
+
+    generateSwizzles(programBinary);
+
     if (!mRenderer->applyPrimitiveType(mode, count))
     {
         return;
@@ -2745,16 +2792,14 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
 
     applyState(mode);
 
-    ProgramBinary *programBinary = getCurrentProgramBinary();
-
     GLenum err = mRenderer->applyVertexBuffer(programBinary, getCurrentVertexArray()->getVertexAttributes(), mState.vertexAttribCurrentValues, first, count, instances);
     if (err != GL_NO_ERROR)
     {
         return gl::error(err);
     }
 
-    applyShaders();
-    applyTextures();
+    applyShaders(programBinary);
+    applyTextures(programBinary);
 
     if (!applyUniformBuffers())
     {
@@ -2784,7 +2829,12 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     {
         return gl::error(GL_INVALID_OPERATION);
     }
-    
+
+    ProgramBinary *programBinary = getCurrentProgramBinary();
+    programBinary->applyUniforms();
+
+    generateSwizzles(programBinary);
+
     if (!mRenderer->applyPrimitiveType(mode, count))
     {
         return;
@@ -2804,8 +2854,6 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
         return gl::error(err);
     }
 
-    ProgramBinary *programBinary = getCurrentProgramBinary();
-
     GLsizei vertexCount = indexInfo.maxIndex - indexInfo.minIndex + 1;
     err = mRenderer->applyVertexBuffer(programBinary, vao->getVertexAttributes(), mState.vertexAttribCurrentValues, indexInfo.minIndex, vertexCount, instances);
     if (err != GL_NO_ERROR)
@@ -2813,8 +2861,8 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
         return gl::error(err);
     }
 
-    applyShaders();
-    applyTextures();
+    applyShaders(programBinary);
+    applyTextures(programBinary);
 
     if (!applyUniformBuffers())
     {
