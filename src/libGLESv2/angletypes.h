@@ -152,6 +152,11 @@ struct SamplerState
 
     GLenum compareMode;
     GLenum compareFunc;
+
+    GLenum swizzleRed;
+    GLenum swizzleGreen;
+    GLenum swizzleBlue;
+    GLenum swizzleAlpha;
 };
 
 struct ClearParameters

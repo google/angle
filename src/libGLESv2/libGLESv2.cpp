@@ -3751,6 +3751,34 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
                 }
                 *params = (GLfloat)texture->getMaxAnisotropy();
                 break;
+              case GL_TEXTURE_SWIZZLE_R:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = (GLfloat)texture->getSwizzleRed();
+                break;
+              case GL_TEXTURE_SWIZZLE_G:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = (GLfloat)texture->getSwizzleGreen();
+                break;
+              case GL_TEXTURE_SWIZZLE_B:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = (GLfloat)texture->getSwizzleBlue();
+                break;
+              case GL_TEXTURE_SWIZZLE_A:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = (GLfloat)texture->getSwizzleAlpha();
+                break;
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -3820,6 +3848,34 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                     return gl::error(GL_INVALID_ENUM);
                 }
                 *params = (GLint)texture->getMaxAnisotropy();
+                break;
+              case GL_TEXTURE_SWIZZLE_R:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = texture->getSwizzleRed();
+                break;
+              case GL_TEXTURE_SWIZZLE_G:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = texture->getSwizzleGreen();
+                break;
+              case GL_TEXTURE_SWIZZLE_B:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = texture->getSwizzleBlue();
+                break;
+              case GL_TEXTURE_SWIZZLE_A:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = texture->getSwizzleAlpha();
                 break;
 
               default:
@@ -5181,11 +5237,11 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
               case GL_TEXTURE_MAX_ANISOTROPY_EXT:   texture->setMaxAnisotropy(static_cast<GLfloat>(param), context->getTextureMaxAnisotropy()); break;
               case GL_TEXTURE_COMPARE_MODE:         texture->setCompareMode(gl::uiround<GLenum>(param)); break;
               case GL_TEXTURE_COMPARE_FUNC:         texture->setCompareFunc(gl::uiround<GLenum>(param)); break;
+              case GL_TEXTURE_SWIZZLE_R:            texture->setSwizzleRed(gl::uiround<GLenum>(param));   break;
+              case GL_TEXTURE_SWIZZLE_G:            texture->setSwizzleGreen(gl::uiround<GLenum>(param)); break;
+              case GL_TEXTURE_SWIZZLE_B:            texture->setSwizzleBlue(gl::uiround<GLenum>(param));  break;
+              case GL_TEXTURE_SWIZZLE_A:            texture->setSwizzleAlpha(gl::uiround<GLenum>(param)); break;
 
-              case GL_TEXTURE_SWIZZLE_R:
-              case GL_TEXTURE_SWIZZLE_G:
-              case GL_TEXTURE_SWIZZLE_B:
-              case GL_TEXTURE_SWIZZLE_A:
               case GL_TEXTURE_BASE_LEVEL:
               case GL_TEXTURE_MAX_LEVEL:
               case GL_TEXTURE_MIN_LOD:
@@ -5241,11 +5297,11 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
               case GL_TEXTURE_MAX_ANISOTROPY_EXT:   texture->setMaxAnisotropy((float)param, context->getTextureMaxAnisotropy()); break;
               case GL_TEXTURE_COMPARE_MODE:         texture->setCompareMode((GLenum)param); break;
               case GL_TEXTURE_COMPARE_FUNC:         texture->setCompareFunc((GLenum)param); break;
+              case GL_TEXTURE_SWIZZLE_R:            texture->setSwizzleRed((GLenum)param);   break;
+              case GL_TEXTURE_SWIZZLE_G:            texture->setSwizzleGreen((GLenum)param); break;
+              case GL_TEXTURE_SWIZZLE_B:            texture->setSwizzleBlue((GLenum)param);  break;
+              case GL_TEXTURE_SWIZZLE_A:            texture->setSwizzleAlpha((GLenum)param); break;
 
-              case GL_TEXTURE_SWIZZLE_R:
-              case GL_TEXTURE_SWIZZLE_G:
-              case GL_TEXTURE_SWIZZLE_B:
-              case GL_TEXTURE_SWIZZLE_A:
               case GL_TEXTURE_BASE_LEVEL:
               case GL_TEXTURE_MAX_LEVEL:
               case GL_TEXTURE_MIN_LOD:

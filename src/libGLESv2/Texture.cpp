@@ -62,6 +62,10 @@ Texture::Texture(rx::Renderer *renderer, GLuint id, GLenum target) : RefCountObj
     mSamplerState.lodOffset = 0;
     mSamplerState.compareMode = GL_NONE;
     mSamplerState.compareFunc = GL_LEQUAL;
+    mSamplerState.swizzleRed = GL_RED;
+    mSamplerState.swizzleGreen = GL_GREEN;
+    mSamplerState.swizzleBlue = GL_BLUE;
+    mSamplerState.swizzleAlpha = GL_ALPHA;
     mUsage = GL_NONE;
 
     mDirtyImages = true;
@@ -130,6 +134,26 @@ void Texture::setCompareFunc(GLenum func)
     mSamplerState.compareFunc = func;
 }
 
+void Texture::setSwizzleRed(GLenum swizzle)
+{
+    mSamplerState.swizzleRed = swizzle;
+}
+
+void Texture::setSwizzleGreen(GLenum swizzle)
+{
+    mSamplerState.swizzleGreen = swizzle;
+}
+
+void Texture::setSwizzleBlue(GLenum swizzle)
+{
+    mSamplerState.swizzleBlue = swizzle;
+}
+
+void Texture::setSwizzleAlpha(GLenum swizzle)
+{
+    mSamplerState.swizzleAlpha = swizzle;
+}
+
 void Texture::setUsage(GLenum usage)
 {
     mUsage = usage;
@@ -163,6 +187,34 @@ GLenum Texture::getWrapR() const
 float Texture::getMaxAnisotropy() const
 {
     return mSamplerState.maxAnisotropy;
+}
+
+GLenum Texture::getSwizzleRed() const
+{
+    return mSamplerState.swizzleRed;
+}
+
+GLenum Texture::getSwizzleGreen() const
+{
+    return mSamplerState.swizzleGreen;
+}
+
+GLenum Texture::getSwizzleBlue() const
+{
+    return mSamplerState.swizzleBlue;
+}
+
+GLenum Texture::getSwizzleAlpha() const
+{
+    return mSamplerState.swizzleAlpha;
+}
+
+bool Texture::isSwizzled() const
+{
+    return mSamplerState.swizzleRed   != GL_RED   ||
+           mSamplerState.swizzleGreen != GL_GREEN ||
+           mSamplerState.swizzleBlue  != GL_BLUE  ||
+           mSamplerState.swizzleAlpha != GL_ALPHA;
 }
 
 int Texture::getLodOffset()

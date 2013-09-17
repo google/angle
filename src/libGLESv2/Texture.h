@@ -77,6 +77,10 @@ class Texture : public RefCountObject
     void setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy);
     void setCompareMode(GLenum mode);
     void setCompareFunc(GLenum func);
+    void setSwizzleRed(GLenum swizzle);
+    void setSwizzleGreen(GLenum swizzle);
+    void setSwizzleBlue(GLenum swizzle);
+    void setSwizzleAlpha(GLenum swizzle);
     void setUsage(GLenum usage);
 
     GLenum getMinFilter() const;
@@ -85,6 +89,11 @@ class Texture : public RefCountObject
     GLenum getWrapT() const;
     GLenum getWrapR() const;
     float getMaxAnisotropy() const;
+    GLenum getSwizzleRed() const;
+    GLenum getSwizzleGreen() const;
+    GLenum getSwizzleBlue() const;
+    GLenum getSwizzleAlpha() const;
+    bool isSwizzled() const;
     int getLodOffset();
     void getSamplerState(SamplerState *sampler);
     GLenum getUsage() const;

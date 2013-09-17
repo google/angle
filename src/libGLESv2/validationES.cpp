@@ -575,6 +575,20 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum pname, GLint param)
       case GL_TEXTURE_SWIZZLE_G:
       case GL_TEXTURE_SWIZZLE_B:
       case GL_TEXTURE_SWIZZLE_A:
+        switch (param)
+        {
+          case GL_RED:
+          case GL_GREEN:
+          case GL_BLUE:
+          case GL_ALPHA:
+          case GL_ZERO:
+          case GL_ONE:
+            return true;
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+
       case GL_TEXTURE_BASE_LEVEL:
       case GL_TEXTURE_MAX_LEVEL:
         UNIMPLEMENTED();
