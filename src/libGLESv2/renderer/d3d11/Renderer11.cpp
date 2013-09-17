@@ -523,7 +523,17 @@ SwapChain *Renderer11::createSwapChain(HWND window, HANDLE shareHandle, GLenum b
 
 void Renderer11::generateSwizzle(gl::Texture *texture)
 {
-    UNIMPLEMENTED();
+    if (texture)
+    {
+        TextureStorageInterface *texStorage = texture->getNativeTexture();
+        if (texStorage)
+        {
+            TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage->getStorageInstance());
+
+            storage11->generateSwizzles(texture->getSwizzleRed(), texture->getSwizzleGreen(), texture->getSwizzleBlue(),
+                                        texture->getSwizzleAlpha());
+        }
+    }
 }
 
 void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
@@ -1090,6 +1100,8 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         mDepthStencilInitialized = true;
     }
 
+    invalidateFramebufferSwizzles(framebuffer);
+
     return true;
 }
 
@@ -1597,6 +1609,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
 {
     mClear->clearFramebuffer(clearParams, frameBuffer);
+    invalidateFramebufferSwizzles(frameBuffer);
 }
 
 void Renderer11::markAllStateDirty()
@@ -2378,6 +2391,9 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStor
         TextureStorage11_2D *dest11 = TextureStorage11_2D::makeTextureStorage11_2D(dest->getStorageInstance());
 
         mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+
+        dest11->invalidateSwizzleCache();
+
         return true;
     }
 
@@ -2392,6 +2408,9 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureSt
         TextureStorage11_Cube *dest11 = TextureStorage11_Cube::makeTextureStorage11_Cube(dest->getStorageInstance());
 
         mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+
+        dest11->invalidateSwizzleCache();
+
         return true;
     }
 
@@ -2406,6 +2425,9 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterface3D *dest, TextureStor
         TextureStorage11_3D *dest11 = TextureStorage11_3D::makeTextureStorage11_3D(dest->getStorageInstance());
 
         mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+
+        dest11->invalidateSwizzleCache();
+
         return true;
     }
 
@@ -2420,6 +2442,9 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterface2DArray *dest, Textur
         TextureStorage11_2DArray *dest11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(dest->getStorageInstance());
 
         mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+
+        dest11->invalidateSwizzleCache();
+
         return true;
     }
 
@@ -2482,6 +2507,8 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, NULL,
                                   destFormat, GL_NEAREST);
 
+    storage11->invalidateSwizzleCacheLevel(level);
+
     return ret;
 }
 
@@ -2541,6 +2568,8 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, NULL,
                                   destFormat, GL_NEAREST);
 
+    storage11->invalidateSwizzleCacheLevel(level);
+
     return ret;
 }
 
@@ -2599,6 +2628,8 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     // copy
     bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, NULL,
                                   destFormat, GL_NEAREST);
+
+    storage11->invalidateSwizzleCacheLevel(level);
 
     return ret;
 }
@@ -2660,6 +2691,8 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     // copy
     bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, NULL,
                                   destFormat, GL_NEAREST);
+
+    storage11->invalidateSwizzleCacheLevel(level);
 
     return ret;
 }
@@ -2965,6 +2998,8 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
             return false;
         }
     }
+
+    invalidateFramebufferSwizzles(drawTarget);
 
     return true;
 }
@@ -3400,6 +3435,46 @@ ID3D11Texture2D *Renderer11::resolveMultisampledTexture(ID3D11Texture2D *source,
     {
         source->AddRef();
         return source;
+    }
+}
+
+void Renderer11::invalidateRenderbufferSwizzles(gl::Renderbuffer *renderBuffer, int mipLevel)
+{
+    TextureStorage *texStorage = renderBuffer->getTextureStorage();
+    if (texStorage)
+    {
+        TextureStorage11 *texStorage11 = TextureStorage11::makeTextureStorage11(texStorage);
+        if (!texStorage11)
+        {
+            ERR("texture storage pointer unexpectedly null.");
+            return;
+        }
+
+        texStorage11->invalidateSwizzleCacheLevel(mipLevel);
+    }
+}
+
+void Renderer11::invalidateFramebufferSwizzles(gl::Framebuffer *framebuffer)
+{
+    for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
+    {
+        gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer(colorAttachment);
+        if (colorbuffer)
+        {
+            invalidateRenderbufferSwizzles(colorbuffer, framebuffer->getColorbufferMipLevel(colorAttachment));
+        }
+    }
+
+    gl::Renderbuffer *depthBuffer = framebuffer->getDepthbuffer();
+    if (depthBuffer)
+    {
+        invalidateRenderbufferSwizzles(depthBuffer, framebuffer->getDepthbufferMipLevel());
+    }
+
+    gl::Renderbuffer *stencilBuffer = framebuffer->getStencilbuffer();
+    if (stencilBuffer)
+    {
+        invalidateRenderbufferSwizzles(stencilBuffer, framebuffer->getStencilbufferMipLevel());
     }
 }
 

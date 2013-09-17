@@ -238,6 +238,9 @@ class Renderer11 : public Renderer
                               bool colorBlit, bool depthBlit, bool stencilBlit);
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
 
+    static void invalidateRenderbufferSwizzles(gl::Renderbuffer *renderBuffer, int mipLevel);
+    static void invalidateFramebufferSwizzles(gl::Framebuffer *framebuffer);
+
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HDC mDc;
