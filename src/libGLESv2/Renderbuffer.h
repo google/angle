@@ -24,6 +24,7 @@ namespace rx
 class Renderer;
 class SwapChain;
 class RenderTarget;
+class TextureStorage;
 }
 
 namespace gl
@@ -48,6 +49,7 @@ class RenderbufferInterface
 
     virtual rx::RenderTarget *getRenderTarget() = 0;
     virtual rx::RenderTarget *getDepthStencil() = 0;
+    virtual rx::TextureStorage *getTextureStorage() = 0;
 
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;
@@ -74,6 +76,7 @@ class RenderbufferTexture2D : public RenderbufferInterface
 
     rx::RenderTarget *getRenderTarget();
     rx::RenderTarget *getDepthStencil();
+    rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
@@ -103,6 +106,7 @@ class RenderbufferTextureCubeMap : public RenderbufferInterface
 
     rx::RenderTarget *getRenderTarget();
     rx::RenderTarget *getDepthStencil();
+    rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
@@ -133,6 +137,7 @@ public:
 
     rx::RenderTarget *getRenderTarget();
     rx::RenderTarget *getDepthStencil();
+    rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
@@ -163,6 +168,7 @@ public:
 
     rx::RenderTarget *getRenderTarget();
     rx::RenderTarget *getDepthStencil();
+    rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
@@ -193,6 +199,7 @@ class RenderbufferStorage : public RenderbufferInterface
 
     virtual rx::RenderTarget *getRenderTarget();
     virtual rx::RenderTarget *getDepthStencil();
+    virtual rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
@@ -239,6 +246,7 @@ class Renderbuffer : public RefCountObject
 
     rx::RenderTarget *getRenderTarget();
     rx::RenderTarget *getDepthStencil();
+    rx::TextureStorage *getTextureStorage();
 
     GLsizei getWidth() const;
     GLsizei getHeight() const;

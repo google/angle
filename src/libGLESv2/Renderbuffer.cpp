@@ -14,6 +14,7 @@
 
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/TextureStorage.h"
 #include "common/utilities.h"
 #include "libGLESv2/formatutils.h"
 
@@ -68,6 +69,11 @@ rx::RenderTarget *RenderbufferTexture2D::getRenderTarget()
 rx::RenderTarget *RenderbufferTexture2D::getDepthStencil()
 {
     return mTexture2D->getDepthSencil(mLevel);
+}
+
+rx::TextureStorage *RenderbufferTexture2D::getTextureStorage()
+{
+    return mTexture2D->getNativeTexture()->getStorageInstance();
 }
 
 GLsizei RenderbufferTexture2D::getWidth() const
@@ -140,6 +146,11 @@ rx::RenderTarget *RenderbufferTextureCubeMap::getDepthStencil()
     return mTextureCubeMap->getDepthStencil(mFaceTarget, mLevel);
 }
 
+rx::TextureStorage *RenderbufferTextureCubeMap::getTextureStorage()
+{
+    return mTextureCubeMap->getNativeTexture()->getStorageInstance();
+}
+
 GLsizei RenderbufferTextureCubeMap::getWidth() const
 {
     return mTextureCubeMap->getWidth(mFaceTarget, mLevel);
@@ -210,6 +221,11 @@ rx::RenderTarget *RenderbufferTexture3DLayer::getDepthStencil()
     return mTexture3D->getDepthStencil(mLevel, mLayer);
 }
 
+rx::TextureStorage *RenderbufferTexture3DLayer::getTextureStorage()
+{
+    return mTexture3D->getNativeTexture()->getStorageInstance();
+}
+
 GLsizei RenderbufferTexture3DLayer::getWidth() const
 {
     return mTexture3D->getWidth(mLevel);
@@ -276,6 +292,11 @@ rx::RenderTarget *RenderbufferTexture2DArrayLayer::getRenderTarget()
 rx::RenderTarget *RenderbufferTexture2DArrayLayer::getDepthStencil()
 {
     return mTexture2DArray->getDepthStencil(mLevel, mLayer);
+}
+
+rx::TextureStorage *RenderbufferTexture2DArrayLayer::getTextureStorage()
+{
+    return mTexture2DArray->getNativeTexture()->getStorageInstance();
 }
 
 GLsizei RenderbufferTexture2DArrayLayer::getWidth() const
@@ -353,6 +374,11 @@ rx::RenderTarget *Renderbuffer::getRenderTarget()
 rx::RenderTarget *Renderbuffer::getDepthStencil()
 {
     return mInstance->getDepthStencil();
+}
+
+rx::TextureStorage *Renderbuffer::getTextureStorage()
+{
+    return mInstance->getTextureStorage();
 }
 
 GLsizei Renderbuffer::getWidth() const
@@ -457,6 +483,11 @@ rx::RenderTarget *RenderbufferStorage::getRenderTarget()
 }
 
 rx::RenderTarget *RenderbufferStorage::getDepthStencil()
+{
+    return NULL;
+}
+
+rx::TextureStorage *RenderbufferStorage::getTextureStorage()
 {
     return NULL;
 }
