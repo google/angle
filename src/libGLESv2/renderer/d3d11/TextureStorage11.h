@@ -33,7 +33,7 @@ class TextureStorage11 : public TextureStorage
     UINT getBindFlags() const;
 
     virtual ID3D11Resource *getBaseTexture() const = 0;
-    virtual ID3D11ShaderResourceView *getSRV() = 0;
+    virtual ID3D11ShaderResourceView *getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha) = 0;
     virtual RenderTarget *getRenderTarget(int level) { return NULL; }
     virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level) { return NULL; }
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer) { return NULL; }
@@ -48,6 +48,10 @@ class TextureStorage11 : public TextureStorage
     virtual int getMaxLevel() const;
     UINT getSubresourceIndex(int mipLevel, int layerTarget) const;
 
+    void generateSwizzles(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
+    void invalidateSwizzleCacheLevel(int mipLevel);
+    void invalidateSwizzleCache();
+
     bool updateSubresourceLevel(ID3D11Resource *texture, unsigned int sourceSubresource, int level,
                                 int layerTarget, GLint xoffset, GLint yoffset, GLint zoffset,
                                 GLsizei width, GLsizei height, GLsizei depth);
@@ -59,6 +63,13 @@ class TextureStorage11 : public TextureStorage
     int getLevelHeight(int mipLevel) const;
     int getLevelDepth(int mipLevel) const;
 
+    virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel) = 0;
+    virtual ID3D11ShaderResourceView *getSRVLevel(int mipLevel) = 0;
+
+    void verifySwizzleExists(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
+
+    virtual unsigned int getTextureLevelDepth(int mipLevel) const = 0;
+
     Renderer11 *mRenderer;
     int mLodOffset;
     unsigned int mMipLevels;
@@ -68,11 +79,27 @@ class TextureStorage11 : public TextureStorage
     DXGI_FORMAT mShaderResourceFormat;
     DXGI_FORMAT mRenderTargetFormat;
     DXGI_FORMAT mDepthStencilFormat;
+    DXGI_FORMAT mSwizzleTextureFormat;
+    DXGI_FORMAT mSwizzleShaderResourceFormat;
+    DXGI_FORMAT mSwizzleRenderTargetFormat;
     unsigned int mTextureWidth;
     unsigned int mTextureHeight;
     unsigned int mTextureDepth;
 
-    ID3D11ShaderResourceView *mSRV;
+    struct SwizzleCacheValue
+    {
+        GLenum swizzleRed;
+        GLenum swizzleGreen;
+        GLenum swizzleBlue;
+        GLenum swizzleAlpha;
+
+        SwizzleCacheValue();
+        SwizzleCacheValue(GLenum red, GLenum green, GLenum blue, GLenum alpha);
+
+        bool operator ==(const SwizzleCacheValue &other) const;
+        bool operator !=(const SwizzleCacheValue &other) const;
+    };
+    SwizzleCacheValue mSwizzleCache[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11);
@@ -90,16 +117,30 @@ class TextureStorage11_2D : public TextureStorage11
     static TextureStorage11_2D *makeTextureStorage11_2D(TextureStorage *storage);
 
     virtual ID3D11Resource *getBaseTexture() const;
-    virtual ID3D11ShaderResourceView *getSRV();
+    virtual ID3D11ShaderResourceView *getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
     virtual RenderTarget *getRenderTarget(int level);
 
     virtual void generateMipmap(int level);
+
+  protected:
+    ID3D11Texture2D *getSwizzleTexture();
+    virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
+
+    virtual ID3D11ShaderResourceView *getSRVLevel(int mipLevel);
+
+    virtual unsigned int getTextureLevelDepth(int mipLevel) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2D);
 
     ID3D11Texture2D *mTexture;
+    ID3D11ShaderResourceView *mSRV;
+    ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
     RenderTarget11 *mRenderTarget[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+
+    ID3D11Texture2D *mSwizzleTexture;
+    ID3D11ShaderResourceView *mSwizzleSRV;
+    ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
 class TextureStorage11_Cube : public TextureStorage11
@@ -111,16 +152,30 @@ class TextureStorage11_Cube : public TextureStorage11
     static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
 
     virtual ID3D11Resource *getBaseTexture() const;
-    virtual ID3D11ShaderResourceView *getSRV();
+    virtual ID3D11ShaderResourceView *getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
     virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level);
 
     virtual void generateMipmap(int faceIndex, int level);
+
+  protected:
+    ID3D11Texture2D *getSwizzleTexture();
+    virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
+
+    virtual ID3D11ShaderResourceView *getSRVLevel(int mipLevel);
+
+    virtual unsigned int getTextureLevelDepth(int mipLevel) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_Cube);
 
     ID3D11Texture2D *mTexture;
+    ID3D11ShaderResourceView *mSRV;
+    ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
     RenderTarget11 *mRenderTarget[6][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+
+    ID3D11Texture2D *mSwizzleTexture;
+    ID3D11ShaderResourceView *mSwizzleSRV;
+    ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
 class TextureStorage11_3D : public TextureStorage11
@@ -133,11 +188,19 @@ class TextureStorage11_3D : public TextureStorage11
     static TextureStorage11_3D *makeTextureStorage11_3D(TextureStorage *storage);
 
     virtual ID3D11Resource *getBaseTexture() const;
-    virtual ID3D11ShaderResourceView *getSRV();
+    virtual ID3D11ShaderResourceView *getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
     virtual RenderTarget *getRenderTarget(int mipLevel);
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer);
 
     virtual void generateMipmap(int level);
+
+  protected:
+    ID3D11Texture3D *getSwizzleTexture();
+    virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
+
+    virtual ID3D11ShaderResourceView *getSRVLevel(int mipLevel);
+
+    virtual unsigned int getTextureLevelDepth(int mipLevel) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_3D);
@@ -149,6 +212,12 @@ class TextureStorage11_3D : public TextureStorage11
     RenderTarget11 *mLevelRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     ID3D11Texture3D *mTexture;
+    ID3D11ShaderResourceView *mSRV;
+    ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+
+    ID3D11Texture3D *mSwizzleTexture;
+    ID3D11ShaderResourceView *mSwizzleSRV;
+    ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
 class TextureStorage11_2DArray : public TextureStorage11
@@ -161,10 +230,18 @@ class TextureStorage11_2DArray : public TextureStorage11
     static TextureStorage11_2DArray *makeTextureStorage11_2DArray(TextureStorage *storage);
 
     virtual ID3D11Resource *getBaseTexture() const;
-    virtual ID3D11ShaderResourceView *getSRV();
+    virtual ID3D11ShaderResourceView *getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer);
 
     virtual void generateMipmap(int level);
+
+  protected:
+    ID3D11Texture2D *getSwizzleTexture();
+    virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
+
+    virtual ID3D11ShaderResourceView *getSRVLevel(int mipLevel);
+
+    virtual unsigned int getTextureLevelDepth(int mipLevel) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2DArray);
@@ -174,6 +251,12 @@ class TextureStorage11_2DArray : public TextureStorage11
     RenderTargetMap mRenderTargets;
 
     ID3D11Texture2D *mTexture;
+    ID3D11ShaderResourceView *mSRV;
+    ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+
+    ID3D11Texture2D *mSwizzleTexture;
+    ID3D11ShaderResourceView *mSwizzleSRV;
+    ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
 }
