@@ -1344,6 +1344,20 @@ GLuint GetComponentType(GLint internalFormat, GLuint clientVersion)
     }
 }
 
+GLuint GetComponentCount(GLint internalFormat, GLuint clientVersion)
+{
+    InternalFormatInfo internalFormatInfo;
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    {
+        return internalFormatInfo.mComponentCount;
+    }
+    else
+    {
+        UNREACHABLE();
+        return false;
+    }
+}
+
 GLenum GetColorEncoding(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;

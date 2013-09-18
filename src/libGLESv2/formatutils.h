@@ -66,6 +66,7 @@ GLenum GetFormat(GLint internalFormat, GLuint clientVersion);
 GLenum GetType(GLint internalFormat, GLuint clientVersion);
 
 GLenum GetComponentType(GLint internalFormat, GLuint clientVersion);
+GLuint GetComponentCount(GLint internalFormat, GLuint clientVersion);
 GLenum GetColorEncoding(GLint internalFormat, GLuint clientVersion);
 
 bool IsColorRenderingSupported(GLint internalFormat, const rx::Renderer *renderer);
