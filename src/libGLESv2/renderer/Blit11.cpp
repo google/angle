@@ -51,6 +51,126 @@
 namespace rx
 {
 
+static DXGI_FORMAT GetTextureFormat(ID3D11Resource *resource)
+{
+    ID3D11Texture2D *texture = d3d11::DynamicCastComObject<ID3D11Texture2D>(resource);
+    if (!texture)
+    {
+        return DXGI_FORMAT_UNKNOWN;
+    }
+
+    D3D11_TEXTURE2D_DESC desc;
+    texture->GetDesc(&desc);
+
+    SafeRelease(texture);
+
+    return desc.Format;
+}
+
+static ID3D11Resource *CreateStagingTexture(ID3D11Device *device, ID3D11DeviceContext *context,
+                                            ID3D11Resource *source, unsigned int subresource,
+                                            const gl::Extents &size, unsigned int cpuAccessFlags)
+{
+    D3D11_TEXTURE2D_DESC stagingDesc;
+    stagingDesc.Width = size.width;
+    stagingDesc.Height = size.height;
+    stagingDesc.MipLevels = 1;
+    stagingDesc.ArraySize = 1;
+    stagingDesc.Format = GetTextureFormat(source);
+    stagingDesc.SampleDesc.Count = 1;
+    stagingDesc.SampleDesc.Quality = 0;
+    stagingDesc.Usage = D3D11_USAGE_STAGING;
+    stagingDesc.CPUAccessFlags = cpuAccessFlags;
+    stagingDesc.MiscFlags = 0;
+    stagingDesc.BindFlags = 0;
+
+    ID3D11Texture2D *stagingTexture = NULL;
+    HRESULT result = device->CreateTexture2D(&stagingDesc, NULL, &stagingTexture);
+    if (FAILED(result))
+    {
+        ERR("Failed to create staging texture for depth stencil blit. HRESULT: 0x%X.", result);
+        return NULL;
+    }
+
+    context->CopySubresourceRegion(stagingTexture, 0, 0, 0, 0, source, subresource, NULL);
+
+    return stagingTexture;
+}
+
+inline static void GenerateVertexCoords(const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                                        const gl::Box &destArea, const gl::Extents &destSize,
+                                        float *x1, float *y1, float *x2, float *y2,
+                                        float *u1, float *v1, float *u2, float *v2)
+{
+    *x1 = (destArea.x / float(destSize.width)) * 2.0f - 1.0f;
+    *y1 = ((destSize.height - destArea.y - destArea.height) / float(destSize.height)) * 2.0f - 1.0f;
+    *x2 = ((destArea.x + destArea.width) / float(destSize.width)) * 2.0f - 1.0f;
+    *y2 = ((destSize.height - destArea.y) / float(destSize.height)) * 2.0f - 1.0f;
+
+    *u1 = sourceArea.x / float(sourceSize.width);
+    *v1 = sourceArea.y / float(sourceSize.height);
+    *u2 = (sourceArea.x + sourceArea.width) / float(sourceSize.width);
+    *v2 = (sourceArea.y + sourceArea.height) / float(sourceSize.height);
+}
+
+static void Write2DVertices(const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                            const gl::Box &destArea, const gl::Extents &destSize,
+                            void *outVertices, unsigned int *outStride, unsigned int *outVertexCount,
+                            D3D11_PRIMITIVE_TOPOLOGY *outTopology)
+{
+    float x1, y1, x2, y2, u1, v1, u2, v2;
+    GenerateVertexCoords(sourceArea, sourceSize, destArea, destSize, &x1, &y1, &x2, &y2, &u1, &v1, &u2, &v2);
+
+    d3d11::PositionTexCoordVertex *vertices = static_cast<d3d11::PositionTexCoordVertex*>(outVertices);
+
+    d3d11::SetPositionTexCoordVertex(&vertices[0], x1, y1, u1, v2);
+    d3d11::SetPositionTexCoordVertex(&vertices[1], x1, y2, u1, v1);
+    d3d11::SetPositionTexCoordVertex(&vertices[2], x2, y1, u2, v2);
+    d3d11::SetPositionTexCoordVertex(&vertices[3], x2, y2, u2, v1);
+
+    *outStride = sizeof(d3d11::PositionTexCoordVertex);
+    *outVertexCount = 4;
+    *outTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+}
+
+static void Write3DVertices(const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                            const gl::Box &destArea, const gl::Extents &destSize,
+                            void *outVertices, unsigned int *outStride, unsigned int *outVertexCount,
+                            D3D11_PRIMITIVE_TOPOLOGY *outTopology)
+{
+    float x1, y1, x2, y2, u1, v1, u2, v2;
+    GenerateVertexCoords(sourceArea, sourceSize, destArea, destSize, &x1, &y1, &x2, &y2, &u1, &v1, &u2, &v2);
+
+    d3d11::PositionLayerTexCoord3DVertex *vertices = static_cast<d3d11::PositionLayerTexCoord3DVertex*>(outVertices);
+
+    for (int i = 0; i < destSize.depth; i++)
+    {
+        float readDepth = ((i * 2) + 0.5f) / (sourceSize.depth - 1);
+
+        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 0], x1, y1, i, u1, v2, readDepth);
+        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 1], x1, y2, i, u1, v1, readDepth);
+        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 2], x2, y1, i, u2, v2, readDepth);
+
+        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 3], x1, y2, i, u1, v1, readDepth);
+        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 4], x2, y2, i, u2, v1, readDepth);
+        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 5], x2, y1, i, u2, v2, readDepth);
+    }
+
+    *outStride = sizeof(d3d11::PositionLayerTexCoord3DVertex);
+    *outVertexCount = destSize.depth * 6;
+    *outTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+}
+
+template <unsigned int N>
+static ID3D11PixelShader *CompilePS(ID3D11Device *device, const BYTE (&byteCode)[N], const char *name)
+{
+    ID3D11PixelShader *ps = NULL;
+    HRESULT result = device->CreatePixelShader(byteCode, N, NULL, &ps);
+    ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(ps, name);
+    return ps;
+}
+
 Blit11::Blit11(rx::Renderer11 *renderer)
     : mRenderer(renderer), mShaderMap(compareBlitParameters), mVertexBuffer(NULL),
       mPointSampler(NULL), mLinearSampler(NULL), mScissorEnabledRasterizerState(NULL),
@@ -338,116 +458,6 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     return true;
 }
 
-static DXGI_FORMAT getTextureFormat(ID3D11Resource *resource)
-{
-    ID3D11Texture2D *texture = d3d11::DynamicCastComObject<ID3D11Texture2D>(resource);
-    if (!texture)
-    {
-        return DXGI_FORMAT_UNKNOWN;
-    }
-
-    D3D11_TEXTURE2D_DESC desc;
-    texture->GetDesc(&desc);
-
-    SafeRelease(texture);
-
-    return desc.Format;
-}
-
-static ID3D11Resource *createStagingTexture(ID3D11Device *device, ID3D11DeviceContext *context,
-                                            ID3D11Resource *source, unsigned int subresource,
-                                            const gl::Extents &size, unsigned int cpuAccessFlags)
-{
-    D3D11_TEXTURE2D_DESC stagingDesc;
-    stagingDesc.Width = size.width;
-    stagingDesc.Height = size.height;
-    stagingDesc.MipLevels = 1;
-    stagingDesc.ArraySize = 1;
-    stagingDesc.Format = getTextureFormat(source);
-    stagingDesc.SampleDesc.Count = 1;
-    stagingDesc.SampleDesc.Quality = 0;
-    stagingDesc.Usage = D3D11_USAGE_STAGING;
-    stagingDesc.CPUAccessFlags = cpuAccessFlags;
-    stagingDesc.MiscFlags = 0;
-    stagingDesc.BindFlags = 0;
-
-    ID3D11Texture2D *stagingTexture = NULL;
-    HRESULT result = device->CreateTexture2D(&stagingDesc, NULL, &stagingTexture);
-    if (FAILED(result))
-    {
-        ERR("Failed to create staging texture for depth stencil blit. HRESULT: 0x%X.", result);
-        return NULL;
-    }
-
-    context->CopySubresourceRegion(stagingTexture, 0, 0, 0, 0, source, subresource, NULL);
-
-    return stagingTexture;
-}
-
-inline static void generateVertexCoords(const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                                        const gl::Box &destArea, const gl::Extents &destSize,
-                                        float *x1, float *y1, float *x2, float *y2,
-                                        float *u1, float *v1, float *u2, float *v2)
-{
-    *x1 = (destArea.x / float(destSize.width)) * 2.0f - 1.0f;
-    *y1 = ((destSize.height - destArea.y - destArea.height) / float(destSize.height)) * 2.0f - 1.0f;
-    *x2 = ((destArea.x + destArea.width) / float(destSize.width)) * 2.0f - 1.0f;
-    *y2 = ((destSize.height - destArea.y) / float(destSize.height)) * 2.0f - 1.0f;
-
-    *u1 = sourceArea.x / float(sourceSize.width);
-    *v1 = sourceArea.y / float(sourceSize.height);
-    *u2 = (sourceArea.x + sourceArea.width) / float(sourceSize.width);
-    *v2 = (sourceArea.y + sourceArea.height) / float(sourceSize.height);
-}
-
-static void write2DVertices(const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                            const gl::Box &destArea, const gl::Extents &destSize,
-                            void *outVertices, unsigned int *outStride, unsigned int *outVertexCount,
-                            D3D11_PRIMITIVE_TOPOLOGY *outTopology)
-{
-    float x1, y1, x2, y2, u1, v1, u2, v2;
-    generateVertexCoords(sourceArea, sourceSize, destArea, destSize, &x1, &y1, &x2, &y2, &u1, &v1, &u2, &v2);
-
-    d3d11::PositionTexCoordVertex *vertices = static_cast<d3d11::PositionTexCoordVertex*>(outVertices);
-
-    d3d11::SetPositionTexCoordVertex(&vertices[0], x1, y1, u1, v2);
-    d3d11::SetPositionTexCoordVertex(&vertices[1], x1, y2, u1, v1);
-    d3d11::SetPositionTexCoordVertex(&vertices[2], x2, y1, u2, v2);
-    d3d11::SetPositionTexCoordVertex(&vertices[3], x2, y2, u2, v1);
-
-    *outStride = sizeof(d3d11::PositionTexCoordVertex);
-    *outVertexCount = 4;
-    *outTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-}
-
-static void write3DVertices(const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                            const gl::Box &destArea, const gl::Extents &destSize,
-                            void *outVertices, unsigned int *outStride, unsigned int *outVertexCount,
-                            D3D11_PRIMITIVE_TOPOLOGY *outTopology)
-{
-    float x1, y1, x2, y2, u1, v1, u2, v2;
-    generateVertexCoords(sourceArea, sourceSize, destArea, destSize, &x1, &y1, &x2, &y2, &u1, &v1, &u2, &v2);
-
-    d3d11::PositionLayerTexCoord3DVertex *vertices = static_cast<d3d11::PositionLayerTexCoord3DVertex*>(outVertices);
-
-    for (int i = 0; i < destSize.depth; i++)
-    {
-        float readDepth = ((i * 2) + 0.5f) / (sourceSize.depth - 1);
-
-        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 0], x1, y1, i, u1, v2, readDepth);
-        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 1], x1, y2, i, u1, v1, readDepth);
-        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 2], x2, y1, i, u2, v2, readDepth);
-
-        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 3], x1, y2, i, u1, v1, readDepth);
-        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 4], x2, y2, i, u2, v1, readDepth);
-        d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 5], x2, y1, i, u2, v2, readDepth);
-    }
-
-    *outStride = sizeof(d3d11::PositionLayerTexCoord3DVertex);
-    *outVertexCount = destSize.depth * 6;
-    *outTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-}
-
 bool Blit11::copyStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
                          ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
                          const gl::Rectangle *scissor)
@@ -478,7 +488,7 @@ bool Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sourceAr
     UINT drawCount = 0;
     D3D11_PRIMITIVE_TOPOLOGY topology;
 
-    write2DVertices(sourceArea, sourceSize, destArea, destSize, mappedResource.pData,
+    Write2DVertices(sourceArea, sourceSize, destArea, destSize, mappedResource.pData,
                     &stride, &drawCount, &topology);
 
     deviceContext->Unmap(mVertexBuffer, 0);
@@ -570,10 +580,10 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
     ID3D11Device *device = mRenderer->getDevice();
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
-    ID3D11Resource *sourceStaging = createStagingTexture(device, deviceContext, source, sourceSubresource, sourceSize, D3D11_CPU_ACCESS_READ);
+    ID3D11Resource *sourceStaging = CreateStagingTexture(device, deviceContext, source, sourceSubresource, sourceSize, D3D11_CPU_ACCESS_READ);
     // HACK: Create the destination staging buffer as a read/write texture so ID3D11DevicContext::UpdateSubresource can be called
     //       using it's mapped data as a source
-    ID3D11Resource *destStaging = createStagingTexture(device, deviceContext, dest, destSubresource, destSize, D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE);
+    ID3D11Resource *destStaging = CreateStagingTexture(device, deviceContext, dest, destSubresource, destSize, D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE);
 
     if (!sourceStaging || !destStaging)
     {
@@ -582,8 +592,8 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
         return false;
     }
 
-    DXGI_FORMAT format = getTextureFormat(source);
-    ASSERT(format == getTextureFormat(dest));
+    DXGI_FORMAT format = GetTextureFormat(source);
+    ASSERT(format == GetTextureFormat(dest));
 
     unsigned int pixelSize = d3d11::GetFormatPixelBytes(format, mRenderer->getCurrentClientVersion());
     unsigned int copyOffset = 0;
@@ -702,16 +712,6 @@ bool Blit11::compareBlitParameters(const Blit11::BlitParameters &a, const Blit11
     return memcmp(&a, &b, sizeof(Blit11::BlitParameters)) < 0;
 }
 
-template <unsigned int N>
-static ID3D11PixelShader *compilePS(ID3D11Device *device, const BYTE (&byteCode)[N], const char *name)
-{
-    ID3D11PixelShader *ps = NULL;
-    HRESULT result = device->CreatePixelShader(byteCode, N, NULL, &ps);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(ps, name);
-    return ps;
-}
-
 void Blit11::add2DShaderToMap(GLenum destFormat, bool signedInteger, ID3D11PixelShader *ps)
 {
     BlitParameters params = { 0 };
@@ -723,7 +723,7 @@ void Blit11::add2DShaderToMap(GLenum destFormat, bool signedInteger, ID3D11Pixel
     ASSERT(ps);
 
     BlitShader shader;
-    shader.mVertexWriteFunction = write2DVertices;
+    shader.mVertexWriteFunction = Write2DVertices;
     shader.mInputLayout = mQuad2DIL;
     shader.mVertexShader = mQuad2DVS;
     shader.mGeometryShader = NULL;
@@ -743,7 +743,7 @@ void Blit11::add3DShaderToMap(GLenum destFormat, bool signedInteger, ID3D11Pixel
     ASSERT(ps);
 
     BlitShader shader;
-    shader.mVertexWriteFunction = write3DVertices;
+    shader.mVertexWriteFunction = Write3DVertices;
     shader.mInputLayout = mQuad3DIL;
     shader.mVertexShader = mQuad3DVS;
     shader.mGeometryShader = mQuad3DGS;
@@ -756,39 +756,39 @@ void Blit11::buildShaderMap()
 {
     ID3D11Device *device = mRenderer->getDevice();
 
-    add2DShaderToMap(GL_RGBA,            false, compilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D RGBA pixel shader"           ));
-    add2DShaderToMap(GL_RGBA_INTEGER,    false, compilePS(device, g_PS_PassthroughRGBA2DUI,   "Blit11 2D RGBA UI pixel shader"        ));
-    add2DShaderToMap(GL_RGBA_INTEGER,    true,  compilePS(device, g_PS_PassthroughRGBA2DI,    "Blit11 2D RGBA I pixel shader"         ));
-    add2DShaderToMap(GL_BGRA_EXT,        false, compilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D BGRA pixel shader"           ));
-    add2DShaderToMap(GL_RGB,             false, compilePS(device, g_PS_PassthroughRGB2D,      "Blit11 2D RGB pixel shader"            ));
-    add2DShaderToMap(GL_RGB_INTEGER,     false, compilePS(device, g_PS_PassthroughRGB2DUI,    "Blit11 2D RGB UI pixel shader"         ));
-    add2DShaderToMap(GL_RGB_INTEGER,     true,  compilePS(device, g_PS_PassthroughRGB2DI,     "Blit11 2D RGB I pixel shader"          ));
-    add2DShaderToMap(GL_RG,              false, compilePS(device, g_PS_PassthroughRG2D,       "Blit11 2D RG pixel shader"             ));
-    add2DShaderToMap(GL_RG_INTEGER,      false, compilePS(device, g_PS_PassthroughRG2DUI,     "Blit11 2D RG UI pixel shader"          ));
-    add2DShaderToMap(GL_RG_INTEGER,      true,  compilePS(device, g_PS_PassthroughRG2DI,      "Blit11 2D RG I pixel shader"           ));
-    add2DShaderToMap(GL_RED,             false, compilePS(device, g_PS_PassthroughR2D,        "Blit11 2D R pixel shader"              ));
-    add2DShaderToMap(GL_RED_INTEGER,     false, compilePS(device, g_PS_PassthroughR2DUI,      "Blit11 2D R UI pixel shader"           ));
-    add2DShaderToMap(GL_RED_INTEGER,     true,  compilePS(device, g_PS_PassthroughR2DI,       "Blit11 2D R I pixel shader"            ));
-    add2DShaderToMap(GL_ALPHA,           false, compilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D alpha pixel shader"          ));
-    add2DShaderToMap(GL_LUMINANCE,       false, compilePS(device, g_PS_PassthroughLum2D,      "Blit11 2D lum pixel shader"            ));
-    add2DShaderToMap(GL_LUMINANCE_ALPHA, false, compilePS(device, g_PS_PassthroughLumAlpha2D, "Blit11 2D luminance alpha pixel shader"));
+    add2DShaderToMap(GL_RGBA,            false, CompilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D RGBA pixel shader"           ));
+    add2DShaderToMap(GL_RGBA_INTEGER,    false, CompilePS(device, g_PS_PassthroughRGBA2DUI,   "Blit11 2D RGBA UI pixel shader"        ));
+    add2DShaderToMap(GL_RGBA_INTEGER,    true,  CompilePS(device, g_PS_PassthroughRGBA2DI,    "Blit11 2D RGBA I pixel shader"         ));
+    add2DShaderToMap(GL_BGRA_EXT,        false, CompilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D BGRA pixel shader"           ));
+    add2DShaderToMap(GL_RGB,             false, CompilePS(device, g_PS_PassthroughRGB2D,      "Blit11 2D RGB pixel shader"            ));
+    add2DShaderToMap(GL_RGB_INTEGER,     false, CompilePS(device, g_PS_PassthroughRGB2DUI,    "Blit11 2D RGB UI pixel shader"         ));
+    add2DShaderToMap(GL_RGB_INTEGER,     true,  CompilePS(device, g_PS_PassthroughRGB2DI,     "Blit11 2D RGB I pixel shader"          ));
+    add2DShaderToMap(GL_RG,              false, CompilePS(device, g_PS_PassthroughRG2D,       "Blit11 2D RG pixel shader"             ));
+    add2DShaderToMap(GL_RG_INTEGER,      false, CompilePS(device, g_PS_PassthroughRG2DUI,     "Blit11 2D RG UI pixel shader"          ));
+    add2DShaderToMap(GL_RG_INTEGER,      true,  CompilePS(device, g_PS_PassthroughRG2DI,      "Blit11 2D RG I pixel shader"           ));
+    add2DShaderToMap(GL_RED,             false, CompilePS(device, g_PS_PassthroughR2D,        "Blit11 2D R pixel shader"              ));
+    add2DShaderToMap(GL_RED_INTEGER,     false, CompilePS(device, g_PS_PassthroughR2DUI,      "Blit11 2D R UI pixel shader"           ));
+    add2DShaderToMap(GL_RED_INTEGER,     true,  CompilePS(device, g_PS_PassthroughR2DI,       "Blit11 2D R I pixel shader"            ));
+    add2DShaderToMap(GL_ALPHA,           false, CompilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D alpha pixel shader"          ));
+    add2DShaderToMap(GL_LUMINANCE,       false, CompilePS(device, g_PS_PassthroughLum2D,      "Blit11 2D lum pixel shader"            ));
+    add2DShaderToMap(GL_LUMINANCE_ALPHA, false, CompilePS(device, g_PS_PassthroughLumAlpha2D, "Blit11 2D luminance alpha pixel shader"));
 
-    add3DShaderToMap(GL_RGBA,            false, compilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D RGBA pixel shader"           ));
-    add3DShaderToMap(GL_RGBA_INTEGER,    false, compilePS(device, g_PS_PassthroughRGBA3DUI,   "Blit11 3D UI RGBA pixel shader"        ));
-    add3DShaderToMap(GL_RGBA_INTEGER,    true,  compilePS(device, g_PS_PassthroughRGBA3DI,    "Blit11 3D I RGBA pixel shader"         ));
-    add3DShaderToMap(GL_BGRA_EXT,        false, compilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D BGRA pixel shader"           ));
-    add3DShaderToMap(GL_RGB,             false, compilePS(device, g_PS_PassthroughRGB3D,      "Blit11 3D RGB pixel shader"            ));
-    add3DShaderToMap(GL_RGB_INTEGER,     false, compilePS(device, g_PS_PassthroughRGB3DUI,    "Blit11 3D RGB UI pixel shader"         ));
-    add3DShaderToMap(GL_RGB_INTEGER,     true,  compilePS(device, g_PS_PassthroughRGB3DI,     "Blit11 3D RGB I pixel shader"          ));
-    add3DShaderToMap(GL_RG,              false, compilePS(device, g_PS_PassthroughRG3D,       "Blit11 3D RG pixel shader"             ));
-    add3DShaderToMap(GL_RG_INTEGER,      false, compilePS(device, g_PS_PassthroughRG3DUI,     "Blit11 3D RG UI pixel shader"          ));
-    add3DShaderToMap(GL_RG_INTEGER,      true,  compilePS(device, g_PS_PassthroughRG3DI,      "Blit11 3D RG I pixel shader"           ));
-    add3DShaderToMap(GL_RED,             false, compilePS(device, g_PS_PassthroughR3D,        "Blit11 3D R pixel shader"              ));
-    add3DShaderToMap(GL_RED_INTEGER,     false, compilePS(device, g_PS_PassthroughR3DUI,      "Blit11 3D R UI pixel shader"           ));
-    add3DShaderToMap(GL_RED_INTEGER,     true,  compilePS(device, g_PS_PassthroughR3DI,       "Blit11 3D R I pixel shader"            ));
-    add3DShaderToMap(GL_ALPHA,           false, compilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D alpha pixel shader"          ));
-    add3DShaderToMap(GL_LUMINANCE,       false, compilePS(device, g_PS_PassthroughLum3D,      "Blit11 3D luminance pixel shader"      ));
-    add3DShaderToMap(GL_LUMINANCE_ALPHA, false, compilePS(device, g_PS_PassthroughLumAlpha3D, "Blit11 3D luminance alpha pixel shader"));
+    add3DShaderToMap(GL_RGBA,            false, CompilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D RGBA pixel shader"           ));
+    add3DShaderToMap(GL_RGBA_INTEGER,    false, CompilePS(device, g_PS_PassthroughRGBA3DUI,   "Blit11 3D UI RGBA pixel shader"        ));
+    add3DShaderToMap(GL_RGBA_INTEGER,    true,  CompilePS(device, g_PS_PassthroughRGBA3DI,    "Blit11 3D I RGBA pixel shader"         ));
+    add3DShaderToMap(GL_BGRA_EXT,        false, CompilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D BGRA pixel shader"           ));
+    add3DShaderToMap(GL_RGB,             false, CompilePS(device, g_PS_PassthroughRGB3D,      "Blit11 3D RGB pixel shader"            ));
+    add3DShaderToMap(GL_RGB_INTEGER,     false, CompilePS(device, g_PS_PassthroughRGB3DUI,    "Blit11 3D RGB UI pixel shader"         ));
+    add3DShaderToMap(GL_RGB_INTEGER,     true,  CompilePS(device, g_PS_PassthroughRGB3DI,     "Blit11 3D RGB I pixel shader"          ));
+    add3DShaderToMap(GL_RG,              false, CompilePS(device, g_PS_PassthroughRG3D,       "Blit11 3D RG pixel shader"             ));
+    add3DShaderToMap(GL_RG_INTEGER,      false, CompilePS(device, g_PS_PassthroughRG3DUI,     "Blit11 3D RG UI pixel shader"          ));
+    add3DShaderToMap(GL_RG_INTEGER,      true,  CompilePS(device, g_PS_PassthroughRG3DI,      "Blit11 3D RG I pixel shader"           ));
+    add3DShaderToMap(GL_RED,             false, CompilePS(device, g_PS_PassthroughR3D,        "Blit11 3D R pixel shader"              ));
+    add3DShaderToMap(GL_RED_INTEGER,     false, CompilePS(device, g_PS_PassthroughR3DUI,      "Blit11 3D R UI pixel shader"           ));
+    add3DShaderToMap(GL_RED_INTEGER,     true,  CompilePS(device, g_PS_PassthroughR3DI,       "Blit11 3D R I pixel shader"            ));
+    add3DShaderToMap(GL_ALPHA,           false, CompilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D alpha pixel shader"          ));
+    add3DShaderToMap(GL_LUMINANCE,       false, CompilePS(device, g_PS_PassthroughLum3D,      "Blit11 3D luminance pixel shader"      ));
+    add3DShaderToMap(GL_LUMINANCE_ALPHA, false, CompilePS(device, g_PS_PassthroughLumAlpha3D, "Blit11 3D luminance alpha pixel shader"));
 }
 
 void Blit11::clearShaderMap()
