@@ -31,6 +31,7 @@ class IndexDataManager;
 class StreamingIndexBufferInterface;
 class Blit11;
 class Clear11;
+class PixelTransfer11;
 
 enum
 {
@@ -206,6 +207,10 @@ class Renderer11 : public Renderer
 
     Blit11 *getBlitter() { return mBlit; }
 
+    // Buffer-to-texture and Texture-to-buffer copies
+    virtual bool fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
+                                         GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
+
     bool getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource);
     void unapplyRenderTargets();
     void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);
@@ -352,6 +357,7 @@ class Renderer11 : public Renderer
 
     // Texture copy resources
     Blit11 *mBlit;
+    PixelTransfer11 *mPixelTransfer;
 
     // Masked clear resources
     Clear11 *mClear;

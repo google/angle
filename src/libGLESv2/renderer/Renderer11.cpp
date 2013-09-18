@@ -30,6 +30,7 @@
 #include "libGLESv2/renderer/Fence11.h"
 #include "libGLESv2/renderer/Blit11.h"
 #include "libGLESv2/renderer/Clear11.h"
+#include "libGLESv2/renderer/PixelTransfer11.h"
 
 #include "libEGL/Display.h"
 
@@ -68,6 +69,7 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mTriangleFanIB = NULL;
 
     mBlit = NULL;
+    mPixelTransfer = NULL;
 
     mClear = NULL;
 
@@ -390,6 +392,9 @@ void Renderer11::initializeDevice()
 
     ASSERT(!mClear);
     mClear = new Clear11(this);
+
+    ASSERT(!mPixelTransfer);
+    mPixelTransfer = new PixelTransfer11(this);
 
     markAllStateDirty();
 }
@@ -1615,6 +1620,7 @@ void Renderer11::releaseDeviceResources()
     SafeDelete(mTriangleFanIB);
     SafeDelete(mBlit);
     SafeDelete(mClear);
+    SafeDelete(mPixelTransfer);
 
     SafeRelease(mDriverConstantBufferVS);
     SafeRelease(mDriverConstantBufferPS);
@@ -2766,6 +2772,13 @@ QueryImpl *Renderer11::createQuery(GLenum type)
 FenceImpl *Renderer11::createFence()
 {
     return new Fence11(this);
+}
+
+bool Renderer11::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
+                                         GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
+{
+    ASSERT(gl::IsFastCopyBufferToTextureSupported(destinationFormat, getCurrentClientVersion()));
+    return mPixelTransfer->copyBufferToTexture(unpack, offset, destRenderTarget, destinationFormat, sourcePixelsType, destArea);
 }
 
 bool Renderer11::getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource)

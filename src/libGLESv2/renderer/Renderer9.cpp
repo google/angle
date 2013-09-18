@@ -693,6 +693,14 @@ FenceImpl *Renderer9::createFence()
     return new Fence9(this);
 }
 
+bool Renderer9::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
+                                        GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
+{
+    // Pixel buffer objects are not supported in D3D9, since D3D9 is ES2-only and PBOs are ES3.
+    UNREACHABLE();
+    return false;
+}
+
 void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
 {
     bool *forceSetSamplers = (type == gl::SAMPLER_PIXEL) ? mForceSetPixelSamplerStates : mForceSetVertexSamplerStates;
