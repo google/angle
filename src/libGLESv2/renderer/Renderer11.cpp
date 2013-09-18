@@ -1455,14 +1455,8 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
         {
             unsigned int componentCount = (4 - uniform->registerElement);
 
-            // we always assume that uniforms from structs are arranged in struct order in our uniforms list. otherwise we would
+            // we assume that uniforms from structs are arranged in struct order in our uniforms list. otherwise we would
             // overwrite previously written regions of memory.
-            if (uniformIndex > 0)
-            {
-                gl::Uniform *previousUniform = (*uniformArray)[uniformIndex-1];
-                ASSERT(!uniform->isReferencedByVertexShader() || previousUniform->vsRegisterIndex != uniform->vsRegisterIndex || uniform->registerElement > previousUniform->registerElement);
-                ASSERT(!uniform->isReferencedByFragmentShader() || previousUniform->psRegisterIndex != uniform->psRegisterIndex || uniform->registerElement > previousUniform->registerElement);
-            }
 
             if (uniform->isReferencedByVertexShader() && mapVS)
             {
