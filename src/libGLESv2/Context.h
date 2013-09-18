@@ -129,12 +129,8 @@ struct State
     BindingPointer<Buffer> copyReadBuffer;
     BindingPointer<Buffer> copyWriteBuffer;
 
-    BindingPointer<Buffer> pixelPackBuffer;
-    BindingPointer<Buffer> pixelUnpackBuffer;
-
-    GLint unpackAlignment;
-    GLint packAlignment;
-    bool packReverseRowOrder;
+    PixelUnpackState unpack;
+    PixelPackState pack;
 };
 
 class Context

@@ -189,10 +189,6 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mState.currentProgram = 0;
     mCurrentProgramBinary.set(NULL);
 
-    mState.packAlignment = 4;
-    mState.unpackAlignment = 4;
-    mState.packReverseRowOrder = false;
-
     mCombinedExtensionsString = NULL;
     mRendererString = NULL;
 
@@ -297,8 +293,8 @@ Context::~Context()
     mState.copyReadBuffer.set(NULL);
     mState.copyWriteBuffer.set(NULL);
 
-    mState.pixelPackBuffer.set(NULL);
-    mState.pixelUnpackBuffer.set(NULL);
+    mState.pack.pixelBuffer.set(NULL);
+    mState.unpack.pixelBuffer.set(NULL);
 
     mResourceManager->release();
 }
@@ -750,32 +746,32 @@ const void *Context::getVertexAttribPointer(unsigned int attribNum) const
 
 void Context::setPackAlignment(GLint alignment)
 {
-    mState.packAlignment = alignment;
+    mState.pack.alignment = alignment;
 }
 
 GLint Context::getPackAlignment() const
 {
-    return mState.packAlignment;
+    return mState.pack.alignment;
 }
 
 void Context::setUnpackAlignment(GLint alignment)
 {
-    mState.unpackAlignment = alignment;
+    mState.unpack.alignment = alignment;
 }
 
 GLint Context::getUnpackAlignment() const
 {
-    return mState.unpackAlignment;
+    return mState.unpack.alignment;
 }
 
 void Context::setPackReverseRowOrder(bool reverseRowOrder)
 {
-    mState.packReverseRowOrder = reverseRowOrder;
+    mState.pack.reverseRowOrder = reverseRowOrder;
 }
 
 bool Context::getPackReverseRowOrder() const
 {
-    return mState.packReverseRowOrder;
+    return mState.pack.reverseRowOrder;
 }
 
 GLuint Context::createBuffer()
@@ -1180,14 +1176,14 @@ void Context::bindPixelPackBuffer(GLuint buffer)
 {
     mResourceManager->checkBufferAllocation(buffer);
 
-    mState.pixelPackBuffer.set(getBuffer(buffer));
+    mState.pack.pixelBuffer.set(getBuffer(buffer));
 }
 
 void Context::bindPixelUnpackBuffer(GLuint buffer)
 {
     mResourceManager->checkBufferAllocation(buffer);
 
-    mState.pixelUnpackBuffer.set(getBuffer(buffer));
+    mState.unpack.pixelBuffer.set(getBuffer(buffer));
 }
 
 void Context::useProgram(GLuint program)
@@ -1480,12 +1476,12 @@ Buffer *Context::getCopyWriteBuffer()
 
 Buffer *Context::getPixelPackBuffer()
 {
-    return mState.pixelPackBuffer.get();
+    return mState.pack.pixelBuffer.get();
 }
 
 Buffer *Context::getPixelUnpackBuffer()
 {
-    return mState.pixelUnpackBuffer.get();
+    return mState.unpack.pixelBuffer.get();
 }
 
 Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type)
@@ -1636,9 +1632,9 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_RENDERBUFFER_BINDING:                     *params = mState.renderbuffer.id();                             break;
       case GL_VERTEX_ARRAY_BINDING:                     *params = mState.vertexArray;                                   break;
       case GL_CURRENT_PROGRAM:                          *params = mState.currentProgram;                                break;
-      case GL_PACK_ALIGNMENT:                           *params = mState.packAlignment;                                 break;
-      case GL_PACK_REVERSE_ROW_ORDER_ANGLE:             *params = mState.packReverseRowOrder;                           break;
-      case GL_UNPACK_ALIGNMENT:                         *params = mState.unpackAlignment;                               break;
+      case GL_PACK_ALIGNMENT:                           *params = mState.pack.alignment;                                break;
+      case GL_PACK_REVERSE_ROW_ORDER_ANGLE:             *params = mState.pack.reverseRowOrder;                          break;
+      case GL_UNPACK_ALIGNMENT:                         *params = mState.unpack.alignment;                              break;
       case GL_GENERATE_MIPMAP_HINT:                     *params = mState.generateMipmapHint;                            break;
       case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:      *params = mState.fragmentShaderDerivativeHint;                  break;
       case GL_ACTIVE_TEXTURE:                           *params = (mState.activeSampler + GL_TEXTURE0);                 break;
@@ -1892,10 +1888,10 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         *params = mState.copyWriteBuffer.id();
         break;
       case GL_PIXEL_PACK_BUFFER_BINDING:
-        *params = mState.pixelPackBuffer.id();
+        *params = mState.pack.pixelBuffer.id();
         break;
       case GL_PIXEL_UNPACK_BUFFER_BINDING:
-        *params = mState.pixelUnpackBuffer.id();
+        *params = mState.unpack.pixelBuffer.id();
         break;
       case GL_NUM_EXTENSIONS:
         *params = static_cast<GLint>(getNumExtensions());

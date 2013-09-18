@@ -10,9 +10,11 @@
 #define LIBGLESV2_ANGLETYPES_H_
 
 #include "libGLESv2/constants.h"
+#include "common/RefCountObject.h"
 
 namespace gl
 {
+class Buffer;
 
 enum TextureType
 {
@@ -173,6 +175,37 @@ struct ClearParameters
 
     bool scissorEnabled;
     Rectangle scissor;
+};
+
+struct PixelUnpackState
+{
+    BindingPointer<Buffer> pixelBuffer;
+    GLint alignment;
+
+    PixelUnpackState()
+        : alignment(4)
+    {}
+
+    explicit PixelUnpackState(GLint alignmentIn)
+        : alignment(alignmentIn)
+    {}
+};
+
+struct PixelPackState
+{
+    BindingPointer<Buffer> pixelBuffer;
+    GLint alignment;
+    bool reverseRowOrder;
+
+    PixelPackState()
+        : alignment(4),
+          reverseRowOrder(false)
+    {}
+
+    explicit PixelPackState(GLint alignmentIn, bool reverseRowOrderIn)
+        : alignment(alignmentIn),
+          reverseRowOrder(reverseRowOrderIn)
+    {}
 };
 
 }
