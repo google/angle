@@ -108,6 +108,36 @@ inline bool isDeviceLostError(HRESULT errorCode)
     }
 }
 
+template <unsigned int N>
+inline ID3D11VertexShader *CompileVS(ID3D11Device *device, const BYTE (&byteCode)[N], const char *name)
+{
+    ID3D11VertexShader *vs = NULL;
+    HRESULT result = device->CreateVertexShader(byteCode, N, NULL, &vs);
+    ASSERT(SUCCEEDED(result));
+    SetDebugName(vs, name);
+    return vs;
+}
+
+template <unsigned int N>
+inline ID3D11GeometryShader *CompileGS(ID3D11Device *device, const BYTE (&byteCode)[N], const char *name)
+{
+    ID3D11GeometryShader *gs = NULL;
+    HRESULT result = device->CreateGeometryShader(byteCode, N, NULL, &gs);
+    ASSERT(SUCCEEDED(result));
+    SetDebugName(gs, name);
+    return gs;
+}
+
+template <unsigned int N>
+inline ID3D11PixelShader *CompilePS(ID3D11Device *device, const BYTE (&byteCode)[N], const char *name)
+{
+    ID3D11PixelShader *ps = NULL;
+    HRESULT result = device->CreatePixelShader(byteCode, N, NULL, &ps);
+    ASSERT(SUCCEEDED(result));
+    SetDebugName(ps, name);
+    return ps;
+}
+
 }
 
 }
