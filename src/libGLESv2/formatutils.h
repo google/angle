@@ -88,6 +88,8 @@ GLuint GetCompressedBlockHeight(GLint internalFormat, GLuint clientVersion);
 
 ColorWriteFunction GetColorWriteFunction(GLenum format, GLenum type, GLuint clientVersion);
 
+bool IsFastCopyBufferToTextureSupported(GLint internalFormat, GLuint clientVersion);
+
 }
 
 #endif LIBGLESV2_FORMATUTILS_H_

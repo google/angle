@@ -266,6 +266,9 @@
     <ClCompile Include="angletypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\PixelTransfer11.cpp">
+      <Filter>Source Files\Renderer11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -681,6 +684,9 @@
     </ClInclude>
     <ClInclude Include="renderer\shaders\compiled\clearfloat11vs.h">
       <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\PixelTransfer11.h">
+      <Filter>Header Files\Renderer11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

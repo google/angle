@@ -35,7 +35,7 @@ typedef std::pair<GLenum, GLenum> FormatTypePair;
 typedef std::pair<FormatTypePair, FormatTypeInfo> FormatPair;
 typedef std::map<FormatTypePair, FormatTypeInfo> FormatMap;
 
-// A helper function to insert data into the D3D11LoadFunctionMap with fewer characters.
+// A helper function to insert data into the format map with fewer characters.
 static inline void InsertFormatMapping(FormatMap *map, GLenum format, GLenum type, GLint internalFormat, ColorWriteFunction writeFunc)
 {
     map->insert(FormatPair(FormatTypePair(format, type), FormatTypeInfo(internalFormat, writeFunc)));
@@ -1582,6 +1582,11 @@ ColorWriteFunction GetColorWriteFunction(GLenum format, GLenum type, GLuint clie
     static const FormatMap &formats = GetFormatMap(clientVersion);
     FormatMap::const_iterator iter = formats.find(FormatTypePair(format, type));
     return (iter != formats.end()) ? iter->second.mColorWriteFunction : NULL;
+}
+
+bool IsFastCopyBufferToTextureSupported(GLint internalFormat, GLuint clientVersion)
+{
+    return false;
 }
 
 }

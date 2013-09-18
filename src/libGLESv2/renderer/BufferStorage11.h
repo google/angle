@@ -33,6 +33,7 @@ class BufferStorage11 : public BufferStorage
     virtual bool supportsDirectBinding() const;
 
     ID3D11Buffer *getBuffer(GLenum usage);
+    ID3D11ShaderResourceView *getSRV(DXGI_FORMAT srvFormat);
 
   private:
     Renderer11 *mRenderer;

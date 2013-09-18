@@ -326,6 +326,8 @@
             'libGLESv2/renderer/loadimage.cpp',
             'libGLESv2/renderer/loadimageSSE2.cpp',
             'libGLESv2/renderer/loadimage.h',
+            'libGLESv2/renderer/PixelTransfer11.cpp',
+            'libGLESv2/renderer/PixelTransfer11.h',
             'libGLESv2/renderer/QueryImpl.h',
             'libGLESv2/renderer/Query9.cpp',
             'libGLESv2/renderer/Query9.h',

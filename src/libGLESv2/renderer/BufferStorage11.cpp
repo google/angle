@@ -266,6 +266,11 @@ ID3D11Buffer *BufferStorage11::getBuffer(GLenum usage)
     return directBuffer->getD3DBuffer();
 }
 
+ID3D11ShaderResourceView *BufferStorage11::getSRV(DXGI_FORMAT srvFormat)
+{
+    return NULL;
+}
+
 DirectBufferStorage11::DirectBufferStorage11(Renderer11 *renderer, const GLenum target)
     : mRenderer(renderer)
     , mTarget(target)
