@@ -236,9 +236,11 @@ class Context
 
     void setUnpackAlignment(GLint alignment);
     GLint getUnpackAlignment() const;
+    const PixelUnpackState &getUnpackState() const;
 
     void setPackAlignment(GLint alignment);
     GLint getPackAlignment() const;
+    const PixelPackState &getPackState() const;
 
     void setPackReverseRowOrder(bool reverseRowOrder);
     bool getPackReverseRowOrder() const;

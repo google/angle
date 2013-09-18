@@ -269,13 +269,13 @@ GLenum Texture::getUsage() const
     return mUsage;
 }
 
-void Texture::setImage(GLint unpackAlignment, GLenum type, const void *pixels, rx::Image *image)
+void Texture::setImage(const PixelUnpackState &unpack, GLenum type, const void *pixels, rx::Image *image)
 {
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
     if (pixels != NULL)
     {
-        image->loadData(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth(), unpackAlignment, type, pixels);
+        image->loadData(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth(), unpack.alignment, type, pixels);
         mDirtyImages = true;
     }
 }
@@ -290,11 +290,11 @@ void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, rx::Imag
 }
 
 bool Texture::subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                       GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, rx::Image *image)
+                       GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels, rx::Image *image)
 {
     if (pixels != NULL)
     {
-        image->loadData(xoffset, yoffset, zoffset, width, height, depth, unpackAlignment, type, pixels);
+        image->loadData(xoffset, yoffset, zoffset, width, height, depth, unpack.alignment, type, pixels);
         mDirtyImages = true;
     }
 
@@ -463,14 +463,14 @@ void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, 
     }
 }
 
-void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
     GLint sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
                                                                                      : GetSizedInternalFormat(format, type, clientVersion);
     redefineImage(level, sizedInternalFormat, width, height);
 
-    Texture::setImage(unpackAlignment, type, pixels, mImageArray[level]);
+    Texture::setImage(unpack, type, pixels, mImageArray[level]);
 }
 
 void Texture2D::bindTexImage(egl::Surface *surface)
@@ -529,9 +529,9 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
     }
 }
 
-void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    if (Texture::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpackAlignment, pixels, mImageArray[level]))
+    if (Texture::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels, mImageArray[level]))
     {
         commitRect(level, xoffset, yoffset, width, height);
     }
@@ -1044,34 +1044,34 @@ GLenum TextureCubeMap::getActualFormat(GLenum target, GLint level) const
         return D3DFMT_UNKNOWN;
 }
 
-void TextureCubeMap::setImagePosX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImagePosX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(0, level, width, height, internalFormat, format, type, unpackAlignment, pixels);
+    setImage(0, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImageNegX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImageNegX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(1, level, width, height, internalFormat, format, type, unpackAlignment, pixels);
+    setImage(1, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImagePosY(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImagePosY(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(2, level, width, height, internalFormat, format, type, unpackAlignment, pixels);
+    setImage(2, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImageNegY(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImageNegY(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(3, level, width, height, internalFormat, format, type, unpackAlignment, pixels);
+    setImage(3, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImagePosZ(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImagePosZ(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(4, level, width, height, internalFormat, format, type, unpackAlignment, pixels);
+    setImage(4, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImageNegZ(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImageNegZ(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(5, level, width, height, internalFormat, format, type, unpackAlignment, pixels);
+    setImage(5, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
 void TextureCubeMap::setCompressedImage(GLenum face, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
@@ -1092,9 +1092,9 @@ void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoff
     }
 }
 
-void TextureCubeMap::subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    if (Texture::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpackAlignment, pixels, mImageArray[faceIndex(target)][level]))
+    if (Texture::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels, mImageArray[faceIndex(target)][level]))
     {
         commitRect(faceIndex(target), level, xoffset, yoffset, width, height);
     }
@@ -1330,7 +1330,7 @@ void TextureCubeMap::convertToRenderTarget()
     mDirtyImages = true;
 }
 
-void TextureCubeMap::setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
     GLint sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
@@ -1338,7 +1338,7 @@ void TextureCubeMap::setImage(int faceIndex, GLint level, GLsizei width, GLsizei
 
     redefineImage(faceIndex, level, sizedInternalFormat, width, height);
 
-    Texture::setImage(unpackAlignment, type, pixels, mImageArray[faceIndex][level]);
+    Texture::setImage(unpack, type, pixels, mImageArray[faceIndex][level]);
 }
 
 unsigned int TextureCubeMap::faceIndex(GLenum face)
@@ -1705,14 +1705,14 @@ bool Texture3D::isDepth(GLint level) const
     return GetDepthBits(getInternalFormat(level), mRenderer->getCurrentClientVersion()) > 0;
 }
 
-void Texture3D::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void Texture3D::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
     GLint sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
                                                                                      : GetSizedInternalFormat(format, type, clientVersion);
     redefineImage(level, sizedInternalFormat, width, height, depth);
 
-    Texture::setImage(unpackAlignment, type, pixels, mImageArray[level]);
+    Texture::setImage(unpack, type, pixels, mImageArray[level]);
 }
 
 void Texture3D::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels)
@@ -1723,9 +1723,9 @@ void Texture3D::setCompressedImage(GLint level, GLenum format, GLsizei width, GL
     Texture::setCompressedImage(imageSize, pixels, mImageArray[level]);
 }
 
-void Texture3D::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void Texture3D::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    if (Texture::subImage(xoffset, yoffset, zoffset, width, height, depth, format, type, unpackAlignment, pixels, mImageArray[level]))
+    if (Texture::subImage(xoffset, yoffset, zoffset, width, height, depth, format, type, unpack, pixels, mImageArray[level]))
     {
         commitRect(level, xoffset, yoffset, zoffset, width, height, depth);
     }
@@ -2205,19 +2205,19 @@ bool Texture2DArray::isDepth(GLint level) const
     return GetDepthBits(getInternalFormat(level), mRenderer->getCurrentClientVersion()) > 0;
 }
 
-void Texture2DArray::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void Texture2DArray::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
     GLint sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
                                                                                      : GetSizedInternalFormat(format, type, clientVersion);
     redefineImage(level, sizedInternalFormat, width, height, depth);
 
-    GLsizei inputDepthPitch = gl::GetDepthPitch(sizedInternalFormat, type, clientVersion, width, height, unpackAlignment);
+    GLsizei inputDepthPitch = gl::GetDepthPitch(sizedInternalFormat, type, clientVersion, width, height, unpack.alignment);
 
     for (int i = 0; i < depth; i++)
     {
         const void *layerPixels = pixels ? (reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i)) : NULL;
-        Texture::setImage(unpackAlignment, type, layerPixels, mImageArray[level][i]);
+        Texture::setImage(unpack, type, layerPixels, mImageArray[level][i]);
     }
 }
 
@@ -2236,18 +2236,18 @@ void Texture2DArray::setCompressedImage(GLint level, GLenum format, GLsizei widt
     }
 }
 
-void Texture2DArray::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void Texture2DArray::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     GLint internalformat = getInternalFormat(level);
     GLuint clientVersion =  mRenderer->getCurrentClientVersion();
-    GLsizei inputDepthPitch = gl::GetDepthPitch(internalformat, type, clientVersion, width, height, unpackAlignment);
+    GLsizei inputDepthPitch = gl::GetDepthPitch(internalformat, type, clientVersion, width, height, unpack.alignment);
 
     for (int i = 0; i < depth; i++)
     {
         int layer = zoffset + i;
         const void *layerPixels = pixels ? (reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i)) : NULL;
 
-        if (Texture::subImage(xoffset, yoffset, zoffset, width, height, 1, format, type, unpackAlignment, layerPixels, mImageArray[level][layer]))
+        if (Texture::subImage(xoffset, yoffset, zoffset, width, height, 1, format, type, unpack, layerPixels, mImageArray[level][layer]))
         {
             commitRect(level, xoffset, yoffset, layer, width, height);
         }

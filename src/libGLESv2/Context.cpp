@@ -774,6 +774,16 @@ bool Context::getPackReverseRowOrder() const
     return mState.pack.reverseRowOrder;
 }
 
+const PixelUnpackState &Context::getUnpackState() const
+{
+    return mState.unpack;
+}
+
+const PixelPackState &Context::getPackState() const
+{
+    return mState.pack;
+}
+
 GLuint Context::createBuffer()
 {
     return mResourceManager->createBuffer();
@@ -3258,7 +3268,8 @@ Texture *Context::getIncompleteTexture(TextureType type)
 
     if (t == NULL)
     {
-        static const GLubyte color[] = { 0, 0, 0, 255 };
+        const GLubyte color[] = { 0, 0, 0, 255 };
+        const PixelUnpackState incompleteUnpackState(1);
 
         switch (type)
         {
@@ -3269,7 +3280,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
           case TEXTURE_2D:
             {
                 Texture2D *incomplete2d = new Texture2D(mRenderer, Texture::INCOMPLETE_TEXTURE_ID);
-                incomplete2d->setImage(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
+                incomplete2d->setImage(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
                 t = incomplete2d;
             }
             break;
@@ -3278,12 +3289,12 @@ Texture *Context::getIncompleteTexture(TextureType type)
             {
               TextureCubeMap *incompleteCube = new TextureCubeMap(mRenderer, Texture::INCOMPLETE_TEXTURE_ID);
 
-              incompleteCube->setImagePosX(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
-              incompleteCube->setImageNegX(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
-              incompleteCube->setImagePosY(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
-              incompleteCube->setImageNegY(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
-              incompleteCube->setImagePosZ(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
-              incompleteCube->setImageNegZ(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
+              incompleteCube->setImagePosX(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
+              incompleteCube->setImageNegX(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
+              incompleteCube->setImagePosY(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
+              incompleteCube->setImageNegY(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
+              incompleteCube->setImagePosZ(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
+              incompleteCube->setImageNegZ(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
 
               t = incompleteCube;
             }
@@ -3292,7 +3303,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
           case TEXTURE_3D:
             {
                 Texture3D *incomplete3d = new Texture3D(mRenderer, Texture::INCOMPLETE_TEXTURE_ID);
-                incomplete3d->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
+                incomplete3d->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
 
                 t = incomplete3d;
             }
@@ -3301,7 +3312,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
           case TEXTURE_2D_ARRAY:
             {
                 Texture2DArray *incomplete2darray = new Texture2DArray(mRenderer, Texture::INCOMPLETE_TEXTURE_ID);
-                incomplete2darray->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
+                incomplete2darray->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
 
                 t = incomplete2darray;
             }

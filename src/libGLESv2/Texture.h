@@ -107,9 +107,9 @@ class Texture : public RefCountObject
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
   protected:
-    void setImage(GLint unpackAlignment, GLenum type, const void *pixels, rx::Image *image);
+    void setImage(const PixelUnpackState &unpack, GLenum type, const void *pixels, rx::Image *image);
     bool subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                  GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, rx::Image *image);
+                  GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels, rx::Image *image);
     void setCompressedImage(GLsizei imageSize, const void *pixels, rx::Image *image);
     bool subImageCompressed(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                             GLenum format, GLsizei imageSize, const void *pixels, rx::Image *image);
@@ -160,9 +160,9 @@ class Texture2D : public Texture
     bool isCompressed(GLint level) const;
     bool isDepth(GLint level) const;
 
-    void setImage(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void setImage(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
-    void subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
     void copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
@@ -218,16 +218,16 @@ class TextureCubeMap : public Texture
     bool isCompressed(GLenum target, GLint level) const;
     bool isDepth(GLenum target, GLint level) const;
 
-    void setImagePosX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
-    void setImageNegX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
-    void setImagePosY(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
-    void setImageNegY(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
-    void setImagePosZ(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
-    void setImageNegZ(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void setImagePosX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
+    void setImageNegX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
+    void setImagePosY(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
+    void setImageNegY(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
+    void setImagePosZ(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
+    void setImageNegZ(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
 
     void setCompressedImage(GLenum face, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
 
-    void subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
     void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
@@ -261,7 +261,7 @@ class TextureCubeMap : public Texture
     bool isFaceLevelComplete(int face, int level) const;
     void updateTextureFaceLevel(int face, int level);
 
-    void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
     void redefineImage(int faceIndex, GLint level, GLint internalformat, GLsizei width, GLsizei height);
 
@@ -285,9 +285,9 @@ class Texture3D : public Texture
     bool isCompressed(GLint level) const;
     bool isDepth(GLint level) const;
 
-    void setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
-    void subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
     void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
@@ -341,9 +341,9 @@ class Texture2DArray : public Texture
     bool isCompressed(GLint level) const;
     bool isDepth(GLint level) const;
 
-    void setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
-    void subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
     void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
