@@ -15,6 +15,8 @@
 namespace rx
 {
 
+class Renderer;
+
 namespace d3d11
 {
 
@@ -49,6 +51,10 @@ DXGI_FORMAT GetSRVFormat(GLenum internalFormat, GLuint clientVersion);
 DXGI_FORMAT GetRTVFormat(GLenum internalFormat, GLuint clientVersion);
 DXGI_FORMAT GetDSVFormat(GLenum internalFormat, GLuint clientVersion);
 DXGI_FORMAT GetRenderableFormat(GLenum internalFormat, GLuint clientVersion);
+
+DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat, const Renderer *renderer);
+DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat, const Renderer *renderer);
+DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat, const Renderer *renderer);
 
 }
 

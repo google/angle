@@ -12,6 +12,7 @@
 #include "libGLESv2/renderer/generatemip.h"
 #include "libGLESv2/renderer/loadimage.h"
 #include "libGLESv2/renderer/copyimage.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace rx
 {
@@ -698,6 +699,101 @@ bool GetDepthStencilInfo(DXGI_FORMAT format, DXGIDepthStencilInfo *outDepthStenc
     }
 }
 
+struct SwizzleSizeType
+{
+    unsigned int mMaxComponentSize;
+    GLenum mComponentType;
+
+    SwizzleSizeType()
+        : mMaxComponentSize(0), mComponentType(GL_NONE)
+    { }
+
+    SwizzleSizeType(unsigned int maxComponentSize, GLenum componentType)
+        : mMaxComponentSize(maxComponentSize), mComponentType(componentType)
+    { }
+
+    bool operator<(const SwizzleSizeType& other) const
+    {
+        return (mMaxComponentSize != other.mMaxComponentSize) ? (mMaxComponentSize < other.mMaxComponentSize)
+                                                              : (mComponentType < other.mComponentType);
+    }
+};
+
+struct SwizzleFormatInfo
+{
+    DXGI_FORMAT mTexFormat;
+    DXGI_FORMAT mSRVFormat;
+    DXGI_FORMAT mRTVFormat;
+
+    SwizzleFormatInfo()
+        : mTexFormat(DXGI_FORMAT_UNKNOWN), mSRVFormat(DXGI_FORMAT_UNKNOWN), mRTVFormat(DXGI_FORMAT_UNKNOWN)
+    { }
+
+    SwizzleFormatInfo(DXGI_FORMAT texFormat, DXGI_FORMAT srvFormat, DXGI_FORMAT rtvFormat)
+        : mTexFormat(texFormat), mSRVFormat(srvFormat), mRTVFormat(rtvFormat)
+    { }
+};
+
+typedef std::map<SwizzleSizeType, SwizzleFormatInfo> SwizzleInfoMap;
+typedef std::pair<SwizzleSizeType, SwizzleFormatInfo> SwizzleInfoPair;
+
+static SwizzleInfoMap BuildSwizzleInfoMap()
+{
+    SwizzleInfoMap map;
+
+    map.insert(SwizzleInfoPair(SwizzleSizeType( 8, GL_UNSIGNED_NORMALIZED), SwizzleFormatInfo(DXGI_FORMAT_R8G8B8A8_UNORM,     DXGI_FORMAT_R8G8B8A8_UNORM,     DXGI_FORMAT_R8G8B8A8_UNORM    )));
+
+    map.insert(SwizzleInfoPair(SwizzleSizeType( 8, GL_SIGNED_NORMALIZED  ), SwizzleFormatInfo(DXGI_FORMAT_R8G8B8A8_SNORM,     DXGI_FORMAT_R8G8B8A8_SNORM,     DXGI_FORMAT_R8G8B8A8_SNORM    )));
+
+    map.insert(SwizzleInfoPair(SwizzleSizeType(16, GL_FLOAT              ), SwizzleFormatInfo(DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R16G16B16A16_FLOAT)));
+    map.insert(SwizzleInfoPair(SwizzleSizeType(32, GL_FLOAT              ), SwizzleFormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT)));
+
+    map.insert(SwizzleInfoPair(SwizzleSizeType( 8, GL_UNSIGNED_INT       ), SwizzleFormatInfo(DXGI_FORMAT_R8G8B8A8_UINT,      DXGI_FORMAT_R8G8B8A8_UINT,      DXGI_FORMAT_R8G8B8A8_UINT     )));
+    map.insert(SwizzleInfoPair(SwizzleSizeType(16, GL_UNSIGNED_INT       ), SwizzleFormatInfo(DXGI_FORMAT_R16G16B16A16_UINT,  DXGI_FORMAT_R16G16B16A16_UINT,  DXGI_FORMAT_R16G16B16A16_UINT )));
+    map.insert(SwizzleInfoPair(SwizzleSizeType(32, GL_UNSIGNED_INT       ), SwizzleFormatInfo(DXGI_FORMAT_R32G32B32A32_UINT,  DXGI_FORMAT_R32G32B32A32_UINT,  DXGI_FORMAT_R32G32B32A32_UINT )));
+
+    map.insert(SwizzleInfoPair(SwizzleSizeType( 8, GL_INT                ), SwizzleFormatInfo(DXGI_FORMAT_R8G8B8A8_SINT,      DXGI_FORMAT_R8G8B8A8_SINT,      DXGI_FORMAT_R8G8B8A8_SINT     )));
+    map.insert(SwizzleInfoPair(SwizzleSizeType(16, GL_INT                ), SwizzleFormatInfo(DXGI_FORMAT_R16G16B16A16_SINT,  DXGI_FORMAT_R16G16B16A16_SINT,  DXGI_FORMAT_R16G16B16A16_SINT )));
+    map.insert(SwizzleInfoPair(SwizzleSizeType(32, GL_INT                ), SwizzleFormatInfo(DXGI_FORMAT_R32G32B32A32_SINT,  DXGI_FORMAT_R32G32B32A32_SINT,  DXGI_FORMAT_R32G32B32A32_SINT )));
+
+    return map;
+}
+
+static const SwizzleInfoMap &GetSwizzleInfoMap()
+{
+    static const SwizzleInfoMap map = BuildSwizzleInfoMap();
+    return map;
+}
+
+static const SwizzleFormatInfo GetSwizzleFormatInfo(GLint internalFormat, GLuint clientVersion)
+{
+    // Get the maximum sized component
+    unsigned int maxBits = 0;
+    maxBits = std::max(maxBits, gl::GetAlphaBits(    internalFormat, clientVersion));
+    maxBits = std::max(maxBits, gl::GetRedBits(      internalFormat, clientVersion));
+    maxBits = std::max(maxBits, gl::GetGreenBits(    internalFormat, clientVersion));
+    maxBits = std::max(maxBits, gl::GetBlueBits(     internalFormat, clientVersion));
+    maxBits = std::max(maxBits, gl::GetLuminanceBits(internalFormat, clientVersion));
+    maxBits = std::max(maxBits, gl::GetDepthBits(    internalFormat, clientVersion));
+    maxBits = roundUp(maxBits, 8U);
+
+    GLenum componentType = gl::GetComponentType(internalFormat, clientVersion);
+
+    const SwizzleInfoMap &map = GetSwizzleInfoMap();
+    SwizzleInfoMap::const_iterator iter = map.find(SwizzleSizeType(maxBits, componentType));
+
+    if (iter != map.end())
+    {
+        return iter->second;
+    }
+    else
+    {
+        UNREACHABLE();
+        static const SwizzleFormatInfo defaultFormatInfo;
+        return defaultFormatInfo;
+    }
+}
+
 namespace d3d11
 {
 
@@ -1062,6 +1158,48 @@ DXGI_FORMAT GetRenderableFormat(GLenum internalFormat, GLuint clientVersion)
         targetFormat = GetTexFormat(internalFormat, clientVersion);
 
     return targetFormat;
+}
+
+DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat, const Renderer *renderer)
+{
+    GLuint clientVersion = renderer->getCurrentClientVersion();
+    if (gl::GetComponentCount(internalFormat, clientVersion) != 4 || !gl::IsColorRenderingSupported(internalFormat, renderer))
+    {
+        const SwizzleFormatInfo &swizzleInfo = GetSwizzleFormatInfo(internalFormat, clientVersion);
+        return swizzleInfo.mTexFormat;
+    }
+    else
+    {
+        return GetTexFormat(internalFormat, clientVersion);
+    }
+}
+
+DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat, const Renderer *renderer)
+{
+    GLuint clientVersion = renderer->getCurrentClientVersion();
+    if (gl::GetComponentCount(internalFormat, clientVersion) != 4 || !gl::IsColorRenderingSupported(internalFormat, renderer))
+    {
+        const SwizzleFormatInfo &swizzleInfo = GetSwizzleFormatInfo(internalFormat, clientVersion);
+        return swizzleInfo.mSRVFormat;
+    }
+    else
+    {
+        return GetTexFormat(internalFormat, clientVersion);
+    }
+}
+
+DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat, const Renderer *renderer)
+{
+    GLuint clientVersion = renderer->getCurrentClientVersion();
+    if (gl::GetComponentCount(internalFormat, clientVersion) != 4 || !gl::IsColorRenderingSupported(internalFormat, renderer))
+    {
+        const SwizzleFormatInfo &swizzleInfo = GetSwizzleFormatInfo(internalFormat, clientVersion);
+        return swizzleInfo.mRTVFormat;
+    }
+    else
+    {
+        return GetTexFormat(internalFormat, clientVersion);
+    }
 }
 
 }
