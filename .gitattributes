@@ -1,0 +1,5 @@
+*                  text=auto
+*.vcxproj          eol=crlf
+*.vcxproj.filters  eol=crlf
+*.bat              eol=crlf
+**/compiled/*.h    eol=crlf
