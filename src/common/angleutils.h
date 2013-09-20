@@ -56,6 +56,28 @@ void SafeDeleteArray(T*& resource)
     resource = NULL;
 }
 
+// Provide a less-than function for comparing structs
+// Note: struct memory must be initialized to zero, because of packing gaps
+template <typename T>
+inline bool StructLessThan(const T &a, const T &b)
+{
+    return (memcmp(&a, &b, sizeof(T)) < 0);
+}
+
+// Provide a less-than function for comparing structs
+// Note: struct memory must be initialized to zero, because of packing gaps
+template <typename T>
+inline bool StructEquals(const T &a, const T &b)
+{
+    return (memcmp(&a, &b, sizeof(T)) == 0);
+}
+
+template <typename T>
+inline void StructZero(T *obj)
+{
+    memset(obj, 0, sizeof(T));
+}
+
 #if defined(_MSC_VER)
 #define snprintf _snprintf
 #endif

@@ -28,13 +28,6 @@
 namespace rx
 {
 
-// Provide a less-than function for comparing states in the caches
-template <typename T>
-static bool CompareStates(const T &a, const T &b)
-{
-    return memcmp(&a, &b, sizeof(T)) < 0;
-}
-
 template <typename T>
 static void ApplyVertices(const gl::Extents &framebufferSize, const gl::Rectangle *scissor, const gl::Color<T> &color, float depth, void *buffer)
 {
@@ -87,7 +80,7 @@ Clear11::ClearShader Clear11::CreateClearShader(ID3D11Device *device, DXGI_FORMA
 }
 
 Clear11::Clear11(Renderer11 *renderer)
-    : mRenderer(renderer), mClearBlendStates(CompareStates<ClearBlendInfo>), mClearDepthStencilStates(CompareStates<ClearDepthStencilInfo>),
+    : mRenderer(renderer), mClearBlendStates(StructLessThan<ClearBlendInfo>), mClearDepthStencilStates(StructLessThan<ClearDepthStencilInfo>),
       mVertexBuffer(NULL), mRasterizerState(NULL)
 {
     HRESULT result;
