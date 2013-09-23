@@ -33,6 +33,8 @@
 
 #include "libEGL/Display.h"
 
+#include "third_party/trace_event/trace_event.h"
+
 // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
 #define REF_RAST 0
 
@@ -171,10 +173,12 @@ EGLint Renderer9::initialize()
 
     if (mSoftwareDevice)
     {
+        TRACE_EVENT0("gpu", "GetModuleHandle_swiftshader");
         mD3d9Module = GetModuleHandle(TEXT("swiftshader_d3d9.dll"));
     }
     else
     {
+        TRACE_EVENT0("gpu", "GetModuleHandle_d3d9");
         mD3d9Module = GetModuleHandle(TEXT("d3d9.dll"));
     }
 
@@ -192,12 +196,14 @@ EGLint Renderer9::initialize()
     // desktop. Direct3D9Ex is available in Windows Vista and later if suitable drivers are available.
     if (ANGLE_ENABLE_D3D9EX && Direct3DCreate9ExPtr && SUCCEEDED(Direct3DCreate9ExPtr(D3D_SDK_VERSION, &mD3d9Ex)))
     {
+        TRACE_EVENT0("gpu", "D3d9Ex_QueryInterface");
         ASSERT(mD3d9Ex);
         mD3d9Ex->QueryInterface(IID_IDirect3D9, reinterpret_cast<void**>(&mD3d9));
         ASSERT(mD3d9);
     }
     else
     {
+        TRACE_EVENT0("gpu", "Direct3DCreate9");
         mD3d9 = Direct3DCreate9(D3D_SDK_VERSION);
     }
 
@@ -215,21 +221,24 @@ EGLint Renderer9::initialize()
     HRESULT result;
 
     // Give up on getting device caps after about one second.
-    for (int i = 0; i < 10; ++i)
     {
-        result = mD3d9->GetDeviceCaps(mAdapter, mDeviceType, &mDeviceCaps);
-        if (SUCCEEDED(result))
+        TRACE_EVENT0("gpu", "GetDeviceCaps");
+        for (int i = 0; i < 10; ++i)
         {
-            break;
-        }
-        else if (result == D3DERR_NOTAVAILABLE)
-        {
-            Sleep(100);   // Give the driver some time to initialize/recover
-        }
-        else if (FAILED(result))   // D3DERR_OUTOFVIDEOMEMORY, E_OUTOFMEMORY, D3DERR_INVALIDDEVICE, or another error we can't recover from
-        {
-            ERR("failed to get device caps (0x%x)\n", result);
-            return EGL_NOT_INITIALIZED;
+            result = mD3d9->GetDeviceCaps(mAdapter, mDeviceType, &mDeviceCaps);
+            if (SUCCEEDED(result))
+            {
+                break;
+            }
+            else if (result == D3DERR_NOTAVAILABLE)
+            {
+                Sleep(100);   // Give the driver some time to initialize/recover
+            }
+            else if (FAILED(result))   // D3DERR_OUTOFVIDEOMEMORY, E_OUTOFMEMORY, D3DERR_INVALIDDEVICE, or another error we can't recover from
+            {
+                ERR("failed to get device caps (0x%x)\n", result);
+                return EGL_NOT_INITIALIZED;
+            }
         }
     }
 
@@ -247,7 +256,10 @@ EGLint Renderer9::initialize()
         return EGL_NOT_INITIALIZED;
     }
 
-    mD3d9->GetAdapterIdentifier(mAdapter, 0, &mAdapterIdentifier);
+    {
+        TRACE_EVENT0("gpu", "GetAdapterIdentifier");
+        mD3d9->GetAdapterIdentifier(mAdapter, 0, &mAdapterIdentifier);
+    }
 
     // ATI cards on XP have problems with non-power-of-two textures.
     mSupportsNonPower2Textures = !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_POW2) &&
@@ -292,6 +304,7 @@ EGLint Renderer9::initialize()
     const d3d9::D3DFormatSet &d3d9Formats = d3d9::GetAllUsedD3DFormats();
     for (d3d9::D3DFormatSet::const_iterator i = d3d9Formats.begin(); i != d3d9Formats.end(); ++i)
     {
+        TRACE_EVENT0("gpu", "getMultiSampleSupport");
         MultisampleSupportInfo support = getMultiSampleSupport(*i);
         mMultiSampleSupport[*i] = support;
         mMaxSupportedSamples = std::max(mMaxSupportedSamples, support.maxSupportedSamples);
@@ -300,12 +313,18 @@ EGLint Renderer9::initialize()
     static const TCHAR windowName[] = TEXT("AngleHiddenWindow");
     static const TCHAR className[] = TEXT("STATIC");
 
-    mDeviceWindow = CreateWindowEx(WS_EX_NOACTIVATE, className, windowName, WS_DISABLED | WS_POPUP, 0, 0, 1, 1, HWND_MESSAGE, NULL, GetModuleHandle(NULL), NULL);
+    {
+        TRACE_EVENT0("gpu", "CreateWindowEx");
+        mDeviceWindow = CreateWindowEx(WS_EX_NOACTIVATE, className, windowName, WS_DISABLED | WS_POPUP, 0, 0, 1, 1, HWND_MESSAGE, NULL, GetModuleHandle(NULL), NULL);
+    }
 
     D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
     DWORD behaviorFlags = D3DCREATE_FPU_PRESERVE | D3DCREATE_NOWINDOWCHANGES;
 
-    result = mD3d9->CreateDevice(mAdapter, mDeviceType, mDeviceWindow, behaviorFlags | D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE, &presentParameters, &mDevice);
+    {
+        TRACE_EVENT0("gpu", "D3d9_CreateDevice");
+        result = mD3d9->CreateDevice(mAdapter, mDeviceType, mDeviceWindow, behaviorFlags | D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE, &presentParameters, &mDevice);
+    }
     if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DEVICELOST)
     {
         return EGL_BAD_ALLOC;
@@ -313,6 +332,7 @@ EGLint Renderer9::initialize()
 
     if (FAILED(result))
     {
+        TRACE_EVENT0("gpu", "D3d9_CreateDevice2");
         result = mD3d9->CreateDevice(mAdapter, mDeviceType, mDeviceWindow, behaviorFlags | D3DCREATE_SOFTWARE_VERTEXPROCESSING, &presentParameters, &mDevice);
 
         if (FAILED(result))
@@ -324,35 +344,45 @@ EGLint Renderer9::initialize()
 
     if (mD3d9Ex)
     {
+        TRACE_EVENT0("gpu", "mDevice_QueryInterface");
         result = mDevice->QueryInterface(IID_IDirect3DDevice9Ex, (void**) &mDeviceEx);
         ASSERT(SUCCEEDED(result));
     }
 
-    mVertexShaderCache.initialize(mDevice);
-    mPixelShaderCache.initialize(mDevice);
+    {
+        TRACE_EVENT0("gpu", "ShaderCache initialize");
+        mVertexShaderCache.initialize(mDevice);
+        mPixelShaderCache.initialize(mDevice);
+    }
 
     // Check occlusion query support
     IDirect3DQuery9 *occlusionQuery = NULL;
-    if (SUCCEEDED(mDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, &occlusionQuery)) && occlusionQuery)
     {
-        SafeRelease(occlusionQuery);
-        mOcclusionQuerySupport = true;
-    }
-    else
-    {
-        mOcclusionQuerySupport = false;
+        TRACE_EVENT0("gpu", "device_CreateQuery");
+        if (SUCCEEDED(mDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, &occlusionQuery)) && occlusionQuery)
+        {
+            SafeRelease(occlusionQuery);
+            mOcclusionQuerySupport = true;
+        }
+        else
+        {
+            mOcclusionQuerySupport = false;
+        }
     }
 
     // Check event query support
     IDirect3DQuery9 *eventQuery = NULL;
-    if (SUCCEEDED(mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &eventQuery)) && eventQuery)
     {
-        SafeRelease(eventQuery);
-        mEventQuerySupport = true;
-    }
-    else
-    {
-        mEventQuerySupport = false;
+        TRACE_EVENT0("gpu", "device_CreateQuery2");
+        if (SUCCEEDED(mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &eventQuery)) && eventQuery)
+        {
+            SafeRelease(eventQuery);
+            mEventQuerySupport = true;
+        }
+        else
+        {
+            mEventQuerySupport = false;
+        }
     }
 
     D3DDISPLAYMODE currentDisplayMode;
