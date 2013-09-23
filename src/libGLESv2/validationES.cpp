@@ -529,6 +529,7 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum pname, GLint param)
         return true;
 
       case GL_TEXTURE_COMPARE_MODE:
+        // Acceptable mode parameters from GLES 3.0.2 spec, table 3.17
         switch (param)
         {
           case GL_NONE:
@@ -540,6 +541,7 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum pname, GLint param)
         break;
 
       case GL_TEXTURE_COMPARE_FUNC:
+        // Acceptable function parameters from GLES 3.0.2 spec, table 3.17
         switch (param)
         {
           case GL_LEQUAL:

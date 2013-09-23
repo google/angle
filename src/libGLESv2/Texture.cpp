@@ -85,143 +85,49 @@ void Texture::releaseProxy(const Renderbuffer *proxy)
     mRenderbufferProxies.release(proxy);
 }
 
-// Returns true on successful filter state update (valid enum parameter)
-bool Texture::setMinFilter(GLenum filter)
+void Texture::setMinFilter(GLenum filter)
 {
-    switch (filter)
-    {
-      case GL_NEAREST:
-      case GL_LINEAR:
-      case GL_NEAREST_MIPMAP_NEAREST:
-      case GL_LINEAR_MIPMAP_NEAREST:
-      case GL_NEAREST_MIPMAP_LINEAR:
-      case GL_LINEAR_MIPMAP_LINEAR:
-        mSamplerState.minFilter = filter;
-        return true;
-      default:
-        return false;
-    }
+    mSamplerState.minFilter = filter;
 }
 
-// Returns true on successful filter state update (valid enum parameter)
-bool Texture::setMagFilter(GLenum filter)
+void Texture::setMagFilter(GLenum filter)
 {
-    switch (filter)
-    {
-      case GL_NEAREST:
-      case GL_LINEAR:
-        mSamplerState.magFilter = filter;
-        return true;
-      default:
-        return false;
-    }
+    mSamplerState.magFilter = filter;
 }
 
-// Returns true on successful wrap state update (valid enum parameter)
-bool Texture::setWrapS(GLenum wrap)
+void Texture::setWrapS(GLenum wrap)
 {
-    switch (wrap)
-    {
-      case GL_REPEAT:
-      case GL_CLAMP_TO_EDGE:
-      case GL_MIRRORED_REPEAT:
-        mSamplerState.wrapS = wrap;
-        return true;
-      default:
-        return false;
-    }
+    mSamplerState.wrapS = wrap;
 }
 
-// Returns true on successful wrap state update (valid enum parameter)
-bool Texture::setWrapT(GLenum wrap)
+void Texture::setWrapT(GLenum wrap)
 {
-    switch (wrap)
-    {
-      case GL_REPEAT:
-      case GL_CLAMP_TO_EDGE:
-      case GL_MIRRORED_REPEAT:
-        mSamplerState.wrapT = wrap;
-        return true;
-      default:
-        return false;
-    }
+    mSamplerState.wrapT = wrap;
 }
 
-// Returns true on successful wrap state update (valid enum parameter)
-bool Texture::setWrapR(GLenum wrap)
+void Texture::setWrapR(GLenum wrap)
 {
-    switch (wrap)
-    {
-      case GL_REPEAT:
-      case GL_CLAMP_TO_EDGE:
-      case GL_MIRRORED_REPEAT:
-        mSamplerState.wrapR = wrap;
-        return true;
-      default:
-        return false;
-    }
+    mSamplerState.wrapR = wrap;
 }
 
-// Returns true on successful max anisotropy update (valid anisotropy value)
-bool Texture::setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy)
+void Texture::setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy)
 {
-    textureMaxAnisotropy = std::min(textureMaxAnisotropy, contextMaxAnisotropy);
-    if (textureMaxAnisotropy < 1.0f)
-    {
-        return false;
-    }
-
-    mSamplerState.maxAnisotropy = textureMaxAnisotropy;
-
-    return true;
+    mSamplerState.maxAnisotropy = std::min(textureMaxAnisotropy, contextMaxAnisotropy);
 }
 
-bool Texture::setCompareMode(GLenum mode)
+void Texture::setCompareMode(GLenum mode)
 {
-    // Acceptable mode parameters from GLES 3.0.2 spec, table 3.17
-    switch (mode)
-    {
-      case GL_NONE:
-      case GL_COMPARE_REF_TO_TEXTURE:
-        mSamplerState.compareMode = mode;
-        return true;
-      default:
-        return false;
-    }
+    mSamplerState.compareMode = mode;
 }
 
-bool Texture::setCompareFunc(GLenum func)
+void Texture::setCompareFunc(GLenum func)
 {
-    // Acceptable function parameters from GLES 3.0.2 spec, table 3.17
-    switch (func)
-    {
-      case GL_LEQUAL:
-      case GL_GEQUAL:
-      case GL_LESS:
-      case GL_GREATER:
-      case GL_EQUAL:
-      case GL_NOTEQUAL:
-      case GL_ALWAYS:
-      case GL_NEVER:
-        mSamplerState.compareFunc = func;
-        return true;
-      default:
-        return false;
-    }
+    mSamplerState.compareFunc = func;
 }
 
-// Returns true on successful usage state update (valid enum parameter)
-bool Texture::setUsage(GLenum usage)
+void Texture::setUsage(GLenum usage)
 {
-    switch (usage)
-    {
-      case GL_NONE:
-      case GL_FRAMEBUFFER_ATTACHMENT_ANGLE:
-        mUsage = usage;
-        return true;
-      default:
-        return false;
-    }
+    mUsage = usage;
 }
 
 GLenum Texture::getMinFilter() const

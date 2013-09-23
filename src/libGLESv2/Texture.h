@@ -69,15 +69,15 @@ class Texture : public RefCountObject
 
     GLenum getTarget() const;
 
-    bool setMinFilter(GLenum filter);
-    bool setMagFilter(GLenum filter);
-    bool setWrapS(GLenum wrap);
-    bool setWrapT(GLenum wrap);
-    bool setWrapR(GLenum wrap);
-    bool setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy);
-    bool setCompareMode(GLenum mode);
-    bool setCompareFunc(GLenum func);
-    bool setUsage(GLenum usage);
+    void setMinFilter(GLenum filter);
+    void setMagFilter(GLenum filter);
+    void setWrapS(GLenum wrap);
+    void setWrapT(GLenum wrap);
+    void setWrapR(GLenum wrap);
+    void setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy);
+    void setCompareMode(GLenum mode);
+    void setCompareFunc(GLenum func);
+    void setUsage(GLenum usage);
 
     GLenum getMinFilter() const;
     GLenum getMagFilter() const;
