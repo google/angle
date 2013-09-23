@@ -1020,6 +1020,8 @@ static int ES2_reserved_ES3_keyword(TParseContext *context, int token);
 static int ES2_keyword_ES3_reserved(TParseContext *context, int token);
 static int ES2_ident_ES3_keyword(TParseContext *context, int token);
 static int uint_constant(TParseContext *context);
+static int int_constant(yyscan_t yyscanner);
+static int float_constant(yyscan_t yyscanner);
 static int floatsuffix_check(TParseContext* context);
 
 #define INITIAL 0
@@ -1793,15 +1795,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 178:
 YY_RULE_SETUP
-{ yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
+{ return int_constant(yyscanner); }
 	YY_BREAK
 case 179:
 YY_RULE_SETUP
-{ yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
+{ return int_constant(yyscanner); }
 	YY_BREAK
 case 180:
 YY_RULE_SETUP
-{ yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
+{ return int_constant(yyscanner); }
 	YY_BREAK
 case 181:
 YY_RULE_SETUP
@@ -1817,15 +1819,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 184:
 YY_RULE_SETUP
-{ yylval->lex.f = static_cast<float>(atof_dot(yytext)); return FLOATCONSTANT; }
+{ return float_constant(yyscanner); }
 	YY_BREAK
 case 185:
 YY_RULE_SETUP
-{ yylval->lex.f = static_cast<float>(atof_dot(yytext)); return FLOATCONSTANT; }
+{ return float_constant(yyscanner); }
 	YY_BREAK
 case 186:
 YY_RULE_SETUP
-{ yylval->lex.f = static_cast<float>(atof_dot(yytext)); return FLOATCONSTANT; }
+{ return float_constant(yyscanner); }
 	YY_BREAK
 case 187:
 YY_RULE_SETUP
@@ -3261,14 +3263,15 @@ int uint_constant(TParseContext *context)
     struct yyguts_t* yyg = (struct yyguts_t*) context->scanner;
     yyscan_t yyscanner = (yyscan_t) context->scanner;
 
-    yylval->lex.u = static_cast<unsigned int>(strtol(yytext, 0, 0));
-
     if (context->shaderVersion < 300)
     {
         context->error(*yylloc, "Unsigned integers are unsupported prior to GLSL ES 3.00", yytext, "");
         context->recover();
         return 0;
     }
+
+    if (!atoi_clamp(yytext, &(yylval->lex.i)))
+        yyextra->warning(*yylloc, "Integer overflow", yytext, "");
 
     return UINTCONSTANT;
 }
@@ -3277,8 +3280,6 @@ int floatsuffix_check(TParseContext* context)
 {
     struct yyguts_t* yyg = (struct yyguts_t*) context->scanner;
 
-    yylval->lex.f = static_cast<float>(atof_dot(yytext));
-
     if (context->shaderVersion < 300)
     {
         context->error(*yylloc, "Floating-point suffix unsupported prior to GLSL ES 3.00", yytext);
@@ -3286,12 +3287,31 @@ int floatsuffix_check(TParseContext* context)
         return 0;
     }
 
+    if (!atof_clamp(yytext, &(yylval->lex.f)))
+        yyextra->warning(*yylloc, "Float overflow", yytext, "");
+
     return(FLOATCONSTANT);
 }
 
 void yyerror(YYLTYPE* lloc, TParseContext* context, const char* reason) {
     context->error(*lloc, reason, yyget_text(context->scanner));
     context->recover();
+}
+
+int int_constant(yyscan_t yyscanner) {
+    struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
+
+    if (!atoi_clamp(yytext, &(yylval->lex.i)))
+        yyextra->warning(*yylloc, "Integer overflow", yytext, "");
+    return INTCONSTANT;
+}
+
+int float_constant(yyscan_t yyscanner) {
+    struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
+
+    if (!atof_clamp(yytext, &(yylval->lex.f)))
+        yyextra->warning(*yylloc, "Float overflow", yytext, "");
+    return FLOATCONSTANT;
 }
 
 int glslang_initialize(TParseContext* context) {

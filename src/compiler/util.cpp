@@ -7,6 +7,9 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include <cerrno>
+#include <limits>
+
 #include "util.h"
 
 #ifdef _MSC_VER
@@ -15,19 +18,39 @@
     #include <sstream>
 #endif
 
-double atof_dot(const char *str)
+bool atof_clamp(const char *str, float *value)
 {
+    bool success = true;
 #ifdef _MSC_VER
     _locale_t l = _create_locale(LC_NUMERIC, "C");
-    double result = _atof_l(str, l);
+    double dvalue = _atof_l(str, l);
     _free_locale(l);
-    return result;
+    if (errno == ERANGE || dvalue > std::numeric_limits<float>::max())
+        success = false;
+    else
+        *value = static_cast<float>(dvalue);
 #else
-    double result;
     std::istringstream s(str);
     std::locale l("C");
     s.imbue(l);
-    s >> result;
-    return result;
+    s >> *value;
+    if (s.fail())
+        success = false;
 #endif
+    if (!success)
+        *value = std::numeric_limits<float>::max();
+    return success;
 }
+
+bool atoi_clamp(const char *str, int *value)
+{
+    long int lvalue = strtol(str, 0, 0);
+    if (errno == ERANGE || lvalue > std::numeric_limits<int>::max())
+    {
+        *value = std::numeric_limits<int>::max();
+        return  false;
+    }
+    *value = static_cast<int>(lvalue);
+    return true;
+}
+
