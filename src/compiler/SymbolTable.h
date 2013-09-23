@@ -332,10 +332,8 @@ public:
     void dump(TInfoSink &infoSink) const;
 
     bool setDefaultPrecision(const TPublicType& type, TPrecision prec) {
-        if (IsSampler(type.type))
-            return true;  // Skip sampler types for the time being
-        if (type.type != EbtFloat && type.type != EbtInt)
-            return false; // Only set default precision for int/float
+        if (!supportsPrecision(type.type))
+            return false;
         if (type.isAggregate())
             return false; // Not allowed to set for aggregate types
         int indexOfLastElement = static_cast<int>(precisionStack.size()) - 1;
@@ -346,19 +344,18 @@ public:
     // Searches down the precisionStack for a precision qualifier for the specified TBasicType
     TPrecision getDefaultPrecision( TBasicType type){
 
-        // unsigned integers use the same precision as signed
-        if (type == EbtUInt)
-            type = EbtInt;
-
-        if (type != EbtFloat && type != EbtInt)
+        if (!supportsPrecision(type))
             return EbpUndefined;
+
+        // unsigned integers use the same precision as signed
+        TBasicType baseType = (type == EbtUInt) ? EbtInt : type;
 
         int level = static_cast<int>(precisionStack.size()) - 1;
         assert(level >= 0); // Just to be safe. Should not happen.
         PrecisionStackLevel::iterator it;
         TPrecision prec = EbpUndefined; // If we dont find anything we return this. Should we error check this?
         while (level >= 0) {
-            it = precisionStack[level]->find(type);
+            it = precisionStack[level]->find(baseType);
             if (it != precisionStack[level]->end()) {
                 prec = (*it).second;
                 break;
@@ -370,6 +367,11 @@ public:
 
 private:
     ESymbolLevel currentLevel() const { return static_cast<ESymbolLevel>(table.size() - 1); }
+
+    bool supportsPrecision(TBasicType type) {
+      // Only supports precision for int, float, and sampler types.
+      return type == EbtFloat || type == EbtInt || type == EbtUInt || IsSampler(type);
+    }
 
     std::vector<TSymbolTableLevel*> table;
     typedef TMap<TBasicType, TPrecision> PrecisionStackLevel;
