@@ -487,6 +487,11 @@ int floatsuffix_check(TParseContext* context)
     return(FLOATCONSTANT);
 }
 
+void yyerror(YYLTYPE* lloc, TParseContext* context, const char* reason) {
+    context->error(*lloc, reason, yyget_text(context->scanner));
+    context->recover();
+}
+
 int glslang_initialize(TParseContext* context) {
     yyscan_t scanner = NULL;
     if (yylex_init_extra(context, &scanner))

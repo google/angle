@@ -342,7 +342,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 
-extern int yylex(YYSTYPE* yylval_param, YYLTYPE* yylloc, void* yyscanner);
+extern int yylex(YYSTYPE* yylval, YYLTYPE* yylloc, void* yyscanner);
 extern void yyerror(YYLTYPE* yylloc, TParseContext* context, const char* reason);
 
 #define YYLLOC_DEFAULT(Current, Rhs, N)                      \
@@ -5233,11 +5233,6 @@ yyreturn:
 
 
 
-
-void yyerror(YYLTYPE* yylloc, TParseContext* context, const char* reason) {
-    context->error(*yylloc, reason, "");
-    context->recover();
-}
 
 int glslang_parse(TParseContext* context) {
     return yyparse(context);
