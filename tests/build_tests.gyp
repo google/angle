@@ -35,6 +35,12 @@
         'gtest',
         'gmock',
       ],
+      'variables': {
+        'ANGLE_DIR': '..',
+      },
+      'includes': [
+        'preprocessor_tests/preprocessor_tests.gypi',
+      ]
       'include_dirs': [
         '../src/compiler/preprocessor',
         '../third_party/googletest/include',
@@ -42,35 +48,23 @@
       ],
       'sources': [
         '../third_party/googlemock/src/gmock_main.cc',
-        'preprocessor_tests/char_test.cpp',
-        'preprocessor_tests/comment_test.cpp',
-        'preprocessor_tests/define_test.cpp',
-        'preprocessor_tests/error_test.cpp',
-        'preprocessor_tests/extension_test.cpp',
-        'preprocessor_tests/identifier_test.cpp',
-        'preprocessor_tests/if_test.cpp',
-        'preprocessor_tests/input_test.cpp',
-        'preprocessor_tests/location_test.cpp',
-        'preprocessor_tests/MockDiagnostics.h',
-        'preprocessor_tests/MockDirectiveHandler.h',
-        'preprocessor_tests/number_test.cpp',
-        'preprocessor_tests/operator_test.cpp',
-        'preprocessor_tests/pragma_test.cpp',
-        'preprocessor_tests/PreprocessorTest.cpp',
-        'preprocessor_tests/PreprocessorTest.h',
-        'preprocessor_tests/space_test.cpp',
-        'preprocessor_tests/token_test.cpp',
-        'preprocessor_tests/version_test.cpp',
       ],
     },
     {
       'target_name': 'compiler_tests',
       'type': 'executable',
-      'dependencies': [
+      'dependencies': 
+        '../src/build_angle.gyp:translator_common',
         '../src/build_angle.gyp:translator_glsl',
         'gtest',
         'gmock',
       ],
+      'variables': {
+        'ANGLE_DIR': '..',
+      },
+      'includes': [
+        'compiler_tests/compiler_tests.gypi',
+      ]
       'include_dirs': [
         '../include',
         '../src',
@@ -79,8 +73,6 @@
       ],
       'sources': [
         '../third_party/googlemock/src/gmock_main.cc',
-        'compiler_tests/ExpressionLimit_test.cpp',
-        'compiler_tests/VariablePacker_test.cpp',
       ],
     },
   ],

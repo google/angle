@@ -34,15 +34,15 @@ TEST_F(InitTest, NullString)
 TEST(InputTest, DefaultConstructor)
 {
     pp::Input input;
-    EXPECT_EQ(0, input.count());
-    EXPECT_EQ(0, input.read(NULL, 1));
+    EXPECT_EQ(0u, input.count());
+    EXPECT_EQ(0u, input.read(NULL, 1));
 }
 
 TEST(InputTest, NullLength)
 {
     const char* str[] = {"foo"};
     pp::Input input(1, str, NULL);
-    EXPECT_EQ(3, input.length(0));
+    EXPECT_EQ(3u, input.length(0));
 }
 
 TEST(InputTest, NegativeLength)
@@ -50,7 +50,7 @@ TEST(InputTest, NegativeLength)
     const char* str[] = {"foo"};
     int length[] = {-1};
     pp::Input input(1, str, length);
-    EXPECT_EQ(3, input.length(0));
+    EXPECT_EQ(3u, input.length(0));
 }
 
 TEST(InputTest, ActualLength)
@@ -60,7 +60,7 @@ TEST(InputTest, ActualLength)
     pp::Input input(1, str, length);
     // Note that strlen(str[0]) != length[0].
     // Even then Input should just accept any non-negative number.
-    EXPECT_EQ(length[0], input.length(0));
+    EXPECT_EQ(static_cast<size_t>(length[0]), input.length(0));
 }
 
 TEST(InputTest, String)
@@ -78,33 +78,33 @@ TEST(InputTest, ReadSingleString)
 
     int maxSize = 1;
     pp::Input input1(count, str, NULL);
-    EXPECT_EQ(1, input1.read(buf, maxSize));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('f', buf[0]);
-    EXPECT_EQ(1, input1.read(buf, maxSize));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(1, input1.read(buf, maxSize));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(0, input1.read(buf, maxSize));
+    EXPECT_EQ(0u, input1.read(buf, maxSize));
 
     maxSize = 2;
     pp::Input input2(count, str, NULL);
-    EXPECT_EQ(2, input2.read(buf, maxSize));
+    EXPECT_EQ(2u, input2.read(buf, maxSize));
     EXPECT_STREQ("fo", buf);
-    EXPECT_EQ(1, input2.read(buf, maxSize));
+    EXPECT_EQ(1u, input2.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(0, input2.read(buf, maxSize));
+    EXPECT_EQ(0u, input2.read(buf, maxSize));
 
     maxSize = 3;
     pp::Input input3(count, str, NULL);
-    EXPECT_EQ(3, input3.read(buf, maxSize));
+    EXPECT_EQ(3u, input3.read(buf, maxSize));
     EXPECT_STREQ("foo", buf);
-    EXPECT_EQ(0, input3.read(buf, maxSize));
+    EXPECT_EQ(0u, input3.read(buf, maxSize));
 
     maxSize = 4;
     pp::Input input4(count, str, NULL);
-    EXPECT_EQ(3, input4.read(buf, maxSize));
+    EXPECT_EQ(3u, input4.read(buf, maxSize));
     EXPECT_STREQ("foo", buf);
-    EXPECT_EQ(0, input4.read(buf, maxSize));
+    EXPECT_EQ(0u, input4.read(buf, maxSize));
 }
 
 TEST(InputTest, ReadMultipleStrings)
@@ -115,33 +115,33 @@ TEST(InputTest, ReadMultipleStrings)
 
     int maxSize = 1;
     pp::Input input1(count, str, NULL);
-    EXPECT_EQ(1, input1.read(buf, maxSize));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('f', buf[0]);
-    EXPECT_EQ(1, input1.read(buf, maxSize));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(1, input1.read(buf, maxSize));
+    EXPECT_EQ(1u, input1.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(0, input1.read(buf, maxSize));
+    EXPECT_EQ(0u, input1.read(buf, maxSize));
 
     maxSize = 2;
     pp::Input input2(count, str, NULL);
-    EXPECT_EQ(2, input2.read(buf, maxSize));
+    EXPECT_EQ(2u, input2.read(buf, maxSize));
     EXPECT_STREQ("fo", buf);
-    EXPECT_EQ(1, input2.read(buf, maxSize));
+    EXPECT_EQ(1u, input2.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(0, input2.read(buf, maxSize));
+    EXPECT_EQ(0u, input2.read(buf, maxSize));
 
     maxSize = 3;
     pp::Input input3(count, str, NULL);
-    EXPECT_EQ(3, input3.read(buf, maxSize));
+    EXPECT_EQ(3u, input3.read(buf, maxSize));
     EXPECT_STREQ("foo", buf);
-    EXPECT_EQ(0, input3.read(buf, maxSize));
+    EXPECT_EQ(0u, input3.read(buf, maxSize));
 
     maxSize = 4;
     pp::Input input4(count, str, NULL);
-    EXPECT_EQ(3, input4.read(buf, maxSize));
+    EXPECT_EQ(3u, input4.read(buf, maxSize));
     EXPECT_STREQ("foo", buf);
-    EXPECT_EQ(0, input4.read(buf, maxSize));
+    EXPECT_EQ(0u, input4.read(buf, maxSize));
 }
 
 TEST(InputTest, ReadStringsWithLength)
@@ -152,7 +152,7 @@ TEST(InputTest, ReadStringsWithLength)
     // strlen(str[0]. We want to make sure that the last character is ignored.
     int length[] = {2, 3};
     char buf[6] = {'\0', '\0', '\0', '\0', '\0', '\0'};
-    int maxSize = 5;
+    size_t maxSize = 5;
 
     pp::Input input(count, str, length);
     EXPECT_EQ(maxSize, input.read(buf, maxSize));
