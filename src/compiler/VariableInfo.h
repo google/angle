@@ -20,15 +20,17 @@ struct TVariableInfo {
     TPersistString mappedName;
     ShDataType type;
     int size;
+    TPrecision precision;
 };
 typedef std::vector<TVariableInfo> TVariableInfoList;
 
-// Traverses intermediate tree to collect all attributes and uniforms.
-class CollectAttribsUniforms : public TIntermTraverser {
+// Traverses intermediate tree to collect all attributes, uniforms, varyings.
+class CollectVariables : public TIntermTraverser {
 public:
-    CollectAttribsUniforms(TVariableInfoList& attribs,
-                           TVariableInfoList& uniforms,
-                           ShHashFunction64 hashFunction);
+    CollectVariables(TVariableInfoList& attribs,
+                     TVariableInfoList& uniforms,
+                     TVariableInfoList& varyings,
+                     ShHashFunction64 hashFunction);
 
     virtual void visitSymbol(TIntermSymbol*);
     virtual void visitConstantUnion(TIntermConstantUnion*);
@@ -42,6 +44,7 @@ public:
 private:
     TVariableInfoList& mAttribs;
     TVariableInfoList& mUniforms;
+    TVariableInfoList& mVaryings;
 
     ShHashFunction64 mHashFunction;
 };

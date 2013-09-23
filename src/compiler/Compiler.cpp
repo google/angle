@@ -186,8 +186,8 @@ bool TCompiler::compile(const char* const shaderStrings[],
         if (success && (compileOptions & SH_MAP_LONG_VARIABLE_NAMES) && hashFunction == NULL)
             mapLongVariableNames(root);
 
-        if (success && (compileOptions & SH_ATTRIBUTES_UNIFORMS)) {
-            collectAttribsUniforms(root);
+        if (success && (compileOptions & SH_VARIABLES)) {
+            collectVariables(root);
             if (compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS) {
                 success = enforcePackingRestrictions();
                 if (!success) {
@@ -375,9 +375,9 @@ bool TCompiler::enforceVertexShaderTimingRestrictions(TIntermNode* root)
     return restrictor.numErrors() == 0;
 }
 
-void TCompiler::collectAttribsUniforms(TIntermNode* root)
+void TCompiler::collectVariables(TIntermNode* root)
 {
-    CollectAttribsUniforms collect(attribs, uniforms, hashFunction);
+    CollectVariables collect(attribs, uniforms, varyings, hashFunction);
     root->traverse(&collect);
 }
 

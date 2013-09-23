@@ -166,6 +166,7 @@ void getBuiltInVariableInfo(const TType& type,
         varInfo.mappedName = mappedName.c_str();
         varInfo.size = 1;
     }
+    varInfo.precision = type.getPrecision();
     varInfo.type = getVariableDataType(type);
     infoList.push_back(varInfo);
 }
@@ -200,40 +201,42 @@ TVariableInfo::TVariableInfo(ShDataType type, int size)
 {
 }
 
-CollectAttribsUniforms::CollectAttribsUniforms(TVariableInfoList& attribs,
-                                               TVariableInfoList& uniforms,
-                                               ShHashFunction64 hashFunction)
+CollectVariables::CollectVariables(TVariableInfoList& attribs,
+                                   TVariableInfoList& uniforms,
+                                   TVariableInfoList& varyings,
+                                   ShHashFunction64 hashFunction)
     : mAttribs(attribs),
       mUniforms(uniforms),
+      mVaryings(varyings),
       mHashFunction(hashFunction)
 {
 }
 
 // We are only interested in attribute and uniform variable declaration.
-void CollectAttribsUniforms::visitSymbol(TIntermSymbol*)
+void CollectVariables::visitSymbol(TIntermSymbol*)
 {
 }
 
-void CollectAttribsUniforms::visitConstantUnion(TIntermConstantUnion*)
+void CollectVariables::visitConstantUnion(TIntermConstantUnion*)
 {
 }
 
-bool CollectAttribsUniforms::visitBinary(Visit, TIntermBinary*)
-{
-    return false;
-}
-
-bool CollectAttribsUniforms::visitUnary(Visit, TIntermUnary*)
+bool CollectVariables::visitBinary(Visit, TIntermBinary*)
 {
     return false;
 }
 
-bool CollectAttribsUniforms::visitSelection(Visit, TIntermSelection*)
+bool CollectVariables::visitUnary(Visit, TIntermUnary*)
 {
     return false;
 }
 
-bool CollectAttribsUniforms::visitAggregate(Visit, TIntermAggregate* node)
+bool CollectVariables::visitSelection(Visit, TIntermSelection*)
+{
+    return false;
+}
+
+bool CollectVariables::visitAggregate(Visit, TIntermAggregate* node)
 {
     bool visitChildren = false;
 
@@ -246,10 +249,26 @@ bool CollectAttribsUniforms::visitAggregate(Visit, TIntermAggregate* node)
     case EOpDeclaration: {
         const TIntermSequence& sequence = node->getSequence();
         TQualifier qualifier = sequence.front()->getAsTyped()->getQualifier();
-        if (qualifier == EvqAttribute || qualifier == EvqVertexIn || qualifier == EvqUniform)
+        if (qualifier == EvqAttribute || qualifier == EvqVertexIn || qualifier == EvqUniform ||
+            qualifier == EvqVaryingIn || qualifier == EvqVaryingOut ||
+            qualifier == EvqInvariantVaryingIn || qualifier == EvqInvariantVaryingOut)
         {
-            TVariableInfoList& infoList = (qualifier == EvqAttribute || qualifier == EvqVertexIn) ?
-                mAttribs : mUniforms;
+            TVariableInfoList *infoList = NULL;
+
+            switch (qualifier)
+            {
+              case EvqAttribute:
+              case EvqVertexIn:
+                infoList = &mAttribs;
+                break;
+              case EvqUniform:
+                infoList = &mUniforms;
+                break;
+              default:
+                infoList = &mVaryings;
+                break;
+            }
+
             for (TIntermSequence::const_iterator i = sequence.begin();
                  i != sequence.end(); ++i)
             {
@@ -268,7 +287,7 @@ bool CollectAttribsUniforms::visitAggregate(Visit, TIntermAggregate* node)
                 getVariableInfo(variable->getType(),
                                 variable->getOriginalSymbol(),
                                 processedSymbol,
-                                infoList,
+                                *infoList,
                                 mHashFunction);
             }
         }
@@ -280,12 +299,12 @@ bool CollectAttribsUniforms::visitAggregate(Visit, TIntermAggregate* node)
     return visitChildren;
 }
 
-bool CollectAttribsUniforms::visitLoop(Visit, TIntermLoop*)
+bool CollectVariables::visitLoop(Visit, TIntermLoop*)
 {
     return false;
 }
 
-bool CollectAttribsUniforms::visitBranch(Visit, TIntermBranch*)
+bool CollectVariables::visitBranch(Visit, TIntermBranch*)
 {
     return false;
 }
