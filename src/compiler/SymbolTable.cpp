@@ -246,3 +246,9 @@ TSymbol *TSymbolTable::findBuiltIn(const TString &name, int shaderVersion)
 
     return 0;
 }
+
+TSymbolTable::~TSymbolTable()
+{
+    while (table.size() > 0)
+        pop();
+}

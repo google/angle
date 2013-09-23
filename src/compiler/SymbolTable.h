@@ -42,7 +42,7 @@
 class TSymbol {    
 public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TSymbol(const TString *n) :  name(n) { }
+    TSymbol(const TString* n) :  uniqueId(0), name(n) { }
     virtual ~TSymbol() { /* don't delete name, it's from the pool */ }
 
     const TString& getName() const { return *name; }
@@ -57,8 +57,8 @@ public:
 private:
     DISALLOW_COPY_AND_ASSIGN(TSymbol);
 
+    int uniqueId;      // For real comparing during code generation
     const TString *name;
-    unsigned int uniqueId;      // For real comparing during code generation
     TString extension;
 };
 
@@ -194,7 +194,6 @@ public:
     typedef const tLevel::value_type tLevelPair;
     typedef std::pair<tLevel::iterator, bool> tInsertResult;
 
-    POOL_ALLOCATOR_NEW_DELETE();
     TSymbolTableLevel() { }
     ~TSymbolTableLevel();
 
@@ -205,8 +204,7 @@ public:
         //
         // returning true means symbol was added to the table
         //
-        tInsertResult result;
-        result = level.insert(tLevelPair(name, &symbol));
+        tInsertResult result = level.insert(tLevelPair(name, &symbol));
 
         return result.second;
     }
@@ -253,11 +251,7 @@ public:
         //
     }
 
-    ~TSymbolTable()
-    {
-        while (table.size() > 0)
-            pop();
-    }
+    ~TSymbolTable();
 
     //
     // When the symbol table is initialized with the built-ins, there should
@@ -270,13 +264,15 @@ public:
     void push()
     {
         table.push_back(new TSymbolTableLevel);
-        precisionStack.push_back( PrecisionStackLevel() );
+        precisionStack.push_back(new PrecisionStackLevel);
     }
 
     void pop()
-    { 
-        delete table[currentLevel()]; 
-        table.pop_back(); 
+    {
+        delete table.back();
+        table.pop_back();
+
+        delete precisionStack.back();
         precisionStack.pop_back();
     }
 
@@ -333,8 +329,9 @@ public:
     void relateToExtension(ESymbolLevel level, const char* name, const TString& ext) {
         table[level]->relateToExtension(name, ext);
     }
+    void dump(TInfoSink &infoSink) const;
 
-    bool setDefaultPrecision( const TPublicType& type, TPrecision prec ){
+    bool setDefaultPrecision(const TPublicType& type, TPrecision prec) {
         if (IsSampler(type.type))
             return true;  // Skip sampler types for the time being
         if (type.type != EbtFloat && type.type != EbtInt)
@@ -342,7 +339,7 @@ public:
         if (type.isAggregate())
             return false; // Not allowed to set for aggregate types
         int indexOfLastElement = static_cast<int>(precisionStack.size()) - 1;
-        precisionStack[indexOfLastElement][type.type] = prec; // Uses map operator [], overwrites the current value
+        (*precisionStack[indexOfLastElement])[type.type] = prec; // Uses map operator [], overwrites the current value
         return true;
     }
 
@@ -350,16 +347,19 @@ public:
     TPrecision getDefaultPrecision( TBasicType type){
 
         // unsigned integers use the same precision as signed
-        if (type == EbtUInt) type = EbtInt;
+        if (type == EbtUInt)
+            type = EbtInt;
 
-        if( type != EbtFloat && type != EbtInt ) return EbpUndefined;
+        if (type != EbtFloat && type != EbtInt)
+            return EbpUndefined;
+
         int level = static_cast<int>(precisionStack.size()) - 1;
-        assert( level >= 0); // Just to be safe. Should not happen.
+        assert(level >= 0); // Just to be safe. Should not happen.
         PrecisionStackLevel::iterator it;
         TPrecision prec = EbpUndefined; // If we dont find anything we return this. Should we error check this?
-        while( level >= 0 ){
-            it = precisionStack[level].find( type );
-            if( it != precisionStack[level].end() ){
+        while (level >= 0) {
+            it = precisionStack[level]->find(type);
+            if (it != precisionStack[level]->end()) {
                 prec = (*it).second;
                 break;
             }
@@ -368,12 +368,12 @@ public:
         return prec;
     }
 
-protected:
+private:
     ESymbolLevel currentLevel() const { return static_cast<ESymbolLevel>(table.size() - 1); }
 
     std::vector<TSymbolTableLevel*> table;
-    typedef std::map< TBasicType, TPrecision > PrecisionStackLevel;
-    std::vector< PrecisionStackLevel > precisionStack;
+    typedef TMap<TBasicType, TPrecision> PrecisionStackLevel;
+    std::vector< PrecisionStackLevel*> precisionStack;
 };
 
 #endif // _SYMBOL_TABLE_INCLUDED_

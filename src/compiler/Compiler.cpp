@@ -30,19 +30,32 @@ bool isWebGLBasedSpec(ShShaderSpec spec)
 namespace {
 class TScopedPoolAllocator {
 public:
-    TScopedPoolAllocator(TPoolAllocator* allocator, bool pushPop)
-        : mAllocator(allocator), mPushPopAllocator(pushPop) {
-        if (mPushPopAllocator) mAllocator->push();
+    TScopedPoolAllocator(TPoolAllocator* allocator) : mAllocator(allocator) {
+        mAllocator->push();
         SetGlobalPoolAllocator(mAllocator);
     }
     ~TScopedPoolAllocator() {
         SetGlobalPoolAllocator(NULL);
-        if (mPushPopAllocator) mAllocator->pop();
+        mAllocator->pop();
     }
 
 private:
     TPoolAllocator* mAllocator;
-    bool mPushPopAllocator;
+};
+
+class TScopedSymbolTableLevel {
+public:
+    TScopedSymbolTableLevel(TSymbolTable* table) : mTable(table) {
+        ASSERT(mTable->atBuiltInLevel());
+        mTable->push();
+    }
+    ~TScopedSymbolTableLevel() {
+        while (!mTable->atBuiltInLevel())
+            mTable->pop();
+    }
+
+private:
+    TSymbolTable* mTable;
 };
 }  // namespace
 
@@ -83,7 +96,8 @@ bool TCompiler::Init(const ShBuiltInResources& resources)
         resources.MaxFragmentUniformVectors;
     maxExpressionComplexity = resources.MaxExpressionComplexity;
     maxCallStackDepth = resources.MaxCallStackDepth;
-    TScopedPoolAllocator scopedAlloc(&allocator, false);
+
+    SetGlobalPoolAllocator(&allocator);
 
     // Generate built-in symbol table.
     if (!InitBuiltInSymbolTable(resources))
@@ -103,7 +117,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
                         size_t numStrings,
                         int compileOptions)
 {
-    TScopedPoolAllocator scopedAlloc(&allocator, true);
+    TScopedPoolAllocator scopedAlloc(&allocator);
     clearResults();
 
     if (numStrings == 0)
@@ -131,11 +145,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
     // We preserve symbols at the built-in level from compile-to-compile.
     // Start pushing the user-defined symbols at global level.
-    symbolTable.push();
-    if (!symbolTable.atGlobalLevel()) {
-        infoSink.info.prefix(EPrefixInternalError);
-        infoSink.info << "Wrong symbol table level";
-    }
+    TScopedSymbolTableLevel scopedSymbolLevel(&symbolTable);
 
     // Parse shader.
     bool success =
@@ -206,10 +216,6 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
     // Cleanup memory.
     intermediate.remove(parseContext.treeRoot);
-    // Ensure symbol table is returned to the built-in level,
-    // throwing away all but the built-ins.
-    while (!symbolTable.atBuiltInLevel())
-        symbolTable.pop();
 
     return success;
 }
