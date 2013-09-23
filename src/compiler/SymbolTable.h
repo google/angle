@@ -41,9 +41,10 @@
 //
 class TSymbol {    
 public:
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
+    POOL_ALLOCATOR_NEW_DELETE();
     TSymbol(const TString *n) :  name(n) { }
     virtual ~TSymbol() { /* don't delete name, it's from the pool */ }
+
     const TString& getName() const { return *name; }
     virtual const TString& getMangledName() const { return getName(); }
     virtual bool isFunction() const { return false; }
@@ -193,7 +194,7 @@ public:
     typedef const tLevel::value_type tLevelPair;
     typedef std::pair<tLevel::iterator, bool> tInsertResult;
 
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
+    POOL_ALLOCATOR_NEW_DELETE();
     TSymbolTableLevel() { }
     ~TSymbolTableLevel();
 

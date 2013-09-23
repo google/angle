@@ -11,13 +11,13 @@
 
 class ConstantUnion {
 public:
+    POOL_ALLOCATOR_NEW_DELETE();
     ConstantUnion()
     {
         iConst = 0;
         type = EbtVoid;
     }
 
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
     void setIConst(int i) {iConst = i; type = EbtInt; }
     void setUConst(unsigned int u) { uConst = u; type = EbtUInt; }
     void setFConst(float f) {fConst = f; type = EbtFloat; }

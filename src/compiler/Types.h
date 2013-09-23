@@ -19,7 +19,7 @@ class TType;
 class TField
 {
 public:
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator);
+    POOL_ALLOCATOR_NEW_DELETE();
     TField(TType* type, TString* name, const TSourceLoc& line) : mType(type), mName(name), mLine(line) {}
 
     // TODO(alokp): We should only return const type.
@@ -40,7 +40,7 @@ private:
 typedef TVector<TField*> TFieldList;
 inline TFieldList* NewPoolTFieldList()
 {
-    void* memory = GlobalPoolAllocator.allocate(sizeof(TFieldList));
+    void* memory = GetGlobalPoolAllocator()->allocate(sizeof(TFieldList));
     return new(memory) TFieldList;
 }
 
@@ -82,7 +82,7 @@ protected:
 class TStructure : public TFieldListCollection
 {
 public:
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator);
+    POOL_ALLOCATOR_NEW_DELETE();
     TStructure(const TString* name, TFieldList* fields)
         : TFieldListCollection(name, fields),
           mDeepestNesting(0) {
@@ -106,7 +106,7 @@ private:
 class TInterfaceBlock : public TFieldListCollection
 {
 public:
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator);
+    POOL_ALLOCATOR_NEW_DELETE();
     TInterfaceBlock(const TString* name, TFieldList* fields, const TString* instanceName, int arraySize, const TLayoutQualifier& layoutQualifier)
         : TFieldListCollection(name, fields),
           mInstanceName(instanceName),
@@ -138,7 +138,7 @@ private:
 class TType
 {
 public:
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
+    POOL_ALLOCATOR_NEW_DELETE();
     TType() {}
     TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int ps = 1, int ss = 1, bool a = false) :
             type(t), precision(p), qualifier(q), primarySize(ps), secondarySize(ss), array(a), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
