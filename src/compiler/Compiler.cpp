@@ -281,6 +281,7 @@ void TCompiler::clearResults()
 
     attribs.clear();
     uniforms.clear();
+    varyings.clear();
 
     builtInFunctionEmulator.Cleanup();
 
