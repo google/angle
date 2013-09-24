@@ -8,6 +8,7 @@
 // validationES3.cpp: Validation functions for OpenGL ES 3.0 entry point parameters
 
 #include "libGLESv2/validationES3.h"
+#include "libGLESv2/validationES.h"
 #include "libGLESv2/Context.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/Framebuffer.h"
@@ -19,31 +20,6 @@
 
 namespace gl
 {
-
-static bool validImageSize(const gl::Context *context, GLint level, GLsizei width, GLsizei height, GLsizei depth)
-{
-    if (level < 0 || width < 0 || height < 0 || depth < 0)
-    {
-        return false;
-    }
-
-    if (context->supportsNonPower2Texture())
-    {
-        return true;
-    }
-
-    if (level == 0)
-    {
-        return true;
-    }
-
-    if (gl::isPow2(width) && gl::isPow2(height) && gl::isPow2(depth))
-    {
-        return true;
-    }
-
-    return false;
-}
 
 static bool validCompressedImageSize(GLsizei width, GLsizei height)
 {
@@ -65,7 +41,7 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
                                    GLint border, GLenum format, GLenum type, const GLvoid *pixels)
 {
     // Validate image size
-    if (!validImageSize(context, level, width, height, depth))
+    if (!ValidImageSize(context, target, level, width, height, depth))
     {
         return gl::error(GL_INVALID_VALUE, false);
     }
@@ -77,12 +53,6 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
 
     // Verify zero border
     if (border != 0)
-    {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    // Validate dimensions based on Context limits and validate the texture
-    if (level > context->getMaximumTextureLevel())
     {
         return gl::error(GL_INVALID_VALUE, false);
     }
@@ -342,7 +312,7 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
         return gl::error(GL_INVALID_VALUE, false);
     }
 
-    if (level > context->getMaximumTextureLevel())
+    if (!ValidMipLevel(context, target, level))
     {
         return gl::error(GL_INVALID_VALUE, false);
     }

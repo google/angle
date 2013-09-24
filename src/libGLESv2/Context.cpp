@@ -317,12 +317,17 @@ void Context::makeCurrent(egl::Surface *surface)
                                           (int)gl::IMPLEMENTATION_MAX_3D_TEXTURE_SIZE);
         mMax2DArrayTextureLayers = mRenderer->getMaxTextureArrayLayers();
         mMaxRenderbufferDimension = mMax2DTextureDimension;
-        mMaxTextureLevel = log2(mMax2DTextureDimension) + 1;
+        mMax2DTextureLevel = log2(mMax2DTextureDimension) + 1;
+        mMaxCubeTextureLevel = log2(mMaxCubeTextureDimension) + 1;
+        mMax3DTextureLevel = log2(mMax3DTextureDimension) + 1;
+        mMax2DArrayTextureLevel = log2(mMax2DTextureDimension) + 1;
         mMaxTextureAnisotropy = mRenderer->getTextureMaxAnisotropy();
         TRACE("Max2DTextureDimension=%d, MaxCubeTextureDimension=%d, Max3DTextureDimension=%d, Max2DArrayTextureLayers = %d, "
-              "MaxRenderbufferDimension=%d, MaxTextureLevel=%d, MaxTextureAnisotropy=%f",
+              "Max2DTextureLevel=%d, MaxCubeTextureLevel=%d, Max3DTextureLevel=%d, Max2DArrayTextureLevel=%d, "
+              "MaxRenderbufferDimension=%d, MaxTextureAnisotropy=%f",
               mMax2DTextureDimension, mMaxCubeTextureDimension, mMax3DTextureDimension, mMax2DArrayTextureLayers,
-              mMaxRenderbufferDimension, mMaxTextureLevel, mMaxTextureAnisotropy);
+              mMax2DTextureLevel, mMaxCubeTextureLevel, mMax3DTextureLevel, mMax2DArrayTextureLevel,
+              mMaxRenderbufferDimension, mMaxTextureAnisotropy);
 
         mSupportsEventQueries = mRenderer->getEventQuerySupport();
         mSupportsOcclusionQueries = mRenderer->getOcclusionQuerySupport();
@@ -3069,9 +3074,24 @@ int Context::getMaximum2DArrayTextureLayers() const
     return mMax2DArrayTextureLayers;
 }
 
-int Context::getMaximumTextureLevel() const
+int Context::getMaximum2DTextureLevel() const
 {
-    return mMaxTextureLevel;
+    return mMax2DTextureLevel;
+}
+
+int Context::getMaximumCubeTextureLevel() const
+{
+    return mMaxCubeTextureLevel;
+}
+
+int Context::getMaximum3DTextureLevel() const
+{
+    return mMax3DTextureLevel;
+}
+
+int Context::getMaximum2DArrayTextureLevel() const
+{
+    return mMax2DArrayTextureLevel;
 }
 
 bool Context::supportsLuminanceTextures() const

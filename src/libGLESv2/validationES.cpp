@@ -21,6 +21,47 @@
 namespace gl
 {
 
+bool ValidMipLevel(const gl::Context *context, GLenum target, GLint level)
+{
+    int maxLevel = 0;
+    switch (target)
+    {
+      case GL_TEXTURE_2D:                  maxLevel = context->getMaximum2DTextureLevel();      break;
+      case GL_TEXTURE_CUBE_MAP:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z: maxLevel = context->getMaximumCubeTextureLevel();    break;
+      case GL_TEXTURE_3D:                  maxLevel = context->getMaximum3DTextureLevel();      break;
+      case GL_TEXTURE_2D_ARRAY:            maxLevel = context->getMaximum2DArrayTextureLevel(); break;
+      default: UNREACHABLE();
+    }
+
+    return level < maxLevel;
+}
+
+bool ValidImageSize(const gl::Context *context, GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth)
+{
+    if (level < 0 || width < 0 || height < 0 || depth < 0)
+    {
+        return false;
+    }
+
+    if (!context->supportsNonPower2Texture() && (level != 0 || !gl::isPow2(width) || !gl::isPow2(height) || !gl::isPow2(depth)))
+    {
+        return false;
+    }
+
+    if (!ValidMipLevel(context, target, level))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum target, GLsizei samples,
                                            GLenum internalformat, GLsizei width, GLsizei height,
                                            bool angleExtension)
