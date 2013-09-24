@@ -496,6 +496,20 @@ T roundUp(const T value, const T alignment)
     return value + alignment - 1 - (value - 1) % alignment;
 }
 
+template <class T>
+inline bool IsUnsignedAdditionSafe(T lhs, T rhs)
+{
+    META_ASSERT(!std::numeric_limits<T>::is_signed);
+    return (rhs <= std::numeric_limits<T>::max() - lhs);
+}
+
+template <class T>
+inline bool IsUnsignedMultiplicationSafe(T lhs, T rhs)
+{
+    META_ASSERT(!std::numeric_limits<T>::is_signed);
+    return (lhs == T(0) || rhs == T(0) || (rhs <= std::numeric_limits<T>::max() / lhs));
+}
+
 }
 
 #endif   // LIBGLESV2_MATHUTIL_H_
