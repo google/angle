@@ -53,7 +53,7 @@
       ],      
     },
     {
-      'target_name': 'translator_common',
+      'target_name': 'translator_static',
       'type': 'static_library',
       'dependencies': ['preprocessor'],
       'include_dirs': [
@@ -67,6 +67,7 @@
         'compiler/BaseTypes.h',
         'compiler/BuiltInFunctionEmulator.cpp',
         'compiler/BuiltInFunctionEmulator.h',
+        'compiler/CodeGen.cpp',
         'compiler/Common.h',
         'compiler/Compiler.cpp',
         'compiler/ConstantUnion.h',
@@ -74,6 +75,8 @@
         'compiler/debug.h',
         'compiler/DetectCallDepth.cpp',
         'compiler/DetectCallDepth.h',
+        'compiler/DetectDiscontinuity.cpp',
+        'compiler/DetectDiscontinuity.h',
         'compiler/Diagnostics.h',
         'compiler/Diagnostics.cpp',
         'compiler/DirectiveHandler.h',
@@ -106,6 +109,14 @@
         'compiler/MapLongVariableNames.h',
         'compiler/MMap.h',
         'compiler/osinclude.h',
+        'compiler/OutputESSL.cpp',
+        'compiler/OutputESSL.h',        
+        'compiler/OutputGLSLBase.cpp',
+        'compiler/OutputGLSLBase.h',
+        'compiler/OutputGLSL.cpp',
+        'compiler/OutputGLSL.h',
+        'compiler/OutputHLSL.cpp',
+        'compiler/OutputHLSL.h',
         'compiler/parseConst.cpp',
         'compiler/ParseHelper.cpp',
         'compiler/ParseHelper.h',
@@ -116,10 +127,21 @@
         'compiler/RemoveTree.cpp',
         'compiler/RemoveTree.h',
         'compiler/RenameFunction.h',
+        'compiler/SearchSymbol.cpp',
+        'compiler/SearchSymbol.h',
+        'compiler/ShaderLang.cpp',
         'compiler/ShHandle.h',
         'compiler/SymbolTable.cpp',
         'compiler/SymbolTable.h',
+        'compiler/TranslatorESSL.cpp',
+        'compiler/TranslatorESSL.h',
+        'compiler/TranslatorGLSL.cpp',
+        'compiler/TranslatorGLSL.h',
+        'compiler/TranslatorHLSL.cpp',
+        'compiler/TranslatorHLSL.h',
         'compiler/Types.h',
+        'compiler/UnfoldShortCircuit.cpp',
+        'compiler/UnfoldShortCircuit.h',
         'compiler/Uniform.cpp',
         'compiler/Uniform.h',
         'compiler/util.cpp',
@@ -130,6 +152,8 @@
         'compiler/VariableInfo.h',
         'compiler/VariablePacker.cpp',
         'compiler/VariablePacker.h',
+        'compiler/VersionGLSL.cpp',
+        'compiler/VersionGLSL.h',
         # Dependency graph
         'compiler/depgraph/DependencyGraph.cpp',
         'compiler/depgraph/DependencyGraph.h',
@@ -146,10 +170,10 @@
         'third_party/compiler/ArrayBoundsClamper.cpp',
         'third_party/compiler/ArrayBoundsClamper.h',
       ],
+      # TODO(jschuh): http://crbug.com/167187 size_t -> int
+      'msvs_disabled_warnings': [ 4267 ],
       'conditions': [
         ['OS=="win"', {
-          # TODO(jschuh): http://crbug.com/167187 size_t -> int
-          'msvs_disabled_warnings': [ 4267 ],
           'sources': ['compiler/ossource_win.cpp'],
         }, { # else: posix
           'sources': ['compiler/ossource_posix.cpp'],
@@ -157,71 +181,25 @@
       ],
     },
     {
+      'target_name': 'translator',
+      'type': '<(component)',
+      'dependencies': ['translator_static'],
+    },
+    # TODO(zmo): once we rid the webkit dependency to tranlator_glsl,
+    #            we can get rid of this translator_glsl.
+    {
       'target_name': 'translator_glsl',
       'type': '<(component)',
-      'dependencies': ['translator_common'],
-      'include_dirs': [
-        '.',
-        '../include',
-      ],
-      'defines': [
-        'COMPILER_IMPLEMENTATION',
-      ],
-      'sources': [
-        'compiler/CodeGenGLSL.cpp',
-        'compiler/OutputESSL.cpp',
-        'compiler/OutputESSL.h',        
-        'compiler/OutputGLSLBase.cpp',
-        'compiler/OutputGLSLBase.h',
-        'compiler/OutputGLSL.cpp',
-        'compiler/OutputGLSL.h',
-        'compiler/ShaderLang.cpp',
-        'compiler/TranslatorESSL.cpp',
-        'compiler/TranslatorESSL.h',
-        'compiler/TranslatorGLSL.cpp',
-        'compiler/TranslatorGLSL.h',
-        'compiler/VersionGLSL.cpp',
-        'compiler/VersionGLSL.h',
-      ],
-      # TODO(jschuh): http://crbug.com/167187 size_t -> int
-      'msvs_disabled_warnings': [ 4267 ],
+      'dependencies': ['translator_static'],
     },
   ],
   'conditions': [
     ['OS=="win"', {
       'targets': [
         {
-          'target_name': 'translator_hlsl',
-          'type': '<(component)',
-          'dependencies': ['translator_common'],
-          'include_dirs': [
-            '.',
-            '../include',
-          ],
-          'defines': [
-            'COMPILER_IMPLEMENTATION',
-          ],
-          'sources': [
-            'compiler/ShaderLang.cpp',
-            'compiler/DetectDiscontinuity.cpp',
-            'compiler/DetectDiscontinuity.h',
-            'compiler/CodeGenHLSL.cpp',
-            'compiler/OutputHLSL.cpp',
-            'compiler/OutputHLSL.h',
-            'compiler/TranslatorHLSL.cpp',
-            'compiler/TranslatorHLSL.h',
-            'compiler/UnfoldShortCircuit.cpp',
-            'compiler/UnfoldShortCircuit.h',
-            'compiler/SearchSymbol.cpp',
-            'compiler/SearchSymbol.h',
-          ],
-          # TODO(jschuh): http://crbug.com/167187 size_t -> int
-          'msvs_disabled_warnings': [ 4267 ],
-        },
-        {
           'target_name': 'libGLESv2',
           'type': 'shared_library',
-          'dependencies': ['translator_hlsl'],
+          'dependencies': ['translator'],
           'include_dirs': [
             '.',
             '../include',
