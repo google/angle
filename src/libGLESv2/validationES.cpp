@@ -62,6 +62,25 @@ bool ValidImageSize(const gl::Context *context, GLenum target, GLint level, GLsi
     return true;
 }
 
+bool ValidCompressedImageSize(const gl::Context *context, GLint internalFormat, GLsizei width, GLsizei height)
+{
+    GLuint clientVersion = context->getClientVersion();
+    if (!IsFormatCompressed(internalFormat, clientVersion))
+    {
+        return false;
+    }
+
+    GLint blockWidth = GetCompressedBlockWidth(internalFormat, clientVersion);
+    GLint blockHeight = GetCompressedBlockHeight(internalFormat, clientVersion);
+    if (width  < 0 || (width  > blockWidth  && width  % blockWidth  != 0) ||
+        height < 0 || (height > blockHeight && height % blockHeight != 0))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum target, GLsizei samples,
                                            GLenum internalformat, GLsizei width, GLsizei height,
                                            bool angleExtension)

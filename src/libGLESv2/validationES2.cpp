@@ -22,21 +22,6 @@
 namespace gl
 {
 
-static bool validCompressedImageSize(GLsizei width, GLsizei height)
-{
-    if (width != 1 && width != 2 && width % 4 != 0)
-    {
-        return false;
-    }
-
-    if (height != 1 && height != 2 && height % 4 != 0)
-    {
-        return false;
-    }
-
-    return true;
-}
-
 static bool validateSubImageParams2D(bool compressed, GLsizei width, GLsizei height,
                                      GLint xoffset, GLint yoffset, GLint level, GLenum format, GLenum type,
                                      gl::Texture2D *texture)
@@ -126,11 +111,6 @@ bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint le
     if (!ValidImageSize(context, target, level, width, height, 1))
     {
         return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    if (isCompressed && !validCompressedImageSize(width, height))
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
     }
 
     if (level < 0 || xoffset < 0 ||
@@ -239,6 +219,11 @@ bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint le
     GLenum actualInternalFormat = isSubImage ? textureInternalFormat : internalformat;
     if (isCompressed)
     {
+        if (!ValidCompressedImageSize(context, actualInternalFormat, width, height))
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+
         switch (actualInternalFormat)
         {
           case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:

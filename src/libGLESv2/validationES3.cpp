@@ -21,21 +21,6 @@
 namespace gl
 {
 
-static bool validCompressedImageSize(GLsizei width, GLsizei height)
-{
-    if (width != 1 && width != 2 && width % 4 != 0)
-    {
-        return false;
-    }
-
-    if (height != 1 && height != 2 && height % 4 != 0)
-    {
-        return false;
-    }
-
-    return true;
-}
-
 bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint level, GLint internalformat, bool isCompressed, bool isSubImage,
                                    GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                    GLint border, GLenum format, GLenum type, const GLvoid *pixels)
@@ -44,11 +29,6 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
     if (!ValidImageSize(context, target, level, width, height, depth))
     {
         return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    if (isCompressed && !validCompressedImageSize(width, height))
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
     }
 
     // Verify zero border
@@ -178,6 +158,11 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
     GLenum actualInternalFormat = isSubImage ? textureInternalFormat : internalformat;
     if (isCompressed)
     {
+        if (!ValidCompressedImageSize(context, actualInternalFormat, width, height))
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+
         if (!gl::IsFormatCompressed(actualInternalFormat, context->getClientVersion()))
         {
             return gl::error(GL_INVALID_ENUM, false);
