@@ -470,12 +470,7 @@ bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsize
         }
         break;
 
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+      case GL_TEXTURE_CUBE_MAP:
         {
             texture = context->getTextureCubeMap();
 

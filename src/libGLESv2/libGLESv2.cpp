@@ -5302,12 +5302,7 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
                 }
                 break;
 
-              case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-              case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-              case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-              case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+              case GL_TEXTURE_CUBE_MAP:
                 {
                     gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
                     textureCube->storage(levels, internalformat, width);
@@ -5375,7 +5370,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                 break;
 
               default:
-                return gl::error(GL_INVALID_ENUM);
+                UNREACHABLE();
             }
         }
     }
@@ -10041,12 +10036,7 @@ void __stdcall glTexStorage2D(GLenum target, GLsizei levels, GLenum internalform
                 }
                 break;
 
-              case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-              case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-              case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-              case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+              case GL_TEXTURE_CUBE_MAP:
                 {
                     gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
                     textureCube->storage(levels, internalformat, width);
@@ -10103,7 +10093,7 @@ void __stdcall glTexStorage3D(GLenum target, GLsizei levels, GLenum internalform
                 break;
 
               default:
-                return gl::error(GL_INVALID_ENUM);
+                UNREACHABLE();
             }
         }
     }
