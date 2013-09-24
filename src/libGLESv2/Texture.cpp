@@ -1456,10 +1456,10 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
 
     for (int level = 0; level < levels; level++)
     {
+        GLsizei mipSize = std::max(1, size >> level);
         for (int face = 0; face < 6; face++)
         {
-            mImageArray[face][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, internalformat, size, size, 1, true);
-            size = std::max(1, size >> 1);
+            mImageArray[face][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, internalformat, mipSize, mipSize, 1, true);
         }
     }
 
