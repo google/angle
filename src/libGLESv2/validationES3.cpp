@@ -337,11 +337,6 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
         return gl::error(GL_INVALID_VALUE, false);
     }
 
-    if (width == 0 || height == 0)
-    {
-        return false;
-    }
-
     if (border != 0)
     {
         return gl::error(GL_INVALID_VALUE, false);
@@ -488,7 +483,8 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
         }
     }
 
-    return true;
+    // If width or height is zero, it is a no-op.  Return false without setting an error.
+    return (width > 0 && height > 0);
 }
 
 bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsizei levels, GLenum internalformat,
