@@ -979,7 +979,7 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
 
             if (context->getClientVersion() >= 3 &&
                 !ValidateES3TexImageParameters(context, target, level, internalformat, true, false,
-                                               0, 0, 0, width, height, 1, 0, GL_NONE, GL_NONE))
+                                               0, 0, 0, width, height, 1, 0, GL_NONE, GL_NONE, data))
             {
                 return;
             }
@@ -1044,7 +1044,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
 
             if (context->getClientVersion() >= 3 &&
                 !ValidateES3TexImageParameters(context, target, level, GL_NONE, true, true,
-                                               xoffset, yoffset, 0, width, height, 1, 0, GL_NONE, GL_NONE))
+                                               xoffset, yoffset, 0, width, height, 1, 0, GL_NONE, GL_NONE, data))
             {
                 return;
             }
@@ -5142,7 +5142,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
 
             if (context->getClientVersion() >= 3 &&
                 !ValidateES3TexImageParameters(context, target, level, internalformat, false, false,
-                                               0, 0, 0, width, height, 1, border, format, type))
+                                               0, 0, 0, width, height, 1, border, format, type, pixels))
             {
                 return;
             }
@@ -5399,7 +5399,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
 
             if (context->getClientVersion() >= 3 &&
                 !ValidateES3TexImageParameters(context, target, level, GL_NONE, false, true,
-                                               0, 0, 0, width, height, 1, 0, format, type))
+                                               0, 0, 0, width, height, 1, 0, format, type, pixels))
             {
                 return;
             }
@@ -6392,7 +6392,7 @@ void __stdcall glTexImage3D(GLenum target, GLint level, GLint internalformat, GL
 
             // validateES3TexImageFormat sets the error code if there is an error
             if (!ValidateES3TexImageParameters(context, target, level, internalformat, false, false,
-                                               0, 0, 0, width, height, depth, border, format, type))
+                                               0, 0, 0, width, height, depth, border, format, type, pixels))
             {
                 return;
             }
@@ -6450,7 +6450,7 @@ void __stdcall glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint 
             // validateES3TexImageFormat sets the error code if there is an error
             if (!ValidateES3TexImageParameters(context, target, level, GL_NONE, false, true,
                                                xoffset, yoffset, zoffset, width, height, depth, 0,
-                                               format, type))
+                                               format, type, pixels))
             {
                 return;
             }
@@ -6555,7 +6555,7 @@ void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum interna
 
             // validateES3TexImageFormat sets the error code if there is an error
             if (!ValidateES3TexImageParameters(context, target, level, internalformat, true, false,
-                                               0, 0, 0, width, height, depth, border, GL_NONE, GL_NONE))
+                                               0, 0, 0, width, height, depth, border, GL_NONE, GL_NONE, data))
             {
                 return;
             }
@@ -6617,7 +6617,7 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
 
             // validateES3TexImageFormat sets the error code if there is an error
             if (!ValidateES3TexImageParameters(context, target, level, GL_NONE, true, true,
-                                               0, 0, 0, width, height, depth, 0, GL_NONE, GL_NONE))
+                                               0, 0, 0, width, height, depth, 0, GL_NONE, GL_NONE, data))
             {
                 return;
             }

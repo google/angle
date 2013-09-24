@@ -62,7 +62,7 @@ static bool validCompressedImageSize(GLsizei width, GLsizei height)
 
 bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint level, GLint internalformat, bool isCompressed, bool isSubImage,
                                    GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                                   GLint border, GLenum format, GLenum type)
+                                   GLint border, GLenum format, GLenum type, const GLvoid *pixels)
 {
     // Validate image size
     if (!validImageSize(context, level, width, height, depth))
@@ -278,6 +278,46 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
         {
             return gl::error(GL_INVALID_VALUE, false);
         }
+    }
+
+    // Check for pixel unpack buffer related API errors
+    gl::Buffer *pixelUnpackBuffer = context->getPixelUnpackBuffer();
+    if (pixelUnpackBuffer != NULL)
+    {
+        // ...the data would be unpacked from the buffer object such that the memory reads required
+        // would exceed the data store size.
+        size_t widthSize = static_cast<size_t>(width);
+        size_t heightSize = static_cast<size_t>(height);
+        size_t depthSize = static_cast<size_t>(depth);
+        size_t pixelBytes = static_cast<size_t>(gl::GetPixelBytes(actualInternalFormat, context->getClientVersion()));
+
+        if (!rx::IsUnsignedMultiplicationSafe(widthSize, heightSize) ||
+            !rx::IsUnsignedMultiplicationSafe(widthSize * heightSize, depthSize) ||
+            !rx::IsUnsignedMultiplicationSafe(widthSize * heightSize * depthSize, pixelBytes))
+        {
+            // Overflow past the end of the buffer
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+
+        size_t copyBytes = widthSize * heightSize * depthSize * pixelBytes;
+        size_t offset = reinterpret_cast<size_t>(pixels);
+
+        if (!rx::IsUnsignedAdditionSafe(offset, copyBytes) || ((offset + copyBytes) > static_cast<size_t>(pixelUnpackBuffer->size())))
+        {
+            // Overflow past the end of the buffer
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+
+        // ...data is not evenly divisible into the number of bytes needed to store in memory a datum
+        // indicated by type.
+        size_t dataBytesPerPixel = static_cast<size_t>(gl::GetTypeBytes(type));
+
+        if ((offset % dataBytesPerPixel) != 0)
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+
+        // TODO: ...the buffer object's data store is currently mapped.
     }
 
     return true;
