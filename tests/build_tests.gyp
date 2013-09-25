@@ -72,7 +72,7 @@
         '../third_party/googlemock/include',
       ],
       'sources': [
-        '../third_party/googlemock/src/gmock_main.cc',
+        'compiler_tests/compiler_test_main.cpp',
       ],
     },
   ],

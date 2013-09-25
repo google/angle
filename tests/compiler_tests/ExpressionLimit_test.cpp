@@ -22,15 +22,7 @@ protected:
     virtual void SetUp()
     {
         memset(&resources, 0, sizeof(resources));
-
-        ASSERT_TRUE(ShInitialize() != 0) << "Could not ShInitialize";
-
         GenerateResources(&resources);
-    }
-
-    virtual void TearDown()
-    {
-        ASSERT_TRUE(ShFinalize() != 0);
     }
 
     // Set up the per compile resources
