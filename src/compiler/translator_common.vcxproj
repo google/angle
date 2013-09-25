@@ -22,6 +22,7 @@
     <ProjectGuid>{5B3A6DB8-1E7E-40D7-92B9-DA8AAE619FAD}</ProjectGuid>
     <RootNamespace>compiler</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>translator</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -139,9 +140,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BuiltInFunctionEmulator.cpp" />
+    <ClCompile Include="CodeGen.cpp" />
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="DetectCallDepth.cpp" />
+    <ClCompile Include="DetectDiscontinuity.cpp" />
     <ClCompile Include="Diagnostics.cpp" />
     <ClCompile Include="DirectiveHandler.cpp" />
     <ClCompile Include="ForLoopUnroll.cpp" />
@@ -155,13 +158,18 @@
     <ClCompile Include="IntermTraverse.cpp" />
     <ClCompile Include="MapLongVariableNames.cpp" />
     <ClCompile Include="ossource_win.cpp" />
+    <ClCompile Include="OutputHLSL.cpp" />
     <ClCompile Include="parseConst.cpp" />
     <ClCompile Include="ParseHelper.cpp" />
     <ClCompile Include="PoolAlloc.cpp" />
     <ClCompile Include="QualifierAlive.cpp" />
     <ClCompile Include="RemoveTree.cpp" />
+    <ClCompile Include="SearchSymbol.cpp" />
     <ClCompile Include="ShaderLang.cpp" />
     <ClCompile Include="SymbolTable.cpp" />
+    <ClCompile Include="TranslatorHLSL.cpp" />
+    <ClCompile Include="UnfoldShortCircuit.cpp" />
+    <ClCompile Include="Uniform.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="ValidateLimitations.cpp" />
     <ClCompile Include="VariableInfo.cpp" />
@@ -233,6 +241,7 @@
     <ClInclude Include="ConstantUnion.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="DetectCallDepth.h" />
+    <ClInclude Include="DetectDiscontinuity.h" />
     <ClInclude Include="Diagnostics.h" />
     <ClInclude Include="DirectiveHandler.h" />
     <ClInclude Include="ForLoopUnroll.h" />
@@ -248,15 +257,20 @@
     <ClInclude Include="MapLongVariableNames.h" />
     <ClInclude Include="MMap.h" />
     <ClInclude Include="osinclude.h" />
+    <ClInclude Include="OutputHLSL.h" />
     <ClInclude Include="ParseHelper.h" />
     <ClInclude Include="PoolAlloc.h" />
     <ClInclude Include="QualifierAlive.h" />
     <ClInclude Include="RemoveTree.h" />
     <ClInclude Include="RenameFunction.h" />
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h" />
+    <ClInclude Include="SearchSymbol.h" />
     <ClInclude Include="ShHandle.h" />
     <ClInclude Include="SymbolTable.h" />
+    <ClInclude Include="TranslatorHLSL.h" />
     <ClInclude Include="Types.h" />
+    <ClInclude Include="UnfoldShortCircuit.h" />
+    <ClInclude Include="Uniform.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="ValidateLimitations.h" />
     <ClInclude Include="VariableInfo.h" />
