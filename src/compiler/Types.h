@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -95,7 +95,7 @@ class TType
 public:
     POOL_ALLOCATOR_NEW_DELETE();
     TType() {}
-    TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int s = 1, bool m = false, bool a = false) :
+    TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, unsigned char s = 1, bool m = false, bool a = false) :
             type(t), precision(p), qualifier(q), size(s), matrix(m), array(a), arraySize(0), structure(0)
     {
     }
@@ -116,7 +116,7 @@ public:
 
     // One-dimensional size of single instance type
     int getNominalSize() const { return size; }
-    void setNominalSize(int s) { size = s; }
+    void setNominalSize(unsigned char s) { size = s; }
     // Full size of single instance of type
     size_t getObjectSize() const;
 
@@ -234,12 +234,12 @@ public:
 private:
     TString buildMangledName() const;
 
-    TBasicType type      : 6;
+    TBasicType type;
     TPrecision precision;
-    TQualifier qualifier : 7;
-    int size             : 8; // size of vector or matrix, not size of array
-    unsigned int matrix  : 1;
-    unsigned int array   : 1;
+    TQualifier qualifier;
+    unsigned char size;
+    bool matrix;
+    bool array;
     int arraySize;
 
     TStructure* structure;      // 0 unless this is a struct
@@ -261,7 +261,7 @@ struct TPublicType
     TBasicType type;
     TQualifier qualifier;
     TPrecision precision;
-    int size;          // size of vector or matrix, not size of array
+    unsigned char size;          // size of vector or matrix, not size of array
     bool matrix;
     bool array;
     int arraySize;
@@ -281,7 +281,7 @@ struct TPublicType
         line = ln;
     }
 
-    void setAggregate(int s, bool m = false)
+    void setAggregate(unsigned char s, bool m = false)
     {
         size = s;
         matrix = m;
