@@ -140,7 +140,7 @@ class TType
 public:
     POOL_ALLOCATOR_NEW_DELETE();
     TType() {}
-    TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int ps = 1, int ss = 1, bool a = false) :
+    TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, unsigned char ps = 1, unsigned char ss = 1, bool a = false) :
             type(t), precision(p), qualifier(q), primarySize(ps), secondarySize(ss), array(a), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
             interfaceBlock(0), structure(0)
     {
@@ -173,8 +173,8 @@ public:
     int getSecondarySize() const { return secondarySize; }
     int getCols() const { ASSERT(isMatrix()); return primarySize; }
     int getRows() const { ASSERT(isMatrix()); return secondarySize; }
-    void setPrimarySize(int ps) { primarySize = ps; }
-    void setSecondarySize(int ss) { secondarySize = ss; }
+    void setPrimarySize(unsigned char ps) { primarySize = ps; }
+    void setSecondarySize(unsigned char ss) { secondarySize = ss; }
 
     // Full size of single instance of type
     size_t getObjectSize() const;
@@ -263,13 +263,13 @@ protected:
     size_t getStructSize() const;
     void computeDeepestStructNesting();
 
-    TBasicType type      : 6;
-    TPrecision precision : 4;
-    TQualifier qualifier : 7;
-    unsigned int array   : 1;
+    TBasicType type;
+    TPrecision precision;
+    TQualifier qualifier;
     TLayoutQualifier layoutQualifier;
-    int primarySize; // size of vector or cols matrix
-    int secondarySize; // rows of a matrix
+    unsigned char primarySize; // size of vector or cols matrix
+    unsigned char secondarySize; // rows of a matrix
+    bool array;
     int arraySize;
 
     // 0 unless this is an interface block, or interface block member variable
@@ -296,8 +296,8 @@ struct TPublicType
     TLayoutQualifier layoutQualifier;
     TQualifier qualifier;
     TPrecision precision;
-    int primarySize;          // size of vector or cols of matrix
-    int secondarySize;        // rows of matrix
+    unsigned char primarySize;          // size of vector or cols of matrix
+    unsigned char secondarySize;        // rows of matrix
     bool array;
     int arraySize;
     TType* userDef;
@@ -317,12 +317,12 @@ struct TPublicType
         line = ln;
     }
 
-    void setAggregate(int size)
+    void setAggregate(unsigned char size)
     {
         primarySize = size;
     }
 
-    void setMatrix(int c, int r)
+    void setMatrix(unsigned char c, unsigned char r)
     {
         ASSERT(c > 1 && r > 1 && c <= 4 && r <= 4);
         primarySize = c;
