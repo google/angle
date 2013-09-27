@@ -8,7 +8,7 @@
       'target_name': 'essl_to_glsl',
       'type': 'executable',
       'dependencies': [
-        '../src/build_angle.gyp:translator_glsl',
+        '../src/build_angle.gyp:translator',
       ],
       'include_dirs': [
         '../include',
@@ -25,7 +25,7 @@
           'target_name': 'essl_to_hlsl',
           'type': 'executable',
           'dependencies': [
-            '../src/build_angle.gyp:translator_hlsl',
+            '../src/build_angle.gyp:translator',
           ],
           'include_dirs': [
             '../include',

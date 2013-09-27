@@ -6,7 +6,7 @@
 #ifndef _COMPILER_INTERFACE_INCLUDED_
 #define _COMPILER_INTERFACE_INCLUDED_
 
-#if defined(COMPONENT_BUILD)
+#if (COMPONENT_BUILD)
 #if defined(_WIN32) || defined(_WIN64)
 
 #if defined(COMPILER_IMPLEMENTATION)

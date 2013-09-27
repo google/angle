@@ -5,65 +5,7 @@
 {
   'variables': {
     'angle_code': 1,
-  },
-  'target_defaults': {
-    'defines': [
-      'ANGLE_DISABLE_TRACE',
-      'ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1',
-      'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT("d3dcompiler_46.dll"), TEXT("d3dcompiler_43.dll") }',
-    ],
-  },
-  'targets': [
-    {
-      'target_name': 'preprocessor',
-      'type': 'static_library',
-      'include_dirs': [
-      ],
-      'sources': [
-        'compiler/preprocessor/DiagnosticsBase.cpp',
-        'compiler/preprocessor/DiagnosticsBase.h',
-        'compiler/preprocessor/DirectiveHandlerBase.cpp',
-        'compiler/preprocessor/DirectiveHandlerBase.h',
-        'compiler/preprocessor/DirectiveParser.cpp',
-        'compiler/preprocessor/DirectiveParser.h',
-        'compiler/preprocessor/ExpressionParser.cpp',
-        'compiler/preprocessor/ExpressionParser.h',
-        'compiler/preprocessor/Input.cpp',
-        'compiler/preprocessor/Input.h',
-        'compiler/preprocessor/length_limits.h',
-        'compiler/preprocessor/Lexer.cpp',
-        'compiler/preprocessor/Lexer.h',
-        'compiler/preprocessor/Macro.cpp',
-        'compiler/preprocessor/Macro.h',
-        'compiler/preprocessor/MacroExpander.cpp',
-        'compiler/preprocessor/MacroExpander.h',
-        'compiler/preprocessor/numeric_lex.h',
-        'compiler/preprocessor/pp_utils.h',
-        'compiler/preprocessor/Preprocessor.cpp',
-        'compiler/preprocessor/Preprocessor.h',
-        'compiler/preprocessor/SourceLocation.h',
-        'compiler/preprocessor/Token.cpp',
-        'compiler/preprocessor/Token.h',
-        'compiler/preprocessor/Tokenizer.cpp',
-        'compiler/preprocessor/Tokenizer.h',
-      ],
-      # TODO(jschuh): http://crbug.com/167187
-      'msvs_disabled_warnings': [
-        4267,
-      ],      
-    },
-    {
-      'target_name': 'translator_static',
-      'type': 'static_library',
-      'dependencies': ['preprocessor'],
-      'include_dirs': [
-        '.',
-        '../include',
-      ],
-      'defines': [
-        'COMPILER_IMPLEMENTATION',
-      ],
-      'sources': [
+    'translator_sources': [
         'compiler/BaseTypes.h',
         'compiler/BuiltInFunctionEmulator.cpp',
         'compiler/BuiltInFunctionEmulator.h',
@@ -110,7 +52,7 @@
         'compiler/MMap.h',
         'compiler/osinclude.h',
         'compiler/OutputESSL.cpp',
-        'compiler/OutputESSL.h',        
+        'compiler/OutputESSL.h',
         'compiler/OutputGLSLBase.cpp',
         'compiler/OutputGLSLBase.h',
         'compiler/OutputGLSL.cpp',
@@ -170,6 +112,89 @@
         'third_party/compiler/ArrayBoundsClamper.cpp',
         'third_party/compiler/ArrayBoundsClamper.h',
       ],
+  },
+  'target_defaults': {
+    'defines': [
+      'ANGLE_DISABLE_TRACE',
+      'ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1',
+      'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT("d3dcompiler_46.dll"), TEXT("d3dcompiler_43.dll") }',
+    ],
+  },
+  'targets': [
+    {
+      'target_name': 'preprocessor',
+      'type': 'static_library',
+      'include_dirs': [
+      ],
+      'sources': [
+        'compiler/preprocessor/DiagnosticsBase.cpp',
+        'compiler/preprocessor/DiagnosticsBase.h',
+        'compiler/preprocessor/DirectiveHandlerBase.cpp',
+        'compiler/preprocessor/DirectiveHandlerBase.h',
+        'compiler/preprocessor/DirectiveParser.cpp',
+        'compiler/preprocessor/DirectiveParser.h',
+        'compiler/preprocessor/ExpressionParser.cpp',
+        'compiler/preprocessor/ExpressionParser.h',
+        'compiler/preprocessor/Input.cpp',
+        'compiler/preprocessor/Input.h',
+        'compiler/preprocessor/length_limits.h',
+        'compiler/preprocessor/Lexer.cpp',
+        'compiler/preprocessor/Lexer.h',
+        'compiler/preprocessor/Macro.cpp',
+        'compiler/preprocessor/Macro.h',
+        'compiler/preprocessor/MacroExpander.cpp',
+        'compiler/preprocessor/MacroExpander.h',
+        'compiler/preprocessor/numeric_lex.h',
+        'compiler/preprocessor/pp_utils.h',
+        'compiler/preprocessor/Preprocessor.cpp',
+        'compiler/preprocessor/Preprocessor.h',
+        'compiler/preprocessor/SourceLocation.h',
+        'compiler/preprocessor/Token.cpp',
+        'compiler/preprocessor/Token.h',
+        'compiler/preprocessor/Tokenizer.cpp',
+        'compiler/preprocessor/Tokenizer.h',
+      ],
+      # TODO(jschuh): http://crbug.com/167187
+      'msvs_disabled_warnings': [
+        4267,
+      ],
+    },
+    {
+      'target_name': 'translator',
+      'type': '<(component)',
+      'dependencies': ['preprocessor'],
+      'include_dirs': [
+        '.',
+        '../include',
+      ],
+      'defines': [
+        'COMPILER_IMPLEMENTATION',
+      ],
+      'sources': ['<@(translator_sources)'],
+      # TODO(jschuh): http://crbug.com/167187 size_t -> int
+      'msvs_disabled_warnings': [ 4267 ],
+      'conditions': [
+        ['OS=="win"', {
+          'sources': ['compiler/ossource_win.cpp'],
+        }, { # else: posix
+          'sources': ['compiler/ossource_posix.cpp'],
+        }],
+      ],
+    },
+    # TODO(zmo): once we rid the webkit dependency to tranlator_glsl,
+    #            we can get rid of this translator_glsl.
+    {
+      'target_name': 'translator_glsl',
+      'type': '<(component)',
+      'dependencies': ['preprocessor'],
+      'include_dirs': [
+        '.',
+        '../include',
+      ],
+      'defines': [
+        'COMPILER_IMPLEMENTATION',
+      ],
+      'sources': ['<@(translator_sources)'],
       # TODO(jschuh): http://crbug.com/167187 size_t -> int
       'msvs_disabled_warnings': [ 4267 ],
       'conditions': [
@@ -181,16 +206,27 @@
       ],
     },
     {
-      'target_name': 'translator',
-      'type': '<(component)',
-      'dependencies': ['translator_static'],
-    },
-    # TODO(zmo): once we rid the webkit dependency to tranlator_glsl,
-    #            we can get rid of this translator_glsl.
-    {
-      'target_name': 'translator_glsl',
-      'type': '<(component)',
-      'dependencies': ['translator_static'],
+      'target_name': 'translator_static',
+      'type': 'static_library',
+      'dependencies': ['preprocessor'],
+      'include_dirs': [
+        '.',
+        '../include',
+      ],
+      'defines': [
+        'COMPILER_IMPLEMENTATION',
+        'COMPONENT_BUILD=0',
+      ],
+      'sources': ['<@(translator_sources)'],
+      # TODO(jschuh): http://crbug.com/167187 size_t -> int
+      'msvs_disabled_warnings': [ 4267 ],
+      'conditions': [
+        ['OS=="win"', {
+          'sources': ['compiler/ossource_win.cpp'],
+        }, { # else: posix
+          'sources': ['compiler/ossource_posix.cpp'],
+        }],
+      ],
     },
   ],
   'conditions': [
@@ -348,6 +384,7 @@
               'AdditionalDependencies': [
                 'd3d9.lib',
                 'dxguid.lib',
+                '%(AdditionalDependencies)',
               ],
             }
           },
@@ -386,6 +423,7 @@
             'VCLinkerTool': {
               'AdditionalDependencies': [
                 'd3d9.lib',
+                '%(AdditionalDependencies)',
               ],
             }
           },

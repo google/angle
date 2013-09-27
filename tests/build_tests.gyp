@@ -40,7 +40,7 @@
       },
       'includes': [
         'preprocessor_tests/preprocessor_tests.gypi',
-      ]
+      ],
       'include_dirs': [
         '../src/compiler/preprocessor',
         '../third_party/googletest/include',
@@ -53,9 +53,8 @@
     {
       'target_name': 'compiler_tests',
       'type': 'executable',
-      'dependencies': 
-        '../src/build_angle.gyp:translator_common',
-        '../src/build_angle.gyp:translator_glsl',
+      'dependencies': [
+        '../src/build_angle.gyp:translator_static',
         'gtest',
         'gmock',
       ],
@@ -64,7 +63,7 @@
       },
       'includes': [
         'compiler_tests/compiler_tests.gypi',
-      ]
+      ],
       'include_dirs': [
         '../include',
         '../src',
