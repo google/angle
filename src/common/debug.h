@@ -114,6 +114,11 @@ namespace gl
 #endif
 
 // A macro functioning as a compile-time assert to validate constant conditions
-#define META_ASSERT(condition) typedef int COMPILE_TIME_ASSERT_##__LINE__[static_cast<bool>(condition)?1:-1]
+#if defined(_MSC_VER) && _MSC_VER >= 1600
+#define META_ASSERT_MSG(condition, msg) static_assert(condition, msg)
+#else
+#define META_ASSERT_MSG(condition, msg) typedef int COMPILE_TIME_ASSERT_##__LINE__[static_cast<bool>(condition)?1:-1]
+#endif
+#define META_ASSERT(condition) META_ASSERT_MSG(condition, "compile time assertion failed.")
 
 #endif   // COMMON_DEBUG_H_
