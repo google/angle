@@ -1,57 +1,107 @@
 @ECHO OFF
 REM
-REM Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+REM Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
 REM Use of this source code is governed by a BSD-style license that can be
 REM found in the LICENSE file.
 REM
 
 PATH %PATH%;%ProgramFiles(x86)%\Windows Kits\8.0\bin\x86;%DXSDK_DIR%\Utilities\bin\x86
 
-fxc /E standardvs /T vs_2_0 /Fh compiled/standardvs.h Blit.vs
-fxc /E flipyvs /T vs_2_0 /Fh compiled/flipyvs.h Blit.vs
-fxc /E passthroughps /T ps_2_0 /Fh compiled/passthroughps.h Blit.ps
-fxc /E luminanceps /T ps_2_0 /Fh compiled/luminanceps.h Blit.ps
-fxc /E componentmaskps /T ps_2_0 /Fh compiled/componentmaskps.h Blit.ps
+setlocal
+set errorCount=0
+set successCount=0
+set debug=0
 
-fxc /E VS_Passthrough2D /T vs_4_0 /Fh compiled/passthrough2d11vs.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughDepth2D /T ps_4_0 /Fh compiled/passthroughdepth2d11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughRGBA2D /T ps_4_0 /Fh compiled/passthroughrgba2d11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughRGBA2DUI /T ps_4_0 /Fh compiled/passthroughrgba2dui11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughRGBA2DI /T ps_4_0 /Fh compiled/passthroughrgba2di11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughRGB2D /T ps_4_0 /Fh compiled/passthroughrgb2d11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughRGB2DUI /T ps_4_0 /Fh compiled/passthroughrgb2dui11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughRGB2DI /T ps_4_0 /Fh compiled/passthroughrgb2di11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughRG2D /T ps_4_0 /Fh compiled/passthroughrg2d11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughRG2DUI /T ps_4_0 /Fh compiled/passthroughrg2dui11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughRG2DI /T ps_4_0 /Fh compiled/passthroughrg2di11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughR2D /T ps_4_0 /Fh compiled/passthroughr2d11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughR2DUI /T ps_4_0 /Fh compiled/passthroughr2dui11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughR2DI /T ps_4_0 /Fh compiled/passthroughr2di11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughLum2D /T ps_4_0 /Fh compiled/passthroughlum2d11ps.h Passthrough2D11.hlsl
-fxc /E PS_PassthroughLumAlpha2D /T ps_4_0 /Fh compiled/passthroughlumalpha2d11ps.h Passthrough2D11.hlsl
+if "%1" == "debug" (
+    set debug=1
+)
+if "%1" == "release" (
+    set debug=0
+)
 
-fxc /E VS_Passthrough3D /T vs_4_0 /Fh compiled/passthrough3d11vs.h Passthrough3D11.hlsl
-fxc /E GS_Passthrough3D /T gs_4_0 /Fh compiled/passthrough3d11gs.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughRGBA3D /T ps_4_0 /Fh compiled/passthroughrgba3d11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughRGBA3DUI /T ps_4_0 /Fh compiled/passthroughrgba3dui11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughRGBA3DI /T ps_4_0 /Fh compiled/passthroughrgba3di11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughRGB3D /T ps_4_0 /Fh compiled/passthroughrgb3d11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughRGB3DUI /T ps_4_0 /Fh compiled/passthroughrgb3dui11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughRGB3DI /T ps_4_0 /Fh compiled/passthroughrgb3di11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughRG3D /T ps_4_0 /Fh compiled/passthroughrg3d11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughRG3DUI /T ps_4_0 /Fh compiled/passthroughrg3dui11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughRG3DI /T ps_4_0 /Fh compiled/passthroughrg3di11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughR3D /T ps_4_0 /Fh compiled/passthroughr3d11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughR3DUI /T ps_4_0 /Fh compiled/passthroughr3dui11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughR3DI /T ps_4_0 /Fh compiled/passthroughr3di11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughLum3D /T ps_4_0 /Fh compiled/passthroughlum3d11ps.h Passthrough3D11.hlsl
-fxc /E PS_PassthroughLumAlpha3D /T ps_4_0 /Fh compiled/passthroughlumalpha3d11ps.h Passthrough3D11.hlsl
+::              | Input file          | Entry point           | Type | Output file                        | Debug |
+call:BuildShader Blit.vs               standardvs              vs_2_0 compiled\standardvs.h                %debug%
+call:BuildShader Blit.vs               flipyvs                 vs_2_0 compiled\flipyvs.h                   %debug%
+call:BuildShader Blit.ps               passthroughps           ps_2_0 compiled\passthroughps.h             %debug%
+call:BuildShader Blit.ps               luminanceps             ps_2_0 compiled\luminanceps.h               %debug%
+call:BuildShader Blit.ps               componentmaskps         ps_2_0 compiled\componentmaskps.h           %debug%
 
-fxc /E VS_ClearFloat /T vs_4_0 /Fh compiled/clearfloat11vs.h Clear11.hlsl
-fxc /E PS_ClearFloat /T ps_4_0 /Fh compiled/clearfloat11ps.h Clear11.hlsl
+call:BuildShader Passthrough2D11.hlsl VS_Passthrough2D         vs_4_0 compiled\passthrough2d11vs.h         %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughDepth2D    ps_4_0 compiled\passthroughdepth2d11ps.h    %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2D     ps_4_0 compiled\passthroughrgba2d11ps.h     %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2DUI   ps_4_0 compiled\passthroughrgba2dui11ps.h   %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2DI    ps_4_0 compiled\passthroughrgba2di11ps.h    %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGB2D      ps_4_0 compiled\passthroughrgb2d11ps.h      %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGB2DUI    ps_4_0 compiled\passthroughrgb2dui11ps.h    %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGB2DI     ps_4_0 compiled\passthroughrgb2di11ps.h     %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRG2D       ps_4_0 compiled\passthroughrg2d11ps.h       %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRG2DUI     ps_4_0 compiled\passthroughrg2dui11ps.h     %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRG2DI      ps_4_0 compiled\passthroughrg2di11ps.h      %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughR2D        ps_4_0 compiled\passthroughr2d11ps.h        %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughR2DUI      ps_4_0 compiled\passthroughr2dui11ps.h      %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughR2DI       ps_4_0 compiled\passthroughr2di11ps.h       %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughLum2D      ps_4_0 compiled\passthroughlum2d11ps.h      %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughLumAlpha2D ps_4_0 compiled\passthroughlumalpha2d11ps.h %debug%
 
-fxc /E VS_ClearUint /T vs_4_0 /Fh compiled/clearuint11vs.h Clear11.hlsl
-fxc /E PS_ClearUint /T ps_4_0 /Fh compiled/clearuint11ps.h Clear11.hlsl
 
-fxc /E VS_ClearSint /T vs_4_0 /Fh compiled/clearsint11vs.h Clear11.hlsl
-fxc /E PS_ClearSint /T ps_4_0 /Fh compiled/clearsint11ps.h Clear11.hlsl
+call:BuildShader Passthrough3D11.hlsl VS_Passthrough3D         vs_4_0 compiled\passthrough3d11vs.h         %debug%
+call:BuildShader Passthrough3D11.hlsl GS_Passthrough3D         gs_4_0 compiled\passthrough3d11gs.h         %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughRGBA3D     ps_4_0 compiled\passthroughrgba3d11ps.h     %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughRGBA3DUI   ps_4_0 compiled\passthroughrgba3dui11ps.h   %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughRGBA3DI    ps_4_0 compiled\passthroughrgba3di11ps.h    %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughRGB3D      ps_4_0 compiled\passthroughrgb3d11ps.h      %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughRGB3DUI    ps_4_0 compiled\passthroughrgb3dui11ps.h    %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughRGB3DI     ps_4_0 compiled\passthroughrgb3di11ps.h     %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughRG3D       ps_4_0 compiled\passthroughrg3d11ps.h       %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughRG3DUI     ps_4_0 compiled\passthroughrg3dui11ps.h     %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughRG3DI      ps_4_0 compiled\passthroughrg3di11ps.h      %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughR3D        ps_4_0 compiled\passthroughr3d11ps.h        %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughR3DUI      ps_4_0 compiled\passthroughr3dui11ps.h      %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughR3DI       ps_4_0 compiled\passthroughr3di11ps.h       %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughLum3D      ps_4_0 compiled\passthroughlum3d11ps.h      %debug%
+call:BuildShader Passthrough3D11.hlsl PS_PassthroughLumAlpha3D ps_4_0 compiled\passthroughlumalpha3d11ps.h %debug%
+
+call:BuildShader Clear11.hlsl         VS_ClearFloat            vs_4_0 compiled\clearfloat11vs.h            %debug%
+call:BuildShader Clear11.hlsl         PS_ClearFloat            ps_4_0 compiled\clearfloat11ps.h            %debug%
+
+call:BuildShader Clear11.hlsl         VS_ClearUint             vs_4_0 compiled\clearuint11vs.h             %debug%
+call:BuildShader Clear11.hlsl         PS_ClearUint             ps_4_0 compiled\clearuint11ps.h             %debug%
+
+call:BuildShader Clear11.hlsl         VS_ClearSint             vs_4_0 compiled\clearsint11vs.h             %debug%
+call:BuildShader Clear11.hlsl         PS_ClearSint             ps_4_0 compiled\clearsint11ps.h             %debug%
+
+echo.
+
+if %successCount% GTR 0 (
+   echo %successCount% shaders compiled successfully.
+)
+if %errorCount% GTR 0 (
+   echo There were %errorCount% shader compilation errors.
+)
+
+endlocal
+exit /b
+
+:BuildShader
+set input=%~1
+set entry=%~2
+set type=%~3
+set output=%~4
+set debug=%~5
+
+if %debug% == 0 (
+    set "buildCMD=fxc /nologo /E %entry% /T %type% /Fh %output% %input%"
+) else (
+    set "buildCMD=fxc /nologo /Zi /Od /E %entry% /T %type% /Fh %output% %input%"
+)
+
+set error=0
+%buildCMD% || set error=1
+
+if %error% == 0 (
+    set /a successCount=%successCount%+1
+) else (
+    set /a errorCount=%errorCount%+1
+)
+
+exit /b
