@@ -222,6 +222,7 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
                 }
 
                 GLenum internalFormat = renderbuffer->getInternalFormat();
+                GLenum actualFormat = renderbuffer->getActualFormat();
                 GLenum componentType = gl::GetComponentType(internalFormat, clientVersion);
                 if (clearParams.colorClearType == GL_FLOAT &&
                     !(componentType == GL_FLOAT || componentType == GL_UNSIGNED_NORMALIZED || componentType == GL_SIGNED_NORMALIZED))
@@ -245,6 +246,14 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
                          (gl::GetAlphaBits(internalFormat, clientVersion) > 0 && !clearParams.colorMaskAlpha))
                 {
                     // A scissored or masked clear is required
+                    maskedClearRenderTargets.push_back(renderTarget);
+                }
+                else if (((gl::GetRedBits(internalFormat, clientVersion)   == 0) && (gl::GetRedBits(actualFormat, clientVersion)   > 0))  ||
+                         ((gl::GetGreenBits(internalFormat, clientVersion) == 0) && (gl::GetGreenBits(actualFormat, clientVersion) > 0)) ||
+                         ((gl::GetBlueBits(internalFormat, clientVersion)  == 0) && (gl::GetBlueBits(actualFormat, clientVersion)  > 0)) ||
+                         ((gl::GetAlphaBits(internalFormat, clientVersion) == 0) && (gl::GetAlphaBits(actualFormat, clientVersion) > 0)))
+                {
+                    // The actual format has a channel that the internal format does not
                     maskedClearRenderTargets.push_back(renderTarget);
                 }
                 else
@@ -348,7 +357,7 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
         }
         ID3D11DepthStencilView *dsv = maskedClearDepthStencil ? maskedClearDepthStencil->getDepthStencilView() : NULL;
 
-        ID3D11BlendState *blendState = getBlendState(clearParams);
+        ID3D11BlendState *blendState = getBlendState(clearParams, maskedClearRenderTargets);
         const FLOAT blendFactors[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
         const UINT sampleMask = 0xFFFFFFFF;
 
@@ -431,13 +440,30 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
     }
 }
 
-ID3D11BlendState *Clear11::getBlendState(const gl::ClearParameters &clearParams)
+ID3D11BlendState *Clear11::getBlendState(const gl::ClearParameters &clearParams, const std::vector<RenderTarget11*>& rts)
 {
+    GLuint clientVersion = mRenderer->getCurrentClientVersion();
+
     ClearBlendInfo blendKey = { 0 };
-    blendKey.maskRed   = clearParams.clearColor ? clearParams.colorMaskRed   : false;
-    blendKey.maskGreen = clearParams.clearColor ? clearParams.colorMaskGreen : false;
-    blendKey.maskBlue  = clearParams.clearColor ? clearParams.colorMaskBlue  : false;
-    blendKey.maskAlpha = clearParams.clearColor ? clearParams.colorMaskAlpha : false;
+    for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
+    {
+        if (i < rts.size())
+        {
+            GLint internalFormat = rts[i]->getInternalFormat();
+
+            blendKey.maskChannels[i][0] = clearParams.clearColor ? (clearParams.colorMaskRed   && gl::GetRedBits(internalFormat, clientVersion)   > 0) : false;
+            blendKey.maskChannels[i][1] = clearParams.clearColor ? (clearParams.colorMaskGreen && gl::GetGreenBits(internalFormat, clientVersion) > 0) : false;
+            blendKey.maskChannels[i][2] = clearParams.clearColor ? (clearParams.colorMaskBlue  && gl::GetBlueBits(internalFormat, clientVersion)  > 0) : false;
+            blendKey.maskChannels[i][3] = clearParams.clearColor ? (clearParams.colorMaskAlpha && gl::GetAlphaBits(internalFormat, clientVersion) > 0) : false;
+        }
+        else
+        {
+            blendKey.maskChannels[i][0] = false;
+            blendKey.maskChannels[i][1] = false;
+            blendKey.maskChannels[i][2] = false;
+            blendKey.maskChannels[i][3] = false;
+        }
+    }
 
     ClearBlendStateMap::const_iterator i = mClearBlendStates.find(blendKey);
     if (i != mClearBlendStates.end())
@@ -448,12 +474,16 @@ ID3D11BlendState *Clear11::getBlendState(const gl::ClearParameters &clearParams)
     {
         D3D11_BLEND_DESC blendDesc = { 0 };
         blendDesc.AlphaToCoverageEnable = FALSE;
-        blendDesc.IndependentBlendEnable = FALSE;
-        blendDesc.RenderTarget[0].BlendEnable = FALSE;
-        blendDesc.RenderTarget[0].RenderTargetWriteMask = gl_d3d11::ConvertColorMask(blendKey.maskRed,
-                                                                                     blendKey.maskGreen,
-                                                                                     blendKey.maskBlue,
-                                                                                     blendKey.maskAlpha);
+        blendDesc.IndependentBlendEnable = (rts.size() > 1) ? TRUE : FALSE;
+
+        for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
+        {
+            blendDesc.RenderTarget[i].BlendEnable = FALSE;
+            blendDesc.RenderTarget[i].RenderTargetWriteMask = gl_d3d11::ConvertColorMask(blendKey.maskChannels[i][0],
+                                                                                         blendKey.maskChannels[i][1],
+                                                                                         blendKey.maskChannels[i][2],
+                                                                                         blendKey.maskChannels[i][3]);
+        }
 
         ID3D11Device *device = mRenderer->getDevice();
         ID3D11BlendState* blendState = NULL;

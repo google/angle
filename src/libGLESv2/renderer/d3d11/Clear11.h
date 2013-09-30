@@ -19,6 +19,7 @@ class Framebuffer;
 namespace rx
 {
 class Renderer11;
+class RenderTarget11;
 
 class Clear11
 {
@@ -34,16 +35,13 @@ class Clear11
 
     struct ClearBlendInfo
     {
-        bool maskRed;
-        bool maskGreen;
-        bool maskBlue;
-        bool maskAlpha;
+        bool maskChannels[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT][4];
     };
     typedef bool (*ClearBlendInfoComparisonFunction)(const ClearBlendInfo&, const ClearBlendInfo &);
     typedef std::map<ClearBlendInfo, ID3D11BlendState*, ClearBlendInfoComparisonFunction> ClearBlendStateMap;
     ClearBlendStateMap mClearBlendStates;
 
-    ID3D11BlendState *getBlendState(const gl::ClearParameters &clearParams);
+    ID3D11BlendState *getBlendState(const gl::ClearParameters &clearParams, const std::vector<RenderTarget11*>& rts);
 
     struct ClearShader
     {
