@@ -723,7 +723,7 @@ void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
     mForceSetRasterState = false;
 }
 
-void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::ColorF &blendColor,
+void Renderer11::setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
                                unsigned int sampleMask)
 {
     if (mForceSetBlendState ||
@@ -731,7 +731,7 @@ void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::Color
         memcmp(&blendColor, &mCurBlendColor, sizeof(gl::ColorF)) != 0 ||
         sampleMask != mCurSampleMask)
     {
-        ID3D11BlendState *dxBlendState = mStateCache.getBlendState(blendState);
+        ID3D11BlendState *dxBlendState = mStateCache.getBlendState(framebuffer, blendState);
         if (!dxBlendState)
         {
             ERR("NULL blend state returned by RenderStateCache::getBlendState, setting the default "
@@ -1081,6 +1081,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         mRenderTargetDesc.format = renderTargetFormat;
         mForceSetViewport = true;
         mForceSetScissor = true;
+        mForceSetBlendState = true;
 
         if (!mDepthStencilInitialized || depthSize != mCurDepthSize)
         {

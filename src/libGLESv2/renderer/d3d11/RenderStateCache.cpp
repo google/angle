@@ -10,6 +10,9 @@
 
 #include "libGLESv2/renderer/d3d11/RenderStateCache.h"
 #include "libGLESv2/renderer/d3d11/renderer11_utils.h"
+#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/Renderbuffer.h"
 
 #include "common/debug.h"
 #include "third_party/murmurhash/MurmurHash3.h"
@@ -62,7 +65,7 @@ void RenderStateCache::clear()
     ClearStateMap(mSamplerStateCache);
 }
 
-std::size_t RenderStateCache::hashBlendState(const gl::BlendState &blendState)
+std::size_t RenderStateCache::hashBlendState(const BlendStateKey &blendState)
 {
     static const unsigned int seed = 0xABCDEF98;
 
@@ -71,12 +74,12 @@ std::size_t RenderStateCache::hashBlendState(const gl::BlendState &blendState)
     return hash;
 }
 
-bool RenderStateCache::compareBlendStates(const gl::BlendState &a, const gl::BlendState &b)
+bool RenderStateCache::compareBlendStates(const BlendStateKey &a, const BlendStateKey &b)
 {
     return memcmp(&a, &b, sizeof(gl::BlendState)) == 0;
 }
 
-ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendState)
+ID3D11BlendState *RenderStateCache::getBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState)
 {
     if (!mDevice)
     {
@@ -84,7 +87,35 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendSta
         return NULL;
     }
 
-    BlendStateMap::iterator i = mBlendStateCache.find(blendState);
+    bool mrt = false;
+
+    BlendStateKey key = { 0 };
+    key.blendState = blendState;
+    for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
+    {
+        gl::Renderbuffer *renderBuffer = framebuffer->getColorbuffer(i);
+        if (renderBuffer)
+        {
+            if (i > 0)
+            {
+                mrt = true;
+            }
+
+            key.rtChannels[i][0] = renderBuffer->getRedSize()   > 0;
+            key.rtChannels[i][1] = renderBuffer->getGreenSize() > 0;
+            key.rtChannels[i][2] = renderBuffer->getBlueSize()  > 0;
+            key.rtChannels[i][3] = renderBuffer->getAlphaSize() > 0;
+        }
+        else
+        {
+            key.rtChannels[i][0] = false;
+            key.rtChannels[i][1] = false;
+            key.rtChannels[i][2] = false;
+            key.rtChannels[i][3] = false;
+        }
+    }
+
+    BlendStateMap::iterator i = mBlendStateCache.find(key);
     if (i != mBlendStateCache.end())
     {
         BlendStateCounterPair &state = i->second;
@@ -113,7 +144,7 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendSta
         // Create a new blend state and insert it into the cache
         D3D11_BLEND_DESC blendDesc = { 0 };
         blendDesc.AlphaToCoverageEnable = blendState.sampleAlphaToCoverage;
-        blendDesc.IndependentBlendEnable = FALSE;
+        blendDesc.IndependentBlendEnable = mrt ? TRUE : FALSE;
 
         for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
         {
@@ -131,10 +162,10 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendSta
                 rtBlend.BlendOpAlpha = gl_d3d11::ConvertBlendOp(blendState.blendEquationAlpha);
             }
 
-            rtBlend.RenderTargetWriteMask = gl_d3d11::ConvertColorMask(blendState.colorMaskRed,
-                                                                       blendState.colorMaskGreen,
-                                                                       blendState.colorMaskBlue,
-                                                                       blendState.colorMaskAlpha);
+            rtBlend.RenderTargetWriteMask = gl_d3d11::ConvertColorMask(key.rtChannels[i][0] && blendState.colorMaskRed,
+                                                                       key.rtChannels[i][1] && blendState.colorMaskGreen,
+                                                                       key.rtChannels[i][2] && blendState.colorMaskBlue,
+                                                                       key.rtChannels[i][3] && blendState.colorMaskAlpha);
         }
 
         ID3D11BlendState *dx11BlendState = NULL;
@@ -145,7 +176,7 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendSta
             return NULL;
         }
 
-        mBlendStateCache.insert(std::make_pair(blendState, std::make_pair(dx11BlendState, mCounter++)));
+        mBlendStateCache.insert(std::make_pair(key, std::make_pair(dx11BlendState, mCounter++)));
 
         return dx11BlendState;
     }
@@ -174,7 +205,7 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
         return NULL;
     }
 
-    RasterizerStateKey key;
+    RasterizerStateKey key = { 0 };
     key.rasterizerState = rasterState;
     key.scissorEnabled = scissorEnabled;
     key.depthSize = depthSize;

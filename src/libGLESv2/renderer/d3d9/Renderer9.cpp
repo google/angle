@@ -872,7 +872,8 @@ void Renderer9::setRasterizerState(const gl::RasterizerState &rasterState)
     mForceSetRasterState = false;
 }
 
-void Renderer9::setBlendState(const gl::BlendState &blendState, const gl::ColorF &blendColor, unsigned int sampleMask)
+void Renderer9::setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
+                              unsigned int sampleMask)
 {
     bool blendStateChanged = mForceSetBlendState || memcmp(&blendState, &mCurBlendState, sizeof(gl::BlendState)) != 0;
     bool blendColorChanged = mForceSetBlendState || memcmp(&blendColor, &mCurBlendColor, sizeof(gl::ColorF)) != 0;
@@ -926,6 +927,10 @@ void Renderer9::setBlendState(const gl::BlendState &blendState, const gl::ColorF
             FIXME("Sample alpha to coverage is unimplemented.");
         }
 
+        gl::Renderbuffer *renderBuffer = framebuffer->getFirstColorbuffer();
+        GLenum internalFormat = renderBuffer ? renderBuffer->getInternalFormat() : GL_NONE;
+        GLuint clientVersion = getCurrentClientVersion();
+
         // Set the color mask
         bool zeroColorMaskAllowed = getAdapterVendor() != VENDOR_ID_AMD;
         // Apparently some ATI cards have a bug where a draw with a zero color
@@ -934,8 +939,10 @@ void Renderer9::setBlendState(const gl::BlendState &blendState, const gl::ColorF
         // drawing is done.
         // http://code.google.com/p/angleproject/issues/detail?id=169
 
-        DWORD colorMask = gl_d3d9::ConvertColorMask(blendState.colorMaskRed, blendState.colorMaskGreen,
-                                                    blendState.colorMaskBlue, blendState.colorMaskAlpha);
+        DWORD colorMask = gl_d3d9::ConvertColorMask(gl::GetRedBits(internalFormat, clientVersion) > 0 && blendState.colorMaskRed,
+                                                    gl::GetGreenBits(internalFormat, clientVersion) > 0 && blendState.colorMaskGreen,
+                                                    gl::GetBlueBits(internalFormat, clientVersion) > 0 && blendState.colorMaskBlue,
+                                                    gl::GetAlphaBits(internalFormat, clientVersion) > 0 && blendState.colorMaskAlpha);
         if (colorMask == 0 && !zeroColorMaskAllowed)
         {
             // Enable green channel, but set blending so nothing will be drawn.
@@ -1386,6 +1393,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
     {
         mForceSetScissor = true;
         mForceSetViewport = true;
+        mForceSetBlendState = true;
 
         mRenderTargetDesc.width = renderbufferObject->getWidth();
         mRenderTargetDesc.height = renderbufferObject->getHeight();

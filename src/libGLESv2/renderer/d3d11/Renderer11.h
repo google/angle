@@ -64,7 +64,7 @@ class Renderer11 : public Renderer
     virtual bool setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[]);
 
     virtual void setRasterizerState(const gl::RasterizerState &rasterState);
-    virtual void setBlendState(const gl::BlendState &blendState, const gl::ColorF &blendColor,
+    virtual void setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
                                unsigned int sampleMask);
     virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
                                       int stencilBackRef, bool frontFaceCCW);
