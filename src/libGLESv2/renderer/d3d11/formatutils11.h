@@ -56,6 +56,9 @@ DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat, const Renderer *renderer);
 DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat, const Renderer *renderer);
 DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat, const Renderer *renderer);
 
+bool RequiresTextureDataInitialization(GLint internalFormat);
+InitializeTextureDataFunction GetTextureDataInitializationFunction(GLint internalFormat);
+
 }
 
 namespace d3d11_gl

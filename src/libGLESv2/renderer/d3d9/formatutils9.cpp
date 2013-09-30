@@ -286,6 +286,25 @@ static D3D9FastCopyMap BuildFastCopyMap()
     return map;
 }
 
+typedef std::pair<GLint, InitializeTextureDataFunction> InternalFormatInitialzerPair;
+typedef std::map<GLint, InitializeTextureDataFunction> InternalFormatInitialzerMap;
+
+static InternalFormatInitialzerMap BuildInternalFormatInitialzerMap()
+{
+    InternalFormatInitialzerMap map;
+
+    map.insert(InternalFormatInitialzerPair(GL_RGB16F,  initialize4ComponentData<GLhalf,   0x0000,     0x0000,     0x0000,     gl::Float16One>));
+    map.insert(InternalFormatInitialzerPair(GL_RGB32F,  initialize4ComponentData<GLfloat,  0x00000000, 0x00000000, 0x00000000, gl::Float32One>));
+
+    return map;
+}
+
+static const InternalFormatInitialzerMap &GetInternalFormatInitialzerMap()
+{
+    static const InternalFormatInitialzerMap map = BuildInternalFormatInitialzerMap();
+    return map;
+}
+
 namespace d3d9
 {
 
@@ -486,6 +505,27 @@ D3DFORMAT GetRenderFormat(GLenum internalFormat, const Renderer9 *renderer)
 D3DMULTISAMPLE_TYPE GetMultisampleType(GLsizei samples)
 {
     return (samples > 1) ? static_cast<D3DMULTISAMPLE_TYPE>(samples) : D3DMULTISAMPLE_NONE;
+}
+
+bool RequiresTextureDataInitialization(GLint internalFormat)
+{
+    const InternalFormatInitialzerMap &map = GetInternalFormatInitialzerMap();
+    return map.find(internalFormat) != map.end();
+}
+
+InitializeTextureDataFunction GetTextureDataInitializationFunction(GLint internalFormat)
+{
+    const InternalFormatInitialzerMap &map = GetInternalFormatInitialzerMap();
+    InternalFormatInitialzerMap::const_iterator iter = map.find(internalFormat);
+    if (iter != map.end())
+    {
+        return iter->second;
+    }
+    else
+    {
+        UNREACHABLE();
+        return NULL;
+    }
 }
 
 }

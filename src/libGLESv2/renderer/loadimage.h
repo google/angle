@@ -310,6 +310,34 @@ void loadUintDataToUshort(int width, int height, int depth,
                           const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                           void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
 
+template <typename type, unsigned int firstBits, unsigned int secondBits, unsigned int thirdBits, unsigned int fourthBits>
+void initialize4ComponentData(int width, int height, int depth,
+                              void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    unsigned int writeBits[4] = { firstBits, secondBits, thirdBits, fourthBits };
+    type writeValues[4] = { *reinterpret_cast<const type*>(&writeBits[0]),
+                            *reinterpret_cast<const type*>(&writeBits[1]),
+                            *reinterpret_cast<const type*>(&writeBits[2]),
+                            *reinterpret_cast<const type*>(&writeBits[3]) };
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            type* destRow = offsetDataPointer<type>(output, y, z, outputRowPitch, outputDepthPitch);
+
+            for (int x = 0; x < width; x++)
+            {
+                type* destPixel = destRow + x * 4;
+
+                // This could potentially be optimized by generating an entire row of initialization
+                // data and copying row by row instead of pixel by pixel.
+                memcpy(destPixel, writeValues, sizeof(type) * 4);
+            }
+        }
+    }
+}
+
 }
 
 #endif // LIBGLESV2_RENDERER_LOADIMAGE_H_

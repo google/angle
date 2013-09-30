@@ -47,6 +47,9 @@ D3DFORMAT GetRenderFormat(GLenum internalFormat, const Renderer9 *renderer);
 
 D3DMULTISAMPLE_TYPE GetMultisampleType(GLsizei samples);
 
+bool RequiresTextureDataInitialization(GLint internalFormat);
+InitializeTextureDataFunction GetTextureDataInitializationFunction(GLint internalFormat);
+
 }
 
 namespace d3d9_gl

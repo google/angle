@@ -758,6 +758,27 @@ static SwizzleInfoMap BuildSwizzleInfoMap()
 
     return map;
 }
+typedef std::pair<GLint, InitializeTextureDataFunction> InternalFormatInitializerPair;
+typedef std::map<GLint, InitializeTextureDataFunction> InternalFormatInitializerMap;
+
+static InternalFormatInitializerMap BuildInternalFormatInitializerMap()
+{
+    InternalFormatInitializerMap map;
+
+    map.insert(InternalFormatInitializerPair(GL_RGB8,    initialize4ComponentData<GLubyte,  0x00,       0x00,       0x00,       0xFF>          ));
+    map.insert(InternalFormatInitializerPair(GL_RGB565,  initialize4ComponentData<GLubyte,  0x00,       0x00,       0x00,       0xFF>          ));
+    map.insert(InternalFormatInitializerPair(GL_SRGB8,   initialize4ComponentData<GLubyte,  0x00,       0x00,       0x00,       0xFF>          ));
+    map.insert(InternalFormatInitializerPair(GL_RGB16F,  initialize4ComponentData<GLhalf,   0x0000,     0x0000,     0x0000,     gl::Float16One>));
+    map.insert(InternalFormatInitializerPair(GL_RGB32F,  initialize4ComponentData<GLfloat,  0x00000000, 0x00000000, 0x00000000, gl::Float32One>));
+    map.insert(InternalFormatInitializerPair(GL_RGB8UI,  initialize4ComponentData<GLubyte,  0x00,       0x00,       0x00,       0x01>          ));
+    map.insert(InternalFormatInitializerPair(GL_RGB8I,   initialize4ComponentData<GLbyte,   0x00,       0x00,       0x00,       0x01>          ));
+    map.insert(InternalFormatInitializerPair(GL_RGB16UI, initialize4ComponentData<GLushort, 0x0000,     0x0000,     0x0000,     0x0001>        ));
+    map.insert(InternalFormatInitializerPair(GL_RGB16I,  initialize4ComponentData<GLshort,  0x0000,     0x0000,     0x0000,     0x0001>        ));
+    map.insert(InternalFormatInitializerPair(GL_RGB32UI, initialize4ComponentData<GLuint,   0x00000000, 0x00000000, 0x00000000, 0x00000001>    ));
+    map.insert(InternalFormatInitializerPair(GL_RGB32I,  initialize4ComponentData<GLint,    0x00000000, 0x00000000, 0x00000000, 0x00000001>    ));
+
+    return map;
+}
 
 static const SwizzleInfoMap &GetSwizzleInfoMap()
 {
@@ -792,6 +813,12 @@ static const SwizzleFormatInfo GetSwizzleFormatInfo(GLint internalFormat, GLuint
         static const SwizzleFormatInfo defaultFormatInfo;
         return defaultFormatInfo;
     }
+}
+
+static const InternalFormatInitializerMap &GetInternalFormatInitializerMap()
+{
+    static const InternalFormatInitializerMap map = BuildInternalFormatInitializerMap();
+    return map;
 }
 
 namespace d3d11
@@ -1199,6 +1226,27 @@ DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat, const Renderer *renderer)
     else
     {
         return GetTexFormat(internalFormat, clientVersion);
+    }
+}
+
+bool RequiresTextureDataInitialization(GLint internalFormat)
+{
+    const InternalFormatInitializerMap &map = GetInternalFormatInitializerMap();
+    return map.find(internalFormat) != map.end();
+}
+
+InitializeTextureDataFunction GetTextureDataInitializationFunction(GLint internalFormat)
+{
+    const InternalFormatInitializerMap &map = GetInternalFormatInitializerMap();
+    InternalFormatInitializerMap::const_iterator iter = map.find(internalFormat);
+    if (iter != map.end())
+    {
+        return iter->second;
+    }
+    else
+    {
+        UNREACHABLE();
+        return NULL;
     }
 }
 

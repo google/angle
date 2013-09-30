@@ -24,6 +24,9 @@ typedef void (*LoadImageFunction)(int width, int height, int depth,
                                   const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                                   void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
 
+typedef void (*InitializeTextureDataFunction)(int width, int height, int depth,
+                                              void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
+
 typedef void (*ColorReadFunction)(const void *source, void *dest);
 typedef void (*ColorWriteFunction)(const void *source, void *dest);
 typedef void (*ColorCopyFunction)(const void *source, void *dest);
