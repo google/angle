@@ -60,7 +60,7 @@ struct R8
         dst->red   = src->R;
         dst->green = 0;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R8 *dst, const gl::ColorF *src)
@@ -172,7 +172,7 @@ struct R8G8
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R8G8 *dst, const gl::ColorF *src)
@@ -212,7 +212,7 @@ struct R8G8B8
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = src->G;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R8G8B8 *dst, const gl::ColorF *src)
@@ -256,7 +256,7 @@ struct B8G8R8
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = src->G;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(B8G8R8 *dst, const gl::ColorF *src)
@@ -614,7 +614,7 @@ struct R16
         dst->red   = src->R;
         dst->green = 0;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R16 *dst, const gl::ColorF *src)
@@ -651,7 +651,7 @@ struct R16G16
         dst->red = src->R;
         dst->green = src->G;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R16G16 *dst, const gl::ColorF *src)
@@ -692,7 +692,7 @@ struct R16G16B16
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = src->B;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R16G16B16 *dst, const gl::ColorF *src)
@@ -782,7 +782,7 @@ struct R32
         dst->red   = src->R;
         dst->green = 0;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R32 *dst, const gl::ColorF *src)
@@ -819,7 +819,7 @@ struct R32G32
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R32G32 *dst, const gl::ColorF *src)
@@ -860,7 +860,7 @@ struct R32G32B32
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = src->B;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R32G32B32 *dst, const gl::ColorF *src)
@@ -950,7 +950,7 @@ struct R8S
         dst->red   = src->R;
         dst->green = 0;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R8S *dst, const gl::ColorF *src)
@@ -987,7 +987,7 @@ struct R8G8S
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R8G8S *dst, const gl::ColorF *src)
@@ -1028,7 +1028,7 @@ struct R8G8B8S
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = src->B;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R8G8B8S *dst, const gl::ColorF *src)
@@ -1118,7 +1118,7 @@ struct R16S
         dst->red   = src->R;
         dst->green = 0;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R16S *dst, const gl::ColorF *src)
@@ -1155,7 +1155,7 @@ struct R16G16S
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R16G16S *dst, const gl::ColorF *src)
@@ -1196,7 +1196,7 @@ struct R16G16B16S
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = src->B;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R16G16B16S *dst, const gl::ColorF *src)
@@ -1286,7 +1286,7 @@ struct R32S
         dst->red   = src->R;
         dst->green = 0;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R32S *dst, const gl::ColorF *src)
@@ -1323,7 +1323,7 @@ struct R32G32S
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = 0;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R32G32S *dst, const gl::ColorF *src)
@@ -1364,7 +1364,7 @@ struct R32G32B32S
         dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = src->B;
-        dst->alpha = 0;
+        dst->alpha = 1;
     }
 
     static void writeColor(R32G32B32S *dst, const gl::ColorF *src)

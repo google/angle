@@ -740,8 +740,14 @@ static InternalFormatInfoMap BuildES3InternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_ALPHA,           InternalFormatInfo::UnsizedFormat(GL_ALPHA,           AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_LUMINANCE,       InternalFormatInfo::UnsizedFormat(GL_LUMINANCE,       AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_LUMINANCE_ALPHA, InternalFormatInfo::UnsizedFormat(GL_LUMINANCE_ALPHA, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RED,             InternalFormatInfo::UnsizedFormat(GL_RED,             AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RG,              InternalFormatInfo::UnsizedFormat(GL_RG,              AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_RGB,             InternalFormatInfo::UnsizedFormat(GL_RGB,             AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_RGBA,            InternalFormatInfo::UnsizedFormat(GL_RGBA,            AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RED_INTEGER,     InternalFormatInfo::UnsizedFormat(GL_RED_INTEGER,     AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RG_INTEGER,      InternalFormatInfo::UnsizedFormat(GL_RG_INTEGER,      AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RGB_INTEGER,     InternalFormatInfo::UnsizedFormat(GL_RGB_INTEGER,     AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RGBA_INTEGER,    InternalFormatInfo::UnsizedFormat(GL_RGBA_INTEGER,    AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_BGRA_EXT,        InternalFormatInfo::UnsizedFormat(GL_BGRA_EXT,        AlwaysSupported)));
 
     // Compressed formats, From ES 3.0.1 spec, table 3.16
