@@ -415,7 +415,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ProjectReference Include="..\compiler\preprocessor\preprocessor.vcxproj">
       <Project>{fbe32df3-0fb0-4f2f-a424-2c21bd7bc325}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\compiler\translator_common.vcxproj">
+    <ProjectReference Include="..\compiler\translator.vcxproj">
       <Project>{5b3a6db8-1e7e-40d7-92b9-da8aae619fad}</Project>
     </ProjectReference>
   </ItemGroup>
