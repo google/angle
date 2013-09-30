@@ -23,6 +23,7 @@ Image::Image()
     mActualFormat = GL_NONE;
     mTarget = GL_NONE;
     mRenderable = false;
+    mDirty = false;
 }
 
 }

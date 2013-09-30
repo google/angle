@@ -39,6 +39,10 @@ FLOAT ConvertMaxLOD(GLenum minFilter, unsigned int lodOffset);
 namespace d3d11
 {
 
+void GenerateInitialTextureData(GLint internalFormat, GLuint clientVersion, GLuint width, GLuint height, GLuint depth,
+                                GLuint mipLevels, std::vector<D3D11_SUBRESOURCE_DATA> *outSubresourceData,
+                                std::vector< std::vector<BYTE> > *outData);
+
 struct PositionTexCoordVertex
 {
     float x, y;

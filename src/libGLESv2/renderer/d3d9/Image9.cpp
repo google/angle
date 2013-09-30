@@ -151,6 +151,7 @@ bool Image9::redefine(rx::Renderer *renderer, GLenum target, GLenum internalform
         mRenderable = gl_d3d9::GetRenderFormat(internalformat, mRenderer) != D3DFMT_UNKNOWN;
 
         SafeRelease(mSurface);
+        mDirty = gl_d3d9::RequiresTextureDataInitialization(mInternalFormat);
 
         return true;
     }
@@ -191,6 +192,26 @@ void Image9::createSurface()
 
         newTexture->GetSurfaceLevel(levelToFetch, &newSurface);
         SafeRelease(newTexture);
+
+        if (gl_d3d9::RequiresTextureDataInitialization(mInternalFormat))
+        {
+            InitializeTextureDataFunction initializeFunc = gl_d3d9::GetTextureDataInitializationFunction(mInternalFormat);
+
+            RECT entireRect;
+            entireRect.left = 0;
+            entireRect.right = mWidth;
+            entireRect.top = 0;
+            entireRect.bottom = mHeight;
+
+            D3DLOCKED_RECT lockedRect;
+            result = newSurface->LockRect(&lockedRect, &entireRect, 0);
+            ASSERT(SUCCEEDED(result));
+
+            initializeFunc(mWidth, mHeight, 1, lockedRect.pBits, lockedRect.Pitch, 0);
+
+            result = newSurface->UnlockRect();
+            ASSERT(SUCCEEDED(result));
+        }
     }
 
     mSurface = newSurface;
@@ -231,6 +252,13 @@ D3DFORMAT Image9::getD3DFormat() const
     ASSERT(mD3DFormat != D3DFMT_UNKNOWN);
 
     return mD3DFormat;
+}
+
+bool Image9::isDirty() const
+{
+    // Make sure to that this image is marked as dirty even if the staging texture hasn't been created yet
+    // if initialization is required before use.
+    return (mSurface || gl_d3d9::RequiresTextureDataInitialization(mInternalFormat)) && mDirty;
 }
 
 IDirect3DSurface9 *Image9::getSurface()

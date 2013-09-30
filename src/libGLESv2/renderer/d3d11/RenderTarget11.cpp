@@ -377,6 +377,14 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
                 return;
             }
             ASSERT(SUCCEEDED(result));
+
+            if (gl_d3d11::RequiresTextureDataInitialization(internalFormat))
+            {
+                ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+                const float clearValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+                context->ClearRenderTargetView(mRenderTarget, clearValues);
+            }
         }
     }
 

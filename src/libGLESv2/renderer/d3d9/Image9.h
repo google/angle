@@ -41,7 +41,7 @@ class Image9 : public Image
 
     D3DFORMAT getD3DFormat() const;
 
-    virtual bool isDirty() const {return mSurface && mDirty;}
+    virtual bool isDirty() const;
     IDirect3DSurface9 *getSurface();
 
     virtual void setManagedSurface(TextureStorageInterface2D *storage, int level);

@@ -9,7 +9,7 @@
 // specific to the D3D11 renderer.
 
 #include "libGLESv2/renderer/d3d11/renderer11_utils.h"
-
+#include "libGLESv2/renderer/d3d11/formatutils11.h"
 #include "common/debug.h"
 
 namespace rx
@@ -217,6 +217,34 @@ FLOAT ConvertMaxLOD(GLenum minFilter, unsigned int lodOffset)
 
 namespace d3d11
 {
+
+void GenerateInitialTextureData(GLint internalFormat, GLuint clientVersion, GLuint width, GLuint height, GLuint depth,
+                                GLuint mipLevels, std::vector<D3D11_SUBRESOURCE_DATA> *outSubresourceData,
+                                std::vector< std::vector<BYTE> > *outData)
+{
+    InitializeTextureDataFunction initializeFunc = gl_d3d11::GetTextureDataInitializationFunction(internalFormat);
+    DXGI_FORMAT dxgiFormat = gl_d3d11::GetTexFormat(internalFormat, clientVersion);
+
+    outSubresourceData->resize(mipLevels);
+    outData->resize(mipLevels);
+
+    for (unsigned int i = 0; i < mipLevels; i++)
+    {
+        unsigned int mipWidth = std::max(width >> i, 1U);
+        unsigned int mipHeight = std::max(height >> i, 1U);
+        unsigned int mipDepth = std::max(depth >> i, 1U);
+
+        unsigned int rowWidth = d3d11::GetFormatPixelBytes(dxgiFormat, clientVersion) * mipWidth;
+        unsigned int imageSize = rowWidth * height;
+
+        outData->at(i).resize(rowWidth * mipHeight * mipDepth);
+        initializeFunc(mipWidth, mipHeight, mipDepth, outData->at(i).data(), rowWidth, imageSize);
+
+        outSubresourceData->at(i).pSysMem = outData->at(i).data();
+        outSubresourceData->at(i).SysMemPitch = rowWidth;
+        outSubresourceData->at(i).SysMemSlicePitch = imageSize;
+    }
+}
 
 void SetPositionTexCoordVertex(PositionTexCoordVertex* vertex, float x, float y, float u, float v)
 {

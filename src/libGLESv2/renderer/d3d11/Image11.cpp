@@ -81,7 +81,9 @@ void Image11::generateMipmap(GLuint clientVersion, Image11 *dest, Image11 *src)
 
 bool Image11::isDirty() const
 {
-    return (mStagingTexture && mDirty);
+    // Make sure that this image is marked as dirty even if the staging texture hasn't been created yet
+    // if initialization is required before use.
+    return ((mStagingTexture || gl_d3d11::RequiresTextureDataInitialization(mInternalFormat)) && mDirty);
 }
 
 bool Image11::copyToStorage(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
@@ -130,6 +132,7 @@ bool Image11::redefine(Renderer *renderer, GLenum target, GLenum internalformat,
         mRenderable = gl_d3d11::GetRTVFormat(internalformat, clientVersion) != DXGI_FORMAT_UNKNOWN;
 
         SafeRelease(mStagingTexture);
+        mDirty = gl_d3d11::RequiresTextureDataInitialization(mInternalFormat);
 
         return true;
     }
@@ -316,6 +319,7 @@ void Image11::createStagingTexture()
     if (mWidth > 0 && mHeight > 0 && mDepth > 0)
     {
         ID3D11Device *device = mRenderer->getDevice();
+        HRESULT result;
 
         int lodOffset = 1;
         GLsizei width = mWidth;
@@ -339,7 +343,20 @@ void Image11::createStagingTexture()
             desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
             desc.MiscFlags = 0;
 
-            HRESULT result = device->CreateTexture3D(&desc, NULL, &newTexture);
+            if (gl_d3d11::RequiresTextureDataInitialization(mInternalFormat))
+            {
+                std::vector<D3D11_SUBRESOURCE_DATA> initialData;
+                std::vector< std::vector<BYTE> > textureData;
+                d3d11::GenerateInitialTextureData(mInternalFormat, mRenderer->getCurrentClientVersion(), width, height,
+                                                  mDepth, lodOffset + 1, &initialData, &textureData);
+
+                result = device->CreateTexture3D(&desc, initialData.data(), &newTexture);
+            }
+            else
+            {
+                result = device->CreateTexture3D(&desc, NULL, &newTexture);
+            }
+
             if (FAILED(result))
             {
                 ASSERT(result == E_OUTOFMEMORY);
@@ -367,7 +384,19 @@ void Image11::createStagingTexture()
             desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
             desc.MiscFlags = 0;
 
-            HRESULT result = device->CreateTexture2D(&desc, NULL, &newTexture);
+            if (gl_d3d11::RequiresTextureDataInitialization(mInternalFormat))
+            {
+                std::vector<D3D11_SUBRESOURCE_DATA> initialData;
+                std::vector< std::vector<BYTE> > textureData;
+                d3d11::GenerateInitialTextureData(mInternalFormat, mRenderer->getCurrentClientVersion(), width, height,
+                                                  1, lodOffset + 1, &initialData, &textureData);
+
+                result = device->CreateTexture2D(&desc, initialData.data(), &newTexture);
+            }
+            else
+            {
+                result = device->CreateTexture2D(&desc, NULL, &newTexture);
+            }
 
             if (FAILED(result))
             {

@@ -62,6 +62,8 @@ RenderTarget9::RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, 
     {
         IDirect3DDevice9 *device = mRenderer->getDevice();
 
+        bool requiresInitialization = false;
+
         if (gl::GetDepthBits(internalFormat, clientVersion) > 0 ||
             gl::GetStencilBits(internalFormat, clientVersion) > 0)
         {
@@ -71,6 +73,8 @@ RenderTarget9::RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, 
         }
         else
         {
+            requiresInitialization = gl_d3d9::RequiresTextureDataInitialization(internalFormat);
+
             result = device->CreateRenderTarget(width, height, renderFormat,
                                                 gl_d3d9::GetMultisampleType(supportedSamples),
                                                 0, FALSE, &mRenderTarget, NULL);
@@ -84,6 +88,18 @@ RenderTarget9::RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, 
         }
 
         ASSERT(SUCCEEDED(result));
+
+        if (requiresInitialization)
+        {
+            // This format requires that the data be initialized before the render target can be used
+            // Unfortunately this requires a Get call on the d3d device but it is far better than having
+            // to mark the render target as lockable and copy data to the gpu.
+            IDirect3DSurface9 *prevRenderTarget = NULL;
+            device->GetRenderTarget(0, &prevRenderTarget);
+            device->SetRenderTarget(0, mRenderTarget);
+            device->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_RGBA(0, 0, 0, 255), 0.0f, 0);
+            device->SetRenderTarget(0, prevRenderTarget);
+        }
     }
 
     mWidth = width;
