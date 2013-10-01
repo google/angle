@@ -384,7 +384,6 @@
               'AdditionalDependencies': [
                 'd3d9.lib',
                 'dxguid.lib',
-                '%(AdditionalDependencies)',
               ],
             }
           },
@@ -423,7 +422,6 @@
             'VCLinkerTool': {
               'AdditionalDependencies': [
                 'd3d9.lib',
-                '%(AdditionalDependencies)',
               ],
             }
           },
