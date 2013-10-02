@@ -168,7 +168,7 @@
         '../include',
       ],
       'defines': [
-        'COMPILER_IMPLEMENTATION',
+        'ANGLE_TRANSLATOR_IMPLEMENTATION',
       ],
       'sources': ['<@(translator_sources)'],
       # TODO(jschuh): http://crbug.com/167187 size_t -> int
@@ -192,7 +192,7 @@
         '../include',
       ],
       'defines': [
-        'COMPILER_IMPLEMENTATION',
+        'ANGLE_TRANSLATOR_IMPLEMENTATION',
       ],
       'sources': ['<@(translator_sources)'],
       # TODO(jschuh): http://crbug.com/167187 size_t -> int
@@ -214,8 +214,7 @@
         '../include',
       ],
       'defines': [
-        'COMPILER_IMPLEMENTATION',
-        'COMPONENT_BUILD=0',
+        'ANGLE_TRANSLATOR_STATIC',
       ],
       'sources': ['<@(translator_sources)'],
       # TODO(jschuh): http://crbug.com/167187 size_t -> int
