@@ -181,30 +181,6 @@
         }],
       ],
     },
-    # TODO(zmo): once we rid the webkit dependency to tranlator_glsl,
-    #            we can get rid of this translator_glsl.
-    {
-      'target_name': 'translator_glsl',
-      'type': '<(component)',
-      'dependencies': ['preprocessor'],
-      'include_dirs': [
-        '.',
-        '../include',
-      ],
-      'defines': [
-        'ANGLE_TRANSLATOR_IMPLEMENTATION',
-      ],
-      'sources': ['<@(translator_sources)'],
-      # TODO(jschuh): http://crbug.com/167187 size_t -> int
-      'msvs_disabled_warnings': [ 4267 ],
-      'conditions': [
-        ['OS=="win"', {
-          'sources': ['compiler/ossource_win.cpp'],
-        }, { # else: posix
-          'sources': ['compiler/ossource_posix.cpp'],
-        }],
-      ],
-    },
     {
       'target_name': 'translator_static',
       'type': 'static_library',
