@@ -211,9 +211,15 @@ void TIntermLoop::traverse(TIntermTraverser *it)
 
             if (cond)
                 cond->traverse(it);
+
+            if (init)
+                init->traverse(it);
         }
         else
         {
+            if (init)
+                init->traverse(it);
+
             if (cond)
                 cond->traverse(it);
 
