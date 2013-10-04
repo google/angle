@@ -100,12 +100,16 @@ static D3D9FormatMap BuildD3D9FormatMap()
 
     map.insert(D3D9FormatPair(GL_RGBA32F_EXT,                      D3D9FormatInfo(D3D9Format<D3DFMT_A32B32G32R32F>, D3D9Format<D3DFMT_A32B32G32R32F>,  SimpleLoad<loadToNative<GLfloat, 4> >            )));
     map.insert(D3D9FormatPair(GL_RGB32F_EXT,                       D3D9FormatInfo(D3D9Format<D3DFMT_A32B32G32R32F>, D3D9Format<D3DFMT_A32B32G32R32F>,  SimpleLoad<loadToNative3To4<GLfloat, gl::Float32One> >)));
+    map.insert(D3D9FormatPair(GL_RG32F_EXT,                        D3D9FormatInfo(D3D9Format<D3DFMT_G32R32F>,       D3D9Format<D3DFMT_G32R32F>,        SimpleLoad<loadToNative<GLfloat, 2> >            )));
+    map.insert(D3D9FormatPair(GL_R32F_EXT,                         D3D9FormatInfo(D3D9Format<D3DFMT_R32F>,          D3D9Format<D3DFMT_R32F>,           SimpleLoad<loadToNative<GLfloat, 1> >            )));
     map.insert(D3D9FormatPair(GL_ALPHA32F_EXT,                     D3D9FormatInfo(D3D9Format<D3DFMT_A32B32G32R32F>, D3D9Format<D3DFMT_UNKNOWN>,        SimpleLoad<loadAlphaFloatDataToRGBA>             )));
     map.insert(D3D9FormatPair(GL_LUMINANCE32F_EXT,                 D3D9FormatInfo(D3D9Format<D3DFMT_A32B32G32R32F>, D3D9Format<D3DFMT_UNKNOWN>,        SimpleLoad<loadLuminanceFloatDataToRGBA>         )));
     map.insert(D3D9FormatPair(GL_LUMINANCE_ALPHA32F_EXT,           D3D9FormatInfo(D3D9Format<D3DFMT_A32B32G32R32F>, D3D9Format<D3DFMT_UNKNOWN>,        SimpleLoad<loadLuminanceAlphaFloatDataToRGBA>    )));
 
-    map.insert(D3D9FormatPair(GL_RGBA16F_EXT,                      D3D9FormatInfo(D3D9Format<D3DFMT_A16B16G16R16F>, D3D9Format<D3DFMT_A16B16G16R16F>,  SimpleLoad<loadToNative<GLhalf, 4>>              )));
-    map.insert(D3D9FormatPair(GL_RGB16F_EXT,                       D3D9FormatInfo(D3D9Format<D3DFMT_A16B16G16R16F>, D3D9Format<D3DFMT_A16B16G16R16F>,  SimpleLoad<loadRGBHalfFloatDataToRGBA>           )));
+    map.insert(D3D9FormatPair(GL_RGBA16F_EXT,                      D3D9FormatInfo(D3D9Format<D3DFMT_A16B16G16R16F>, D3D9Format<D3DFMT_A16B16G16R16F>,  SimpleLoad<loadToNative<GLhalf, 4> >             )));
+    map.insert(D3D9FormatPair(GL_RGB16F_EXT,                       D3D9FormatInfo(D3D9Format<D3DFMT_A16B16G16R16F>, D3D9Format<D3DFMT_A16B16G16R16F>,  SimpleLoad<loadToNative3To4<GLhalf, gl::Float16One> >)));
+    map.insert(D3D9FormatPair(GL_RG16F_EXT,                        D3D9FormatInfo(D3D9Format<D3DFMT_G16R16F>,       D3D9Format<D3DFMT_G16R16F>,        SimpleLoad<loadToNative<GLhalf, 2> >             )));
+    map.insert(D3D9FormatPair(GL_R16F_EXT,                         D3D9FormatInfo(D3D9Format<D3DFMT_R16F>,          D3D9Format<D3DFMT_R16F>,           SimpleLoad<loadToNative<GLhalf, 1> >             )));
     map.insert(D3D9FormatPair(GL_ALPHA16F_EXT,                     D3D9FormatInfo(D3D9Format<D3DFMT_A16B16G16R16F>, D3D9Format<D3DFMT_UNKNOWN>,        SimpleLoad<loadAlphaHalfFloatDataToRGBA>         )));
     map.insert(D3D9FormatPair(GL_LUMINANCE16F_EXT,                 D3D9FormatInfo(D3D9Format<D3DFMT_A16B16G16R16F>, D3D9Format<D3DFMT_UNKNOWN>,        SimpleLoad<loadLuminanceHalfFloatDataToRGBA>     )));
     map.insert(D3D9FormatPair(GL_LUMINANCE_ALPHA16F_EXT,           D3D9FormatInfo(D3D9Format<D3DFMT_A16B16G16R16F>, D3D9Format<D3DFMT_UNKNOWN>,        SimpleLoad<loadLuminanceAlphaHalfFloatDataToRGBA>)));
@@ -117,6 +121,8 @@ static D3D9FormatMap BuildD3D9FormatMap()
     map.insert(D3D9FormatPair(GL_RGBA8_OES,                        D3D9FormatInfo(D3D9Format<D3DFMT_A8R8G8B8>,      D3D9Format<D3DFMT_A8R8G8B8>,       FallbackLoadFunction<gl::supportsSSE2, loadRGBAUByteDataToBGRASSE2, loadRGBAUByteDataToBGRA>)));
     map.insert(D3D9FormatPair(GL_RGBA4,                            D3D9FormatInfo(D3D9Format<D3DFMT_A8R8G8B8>,      D3D9Format<D3DFMT_A8R8G8B8>,       SimpleLoad<loadRGBA4444DataToBGRA>                )));
     map.insert(D3D9FormatPair(GL_RGB5_A1,                          D3D9FormatInfo(D3D9Format<D3DFMT_A8R8G8B8>,      D3D9Format<D3DFMT_A8R8G8B8>,       SimpleLoad<loadRGBA5551DataToBGRA>                )));
+    map.insert(D3D9FormatPair(GL_R8_EXT,                           D3D9FormatInfo(D3D9Format<D3DFMT_X8R8G8B8>,      D3D9Format<D3DFMT_X8R8G8B8>,       SimpleLoad<loadRUByteDataToBGRX>                  )));
+    map.insert(D3D9FormatPair(GL_RG8_EXT,                          D3D9FormatInfo(D3D9Format<D3DFMT_X8R8G8B8>,      D3D9Format<D3DFMT_X8R8G8B8>,       SimpleLoad<loadRGUByteDataToBGRX>                 )));
 
     map.insert(D3D9FormatPair(GL_BGRA8_EXT,                        D3D9FormatInfo(D3D9Format<D3DFMT_A8R8G8B8>,      D3D9Format<D3DFMT_A8R8G8B8>,       SimpleLoad<loadToNative<GLubyte, 4> >             )));
     map.insert(D3D9FormatPair(GL_BGRA4_ANGLEX,                     D3D9FormatInfo(D3D9Format<D3DFMT_A8R8G8B8>,      D3D9Format<D3DFMT_A8R8G8B8>,       SimpleLoad<loadRGBA4444DataToRGBA>                )));
@@ -195,7 +201,11 @@ static D3D9FormatInfoMap BuildD3D9FormatInfoMap()
     map.insert(D3D9FormatInfoPair(D3DFMT_R5G6B5,        D3DFormatInfo( 16, 1, 1, GL_RGB565,                          GenerateMip<R5G6B5>,        ReadColor<R5G6B5, GLfloat>       )));
     map.insert(D3D9FormatInfoPair(D3DFMT_X8R8G8B8,      D3DFormatInfo( 32, 1, 1, GL_BGRA8_EXT,                       GenerateMip<B8G8R8A8>,      ReadColor<B8G8R8A8, GLfloat>     )));
     map.insert(D3D9FormatInfoPair(D3DFMT_A8R8G8B8,      D3DFormatInfo( 32, 1, 1, GL_BGRA8_EXT,                       GenerateMip<B8G8R8A8>,      ReadColor<B8G8R8A8, GLfloat>     )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_R16F,          D3DFormatInfo( 16, 1, 1, GL_R16F_EXT,                        GenerateMip<R16F>,          ReadColor<R16F, GLfloat>         )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_G16R16F,       D3DFormatInfo( 32, 1, 1, GL_RG16F_EXT,                       GenerateMip<R16G16F>,       ReadColor<R16G16F, GLfloat>      )));
     map.insert(D3D9FormatInfoPair(D3DFMT_A16B16G16R16F, D3DFormatInfo( 64, 1, 1, GL_RGBA16F_EXT,                     GenerateMip<R16G16B16A16F>, ReadColor<R16G16B16A16F, GLfloat>)));
+    map.insert(D3D9FormatInfoPair(D3DFMT_R32F,          D3DFormatInfo( 32, 1, 1, GL_R32F_EXT,                        GenerateMip<R32F>,          ReadColor<R32F, GLfloat>         )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_G32R32F,       D3DFormatInfo( 64, 1, 1, GL_RG32F_EXT,                       GenerateMip<R32G32F>,       ReadColor<R32G32F, GLfloat>      )));
     map.insert(D3D9FormatInfoPair(D3DFMT_A32B32G32R32F, D3DFormatInfo(128, 1, 1, GL_RGBA32F_EXT,                     GenerateMip<R32G32B32A32F>, ReadColor<R32G32B32A32F, GLfloat>)));
 
     map.insert(D3D9FormatInfoPair(D3DFMT_D16,           D3DFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,               NULL,                       NULL                             )));

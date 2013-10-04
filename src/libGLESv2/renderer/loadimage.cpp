@@ -331,6 +331,54 @@ void loadRGBUByteDataToBGRX(int width, int height, int depth,
     }
 }
 
+void loadRGUByteDataToBGRX(int width, int height, int depth,
+                           const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                           void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<unsigned char>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
+            for (int x = 0; x < width; x++)
+            {
+                dest[4 * x + 0] = 0x00;
+                dest[4 * x + 1] = source[x * 2 + 1];
+                dest[4 * x + 2] = source[x * 2 + 0];
+                dest[4 * x + 3] = 0xFF;
+            }
+        }
+    }
+}
+
+void loadRUByteDataToBGRX(int width, int height, int depth,
+                          const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                          void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<unsigned char>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
+            for (int x = 0; x < width; x++)
+            {
+                dest[4 * x + 0] = 0x00;
+                dest[4 * x + 1] = 0x00;
+                dest[4 * x + 2] = source[x];
+                dest[4 * x + 3] = 0xFF;
+            }
+        }
+    }
+}
+
 void loadRGBUByteDataToRGBA(int width, int height, int depth,
                             const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                             void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)

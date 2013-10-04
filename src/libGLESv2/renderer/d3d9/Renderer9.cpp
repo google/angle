@@ -454,6 +454,25 @@ EGLint Renderer9::initialize()
         mFloat16TextureSupport = true;
     }
 
+    D3DFORMAT rgTextureFormats[] =
+    {
+        D3DFMT_R16F,
+        D3DFMT_G16R16F,
+        D3DFMT_R32F,
+        D3DFMT_G32R32F,
+    };
+
+    mRGTextureSupport = true;
+    for (unsigned int i = 0; i < ArraySize(rgTextureFormats); i++)
+    {
+        D3DFORMAT fmt = rgTextureFormats[i];
+        mRGTextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, D3DRTYPE_TEXTURE, fmt)) &&
+                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, fmt)) &&
+                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, D3DRTYPE_CUBETEXTURE, fmt)) &&
+                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, D3DRTYPE_CUBETEXTURE, fmt));
+    }
+
+
     // Check DXT texture support
     mDXT1TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1));
     mDXT3TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT3));
@@ -2314,6 +2333,11 @@ bool Renderer9::getLuminanceTextureSupport() const
 bool Renderer9::getLuminanceAlphaTextureSupport() const
 {
     return mLuminanceAlphaTextureSupport;
+}
+
+bool Renderer9::getRGTextureSupport() const
+{
+    return mRGTextureSupport;
 }
 
 bool Renderer9::getTextureFilterAnisotropySupport() const

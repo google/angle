@@ -343,6 +343,7 @@ void Context::makeCurrent(egl::Surface *surface)
         mSupportsFloat16RenderableTextures = mRenderer->getFloat16TextureRenderingSupport();
         mSupportsLuminanceTextures = mRenderer->getLuminanceTextureSupport();
         mSupportsLuminanceAlphaTextures = mRenderer->getLuminanceAlphaTextureSupport();
+        mSupportsRGTextures = mRenderer->getRGTextureSupport();
         mSupportsDepthTextures = mRenderer->getDepthTextureSupport();
         mSupportsTextureFilterAnisotropy = mRenderer->getTextureFilterAnisotropySupport();
         mSupports32bitIndices = mRenderer->get32BitIndexSupport();
@@ -3107,6 +3108,11 @@ bool Context::supportsLuminanceAlphaTextures() const
     return mSupportsLuminanceAlphaTextures;
 }
 
+bool Context::supportsRGTextures() const
+{
+    return mSupportsRGTextures;
+}
+
 bool Context::supportsDepthTextures() const
 {
     return mSupportsDepthTextures;
@@ -3524,6 +3530,11 @@ void Context::initExtensionString()
         if (supportsFloat32LinearFilter())
         {
             mExtensionStringList.push_back("GL_OES_texture_float_linear");
+        }
+
+        if (supportsRGTextures())
+        {
+            mExtensionStringList.push_back("GL_EXT_texture_rg");
         }
 
         if (supportsNonPower2Texture())

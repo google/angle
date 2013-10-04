@@ -86,6 +86,14 @@ void loadRGBUByteDataToBGRX(int width, int height, int depth,
                             const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                             void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
 
+void loadRGUByteDataToBGRX(int width, int height, int depth,
+                           const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                           void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
+
+void loadRUByteDataToBGRX(int width, int height, int depth,
+                          const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                          void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
+
 void loadRGBUByteDataToRGBA(int width, int height, int depth,
                             const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                             void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);

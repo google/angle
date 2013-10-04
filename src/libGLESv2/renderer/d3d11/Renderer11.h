@@ -112,6 +112,7 @@ class Renderer11 : public Renderer
     virtual bool getRGB565TextureSupport() const;
     virtual bool getLuminanceTextureSupport() const;
     virtual bool getLuminanceAlphaTextureSupport() const;
+    virtual bool getRGTextureSupport() const;
     virtual unsigned int getMaxVertexTextureImageUnits() const;
     virtual unsigned int getMaxCombinedTextureImageUnits() const;
     virtual unsigned int getReservedVertexUniformVectors() const;
@@ -261,6 +262,8 @@ class Renderer11 : public Renderer
     bool mDXT1TextureSupport;
     bool mDXT3TextureSupport;
     bool mDXT5TextureSupport;
+
+    bool mRGTextureSupport;
 
     bool mDepthTextureSupport;
 

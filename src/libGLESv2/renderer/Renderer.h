@@ -167,6 +167,7 @@ class Renderer
     virtual bool getRGB565TextureSupport() const = 0;
     virtual bool getLuminanceTextureSupport() const = 0;
     virtual bool getLuminanceAlphaTextureSupport() const = 0;
+    virtual bool getRGTextureSupport() const = 0;
     bool getVertexTextureSupport() const { return getMaxVertexTextureImageUnits() > 0; }
     virtual unsigned int getMaxVertexTextureImageUnits() const = 0;
     virtual unsigned int getMaxCombinedTextureImageUnits() const = 0;

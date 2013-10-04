@@ -286,6 +286,36 @@ bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint le
                 return gl::error(GL_INVALID_OPERATION, false);
             }
             break;
+          case GL_RED:
+              if (!context->supportsRGTextures())
+              {
+                  return gl::error(GL_INVALID_ENUM, false);
+              }
+              switch (type)
+              {
+                case GL_UNSIGNED_BYTE:
+                case GL_FLOAT:
+                case GL_HALF_FLOAT_OES:
+                  break;
+                default:
+                  return gl::error(GL_INVALID_OPERATION, false);
+              }
+              break;
+          case GL_RG:
+              if (!context->supportsRGTextures())
+              {
+                  return gl::error(GL_INVALID_ENUM, false);
+              }
+              switch (type)
+              {
+              case GL_UNSIGNED_BYTE:
+              case GL_FLOAT:
+              case GL_HALF_FLOAT_OES:
+                  break;
+              default:
+                  return gl::error(GL_INVALID_OPERATION, false);
+              }
+              break;
           case GL_RGB:
             switch (type)
             {
@@ -554,6 +584,40 @@ bool ValidateES2CopyTexImageParameters(gl::Context* context, GLenum target, GLin
             }
             break;
           case GL_LUMINANCE:
+              if (colorbufferFormat != GL_R8_EXT &&
+                  colorbufferFormat != GL_RG8_EXT &&
+                  colorbufferFormat != GL_RGB565 &&
+                  colorbufferFormat != GL_RGB8_OES &&
+                  colorbufferFormat != GL_RGBA4 &&
+                  colorbufferFormat != GL_RGB5_A1 &&
+                  colorbufferFormat != GL_RGBA8_OES)
+              {
+                  return gl::error(GL_INVALID_OPERATION, false);
+              }
+              break;
+          case GL_RED_EXT:
+              if (colorbufferFormat != GL_R8_EXT &&
+                  colorbufferFormat != GL_RG8_EXT &&
+                  colorbufferFormat != GL_RGB565 &&
+                  colorbufferFormat != GL_RGB8_OES &&
+                  colorbufferFormat != GL_RGBA4 &&
+                  colorbufferFormat != GL_RGB5_A1 &&
+                  colorbufferFormat != GL_RGBA8_OES)
+              {
+                  return gl::error(GL_INVALID_OPERATION, false);
+              }
+              break;
+          case GL_RG_EXT:
+              if (colorbufferFormat != GL_RG8_EXT &&
+                  colorbufferFormat != GL_RGB565 &&
+                  colorbufferFormat != GL_RGB8_OES &&
+                  colorbufferFormat != GL_RGBA4 &&
+                  colorbufferFormat != GL_RGB5_A1 &&
+                  colorbufferFormat != GL_RGBA8_OES)
+              {
+                  return gl::error(GL_INVALID_OPERATION, false);
+              }
+              break;
           case GL_RGB:
             if (colorbufferFormat != GL_RGB565 &&
                 colorbufferFormat != GL_RGB8_OES &&
@@ -600,6 +664,43 @@ bool ValidateES2CopyTexImageParameters(gl::Context* context, GLenum target, GLin
             }
             break;
           case GL_LUMINANCE:
+              if (colorbufferFormat != GL_R8_EXT &&
+                  colorbufferFormat != GL_RG8_EXT &&
+                  colorbufferFormat != GL_RGB565 &&
+                  colorbufferFormat != GL_RGB8_OES &&
+                  colorbufferFormat != GL_RGBA4 &&
+                  colorbufferFormat != GL_RGB5_A1 &&
+                  colorbufferFormat != GL_BGRA8_EXT &&
+                  colorbufferFormat != GL_RGBA8_OES)
+              {
+                  return gl::error(GL_INVALID_OPERATION, false);
+              }
+              break;
+          case GL_RED_EXT:
+              if (colorbufferFormat != GL_R8_EXT &&
+                  colorbufferFormat != GL_RG8_EXT &&
+                  colorbufferFormat != GL_RGB565 &&
+                  colorbufferFormat != GL_RGB8_OES &&
+                  colorbufferFormat != GL_RGBA4 &&
+                  colorbufferFormat != GL_RGB5_A1 &&
+                  colorbufferFormat != GL_BGRA8_EXT &&
+                  colorbufferFormat != GL_RGBA8_OES)
+              {
+                  return gl::error(GL_INVALID_OPERATION, false);
+              }
+              break;
+          case GL_RG_EXT:
+              if (colorbufferFormat != GL_RG8_EXT &&
+                  colorbufferFormat != GL_RGB565 &&
+                  colorbufferFormat != GL_RGB8_OES &&
+                  colorbufferFormat != GL_RGBA4 &&
+                  colorbufferFormat != GL_RGB5_A1 &&
+                  colorbufferFormat != GL_BGRA8_EXT &&
+                  colorbufferFormat != GL_RGBA8_OES)
+              {
+                  return gl::error(GL_INVALID_OPERATION, false);
+              }
+              break;
           case GL_RGB:
             if (colorbufferFormat != GL_RGB565 &&
                 colorbufferFormat != GL_RGB8_OES &&
@@ -770,6 +871,17 @@ bool ValidateES2TexStorageParameters(gl::Context *context, GLenum target, GLsize
       case GL_LUMINANCE16F_EXT:
       case GL_LUMINANCE_ALPHA16F_EXT:
         if (!context->supportsFloat16Textures())
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+      case GL_R8_EXT:
+      case GL_RG8_EXT:
+      case GL_R16F_EXT:
+      case GL_RG16F_EXT:
+      case GL_R32F_EXT:
+      case GL_RG32F_EXT:
+        if (!context->supportsRGTextures())
         {
             return gl::error(GL_INVALID_ENUM, false);
         }

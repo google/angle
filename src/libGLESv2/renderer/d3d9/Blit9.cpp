@@ -354,6 +354,8 @@ bool Blit9::setFormatConvertShaders(GLenum destFormat)
       case GL_RGBA:
       case GL_BGRA_EXT:
       case GL_RGB:
+      case GL_RG_EXT:
+      case GL_RED_EXT:
       case GL_ALPHA:
         okay = okay && setPixelShader(SHADER_PS_COMPONENTMASK);
         break;
@@ -373,36 +375,94 @@ bool Blit9::setFormatConvertShaders(GLenum destFormat)
 
     // The meaning of this constant depends on the shader that was selected.
     // See the shader assembly code above for details.
-    float psConst0[4] = { 0, 0, 0, 0 };
+    // Allocate one array for both registers and split it into two float4's.
+    float psConst[8] = { 0 };
+    float *multConst = &psConst[0];
+    float *addConst = &psConst[4];
 
     switch (destFormat)
     {
       default: UNREACHABLE();
       case GL_RGBA:
       case GL_BGRA_EXT:
-        psConst0[X] = 1;
-        psConst0[Z] = 1;
+        multConst[X] = 1;
+        multConst[Y] = 1;
+        multConst[Z] = 1;
+        multConst[W] = 1;
+        addConst[X] = 0;
+        addConst[Y] = 0;
+        addConst[Z] = 0;
+        addConst[W] = 0;
         break;
 
       case GL_RGB:
-        psConst0[X] = 1;
-        psConst0[W] = 1;
+        multConst[X] = 1;
+        multConst[Y] = 1;
+        multConst[Z] = 1;
+        multConst[W] = 0;
+        addConst[X] = 0;
+        addConst[Y] = 0;
+        addConst[Z] = 0;
+        addConst[W] = 1;
+        break;
+
+      case GL_RG_EXT:
+        multConst[X] = 1;
+        multConst[Y] = 1;
+        multConst[Z] = 0;
+        multConst[W] = 0;
+        addConst[X] = 0;
+        addConst[Y] = 0;
+        addConst[Z] = 0;
+        addConst[W] = 1;
+        break;
+
+      case GL_RED_EXT:
+        multConst[X] = 1;
+        multConst[Y] = 0;
+        multConst[Z] = 0;
+        multConst[W] = 0;
+        addConst[X] = 0;
+        addConst[Y] = 0;
+        addConst[Z] = 0;
+        addConst[W] = 1;
         break;
 
       case GL_ALPHA:
-        psConst0[Z] = 1;
+        multConst[X] = 0;
+        multConst[Y] = 0;
+        multConst[Z] = 0;
+        multConst[W] = 1;
+        addConst[X] = 0;
+        addConst[Y] = 0;
+        addConst[Z] = 0;
+        addConst[W] = 0;
         break;
 
       case GL_LUMINANCE:
-        psConst0[Y] = 1;
+        multConst[X] = 1;
+        multConst[Y] = 0;
+        multConst[Z] = 0;
+        multConst[W] = 0;
+        addConst[X] = 0;
+        addConst[Y] = 0;
+        addConst[Z] = 0;
+        addConst[W] = 1;
         break;
 
       case GL_LUMINANCE_ALPHA:
-        psConst0[X] = 1;
+        multConst[X] = 1;
+        multConst[Y] = 0;
+        multConst[Z] = 0;
+        multConst[W] = 1;
+        addConst[X] = 0;
+        addConst[Y] = 0;
+        addConst[Z] = 0;
+        addConst[W] = 0;
         break;
     }
 
-    mRenderer->getDevice()->SetPixelShaderConstantF(0, psConst0, 1);
+    mRenderer->getDevice()->SetPixelShaderConstantF(0, psConst, 2);
 
     return true;
 }
@@ -528,12 +588,12 @@ void Blit9::saveState()
 
         setCommonBlitState();
 
-        static const float dummyConst[4] = { 0, 0, 0, 0 };
+        static const float dummyConst[8] = { 0 };
 
         device->SetVertexShader(NULL);
-        device->SetVertexShaderConstantF(0, dummyConst, 1);
+        device->SetVertexShaderConstantF(0, dummyConst, 2);
         device->SetPixelShader(NULL);
-        device->SetPixelShaderConstantF(0, dummyConst, 1);
+        device->SetPixelShaderConstantF(0, dummyConst, 2);
 
         D3DVIEWPORT9 dummyVp;
         dummyVp.X = 0;

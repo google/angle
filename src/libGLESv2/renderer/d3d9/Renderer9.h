@@ -125,6 +125,7 @@ class Renderer9 : public Renderer
     virtual bool getRGB565TextureSupport() const;
     virtual bool getLuminanceTextureSupport() const;
     virtual bool getLuminanceAlphaTextureSupport() const;
+    virtual bool getRGTextureSupport() const;
     virtual unsigned int getMaxVertexTextureImageUnits() const;
     virtual unsigned int getMaxCombinedTextureImageUnits() const;
     virtual unsigned int getReservedVertexUniformVectors() const;
@@ -299,6 +300,8 @@ class Renderer9 : public Renderer
 
     bool mLuminanceTextureSupport;
     bool mLuminanceAlphaTextureSupport;
+
+    bool mRGTextureSupport;
 
     struct MultisampleSupportInfo
     {

@@ -422,6 +422,7 @@ class Context
     bool supportsFloat16RenderableTextures() const;
     bool supportsLuminanceTextures() const;
     bool supportsLuminanceAlphaTextures() const;
+    bool supportsRGTextures() const;
     bool supportsDepthTextures() const;
     bool supports32bitIndices() const;
     bool supportsNonPower2Texture() const;
@@ -544,6 +545,7 @@ class Context
     bool mSupportsFloat16RenderableTextures;
     bool mSupportsLuminanceTextures;
     bool mSupportsLuminanceAlphaTextures;
+    bool mSupportsRGTextures;
     bool mSupportsDepthTextures;
     bool mSupports32bitIndices;
     bool mSupportsTextureFilterAnisotropy;

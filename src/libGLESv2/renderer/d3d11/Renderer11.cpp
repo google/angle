@@ -316,6 +316,31 @@ EGLint Renderer11::initialize()
         }
     }
 
+    DXGI_FORMAT rgTextureFormats[] =
+    {
+        DXGI_FORMAT_R8_UNORM,
+        DXGI_FORMAT_R8G8_UNORM,
+        DXGI_FORMAT_R16_FLOAT,
+        DXGI_FORMAT_R16G16_FLOAT,
+        DXGI_FORMAT_R32_FLOAT,
+        DXGI_FORMAT_R32G32_FLOAT,
+    };
+
+    mRGTextureSupport = true;
+    for (unsigned int i = 0; i < ArraySize(rgTextureFormats); i++)
+    {
+        if (SUCCEEDED(mDevice->CheckFormatSupport(rgTextureFormats[i], &formatSupport)))
+        {
+            mRGTextureSupport = mRGTextureSupport && (formatSupport & requiredTextureFlags) == requiredTextureFlags;
+            mRGTextureSupport = mRGTextureSupport && (formatSupport & requiredFilterFlags) == requiredFilterFlags;
+            mRGTextureSupport = mRGTextureSupport && (formatSupport & requiredRenderableFlags) == requiredRenderableFlags;
+        }
+        else
+        {
+            mRGTextureSupport = false;
+        }
+    }
+
     // Check compressed texture support
     const unsigned int requiredCompressedTextureFlags = D3D11_FORMAT_SUPPORT_TEXTURE2D;
 
@@ -1869,6 +1894,11 @@ bool Renderer11::getLuminanceTextureSupport() const
 bool Renderer11::getLuminanceAlphaTextureSupport() const
 {
     return false;
+}
+
+bool Renderer11::getRGTextureSupport() const
+{
+    return mRGTextureSupport;
 }
 
 bool Renderer11::getTextureFilterAnisotropySupport() const
