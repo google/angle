@@ -10,12 +10,12 @@
             'type': 'static_library',
             'include_dirs':
             [
-                '../third_party/googletest',
-                '../third_party/googletest/include',
+                'third_party/googletest',
+                'third_party/googletest/include',
             ],
             'sources':
             [
-                '../third_party/googletest/src/gtest-all.cc',
+                'third_party/googletest/src/gtest-all.cc',
             ],
         },
 
@@ -24,13 +24,13 @@
             'type': 'static_library',
             'include_dirs':
             [
-                '../third_party/googlemock',
-                '../third_party/googlemock/include',
-                '../third_party/googletest/include',
+                'third_party/googlemock',
+                'third_party/googlemock/include',
+                'third_party/googletest/include',
             ],
             'sources':
             [
-                '../third_party/googlemock/src/gmock-all.cc',
+                'third_party/googlemock/src/gmock-all.cc',
             ],
         },
 
@@ -46,12 +46,12 @@
             'include_dirs':
             [
                 '../src/compiler/preprocessor',
-                '../third_party/googletest/include',
-                '../third_party/googlemock/include',
+                'third_party/googletest/include',
+                'third_party/googlemock/include',
             ],
             'sources':
             [
-                '../third_party/googlemock/src/gmock_main.cc',
+                'third_party/googlemock/src/gmock_main.cc',
                 '<!@(python enumerate_files.py preprocessor_tests -types *.cpp *.h)'
             ],
         },
@@ -69,12 +69,12 @@
             [
                 '../include',
                 '../src',
-                '../third_party/googletest/include',
-                '../third_party/googlemock/include',
+                'third_party/googletest/include',
+                'third_party/googlemock/include',
             ],
             'sources':
             [
-                '../third_party/googlemock/src/gmock_main.cc',
+                'third_party/googlemock/src/gmock_main.cc',
                 '<!@(python enumerate_files.py compiler_tests -types *.cpp *.h)'
             ],
         },
