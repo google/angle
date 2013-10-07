@@ -243,6 +243,7 @@ class TextureCubeMap : public Texture
     void storage(GLsizei levels, GLenum internalformat, GLsizei size);
 
     virtual bool isSamplerComplete(const SamplerState &samplerState) const;
+    bool isCubeComplete() const;
 
     virtual void generateMipmaps();
 
@@ -266,7 +267,6 @@ class TextureCubeMap : public Texture
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
     virtual const rx::Image *getBaseLevelImage() const;
 
-    bool isCubeComplete() const;
     bool isMipmapCubeComplete() const;
     bool isFaceLevelComplete(int face, int level) const;
     void updateTextureFaceLevel(int face, int level);

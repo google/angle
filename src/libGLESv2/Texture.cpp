@@ -843,14 +843,6 @@ void Texture2D::convertToRenderTarget()
 
 void Texture2D::generateMipmaps()
 {
-    if (!mRenderer->getNonPower2TextureSupport())
-    {
-        if (!isPow2(getBaseLevelWidth()) || !isPow2(getBaseLevelHeight()))
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-    }
-
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
     unsigned int q = log2(std::max(getBaseLevelWidth(), getBaseLevelHeight()));
     for (unsigned int i = 1; i <= q; i++)
@@ -1132,16 +1124,22 @@ bool TextureCubeMap::isSamplerComplete(const SamplerState &samplerState) const
 // Tests for cube texture completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool TextureCubeMap::isCubeComplete() const
 {
-    if (getBaseLevelWidth() <= 0 || getBaseLevelHeight() != getBaseLevelWidth())
+    int    baseWidth  = getBaseLevelWidth();
+    int    baseHeight = getBaseLevelHeight();
+    GLenum baseFormat = getBaseLevelInternalFormat();
+
+    if (baseWidth <= 0 || baseWidth != baseHeight)
     {
         return false;
     }
 
     for (unsigned int face = 1; face < 6; face++)
     {
-        if (mImageArray[face][0]->getWidth() != getBaseLevelWidth() ||
-            mImageArray[face][0]->getWidth() != getBaseLevelHeight() ||
-            mImageArray[face][0]->getInternalFormat() != getBaseLevelInternalFormat())
+        const rx::Image &faceBaseImage = *mImageArray[face][0];
+
+        if (faceBaseImage.getWidth()          != baseWidth  ||
+            faceBaseImage.getHeight()         != baseHeight ||
+            faceBaseImage.getInternalFormat() != baseFormat )
         {
             return false;
         }
@@ -1489,19 +1487,6 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
 
 void TextureCubeMap::generateMipmaps()
 {
-    if (!isCubeComplete())
-    {
-        return gl::error(GL_INVALID_OPERATION);
-    }
-
-    if (!mRenderer->getNonPower2TextureSupport())
-    {
-        if (!isPow2(getBaseLevelWidth()))
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-    }
-
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
     unsigned int q = log2(getBaseLevelWidth());
     for (unsigned int f = 0; f < 6; f++)

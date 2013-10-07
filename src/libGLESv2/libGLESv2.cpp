@@ -2223,6 +2223,23 @@ void __stdcall glGenerateMipmap(GLenum target)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // Non-power of 2 ES2 check
+            if (!context->supportsNonPower2Texture() && (!gl::isPow2(texture->getBaseLevelWidth()) || !gl::isPow2(texture->getBaseLevelHeight())))
+            {
+                ASSERT(context->getClientVersion() <= 2 && (target == GL_TEXTURE_2D || target == GL_TEXTURE_CUBE_MAP));
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            // Cube completeness check
+            if (target == GL_TEXTURE_CUBE_MAP)
+            {
+                gl::TextureCubeMap *textureCube = static_cast<gl::TextureCubeMap *>(texture);
+                if (!textureCube->isCubeComplete())
+                {
+                    return gl::error(GL_INVALID_OPERATION);
+                }
+            }
+
             texture->generateMipmaps();
         }
     }
