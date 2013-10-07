@@ -55,7 +55,7 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved
     {
       case DLL_PROCESS_ATTACH:
         {
-#if !defined(ANGLE_DISABLE_TRACE)
+#if defined(ANGLE_ENABLE_TRACE)
             FILE *debug = fopen(TRACE_OUTPUT_FILE, "rt");
 
             if (debug)

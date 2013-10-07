@@ -207,7 +207,8 @@
                             '<(windows_sdk_path)/Lib/win8/um/x64',
                         ],
                     },
-                    'VCLibrarianTool': {
+                    'VCLibrarianTool':
+                    {
                         'AdditionalLibraryDirectories':
                         [
                             '<(windows_sdk_path)/Lib/win8/um/x64',
@@ -254,7 +255,20 @@
         {
             'target_defaults':
             {
-                'msvs_cygwin_dirs': ['../third_party/cygwin'],
+                'msvs_cygwin_dirs':
+                [
+                    '../third_party/cygwin'
+                ],
+                'configurations':
+                {
+                    'Debug':
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_PERF',
+                        ],
+                    },
+                },
             },
         }],
         ['OS != "win" and OS != "mac"',
