@@ -8,12 +8,18 @@
 
 #include "common/debug.h"
 #include "common/system.h"
+
+#if defined(ANGLE_ENABLE_D3D_EVENTS)
 #include <d3d9.h>
+#endif
 
 namespace gl
 {
-
+#if defined(ANGLE_ENABLE_D3D_EVENTS)
 typedef void (WINAPI *PerfOutputFunction)(D3DCOLOR, LPCWSTR);
+#else
+typedef void (*PerfOutputFunction)(unsigned int, const wchar_t*);
+#endif
 
 static void output(bool traceFileDebugOnly, PerfOutputFunction perfFunc, const char *format, va_list vararg)
 {
@@ -60,7 +66,7 @@ void trace(bool traceFileDebugOnly, const char *format, ...)
 {
     va_list vararg;
     va_start(vararg, format);
-#if defined(ANGLE_DISABLE_PERF)
+#if defined(ANGLE_DISABLE_PERF) || !defined(ANGLE_ENABLE_D3D_EVENTS)
     output(traceFileDebugOnly, NULL, format, vararg);
 #else
     output(traceFileDebugOnly, D3DPERF_SetMarker, format, vararg);
@@ -70,7 +76,7 @@ void trace(bool traceFileDebugOnly, const char *format, ...)
 
 bool perfActive()
 {
-#if defined(ANGLE_DISABLE_PERF)
+#if defined(ANGLE_DISABLE_PERF) || !defined(ANGLE_ENABLE_D3D_EVENTS)
     return false;
 #else
     static bool active = D3DPERF_GetStatus() != 0;
@@ -80,7 +86,7 @@ bool perfActive()
 
 ScopedPerfEventHelper::ScopedPerfEventHelper(const char* format, ...)
 {
-#if !defined(ANGLE_DISABLE_PERF)
+#if !defined(ANGLE_DISABLE_PERF) && defined(ANGLE_ENABLE_D3D_EVENTS)
 #if defined(ANGLE_DISABLE_TRACE)
     if (!perfActive())
     {
@@ -96,7 +102,7 @@ ScopedPerfEventHelper::ScopedPerfEventHelper(const char* format, ...)
 
 ScopedPerfEventHelper::~ScopedPerfEventHelper()
 {
-#if !defined(ANGLE_DISABLE_PERF)
+#if !defined(ANGLE_DISABLE_PERF) && defined(ANGLE_ENABLE_D3D_EVENTS)
     if (perfActive())
     {
         D3DPERF_EndEvent();

@@ -32,6 +32,7 @@
                     'defines':
                     [
                         'NOMINMAX',
+                        'ANGLE_ENABLE_D3D_EVENTS',
                     ],
                     'sources': [ '<!@(python enumerate_files.py common libGLESv2 third_party/murmurhash -types *.cpp *.h *.hlsl *.vs *.ps *.bat *.def)' ],
                     'msvs_disabled_warnings': [ 4267 ],
