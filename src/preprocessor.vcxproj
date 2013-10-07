@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7642CFD5-F187-3E3F-F8FF-859949B9F13E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>preprocessor</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <PropertyGroup Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <ImportGroup Label="ExtensionSettings"/>
+  <ImportGroup Label="PropertySheets">
+    <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"/>
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros"/>
+  <PropertyGroup>
+    <ExecutablePath>$(ExecutablePath);$(MSBuildProjectDirectory)\..\third_party\cygwin\bin\;$(MSBuildProjectDirectory)\..\third_party\python_26\</ExecutablePath>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)obj\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+    <TargetPath>$(OutDir)lib\$(ProjectName)$(TargetExt)</TargetPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ProgramFiles)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4100;4127;4189;4239;4244;4245;4512;4702;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;_WIN32_WINNT=0x0600;_WINDOWS;NOMINMAX;WIN32;WIN32_LEAN_AND_MEAN;WINVER=0x0600;_DEBUG;ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level4</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ProgramFiles)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ProgramFiles)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4100;4127;4189;4239;4244;4245;4512;4702;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;_WIN32_WINNT=0x0600;_WINDOWS;NOMINMAX;WIN32;WIN32_LEAN_AND_MEAN;WINVER=0x0600;NDEBUG;ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level4</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ProgramFiles)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="angle.gyp"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="compiler\preprocessor\length_limits.h"/>
+    <ClInclude Include="compiler\preprocessor\Tokenizer.h"/>
+    <ClInclude Include="compiler\preprocessor\Lexer.h"/>
+    <ClInclude Include="compiler\preprocessor\Token.h"/>
+    <ClInclude Include="compiler\preprocessor\Preprocessor.h"/>
+    <ClInclude Include="compiler\preprocessor\ExpressionParser.h"/>
+    <ClInclude Include="compiler\preprocessor\MacroExpander.h"/>
+    <ClInclude Include="compiler\preprocessor\Macro.h"/>
+    <ClInclude Include="compiler\preprocessor\pp_utils.h"/>
+    <ClInclude Include="compiler\preprocessor\Input.h"/>
+    <ClInclude Include="compiler\preprocessor\SourceLocation.h"/>
+    <ClInclude Include="compiler\preprocessor\numeric_lex.h"/>
+    <ClInclude Include="compiler\preprocessor\DirectiveParser.h"/>
+    <ClInclude Include="compiler\preprocessor\DiagnosticsBase.h"/>
+    <ClInclude Include="compiler\preprocessor\DirectiveHandlerBase.h"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="compiler\preprocessor\ExpressionParser.cpp"/>
+    <ClCompile Include="compiler\preprocessor\Input.cpp"/>
+    <ClCompile Include="compiler\preprocessor\Tokenizer.cpp"/>
+    <ClCompile Include="compiler\preprocessor\DirectiveHandlerBase.cpp"/>
+    <ClCompile Include="compiler\preprocessor\Lexer.cpp"/>
+    <ClCompile Include="compiler\preprocessor\Token.cpp"/>
+    <ClCompile Include="compiler\preprocessor\Macro.cpp"/>
+    <ClCompile Include="compiler\preprocessor\DiagnosticsBase.cpp"/>
+    <ClCompile Include="compiler\preprocessor\Preprocessor.cpp"/>
+    <ClCompile Include="compiler\preprocessor\DirectiveParser.cpp"/>
+    <ClCompile Include="compiler\preprocessor\MacroExpander.cpp"/>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
+</Project>
