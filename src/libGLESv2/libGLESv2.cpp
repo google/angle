@@ -27,15 +27,11 @@
 #include "libGLESv2/validationES2.h"
 #include "libGLESv2/validationES3.h"
 
-
-gl::Texture *getTargetTexture(gl::Context *context, GLenum target)
+gl::Texture *GetTargetTexture(gl::Context *context, GLenum target)
 {
-    if (context->getClientVersion() < 3)
+    if (!ValidTextureTarget(context, target))
     {
-        if (target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY)
-        {
-            return NULL;
-        }
+        return NULL;
     }
 
     switch (target)
@@ -47,7 +43,6 @@ gl::Texture *getTargetTexture(gl::Context *context, GLenum target)
       default:                  return NULL;
     }
 }
-
 
 extern "C"
 {
@@ -2204,73 +2199,19 @@ void __stdcall glGenerateMipmap(GLenum target)
 
         if (context)
         {
-            gl::Texture *texture = NULL;
-            GLint internalFormat = GL_NONE;
-
-            switch (target)
+            if (!ValidTextureTarget(context, target))
             {
-              case GL_TEXTURE_2D:
-                {
-                    gl::Texture2D *tex2d = context->getTexture2D();
-                    if (tex2d)
-                    {
-                        internalFormat = tex2d->getInternalFormat(0);
-                        texture = tex2d;
-                    }
-                    break;
-                }
-
-              case GL_TEXTURE_CUBE_MAP:
-                {
-                    gl::TextureCubeMap *texcube = context->getTextureCubeMap();
-                    if (texcube)
-                    {
-                        internalFormat = texcube->getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
-                        texture = texcube;
-                    }
-                    break;
-                }
-
-              case GL_TEXTURE_3D:
-                {
-                    if (context->getClientVersion() < 3)
-                    {
-                        return gl::error(GL_INVALID_ENUM);
-                    }
-
-                    gl::Texture3D *tex3D = context->getTexture3D();
-                    if (tex3D)
-                    {
-                        internalFormat = tex3D->getInternalFormat(0);
-                        texture = tex3D;
-                    }
-                    break;
-                }
-
-                case GL_TEXTURE_2D_ARRAY:
-                  {
-                      if (context->getClientVersion() < 3)
-                      {
-                          return gl::error(GL_INVALID_ENUM);
-                      }
-
-                      gl::Texture2DArray *tex2darr = context->getTexture2DArray();
-                      if (tex2darr)
-                      {
-                          internalFormat = tex2darr->getInternalFormat(0);
-                          texture = tex2darr;
-                      }
-                      break;
-                  }
-
-              default:
                 return gl::error(GL_INVALID_ENUM);
             }
 
-            if (!texture)
+            gl::Texture *texture = GetTargetTexture(context, target);
+
+            if (texture == NULL)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
+
+            GLint internalFormat = texture->getBaseLevelInternalFormat();
 
             // Internally, all texture formats are sized so checking if the format
             // is color renderable and filterable will not fail.
@@ -3744,7 +3685,7 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
 
         if (context)
         {
-            gl::Texture *texture = getTargetTexture(context, target);
+            gl::Texture *texture = GetTargetTexture(context, target);
 
             if (!texture)
             {
@@ -3814,7 +3755,7 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
 
         if (context)
         {
-            gl::Texture *texture = getTargetTexture(context, target);
+            gl::Texture *texture = GetTargetTexture(context, target);
 
             if (!texture)
             {
@@ -5207,7 +5148,7 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
                 return;
             }
 
-            gl::Texture *texture = getTargetTexture(context, target);
+            gl::Texture *texture = GetTargetTexture(context, target);
 
             if (!texture)
             {
@@ -5267,7 +5208,7 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
                 return;
             }
 
-            gl::Texture *texture = getTargetTexture(context, target);
+            gl::Texture *texture = GetTargetTexture(context, target);
 
             if (!texture)
             {

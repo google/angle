@@ -21,6 +21,19 @@
 namespace gl
 {
 
+bool ValidTextureTarget(gl::Context *context, GLenum target)
+{
+    if (context->getClientVersion() < 3)
+    {
+        if (target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool ValidMipLevel(const gl::Context *context, GLenum target, GLint level)
 {
     int maxLevel = 0;
