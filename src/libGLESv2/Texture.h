@@ -90,6 +90,11 @@ class Texture : public RefCountObject
     GLenum getUsage() const;
     virtual int levelCount() = 0;
 
+    GLint getBaseLevelWidth() const;
+    GLint getBaseLevelHeight() const;
+    GLint getBaseLevelDepth() const;
+    GLenum getBaseLevelInternalFormat() const;
+
     virtual bool isSamplerComplete(const SamplerState &samplerState) const = 0;
 
     rx::TextureStorageInterface *getNativeTexture();
@@ -146,6 +151,7 @@ class Texture : public RefCountObject
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget) = 0;
+    virtual const rx::Image *getBaseLevelImage() const = 0;
 };
 
 class Texture2D : public Texture
@@ -192,6 +198,7 @@ class Texture2D : public Texture
     virtual void updateTexture();
     virtual void convertToRenderTarget();
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
+    virtual const rx::Image *getBaseLevelImage() const;
 
     bool isMipmapComplete() const;
     bool isLevelComplete(int level) const;
@@ -257,6 +264,7 @@ class TextureCubeMap : public Texture
     virtual void updateTexture();
     virtual void convertToRenderTarget();
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
+    virtual const rx::Image *getBaseLevelImage() const;
 
     bool isCubeComplete() const;
     bool isMipmapCubeComplete() const;
@@ -314,8 +322,8 @@ class Texture3D : public Texture
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();
-
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
+    virtual const rx::Image *getBaseLevelImage() const;
 
     void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);
@@ -370,8 +378,8 @@ class Texture2DArray : public Texture
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();
-
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
+    virtual const rx::Image *getBaseLevelImage() const;
 
     void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint layerTarget, GLsizei width, GLsizei height);
