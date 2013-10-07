@@ -19,10 +19,6 @@
                         '../include',
                         'libGLESv2',
                     ],
-                    'defines':
-                    [
-                        'ANGLE_ENABLE_D3D_EVENTS',
-                    ],
                     'sources': [ '<!@(python enumerate_files.py common libEGL -types *.cpp *.h *.def libEGL.rc)' ],
                     # TODO(jschuh): http://crbug.com/167187 size_t -> int
                     'msvs_disabled_warnings': [ 4267 ],
@@ -33,6 +29,16 @@
                             'AdditionalDependencies':
                             [
                                 'd3d9.lib',
+                            ],
+                        },
+                    },
+                    'configurations':
+                    {
+                        'Debug':
+                        {
+                            'defines':
+                            [
+                                'ANGLE_ENABLE_PERF',
                             ],
                         },
                     },

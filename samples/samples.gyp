@@ -32,16 +32,6 @@
                     [
                         '<!@(python enumerate_files.py translator -types *.cpp *.h)',
                     ],
-                    'msvs_settings':
-                    {
-                        'VCLinkerTool':
-                        {
-                            'AdditionalDependencies':
-                            [
-                                'd3d9.lib',
-                            ],
-                        }
-                    }
                 },
 
                 {

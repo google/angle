@@ -175,6 +175,9 @@
     <ClCompile Include="..\..\src\libGLESv2\ResourceManager.cpp">
       <Filter>libGLESv2</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\libGLESv2\angletypes.cpp">
+      <Filter>libGLESv2</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\Texture.cpp">
       <Filter>libGLESv2</Filter>
     </ClCompile>
@@ -193,9 +196,6 @@
     <ClInclude Include="..\..\src\libGLESv2\formatutils.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\libGLESv2\angletypes.cpp">
-      <Filter>libGLESv2</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\Framebuffer.cpp">
       <Filter>libGLESv2</Filter>
     </ClCompile>
