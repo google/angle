@@ -2206,8 +2206,6 @@ void __stdcall glGenerateMipmap(GLenum target)
         {
             gl::Texture *texture = NULL;
             GLint internalFormat = GL_NONE;
-            bool isCompressed = false;
-            bool isDepth = false;
 
             switch (target)
             {
@@ -2217,8 +2215,6 @@ void __stdcall glGenerateMipmap(GLenum target)
                     if (tex2d)
                     {
                         internalFormat = tex2d->getInternalFormat(0);
-                        isCompressed = tex2d->isCompressed(0);
-                        isDepth = tex2d->isDepth(0);
                         texture = tex2d;
                     }
                     break;
@@ -2230,8 +2226,6 @@ void __stdcall glGenerateMipmap(GLenum target)
                     if (texcube)
                     {
                         internalFormat = texcube->getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
-                        isCompressed = texcube->isCompressed(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
-                        isDepth = false;
                         texture = texcube;
                     }
                     break;
@@ -2248,8 +2242,6 @@ void __stdcall glGenerateMipmap(GLenum target)
                     if (tex3D)
                     {
                         internalFormat = tex3D->getInternalFormat(0);
-                        isCompressed = tex3D->isCompressed(0);
-                        isDepth = tex3D->isDepth(0);
                         texture = tex3D;
                     }
                     break;
@@ -2266,8 +2258,6 @@ void __stdcall glGenerateMipmap(GLenum target)
                       if (tex2darr)
                       {
                           internalFormat = tex2darr->getInternalFormat(0);
-                          isCompressed = tex2darr->isCompressed(0);
-                          isDepth = tex2darr->isDepth(0);
                           texture = tex2darr;
                       }
                       break;
@@ -2284,7 +2274,8 @@ void __stdcall glGenerateMipmap(GLenum target)
 
             // Internally, all texture formats are sized so checking if the format
             // is color renderable and filterable will not fail.
-            if (isDepth || isCompressed ||
+            if (gl::IsDepthRenderingSupported(internalFormat, context) ||
+                gl::IsFormatCompressed(internalFormat, context->getClientVersion()) ||
                 !gl::IsColorRenderingSupported(internalFormat, context) ||
                 !gl::IsTextureFilteringSupported(internalFormat, context))
             {
