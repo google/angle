@@ -32,7 +32,6 @@
                             'AdditionalDependencies':
                             [
                                 'd3d9.lib',
-                                '%(AdditionalDependencies)',
                             ],
                         },
                     },

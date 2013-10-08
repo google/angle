@@ -44,7 +44,6 @@
                             [
                                 'd3d9.lib',
                                 'dxguid.lib',
-                                '%(AdditionalDependencies)',
                             ]
                         }
                     },
