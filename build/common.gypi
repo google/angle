@@ -5,6 +5,8 @@
 {
   'variables': {
     'component%': 'static_library',
+    'angle_build_tests%': '1',
+    'angle_build_samples%': '1',
     # angle_code is set to 1 for the core ANGLE targets defined in src/build_angle.gyp.
     # angle_code is set to 0 for test code, sample code, and third party code.
     # When angle_code is 1, we build with additional warning flags on Mac and Linux.
