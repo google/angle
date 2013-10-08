@@ -53,6 +53,7 @@
         'msvs_configuration_platform': 'Win32',
         'msvs_settings': {
           'VCCLCompilerTool': {
+            'AdditionalOptions': ['/MP'],
             'BufferSecurityCheck': 'true',
             'DebugInformationFormat': '3',
             # TODO(alokp): Disable exceptions before integrating with chromium.
