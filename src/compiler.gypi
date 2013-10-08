@@ -24,7 +24,7 @@
             ],
             'defines':
             [
-                'COMPILER_IMPLEMENTATION',
+                'ANGLE_TRANSLATOR_IMPLEMENTATION',
             ],
             'sources': [ '<!@(python enumerate_files.py compiler/translator third_party/compiler common -types *.cpp *.h *.y *.l )', ],
             'conditions':
@@ -52,7 +52,7 @@
             ],
             'defines':
             [
-                'COMPILER_IMPLEMENTATION',
+                'ANGLE_TRANSLATOR_STATIC',
             ],
             'direct_dependent_settings':
             {

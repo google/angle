@@ -6,20 +6,20 @@
 #ifndef _COMPILER_INTERFACE_INCLUDED_
 #define _COMPILER_INTERFACE_INCLUDED_
 
-#if defined(COMPONENT_BUILD)
+#if defined(COMPONENT_BUILD) && !defined(ANGLE_TRANSLATOR_STATIC)
 #if defined(_WIN32) || defined(_WIN64)
 
-#if defined(COMPILER_IMPLEMENTATION)
+#if defined(ANGLE_TRANSLATOR_IMPLEMENTATION)
 #define COMPILER_EXPORT __declspec(dllexport)
 #else
 #define COMPILER_EXPORT __declspec(dllimport)
-#endif  // defined(COMPILER_IMPLEMENTATION)
+#endif  // defined(ANGLE_TRANSLATOR_IMPLEMENTATION)
 
-#else  // defined(WIN32)
+#else  // defined(_WIN32) || defined(_WIN64)
 #define COMPILER_EXPORT __attribute__((visibility("default")))
 #endif
 
-#else  // defined(COMPONENT_BUILD)
+#else  // defined(COMPONENT_BUILD) && !defined(ANGLE_TRANSLATOR_STATIC)
 #define COMPILER_EXPORT
 #endif
 
