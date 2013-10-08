@@ -51,7 +51,6 @@
             ],
             'sources':
             [
-                'third_party/googlemock/src/gmock_main.cc',
                 '<!@(python enumerate_files.py preprocessor_tests -types *.cpp *.h)'
             ],
         },
@@ -74,7 +73,6 @@
             ],
             'sources':
             [
-                'third_party/googlemock/src/gmock_main.cc',
                 '<!@(python enumerate_files.py compiler_tests -types *.cpp *.h)'
             ],
         },
