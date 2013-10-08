@@ -189,6 +189,11 @@
         '.',
         '../include',
       ],
+      'direct_dependent_settings': {
+        'defines': [
+          'ANGLE_TRANSLATOR_STATIC',
+        ],
+      },
       'defines': [
         'ANGLE_TRANSLATOR_STATIC',
       ],
