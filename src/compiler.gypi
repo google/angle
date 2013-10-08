@@ -15,6 +15,34 @@
 
         {
             'target_name': 'translator',
+            'type': '<(component)',
+            'dependencies': [ 'preprocessor' ],
+            'include_dirs':
+            [
+                '.',
+                '../include',
+            ],
+            'defines':
+            [
+                'COMPILER_IMPLEMENTATION',
+            ],
+            'sources': [ '<!@(python enumerate_files.py compiler/translator third_party/compiler common -types *.cpp *.h *.y *.l )', ],
+            'conditions':
+            [
+                ['OS=="win"',
+                    {
+                        'msvs_disabled_warnings': [ 4267 ],
+                        'sources/': [ [ 'exclude', 'compiler/translator/ossource_posix.cpp' ], ],
+                    },
+                    { # else: posix
+                        'sources/': [ [ 'exclude', 'compiler/translator/ossource_win.cpp' ], ],
+                    }
+                ],
+            ],
+        },
+
+        {
+            'target_name': 'translator_static',
             'type': 'static_library',
             'dependencies': [ 'preprocessor' ],
             'include_dirs':
@@ -26,6 +54,13 @@
             [
                 'COMPILER_IMPLEMENTATION',
             ],
+            'direct_dependent_settings':
+            {
+                'defines':
+                [
+                    'ANGLE_TRANSLATOR_STATIC',
+                ],
+            },
             'sources': [ '<!@(python enumerate_files.py compiler/translator third_party/compiler common -types *.cpp *.h *.y *.l )', ],
             'conditions':
             [

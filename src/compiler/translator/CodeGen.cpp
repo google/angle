@@ -1,9 +1,11 @@
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 
+#include "compiler/translator/TranslatorESSL.h"
+#include "compiler/translator/TranslatorGLSL.h"
 #include "compiler/translator/TranslatorHLSL.h"
 
 //
@@ -14,14 +16,17 @@
 TCompiler* ConstructCompiler(
     ShShaderType type, ShShaderSpec spec, ShShaderOutput output)
 {
-  switch (output)
-  {
+    switch (output) {
+    case SH_ESSL_OUTPUT:
+        return new TranslatorESSL(type, spec);
+    case SH_GLSL_OUTPUT:
+        return new TranslatorGLSL(type, spec);
     case SH_HLSL9_OUTPUT:
     case SH_HLSL11_OUTPUT:
-      return new TranslatorHLSL(type, spec, output);
+        return new TranslatorHLSL(type, spec, output);
     default:
-      return NULL;
-  }
+        return NULL;
+    }
 }
 
 //
