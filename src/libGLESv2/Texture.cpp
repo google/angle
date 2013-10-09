@@ -2335,7 +2335,7 @@ void Texture2DArray::generateMipmaps()
 
 const rx::Image *Texture2DArray::getBaseLevelImage() const
 {
-    return mImageArray[0][0];
+    return (mLayerCounts[0] > 0 ? mImageArray[0][0] : NULL);
 }
 
 void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
@@ -2651,14 +2651,18 @@ void Texture2DArray::redefineImage(GLint level, GLint internalformat, GLsizei wi
         delete mImageArray[level][layer];
     }
     delete[] mImageArray[level];
-
-    mImageArray[level] = new rx::Image*[depth]();
+    mImageArray[level] = NULL;
     mLayerCounts[level] = depth;
 
-    for (int layer = 0; layer < mLayerCounts[level]; layer++)
+    if (depth > 0)
     {
-        mImageArray[level][layer] = mRenderer->createImage();
-        mImageArray[level][layer]->redefine(mRenderer, GL_TEXTURE_2D_ARRAY, internalformat, width, height, 1, false);
+        mImageArray[level] = new rx::Image*[depth]();
+
+        for (int layer = 0; layer < mLayerCounts[level]; layer++)
+        {
+            mImageArray[level][layer] = mRenderer->createImage();
+            mImageArray[level][layer]->redefine(mRenderer, GL_TEXTURE_2D_ARRAY, internalformat, width, height, 1, false);
+        }
     }
 
     if (mTexStorage)
