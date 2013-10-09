@@ -79,7 +79,7 @@ void BlockLayoutEncoder::encodeType(GLenum type, unsigned int arraySize, bool is
 
 void BlockLayoutEncoder::nextRegister()
 {
-    mCurrentOffset = rx::roundUp(mCurrentOffset, ComponentsPerRegister);
+    mCurrentOffset = rx::roundUp<size_t>(mCurrentOffset, ComponentsPerRegister);
 }
 
 Std140BlockEncoder::Std140BlockEncoder(std::vector<BlockMemberInfo> *blockInfoOut)

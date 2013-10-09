@@ -369,7 +369,7 @@ static bool ReadShaderSource(const char* fileName, ShaderSource& source) {
 
     // Obtain file size.
     fseek(in, 0, SEEK_END);
-    int count = ftell(in);
+    size_t count = ftell(in);
     rewind(in);
 
     int len = (int)ceil((float)count / (float)NUM_SOURCE_STRINGS);
@@ -379,7 +379,7 @@ static bool ReadShaderSource(const char* fileName, ShaderSource& source) {
     // string is added to vector.
     do {
         char* data = new char[len + 1];
-        int nread = fread(data, 1, len, in);
+        size_t nread = fread(data, 1, len, in);
         data[nread] = '\0';
         source.push_back(data);
 

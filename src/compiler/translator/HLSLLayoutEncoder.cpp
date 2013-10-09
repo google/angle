@@ -147,7 +147,7 @@ unsigned int HLSLVariableRegisterCount(const Varying &variable)
     HLSLVariableRegisterCount(variable, &encoder);
 
     const size_t registerBytes = (encoder.BytesPerComponent * encoder.ComponentsPerRegister);
-    return rx::roundUp(encoder.getBlockSize(), registerBytes) / registerBytes;
+    return static_cast<unsigned int>(rx::roundUp<size_t>(encoder.getBlockSize(), registerBytes) / registerBytes);
 }
 
 unsigned int HLSLVariableRegisterCount(const Uniform &variable)
@@ -156,7 +156,7 @@ unsigned int HLSLVariableRegisterCount(const Uniform &variable)
     HLSLVariableRegisterCount(variable, &encoder);
 
     const size_t registerBytes = (encoder.BytesPerComponent * encoder.ComponentsPerRegister);
-    return rx::roundUp(encoder.getBlockSize(), registerBytes) / registerBytes;
+    return static_cast<unsigned int>(rx::roundUp<size_t>(encoder.getBlockSize(), registerBytes) / registerBytes);
 }
 
 }

@@ -23,10 +23,13 @@
 namespace sh
 {
 // Integer to TString conversion
-TString str(int i)
+template <typename T>
+TString str(T i)
 {
-    char buffer[20];
-    snprintf(buffer, sizeof(buffer), "%d", i);
+    ASSERT(std::numeric_limits<T>::is_integer);
+    char buffer[(CHAR_BIT * sizeof(T) / 3) + 3];
+    const char *formatStr = std::numeric_limits<T>::is_signed ? "%d" : "%u";
+    snprintf(buffer, sizeof(buffer), formatStr, i);
     return buffer;
 }
 

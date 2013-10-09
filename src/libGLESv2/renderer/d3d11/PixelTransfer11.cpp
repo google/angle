@@ -94,7 +94,7 @@ PixelTransfer11::PixelTransfer11(Renderer11 *renderer)
     ASSERT(SUCCEEDED(result));
 
     D3D11_BUFFER_DESC constantBufferDesc = { 0 };
-    constantBufferDesc.ByteWidth = rx::roundUp(sizeof(CopyShaderParams), 32u);
+    constantBufferDesc.ByteWidth = rx::roundUp<UINT>(sizeof(CopyShaderParams), 32u);
     constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
