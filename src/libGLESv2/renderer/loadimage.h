@@ -178,6 +178,10 @@ void loadRGBFloatDataTo111110Float(int width, int height, int depth,
                                    const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                                    void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
 
+void loadG8R24DataToR24G8(int width, int height, int depth,
+                        const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                        void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
+
 template <typename type, unsigned int componentCount>
 void loadToNative(int width, int height, int depth,
                   const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,

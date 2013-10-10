@@ -828,6 +828,31 @@ void loadRGBFloatDataTo111110Float(int width, int height, int depth,
     }
 }
 
+
+void loadG8R24DataToR24G8(int width, int height, int depth,
+                          const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                          void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const unsigned int *source = NULL;
+    unsigned int *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<const unsigned int>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned int>(output, y, z, outputRowPitch, outputDepthPitch);
+
+            for (int x = 0; x < width; x++)
+            {
+                unsigned int depth = source[x] >> 8;
+                unsigned int stencil = source[x] & 0xFF;
+                dest[x] = depth | (stencil << 24);
+            }
+        }
+    }
+}
+
 void loadFloatRGBDataToHalfFloatRGBA(int width, int height, int depth,
                                      const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                                      void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)

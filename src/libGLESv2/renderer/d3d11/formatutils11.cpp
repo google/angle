@@ -268,10 +268,10 @@ D3D11LoadFunctionMap buildD3D11LoadFunctionMap()
     insertLoadFunction(&map, GL_R32UI,              GL_UNSIGNED_INT,                   loadToNative<GLuint, 1>              );
     insertLoadFunction(&map, GL_R32I,               GL_INT,                            loadToNative<GLint, 1>               );
     insertLoadFunction(&map, GL_DEPTH_COMPONENT16,  GL_UNSIGNED_SHORT,                 loadToNative<GLushort, 1>            );
-    insertLoadFunction(&map, GL_DEPTH_COMPONENT24,  GL_UNSIGNED_INT,                   loadToNative<GLuint, 1>              );
+    insertLoadFunction(&map, GL_DEPTH_COMPONENT24,  GL_UNSIGNED_INT,                   loadG8R24DataToR24G8                 );
     insertLoadFunction(&map, GL_DEPTH_COMPONENT16,  GL_UNSIGNED_INT,                   loadUintDataToUshort                 );
     insertLoadFunction(&map, GL_DEPTH_COMPONENT32F, GL_FLOAT,                          loadToNative<GLfloat, 1>             );
-    insertLoadFunction(&map, GL_DEPTH24_STENCIL8,   GL_UNSIGNED_INT_24_8,              loadToNative<GLuint, 1>              );
+    insertLoadFunction(&map, GL_DEPTH24_STENCIL8,   GL_UNSIGNED_INT_24_8,              loadG8R24DataToR24G8                 );
     insertLoadFunction(&map, GL_DEPTH32F_STENCIL8,  GL_FLOAT_32_UNSIGNED_INT_24_8_REV, loadToNative<GLuint, 2>              );
 
     // Unsized formats
