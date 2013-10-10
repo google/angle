@@ -257,9 +257,20 @@ void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, rx::Imag
 bool Texture::subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                        GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels, rx::Image *image)
 {
-    if (pixels != NULL)
+    const void *pixelData = pixels;
+
+    // CPU readback & copy where direct GPU copy is not supported
+    if (unpack.pixelBuffer.id() != 0)
     {
-        image->loadData(xoffset, yoffset, zoffset, width, height, depth, unpack.alignment, type, pixels);
+        Buffer *pixelBuffer = unpack.pixelBuffer.get();
+        unsigned int offset = reinterpret_cast<unsigned int>(pixels);
+        const void *bufferData = pixelBuffer->getStorage()->getData();
+        pixelData = static_cast<const unsigned char *>(bufferData) + offset;
+    }
+
+    if (pixelData != NULL)
+    {
+        image->loadData(xoffset, yoffset, zoffset, width, height, depth, unpack.alignment, type, pixelData);
         mDirtyImages = true;
     }
 
@@ -517,7 +528,23 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
 
 void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    if (Texture::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels, mImageArray[level]))
+    bool fastUnpacked = false;
+
+    if (isFastUnpackable(unpack, getInternalFormat(level)) && isLevelComplete(level))
+    {
+        rx::RenderTarget *renderTarget = getRenderTarget(level);
+        Box destArea(xoffset, yoffset, 0, width, height, 1);
+
+        if (renderTarget && fastUnpackPixels(unpack, pixels, destArea, getInternalFormat(level), type, renderTarget))
+        {
+            // Ensure we don't overwrite our newly initialized data
+            mImageArray[level]->markClean();
+
+            fastUnpacked = true;
+        }
+    }
+
+    if (!fastUnpacked && Texture::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels, mImageArray[level]))
     {
         commitRect(level, xoffset, yoffset, width, height);
     }
