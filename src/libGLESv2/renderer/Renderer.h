@@ -265,6 +265,7 @@ class Renderer
                                          GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
 
     virtual bool getLUID(LUID *adapterLuid) const = 0;
+    virtual GLint getNativeTextureFormat(GLint internalFormat) const = 0;
 
   protected:
     bool initializeCompiler();

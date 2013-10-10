@@ -3338,6 +3338,12 @@ bool Renderer11::getLUID(LUID *adapterLuid) const
     return true;
 }
 
+GLint Renderer11::getNativeTextureFormat(GLint internalFormat) const
+{
+    int clientVersion = getCurrentClientVersion();
+    return d3d11_gl::GetInternalFormat(gl_d3d11::GetTexFormat(internalFormat, clientVersion), clientVersion);
+}
+
 Renderer11::MultisampleSupportInfo Renderer11::getMultisampleSupportInfo(DXGI_FORMAT format)
 {
     MultisampleSupportInfo supportInfo = { 0 };

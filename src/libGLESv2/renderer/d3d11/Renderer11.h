@@ -217,6 +217,7 @@ class Renderer11 : public Renderer
     void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);
 
     virtual bool getLUID(LUID *adapterLuid) const;
+    virtual GLint getNativeTextureFormat(GLint internalFormat) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);

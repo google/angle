@@ -3329,4 +3329,9 @@ bool Renderer9::getLUID(LUID *adapterLuid) const
     return false;
 }
 
+GLint Renderer9::getNativeTextureFormat(GLint internalFormat) const
+{
+    return d3d9_gl::GetInternalFormat(gl_d3d9::GetTextureFormat(internalFormat, this));
+}
+
 }
