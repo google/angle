@@ -465,18 +465,6 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
 
     if (mWindow)
     {
-        // We cannot create a swap chain for an HWND that is owned by a different process
-        DWORD currentProcessId = GetCurrentProcessId();
-        DWORD wndProcessId;
-        GetWindowThreadProcessId(mWindow, &wndProcessId);
-
-        if (currentProcessId != wndProcessId)
-        {
-            ERR("Could not create swap chain, window owned by different process");
-            release();
-            return EGL_BAD_NATIVE_WINDOW;
-        }
-
         IDXGIFactory *factory = mRenderer->getDxgiFactory();
 
         DXGI_SWAP_CHAIN_DESC swapChainDesc = {0};
@@ -508,7 +496,21 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
             }
             else
             {
-                return EGL_BAD_ALLOC;
+                // We cannot create a swap chain for an HWND that is owned by a different process on some versions of
+                // windows
+                DWORD currentProcessId = GetCurrentProcessId();
+                DWORD wndProcessId;
+                GetWindowThreadProcessId(mWindow, &wndProcessId);
+
+                if (currentProcessId != wndProcessId)
+                {
+                    ERR("Could not create swap chain, window owned by different process");
+                    return EGL_BAD_NATIVE_WINDOW;
+                }
+                else
+                {
+                    return EGL_BAD_ALLOC;
+                }
             }
         }
 
