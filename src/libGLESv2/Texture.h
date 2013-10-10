@@ -118,8 +118,9 @@ class Texture : public RefCountObject
     void setCompressedImage(GLsizei imageSize, const void *pixels, rx::Image *image);
     bool subImageCompressed(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                             GLenum format, GLsizei imageSize, const void *pixels, rx::Image *image);
+    bool isFastUnpackable(const PixelUnpackState &unpack, GLint sizedInternalFormat);
     bool fastUnpackPixels(const PixelUnpackState &unpack, const void *pixels, const Box &destArea,
-                          GLenum sizedInternalFormat, GLenum type, GLint level);
+                          GLenum sizedInternalFormat, GLenum type, rx::RenderTarget *destRenderTarget);
 
     GLint creationLevels(GLsizei width, GLsizei height, GLsizei depth) const;
     GLint creationLevels(GLsizei width, GLsizei height) const;

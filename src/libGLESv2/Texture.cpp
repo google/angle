@@ -223,8 +223,13 @@ void Texture::setImage(const PixelUnpackState &unpack, GLenum type, const void *
     }
 }
 
+bool Texture::isFastUnpackable(const PixelUnpackState &unpack, GLint sizedInternalFormat)
+{
+    return unpack.pixelBuffer.id() != 0 && mRenderer->supportsFastCopyBufferToTexture(sizedInternalFormat);
+}
+
 bool Texture::fastUnpackPixels(const PixelUnpackState &unpack, const void *pixels, const Box &destArea,
-                               GLenum sizedInternalFormat, GLenum type, GLint level)
+                               GLenum sizedInternalFormat, GLenum type, rx::RenderTarget *destRenderTarget)
 {
     if (destArea.width <= 0 && destArea.height <= 0 && destArea.depth <= 0)
     {
@@ -233,16 +238,11 @@ bool Texture::fastUnpackPixels(const PixelUnpackState &unpack, const void *pixel
 
     // In order to perform the fast copy through the shader, we must have the right format, and be able
     // to create a render target.
-    if (mRenderer->supportsFastCopyBufferToTexture(sizedInternalFormat))
-    {
-        unsigned int offset = reinterpret_cast<unsigned int>(pixels);
-        rx::RenderTarget *destRenderTarget = getStorage(true)->getStorageInstance()->getRenderTarget(level);
+    ASSERT(mRenderer->supportsFastCopyBufferToTexture(sizedInternalFormat));
 
-        return mRenderer->fastCopyBufferToTexture(unpack, offset, destRenderTarget, sizedInternalFormat, type, destArea);
-    }
+    unsigned int offset = reinterpret_cast<unsigned int>(pixels);
 
-    // Return false if we do not support fast unpack
-    return false;
+    return mRenderer->fastCopyBufferToTexture(unpack, offset, destRenderTarget, sizedInternalFormat, type, destArea);
 }
 
 void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, rx::Image *image)
@@ -435,15 +435,25 @@ void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLint inter
                                                                                      : GetSizedInternalFormat(format, type, clientVersion);
     redefineImage(level, sizedInternalFormat, width, height);
 
+    bool fastUnpacked = false;
+
     // Attempt a fast gpu copy of the pixel data to the surface
-    //   If we want to support rendering (which is necessary for GPU unpack buffers), level 0 must be complete
-    Box destArea(0, 0, 0, getWidth(level), getHeight(level), 1);
-    if (unpack.pixelBuffer.id() != 0 && isLevelComplete(0) && fastUnpackPixels(unpack, pixels, destArea, sizedInternalFormat, type, level))
+    if (isFastUnpackable(unpack, sizedInternalFormat) && isLevelComplete(level))
     {
-        // Ensure we don't overwrite our newly initialized data
-        mImageArray[level]->markClean();
+        // Will try to create RT storage if it does not exist
+        rx::RenderTarget *destRenderTarget = getRenderTarget(level);
+        Box destArea(0, 0, 0, getWidth(level), getHeight(level), 1);
+
+        if (destRenderTarget && fastUnpackPixels(unpack, pixels, destArea, sizedInternalFormat, type, destRenderTarget))
+        {
+            // Ensure we don't overwrite our newly initialized data
+            mImageArray[level]->markClean();
+
+            fastUnpacked = true;
+        }
     }
-    else
+
+    if (!fastUnpacked)
     {
         Texture::setImage(unpack, type, pixels, mImageArray[level]);
     }
