@@ -1757,7 +1757,24 @@ void Texture3D::setCompressedImage(GLint level, GLenum format, GLsizei width, GL
 
 void Texture3D::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    if (Texture::subImage(xoffset, yoffset, zoffset, width, height, depth, format, type, unpack, pixels, mImageArray[level]))
+    bool fastUnpacked = false;
+
+    // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
+    if (isFastUnpackable(unpack, getInternalFormat(level)))
+    {
+        rx::RenderTarget *destRenderTarget = getRenderTarget(level);
+        Box destArea(xoffset, yoffset, zoffset, width, height, depth);
+
+        if (destRenderTarget && fastUnpackPixels(unpack, pixels, destArea, getInternalFormat(level), type, destRenderTarget))
+        {
+            // Ensure we don't overwrite our newly initialized data
+            mImageArray[level]->markClean();
+
+            fastUnpacked = true;
+        }
+    }
+
+    if (!fastUnpacked && Texture::subImage(xoffset, yoffset, zoffset, width, height, depth, format, type, unpack, pixels, mImageArray[level]))
     {
         commitRect(level, xoffset, yoffset, zoffset, width, height, depth);
     }

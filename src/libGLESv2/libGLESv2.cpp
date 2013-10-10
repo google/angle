@@ -6386,11 +6386,6 @@ void __stdcall glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!pixels)
-            {
-                return gl::error(GL_INVALID_VALUE);
-            }
-
             // validateES3TexImageFormat sets the error code if there is an error
             if (!ValidateES3TexImageParameters(context, target, level, GL_NONE, false, true,
                                                xoffset, yoffset, zoffset, width, height, depth, 0,
