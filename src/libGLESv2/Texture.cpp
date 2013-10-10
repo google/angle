@@ -841,11 +841,11 @@ void Texture2D::updateTexture()
 void Texture2D::updateTextureLevel(int level)
 {
     ASSERT(level <= (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
-    rx::Image *image = mImageArray[level];
+    ASSERT(isLevelComplete(level));
 
-    if (image->isDirty())
+    if (mImageArray[level]->isDirty())
     {
-        commitRect(level, 0, 0, mImageArray[level]->getWidth(), mImageArray[level]->getHeight());
+        commitRect(level, 0, 0, getWidth(level), getHeight(level));
     }
 }
 
@@ -942,7 +942,7 @@ rx::RenderTarget *Texture2D::getRenderTarget(GLint level)
         return NULL;
     }
 
-    updateTexture();
+    updateTextureLevel(level);
 
     // ensure this is NOT a depth texture
     if (isDepth(level))
@@ -961,7 +961,7 @@ rx::RenderTarget *Texture2D::getDepthSencil(GLint level)
         return NULL;
     }
 
-    updateTexture();
+    updateTextureLevel(level);
 
     // ensure this is actually a depth texture
     if (!isDepth(level))
@@ -1606,7 +1606,7 @@ rx::RenderTarget *TextureCubeMap::getRenderTarget(GLenum target, GLint level)
         return NULL;
     }
 
-    updateTexture();
+    updateTextureFaceLevel(faceIndex(target), level);
 
     // ensure this is NOT a depth texture
     if (isDepth(target, level))
@@ -1627,7 +1627,7 @@ rx::RenderTarget *TextureCubeMap::getDepthStencil(GLenum target, GLint level)
         return NULL;
     }
 
-    updateTexture();
+    updateTextureFaceLevel(faceIndex(target), level);
 
     // ensure this is a depth texture
     if (!isDepth(target, level))
@@ -2058,12 +2058,11 @@ void Texture3D::updateTexture()
 void Texture3D::updateTextureLevel(int level)
 {
     ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
+    ASSERT(isLevelComplete(level));
 
-    rx::Image *image = mImageArray[level];
-
-    if (image->isDirty())
+    if (mImageArray[level]->isDirty())
     {
-        commitRect(level, 0, 0, 0, mImageArray[level]->getWidth(), mImageArray[level]->getHeight(), mImageArray[level]->getDepth());
+        commitRect(level, 0, 0, 0, getWidth(level), getHeight(level), getDepth(level));
     }
 }
 
@@ -2104,7 +2103,7 @@ rx::RenderTarget *Texture3D::getRenderTarget(GLint level)
         return NULL;
     }
 
-    updateTexture();
+    updateTextureLevel(level);
 
     // ensure this is NOT a depth texture
     if (isDepth(level))
@@ -2142,7 +2141,7 @@ rx::RenderTarget *Texture3D::getDepthStencil(GLint level, GLint layer)
         return NULL;
     }
 
-    updateTexture();
+    updateTextureLevel(level);
 
     // ensure this is a depth texture
     if (!isDepth(level))
@@ -2635,13 +2634,15 @@ void Texture2DArray::updateTexture()
 
 void Texture2DArray::updateTextureLevel(int level)
 {
+    ASSERT(level >= 0 && level < (int)ArraySize(mLayerCounts));
+    ASSERT(isLevelComplete(level));
+
     for (int layer = 0; layer < mLayerCounts[level]; layer++)
     {
-        rx::Image *image = mImageArray[level][layer];
-
-        if (image->isDirty())
+        ASSERT(mImageArray[level] != NULL && mImageArray[level][layer] != NULL);
+        if (mImageArray[level][layer]->isDirty())
         {
-            commitRect(level, 0, 0, layer, image->getWidth(), image->getHeight());
+            commitRect(level, 0, 0, layer, getWidth(level), getHeight(level));
         }
     }
 }
@@ -2685,7 +2686,7 @@ rx::RenderTarget *Texture2DArray::getRenderTarget(GLint level, GLint layer)
         return NULL;
     }
 
-    updateTexture();
+    updateTextureLevel(level);
 
     // ensure this is NOT a depth texture
     if (isDepth(level))
@@ -2704,7 +2705,7 @@ rx::RenderTarget *Texture2DArray::getDepthStencil(GLint level, GLint layer)
         return NULL;
     }
 
-    updateTexture();
+    updateTextureLevel(level);
 
     // ensure this is a depth texture
     if (!isDepth(level))
