@@ -22,6 +22,18 @@
 #include "libGLESv2/renderer/d3d11/RenderTarget11.h"
 #include "libGLESv2/Context.h"
 
+// Precompiled shaders
+#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_vs.h"
+#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_4f.h"
+#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_4i.h"
+#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_4ui.h"
+#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_2f.h"
+#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_2i.h"
+#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_2ui.h"
+#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_1f.h"
+#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_1i.h"
+#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_1ui.h"
+
 namespace rx
 {
 
@@ -92,7 +104,8 @@ PixelTransfer11::PixelTransfer11(Renderer11 *renderer)
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mParamsConstantBuffer, "PixelTransfer11 constant buffer");
 
-    // TODO: init shaders
+    // init shaders
+    mBufferToTextureVS = d3d11::CompileVS(device, g_VS_BufferToTexture, "BufferToTexture VS");
 
     buildShaderMap();
 
@@ -242,7 +255,17 @@ void PixelTransfer11::addBufferToTextureShader(GLenum sourceFormat, bool signedI
 
 void PixelTransfer11::buildShaderMap()
 {
-    // TODO
+    ID3D11Device *device = mRenderer->getDevice();
+
+    addBufferToTextureShader(GL_RGBA,         false, d3d11::CompilePS(device, g_PS_BufferToTexture_4F,  "BufferToTexture RGBA ps"));
+    addBufferToTextureShader(GL_RG,           false, d3d11::CompilePS(device, g_PS_BufferToTexture_2F,  "BufferToTexture RG ps"));
+    addBufferToTextureShader(GL_RED,          false, d3d11::CompilePS(device, g_PS_BufferToTexture_1F,  "BufferToTexture R ps"));
+    addBufferToTextureShader(GL_RGBA_INTEGER, true,  d3d11::CompilePS(device, g_PS_BufferToTexture_4I,  "BufferToTexture RGBA-I ps"));
+    addBufferToTextureShader(GL_RG_INTEGER,   true,  d3d11::CompilePS(device, g_PS_BufferToTexture_2I,  "BufferToTexture RG-I ps"));
+    addBufferToTextureShader(GL_RED_INTEGER,  true,  d3d11::CompilePS(device, g_PS_BufferToTexture_1I,  "BufferToTexture R-I ps"));
+    addBufferToTextureShader(GL_RGBA_INTEGER, false, d3d11::CompilePS(device, g_PS_BufferToTexture_4UI, "BufferToTexture RGBA-UI ps"));
+    addBufferToTextureShader(GL_RG_INTEGER,   false, d3d11::CompilePS(device, g_PS_BufferToTexture_2UI, "BufferToTexture RG-UI ps"));
+    addBufferToTextureShader(GL_RED_INTEGER,  false, d3d11::CompilePS(device, g_PS_BufferToTexture_1UI, "BufferToTexture R-UI ps"));
 }
 
 ID3D11PixelShader *PixelTransfer11::findBufferToTexturePS(GLenum internalFormat) const
