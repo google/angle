@@ -2769,8 +2769,39 @@ FenceImpl *Renderer11::createFence()
 
 bool Renderer11::supportsFastCopyBufferToTexture(GLint internalFormat) const
 {
-    //TODO
-    return false;
+    int clientVersion = getCurrentClientVersion();
+
+    // We only support buffer to texture copies in ES3
+    if (clientVersion <= 2)
+    {
+        return false;
+    }
+
+    // sRGB formats do not work with D3D11 buffer SRVs
+    if (gl::GetColorEncoding(internalFormat, clientVersion) == GL_SRGB)
+    {
+        return false;
+    }
+
+    // We cannot support direct copies to non-color-renderable formats
+    if (!gl::IsColorRenderingSupported(internalFormat, this))
+    {
+        return false;
+    }
+
+    // We skip all 3-channel formats since sometimes format support is missing
+    if (gl::GetComponentCount(internalFormat, clientVersion) == 3)
+    {
+        return false;
+    }
+
+    // We don't support formats which we can't represent without conversion
+    if (getNativeTextureFormat(internalFormat) != internalFormat)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool Renderer11::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,

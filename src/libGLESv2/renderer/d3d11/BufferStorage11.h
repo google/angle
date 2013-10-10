@@ -42,6 +42,10 @@ class BufferStorage11 : public BufferStorage
     unsigned int mStagingBufferSize;
 
     std::vector<DirectBufferStorage11*> mDirectBuffers;
+
+    typedef std::pair<ID3D11Buffer *, ID3D11ShaderResourceView *> BufferSRVPair;
+    std::map<DXGI_FORMAT, BufferSRVPair> mBufferResourceViews;
+
     unsigned int mSize;
 
     void *mResolvedData;

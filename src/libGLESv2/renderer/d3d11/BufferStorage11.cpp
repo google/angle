@@ -10,6 +10,7 @@
 #include "libGLESv2/renderer/d3d11/BufferStorage11.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/renderer/d3d11/Renderer11.h"
+#include "libGLESv2/renderer/d3d11/formatutils11.h"
 
 namespace rx
 {
@@ -268,7 +269,38 @@ ID3D11Buffer *BufferStorage11::getBuffer(bool isConstantBufferUsage)
 
 ID3D11ShaderResourceView *BufferStorage11::getSRV(DXGI_FORMAT srvFormat)
 {
-    return NULL;
+    ID3D11Buffer *buffer = getBuffer(false);
+
+    auto bufferSRVIt = mBufferResourceViews.find(srvFormat);
+
+    if (bufferSRVIt != mBufferResourceViews.end())
+    {
+        if (bufferSRVIt->second.first == buffer)
+        {
+            return bufferSRVIt->second.second;
+        }
+        else
+        {
+            // The underlying buffer has changed since the SRV was created: recreate the SRV.
+            SafeRelease(bufferSRVIt->second.second);
+        }
+    }
+
+    ID3D11Device *device = mRenderer->getDevice();
+    ID3D11ShaderResourceView *bufferSRV = NULL;
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC bufferSRVDesc;
+    bufferSRVDesc.Buffer.ElementOffset = 0;
+    bufferSRVDesc.Buffer.ElementWidth = mSize / d3d11::GetFormatPixelBytes(srvFormat, mRenderer->getCurrentClientVersion());
+    bufferSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+    bufferSRVDesc.Format = srvFormat;
+
+    HRESULT result = device->CreateShaderResourceView(buffer, &bufferSRVDesc, &bufferSRV);
+    ASSERT(SUCCEEDED(result));
+
+    mBufferResourceViews[srvFormat] = BufferSRVPair(buffer, bufferSRV);
+
+    return bufferSRV;
 }
 
 DirectBufferStorage11::DirectBufferStorage11(Renderer11 *renderer, bool isConstantBufferUsage)
@@ -352,7 +384,7 @@ void DirectBufferStorage11::fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, unsign
     if (!mIsConstantBufferUsage)
     {
         bufferDesc->Usage = D3D11_USAGE_DEFAULT;
-        bufferDesc->BindFlags = D3D11_BIND_INDEX_BUFFER | D3D11_BIND_VERTEX_BUFFER;
+        bufferDesc->BindFlags = D3D11_BIND_INDEX_BUFFER | D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_SHADER_RESOURCE;
         bufferDesc->CPUAccessFlags = 0;
     }
     else
