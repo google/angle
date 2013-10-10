@@ -111,6 +111,7 @@ class TextureStorageInterface3D : public TextureStorageInterface
     virtual ~TextureStorageInterface3D();
 
     void generateMipmap(int level);
+    RenderTarget *getRenderTarget(GLint level) const;
     RenderTarget *getRenderTarget(GLint level, GLint layer) const;
 
     virtual unsigned int getRenderTargetSerial(GLint level, GLint layer) const;

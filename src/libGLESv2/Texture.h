@@ -313,6 +313,7 @@ class Texture3D : public Texture
 
   protected:
     friend class RenderbufferTexture3DLayer;
+    rx::RenderTarget *getRenderTarget(GLint level);
     rx::RenderTarget *getRenderTarget(GLint level, GLint layer);
     rx::RenderTarget *getDepthStencil(GLint level, GLint layer);
     virtual int levelCount();

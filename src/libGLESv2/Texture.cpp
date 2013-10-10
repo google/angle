@@ -1723,7 +1723,28 @@ void Texture3D::setImage(GLint level, GLsizei width, GLsizei height, GLsizei dep
                                                                                      : GetSizedInternalFormat(format, type, clientVersion);
     redefineImage(level, sizedInternalFormat, width, height, depth);
 
-    Texture::setImage(unpack, type, pixels, mImageArray[level]);
+    bool fastUnpacked = false;
+
+    // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
+    if (isFastUnpackable(unpack, sizedInternalFormat))
+    {
+        // Will try to create RT storage if it does not exist
+        rx::RenderTarget *destRenderTarget = getRenderTarget(level);
+        Box destArea(0, 0, 0, getWidth(level), getHeight(level), getDepth(level));
+
+        if (destRenderTarget && fastUnpackPixels(unpack, pixels, destArea, sizedInternalFormat, type, destRenderTarget))
+        {
+            // Ensure we don't overwrite our newly initialized data
+            mImageArray[level]->markClean();
+
+            fastUnpacked = true;
+        }
+    }
+
+    if (!fastUnpacked)
+    {
+        Texture::setImage(unpack, type, pixels, mImageArray[level]);
+    }
 }
 
 void Texture3D::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels)
@@ -2056,6 +2077,25 @@ void Texture3D::convertToRenderTarget()
     mTexStorage = newTexStorage;
 
     mDirtyImages = true;
+}
+
+rx::RenderTarget *Texture3D::getRenderTarget(GLint level)
+{
+    // ensure the underlying texture is created
+    if (getStorage(true) == NULL)
+    {
+        return NULL;
+    }
+
+    updateTexture();
+
+    // ensure this is NOT a depth texture
+    if (isDepth(level))
+    {
+        return NULL;
+    }
+
+    return mTexStorage->getRenderTarget(level);
 }
 
 rx::RenderTarget *Texture3D::getRenderTarget(GLint level, GLint layer)

@@ -146,6 +146,11 @@ void TextureStorageInterface3D::generateMipmap(int level)
     mInstance->generateMipmap(level);
 }
 
+RenderTarget *TextureStorageInterface3D::getRenderTarget(GLint level) const
+{
+    return mInstance->getRenderTarget(level);
+}
+
 RenderTarget *TextureStorageInterface3D::getRenderTarget(GLint level, GLint layer) const
 {
     return mInstance->getRenderTargetLayer(level, layer);
