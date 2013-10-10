@@ -24,6 +24,7 @@
 
 // Precompiled shaders
 #include "libGLESv2/renderer/shaders/compiled/buffertotexture11_vs.h"
+#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_gs.h"
 #include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_4f.h"
 #include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_4i.h"
 #include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_4ui.h"
@@ -106,6 +107,7 @@ PixelTransfer11::PixelTransfer11(Renderer11 *renderer)
 
     // init shaders
     mBufferToTextureVS = d3d11::CompileVS(device, g_VS_BufferToTexture, "BufferToTexture VS");
+    mBufferToTextureGS = d3d11::CompileGS(device, g_GS_BufferToTexture, "BufferToTexture GS");
 
     buildShaderMap();
 

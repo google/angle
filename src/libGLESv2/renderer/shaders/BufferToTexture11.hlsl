@@ -17,6 +17,13 @@ struct VS_OUTPUT
     uint slice      : LAYER;
 };
 
+struct GS_OUTPUT
+{
+    float4 position : SV_Position;
+    uint index      : TEXCOORD0;
+    uint slice      : SV_RenderTargetArrayIndex;
+};
+
 cbuffer BufferCopyParams : register(b0)
 {
     uint FirstPixelOffset;
@@ -49,6 +56,16 @@ void ComputePositionAndIndex(uint vertexID, out VS_OUTPUT outVertex)
 void VS_BufferToTexture(in uint vertexID : SV_VertexID, out VS_OUTPUT outVertex)
 {
     ComputePositionAndIndex(vertexID, outVertex);
+}
+
+[maxvertexcount(1)]
+void GS_BufferToTexture(point VS_OUTPUT inVertex[1], inout PointStream<GS_OUTPUT> outStream)
+{
+    GS_OUTPUT outVertex;
+    outVertex.position  = inVertex[0].position;
+    outVertex.index     = inVertex[0].index;
+    outVertex.slice     = inVertex[0].slice;
+    outStream.Append(outVertex);
 }
 
 float4 PS_BufferToTexture_4F(in float4 inPosition : SV_Position, in uint inIndex : TEXCOORD0) : SV_Target
