@@ -2767,10 +2767,16 @@ FenceImpl *Renderer11::createFence()
     return new Fence11(this);
 }
 
+bool Renderer11::supportsFastCopyBufferToTexture(GLint internalFormat) const
+{
+    //TODO
+    return false;
+}
+
 bool Renderer11::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
                                          GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
 {
-    ASSERT(gl::IsFastCopyBufferToTextureSupported(destinationFormat, getCurrentClientVersion()));
+    ASSERT(supportsFastCopyBufferToTexture(destinationFormat));
     return mPixelTransfer->copyBufferToTexture(unpack, offset, destRenderTarget, destinationFormat, sourcePixelsType, destArea);
 }
 

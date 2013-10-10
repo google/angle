@@ -723,6 +723,12 @@ FenceImpl *Renderer9::createFence()
     return new Fence9(this);
 }
 
+bool Renderer9::supportsFastCopyBufferToTexture(GLint internalFormat) const
+{
+    // Pixel buffer objects are not supported in D3D9, since D3D9 is ES2-only and PBOs are ES3.
+    return false;
+}
+
 bool Renderer9::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
                                         GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
 {

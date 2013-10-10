@@ -22,6 +22,7 @@
 #include "libEGL/Surface.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/renderer/BufferStorage.h"
+#include "libGLESv2/renderer/RenderTarget.h"
 
 namespace gl
 {
@@ -232,7 +233,7 @@ bool Texture::fastUnpackPixels(const PixelUnpackState &unpack, const void *pixel
 
     // In order to perform the fast copy through the shader, we must have the right format, and be able
     // to create a render target.
-    if (IsFastCopyBufferToTextureSupported(sizedInternalFormat, mRenderer->getCurrentClientVersion()))
+    if (mRenderer->supportsFastCopyBufferToTexture(sizedInternalFormat))
     {
         unsigned int offset = reinterpret_cast<unsigned int>(pixels);
         rx::RenderTarget *destRenderTarget = getStorage(true)->getStorageInstance()->getRenderTarget(level);

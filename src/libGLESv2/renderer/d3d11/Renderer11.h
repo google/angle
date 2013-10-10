@@ -208,6 +208,7 @@ class Renderer11 : public Renderer
     Blit11 *getBlitter() { return mBlit; }
 
     // Buffer-to-texture and Texture-to-buffer copies
+    virtual bool supportsFastCopyBufferToTexture(GLint internalFormat) const;
     virtual bool fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
                                          GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
 

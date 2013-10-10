@@ -260,6 +260,7 @@ class Renderer
     int getCurrentClientVersion() const { return mCurrentClientVersion; }
 
     // Buffer-to-texture and Texture-to-buffer copies
+    virtual bool supportsFastCopyBufferToTexture(GLint internalFormat) const = 0;
     virtual bool fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
                                          GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
 

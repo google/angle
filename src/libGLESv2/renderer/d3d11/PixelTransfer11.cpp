@@ -152,7 +152,7 @@ bool PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpack, un
     int clientVersion = mRenderer->getCurrentClientVersion();
     const gl::Buffer &sourceBuffer = *unpack.pixelBuffer.get();
 
-    ASSERT(gl::IsFastCopyBufferToTextureSupported(destinationFormat, clientVersion));
+    ASSERT(mRenderer->supportsFastCopyBufferToTexture(destinationFormat));
 
     ID3D11PixelShader *pixelShader = findBufferToTexturePS(destinationFormat);
     ASSERT(pixelShader);

@@ -1590,9 +1590,4 @@ ColorWriteFunction GetColorWriteFunction(GLenum format, GLenum type, GLuint clie
     return (iter != formats.end()) ? iter->second.mColorWriteFunction : NULL;
 }
 
-bool IsFastCopyBufferToTextureSupported(GLint internalFormat, GLuint clientVersion)
-{
-    return false;
-}
-
 }
