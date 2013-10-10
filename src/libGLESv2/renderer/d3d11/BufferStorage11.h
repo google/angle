@@ -32,7 +32,7 @@ class BufferStorage11 : public BufferStorage
     virtual unsigned int getSize() const;
     virtual bool supportsDirectBinding() const;
 
-    ID3D11Buffer *getBuffer(GLenum usage);
+    ID3D11Buffer *getBuffer(bool isConstantBufferUsage);
     ID3D11ShaderResourceView *getSRV(DXGI_FORMAT srvFormat);
 
   private:
@@ -41,8 +41,7 @@ class BufferStorage11 : public BufferStorage
     ID3D11Buffer *mStagingBuffer;
     unsigned int mStagingBufferSize;
 
-    typedef std::vector<DirectBufferStorage11*> DirectBufferList;
-    DirectBufferList mDirectBuffers;
+    std::vector<DirectBufferStorage11*> mDirectBuffers;
     unsigned int mSize;
 
     void *mResolvedData;
@@ -62,11 +61,11 @@ class BufferStorage11 : public BufferStorage
 class DirectBufferStorage11
 {
   public:
-    DirectBufferStorage11(Renderer11 *renderer, const GLenum target);
+    DirectBufferStorage11(Renderer11 *renderer, bool isConstantBufferUsage);
     ~DirectBufferStorage11();
 
-    bool hasTarget(const GLenum target) const;
-    bool updateFromStagingBuffer(ID3D11Buffer *stagingBuffer, const size_t size, const size_t offset);
+    bool isConstantBufferUsage() const;
+    bool updateFromStagingBuffer(ID3D11Buffer *stagingBuffer, size_t size, size_t offset);
 
     ID3D11Buffer *getD3DBuffer() { return mDirectBuffer; }
     bool isDirty() const { return mDirty; }
@@ -74,7 +73,7 @@ class DirectBufferStorage11
 
   private:
     Renderer11 *mRenderer;
-    const GLenum mTarget;
+    const bool mIsConstantBufferUsage;
     ID3D11Buffer *mDirectBuffer;
     size_t mBufferSize;
     bool mDirty;
