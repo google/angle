@@ -830,11 +830,14 @@ void Texture2D::createTexture()
 
 void Texture2D::updateTexture()
 {
-    int levels = (isMipmapComplete() ? levelCount() : 1);
+    int storageLevels = levelCount();
 
-    for (int level = 0; level < levels; level++)
+    for (int level = 0; level < storageLevels; level++)
     {
-        updateTextureLevel(level);
+        if (isLevelComplete(level))
+        {
+            updateTextureLevel(level);
+        }
     }
 }
 
@@ -1296,13 +1299,16 @@ void TextureCubeMap::createTexture()
 
 void TextureCubeMap::updateTexture()
 {
-    int levels = (isMipmapCubeComplete() ? levelCount() : 1);
+    int storageLevels = levelCount();
 
     for (int face = 0; face < 6; face++)
     {
-        for (int level = 0; level < levels; level++)
+        for (int level = 0; level < storageLevels; level++)
         {
-            updateTextureFaceLevel(face, level);
+            if (isFaceLevelComplete(face, level))
+            {
+                updateTextureFaceLevel(face, level);
+            }
         }
     }
 }
@@ -2047,11 +2053,14 @@ void Texture3D::createTexture()
 
 void Texture3D::updateTexture()
 {
-    int levels = (isMipmapComplete() ? levelCount() : 1);
+    int storageLevels = levelCount();
 
-    for (int level = 0; level < levels; level++)
+    for (int level = 0; level < storageLevels; level++)
     {
-        updateTextureLevel(level);
+        if (isLevelComplete(level))
+        {
+            updateTextureLevel(level);
+        }
     }
 }
 
@@ -2625,10 +2634,14 @@ void Texture2DArray::createTexture()
 
 void Texture2DArray::updateTexture()
 {
-    int levels = (isMipmapComplete() ? levelCount() : 1);
-    for (int level = 0; level < levels; level++)
+    int storageLevels = levelCount();
+
+    for (int level = 0; level < storageLevels; level++)
     {
-        updateTextureLevel(level);
+        if (isLevelComplete(level))
+        {
+            updateTextureLevel(level);
+        }
     }
 }
 
