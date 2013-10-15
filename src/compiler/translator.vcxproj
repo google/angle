@@ -174,6 +174,7 @@
     <ClCompile Include="TranslatorGLSL.cpp" />
     <ClCompile Include="TranslatorHLSL.cpp" />
     <ClCompile Include="UnfoldShortCircuit.cpp" />
+    <ClCompile Include="UnfoldShortCircuitAST.cpp" />
     <ClCompile Include="Uniform.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="ValidateLimitations.cpp" />
@@ -281,6 +282,7 @@
     <ClInclude Include="TranslatorHLSL.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="UnfoldShortCircuit.h" />
+    <ClInclude Include="UnfoldShortCircuitAST.h" />
     <ClInclude Include="Uniform.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="ValidateLimitations.h" />
