@@ -14,6 +14,7 @@
 #include "compiler/ParseHelper.h"
 #include "compiler/RenameFunction.h"
 #include "compiler/ShHandle.h"
+#include "compiler/UnfoldShortCircuitAST.h"
 #include "compiler/ValidateLimitations.h"
 #include "compiler/VariablePacker.h"
 #include "compiler/depgraph/DependencyGraph.h"
@@ -193,6 +194,12 @@ bool TCompiler::compile(const char* const shaderStrings[],
             InitializeGLPosition initGLPosition;
             root->traverse(&initGLPosition);
         }
+
+	if (success && (compileOptions & SH_UNFOLD_SHORT_CIRCUIT)) {
+            UnfoldShortCircuitAST unfoldShortCircuit;
+            root->traverse(&unfoldShortCircuit);
+            unfoldShortCircuit.updateTree();
+	}
 
         if (success && (compileOptions & SH_VARIABLES)) {
             collectVariables(root);

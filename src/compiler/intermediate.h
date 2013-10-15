@@ -227,6 +227,11 @@ public:
     virtual TIntermSymbol* getAsSymbolNode() { return 0; }
     virtual TIntermLoop* getAsLoopNode() { return 0; }
 
+    // Replace a child node. Return true if |original| is a child
+    // node and it is replaced; otherwise, return false.
+    virtual bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement) = 0;
+
 protected:
     TSourceLoc line;
 };
@@ -295,6 +300,8 @@ public:
 
     virtual TIntermLoop* getAsLoopNode() { return this; }
     virtual void traverse(TIntermTraverser*);
+    virtual bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement);
 
     TLoopType getType() const { return type; }
     TIntermNode* getInit() { return init; }
@@ -325,6 +332,8 @@ public:
             expression(e) { }
 
     virtual void traverse(TIntermTraverser*);
+    virtual bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement);
 
     TOperator getFlowOp() { return flowOp; }
     TIntermTyped* getExpression() { return expression; }
@@ -355,6 +364,7 @@ public:
 
     virtual void traverse(TIntermTraverser*);
     virtual TIntermSymbol* getAsSymbolNode() { return this; }
+    virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
 
 protected:
     int id;
@@ -374,6 +384,7 @@ public:
 
     virtual TIntermConstantUnion* getAsConstantUnion()  { return this; }
     virtual void traverse(TIntermTraverser*);
+    virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
 
     TIntermTyped* fold(TOperator, TIntermTyped*, TInfoSink&);
 
@@ -407,6 +418,8 @@ public:
 
     virtual TIntermBinary* getAsBinaryNode() { return this; }
     virtual void traverse(TIntermTraverser*);
+    virtual bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement);
 
     void setLeft(TIntermTyped* n) { left = n; }
     void setRight(TIntermTyped* n) { right = n; }
@@ -435,6 +448,8 @@ public:
 
     virtual void traverse(TIntermTraverser*);
     virtual TIntermUnary* getAsUnaryNode() { return this; }
+    virtual bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement);
 
     void setOperand(TIntermTyped* o) { operand = o; }
     TIntermTyped* getOperand() { return operand; }    
@@ -465,6 +480,8 @@ public:
 
     virtual TIntermAggregate* getAsAggregate() { return this; }
     virtual void traverse(TIntermTraverser*);
+    virtual bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement);
 
     TIntermSequence& getSequence() { return sequence; }
 
@@ -508,6 +525,8 @@ public:
             TIntermTyped(type), condition(cond), trueBlock(trueB), falseBlock(falseB) {}
 
     virtual void traverse(TIntermTraverser*);
+    virtual bool replaceChildNode(
+        TIntermNode *original, TIntermNode *replacement);
 
     bool usesTernaryOperator() const { return getBasicType() != EbtVoid; }
     TIntermNode* getCondition() const { return condition; }
@@ -547,7 +566,7 @@ public:
             rightToLeft(rightToLeft),
             depth(0),
             maxDepth(0) {}
-    virtual ~TIntermTraverser() {};
+    virtual ~TIntermTraverser() {}
 
     virtual void visitSymbol(TIntermSymbol*) {}
     virtual void visitConstantUnion(TIntermConstantUnion*) {}
@@ -559,8 +578,24 @@ public:
     virtual bool visitBranch(Visit visit, TIntermBranch*) {return true;}
 
     int getMaxDepth() const {return maxDepth;}
-    void incrementDepth() {depth++; maxDepth = std::max(maxDepth, depth); }
-    void decrementDepth() {depth--;}
+
+    void incrementDepth(TIntermNode *current)
+    {
+        depth++;
+        maxDepth = std::max(maxDepth, depth);
+        path.push_back(current);
+    }
+
+    void decrementDepth()
+    {
+        depth--;
+        path.pop_back();
+    }
+
+    TIntermNode *getParentNode()
+    {
+        return path.size() == 0 ? NULL : path.back();
+    }
 
     // Return the original name if hash function pointer is NULL;
     // otherwise return the hashed name.
@@ -574,6 +609,9 @@ public:
 protected:
     int depth;
     int maxDepth;
+
+    // All the nodes from root to the current node's parent during traversing.
+    TVector<TIntermNode *> path;
 };
 
 #endif // __INTERMEDIATE_H

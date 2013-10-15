@@ -19,11 +19,13 @@
 
 bool CompareStructure(const TType& leftNodeType, ConstantUnion* rightUnionArray, ConstantUnion* leftUnionArray);
 
-static TPrecision GetHigherPrecision( TPrecision left, TPrecision right ){
+static TPrecision GetHigherPrecision(TPrecision left, TPrecision right)
+{
     return left > right ? left : right;
 }
 
-const char* getOperatorString(TOperator op) {
+const char* getOperatorString(TOperator op)
+{
     switch (op) {
       case EOpInitialize: return "=";
       case EOpAssign: return "=";
@@ -742,6 +744,63 @@ void TIntermediate::remove(TIntermNode* root)
 //
 ////////////////////////////////////////////////////////////////
 
+#define REPLACE_IF_IS(node, type, original, replacement) \
+    if (node == original) { \
+        node = static_cast<type *>(replacement); \
+        return true; \
+    }
+
+bool TIntermLoop::replaceChildNode(
+    TIntermNode *original, TIntermNode *replacement)
+{
+    REPLACE_IF_IS(init, TIntermNode, original, replacement);
+    REPLACE_IF_IS(cond, TIntermTyped, original, replacement);
+    REPLACE_IF_IS(expr, TIntermTyped, original, replacement);
+    REPLACE_IF_IS(body, TIntermNode, original, replacement);
+    return false;
+}
+
+bool TIntermBranch::replaceChildNode(
+    TIntermNode *original, TIntermNode *replacement)
+{
+    REPLACE_IF_IS(expression, TIntermTyped, original, replacement);
+    return false;
+}
+
+bool TIntermBinary::replaceChildNode(
+    TIntermNode *original, TIntermNode *replacement)
+{
+    REPLACE_IF_IS(left, TIntermTyped, original, replacement);
+    REPLACE_IF_IS(right, TIntermTyped, original, replacement);
+    return false;
+}
+
+bool TIntermUnary::replaceChildNode(
+    TIntermNode *original, TIntermNode *replacement)
+{
+    REPLACE_IF_IS(operand, TIntermTyped, original, replacement);
+    return false;
+}
+
+bool TIntermAggregate::replaceChildNode(
+    TIntermNode *original, TIntermNode *replacement)
+{
+    for (size_t ii = 0; ii < sequence.size(); ++ii)
+    {
+        REPLACE_IF_IS(sequence[ii], TIntermNode, original, replacement);
+    }
+    return false;
+}
+
+bool TIntermSelection::replaceChildNode(
+    TIntermNode *original, TIntermNode *replacement)
+{
+    REPLACE_IF_IS(condition, TIntermTyped, original, replacement);
+    REPLACE_IF_IS(trueBlock, TIntermNode, original, replacement);
+    REPLACE_IF_IS(falseBlock, TIntermNode, original, replacement);
+    return false;
+}
+
 //
 // Say whether or not an operation node changes the value of a variable.
 //
@@ -796,6 +855,7 @@ bool TIntermOperator::isConstructor() const
             return false;
     }
 }
+
 //
 // Make sure the type of a unary operator is appropriate for its
 // combination of operation and operand type.

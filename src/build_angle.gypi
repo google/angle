@@ -82,6 +82,8 @@
         'compiler/TranslatorHLSL.cpp',
         'compiler/TranslatorHLSL.h',
         'compiler/Types.h',
+        'compiler/UnfoldShortCircuitAST.cpp',
+        'compiler/UnfoldShortCircuitAST.h',
         'compiler/UnfoldShortCircuit.cpp',
         'compiler/UnfoldShortCircuit.h',
         'compiler/Uniform.cpp',

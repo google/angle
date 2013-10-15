@@ -51,7 +51,7 @@ void TIntermBinary::traverse(TIntermTraverser *it)
     //
     if (visit)
     {
-        it->incrementDepth();
+        it->incrementDepth(this);
 
         if (it->rightToLeft) 
         {
@@ -98,7 +98,7 @@ void TIntermUnary::traverse(TIntermTraverser *it)
         visit = it->visitUnary(PreVisit, this);
 
     if (visit) {
-        it->incrementDepth();
+        it->incrementDepth(this);
         operand->traverse(it);
         it->decrementDepth();
     }
@@ -119,7 +119,7 @@ void TIntermAggregate::traverse(TIntermTraverser *it)
     
     if (visit)
     {
-        it->incrementDepth();
+        it->incrementDepth(this);
 
         if (it->rightToLeft)
         {
@@ -166,7 +166,7 @@ void TIntermSelection::traverse(TIntermTraverser *it)
         visit = it->visitSelection(PreVisit, this);
     
     if (visit) {
-        it->incrementDepth();
+        it->incrementDepth(this);
         if (it->rightToLeft) {
             if (falseBlock)
                 falseBlock->traverse(it);
@@ -199,7 +199,7 @@ void TIntermLoop::traverse(TIntermTraverser *it)
     
     if (visit)
     {
-        it->incrementDepth();
+        it->incrementDepth(this);
 
         if (it->rightToLeft)
         {
@@ -248,7 +248,7 @@ void TIntermBranch::traverse(TIntermTraverser *it)
         visit = it->visitBranch(PreVisit, this);
     
     if (visit && expression) {
-        it->incrementDepth();
+        it->incrementDepth(this);
         expression->traverse(it);
         it->decrementDepth();
     }

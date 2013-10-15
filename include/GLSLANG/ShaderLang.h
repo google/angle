@@ -189,6 +189,13 @@ typedef enum {
   // fragment shader. It is intended as a workaround for drivers which
   // incorrectly fail to link programs if gl_Position is not written.
   SH_INIT_GL_POSITION = 0x8000,
+
+  // This flag replaces
+  //   "a && b" with "a ? b : false",
+  //   "a || b" with "a ? true : b".
+  // This is to work around a MacOSX driver bug that |b| is executed
+  // independent of |a|'s value.
+  SH_UNFOLD_SHORT_CIRCUIT = 0x10000,
 } ShCompileOptions;
 
 // Defines alternate strategies for implementing array index clamping.
