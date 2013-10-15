@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libEGL", "libEGL.vcxproj", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libGLESv2", "libGLESv2.vcxproj", "{D5D676ED-C189-2A6B-8DE3-F4CA6175550F}"
 	ProjectSection(ProjectDependencies) = postProject
-		{6AC42CF5-8088-F4BE-7C3D-1BD1BD440FCC} = {6AC42CF5-8088-F4BE-7C3D-1BD1BD440FCC}
+		{65BE9C8A-0FF1-A4B7-C81E-43801F64E13D} = {65BE9C8A-0FF1-A4B7-C81E-43801F64E13D}
 		{7642CFD5-F187-3E3F-F8FF-859949B9F13E} = {7642CFD5-F187-3E3F-F8FF-859949B9F13E}
 	EndProjectSection
 EndProject
@@ -15,12 +15,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "preprocessor", "preprocesso
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator", "translator.vcxproj", "{6AC42CF5-8088-F4BE-7C3D-1BD1BD440FCC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator_static", "translator_static.vcxproj", "{65BE9C8A-0FF1-A4B7-C81E-43801F64E13D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65BE9C8A-0FF1-A4B7-C81E-43801F64E13D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{65BE9C8A-0FF1-A4B7-C81E-43801F64E13D}.Debug|Win32.Build.0 = Debug|Win32
+		{65BE9C8A-0FF1-A4B7-C81E-43801F64E13D}.Release|Win32.ActiveCfg = Release|Win32
+		{65BE9C8A-0FF1-A4B7-C81E-43801F64E13D}.Release|Win32.Build.0 = Release|Win32
 		{6AC42CF5-8088-F4BE-7C3D-1BD1BD440FCC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{6AC42CF5-8088-F4BE-7C3D-1BD1BD440FCC}.Debug|Win32.Build.0 = Debug|Win32
 		{6AC42CF5-8088-F4BE-7C3D-1BD1BD440FCC}.Release|Win32.ActiveCfg = Release|Win32

@@ -151,7 +151,7 @@
     <ClCompile Include="compiler\translator\InitializeDll.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
-    <ClCompile Include="compiler\translator\CodeGenGLSL.cpp">
+    <ClCompile Include="compiler\translator\PoolAlloc.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
     <ClInclude Include="compiler\translator\InitializeGlobals.h">
@@ -226,9 +226,9 @@
     <ClInclude Include="compiler\translator\OutputGLSLBase.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
-    <ClCompile Include="compiler\translator\PoolAlloc.cpp">
+    <ClInclude Include="compiler\translator\ForLoopUnroll.h">
       <Filter>compiler\translator</Filter>
-    </ClCompile>
+    </ClInclude>
     <ClInclude Include="compiler\translator\InitializeGLPosition.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
@@ -280,9 +280,6 @@
     <ClInclude Include="compiler\translator\DetectCallDepth.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
-    <ClInclude Include="compiler\translator\ForLoopUnroll.h">
-      <Filter>compiler\translator</Filter>
-    </ClInclude>
     <None Include="compiler\translator\glslang.l">
       <Filter>compiler\translator</Filter>
     </None>
@@ -302,6 +299,9 @@
       <Filter>compiler\translator</Filter>
     </ClInclude>
     <ClCompile Include="compiler\translator\MapLongVariableNames.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="compiler\translator\CodeGen.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
     <ClInclude Include="compiler\translator\ParseHelper.h">
@@ -377,9 +377,6 @@
       <Filter>compiler\translator</Filter>
     </ClCompile>
     <ClCompile Include="compiler\translator\Initialize.cpp">
-      <Filter>compiler\translator</Filter>
-    </ClCompile>
-    <ClCompile Include="compiler\translator\CodeGenHLSL.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
     <ClCompile Include="compiler\translator\ossource_posix.cpp">

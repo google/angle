@@ -46,7 +46,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;_WIN32_WINNT=0x0600;_WINDOWS;NOMINMAX;WIN32;WIN32_LEAN_AND_MEAN;WINVER=0x0600;_DEBUG;ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };COMPILER_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;_WIN32_WINNT=0x0600;_WINDOWS;NOMINMAX;WIN32;WIN32_LEAN_AND_MEAN;WINVER=0x0600;_DEBUG;ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };ANGLE_TRANSLATOR_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -57,7 +57,7 @@
       <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
     </Lib>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -68,7 +68,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>.;..\include;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ProgramFiles)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };COMPILER_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };ANGLE_TRANSLATOR_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,7 +81,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;_WIN32_WINNT=0x0600;_WINDOWS;NOMINMAX;WIN32;WIN32_LEAN_AND_MEAN;WINVER=0x0600;NDEBUG;ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };COMPILER_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;_WIN32_WINNT=0x0600;_WINDOWS;NOMINMAX;WIN32;WIN32_LEAN_AND_MEAN;WINVER=0x0600;NDEBUG;ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };ANGLE_TRANSLATOR_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -92,7 +92,7 @@
       <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
     </Lib>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -103,7 +103,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>.;..\include;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ProgramFiles)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };COMPILER_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };ANGLE_TRANSLATOR_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -150,6 +150,7 @@
     <ClInclude Include="compiler\translator\localintermediate.h"/>
     <ClInclude Include="compiler\translator\ShHandle.h"/>
     <ClInclude Include="compiler\translator\OutputGLSLBase.h"/>
+    <ClInclude Include="compiler\translator\ForLoopUnroll.h"/>
     <ClInclude Include="compiler\translator\InitializeGLPosition.h"/>
     <ClInclude Include="compiler\translator\ShaderVariable.h"/>
     <ClInclude Include="compiler\translator\Pragma.h"/>
@@ -162,7 +163,6 @@
     <ClInclude Include="compiler\translator\InfoSink.h"/>
     <ClInclude Include="compiler\translator\RemoveTree.h"/>
     <ClInclude Include="compiler\translator\DetectCallDepth.h"/>
-    <ClInclude Include="compiler\translator\ForLoopUnroll.h"/>
     <ClInclude Include="compiler\translator\VariablePacker.h"/>
     <ClInclude Include="compiler\translator\glslang.h"/>
     <ClInclude Include="compiler\translator\SearchSymbol.h"/>
@@ -199,7 +199,7 @@
     <ClCompile Include="compiler\translator\ShaderVariable.cpp"/>
     <ClCompile Include="compiler\translator\RemoveTree.cpp"/>
     <ClCompile Include="compiler\translator\InitializeDll.cpp"/>
-    <ClCompile Include="compiler\translator\CodeGenGLSL.cpp"/>
+    <ClCompile Include="compiler\translator\PoolAlloc.cpp"/>
     <ClCompile Include="compiler\translator\BlockLayoutEncoder.cpp"/>
     <ClCompile Include="compiler\translator\ossource_win.cpp"/>
     <ClCompile Include="compiler\translator\Diagnostics.cpp"/>
@@ -209,7 +209,6 @@
     <ClCompile Include="compiler\translator\ValidateOutputs.cpp"/>
     <ClCompile Include="compiler\translator\TranslatorESSL.cpp"/>
     <ClCompile Include="compiler\translator\InitializeGLPosition.cpp"/>
-    <ClCompile Include="compiler\translator\PoolAlloc.cpp"/>
     <ClCompile Include="compiler\translator\VariablePacker.cpp"/>
     <ClCompile Include="compiler\translator\parseConst.cpp"/>
     <ClCompile Include="compiler\translator\ParseHelper.cpp"/>
@@ -217,6 +216,7 @@
     <ClCompile Include="compiler\translator\DetectCallDepth.cpp"/>
     <ClCompile Include="compiler\translator\InitializeParseContext.cpp"/>
     <ClCompile Include="compiler\translator\MapLongVariableNames.cpp"/>
+    <ClCompile Include="compiler\translator\CodeGen.cpp"/>
     <ClCompile Include="compiler\translator\IntermTraverse.cpp"/>
     <ClCompile Include="compiler\translator\intermOut.cpp"/>
     <ClCompile Include="compiler\translator\glslang_tab.cpp"/>
@@ -234,7 +234,6 @@
     <ClCompile Include="compiler\translator\VariableInfo.cpp"/>
     <ClCompile Include="compiler\translator\Compiler.cpp"/>
     <ClCompile Include="compiler\translator\Initialize.cpp"/>
-    <ClCompile Include="compiler\translator\CodeGenHLSL.cpp"/>
     <ClCompile Include="compiler\translator\ossource_posix.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
