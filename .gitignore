@@ -17,4 +17,4 @@ debug.txt
 .gclient_entries
 third_party
 tests/third_party
-build/trunk
+out
