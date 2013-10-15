@@ -14,6 +14,7 @@
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/RenameFunction.h"
 #include "compiler/translator/ShHandle.h"
+#include "compiler/translator/UnfoldShortCircuitAST.h"
 #include "compiler/translator/ValidateLimitations.h"
 #include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/VariablePacker.h"
@@ -200,6 +201,12 @@ bool TCompiler::compile(const char* const shaderStrings[],
         if (success && shaderType == SH_VERTEX_SHADER && (compileOptions & SH_INIT_GL_POSITION)) {
             InitializeGLPosition initGLPosition;
             root->traverse(&initGLPosition);
+        }
+
+        if (success && (compileOptions & SH_UNFOLD_SHORT_CIRCUIT)) {
+            UnfoldShortCircuitAST unfoldShortCircuit;
+            root->traverse(&unfoldShortCircuit);
+            unfoldShortCircuit.updateTree();
         }
 
         if (success && (compileOptions & SH_VARIABLES)) {

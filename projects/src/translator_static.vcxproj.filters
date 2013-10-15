@@ -94,6 +94,9 @@
     <ClInclude Include="..\..\src\compiler\translator\Common.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\compiler\translator\UnfoldShortCircuitAST.h">
+      <Filter>..\..\src\compiler\translator</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\ValidateLimitations.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
@@ -331,6 +334,9 @@
     <ClInclude Include="..\..\src\compiler\translator\BlockLayoutEncoder.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\compiler\translator\UnfoldShortCircuitAST.cpp">
+      <Filter>..\..\src\compiler\translator</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\compiler\translator\MMap.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>

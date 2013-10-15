@@ -129,6 +129,7 @@
     <ClInclude Include="..\..\src\compiler\translator\BaseTypes.h"/>
     <ClInclude Include="..\..\src\compiler\translator\compilerdebug.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Common.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\UnfoldShortCircuitAST.h"/>
     <ClInclude Include="..\..\src\compiler\translator\util.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputGLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\FlagStd140Structs.h"/>
@@ -228,6 +229,7 @@
     <ClCompile Include="..\..\src\compiler\translator\glslang_tab.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ForLoopUnroll.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\SearchSymbol.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\UnfoldShortCircuitAST.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorGLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\SymbolTable.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\DirectiveHandler.cpp"/>
