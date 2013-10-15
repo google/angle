@@ -53,10 +53,13 @@ bool Renderer::initializeCompiler()
             break;
         }
     }
-#else
-    // Load the version of the D3DCompiler DLL associated with the Direct3D version ANGLE was built with.
-    mD3dCompilerModule = LoadLibrary(D3DCOMPILER_DLL);
 #endif  // ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES
+
+    if (!mD3dCompilerModule)
+    {
+        // Load the version of the D3DCompiler DLL associated with the Direct3D version ANGLE was built with.
+        mD3dCompilerModule = LoadLibrary(D3DCOMPILER_DLL);
+    }
 
     if (!mD3dCompilerModule)
     {
