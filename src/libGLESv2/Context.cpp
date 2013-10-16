@@ -3612,6 +3612,11 @@ void Context::initExtensionString()
         }
     }
 
+    if (mClientVersion == 3)
+    {
+        mExtensionStringList.push_back("GL_EXT_color_buffer_float");
+    }
+
     // Join the extension strings to one long string for use with GetString
     std::stringstream strstr;
     for (unsigned int extensionIndex = 0; extensionIndex < mExtensionStringList.size(); extensionIndex++)

@@ -725,6 +725,12 @@ bool ValidES3ReadFormatType(GLenum internalFormat, GLenum format, GLenum type)
                 return false;
             }
             break;
+          case GL_FLOAT:
+            if (gl::GetComponentType(internalFormat, 3) != GL_FLOAT)
+            {
+                return false;
+            }
+            break;
           default:
             return false;
         }
