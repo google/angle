@@ -6469,7 +6469,7 @@ void __stdcall glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
 
 void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const GLvoid* data)
 {
-    EVENT("(GLenum target = 0x%X, GLint level = %d, GLint internalformat = %d, GLsizei width = %d, "
+    EVENT("(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLsizei width = %d, "
           "GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLsizei imageSize = %d, "
           "const GLvoid* data = 0x%0.8p)",
           target, level, internalformat, width, height, depth, border, imageSize, data);
