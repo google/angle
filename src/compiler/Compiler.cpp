@@ -11,7 +11,7 @@
 #include "compiler/InitializeGLPosition.h"
 #include "compiler/InitializeParseContext.h"
 #include "compiler/MapLongVariableNames.h"
-#include "compiler/ParseHelper.h"
+#include "compiler/ParseContext.h"
 #include "compiler/RenameFunction.h"
 #include "compiler/ShHandle.h"
 #include "compiler/UnfoldShortCircuitAST.h"

@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/ParseHelper.h"
+#include "compiler/ParseContext.h"
 
 #include <stdarg.h>
 #include <stdio.h>

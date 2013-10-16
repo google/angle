@@ -15,7 +15,7 @@
 #include <GLES2/gl2.h>
 
 #include "compiler/intermediate.h"
-#include "compiler/ParseHelper.h"
+#include "compiler/ParseContext.h"
 #include "compiler/Uniform.h"
 
 namespace sh

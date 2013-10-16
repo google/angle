@@ -85,7 +85,7 @@
 #endif
 
 #include "compiler/SymbolTable.h"
-#include "compiler/ParseHelper.h"
+#include "compiler/ParseContext.h"
 #include "GLSLANG/ShaderLang.h"
 
 #define YYENABLE_NLS 0

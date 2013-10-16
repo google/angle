@@ -163,7 +163,7 @@
     <ClCompile Include="OutputGLSLBase.cpp" />
     <ClCompile Include="OutputHLSL.cpp" />
     <ClCompile Include="parseConst.cpp" />
-    <ClCompile Include="ParseHelper.cpp" />
+    <ClCompile Include="ParseContext.cpp" />
     <ClCompile Include="PoolAlloc.cpp" />
     <ClCompile Include="QualifierAlive.cpp" />
     <ClCompile Include="RemoveTree.cpp" />
@@ -268,7 +268,7 @@
     <ClInclude Include="OutputGLSL.h" />
     <ClInclude Include="OutputGLSLBase.h" />
     <ClInclude Include="OutputHLSL.h" />
-    <ClInclude Include="ParseHelper.h" />
+    <ClInclude Include="ParseContext.h" />
     <ClInclude Include="PoolAlloc.h" />
     <ClInclude Include="QualifierAlive.h" />
     <ClInclude Include="RemoveTree.h" />
