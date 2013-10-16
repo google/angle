@@ -75,7 +75,7 @@ bool ValidImageSize(const gl::Context *context, GLenum target, GLint level, GLsi
     return true;
 }
 
-bool ValidCompressedImageSize(const gl::Context *context, GLint internalFormat, GLsizei width, GLsizei height)
+bool ValidCompressedImageSize(const gl::Context *context, GLenum internalFormat, GLsizei width, GLsizei height)
 {
     GLuint clientVersion = context->getClientVersion();
     if (!IsFormatCompressed(internalFormat, clientVersion))
@@ -273,14 +273,14 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
 
         if (readColorBuffer && drawColorBuffer)
         {
-            GLint readInternalFormat = readColorBuffer->getActualFormat();
+            GLenum readInternalFormat = readColorBuffer->getActualFormat();
             GLenum readComponentType = gl::GetComponentType(readInternalFormat, clientVersion);
 
             for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; i++)
             {
                 if (drawFramebuffer->isEnabledColorAttachment(i))
                 {
-                    GLint drawInternalFormat = drawFramebuffer->getColorbuffer(i)->getActualFormat();
+                    GLenum drawInternalFormat = drawFramebuffer->getColorbuffer(i)->getActualFormat();
                     GLenum drawComponentType = gl::GetComponentType(drawInternalFormat, clientVersion);
 
                     // The GL ES 3.0.2 spec (pg 193) states that:

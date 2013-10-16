@@ -17,7 +17,7 @@ class Context;
 bool ValidTextureTarget(gl::Context *context, GLenum target);
 bool ValidMipLevel(const gl::Context *context, GLenum target, GLint level);
 bool ValidImageSize(const gl::Context *context, GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth);
-bool ValidCompressedImageSize(const gl::Context *context, GLint internalFormat, GLsizei width, GLsizei height);
+bool ValidCompressedImageSize(const gl::Context *context, GLenum internalFormat, GLsizei width, GLsizei height);
 
 bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum target, GLsizei samples,
                                            GLenum internalformat, GLsizei width, GLsizei height,

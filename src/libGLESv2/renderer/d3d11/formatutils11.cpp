@@ -35,8 +35,8 @@ struct D3D11ES3FormatInfo
 // For sized GL internal formats, there is only one corresponding D3D11 format. This map type allows
 // querying for the DXGI texture formats to use for textures, SRVs, RTVs and DSVs given a GL internal
 // format.
-typedef std::pair<GLint, D3D11ES3FormatInfo> D3D11ES3FormatPair;
-typedef std::map<GLint, D3D11ES3FormatInfo> D3D11ES3FormatMap;
+typedef std::pair<GLenum, D3D11ES3FormatInfo> D3D11ES3FormatPair;
+typedef std::map<GLenum, D3D11ES3FormatInfo> D3D11ES3FormatMap;
 
 static D3D11ES3FormatMap BuildD3D11ES3FormatMap()
 {
@@ -154,7 +154,7 @@ static D3D11ES3FormatMap BuildD3D11ES3FormatMap()
     return map;
 }
 
-static bool GetD3D11ES3FormatInfo(GLint internalFormat, GLuint clientVersion, D3D11ES3FormatInfo *outFormatInfo)
+static bool GetD3D11ES3FormatInfo(GLenum internalFormat, GLuint clientVersion, D3D11ES3FormatInfo *outFormatInfo)
 {
     static const D3D11ES3FormatMap formatMap = BuildD3D11ES3FormatMap();
     D3D11ES3FormatMap::const_iterator iter = formatMap.find(internalFormat);
@@ -176,7 +176,7 @@ static bool GetD3D11ES3FormatInfo(GLint internalFormat, GLuint clientVersion, D3
 // this map type determines the loading function from the internal format and type supplied
 // to glTex*Image*D and the destination DXGI_FORMAT. Source formats and types are taken from
 // Tables 3.2 and 3.3 of the ES 3 spec.
-typedef std::pair<GLint, GLenum> InternalFormatTypePair;
+typedef std::pair<GLenum, GLenum> InternalFormatTypePair;
 typedef std::pair<InternalFormatTypePair, LoadImageFunction> D3D11LoadFunctionPair;
 typedef std::map<InternalFormatTypePair, LoadImageFunction> D3D11LoadFunctionMap;
 
@@ -195,7 +195,7 @@ static void UnreachableLoadFunction(int width, int height, int depth,
 }
 
 // A helper function to insert data into the D3D11LoadFunctionMap with fewer characters.
-static inline void insertLoadFunction(D3D11LoadFunctionMap *map, GLint internalFormat, GLenum type,
+static inline void insertLoadFunction(D3D11LoadFunctionMap *map, GLenum internalFormat, GLenum type,
                                       LoadImageFunction loadFunc)
 {
     map->insert(D3D11LoadFunctionPair(InternalFormatTypePair(internalFormat, type), loadFunc));
@@ -363,8 +363,8 @@ struct D3D11ES2FormatInfo
 };
 
 // ES2 internal formats can map to DXGI formats and loading functions
-typedef std::pair<GLint, D3D11ES2FormatInfo> D3D11ES2FormatPair;
-typedef std::map<GLint, D3D11ES2FormatInfo> D3D11ES2FormatMap;
+typedef std::pair<GLenum, D3D11ES2FormatInfo> D3D11ES2FormatPair;
+typedef std::map<GLenum, D3D11ES2FormatInfo> D3D11ES2FormatMap;
 
 static D3D11ES2FormatMap BuildD3D11ES2FormatMap()
 {
@@ -410,7 +410,7 @@ static D3D11ES2FormatMap BuildD3D11ES2FormatMap()
     return map;
 }
 
-static bool GetD3D11ES2FormatInfo(GLint internalFormat, GLuint clientVersion, D3D11ES2FormatInfo *outFormatInfo)
+static bool GetD3D11ES2FormatInfo(GLenum internalFormat, GLuint clientVersion, D3D11ES2FormatInfo *outFormatInfo)
 {
     static const D3D11ES2FormatMap formatMap = BuildD3D11ES2FormatMap();
     D3D11ES2FormatMap::const_iterator iter = formatMap.find(internalFormat);
@@ -434,7 +434,7 @@ struct DXGIFormatInfo
     GLuint mPixelBits;
     GLuint mBlockWidth;
     GLuint mBlockHeight;
-    GLint mInternalFormat;
+    GLenum mInternalFormat;
     GLuint mClientVersion;
 
     MipGenerationFunction mMipGenerationFunction;
@@ -445,7 +445,7 @@ struct DXGIFormatInfo
           mColorReadFunction(NULL), mClientVersion(0)
     { }
 
-    DXGIFormatInfo(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight, GLint internalFormat,
+    DXGIFormatInfo(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight, GLenum internalFormat,
                    MipGenerationFunction mipFunc, ColorReadFunction readFunc, GLuint clientVersion)
         : mPixelBits(pixelBits), mBlockWidth(blockWidth), mBlockHeight(blockHeight), mInternalFormat(internalFormat),
           mMipGenerationFunction(mipFunc), mColorReadFunction(readFunc), mClientVersion(clientVersion)
@@ -708,7 +708,7 @@ MipGenerationFunction GetMipGenerationFunction(DXGI_FORMAT format, GLuint client
     }
 }
 
-LoadImageFunction GetImageLoadFunction(GLint internalFormat, GLenum type, GLuint clientVersion)
+LoadImageFunction GetImageLoadFunction(GLenum internalFormat, GLenum type, GLuint clientVersion)
 {
     if (clientVersion == 2)
     {
@@ -906,7 +906,7 @@ ColorCopyFunction GetFastCopyFunction(DXGI_FORMAT sourceFormat, GLenum destForma
 namespace gl_d3d11
 {
 
-DXGI_FORMAT GetTexFormat(GLint internalFormat, GLuint clientVersion)
+DXGI_FORMAT GetTexFormat(GLenum internalFormat, GLuint clientVersion)
 {
     if (clientVersion == 2)
     {
@@ -941,7 +941,7 @@ DXGI_FORMAT GetTexFormat(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-DXGI_FORMAT GetSRVFormat(GLint internalFormat, GLuint clientVersion)
+DXGI_FORMAT GetSRVFormat(GLenum internalFormat, GLuint clientVersion)
 {
     if (clientVersion == 2)
     {
@@ -976,7 +976,7 @@ DXGI_FORMAT GetSRVFormat(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-DXGI_FORMAT GetRTVFormat(GLint internalFormat, GLuint clientVersion)
+DXGI_FORMAT GetRTVFormat(GLenum internalFormat, GLuint clientVersion)
 {
     if (clientVersion == 2)
     {
@@ -1011,7 +1011,7 @@ DXGI_FORMAT GetRTVFormat(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-DXGI_FORMAT GetDSVFormat(GLint internalFormat, GLuint clientVersion)
+DXGI_FORMAT GetDSVFormat(GLenum internalFormat, GLuint clientVersion)
 {
     if (clientVersion == 2)
     {
@@ -1046,7 +1046,7 @@ DXGI_FORMAT GetDSVFormat(GLint internalFormat, GLuint clientVersion)
 
 // Given a GL internal format, this function returns the DSV format if it is depth- or stencil-renderable,
 // the RTV format if it is color-renderable, and the (nonrenderable) texture format otherwise.
-DXGI_FORMAT GetRenderableFormat(GLint internalFormat, GLuint clientVersion)
+DXGI_FORMAT GetRenderableFormat(GLenum internalFormat, GLuint clientVersion)
 {
     DXGI_FORMAT targetFormat = GetDSVFormat(internalFormat, clientVersion);
     if (targetFormat == DXGI_FORMAT_UNKNOWN)
@@ -1062,7 +1062,7 @@ DXGI_FORMAT GetRenderableFormat(GLint internalFormat, GLuint clientVersion)
 namespace d3d11_gl
 {
 
-GLint GetInternalFormat(DXGI_FORMAT format, GLuint clientVersion)
+GLenum GetInternalFormat(DXGI_FORMAT format, GLuint clientVersion)
 {
     DXGIFormatInfo formatInfo;
     if (GetDXGIFormatInfo(format, clientVersion, &formatInfo))

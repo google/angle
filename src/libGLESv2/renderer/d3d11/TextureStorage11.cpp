@@ -49,7 +49,7 @@ TextureStorage11 *TextureStorage11::makeTextureStorage11(TextureStorage *storage
     return static_cast<TextureStorage11*>(storage);
 }
 
-DWORD TextureStorage11::GetTextureBindFlags(GLint internalFormat, GLuint clientVersion, GLenum glusage)
+DWORD TextureStorage11::GetTextureBindFlags(GLenum internalFormat, GLuint clientVersion, GLenum glusage)
 {
     UINT bindFlags = 0;
 

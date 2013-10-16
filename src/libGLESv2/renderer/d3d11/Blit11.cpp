@@ -335,7 +335,7 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     // be GL_XXXX_INTEGER but it does not tell us if it is signed or unsigned.
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
     source->GetDesc(&sourceSRVDesc);
-    GLint sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceSRVDesc.Format, mRenderer->getCurrentClientVersion());
+    GLenum sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceSRVDesc.Format, mRenderer->getCurrentClientVersion());
 
     BlitParameters parameters = { 0 };
     parameters.mDestinationFormat = destFormat;

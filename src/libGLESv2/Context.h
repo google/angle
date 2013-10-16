@@ -400,9 +400,9 @@ class Context
     int getMaximum2DArrayTextureLevel() const;
     unsigned int getMaximumRenderTargets() const;
     GLsizei getMaxSupportedSamples() const;
-    GLsizei getMaxSupportedFormatSamples(GLint internalFormat) const;
-    GLsizei getNumSampleCounts(GLint internalFormat) const;
-    void getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const;
+    GLsizei getMaxSupportedFormatSamples(GLenum internalFormat) const;
+    GLsizei getNumSampleCounts(GLenum internalFormat) const;
+    void getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const;
     unsigned int getMaxTransformFeedbackBufferBindings() const;
     GLintptr getUniformBufferOffsetAlignment() const;
     const char *getCombinedExtensionsString() const;
@@ -429,7 +429,7 @@ class Context
     bool supportsInstancing() const;
     bool supportsTextureFilterAnisotropy() const;
 
-    bool getCurrentReadFormatType(GLint *internalFormat, GLenum *format, GLenum *type);
+    bool getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type);
 
     float getTextureMaxAnisotropy() const;
 

@@ -104,7 +104,7 @@ static bool validateSubImageParamsCube(bool compressed, GLsizei width, GLsizei h
     return true;
 }
 
-bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint level, GLint internalformat, bool isCompressed, bool isSubImage,
+bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint level, GLenum internalformat, bool isCompressed, bool isSubImage,
                                    GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                    GLint border, GLenum format, GLenum type, const GLvoid *pixels)
 {
@@ -120,7 +120,7 @@ bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint le
         return gl::error(GL_INVALID_VALUE, false);
     }
 
-    if (!isSubImage && !isCompressed && internalformat != GLint(format))
+    if (!isSubImage && !isCompressed && internalformat != format)
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }

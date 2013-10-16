@@ -2216,14 +2216,14 @@ int Renderer11::getMaxSupportedSamples() const
     return mMaxSupportedSamples;
 }
 
-GLsizei Renderer11::getMaxSupportedFormatSamples(GLint internalFormat) const
+GLsizei Renderer11::getMaxSupportedFormatSamples(GLenum internalFormat) const
 {
     DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat, getCurrentClientVersion());
     MultisampleSupportMap::const_iterator iter = mMultisampleSupportMap.find(format);
     return (iter != mMultisampleSupportMap.end()) ? iter->second.maxSupportedSamples : 0;
 }
 
-GLsizei Renderer11::getNumSampleCounts(GLint internalFormat) const
+GLsizei Renderer11::getNumSampleCounts(GLenum internalFormat) const
 {
     unsigned int numCounts = 0;
 
@@ -2250,7 +2250,7 @@ GLsizei Renderer11::getNumSampleCounts(GLint internalFormat) const
     return numCounts;
 }
 
-void Renderer11::getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const
+void Renderer11::getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const
 {
     // D3D11 supports multisampling for signed and unsigned format, but ES 3.0 does not
     GLenum componentType = gl::GetComponentType(internalFormat, getCurrentClientVersion());
@@ -2767,7 +2767,7 @@ FenceImpl *Renderer11::createFence()
     return new Fence11(this);
 }
 
-bool Renderer11::supportsFastCopyBufferToTexture(GLint internalFormat) const
+bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
 {
     int clientVersion = getCurrentClientVersion();
 
@@ -3067,7 +3067,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
 
     GLuint clientVersion = getCurrentClientVersion();
 
-    GLint sourceInternalFormat = d3d11_gl::GetInternalFormat(textureDesc.Format, clientVersion);
+    GLenum sourceInternalFormat = d3d11_gl::GetInternalFormat(textureDesc.Format, clientVersion);
     GLenum sourceFormat = gl::GetFormat(sourceInternalFormat, clientVersion);
     GLenum sourceType = gl::GetType(sourceInternalFormat, clientVersion);
 
@@ -3084,7 +3084,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
     }
     else
     {
-        GLint destInternalFormat = gl::GetSizedInternalFormat(format, type, clientVersion);
+        GLenum destInternalFormat = gl::GetSizedInternalFormat(format, type, clientVersion);
         GLuint destPixelSize = gl::GetPixelBytes(destInternalFormat, clientVersion);
 
         ColorCopyFunction fastCopyFunc = d3d11::GetFastCopyFunction(textureDesc.Format, format, type, getCurrentClientVersion());
@@ -3369,7 +3369,7 @@ bool Renderer11::getLUID(LUID *adapterLuid) const
     return true;
 }
 
-GLint Renderer11::getNativeTextureFormat(GLint internalFormat) const
+GLenum Renderer11::getNativeTextureFormat(GLenum internalFormat) const
 {
     int clientVersion = getCurrentClientVersion();
     return d3d11_gl::GetInternalFormat(gl_d3d11::GetTexFormat(internalFormat, clientVersion), clientVersion);

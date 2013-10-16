@@ -161,14 +161,14 @@ class Renderer9 : public Renderer
     virtual int getMaxSwapInterval() const;
 
     virtual GLsizei getMaxSupportedSamples() const;
-    virtual GLsizei getMaxSupportedFormatSamples(GLint internalFormat) const;
-    virtual GLsizei getNumSampleCounts(GLint internalFormat) const;
-    virtual void getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const;
+    virtual GLsizei getMaxSupportedFormatSamples(GLenum internalFormat) const;
+    virtual GLsizei getNumSampleCounts(GLenum internalFormat) const;
+    virtual void getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const;
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     
     virtual unsigned int getMaxRenderTargets() const;
 
-    D3DFORMAT ConvertTextureInternalFormat(GLint internalformat);
+    D3DFORMAT ConvertTextureInternalFormat(GLenum internalformat);
 
     // Pixel operations
     virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source);
@@ -217,7 +217,7 @@ class Renderer9 : public Renderer
     virtual FenceImpl *createFence();
 
     // Buffer-to-texture and Texture-to-buffer copies
-    virtual bool supportsFastCopyBufferToTexture(GLint internalFormat) const;
+    virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const;
     virtual bool fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
                                          GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
 
@@ -227,7 +227,7 @@ class Renderer9 : public Renderer
     D3DPOOL getTexturePool(DWORD usage) const;
 
     virtual bool getLUID(LUID *adapterLuid) const;
-    virtual GLint getNativeTextureFormat(GLint internalFormat) const;
+    virtual GLenum getNativeTextureFormat(GLenum internalFormat) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer9);

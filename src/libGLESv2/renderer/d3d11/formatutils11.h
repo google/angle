@@ -21,7 +21,7 @@ namespace d3d11
 typedef std::set<DXGI_FORMAT> DXGIFormatSet;
 
 MipGenerationFunction GetMipGenerationFunction(DXGI_FORMAT format, GLuint clientVersion);
-LoadImageFunction GetImageLoadFunction(GLint internalFormat, GLenum type, GLuint clientVersion);
+LoadImageFunction GetImageLoadFunction(GLenum internalFormat, GLenum type, GLuint clientVersion);
 
 GLuint GetFormatPixelBytes(DXGI_FORMAT format, GLuint clientVersion);
 GLuint GetBlockWidth(DXGI_FORMAT format, GLuint clientVersion);
@@ -44,18 +44,18 @@ ColorCopyFunction GetFastCopyFunction(DXGI_FORMAT sourceFormat, GLenum destForma
 namespace gl_d3d11
 {
 
-DXGI_FORMAT GetTexFormat(GLint internalFormat, GLuint clientVersion);
-DXGI_FORMAT GetSRVFormat(GLint internalFormat, GLuint clientVersion);
-DXGI_FORMAT GetRTVFormat(GLint internalFormat, GLuint clientVersion);
-DXGI_FORMAT GetDSVFormat(GLint internalFormat, GLuint clientVersion);
-DXGI_FORMAT GetRenderableFormat(GLint internalFormat, GLuint clientVersion);
+DXGI_FORMAT GetTexFormat(GLenum internalFormat, GLuint clientVersion);
+DXGI_FORMAT GetSRVFormat(GLenum internalFormat, GLuint clientVersion);
+DXGI_FORMAT GetRTVFormat(GLenum internalFormat, GLuint clientVersion);
+DXGI_FORMAT GetDSVFormat(GLenum internalFormat, GLuint clientVersion);
+DXGI_FORMAT GetRenderableFormat(GLenum internalFormat, GLuint clientVersion);
 
 }
 
 namespace d3d11_gl
 {
 
-GLint GetInternalFormat(DXGI_FORMAT format, GLuint clientVersion);
+GLenum GetInternalFormat(DXGI_FORMAT format, GLuint clientVersion);
 
 }
 

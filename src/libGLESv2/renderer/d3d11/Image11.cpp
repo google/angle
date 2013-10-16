@@ -108,7 +108,7 @@ bool Image11::updateSurface(TextureStorageInterface2DArray *storage, int level, 
     return storage11->updateSubresourceLevel(getStagingTexture(), getStagingSubresource(), level, arrayLayer, xoffset, yoffset, 0, width, height, 1);
 }
 
-bool Image11::redefine(Renderer *renderer, GLenum target, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
+bool Image11::redefine(Renderer *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
 {
     if (mWidth != width ||
         mHeight != height ||

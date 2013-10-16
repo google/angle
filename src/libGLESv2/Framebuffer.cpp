@@ -485,7 +485,7 @@ GLenum Framebuffer::completeness() const
             }
             else if (IsInternalTextureTarget(mColorbuffers[colorAttachment].type(), mRenderer->getCurrentClientVersion()))
             {
-                GLint internalformat = colorbuffer->getInternalFormat();
+                GLenum internalformat = colorbuffer->getInternalFormat();
 
                 if (!gl::IsColorRenderingSupported(internalformat, mRenderer))
                 {
@@ -575,7 +575,7 @@ GLenum Framebuffer::completeness() const
         }
         else if (IsInternalTextureTarget(mDepthbuffer.type(), mRenderer->getCurrentClientVersion()))
         {
-            GLint internalformat = depthbuffer->getInternalFormat();
+            GLenum internalformat = depthbuffer->getInternalFormat();
 
             // depth texture attachments require OES/ANGLE_depth_texture
             if (!mRenderer->getDepthTextureSupport())
@@ -634,7 +634,7 @@ GLenum Framebuffer::completeness() const
         }
         else if (IsInternalTextureTarget(mStencilbuffer.type(), mRenderer->getCurrentClientVersion()))
         {
-            GLint internalformat = stencilbuffer->getInternalFormat();
+            GLenum internalformat = stencilbuffer->getInternalFormat();
 
             // texture stencil attachments come along as part
             // of OES_packed_depth_stencil + OES/ANGLE_depth_texture

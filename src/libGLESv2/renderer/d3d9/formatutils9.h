@@ -23,7 +23,7 @@ namespace d3d9
 typedef std::set<D3DFORMAT> D3DFormatSet;
 
 MipGenerationFunction GetMipGenerationFunction(D3DFORMAT format);
-LoadImageFunction GetImageLoadFunction(GLint internalFormat, const Renderer9 *renderer);
+LoadImageFunction GetImageLoadFunction(GLenum internalFormat, const Renderer9 *renderer);
 
 GLuint GetFormatPixelBytes(D3DFORMAT format);
 GLuint GetBlockWidth(D3DFORMAT format);
@@ -42,8 +42,8 @@ ColorCopyFunction GetFastCopyFunction(D3DFORMAT sourceFormat, GLenum destFormat,
 namespace gl_d3d9
 {
 
-D3DFORMAT GetTextureFormat(GLint internalFormat, const Renderer9 *renderer);
-D3DFORMAT GetRenderFormat(GLint internalFormat, const Renderer9 *renderer);
+D3DFORMAT GetTextureFormat(GLenum internalFormat, const Renderer9 *renderer);
+D3DFORMAT GetRenderFormat(GLenum internalFormat, const Renderer9 *renderer);
 
 D3DMULTISAMPLE_TYPE GetMultisampleType(GLsizei samples);
 
@@ -52,7 +52,7 @@ D3DMULTISAMPLE_TYPE GetMultisampleType(GLsizei samples);
 namespace d3d9_gl
 {
 
-GLint GetInternalFormat(D3DFORMAT format);
+GLenum GetInternalFormat(D3DFORMAT format);
 GLsizei GetSamplesCount(D3DMULTISAMPLE_TYPE type);
 bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format, GLuint clientVersion);
 

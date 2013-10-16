@@ -53,7 +53,7 @@ class Image
     virtual bool updateSurface(TextureStorageInterface3D *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth) = 0;
     virtual bool updateSurface(TextureStorageInterface2DArray *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height) = 0;
 
-    virtual bool redefine(Renderer *renderer, GLenum target, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) = 0;
+    virtual bool redefine(Renderer *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) = 0;
 
     virtual void loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                           GLint unpackAlignment, GLenum type, const void *input) = 0;
@@ -66,7 +66,7 @@ class Image
     GLsizei mWidth;
     GLsizei mHeight;
     GLsizei mDepth;
-    GLint mInternalFormat;
+    GLenum mInternalFormat;
     GLenum mActualFormat;
     bool mRenderable;
     GLenum mTarget;

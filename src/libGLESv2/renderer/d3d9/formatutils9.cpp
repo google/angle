@@ -83,8 +83,8 @@ struct D3D9FormatInfo
 const D3DFORMAT D3DFMT_INTZ = ((D3DFORMAT)(MAKEFOURCC('I','N','T','Z')));
 const D3DFORMAT D3DFMT_NULL = ((D3DFORMAT)(MAKEFOURCC('N','U','L','L')));
 
-typedef std::pair<GLint, D3D9FormatInfo> D3D9FormatPair;
-typedef std::map<GLint, D3D9FormatInfo> D3D9FormatMap;
+typedef std::pair<GLenum, D3D9FormatInfo> D3D9FormatPair;
+typedef std::map<GLenum, D3D9FormatInfo> D3D9FormatMap;
 
 static D3D9FormatMap BuildD3D9FormatMap()
 {
@@ -135,7 +135,7 @@ static D3D9FormatMap BuildD3D9FormatMap()
     return map;
 }
 
-static bool GetD3D9FormatInfo(GLint internalFormat, D3D9FormatInfo *outFormatInfo)
+static bool GetD3D9FormatInfo(GLenum internalFormat, D3D9FormatInfo *outFormatInfo)
 {
     static const D3D9FormatMap formatMap = BuildD3D9FormatMap();
     D3D9FormatMap::const_iterator iter = formatMap.find(internalFormat);
@@ -159,7 +159,7 @@ struct D3DFormatInfo
     GLuint mPixelBits;
     GLuint mBlockWidth;
     GLuint mBlockHeight;
-    GLint mInternalFormat;
+    GLenum mInternalFormat;
 
     MipGenerationFunction mMipGenerationFunction;
     ColorReadFunction mColorReadFunction;
@@ -169,7 +169,7 @@ struct D3DFormatInfo
           mColorReadFunction(NULL)
     { }
 
-    D3DFormatInfo(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight, GLint internalFormat,
+    D3DFormatInfo(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight, GLenum internalFormat,
                   MipGenerationFunction mipFunc, ColorReadFunction readFunc)
         : mPixelBits(pixelBits), mBlockWidth(blockWidth), mBlockHeight(blockHeight), mInternalFormat(internalFormat),
           mMipGenerationFunction(mipFunc), mColorReadFunction(readFunc)
@@ -293,7 +293,7 @@ MipGenerationFunction GetMipGenerationFunction(D3DFORMAT format)
     }
 }
 
-LoadImageFunction GetImageLoadFunction(GLint internalFormat, const Renderer9 *renderer)
+LoadImageFunction GetImageLoadFunction(GLenum internalFormat, const Renderer9 *renderer)
 {
     if (!renderer)
     {
@@ -429,7 +429,7 @@ ColorCopyFunction GetFastCopyFunction(D3DFORMAT sourceFormat, GLenum destFormat,
 namespace gl_d3d9
 {
 
-D3DFORMAT GetTextureFormat(GLint internalFormat, const Renderer9 *renderer)
+D3DFORMAT GetTextureFormat(GLenum internalFormat, const Renderer9 *renderer)
 {
     if (!renderer)
     {
@@ -451,7 +451,7 @@ D3DFORMAT GetTextureFormat(GLint internalFormat, const Renderer9 *renderer)
     }
 }
 
-D3DFORMAT GetRenderFormat(GLint internalFormat, const Renderer9 *renderer)
+D3DFORMAT GetRenderFormat(GLenum internalFormat, const Renderer9 *renderer)
 {
     if (!renderer)
     {
@@ -483,7 +483,7 @@ D3DMULTISAMPLE_TYPE GetMultisampleType(GLsizei samples)
 namespace d3d9_gl
 {
 
-GLint GetInternalFormat(D3DFORMAT format)
+GLenum GetInternalFormat(D3DFORMAT format)
 {
     static const D3D9FormatInfoMap infoMap = BuildD3D9FormatInfoMap();
     D3D9FormatInfoMap::const_iterator iter = infoMap.find(format);
@@ -505,7 +505,7 @@ GLsizei GetSamplesCount(D3DMULTISAMPLE_TYPE type)
 
 bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format, GLuint clientVersion)
 {
-    GLint internalFormat = d3d9_gl::GetInternalFormat(d3dformat);
+    GLenum internalFormat = d3d9_gl::GetInternalFormat(d3dformat);
     GLenum convertedFormat = gl::GetFormat(internalFormat, clientVersion);
     return convertedFormat == format;
 }

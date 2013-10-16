@@ -23,10 +23,10 @@ namespace gl
 
 struct FormatTypeInfo
 {
-    GLint mInternalFormat;
+    GLenum mInternalFormat;
     ColorWriteFunction mColorWriteFunction;
 
-    FormatTypeInfo(GLint internalFormat, ColorWriteFunction writeFunc)
+    FormatTypeInfo(GLenum internalFormat, ColorWriteFunction writeFunc)
         : mInternalFormat(internalFormat), mColorWriteFunction(writeFunc)
     { }
 };
@@ -36,7 +36,7 @@ typedef std::pair<FormatTypePair, FormatTypeInfo> FormatPair;
 typedef std::map<FormatTypePair, FormatTypeInfo> FormatMap;
 
 // A helper function to insert data into the format map with fewer characters.
-static inline void InsertFormatMapping(FormatMap *map, GLenum format, GLenum type, GLint internalFormat, ColorWriteFunction writeFunc)
+static inline void InsertFormatMapping(FormatMap *map, GLenum format, GLenum type, GLenum internalFormat, ColorWriteFunction writeFunc)
 {
     map->insert(FormatPair(FormatTypePair(format, type), FormatTypeInfo(internalFormat, writeFunc)));
 }
@@ -196,11 +196,11 @@ static const FormatMap &GetFormatMap(GLuint clientVersion)
 
 struct FormatInfo
 {
-    GLint mInternalformat;
+    GLenum mInternalformat;
     GLenum mFormat;
     GLenum mType;
 
-    FormatInfo(GLint internalformat, GLenum format, GLenum type)
+    FormatInfo(GLenum internalformat, GLenum format, GLenum type)
         : mInternalformat(internalformat), mFormat(format), mType(type) { }
 
     bool operator<(const FormatInfo& other) const
@@ -642,8 +642,8 @@ struct InternalFormatInfo
     }
 };
 
-typedef std::pair<GLuint, InternalFormatInfo> InternalFormatInfoPair;
-typedef std::map<GLuint, InternalFormatInfo> InternalFormatInfoMap;
+typedef std::pair<GLenum, InternalFormatInfo> InternalFormatInfoPair;
+typedef std::map<GLenum, InternalFormatInfo> InternalFormatInfoMap;
 
 static InternalFormatInfoMap BuildES3InternalFormatInfoMap()
 {
@@ -850,7 +850,7 @@ static InternalFormatInfoMap BuildES2InternalFormatInfoMap()
     return map;
 }
 
-static bool GetInternalFormatInfo(GLint internalFormat, GLuint clientVersion, InternalFormatInfo *outFormatInfo)
+static bool GetInternalFormatInfo(GLenum internalFormat, GLuint clientVersion, InternalFormatInfo *outFormatInfo)
 {
     const InternalFormatInfoMap* map = NULL;
 
@@ -1009,7 +1009,7 @@ static CopyConversionSet BuildValidES3CopyTexImageCombinations()
     return set;
 }
 
-bool IsValidInternalFormat(GLint internalFormat, const Context *context)
+bool IsValidInternalFormat(GLenum internalFormat, const Context *context)
 {
     if (!context)
     {
@@ -1066,7 +1066,7 @@ bool IsValidType(GLenum type, GLuint clientVersion)
     }
 }
 
-bool IsValidFormatCombination(GLint internalFormat, GLenum format, GLenum type, GLuint clientVersion)
+bool IsValidFormatCombination(GLenum internalFormat, GLenum format, GLenum type, GLuint clientVersion)
 {
     if (clientVersion == 2)
     {
@@ -1147,7 +1147,7 @@ bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBu
     }
 }
 
-bool IsSizedInternalFormat(GLint internalFormat, GLuint clientVersion)
+bool IsSizedInternalFormat(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1161,14 +1161,14 @@ bool IsSizedInternalFormat(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLint GetSizedInternalFormat(GLenum format, GLenum type, GLuint clientVersion)
+GLenum GetSizedInternalFormat(GLenum format, GLenum type, GLuint clientVersion)
 {
     const FormatMap &formats = GetFormatMap(clientVersion);
     FormatMap::const_iterator iter = formats.find(FormatTypePair(format, type));
     return (iter != formats.end()) ? iter->second.mInternalFormat : GL_NONE;
 }
 
-GLuint GetPixelBytes(GLint internalFormat, GLuint clientVersion)
+GLuint GetPixelBytes(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1182,7 +1182,7 @@ GLuint GetPixelBytes(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetAlphaBits(GLint internalFormat, GLuint clientVersion)
+GLuint GetAlphaBits(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1196,7 +1196,7 @@ GLuint GetAlphaBits(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetRedBits(GLint internalFormat, GLuint clientVersion)
+GLuint GetRedBits(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1210,7 +1210,7 @@ GLuint GetRedBits(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetGreenBits(GLint internalFormat, GLuint clientVersion)
+GLuint GetGreenBits(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1224,7 +1224,7 @@ GLuint GetGreenBits(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetBlueBits(GLint internalFormat, GLuint clientVersion)
+GLuint GetBlueBits(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1238,7 +1238,7 @@ GLuint GetBlueBits(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetLuminanceBits(GLint internalFormat, GLuint clientVersion)
+GLuint GetLuminanceBits(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1252,7 +1252,7 @@ GLuint GetLuminanceBits(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetDepthBits(GLint internalFormat, GLuint clientVersion)
+GLuint GetDepthBits(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1266,7 +1266,7 @@ GLuint GetDepthBits(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetStencilBits(GLint internalFormat, GLuint clientVersion)
+GLuint GetStencilBits(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1308,7 +1308,7 @@ bool IsSpecialInterpretationType(GLenum type)
     }
 }
 
-GLenum GetFormat(GLint internalFormat, GLuint clientVersion)
+GLenum GetFormat(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1322,7 +1322,7 @@ GLenum GetFormat(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLenum GetType(GLint internalFormat, GLuint clientVersion)
+GLenum GetType(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1336,7 +1336,7 @@ GLenum GetType(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetComponentType(GLint internalFormat, GLuint clientVersion)
+GLuint GetComponentType(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1350,7 +1350,7 @@ GLuint GetComponentType(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetComponentCount(GLint internalFormat, GLuint clientVersion)
+GLuint GetComponentCount(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1364,7 +1364,7 @@ GLuint GetComponentCount(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLenum GetColorEncoding(GLint internalFormat, GLuint clientVersion)
+GLenum GetColorEncoding(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1378,7 +1378,7 @@ GLenum GetColorEncoding(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-bool IsColorRenderingSupported(GLint internalFormat, const rx::Renderer *renderer)
+bool IsColorRenderingSupported(GLenum internalFormat, const rx::Renderer *renderer)
 {
     InternalFormatInfo internalFormatInfo;
     if (renderer && GetInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
@@ -1392,7 +1392,7 @@ bool IsColorRenderingSupported(GLint internalFormat, const rx::Renderer *rendere
     }
 }
 
-bool IsColorRenderingSupported(GLint internalFormat, const Context *context)
+bool IsColorRenderingSupported(GLenum internalFormat, const Context *context)
 {
     InternalFormatInfo internalFormatInfo;
     if (context && GetInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
@@ -1406,7 +1406,7 @@ bool IsColorRenderingSupported(GLint internalFormat, const Context *context)
     }
 }
 
-bool IsTextureFilteringSupported(GLint internalFormat, const rx::Renderer *renderer)
+bool IsTextureFilteringSupported(GLenum internalFormat, const rx::Renderer *renderer)
 {
     InternalFormatInfo internalFormatInfo;
     if (renderer && GetInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
@@ -1420,7 +1420,7 @@ bool IsTextureFilteringSupported(GLint internalFormat, const rx::Renderer *rende
     }
 }
 
-bool IsTextureFilteringSupported(GLint internalFormat, const Context *context)
+bool IsTextureFilteringSupported(GLenum internalFormat, const Context *context)
 {
     InternalFormatInfo internalFormatInfo;
     if (context && GetInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
@@ -1434,7 +1434,7 @@ bool IsTextureFilteringSupported(GLint internalFormat, const Context *context)
     }
 }
 
-bool IsDepthRenderingSupported(GLint internalFormat, const rx::Renderer *renderer)
+bool IsDepthRenderingSupported(GLenum internalFormat, const rx::Renderer *renderer)
 {
     InternalFormatInfo internalFormatInfo;
     if (renderer && GetInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
@@ -1448,7 +1448,7 @@ bool IsDepthRenderingSupported(GLint internalFormat, const rx::Renderer *rendere
     }
 }
 
-bool IsDepthRenderingSupported(GLint internalFormat, const Context *context)
+bool IsDepthRenderingSupported(GLenum internalFormat, const Context *context)
 {
     InternalFormatInfo internalFormatInfo;
     if (context && GetInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
@@ -1462,7 +1462,7 @@ bool IsDepthRenderingSupported(GLint internalFormat, const Context *context)
     }
 }
 
-bool IsStencilRenderingSupported(GLint internalFormat, const rx::Renderer *renderer)
+bool IsStencilRenderingSupported(GLenum internalFormat, const rx::Renderer *renderer)
 {
     InternalFormatInfo internalFormatInfo;
     if (renderer && GetInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
@@ -1476,7 +1476,7 @@ bool IsStencilRenderingSupported(GLint internalFormat, const rx::Renderer *rende
     }
 }
 
-bool IsStencilRenderingSupported(GLint internalFormat, const Context *context)
+bool IsStencilRenderingSupported(GLenum internalFormat, const Context *context)
 {
     InternalFormatInfo internalFormatInfo;
     if (context && GetInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
@@ -1490,18 +1490,18 @@ bool IsStencilRenderingSupported(GLint internalFormat, const Context *context)
     }
 }
 
-GLuint GetRowPitch(GLint internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLint alignment)
+GLuint GetRowPitch(GLenum internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLint alignment)
 {
     ASSERT(alignment > 0 && isPow2(alignment));
     return (GetBlockSize(internalFormat, type, clientVersion, width, 1) + alignment - 1) & ~(alignment - 1);
 }
 
-GLuint GetDepthPitch(GLint internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLsizei height, GLint alignment)
+GLuint GetDepthPitch(GLenum internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLsizei height, GLint alignment)
 {
     return GetRowPitch(internalFormat, type, clientVersion, width, alignment) * height;
 }
 
-GLuint GetBlockSize(GLint internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLsizei height)
+GLuint GetBlockSize(GLenum internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLsizei height)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1541,7 +1541,7 @@ GLuint GetBlockSize(GLint internalFormat, GLenum type, GLuint clientVersion, GLs
     }
 }
 
-bool IsFormatCompressed(GLint internalFormat, GLuint clientVersion)
+bool IsFormatCompressed(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1555,7 +1555,7 @@ bool IsFormatCompressed(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetCompressedBlockWidth(GLint internalFormat, GLuint clientVersion)
+GLuint GetCompressedBlockWidth(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1569,7 +1569,7 @@ GLuint GetCompressedBlockWidth(GLint internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetCompressedBlockHeight(GLint internalFormat, GLuint clientVersion)
+GLuint GetCompressedBlockHeight(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))

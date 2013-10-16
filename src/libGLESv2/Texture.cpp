@@ -223,7 +223,7 @@ void Texture::setImage(const PixelUnpackState &unpack, GLenum type, const void *
     }
 }
 
-bool Texture::isFastUnpackable(const PixelUnpackState &unpack, GLint sizedInternalFormat)
+bool Texture::isFastUnpackable(const PixelUnpackState &unpack, GLenum sizedInternalFormat)
 {
     return unpack.pixelBuffer.id() != 0 && mRenderer->supportsFastCopyBufferToTexture(sizedInternalFormat);
 }
@@ -407,14 +407,14 @@ GLenum Texture2D::getActualFormat(GLint level) const
         return D3DFMT_UNKNOWN;
 }
 
-void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height)
+void Texture2D::redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height)
 {
     releaseTexImage();
 
     // If there currently is a corresponding storage texture image, it has these parameters
     const int storageWidth = std::max(1, getBaseLevelWidth() >> level);
     const int storageHeight = std::max(1, getBaseLevelHeight() >> level);
-    const int storageFormat = getBaseLevelInternalFormat();
+    const GLenum storageFormat = getBaseLevelInternalFormat();
 
     mImageArray[level]->redefine(mRenderer, GL_TEXTURE_2D, internalformat, width, height, 1, false);
 
@@ -439,11 +439,11 @@ void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, 
     }
 }
 
-void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
-    GLint sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
-                                                                                     : GetSizedInternalFormat(format, type, clientVersion);
+    GLenum sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
+                                                                                      : GetSizedInternalFormat(format, type, clientVersion);
     redefineImage(level, sizedInternalFormat, width, height);
 
     bool fastUnpacked = false;
@@ -474,7 +474,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 {
     releaseTexImage();
 
-    GLint internalformat = surface->getFormat();
+    GLenum internalformat = surface->getFormat();
 
     mImageArray[0]->redefine(mRenderer, GL_TEXTURE_2D, internalformat, surface->getWidth(), surface->getHeight(), 1, true);
 
@@ -561,8 +561,8 @@ void Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GL
 void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
-    GLint sizedInternalFormat = IsSizedInternalFormat(format, clientVersion) ? format
-                                                                             : GetSizedInternalFormat(format, GL_UNSIGNED_BYTE, clientVersion);
+    GLenum sizedInternalFormat = IsSizedInternalFormat(format, clientVersion) ? format
+                                                                              : GetSizedInternalFormat(format, GL_UNSIGNED_BYTE, clientVersion);
     redefineImage(level, sizedInternalFormat, width, height);
 
     if (!mImageArray[level]->isRenderableFormat())
@@ -1052,32 +1052,32 @@ GLenum TextureCubeMap::getActualFormat(GLenum target, GLint level) const
         return D3DFMT_UNKNOWN;
 }
 
-void TextureCubeMap::setImagePosX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+void TextureCubeMap::setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     setImage(0, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImageNegX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+void TextureCubeMap::setImageNegX(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     setImage(1, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImagePosY(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+void TextureCubeMap::setImagePosY(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     setImage(2, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImageNegY(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+void TextureCubeMap::setImageNegY(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     setImage(3, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImagePosZ(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+void TextureCubeMap::setImagePosZ(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     setImage(4, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImageNegZ(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+void TextureCubeMap::setImageNegZ(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     setImage(5, level, width, height, internalFormat, format, type, unpack, pixels);
 }
@@ -1346,11 +1346,11 @@ void TextureCubeMap::convertToRenderTarget()
     mDirtyImages = true;
 }
 
-void TextureCubeMap::setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+void TextureCubeMap::setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
-    GLint sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
-                                                                                     : GetSizedInternalFormat(format, type, clientVersion);
+    GLenum sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
+                                                                                      : GetSizedInternalFormat(format, type, clientVersion);
 
     redefineImage(faceIndex, level, sizedInternalFormat, width, height);
 
@@ -1368,12 +1368,12 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
     return face - GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 }
 
-void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, GLsizei width, GLsizei height)
+void TextureCubeMap::redefineImage(int face, GLint level, GLenum internalformat, GLsizei width, GLsizei height)
 {
     // If there currently is a corresponding storage texture image, it has these parameters
     const int storageWidth = std::max(1, getBaseLevelWidth() >> level);
     const int storageHeight = std::max(1, getBaseLevelHeight() >> level);
-    const int storageFormat = getBaseLevelInternalFormat();
+    const GLenum storageFormat = getBaseLevelInternalFormat();
 
     mImageArray[face][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, internalformat, width, height, 1, false);
 
@@ -1406,8 +1406,8 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
 {
     unsigned int faceindex = faceIndex(target);
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
-    GLint sizedInternalFormat = IsSizedInternalFormat(format, clientVersion) ? format
-                                                                             : GetSizedInternalFormat(format, GL_UNSIGNED_BYTE, clientVersion);
+    GLenum sizedInternalFormat = IsSizedInternalFormat(format, clientVersion) ? format
+                                                                              : GetSizedInternalFormat(format, GL_UNSIGNED_BYTE, clientVersion);
     redefineImage(faceindex, level, sizedInternalFormat, width, height);
 
     if (!mImageArray[faceindex][level]->isRenderableFormat())
@@ -1716,11 +1716,11 @@ bool Texture3D::isDepth(GLint level) const
     return GetDepthBits(getInternalFormat(level), mRenderer->getCurrentClientVersion()) > 0;
 }
 
-void Texture3D::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+void Texture3D::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
-    GLint sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
-                                                                                     : GetSizedInternalFormat(format, type, clientVersion);
+    GLenum sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
+                                                                                      : GetSizedInternalFormat(format, type, clientVersion);
     redefineImage(level, sizedInternalFormat, width, height, depth);
 
     bool fastUnpacked = false;
@@ -2170,13 +2170,13 @@ rx::TextureStorageInterface *Texture3D::getStorage(bool renderTarget)
     return mTexStorage;
 }
 
-void Texture3D::redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth)
+void Texture3D::redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
 {
     // If there currently is a corresponding storage texture image, it has these parameters
     const int storageWidth = std::max(1, getBaseLevelWidth() >> level);
     const int storageHeight = std::max(1, getBaseLevelHeight() >> level);
     const int storageDepth = std::max(1, getBaseLevelDepth() >> level);
-    const int storageFormat = getBaseLevelInternalFormat();
+    const GLenum storageFormat = getBaseLevelInternalFormat();
 
     mImageArray[level]->redefine(mRenderer, GL_TEXTURE_3D, internalformat, width, height, depth, false);
 
@@ -2274,11 +2274,11 @@ bool Texture2DArray::isDepth(GLint level) const
     return GetDepthBits(getInternalFormat(level), mRenderer->getCurrentClientVersion()) > 0;
 }
 
-void Texture2DArray::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+void Texture2DArray::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
-    GLint sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
-                                                                                     : GetSizedInternalFormat(format, type, clientVersion);
+    GLenum sizedInternalFormat = IsSizedInternalFormat(internalFormat, clientVersion) ? internalFormat
+                                                                                      : GetSizedInternalFormat(format, type, clientVersion);
     redefineImage(level, sizedInternalFormat, width, height, depth);
 
     GLsizei inputDepthPitch = gl::GetDepthPitch(sizedInternalFormat, type, clientVersion, width, height, unpack.alignment);
@@ -2307,7 +2307,7 @@ void Texture2DArray::setCompressedImage(GLint level, GLenum format, GLsizei widt
 
 void Texture2DArray::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    GLint internalformat = getInternalFormat(level);
+    GLenum internalformat = getInternalFormat(level);
     GLuint clientVersion =  mRenderer->getCurrentClientVersion();
     GLsizei inputDepthPitch = gl::GetDepthPitch(internalformat, type, clientVersion, width, height, unpack.alignment);
 
@@ -2732,13 +2732,13 @@ rx::TextureStorageInterface *Texture2DArray::getStorage(bool renderTarget)
     return mTexStorage;
 }
 
-void Texture2DArray::redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth)
+void Texture2DArray::redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
 {
     // If there currently is a corresponding storage texture image, it has these parameters
     const int storageWidth = std::max(1, getBaseLevelWidth() >> level);
     const int storageHeight = std::max(1, getBaseLevelHeight() >> level);
     const int storageDepth = getBaseLevelDepth();
-    const int storageFormat = getBaseLevelInternalFormat();
+    const GLenum storageFormat = getBaseLevelInternalFormat();
 
     for (int layer = 0; layer < mLayerCounts[level]; layer++)
     {

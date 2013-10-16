@@ -2211,7 +2211,7 @@ void __stdcall glGenerateMipmap(GLenum target)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            GLint internalFormat = texture->getBaseLevelInternalFormat();
+            GLenum internalFormat = texture->getBaseLevelInternalFormat();
 
             // Internally, all texture formats are sized so checking if the format
             // is color renderable and filterable will not fail.
@@ -4604,8 +4604,7 @@ void __stdcall glReadnPixelsEXT(GLint x, GLint y, GLsizei width, GLsizei height,
 
         if (context)
         {
-            GLint currentInternalFormat;
-            GLenum currentFormat, currentType;
+            GLenum currentInternalFormat, currentFormat, currentType;
 
             // Failure in getCurrentReadFormatType indicates that no color attachment is currently bound,
             // and attempting to read back if that's the case is an error. The error will be registered
@@ -4648,8 +4647,7 @@ void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
 
         if (context)
         {
-            GLint currentInternalFormat;
-            GLenum currentFormat, currentType;
+            GLenum currentInternalFormat, currentFormat, currentType;
 
             // Failure in getCurrentReadFormatType indicates that no color attachment is currently bound,
             // and attempting to read back if that's the case is an error. The error will be registered

@@ -37,7 +37,7 @@ class Image9 : public Image
     static void generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface);
     static void copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
 
-    virtual bool redefine(Renderer *renderer, GLenum target, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease);
+    virtual bool redefine(Renderer *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease);
 
     D3DFORMAT getD3DFormat() const;
 

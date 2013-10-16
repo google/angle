@@ -14,7 +14,7 @@ namespace gl
 
 class Context;
 
-bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint level, GLint internalformat, bool isCompressed, bool isSubImage,
+bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint level, GLenum internalformat, bool isCompressed, bool isSubImage,
                                    GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                    GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 

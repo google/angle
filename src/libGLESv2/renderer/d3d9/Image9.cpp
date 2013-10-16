@@ -123,7 +123,7 @@ void Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *so
     else UNREACHABLE();
 }
 
-bool Image9::redefine(rx::Renderer *renderer, GLenum target, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
+bool Image9::redefine(rx::Renderer *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
 {
     // 3D textures are not supported by the D3D9 backend.
     ASSERT(depth <= 1);

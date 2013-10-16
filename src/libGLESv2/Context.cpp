@@ -1737,8 +1737,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_IMPLEMENTATION_COLOR_READ_TYPE:
       case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
         {
-            GLint internalFormat;
-            GLenum format, type;
+            GLenum internalFormat, format, type;
             if (getCurrentReadFormatType(&internalFormat, &format, &type))
             {
                 if (pname == GL_IMPLEMENTATION_COLOR_READ_FORMAT)
@@ -2706,8 +2705,8 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
         return gl::error(GL_INVALID_OPERATION);
     }
 
-    GLint sizedInternalFormat = IsSizedInternalFormat(format, mClientVersion) ? format
-        : GetSizedInternalFormat(format, type, mClientVersion);
+    GLenum sizedInternalFormat = IsSizedInternalFormat(format, mClientVersion) ? format
+                                                                               : GetSizedInternalFormat(format, type, mClientVersion);
 
     GLsizei outputPitch = GetRowPitch(sizedInternalFormat, type, mClientVersion, width, getPackAlignment());
     // sized query sanity check
@@ -2962,17 +2961,17 @@ int Context::getMaxSupportedSamples() const
     return mRenderer->getMaxSupportedSamples();
 }
 
-GLsizei Context::getMaxSupportedFormatSamples(GLint internalFormat) const
+GLsizei Context::getMaxSupportedFormatSamples(GLenum internalFormat) const
 {
     return mRenderer->getMaxSupportedFormatSamples(internalFormat);
 }
 
-GLsizei Context::getNumSampleCounts(GLint internalFormat) const
+GLsizei Context::getNumSampleCounts(GLenum internalFormat) const
 {
     return mRenderer->getNumSampleCounts(internalFormat);
 }
 
-void Context::getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const
+void Context::getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const
 {
     mRenderer->getSampleCounts(internalFormat, bufSize, params);
 }
@@ -3138,7 +3137,7 @@ float Context::getTextureMaxAnisotropy() const
     return mMaxTextureAnisotropy;
 }
 
-bool Context::getCurrentReadFormatType(GLint *internalFormat, GLenum *format, GLenum *type)
+bool Context::getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type)
 {
     Framebuffer *framebuffer = getReadFramebuffer();
     if (!framebuffer || framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)

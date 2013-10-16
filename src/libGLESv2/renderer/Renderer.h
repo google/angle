@@ -203,9 +203,9 @@ class Renderer
     virtual int getMaxSwapInterval() const = 0;
 
     virtual GLsizei getMaxSupportedSamples() const = 0;
-    virtual GLsizei getMaxSupportedFormatSamples(GLint internalFormat) const = 0;
-    virtual GLsizei getNumSampleCounts(GLint internalFormat) const = 0;
-    virtual void getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const = 0;
+    virtual GLsizei getMaxSupportedFormatSamples(GLenum internalFormat) const = 0;
+    virtual GLsizei getNumSampleCounts(GLenum internalFormat) const = 0;
+    virtual void getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const = 0;
 
     virtual unsigned int getMaxRenderTargets() const = 0;
 
@@ -260,12 +260,12 @@ class Renderer
     int getCurrentClientVersion() const { return mCurrentClientVersion; }
 
     // Buffer-to-texture and Texture-to-buffer copies
-    virtual bool supportsFastCopyBufferToTexture(GLint internalFormat) const = 0;
+    virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const = 0;
     virtual bool fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
                                          GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
 
     virtual bool getLUID(LUID *adapterLuid) const = 0;
-    virtual GLint getNativeTextureFormat(GLint internalFormat) const = 0;
+    virtual GLenum getNativeTextureFormat(GLenum internalFormat) const = 0;
 
   protected:
     bool initializeCompiler();

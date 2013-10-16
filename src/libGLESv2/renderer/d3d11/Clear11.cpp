@@ -221,7 +221,7 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
                     return;
                 }
 
-                GLint internalFormat = renderbuffer->getInternalFormat();
+                GLenum internalFormat = renderbuffer->getInternalFormat();
                 GLenum componentType = gl::GetComponentType(internalFormat, clientVersion);
                 if (clearParams.colorClearType == GL_FLOAT &&
                     !(componentType == GL_FLOAT || componentType == GL_UNSIGNED_NORMALIZED || componentType == GL_SIGNED_NORMALIZED))
@@ -279,7 +279,7 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
                 return;
             }
 
-            GLuint actualFormat = renderbuffer->getActualFormat();
+            GLenum actualFormat = renderbuffer->getActualFormat();
 
             unsigned int stencilUnmasked = frameBuffer->hasStencil() ? (1 << gl::GetStencilBits(actualFormat, clientVersion)) - 1 : 0;
             bool needMaskedStencilClear = clearParams.clearStencil && (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;

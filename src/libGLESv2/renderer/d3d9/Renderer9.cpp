@@ -723,7 +723,7 @@ FenceImpl *Renderer9::createFence()
     return new Fence9(this);
 }
 
-bool Renderer9::supportsFastCopyBufferToTexture(GLint internalFormat) const
+bool Renderer9::supportsFastCopyBufferToTexture(GLenum internalFormat) const
 {
     // Pixel buffer objects are not supported in D3D9, since D3D9 is ES2-only and PBOs are ES3.
     return false;
@@ -2499,14 +2499,14 @@ int Renderer9::getMaxSupportedSamples() const
     return mMaxSupportedSamples;
 }
 
-GLsizei Renderer9::getMaxSupportedFormatSamples(GLint internalFormat) const
+GLsizei Renderer9::getMaxSupportedFormatSamples(GLenum internalFormat) const
 {
     D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat, this);
     MultisampleSupportMap::const_iterator itr = mMultiSampleSupport.find(format);
     return (itr != mMultiSampleSupport.end()) ? mMaxSupportedSamples : 0;
 }
 
-GLsizei Renderer9::getNumSampleCounts(GLint internalFormat) const
+GLsizei Renderer9::getNumSampleCounts(GLenum internalFormat) const
 {
     D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat, this);
     MultisampleSupportMap::const_iterator iter = mMultiSampleSupport.find(format);
@@ -2527,7 +2527,7 @@ GLsizei Renderer9::getNumSampleCounts(GLint internalFormat) const
     return numCounts;
 }
 
-void Renderer9::getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const
+void Renderer9::getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const
 {
     D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat, this);
     MultisampleSupportMap::const_iterator iter = mMultiSampleSupport.find(format);
@@ -2578,7 +2578,7 @@ unsigned int Renderer9::getMaxRenderTargets() const
     return 1;
 }
 
-D3DFORMAT Renderer9::ConvertTextureInternalFormat(GLint internalformat)
+D3DFORMAT Renderer9::ConvertTextureInternalFormat(GLenum internalformat)
 {
     switch (internalformat)
     {
@@ -3064,7 +3064,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
 
     GLuint clientVersion = getCurrentClientVersion();
 
-    GLint sourceInternalFormat = d3d9_gl::GetInternalFormat(desc.Format);
+    GLenum sourceInternalFormat = d3d9_gl::GetInternalFormat(desc.Format);
     GLenum sourceFormat = gl::GetFormat(sourceInternalFormat, clientVersion);
     GLenum sourceType = gl::GetType(sourceInternalFormat, clientVersion);
 
@@ -3081,7 +3081,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     }
     else
     {
-        GLint destInternalFormat = gl::GetSizedInternalFormat(format, type, clientVersion);
+        GLenum destInternalFormat = gl::GetSizedInternalFormat(format, type, clientVersion);
         GLuint destPixelSize = gl::GetPixelBytes(destInternalFormat, clientVersion);
         GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat, clientVersion);
 
@@ -3329,7 +3329,7 @@ bool Renderer9::getLUID(LUID *adapterLuid) const
     return false;
 }
 
-GLint Renderer9::getNativeTextureFormat(GLint internalFormat) const
+GLenum Renderer9::getNativeTextureFormat(GLenum internalFormat) const
 {
     return d3d9_gl::GetInternalFormat(gl_d3d9::GetTextureFormat(internalFormat, this));
 }
