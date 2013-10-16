@@ -182,7 +182,7 @@ bool VertexBuffer9::getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei 
 
 bool VertexBuffer9::requiresConversion(const gl::VertexAttribute &attrib) const
 {
-    return formatConverter(attrib).identity;
+    return !formatConverter(attrib).identity;
 }
 
 unsigned int VertexBuffer9::getVertexSize(const gl::VertexAttribute &attrib) const
