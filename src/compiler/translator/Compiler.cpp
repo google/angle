@@ -11,7 +11,7 @@
 #include "compiler/translator/InitializeGLPosition.h"
 #include "compiler/translator/InitializeParseContext.h"
 #include "compiler/translator/MapLongVariableNames.h"
-#include "compiler/translator/ParseHelper.h"
+#include "compiler/translator/ParseContext.h"
 #include "compiler/translator/RenameFunction.h"
 #include "compiler/translator/ShHandle.h"
 #include "compiler/translator/ValidateLimitations.h"

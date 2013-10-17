@@ -7,7 +7,7 @@
 #include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/InitializeParseContext.h"
-#include "compiler/translator/ParseHelper.h"
+#include "compiler/translator/ParseContext.h"
 
 ValidateOutputs::ValidateOutputs(TInfoSinkBase& sink, int maxDrawBuffers)
     : mSink(sink),

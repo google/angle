@@ -10,7 +10,7 @@
 #define COMPILER_UNFOLDSHORTCIRCUIT_H_
 
 #include "compiler/translator/intermediate.h"
-#include "compiler/translator/ParseHelper.h"
+#include "compiler/translator/ParseContext.h"
 
 namespace sh
 {

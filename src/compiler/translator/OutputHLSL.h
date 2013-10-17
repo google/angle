@@ -16,7 +16,7 @@
 #include <GLES2/gl2.h>
 
 #include "compiler/translator/intermediate.h"
-#include "compiler/translator/ParseHelper.h"
+#include "compiler/translator/ParseContext.h"
 #include "compiler/translator/ShaderVariable.h"
 
 namespace sh

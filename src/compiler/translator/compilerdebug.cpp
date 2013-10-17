@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #include "compiler/translator/InitializeParseContext.h"
-#include "compiler/translator/ParseHelper.h"
+#include "compiler/translator/ParseContext.h"
 
 static const int kTraceBufferLen = 1024;
 

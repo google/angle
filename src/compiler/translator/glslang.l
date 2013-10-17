@@ -37,7 +37,7 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 
 %{
 #include "compiler/translator/glslang.h"
-#include "compiler/translator/ParseHelper.h"
+#include "compiler/translator/ParseContext.h"
 #include "compiler/preprocessor/Token.h"
 #include "compiler/translator/util.h"
 #include "glslang_tab.h"

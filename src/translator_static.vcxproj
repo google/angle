@@ -141,6 +141,7 @@
     <ClInclude Include="compiler\translator\HLSLLayoutEncoder.h"/>
     <ClInclude Include="compiler\translator\QualifierAlive.h"/>
     <ClInclude Include="compiler\translator\ConstantUnion.h"/>
+    <ClInclude Include="compiler\translator\ParseContext.h"/>
     <ClInclude Include="compiler\translator\Diagnostics.h"/>
     <ClInclude Include="compiler\translator\VersionGLSL.h"/>
     <ClInclude Include="compiler\translator\HashNames.h"/>
@@ -166,7 +167,6 @@
     <ClInclude Include="compiler\translator\VariablePacker.h"/>
     <ClInclude Include="compiler\translator\glslang.h"/>
     <ClInclude Include="compiler\translator\SearchSymbol.h"/>
-    <ClInclude Include="compiler\translator\ParseHelper.h"/>
     <ClInclude Include="compiler\translator\BlockLayoutEncoder.h"/>
     <ClInclude Include="compiler\translator\MMap.h"/>
     <ClInclude Include="compiler\translator\OutputHLSL.h"/>
@@ -197,6 +197,7 @@
     <ClCompile Include="compiler\translator\TranslatorHLSL.cpp"/>
     <ClCompile Include="compiler\translator\OutputGLSLBase.cpp"/>
     <ClCompile Include="compiler\translator\ShaderVariable.cpp"/>
+    <ClCompile Include="compiler\translator\ParseContext.cpp"/>
     <ClCompile Include="compiler\translator\RemoveTree.cpp"/>
     <ClCompile Include="compiler\translator\InitializeDll.cpp"/>
     <ClCompile Include="compiler\translator\PoolAlloc.cpp"/>
@@ -211,7 +212,6 @@
     <ClCompile Include="compiler\translator\InitializeGLPosition.cpp"/>
     <ClCompile Include="compiler\translator\VariablePacker.cpp"/>
     <ClCompile Include="compiler\translator\parseConst.cpp"/>
-    <ClCompile Include="compiler\translator\ParseHelper.cpp"/>
     <ClCompile Include="compiler\translator\VersionGLSL.cpp"/>
     <ClCompile Include="compiler\translator\DetectCallDepth.cpp"/>
     <ClCompile Include="compiler\translator\InitializeParseContext.cpp"/>

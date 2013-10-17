@@ -11,7 +11,7 @@
 
 #include "compiler/translator/ForLoopUnroll.h"
 #include "compiler/translator/intermediate.h"
-#include "compiler/translator/ParseHelper.h"
+#include "compiler/translator/ParseContext.h"
 
 class TOutputGLSLBase : public TIntermTraverser
 {

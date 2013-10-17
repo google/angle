@@ -133,6 +133,9 @@
     <ClCompile Include="compiler\translator\ShaderVariable.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
+    <ClCompile Include="compiler\translator\ParseContext.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
     <ClInclude Include="compiler\translator\ValidateOutputs.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
@@ -181,6 +184,9 @@
     <ClCompile Include="compiler\translator\Diagnostics.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
+    <ClInclude Include="compiler\translator\ParseContext.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
     <ClCompile Include="compiler\translator\QualifierAlive.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
@@ -259,9 +265,6 @@
     <ClInclude Include="compiler\translator\ValidateLimitations.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
-    <ClCompile Include="compiler\translator\ParseHelper.cpp">
-      <Filter>compiler\translator</Filter>
-    </ClCompile>
     <ClInclude Include="compiler\translator\Types.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
@@ -304,9 +307,6 @@
     <ClCompile Include="compiler\translator\CodeGen.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
-    <ClInclude Include="compiler\translator\ParseHelper.h">
-      <Filter>compiler\translator</Filter>
-    </ClInclude>
     <ClCompile Include="compiler\translator\IntermTraverse.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>

@@ -5,7 +5,7 @@
 //
 
 #include "compiler/translator/InfoSink.h"
-#include "compiler/translator/ParseHelper.h"
+#include "compiler/translator/ParseContext.h"
 #include "compiler/translator/depgraph/DependencyGraphOutput.h"
 #include "compiler/translator/timing/RestrictFragmentShaderTiming.h"
 
