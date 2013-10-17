@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libEGL", "libEGL.vcxproj", "{777AC703-C49D-E67C-F2EA-2BEDE272A25F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D5D676ED-C189-2A6B-8DE3-F4CA6175550F} = {D5D676ED-C189-2A6B-8DE3-F4CA6175550F}
@@ -46,7 +46,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal
