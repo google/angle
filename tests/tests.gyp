@@ -17,6 +17,17 @@
             [
                 'third_party/googletest/src/gtest-all.cc',
             ],
+            'defines':
+            [
+                '_VARIADIC_MAX=10',
+            ],
+            'direct_dependent_settings':
+            {
+                'defines':
+                [
+                    '_VARIADIC_MAX=10',
+                ],
+            },
         },
 
         {
@@ -32,6 +43,17 @@
             [
                 'third_party/googlemock/src/gmock-all.cc',
             ],
+            'defines':
+            [
+                '_VARIADIC_MAX=10',
+            ],
+            'direct_dependent_settings':
+            {
+                'defines':
+                [
+                    '_VARIADIC_MAX=10',
+                ],
+            },
         },
 
         {
