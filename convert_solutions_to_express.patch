@@ -1,0 +1,68 @@
+From a2b7ac4ae39c2892f9121c247637813f5dcd554e Mon Sep 17 00:00:00 2001
+From: Geoff Lang <geofflang@chromium.org>
+Date: Thu, 17 Oct 2013 11:58:55 -0400
+Subject: [PATCH] Convert visual studio solutions to express.
+
+---
+ build/all.sln       | 4 +---
+ samples/samples.sln | 4 +---
+ src/angle.sln       | 4 +---
+ 3 files changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/build/all.sln b/build/all.sln
+index b43dce0..28063ce 100644
+--- a/build/all.sln
++++ b/build/all.sln
+@@ -1,5 +1,5 @@
+ Microsoft Visual Studio Solution File, Format Version 11.00
+-# Visual Studio 2010
++# Visual C++ Express 2010
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "all", "all.vcxproj", "{F38E9C0E-E1F0-6C2F-966A-BAB0A9C226A9}"
+ 	ProjectSection(ProjectDependencies) = postProject
+ 		{7642CFD5-F187-3E3F-F8FF-859949B9F13E} = {7642CFD5-F187-3E3F-F8FF-859949B9F13E}
+@@ -213,6 +213,4 @@ Global
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+ 	EndGlobalSection
+-	GlobalSection(NestedProjects) = preSolution
+-	EndGlobalSection
+ EndGlobal
+diff --git a/samples/samples.sln b/samples/samples.sln
+index 4d44b1a..f0fbc99 100644
+--- a/samples/samples.sln
++++ b/samples/samples.sln
+@@ -1,5 +1,5 @@
+ Microsoft Visual Studio Solution File, Format Version 11.00
+-# Visual Studio 2010
++# Visual C++ Express 2010
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "es_util", "es_util.vcxproj", "{A3860D3E-C52F-F6AC-4B16-067147646E4D}"
+ 	ProjectSection(ProjectDependencies) = postProject
+ 		{777AC703-C49D-E67C-F2EA-2BEDE272A25F} = {777AC703-C49D-E67C-F2EA-2BEDE272A25F}
+@@ -181,6 +181,4 @@ Global
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+ 	EndGlobalSection
+-	GlobalSection(NestedProjects) = preSolution
+-	EndGlobalSection
+ EndGlobal
+diff --git a/src/angle.sln b/src/angle.sln
+index 294e81a..1bd6d59 100644
+--- a/src/angle.sln
++++ b/src/angle.sln
+@@ -1,5 +1,5 @@
+ Microsoft Visual Studio Solution File, Format Version 11.00
+-# Visual Studio 2010
++# Visual C++ Express 2010
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libEGL", "libEGL.vcxproj", "{777AC703-C49D-E67C-F2EA-2BEDE272A25F}"
+ 	ProjectSection(ProjectDependencies) = postProject
+ 		{D5D676ED-C189-2A6B-8DE3-F4CA6175550F} = {D5D676ED-C189-2A6B-8DE3-F4CA6175550F}
+@@ -47,6 +47,4 @@ Global
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+ 	EndGlobalSection
+-	GlobalSection(NestedProjects) = preSolution
+-	EndGlobalSection
+ EndGlobal
+-- 
+1.8.3.msysgit.0
+

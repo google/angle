@@ -1,8 +1,11 @@
 Debug
 Release
+*.sln
 *.sdf
 *.ncb
 *.suo
+*.vcxproj
+*.vcxproj.filters
 *.vcxproj.user
 patches-*
 *.target.mk
