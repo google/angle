@@ -23,17 +23,17 @@
 #include "libGLESv2/Context.h"
 
 // Precompiled shaders
-#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_vs.h"
-#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_gs.h"
-#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_4f.h"
-#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_4i.h"
-#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_4ui.h"
-#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_2f.h"
-#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_2i.h"
-#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_2ui.h"
-#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_1f.h"
-#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_1i.h"
-#include "libGLESv2/renderer/shaders/compiled/buffertotexture11_ps_1ui.h"
+#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_vs.h"
+#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_gs.h"
+#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_4f.h"
+#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_4i.h"
+#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_4ui.h"
+#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_2f.h"
+#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_2i.h"
+#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_2ui.h"
+#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_1f.h"
+#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_1i.h"
+#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_1ui.h"
 
 namespace rx
 {
