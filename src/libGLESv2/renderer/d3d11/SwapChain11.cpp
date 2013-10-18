@@ -30,6 +30,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer, HWND window, HANDLE shareHandle,
     mOffscreenSRView = NULL;
     mDepthStencilTexture = NULL;
     mDepthStencilDSView = NULL;
+    mDepthStencilSRView = NULL;
     mQuadVB = NULL;
     mPassThroughSampler = NULL;
     mPassThroughIL = NULL;
@@ -57,6 +58,7 @@ void SwapChain11::release()
     SafeRelease(mOffscreenSRView);
     SafeRelease(mDepthStencilTexture);
     SafeRelease(mDepthStencilDSView);
+    SafeRelease(mDepthStencilSRView);
     SafeRelease(mQuadVB);
     SafeRelease(mPassThroughSampler);
     SafeRelease(mPassThroughIL);
@@ -172,7 +174,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
             }
         }
 
-        d3d11::SetDebugName(mOffscreenTexture, "Offscreen texture");
+        d3d11::SetDebugName(mOffscreenTexture, "Offscreen back buffer texture");
 
         // EGL_ANGLE_surface_d3d_texture_2d_share_handle requires that we store a share handle for the client
         if (useSharedResource)
@@ -207,7 +209,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
 
     HRESULT result = device->CreateRenderTargetView(mOffscreenTexture, &offscreenRTVDesc, &mOffscreenRTView);
     ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mOffscreenRTView, "Offscreen render target");
+    d3d11::SetDebugName(mOffscreenRTView, "Offscreen back buffer render target");
 
     D3D11_SHADER_RESOURCE_VIEW_DESC offscreenSRVDesc;
     offscreenSRVDesc.Format = gl_d3d11::GetSRVFormat(mBackBufferFormat, mRenderer->getCurrentClientVersion());
@@ -217,7 +219,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
 
     result = device->CreateShaderResourceView(mOffscreenTexture, &offscreenSRVDesc, &mOffscreenSRView);
     ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mOffscreenSRView, "Offscreen shader resource");
+    d3d11::SetDebugName(mOffscreenSRView, "Offscreen back buffer shader resource");
 
     if (mDepthBufferFormat != GL_NONE)
     {
@@ -230,7 +232,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
         depthStencilTextureDesc.SampleDesc.Count = 1;
         depthStencilTextureDesc.SampleDesc.Quality = 0;
         depthStencilTextureDesc.Usage = D3D11_USAGE_DEFAULT;
-        depthStencilTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+        depthStencilTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
         depthStencilTextureDesc.CPUAccessFlags = 0;
         depthStencilTextureDesc.MiscFlags = 0;
 
@@ -249,7 +251,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
                 return EGL_BAD_ALLOC;
             }
         }
-        d3d11::SetDebugName(mDepthStencilTexture, "Depth stencil texture");
+        d3d11::SetDebugName(mDepthStencilTexture, "Offscreen depth stencil texture");
 
         D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilDesc;
         depthStencilDesc.Format = gl_d3d11::GetDSVFormat(mDepthBufferFormat, mRenderer->getCurrentClientVersion());
@@ -259,7 +261,17 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
 
         result = device->CreateDepthStencilView(mDepthStencilTexture, &depthStencilDesc, &mDepthStencilDSView);
         ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mDepthStencilDSView, "Depth stencil view");
+        d3d11::SetDebugName(mDepthStencilDSView, "Offscreen depth stencil view");
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC depthStencilSRVDesc;
+        depthStencilSRVDesc.Format = gl_d3d11::GetSRVFormat(mDepthBufferFormat, mRenderer->getCurrentClientVersion());
+        depthStencilSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        depthStencilSRVDesc.Texture2D.MostDetailedMip = 0;
+        depthStencilSRVDesc.Texture2D.MipLevels = -1;
+
+        result = device->CreateShaderResourceView(mDepthStencilTexture, &depthStencilSRVDesc, &mDepthStencilSRView);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mDepthStencilSRView, "Offscreen depth stencil shader resource");
     }
 
     mWidth = backbufferWidth;
@@ -656,6 +668,18 @@ ID3D11DepthStencilView *SwapChain11::getDepthStencil()
     }
 
     return mDepthStencilDSView;
+}
+
+// Increments refcount on view.
+// caller must Release() the returned view
+ID3D11ShaderResourceView * SwapChain11::getDepthStencilShaderResource()
+{
+    if (mDepthStencilSRView)
+    {
+        mDepthStencilSRView->AddRef();
+    }
+
+    return mDepthStencilSRView;
 }
 
 ID3D11Texture2D *SwapChain11::getDepthStencilTexture()
