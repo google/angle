@@ -28,7 +28,7 @@
   <PropertyGroup Label="UserMacros"/>
   <PropertyGroup>
     <ExecutablePath>$(ExecutablePath);$(MSBuildProjectDirectory)\..\third_party\cygwin\bin\;$(MSBuildProjectDirectory)\..\third_party\python_26\</ExecutablePath>
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(OutDir)obj\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
@@ -37,12 +37,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;..\include;libGLESv2;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ProgramFiles)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\include;libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4100;4127;4189;4239;4244;4245;4512;4702;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4267;4100;4127;4189;4239;4244;4245;4512;4702;4530;4718;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
@@ -53,11 +53,11 @@
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <Link>
       <AdditionalDependencies>d3d9.lib;dxguid.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
@@ -65,20 +65,21 @@
       <ModuleDefinitionFile>libGLESv2\libGLESv2.def</ModuleDefinitionFile>
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
       <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>.;..\include;libGLESv2;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ProgramFiles)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\include;libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
       <PreprocessorDefinitions>ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };NOMINMAX;ANGLE_ENABLE_D3D_EVENTS;ANGLE_TRANSLATOR_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;..\include;libGLESv2;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ProgramFiles)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\include;libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4100;4127;4189;4239;4244;4245;4512;4702;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4267;4100;4127;4189;4239;4244;4245;4512;4702;4530;4718;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
@@ -89,11 +90,11 @@
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <Link>
       <AdditionalDependencies>d3d9.lib;dxguid.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
@@ -101,9 +102,10 @@
       <ModuleDefinitionFile>libGLESv2\libGLESv2.def</ModuleDefinitionFile>
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
       <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>.;..\include;libGLESv2;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ProgramFiles)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\include;libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
       <PreprocessorDefinitions>ANGLE_DISABLE_TRACE;ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };NOMINMAX;ANGLE_ENABLE_D3D_EVENTS;ANGLE_TRANSLATOR_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
@@ -115,9 +117,10 @@
     <None Include="libGLESv2\renderer\d3d11\shaders\Passthrough2D11.hlsl"/>
     <None Include="libGLESv2\renderer\d3d11\shaders\Passthrough3D11.hlsl"/>
     <None Include="libGLESv2\renderer\d3d11\shaders\Clear11.hlsl"/>
+    <None Include="libGLESv2\renderer\shaders\BufferToTexture11.hlsl"/>
+    <None Include="libGLESv2\renderer\d3d9\shaders\Blit.ps"/>
     <None Include="libGLESv2\renderer\d3d9\shaders\Blit.vs"/>
     <None Include="libGLESv2\renderer\d3d9\shaders\generate_shaders.bat"/>
-    <None Include="libGLESv2\renderer\d3d9\shaders\Blit.ps"/>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libGLESv2\resource.h"/>
@@ -215,18 +218,30 @@
     <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\passthrough2d11vs.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgba2di11ps.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgba2d11ps.h"/>
-    <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgb2di11ps.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgba3di11ps.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgb2d11ps.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\clearuint11ps.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\clearsint11ps.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\passthroughrg3dui11ps.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\passthrough3d11vs.h"/>
+    <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgb2di11ps.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgb3dui11ps.h"/>
+    <ClInclude Include="libGLESv2\renderer\shaders\compiled\buffertotexture11_ps_2f.h"/>
+    <ClInclude Include="libGLESv2\renderer\shaders\compiled\buffertotexture11_vs.h"/>
+    <ClInclude Include="libGLESv2\renderer\shaders\compiled\buffertotexture11_ps_1i.h"/>
+    <ClInclude Include="libGLESv2\renderer\shaders\compiled\buffertotexture11_ps_4i.h"/>
+    <ClInclude Include="libGLESv2\renderer\shaders\compiled\buffertotexture11_ps_2i.h"/>
+    <ClInclude Include="libGLESv2\renderer\shaders\compiled\buffertotexture11_ps_1ui.h"/>
+    <ClInclude Include="libGLESv2\renderer\shaders\compiled\buffertotexture11_gs.h"/>
+    <ClInclude Include="libGLESv2\renderer\shaders\compiled\buffertotexture11_ps_4f.h"/>
+    <ClInclude Include="libGLESv2\renderer\shaders\compiled\buffertotexture11_ps_2ui.h"/>
+    <ClInclude Include="libGLESv2\renderer\shaders\compiled\buffertotexture11_ps_1f.h"/>
+    <ClInclude Include="libGLESv2\renderer\shaders\compiled\buffertotexture11_ps_4ui.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\IndexBuffer9.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\VertexDeclarationCache.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\Blit9.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\ShaderExecutable9.h"/>
+    <ClInclude Include="libGLESv2\renderer\d3d9\Image9.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\SwapChain9.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\formatutils9.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\Query9.h"/>
@@ -237,7 +252,6 @@
     <ClInclude Include="libGLESv2\renderer\d3d9\RenderTarget9.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\TextureStorage9.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\VertexBuffer9.h"/>
-    <ClInclude Include="libGLESv2\renderer\d3d9\Image9.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\shaders\compiled\luminanceps.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\shaders\compiled\passthroughps.h"/>
     <ClInclude Include="libGLESv2\renderer\d3d9\shaders\compiled\flipyvs.h"/>
@@ -316,13 +330,13 @@
     <ClCompile Include="libGLESv2\renderer\d3d9\ShaderExecutable9.cpp"/>
     <ClCompile Include="libGLESv2\renderer\d3d9\RenderTarget9.cpp"/>
     <ClCompile Include="libGLESv2\renderer\d3d9\BufferStorage9.cpp"/>
-    <ClCompile Include="libGLESv2\renderer\d3d9\Renderer9.cpp"/>
     <ClCompile Include="libGLESv2\renderer\d3d9\TextureStorage9.cpp"/>
+    <ClCompile Include="libGLESv2\renderer\d3d9\formatutils9.cpp"/>
     <ClCompile Include="libGLESv2\renderer\d3d9\Fence9.cpp"/>
     <ClCompile Include="libGLESv2\renderer\d3d9\Blit9.cpp"/>
     <ClCompile Include="libGLESv2\renderer\d3d9\SwapChain9.cpp"/>
     <ClCompile Include="libGLESv2\renderer\d3d9\VertexBuffer9.cpp"/>
-    <ClCompile Include="libGLESv2\renderer\d3d9\formatutils9.cpp"/>
+    <ClCompile Include="libGLESv2\renderer\d3d9\Renderer9.cpp"/>
     <ClCompile Include="libGLESv2\renderer\d3d9\Query9.cpp"/>
     <ClCompile Include="common\event_tracer.cpp"/>
     <ClCompile Include="common\RefCountObject.cpp"/>
