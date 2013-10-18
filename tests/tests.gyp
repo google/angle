@@ -99,6 +99,38 @@
             ],
         },
     ],
+
+    'conditions':
+    [
+        ['OS=="win"',
+        {
+            'targets':
+            [
+                {
+                    'target_name': 'angle_tests',
+                    'type': 'executable',
+                    'dependencies':
+                    [
+                        '../src/angle.gyp:libGLESv2',
+                        '../src/angle.gyp:libEGL',
+                        'gtest',
+                        'gmock',
+                    ],
+                    'include_dirs':
+                    [
+                        '../include',
+                        'angle_tests',
+                        'third_party/googletest/include',
+                        'third_party/googlemock/include',
+                    ],
+                    'sources':
+                    [
+                        '<!@(python enumerate_files.py angle_tests -types *.cpp *.h)'
+                    ],
+                },
+            ],
+        }],
+    ],
 }
 
 # Local Variables:
