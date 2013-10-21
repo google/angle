@@ -107,7 +107,7 @@ static D3D11ES3FormatMap BuildD3D11ES3FormatMap()
     map.insert(D3D11ES3FormatPair(GL_ALPHA8_EXT,             D3D11ES3FormatInfo(DXGI_FORMAT_A8_UNORM,           DXGI_FORMAT_A8_UNORM,                 DXGI_FORMAT_A8_UNORM,           DXGI_FORMAT_UNKNOWN             )));
     map.insert(D3D11ES3FormatPair(GL_LUMINANCE8_EXT,         D3D11ES3FormatInfo(DXGI_FORMAT_R8G8B8A8_UNORM,     DXGI_FORMAT_R8G8B8A8_UNORM,           DXGI_FORMAT_R8G8B8A8_UNORM,     DXGI_FORMAT_UNKNOWN             )));
     map.insert(D3D11ES3FormatPair(GL_ALPHA32F_EXT,           D3D11ES3FormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT,       DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN             )));
-    map.insert(D3D11ES3FormatPair(GL_LUMINANCE32F_EXT,       D3D11ES3FormatInfo(DXGI_FORMAT_R32G32B32_FLOAT,    DXGI_FORMAT_R32G32B32_FLOAT,          DXGI_FORMAT_R32G32B32_FLOAT,    DXGI_FORMAT_UNKNOWN             )));
+    map.insert(D3D11ES3FormatPair(GL_LUMINANCE32F_EXT,       D3D11ES3FormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT,       DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN             )));
     map.insert(D3D11ES3FormatPair(GL_ALPHA16F_EXT,           D3D11ES3FormatInfo(DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R16G16B16A16_FLOAT,       DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_UNKNOWN             )));
     map.insert(D3D11ES3FormatPair(GL_LUMINANCE16F_EXT,       D3D11ES3FormatInfo(DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_UNKNOWN,                  DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_UNKNOWN             )));
     map.insert(D3D11ES3FormatPair(GL_LUMINANCE8_ALPHA8_EXT,  D3D11ES3FormatInfo(DXGI_FORMAT_R8G8B8A8_UNORM,     DXGI_FORMAT_R8G8B8A8_UNORM,           DXGI_FORMAT_R8G8B8A8_UNORM,     DXGI_FORMAT_UNKNOWN             )));
@@ -380,7 +380,7 @@ static D3D11ES2FormatMap BuildD3D11ES2FormatMap()
     map.insert(D3D11ES2FormatPair(GL_RGBA32F_EXT,                     D3D11ES2FormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT,    DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN,           loadRGBAFloatDataToRGBA                  )));
     map.insert(D3D11ES2FormatPair(GL_RGB32F_EXT,                      D3D11ES2FormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT,    DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN,           loadRGBFloatDataToRGBA                   )));
     map.insert(D3D11ES2FormatPair(GL_ALPHA32F_EXT,                    D3D11ES2FormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT,    DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN,           loadAlphaFloatDataToRGBA                 )));
-    map.insert(D3D11ES2FormatPair(GL_LUMINANCE32F_EXT,                D3D11ES2FormatInfo(DXGI_FORMAT_R32G32B32_FLOAT,    DXGI_FORMAT_R32G32B32_FLOAT,       DXGI_FORMAT_R32G32B32_FLOAT,    DXGI_FORMAT_UNKNOWN,           loadLuminanceFloatDataToRGB              )));
+    map.insert(D3D11ES2FormatPair(GL_LUMINANCE32F_EXT,                D3D11ES2FormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT,    DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN,           loadLuminanceFloatDataToRGBA             )));
     map.insert(D3D11ES2FormatPair(GL_LUMINANCE_ALPHA32F_EXT,          D3D11ES2FormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT,    DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN,           loadLuminanceAlphaFloatDataToRGBA        )));
 
     map.insert(D3D11ES2FormatPair(GL_RGBA16F_EXT,                     D3D11ES2FormatInfo(DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R16G16B16A16_FLOAT,    DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_UNKNOWN,           loadRGBAHalfFloatDataToRGBA              )));
@@ -512,7 +512,6 @@ static DXGIFormatInfoMap BuildCommonDXGIFormatInfoMap(GLuint clientVersion)
 
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32_FLOAT,           DXGIFormatInfo( 32, 1, 1, GL_R32F,                            GenerateMip<R32F>,          ReadColor<R32F, GLfloat>,          clientVersion)));
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G32_FLOAT,        DXGIFormatInfo( 64, 1, 1, GL_RG32F,                           GenerateMip<R32G32F>,       ReadColor<R32G32F, GLfloat>,       clientVersion)));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G32B32_FLOAT,     DXGIFormatInfo( 96, 1, 1, GL_RGB32F,                          GenerateMip<R32G32B32F>,    ReadColor<R32G32B32F, GLfloat>,    clientVersion)));
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G32B32A32_FLOAT,  DXGIFormatInfo(128, 1, 1, GL_RGBA32F,                         GenerateMip<R32G32B32A32F>, ReadColor<R32G32B32A32F, GLfloat>, clientVersion)));
 
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R9G9B9E5_SHAREDEXP,  DXGIFormatInfo( 32, 1, 1, GL_RGB9_E5,                         GenerateMip<R9G9B9E5>,      ReadColor<R9G9B9E5, GLfloat>,      clientVersion)));
