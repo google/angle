@@ -18,3 +18,5 @@ debug.txt
 third_party
 tests/third_party
 out
+build/Debug*
+build/Release*
