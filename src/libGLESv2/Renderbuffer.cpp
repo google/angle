@@ -100,6 +100,11 @@ unsigned int RenderbufferTexture2D::getSerial() const
     return mTexture2D->getRenderTargetSerial(mLevel);
 }
 
+unsigned int RenderbufferTexture2D::getTextureSerial() const
+{
+    return mTexture2D->getTextureSerial();
+}
+
 ///// RenderbufferTextureCubeMap Implementation ////////
 
 RenderbufferTextureCubeMap::RenderbufferTextureCubeMap(TextureCubeMap *texture, GLenum faceTarget, GLint level)
@@ -163,6 +168,11 @@ GLsizei RenderbufferTextureCubeMap::getSamples() const
 unsigned int RenderbufferTextureCubeMap::getSerial() const
 {
     return mTextureCubeMap->getRenderTargetSerial(mFaceTarget, mLevel);
+}
+
+unsigned int RenderbufferTextureCubeMap::getTextureSerial() const
+{
+    return mTextureCubeMap->getTextureSerial();
 }
 
 ///// RenderbufferTexture3DLayer Implementation ////////
@@ -230,6 +240,11 @@ unsigned int RenderbufferTexture3DLayer::getSerial() const
     return mTexture3D->getRenderTargetSerial(mLevel, mLayer);
 }
 
+unsigned int RenderbufferTexture3DLayer::getTextureSerial() const
+{
+    return mTexture3D->getTextureSerial();
+}
+
 ////// RenderbufferTexture2DArrayLayer Implementation //////
 
 RenderbufferTexture2DArrayLayer::RenderbufferTexture2DArrayLayer(Texture2DArray *texture, GLint level, GLint layer)
@@ -291,6 +306,11 @@ GLsizei RenderbufferTexture2DArrayLayer::getSamples() const
 unsigned int RenderbufferTexture2DArrayLayer::getSerial() const
 {
     return mTexture2DArray->getRenderTargetSerial(mLevel, mLayer);
+}
+
+unsigned int RenderbufferTexture2DArrayLayer::getTextureSerial() const
+{
+    return mTexture2DArray->getTextureSerial();
 }
 
 ////// Renderbuffer Implementation //////
@@ -403,6 +423,11 @@ GLsizei Renderbuffer::getSamples() const
 unsigned int Renderbuffer::getSerial() const
 {
     return mInstance->getSerial();
+}
+
+unsigned int Renderbuffer::getTextureSerial() const
+{
+    return mInstance->getTextureSerial();
 }
 
 void Renderbuffer::setStorage(RenderbufferStorage *newStorage)

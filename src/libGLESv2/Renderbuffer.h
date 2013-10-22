@@ -56,6 +56,7 @@ class RenderbufferInterface
     virtual GLsizei getSamples() const = 0;
 
     virtual unsigned int getSerial() const = 0;
+    virtual unsigned int getTextureSerial() const = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferInterface);
@@ -81,6 +82,7 @@ class RenderbufferTexture2D : public RenderbufferInterface
     virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
+    virtual unsigned int getTextureSerial() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferTexture2D);
@@ -109,6 +111,7 @@ class RenderbufferTextureCubeMap : public RenderbufferInterface
     virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
+    virtual unsigned int getTextureSerial() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferTextureCubeMap);
@@ -138,6 +141,7 @@ public:
     virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
+    virtual unsigned int getTextureSerial() const;
 
 private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferTexture3DLayer);
@@ -167,6 +171,7 @@ public:
     virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
+    virtual unsigned int getTextureSerial() const;
 
 private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferTexture2DArrayLayer);
@@ -196,6 +201,7 @@ class RenderbufferStorage : public RenderbufferInterface
     virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
+    virtual unsigned int getTextureSerial() const { return 0; }
 
     static unsigned int issueSerials(GLuint count);
 
@@ -249,6 +255,7 @@ class Renderbuffer : public RefCountObject
     GLsizei getSamples() const;
 
     unsigned int getSerial() const;
+    unsigned int getTextureSerial() const;
 
     void setStorage(RenderbufferStorage *newStorage);
 
