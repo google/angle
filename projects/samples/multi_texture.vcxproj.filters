@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\samples">
+      <UniqueIdentifier>{C211F48C-152B-ADFE-63E3-597A16DC94A5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\samples\gles2_book">
+      <UniqueIdentifier>{01DCD872-C931-E1FA-4F9F-EBFA79587BB6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\samples\gles2_book\MultiTexture">
+      <UniqueIdentifier>{B094F5D0-1DD1-94CB-CEBD-6C2EB17B4D5A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\samples\samples.gyp">
+      <Filter>..\..\samples</Filter>
+    </None>
+    <None Include="..\..\samples\gles2_book\MultiTexture\lightmap.tga">
+      <Filter>..\..\samples\gles2_book\MultiTexture</Filter>
+    </None>
+    <None Include="..\..\samples\gles2_book\MultiTexture\basemap.tga">
+      <Filter>..\..\samples\gles2_book\MultiTexture</Filter>
+    </None>
+    <ClCompile Include="..\..\samples\gles2_book\MultiTexture\MultiTexture.c">
+      <Filter>..\..\samples\gles2_book\MultiTexture</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
