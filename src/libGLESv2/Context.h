@@ -38,7 +38,6 @@ class Renderer;
 
 namespace egl
 {
-class Display;
 class Surface;
 }
 
@@ -438,6 +437,8 @@ class Context
 
     void invalidateFrameBuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments,
                                GLint x, GLint y, GLsizei width, GLsizei height);
+
+    rx::Renderer *getRenderer() { return mRenderer; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
