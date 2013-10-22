@@ -21,7 +21,6 @@ gyp_generators = "msvs"
 msvs_version = "2010e"
 build_samples = True
 build_tests = False
-express_patch_script = os.path.join(generation_dir, 'convert_solutions_to_express.patch')
 
 if __name__ == '__main__':
 	gyp_cmd = os.path.join(gyp_dir, 'gyp')
@@ -39,12 +38,6 @@ if __name__ == '__main__':
 	print gyp_cmd
 	sys.stdout.flush()
 	os.system(gyp_cmd)
-
-	git_patch_cmd = 'git apply ' + express_patch_script
-	print '\nPatching Visual Studio projects to Visual Studio Express...'
-	print git_patch_cmd
-	sys.stdout.flush()
-	os.system(git_patch_cmd)
 
 	git_add_cmd = 'git add ' + generation_dir + ' -u'
 	print '\nRunning git add on updated Visual Studio projects...'

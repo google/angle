@@ -1,6 +1,6 @@
 deps = {
   "third_party/gyp":
-      "http://gyp.googlecode.com/svn/trunk@1564",
+      "http://gyp.googlecode.com/svn/trunk@1767",
 
   "tests/third_party/googletest":
       "http://googletest.googlecode.com/svn/trunk@629",
