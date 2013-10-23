@@ -320,3 +320,16 @@ bool ANGLETest::destroyEGLContext()
 
     return true;
 }
+
+void ANGLETestEnvironment::SetUp()
+{
+    if (!ANGLETest::InitTestWindow())
+    {
+        FAIL() << "Failed to create ANGLE test window.";
+    }
+}
+
+void ANGLETestEnvironment::TearDown()
+{
+    ANGLETest::DestroyTestWindow();
+}

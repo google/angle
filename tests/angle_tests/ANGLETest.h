@@ -104,4 +104,11 @@ class ANGLETest : public testing::Test
     static EGLNativeDisplayType mNativeDisplay;
 };
 
+class ANGLETestEnvironment : public testing::Environment
+{
+  public:
+    virtual void SetUp();
+    virtual void TearDown();
+};
+
 #endif  // ANGLE_TESTS_ANGLE_TEST_H_

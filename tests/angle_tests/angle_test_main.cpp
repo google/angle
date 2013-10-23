@@ -10,15 +10,8 @@
 
 int main(int argc, char** argv)
 {
-    if (!ANGLETest::InitTestWindow())
-    {
-        return -1;
-    }
-
     testing::InitGoogleMock(&argc, argv);
+    testing::AddGlobalTestEnvironment(new ANGLETestEnvironment());
     int rt = RUN_ALL_TESTS();
-
-    ANGLETest::DestroyTestWindow();
-
     return rt;
 }
