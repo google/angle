@@ -37,7 +37,6 @@ class Renderer;
 
 namespace egl
 {
-class Display;
 class Surface;
 }
 
@@ -397,6 +396,8 @@ class Context
     void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, 
                          GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
                          GLbitfield mask);
+
+    rx::Renderer *getRenderer() { return mRenderer; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
