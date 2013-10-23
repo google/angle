@@ -8,11 +8,30 @@
 #include "gtest/gtest.h"
 #include "GLSLANG/ShaderLang.h"
 
+class CompilerTestEnvironment : public testing::Environment
+{
+  public:
+    virtual void SetUp()
+    {
+        if (!ShInitialize())
+        {
+            FAIL() << "Failed to initialize the compiler.";
+        }
+    }
+
+    virtual void TearDown()
+    {
+        if (!ShFinalize())
+        {
+            FAIL() << "Failed to finalize the compiler.";
+        }
+    }
+};
+
 int main(int argc, char** argv)
 {
     testing::InitGoogleMock(&argc, argv);
-    ShInitialize();
+    testing::AddGlobalTestEnvironment(new CompilerTestEnvironment());
     int rt = RUN_ALL_TESTS();
-    ShFinalize();
     return rt;
 }
