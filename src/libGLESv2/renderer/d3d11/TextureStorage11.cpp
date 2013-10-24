@@ -49,7 +49,7 @@ TextureStorage11 *TextureStorage11::makeTextureStorage11(TextureStorage *storage
     return static_cast<TextureStorage11*>(storage);
 }
 
-DWORD TextureStorage11::GetTextureBindFlags(GLenum internalFormat, GLuint clientVersion, GLenum glusage)
+DWORD TextureStorage11::GetTextureBindFlags(GLenum internalFormat, GLuint clientVersion, bool renderTarget)
 {
     UINT bindFlags = 0;
 
@@ -61,8 +61,7 @@ DWORD TextureStorage11::GetTextureBindFlags(GLenum internalFormat, GLuint client
     {
         bindFlags |= D3D11_BIND_DEPTH_STENCIL;
     }
-    if (gl_d3d11::GetRTVFormat(internalFormat, clientVersion) != DXGI_FORMAT_UNKNOWN &&
-        glusage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE)
+    if (gl_d3d11::GetRTVFormat(internalFormat, clientVersion) != DXGI_FORMAT_UNKNOWN && renderTarget)
     {
         bindFlags |= D3D11_BIND_RENDER_TARGET;
     }
@@ -220,8 +219,8 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
     mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
 }
 
-TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), usage))
+TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height)
+    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
@@ -428,8 +427,8 @@ void TextureStorage11_2D::generateMipmap(int level)
     generateMipmapLayer(source, dest);
 }
 
-TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), usage))
+TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, int size)
+    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
     for (unsigned int i = 0; i < 6; i++)
@@ -644,9 +643,9 @@ void TextureStorage11_Cube::generateMipmap(int face, int level)
     generateMipmapLayer(source, dest);
 }
 
-TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
                                          GLsizei width, GLsizei height, GLsizei depth)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), usage))
+    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
 
@@ -888,9 +887,9 @@ void TextureStorage11_3D::generateMipmap(int level)
     generateMipmapLayer(source, dest);
 }
 
-TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
                                                    GLsizei width, GLsizei height, GLsizei depth)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), usage))
+    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
 

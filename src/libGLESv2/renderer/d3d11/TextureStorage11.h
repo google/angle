@@ -29,7 +29,7 @@ class TextureStorage11 : public TextureStorage
 
     static TextureStorage11 *makeTextureStorage11(TextureStorage *storage);
 
-    static DWORD GetTextureBindFlags(GLenum internalFormat, GLuint clientVersion, GLenum glusage);
+    static DWORD GetTextureBindFlags(GLenum internalFormat, GLuint clientVersion, bool renderTarget);
 
     UINT getBindFlags() const;
 
@@ -79,7 +79,7 @@ class TextureStorage11_2D : public TextureStorage11
 {
   public:
     TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapchain);
-    TextureStorage11_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
+    TextureStorage11_2D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height);
     virtual ~TextureStorage11_2D();
 
     static TextureStorage11_2D *makeTextureStorage11_2D(TextureStorage *storage);
@@ -100,7 +100,7 @@ class TextureStorage11_2D : public TextureStorage11
 class TextureStorage11_Cube : public TextureStorage11
 {
   public:
-    TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
+    TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, int size);
     virtual ~TextureStorage11_Cube();
 
     static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
@@ -121,7 +121,7 @@ class TextureStorage11_Cube : public TextureStorage11
 class TextureStorage11_3D : public TextureStorage11
 {
   public:
-    TextureStorage11_3D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+    TextureStorage11_3D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
                         GLsizei width, GLsizei height, GLsizei depth);
     virtual ~TextureStorage11_3D();
 
@@ -149,7 +149,7 @@ class TextureStorage11_3D : public TextureStorage11
 class TextureStorage11_2DArray : public TextureStorage11
 {
   public:
-    TextureStorage11_2DArray(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+    TextureStorage11_2DArray(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
                              GLsizei width, GLsizei height, GLsizei depth);
     virtual ~TextureStorage11_2DArray();
 

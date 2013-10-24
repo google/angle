@@ -44,6 +44,11 @@ bool IsMipmapFiltered(const SamplerState &samplerState)
     }
 }
 
+bool IsRenderTargetUsage(GLenum usage)
+{
+    return (usage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+}
+
 Texture::Texture(rx::Renderer *renderer, GLuint id, GLenum target) : RefCountObject(id)
 {
     mRenderer = renderer;
@@ -630,7 +635,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, internalformat, mUsage, false, width, height);
+    mTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), width, height);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -806,7 +811,7 @@ void Texture2D::createTexture()
     GLint levels = creationLevels(width, height);
 
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, getBaseLevelInternalFormat(), mUsage, false, width, height);
+    mTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, getBaseLevelInternalFormat(), IsRenderTargetUsage(mUsage), width, height);
     
     if (mTexStorage->isManaged())
     {
@@ -861,7 +866,7 @@ bool Texture2D::ensureRenderTarget()
     {
         GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(width, height);
 
-        newTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, getBaseLevelInternalFormat(), GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, width, height);
+        newTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, getBaseLevelInternalFormat(), true, width, height);
 
         if (mTexStorage != NULL)
         {
@@ -1274,7 +1279,7 @@ void TextureCubeMap::createTexture()
     GLenum internalformat = getBaseLevelInternalFormat();
 
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, mUsage, false, size);
+    mTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), size);
 
     if (mTexStorage->isManaged())
     {
@@ -1334,7 +1339,7 @@ bool TextureCubeMap::ensureRenderTarget()
         GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(size);
         GLenum internalformat = getBaseLevelInternalFormat();
 
-        newTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, size);
+        newTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, true, size);
 
         if (mTexStorage != NULL)
         {
@@ -1488,7 +1493,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
 {
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, mUsage, false, size);
+    mTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), size);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -1786,7 +1791,7 @@ void Texture3D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GL
 void Texture3D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
 {
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, internalformat, mUsage, width, height, depth);
+    mTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), width, height, depth);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -2017,7 +2022,7 @@ void Texture3D::createTexture()
     GLint levels = creationLevels(width, height, depth);
 
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, getBaseLevelInternalFormat(), mUsage, width, height, depth);
+    mTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, getBaseLevelInternalFormat(), IsRenderTargetUsage(mUsage), width, height, depth);
 
     if (mTexStorage->isManaged())
     {
@@ -2072,7 +2077,7 @@ bool Texture3D::ensureRenderTarget()
         GLsizei depth = getBaseLevelDepth();
         GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(width, height, depth);
 
-        newTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, getBaseLevelInternalFormat(), GL_FRAMEBUFFER_ATTACHMENT_ANGLE, width, height, depth);
+        newTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, getBaseLevelInternalFormat(), true, width, height, depth);
 
         if (mTexStorage != NULL)
         {
@@ -2338,7 +2343,7 @@ void Texture2DArray::subImageCompressed(GLint level, GLint xoffset, GLint yoffse
 void Texture2DArray::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
 {
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, mUsage, width, height, depth);
+    mTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), width, height, depth);
     mImmutable = true;
 
     for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
@@ -2594,7 +2599,7 @@ void Texture2DArray::createTexture()
     GLenum internalformat = getBaseLevelInternalFormat();
 
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, mUsage, width, height, depth);
+    mTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), width, height, depth);
 
     if (mTexStorage->isManaged())
     {
@@ -2657,7 +2662,7 @@ bool Texture2DArray::ensureRenderTarget()
         GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(width, height);
         GLenum internalformat = getInternalFormat(0);
 
-        newTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, width, height, depth);
+        newTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, true, width, height, depth);
 
         if (mTexStorage != NULL)
         {

@@ -3313,17 +3313,17 @@ TextureStorage *Renderer9::createTextureStorage2D(SwapChain *swapChain)
     return new TextureStorage9_2D(this, swapChain9);
 }
 
-TextureStorage *Renderer9::createTextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
+TextureStorage *Renderer9::createTextureStorage2D(int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height)
 {
-    return new TextureStorage9_2D(this, levels, internalformat, usage, forceRenderable, width, height);
+    return new TextureStorage9_2D(this, levels, internalformat, renderTarget, width, height);
 }
 
-TextureStorage *Renderer9::createTextureStorageCube(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
+TextureStorage *Renderer9::createTextureStorageCube(int levels, GLenum internalformat, bool renderTarget, int size)
 {
-    return new TextureStorage9_Cube(this, levels, internalformat, usage, forceRenderable, size);
+    return new TextureStorage9_Cube(this, levels, internalformat, renderTarget, size);
 }
 
-TextureStorage *Renderer9::createTextureStorage3D(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth)
+TextureStorage *Renderer9::createTextureStorage3D(int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth)
 {
     // 3D textures are not supported by the D3D9 backend.
     UNREACHABLE();
@@ -3331,7 +3331,7 @@ TextureStorage *Renderer9::createTextureStorage3D(int levels, GLenum internalfor
     return NULL;
 }
 
-TextureStorage *Renderer9::createTextureStorage2DArray(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth)
+TextureStorage *Renderer9::createTextureStorage2DArray(int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth)
 {
     // 2D array textures are not supported by the D3D9 backend.
     UNREACHABLE();

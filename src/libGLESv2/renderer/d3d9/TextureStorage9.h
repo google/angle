@@ -29,7 +29,7 @@ class TextureStorage9 : public TextureStorage
 
     static TextureStorage9 *makeTextureStorage9(TextureStorage *storage);
 
-    static DWORD GetTextureUsage(GLenum internalformat, Renderer9 *renderer, GLenum glusage, bool forceRenderable);
+    static DWORD GetTextureUsage(GLenum internalformat, Renderer9 *renderer, bool renderTarget);
 
     D3DPOOL getPool() const;
     DWORD getUsage() const;
@@ -61,7 +61,7 @@ class TextureStorage9_2D : public TextureStorage9
 {
   public:
     TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain);
-    TextureStorage9_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
+    TextureStorage9_2D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height);
     virtual ~TextureStorage9_2D();
 
     static TextureStorage9_2D *makeTextureStorage9_2D(TextureStorage *storage);
@@ -83,7 +83,7 @@ class TextureStorage9_2D : public TextureStorage9
 class TextureStorage9_Cube : public TextureStorage9
 {
   public:
-    TextureStorage9_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
+    TextureStorage9_Cube(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, int size);
     virtual ~TextureStorage9_Cube();
 
     static TextureStorage9_Cube *makeTextureStorage9_Cube(TextureStorage *storage);

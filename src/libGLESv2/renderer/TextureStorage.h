@@ -72,7 +72,7 @@ class TextureStorageInterface2D : public TextureStorageInterface
 {
   public:
     TextureStorageInterface2D(Renderer *renderer, SwapChain *swapchain);
-    TextureStorageInterface2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
+    TextureStorageInterface2D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height);
     virtual ~TextureStorageInterface2D();
 
     void generateMipmap(int level);
@@ -89,7 +89,7 @@ class TextureStorageInterface2D : public TextureStorageInterface
 class TextureStorageInterfaceCube : public TextureStorageInterface
 {
   public:
-    TextureStorageInterfaceCube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
+    TextureStorageInterfaceCube(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, int size);
     virtual ~TextureStorageInterfaceCube();
 
     void generateMipmap(int face, int level);
@@ -106,7 +106,7 @@ class TextureStorageInterfaceCube : public TextureStorageInterface
 class TextureStorageInterface3D : public TextureStorageInterface
 {
   public:
-    TextureStorageInterface3D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+    TextureStorageInterface3D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
                               GLsizei width, GLsizei height, GLsizei depth);
     virtual ~TextureStorageInterface3D();
 
@@ -126,8 +126,8 @@ class TextureStorageInterface3D : public TextureStorageInterface
 class TextureStorageInterface2DArray : public TextureStorageInterface
 {
   public:
-    TextureStorageInterface2DArray(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
-                              GLsizei width, GLsizei height, GLsizei depth);
+    TextureStorageInterface2DArray(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
+                                   GLsizei width, GLsizei height, GLsizei depth);
     virtual ~TextureStorageInterface2DArray();
 
     void generateMipmap(int level);

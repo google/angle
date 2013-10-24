@@ -3004,24 +3004,24 @@ TextureStorage *Renderer11::createTextureStorage2D(SwapChain *swapChain)
     return new TextureStorage11_2D(this, swapChain11);
 }
 
-TextureStorage *Renderer11::createTextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
+TextureStorage *Renderer11::createTextureStorage2D(int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height)
 {
-    return new TextureStorage11_2D(this, levels, internalformat, usage, forceRenderable, width, height);
+    return new TextureStorage11_2D(this, levels, internalformat, renderTarget, width, height);
 }
 
-TextureStorage *Renderer11::createTextureStorageCube(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
+TextureStorage *Renderer11::createTextureStorageCube(int levels, GLenum internalformat, bool renderTarget, int size)
 {
-    return new TextureStorage11_Cube(this, levels, internalformat, usage, forceRenderable, size);
+    return new TextureStorage11_Cube(this, levels, internalformat, renderTarget, size);
 }
 
-TextureStorage *Renderer11::createTextureStorage3D(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth)
+TextureStorage *Renderer11::createTextureStorage3D(int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth)
 {
-    return new TextureStorage11_3D(this, levels, internalformat, usage, width, height, depth);
+    return new TextureStorage11_3D(this, levels, internalformat, renderTarget, width, height, depth);
 }
 
-TextureStorage *Renderer11::createTextureStorage2DArray(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth)
+TextureStorage *Renderer11::createTextureStorage2DArray(int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth)
 {
-    return new TextureStorage11_2DArray(this, levels, internalformat, usage, width, height, depth);
+    return new TextureStorage11_2DArray(this, levels, internalformat, renderTarget, width, height, depth);
 }
 
 void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area,

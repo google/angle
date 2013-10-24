@@ -242,10 +242,10 @@ class Renderer
     virtual Image *createImage() = 0;
     virtual void generateMipmap(Image *dest, Image *source) = 0;
     virtual TextureStorage *createTextureStorage2D(SwapChain *swapChain) = 0;
-    virtual TextureStorage *createTextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height) = 0;
-    virtual TextureStorage *createTextureStorageCube(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size) = 0;
-    virtual TextureStorage *createTextureStorage3D(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth) = 0;
-    virtual TextureStorage *createTextureStorage2DArray(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth) = 0;
+    virtual TextureStorage *createTextureStorage2D(int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height) = 0;
+    virtual TextureStorage *createTextureStorageCube(int levels, GLenum internalformat, bool renderTarget, int size) = 0;
+    virtual TextureStorage *createTextureStorage3D(int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth) = 0;
+    virtual TextureStorage *createTextureStorage2DArray(int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth) = 0;
 
     // Buffer creation
     virtual VertexBuffer *createVertexBuffer() = 0;

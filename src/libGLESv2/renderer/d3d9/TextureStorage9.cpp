@@ -38,7 +38,7 @@ TextureStorage9 *TextureStorage9::makeTextureStorage9(TextureStorage *storage)
     return static_cast<TextureStorage9*>(storage);
 }
 
-DWORD TextureStorage9::GetTextureUsage(GLenum internalformat, Renderer9 *renderer, GLenum glusage, bool forceRenderable)
+DWORD TextureStorage9::GetTextureUsage(GLenum internalformat, Renderer9 *renderer, bool renderTarget)
 {
     GLuint clientVersion = renderer->getCurrentClientVersion();
 
@@ -49,9 +49,7 @@ DWORD TextureStorage9::GetTextureUsage(GLenum internalformat, Renderer9 *rendere
     {
         d3dusage |= D3DUSAGE_DEPTHSTENCIL;
     }
-    else if (forceRenderable ||
-             (gl_d3d9::GetRenderFormat(internalformat, renderer) != D3DFMT_UNKNOWN &&
-              glusage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE))
+    else if (renderTarget && (gl_d3d9::GetRenderFormat(internalformat, renderer) != D3DFMT_UNKNOWN))
     {
         d3dusage |= D3DUSAGE_RENDERTARGET;
     }
@@ -99,8 +97,8 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain
     initializeRenderTarget();
 }
 
-TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
-    : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), usage, forceRenderable))
+TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height)
+    : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), renderTarget))
 {
     mTexture = NULL;
     mRenderTarget = NULL;
@@ -193,8 +191,8 @@ void TextureStorage9_2D::initializeRenderTarget()
     }
 }
 
-TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
-    : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), usage, forceRenderable))
+TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, int size)
+    : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), renderTarget))
 {
     mTexture = NULL;
     for (int i = 0; i < 6; ++i)
