@@ -54,6 +54,9 @@ class TextureStorage11 : public TextureStorage
 
   protected:
     void generateMipmapLayer(RenderTarget11 *source, RenderTarget11 *dest);
+    int getLevelWidth(int mipLevel) const;
+    int getLevelHeight(int mipLevel) const;
+    int getLevelDepth(int mipLevel) const;
 
     Renderer11 *mRenderer;
     int mLodOffset;

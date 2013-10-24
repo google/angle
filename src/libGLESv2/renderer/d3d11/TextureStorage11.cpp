@@ -98,6 +98,21 @@ int TextureStorage11::levelCount()
     return levels;
 }
 
+int TextureStorage11::getLevelWidth(int mipLevel) const
+{
+    return std::max((static_cast<int>(mTextureWidth) >> mipLevel), 1);
+}
+
+int TextureStorage11::getLevelHeight(int mipLevel) const
+{
+    return std::max((static_cast<int>(mTextureHeight) >> mipLevel), 1);
+}
+
+int TextureStorage11::getLevelDepth(int mipLevel) const
+{
+    return std::max((static_cast<int>(mTextureDepth) >> mipLevel), 1);
+}
+
 UINT TextureStorage11::getSubresourceIndex(int mipLevel, int layerTarget)
 {
     UINT index = 0;
@@ -116,9 +131,7 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsign
     {
         GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
-        gl::Extents texSize(std::max(mTextureWidth  >> level, 1U),
-                            std::max(mTextureHeight >> level, 1U),
-                            std::max(mTextureDepth  >> level, 1U));
+        gl::Extents texSize(getLevelWidth(level), getLevelHeight(level), getLevelDepth(level));
         gl::Box copyArea(xoffset, yoffset, zoffset, width, height, depth);
 
         bool fullCopy = copyArea.x == 0 &&
@@ -349,10 +362,7 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
                 // also needs to keep a reference to the texture.
                 mTexture->AddRef();
 
-                mRenderTarget[level] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
-                                                          std::max(mTextureWidth >> level, 1U),
-                                                          std::max(mTextureHeight >> level, 1U),
-                                                          1);
+                mRenderTarget[level] = new RenderTarget11(mRenderer, rtv, mTexture, srv, getLevelWidth(level), getLevelHeight(level), 1);
             }
             else if (mDepthStencilFormat != DXGI_FORMAT_UNKNOWN)
             {
@@ -376,10 +386,7 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
                 // also needs to keep a reference to the texture.
                 mTexture->AddRef();
 
-                mRenderTarget[level] = new RenderTarget11(mRenderer, dsv, mTexture, srv,
-                                                          std::max(mTextureWidth >> level, 1U),
-                                                          std::max(mTextureHeight >> level, 1U),
-                                                          1);
+                mRenderTarget[level] = new RenderTarget11(mRenderer, dsv, mTexture, srv, getLevelWidth(level), getLevelHeight(level), 1);
             }
             else
             {
@@ -563,10 +570,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
                 // also needs to keep a reference to the texture.
                 mTexture->AddRef();
 
-                mRenderTarget[faceIndex][level] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
-                                                                   std::max(mTextureWidth >> level, 1U),
-                                                                   std::max(mTextureHeight >> level, 1U),
-                                                                   1);
+                mRenderTarget[faceIndex][level] = new RenderTarget11(mRenderer, rtv, mTexture, srv, getLevelWidth(level), getLevelHeight(level), 1);
             }
             else if (mDepthStencilFormat != DXGI_FORMAT_UNKNOWN)
             {
@@ -592,10 +596,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
                 // also needs to keep a reference to the texture.
                 mTexture->AddRef();
 
-                mRenderTarget[faceIndex][level] = new RenderTarget11(mRenderer, dsv, mTexture, srv,
-                                                                   std::max(mTextureWidth >> level, 1U),
-                                                                   std::max(mTextureHeight >> level, 1U),
-                                                                   1);
+                mRenderTarget[faceIndex][level] = new RenderTarget11(mRenderer, dsv, mTexture, srv, getLevelWidth(level), getLevelHeight(level), 1);
             }
             else
             {
@@ -805,10 +806,7 @@ RenderTarget *TextureStorage11_3D::getRenderTarget(int mipLevel)
                 // also needs to keep a reference to the texture.
                 mTexture->AddRef();
 
-                mLevelRenderTargets[mipLevel] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
-                                                                   std::max(mTextureWidth >> mipLevel, 1U),
-                                                                   std::max(mTextureHeight >> mipLevel, 1U),
-                                                                   std::max(mTextureDepth >> mipLevel, 1U));
+                mLevelRenderTargets[mipLevel] = new RenderTarget11(mRenderer, rtv, mTexture, srv, getLevelWidth(mipLevel), getLevelHeight(mipLevel), getLevelDepth(mipLevel));
             }
             else
             {
@@ -860,10 +858,7 @@ RenderTarget *TextureStorage11_3D::getRenderTargetLayer(int mipLevel, int layer)
                 // also needs to keep a reference to the texture.
                 mTexture->AddRef();
 
-                mLevelLayerRenderTargets[key] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
-                                                                   std::max(mTextureWidth >> mipLevel, 1U),
-                                                                   std::max(mTextureHeight >> mipLevel, 1U),
-                                                                   1);
+                mLevelLayerRenderTargets[key] = new RenderTarget11(mRenderer, rtv, mTexture, srv, getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1);
             }
             else
             {
@@ -1046,10 +1041,7 @@ RenderTarget *TextureStorage11_2DArray::getRenderTargetLayer(int mipLevel, int l
                 // also needs to keep a reference to the texture.
                 mTexture->AddRef();
 
-                mRenderTargets[key] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
-                                                         std::max(mTextureWidth >> mipLevel, 1U),
-                                                         std::max(mTextureHeight >> mipLevel, 1U),
-                                                         1);
+                mRenderTargets[key] = new RenderTarget11(mRenderer, rtv, mTexture, srv, getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1);
             }
             else
             {
