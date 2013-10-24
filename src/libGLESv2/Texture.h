@@ -191,7 +191,6 @@ class Texture2D : public Texture
     friend class RenderbufferTexture2D;
     rx::RenderTarget *getRenderTarget(GLint level);
     rx::RenderTarget *getDepthSencil(GLint level);
-    virtual int levelCount();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
@@ -206,6 +205,7 @@ class Texture2D : public Texture
     virtual const rx::Image *getBaseLevelImage() const;
 
     bool isMipmapComplete() const;
+    bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
     void updateStorageLevel(int level);
 
@@ -261,7 +261,6 @@ class TextureCubeMap : public Texture
     friend class RenderbufferTextureCubeMap;
     rx::RenderTarget *getRenderTarget(GLenum target, GLint level);
     rx::RenderTarget *getDepthStencil(GLenum target, GLint level);
-    virtual int levelCount();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
@@ -276,6 +275,7 @@ class TextureCubeMap : public Texture
     virtual const rx::Image *getBaseLevelImage() const;
 
     bool isMipmapCubeComplete() const;
+    bool isValidFaceLevel(int faceIndex, int level) const;
     bool isFaceLevelComplete(int faceIndex, int level) const;
     void updateStorageFaceLevel(int faceIndex, int level);
 
@@ -323,7 +323,6 @@ class Texture3D : public Texture
     rx::RenderTarget *getRenderTarget(GLint level);
     rx::RenderTarget *getRenderTarget(GLint level, GLint layer);
     rx::RenderTarget *getDepthStencil(GLint level, GLint layer);
-    virtual int levelCount();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture3D);
@@ -341,6 +340,7 @@ class Texture3D : public Texture
     void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);
 
+    bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
     void updateStorageLevel(int level);
 
@@ -383,7 +383,6 @@ class Texture2DArray : public Texture
     friend class RenderbufferTexture2DArrayLayer;
     rx::RenderTarget *getRenderTarget(GLint level, GLint layer);
     rx::RenderTarget *getDepthStencil(GLint level, GLint layer);
-    virtual int levelCount();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2DArray);
@@ -402,6 +401,7 @@ class Texture2DArray : public Texture
     void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint layerTarget, GLsizei width, GLsizei height);
 
+    bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
     void updateStorageLevel(int level);
 

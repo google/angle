@@ -532,7 +532,7 @@ void Texture2D::setCompressedImage(GLint level, GLenum format, GLsizei width, GL
 
 void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    if (level < levelCount())
+    if (isValidLevel(level))
     {
         rx::Image *image = mImageArray[level];
         if (image->copyToStorage(mTexStorage, level, xoffset, yoffset, width, height))
@@ -591,7 +591,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
         ensureRenderTarget();
         mImageArray[level]->markClean();
 
-        if (width != 0 && height != 0 && level < levelCount())
+        if (width != 0 && height != 0 && isValidLevel(level))
         {
             gl::Rectangle sourceRect;
             sourceRect.x = x;
@@ -624,7 +624,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
     {
         ensureRenderTarget();
         
-        if (level < levelCount())
+        if (isValidLevel(level))
         {
             updateStorageLevel(level);
 
@@ -992,9 +992,9 @@ rx::RenderTarget *Texture2D::getDepthSencil(GLint level)
     return mTexStorage->getRenderTarget(level);
 }
 
-int Texture2D::levelCount()
+bool Texture2D::isValidLevel(int level) const
 {
-    return mTexStorage ? mTexStorage->levelCount() : 0;
+    return (mTexStorage ? (level < mTexStorage->levelCount()) : false);
 }
 
 TextureCubeMap::TextureCubeMap(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_CUBE_MAP)
@@ -1096,7 +1096,7 @@ void TextureCubeMap::setCompressedImage(GLenum target, GLint level, GLenum forma
 
 void TextureCubeMap::commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    if (level < levelCount())
+    if (isValidFaceLevel(faceIndex, level))
     {
         rx::Image *image = mImageArray[faceIndex][level];
         if (image->copyToStorage(mTexStorage, faceIndex, level, xoffset, yoffset, width, height))
@@ -1450,7 +1450,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
 
         ASSERT(width == height);
 
-        if (width > 0 && level < levelCount())
+        if (width > 0 && isValidFaceLevel(faceIndex, level))
         {
             gl::Rectangle sourceRect;
             sourceRect.x = x;
@@ -1488,7 +1488,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
     {
         ensureRenderTarget();
         
-        if (level < levelCount())
+        if (isValidFaceLevel(faceIndex, level))
         {
             updateStorageFaceLevel(faceIndex, level);
 
@@ -1645,9 +1645,9 @@ rx::RenderTarget *TextureCubeMap::getDepthStencil(GLenum target, GLint level)
     return mTexStorage->getRenderTarget(target, level);
 }
 
-int TextureCubeMap::levelCount()
+bool TextureCubeMap::isValidFaceLevel(int faceIndex, int level) const
 {
-    return mTexStorage ? mTexStorage->levelCount() - getLodOffset() : 0;
+    return (mTexStorage ? (level < mTexStorage->levelCount()) : 0);
 }
 
 Texture3D::Texture3D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_3D)
@@ -1858,7 +1858,7 @@ void Texture3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
     {
         ensureRenderTarget();
 
-        if (level < levelCount())
+        if (isValidLevel(level))
         {
             updateStorageLevel(level);
 
@@ -1985,9 +1985,9 @@ unsigned int Texture3D::getRenderTargetSerial(GLint level, GLint layer)
     return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(level, layer) : 0);
 }
 
-int Texture3D::levelCount()
+bool Texture3D::isValidLevel(int level) const
 {
-    return mTexStorage ? mTexStorage->levelCount() : 0;
+    return (mTexStorage ? (level < mTexStorage->levelCount()) : 0);
 }
 
 void Texture3D::initializeStorage(bool renderTarget)
@@ -2176,7 +2176,7 @@ void Texture3D::redefineImage(GLint level, GLenum internalformat, GLsizei width,
 
 void Texture3D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth)
 {
-    if (level < levelCount())
+    if (isValidLevel(level))
     {
         rx::Image *image = mImageArray[level];
         if (image->copyToStorage(mTexStorage, level, xoffset, yoffset, zoffset, width, height, depth))
@@ -2417,7 +2417,7 @@ void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
     {
         ensureRenderTarget();
 
-        if (level < levelCount())
+        if (isValidLevel(level))
         {
             updateStorageLevel(level);
 
@@ -2541,9 +2541,9 @@ unsigned int Texture2DArray::getRenderTargetSerial(GLint level, GLint layer)
     return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(level, layer) : 0);
 }
 
-int Texture2DArray::levelCount()
+bool Texture2DArray::isValidLevel(int level) const
 {
-    return mTexStorage ? mTexStorage->levelCount() : 0;
+    return (mTexStorage ? (level < mTexStorage->levelCount()) : 0);
 }
 
 void Texture2DArray::initializeStorage(bool renderTarget)
@@ -2737,7 +2737,7 @@ void Texture2DArray::redefineImage(GLint level, GLenum internalformat, GLsizei w
 
 void Texture2DArray::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint layerTarget, GLsizei width, GLsizei height)
 {
-    if (level < levelCount() && layerTarget < getDepth(level))
+    if (isValidLevel(level) && layerTarget < getDepth(level))
     {
         rx::Image *image = mImageArray[level][layerTarget];
         if (image->copyToStorage(mTexStorage, level, xoffset, yoffset, layerTarget, width, height))
