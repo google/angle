@@ -167,7 +167,7 @@ float Texture::getMaxAnisotropy() const
 
 int Texture::getLodOffset()
 {
-    rx::TextureStorageInterface *texture = getStorage(false);
+    rx::TextureStorageInterface *texture = getNativeTexture();
     return texture ? texture->getLodOffset() : 0;
 }
 
@@ -297,8 +297,9 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLint zoffset, GL
 rx::TextureStorageInterface *Texture::getNativeTexture()
 {
     // ensure the underlying texture is created
+    initializeStorage(false);
 
-    rx::TextureStorageInterface *storage = getStorage(false);
+    rx::TextureStorageInterface *storage = getBaseLevelStorage();
     if (storage)
     {
         updateStorage();
@@ -319,7 +320,7 @@ void Texture::resetDirty()
 
 unsigned int Texture::getTextureSerial()
 {
-    rx::TextureStorageInterface *texture = getStorage(false);
+    rx::TextureStorageInterface *texture = getNativeTexture();
     return texture ? texture->getTextureSerial() : 0;
 }
 
@@ -926,6 +927,11 @@ const rx::Image *Texture2D::getBaseLevelImage() const
     return mImageArray[0];
 }
 
+rx::TextureStorageInterface *Texture2D::getBaseLevelStorage()
+{
+    return mTexStorage;
+}
+
 Renderbuffer *Texture2D::getRenderbuffer(GLint level)
 {
     Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, 0);
@@ -946,7 +952,7 @@ unsigned int Texture2D::getRenderTargetSerial(GLint level)
 rx::RenderTarget *Texture2D::getRenderTarget(GLint level)
 {
     // ensure the underlying texture is created
-    if (getStorage(true) == NULL)
+    if (!ensureRenderTarget())
     {
         return NULL;
     }
@@ -965,7 +971,7 @@ rx::RenderTarget *Texture2D::getRenderTarget(GLint level)
 rx::RenderTarget *Texture2D::getDepthSencil(GLint level)
 {
     // ensure the underlying texture is created
-    if (getStorage(true) == NULL)
+    if (!ensureRenderTarget())
     {
         return NULL;
     }
@@ -984,23 +990,6 @@ rx::RenderTarget *Texture2D::getDepthSencil(GLint level)
 int Texture2D::levelCount()
 {
     return mTexStorage ? mTexStorage->levelCount() : 0;
-}
-
-rx::TextureStorageInterface *Texture2D::getStorage(bool renderTarget)
-{
-    if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
-    {
-        if (renderTarget)
-        {
-            ensureRenderTarget();
-        }
-        else
-        {
-            initializeStorage(false);
-        }
-    }
-
-    return mTexStorage;
 }
 
 TextureCubeMap::TextureCubeMap(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_CUBE_MAP)
@@ -1580,6 +1569,11 @@ const rx::Image *TextureCubeMap::getBaseLevelImage() const
     return mImageArray[0][0];
 }
 
+rx::TextureStorageInterface *TextureCubeMap::getBaseLevelStorage()
+{
+    return mTexStorage;
+}
+
 Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target, GLint level)
 {
     if (!IsCubemapTextureTarget(target))
@@ -1609,7 +1603,7 @@ rx::RenderTarget *TextureCubeMap::getRenderTarget(GLenum target, GLint level)
     ASSERT(IsCubemapTextureTarget(target));
 
     // ensure the underlying texture is created
-    if (getStorage(true) == NULL)
+    if (!ensureRenderTarget())
     {
         return NULL;
     }
@@ -1630,7 +1624,7 @@ rx::RenderTarget *TextureCubeMap::getDepthStencil(GLenum target, GLint level)
     ASSERT(IsCubemapTextureTarget(target));
 
     // ensure the underlying texture is created
-    if (getStorage(true) == NULL)
+    if (!ensureRenderTarget())
     {
         return NULL;
     }
@@ -1649,23 +1643,6 @@ rx::RenderTarget *TextureCubeMap::getDepthStencil(GLenum target, GLint level)
 int TextureCubeMap::levelCount()
 {
     return mTexStorage ? mTexStorage->levelCount() - getLodOffset() : 0;
-}
-
-rx::TextureStorageInterface *TextureCubeMap::getStorage(bool renderTarget)
-{
-    if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
-    {
-        if (renderTarget)
-        {
-            ensureRenderTarget();
-        }
-        else
-        {
-            initializeStorage(false);
-        }
-    }
-
-    return mTexStorage;
 }
 
 Texture3D::Texture3D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_3D)
@@ -1849,6 +1826,11 @@ void Texture3D::generateMipmaps()
 const rx::Image *Texture3D::getBaseLevelImage() const
 {
     return mImageArray[0];
+}
+
+rx::TextureStorageInterface *Texture3D::getBaseLevelStorage()
+{
+    return mTexStorage;
 }
 
 void Texture3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
@@ -2101,7 +2083,7 @@ bool Texture3D::ensureRenderTarget()
 rx::RenderTarget *Texture3D::getRenderTarget(GLint level)
 {
     // ensure the underlying texture is created
-    if (getStorage(true) == NULL)
+    if (!ensureRenderTarget())
     {
         return NULL;
     }
@@ -2120,7 +2102,7 @@ rx::RenderTarget *Texture3D::getRenderTarget(GLint level)
 rx::RenderTarget *Texture3D::getRenderTarget(GLint level, GLint layer)
 {
     // ensure the underlying texture is created
-    if (getStorage(true) == NULL)
+    if (!ensureRenderTarget())
     {
         return NULL;
     }
@@ -2139,7 +2121,7 @@ rx::RenderTarget *Texture3D::getRenderTarget(GLint level, GLint layer)
 rx::RenderTarget *Texture3D::getDepthStencil(GLint level, GLint layer)
 {
     // ensure the underlying texture is created
-    if (getStorage(true) == NULL)
+    if (!ensureRenderTarget())
     {
         return NULL;
     }
@@ -2153,23 +2135,6 @@ rx::RenderTarget *Texture3D::getDepthStencil(GLint level, GLint layer)
     }
 
     return mTexStorage->getRenderTarget(level, layer);
-}
-
-rx::TextureStorageInterface *Texture3D::getStorage(bool renderTarget)
-{
-    if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
-    {
-        if (renderTarget)
-        {
-            ensureRenderTarget();
-        }
-        else
-        {
-            initializeStorage(false);
-        }
-    }
-
-    return mTexStorage;
 }
 
 void Texture3D::redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
@@ -2420,6 +2385,11 @@ void Texture2DArray::generateMipmaps()
 const rx::Image *Texture2DArray::getBaseLevelImage() const
 {
     return (mLayerCounts[0] > 0 ? mImageArray[0][0] : NULL);
+}
+
+rx::TextureStorageInterface *Texture2DArray::getBaseLevelStorage()
+{
+    return mTexStorage;
 }
 
 void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
@@ -2673,7 +2643,7 @@ bool Texture2DArray::ensureRenderTarget()
 rx::RenderTarget *Texture2DArray::getRenderTarget(GLint level, GLint layer)
 {
     // ensure the underlying texture is created
-    if (getStorage(true) == NULL)
+    if (!ensureRenderTarget())
     {
         return NULL;
     }
@@ -2692,7 +2662,7 @@ rx::RenderTarget *Texture2DArray::getRenderTarget(GLint level, GLint layer)
 rx::RenderTarget *Texture2DArray::getDepthStencil(GLint level, GLint layer)
 {
     // ensure the underlying texture is created
-    if (getStorage(true) == NULL)
+    if (!ensureRenderTarget())
     {
         return NULL;
     }
@@ -2706,23 +2676,6 @@ rx::RenderTarget *Texture2DArray::getDepthStencil(GLint level, GLint layer)
     }
 
     return mTexStorage->getRenderTarget(level, layer);
-}
-
-rx::TextureStorageInterface *Texture2DArray::getStorage(bool renderTarget)
-{
-    if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
-    {
-        if (renderTarget)
-        {
-            ensureRenderTarget();
-        }
-        else
-        {
-            initializeStorage(false);
-        }
-    }
-
-    return mTexStorage;
 }
 
 void Texture2DArray::redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)

@@ -152,7 +152,7 @@ class Texture : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
-    virtual rx::TextureStorageInterface *getStorage(bool renderTarget) = 0;
+    virtual rx::TextureStorageInterface *getBaseLevelStorage() = 0;
     virtual const rx::Image *getBaseLevelImage() const = 0;
 };
 
@@ -202,7 +202,7 @@ class Texture2D : public Texture
 
     virtual void updateStorage();
     virtual bool ensureRenderTarget();
-    virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
+    virtual rx::TextureStorageInterface *getBaseLevelStorage();
     virtual const rx::Image *getBaseLevelImage() const;
 
     bool isMipmapComplete() const;
@@ -272,7 +272,7 @@ class TextureCubeMap : public Texture
 
     virtual void updateStorage();
     virtual bool ensureRenderTarget();
-    virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
+    virtual rx::TextureStorageInterface *getBaseLevelStorage();
     virtual const rx::Image *getBaseLevelImage() const;
 
     bool isMipmapCubeComplete() const;
@@ -335,7 +335,7 @@ class Texture3D : public Texture
     virtual void updateStorage();
     virtual bool ensureRenderTarget();
 
-    virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
+    virtual rx::TextureStorageInterface *getBaseLevelStorage();
     virtual const rx::Image *getBaseLevelImage() const;
 
     void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
@@ -395,7 +395,7 @@ class Texture2DArray : public Texture
     virtual void updateStorage();
     virtual bool ensureRenderTarget();
 
-    virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
+    virtual rx::TextureStorageInterface *getBaseLevelStorage();
     virtual const rx::Image *getBaseLevelImage() const;
 
     void deleteImages();
