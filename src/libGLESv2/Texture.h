@@ -128,7 +128,7 @@ class Texture : public RefCountObject
     int mipLevels() const;
 
     virtual void createTexture() = 0;
-    virtual void updateTexture() = 0;
+    virtual void updateStorage() = 0;
     virtual bool ensureRenderTarget() = 0;
 
     rx::Renderer *mRenderer;
@@ -197,14 +197,14 @@ class Texture2D : public Texture
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
 
     virtual void createTexture();
-    virtual void updateTexture();
+    virtual void updateStorage();
     virtual bool ensureRenderTarget();
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
     virtual const rx::Image *getBaseLevelImage() const;
 
     bool isMipmapComplete() const;
     bool isLevelComplete(int level) const;
-    void updateTextureLevel(int level);
+    void updateStorageLevel(int level);
 
     void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
@@ -264,14 +264,14 @@ class TextureCubeMap : public Texture
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
 
     virtual void createTexture();
-    virtual void updateTexture();
+    virtual void updateStorage();
     virtual bool ensureRenderTarget();
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
     virtual const rx::Image *getBaseLevelImage() const;
 
     bool isMipmapCubeComplete() const;
     bool isFaceLevelComplete(int faceIndex, int level) const;
-    void updateTextureFaceLevel(int faceIndex, int level);
+    void updateStorageFaceLevel(int faceIndex, int level);
 
     void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
@@ -323,7 +323,7 @@ class Texture3D : public Texture
     DISALLOW_COPY_AND_ASSIGN(Texture3D);
 
     virtual void createTexture();
-    virtual void updateTexture();
+    virtual void updateStorage();
     virtual bool ensureRenderTarget();
 
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
@@ -333,7 +333,7 @@ class Texture3D : public Texture
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);
 
     bool isLevelComplete(int level) const;
-    void updateTextureLevel(int level);
+    void updateStorageLevel(int level);
 
     rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
@@ -380,7 +380,7 @@ class Texture2DArray : public Texture
     DISALLOW_COPY_AND_ASSIGN(Texture2DArray);
 
     virtual void createTexture();
-    virtual void updateTexture();
+    virtual void updateStorage();
     virtual bool ensureRenderTarget();
 
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
@@ -390,7 +390,7 @@ class Texture2DArray : public Texture
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint layerTarget, GLsizei width, GLsizei height);
 
     bool isLevelComplete(int level) const;
-    void updateTextureLevel(int level);
+    void updateStorageLevel(int level);
 
     // Storing images as an array of single depth textures since D3D11 treats each array level of a
     // Texture2D object as a separate subresource.  Each layer would have to be looped over

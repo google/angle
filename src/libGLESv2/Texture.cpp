@@ -301,7 +301,7 @@ rx::TextureStorageInterface *Texture::getNativeTexture()
     rx::TextureStorageInterface *storage = getStorage(false);
     if (storage)
     {
-        updateTexture();
+        updateStorage();
     }
 
     return storage;
@@ -529,7 +529,7 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
     if (level < levelCount())
     {
         rx::Image *image = mImageArray[level];
-        if (image->updateSurface(mTexStorage, level, xoffset, yoffset, width, height))
+        if (image->copyToStorage(mTexStorage, level, xoffset, yoffset, width, height))
         {
             image->markClean();
         }
@@ -620,7 +620,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
         
         if (level < levelCount())
         {
-            updateTextureLevel(level);
+            updateStorageLevel(level);
 
             GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
@@ -828,7 +828,7 @@ void Texture2D::createTexture()
     mDirtyImages = true;
 }
 
-void Texture2D::updateTexture()
+void Texture2D::updateStorage()
 {
     int storageLevels = levelCount();
 
@@ -836,12 +836,12 @@ void Texture2D::updateTexture()
     {
         if (isLevelComplete(level))
         {
-            updateTextureLevel(level);
+            updateStorageLevel(level);
         }
     }
 }
 
-void Texture2D::updateTextureLevel(int level)
+void Texture2D::updateStorageLevel(int level)
 {
     ASSERT(level <= (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
     ASSERT(isLevelComplete(level));
@@ -947,7 +947,7 @@ rx::RenderTarget *Texture2D::getRenderTarget(GLint level)
         return NULL;
     }
 
-    updateTextureLevel(level);
+    updateStorageLevel(level);
 
     // ensure this is NOT a depth texture
     if (isDepth(level))
@@ -966,7 +966,7 @@ rx::RenderTarget *Texture2D::getDepthSencil(GLint level)
         return NULL;
     }
 
-    updateTextureLevel(level);
+    updateStorageLevel(level);
 
     // ensure this is actually a depth texture
     if (!isDepth(level))
@@ -1101,7 +1101,7 @@ void TextureCubeMap::commitRect(int faceIndex, GLint level, GLint xoffset, GLint
     if (level < levelCount())
     {
         rx::Image *image = mImageArray[faceIndex][level];
-        if (image->updateSurface(mTexStorage, faceIndex, level, xoffset, yoffset, width, height))
+        if (image->copyToStorage(mTexStorage, faceIndex, level, xoffset, yoffset, width, height))
             image->markClean();
     }
 }
@@ -1301,7 +1301,7 @@ void TextureCubeMap::createTexture()
     mDirtyImages = true;
 }
 
-void TextureCubeMap::updateTexture()
+void TextureCubeMap::updateStorage()
 {
     int storageLevels = levelCount();
 
@@ -1311,13 +1311,13 @@ void TextureCubeMap::updateTexture()
         {
             if (isFaceLevelComplete(face, level))
             {
-                updateTextureFaceLevel(face, level);
+                updateStorageFaceLevel(face, level);
             }
         }
     }
 }
 
-void TextureCubeMap::updateTextureFaceLevel(int faceIndex, int level)
+void TextureCubeMap::updateStorageFaceLevel(int faceIndex, int level)
 {
     ASSERT(level >= 0 && faceIndex < 6 && level < (int)ArraySize(mImageArray[faceIndex]) && mImageArray[faceIndex][level] != NULL);
     rx::Image *image = mImageArray[faceIndex][level];
@@ -1478,7 +1478,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
         
         if (level < levelCount())
         {
-            updateTextureFaceLevel(faceIndex, level);
+            updateStorageFaceLevel(faceIndex, level);
 
             GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
@@ -1609,7 +1609,7 @@ rx::RenderTarget *TextureCubeMap::getRenderTarget(GLenum target, GLint level)
         return NULL;
     }
 
-    updateTextureFaceLevel(targetToIndex(target), level);
+    updateStorageFaceLevel(targetToIndex(target), level);
 
     // ensure this is NOT a depth texture
     if (isDepth(target, level))
@@ -1630,7 +1630,7 @@ rx::RenderTarget *TextureCubeMap::getDepthStencil(GLenum target, GLint level)
         return NULL;
     }
 
-    updateTextureFaceLevel(targetToIndex(target), level);
+    updateStorageFaceLevel(targetToIndex(target), level);
 
     // ensure this is a depth texture
     if (!isDepth(target, level))
@@ -1879,7 +1879,7 @@ void Texture3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
         if (level < levelCount())
         {
-            updateTextureLevel(level);
+            updateStorageLevel(level);
 
             gl::Rectangle sourceRect;
             sourceRect.x = x;
@@ -2036,7 +2036,7 @@ void Texture3D::createTexture()
     mDirtyImages = true;
 }
 
-void Texture3D::updateTexture()
+void Texture3D::updateStorage()
 {
     int storageLevels = levelCount();
 
@@ -2044,12 +2044,12 @@ void Texture3D::updateTexture()
     {
         if (isLevelComplete(level))
         {
-            updateTextureLevel(level);
+            updateStorageLevel(level);
         }
     }
 }
 
-void Texture3D::updateTextureLevel(int level)
+void Texture3D::updateStorageLevel(int level)
 {
     ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
     ASSERT(isLevelComplete(level));
@@ -2103,7 +2103,7 @@ rx::RenderTarget *Texture3D::getRenderTarget(GLint level)
         return NULL;
     }
 
-    updateTextureLevel(level);
+    updateStorageLevel(level);
 
     // ensure this is NOT a depth texture
     if (isDepth(level))
@@ -2122,7 +2122,7 @@ rx::RenderTarget *Texture3D::getRenderTarget(GLint level, GLint layer)
         return NULL;
     }
 
-    updateTexture();
+    updateStorage();
 
     // ensure this is NOT a depth texture
     if (isDepth(level))
@@ -2141,7 +2141,7 @@ rx::RenderTarget *Texture3D::getDepthStencil(GLint level, GLint layer)
         return NULL;
     }
 
-    updateTextureLevel(level);
+    updateStorageLevel(level);
 
     // ensure this is a depth texture
     if (!isDepth(level))
@@ -2206,7 +2206,7 @@ void Texture3D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoff
     if (level < levelCount())
     {
         rx::Image *image = mImageArray[level];
-        if (image->updateSurface(mTexStorage, level, xoffset, yoffset, zoffset, width, height, depth))
+        if (image->copyToStorage(mTexStorage, level, xoffset, yoffset, zoffset, width, height, depth))
         {
             image->markClean();
         }
@@ -2453,7 +2453,7 @@ void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
         if (level < levelCount())
         {
-            updateTextureLevel(level);
+            updateStorageLevel(level);
 
             GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
@@ -2612,7 +2612,7 @@ void Texture2DArray::createTexture()
     mDirtyImages = true;
 }
 
-void Texture2DArray::updateTexture()
+void Texture2DArray::updateStorage()
 {
     int storageLevels = levelCount();
 
@@ -2620,12 +2620,12 @@ void Texture2DArray::updateTexture()
     {
         if (isLevelComplete(level))
         {
-            updateTextureLevel(level);
+            updateStorageLevel(level);
         }
     }
 }
 
-void Texture2DArray::updateTextureLevel(int level)
+void Texture2DArray::updateStorageLevel(int level)
 {
     ASSERT(level >= 0 && level < (int)ArraySize(mLayerCounts));
     ASSERT(isLevelComplete(level));
@@ -2685,7 +2685,7 @@ rx::RenderTarget *Texture2DArray::getRenderTarget(GLint level, GLint layer)
         return NULL;
     }
 
-    updateTextureLevel(level);
+    updateStorageLevel(level);
 
     // ensure this is NOT a depth texture
     if (isDepth(level))
@@ -2704,7 +2704,7 @@ rx::RenderTarget *Texture2DArray::getDepthStencil(GLint level, GLint layer)
         return NULL;
     }
 
-    updateTextureLevel(level);
+    updateStorageLevel(level);
 
     // ensure this is a depth texture
     if (!isDepth(level))
@@ -2789,7 +2789,7 @@ void Texture2DArray::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint
     if (level < levelCount() && layerTarget < getDepth(level))
     {
         rx::Image *image = mImageArray[level][layerTarget];
-        if (image->updateSurface(mTexStorage, level, xoffset, yoffset, layerTarget, width, height))
+        if (image->copyToStorage(mTexStorage, level, xoffset, yoffset, layerTarget, width, height))
         {
             image->markClean();
         }
