@@ -235,7 +235,7 @@ class TextureCubeMap : public Texture
     void setImagePosZ(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void setImageNegZ(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
 
-    void setCompressedImage(GLenum face, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
+    void setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
 
     void subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
@@ -249,9 +249,9 @@ class TextureCubeMap : public Texture
     virtual void generateMipmaps();
 
     Renderbuffer *getRenderbuffer(GLenum target, GLint level);
-    unsigned int getRenderTargetSerial(GLenum faceTarget, GLint level);
+    unsigned int getRenderTargetSerial(GLenum target, GLint level);
 
-    static unsigned int faceIndex(GLenum face);
+    static int targetToIndex(GLenum target);
 
   protected:
     friend class RenderbufferTextureCubeMap;
@@ -269,8 +269,8 @@ class TextureCubeMap : public Texture
     virtual const rx::Image *getBaseLevelImage() const;
 
     bool isMipmapCubeComplete() const;
-    bool isFaceLevelComplete(int face, int level) const;
-    void updateTextureFaceLevel(int face, int level);
+    bool isFaceLevelComplete(int faceIndex, int level) const;
+    void updateTextureFaceLevel(int faceIndex, int level);
 
     void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
     void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);

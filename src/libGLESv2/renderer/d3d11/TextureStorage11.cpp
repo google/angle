@@ -515,10 +515,10 @@ ID3D11Resource *TextureStorage11_Cube::getBaseTexture() const
 
 RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int level)
 {
-    unsigned int faceIdx = gl::TextureCubeMap::faceIndex(faceTarget);
     if (level >= 0 && level < static_cast<int>(mMipLevels))
     {
-        if (!mRenderTarget[faceIdx][level])
+        int faceIndex = gl::TextureCubeMap::targetToIndex(faceTarget);
+        if (!mRenderTarget[faceIndex][level])
         {
             ID3D11Device *device = mRenderer->getDevice();
             HRESULT result;
@@ -528,7 +528,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY; // Will be used with Texture2D sampler, not TextureCube
             srvDesc.Texture2DArray.MostDetailedMip = level;
             srvDesc.Texture2DArray.MipLevels = 1;
-            srvDesc.Texture2DArray.FirstArraySlice = faceIdx;
+            srvDesc.Texture2DArray.FirstArraySlice = faceIndex;
             srvDesc.Texture2DArray.ArraySize = 1;
 
             ID3D11ShaderResourceView *srv;
@@ -546,7 +546,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
                 rtvDesc.Format = mRenderTargetFormat;
                 rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
                 rtvDesc.Texture2DArray.MipSlice = level;
-                rtvDesc.Texture2DArray.FirstArraySlice = faceIdx;
+                rtvDesc.Texture2DArray.FirstArraySlice = faceIndex;
                 rtvDesc.Texture2DArray.ArraySize = 1;
 
                 ID3D11RenderTargetView *rtv;
@@ -563,7 +563,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
                 // also needs to keep a reference to the texture.
                 mTexture->AddRef();
 
-                mRenderTarget[faceIdx][level] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
+                mRenderTarget[faceIndex][level] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
                                                                    std::max(mTextureWidth >> level, 1U),
                                                                    std::max(mTextureHeight >> level, 1U),
                                                                    1);
@@ -575,7 +575,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
                 dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
                 dsvDesc.Flags = 0;
                 dsvDesc.Texture2DArray.MipSlice = level;
-                dsvDesc.Texture2DArray.FirstArraySlice = faceIdx;
+                dsvDesc.Texture2DArray.FirstArraySlice = faceIndex;
                 dsvDesc.Texture2DArray.ArraySize = 1;
 
                 ID3D11DepthStencilView *dsv;
@@ -592,7 +592,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
                 // also needs to keep a reference to the texture.
                 mTexture->AddRef();
 
-                mRenderTarget[faceIdx][level] = new RenderTarget11(mRenderer, dsv, mTexture, srv,
+                mRenderTarget[faceIndex][level] = new RenderTarget11(mRenderer, dsv, mTexture, srv,
                                                                    std::max(mTextureWidth >> level, 1U),
                                                                    std::max(mTextureHeight >> level, 1U),
                                                                    1);
@@ -603,7 +603,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
             }
         }
 
-        return mRenderTarget[faceIdx][level];
+        return mRenderTarget[faceIndex][level];
     }
     else
     {
@@ -635,10 +635,10 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV()
     return mSRV;
 }
 
-void TextureStorage11_Cube::generateMipmap(int face, int level)
+void TextureStorage11_Cube::generateMipmap(int faceIndex, int level)
 {
-    RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTargetFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level - 1));
-    RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTargetFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level));
+    RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTargetFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level - 1));
+    RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTargetFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level));
 
     generateMipmapLayer(source, dest);
 }

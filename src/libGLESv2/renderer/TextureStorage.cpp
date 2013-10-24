@@ -118,14 +118,14 @@ RenderTarget *TextureStorageInterfaceCube::getRenderTarget(GLenum faceTarget, GL
     return mInstance->getRenderTargetFace(faceTarget, level);
 }
 
-void TextureStorageInterfaceCube::generateMipmap(int face, int level)
+void TextureStorageInterfaceCube::generateMipmap(int faceIndex, int level)
 {
-    mInstance->generateMipmap(face, level);
+    mInstance->generateMipmap(faceIndex, level);
 }
 
 unsigned int TextureStorageInterfaceCube::getRenderTargetSerial(GLenum target, GLint level) const
 {
-    return mFirstRenderTargetSerial + (level * 6) + gl::TextureCubeMap::faceIndex(target);
+    return mFirstRenderTargetSerial + (level * 6) + gl::TextureCubeMap::targetToIndex(target);
 }
 
 TextureStorageInterface3D::TextureStorageInterface3D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,

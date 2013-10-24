@@ -91,7 +91,7 @@ class TextureStorage9_Cube : public TextureStorage9
     IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level, bool dirty);
     virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level);
     virtual IDirect3DBaseTexture9 *getBaseTexture() const;
-    virtual void generateMipmap(int face, int level);
+    virtual void generateMipmap(int faceIndex, int level);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage9_Cube);

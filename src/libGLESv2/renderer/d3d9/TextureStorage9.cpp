@@ -261,13 +261,13 @@ IDirect3DSurface9 *TextureStorage9_Cube::getCubeMapSurface(GLenum faceTarget, in
 
 RenderTarget *TextureStorage9_Cube::getRenderTargetFace(GLenum faceTarget, int level)
 {
-    return mRenderTarget[gl::TextureCubeMap::faceIndex(faceTarget)];
+    return mRenderTarget[gl::TextureCubeMap::targetToIndex(faceTarget)];
 }
 
-void TextureStorage9_Cube::generateMipmap(int face, int level)
+void TextureStorage9_Cube::generateMipmap(int faceIndex, int level)
 {
-    IDirect3DSurface9 *upper = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level - 1, false);
-    IDirect3DSurface9 *lower = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true);
+    IDirect3DSurface9 *upper = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level - 1, false);
+    IDirect3DSurface9 *lower = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level, true);
 
     if (upper != NULL && lower != NULL)
     {

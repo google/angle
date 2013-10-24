@@ -92,7 +92,7 @@ class TextureStorageInterfaceCube : public TextureStorageInterface
     TextureStorageInterfaceCube(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, int size);
     virtual ~TextureStorageInterfaceCube();
 
-    void generateMipmap(int face, int level);
+    void generateMipmap(int faceIndex, int level);
     RenderTarget *getRenderTarget(GLenum faceTarget, GLint level) const;
 
     virtual unsigned int getRenderTargetSerial(GLenum target, GLint level) const;

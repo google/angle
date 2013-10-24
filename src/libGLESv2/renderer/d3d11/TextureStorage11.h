@@ -109,7 +109,7 @@ class TextureStorage11_Cube : public TextureStorage11
     virtual ID3D11ShaderResourceView *getSRV();
     virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level);
 
-    virtual void generateMipmap(int face, int level);
+    virtual void generateMipmap(int faceIndex, int level);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_Cube);
