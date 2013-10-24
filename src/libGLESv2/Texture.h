@@ -329,6 +329,9 @@ class Texture3D : public Texture
     DISALLOW_COPY_AND_ASSIGN(Texture3D);
 
     virtual void initializeStorage(bool renderTarget);
+    rx::TextureStorageInterface3D *createCompleteStorage(bool renderTarget) const;
+    void setCompleteTexStorage(rx::TextureStorageInterface3D *newCompleteTexStorage);
+
     virtual void updateStorage();
     virtual bool ensureRenderTarget();
 

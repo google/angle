@@ -1798,16 +1798,12 @@ void Texture3D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GL
 
 void Texture3D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
 {
-    delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), width, height, depth);
-    mImmutable = true;
-
     for (int level = 0; level < levels; level++)
     {
-        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_3D, internalformat, width, height, depth, true);
-        width = std::max(1, width >> 1);
-        height = std::max(1, height >> 1);
-        depth = std::max(1, depth >> 1);
+        GLsizei levelWidth = std::max(1, width >> level);
+        GLsizei levelHeight = std::max(1, height >> level);
+        GLsizei levelDepth = std::max(1, depth >> level);
+        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_3D, internalformat, levelWidth, levelHeight, levelDepth, true);
     }
 
     for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
@@ -1815,17 +1811,10 @@ void Texture3D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
         mImageArray[level]->redefine(mRenderer, GL_TEXTURE_3D, GL_NONE, 0, 0, 0, true);
     }
 
-    if (mTexStorage->isManaged())
-    {
-        int levels = levelCount();
+    mImmutable = true;
 
-        for (int level = 0; level < levels; level++)
-        {
-            mImageArray[level]->setManagedSurface(mTexStorage, level);
-        }
-    }
+    setCompleteTexStorage(new rx::TextureStorageInterface3D(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), width, height, depth));
 }
-
 
 void Texture3D::generateMipmaps()
 {
@@ -2016,29 +2005,49 @@ int Texture3D::levelCount()
 
 void Texture3D::initializeStorage(bool renderTarget)
 {
+    // Only initialize the first time this texture is used as a render target or shader resource
+    if (mTexStorage)
+    {
+        return;
+    }
+
+    // do not attempt to create storage for nonexistant data
+    if (!isLevelComplete(0))
+    {
+        return;
+    }
+
+    bool createRenderTarget = (renderTarget || mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+
+    setCompleteTexStorage(createCompleteStorage(createRenderTarget));
+    ASSERT(mTexStorage);
+
+    // flush image data to the storage
+    updateStorage();
+}
+
+rx::TextureStorageInterface3D *Texture3D::createCompleteStorage(bool renderTarget) const
+{
     GLsizei width = getBaseLevelWidth();
     GLsizei height = getBaseLevelHeight();
     GLsizei depth = getBaseLevelDepth();
 
-    if (!(width > 0 && height > 0 && depth > 0))
-        return; // do not attempt to create native textures for nonexistant data
+    ASSERT(width > 0 && height > 0 && depth > 0);
 
-    GLint levels = creationLevels(width, height, depth);
+    // use existing storage level count, when previously specified by TexStorage*D
+    GLint levels = (mTexStorage ? mTexStorage->levelCount() : creationLevels(width, height, depth));
 
-    delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, getBaseLevelInternalFormat(), IsRenderTargetUsage(mUsage), width, height, depth);
+    return new rx::TextureStorageInterface3D(mRenderer, levels, getBaseLevelInternalFormat(), renderTarget, width, height, depth);
+}
 
-    if (mTexStorage->isManaged())
-    {
-        int levels = levelCount();
-
-        for (int level = 0; level < levels; level++)
-        {
-            mImageArray[level]->setManagedSurface(mTexStorage, level);
-        }
-    }
-
+void Texture3D::setCompleteTexStorage(rx::TextureStorageInterface3D *newCompleteTexStorage)
+{
+    SafeDelete(mTexStorage);
+    mTexStorage = newCompleteTexStorage;
     mDirtyImages = true;
+
+    // We do not support managed 3D storage, as that is D3D9/ES2-only
+    ASSERT(!mTexStorage->isManaged());
 }
 
 void Texture3D::updateStorage()
@@ -2067,36 +2076,25 @@ void Texture3D::updateStorageLevel(int level)
 
 bool Texture3D::ensureRenderTarget()
 {
-    if (mTexStorage && mTexStorage->isRenderTarget())
+    initializeStorage(true);
+
+    if (getBaseLevelWidth() > 0 && getBaseLevelHeight() > 0 && getBaseLevelDepth() > 0)
     {
-        return true;
-    }
-
-    rx::TextureStorageInterface3D *newTexStorage = NULL;
-
-    if (getBaseLevelWidth() != 0 && getBaseLevelHeight() != 0 && getBaseLevelDepth() != 0)
-    {
-        GLsizei width = getBaseLevelWidth();
-        GLsizei height = getBaseLevelHeight();
-        GLsizei depth = getBaseLevelDepth();
-        GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(width, height, depth);
-
-        newTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, getBaseLevelInternalFormat(), true, width, height, depth);
-
-        if (mTexStorage != NULL)
+        ASSERT(mTexStorage);
+        if (!mTexStorage->isRenderTarget())
         {
-            if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
+            rx::TextureStorageInterface3D *newRenderTargetStorage = createCompleteStorage(true);
+
+            if (!mRenderer->copyToRenderTarget(newRenderTargetStorage, mTexStorage))
             {
-                delete newTexStorage;
+                delete newRenderTargetStorage;
                 return gl::error(GL_OUT_OF_MEMORY, false);
             }
+
+            setCompleteTexStorage(newRenderTargetStorage);
         }
     }
 
-    delete mTexStorage;
-    mTexStorage = newTexStorage;
-
-    mDirtyImages = true;
     return (mTexStorage && mTexStorage->isRenderTarget());
 }
 
