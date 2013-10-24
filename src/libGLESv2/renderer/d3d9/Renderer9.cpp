@@ -249,7 +249,7 @@ EGLint Renderer9::initialize()
     }
 
     // When DirectX9 is running with an older DirectX8 driver, a StretchRect from a regular texture to a render target texture is not supported.
-    // This is required by Texture2D::convertToRenderTarget.
+    // This is required by Texture2D::ensureRenderTarget.
     if ((mDeviceCaps.DevCaps2 & D3DDEVCAPS2_CAN_STRETCHRECT_FROM_TEXTURES) == 0)
     {
         ERR("Renderer does not support stretctrect from textures!\n");

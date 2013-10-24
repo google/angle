@@ -572,11 +572,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
     }
     else
     {
-        if (!mTexStorage || !mTexStorage->isRenderTarget())
-        {
-            convertToRenderTarget();
-        }
-        
+        ensureRenderTarget();
         mImageArray[level]->markClean();
 
         if (width != 0 && height != 0 && level < levelCount())
@@ -610,10 +606,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
     }
     else
     {
-        if (!mTexStorage || !mTexStorage->isRenderTarget())
-        {
-            convertToRenderTarget();
-        }
+        ensureRenderTarget();
         
         if (level < levelCount())
         {
@@ -852,8 +845,13 @@ void Texture2D::updateTextureLevel(int level)
     }
 }
 
-void Texture2D::convertToRenderTarget()
+bool Texture2D::ensureRenderTarget()
 {
+    if (mTexStorage && mTexStorage->isRenderTarget())
+    {
+        return true;
+    }
+
     rx::TextureStorageInterface2D *newTexStorage = NULL;
 
     GLsizei width = getBaseLevelWidth();
@@ -870,7 +868,7 @@ void Texture2D::convertToRenderTarget()
             if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
             {   
                 delete newTexStorage;
-                return gl::error(GL_OUT_OF_MEMORY);
+                return gl::error(GL_OUT_OF_MEMORY, false);
             }
         }
     }
@@ -879,6 +877,8 @@ void Texture2D::convertToRenderTarget()
     mTexStorage = newTexStorage;
 
     mDirtyImages = true;
+
+    return (mTexStorage && mTexStorage->isRenderTarget());
 }
 
 void Texture2D::generateMipmaps()
@@ -929,12 +929,7 @@ Renderbuffer *Texture2D::getRenderbuffer(GLint level)
 
 unsigned int Texture2D::getRenderTargetSerial(GLint level)
 {
-    if (!mTexStorage || !mTexStorage->isRenderTarget())
-    {
-        convertToRenderTarget();
-    }
-
-    return mTexStorage ? mTexStorage->getRenderTargetSerial(level) : 0;
+    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(level) : 0);
 }
 
 rx::RenderTarget *Texture2D::getRenderTarget(GLint level)
@@ -986,7 +981,7 @@ rx::TextureStorageInterface *Texture2D::getStorage(bool renderTarget)
     {
         if (renderTarget)
         {
-            convertToRenderTarget();
+            ensureRenderTarget();
         }
         else
         {
@@ -1324,8 +1319,13 @@ void TextureCubeMap::updateTextureFaceLevel(int face, int level)
     }
 }
 
-void TextureCubeMap::convertToRenderTarget()
+bool TextureCubeMap::ensureRenderTarget()
 {
+    if (mTexStorage && mTexStorage->isRenderTarget())
+    {
+        return true;
+    }
+
     rx::TextureStorageInterfaceCube *newTexStorage = NULL;
 
     if (getBaseLevelWidth() != 0)
@@ -1341,7 +1341,7 @@ void TextureCubeMap::convertToRenderTarget()
             if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
             {
                 delete newTexStorage;
-                return gl::error(GL_OUT_OF_MEMORY);
+                return gl::error(GL_OUT_OF_MEMORY, false);
             }
         }
     }
@@ -1350,6 +1350,7 @@ void TextureCubeMap::convertToRenderTarget()
     mTexStorage = newTexStorage;
 
     mDirtyImages = true;
+    return (mTexStorage && mTexStorage->isRenderTarget());
 }
 
 void TextureCubeMap::setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
@@ -1423,11 +1424,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
     }
     else
     {
-        if (!mTexStorage || !mTexStorage->isRenderTarget())
-        {
-            convertToRenderTarget();
-        }
-        
+        ensureRenderTarget();
         mImageArray[faceindex][level]->markClean();
 
         ASSERT(width == height);
@@ -1468,10 +1465,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
     }
     else
     {
-        if (!mTexStorage || !mTexStorage->isRenderTarget())
-        {
-            convertToRenderTarget();
-        }
+        ensureRenderTarget();
         
         if (level < levelCount())
         {
@@ -1594,12 +1588,7 @@ Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target, GLint level)
 
 unsigned int TextureCubeMap::getRenderTargetSerial(GLenum faceTarget, GLint level)
 {
-    if (!mTexStorage || !mTexStorage->isRenderTarget())
-    {
-        convertToRenderTarget();
-    }
-
-    return mTexStorage ? mTexStorage->getRenderTargetSerial(faceTarget, level) : 0;
+    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(faceTarget, level) : 0);
 }
 
 rx::RenderTarget *TextureCubeMap::getRenderTarget(GLenum target, GLint level)
@@ -1655,7 +1644,7 @@ rx::TextureStorageInterface *TextureCubeMap::getStorage(bool renderTarget)
     {
         if (renderTarget)
         {
-            convertToRenderTarget();
+            ensureRenderTarget();
         }
         else
         {
@@ -1878,10 +1867,7 @@ void Texture3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
     }
     else
     {
-        if (!mTexStorage || !mTexStorage->isRenderTarget())
-        {
-            convertToRenderTarget();
-        }
+        ensureRenderTarget();
 
         if (level < levelCount())
         {
@@ -2011,12 +1997,7 @@ Renderbuffer *Texture3D::getRenderbuffer(GLint level, GLint layer)
 
 unsigned int Texture3D::getRenderTargetSerial(GLint level, GLint layer)
 {
-    if (!mTexStorage || !mTexStorage->isRenderTarget())
-    {
-        convertToRenderTarget();
-    }
-
-    return mTexStorage ? mTexStorage->getRenderTargetSerial(level, layer) : 0;
+    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(level, layer) : 0);
 }
 
 int Texture3D::levelCount()
@@ -2075,8 +2056,13 @@ void Texture3D::updateTextureLevel(int level)
     }
 }
 
-void Texture3D::convertToRenderTarget()
+bool Texture3D::ensureRenderTarget()
 {
+    if (mTexStorage && mTexStorage->isRenderTarget())
+    {
+        return true;
+    }
+
     rx::TextureStorageInterface3D *newTexStorage = NULL;
 
     if (getBaseLevelWidth() != 0 && getBaseLevelHeight() != 0 && getBaseLevelDepth() != 0)
@@ -2093,7 +2079,7 @@ void Texture3D::convertToRenderTarget()
             if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
             {
                 delete newTexStorage;
-                return gl::error(GL_OUT_OF_MEMORY);
+                return gl::error(GL_OUT_OF_MEMORY, false);
             }
         }
     }
@@ -2102,6 +2088,7 @@ void Texture3D::convertToRenderTarget()
     mTexStorage = newTexStorage;
 
     mDirtyImages = true;
+    return (mTexStorage && mTexStorage->isRenderTarget());
 }
 
 rx::RenderTarget *Texture3D::getRenderTarget(GLint level)
@@ -2167,7 +2154,7 @@ rx::TextureStorageInterface *Texture3D::getStorage(bool renderTarget)
     {
         if (renderTarget)
         {
-            convertToRenderTarget();
+            ensureRenderTarget();
         }
         else
         {
@@ -2458,10 +2445,7 @@ void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
     }
     else
     {
-        if (!mTexStorage || !mTexStorage->isRenderTarget())
-        {
-            convertToRenderTarget();
-        }
+        ensureRenderTarget();
 
         if (level < levelCount())
         {
@@ -2585,14 +2569,9 @@ Renderbuffer *Texture2DArray::getRenderbuffer(GLint level, GLint layer)
     return renderBuffer;
 }
 
-unsigned int Texture2DArray::getRenderTargetSerial( GLint level, GLint layer )
+unsigned int Texture2DArray::getRenderTargetSerial(GLint level, GLint layer)
 {
-    if (!mTexStorage || !mTexStorage->isRenderTarget())
-    {
-        convertToRenderTarget();
-    }
-
-    return mTexStorage ? mTexStorage->getRenderTargetSerial(level, layer) : 0;
+    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(level, layer) : 0);
 }
 
 int Texture2DArray::levelCount()
@@ -2660,8 +2639,13 @@ void Texture2DArray::updateTextureLevel(int level)
     }
 }
 
-void Texture2DArray::convertToRenderTarget()
+bool Texture2DArray::ensureRenderTarget()
 {
+    if (mTexStorage && mTexStorage->isRenderTarget())
+    {
+        return true;
+    }
+
     rx::TextureStorageInterface2DArray *newTexStorage = NULL;
 
     GLsizei width = getBaseLevelWidth();
@@ -2680,7 +2664,7 @@ void Texture2DArray::convertToRenderTarget()
             if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
             {
                 delete newTexStorage;
-                return gl::error(GL_OUT_OF_MEMORY);
+                return gl::error(GL_OUT_OF_MEMORY, false);
             }
         }
     }
@@ -2689,6 +2673,7 @@ void Texture2DArray::convertToRenderTarget()
     mTexStorage = newTexStorage;
 
     mDirtyImages = true;
+    return (mTexStorage && mTexStorage->isRenderTarget());
 }
 
 rx::RenderTarget *Texture2DArray::getRenderTarget(GLint level, GLint layer)
@@ -2735,7 +2720,7 @@ rx::TextureStorageInterface *Texture2DArray::getStorage(bool renderTarget)
     {
         if (renderTarget)
         {
-            convertToRenderTarget();
+            ensureRenderTarget();
         }
         else
         {

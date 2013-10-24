@@ -128,7 +128,7 @@ class Texture : public RefCountObject
 
     virtual void createTexture() = 0;
     virtual void updateTexture() = 0;
-    virtual void convertToRenderTarget() = 0;
+    virtual bool ensureRenderTarget() = 0;
 
     rx::Renderer *mRenderer;
 
@@ -197,7 +197,7 @@ class Texture2D : public Texture
 
     virtual void createTexture();
     virtual void updateTexture();
-    virtual void convertToRenderTarget();
+    virtual bool ensureRenderTarget();
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
     virtual const rx::Image *getBaseLevelImage() const;
 
@@ -264,7 +264,7 @@ class TextureCubeMap : public Texture
 
     virtual void createTexture();
     virtual void updateTexture();
-    virtual void convertToRenderTarget();
+    virtual bool ensureRenderTarget();
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
     virtual const rx::Image *getBaseLevelImage() const;
 
@@ -323,7 +323,8 @@ class Texture3D : public Texture
 
     virtual void createTexture();
     virtual void updateTexture();
-    virtual void convertToRenderTarget();
+    virtual bool ensureRenderTarget();
+
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
     virtual const rx::Image *getBaseLevelImage() const;
 
@@ -379,7 +380,8 @@ class Texture2DArray : public Texture
 
     virtual void createTexture();
     virtual void updateTexture();
-    virtual void convertToRenderTarget();
+    virtual bool ensureRenderTarget();
+
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
     virtual const rx::Image *getBaseLevelImage() const;
 
