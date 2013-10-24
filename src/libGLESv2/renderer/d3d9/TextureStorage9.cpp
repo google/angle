@@ -20,8 +20,9 @@
 
 namespace rx
 {
-TextureStorage9::TextureStorage9(Renderer *renderer, DWORD usage)
+TextureStorage9::TextureStorage9(Renderer *renderer, int baseLevel, DWORD usage)
     : mLodOffset(0),
+      mBaseLevel(baseLevel),
       mRenderer(Renderer9::makeRenderer9(renderer)),
       mD3DUsage(usage),
       mD3DPool(mRenderer->getTexturePool(usage))
@@ -83,12 +84,18 @@ int TextureStorage9::getLodOffset() const
     return mLodOffset;
 }
 
-int TextureStorage9::levelCount()
+int TextureStorage9::getBaseLevel() const
 {
-    return getBaseTexture() ? getBaseTexture()->GetLevelCount() - getLodOffset() : 0;
+    return mBaseLevel;
 }
 
-TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain) : TextureStorage9(renderer, D3DUSAGE_RENDERTARGET)
+int TextureStorage9::getMaxLevel() const
+{
+    return getBaseLevel() + (getBaseTexture() ? getBaseTexture()->GetLevelCount() - getLodOffset() : 0);
+}
+
+TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain)
+    : TextureStorage9(renderer, 0, D3DUSAGE_RENDERTARGET)
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
@@ -97,8 +104,8 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain
     initializeRenderTarget();
 }
 
-TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height)
-    : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), renderTarget))
+TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height)
+    : TextureStorage9(renderer, baseLevel, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), renderTarget))
 {
     mTexture = NULL;
     mRenderTarget = NULL;
@@ -109,8 +116,9 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int levels, GLenum in
         IDirect3DDevice9 *device = mRenderer->getDevice();
         D3DFORMAT format = gl_d3d9::GetTextureFormat(internalformat, mRenderer);
         d3d9::MakeValidSize(false, format, &width, &height, &mLodOffset);
-        HRESULT result = device->CreateTexture(width, height, levels ? levels + mLodOffset : 0, getUsage(),
-                                               format, getPool(), &mTexture, NULL);
+        UINT creationLevels = (maxLevel ? maxLevel + mLodOffset : 0);
+
+        HRESULT result = device->CreateTexture(width, height, creationLevels, getUsage(), format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
@@ -191,8 +199,8 @@ void TextureStorage9_2D::initializeRenderTarget()
     }
 }
 
-TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, int size)
-    : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), renderTarget))
+TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, int size)
+    : TextureStorage9(renderer, baseLevel, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), renderTarget))
 {
     mTexture = NULL;
     for (int i = 0; i < 6; ++i)
@@ -208,8 +216,9 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int levels, GLenu
         int height = size;
         D3DFORMAT format = gl_d3d9::GetTextureFormat(internalformat, mRenderer);
         d3d9::MakeValidSize(false, format, &size, &height, &mLodOffset);
-        HRESULT result = device->CreateCubeTexture(size, levels ? levels + mLodOffset : 0, getUsage(),
-                                                   format, getPool(), &mTexture, NULL);
+        UINT creationLevels = (maxLevel ? maxLevel + mLodOffset : 0);
+
+        HRESULT result = device->CreateCubeTexture(size, creationLevels, getUsage(), format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {

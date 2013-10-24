@@ -28,7 +28,8 @@ class TextureStorage
     virtual int getLodOffset() const = 0;
     virtual bool isRenderTarget() const = 0;
     virtual bool isManaged() const = 0;
-    virtual int levelCount() = 0;
+    virtual int getBaseLevel() const = 0;
+    virtual int getMaxLevel() const = 0;
 
     virtual RenderTarget *getRenderTarget(int level) = 0;
     virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level) = 0;
@@ -54,7 +55,8 @@ class TextureStorageInterface
     virtual int getLodOffset() const;
     virtual bool isRenderTarget() const;
     virtual bool isManaged() const;
-    virtual int levelCount();
+    virtual int getBaseLevel() const;
+    virtual int getMaxLevel() const;
 
   protected:
     TextureStorage *mInstance;
@@ -72,7 +74,7 @@ class TextureStorageInterface2D : public TextureStorageInterface
 {
   public:
     TextureStorageInterface2D(Renderer *renderer, SwapChain *swapchain);
-    TextureStorageInterface2D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height);
+    TextureStorageInterface2D(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height);
     virtual ~TextureStorageInterface2D();
 
     void generateMipmap(int level);
@@ -89,7 +91,7 @@ class TextureStorageInterface2D : public TextureStorageInterface
 class TextureStorageInterfaceCube : public TextureStorageInterface
 {
   public:
-    TextureStorageInterfaceCube(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, int size);
+    TextureStorageInterfaceCube(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, int size);
     virtual ~TextureStorageInterfaceCube();
 
     void generateMipmap(int faceIndex, int level);
@@ -106,7 +108,7 @@ class TextureStorageInterfaceCube : public TextureStorageInterface
 class TextureStorageInterface3D : public TextureStorageInterface
 {
   public:
-    TextureStorageInterface3D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
+    TextureStorageInterface3D(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget,
                               GLsizei width, GLsizei height, GLsizei depth);
     virtual ~TextureStorageInterface3D();
 
@@ -126,7 +128,7 @@ class TextureStorageInterface3D : public TextureStorageInterface
 class TextureStorageInterface2DArray : public TextureStorageInterface
 {
   public:
-    TextureStorageInterface2DArray(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
+    TextureStorageInterface2DArray(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget,
                                    GLsizei width, GLsizei height, GLsizei depth);
     virtual ~TextureStorageInterface2DArray();
 

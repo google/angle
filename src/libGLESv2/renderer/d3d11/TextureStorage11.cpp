@@ -23,10 +23,11 @@
 namespace rx
 {
 
-TextureStorage11::TextureStorage11(Renderer *renderer, UINT bindFlags)
+TextureStorage11::TextureStorage11(Renderer *renderer, int baseLevel, UINT bindFlags)
     : mBindFlags(bindFlags),
       mLodOffset(0),
       mMipLevels(0),
+      mBaseLevel(baseLevel),
       mTextureFormat(DXGI_FORMAT_UNKNOWN),
       mShaderResourceFormat(DXGI_FORMAT_UNKNOWN),
       mRenderTargetFormat(DXGI_FORMAT_UNKNOWN),
@@ -88,32 +89,37 @@ bool TextureStorage11::isManaged() const
     return false;
 }
 
-int TextureStorage11::levelCount()
+int TextureStorage11::getBaseLevel() const
+{
+    return mBaseLevel;
+}
+
+int TextureStorage11::getMaxLevel() const
 {
     int levels = 0;
     if (getBaseTexture())
     {
         levels = mMipLevels - getLodOffset();
     }
-    return levels;
+    return getBaseLevel() + levels;
 }
 
 int TextureStorage11::getLevelWidth(int mipLevel) const
 {
-    return std::max((static_cast<int>(mTextureWidth) >> mipLevel), 1);
+    return std::max((static_cast<int>(mTextureWidth) >> (mipLevel - mBaseLevel)), 1);
 }
 
 int TextureStorage11::getLevelHeight(int mipLevel) const
 {
-    return std::max((static_cast<int>(mTextureHeight) >> mipLevel), 1);
+    return std::max((static_cast<int>(mTextureHeight) >> (mipLevel - mBaseLevel)), 1);
 }
 
 int TextureStorage11::getLevelDepth(int mipLevel) const
 {
-    return std::max((static_cast<int>(mTextureDepth) >> mipLevel), 1);
+    return std::max((static_cast<int>(mTextureDepth) >> (mipLevel - mBaseLevel)), 1);
 }
 
-UINT TextureStorage11::getSubresourceIndex(int mipLevel, int layerTarget)
+UINT TextureStorage11::getSubresourceIndex(int mipLevel, int layerTarget) const
 {
     UINT index = 0;
     if (getBaseTexture())
@@ -201,7 +207,7 @@ void TextureStorage11::generateMipmapLayer(RenderTarget11 *source, RenderTarget1
 }
 
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapchain)
-    : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE)
+    : TextureStorage11(renderer, 0, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE)
 {
     mTexture = swapchain->getOffscreenTexture();
     mSRV = swapchain->getRenderTargetShaderResource();
@@ -232,8 +238,8 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
     mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
 }
 
-TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
+TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height)
+    : TextureStorage11(renderer, baseLevel, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
@@ -260,7 +266,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = width;      // Compressed texture size constraints?
         desc.Height = height;
-        desc.MipLevels = (levels > 0) ? levels + mLodOffset : 0;
+        desc.MipLevels = ((maxLevel > 0) ? (maxLevel + mLodOffset - baseLevel) : 0);
         desc.ArraySize = 1;
         desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;
@@ -319,7 +325,7 @@ ID3D11Resource *TextureStorage11_2D::getBaseTexture() const
 
 RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
 {
-    if (level >= 0 && level < static_cast<int>(mMipLevels))
+    if (level >= getBaseLevel() && level < getMaxLevel())
     {
         if (!mRenderTarget[level])
         {
@@ -329,7 +335,7 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
             srvDesc.Format = mShaderResourceFormat;
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-            srvDesc.Texture2D.MostDetailedMip = level;
+            srvDesc.Texture2D.MostDetailedMip = level - getBaseLevel();
             srvDesc.Texture2D.MipLevels = 1;
 
             ID3D11ShaderResourceView *srv;
@@ -346,7 +352,7 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
                 D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
                 rtvDesc.Format = mRenderTargetFormat;
                 rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-                rtvDesc.Texture2D.MipSlice = level;
+                rtvDesc.Texture2D.MipSlice = level - getBaseLevel();
 
                 ID3D11RenderTargetView *rtv;
                 result = device->CreateRenderTargetView(mTexture, &rtvDesc, &rtv);
@@ -434,8 +440,8 @@ void TextureStorage11_2D::generateMipmap(int level)
     generateMipmapLayer(source, dest);
 }
 
-TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, int size)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
+TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, int size)
+    : TextureStorage11(renderer, baseLevel, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
     for (unsigned int i = 0; i < 6; i++)
@@ -466,7 +472,7 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = size;
         desc.Height = size;
-        desc.MipLevels = (levels > 0) ? levels + mLodOffset : 0;
+        desc.MipLevels = ((maxLevel > 0) ? (maxLevel + mLodOffset - baseLevel) : 0);
         desc.ArraySize = 6;
         desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;
@@ -522,7 +528,7 @@ ID3D11Resource *TextureStorage11_Cube::getBaseTexture() const
 
 RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int level)
 {
-    if (level >= 0 && level < static_cast<int>(mMipLevels))
+    if (level >= getBaseLevel() && level < getMaxLevel())
     {
         int faceIndex = gl::TextureCubeMap::targetToIndex(faceTarget);
         if (!mRenderTarget[faceIndex][level])
@@ -533,7 +539,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
             srvDesc.Format = mShaderResourceFormat;
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY; // Will be used with Texture2D sampler, not TextureCube
-            srvDesc.Texture2DArray.MostDetailedMip = level;
+            srvDesc.Texture2DArray.MostDetailedMip = level - getBaseLevel();
             srvDesc.Texture2DArray.MipLevels = 1;
             srvDesc.Texture2DArray.FirstArraySlice = faceIndex;
             srvDesc.Texture2DArray.ArraySize = 1;
@@ -552,7 +558,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
                 D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
                 rtvDesc.Format = mRenderTargetFormat;
                 rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
-                rtvDesc.Texture2DArray.MipSlice = level;
+                rtvDesc.Texture2DArray.MipSlice = level - getBaseLevel();
                 rtvDesc.Texture2DArray.FirstArraySlice = faceIndex;
                 rtvDesc.Texture2DArray.ArraySize = 1;
 
@@ -578,7 +584,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
                 dsvDesc.Format = mDepthStencilFormat;
                 dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
                 dsvDesc.Flags = 0;
-                dsvDesc.Texture2DArray.MipSlice = level;
+                dsvDesc.Texture2DArray.MipSlice = level - getBaseLevel();
                 dsvDesc.Texture2DArray.FirstArraySlice = faceIndex;
                 dsvDesc.Texture2DArray.ArraySize = 1;
 
@@ -644,9 +650,9 @@ void TextureStorage11_Cube::generateMipmap(int faceIndex, int level)
     generateMipmapLayer(source, dest);
 }
 
-TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
+TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget,
                                          GLsizei width, GLsizei height, GLsizei depth)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
+    : TextureStorage11(renderer, baseLevel, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
 
@@ -675,7 +681,7 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int levels, GLenum 
         desc.Width = width;
         desc.Height = height;
         desc.Depth = depth;
-        desc.MipLevels = (levels > 0) ? levels + mLodOffset : 0;
+        desc.MipLevels = ((maxLevel > 0) ? (maxLevel + mLodOffset - baseLevel) : 0);
         desc.Format = mTextureFormat;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = getBindFlags();
@@ -761,7 +767,7 @@ ID3D11ShaderResourceView *TextureStorage11_3D::getSRV()
 
 RenderTarget *TextureStorage11_3D::getRenderTarget(int mipLevel)
 {
-    if (mipLevel >= 0 && mipLevel < static_cast<int>(mMipLevels))
+    if (mipLevel >= getBaseLevel() && mipLevel < getMaxLevel())
     {
         if (!mLevelRenderTargets[mipLevel])
         {
@@ -771,7 +777,7 @@ RenderTarget *TextureStorage11_3D::getRenderTarget(int mipLevel)
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
             srvDesc.Format = mShaderResourceFormat;
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
-            srvDesc.Texture3D.MostDetailedMip = mipLevel;
+            srvDesc.Texture3D.MostDetailedMip = mipLevel - getBaseLevel();
             srvDesc.Texture3D.MipLevels = 1;
 
             ID3D11ShaderResourceView *srv;
@@ -788,7 +794,7 @@ RenderTarget *TextureStorage11_3D::getRenderTarget(int mipLevel)
                 D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
                 rtvDesc.Format = mRenderTargetFormat;
                 rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
-                rtvDesc.Texture3D.MipSlice = mipLevel;
+                rtvDesc.Texture3D.MipSlice = mipLevel - getBaseLevel();
                 rtvDesc.Texture3D.FirstWSlice = 0;
                 rtvDesc.Texture3D.WSize = -1;
 
@@ -824,7 +830,7 @@ RenderTarget *TextureStorage11_3D::getRenderTarget(int mipLevel)
 
 RenderTarget *TextureStorage11_3D::getRenderTargetLayer(int mipLevel, int layer)
 {
-    if (mipLevel >= 0 && mipLevel < static_cast<int>(mMipLevels))
+    if (mipLevel >= getBaseLevel() && mipLevel < getMaxLevel())
     {
         LevelLayerKey key(mipLevel, layer);
         if (mLevelLayerRenderTargets.find(key) == mLevelLayerRenderTargets.end())
@@ -840,7 +846,7 @@ RenderTarget *TextureStorage11_3D::getRenderTargetLayer(int mipLevel, int layer)
                 D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
                 rtvDesc.Format = mRenderTargetFormat;
                 rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
-                rtvDesc.Texture3D.MipSlice = mipLevel;
+                rtvDesc.Texture3D.MipSlice = mipLevel - getBaseLevel();
                 rtvDesc.Texture3D.FirstWSlice = layer;
                 rtvDesc.Texture3D.WSize = 1;
 
@@ -882,9 +888,9 @@ void TextureStorage11_3D::generateMipmap(int level)
     generateMipmapLayer(source, dest);
 }
 
-TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
+TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget,
                                                    GLsizei width, GLsizei height, GLsizei depth)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
+    : TextureStorage11(renderer, baseLevel, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
 
@@ -907,7 +913,7 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int level
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = width;
         desc.Height = height;
-        desc.MipLevels = (levels > 0) ? levels + mLodOffset : 0;
+        desc.MipLevels = ((maxLevel > 0) ? (maxLevel + mLodOffset - baseLevel) : 0);
         desc.ArraySize = depth;
         desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;
@@ -1004,7 +1010,7 @@ RenderTarget *TextureStorage11_2DArray::getRenderTargetLayer(int mipLevel, int l
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
             srvDesc.Format = mShaderResourceFormat;
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-            srvDesc.Texture2DArray.MostDetailedMip = mipLevel;
+            srvDesc.Texture2DArray.MostDetailedMip = mipLevel - getBaseLevel();
             srvDesc.Texture2DArray.MipLevels = 1;
             srvDesc.Texture2DArray.FirstArraySlice = layer;
             srvDesc.Texture2DArray.ArraySize = 1;
@@ -1023,7 +1029,7 @@ RenderTarget *TextureStorage11_2DArray::getRenderTargetLayer(int mipLevel, int l
                 D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
                 rtvDesc.Format = mRenderTargetFormat;
                 rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
-                rtvDesc.Texture2DArray.MipSlice = mipLevel;
+                rtvDesc.Texture2DArray.MipSlice = mipLevel - getBaseLevel();
                 rtvDesc.Texture2DArray.FirstArraySlice = layer;
                 rtvDesc.Texture2DArray.ArraySize = 1;
 

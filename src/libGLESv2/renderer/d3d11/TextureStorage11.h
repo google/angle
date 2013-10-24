@@ -24,7 +24,6 @@ class SwapChain11;
 class TextureStorage11 : public TextureStorage
 {
   public:
-    TextureStorage11(Renderer *renderer, UINT bindFlags);
     virtual ~TextureStorage11();
 
     static TextureStorage11 *makeTextureStorage11(TextureStorage *storage);
@@ -45,14 +44,16 @@ class TextureStorage11 : public TextureStorage
     virtual int getLodOffset() const;
     virtual bool isRenderTarget() const;
     virtual bool isManaged() const;
-    virtual int levelCount();
-    UINT getSubresourceIndex(int mipLevel, int layerTarget);
+    virtual int getBaseLevel() const;
+    virtual int getMaxLevel() const;
+    UINT getSubresourceIndex(int mipLevel, int layerTarget) const;
 
     bool updateSubresourceLevel(ID3D11Resource *texture, unsigned int sourceSubresource, int level,
                                 int layerTarget, GLint xoffset, GLint yoffset, GLint zoffset,
                                 GLsizei width, GLsizei height, GLsizei depth);
 
   protected:
+    TextureStorage11(Renderer *renderer, int baseLevel, UINT bindFlags);
     void generateMipmapLayer(RenderTarget11 *source, RenderTarget11 *dest);
     int getLevelWidth(int mipLevel) const;
     int getLevelHeight(int mipLevel) const;
@@ -61,6 +62,7 @@ class TextureStorage11 : public TextureStorage
     Renderer11 *mRenderer;
     int mLodOffset;
     unsigned int mMipLevels;
+    int mBaseLevel;
 
     DXGI_FORMAT mTextureFormat;
     DXGI_FORMAT mShaderResourceFormat;
@@ -82,7 +84,7 @@ class TextureStorage11_2D : public TextureStorage11
 {
   public:
     TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapchain);
-    TextureStorage11_2D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height);
+    TextureStorage11_2D(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height);
     virtual ~TextureStorage11_2D();
 
     static TextureStorage11_2D *makeTextureStorage11_2D(TextureStorage *storage);
@@ -103,7 +105,7 @@ class TextureStorage11_2D : public TextureStorage11
 class TextureStorage11_Cube : public TextureStorage11
 {
   public:
-    TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget, int size);
+    TextureStorage11_Cube(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, int size);
     virtual ~TextureStorage11_Cube();
 
     static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
@@ -124,7 +126,7 @@ class TextureStorage11_Cube : public TextureStorage11
 class TextureStorage11_3D : public TextureStorage11
 {
   public:
-    TextureStorage11_3D(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
+    TextureStorage11_3D(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget,
                         GLsizei width, GLsizei height, GLsizei depth);
     virtual ~TextureStorage11_3D();
 
@@ -152,7 +154,7 @@ class TextureStorage11_3D : public TextureStorage11
 class TextureStorage11_2DArray : public TextureStorage11
 {
   public:
-    TextureStorage11_2DArray(Renderer *renderer, int levels, GLenum internalformat, bool renderTarget,
+    TextureStorage11_2DArray(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget,
                              GLsizei width, GLsizei height, GLsizei depth);
     virtual ~TextureStorage11_2DArray();
 
