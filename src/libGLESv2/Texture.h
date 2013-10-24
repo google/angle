@@ -125,6 +125,7 @@ class Texture : public RefCountObject
     GLint creationLevels(GLsizei width, GLsizei height, GLsizei depth) const;
     GLint creationLevels(GLsizei width, GLsizei height) const;
     GLint creationLevels(GLsizei size) const;
+    int mipLevels() const;
 
     virtual void createTexture() = 0;
     virtual void updateTexture() = 0;
