@@ -88,7 +88,6 @@ class Texture : public RefCountObject
     int getLodOffset();
     void getSamplerState(SamplerState *sampler);
     GLenum getUsage() const;
-    virtual int levelCount() = 0;
 
     GLint getBaseLevelWidth() const;
     GLint getBaseLevelHeight() const;
@@ -108,6 +107,7 @@ class Texture : public RefCountObject
     unsigned int getTextureSerial();
 
     bool isImmutable() const;
+    int immutableLevelCount();
 
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 

@@ -3739,7 +3739,7 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
-                *params = (GLfloat)(texture->isImmutable() ? texture->levelCount() : 0);
+                *params = (GLfloat)texture->immutableLevelCount();
                 break;
               case GL_TEXTURE_USAGE_ANGLE:
                 *params = (GLfloat)texture->getUsage();
@@ -3809,7 +3809,7 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
-                *params = texture->isImmutable() ? texture->levelCount() : 0;
+                *params = texture->immutableLevelCount();
                 break;
               case GL_TEXTURE_USAGE_ANGLE:
                 *params = texture->getUsage();

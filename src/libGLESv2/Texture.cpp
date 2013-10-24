@@ -329,6 +329,11 @@ bool Texture::isImmutable() const
     return mImmutable;
 }
 
+int Texture::immutableLevelCount()
+{
+    return (mImmutable ? getNativeTexture()->getStorageInstance()->levelCount() : 0);
+}
+
 GLint Texture::creationLevels(GLsizei width, GLsizei height, GLsizei depth) const
 {
     // NPOT checks are not required in ES 3.0, NPOT texture support is assumed.
