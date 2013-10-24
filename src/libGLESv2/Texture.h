@@ -123,8 +123,6 @@ class Texture : public RefCountObject
                           GLenum sizedInternalFormat, GLenum type, rx::RenderTarget *destRenderTarget);
 
     GLint creationLevels(GLsizei width, GLsizei height, GLsizei depth) const;
-    GLint creationLevels(GLsizei width, GLsizei height) const;
-    GLint creationLevels(GLsizei size) const;
     int mipLevels() const;
 
     virtual void initializeStorage(bool renderTarget) = 0;

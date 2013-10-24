@@ -266,7 +266,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int baseLevel, int 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = width;      // Compressed texture size constraints?
         desc.Height = height;
-        desc.MipLevels = ((maxLevel > 0) ? (maxLevel + mLodOffset - baseLevel) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
         desc.ArraySize = 1;
         desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;
@@ -472,7 +472,7 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int baseLevel, 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = size;
         desc.Height = size;
-        desc.MipLevels = ((maxLevel > 0) ? (maxLevel + mLodOffset - baseLevel) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
         desc.ArraySize = 6;
         desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;
@@ -681,7 +681,7 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int baseLevel, int 
         desc.Width = width;
         desc.Height = height;
         desc.Depth = depth;
-        desc.MipLevels = ((maxLevel > 0) ? (maxLevel + mLodOffset - baseLevel) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
         desc.Format = mTextureFormat;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = getBindFlags();
@@ -913,7 +913,7 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int baseL
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = width;
         desc.Height = height;
-        desc.MipLevels = ((maxLevel > 0) ? (maxLevel + mLodOffset - baseLevel) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
         desc.ArraySize = depth;
         desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;

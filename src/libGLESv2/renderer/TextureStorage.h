@@ -31,6 +31,8 @@ class TextureStorage
     virtual int getBaseLevel() const = 0;
     virtual int getMaxLevel() const = 0;
 
+    int levelCount() const { return getMaxLevel() - getBaseLevel(); }
+
     virtual RenderTarget *getRenderTarget(int level) = 0;
     virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level) = 0;
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer) = 0;
@@ -121,7 +123,6 @@ class TextureStorageInterface3D : public TextureStorageInterface
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface3D);
 
-    unsigned int mLevels;
     unsigned int mFirstRenderTargetSerial;
 };
 
@@ -140,7 +141,6 @@ class TextureStorageInterface2DArray : public TextureStorageInterface
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface2DArray);
 
-    unsigned int mLevels;
     unsigned int mFirstRenderTargetSerial;
 };
 

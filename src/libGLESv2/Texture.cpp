@@ -336,15 +336,10 @@ int Texture::immutableLevelCount()
 
 GLint Texture::creationLevels(GLsizei width, GLsizei height, GLsizei depth) const
 {
-    // NPOT checks are not required in ES 3.0, NPOT texture support is assumed.
-    return 0;   // Maximum number of levels
-}
-
-GLint Texture::creationLevels(GLsizei width, GLsizei height) const
-{
-    if ((isPow2(width) && isPow2(height)) || mRenderer->getNonPower2TextureSupport())
+    if ((isPow2(width) && isPow2(height) && isPow2(depth)) || mRenderer->getNonPower2TextureSupport())
     {
-        return 0;   // Maximum number of levels
+        // Maximum number of levels
+        return static_cast<GLint>(log2(std::max(std::max(width, height), depth)));
     }
     else
     {
@@ -353,14 +348,9 @@ GLint Texture::creationLevels(GLsizei width, GLsizei height) const
     }
 }
 
-GLint Texture::creationLevels(GLsizei size) const
-{
-    return creationLevels(size, size);
-}
-
 int Texture::mipLevels() const
 {
-    return log2(std::max(std::max(getBaseLevelWidth(), getBaseLevelHeight()), getBaseLevelDepth()));
+    return static_cast<int>(log2(std::max(std::max(getBaseLevelWidth(), getBaseLevelHeight()), getBaseLevelDepth())));
 }
 
 Texture2D::Texture2D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_2D)
@@ -845,7 +835,7 @@ rx::TextureStorageInterface2D *Texture2D::createCompleteStorage(bool renderTarge
     ASSERT(width > 0 && height > 0);
 
     // use existing storage level count, when previously specified by TexStorage*D
-    GLint levels = (mTexStorage ? mTexStorage->getMaxLevel() : creationLevels(width, height));
+    GLint levels = (mTexStorage ? mTexStorage->getMaxLevel() : creationLevels(width, height, 1));
 
     return new rx::TextureStorageInterface2D(mRenderer, 0, levels, getBaseLevelInternalFormat(), renderTarget, width, height);
 }
@@ -1297,7 +1287,7 @@ rx::TextureStorageInterfaceCube *TextureCubeMap::createCompleteStorage(bool rend
     ASSERT(size > 0);
 
     // use existing storage level count, when previously specified by TexStorage*D
-    GLint levels = (mTexStorage ? mTexStorage->getMaxLevel() : creationLevels(size));
+    GLint levels = (mTexStorage ? mTexStorage->getMaxLevel() : creationLevels(size, size, 1));
 
     return new rx::TextureStorageInterfaceCube(mRenderer, 0, levels, getBaseLevelInternalFormat(), renderTarget, size);
 }
@@ -2574,7 +2564,7 @@ rx::TextureStorageInterface2DArray *Texture2DArray::createCompleteStorage(bool r
     ASSERT(width > 0 && height > 0 && depth > 0);
 
     // use existing storage level count, when previously specified by TexStorage*D
-    GLint levels = (mTexStorage ? mTexStorage->getMaxLevel() : creationLevels(width, height));
+    GLint levels = (mTexStorage ? mTexStorage->getMaxLevel() : creationLevels(width, height, 1));
 
     return new rx::TextureStorageInterface2DArray(mRenderer, 0, levels, getBaseLevelInternalFormat(), renderTarget, width, height, depth);
 }
