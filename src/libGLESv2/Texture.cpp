@@ -2231,6 +2231,12 @@ Texture2DArray::~Texture2DArray()
 {
     delete mTexStorage;
     mTexStorage = NULL;
+
+    deleteImages();
+}
+
+void Texture2DArray::deleteImages()
+{
     for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++level)
     {
         for (int layer = 0; layer < mLayerCounts[level]; ++layer)
@@ -2238,6 +2244,8 @@ Texture2DArray::~Texture2DArray()
             delete mImageArray[level][layer];
         }
         delete[] mImageArray[level];
+        mImageArray[level] = NULL;
+        mLayerCounts[level] = 0;
     }
 }
 
@@ -2344,29 +2352,19 @@ void Texture2DArray::subImageCompressed(GLint level, GLint xoffset, GLint yoffse
 
 void Texture2DArray::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
 {
-    delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), width, height, depth);
-    mImmutable = true;
+    deleteImages();
 
     for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        GLsizei levelWidth = std::max(width >> level, 1);
-        GLsizei levelHeight = std::max(height >> level, 1);
+        GLsizei levelWidth = std::max(1, width >> level);
+        GLsizei levelHeight = std::max(1, height >> level);
 
-        // Clear this level
-        for (int layer = 0; layer < mLayerCounts[level]; layer++)
-        {
-            delete mImageArray[level][layer];
-        }
-        delete[] mImageArray[level];
-        mImageArray[level] = NULL;
-        mLayerCounts[level] = 0;
+        mLayerCounts[level] = (level < levels ? depth : 0);
 
-        if (level < levels)
+        if (mLayerCounts[level] > 0)
         {
             // Create new images for this level
-            mImageArray[level] = new rx::Image*[depth]();
-            mLayerCounts[level] = depth;
+            mImageArray[level] = new rx::Image*[mLayerCounts[level]];
 
             for (int layer = 0; layer < mLayerCounts[level]; layer++)
             {
@@ -2377,18 +2375,8 @@ void Texture2DArray::storage(GLsizei levels, GLenum internalformat, GLsizei widt
         }
     }
 
-    if (mTexStorage->isManaged())
-    {
-        int levels = levelCount();
-
-        for (int level = 0; level < levels; level++)
-        {
-            for (int layer = 0; layer < mLayerCounts[level]; layer++)
-            {
-                mImageArray[level][layer]->setManagedSurface(mTexStorage, layer, level);
-            }
-        }
-    }
+    mImmutable = true;
+    setCompleteTexStorage(new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), width, height, depth));
 }
 
 void Texture2DArray::generateMipmaps()
@@ -2585,34 +2573,49 @@ int Texture2DArray::levelCount()
 
 void Texture2DArray::initializeStorage(bool renderTarget)
 {
+    // Only initialize the first time this texture is used as a render target or shader resource
+    if (mTexStorage)
+    {
+        return;
+    }
+
+    // do not attempt to create storage for nonexistant data
+    if (!isLevelComplete(0))
+    {
+        return;
+    }
+
+    bool createRenderTarget = (renderTarget || mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+
+    setCompleteTexStorage(createCompleteStorage(createRenderTarget));
+    ASSERT(mTexStorage);
+
+    // flush image data to the storage
+    updateStorage();
+}
+
+rx::TextureStorageInterface2DArray *Texture2DArray::createCompleteStorage(bool renderTarget) const
+{
     GLsizei width = getBaseLevelWidth();
     GLsizei height = getBaseLevelHeight();
     GLsizei depth = getBaseLevelDepth();
 
-    if (width <= 0 || height <= 0 || depth <= 0)
-    {
-        return; // do not attempt to create native textures for nonexistant data
-    }
+    ASSERT(width > 0 && height > 0 && depth > 0);
 
-    GLint levels = creationLevels(width, height);
-    GLenum internalformat = getBaseLevelInternalFormat();
+    // use existing storage level count, when previously specified by TexStorage*D
+    GLint levels = (mTexStorage ? mTexStorage->levelCount() : creationLevels(width, height));
 
-    delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), width, height, depth);
+    return new rx::TextureStorageInterface2DArray(mRenderer, levels, getBaseLevelInternalFormat(), renderTarget, width, height, depth);
+}
 
-    if (mTexStorage->isManaged())
-    {
-        int levels = levelCount();
-        for (int level = 0; level < levels; level++)
-        {
-            for (int layer = 0; layer < mLayerCounts[level]; layer++)
-            {
-                mImageArray[level][layer]->setManagedSurface(mTexStorage, layer, level);
-            }
-        }
-    }
-
+void Texture2DArray::setCompleteTexStorage(rx::TextureStorageInterface2DArray *newCompleteTexStorage)
+{
+    SafeDelete(mTexStorage);
+    mTexStorage = newCompleteTexStorage;
     mDirtyImages = true;
+
+    // We do not support managed 2D array storage, as managed storage is ES2/D3D9 only
+    ASSERT(!mTexStorage->isManaged());
 }
 
 void Texture2DArray::updateStorage()
@@ -2645,38 +2648,25 @@ void Texture2DArray::updateStorageLevel(int level)
 
 bool Texture2DArray::ensureRenderTarget()
 {
-    if (mTexStorage && mTexStorage->isRenderTarget())
+    initializeStorage(true);
+
+    if (getBaseLevelWidth() > 0 && getBaseLevelHeight() > 0 && getBaseLevelDepth() > 0)
     {
-        return true;
-    }
-
-    rx::TextureStorageInterface2DArray *newTexStorage = NULL;
-
-    GLsizei width = getBaseLevelWidth();
-    GLsizei height = getBaseLevelHeight();
-    GLsizei depth = getBaseLevelDepth();
-
-    if (width != 0 && height != 0 && depth != 0)
-    {
-        GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(width, height);
-        GLenum internalformat = getInternalFormat(0);
-
-        newTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, true, width, height, depth);
-
-        if (mTexStorage != NULL)
+        ASSERT(mTexStorage);
+        if (!mTexStorage->isRenderTarget())
         {
-            if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
+            rx::TextureStorageInterface2DArray *newRenderTargetStorage = createCompleteStorage(true);
+
+            if (!mRenderer->copyToRenderTarget(newRenderTargetStorage, mTexStorage))
             {
-                delete newTexStorage;
+                delete newRenderTargetStorage;
                 return gl::error(GL_OUT_OF_MEMORY, false);
             }
+
+            setCompleteTexStorage(newRenderTargetStorage);
         }
     }
 
-    delete mTexStorage;
-    mTexStorage = newTexStorage;
-
-    mDirtyImages = true;
     return (mTexStorage && mTexStorage->isRenderTarget());
 }
 

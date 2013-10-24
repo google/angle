@@ -389,12 +389,16 @@ class Texture2DArray : public Texture
     DISALLOW_COPY_AND_ASSIGN(Texture2DArray);
 
     virtual void initializeStorage(bool renderTarget);
+    rx::TextureStorageInterface2DArray *createCompleteStorage(bool renderTarget) const;
+    void setCompleteTexStorage(rx::TextureStorageInterface2DArray *newCompleteTexStorage);
+
     virtual void updateStorage();
     virtual bool ensureRenderTarget();
 
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
     virtual const rx::Image *getBaseLevelImage() const;
 
+    void deleteImages();
     void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint layerTarget, GLsizei width, GLsizei height);
 
