@@ -639,15 +639,11 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
-    delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), width, height);
-    mImmutable = true;
-
     for (int level = 0; level < levels; level++)
     {
-        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_2D, internalformat, width, height, 1, true);
-        width = std::max(1, width >> 1);
-        height = std::max(1, height >> 1);
+        GLsizei levelWidth = std::max(1, width >> level);
+        GLsizei levelHeight = std::max(1, height >> level);
+        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_2D, internalformat, levelWidth, levelHeight, 1, true);
     }
 
     for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
@@ -655,15 +651,25 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
         mImageArray[level]->redefine(mRenderer, GL_TEXTURE_2D, GL_NONE, 0, 0, 0, true);
     }
 
-    if (mTexStorage->isManaged())
-    {
-        int levels = levelCount();
+    mImmutable = true;
 
-        for (int level = 0; level < levels; level++)
+    setCompleteTexStorage(new rx::TextureStorageInterface2D(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), width, height));
+}
+
+void Texture2D::setCompleteTexStorage(rx::TextureStorageInterface2D *newCompleteTexStorage)
+{
+    SafeDelete(mTexStorage);
+    mTexStorage = newCompleteTexStorage;
+
+    if (mTexStorage && mTexStorage->isManaged())
+    {
+        for (int level = 0; level < mTexStorage->levelCount(); level++)
         {
             mImageArray[level]->setManagedSurface(mTexStorage, level);
         }
     }
+
+    mDirtyImages = true;
 }
 
 // Tests for 2D texture sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 85.
@@ -802,30 +808,40 @@ bool Texture2D::isDepth(GLint level) const
 }
 
 // Constructs a native texture resource from the texture images
-void Texture2D::createTexture()
+void Texture2D::initializeStorage(bool renderTarget)
+{
+    // Only initialize the first time this texture is used as a render target or shader resource
+    if (mTexStorage)
+    {
+        return;
+    }
+
+    // do not attempt to create storage for nonexistant data
+    if (!isLevelComplete(0))
+    {
+        return;
+    }
+
+    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mUsage));
+
+    setCompleteTexStorage(createCompleteStorage(createRenderTarget));
+    ASSERT(mTexStorage);
+
+    // flush image data to the storage
+    updateStorage();
+}
+
+rx::TextureStorageInterface2D *Texture2D::createCompleteStorage(bool renderTarget) const
 {
     GLsizei width = getBaseLevelWidth();
     GLsizei height = getBaseLevelHeight();
 
-    if (!(width > 0 && height > 0))
-        return; // do not attempt to create native textures for nonexistant data
+    ASSERT(width > 0 && height > 0);
 
-    GLint levels = creationLevels(width, height);
+    // use existing storage level count, when previously specified by TexStorage*D
+    GLint levels = (mTexStorage ? mTexStorage->levelCount() : creationLevels(width, height));
 
-    delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, getBaseLevelInternalFormat(), IsRenderTargetUsage(mUsage), width, height);
-    
-    if (mTexStorage->isManaged())
-    {
-        int levels = levelCount();
-
-        for (int level = 0; level < levels; level++)
-        {
-            mImageArray[level]->setManagedSurface(mTexStorage, level);
-        }
-    }
-
-    mDirtyImages = true;
+    return new rx::TextureStorageInterface2D(mRenderer, levels, getBaseLevelInternalFormat(), renderTarget, width, height);
 }
 
 void Texture2D::updateStorage()
@@ -854,36 +870,24 @@ void Texture2D::updateStorageLevel(int level)
 
 bool Texture2D::ensureRenderTarget()
 {
-    if (mTexStorage && mTexStorage->isRenderTarget())
+    initializeStorage(true);
+
+    if (getBaseLevelWidth() > 0 && getBaseLevelHeight() > 0)
     {
-        return true;
-    }
-
-    rx::TextureStorageInterface2D *newTexStorage = NULL;
-
-    GLsizei width = getBaseLevelWidth();
-    GLsizei height = getBaseLevelHeight();
-
-    if (width != 0 && height != 0)
-    {
-        GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(width, height);
-
-        newTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, getBaseLevelInternalFormat(), true, width, height);
-
-        if (mTexStorage != NULL)
+        ASSERT(mTexStorage);
+        if (!mTexStorage->isRenderTarget())
         {
-            if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
-            {   
-                delete newTexStorage;
+            rx::TextureStorageInterface2D *newRenderTargetStorage = createCompleteStorage(true);
+
+            if (!mRenderer->copyToRenderTarget(newRenderTargetStorage, mTexStorage))
+            {
+                delete newRenderTargetStorage;
                 return gl::error(GL_OUT_OF_MEMORY, false);
             }
+
+            setCompleteTexStorage(newRenderTargetStorage);
         }
     }
-
-    delete mTexStorage;
-    mTexStorage = newTexStorage;
-
-    mDirtyImages = true;
 
     return (mTexStorage && mTexStorage->isRenderTarget());
 }
@@ -992,7 +996,7 @@ rx::TextureStorageInterface *Texture2D::getStorage(bool renderTarget)
         }
         else
         {
-            createTexture();
+            initializeStorage(false);
         }
     }
 
@@ -1272,7 +1276,7 @@ bool TextureCubeMap::isDepth(GLenum target, GLint level) const
 }
 
 // Constructs a native texture resource from the texture images, or returns an existing one
-void TextureCubeMap::createTexture()
+void TextureCubeMap::initializeStorage(bool renderTarget)
 {
     GLsizei size = getBaseLevelWidth();
 
@@ -1656,7 +1660,7 @@ rx::TextureStorageInterface *TextureCubeMap::getStorage(bool renderTarget)
         }
         else
         {
-            createTexture();
+            initializeStorage(false);
         }
     }
 
@@ -2009,7 +2013,7 @@ int Texture3D::levelCount()
     return mTexStorage ? mTexStorage->levelCount() : 0;
 }
 
-void Texture3D::createTexture()
+void Texture3D::initializeStorage(bool renderTarget)
 {
     GLsizei width = getBaseLevelWidth();
     GLsizei height = getBaseLevelHeight();
@@ -2162,7 +2166,7 @@ rx::TextureStorageInterface *Texture3D::getStorage(bool renderTarget)
         }
         else
         {
-            createTexture();
+            initializeStorage(false);
         }
     }
 
@@ -2580,7 +2584,7 @@ int Texture2DArray::levelCount()
     return mTexStorage ? mTexStorage->levelCount() : 0;
 }
 
-void Texture2DArray::createTexture()
+void Texture2DArray::initializeStorage(bool renderTarget)
 {
     GLsizei width = getBaseLevelWidth();
     GLsizei height = getBaseLevelHeight();
@@ -2725,7 +2729,7 @@ rx::TextureStorageInterface *Texture2DArray::getStorage(bool renderTarget)
         }
         else
         {
-            createTexture();
+            initializeStorage(false);
         }
     }
 

@@ -127,7 +127,7 @@ class Texture : public RefCountObject
     GLint creationLevels(GLsizei size) const;
     int mipLevels() const;
 
-    virtual void createTexture() = 0;
+    virtual void initializeStorage(bool renderTarget) = 0;
     virtual void updateStorage() = 0;
     virtual bool ensureRenderTarget() = 0;
 
@@ -196,7 +196,10 @@ class Texture2D : public Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
 
-    virtual void createTexture();
+    virtual void initializeStorage(bool renderTarget);
+    rx::TextureStorageInterface2D *createCompleteStorage(bool renderTarget) const;
+    void setCompleteTexStorage(rx::TextureStorageInterface2D *newCompleteTexStorage);
+
     virtual void updateStorage();
     virtual bool ensureRenderTarget();
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
@@ -263,7 +266,7 @@ class TextureCubeMap : public Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
 
-    virtual void createTexture();
+    virtual void initializeStorage(bool renderTarget);
     virtual void updateStorage();
     virtual bool ensureRenderTarget();
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
@@ -322,7 +325,7 @@ class Texture3D : public Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture3D);
 
-    virtual void createTexture();
+    virtual void initializeStorage(bool renderTarget);
     virtual void updateStorage();
     virtual bool ensureRenderTarget();
 
@@ -379,7 +382,7 @@ class Texture2DArray : public Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2DArray);
 
-    virtual void createTexture();
+    virtual void initializeStorage(bool renderTarget);
     virtual void updateStorage();
     virtual bool ensureRenderTarget();
 
