@@ -1275,27 +1275,51 @@ bool TextureCubeMap::isDepth(GLenum target, GLint level) const
     return GetDepthBits(getInternalFormat(target, level), mRenderer->getCurrentClientVersion()) > 0;
 }
 
-// Constructs a native texture resource from the texture images, or returns an existing one
 void TextureCubeMap::initializeStorage(bool renderTarget)
+{
+    // Only initialize the first time this texture is used as a render target or shader resource
+    if (mTexStorage)
+    {
+        return;
+    }
+
+    // do not attempt to create storage for nonexistant data
+    if (!isFaceLevelComplete(0, 0))
+    {
+        return;
+    }
+
+    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mUsage));
+
+    setCompleteTexStorage(createCompleteStorage(createRenderTarget));
+    ASSERT(mTexStorage);
+
+    // flush image data to the storage
+    updateStorage();
+}
+
+rx::TextureStorageInterfaceCube *TextureCubeMap::createCompleteStorage(bool renderTarget) const
 {
     GLsizei size = getBaseLevelWidth();
 
-    if (!(size > 0))
-        return; // do not attempt to create native textures for nonexistant data
+    ASSERT(size > 0);
 
-    GLint levels = creationLevels(size);
-    GLenum internalformat = getBaseLevelInternalFormat();
+    // use existing storage level count, when previously specified by TexStorage*D
+    GLint levels = (mTexStorage ? mTexStorage->levelCount() : creationLevels(size));
 
-    delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), size);
+    return new rx::TextureStorageInterfaceCube(mRenderer, levels, getBaseLevelInternalFormat(), renderTarget, size);
+}
 
-    if (mTexStorage->isManaged())
+void TextureCubeMap::setCompleteTexStorage(rx::TextureStorageInterfaceCube *newCompleteTexStorage)
+{
+    SafeDelete(mTexStorage);
+    mTexStorage = newCompleteTexStorage;
+
+    if (mTexStorage && mTexStorage->isManaged())
     {
-        int levels = levelCount();
-
         for (int faceIndex = 0; faceIndex < 6; faceIndex++)
         {
-            for (int level = 0; level < levels; level++)
+            for (int level = 0; level < mTexStorage->levelCount(); level++)
             {
                 mImageArray[faceIndex][level]->setManagedSurface(mTexStorage, faceIndex, level);
             }
@@ -1334,35 +1358,25 @@ void TextureCubeMap::updateStorageFaceLevel(int faceIndex, int level)
 
 bool TextureCubeMap::ensureRenderTarget()
 {
-    if (mTexStorage && mTexStorage->isRenderTarget())
+    initializeStorage(true);
+
+    if (getBaseLevelWidth() > 0)
     {
-        return true;
-    }
-
-    rx::TextureStorageInterfaceCube *newTexStorage = NULL;
-
-    if (getBaseLevelWidth() != 0)
-    {
-        GLsizei size = getBaseLevelWidth();
-        GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(size);
-        GLenum internalformat = getBaseLevelInternalFormat();
-
-        newTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, true, size);
-
-        if (mTexStorage != NULL)
+        ASSERT(mTexStorage);
+        if (!mTexStorage->isRenderTarget())
         {
-            if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
+            rx::TextureStorageInterfaceCube *newRenderTargetStorage = createCompleteStorage(true);
+
+            if (!mRenderer->copyToRenderTarget(newRenderTargetStorage, mTexStorage))
             {
-                delete newTexStorage;
+                delete newRenderTargetStorage;
                 return gl::error(GL_OUT_OF_MEMORY, false);
             }
+
+            setCompleteTexStorage(newRenderTargetStorage);
         }
     }
 
-    delete mTexStorage;
-    mTexStorage = newTexStorage;
-
-    mDirtyImages = true;
     return (mTexStorage && mTexStorage->isRenderTarget());
 }
 
@@ -1500,10 +1514,6 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
 {
-    delete mTexStorage;
-    mTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), size);
-    mImmutable = true;
-
     for (int level = 0; level < levels; level++)
     {
         GLsizei mipSize = std::max(1, size >> level);
@@ -1521,18 +1531,9 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
         }
     }
 
-    if (mTexStorage->isManaged())
-    {
-        int levels = levelCount();
+    mImmutable = true;
 
-        for (int faceIndex = 0; faceIndex < 6; faceIndex++)
-        {
-            for (int level = 0; level < levels; level++)
-            {
-                mImageArray[faceIndex][level]->setManagedSurface(mTexStorage, faceIndex, level);
-            }
-        }
-    }
+    setCompleteTexStorage(new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, IsRenderTargetUsage(mUsage), size));
 }
 
 void TextureCubeMap::generateMipmaps()

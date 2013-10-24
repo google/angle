@@ -267,6 +267,9 @@ class TextureCubeMap : public Texture
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
 
     virtual void initializeStorage(bool renderTarget);
+    rx::TextureStorageInterfaceCube *createCompleteStorage(bool renderTarget) const;
+    void setCompleteTexStorage(rx::TextureStorageInterfaceCube *newCompleteTexStorage);
+
     virtual void updateStorage();
     virtual bool ensureRenderTarget();
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
