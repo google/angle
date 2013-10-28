@@ -18,6 +18,7 @@
 
 #include <string>
 #include <map>
+#include <set>
 #ifdef _MSC_VER
 #include <hash_map>
 #else
@@ -419,6 +420,9 @@ class Context
 
     void initExtensionString();
     void initRendererString();
+
+    typedef std::set<unsigned> FramebufferTextureSerialSet;
+    FramebufferTextureSerialSet getBoundFramebufferTextureSerials();
 
     rx::Renderer *const mRenderer;
 
