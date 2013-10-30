@@ -54,6 +54,7 @@
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
     </Lib>
     <Link>
@@ -90,6 +91,7 @@
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
     </Lib>
     <Link>

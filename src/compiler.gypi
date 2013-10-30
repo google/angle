@@ -39,6 +39,13 @@
                     }
                 ],
             ],
+            'msvs_settings':
+            {
+              'VCLibrarianTool':
+              {
+                'AdditionalOptions': ['/ignore:4221']
+              },
+            },
         },
 
         {
@@ -74,6 +81,13 @@
                     }
                 ],
             ],
+            'msvs_settings':
+            {
+              'VCLibrarianTool':
+              {
+                'AdditionalOptions': ['/ignore:4221']
+              },
+            },
         },
     ],
 }
