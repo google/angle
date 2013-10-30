@@ -125,7 +125,7 @@
                     ],
                     'sources':
                     [
-                        '<!@(python enumerate_files.py angle_tests -types *.cpp *.h)'
+                        '<!@(python enumerate_files.py angle_tests -types *.cpp *.h *.inl)'
                     ],
                 },
                 {
