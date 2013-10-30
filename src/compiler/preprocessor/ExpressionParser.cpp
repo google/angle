@@ -92,6 +92,7 @@
 
 #include "ExpressionParser.h"
 
+#include <malloc.h>
 #include <cassert>
 #include <sstream>
 
