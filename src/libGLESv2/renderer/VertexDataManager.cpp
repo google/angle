@@ -256,7 +256,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
 
                 StreamingVertexBufferInterface *buffer = mCurrentValueBuffer[i];
 
-                if (memcmp(&mCurrentValue[i], &currentValues[i], sizeof(gl::VertexAttribCurrentValueData)) != 0)
+                if (mCurrentValue[i] != currentValues[i])
                 {
                     if (!buffer->reserveVertexSpace(attribs[i], 1, 0))
                     {
@@ -269,6 +269,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                         return GL_OUT_OF_MEMORY;
                     }
 
+                    mCurrentValue[i] = currentValues[i];
                     mCurrentValueOffsets[i] = streamOffset;
                 }
 

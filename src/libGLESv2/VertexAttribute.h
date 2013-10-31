@@ -139,6 +139,16 @@ struct VertexAttribCurrentValueData
         }
         Type = GL_UNSIGNED_INT;
     }
+
+    bool operator==(const VertexAttribCurrentValueData &other)
+    {
+        return (Type == other.Type && memcmp(FloatValues, other.FloatValues, sizeof(float) * 4) == 0);
+    }
+
+    bool operator!=(const VertexAttribCurrentValueData &other)
+    {
+        return !(*this == other);
+    }
 };
 
 }
