@@ -266,6 +266,10 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                         return GL_OUT_OF_MEMORY;
                     }
 
+                    mCurrentValue[i][0] = attribs[i].mCurrentValue[0];
+                    mCurrentValue[i][1] = attribs[i].mCurrentValue[1];
+                    mCurrentValue[i][2] = attribs[i].mCurrentValue[2];
+                    mCurrentValue[i][3] = attribs[i].mCurrentValue[3];
                     mCurrentValueOffsets[i] = streamOffset;
                 }
 
