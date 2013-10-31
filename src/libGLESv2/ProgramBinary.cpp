@@ -740,7 +740,7 @@ bool ProgramBinary::getUniformv(GLint location, GLsizei *bufSize, T *params, GLe
     {
         const int rows = VariableRowCount(targetUniform->type);
         const int cols = VariableColumnCount(targetUniform->type);
-        transposeMatrix(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4 * rows, cols, rows, 4, rows);
+        transposeMatrix(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4 * rows, rows, cols, 4, rows);
     }
     else if (uniformType == UniformComponentType(targetUniform->type))
     {
