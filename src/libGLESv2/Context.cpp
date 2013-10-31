@@ -2392,8 +2392,8 @@ void Context::applyTextures(SamplerType type)
             SamplerState samplerState;
             texture->getSamplerState(&samplerState);
 
-            if (texture->isSamplerComplete(samplerState) &&
-                boundFramebufferTextures.find(texture->getTextureSerial()) == boundFramebufferTextures.end())
+            if ((mState.samplers[textureUnit] != 0) &&
+                (boundFramebufferTextures.find(texture->getTextureSerial()) == boundFramebufferTextures.end()))
             {
                 Sampler *samplerObject = getSampler(mState.samplers[textureUnit]);
                 samplerObject->getState(&samplerState);
