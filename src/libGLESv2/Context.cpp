@@ -2374,6 +2374,8 @@ void Context::applyTextures(SamplerType type)
 {
     ProgramBinary *programBinary = getCurrentProgramBinary();
 
+    FramebufferTextureSerialSet boundFramebufferTextures = getBoundFramebufferTextureSerials();
+
     // Range of Direct3D samplers of given sampler type
     int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : mRenderer->getMaxVertexTextureImageUnits();
     int samplerRange = programBinary->getUsedSamplerRange(type);
@@ -2390,7 +2392,8 @@ void Context::applyTextures(SamplerType type)
             SamplerState samplerState;
             texture->getSamplerState(&samplerState);
 
-            if (mState.samplers[textureUnit] != 0)
+            if (texture->isSamplerComplete(samplerState) &&
+                boundFramebufferTextures.find(texture->getTextureSerial()) == boundFramebufferTextures.end())
             {
                 Sampler *samplerObject = getSampler(mState.samplers[textureUnit]);
                 samplerObject->getState(&samplerState);
@@ -3657,6 +3660,29 @@ void Context::initRendererString()
 const char *Context::getRendererString() const
 {
     return mRendererString;
+}
+
+Context::FramebufferTextureSerialSet Context::getBoundFramebufferTextureSerials()
+{
+    FramebufferTextureSerialSet set;
+
+    Framebuffer *drawFramebuffer = getDrawFramebuffer();
+    for (unsigned int i = 0; i < IMPLEMENTATION_MAX_DRAW_BUFFERS; i++)
+    {
+        Renderbuffer *renderBuffer = drawFramebuffer->getColorbuffer(i);
+        if (renderBuffer && renderBuffer->getTextureSerial() != 0)
+        {
+            set.insert(renderBuffer->getTextureSerial());
+        }
+    }
+
+    Renderbuffer *depthStencilBuffer = drawFramebuffer->getDepthOrStencilbuffer();
+    if (depthStencilBuffer && depthStencilBuffer->getTextureSerial() != 0)
+    {
+        set.insert(depthStencilBuffer->getTextureSerial());
+    }
+
+    return set;
 }
 
 void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,

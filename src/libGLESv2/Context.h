@@ -21,6 +21,7 @@
 #include <EGL/egl.h>
 
 #include <string>
+#include <set>
 #include <map>
 #include <unordered_map>
 
@@ -464,6 +465,9 @@ class Context
 
     void initExtensionString();
     void initRendererString();
+
+    typedef std::set<unsigned> FramebufferTextureSerialSet;
+    FramebufferTextureSerialSet getBoundFramebufferTextureSerials();
 
     rx::Renderer *const mRenderer;
 
