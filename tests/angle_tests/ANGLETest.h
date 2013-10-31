@@ -54,30 +54,31 @@ class ANGLETest : public testing::Test
     virtual void swapBuffers();
 
     static void drawQuad(GLuint program, const std::string& positionAttribName, GLfloat quadDepth);
+    static GLuint compileShader(GLenum type, const std::string &source);
     static GLuint compileProgram(const std::string &vsSource, const std::string &fsSource);
     static bool extensionEnabled(const std::string &extName);
 
     void setClientVersion(int clientVersion);
     void setWindowWidth(int width);
     void setWindowHeight(int height);
-    void setRedBits(int bits);
-    void setGreenBits(int bits);
-    void setBlueBits(int bits);
-    void setAlphaBits(int bits);
-    void setDepthBits(int bits);
-    void setStencilBits(int bits);
+    void setConfigRedBits(int bits);
+    void setConfigGreenBits(int bits);
+    void setConfigBlueBits(int bits);
+    void setConfigAlphaBits(int bits);
+    void setConfigDepthBits(int bits);
+    void setConfigStencilBits(int bits);
     void setMultisampleEnabled(bool enabled);
 
     int getClientVersion() const;
     int getWindowWidth() const;
     int getWindowHeight() const;
-    int getRedBits() const;
-    int getGreenBits() const;
-    int getBlueBits() const;
-    int getAlphaBits() const;
-    int getDepthBits() const;
-    int getStencilBits() const;
-    bool multisampleEnabled() const;
+    int getConfigRedBits() const;
+    int getConfigGreenBits() const;
+    int getConfigBlueBits() const;
+    int getConfigAlphaBits() const;
+    int getConfigDepthBits() const;
+    int getConfigStencilBits() const;
+    bool isMultisampleEnabled() const;
 
   private:
     bool createEGLContext();

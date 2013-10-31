@@ -1,16 +1,16 @@
 #include "ANGLETest.h"
 
 ANGLETest::ANGLETest()
-    : mClientVersion(2)
-    , mWidth(1280)
-    , mHeight(720)
-    , mRedBits(-1)
-    , mGreenBits(-1)
-    , mBlueBits(-1)
-    , mAlphaBits(-1)
-    , mDepthBits(-1)
-    , mStencilBits(-1)
-    , mMultisample(false)
+    : mClientVersion(2),
+      mWidth(1280),
+      mHeight(720),
+      mRedBits(-1),
+      mGreenBits(-1),
+      mBlueBits(-1),
+      mAlphaBits(-1),
+      mDepthBits(-1),
+      mStencilBits(-1),
+      mMultisample(false)
 {
 }
 
@@ -69,21 +69,52 @@ void ANGLETest::drawQuad(GLuint program, const std::string& positionAttribName, 
     glUseProgram(0);
 }
 
+GLuint ANGLETest::compileShader(GLenum type, const std::string &source)
+{
+    GLuint shader = glCreateShader(type);
+
+    const char *sourceArray[1] = { source.c_str() };
+    glShaderSource(shader, 1, sourceArray, NULL);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+
+    if (compileResult == 0)
+    {
+        GLint infoLogLength;
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+        std::vector<GLchar> infoLog(infoLogLength);
+        glGetShaderInfoLog(shader, infoLog.size(), NULL, infoLog.data());
+
+        std::cerr << "shader compilation failed: " << infoLog.data();
+
+        glDeleteShader(shader);
+        shader = 0;
+    }
+
+    return shader;
+}
+
 GLuint ANGLETest::compileProgram(const std::string &vsSource, const std::string &fsSource)
 {
     GLuint program = glCreateProgram();
 
-    GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-    const char *vsSourceArray[1] = { vsSource.c_str() };
-    glShaderSource(vs, 1, vsSourceArray, NULL);
-    glCompileShader(vs);
+    GLuint vs = compileShader(GL_VERTEX_SHADER, vsSource);
+    GLuint fs = compileShader(GL_FRAGMENT_SHADER, fsSource);
+
+    if (vs == 0 || fs == 0)
+    {
+        glDeleteShader(fs);
+        glDeleteShader(vs);
+        glDeleteProgram(program);
+        return 0;
+    }
+
     glAttachShader(program, vs);
     glDeleteShader(vs);
 
-    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-    const char *fsSourceArray[1] = { fsSource.c_str() };
-    glShaderSource(fs, 1, fsSourceArray, NULL);
-    glCompileShader(fs);
     glAttachShader(program, fs);
     glDeleteShader(fs);
 
@@ -92,10 +123,18 @@ GLuint ANGLETest::compileProgram(const std::string &vsSource, const std::string 
     GLint linkStatus;
     glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
 
-    if (!linkStatus)
+    if (linkStatus == 0)
     {
+        GLint infoLogLength;
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+        std::vector<GLchar> infoLog(infoLogLength);
+        glGetProgramInfoLog(program, infoLog.size(), NULL, infoLog.data());
+
+        std::cerr << "program link failed: " << infoLog.data();
+
         glDeleteProgram(program);
-        program = 0;
+        return 0;
     }
 
     return program;
@@ -122,32 +161,32 @@ void ANGLETest::setWindowHeight(int height)
     mHeight = height;
 }
 
-void ANGLETest::setRedBits(int bits)
+void ANGLETest::setConfigRedBits(int bits)
 {
     mRedBits = bits;
 }
 
-void ANGLETest::setGreenBits(int bits)
+void ANGLETest::setConfigGreenBits(int bits)
 {
     mGreenBits = bits;
 }
 
-void ANGLETest::setBlueBits(int bits)
+void ANGLETest::setConfigBlueBits(int bits)
 {
     mBlueBits = bits;
 }
 
-void ANGLETest::setAlphaBits(int bits)
+void ANGLETest::setConfigAlphaBits(int bits)
 {
     mAlphaBits = bits;
 }
 
-void ANGLETest::setDepthBits(int bits)
+void ANGLETest::setConfigDepthBits(int bits)
 {
     mDepthBits = bits;
 }
 
-void ANGLETest::setStencilBits(int bits)
+void ANGLETest::setConfigStencilBits(int bits)
 {
     mStencilBits = bits;
 }
@@ -172,37 +211,37 @@ int ANGLETest::getWindowHeight() const
     return mHeight;
 }
 
-int ANGLETest::getRedBits() const
+int ANGLETest::getConfigRedBits() const
 {
     return mRedBits;
 }
 
-int ANGLETest::getGreenBits() const
+int ANGLETest::getConfigGreenBits() const
 {
     return mGreenBits;
 }
 
-int ANGLETest::getBlueBits() const
+int ANGLETest::getConfigBlueBits() const
 {
     return mBlueBits;
 }
 
-int ANGLETest::getAlphaBits() const
+int ANGLETest::getConfigAlphaBits() const
 {
     return mAlphaBits;
 }
 
-int ANGLETest::getDepthBits() const
+int ANGLETest::getConfigDepthBits() const
 {
     return mDepthBits;
 }
 
-int ANGLETest::getStencilBits() const
+int ANGLETest::getConfigStencilBits() const
 {
     return mStencilBits;
 }
 
-bool ANGLETest::multisampleEnabled() const
+bool ANGLETest::isMultisampleEnabled() const
 {
     return mMultisample;
 }

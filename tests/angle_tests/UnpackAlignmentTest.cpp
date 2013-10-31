@@ -9,11 +9,11 @@ protected:
     {
         setWindowWidth(128);
         setWindowHeight(128);
-        setRedBits(8);
-        setGreenBits(8);
-        setBlueBits(8);
-        setAlphaBits(8);
-        setDepthBits(24);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+        setConfigDepthBits(24);
 
         mProgram = 0;
     }
