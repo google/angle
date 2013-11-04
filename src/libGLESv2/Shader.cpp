@@ -232,6 +232,7 @@ void Shader::parseVaryings(void *compiler)
         mUsesPointCoord            = mHlsl.find("GL_USES_POINT_COORD")  != std::string::npos;
         mUsesDepthRange            = mHlsl.find("GL_USES_DEPTH_RANGE")  != std::string::npos;
         mUsesFragDepth             = mHlsl.find("GL_USES_FRAG_DEPTH")   != std::string::npos;
+        mUsesDiscardRewriting      = mHlsl.find("ANGLE_USES_DISCARD_REWRITING") != std::string::npos;
     }
 }
 
@@ -263,6 +264,7 @@ void Shader::uncompile()
     mUsesDepthRange = false;
     mUsesFragDepth = false;
     mShaderVersion = 100;
+    mUsesDiscardRewriting = false;
 
     mActiveUniforms.clear();
     mActiveInterfaceBlocks.clear();

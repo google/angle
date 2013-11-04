@@ -92,6 +92,7 @@ class Shader
     bool mUsesDepthRange;
     bool mUsesFragDepth;
     int mShaderVersion;
+    bool mUsesDiscardRewriting;
 
     static void *mFragmentCompiler;
     static void *mVertexCompiler;

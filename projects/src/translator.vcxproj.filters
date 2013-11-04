@@ -222,6 +222,9 @@
     <ClCompile Include="..\..\src\compiler\translator\ValidateOutputs.cpp">
       <Filter>..\..\src\compiler\translator</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\compiler\translator\NodeSearch.h">
+      <Filter>..\..\src\compiler\translator</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorESSL.h">
       <Filter>..\..\src\compiler\translator</Filter>
     </ClInclude>

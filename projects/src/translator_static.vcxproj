@@ -150,6 +150,7 @@
     <ClInclude Include="..\..\src\compiler\translator\VersionGLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\HashNames.h"/>
     <ClInclude Include="..\..\src\compiler\translator\DirectiveHandler.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\NodeSearch.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorESSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeDll.h"/>
     <ClInclude Include="..\..\src\compiler\translator\localintermediate.h"/>

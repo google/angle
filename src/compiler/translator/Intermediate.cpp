@@ -774,7 +774,7 @@ void TIntermediate::remove(TIntermNode* root)
 //
 // Returns true if state is modified.
 //
-bool TIntermOperator::modifiesState() const
+bool TIntermOperator::hasSideEffects() const
 {
     switch (op) {
         case EOpPostIncrement:
