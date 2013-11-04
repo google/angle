@@ -263,6 +263,7 @@
     <ClInclude Include="localintermediate.h" />
     <ClInclude Include="MapLongVariableNames.h" />
     <ClInclude Include="MMap.h" />
+    <ClInclude Include="NodeSearch.h" />
     <ClInclude Include="osinclude.h" />
     <ClInclude Include="OutputESSL.h" />
     <ClInclude Include="OutputGLSL.h" />

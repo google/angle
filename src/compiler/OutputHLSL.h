@@ -125,6 +125,7 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesAtan2_2;
     bool mUsesAtan2_3;
     bool mUsesAtan2_4;
+    bool mUsesDiscardRewriting;
 
     int mNumRenderTargets;
 
