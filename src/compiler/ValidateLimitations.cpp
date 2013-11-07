@@ -457,7 +457,7 @@ bool ValidateLimitations::validateFunctionCall(TIntermAggregate* node)
 bool ValidateLimitations::validateOperation(TIntermOperator* node,
                                             TIntermNode* operand) {
     // Check if loop index is modified in the loop body.
-    if (!withinLoopBody() || !node->hasSideEffects())
+    if (!withinLoopBody() || !node->isAssignment())
         return true;
 
     const TIntermSymbol* symbol = operand->getAsSymbolNode();

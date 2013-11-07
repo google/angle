@@ -804,9 +804,7 @@ bool TIntermSelection::replaceChildNode(
 //
 // Say whether or not an operation node changes the value of a variable.
 //
-// Returns true if state is modified.
-//
-bool TIntermOperator::hasSideEffects() const
+bool TIntermOperator::isAssignment() const
 {
     switch (op) {
         case EOpPostIncrement:

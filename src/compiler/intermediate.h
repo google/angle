@@ -406,8 +406,10 @@ public:
     TOperator getOp() const { return op; }
     void setOp(TOperator o) { op = o; }
 
-    virtual bool hasSideEffects() const;
+    bool isAssignment() const;
     bool isConstructor() const;
+
+    virtual bool hasSideEffects() const { return isAssignment(); }
 
 protected:
     TIntermOperator(TOperator o) : TIntermTyped(TType(EbtFloat, EbpUndefined)), op(o) {}
@@ -427,7 +429,7 @@ public:
     virtual bool replaceChildNode(
         TIntermNode *original, TIntermNode *replacement);
 
-    virtual bool hasSideEffects() const { return (TIntermOperator::hasSideEffects() || left->hasSideEffects() || right->hasSideEffects()); }
+    virtual bool hasSideEffects() const { return (isAssignment() || left->hasSideEffects() || right->hasSideEffects()); }
 
     void setLeft(TIntermTyped* n) { left = n; }
     void setRight(TIntermTyped* n) { right = n; }
@@ -459,7 +461,7 @@ public:
     virtual bool replaceChildNode(
         TIntermNode *original, TIntermNode *replacement);
 
-    virtual bool hasSideEffects() const { return (TIntermOperator::hasSideEffects() || operand->hasSideEffects()); }
+    virtual bool hasSideEffects() const { return (isAssignment() || operand->hasSideEffects()); }
 
     void setOperand(TIntermTyped* o) { operand = o; }
     TIntermTyped* getOperand() { return operand; }    
