@@ -22,3 +22,5 @@ debug.txt
 third_party
 tests/third_party
 out
+lib/*
+

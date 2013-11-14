@@ -6,6 +6,7 @@
     'variables':
     {
         'angle_code': 1,
+        'angle_post_build_script%': 0,
     },
     'includes':
     [
@@ -13,6 +14,36 @@
         'libGLESv2.gypi',
         'libEGL.gypi'
     ],
+    'conditions':
+    [
+        [
+            'angle_post_build_script!=0 and OS=="win"',
+            {
+                'target_defaults':
+                {
+                   'msvs_cygwin_shell': 0,
+                },
+                'targets':
+                [
+                    {
+                        'target_name': 'post_build',
+                        'type': 'none',
+                        'dependencies': [ 'libGLESv2', 'libEGL' ],
+                        'actions':
+                        [
+                            {
+                                'action_name': 'ANGLE Post-Build Script',
+                                'message': 'Running <(angle_post_build_script)...',
+                                'inputs': [ '<(angle_post_build_script)', '<!@(python <(angle_post_build_script) inputs)' ],
+                                'outputs': [ '<!@(python <(angle_post_build_script) outputs)' ],
+                                'action': ['python', '<(angle_post_build_script)', 'run', '<(CONFIGURATION_NAME)', '$(Platform)', '<(PRODUCT_DIR)'],
+                            }
+                        ] #actions
+                    }
+                ] # targets
+            }
+        ]
+    ] # conditions
 }
 
 # Local Variables:
