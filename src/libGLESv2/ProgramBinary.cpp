@@ -2377,7 +2377,7 @@ TextureType ProgramBinary::getTextureType(GLenum samplerType, InfoLog &infoLog)
 
 bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, InfoLog &infoLog)
 {
-    if (!constant.fields.empty())
+    if (constant.isStruct())
     {
         if (constant.arraySize > 0)
         {
@@ -2389,8 +2389,11 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
                 {
                     const sh::Uniform &field = constant.fields[fieldIndex];
                     const std::string &uniformName = constant.name + arrayString(elementIndex) + "." + field.name;
-                    const sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize,
-                                                   elementRegisterIndex, field.elementIndex);
+                    sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize,
+                                             elementRegisterIndex, field.elementIndex);
+
+                    fieldUniform.fields = field.fields;
+
                     if (!defineUniform(shader, fieldUniform, infoLog))
                     {
                         return false;

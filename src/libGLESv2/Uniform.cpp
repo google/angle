@@ -69,6 +69,7 @@ bool Uniform::isInDefaultBlock() const
 
 size_t Uniform::dataSize() const
 {
+    ASSERT(type != GL_STRUCT_ANGLEX);
     return UniformInternalSize(type) * elementCount();
 }
 
