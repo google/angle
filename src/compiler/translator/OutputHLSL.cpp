@@ -1091,7 +1091,7 @@ void OutputHLSL::header()
                                        "    float2 tSized = float2(t.x * width, t.y * height);\n"
                                        "    float dx = length(ddx(tSized));\n"
                                        "    float dy = length(ddy(tSized));\n"
-                                       "    float lod = log2(max(sqrt(dx), sqrt(dy)));\n";
+                                       "    float lod = log2(max(dx, dy));\n";
 
                                 if (textureFunction->method == TextureFunction::BIAS)
                                 {
@@ -1121,7 +1121,7 @@ void OutputHLSL::header()
                                        "    float2 tSized = float2(t.x * width, t.y * height);\n"
                                        "    float dx = length(ddx(tSized));\n"
                                        "    float dy = length(ddy(tSized));\n"
-                                       "    float lod = log2(max(sqrt(dx), sqrt(dy)));\n";
+                                       "    float lod = log2(max(dx, dy));\n";
 
                                 if (textureFunction->method == TextureFunction::BIAS)
                                 {
@@ -1152,7 +1152,7 @@ void OutputHLSL::header()
                                    "    float3 tSized = float3(t.x * width, t.y * height, t.z * depth);\n"
                                    "    float dx = length(ddx(tSized));\n"
                                    "    float dy = length(ddy(tSized));\n"
-                                   "    float lod = log2(max(sqrt(dx), sqrt(dy)));\n";
+                                   "    float lod = log2(max(dx, dy));\n";
 
                             if (textureFunction->method == TextureFunction::BIAS)
                             {
