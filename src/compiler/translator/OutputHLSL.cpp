@@ -617,7 +617,7 @@ void OutputHLSL::header()
         }
     }
 
-    for (auto flaggedStructIt = mFlaggedStructMappedNames.begin(); flaggedStructIt != mFlaggedStructMappedNames.end(); flaggedStructIt++)
+    for (std::map<TIntermTyped*, TString>::const_iterator flaggedStructIt = mFlaggedStructMappedNames.begin(); flaggedStructIt != mFlaggedStructMappedNames.end(); flaggedStructIt++)
     {
         TIntermTyped *structNode = flaggedStructIt->first;
         const TString &mappedName = flaggedStructIt->second;
@@ -674,7 +674,7 @@ void OutputHLSL::header()
 
         if (mContext.getShaderVersion() >= 300)
         {
-            for (auto outputVariableIt = mReferencedOutputVariables.begin(); outputVariableIt != mReferencedOutputVariables.end(); outputVariableIt++)
+            for (ReferencedSymbols::const_iterator outputVariableIt = mReferencedOutputVariables.begin(); outputVariableIt != mReferencedOutputVariables.end(); outputVariableIt++)
             {
                 const TString &variableName = outputVariableIt->first;
                 const TType &variableType = outputVariableIt->second->getType();
