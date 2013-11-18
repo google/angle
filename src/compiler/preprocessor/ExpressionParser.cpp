@@ -1587,7 +1587,7 @@ yyreduce:
             std::ostringstream stream;
             stream << (yyvsp[(1) - (3)]) << " % " << (yyvsp[(3) - (3)]);
             std::string text = stream.str();
-            context->diagnostics->report(pp::Diagnostics::DIVISION_BY_ZERO,
+            context->diagnostics->report(pp::Diagnostics::PP_DIVISION_BY_ZERO,
                                          context->token->location,
                                          text.c_str());
             YYABORT;
@@ -1604,7 +1604,7 @@ yyreduce:
             std::ostringstream stream;
             stream << (yyvsp[(1) - (3)]) << " / " << (yyvsp[(3) - (3)]);
             std::string text = stream.str();
-            context->diagnostics->report(pp::Diagnostics::DIVISION_BY_ZERO,
+            context->diagnostics->report(pp::Diagnostics::PP_DIVISION_BY_ZERO,
                                          context->token->location,
                                          text.c_str());
             YYABORT;
@@ -1903,7 +1903,7 @@ int yylex(YYSTYPE* lvalp, Context* context)
         unsigned int val = 0;
         if (!token->uValue(&val))
         {
-            context->diagnostics->report(pp::Diagnostics::INTEGER_OVERFLOW,
+            context->diagnostics->report(pp::Diagnostics::PP_INTEGER_OVERFLOW,
                                          token->location, token->text);
         }
         *lvalp = static_cast<YYSTYPE>(val);
@@ -1944,7 +1944,7 @@ int yylex(YYSTYPE* lvalp, Context* context)
 
 void yyerror(Context* context, const char* reason)
 {
-    context->diagnostics->report(pp::Diagnostics::INVALID_EXPRESSION,
+    context->diagnostics->report(pp::Diagnostics::PP_INVALID_EXPRESSION,
                                  context->token->location,
                                  reason);
 }
@@ -1972,12 +1972,12 @@ bool ExpressionParser::parse(Token* token, int* result)
         break;
 
       case 2:
-        mDiagnostics->report(Diagnostics::OUT_OF_MEMORY, token->location, "");
+        mDiagnostics->report(Diagnostics::PP_OUT_OF_MEMORY, token->location, "");
         break;
 
       default:
         assert(false);
-        mDiagnostics->report(Diagnostics::INTERNAL_ERROR, token->location, "");
+        mDiagnostics->report(Diagnostics::PP_INTERNAL_ERROR, token->location, "");
         break;
     }
 

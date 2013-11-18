@@ -39,7 +39,7 @@ TDirectiveHandler::~TDirectiveHandler()
 void TDirectiveHandler::handleError(const pp::SourceLocation& loc,
                                     const std::string& msg)
 {
-    mDiagnostics.writeInfo(pp::Diagnostics::ERROR, loc, msg, "", "");
+    mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc, msg, "", "");
 }
 
 void TDirectiveHandler::handlePragma(const pp::SourceLocation& loc,
@@ -73,12 +73,12 @@ void TDirectiveHandler::handlePragma(const pp::SourceLocation& loc,
     }
     else
     {
-        mDiagnostics.report(pp::Diagnostics::UNRECOGNIZED_PRAGMA, loc, name);
+        mDiagnostics.report(pp::Diagnostics::PP_UNRECOGNIZED_PRAGMA, loc, name);
         return;
     }
 
     if (invalidValue)
-      mDiagnostics.writeInfo(pp::Diagnostics::ERROR, loc,
+      mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc,
                              "invalid pragma value", value,
                              "'on' or 'off' expected");
 }
@@ -92,7 +92,7 @@ void TDirectiveHandler::handleExtension(const pp::SourceLocation& loc,
     TBehavior behaviorVal = getBehavior(behavior);
     if (behaviorVal == EBhUndefined)
     {
-        mDiagnostics.writeInfo(pp::Diagnostics::ERROR, loc,
+        mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc,
                                "behavior", name, "invalid");
         return;
     }
@@ -101,13 +101,13 @@ void TDirectiveHandler::handleExtension(const pp::SourceLocation& loc,
     {
         if (behaviorVal == EBhRequire)
         {
-            mDiagnostics.writeInfo(pp::Diagnostics::ERROR, loc,
+            mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc,
                                    "extension", name,
                                    "cannot have 'require' behavior");
         }
         else if (behaviorVal == EBhEnable)
         {
-            mDiagnostics.writeInfo(pp::Diagnostics::ERROR, loc,
+            mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc,
                                    "extension", name,
                                    "cannot have 'enable' behavior");
         }
@@ -127,15 +127,15 @@ void TDirectiveHandler::handleExtension(const pp::SourceLocation& loc,
         return;
     }
 
-    pp::Diagnostics::Severity severity = pp::Diagnostics::ERROR;
+    pp::Diagnostics::Severity severity = pp::Diagnostics::PP_ERROR;
     switch (behaviorVal) {
       case EBhRequire:
-        severity = pp::Diagnostics::ERROR;
+        severity = pp::Diagnostics::PP_ERROR;
         break;
       case EBhEnable:
       case EBhWarn:
       case EBhDisable:
-        severity = pp::Diagnostics::WARNING;
+        severity = pp::Diagnostics::PP_WARNING;
         break;
       default:
         UNREACHABLE();
@@ -155,7 +155,7 @@ void TDirectiveHandler::handleVersion(const pp::SourceLocation& loc,
         std::stringstream stream;
         stream << version;
         std::string str = stream.str();
-        mDiagnostics.writeInfo(pp::Diagnostics::ERROR, loc,
+        mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc,
                                "version number", str, "not supported");
     }
 }
