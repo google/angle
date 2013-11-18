@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e02f9bb_984f35fa",
+        "filename": "src/compiler/ForLoopUnroll.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-18T16:39:36Z",
+      "side": 1,
+      "message": "This should conform to our style guideline: https://code.google.com/p/angleproject/wiki/CodingStandard\n\n(All caps, files in the compiler directory prefixed with COMPILER_, and a trailing underscore.)",
+      "revId": "983732d62e8aefaf758ac89c18df751088206a0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
