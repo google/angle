@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "defc29ef_5fce2f69",
+        "filename": "src/libGLESv2/renderer/loadimage.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-18T23:41:54Z",
+      "side": 1,
+      "message": "A nested 1-pixel memcpy seems like a place where we could possibly find a more performant path. Is there a way to copy more at once, given that every pixel we\u0027re copying in is the same? If it\u0027s a choice between having a single type-agnostic function and doing fast copies, is single type-agnostic function the right choice?",
+      "revId": "54c3b90780c304d6001b9e52278672981c96cb83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
