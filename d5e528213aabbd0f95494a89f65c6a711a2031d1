@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3e0705cd_77a19013",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-11-19T15:05:35Z",
+      "side": 1,
+      "message": "Pushed a new CL with the copied code.",
+      "parentUuid": "5e02f9bb_fb1d8bf3",
+      "revId": "d5e528213aabbd0f95494a89f65c6a711a2031d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5e02f9bb_3b18a300",
         "filename": "src/libGLESv2/renderer/Renderer9.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2013-11-19T00:22:46Z",
       "side": 1,
       "message": "The reason this wasn\u0027t handled before was that things didn\u0027t seem to work right at the next Present call on some systems (or at least the iMac you were on at the time). Is there any way to test this on a bunch of different hardware without any ANGLE bots? Or should the removed-device-specific handling take care of the issues that were seen way back when?",
+      "revId": "d5e528213aabbd0f95494a89f65c6a711a2031d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e0705cd_179494b1",
+        "filename": "src/libGLESv2/renderer/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-11-19T15:05:35Z",
+      "side": 1,
+      "message": "The method I\u0027ve patched in here is somewhat different from the one I tried in Ottawa. Chrome should theoretically kill the re-creates the GPU process anew, according to John, so it may not be a big concern.\n\nWe could consider the patches above to be a \"best-effort\" approach, although there may be driver flakiness in some cases. I don\u0027t have old DX10 ATI cards here for testing.",
+      "parentUuid": "5e02f9bb_3b18a300",
       "revId": "d5e528213aabbd0f95494a89f65c6a711a2031d1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
