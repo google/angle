@@ -369,6 +369,14 @@
               ],
             }
           },
+          'copies': [
+            {
+              'destination': '<(PRODUCT_DIR)',
+              'files': [
+                '<(windows_sdk_path)/Redist/D3D/<(winsdk_arch)/d3dcompiler_46.dll',
+              ],
+            },
+          ],
         },
         {
           'target_name': 'libEGL',

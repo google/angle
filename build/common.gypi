@@ -9,6 +9,8 @@
     # angle_code is set to 0 for test code, sample code, and third party code.
     # When angle_code is 1, we build with additional warning flags on Mac and Linux.
     'angle_code%': 0,
+    'windows_sdk_path%': 'C:/Program Files (x86)/Windows Kits/8.0',
+    'winsdk_arch%': 'x86',
     'gcc_or_clang_warnings': [
       '-Wall',
       '-Wchar-subscripts',
@@ -81,7 +83,7 @@
             # and utilities with console output.
             'SubSystem': '1',  # /SUBSYSTEM:CONSOLE
             'AdditionalLibraryDirectories': [
-              '$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86',
+              '<(windows_sdk_path)/Lib/win8/um/<(winsdk_arch)',
             ],
             'AdditionalDependencies': [
               'kernel32.lib',
@@ -101,7 +103,7 @@
           },
           'VCLibrarianTool': {
             'AdditionalLibraryDirectories': [
-              '$(ProgramFiles)/Windows Kits/8.0/Lib/win8/um/x86',
+              '<(windows_sdk_path)/Lib/win8/um/<(winsdk_arch)',
             ],
           },
           'VCResourceCompilerTool': {
@@ -109,8 +111,8 @@
           },
         },
         'msvs_system_include_dirs': [
-          '$(ProgramFiles)/Windows Kits/8.0/Include/shared',
-          '$(ProgramFiles)/Windows Kits/8.0/Include/um',
+          '<(windows_sdk_path)/Include/shared',
+          '<(windows_sdk_path)/Include/um',
         ],
       },  # Common
       'Debug': {
