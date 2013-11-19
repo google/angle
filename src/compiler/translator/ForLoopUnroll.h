@@ -4,6 +4,9 @@
 // found in the LICENSE file.
 //
 
+#ifndef COMPILER_FORLOOPUNROLL_H_
+#define COMPILER_FORLOOPUNROLL_H_
+
 #include "compiler/translator/intermediate.h"
 
 struct TLoopIndexInfo {
@@ -46,3 +49,4 @@ private:
     TVector<TLoopIndexInfo> mLoopIndexStack;
 };
 
+#endif
