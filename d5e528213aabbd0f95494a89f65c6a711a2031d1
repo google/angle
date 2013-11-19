@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e02f9bb_fb1d8bf3",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-19T00:22:46Z",
+      "side": 1,
+      "message": "Can we just carry over the version from the es3proto branch (it uses \"resource\" instead of \"variable\"), and SafeDeleteArray while we\u0027re at it?",
+      "revId": "d5e528213aabbd0f95494a89f65c6a711a2031d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e02f9bb_3b18a300",
+        "filename": "src/libGLESv2/renderer/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2117,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-19T00:22:46Z",
+      "side": 1,
+      "message": "The reason this wasn\u0027t handled before was that things didn\u0027t seem to work right at the next Present call on some systems (or at least the iMac you were on at the time). Is there any way to test this on a bunch of different hardware without any ANGLE bots? Or should the removed-device-specific handling take care of the issues that were seen way back when?",
+      "revId": "d5e528213aabbd0f95494a89f65c6a711a2031d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
