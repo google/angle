@@ -121,6 +121,10 @@
       <Project>{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\src\commit_id.vcxproj">
+      <Project>{3B7F5656-177F-52EE-26B3-D6A75368D0A9}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\src\libGLESv2.vcxproj">
       <Project>{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

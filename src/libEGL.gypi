@@ -12,7 +12,7 @@
                 {
                     'target_name': 'libEGL',
                     'type': 'shared_library',
-                    'dependencies': ['libGLESv2'],
+                    'dependencies': [ 'libGLESv2', 'commit_id' ],
                     'include_dirs':
                     [
                         '.',

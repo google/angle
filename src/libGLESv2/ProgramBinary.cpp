@@ -1640,9 +1640,19 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         return false;
     }
 
-    int version = 0;
-    stream.read(&version);
-    if (version != VERSION_DWORD)
+    int majorVersion = 0;
+    int minorVersion = 0;
+    stream.read(&majorVersion);
+    stream.read(&minorVersion);
+    if (majorVersion != MAJOR_VERSION || minorVersion != MINOR_VERSION)
+    {
+        infoLog.append("Invalid program binary version.");
+        return false;
+    }
+
+    unsigned char commitString[COMMIT_STRING_LEN];
+    stream.read(commitString, COMMIT_STRING_LEN);
+    if (memcmp(commitString, COMMIT_STRING, sizeof(unsigned char) * COMMIT_STRING_LEN) != 0)
     {
         infoLog.append("Invalid program binary version.");
         return false;
@@ -1858,7 +1868,9 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     BinaryOutputStream stream;
 
     stream.write(GL_PROGRAM_BINARY_ANGLE);
-    stream.write(VERSION_DWORD);
+    stream.write(MAJOR_VERSION);
+    stream.write(MINOR_VERSION);
+    stream.write(COMMIT_STRING, COMMIT_STRING_LEN);
     stream.write(ANGLE_COMPILE_OPTIMIZATION_LEVEL);
 
     for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)

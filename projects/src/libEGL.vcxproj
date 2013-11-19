@@ -124,8 +124,9 @@
     <ClInclude Include="..\..\src\common\event_tracer.h"/>
     <ClInclude Include="..\..\src\common\RefCountObject.h"/>
     <ClInclude Include="..\..\src\common\version.h"/>
-    <ClInclude Include="..\..\src\common\system.h"/>
     <ClInclude Include="..\..\src\common\utilities.h"/>
+    <ClInclude Include="..\..\src\common\system.h"/>
+    <ClInclude Include="..\..\src\common\commit.h"/>
     <ClInclude Include="..\..\src\common\debug.h"/>
     <ClInclude Include="..\..\src\common\angleutils.h"/>
   </ItemGroup>
@@ -147,6 +148,10 @@
   <ItemGroup>
     <ProjectReference Include="libGLESv2.vcxproj">
       <Project>{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="commit_id.vcxproj">
+      <Project>{3B7F5656-177F-52EE-26B3-D6A75368D0A9}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>

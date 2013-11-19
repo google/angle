@@ -22,7 +22,7 @@
                 {
                     'target_name': 'libGLESv2',
                     'type': 'shared_library',
-                    'dependencies': [ 'translator_static' ],
+                    'dependencies': [ 'translator_static', 'commit_id' ],
                     'include_dirs':
                     [
                         '.',

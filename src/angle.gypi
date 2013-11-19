@@ -17,6 +17,32 @@
     'conditions':
     [
         [
+            'OS=="win"',
+            {
+                'target_defaults':
+                {
+                   'msvs_cygwin_shell': 0,
+                },
+                'targets':
+                [
+                    {
+                        'target_name': 'commit_id',
+                        'type': 'none',
+                        'actions':
+                        [
+                            {
+                                'action_name': 'Generate Commit ID Header',
+                                'message': 'Generating commit ID header...',
+                                'inputs': [],
+                                'outputs': ['common/commit.h'],
+                                'action': ['cmd /C "echo|set /p=#define COMMIT_HASH > common/commit.h & (git rev-parse --short=12 HEAD >> common/commit.h) || (echo badf00dbad00 >> common/commit.h)" > NUL'],
+                            }
+                        ] #actions
+                    }
+                ] # targets
+            },
+        ],
+        [
             'angle_post_build_script!=0 and OS=="win"',
             {
                 'target_defaults':
