@@ -182,7 +182,7 @@ void TParseContext::error(const TSourceLoc& loc,
     pp::SourceLocation srcLoc;
     srcLoc.file = loc.first_file;
     srcLoc.line = loc.first_line;
-    diagnostics.writeInfo(pp::Diagnostics::ERROR,
+    diagnostics.writeInfo(pp::Diagnostics::PP_ERROR,
                           srcLoc, reason, token, extraInfo);
 
 }
@@ -193,7 +193,7 @@ void TParseContext::warning(const TSourceLoc& loc,
     pp::SourceLocation srcLoc;
     srcLoc.file = loc.first_file;
     srcLoc.line = loc.first_line;
-    diagnostics.writeInfo(pp::Diagnostics::WARNING,
+    diagnostics.writeInfo(pp::Diagnostics::PP_WARNING,
                           srcLoc, reason, token, extraInfo);
 }
 

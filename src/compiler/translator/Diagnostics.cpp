@@ -30,11 +30,11 @@ void TDiagnostics::writeInfo(Severity severity,
     TPrefixType prefix = EPrefixNone;
     switch (severity)
     {
-      case ERROR:
+      case PP_ERROR:
         ++mNumErrors;
         prefix = EPrefixError;
         break;
-      case WARNING:
+      case PP_WARNING:
         ++mNumWarnings;
         prefix = EPrefixWarning;
         break;
