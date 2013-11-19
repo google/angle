@@ -23,7 +23,7 @@
                     [
                         'ANGLE_ENABLE_D3D_EVENTS',
                     ],
-                    'sources': [ '<!@(python enumerate_files.py common libEGL -types *.cpp *.h *.def)' ],
+                    'sources': [ '<!@(python enumerate_files.py common libEGL -types *.cpp *.h *.def libEGL.rc)' ],
                     'msvs_disabled_warnings': [ 4267 ],
                     'msvs_settings':
                     {

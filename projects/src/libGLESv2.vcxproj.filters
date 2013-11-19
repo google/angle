@@ -102,6 +102,9 @@
     <ClInclude Include="..\..\src\libGLESv2\ResourceManager.h">
       <Filter>..\..\src\libGLESv2</Filter>
     </ClInclude>
+    <ResourceCompile Include="..\..\src\libGLESv2\libGLESv2.rc">
+      <Filter>..\..\src\libGLESv2</Filter>
+    </ResourceCompile>
     <ClCompile Include="..\..\src\libGLESv2\RenderbufferProxySet.cpp">
       <Filter>..\..\src\libGLESv2</Filter>
     </ClCompile>

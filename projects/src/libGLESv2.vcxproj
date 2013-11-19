@@ -346,6 +346,9 @@
     <ClCompile Include="..\..\src\third_party\murmurhash\MurmurHash3.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="..\..\src\libGLESv2\libGLESv2.rc"/>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="translator_static.vcxproj">
       <Project>{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

@@ -142,6 +142,9 @@
     <ClCompile Include="..\..\src\common\debug.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="..\..\src\libEGL\libEGL.rc"/>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="libGLESv2.vcxproj">
       <Project>{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

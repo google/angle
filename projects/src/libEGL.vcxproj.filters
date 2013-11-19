@@ -51,6 +51,9 @@
     <ClInclude Include="..\..\src\libEGL\Config.h">
       <Filter>..\..\src\libEGL</Filter>
     </ClInclude>
+    <ResourceCompile Include="..\..\src\libEGL\libEGL.rc">
+      <Filter>..\..\src\libEGL</Filter>
+    </ResourceCompile>
     <ClCompile Include="..\..\src\libEGL\libEGL.cpp">
       <Filter>..\..\src\libEGL</Filter>
     </ClCompile>
