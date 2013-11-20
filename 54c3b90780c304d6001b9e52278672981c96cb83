@@ -16,6 +16,24 @@
       "revId": "54c3b90780c304d6001b9e52278672981c96cb83",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bef93500_5ecab135",
+        "filename": "src/libGLESv2/renderer/loadimage.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2013-11-20T20:30:12Z",
+      "side": 1,
+      "message": "It would be possible to create a temporary row with the default data and then copy it into the destination row by row which could be a lot faster at the cost of memory.",
+      "parentUuid": "defc29ef_5fce2f69",
+      "revId": "54c3b90780c304d6001b9e52278672981c96cb83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
