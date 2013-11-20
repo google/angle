@@ -20,7 +20,7 @@ TEST_P(InvalidNumberTest, InvalidNumberIdentified)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     using testing::_;
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::INVALID_NUMBER, _, str));
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_INVALID_NUMBER, _, str));
 
     pp::Token token;
     mPreprocessor.lex(&token);

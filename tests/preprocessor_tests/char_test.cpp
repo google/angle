@@ -82,7 +82,7 @@ TEST_P(CharTest, Identified)
         // Everything else is invalid.
         using testing::_;
         EXPECT_CALL(mDiagnostics,
-            print(pp::Diagnostics::INVALID_CHARACTER, _, str));
+            print(pp::Diagnostics::PP_INVALID_CHARACTER, _, str));
     }
 
     pp::Token token;

@@ -57,7 +57,7 @@ TEST_F(VersionTest, MissingNewline)
     EXPECT_CALL(mDirectiveHandler,
                 handleVersion(pp::SourceLocation(0, 1), 200));
     // Error reported about EOF.
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_EOF_IN_DIRECTIVE, _, _));
 
     preprocess(str, expected);
 }
@@ -104,7 +104,7 @@ TEST_F(VersionTest, AfterValidToken)
 
     using testing::_;
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::VERSION_NOT_FIRST_STATEMENT,
+                print(pp::Diagnostics::PP_VERSION_NOT_FIRST_STATEMENT,
                       pp::SourceLocation(0, 2), _));
 
     pp::Token token;
@@ -122,10 +122,10 @@ TEST_F(VersionTest, AfterInvalidToken)
 
     using testing::_;
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::INVALID_CHARACTER,
+                print(pp::Diagnostics::PP_INVALID_CHARACTER,
                       pp::SourceLocation(0, 1), "$"));
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::VERSION_NOT_FIRST_STATEMENT,
+                print(pp::Diagnostics::PP_VERSION_NOT_FIRST_STATEMENT,
                       pp::SourceLocation(0, 2), _));
 
     pp::Token token;
@@ -143,7 +143,7 @@ TEST_F(VersionTest, AfterValidDirective)
 
     using testing::_;
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::VERSION_NOT_FIRST_STATEMENT,
+                print(pp::Diagnostics::PP_VERSION_NOT_FIRST_STATEMENT,
                       pp::SourceLocation(0, 2), _));
 
     pp::Token token;
@@ -161,10 +161,10 @@ TEST_F(VersionTest, AfterInvalidDirective)
 
     using testing::_;
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::DIRECTIVE_INVALID_NAME,
+                print(pp::Diagnostics::PP_DIRECTIVE_INVALID_NAME,
                       pp::SourceLocation(0, 1), "foo"));
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::VERSION_NOT_FIRST_STATEMENT,
+                print(pp::Diagnostics::PP_VERSION_NOT_FIRST_STATEMENT,
                       pp::SourceLocation(0, 2), _));
 
     pp::Token token;
@@ -184,7 +184,7 @@ TEST_F(VersionTest, AfterExcludedBlock)
 
     using testing::_;
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::VERSION_NOT_FIRST_STATEMENT,
+                print(pp::Diagnostics::PP_VERSION_NOT_FIRST_STATEMENT,
                       pp::SourceLocation(0, 4), _));
 
     pp::Token token;
@@ -220,10 +220,10 @@ TEST_P(InvalidVersionTest, Identified)
 }
 
 static const VersionTestParam kParams[] = {
-    {"#version\n", pp::Diagnostics::INVALID_VERSION_DIRECTIVE},
-    {"#version foo\n", pp::Diagnostics::INVALID_VERSION_NUMBER},
-    {"#version 100 foo\n", pp::Diagnostics::UNEXPECTED_TOKEN},
-    {"#version 0xffffffff\n", pp::Diagnostics::INTEGER_OVERFLOW}
+    {"#version\n", pp::Diagnostics::PP_INVALID_VERSION_DIRECTIVE},
+    {"#version foo\n", pp::Diagnostics::PP_INVALID_VERSION_NUMBER},
+    {"#version 100 foo\n", pp::Diagnostics::PP_UNEXPECTED_TOKEN},
+    {"#version 0xffffffff\n", pp::Diagnostics::PP_INTEGER_OVERFLOW}
 };
 
 INSTANTIATE_TEST_CASE_P(All, InvalidVersionTest, testing::ValuesIn(kParams));

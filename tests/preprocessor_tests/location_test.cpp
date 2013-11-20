@@ -77,7 +77,7 @@ TEST_F(LocationTest, ErrorLocationAfterComment)
     const char* str = "/*\n\n*/@";
 
     ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::INVALID_CHARACTER,
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_INVALID_CHARACTER,
                                     pp::SourceLocation(0, 3),
                                     "@"));
 
@@ -261,7 +261,7 @@ TEST_F(LocationTest, LineDirectiveMissingNewline)
 
     using testing::_;
     // Error reported about EOF.
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_EOF_IN_DIRECTIVE, _, _));
 
     pp::Token token;
     mPreprocessor.lex(&token);
@@ -292,12 +292,12 @@ TEST_P(InvalidLineTest, Identified)
 }
 
 static const LineTestParam kParams[] = {
-    {"#line\n", pp::Diagnostics::INVALID_LINE_DIRECTIVE},
-    {"#line foo\n", pp::Diagnostics::INVALID_LINE_NUMBER},
-    {"#line 10 foo\n", pp::Diagnostics::INVALID_FILE_NUMBER},
-    {"#line 10 20 foo\n", pp::Diagnostics::UNEXPECTED_TOKEN},
-    {"#line 0xffffffff\n", pp::Diagnostics::INTEGER_OVERFLOW},
-    {"#line 10 0xffffffff\n", pp::Diagnostics::INTEGER_OVERFLOW}
+    {"#line\n", pp::Diagnostics::PP_INVALID_LINE_DIRECTIVE},
+    {"#line foo\n", pp::Diagnostics::PP_INVALID_LINE_NUMBER},
+    {"#line 10 foo\n", pp::Diagnostics::PP_INVALID_FILE_NUMBER},
+    {"#line 10 20 foo\n", pp::Diagnostics::PP_UNEXPECTED_TOKEN},
+    {"#line 0xffffffff\n", pp::Diagnostics::PP_INTEGER_OVERFLOW},
+    {"#line 10 0xffffffff\n", pp::Diagnostics::PP_INTEGER_OVERFLOW}
 };
 
 INSTANTIATE_TEST_CASE_P(All, InvalidLineTest, testing::ValuesIn(kParams));

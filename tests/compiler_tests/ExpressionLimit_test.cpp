@@ -145,7 +145,7 @@ protected:
                                 const char* source,
                                 int compileOptions,
                                 const char* expected_error) {
-        bool success = ShCompile(compiler, &source, 1, compileOptions);
+        bool success = ShCompile(compiler, &source, 1, compileOptions) != 0;
         if (success) {
             success = !expected_error;
         } else {
