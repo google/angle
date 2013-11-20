@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e02f9bb_819980ad",
+        "filename": "src/libGLESv2/renderer/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-20T23:18:11Z",
+      "side": 1,
+      "message": "This could probably use a comment explaining why RequiresInit needs to be checked every dirty check, not just at init time.",
+      "revId": "2cce6f4ffdc7e2a6c23c50d663c6316f9b125880",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "defc29ef_027a8e07",
+        "filename": "src/libGLESv2/renderer/d3d9/RenderTarget9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-20T23:18:11Z",
+      "side": 1,
+      "message": "Do we need to be checking the results of these? If not, why are we storing it?",
+      "revId": "2cce6f4ffdc7e2a6c23c50d663c6316f9b125880",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
