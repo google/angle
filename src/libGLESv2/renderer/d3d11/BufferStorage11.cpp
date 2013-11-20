@@ -354,10 +354,6 @@ bool DirectBufferStorage11::updateFromStagingBuffer(ID3D11Buffer *stagingBuffer,
 
         mBufferSize = bufferDesc.ByteWidth;
     }
-    else
-    {
-        mBufferSize = requiredBufferSize;
-    }
 
     // Copy data via staging buffer
     D3D11_BOX srcBox;
