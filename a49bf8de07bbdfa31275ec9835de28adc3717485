@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bea77522_ae80d7e2",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1600,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-20T23:57:15Z",
+      "side": 1,
+      "message": "Does this also need to happen in unapplyRenderTargets()? Alternatively, do we need to store the current framebuffer at all? It\u0027s already retrieved in Context::applyState() via getDrawFramebuffer(), and that\u0027s the only function that calls through to setBlendState(), which is in turn the only place that needs to access the cache, right?",
+      "revId": "a49bf8de07bbdfa31275ec9835de28adc3717485",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
