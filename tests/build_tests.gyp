@@ -14,6 +14,14 @@
       'sources': [
         '../third_party/googletest/src/gtest-all.cc',
       ],
+      'defines': [
+        '_VARIADIC_MAX=10',
+      ],
+      'direct_dependent_settings': {
+        'defines': [
+         '_VARIADIC_MAX=10',
+        ],
+      },
     },
     {
       'target_name': 'gmock',
@@ -26,6 +34,14 @@
       'sources': [
         '../third_party/googlemock/src/gmock-all.cc',
       ],
+      'defines': [
+        '_VARIADIC_MAX=10',
+      ],
+      'direct_dependent_settings': {
+        'defines': [
+         '_VARIADIC_MAX=10',
+        ],
+      },
     },
     {
       'target_name': 'preprocessor_tests',
