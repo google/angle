@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7e0dfde8_3cc37d24",
+        "filename": "projects/build/all.sln",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2013-11-20T16:19:56Z",
+      "side": 1,
+      "message": "Looks like commit_id.vcxproj didn\u0027t get added to the patches.",
+      "revId": "b2d4c78a9ca03f04acc77586705f47455930c955",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
