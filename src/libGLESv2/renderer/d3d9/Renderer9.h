@@ -233,6 +233,8 @@ class Renderer9 : public Renderer
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer9);
 
+    void deinitialize();
+
     void applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v);
     void applyUniformniv(gl::Uniform *targetUniform, const GLint *v);
     void applyUniformnbv(gl::Uniform *targetUniform, const GLint *v);
@@ -251,6 +253,9 @@ class Renderer9 : public Renderer
     void initializeDevice();
     D3DPRESENT_PARAMETERS getDefaultPresentParameters();
     void releaseDeviceResources();
+
+    HRESULT getDeviceStatusCode();
+    HRESULT resetRemovedDevice();
 
     UINT mAdapter;
     D3DDEVTYPE mDeviceType;
