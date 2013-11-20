@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bef93500_5ef8f161",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2013-11-20T21:38:32Z",
+      "side": 1,
+      "message": "Looks like there was a merge issue here, these lines can be removed.",
+      "revId": "5d33724515daea5cb28cdf43df3999cc609b7d16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
