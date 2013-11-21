@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be6e95ae_5699d2a9",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-21T23:45:13Z",
+      "side": 1,
+      "message": "Can this function either be named or commented to make clear that it\u0027s the stored pre-swizzled texture that\u0027s being invalidated, rather than the value of TEXTURE_SWIZZLE_\u003cchannel\u003e? Similarly, can the full-chain invalidation function reflect that it\u0027s doing invalidation for the full chain more clearly either in its name or in a comment?",
+      "revId": "ebf297ef5b8560bb468428fc369eb3df8f43ec11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
