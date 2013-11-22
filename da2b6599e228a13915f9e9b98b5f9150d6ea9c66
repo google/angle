@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be6e95ae_7c114d68",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2359,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-22T22:11:40Z",
+      "side": 1,
+      "message": "Can this function be named something which conveys that it\u0027s a one of the draw-time oriented functions, which relies on current program bindings, rather than a more purely informational one, as most of the functions beginning with \"get\" are? It\u0027s a bit nitpicky, but I think it\u0027s an important distinction.",
+      "revId": "da2b6599e228a13915f9e9b98b5f9150d6ea9c66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e8fa1ae_a423c639",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2414,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-22T22:11:40Z",
+      "side": 1,
+      "message": "Any reason not to pass the program binary down through this get function, since we have to retrieve it above anyway? That might mitigate the get/apply informational/draw-time setup confusion as well.",
+      "revId": "da2b6599e228a13915f9e9b98b5f9150d6ea9c66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e8fa1ae_045ababa",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2840,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-22T22:11:40Z",
+      "side": 1,
+      "message": "Why does this need to be done in drawElements but not drawArrays?",
+      "revId": "da2b6599e228a13915f9e9b98b5f9150d6ea9c66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
