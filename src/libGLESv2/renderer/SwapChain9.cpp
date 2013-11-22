@@ -312,6 +312,11 @@ EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
     device->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
 
+    for (UINT streamIndex = 0; streamIndex < gl::MAX_VERTEX_ATTRIBS; streamIndex++)
+    {
+        device->SetStreamSourceFreq(streamIndex, 1);
+    }
+
     D3DVIEWPORT9 viewport = {0, 0, mWidth, mHeight, 0.0f, 1.0f};
     device->SetViewport(&viewport);
 
