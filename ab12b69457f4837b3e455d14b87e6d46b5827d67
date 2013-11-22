@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be6e95ae_39ab6770",
+        "filename": "src/libGLESv2/renderer/SwapChain9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-11-22T18:23:22Z",
+      "side": 1,
+      "message": "Should we clear the divisor for all attribs like we do before clears and blits?",
+      "revId": "ab12b69457f4837b3e455d14b87e6d46b5827d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
