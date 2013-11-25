@@ -47,6 +47,17 @@
                             ]
                         }
                     },
+                    'actions':
+                    [
+                        {
+                            'msvs_cygwin_shell': 0,
+                            'action_name': 'copy_dll',
+                            'message': 'Copying D3D Compiler DLL...',
+                            'inputs': [ 'copy_compiler_dll.bat' ],
+                            'outputs': [ '<(PRODUCT_DIR)/D3DCompiler_46.dll' ],
+                            'action': ["copy_compiler_dll.bat", "$(PlatformName)", "<(windows_sdk_path)", "<(PRODUCT_DIR)" ],
+                        }
+                    ] #actions
                 },
             ],
         },
