@@ -34,6 +34,24 @@
       "revId": "ab12b69457f4837b3e455d14b87e6d46b5827d67",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e8aa59d_6eca7fdf",
+        "filename": "src/libGLESv2/renderer/SwapChain9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1105340
+      },
+      "writtenOn": "2013-11-25T19:55:59Z",
+      "side": 1,
+      "message": "I\u0027d prefer to deal with all the instancing state the same way in all places we set it. We could avoid setting instancing state at all by checking the vertex decl cache to see if it\u0027s enabled; it all gets set to 1 any time the flag is set false. It may or may not be worth it, given that swapRect basically invalidates our cached draw state anyway.",
+      "parentUuid": "9e7b915f_886b3b34",
+      "revId": "ab12b69457f4837b3e455d14b87e6d46b5827d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
