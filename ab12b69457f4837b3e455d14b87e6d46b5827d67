@@ -16,6 +16,24 @@
       "revId": "ab12b69457f4837b3e455d14b87e6d46b5827d67",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e7b915f_886b3b34",
+        "filename": "src/libGLESv2/renderer/SwapChain9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-11-25T19:14:04Z",
+      "side": 1,
+      "message": "I felt it wasn\u0027t necessary as we only use stream zero in this drawprimitiveUP call, and would add quite a few extra state calls. Should be safe, but we could add the full state reset if you like.",
+      "parentUuid": "be6e95ae_39ab6770",
+      "revId": "ab12b69457f4837b3e455d14b87e6d46b5827d67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
