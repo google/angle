@@ -34,9 +34,9 @@
                             {
                                 'action_name': 'ANGLE Post-Build Script',
                                 'message': 'Running <(angle_post_build_script)...',
-                                'inputs': [ '<(angle_post_build_script)', '<!@(python <(angle_post_build_script) inputs)' ],
-                                'outputs': [ '<!@(python <(angle_post_build_script) outputs)' ],
-                                'action': ['python', '<(angle_post_build_script)', 'run', '<(CONFIGURATION_NAME)', '$(Platform)', '<(PRODUCT_DIR)'],
+                                'inputs': [ '<(angle_post_build_script)', '<!@(["python", "<(angle_post_build_script)", "inputs", "<(CONFIGURATION_NAME)", "$(PlatformName)", "<(PRODUCT_DIR)"])' ],
+                                'outputs': [ '<!@(python <(angle_post_build_script) outputs "<(CONFIGURATION_NAME)" "$(PlatformName)" "<(PRODUCT_DIR)")' ],
+                                'action': ['python', '<(angle_post_build_script)', 'run', '<(CONFIGURATION_NAME)', '$(PlatformName)', '<(PRODUCT_DIR)'],
                             }
                         ] #actions
                     }

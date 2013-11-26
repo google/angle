@@ -8,8 +8,14 @@ Release_x64
 *.sdf
 *.ncb
 *.suo
-*.vcxproj
-*.vcxproj.filters
+src/*.vcxproj
+src/*.vcxproj.filters
+samples/*.vcxproj
+samples/*.vcxproj.filters
+tests/*.vcxproj
+tests/*.vcxproj.filters
+build/*.vcxproj
+build/*.vcxproj.filters
 *.vcxproj.user
 patches-*
 *.target.mk
