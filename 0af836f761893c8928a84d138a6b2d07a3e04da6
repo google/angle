@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2397ee03_fe5a81b6",
+        "filename": "src/libGLESv2/renderer/d3d11/Blit11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2013-11-26T19:08:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e8aa59d_7f66af84",
+      "revId": "0af836f761893c8928a84d138a6b2d07a3e04da6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e8aa59d_a299006b",
         "filename": "src/libGLESv2/renderer/d3d11/Blit11.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-11-21T23:17:54Z",
       "side": 1,
       "message": "Do these shaders run into problems binding a cube SRV to a Texture2DArray object in the shader? I thought we had issues with that elsewhere...",
+      "revId": "0af836f761893c8928a84d138a6b2d07a3e04da6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "638d66f2_400b8eb3",
+        "filename": "src/libGLESv2/renderer/d3d11/Blit11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1010,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2013-11-26T19:08:55Z",
+      "side": 1,
+      "message": "I didn\u0027t run into any issues doing this on the machines that I tested with. I do vaguely recall that issue though..",
+      "parentUuid": "3e8aa59d_a299006b",
       "revId": "0af836f761893c8928a84d138a6b2d07a3e04da6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
