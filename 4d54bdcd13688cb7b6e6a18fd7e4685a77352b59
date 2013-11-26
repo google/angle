@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "43922213_1f096383",
+        "filename": "src/libGLESv2/renderer/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2133,
+      "author": {
+        "id": 1106364
+      },
+      "writtenOn": "2013-11-26T21:29:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c39d3227_7b70bff7",
+      "revId": "4d54bdcd13688cb7b6e6a18fd7e4685a77352b59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c39d3227_fb7b6fd5",
         "filename": "src/libGLESv2/renderer/Renderer9.cpp",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "43922213_3f0ea78c",
+        "filename": "src/libGLESv2/renderer/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2135,
+      "author": {
+        "id": 1106364
+      },
+      "writtenOn": "2013-11-26T21:29:43Z",
+      "side": 1,
+      "message": "Not really. Stylistic.",
+      "parentUuid": "c39d3227_fb7b6fd5",
+      "revId": "4d54bdcd13688cb7b6e6a18fd7e4685a77352b59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c39d3227_1b5adb6a",
         "filename": "src/libGLESv2/renderer/Renderer9.cpp",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2013-11-26T21:04:57Z",
       "side": 1,
       "message": "The three different sleeps for three different intervals is starting to feel a little magic-numbery. Can we have comments for why the sleeps are the intervals they are? Might save some \"maybe fiddling with this number will fix something\" by someone else down the line.",
+      "revId": "4d54bdcd13688cb7b6e6a18fd7e4685a77352b59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43922213_7f142fa0",
+        "filename": "src/libGLESv2/renderer/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2139,
+      "author": {
+        "id": 1106364
+      },
+      "writtenOn": "2013-11-26T21:29:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c39d3227_1b5adb6a",
       "revId": "4d54bdcd13688cb7b6e6a18fd7e4685a77352b59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
