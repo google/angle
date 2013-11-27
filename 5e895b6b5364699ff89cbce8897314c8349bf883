@@ -16,6 +16,24 @@
       "revId": "5e895b6b5364699ff89cbce8897314c8349bf883",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e34cf6b4_9c8a054c",
+        "filename": "src/libGLESv2/renderer/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2208,
+      "author": {
+        "id": 1106364
+      },
+      "writtenOn": "2013-11-27T16:19:01Z",
+      "side": 1,
+      "message": "I would agree with ANGLE using RAII COM pointers. I\u0027ll open an issue.",
+      "parentUuid": "43922213_a229409d",
+      "revId": "5e895b6b5364699ff89cbce8897314c8349bf883",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
