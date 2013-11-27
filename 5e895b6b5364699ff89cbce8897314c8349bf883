@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43922213_a229409d",
+        "filename": "src/libGLESv2/renderer/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2208,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2013-11-27T00:43:13Z",
+      "side": 1,
+      "message": "Release the D3D9 device here. Should ANGLE get RAII COM pointers at some point?",
+      "revId": "5e895b6b5364699ff89cbce8897314c8349bf883",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
