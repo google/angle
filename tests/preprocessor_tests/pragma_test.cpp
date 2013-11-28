@@ -91,7 +91,7 @@ TEST_F(PragmaTest, MissingNewline)
     EXPECT_CALL(mDirectiveHandler,
                 handlePragma(pp::SourceLocation(0, 1), "foo", "bar"));
     // Error reported about EOF.
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_EOF_IN_DIRECTIVE, _, _));
 
     preprocess(str, expected);
 }
@@ -111,7 +111,7 @@ TEST_P(InvalidPragmaTest, Identified)
     EXPECT_CALL(mDirectiveHandler, handlePragma(_, _, _)).Times(0);
     // Unrecognized pragma warning.
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::UNRECOGNIZED_PRAGMA,
+                print(pp::Diagnostics::PP_UNRECOGNIZED_PRAGMA,
                       pp::SourceLocation(0, 1), _));
 
     preprocess(str, expected);

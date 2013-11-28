@@ -612,7 +612,7 @@ TEST_F(IfTest, MissingExpression)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::INVALID_EXPRESSION,
+                print(pp::Diagnostics::PP_INVALID_EXPRESSION,
                       pp::SourceLocation(0, 1),
                       "syntax error"));
 
@@ -627,7 +627,7 @@ TEST_F(IfTest, DivisionByZero)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::DIVISION_BY_ZERO,
+                print(pp::Diagnostics::PP_DIVISION_BY_ZERO,
                       pp::SourceLocation(0, 1), "1 / 0"));
 
     pp::Token token;
@@ -641,7 +641,7 @@ TEST_F(IfTest, ModuloByZero)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::DIVISION_BY_ZERO,
+                print(pp::Diagnostics::PP_DIVISION_BY_ZERO,
                       pp::SourceLocation(0, 1), "1 % 0"));
 
     pp::Token token;
@@ -655,7 +655,7 @@ TEST_F(IfTest, DecIntegerOverflow)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::INTEGER_OVERFLOW,
+                print(pp::Diagnostics::PP_INTEGER_OVERFLOW,
                       pp::SourceLocation(0, 1), "4294967296"));
 
     pp::Token token;
@@ -669,7 +669,7 @@ TEST_F(IfTest, OctIntegerOverflow)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::INTEGER_OVERFLOW,
+                print(pp::Diagnostics::PP_INTEGER_OVERFLOW,
                       pp::SourceLocation(0, 1), "077777777777"));
 
     pp::Token token;
@@ -683,7 +683,7 @@ TEST_F(IfTest, HexIntegerOverflow)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::INTEGER_OVERFLOW,
+                print(pp::Diagnostics::PP_INTEGER_OVERFLOW,
                       pp::SourceLocation(0, 1), "0xfffffffff"));
 
     pp::Token token;
@@ -697,11 +697,11 @@ TEST_F(IfTest, UndefinedMacro)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::INVALID_EXPRESSION,
+                print(pp::Diagnostics::PP_INVALID_EXPRESSION,
                       pp::SourceLocation(0, 1),
                       "syntax error"));
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::CONDITIONAL_UNEXPECTED_TOKEN,
+                print(pp::Diagnostics::PP_CONDITIONAL_UNEXPECTED_TOKEN,
                       pp::SourceLocation(0, 1),
                       "UNDEFINED"));
 
@@ -735,7 +735,7 @@ TEST_F(IfTest, ElseWithoutIf)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::CONDITIONAL_ELSE_WITHOUT_IF,
+                print(pp::Diagnostics::PP_CONDITIONAL_ELSE_WITHOUT_IF,
                       pp::SourceLocation(0, 1),
                       "else"));
 
@@ -749,7 +749,7 @@ TEST_F(IfTest, ElifWithoutIf)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::CONDITIONAL_ELIF_WITHOUT_IF,
+                print(pp::Diagnostics::PP_CONDITIONAL_ELIF_WITHOUT_IF,
                       pp::SourceLocation(0, 1),
                       "elif"));
 
@@ -763,7 +763,7 @@ TEST_F(IfTest, EndifWithoutIf)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::CONDITIONAL_ENDIF_WITHOUT_IF,
+                print(pp::Diagnostics::PP_CONDITIONAL_ENDIF_WITHOUT_IF,
                       pp::SourceLocation(0, 1),
                       "endif"));
 
@@ -780,7 +780,7 @@ TEST_F(IfTest, ElseAfterElse)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::CONDITIONAL_ELSE_AFTER_ELSE,
+                print(pp::Diagnostics::PP_CONDITIONAL_ELSE_AFTER_ELSE,
                       pp::SourceLocation(0, 3),
                       "else"));
 
@@ -797,7 +797,7 @@ TEST_F(IfTest, ElifAfterElse)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::CONDITIONAL_ELIF_AFTER_ELSE,
+                print(pp::Diagnostics::PP_CONDITIONAL_ELIF_AFTER_ELSE,
                       pp::SourceLocation(0, 3),
                       "elif"));
 
@@ -811,7 +811,7 @@ TEST_F(IfTest, UnterminatedIf)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::CONDITIONAL_UNTERMINATED,
+                print(pp::Diagnostics::PP_CONDITIONAL_UNTERMINATED,
                       pp::SourceLocation(0, 1),
                       "if"));
 
@@ -825,7 +825,7 @@ TEST_F(IfTest, UnterminatedIfdef)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::CONDITIONAL_UNTERMINATED,
+                print(pp::Diagnostics::PP_CONDITIONAL_UNTERMINATED,
                       pp::SourceLocation(0, 1),
                       "ifdef"));
 

@@ -61,7 +61,7 @@ TEST_F(ExtensionTest, MissingNewline)
     EXPECT_CALL(mDirectiveHandler,
                 handleExtension(pp::SourceLocation(0, 1), "foo", "bar"));
     // Error reported about EOF.
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_EOF_IN_DIRECTIVE, _, _));
 
     preprocess(str, expected);
 }
@@ -93,11 +93,11 @@ TEST_P(InvalidExtensionTest, Identified)
 }
 
 static const ExtensionTestParam kParams[] = {
-    {"#extension\n", pp::Diagnostics::INVALID_EXTENSION_DIRECTIVE},
-    {"#extension 1\n", pp::Diagnostics::INVALID_EXTENSION_NAME},
-    {"#extension foo bar\n", pp::Diagnostics::UNEXPECTED_TOKEN},
-    {"#extension foo : \n", pp::Diagnostics::INVALID_EXTENSION_DIRECTIVE},
-    {"#extension foo : 1\n", pp::Diagnostics::INVALID_EXTENSION_BEHAVIOR},
-    {"#extension foo : bar baz\n", pp::Diagnostics::UNEXPECTED_TOKEN}
+    {"#extension\n", pp::Diagnostics::PP_INVALID_EXTENSION_DIRECTIVE},
+    {"#extension 1\n", pp::Diagnostics::PP_INVALID_EXTENSION_NAME},
+    {"#extension foo bar\n", pp::Diagnostics::PP_UNEXPECTED_TOKEN},
+    {"#extension foo : \n", pp::Diagnostics::PP_INVALID_EXTENSION_DIRECTIVE},
+    {"#extension foo : 1\n", pp::Diagnostics::PP_INVALID_EXTENSION_BEHAVIOR},
+    {"#extension foo : bar baz\n", pp::Diagnostics::PP_UNEXPECTED_TOKEN}
 };
 INSTANTIATE_TEST_CASE_P(All, InvalidExtensionTest, testing::ValuesIn(kParams));

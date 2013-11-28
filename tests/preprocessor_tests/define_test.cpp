@@ -19,7 +19,7 @@ TEST_F(DefineTest, NonIdentifier)
                            "2\n";
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::UNEXPECTED_TOKEN,
+                print(pp::Diagnostics::PP_UNEXPECTED_TOKEN,
                       pp::SourceLocation(0, 1),
                       "2"));
 
@@ -46,19 +46,19 @@ TEST_F(DefineTest, RedefinePredefined)
                            "1\n";
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_PREDEFINED_REDEFINED,
+                print(pp::Diagnostics::PP_MACRO_PREDEFINED_REDEFINED,
                       pp::SourceLocation(0, 1),
                       "__LINE__"));
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_PREDEFINED_REDEFINED,
+                print(pp::Diagnostics::PP_MACRO_PREDEFINED_REDEFINED,
                       pp::SourceLocation(0, 3),
                       "__FILE__"));
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_PREDEFINED_REDEFINED,
+                print(pp::Diagnostics::PP_MACRO_PREDEFINED_REDEFINED,
                       pp::SourceLocation(0, 5),
                       "__VERSION__"));
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_PREDEFINED_REDEFINED,
+                print(pp::Diagnostics::PP_MACRO_PREDEFINED_REDEFINED,
                       pp::SourceLocation(0, 7),
                       "GL_ES"));
 
@@ -73,7 +73,7 @@ TEST_F(DefineTest, ReservedUnderScore1)
                            "__foo\n";
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_NAME_RESERVED,
+                print(pp::Diagnostics::PP_MACRO_NAME_RESERVED,
                       pp::SourceLocation(0, 1),
                       "__foo"));
 
@@ -88,7 +88,7 @@ TEST_F(DefineTest, ReservedUnderScore2)
                            "foo__bar\n";
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_NAME_RESERVED,
+                print(pp::Diagnostics::PP_MACRO_NAME_RESERVED,
                       pp::SourceLocation(0, 1),
                       "foo__bar"));
 
@@ -103,7 +103,7 @@ TEST_F(DefineTest, ReservedGL)
                            "GL_foo\n";
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_NAME_RESERVED,
+                print(pp::Diagnostics::PP_MACRO_NAME_RESERVED,
                       pp::SourceLocation(0, 1),
                       "GL_foo"));
 
@@ -135,7 +135,7 @@ TEST_F(DefineTest, ObjRedefineInvalid)
                            "(0)\n";
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_REDEFINED,
+                print(pp::Diagnostics::PP_MACRO_REDEFINED,
                       pp::SourceLocation(0, 2),
                       "foo"));
 
@@ -167,7 +167,7 @@ TEST_F(DefineTest, FuncRedefineInvalid)
                            "( a )\n";
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_REDEFINED,
+                print(pp::Diagnostics::PP_MACRO_REDEFINED,
                       pp::SourceLocation(0, 2),
                       "foo"));
 
@@ -684,7 +684,7 @@ TEST_F(DefineTest, FuncMissingRightParen)
                            "\n";
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_UNTERMINATED_INVOCATION,
+                print(pp::Diagnostics::PP_MACRO_UNTERMINATED_INVOCATION,
                       pp::SourceLocation(0, 2),
                       "foo"));
 
@@ -703,15 +703,15 @@ TEST_F(DefineTest, FuncIncorrectArgCount)
                            "\n";
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_TOO_FEW_ARGS,
+                print(pp::Diagnostics::PP_MACRO_TOO_FEW_ARGS,
                       pp::SourceLocation(0, 2),
                       "foo"));
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_TOO_FEW_ARGS,
+                print(pp::Diagnostics::PP_MACRO_TOO_FEW_ARGS,
                       pp::SourceLocation(0, 3),
                       "foo"));
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_TOO_MANY_ARGS,
+                print(pp::Diagnostics::PP_MACRO_TOO_MANY_ARGS,
                       pp::SourceLocation(0, 4),
                       "foo"));
 
@@ -752,19 +752,19 @@ TEST_F(DefineTest, UndefPredefined)
                            "1\n";
 
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_PREDEFINED_UNDEFINED,
+                print(pp::Diagnostics::PP_MACRO_PREDEFINED_UNDEFINED,
                       pp::SourceLocation(0, 1),
                       "__LINE__"));
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_PREDEFINED_UNDEFINED,
+                print(pp::Diagnostics::PP_MACRO_PREDEFINED_UNDEFINED,
                       pp::SourceLocation(0, 3),
                       "__FILE__"));
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_PREDEFINED_UNDEFINED,
+                print(pp::Diagnostics::PP_MACRO_PREDEFINED_UNDEFINED,
                       pp::SourceLocation(0, 5),
                       "__VERSION__"));
     EXPECT_CALL(mDiagnostics,
-                print(pp::Diagnostics::MACRO_PREDEFINED_UNDEFINED,
+                print(pp::Diagnostics::PP_MACRO_PREDEFINED_UNDEFINED,
                       pp::SourceLocation(0, 7),
                       "GL_ES"));
 

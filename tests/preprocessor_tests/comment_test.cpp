@@ -62,7 +62,7 @@ TEST_F(BlockCommentTest, UnterminatedComment)
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     using testing::_;
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_COMMENT, _, _));
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_EOF_IN_COMMENT, _, _));
 
     pp::Token token;
     mPreprocessor.lex(&token);

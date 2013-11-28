@@ -86,7 +86,7 @@ TEST_F(ErrorTest, MissingNewline)
     EXPECT_CALL(mDirectiveHandler,
                 handleError(pp::SourceLocation(0, 1), " foo"));
     // Error reported about EOF.
-    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_EOF_IN_DIRECTIVE, _, _));
 
     preprocess(str, expected);
 }
