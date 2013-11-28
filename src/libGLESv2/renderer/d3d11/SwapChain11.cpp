@@ -628,73 +628,33 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     return EGL_SUCCESS;
 }
 
-// Increments refcount on texture.
-// caller must Release() the returned texture
 ID3D11Texture2D *SwapChain11::getOffscreenTexture()
 {
-    if (mOffscreenTexture)
-    {
-        mOffscreenTexture->AddRef();
-    }
-
     return mOffscreenTexture;
 }
 
-// Increments refcount on view.
-// caller must Release() the returned view
 ID3D11RenderTargetView *SwapChain11::getRenderTarget()
 {
-    if (mOffscreenRTView)
-    {
-        mOffscreenRTView->AddRef();
-    }
-
     return mOffscreenRTView;
 }
 
-// Increments refcount on view.
-// caller must Release() the returned view
 ID3D11ShaderResourceView *SwapChain11::getRenderTargetShaderResource()
 {
-    if (mOffscreenSRView)
-    {
-        mOffscreenSRView->AddRef();
-    }
-
     return mOffscreenSRView;
 }
 
-// Increments refcount on view.
-// caller must Release() the returned view
 ID3D11DepthStencilView *SwapChain11::getDepthStencil()
 {
-    if (mDepthStencilDSView)
-    {
-        mDepthStencilDSView->AddRef();
-    }
-
     return mDepthStencilDSView;
 }
 
-// Increments refcount on view.
-// caller must Release() the returned view
 ID3D11ShaderResourceView * SwapChain11::getDepthStencilShaderResource()
 {
-    if (mDepthStencilSRView)
-    {
-        mDepthStencilSRView->AddRef();
-    }
-
     return mDepthStencilSRView;
 }
 
 ID3D11Texture2D *SwapChain11::getDepthStencilTexture()
 {
-    if (mDepthStencilTexture)
-    {
-        mDepthStencilTexture->AddRef();
-    }
-
     return mDepthStencilTexture;
 }
 

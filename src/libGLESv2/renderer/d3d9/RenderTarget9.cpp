@@ -18,6 +18,7 @@
 namespace rx
 {
 
+// TODO: AddRef the incoming surface to take ownership instead of expecting that its ref is being given.
 RenderTarget9::RenderTarget9(Renderer *renderer, IDirect3DSurface9 *surface)
 {
     mRenderer = Renderer9::makeRenderer9(renderer);
@@ -112,6 +113,7 @@ void RenderTarget9::invalidate(GLint x, GLint y, GLsizei width, GLsizei height)
 IDirect3DSurface9 *RenderTarget9::getSurface()
 {
     // Caller is responsible for releasing the returned surface reference.
+    // TODO: remove the AddRef to match RenderTarget11
     if (mRenderTarget)
     {
         mRenderTarget->AddRef();

@@ -182,10 +182,27 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, 
                                ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height, GLsizei depth)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
+
     mTexture = resource;
+    if (mTexture)
+    {
+        mTexture->AddRef();
+    }
+
     mRenderTarget = rtv;
+    if (mRenderTarget)
+    {
+        mRenderTarget->AddRef();
+    }
+
     mDepthStencil = NULL;
+
     mShaderResource = srv;
+    if (mShaderResource)
+    {
+        mShaderResource->AddRef();
+    }
+
     mSubresourceIndex = 0;
 
     if (mRenderTarget && mTexture)
@@ -211,10 +228,27 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, 
                                ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height, GLsizei depth)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
+
     mTexture = resource;
+    if (mTexture)
+    {
+        mTexture->AddRef();
+    }
+
     mRenderTarget = NULL;
+
     mDepthStencil = dsv;
+    if (mDepthStencil)
+    {
+        mDepthStencil->AddRef();
+    }
+
     mShaderResource = srv;
+    if (mShaderResource)
+    {
+        mShaderResource->AddRef();
+    }
+
     mSubresourceIndex = 0;
 
     if (mDepthStencil && mTexture)
@@ -376,11 +410,6 @@ void RenderTarget11::invalidate(GLint x, GLint y, GLsizei width, GLsizei height)
 
 ID3D11Resource *RenderTarget11::getTexture() const
 {
-    if (mTexture)
-    {
-        mTexture->AddRef();
-    }
-
     return mTexture;
 }
 

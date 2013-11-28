@@ -328,6 +328,7 @@ EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 
 // Increments refcount on surface.
 // caller must Release() the returned surface
+// TODO: remove the AddRef to match SwapChain11
 IDirect3DSurface9 *SwapChain9::getRenderTarget()
 {
     if (mRenderTarget)
@@ -340,6 +341,7 @@ IDirect3DSurface9 *SwapChain9::getRenderTarget()
 
 // Increments refcount on surface.
 // caller must Release() the returned surface
+// TODO: remove the AddRef to match SwapChain11
 IDirect3DSurface9 *SwapChain9::getDepthStencil()
 {
     if (mDepthStencil)
@@ -352,6 +354,7 @@ IDirect3DSurface9 *SwapChain9::getDepthStencil()
 
 // Increments refcount on texture.
 // caller must Release() the returned texture
+// TODO: remove the AddRef to match SwapChain11
 IDirect3DTexture9 *SwapChain9::getOffscreenTexture()
 {
     if (mOffscreenTexture)
