@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63072653_d37aa648",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2409,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-02T18:25:42Z",
+      "side": 1,
+      "message": "Is the the sampler state \u0026c actually needed here? Or would just the texture suffice?",
+      "revId": "b0140df5414ab4d1a43f17eb73cbfa2dbd160e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83025a40_14709af6",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 764,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-02T18:25:42Z",
+      "side": 1,
+      "message": "Nitpick: can this be \"ES2 or D3D9\"?",
+      "revId": "b0140df5414ab4d1a43f17eb73cbfa2dbd160e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
