@@ -12,7 +12,7 @@ TEST(TokenTest, DefaultConstructor)
 {
     pp::Token token;
     EXPECT_EQ(0, token.type);
-    EXPECT_EQ(0, token.flags);
+    EXPECT_EQ(0u, token.flags);
     EXPECT_EQ(0, token.location.line);
     EXPECT_EQ(0, token.location.file);
     EXPECT_EQ("", token.text);
@@ -29,7 +29,7 @@ TEST(TokenTest, Assignment)
 
     token = pp::Token();
     EXPECT_EQ(0, token.type);
-    EXPECT_EQ(0, token.flags);
+    EXPECT_EQ(0u, token.flags);
     EXPECT_EQ(0, token.location.line);
     EXPECT_EQ(0, token.location.file);
     EXPECT_EQ("", token.text);
