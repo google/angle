@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83025a40_546a2204",
+        "filename": "src/libGLESv2/renderer/d3d11/RenderTarget11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-02T19:20:04Z",
+      "side": 1,
+      "message": "Is this a double AddRef for mTexture?",
+      "revId": "5babe4d33e595f519211bd1b807bf810ec03efb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63072653_93593eed",
+        "filename": "src/libGLESv2/renderer/d3d11/RenderTarget11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-02T19:20:04Z",
+      "side": 1,
+      "message": "If resource was non-NULL at constructor call time, should we be decrementing its refcount here before setting mTexture NULL?",
+      "revId": "5babe4d33e595f519211bd1b807bf810ec03efb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3fd9e74_f54d12ad",
+        "filename": "src/libGLESv2/renderer/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-02T19:20:04Z",
+      "side": 1,
+      "message": "This makes me pretty leery-- the refcounting behavior now differs between SwapChain11\u0027s DX object getters and SwapChain9\u0027s, which seems like a recipe for refcount problems down the line.",
+      "revId": "5babe4d33e595f519211bd1b807bf810ec03efb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63072653_b318c200",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-02T19:20:04Z",
+      "side": 1,
+      "message": "This comment should probably appear above the RenderTarget11 constructor call, and specify which resources it means-- right now it looks like it\u0027s applicable only to the RTV. The comment should also call out that taking ownership of the resources includes incrementing the refcounts for all the objects itself. (Likewise for below snippets.)",
+      "revId": "5babe4d33e595f519211bd1b807bf810ec03efb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
