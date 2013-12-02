@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3fd9e74_18e3ad4b",
+        "filename": "src/libGLESv2/renderer/d3d11/Image11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-02T19:28:16Z",
+      "side": 1,
+      "message": "Oops, typo. (One of the downsides of gerrit is the lack of ability to say \"fix this before commit, approved\")",
+      "revId": "e8a99972afd231b9196293507a686fee7873b255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
