@@ -290,10 +290,12 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
 {
     mTexture = swapchain->getOffscreenTexture();
     mSRV = swapchain->getRenderTargetShaderResource();
-
     mSwizzleTexture = NULL;
+    mSwizzleSRV = NULL;
+
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
+        mLevelSRVs[i] = NULL;
         mRenderTarget[i] = NULL;
         mSwizzleRenderTargets[i] = NULL;
     }
