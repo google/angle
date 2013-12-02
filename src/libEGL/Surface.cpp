@@ -309,6 +309,8 @@ bool Surface::checkForOutOfDateSwapChain()
     int clientHeight = client.bottom - client.top;
     bool sizeDirty = clientWidth != getWidth() || clientHeight != getHeight();
 
+    bool wasDirty = (mSwapIntervalDirty || sizeDirty);
+
     if (mSwapIntervalDirty)
     {
         resetSwapChain(clientWidth, clientHeight);
@@ -318,7 +320,7 @@ bool Surface::checkForOutOfDateSwapChain()
         resizeSwapChain(clientWidth, clientHeight);
     }
 
-    if (mSwapIntervalDirty || sizeDirty)
+    if (wasDirty)
     {
         if (static_cast<egl::Surface*>(getCurrentDrawSurface()) == this)
         {
