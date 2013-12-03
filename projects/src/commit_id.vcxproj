@@ -109,9 +109,9 @@
     <None Include="..\..\src\angle.gyp"/>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\..\src\src\angle.gyp">
+    <CustomBuild Include="..\..\src\commit_id.bat">
       <FileType>Document</FileType>
-      <Command>call call cmd \C &quot;echo|set \p=#define COMMIT_HASH &gt; common\commit.h &amp; (git rev-parse --short=12 HEAD &gt;&gt; common\commit.h) || (echo badf00dbad00 &gt;&gt; common\commit.h)&quot; &gt; NUL</Command>
+      <Command>call call ..\..\src\commit_id.bat</Command>
       <Message>Generating commit ID header...</Message>
       <Outputs>..\..\src\common\commit.h</Outputs>
     </CustomBuild>

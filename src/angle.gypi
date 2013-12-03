@@ -34,9 +34,9 @@
                             {
                                 'action_name': 'Generate Commit ID Header',
                                 'message': 'Generating commit ID header...',
-                                'inputs': [],
+                                'inputs': [ 'commit_id.bat' ],
                                 'outputs': ['common/commit.h'],
-                                'action': ['cmd /C "echo|set /p=#define COMMIT_HASH > common/commit.h & (git rev-parse --short=12 HEAD >> common/commit.h) || (echo badf00dbad00 >> common/commit.h)" > NUL'],
+                                'action': ['<(angle_relative_src_path)commit_id.bat'],
                             }
                         ] #actions
                     }
