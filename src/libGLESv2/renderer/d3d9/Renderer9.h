@@ -256,7 +256,8 @@ class Renderer9 : public Renderer
     void releaseDeviceResources();
 
     HRESULT getDeviceStatusCode();
-    HRESULT resetRemovedDevice();
+    bool isRemovedDeviceResettable() const;
+    bool resetRemovedDevice();
 
     UINT mAdapter;
     D3DDEVTYPE mDeviceType;
