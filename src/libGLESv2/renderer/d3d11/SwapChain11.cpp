@@ -311,6 +311,12 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
         return EGL_BAD_ACCESS;
     }
 
+    // EGL allows creating a surface with 0x0 dimension, however, DXGI does not like 0x0 swapchains
+    if (backbufferWidth < 1 || backbufferHeight < 1)
+    {
+        return EGL_SUCCESS;
+    }
+
     // Can only call resize if we have already created our swap buffer and resources
     ASSERT(mSwapChain && mBackBufferTexture && mBackBufferRTView);
 
