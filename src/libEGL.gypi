@@ -24,6 +24,7 @@
                         'ANGLE_ENABLE_D3D_EVENTS',
                     ],
                     'sources': [ '<!@(python enumerate_files.py common libEGL -types *.cpp *.h *.def libEGL.rc)' ],
+                    # TODO(jschuh): http://crbug.com/167187 size_t -> int
                     'msvs_disabled_warnings': [ 4267 ],
                     'msvs_settings':
                     {

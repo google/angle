@@ -10,6 +10,7 @@
             'type': 'static_library',
             'include_dirs': [ ],
             'sources': [ '<!@(python enumerate_files.py compiler/preprocessor -types *.cpp *.h)' ],
+            # TODO(jschuh): http://crbug.com/167187 size_t -> int
             'msvs_disabled_warnings': [ 4267 ],
         },
 
