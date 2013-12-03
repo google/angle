@@ -14,9 +14,9 @@
 #include "compiler/translator/InitializeParseContext.h"
 #include "compiler/translator/ParseContext.h"
 
+#ifdef TRACE_ENABLED
 static const int kTraceBufferLen = 1024;
 
-#ifdef TRACE_ENABLED
 extern "C" {
 void Trace(const char *format, ...) {
     if (!format) return;
