@@ -120,6 +120,7 @@
     <ClInclude Include="..\..\src\common\RefCountObject.h"/>
     <ClInclude Include="..\..\src\common\mathutil.h"/>
     <ClInclude Include="..\..\src\common\event_tracer.h"/>
+    <ClInclude Include="..\..\src\common\commit.h"/>
     <ClInclude Include="..\..\src\common\system.h"/>
     <ClInclude Include="..\..\src\common\debug.h"/>
     <ClInclude Include="..\..\src\common\version.h"/>
@@ -133,7 +134,6 @@
     <ClInclude Include="..\..\src\compiler\translator\FlagStd140Structs.h"/>
     <ClInclude Include="..\..\src\compiler\translator\MapLongVariableNames.h"/>
     <ClInclude Include="..\..\src\compiler\translator\PoolAlloc.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h"/>
     <ClInclude Include="..\..\src\compiler\translator\BuiltInFunctionEmulator.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ValidateOutputs.h"/>
     <ClInclude Include="..\..\src\compiler\translator\UnfoldShortCircuit.h"/>
@@ -161,6 +161,7 @@
     <ClInclude Include="..\..\src\compiler\translator\ShaderVariable.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Pragma.h"/>
     <ClInclude Include="..\..\src\compiler\translator\intermediate.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\InitializeParseContext.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputESSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\RenameFunction.h"/>
@@ -175,7 +176,7 @@
     <ClInclude Include="..\..\src\compiler\translator\BlockLayoutEncoder.h"/>
     <ClInclude Include="..\..\src\compiler\translator\MMap.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputHLSL.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\InitializeParseContext.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h"/>
     <ClInclude Include="..\..\src\compiler\translator\VariableInfo.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang_tab.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ExtensionBehavior.h"/>

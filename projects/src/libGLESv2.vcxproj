@@ -270,10 +270,11 @@
     <ClInclude Include="..\..\src\common\RefCountObject.h"/>
     <ClInclude Include="..\..\src\common\mathutil.h"/>
     <ClInclude Include="..\..\src\common\event_tracer.h"/>
+    <ClInclude Include="..\..\src\common\commit.h"/>
     <ClInclude Include="..\..\src\common\debug.h"/>
     <ClInclude Include="..\..\src\common\version.h"/>
-    <ClInclude Include="..\..\src\common\utilities.h"/>
     <ClInclude Include="..\..\src\common\system.h"/>
+    <ClInclude Include="..\..\src\common\utilities.h"/>
     <ClInclude Include="..\..\src\common\angleutils.h"/>
     <ClInclude Include="..\..\src\third_party\murmurhash\MurmurHash3.h"/>
   </ItemGroup>
@@ -359,20 +360,16 @@
     <ResourceCompile Include="..\..\src\libGLESv2\libGLESv2.rc"/>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\..\src\copy_compiler_dll.bat">
-      <FileType>Document</FileType>
-      <Command>call call copy_compiler_dll.bat &quot;$(Platform)&quot; &quot;C:\Program Files (x86)\Windows Kits\8.0&quot; &quot;$(OutDir)&quot;</Command>
-      <Message>Copying D3D Compiler DLL...</Message>
-      <Outputs>$(OutDir)\D3DCompiler_46.dll</Outputs>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="translator_static.vcxproj">
       <Project>{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="commit_id.vcxproj">
       <Project>{3B7F5656-177F-52EE-26B3-D6A75368D0A9}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="copy_compiler_dll.vcxproj">
+      <Project>{22DC02D5-1598-943C-13E1-82185B469F81}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="preprocessor.vcxproj">

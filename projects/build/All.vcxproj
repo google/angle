@@ -125,6 +125,10 @@
       <Project>{3B7F5656-177F-52EE-26B3-D6A75368D0A9}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\src\copy_compiler_dll.vcxproj">
+      <Project>{22DC02D5-1598-943C-13E1-82185B469F81}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\src\libGLESv2.vcxproj">
       <Project>{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

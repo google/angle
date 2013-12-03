@@ -22,7 +22,7 @@
                 {
                     'target_name': 'libGLESv2',
                     'type': 'shared_library',
-                    'dependencies': [ 'translator_static', 'commit_id' ],
+                    'dependencies': [ 'translator_static', 'commit_id', 'copy_compiler_dll' ],
                     'include_dirs':
                     [
                         '.',
@@ -47,17 +47,6 @@
                             ]
                         }
                     },
-                    'actions':
-                    [
-                        {
-                            'msvs_cygwin_shell': 0,
-                            'action_name': 'copy_dll',
-                            'message': 'Copying D3D Compiler DLL...',
-                            'inputs': [ 'copy_compiler_dll.bat' ],
-                            'outputs': [ '<(PRODUCT_DIR)/D3DCompiler_46.dll' ],
-                            'action': ["copy_compiler_dll.bat", "$(PlatformName)", "<(windows_sdk_path)", "<(PRODUCT_DIR)" ],
-                        }
-                    ] #actions
                 },
             ],
         },
