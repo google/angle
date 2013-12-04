@@ -1,0 +1,47 @@
+#!/usr/bin/python
+
+# Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# This script regenerates the canonical visual studio project files that
+# are distributed with the ANGLE repository. It requires that depot_tools
+# is installed and gclient sync has been run to download gyp. The project
+# files are generated and then git added so they can be committed.
+
+import os
+import sys
+
+script_dir = os.path.join(os.path.dirname(__file__), 'build')
+angle_dir = os.path.normpath(os.path.join(script_dir, os.pardir))
+gyp_dir = os.path.join(angle_dir, 'third_party', 'gyp')
+
+generation_dir = "projects"
+gyp_generators = "msvs"
+msvs_version = "2010e"
+build_samples = True
+build_tests = False
+
+if __name__ == '__main__':
+	gyp_cmd = os.path.join(gyp_dir, 'gyp')
+	gyp_cmd += ' --ignore-environment'
+	gyp_cmd += ' --depth=.'
+	gyp_cmd += ' --include=' + os.path.join(script_dir, 'common.gypi')
+	gyp_cmd += ' --generator-output=' + generation_dir
+	gyp_cmd += ' --format=' + gyp_generators
+	gyp_cmd += ' -G msvs_version=' + msvs_version
+	gyp_cmd += ' -D angle_build_tests=' + ('1' if build_tests else '0')
+	gyp_cmd += ' -D angle_build_samples=' + ('1' if build_samples else '0')
+	gyp_cmd += ' -D angle_relative_src_path=..\\..\\src\\'
+	gyp_cmd += ' ' + os.path.join(script_dir, 'all.gyp')
+
+	print 'Generating projects to ' + generation_dir + ' from gyp files...'
+	print gyp_cmd
+	sys.stdout.flush()
+	os.system(gyp_cmd)
+
+	git_add_cmd = 'git add ' + generation_dir + ' -u'
+	print '\nRunning git add on updated Visual Studio projects...'
+	print git_add_cmd
+	sys.stdout.flush()
+	os.system(git_add_cmd)

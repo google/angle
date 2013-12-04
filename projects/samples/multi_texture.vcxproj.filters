@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="gles2_book">
+      <UniqueIdentifier>{01DCD872-C931-E1FA-4F9F-EBFA79587BB6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gles2_book\MultiTexture">
+      <UniqueIdentifier>{B094F5D0-1DD1-94CB-CEBD-6C2EB17B4D5A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\samples\samples.gyp"/>
+    <None Include="..\..\samples\gles2_book\MultiTexture\lightmap.tga">
+      <Filter>gles2_book\MultiTexture</Filter>
+    </None>
+    <None Include="..\..\samples\gles2_book\MultiTexture\basemap.tga">
+      <Filter>gles2_book\MultiTexture</Filter>
+    </None>
+    <ClCompile Include="..\..\samples\gles2_book\MultiTexture\MultiTexture.c">
+      <Filter>gles2_book\MultiTexture</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

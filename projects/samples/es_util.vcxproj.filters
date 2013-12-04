@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="gles2_book">
+      <UniqueIdentifier>{01DCD872-C931-E1FA-4F9F-EBFA79587BB6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gles2_book\Common">
+      <UniqueIdentifier>{F86A273C-85A3-22AB-C7FA-A36F586D586C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gles2_book\Common\Win32">
+      <UniqueIdentifier>{D4B5535A-60F0-1479-5C4E-3F50DD3EC1A1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\samples\samples.gyp"/>
+    <ClCompile Include="..\..\samples\gles2_book\Common\esTransform.c">
+      <Filter>gles2_book\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\samples\gles2_book\Common\esUtil.c">
+      <Filter>gles2_book\Common</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\samples\gles2_book\Common\esUtil_win.h">
+      <Filter>gles2_book\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\samples\gles2_book\Common\esUtil.h">
+      <Filter>gles2_book\Common</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\samples\gles2_book\Common\esShader.c">
+      <Filter>gles2_book\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\samples\gles2_book\Common\esShapes.c">
+      <Filter>gles2_book\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\samples\gles2_book\Common\Win32\esUtil_win32.c">
+      <Filter>gles2_book\Common\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\samples\gles2_book\Common\Win32\esUtil_TGA.c">
+      <Filter>gles2_book\Common\Win32</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

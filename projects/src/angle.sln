@@ -1,0 +1,57 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "copy_compiler_dll", "copy_compiler_dll.vcxproj", "{22DC02D5-1598-943C-13E1-82185B469F81}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libEGL", "libEGL.vcxproj", "{FBAEE4F6-562A-588F-01F9-72DCABB3B061}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81} = {7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libGLESv2", "libGLESv2.vcxproj", "{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C15697F6-5057-016E-BD29-422971875679} = {C15697F6-5057-016E-BD29-422971875679}
+		{22DC02D5-1598-943C-13E1-82185B469F81} = {22DC02D5-1598-943C-13E1-82185B469F81}
+		{C7BAF548-697D-2DCB-9DF3-9D1506A7B444} = {C7BAF548-697D-2DCB-9DF3-9D1506A7B444}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "preprocessor", "preprocessor.vcxproj", "{C7BAF548-697D-2DCB-9DF3-9D1506A7B444}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator", "translator.vcxproj", "{C15697F6-5057-016E-BD29-422971875679}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator_static", "translator_static.vcxproj", "{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}.Debug|Win32.Build.0 = Debug|Win32
+		{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}.Release|Win32.ActiveCfg = Release|Win32
+		{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}.Release|Win32.Build.0 = Release|Win32
+		{22DC02D5-1598-943C-13E1-82185B469F81}.Debug|Win32.ActiveCfg = Debug|Win32
+		{22DC02D5-1598-943C-13E1-82185B469F81}.Debug|Win32.Build.0 = Debug|Win32
+		{22DC02D5-1598-943C-13E1-82185B469F81}.Release|Win32.ActiveCfg = Release|Win32
+		{22DC02D5-1598-943C-13E1-82185B469F81}.Release|Win32.Build.0 = Release|Win32
+		{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}.Debug|Win32.Build.0 = Debug|Win32
+		{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}.Release|Win32.ActiveCfg = Release|Win32
+		{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}.Release|Win32.Build.0 = Release|Win32
+		{C15697F6-5057-016E-BD29-422971875679}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C15697F6-5057-016E-BD29-422971875679}.Debug|Win32.Build.0 = Debug|Win32
+		{C15697F6-5057-016E-BD29-422971875679}.Release|Win32.ActiveCfg = Release|Win32
+		{C15697F6-5057-016E-BD29-422971875679}.Release|Win32.Build.0 = Release|Win32
+		{C7BAF548-697D-2DCB-9DF3-9D1506A7B444}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C7BAF548-697D-2DCB-9DF3-9D1506A7B444}.Debug|Win32.Build.0 = Debug|Win32
+		{C7BAF548-697D-2DCB-9DF3-9D1506A7B444}.Release|Win32.ActiveCfg = Release|Win32
+		{C7BAF548-697D-2DCB-9DF3-9D1506A7B444}.Release|Win32.Build.0 = Release|Win32
+		{FBAEE4F6-562A-588F-01F9-72DCABB3B061}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FBAEE4F6-562A-588F-01F9-72DCABB3B061}.Debug|Win32.Build.0 = Debug|Win32
+		{FBAEE4F6-562A-588F-01F9-72DCABB3B061}.Release|Win32.ActiveCfg = Release|Win32
+		{FBAEE4F6-562A-588F-01F9-72DCABB3B061}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
