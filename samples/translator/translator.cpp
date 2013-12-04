@@ -369,7 +369,7 @@ static bool ReadShaderSource(const char* fileName, ShaderSource& source) {
     // string is added to vector.
     do {
         char* data = new char[len + 1];
-        int nread = fread(data, 1, len, in);
+        int nread = static_cast<int>(fread(data, 1, len, in));
         data[nread] = '\0';
         source.push_back(data);
 

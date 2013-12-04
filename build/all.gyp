@@ -3,25 +3,23 @@
 # found in the LICENSE file.
 
 {
-  'targets': [
-    {
-      'target_name': 'all',
-      'type': 'none',
-      'dependencies': [
-        # TODO(alokp): build_ prefix should be removed from the gyp files
-        # as soon as we can get rid of manually-maintained sln files.
-        # Otherwise auto-generated sln files will overwrite/conflict the
-        # manually maintained ones.
-        '../samples/build_samples.gyp:*',
-        '../src/build_angle.gyp:*',
-        '../tests/build_tests.gyp:*',
-      ],
-    },
-  ],
+    'targets':
+    [
+        {
+            'target_name': 'All',
+            'type': 'none',
+            'dependencies': [ '../src/angle.gyp:*', ],
+            'conditions':
+            [
+                ['angle_build_samples==1',
+                {
+                    'dependencies': [ '../samples/samples.gyp:*', ],
+                }],
+                ['angle_build_tests==1',
+                {
+                    'dependencies': [ '../tests/tests.gyp:*', ],
+                }],
+            ],
+        },
+    ],
 }
-
-# Local Variables:
-# tab-width:2
-# indent-tabs-mode:nil
-# End:
-# vim: set expandtab tabstop=2 shiftwidth=2:

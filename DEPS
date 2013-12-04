@@ -1,11 +1,11 @@
 deps = {
   "third_party/gyp":
-      "http://gyp.googlecode.com/svn/trunk@1767",
+      "http://gyp.googlecode.com/svn/trunk@1806",
 
-  "third_party/googletest":
+  "tests/third_party/googletest":
       "http://googletest.googlecode.com/svn/trunk@629",
 
-  "third_party/googlemock":
+  "tests/third_party/googlemock":
       "http://googlemock.googlecode.com/svn/trunk@410",
 }
 
