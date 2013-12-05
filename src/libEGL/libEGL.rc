@@ -78,6 +78,7 @@ BEGIN
             VALUE "PrivateBuild", VERSION_STRING
             VALUE "ProductName", "ANGLE libEGL Dynamic Link Library"
             VALUE "ProductVersion", VERSION_STRING
+            VALUE "Comments", "Build Date: " COMMIT_DATE
         END
     END
     BLOCK "VarFileInfo"

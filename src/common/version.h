@@ -1,7 +1,7 @@
 #include "commit.h"
 
-#define MAJOR_VERSION 3
-#define MINOR_VERSION 0
+#define MAJOR_VERSION 2
+#define MINOR_VERSION 1
 
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)

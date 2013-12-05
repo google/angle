@@ -1,3 +1,11 @@
 @echo off
-echo|set /p=#define COMMIT_HASH > %~dp0\common\commit.h
-(git rev-parse --short=12 HEAD >> %~dp0\common\commit.h) || (echo badf00dbad00 >> %~dp0\common\commit.h) > NUL
+
+REM commit hash
+(FOR /F "delims=" %%i IN ('call git rev-parse --short^=12 HEAD') DO set _Str=%%i) || (set _Str=badf00dbad00)
+set _Str=#define COMMIT_HASH %_Str%
+echo %_Str% > %~dp0\common\commit.h
+
+REM commit date
+(FOR /F "delims=" %%i IN ('git show -s --format^="%%ci" HEAD') DO set _Str=%%i) || (set _Str=Unknown Date)
+set _Str=#define COMMIT_DATE "%_Str%"
+echo %_Str% >> %~dp0\common\commit.h
