@@ -1454,7 +1454,7 @@ void Renderer9::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvo
 
     if (mode == GL_POINTS)
     {
-        drawIndexedPoints(count, type, indices, elementArrayBuffer);
+        drawIndexedPoints(count, type, indices, indexInfo.minIndex, elementArrayBuffer);
     }
     else if (mode == GL_LINE_LOOP)
     {
@@ -1658,16 +1658,16 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
 }
 
 template <typename T>
-static void drawPoints(IDirect3DDevice9* device, GLsizei count, const GLvoid *indices)
+static void drawPoints(IDirect3DDevice9* device, GLsizei count, const GLvoid *indices, int minIndex)
 {
     for (int i = 0; i < count; i++)
     {
-        unsigned int indexValue = static_cast<unsigned int>(static_cast<const T*>(indices)[i]);
+        unsigned int indexValue = static_cast<unsigned int>(static_cast<const T*>(indices)[i]) - minIndex;
         device->DrawPrimitive(D3DPT_POINTLIST, indexValue, 1);
     }
 }
 
-void Renderer9::drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer)
+void Renderer9::drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer)
 {
     // Drawing index point lists is unsupported in d3d9, fall back to a regular DrawPrimitive call
     // for each individual point. This call is not expected to happen often.
@@ -1681,9 +1681,9 @@ void Renderer9::drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indi
 
     switch (type)
     {
-        case GL_UNSIGNED_BYTE:  drawPoints<GLubyte>(mDevice, count, indices);  break;
-        case GL_UNSIGNED_SHORT: drawPoints<GLushort>(mDevice, count, indices); break;
-        case GL_UNSIGNED_INT:   drawPoints<GLuint>(mDevice, count, indices);   break;
+        case GL_UNSIGNED_BYTE:  drawPoints<GLubyte>(mDevice, count, indices, minIndex);  break;
+        case GL_UNSIGNED_SHORT: drawPoints<GLushort>(mDevice, count, indices, minIndex); break;
+        case GL_UNSIGNED_INT:   drawPoints<GLuint>(mDevice, count, indices, minIndex);   break;
         default: UNREACHABLE();
     }
 }
