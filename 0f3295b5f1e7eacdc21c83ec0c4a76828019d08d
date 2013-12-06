@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3e59e1d_7874b960",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-06T00:22:22Z",
+      "side": 1,
+      "message": "I\u0027m sorry to pingpong this one again, but can the framebuffer go at the front of the arguments list? We usually provide contextual objects before current state. (Sorry to nitpick.)",
+      "revId": "0f3295b5f1e7eacdc21c83ec0c4a76828019d08d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
