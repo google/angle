@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "431b0207_77fe1089",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-06T19:20:49Z",
+      "side": 1,
+      "message": "Can you stick a ref to the original issue here? did we miss that on master?",
+      "revId": "dd71d0f63ff070579035b9bce187be9337a03bfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
