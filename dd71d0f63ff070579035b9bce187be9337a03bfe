@@ -16,6 +16,24 @@
       "revId": "dd71d0f63ff070579035b9bce187be9337a03bfe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63e9e62a_401bee8c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-06T22:17:52Z",
+      "side": 1,
+      "message": "I second this request, and ditto my comment about the typo on master.",
+      "parentUuid": "431b0207_77fe1089",
+      "revId": "dd71d0f63ff070579035b9bce187be9337a03bfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
