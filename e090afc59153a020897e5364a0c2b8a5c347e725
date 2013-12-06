@@ -16,6 +16,24 @@
       "revId": "e090afc59153a020897e5364a0c2b8a5c347e725",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8386da63_31c8b0e2",
+        "filename": "src/libGLESv2/renderer/SwapChain9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-06T21:43:09Z",
+      "side": 1,
+      "message": "From pg 54 of the EGL spec... \"If eglSwapBuffers is called and the native window associated with surface is no longer valid, an EGL_BAD_NATIVE_WINDOW error is generated.\"\n\nDid you check that section? I thought this was the most appropriate error. I\u0027m open though.",
+      "parentUuid": "e3295620_74ce08f3",
+      "revId": "e090afc59153a020897e5364a0c2b8a5c347e725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
