@@ -34,6 +34,24 @@
       "revId": "e090afc59153a020897e5364a0c2b8a5c347e725",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03f02a0e_bdddbf85",
+        "filename": "src/libGLESv2/renderer/SwapChain9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-06T21:58:46Z",
+      "side": 1,
+      "message": "Ah, sorry, I\u0027d just referenced the section defining all the errors, which refers specifically to function arguments. It does sound like BAD_NATIVE_WINDOW is acceptable, although I don\u0027t know if it\u0027s more or less appropriate than CONTEXT_LOST.",
+      "parentUuid": "8386da63_31c8b0e2",
+      "revId": "e090afc59153a020897e5364a0c2b8a5c347e725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
