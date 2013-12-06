@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8386da63_f159c84f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-06T14:58:57Z",
+      "side": 1,
+      "message": "stype? (typo?)",
+      "revId": "991755e1688214a97502500d63fbd7bcd2833577",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8386da63_914e3c83",
+        "filename": "src/compiler/translator/IntermTraverse.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-06T14:58:57Z",
+      "side": 1,
+      "message": "trailing whitespace here (and in a few other places), can you remove this?",
+      "revId": "991755e1688214a97502500d63fbd7bcd2833577",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
