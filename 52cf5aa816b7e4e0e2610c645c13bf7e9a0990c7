@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03f02a0e_3df24f16",
+        "filename": "src/libGLESv2/renderer/d3d11/RenderStateCache.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-06T22:06:23Z",
+      "side": 1,
+      "message": "Here too, please.",
+      "revId": "52cf5aa816b7e4e0e2610c645c13bf7e9a0990c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
