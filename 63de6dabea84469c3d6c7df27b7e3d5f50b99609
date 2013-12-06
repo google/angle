@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3811e4e_b27fc0f4",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-06T21:28:29Z",
+      "side": 1,
+      "message": "it looks as though Gerrit found some Tabs here... is this in master as well?",
+      "revId": "63de6dabea84469c3d6c7df27b7e3d5f50b99609",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8386da63_51d1b493",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-06T21:28:29Z",
+      "side": 1,
+      "message": "tab #2",
+      "revId": "63de6dabea84469c3d6c7df27b7e3d5f50b99609",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
