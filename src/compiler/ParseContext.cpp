@@ -535,7 +535,7 @@ bool TParseContext::constructorErrorCheck(const TSourceLoc& line, TIntermNode* n
         return true;
     }
     
-    if (op == EOpConstructStruct && !type->isArray() && int(type->getStruct()->fields().size()) != function.getParamCount()) {
+    if (op == EOpConstructStruct && !type->isArray() && type->getStruct()->fields().size() != function.getParamCount()) {
         error(line, "Number of constructor parameters does not match the number of structure fields", "constructor");
         return true;
     }
