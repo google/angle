@@ -16,6 +16,24 @@
       "revId": "0ac3cdcb1b2dcc5b1a9b960cd8cbb26ffca934a6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "231c4e1e_56c8d4e2",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2013-12-09T18:04:20Z",
+      "side": 1,
+      "message": "This is the same as es3proto, I believe the NO_WARNINGS one is the most recent (it\u0027s what the compiler recommends when it gives the warning).",
+      "parentUuid": "63e9e62a_03361003",
+      "revId": "0ac3cdcb1b2dcc5b1a9b960cd8cbb26ffca934a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
