@@ -2113,7 +2113,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         {
                             symbol->traverse(this);
                             out << arrayString(symbol->getType());
-                            out << " = " + initializer(variable->getType());
+                            out << " = " + initializer(symbol->getType());
                         }
                         else
                         {
