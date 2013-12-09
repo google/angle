@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63e9e62a_432018b3",
+        "filename": "tests/standalone_tests/EGLThreadTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-09T17:23:28Z",
+      "side": 1,
+      "message": "Stray whitespace nitpick.",
+      "revId": "213d57a3833a41ab0effc7350303edde03dfcd6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
