@@ -128,6 +128,26 @@
                         '<!@(python enumerate_files.py angle_tests -types *.cpp *.h)'
                     ],
                 },
+                {
+                    'target_name': 'standalone_tests',
+                    'type': 'executable',
+                    'dependencies':
+                    [
+                        'gtest',
+                        'gmock',
+                    ],
+                    'include_dirs':
+                    [
+                        '../include',
+                        'angle_tests',
+                        'third_party/googletest/include',
+                        'third_party/googlemock/include',
+                    ],
+                    'sources':
+                    [
+                        '<!@(python enumerate_files.py standalone_tests -types *.cpp *.h)'
+                    ],
+                },
             ],
         }],
     ],
