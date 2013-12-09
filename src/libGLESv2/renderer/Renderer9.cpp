@@ -2067,7 +2067,7 @@ bool Renderer9::isDeviceLost()
 bool Renderer9::testDeviceLost(bool notify)
 {
     HRESULT status = getDeviceStatusCode();
-    bool isLost = (FAILED(status) || d3d9::isDeviceLostError(status));
+    bool isLost = FAILED(status);
 
     if (isLost)
     {
