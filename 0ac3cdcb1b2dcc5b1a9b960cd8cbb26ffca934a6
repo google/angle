@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63e9e62a_03361003",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-09T17:21:17Z",
+      "side": 1,
+      "message": "Is warnings the updated def, or is deprecate? I can\u0027t remember.",
+      "revId": "0ac3cdcb1b2dcc5b1a9b960cd8cbb26ffca934a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
