@@ -16,6 +16,24 @@
       "revId": "78f514eff926dd312a53ce7a7d50f29c7e66fde1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "231c4e1e_997e1f92",
+        "filename": "src/libGLESv2/renderer/SwapChain9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-09T20:50:35Z",
+      "side": 1,
+      "message": "I know right.. the device lost codes family are positive HRESULTs, and FAILED checks for a negative code. See Renderer9::testDeviceLost",
+      "parentUuid": "23f36e1c_0109ec83",
+      "revId": "78f514eff926dd312a53ce7a7d50f29c7e66fde1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
