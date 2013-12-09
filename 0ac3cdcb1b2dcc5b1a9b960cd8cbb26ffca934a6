@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "231c4e1e_9930df09",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-09T20:13:05Z",
+      "side": 1,
+      "message": "Made a public issue for this one, can you link it up?",
+      "revId": "0ac3cdcb1b2dcc5b1a9b960cd8cbb26ffca934a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63e9e62a_03361003",
         "filename": "build/common.gypi",
         "patchSetId": 1
@@ -31,6 +48,23 @@
       "side": 1,
       "message": "This is the same as es3proto, I believe the NO_WARNINGS one is the most recent (it\u0027s what the compiler recommends when it gives the warning).",
       "parentUuid": "63e9e62a_03361003",
+      "revId": "0ac3cdcb1b2dcc5b1a9b960cd8cbb26ffca934a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6302c6bc_7b2a1b92",
+        "filename": "src/build_angle.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-09T20:13:05Z",
+      "side": 1,
+      "message": "I\u0027ve noticed that we\u0027re pretty consistently using 4 space tabs but all our gyp comments use a tab width of 2... what do you think?",
       "revId": "0ac3cdcb1b2dcc5b1a9b960cd8cbb26ffca934a6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
