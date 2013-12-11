@@ -34,6 +34,24 @@
       "revId": "78f514eff926dd312a53ce7a7d50f29c7e66fde1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "082687b5_2df1cdbf",
+        "filename": "src/libGLESv2/renderer/SwapChain9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-11T22:46:46Z",
+      "side": 1,
+      "message": "D3DERR_DEVICEREMOVED is something like 0x88760870, isn\u0027t it? 0x8XXXXXXX is a failure-- the high bit is set, which makes it negative, no?",
+      "parentUuid": "231c4e1e_997e1f92",
+      "revId": "78f514eff926dd312a53ce7a7d50f29c7e66fde1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
