@@ -1413,7 +1413,7 @@ GLenum Renderer9::applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::
     {
         return err;
     }
-    
+
     return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, programBinary, instances, &mRepeatDraw);
 }
 
@@ -1442,7 +1442,7 @@ GLenum Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArr
 void Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
 {
     startScene();
-        
+
     if (mode == GL_LINE_LOOP)
     {
         drawLineLoop(count, GL_NONE, NULL, 0, NULL);
@@ -2521,6 +2521,20 @@ bool Renderer9::getPostSubBufferSupport() const
     return true;
 }
 
+int Renderer9::getMaxRecommendedElementsIndices() const
+{
+    // ES3 only
+    UNREACHABLE();
+    return 0;
+}
+
+int Renderer9::getMaxRecommendedElementsVertices() const
+{
+    // ES3 only
+    UNREACHABLE();
+    return 0;
+}
+
 int Renderer9::getMajorShaderModel() const
 {
     return D3DSHADER_VERSION_MAJOR(mDeviceCaps.PixelShaderVersion);
@@ -2597,7 +2611,7 @@ GLsizei Renderer9::getNumSampleCounts(GLenum internalFormat) const
 {
     D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat, this);
     MultisampleSupportMap::const_iterator iter = mMultiSampleSupport.find(format);
-    
+
     unsigned int numCounts = 0;
     if (iter != mMultiSampleSupport.end())
     {
@@ -2726,7 +2740,7 @@ bool Renderer9::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStora
         {
             IDirect3DSurface9 *srcSurf = source9->getSurfaceLevel(i, false);
             IDirect3DSurface9 *dstSurf = dest9->getSurfaceLevel(i, false);
-            
+
             result = copyToRenderTarget(dstSurf, srcSurf, source9->isManaged());
 
             SafeRelease(srcSurf);
@@ -3029,7 +3043,7 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
     return true;
 }
 
-void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, 
+void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                            GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels)
 {
     RenderTarget9 *renderTarget = NULL;
@@ -3040,7 +3054,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     {
         renderTarget = RenderTarget9::makeRenderTarget9(colorbuffer->getRenderTarget());
     }
-    
+
     if (renderTarget)
     {
         surface = renderTarget->getSurface();
