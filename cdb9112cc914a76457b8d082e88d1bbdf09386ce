@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8762fc5_36da5659",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2171,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2013-12-12T18:22:16Z",
+      "side": 1,
+      "message": "http://msdn.microsoft.com/en-us/library/windows/desktop/ff819065(v\u003dvs.85).aspx says these have value 232 by default. I assume that\u0027s a typo in their documentation?\n\nglGetInteger64v could report the full value, but I assume that\u0027s not required given that these are just \u0027recommended\u0027 values for optimal performance?",
+      "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28c50b24_b1297a9f",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2527,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2013-12-12T18:22:16Z",
+      "side": 1,
+      "message": "UNIMPLEMENTED() implies it should still be implemented. I think ERR() is more appropriate.",
+      "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
