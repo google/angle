@@ -52,6 +52,24 @@
       "revId": "78f514eff926dd312a53ce7a7d50f29c7e66fde1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28c50b24_2ebc479f",
+        "filename": "src/libGLESv2/renderer/SwapChain9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1106364
+      },
+      "writtenOn": "2013-12-12T15:08:56Z",
+      "side": 1,
+      "message": "Ah yes, I remember now. This was a relic of S_PRESENT_MODE_CHANGED, which for a time we considered a device lost error. Since it\u0027s unlikely we\u0027ll ever consider mode changed a device lost error I went ahead and removed the double check from Renderer9.",
+      "parentUuid": "082687b5_2df1cdbf",
+      "revId": "78f514eff926dd312a53ce7a7d50f29c7e66fde1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
