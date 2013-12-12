@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "68db8306_7341da25",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2171,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-12T18:57:50Z",
+      "side": 1,
+      "message": "Nicolas, we could report anything we like, if it\u0027s easier for us. This is a recommendation so there are no real tests for max elements indices/vertices. Shannon, I can\u0027t determine from anywhere in the spec what the expectation is for returning an integer value in GetIntegerv that is greater than max int. Maybe you could clarify with access to more Khronos resources?",
+      "parentUuid": "c8762fc5_36da5659",
+      "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28c50b24_b1297a9f",
         "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-12-12T18:22:16Z",
       "side": 1,
       "message": "UNIMPLEMENTED() implies it should still be implemented. I think ERR() is more appropriate.",
+      "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8762fc5_d628c26e",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2527,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-12T18:57:50Z",
+      "side": 1,
+      "message": "How about UNREACHABLE -- it\u0027s what we use in other places in Renderer9.",
+      "parentUuid": "28c50b24_b1297a9f",
       "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
