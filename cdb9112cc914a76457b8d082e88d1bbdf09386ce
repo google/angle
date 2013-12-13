@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "a8c01b69_bafd91de",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2171,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2013-12-13T22:40:38Z",
+      "side": 1,
+      "message": "That was my assumption. This code is fine then.",
+      "parentUuid": "68db8306_7341da25",
+      "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28c50b24_b1297a9f",
         "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
         "patchSetId": 1
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "How about UNREACHABLE -- it\u0027s what we use in other places in Renderer9.",
       "parentUuid": "28c50b24_b1297a9f",
+      "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08a847a1_5d155b53",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2527,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2013-12-13T22:40:38Z",
+      "side": 1,
+      "message": "UNREACHABLE is for code that should not be reachable, under the assumption of correct code. If it\u0027s hit, it\u0027s because we, the developers, did something wrong (like assume the range of a variable has been checked to be within a certain range, earlier, but still encountering unexpected values).\n\nIn this case the line can be hit with specific user input, which neither means it\u0027s something we still have to implement, nor that\u0027s it\u0027s code that should never be reached. We\u0027ve previously indicated user input errors (which aren\u0027t reported as GL errors according to the spec) with ERR, so that gets my preference.",
+      "parentUuid": "c8762fc5_d628c26e",
       "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
