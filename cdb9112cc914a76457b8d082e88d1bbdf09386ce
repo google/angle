@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "28d42b2d_bc3589bd",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2171,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-16T23:28:02Z",
+      "side": 1,
+      "message": "I think this is covered by \"If a value is so large in magnitude that it cannot be represented with the requested type, then the nearest value representable using the requested type is returned\" (3.0.2 spec, p222, sec 6.1.2 \"Data Conversions\"). If we want to return a value higher than max int when queried, we can via GetInteger64v as long as we cap it when returning via GetIntegerv. Do we actually have any idea how many vertices might make DX11 cranky? If we don\u0027t, this is fine-- you could update the comment so it\u0027s clear we\u0027re choosing max int for the convenience of not having to have separate handling for GetIntegerv and GetInteger64v, but it\u0027s probably not strictly necessary.",
+      "parentUuid": "68db8306_7341da25",
+      "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28c50b24_b1297a9f",
         "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
         "patchSetId": 1
@@ -138,6 +156,24 @@
       "side": 1,
       "message": "Ok, if this shouldn\u0027t be reachable because we check the enum earlier on, then UNREACHABLE is the right one to use.",
       "parentUuid": "68baa3ef_9868957f",
+      "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8cdb3a7_1717b69c",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2527,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2013-12-16T23:28:02Z",
+      "side": 1,
+      "message": "It looks like there might be a hole in our context version checking for the query functions-- if you call the appropriate function for the native type of the item being queried (i.e., call glGetIntegerv for something that\u0027s stored as an integer), Context::getQueryParameterInfo is never called, and I think that\u0027s the only place we\u0027re enforcing context versions for queries. So it might actually be possible to get to this UNREACHABLE. (But it should still be UNREACHABLE-- we just need to fix the validation.)",
+      "parentUuid": "68baa3ef_585b1de3",
       "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
