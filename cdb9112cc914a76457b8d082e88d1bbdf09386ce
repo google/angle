@@ -123,6 +123,24 @@
       "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68baa3ef_585b1de3",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2527,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2013-12-16T15:12:56Z",
+      "side": 1,
+      "message": "Ok, if this shouldn\u0027t be reachable because we check the enum earlier on, then UNREACHABLE is the right one to use.",
+      "parentUuid": "68baa3ef_9868957f",
+      "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
