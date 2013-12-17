@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "08a847a1_83d26295",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2171,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-17T20:25:45Z",
+      "side": 1,
+      "message": "Yes, that D3D11/10 constant above represents 2^32, while my patch above conservatively returns 2^31-1. As the GL enum query is a suggestion value rather than limit I feel this is okay, but I could see both viewpoints. I\u0027ll add a comment.",
+      "parentUuid": "28d42b2d_bc3589bd",
+      "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28c50b24_b1297a9f",
         "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
         "patchSetId": 1
@@ -174,6 +192,24 @@
       "side": 1,
       "message": "It looks like there might be a hole in our context version checking for the query functions-- if you call the appropriate function for the native type of the item being queried (i.e., call glGetIntegerv for something that\u0027s stored as an integer), Context::getQueryParameterInfo is never called, and I think that\u0027s the only place we\u0027re enforcing context versions for queries. So it might actually be possible to get to this UNREACHABLE. (But it should still be UNREACHABLE-- we just need to fix the validation.)",
       "parentUuid": "68baa3ef_585b1de3",
+      "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8f8efd4_a3c0baca",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2527,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2013-12-17T20:25:45Z",
+      "side": 1,
+      "message": "Wow.. good catch. I\u0027ll make a note to fix this.",
+      "parentUuid": "e8cdb3a7_1717b69c",
       "revId": "cdb9112cc914a76457b8d082e88d1bbdf09386ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
