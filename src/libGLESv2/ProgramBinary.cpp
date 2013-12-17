@@ -2592,7 +2592,9 @@ struct AttributeSorter
 
     bool operator()(int a, int b)
     {
-        return originalIndices[a] == -1 ? false : originalIndices[a] < originalIndices[b];
+        if (originalIndices[a] == -1) return false;
+        if (originalIndices[b] == -1) return true;
+        return (originalIndices[a] < originalIndices[b]);
     }
 
     const int (&originalIndices)[MAX_VERTEX_ATTRIBS];
