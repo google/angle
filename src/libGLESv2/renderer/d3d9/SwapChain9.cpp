@@ -311,17 +311,19 @@ EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 
     mRenderer->markAllStateDirty();
 
-    if (d3d9::isDeviceLostError(result))
-    {
-        return EGL_CONTEXT_LOST;
-    }
-
     if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DRIVERINTERNALERROR)
     {
         return EGL_BAD_ALLOC;
     }
 
-    ASSERT(SUCCEEDED(result));
+    // http://crbug.com/313210
+    // If our swap failed, trigger a device lost event. Resetting will work around an AMD-specific
+    // device removed bug with lost contexts when reinstalling drivers.
+    if (FAILED(result))
+    {
+        mRenderer->notifyDeviceLost();
+        return EGL_CONTEXT_LOST;
+    }
 
     return EGL_SUCCESS;
 }
