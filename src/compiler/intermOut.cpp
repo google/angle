@@ -44,9 +44,9 @@ TString TType::getCompleteString() const
     if (array)
         stream << "array[" << getArraySize() << "] of ";
     if (matrix)
-        stream << size << "X" << size << " matrix of ";
+        stream << static_cast<int>(size) << "X" << static_cast<int>(size) << " matrix of ";
     else if (size > 1)
-        stream << size << "-component vector of ";
+        stream << static_cast<int>(size) << "-component vector of ";
 
     stream << getBasicString();
     return stream.str();
