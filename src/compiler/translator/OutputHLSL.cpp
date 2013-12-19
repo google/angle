@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -55,6 +55,11 @@ TString OutputHLSL::TextureFunction::name() const
     if (proj)
     {
         name += "Proj";
+    }
+
+    if (offset)
+    {
+        name += "Offset";
     }
 
     switch(method)
@@ -1009,11 +1014,34 @@ void OutputHLSL::header()
         switch(textureFunction->method)
         {
           case TextureFunction::IMPLICIT:                        break;
-          case TextureFunction::BIAS:     out << ", float bias"; break;
+          case TextureFunction::BIAS:                            break;
           case TextureFunction::LOD:      out << ", float lod";  break;
           case TextureFunction::LOD0:                            break;
           case TextureFunction::SIZE:                            break;
           default: UNREACHABLE();
+        }
+
+        if (textureFunction->offset)
+        {
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:            out << ", int2 offset"; break;
+              case EbtSampler3D:            out << ", int3 offset"; break;
+              case EbtSampler2DArray:       out << ", int2 offset"; break;
+              case EbtISampler2D:           out << ", int2 offset"; break;
+              case EbtISampler3D:           out << ", int3 offset"; break;
+              case EbtISampler2DArray:      out << ", int2 offset"; break;
+              case EbtUSampler2D:           out << ", int2 offset"; break;
+              case EbtUSampler3D:           out << ", int3 offset"; break;
+              case EbtUSampler2DArray:      out << ", int2 offset"; break;
+              case EbtSampler2DShadow:      out << ", int2 offset"; break;
+              default: UNREACHABLE();
+            }
+        }
+
+        if (textureFunction->method == TextureFunction::BIAS)
+        {
+            out << ", float bias";
         }
 
         out << ")\n"
@@ -1310,15 +1338,15 @@ void OutputHLSL::header()
 
                 if (IsIntegerSampler(textureFunction->sampler))
                 {
-                    out << ", mip));";
+                    out << ", mip)";
                 }
                 else if (IsShadowSampler(textureFunction->sampler))
                 {
                     // Compare value
                     switch(textureFunction->coords)
                     {
-                      case 3: out << "), t.z);"; break;
-                      case 4: out << "), t.w);"; break;
+                      case 3: out << "), t.z"; break;
+                      case 4: out << "), t.w"; break;
                       default: UNREACHABLE();
                     }
                 }
@@ -1326,13 +1354,20 @@ void OutputHLSL::header()
                 {
                     switch(textureFunction->method)
                     {
-                      case TextureFunction::IMPLICIT: out << "));";       break;
-                      case TextureFunction::BIAS:     out << "), bias);"; break;
-                      case TextureFunction::LOD:      out << "), lod);";  break;
-                      case TextureFunction::LOD0:     out << "), 0);";    break;
+                      case TextureFunction::IMPLICIT: out << ")";       break;
+                      case TextureFunction::BIAS:     out << "), bias"; break;
+                      case TextureFunction::LOD:      out << "), lod";  break;
+                      case TextureFunction::LOD0:     out << "), 0";    break;
                       default: UNREACHABLE();
                     }
                 }
+
+                if (textureFunction->offset)
+                {
+                    out << ", offset";
+                }
+
+                out << ");";
             }
             else UNREACHABLE();
         }
@@ -2277,6 +2312,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 textureFunction.coords = arguments[1]->getAsTyped()->getNominalSize();
                 textureFunction.method = TextureFunction::IMPLICIT;
                 textureFunction.proj = false;
+                textureFunction.offset = false;
 
                 if (name == "texture2D" || name == "textureCube" || name == "texture")
                 {
@@ -2300,18 +2336,32 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 {
                     textureFunction.method = TextureFunction::SIZE;
                 }
+                else if (name == "textureOffset")
+                {
+                    textureFunction.method = TextureFunction::IMPLICIT;
+                    textureFunction.offset = true;
+                }
                 else UNREACHABLE();
 
-                if (textureFunction.method != TextureFunction::LOD &&
-                    textureFunction.method != TextureFunction::SIZE)
+                if (textureFunction.method == TextureFunction::IMPLICIT)   // Could require lod 0 or have a bias argument
                 {
                     if (lod0 || mContext.shaderType == SH_VERTEX_SHADER)
                     {
                         textureFunction.method = TextureFunction::LOD0;
                     }
-                    else if (arguments.size() == 3)
+                    else
                     {
-                        textureFunction.method = TextureFunction::BIAS;
+                        unsigned int mandatoryArgumentCount = 2;   // All functions have sampler and coordinate arguments
+
+                        if (textureFunction.offset)
+                        {
+                            mandatoryArgumentCount++;
+                        }
+
+                        if (arguments.size() > mandatoryArgumentCount)   // Bias argument is optional
+                        {
+                            textureFunction.method = TextureFunction::BIAS;
+                        }
                     }
                 }
 
