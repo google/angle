@@ -2231,6 +2231,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_MINOR_VERSION:
       case GL_MAX_ELEMENTS_INDICES:
       case GL_MAX_ELEMENTS_VERTICES:
+      case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS:
         {
             *type = GL_INT;
             *numParams = 1;
@@ -2244,6 +2245,13 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_MAX_SERVER_WAIT_TIMEOUT:
         {
             *type = GL_INT_64_ANGLEX;
+            *numParams = 1;
+        }
+        return true;
+
+      case GL_TRANSFORM_FEEDBACK_ACTIVE:
+        {
+            *type = GL_BOOL;
             *numParams = 1;
         }
         return true;
