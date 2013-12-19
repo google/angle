@@ -2565,67 +2565,69 @@ void __stdcall glGetBooleanv(GLenum pname, GLboolean* params)
 
         if (context)
         {
-            if (!(context->getBooleanv(pname, params)))
+            GLenum nativeType;
+            unsigned int numParams = 0;
+            if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
+                return gl::error(GL_INVALID_ENUM);
+
+            // pname is valid, but there are no parameters to return
+            if (numParams == 0)
+                return;
+
+            if (nativeType == GL_BOOL)
             {
-                GLenum nativeType;
-                unsigned int numParams = 0;
-                if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
-                    return gl::error(GL_INVALID_ENUM);
+                context->getBooleanv(pname, params);
+            }
+            else if (nativeType == GL_FLOAT)
+            {
+                GLfloat *floatParams = NULL;
+                floatParams = new GLfloat[numParams];
 
-                if (numParams == 0)
-                    return; // it is known that the pname is valid, but there are no parameters to return
+                context->getFloatv(pname, floatParams);
 
-                if (nativeType == GL_FLOAT)
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLfloat *floatParams = NULL;
-                    floatParams = new GLfloat[numParams];
-
-                    context->getFloatv(pname, floatParams);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
-                    {
-                        if (floatParams[i] == 0.0f)
-                            params[i] = GL_FALSE;
-                        else
-                            params[i] = GL_TRUE;
-                    }
-
-                    delete [] floatParams;
+                    if (floatParams[i] == 0.0f)
+                        params[i] = GL_FALSE;
+                    else
+                        params[i] = GL_TRUE;
                 }
-                else if (nativeType == GL_INT)
+
+                delete [] floatParams;
+            }
+            else if (nativeType == GL_INT)
+            {
+                GLint *intParams = NULL;
+                intParams = new GLint[numParams];
+
+                context->getIntegerv(pname, intParams);
+
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLint *intParams = NULL;
-                    intParams = new GLint[numParams];
-
-                    context->getIntegerv(pname, intParams);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
-                    {
-                        if (intParams[i] == 0)
-                            params[i] = GL_FALSE;
-                        else
-                            params[i] = GL_TRUE;
-                    }
-
-                    delete [] intParams;
+                    if (intParams[i] == 0)
+                        params[i] = GL_FALSE;
+                    else
+                        params[i] = GL_TRUE;
                 }
-                else if (nativeType == GL_INT_64_ANGLEX)
+
+                delete [] intParams;
+            }
+            else if (nativeType == GL_INT_64_ANGLEX)
+            {
+                GLint64 *int64Params = NULL;
+                int64Params = new GLint64[numParams];
+
+                context->getInteger64v(pname, int64Params);
+
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLint64 *int64Params = NULL;
-                    int64Params = new GLint64[numParams];
-
-                    context->getInteger64v(pname, int64Params);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
-                    {
-                        if (int64Params[i] == 0)
-                            params[i] = GL_FALSE;
-                        else
-                            params[i] = GL_TRUE;
-                    }
-
-                    delete [] int64Params;
+                    if (int64Params[i] == 0)
+                        params[i] = GL_FALSE;
+                    else
+                        params[i] = GL_TRUE;
                 }
+
+                delete [] int64Params;
             }
         }
     }
@@ -2747,61 +2749,63 @@ void __stdcall glGetFloatv(GLenum pname, GLfloat* params)
 
         if (context)
         {
-            if (!(context->getFloatv(pname, params)))
+            GLenum nativeType;
+            unsigned int numParams = 0;
+            if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
+                return gl::error(GL_INVALID_ENUM);
+
+            // pname is valid, but that there are no parameters to return.
+            if (numParams == 0)
+                return;
+
+            if (nativeType == GL_FLOAT)
             {
-                GLenum nativeType;
-                unsigned int numParams = 0;
-                if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
-                    return gl::error(GL_INVALID_ENUM);
+                context->getFloatv(pname, params);
+            }
+            else if (nativeType == GL_BOOL)
+            {
+                GLboolean *boolParams = NULL;
+                boolParams = new GLboolean[numParams];
 
-                if (numParams == 0)
-                    return; // it is known that the pname is valid, but that there are no parameters to return.
+                context->getBooleanv(pname, boolParams);
 
-                if (nativeType == GL_BOOL)
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLboolean *boolParams = NULL;
-                    boolParams = new GLboolean[numParams];
-
-                    context->getBooleanv(pname, boolParams);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
-                    {
-                        if (boolParams[i] == GL_FALSE)
-                            params[i] = 0.0f;
-                        else
-                            params[i] = 1.0f;
-                    }
-
-                    delete [] boolParams;
+                    if (boolParams[i] == GL_FALSE)
+                        params[i] = 0.0f;
+                    else
+                        params[i] = 1.0f;
                 }
-                else if (nativeType == GL_INT)
+
+                delete [] boolParams;
+            }
+            else if (nativeType == GL_INT)
+            {
+                GLint *intParams = NULL;
+                intParams = new GLint[numParams];
+
+                context->getIntegerv(pname, intParams);
+
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLint *intParams = NULL;
-                    intParams = new GLint[numParams];
-
-                    context->getIntegerv(pname, intParams);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
-                    {
-                        params[i] = static_cast<GLfloat>(intParams[i]);
-                    }
-
-                    delete [] intParams;
+                    params[i] = static_cast<GLfloat>(intParams[i]);
                 }
-                else if (nativeType == GL_INT_64_ANGLEX)
+
+                delete [] intParams;
+            }
+            else if (nativeType == GL_INT_64_ANGLEX)
+            {
+                GLint64 *int64Params = NULL;
+                int64Params = new GLint64[numParams];
+
+                context->getInteger64v(pname, int64Params);
+
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLint64 *int64Params = NULL;
-                    int64Params = new GLint64[numParams];
-
-                    context->getInteger64v(pname, int64Params);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
-                    {
-                        params[i] = static_cast<GLfloat>(int64Params[i]);
-                    }
-
-                    delete [] int64Params;
+                    params[i] = static_cast<GLfloat>(int64Params[i]);
                 }
+
+                delete [] int64Params;
             }
         }
     }
@@ -3146,72 +3150,74 @@ void __stdcall glGetIntegerv(GLenum pname, GLint* params)
 
         if (context)
         {
-            if (!(context->getIntegerv(pname, params)))
+            GLenum nativeType;
+            unsigned int numParams = 0;
+            if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
+                return gl::error(GL_INVALID_ENUM);
+
+            // pname is valid, but there are no parameters to return
+            if (numParams == 0)
+                return;
+
+            if (nativeType == GL_INT)
             {
-                GLenum nativeType;
-                unsigned int numParams = 0;
-                if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
-                    return gl::error(GL_INVALID_ENUM);
+                context->getIntegerv(pname, params);
+            }
+            else if (nativeType == GL_BOOL)
+            {
+                GLboolean *boolParams = NULL;
+                boolParams = new GLboolean[numParams];
 
-                if (numParams == 0)
-                    return; // it is known that pname is valid, but there are no parameters to return
+                context->getBooleanv(pname, boolParams);
 
-                if (nativeType == GL_BOOL)
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLboolean *boolParams = NULL;
-                    boolParams = new GLboolean[numParams];
-
-                    context->getBooleanv(pname, boolParams);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
-                    {
-                        if (boolParams[i] == GL_FALSE)
-                            params[i] = 0;
-                        else
-                            params[i] = 1;
-                    }
-
-                    delete [] boolParams;
+                    if (boolParams[i] == GL_FALSE)
+                        params[i] = 0;
+                    else
+                        params[i] = 1;
                 }
-                else if (nativeType == GL_FLOAT)
+
+                delete [] boolParams;
+            }
+            else if (nativeType == GL_FLOAT)
+            {
+                GLfloat *floatParams = NULL;
+                floatParams = new GLfloat[numParams];
+
+                context->getFloatv(pname, floatParams);
+
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLfloat *floatParams = NULL;
-                    floatParams = new GLfloat[numParams];
-
-                    context->getFloatv(pname, floatParams);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
+                    // RGBA color values and DepthRangeF values are converted to integer using Equation 2.4 from Table 4.5
+                    if (pname == GL_DEPTH_RANGE || pname == GL_COLOR_CLEAR_VALUE || pname == GL_DEPTH_CLEAR_VALUE || pname == GL_BLEND_COLOR)
                     {
-                        // RGBA color values and DepthRangeF values are converted to integer using Equation 2.4 from Table 4.5
-                        if (pname == GL_DEPTH_RANGE || pname == GL_COLOR_CLEAR_VALUE || pname == GL_DEPTH_CLEAR_VALUE || pname == GL_BLEND_COLOR)
-                        {
-                            params[i] = static_cast<GLint>((static_cast<GLfloat>(0xFFFFFFFF) * floatParams[i] - 1.0f) / 2.0f);
-                        }
-                        else
-                        {
-                            params[i] = gl::iround<GLint>(floatParams[i]);
-                        }
+                        params[i] = static_cast<GLint>((static_cast<GLfloat>(0xFFFFFFFF) * floatParams[i] - 1.0f) / 2.0f);
                     }
-
-                    delete [] floatParams;
+                    else
+                    {
+                        params[i] = gl::iround<GLint>(floatParams[i]);
+                    }
                 }
-                else if (nativeType == GL_INT_64_ANGLEX)
+
+                delete [] floatParams;
+            }
+            else if (nativeType == GL_INT_64_ANGLEX)
+            {
+                GLint64 minIntValue = static_cast<GLint64>(std::numeric_limits<int>::min());
+                GLint64 maxIntValue = static_cast<GLint64>(std::numeric_limits<int>::max());
+                GLint64 *int64Params = NULL;
+                int64Params = new GLint64[numParams];
+
+                context->getInteger64v(pname, int64Params);
+
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLint64 minIntValue = static_cast<GLint64>(std::numeric_limits<int>::min());
-                    GLint64 maxIntValue = static_cast<GLint64>(std::numeric_limits<int>::max());
-                    GLint64 *int64Params = NULL;
-                    int64Params = new GLint64[numParams];
-
-                    context->getInteger64v(pname, int64Params);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
-                    {
-                        GLint64 clampedValue = std::max(std::min(int64Params[i], maxIntValue), minIntValue);
-                        params[i] = static_cast<GLint>(clampedValue);
-                    }
-
-                    delete [] int64Params;
+                    GLint64 clampedValue = std::max(std::min(int64Params[i], maxIntValue), minIntValue);
+                    params[i] = static_cast<GLint>(clampedValue);
                 }
+
+                delete [] int64Params;
             }
         }
     }
@@ -9240,69 +9246,71 @@ void __stdcall glGetInteger64v(GLenum pname, GLint64* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!(context->getInteger64v(pname, params)))
+            GLenum nativeType;
+            unsigned int numParams = 0;
+            if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
+                return gl::error(GL_INVALID_ENUM);
+
+            // pname is valid, but that there are no parameters to return.
+            if (numParams == 0)
+                return;
+
+            if (nativeType == GL_INT_64_ANGLEX)
             {
-                GLenum nativeType;
-                unsigned int numParams = 0;
-                if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
-                    return gl::error(GL_INVALID_ENUM);
+                context->getInteger64v(pname, params);
+            }
+            else if (nativeType == GL_BOOL)
+            {
+                GLboolean *boolParams = NULL;
+                boolParams = new GLboolean[numParams];
 
-                if (numParams == 0)
-                    return; // it is known that the pname is valid, but that there are no parameters to return.
+                context->getBooleanv(pname, boolParams);
 
-                if (nativeType == GL_BOOL)
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLboolean *boolParams = NULL;
-                    boolParams = new GLboolean[numParams];
-
-                    context->getBooleanv(pname, boolParams);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
-                    {
-                        if (boolParams[i] == GL_FALSE)
-                            params[i] = 0;
-                        else
-                            params[i] = 1;
-                    }
-
-                    delete [] boolParams;
+                    if (boolParams[i] == GL_FALSE)
+                        params[i] = 0;
+                    else
+                        params[i] = 1;
                 }
-                else if (nativeType == GL_INT)
+
+                delete [] boolParams;
+            }
+            else if (nativeType == GL_INT)
+            {
+                GLint *intParams = NULL;
+                intParams = new GLint[numParams];
+
+                context->getIntegerv(pname, intParams);
+
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLint *intParams = NULL;
-                    intParams = new GLint[numParams];
-
-                    context->getIntegerv(pname, intParams);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
-                    {
-                        params[i] = static_cast<GLint64>(intParams[i]);
-                    }
-
-                    delete [] intParams;
+                    params[i] = static_cast<GLint64>(intParams[i]);
                 }
-                else if (nativeType == GL_FLOAT)
+
+                delete [] intParams;
+            }
+            else if (nativeType == GL_FLOAT)
+            {
+                GLfloat *floatParams = NULL;
+                floatParams = new GLfloat[numParams];
+
+                context->getFloatv(pname, floatParams);
+
+                for (unsigned int i = 0; i < numParams; ++i)
                 {
-                    GLfloat *floatParams = NULL;
-                    floatParams = new GLfloat[numParams];
-
-                    context->getFloatv(pname, floatParams);
-
-                    for (unsigned int i = 0; i < numParams; ++i)
+                    // RGBA color values and DepthRangeF values are converted to integer using Equation 2.4 from Table 4.5
+                    if (pname == GL_DEPTH_RANGE || pname == GL_COLOR_CLEAR_VALUE || pname == GL_DEPTH_CLEAR_VALUE || pname == GL_BLEND_COLOR)
                     {
-                        // RGBA color values and DepthRangeF values are converted to integer using Equation 2.4 from Table 4.5
-                        if (pname == GL_DEPTH_RANGE || pname == GL_COLOR_CLEAR_VALUE || pname == GL_DEPTH_CLEAR_VALUE || pname == GL_BLEND_COLOR)
-                        {
-                            params[i] = static_cast<GLint64>((static_cast<GLfloat>(0xFFFFFFFF) * floatParams[i] - 1.0f) / 2.0f);
-                        }
-                        else
-                        {
-                            params[i] = gl::iround<GLint64>(floatParams[i]);
-                        }
+                        params[i] = static_cast<GLint64>((static_cast<GLfloat>(0xFFFFFFFF) * floatParams[i] - 1.0f) / 2.0f);
                     }
-
-                    delete [] floatParams;
+                    else
+                    {
+                        params[i] = gl::iround<GLint64>(floatParams[i]);
+                    }
                 }
+
+                delete [] floatParams;
             }
         }
     }
