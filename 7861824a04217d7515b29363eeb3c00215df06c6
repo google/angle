@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48631fc4_a6b038e7",
+        "filename": "src/compiler/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2013-12-26T15:58:24Z",
+      "side": 1,
+      "message": "Do we have access to the NULL define here?",
+      "revId": "7861824a04217d7515b29363eeb3c00215df06c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c86e2fb0_e263f8a0",
+        "filename": "src/compiler/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2013-12-26T15:58:24Z",
+      "side": 1,
+      "message": "Some tabs got into the mix here.",
+      "revId": "7861824a04217d7515b29363eeb3c00215df06c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
