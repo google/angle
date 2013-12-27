@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 2.7.  */
+/* A Bison parser, made by GNU Bison 2.7.12-4996.  */
 
 /* Bison implementation for Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989-1990, 2000-2012 Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.7"
+#define YYBISON_VERSION "2.7.12-4996"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -401,12 +401,21 @@ typedef short int yytype_int16;
 # endif
 #endif
 
+#ifndef __attribute__
+/* This feature is available in gcc versions 2.5 and later.  */
+# if (! defined __GNUC__ || __GNUC__ < 2 \
+      || (__GNUC__ == 2 && __GNUC_MINOR__ < 5))
+#  define __attribute__(Spec) /* empty */
+# endif
+#endif
+
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
 # define YYUSE(E) ((void) (E))
 #else
 # define YYUSE(E) /* empty */
 #endif
+
 
 /* Identity function, used to suppress warnings about constant conditions.  */
 #ifndef lint
@@ -714,27 +723,27 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   180,   180,   181,   184,   227,   230,   243,   248,   253,
-     259,   262,   265,   268,   363,   373,   386,   394,   494,   497,
-     505,   508,   514,   518,   525,   531,   540,   548,   603,   613,
-     616,   626,   636,   657,   658,   659,   664,   665,   673,   684,
-     685,   693,   704,   708,   709,   719,   729,   739,   752,   753,
-     763,   776,   780,   784,   788,   789,   802,   803,   816,   817,
-     830,   831,   848,   849,   862,   863,   864,   865,   866,   870,
-     873,   884,   892,   919,   924,   938,   993,   996,  1003,  1011,
-    1032,  1053,  1063,  1091,  1096,  1106,  1111,  1121,  1124,  1127,
-    1130,  1136,  1143,  1146,  1168,  1186,  1210,  1233,  1237,  1255,
-    1263,  1295,  1315,  1336,  1345,  1368,  1371,  1377,  1385,  1393,
-    1401,  1411,  1418,  1421,  1424,  1430,  1433,  1448,  1452,  1456,
-    1460,  1464,  1469,  1474,  1479,  1484,  1489,  1494,  1499,  1504,
-    1509,  1514,  1519,  1524,  1528,  1532,  1540,  1548,  1552,  1565,
-    1565,  1579,  1579,  1588,  1591,  1607,  1640,  1644,  1650,  1657,
-    1672,  1676,  1680,  1681,  1687,  1688,  1689,  1690,  1691,  1695,
-    1696,  1696,  1696,  1706,  1707,  1711,  1711,  1712,  1712,  1717,
-    1720,  1730,  1733,  1739,  1740,  1744,  1752,  1756,  1766,  1771,
-    1788,  1788,  1793,  1793,  1800,  1800,  1808,  1811,  1817,  1820,
-    1826,  1830,  1837,  1844,  1851,  1858,  1869,  1878,  1882,  1889,
-    1892,  1898,  1898
+       0,   180,   180,   181,   184,   227,   230,   235,   240,   245,
+     251,   254,   257,   260,   355,   365,   378,   386,   486,   489,
+     497,   500,   506,   510,   517,   523,   532,   540,   595,   605,
+     608,   618,   628,   649,   650,   651,   656,   657,   665,   676,
+     677,   685,   696,   700,   701,   711,   721,   731,   744,   745,
+     755,   768,   772,   776,   780,   781,   794,   795,   808,   809,
+     822,   823,   840,   841,   854,   855,   856,   857,   858,   862,
+     865,   876,   884,   911,   916,   930,   985,   988,   995,  1003,
+    1024,  1045,  1055,  1083,  1088,  1098,  1103,  1113,  1116,  1119,
+    1122,  1128,  1135,  1138,  1160,  1178,  1202,  1225,  1229,  1247,
+    1255,  1287,  1307,  1328,  1337,  1360,  1363,  1369,  1377,  1385,
+    1393,  1403,  1410,  1413,  1416,  1422,  1425,  1440,  1444,  1448,
+    1452,  1456,  1461,  1466,  1471,  1476,  1481,  1486,  1491,  1496,
+    1501,  1506,  1511,  1516,  1520,  1524,  1532,  1540,  1544,  1557,
+    1557,  1571,  1571,  1580,  1583,  1599,  1632,  1636,  1642,  1649,
+    1664,  1668,  1672,  1673,  1679,  1680,  1681,  1682,  1683,  1687,
+    1688,  1688,  1688,  1698,  1699,  1703,  1703,  1704,  1704,  1709,
+    1712,  1722,  1725,  1731,  1732,  1736,  1744,  1748,  1758,  1763,
+    1780,  1780,  1785,  1785,  1792,  1792,  1800,  1803,  1809,  1812,
+    1818,  1822,  1829,  1836,  1843,  1850,  1861,  1870,  1874,  1881,
+    1884,  1890,  1890
 };
 #endif
 
@@ -1512,11 +1521,7 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep, yylocationp, context)
 # else
   YYUSE (yyoutput);
 # endif
-  switch (yytype)
-    {
-      default:
-        break;
-    }
+  YYUSE (yytype);
 }
 
 
@@ -1916,12 +1921,7 @@ yydestruct (yymsg, yytype, yyvaluep, yylocationp, context)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
-  switch (yytype)
-    {
-
-      default:
-        break;
-    }
+  YYUSE (yytype);
 }
 
 
