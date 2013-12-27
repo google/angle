@@ -723,27 +723,27 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   180,   180,   181,   184,   227,   230,   235,   240,   245,
-     251,   254,   257,   260,   355,   365,   378,   386,   486,   489,
-     497,   500,   506,   510,   517,   523,   532,   540,   595,   605,
-     608,   618,   628,   649,   650,   651,   656,   657,   665,   676,
-     677,   685,   696,   700,   701,   711,   721,   731,   744,   745,
-     755,   768,   772,   776,   780,   781,   794,   795,   808,   809,
-     822,   823,   840,   841,   854,   855,   856,   857,   858,   862,
-     865,   876,   884,   911,   916,   930,   985,   988,   995,  1003,
-    1024,  1045,  1055,  1083,  1088,  1098,  1103,  1113,  1116,  1119,
-    1122,  1128,  1135,  1138,  1160,  1178,  1202,  1225,  1229,  1247,
-    1255,  1287,  1307,  1328,  1337,  1360,  1363,  1369,  1377,  1385,
-    1393,  1403,  1410,  1413,  1416,  1422,  1425,  1440,  1444,  1448,
-    1452,  1456,  1461,  1466,  1471,  1476,  1481,  1486,  1491,  1496,
-    1501,  1506,  1511,  1516,  1520,  1524,  1532,  1540,  1544,  1557,
-    1557,  1571,  1571,  1580,  1583,  1599,  1632,  1636,  1642,  1649,
-    1664,  1668,  1672,  1673,  1679,  1680,  1681,  1682,  1683,  1687,
-    1688,  1688,  1688,  1698,  1699,  1703,  1703,  1704,  1704,  1709,
-    1712,  1722,  1725,  1731,  1732,  1736,  1744,  1748,  1758,  1763,
-    1780,  1780,  1785,  1785,  1792,  1792,  1800,  1803,  1809,  1812,
-    1818,  1822,  1829,  1836,  1843,  1850,  1861,  1870,  1874,  1881,
-    1884,  1890,  1890
+       0,   180,   180,   181,   184,   239,   242,   247,   252,   257,
+     263,   266,   269,   272,   367,   377,   390,   398,   498,   501,
+     509,   512,   518,   522,   529,   535,   544,   552,   607,   617,
+     620,   630,   640,   661,   662,   663,   668,   669,   677,   688,
+     689,   697,   708,   712,   713,   723,   733,   743,   756,   757,
+     767,   780,   784,   788,   792,   793,   806,   807,   820,   821,
+     834,   835,   852,   853,   866,   867,   868,   869,   870,   874,
+     877,   888,   896,   923,   928,   942,   997,  1000,  1007,  1015,
+    1036,  1057,  1067,  1095,  1100,  1110,  1115,  1125,  1128,  1131,
+    1134,  1140,  1147,  1150,  1172,  1190,  1214,  1237,  1241,  1259,
+    1267,  1299,  1319,  1340,  1349,  1372,  1375,  1381,  1389,  1397,
+    1405,  1415,  1422,  1425,  1428,  1434,  1437,  1452,  1456,  1460,
+    1464,  1468,  1473,  1478,  1483,  1488,  1493,  1498,  1503,  1508,
+    1513,  1518,  1523,  1528,  1532,  1536,  1544,  1552,  1556,  1569,
+    1569,  1583,  1583,  1592,  1595,  1611,  1644,  1648,  1654,  1661,
+    1676,  1680,  1684,  1685,  1691,  1692,  1693,  1694,  1695,  1699,
+    1700,  1700,  1700,  1710,  1711,  1715,  1715,  1716,  1716,  1721,
+    1724,  1734,  1737,  1743,  1744,  1748,  1756,  1760,  1770,  1775,
+    1792,  1792,  1797,  1797,  1804,  1804,  1812,  1815,  1821,  1824,
+    1830,  1834,  1841,  1848,  1855,  1862,  1873,  1882,  1886,  1893,
+    1896,  1902,  1902
 };
 #endif
 
@@ -2248,43 +2248,55 @@ yyreduce:
 
     {
         // The symbol table search was done in the lexical phase
-        const TSymbol* symbol = (yyvsp[(1) - (1)].lex).symbol;
-        const TVariable* variable;
-        if (symbol == 0) {
+        const TSymbol *symbol = (yyvsp[(1) - (1)].lex).symbol;
+        const TVariable *variable = 0;
+
+        if (!symbol)
+        {
             context->error((yylsp[(1) - (1)]), "undeclared identifier", (yyvsp[(1) - (1)].lex).string->c_str());
             context->recover();
-            TType type(EbtFloat, EbpUndefined);
-            TVariable* fakeVariable = new TVariable((yyvsp[(1) - (1)].lex).string, type);
-            context->symbolTable.insert(*fakeVariable);
-            variable = fakeVariable;
-        } else {
-            // This identifier can only be a variable type symbol
-            if (! symbol->isVariable()) {
-                context->error((yylsp[(1) - (1)]), "variable expected", (yyvsp[(1) - (1)].lex).string->c_str());
-                context->recover();
-            }
-            
+        }
+        else if (!symbol->isVariable())
+        {
+            context->error((yylsp[(1) - (1)]), "variable expected", (yyvsp[(1) - (1)].lex).string->c_str());
+            context->recover();
+        }
+        else
+        {
             variable = static_cast<const TVariable*>(symbol);
 
             if (context->symbolTable.findBuiltIn(variable->getName()) &&
                 !variable->getExtension().empty() &&
-                context->extensionErrorCheck((yylsp[(1) - (1)]), variable->getExtension())) {
+                context->extensionErrorCheck((yylsp[(1) - (1)]), variable->getExtension()))
+            {
                 context->recover();
             }
         }
 
-        // don't delete $1.string, it's used by error recovery, and the pool
-        // pop will reclaim the memory
+        if (!variable)
+        {
+            TType type(EbtFloat, EbpUndefined);
+            TVariable *fakeVariable = new TVariable((yyvsp[(1) - (1)].lex).string, type);
+            context->symbolTable.insert(*fakeVariable);
+            variable = fakeVariable;
+        }
 
-        if (variable->getType().getQualifier() == EvqConst ) {
+        if (variable->getType().getQualifier() == EvqConst)
+        {
             ConstantUnion* constArray = variable->getConstPointer();
             TType t(variable->getType());
             (yyval.interm.intermTypedNode) = context->intermediate.addConstantUnion(constArray, t, (yylsp[(1) - (1)]));
-        } else
+        }
+        else
+        {
             (yyval.interm.intermTypedNode) = context->intermediate.addSymbol(variable->getUniqueId(),
                                                  variable->getName(),
                                                  variable->getType(),
                                                  (yylsp[(1) - (1)]));
+        }
+
+        // don't delete $1.string, it's used by error recovery, and the pool
+        // pop will reclaim the memory
     }
     break;
 
