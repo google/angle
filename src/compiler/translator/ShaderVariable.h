@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_UNIFORM_H_
-#define COMPILER_UNIFORM_H_
+#ifndef COMPILER_SHADERVARIABLE_H_
+#define COMPILER_SHADERVARIABLE_H_
 
 #include <string>
 #include <vector>
@@ -122,4 +122,4 @@ typedef std::vector<InterfaceBlock> ActiveInterfaceBlocks;
 
 }
 
-#endif   // COMPILER_UNIFORM_H_
+#endif   // COMPILER_SHADERVARIABLE_H_
