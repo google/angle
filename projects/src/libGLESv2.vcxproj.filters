@@ -46,6 +46,9 @@
     <ClInclude Include="..\..\src\libGLESv2\Buffer.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\Renderbuffer.h">
+      <Filter>libGLESv2</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\Shader.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
@@ -61,12 +64,18 @@
     <ClCompile Include="..\..\src\libGLESv2\precompiled.cpp">
       <Filter>libGLESv2</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\libGLESv2\queryconversions.h">
+      <Filter>libGLESv2</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\validationES3.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\Program.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\queryconversions.cpp">
+      <Filter>libGLESv2</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\Sampler.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
@@ -119,9 +128,6 @@
       <Filter>libGLESv2</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\validationES.cpp">
-      <Filter>libGLESv2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\libGLESv2\Sampler.cpp">
       <Filter>libGLESv2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\Renderbuffer.cpp">
@@ -178,9 +184,9 @@
     <ClInclude Include="..\..\src\libGLESv2\constants.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\Renderbuffer.h">
+    <ClCompile Include="..\..\src\libGLESv2\Sampler.cpp">
       <Filter>libGLESv2</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\VertexArray.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
@@ -208,15 +214,15 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\Renderer.h">
       <Filter>libGLESv2\renderer</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\loadimageSSE2.cpp">
+      <Filter>libGLESv2\renderer</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\IndexDataManager.cpp">
       <Filter>libGLESv2\renderer</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\SwapChain.h">
       <Filter>libGLESv2\renderer</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\loadimageSSE2.cpp">
-      <Filter>libGLESv2\renderer</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\TextureStorage.h">
       <Filter>libGLESv2\renderer</Filter>
     </ClInclude>
@@ -403,10 +409,10 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\BufferStorage11.cpp">
       <Filter>libGLESv2\renderer\d3d11</Filter>
     </ClCompile>
-    <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\generate_shaders.bat">
+    <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\BufferToTexture11.hlsl">
       <Filter>libGLESv2\renderer\d3d11\shaders</Filter>
     </None>
-    <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\BufferToTexture11.hlsl">
+    <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\generate_shaders.bat">
       <Filter>libGLESv2\renderer\d3d11\shaders</Filter>
     </None>
     <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\Swizzle11.hlsl">
