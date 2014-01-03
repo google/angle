@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -293,7 +293,7 @@ public:
         return insert(level, *constant);
     }
 
-    bool insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name, TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0)
+    bool insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name, TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0)
     {
         TFunction *function = new TFunction(NewPoolTString(name), *rvalue);
 
@@ -310,6 +310,12 @@ public:
         {
             TParameter param3 = {NULL, ptype3};
             function->addParameter(param3);
+        }
+
+        if(ptype4)
+        {
+            TParameter param4 = {NULL, ptype4};
+            function->addParameter(param4);
         }
 
         return insert(level, *function);

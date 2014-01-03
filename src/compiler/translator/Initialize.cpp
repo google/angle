@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -522,6 +522,27 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, float3, "fwidth", float3);
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "fwidth", float4);
     }
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler2D, float2, int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler2D, float2, int2, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler2D, float2, int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler2D, float2, int2, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler2D, float2, int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler2D, float2, int2, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler3D, float3, int3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler3D, float3, int3, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler3D, float3, int3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler3D, float3, int3, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler3D, float3, int3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler3D, float3, int3, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "textureOffset", sampler2DShadow, float3, int3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "textureOffset", sampler2DShadow, float3, int3, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler2DArray, float3, int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler2DArray, float3, int2, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler2DArray, float3, int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler2DArray, float3, int2, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler2DArray, float3, int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler2DArray, float3, int2, float1);
 
     //
     // Depth range in window coordinates
