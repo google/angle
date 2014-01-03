@@ -789,13 +789,23 @@ static const SwizzleInfoMap &GetSwizzleInfoMap()
 static const SwizzleFormatInfo GetSwizzleFormatInfo(GLint internalFormat, GLuint clientVersion)
 {
     // Get the maximum sized component
-    unsigned int maxBits = 0;
-    maxBits = std::max(maxBits, gl::GetAlphaBits(    internalFormat, clientVersion));
-    maxBits = std::max(maxBits, gl::GetRedBits(      internalFormat, clientVersion));
-    maxBits = std::max(maxBits, gl::GetGreenBits(    internalFormat, clientVersion));
-    maxBits = std::max(maxBits, gl::GetBlueBits(     internalFormat, clientVersion));
-    maxBits = std::max(maxBits, gl::GetLuminanceBits(internalFormat, clientVersion));
-    maxBits = std::max(maxBits, gl::GetDepthBits(    internalFormat, clientVersion));
+    unsigned int maxBits = 1;
+
+    if (gl::IsFormatCompressed(internalFormat, clientVersion))
+    {
+        maxBits = (gl::GetCompressedBlockWidth(internalFormat, clientVersion) * gl::GetCompressedBlockHeight(internalFormat, clientVersion)) /
+                  (gl::GetPixelBytes(internalFormat, clientVersion) * 8);
+    }
+    else
+    {
+        maxBits = std::max(maxBits, gl::GetAlphaBits(    internalFormat, clientVersion));
+        maxBits = std::max(maxBits, gl::GetRedBits(      internalFormat, clientVersion));
+        maxBits = std::max(maxBits, gl::GetGreenBits(    internalFormat, clientVersion));
+        maxBits = std::max(maxBits, gl::GetBlueBits(     internalFormat, clientVersion));
+        maxBits = std::max(maxBits, gl::GetLuminanceBits(internalFormat, clientVersion));
+        maxBits = std::max(maxBits, gl::GetDepthBits(    internalFormat, clientVersion));
+    }
+
     maxBits = roundUp(maxBits, 8U);
 
     GLenum componentType = gl::GetComponentType(internalFormat, clientVersion);
