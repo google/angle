@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "edcea54a_6ccfbb9c",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2349,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-03T20:44:29Z",
+      "side": 1,
+      "message": "can you add a comment explaining what this variable does?",
+      "revId": "2d8babed284b4c9846169dad1232184be4c2420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0dc2191e_8d446164",
+        "filename": "src/libEGL/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-03T20:44:29Z",
+      "side": 1,
+      "message": "this should go I think.",
+      "revId": "2d8babed284b4c9846169dad1232184be4c2420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "edcea54a_4ccaff8d",
+        "filename": "src/libGLESv2/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-03T20:44:29Z",
+      "side": 1,
+      "message": "this should go I think.",
+      "revId": "2d8babed284b4c9846169dad1232184be4c2420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
