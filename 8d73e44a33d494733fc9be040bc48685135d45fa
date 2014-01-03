@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eda0655c_fc884958",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-03T18:32:52Z",
+      "side": 1,
+      "message": "nativeType and NativeT should be semantically identical, so is there are way to eliminate one or the other?",
+      "revId": "8d73e44a33d494733fc9be040bc48685135d45fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd9d6127_1b517b24",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-03T18:32:52Z",
+      "side": 1,
+      "message": "This is not a \u0027getter\u0027 so I would remove the \"Get\" from the function name.",
+      "revId": "8d73e44a33d494733fc9be040bc48685135d45fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eda0655c_bc92c182",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-03T18:32:52Z",
+      "side": 1,
+      "message": "queryType and QueryT should be semantically identical, so is there are way to eliminate one or the other?",
+      "revId": "8d73e44a33d494733fc9be040bc48685135d45fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
