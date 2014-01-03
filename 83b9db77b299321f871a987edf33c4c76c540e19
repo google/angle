@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ddb9506_9031d4d6",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-01-03T21:05:06Z",
+      "side": 1,
+      "message": "I think we could compute a lower bound on the max bits using the compressed block size and the bits per compressed block.",
+      "revId": "83b9db77b299321f871a987edf33c4c76c540e19",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
