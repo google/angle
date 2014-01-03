@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0dc2191e_ed888558",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2349,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-03T21:01:13Z",
+      "side": 1,
+      "message": "It\u0027s the number of arguments that is not a bias argument. 8-) It\u0027s used below to determine whether there is a bias argument, as it\u0027s an optional argument and the only way to find out it\u0027s there is to count the number of arguments and compare that to the number of mandatory arguments.\n\nSeems pretty self-explanatory to me, but if you disagree I\u0027ll add a comment or make another attempt at making it self-explanatory.",
+      "parentUuid": "edcea54a_6ccfbb9c",
+      "revId": "2d8babed284b4c9846169dad1232184be4c2420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0dc2191e_8d446164",
         "filename": "src/libEGL/main.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-01-03T20:44:29Z",
       "side": 1,
       "message": "this should go I think.",
+      "revId": "2d8babed284b4c9846169dad1232184be4c2420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ddb9506_f024e099",
+        "filename": "src/libEGL/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-03T21:01:13Z",
+      "side": 1,
+      "message": "Any particular reason why you think this shouldn\u0027t be committed? I used to have a local patch for it myself, but it could be used by other people who have a use for it (i.e. we can point people to this line when they encounter a bug which needs early attaching).",
+      "parentUuid": "0dc2191e_8d446164",
       "revId": "2d8babed284b4c9846169dad1232184be4c2420c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
