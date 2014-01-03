@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "ed7945b6_140954f5",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2349,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-03T21:17:48Z",
+      "side": 1,
+      "message": "I think it\u0027s a little confusing, especially because one of the increments for the value is inside an unreachable clause (why express it if it can\u0027t happen?), and because it could be parsed as \"argument count to which a bias has not been applied\" instead of \"count of arguments which are not the bias argument.\" I also wouldn\u0027t have known you were comparing the number of actual arguments to the number of mandatory ones (Is that what gets accumulated to nonBiasArgumentCount? Why not call it mandatoryArgumentCount?) without this explanation.",
+      "parentUuid": "0dc2191e_ed888558",
+      "revId": "2d8babed284b4c9846169dad1232184be4c2420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0dc2191e_8d446164",
         "filename": "src/libEGL/main.cpp",
         "patchSetId": 2
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Any particular reason why you think this shouldn\u0027t be committed? I used to have a local patch for it myself, but it could be used by other people who have a use for it (i.e. we can point people to this line when they encounter a bug which needs early attaching).",
       "parentUuid": "0dc2191e_8d446164",
+      "revId": "2d8babed284b4c9846169dad1232184be4c2420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "add10de4_72b8f8f4",
+        "filename": "src/libEGL/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-03T21:17:48Z",
+      "side": 1,
+      "message": "If we\u0027re going to have something like this in the repository, an #ifdef guard would be nicer than commented-out code, imho. This just looks like someone forgot to remove their debug crumbs.",
+      "parentUuid": "6ddb9506_f024e099",
       "revId": "2d8babed284b4c9846169dad1232184be4c2420c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
