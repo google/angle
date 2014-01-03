@@ -17,7 +17,7 @@ namespace gl
 class VertexAttribute
 {
   public:
-    VertexAttribute() : mType(GL_FLOAT), mSize(0), mNormalized(false), mPureInteger(false),
+    VertexAttribute() : mType(GL_FLOAT), mSize(4), mNormalized(false), mPureInteger(false),
                         mStride(0), mPointer(NULL), mArrayEnabled(false), mDivisor(0)
     {
     }
