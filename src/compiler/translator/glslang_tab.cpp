@@ -65,7 +65,7 @@
 
 
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -794,32 +794,32 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   205,   205,   206,   209,   250,   253,   258,   263,   268,
-     273,   279,   282,   285,   288,   291,   301,   314,   322,   422,
-     425,   433,   436,   442,   446,   453,   459,   468,   476,   479,
-     489,   492,   502,   512,   533,   534,   535,   540,   541,   549,
-     560,   561,   569,   580,   584,   585,   595,   605,   615,   628,
-     629,   639,   652,   656,   660,   664,   665,   678,   679,   692,
-     693,   706,   707,   724,   725,   738,   739,   740,   741,   742,
-     746,   749,   760,   768,   776,   803,   808,   819,   823,   827,
-     831,   838,   893,   896,   903,   911,   932,   953,   963,   991,
-     996,  1006,  1011,  1021,  1024,  1027,  1030,  1036,  1043,  1046,
-    1050,  1054,  1058,  1065,  1069,  1073,  1080,  1084,  1088,  1109,
-    1118,  1124,  1127,  1133,  1139,  1146,  1155,  1164,  1167,  1170,
-    1177,  1181,  1188,  1191,  1195,  1199,  1208,  1217,  1225,  1235,
-    1242,  1245,  1248,  1254,  1261,  1264,  1270,  1273,  1276,  1282,
-    1285,  1300,  1304,  1308,  1312,  1316,  1320,  1325,  1330,  1335,
-    1340,  1345,  1350,  1355,  1360,  1365,  1370,  1375,  1380,  1385,
-    1390,  1395,  1400,  1405,  1410,  1415,  1420,  1425,  1429,  1433,
-    1437,  1441,  1445,  1449,  1453,  1457,  1461,  1465,  1469,  1473,
-    1477,  1481,  1485,  1493,  1501,  1505,  1518,  1518,  1521,  1521,
-    1527,  1530,  1546,  1549,  1558,  1562,  1568,  1575,  1590,  1594,
-    1598,  1599,  1605,  1606,  1607,  1608,  1609,  1613,  1614,  1614,
-    1614,  1624,  1625,  1629,  1629,  1630,  1630,  1635,  1638,  1648,
-    1651,  1657,  1658,  1662,  1670,  1674,  1684,  1689,  1706,  1706,
-    1711,  1711,  1718,  1718,  1726,  1729,  1735,  1738,  1744,  1748,
-    1755,  1762,  1769,  1776,  1787,  1796,  1800,  1807,  1810,  1816,
-    1816
+       0,   205,   205,   206,   209,   264,   267,   272,   277,   282,
+     287,   293,   296,   299,   302,   305,   315,   328,   336,   436,
+     439,   447,   450,   456,   460,   467,   473,   482,   490,   493,
+     503,   506,   516,   526,   547,   548,   549,   554,   555,   563,
+     574,   575,   583,   594,   598,   599,   609,   619,   629,   642,
+     643,   653,   666,   670,   674,   678,   679,   692,   693,   706,
+     707,   720,   721,   738,   739,   752,   753,   754,   755,   756,
+     760,   763,   774,   782,   790,   817,   822,   833,   837,   841,
+     845,   852,   907,   910,   917,   925,   946,   967,   977,  1005,
+    1010,  1020,  1025,  1035,  1038,  1041,  1044,  1050,  1057,  1060,
+    1064,  1068,  1072,  1079,  1083,  1087,  1094,  1098,  1102,  1123,
+    1132,  1138,  1141,  1147,  1153,  1160,  1169,  1178,  1181,  1184,
+    1191,  1195,  1202,  1205,  1209,  1213,  1222,  1231,  1239,  1249,
+    1256,  1259,  1262,  1268,  1275,  1278,  1284,  1287,  1290,  1296,
+    1299,  1314,  1318,  1322,  1326,  1330,  1334,  1339,  1344,  1349,
+    1354,  1359,  1364,  1369,  1374,  1379,  1384,  1389,  1394,  1399,
+    1404,  1409,  1414,  1419,  1424,  1429,  1434,  1439,  1443,  1447,
+    1451,  1455,  1459,  1463,  1467,  1471,  1475,  1479,  1483,  1487,
+    1491,  1495,  1499,  1507,  1515,  1519,  1532,  1532,  1535,  1535,
+    1541,  1544,  1560,  1563,  1572,  1576,  1582,  1589,  1604,  1608,
+    1612,  1613,  1619,  1620,  1621,  1622,  1623,  1627,  1628,  1628,
+    1628,  1638,  1639,  1643,  1643,  1644,  1644,  1649,  1652,  1662,
+    1665,  1671,  1672,  1676,  1684,  1688,  1698,  1703,  1720,  1720,
+    1725,  1725,  1732,  1732,  1740,  1743,  1749,  1752,  1758,  1762,
+    1769,  1776,  1783,  1790,  1801,  1810,  1814,  1821,  1824,  1830,
+    1830
 };
 #endif
 
@@ -2546,41 +2546,55 @@ yyreduce:
 
     {
         // The symbol table search was done in the lexical phase
-        const TSymbol* symbol = (yyvsp[(1) - (1)].lex).symbol;
-        const TVariable* variable;
-        if (symbol == 0) {
+        const TSymbol *symbol = (yyvsp[(1) - (1)].lex).symbol;
+        const TVariable *variable = 0;
+
+        if (!symbol)
+        {
             context->error((yylsp[(1) - (1)]), "undeclared identifier", (yyvsp[(1) - (1)].lex).string->c_str());
             context->recover();
-            TType type(EbtFloat, EbpUndefined);
-            TVariable* fakeVariable = new TVariable((yyvsp[(1) - (1)].lex).string, type);
-            context->symbolTable.declare(*fakeVariable);
-            variable = fakeVariable;
-        } else {
-            // This identifier can only be a variable type symbol
-            if (! symbol->isVariable()) {
-                context->error((yylsp[(1) - (1)]), "variable expected", (yyvsp[(1) - (1)].lex).string->c_str());
-                context->recover();
-            }
+        }
+        else if (!symbol->isVariable())
+        {
+            context->error((yylsp[(1) - (1)]), "variable expected", (yyvsp[(1) - (1)].lex).string->c_str());
+            context->recover();
+        }
+        else
+        {
             variable = static_cast<const TVariable*>(symbol);
 
             if (context->symbolTable.findBuiltIn(variable->getName(), context->shaderVersion) &&
                 !variable->getExtension().empty() &&
-                context->extensionErrorCheck((yylsp[(1) - (1)]), variable->getExtension())) {
+                context->extensionErrorCheck((yylsp[(1) - (1)]), variable->getExtension()))
+            {
                 context->recover();
             }
         }
 
-        // don't delete $1.string, it's used by error recovery, and the pool
-        // pop will reclaim the memory
+        if (!variable)
+        {
+            TType type(EbtFloat, EbpUndefined);
+            TVariable *fakeVariable = new TVariable((yyvsp[(1) - (1)].lex).string, type);
+            context->symbolTable.declare(*fakeVariable);
+            variable = fakeVariable;
+        }
 
-        if (variable->getType().getQualifier() == EvqConst ) {
+        if (variable->getType().getQualifier() == EvqConst)
+        {
             ConstantUnion* constArray = variable->getConstPointer();
             TType t(variable->getType());
             (yyval.interm.intermTypedNode) = context->intermediate.addConstantUnion(constArray, t, (yylsp[(1) - (1)]));
-        } else
+        }
+        else
+        {
             (yyval.interm.intermTypedNode) = context->intermediate.addSymbol(variable->getUniqueId(),
-                                                     variable->getName(),
-                                                     variable->getType(), (yylsp[(1) - (1)]));
+                                                 variable->getName(),
+                                                 variable->getType(),
+                                                 (yylsp[(1) - (1)]));
+        }
+
+        // don't delete $1.string, it's used by error recovery, and the pool
+        // pop will reclaim the memory
     }
     break;
 

@@ -1,6 +1,6 @@
 /*
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -208,41 +208,55 @@ identifier
 variable_identifier
     : IDENTIFIER {
         // The symbol table search was done in the lexical phase
-        const TSymbol* symbol = $1.symbol;
-        const TVariable* variable;
-        if (symbol == 0) {
+        const TSymbol *symbol = $1.symbol;
+        const TVariable *variable = 0;
+
+        if (!symbol)
+        {
             context->error(@1, "undeclared identifier", $1.string->c_str());
             context->recover();
-            TType type(EbtFloat, EbpUndefined);
-            TVariable* fakeVariable = new TVariable($1.string, type);
-            context->symbolTable.declare(*fakeVariable);
-            variable = fakeVariable;
-        } else {
-            // This identifier can only be a variable type symbol
-            if (! symbol->isVariable()) {
-                context->error(@1, "variable expected", $1.string->c_str());
-                context->recover();
-            }
+        }
+        else if (!symbol->isVariable())
+        {
+            context->error(@1, "variable expected", $1.string->c_str());
+            context->recover();
+        }
+        else
+        {
             variable = static_cast<const TVariable*>(symbol);
 
             if (context->symbolTable.findBuiltIn(variable->getName(), context->shaderVersion) &&
                 !variable->getExtension().empty() &&
-                context->extensionErrorCheck(@1, variable->getExtension())) {
+                context->extensionErrorCheck(@1, variable->getExtension()))
+            {
                 context->recover();
             }
         }
 
-        // don't delete $1.string, it's used by error recovery, and the pool
-        // pop will reclaim the memory
+        if (!variable)
+        {
+            TType type(EbtFloat, EbpUndefined);
+            TVariable *fakeVariable = new TVariable($1.string, type);
+            context->symbolTable.declare(*fakeVariable);
+            variable = fakeVariable;
+        }
 
-        if (variable->getType().getQualifier() == EvqConst ) {
+        if (variable->getType().getQualifier() == EvqConst)
+        {
             ConstantUnion* constArray = variable->getConstPointer();
             TType t(variable->getType());
             $$ = context->intermediate.addConstantUnion(constArray, t, @1);
-        } else
+        }
+        else
+        {
             $$ = context->intermediate.addSymbol(variable->getUniqueId(),
-                                                     variable->getName(),
-                                                     variable->getType(), @1);
+                                                 variable->getName(),
+                                                 variable->getType(),
+                                                 @1);
+        }
+
+        // don't delete $1.string, it's used by error recovery, and the pool
+        // pop will reclaim the memory
     }
     ;
 
