@@ -16,6 +16,24 @@
       "revId": "0523d83941b45d2070c1b39b98a2b27d36707aa4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "edcea54a_205bf235",
+        "filename": "CONTRIBUTORS",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-06T22:09:13Z",
+      "side": 0,
+      "message": "There\u0027s some unicode non-visible characters at the start of the file. Not sure if it matters all that much.",
+      "parentUuid": "edcea54a_2082123c",
+      "revId": "0523d83941b45d2070c1b39b98a2b27d36707aa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
