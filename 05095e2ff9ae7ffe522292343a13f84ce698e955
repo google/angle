@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0dc2191e_f39068bf",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-01-06T21:53:03Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we be ANDing the stencilRef with 0xFF instead? This would change a reference such as 100000000 to 11111111.",
+      "revId": "05095e2ff9ae7ffe522292343a13f84ce698e955",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
