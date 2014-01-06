@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d57b141_7793d045",
+        "filename": "CONTRIBUTORS",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-06T23:10:39Z",
+      "side": 1,
+      "message": "You\u0027ll need to create a section for your company, if you\u0027re contributing on its behalf, and list your names there. Also, whoever the copyright holder is (the company if a corporate submission, yourselves if individual) should be added to AUTHORS.",
+      "revId": "32255141ef8debb28d9857969ec501a8215878fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
