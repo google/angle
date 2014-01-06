@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d57b141_97478468",
+        "filename": "include/EGL/eglplatform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-06T23:53:03Z",
+      "side": 1,
+      "message": "It would be a good idea to keep ANGLE-specific defines out of the Khronos headers, since we\u0027ll want to submit them back to Khronos. Is there a Windows system define that can be checked instead?",
+      "revId": "9ffca329a9d588aeff0c3cd663af1bdedef67089",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d57b141_37fe7853",
+        "filename": "include/EGL/eglplatform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-06T23:53:03Z",
+      "side": 1,
+      "message": "I\u0027m not sure this is the right place for this define-- a cast convenience macro probably belongs at the project level, rather than redistributed by Khronos.",
+      "revId": "9ffca329a9d588aeff0c3cd663af1bdedef67089",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d57b141_570decc7",
+        "filename": "include/EGL/eglplatform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-06T23:53:03Z",
+      "side": 1,
+      "message": "This is fairly pedantic, but would you mind restating the full type rather than reusing EGLNativeWindowType? While they\u0027ll both be using the IUnknown type, it\u0027ll be QueryInterfaced into something different in each case, so it would be good not to imply that the window and display types are equivalent.",
+      "revId": "9ffca329a9d588aeff0c3cd663af1bdedef67089",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed4ce5b4_9c7965df",
+        "filename": "include/EGL/eglplatform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-06T23:53:03Z",
+      "side": 1,
+      "message": "Could the ifdefs be structured such that the vanilla defines don\u0027t need to be repeated?",
+      "revId": "9ffca329a9d588aeff0c3cd663af1bdedef67089",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
