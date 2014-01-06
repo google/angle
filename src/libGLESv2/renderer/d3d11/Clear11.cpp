@@ -430,7 +430,7 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
         deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
         // Apply render targets
-        deviceContext->OMSetRenderTargets(rtvs.size(), &rtvs[0], dsv);
+        deviceContext->OMSetRenderTargets(rtvs.size(), (rtvs.empty() ? NULL : &rtvs[0]), dsv);
 
         // Draw the clear quad
         deviceContext->Draw(4, 0);
