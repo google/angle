@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0dc2191e_d37c4cd0",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-01-06T21:56:59Z",
+      "side": 1,
+      "message": "This function certainly needed fixing, maybe change this return statement to \u0027return context-\u003egetClientVersion() \u003e\u003d 3;\u0027 and add a return after GL_TEXTURE_CUBE_MAP so that the above check can be removed?\n\nFine with it either way.",
+      "revId": "fb21da4db141e8567d0f07bfaa42e6d1eabfa132",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
