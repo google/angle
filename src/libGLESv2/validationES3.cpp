@@ -134,7 +134,7 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
                   textureInternalFormat = texture2darray->getInternalFormat(level);
                   textureLevelWidth = texture2darray->getWidth(level);
                   textureLevelHeight = texture2darray->getHeight(level);
-                  textureLevelDepth = texture2darray->getDepth(level);
+                  textureLevelDepth = texture2darray->getLayers(level);
                   texture = texture2darray;
               }
           }
@@ -372,7 +372,7 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
                 textureIsDepth = texture2dArray->isDepth(level);
                 textureLevelWidth = texture2dArray->getWidth(level);
                 textureLevelHeight = texture2dArray->getHeight(level);
-                textureLevelDepth = texture2dArray->getDepth(level);
+                textureLevelDepth = texture2dArray->getLayers(level);
                 texture = texture2dArray;
             }
         }

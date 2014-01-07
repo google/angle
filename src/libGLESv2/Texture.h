@@ -365,7 +365,7 @@ class Texture2DArray : public Texture
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
-    GLsizei getDepth(GLint level) const;
+    GLsizei getLayers(GLint level) const;
     GLenum getInternalFormat(GLint level) const;
     GLenum getActualFormat(GLint level) const;
     bool isCompressed(GLint level) const;

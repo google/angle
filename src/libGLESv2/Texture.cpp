@@ -252,6 +252,9 @@ GLint Texture::getBaseLevelDepth() const
     return (baseImage ? baseImage->getDepth() : 0);
 }
 
+// Note: "base level image" is loosely defined to be any image from the base level,
+// where in the base of 2D array textures and cube maps there are several. Don't use
+// the base level image for anything except querying texture format and size.
 GLenum Texture::getBaseLevelInternalFormat() const
 {
     const rx::Image *baseImage = getBaseLevelImage();
@@ -2267,7 +2270,7 @@ GLsizei Texture2DArray::getHeight(GLint level) const
     return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS && mLayerCounts[level] > 0) ? mImageArray[level][0]->getHeight() : 0;
 }
 
-GLsizei Texture2DArray::getDepth(GLint level) const
+GLsizei Texture2DArray::getLayers(GLint level) const
 {
     return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS && mLayerCounts[level] > 0) ? mLayerCounts[level] : 0;
 }
@@ -2437,7 +2440,7 @@ rx::TextureStorageInterface *Texture2DArray::getBaseLevelStorage()
 
 void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    if (xoffset + width > getWidth(level) || yoffset + height > getHeight(level) || zoffset >= getDepth(level) || getDepth(level) == 0)
+    if (xoffset + width > getWidth(level) || yoffset + height > getHeight(level) || zoffset >= getLayers(level) || getLayers(level) == 0)
     {
         return gl::error(GL_INVALID_VALUE);
     }
@@ -2477,7 +2480,7 @@ bool Texture2DArray::isSamplerComplete(const SamplerState &samplerState) const
 {
     GLsizei width = getBaseLevelWidth();
     GLsizei height = getBaseLevelHeight();
-    GLsizei depth = getBaseLevelDepth();
+    GLsizei depth = getLayers(0);
 
     if (width <= 0 || height <= 0 || depth <= 0)
     {
@@ -2518,7 +2521,7 @@ bool Texture2DArray::isMipmapComplete() const
 
 bool Texture2DArray::isLevelComplete(int level) const
 {
-    ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
+    ASSERT(level >= 0 && level < (int)ArraySize(mImageArray));
 
     if (isImmutable())
     {
@@ -2527,9 +2530,9 @@ bool Texture2DArray::isLevelComplete(int level) const
 
     GLsizei width = getBaseLevelWidth();
     GLsizei height = getBaseLevelHeight();
-    GLsizei depth = getBaseLevelDepth();
+    GLsizei layers = getLayers(0);
 
-    if (width <= 0 || height <= 0 || depth <= 0)
+    if (width <= 0 || height <= 0 || layers <= 0)
     {
         return false;
     }
@@ -2554,7 +2557,7 @@ bool Texture2DArray::isLevelComplete(int level) const
         return false;
     }
 
-    if (getDepth(level) != depth)
+    if (getLayers(level) != layers)
     {
         return false;
     }
@@ -2611,7 +2614,7 @@ rx::TextureStorageInterface2DArray *Texture2DArray::createCompleteStorage(bool r
 {
     GLsizei width = getBaseLevelWidth();
     GLsizei height = getBaseLevelHeight();
-    GLsizei depth = getBaseLevelDepth();
+    GLsizei depth = getLayers(0);
 
     ASSERT(width > 0 && height > 0 && depth > 0);
 
@@ -2661,7 +2664,7 @@ bool Texture2DArray::ensureRenderTarget()
 {
     initializeStorage(true);
 
-    if (getBaseLevelWidth() > 0 && getBaseLevelHeight() > 0 && getBaseLevelDepth() > 0)
+    if (getBaseLevelWidth() > 0 && getBaseLevelHeight() > 0 && getLayers(0) > 0)
     {
         ASSERT(mTexStorage);
         if (!mTexStorage->isRenderTarget())
@@ -2724,7 +2727,7 @@ void Texture2DArray::redefineImage(GLint level, GLenum internalformat, GLsizei w
     // If there currently is a corresponding storage texture image, it has these parameters
     const int storageWidth = std::max(1, getBaseLevelWidth() >> level);
     const int storageHeight = std::max(1, getBaseLevelHeight() >> level);
-    const int storageDepth = getBaseLevelDepth();
+    const int storageDepth = getLayers(0);
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
     for (int layer = 0; layer < mLayerCounts[level]; layer++)
@@ -2773,7 +2776,7 @@ void Texture2DArray::redefineImage(GLint level, GLenum internalformat, GLsizei w
 
 void Texture2DArray::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint layerTarget, GLsizei width, GLsizei height)
 {
-    if (isValidLevel(level) && layerTarget < getDepth(level))
+    if (isValidLevel(level) && layerTarget < getLayers(level))
     {
         rx::Image *image = mImageArray[level][layerTarget];
         if (image->copyToStorage(mTexStorage, level, xoffset, yoffset, layerTarget, width, height))
