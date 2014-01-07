@@ -16,6 +16,24 @@
       "revId": "5a63119414d2f9a441a6fa2fd5fd2dac75f83c2c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d17798c_8b247199",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-01-07T21:47:54Z",
+      "side": 1,
+      "message": "It\u0027s bits / (width * height) so essentially bits per pixel.",
+      "parentUuid": "ed13059f_c79ae0da",
+      "revId": "5a63119414d2f9a441a6fa2fd5fd2dac75f83c2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
