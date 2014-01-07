@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d1a7db4_09124db2",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-07T21:38:23Z",
+      "side": 0,
+      "message": "I\u0027m okay with removing this warning spam protection -- but could you add a TODO that we should put it back it when we have a chance?",
+      "revId": "5649568c53644bb6c5292a364680e849ee890b31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d17798c_cb414953",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-07T21:38:23Z",
+      "side": 1,
+      "message": "big nitpick- but can you shorten the commit message to \u003c65 chars? eg \"Make Renderer1 track applied textures as SRVs.\" The rest could go on a second line. Seems to work with with git history viewers.",
+      "revId": "32cc4bff9365ee96f8afecc478b3a499a48301ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d1a7db4_490c4595",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-07T21:38:23Z",
+      "side": 1,
+      "message": "Since these are SRVs and not textures, maybe we should call them \"Cur*SRVs\"?",
+      "revId": "32cc4bff9365ee96f8afecc478b3a499a48301ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
