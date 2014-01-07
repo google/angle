@@ -52,6 +52,24 @@
       "revId": "05095e2ff9ae7ffe522292343a13f84ce698e955",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d17798c_85a6223f",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-07T15:57:45Z",
+      "side": 1,
+      "message": "State queries that is, as opposed to queries for writing stencil values during use time.",
+      "parentUuid": "0d17798c_a5a99e11",
+      "revId": "05095e2ff9ae7ffe522292343a13f84ce698e955",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
