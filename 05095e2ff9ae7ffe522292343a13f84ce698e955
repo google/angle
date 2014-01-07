@@ -16,6 +16,24 @@
       "revId": "05095e2ff9ae7ffe522292343a13f84ce698e955",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d17798c_851d82bf",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-01-07T15:40:23Z",
+      "side": 1,
+      "message": "Reviewed the spec on this, it actually should be clamping.  We should also make sure we\u0027re returning the correct stencil ref for glGet* queries.",
+      "parentUuid": "0dc2191e_f39068bf",
+      "revId": "05095e2ff9ae7ffe522292343a13f84ce698e955",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
