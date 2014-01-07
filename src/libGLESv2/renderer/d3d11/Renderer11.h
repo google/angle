@@ -304,8 +304,8 @@ class Renderer11 : public Renderer
     gl::SamplerState mCurPixelSamplerStates[gl::MAX_TEXTURE_IMAGE_UNITS];
 
     // Currently applied textures
-    unsigned int mCurVertexTextureSerials[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
-    unsigned int mCurPixelTextureSerials[gl::MAX_TEXTURE_IMAGE_UNITS];
+    ID3D11ShaderResourceView *mCurVertexSRVs[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
+    ID3D11ShaderResourceView *mCurPixelSRVs[gl::MAX_TEXTURE_IMAGE_UNITS];
 
     // Currently applied blend state
     bool mForceSetBlendState;
