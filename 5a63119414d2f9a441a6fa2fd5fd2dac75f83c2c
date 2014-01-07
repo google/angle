@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed13059f_c79ae0da",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-07T21:45:50Z",
+      "side": 1,
+      "message": "wasn\u0027t it correct the previous way?  bytes / (bytes * bytes) gives bytes^-1 which doesn\u0027t seem like the right unit.",
+      "revId": "5a63119414d2f9a441a6fa2fd5fd2dac75f83c2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
