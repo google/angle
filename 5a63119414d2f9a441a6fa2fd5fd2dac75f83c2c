@@ -34,6 +34,24 @@
       "revId": "5a63119414d2f9a441a6fa2fd5fd2dac75f83c2c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed13059f_8aec6f38",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-07T22:01:40Z",
+      "side": 1,
+      "message": "My bad.. so GetPixelBytes returns bytes per block. and then we divide by pixels per block, to get bits per pixel. I might nitpick and ask if you could unfuddle this a bit, using some temporary variables with descriptive names?\n\nAlso I think we want bits per channel not bits per pixel.. not sure how that works with compressed.",
+      "parentUuid": "0d17798c_8b247199",
+      "revId": "5a63119414d2f9a441a6fa2fd5fd2dac75f83c2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
