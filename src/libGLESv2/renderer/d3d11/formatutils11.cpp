@@ -742,6 +742,9 @@ static SwizzleInfoMap BuildSwizzleInfoMap()
     SwizzleInfoMap map;
 
     map.insert(SwizzleInfoPair(SwizzleSizeType( 8, GL_UNSIGNED_NORMALIZED), SwizzleFormatInfo(DXGI_FORMAT_R8G8B8A8_UNORM,     DXGI_FORMAT_R8G8B8A8_UNORM,     DXGI_FORMAT_R8G8B8A8_UNORM    )));
+    map.insert(SwizzleInfoPair(SwizzleSizeType(16, GL_UNSIGNED_NORMALIZED), SwizzleFormatInfo(DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_R16G16B16A16_UNORM)));
+    map.insert(SwizzleInfoPair(SwizzleSizeType(24, GL_UNSIGNED_NORMALIZED), SwizzleFormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT)));
+    map.insert(SwizzleInfoPair(SwizzleSizeType(32, GL_UNSIGNED_NORMALIZED), SwizzleFormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT)));
 
     map.insert(SwizzleInfoPair(SwizzleSizeType( 8, GL_SIGNED_NORMALIZED  ), SwizzleFormatInfo(DXGI_FORMAT_R8G8B8A8_SNORM,     DXGI_FORMAT_R8G8B8A8_SNORM,     DXGI_FORMAT_R8G8B8A8_SNORM    )));
 
@@ -793,8 +796,10 @@ static const SwizzleFormatInfo GetSwizzleFormatInfo(GLint internalFormat, GLuint
 
     if (gl::IsFormatCompressed(internalFormat, clientVersion))
     {
-        maxBits = (gl::GetCompressedBlockWidth(internalFormat, clientVersion) * gl::GetCompressedBlockHeight(internalFormat, clientVersion)) /
-                  (gl::GetPixelBytes(internalFormat, clientVersion) * 8);
+        unsigned int compressedBitsPerBlock = gl::GetPixelBytes(internalFormat, clientVersion) * 8;
+        unsigned int blockSize = gl::GetCompressedBlockWidth(internalFormat, clientVersion) *
+                                 gl::GetCompressedBlockHeight(internalFormat, clientVersion);
+        maxBits = std::max(compressedBitsPerBlock / blockSize, maxBits);
     }
     else
     {
