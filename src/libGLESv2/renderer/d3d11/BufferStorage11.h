@@ -13,7 +13,15 @@
 
 namespace rx
 {
+class Renderer;
 class Renderer11;
+class DirectBufferStorage11;
+
+enum BufferUsage
+{
+    BUFFER_USAGE_VERTEX,
+    BUFFER_USAGE_INDEX,
+};
 
 class BufferStorage11 : public BufferStorage
 {
@@ -25,12 +33,13 @@ class BufferStorage11 : public BufferStorage
 
     virtual void *getData();
     virtual void setData(const void* data, unsigned int size, unsigned int offset);
+    virtual void copyData(BufferStorage* sourceStorage, unsigned int size,
+                          unsigned int sourceOffset, unsigned int destOffset);
     virtual void clear();
     virtual unsigned int getSize() const;
     virtual bool supportsDirectBinding() const;
-    virtual void markBufferUsage();
 
-    ID3D11Buffer *getBuffer() const;
+    ID3D11Buffer *getBuffer(BufferUsage usage);
 
   private:
     Renderer11 *mRenderer;
@@ -38,8 +47,7 @@ class BufferStorage11 : public BufferStorage
     ID3D11Buffer *mStagingBuffer;
     unsigned int mStagingBufferSize;
 
-    ID3D11Buffer *mBuffer;
-    unsigned int mBufferSize;
+    std::map<BufferUsage, DirectBufferStorage11*> mDirectBuffers;
 
     unsigned int mSize;
 
@@ -49,6 +57,34 @@ class BufferStorage11 : public BufferStorage
 
     unsigned int mReadUsageCount;
     unsigned int mWriteUsageCount;
+
+    void markBufferUsage();
+};
+
+// Each instance of BufferStorageD3DBuffer11 is specialized for a class of D3D binding points
+// - vertex buffers
+// - index buffers
+class DirectBufferStorage11
+{
+  public:
+    DirectBufferStorage11(Renderer11 *renderer, BufferUsage usage);
+    ~DirectBufferStorage11();
+
+    BufferUsage getUsage() const;
+    bool updateFromStagingBuffer(ID3D11Buffer *stagingBuffer, size_t size, size_t offset);
+
+    ID3D11Buffer *getD3DBuffer() { return mDirectBuffer; }
+    bool isDirty() const { return mDirty; }
+    void markDirty() { mDirty = true; }
+
+  private:
+    Renderer11 *mRenderer;
+    const BufferUsage mUsage;
+    ID3D11Buffer *mDirectBuffer;
+    size_t mBufferSize;
+    bool mDirty;
+
+    static void fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Renderer *renderer, BufferUsage usage, unsigned int bufferSize);
 };
 
 }

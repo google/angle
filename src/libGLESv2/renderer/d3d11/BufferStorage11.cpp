@@ -21,9 +21,6 @@ BufferStorage11::BufferStorage11(Renderer11 *renderer)
     mStagingBuffer = NULL;
     mStagingBufferSize = 0;
 
-    mBuffer = NULL;
-    mBufferSize = 0;
-
     mSize = 0;
 
     mResolvedData = NULL;
@@ -36,22 +33,17 @@ BufferStorage11::BufferStorage11(Renderer11 *renderer)
 
 BufferStorage11::~BufferStorage11()
 {
-    if (mStagingBuffer)
-    {
-        mStagingBuffer->Release();
-        mStagingBuffer = NULL;
-    }
-
-    if (mBuffer)
-    {
-        mBuffer->Release();
-        mBuffer = NULL;
-    }
+    SafeRelease(mStagingBuffer);
 
     if (mResolvedData)
     {
         free(mResolvedData);
         mResolvedData = NULL;
+    }
+
+    for (auto it = mDirectBuffers.begin(); it != mDirectBuffers.end(); it++)
+    {
+        SafeDelete(it->second);
     }
 }
 
@@ -63,54 +55,20 @@ BufferStorage11 *BufferStorage11::makeBufferStorage11(BufferStorage *bufferStora
 
 void *BufferStorage11::getData()
 {
+    ASSERT(mStagingBuffer);
+
     if (!mResolvedDataValid)
     {
         ID3D11Device *device = mRenderer->getDevice();
         ID3D11DeviceContext *context = mRenderer->getDeviceContext();
         HRESULT result;
 
-        if (!mStagingBuffer || mStagingBufferSize < mBufferSize)
-        {
-            if (mStagingBuffer)
-            {
-                mStagingBuffer->Release();
-                mStagingBuffer = NULL;
-                mStagingBufferSize = 0;
-            }
-
-            D3D11_BUFFER_DESC bufferDesc;
-            bufferDesc.ByteWidth = mSize;
-            bufferDesc.Usage = D3D11_USAGE_STAGING;
-            bufferDesc.BindFlags = 0;
-            bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-            bufferDesc.MiscFlags = 0;
-            bufferDesc.StructureByteStride = 0;
-
-            result = device->CreateBuffer(&bufferDesc, NULL, &mStagingBuffer);
-            if (FAILED(result))
-            {
-                return gl::error(GL_OUT_OF_MEMORY, (void*)NULL);
-            }
-
-            mStagingBufferSize = bufferDesc.ByteWidth;
-        }
-
-        if (!mResolvedData || mResolvedDataSize < mBufferSize)
+        if (!mResolvedData || mResolvedDataSize < mStagingBufferSize)
         {
             free(mResolvedData);
             mResolvedData = malloc(mSize);
             mResolvedDataSize = mSize;
         }
-
-        D3D11_BOX srcBox;
-        srcBox.left = 0;
-        srcBox.right = mSize;
-        srcBox.top = 0;
-        srcBox.bottom = 1;
-        srcBox.front = 0;
-        srcBox.back = 1;
-
-        context->CopySubresourceRegion(mStagingBuffer, 0, 0, 0, 0, mBuffer, 0, &srcBox);
 
         D3D11_MAPPED_SUBRESOURCE mappedResource;
         result = context->Map(mStagingBuffer, 0, D3D11_MAP_READ, 0, &mappedResource);
@@ -137,178 +95,110 @@ void BufferStorage11::setData(const void* data, unsigned int size, unsigned int 
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
     HRESULT result;
 
-    unsigned int requiredBufferSize = size + offset;
-    unsigned int requiredStagingSize = size;
-    bool directInitialization = offset == 0 && (!mBuffer || mBufferSize < size + offset);
+    const unsigned int requiredStagingBufferSize = size + offset;
+    const bool createStagingBuffer = !mStagingBuffer || mStagingBufferSize < requiredStagingBufferSize;
 
-    if (!directInitialization)
-    {
-        if (!mStagingBuffer || mStagingBufferSize < requiredStagingSize)
-        {
-            if (mStagingBuffer)
-            {
-                mStagingBuffer->Release();
-                mStagingBuffer = NULL;
-                mStagingBufferSize = 0;
-            }
-
-            D3D11_BUFFER_DESC bufferDesc;
-            bufferDesc.ByteWidth = size;
-            bufferDesc.Usage = D3D11_USAGE_STAGING;
-            bufferDesc.BindFlags = 0;
-            bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-            bufferDesc.MiscFlags = 0;
-            bufferDesc.StructureByteStride = 0;
-
-            if (data)
-            {
-                D3D11_SUBRESOURCE_DATA initialData;
-                initialData.pSysMem = data;
-                initialData.SysMemPitch = size;
-                initialData.SysMemSlicePitch = 0;
-
-                result = device->CreateBuffer(&bufferDesc, &initialData, &mStagingBuffer);
-            }
-            else
-            {
-                result = device->CreateBuffer(&bufferDesc, NULL, &mStagingBuffer);
-            }
-
-            if (FAILED(result))
-            {
-                return gl::error(GL_OUT_OF_MEMORY);
-            }
-
-            mStagingBufferSize = size;
-        }
-        else if (data)
-        {
-            D3D11_MAPPED_SUBRESOURCE mappedResource;
-            result = context->Map(mStagingBuffer, 0, D3D11_MAP_WRITE, 0, &mappedResource);
-            if (FAILED(result))
-            {
-                return gl::error(GL_OUT_OF_MEMORY);
-            }
-
-            memcpy(mappedResource.pData, data, size);
-
-            context->Unmap(mStagingBuffer, 0);
-        }
-    }
-
-    if (!mBuffer || mBufferSize < size + offset)
+    if (createStagingBuffer)
     {
         D3D11_BUFFER_DESC bufferDesc;
-        bufferDesc.ByteWidth = requiredBufferSize;
-        bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-        bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_INDEX_BUFFER;
-        bufferDesc.CPUAccessFlags = 0;
+        bufferDesc.ByteWidth = requiredStagingBufferSize;
+        bufferDesc.Usage = D3D11_USAGE_STAGING;
+        bufferDesc.BindFlags = 0;
+        bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
         bufferDesc.MiscFlags = 0;
         bufferDesc.StructureByteStride = 0;
 
-        if (directInitialization)
+        HRESULT result;
+        ID3D11Device *device = mRenderer->getDevice();
+        ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+        ID3D11Buffer *newStagingBuffer;
+
+        if (data && offset == 0)
         {
-            // Since the data will fill the entire buffer (being larger than the initial size and having
-            // no offset), the buffer can be initialized with the data so no staging buffer is required
+            D3D11_SUBRESOURCE_DATA initialData;
+            initialData.pSysMem = data;
+            initialData.SysMemPitch = requiredStagingBufferSize;
+            initialData.SysMemSlicePitch = 0;
 
-            // No longer need the old buffer
-            if (mBuffer)
-            {
-                mBuffer->Release();
-                mBuffer = NULL;
-                mBufferSize = 0;
-            }
-
-            if (data)
-            {
-                D3D11_SUBRESOURCE_DATA initialData;
-                initialData.pSysMem = data;
-                initialData.SysMemPitch = size;
-                initialData.SysMemSlicePitch = 0;
-
-                result = device->CreateBuffer(&bufferDesc, &initialData, &mBuffer);
-            }
-            else
-            {
-                result = device->CreateBuffer(&bufferDesc, NULL, &mBuffer);
-            }
-
-            if (FAILED(result))
-            {
-                return gl::error(GL_OUT_OF_MEMORY);
-            }
+            result = device->CreateBuffer(&bufferDesc, &initialData, &newStagingBuffer);
         }
-        else if (mBuffer && offset > 0)
+        else
+        {
+            result = device->CreateBuffer(&bufferDesc, NULL, &newStagingBuffer);
+        }
+
+        if (FAILED(result))
+        {
+            mStagingBufferSize = 0;
+            return gl::error(GL_OUT_OF_MEMORY);
+        }
+
+        mStagingBufferSize = requiredStagingBufferSize;
+
+        if (mStagingBuffer && offset > 0)
         {
             // If offset is greater than zero and the buffer is non-null, need to preserve the data from
             // the old buffer up to offset
-            ID3D11Buffer *newBuffer = NULL;
-
-            result = device->CreateBuffer(&bufferDesc, NULL, &newBuffer);
-            if (FAILED(result))
-            {
-                return gl::error(GL_OUT_OF_MEMORY);
-            }
-
             D3D11_BOX srcBox;
             srcBox.left = 0;
-            srcBox.right = std::min(offset, mBufferSize);
+            srcBox.right = std::min(offset, requiredStagingBufferSize);
             srcBox.top = 0;
             srcBox.bottom = 1;
             srcBox.front = 0;
             srcBox.back = 1;
 
-            context->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, mBuffer, 0, &srcBox);
-
-            mBuffer->Release();
-            mBuffer = newBuffer;
-        }
-        else
-        {
-            // Simple case, nothing needs to be copied from the old buffer to the new one, just create
-            // a new buffer
-
-            // No longer need the old buffer
-            if (mBuffer)
-            {
-                mBuffer->Release();
-                mBuffer = NULL;
-                mBufferSize = 0;
-            }
-
-            // Create a new buffer for data storage
-            result = device->CreateBuffer(&bufferDesc, NULL, &mBuffer);
-            if (FAILED(result))
-            {
-                return gl::error(GL_OUT_OF_MEMORY);
-            }
+            context->CopySubresourceRegion(newStagingBuffer, 0, 0, 0, 0, mStagingBuffer, 0, &srcBox);
         }
 
-        updateSerial();
-        mBufferSize = bufferDesc.ByteWidth;
+        SafeRelease(mStagingBuffer);
+        mStagingBuffer = newStagingBuffer;
     }
 
-    if (!directInitialization)
+    if (data && (offset != 0 || !createStagingBuffer))
     {
-        ASSERT(mStagingBuffer && mStagingBufferSize >= requiredStagingSize);
+        D3D11_MAPPED_SUBRESOURCE mappedResource;
+        result = context->Map(mStagingBuffer, 0, D3D11_MAP_WRITE, 0, &mappedResource);
+        if (FAILED(result))
+        {
+            return gl::error(GL_OUT_OF_MEMORY);
+        }
 
-        // Data is already put into the staging buffer, copy it over to the data buffer
+        unsigned char *offsetBufferPointer = reinterpret_cast<unsigned char *>(mappedResource.pData) + offset;
+        memcpy(offsetBufferPointer, data, size);
+
+        context->Unmap(mStagingBuffer, 0);
+    }
+
+    for (auto it = mDirectBuffers.begin(); it != mDirectBuffers.end(); it++)
+    {
+        it->second->markDirty();
+    }
+
+    mSize = std::max(mSize, requiredStagingBufferSize);
+    mWriteUsageCount = 0;
+
+    mResolvedDataValid = false;
+}
+
+void BufferStorage11::copyData(BufferStorage* sourceStorage, unsigned int size,
+                               unsigned int sourceOffset, unsigned int destOffset)
+{
+    BufferStorage11* source = makeBufferStorage11(sourceStorage);
+    if (source)
+    {
+        ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
         D3D11_BOX srcBox;
-        srcBox.left = 0;
-        srcBox.right = size;
+        srcBox.left = sourceOffset;
+        srcBox.right = sourceOffset + size;
         srcBox.top = 0;
         srcBox.bottom = 1;
         srcBox.front = 0;
         srcBox.back = 1;
 
-        context->CopySubresourceRegion(mBuffer, 0, offset, 0, 0, mStagingBuffer, 0, &srcBox);
+        ASSERT(mStagingBuffer && source->mStagingBuffer);
+        context->CopySubresourceRegion(mStagingBuffer, 0, destOffset, 0, 0, source->mStagingBuffer, 0, &srcBox);
     }
-
-    mSize = std::max(mSize, offset + size);
-
-    mWriteUsageCount = 0;
-
-    mResolvedDataValid = false;
 }
 
 void BufferStorage11::clear()
@@ -332,7 +222,7 @@ void BufferStorage11::markBufferUsage()
     mReadUsageCount++;
     mWriteUsageCount++;
 
-    static const unsigned int usageLimit = 5;
+    const unsigned int usageLimit = 5;
 
     if (mReadUsageCount > usageLimit && mResolvedData)
     {
@@ -341,18 +231,136 @@ void BufferStorage11::markBufferUsage()
         mResolvedDataSize = 0;
         mResolvedDataValid = false;
     }
-
-    if (mReadUsageCount > usageLimit && mWriteUsageCount > usageLimit && mStagingBuffer)
-    {
-        mStagingBuffer->Release();
-        mStagingBuffer = NULL;
-        mStagingBufferSize = 0;
-    }
 }
 
-ID3D11Buffer *BufferStorage11::getBuffer() const
+ID3D11Buffer *BufferStorage11::getBuffer(BufferUsage usage)
 {
-    return mBuffer;
+    markBufferUsage();
+
+    DirectBufferStorage11 *directBuffer = NULL;
+
+    auto directBufferIt = mDirectBuffers.find(usage);
+    if (directBufferIt != mDirectBuffers.end())
+    {
+        directBuffer = directBufferIt->second;
+    }
+
+    if (directBuffer)
+    {
+        if (directBuffer->isDirty())
+        {
+            // if updateFromStagingBuffer returns true, the D3D buffer has been recreated
+            // and we should update our serial
+            if (directBuffer->updateFromStagingBuffer(mStagingBuffer, mSize, 0))
+            {
+                updateSerial();
+            }
+        }
+    }
+    else
+    {
+        // buffer is not allocated, create it
+        directBuffer = new DirectBufferStorage11(mRenderer, usage);
+        directBuffer->updateFromStagingBuffer(mStagingBuffer, mSize, 0);
+
+        mDirectBuffers.insert(std::make_pair(usage, directBuffer));
+        updateSerial();
+    }
+
+    return directBuffer->getD3DBuffer();
+}
+
+DirectBufferStorage11::DirectBufferStorage11(Renderer11 *renderer, BufferUsage usage)
+    : mRenderer(renderer),
+      mUsage(usage),
+      mDirectBuffer(NULL),
+      mBufferSize(0),
+      mDirty(false)
+{
+}
+
+DirectBufferStorage11::~DirectBufferStorage11()
+{
+    SafeRelease(mDirectBuffer);
+}
+
+BufferUsage DirectBufferStorage11::getUsage() const
+{
+    return mUsage;
+}
+
+// Returns true if it recreates the direct buffer
+bool DirectBufferStorage11::updateFromStagingBuffer(ID3D11Buffer *stagingBuffer, size_t size, size_t offset)
+{
+    ID3D11Device *device = mRenderer->getDevice();
+    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+    // unused for now
+    ASSERT(offset == 0);
+
+    unsigned int requiredBufferSize = size + offset;
+    bool createBuffer = !mDirectBuffer || mBufferSize < requiredBufferSize;
+
+    // (Re)initialize D3D buffer if needed
+    if (createBuffer)
+    {
+        D3D11_BUFFER_DESC bufferDesc;
+        fillBufferDesc(&bufferDesc, mRenderer, mUsage, requiredBufferSize);
+
+        ID3D11Buffer *newBuffer;
+        HRESULT result = device->CreateBuffer(&bufferDesc, NULL, &newBuffer);
+
+        if (FAILED(result))
+        {
+            return gl::error(GL_OUT_OF_MEMORY, false);
+        }
+
+        // No longer need the old buffer
+        SafeRelease(mDirectBuffer);
+        mDirectBuffer = newBuffer;
+
+        mBufferSize = bufferDesc.ByteWidth;
+    }
+
+    // Copy data via staging buffer
+    D3D11_BOX srcBox;
+    srcBox.left = 0;
+    srcBox.right = size;
+    srcBox.top = 0;
+    srcBox.bottom = 1;
+    srcBox.front = 0;
+    srcBox.back = 1;
+
+    context->CopySubresourceRegion(mDirectBuffer, 0, offset, 0, 0, stagingBuffer, 0, &srcBox);
+
+    mDirty = false;
+
+    return createBuffer;
+}
+
+void DirectBufferStorage11::fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Renderer *renderer, BufferUsage usage, unsigned int bufferSize)
+{
+    bufferDesc->ByteWidth = bufferSize;
+    bufferDesc->MiscFlags = 0;
+    bufferDesc->StructureByteStride = 0;
+
+    switch (usage)
+    {
+      case BUFFER_USAGE_VERTEX:
+        bufferDesc->Usage = D3D11_USAGE_DEFAULT;
+        bufferDesc->BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        bufferDesc->CPUAccessFlags = 0;
+        break;
+
+      case BUFFER_USAGE_INDEX:
+        bufferDesc->Usage = D3D11_USAGE_DEFAULT;
+        bufferDesc->BindFlags = D3D11_BIND_INDEX_BUFFER;
+        bufferDesc->CPUAccessFlags = 0;
+        break;
+
+    default:
+        UNREACHABLE();
+    }
 }
 
 }
