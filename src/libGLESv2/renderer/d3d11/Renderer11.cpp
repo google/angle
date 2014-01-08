@@ -658,7 +658,7 @@ bool Renderer11::setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], con
         if (uniformBuffer)
         {
             BufferStorage11 *bufferStorage = BufferStorage11::makeBufferStorage11(uniformBuffer->getStorage());
-            ID3D11Buffer *constantBuffer = bufferStorage->getBuffer(true);
+            ID3D11Buffer *constantBuffer = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
 
             if (!constantBuffer)
             {
@@ -680,7 +680,7 @@ bool Renderer11::setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], con
         if (uniformBuffer)
         {
             BufferStorage11 *bufferStorage = BufferStorage11::makeBufferStorage11(uniformBuffer->getStorage());
-            ID3D11Buffer *constantBuffer = bufferStorage->getBuffer(true);
+            ID3D11Buffer *constantBuffer = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
 
             if (!constantBuffer)
             {
@@ -1114,7 +1114,7 @@ GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementAr
                 BufferStorage11 *storage = BufferStorage11::makeBufferStorage11(indexInfo->storage);
                 IndexBuffer11* indexBuffer = IndexBuffer11::makeIndexBuffer11(indexInfo->indexBuffer);
 
-                mDeviceContext->IASetIndexBuffer(storage->getBuffer(false), indexBuffer->getIndexFormat(), indexInfo->startOffset);
+                mDeviceContext->IASetIndexBuffer(storage->getBuffer(BUFFER_USAGE_INDEX), indexBuffer->getIndexFormat(), indexInfo->startOffset);
 
                 mAppliedIBSerial = 0;
                 mAppliedStorageIBSerial = storage->getSerial();

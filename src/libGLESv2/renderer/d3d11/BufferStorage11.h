@@ -13,8 +13,17 @@
 
 namespace rx
 {
+class Renderer;
 class Renderer11;
 class DirectBufferStorage11;
+
+enum BufferUsage
+{
+    BUFFER_USAGE_VERTEX,
+    BUFFER_USAGE_INDEX,
+    BUFFER_USAGE_PIXEL,
+    BUFFER_USAGE_UNIFORM,
+};
 
 class BufferStorage11 : public BufferStorage
 {
@@ -32,7 +41,7 @@ class BufferStorage11 : public BufferStorage
     virtual unsigned int getSize() const;
     virtual bool supportsDirectBinding() const;
 
-    ID3D11Buffer *getBuffer(bool isConstantBufferUsage);
+    ID3D11Buffer *getBuffer(BufferUsage usage);
     ID3D11ShaderResourceView *getSRV(DXGI_FORMAT srvFormat);
 
   private:
@@ -41,7 +50,7 @@ class BufferStorage11 : public BufferStorage
     ID3D11Buffer *mStagingBuffer;
     unsigned int mStagingBufferSize;
 
-    std::vector<DirectBufferStorage11*> mDirectBuffers;
+    std::map<BufferUsage, DirectBufferStorage11*> mDirectBuffers;
 
     typedef std::pair<ID3D11Buffer *, ID3D11ShaderResourceView *> BufferSRVPair;
     std::map<DXGI_FORMAT, BufferSRVPair> mBufferResourceViews;
@@ -65,10 +74,10 @@ class BufferStorage11 : public BufferStorage
 class DirectBufferStorage11
 {
   public:
-    DirectBufferStorage11(Renderer11 *renderer, bool isConstantBufferUsage);
+    DirectBufferStorage11(Renderer11 *renderer, BufferUsage usage);
     ~DirectBufferStorage11();
 
-    bool isConstantBufferUsage() const;
+    BufferUsage getUsage() const;
     bool updateFromStagingBuffer(ID3D11Buffer *stagingBuffer, size_t size, size_t offset);
 
     ID3D11Buffer *getD3DBuffer() { return mDirectBuffer; }
@@ -77,12 +86,12 @@ class DirectBufferStorage11
 
   private:
     Renderer11 *mRenderer;
-    const bool mIsConstantBufferUsage;
+    const BufferUsage mUsage;
     ID3D11Buffer *mDirectBuffer;
     size_t mBufferSize;
     bool mDirty;
 
-    void fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, unsigned int bufferSize);
+    static void fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Renderer *renderer, BufferUsage usage, unsigned int bufferSize);
 };
 
 }
