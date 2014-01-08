@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8dea89ed_11a46c9c",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-08T22:08:10Z",
+      "side": 1,
+      "message": "Did you have a chance to test if we saw the performance regression when we use both vertex buffer and shader resource binding flags? I realize it makes the code nice and simple to have a 1:1 mapping, but I\u0027d rather favour good performance; it\u0027s not within the realm of imagining that someone who is using PBOs would want to use the same data for both buffers and textures.",
+      "revId": "a12e769261e86dcec91d675f431a1d5de11ac580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
