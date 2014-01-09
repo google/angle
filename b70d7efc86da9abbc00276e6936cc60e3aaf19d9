@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2dd43d2d_c0ba8fa3",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-01-09T23:15:25Z",
+      "side": 1,
+      "message": "this should be translator so in component build, you won\u0027t have two copies of it. translator_static should only be used by test targets.",
+      "revId": "b70d7efc86da9abbc00276e6936cc60e3aaf19d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
