@@ -16,6 +16,24 @@
       "revId": "caf02e2e31747d16beba727905e5ee8edcdeed72",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6def1500_f951cb4f",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-01-09T23:12:04Z",
+      "side": 1,
+      "message": "It returns bytes mostly because the return value is used for allocating memory and every format\u0027s size is a multiple of 8 bits.\n\nI could add a GetPixelBits but if we removed GetPixelBytes we\u0027d have to do the division by 8 in lots of places.",
+      "parentUuid": "4df411d1_236e0246",
+      "revId": "caf02e2e31747d16beba727905e5ee8edcdeed72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
