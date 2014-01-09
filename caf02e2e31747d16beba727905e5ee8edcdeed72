@@ -34,6 +34,24 @@
       "revId": "caf02e2e31747d16beba727905e5ee8edcdeed72",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4df411d1_23ff2219",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-09T23:13:58Z",
+      "side": 1,
+      "message": "We definitely don\u0027t want to remove GetPixelBytes. If this is the only place that we need bits, I don\u0027t think adding a Bits version would be worth it.",
+      "parentUuid": "6def1500_f951cb4f",
+      "revId": "caf02e2e31747d16beba727905e5ee8edcdeed72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
