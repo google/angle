@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4df411d1_236e0246",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-09T23:08:11Z",
+      "side": 1,
+      "message": "GetPixelBytes is dividing the stored number of bits by eight before returning it-- it seems silly that we do that before multiplying it right back in here. Was there a reason we didn\u0027t provide a GetPixelBits?",
+      "revId": "caf02e2e31747d16beba727905e5ee8edcdeed72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
