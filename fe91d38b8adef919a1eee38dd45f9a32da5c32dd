@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8dea89ed_6bd73d0f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-10T20:16:38Z",
+      "side": 1,
+      "message": "Any reason not to keep the original commit messages? Did you try cherry-picking the original patch? A cursory inspection suggests they should copy over mostly cleanly, but of course things aren\u0027t always so simple.",
+      "revId": "fe91d38b8adef919a1eee38dd45f9a32da5c32dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
