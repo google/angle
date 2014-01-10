@@ -23,25 +23,25 @@ build_samples = True
 build_tests = False
 
 if __name__ == '__main__':
-	gyp_cmd = os.path.join(gyp_dir, 'gyp')
-	gyp_cmd += ' --ignore-environment'
-	gyp_cmd += ' --depth=.'
-	gyp_cmd += ' --include=' + os.path.join(script_dir, 'common.gypi')
-	gyp_cmd += ' --generator-output=' + generation_dir
-	gyp_cmd += ' --format=' + gyp_generators
-	gyp_cmd += ' -G msvs_version=' + msvs_version
-	gyp_cmd += ' -D angle_build_tests=' + ('1' if build_tests else '0')
-	gyp_cmd += ' -D angle_build_samples=' + ('1' if build_samples else '0')
-	gyp_cmd += ' -D angle_relative_src_path=..\\..\\src\\'
-	gyp_cmd += ' ' + os.path.join(script_dir, 'all.gyp')
+    gyp_cmd = os.path.join(gyp_dir, 'gyp')
+    gyp_cmd += ' --ignore-environment'
+    gyp_cmd += ' --depth=.'
+    gyp_cmd += ' --include=' + os.path.join(script_dir, 'common.gypi')
+    gyp_cmd += ' --generator-output=' + generation_dir
+    gyp_cmd += ' --format=' + gyp_generators
+    gyp_cmd += ' -G msvs_version=' + msvs_version
+    gyp_cmd += ' -D angle_build_tests=' + ('1' if build_tests else '0')
+    gyp_cmd += ' -D angle_build_samples=' + ('1' if build_samples else '0')
+    gyp_cmd += ' -D angle_relative_src_path=..\\..\\src\\'
+    gyp_cmd += ' ' + os.path.join(script_dir, 'all.gyp')
 
-	print 'Generating projects to' + generation_dir + ' from gyp files...'
-	print gyp_cmd
-	sys.stdout.flush()
-	os.system(gyp_cmd)
+    print 'Generating projects to ' + generation_dir + ' from gyp files...'
+    print gyp_cmd
+    sys.stdout.flush()
+    os.system(gyp_cmd)
 
-	git_add_cmd = 'git add ' + generation_dir + ' -u'
-	print '\nRunning git add on updated Visual Studio projects...'
-	print git_add_cmd
-	sys.stdout.flush()
-	os.system(git_add_cmd)
+    git_add_cmd = 'git add ' + generation_dir + ' -u'
+    print '\nRunning git add on updated Visual Studio projects...'
+    print git_add_cmd
+    sys.stdout.flush()
+    os.system(git_add_cmd)

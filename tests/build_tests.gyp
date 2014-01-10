@@ -5,6 +5,6 @@
 {
     'includes':
     [
-        'angle.gypi',
+        'build_tests.gypi',
     ],
 }
