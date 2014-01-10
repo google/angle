@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d38c95d_c73bb2ae",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2006,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-10T23:57:37Z",
+      "side": 1,
+      "message": "Please let\u0027s not introduce a new style at this point in the project.",
+      "revId": "05a7fd8443ecc97b97a6a49070077c434bb0239e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dea89ed_26484c44",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-10T23:57:37Z",
+      "side": 1,
+      "message": "Why does this take a Context pointer?",
+      "revId": "05a7fd8443ecc97b97a6a49070077c434bb0239e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
