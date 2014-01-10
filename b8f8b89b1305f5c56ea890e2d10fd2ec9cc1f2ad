@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d3d554c_602f32bd",
+        "filename": "projects/src/libGLESv2.vcxproj",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-10T21:29:45Z",
+      "side": 0,
+      "message": "whoops, did we forget to include commit.h in the build? not a breaking issue but still something we might want to fix.",
+      "revId": "b8f8b89b1305f5c56ea890e2d10fd2ec9cc1f2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
