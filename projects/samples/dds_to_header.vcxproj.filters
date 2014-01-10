@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="dds_to_header">
+      <UniqueIdentifier>{6F557D24-D36F-34F5-20A1-E400ED0EC3BE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\samples\samples.gyp"/>
+    <ClCompile Include="..\..\samples\dds_to_header\main.cpp">
+      <Filter>dds_to_header</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

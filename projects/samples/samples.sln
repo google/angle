@@ -4,6 +4,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "commit_id", "..\src\commit_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "copy_compiler_dll", "..\src\copy_compiler_dll.vcxproj", "{22DC02D5-1598-943C-13E1-82185B469F81}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dds_to_header", "dds_to_header.vcxproj", "{6BC75FF2-C11A-C393-F9BB-BF29FF29D736}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "es_util", "es_util.vcxproj", "{80E5C3D9-93C2-943E-176F-C9A903E27BC9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{FBAEE4F6-562A-588F-01F9-72DCABB3B061} = {FBAEE4F6-562A-588F-01F9-72DCABB3B061}
@@ -156,6 +158,10 @@ Global
 		{46160987-0221-9E14-3B88-80F9FCFCFFBF}.Debug|Win32.Build.0 = Debug|Win32
 		{46160987-0221-9E14-3B88-80F9FCFCFFBF}.Release|Win32.ActiveCfg = Release|Win32
 		{46160987-0221-9E14-3B88-80F9FCFCFFBF}.Release|Win32.Build.0 = Release|Win32
+		{6BC75FF2-C11A-C393-F9BB-BF29FF29D736}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6BC75FF2-C11A-C393-F9BB-BF29FF29D736}.Debug|Win32.Build.0 = Debug|Win32
+		{6BC75FF2-C11A-C393-F9BB-BF29FF29D736}.Release|Win32.ActiveCfg = Release|Win32
+		{6BC75FF2-C11A-C393-F9BB-BF29FF29D736}.Release|Win32.Build.0 = Release|Win32
 		{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}.Debug|Win32.ActiveCfg = Debug|Win32
 		{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}.Debug|Win32.Build.0 = Debug|Win32
 		{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}.Release|Win32.ActiveCfg = Release|Win32

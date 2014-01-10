@@ -45,6 +45,15 @@
                 },
 
                 {
+                    'target_name': 'dds_to_header',
+                    'type': 'executable',
+                    'sources':
+                    [
+                        '<!@(python enumerate_files.py dds_to_header -types *.cpp)',
+                    ],
+                },
+
+                {
                     'target_name': 'es_util',
                     'type': 'static_library',
                     'dependencies':

@@ -145,6 +145,10 @@
       <Project>{B4D06330-EED1-6F99-BCA4-2F913908C38A}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\samples\dds_to_header.vcxproj">
+      <Project>{6BC75FF2-C11A-C393-F9BB-BF29FF29D736}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\samples\es_util.vcxproj">
       <Project>{80E5C3D9-93C2-943E-176F-C9A903E27BC9}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
