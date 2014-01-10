@@ -37,7 +37,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -68,14 +68,14 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
       <PreprocessorDefinitions>ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };ANGLE_ENABLE_PERF;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -105,7 +105,7 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
       <PreprocessorDefinitions>ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
@@ -117,8 +117,8 @@
     <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\generate_shaders.bat"/>
     <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\Clear11.hlsl"/>
     <None Include="..\..\src\libGLESv2\renderer\d3d9\shaders\Blit.vs"/>
-    <None Include="..\..\src\libGLESv2\renderer\d3d9\shaders\Blit.ps"/>
     <None Include="..\..\src\libGLESv2\renderer\d3d9\shaders\generate_shaders.bat"/>
+    <None Include="..\..\src\libGLESv2\renderer\d3d9\shaders\Blit.ps"/>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\libGLESv2\resource.h"/>
@@ -126,6 +126,7 @@
     <ClInclude Include="..\..\src\libGLESv2\Shader.h"/>
     <ClInclude Include="..\..\src\libGLESv2\BinaryStream.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Renderbuffer.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\Fence.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Constants.h"/>
     <ClInclude Include="..\..\src\libGLESv2\utilities.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Program.h"/>
@@ -140,7 +141,6 @@
     <ClInclude Include="..\..\src\libGLESv2\Uniform.h"/>
     <ClInclude Include="..\..\src\libGLESv2\main.h"/>
     <ClInclude Include="..\..\src\libGLESv2\mathutil.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Fence.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Framebuffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\IndexDataManager.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\Renderer.h"/>
@@ -200,9 +200,8 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\shaders\compiled\flipyvs.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\shaders\compiled\componentmaskps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\shaders\compiled\standardvs.h"/>
-    <ClInclude Include="..\..\src\common\RefCountObject.h"/>
     <ClInclude Include="..\..\src\common\event_tracer.h"/>
-    <ClInclude Include="..\..\src\common\commit.h"/>
+    <ClInclude Include="..\..\src\common\RefCountObject.h"/>
     <ClInclude Include="..\..\src\common\debug.h"/>
     <ClInclude Include="..\..\src\common\version.h"/>
     <ClInclude Include="..\..\src\common\angleutils.h"/>
@@ -237,6 +236,7 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\IndexRangeCache.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\Renderer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\TextureStorage.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\Query11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\RenderTarget11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\InputLayoutCache.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\IndexBuffer11.cpp"/>
@@ -244,7 +244,6 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\renderer11_utils.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\ShaderExecutable11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\SwapChain11.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\Query11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\VertexBuffer11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\Renderer11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\Image11.cpp"/>
@@ -276,6 +275,10 @@
   <ItemGroup>
     <ProjectReference Include="translator.vcxproj">
       <Project>{C15697F6-5057-016E-BD29-422971875679}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="commit_id.vcxproj">
+      <Project>{3B7F5656-177F-52EE-26B3-D6A75368D0A9}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="copy_compiler_dll.vcxproj">

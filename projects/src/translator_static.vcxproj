@@ -121,7 +121,6 @@
     <ClInclude Include="..\..\src\common\debug.h"/>
     <ClInclude Include="..\..\src\common\event_tracer.h"/>
     <ClInclude Include="..\..\src\common\version.h"/>
-    <ClInclude Include="..\..\src\common\commit.h"/>
     <ClInclude Include="..\..\src\common\angleutils.h"/>
     <ClInclude Include="..\..\src\compiler\translator\BaseTypes.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputESSL.h"/>
@@ -143,6 +142,7 @@
     <ClInclude Include="..\..\src\compiler\translator\BuiltInFunctionEmulator.h"/>
     <ClInclude Include="..\..\src\compiler\translator\PoolAlloc.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Uniform.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\MMap.h"/>
     <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h"/>
     <ClInclude Include="..\..\src\compiler\translator\UnfoldShortCircuit.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorGLSL.h"/>
@@ -165,7 +165,6 @@
     <ClInclude Include="..\..\src\compiler\translator\MapLongVariableNames.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeDll.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang_tab.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\MMap.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h"/>
     <ClInclude Include="..\..\src\compiler\translator\localintermediate.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ShHandle.h"/>

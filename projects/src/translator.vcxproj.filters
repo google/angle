@@ -49,9 +49,6 @@
     <ClInclude Include="..\..\src\common\version.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\commit.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClCompile Include="..\..\src\common\event_tracer.cpp">
       <Filter>common</Filter>
     </ClCompile>
@@ -187,6 +184,9 @@
     <ClCompile Include="..\..\src\compiler\translator\CodeGen.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\compiler\translator\MMap.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
@@ -304,9 +304,6 @@
     <ClCompile Include="..\..\src\compiler\translator\Uniform.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\compiler\translator\MMap.h">
-      <Filter>compiler\translator</Filter>
-    </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\Compiler.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
