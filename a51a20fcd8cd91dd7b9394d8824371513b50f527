@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4df411d1_a997712f",
+        "filename": "src/libGLESv2/renderer/BufferStorage11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-10T17:40:42Z",
+      "side": 1,
+      "message": "Just a nitpick, but can we thinking of anything that doesn\u0027t have the word buffer twice here? (OCD issue more than anything)",
+      "revId": "a51a20fcd8cd91dd7b9394d8824371513b50f527",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
