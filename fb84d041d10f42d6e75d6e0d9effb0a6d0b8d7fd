@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4df411d1_a9553111",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-10T14:53:20Z",
+      "side": 1,
+      "message": "Seems like reducing to 2 cases (if vertex exists) (if index exists) would be better -- trying to avoid copying staging to GPU (dirty) isn\u0027t a big problem, no? Alternately if you feel this code is getting too complex we could just go back to having 4 buffer cases.",
+      "revId": "fb84d041d10f42d6e75d6e0d9effb0a6d0b8d7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d38c95d_21960e7a",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-10T14:53:20Z",
+      "side": 1,
+      "message": "Do we need to pass a renderer as an argument here? We seem to have mRenderer available in this class.",
+      "revId": "fb84d041d10f42d6e75d6e0d9effb0a6d0b8d7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
