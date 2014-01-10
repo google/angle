@@ -1,6 +1,5 @@
 #include "ANGLETest.h"
-#include "media/stanfordbunny.inl"
-#include "media/stanforddragon.inl"
+#include "media/pixel.inl"
 
 class CompressedTextureTest : public ANGLETest
 {
@@ -82,16 +81,16 @@ TEST_F(CompressedTextureTest, compressed_tex_image)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, std::max(stanfordbunnyWidth >> 0, 1U), std::max(stanfordbunnyHeight >> 0, 1U), 0, sizeof(stanfordbunny_0), stanfordbunny_0);
-    glCompressedTexImage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, std::max(stanfordbunnyWidth >> 1, 1U), std::max(stanfordbunnyHeight >> 1, 1U), 0, sizeof(stanfordbunny_1), stanfordbunny_1);
-    glCompressedTexImage2D(GL_TEXTURE_2D, 2, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, std::max(stanfordbunnyWidth >> 2, 1U), std::max(stanfordbunnyHeight >> 2, 1U), 0, sizeof(stanfordbunny_2), stanfordbunny_2);
-    glCompressedTexImage2D(GL_TEXTURE_2D, 3, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, std::max(stanfordbunnyWidth >> 3, 1U), std::max(stanfordbunnyHeight >> 3, 1U), 0, sizeof(stanfordbunny_3), stanfordbunny_3);
-    glCompressedTexImage2D(GL_TEXTURE_2D, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, std::max(stanfordbunnyWidth >> 4, 1U), std::max(stanfordbunnyHeight >> 4, 1U), 0, sizeof(stanfordbunny_4), stanfordbunny_4);
-    glCompressedTexImage2D(GL_TEXTURE_2D, 5, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, std::max(stanfordbunnyWidth >> 5, 1U), std::max(stanfordbunnyHeight >> 5, 1U), 0, sizeof(stanfordbunny_5), stanfordbunny_5);
-    glCompressedTexImage2D(GL_TEXTURE_2D, 6, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, std::max(stanfordbunnyWidth >> 6, 1U), std::max(stanfordbunnyHeight >> 6, 1U), 0, sizeof(stanfordbunny_6), stanfordbunny_6);
-    glCompressedTexImage2D(GL_TEXTURE_2D, 7, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, std::max(stanfordbunnyWidth >> 7, 1U), std::max(stanfordbunnyHeight >> 7, 1U), 0, sizeof(stanfordbunny_7), stanfordbunny_7);
-    glCompressedTexImage2D(GL_TEXTURE_2D, 8, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, std::max(stanfordbunnyWidth >> 8, 1U), std::max(stanfordbunnyHeight >> 8, 1U), 0, sizeof(stanfordbunny_8), stanfordbunny_8);
-    glCompressedTexImage2D(GL_TEXTURE_2D, 9, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, std::max(stanfordbunnyWidth >> 9, 1U), std::max(stanfordbunnyHeight >> 9, 1U), 0, sizeof(stanfordbunny_9), stanfordbunny_9);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_width, pixel_0_height, 0, pixel_0_size, pixel_0_data);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_1_width, pixel_1_height, 0, pixel_1_size, pixel_1_data);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 2, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_2_width, pixel_2_height, 0, pixel_2_size, pixel_2_data);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 3, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_3_width, pixel_3_height, 0, pixel_3_size, pixel_3_data);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_4_width, pixel_4_height, 0, pixel_4_size, pixel_4_data);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 5, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_5_width, pixel_5_height, 0, pixel_5_size, pixel_5_data);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 6, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_6_width, pixel_6_height, 0, pixel_6_size, pixel_6_data);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 7, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_7_width, pixel_7_height, 0, pixel_7_size, pixel_7_data);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 8, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_8_width, pixel_8_height, 0, pixel_8_size, pixel_8_data);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 9, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_9_width, pixel_9_height, 0, pixel_9_size, pixel_9_data);
 
     EXPECT_GL_NO_ERROR();
 
@@ -129,15 +128,15 @@ TEST_F(CompressedTextureTest, compressed_tex_storage)
 
     if (getClientVersion() < 3)
     {
-        glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, stanforddragonWidth, stanforddragonHeight);
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_width, pixel_0_height);
     }
     else
     {
-        glTexStorage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, stanforddragonWidth, stanforddragonHeight);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_width, pixel_0_height);
     }
     EXPECT_GL_NO_ERROR();
 
-    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, stanforddragonWidth, stanforddragonHeight, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, sizeof(stanforddragon), stanforddragon);
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, pixel_0_width, pixel_0_height, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_size, pixel_0_data);
 
     EXPECT_GL_NO_ERROR();
 
