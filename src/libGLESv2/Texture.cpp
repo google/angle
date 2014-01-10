@@ -263,6 +263,12 @@ GLenum Texture::getBaseLevelInternalFormat() const
 
 void Texture::setImage(const PixelUnpackState &unpack, GLenum type, const void *pixels, rx::Image *image)
 {
+    // No-op
+    if (image->getWidth() == 0 || image->getHeight() == 0 || image->getDepth() == 0)
+    {
+        return;
+    }
+
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
     const void *pixelData = pixels;
