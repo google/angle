@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8dea89ed_cbef49dd",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-10T20:13:44Z",
+      "side": 1,
+      "message": "tiny nit: why not use mDirectBuffers[usage] \u003d directBuffer; ? we\u0027ve already established above the map does not contain a value for key \u0027usage\u0027.",
+      "revId": "e2b3df2f55560dd281bcd2c8dcf2b48418b99448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
