@@ -16,6 +16,9 @@
 #include <intrin.h>
 #endif
 
+#include <limits>
+#include <algorithm>
+
 namespace gl
 {
 
@@ -56,6 +59,11 @@ inline unsigned int ceilPow2(unsigned int x)
     x++;
 
     return x;
+}
+
+inline int clampToInt(unsigned int x)
+{
+    return static_cast<int>(std::min(x, static_cast<unsigned int>(std::numeric_limits<int>::max())));
 }
 
 template<typename T, typename MIN, typename MAX>
