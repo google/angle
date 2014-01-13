@@ -9,6 +9,8 @@
 #ifndef COMMON_SYSTEM_H
 #define COMMON_SYSTEM_H
 
+#if defined(_WIN32)
+
 #if !defined(WIN32_LEAN_AND_MEAN)
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -22,5 +24,7 @@
 #if defined(max)
 #undef max
 #endif
+
+#endif // _WIN32
 
 #endif   // COMMON_SYSTEM_H
