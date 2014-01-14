@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #define GL_APICALL
 #include <GLES3/gl3.h>

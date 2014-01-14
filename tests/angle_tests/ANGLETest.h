@@ -17,6 +17,7 @@
 #include <GLES2/gl2ext.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <algorithm>
 
 #define EXPECT_GL_ERROR(err) EXPECT_EQ(glGetError(), (err))
 #define EXPECT_GL_NO_ERROR() EXPECT_GL_ERROR(GL_NO_ERROR)
