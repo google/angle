@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd26414f_5677521b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-14T17:32:21Z",
+      "side": 1,
+      "message": "Sorry for nitpick, but can we shorten this a bit or split in to a short one liner and a body paragaph?",
+      "revId": "c8db0198b54d9bd9e0ad08f5fc030724f902b15c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad810d4e_b839e108",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-14T17:32:21Z",
+      "side": 1,
+      "message": "Can we consolidate the two defines into one? Would be nice to keep the count as low as we can.",
+      "revId": "c8db0198b54d9bd9e0ad08f5fc030724f902b15c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
