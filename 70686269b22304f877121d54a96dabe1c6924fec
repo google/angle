@@ -50,6 +50,24 @@
       "revId": "70686269b22304f877121d54a96dabe1c6924fec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d02b5bc_f8d8f1b9",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-01-15T05:09:20Z",
+      "side": 1,
+      "message": "Whoops, this is a result of the merges, will fix.",
+      "parentUuid": "ad810d4e_21c8588d",
+      "revId": "70686269b22304f877121d54a96dabe1c6924fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
