@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8d0d29ec_9cb72906",
+        "filename": "src/angle.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-15T15:16:25Z",
+      "side": 1,
+      "message": "Mild preference for omitting the slash -- currently angle_relative_src_path can be blank. (Alternately, \".\")",
+      "parentUuid": "cd26414f_7cefcd9b",
+      "revId": "70686269b22304f877121d54a96dabe1c6924fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd26414f_5cf21185",
         "filename": "src/commit_id.bat",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-01-14T23:26:32Z",
       "side": 1,
       "message": "I don\u0027t think putting a generated file in the src folder is a good idea unless you plan to commit it with the CL.\n\nYou should put it in the intermediate build folder instead, and update the include paths.",
+      "revId": "70686269b22304f877121d54a96dabe1c6924fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d02b5bc_fbac6bbb",
+        "filename": "src/commit_id.bat",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-15T15:16:25Z",
+      "side": 1,
+      "message": "Done. I put them in the shared intermediate path.",
+      "parentUuid": "cd26414f_5cf21185",
       "revId": "70686269b22304f877121d54a96dabe1c6924fec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
