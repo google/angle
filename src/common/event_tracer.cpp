@@ -14,8 +14,8 @@ AddTraceEventFunc g_addTraceEvent;
 
 extern "C" {
 
-void __stdcall SetTraceFunctionPointers(GetCategoryEnabledFlagFunc getCategoryEnabledFlag,
-                                        AddTraceEventFunc addTraceEvent)
+void TRACE_ENTRY SetTraceFunctionPointers(GetCategoryEnabledFlagFunc getCategoryEnabledFlag,
+                                          AddTraceEventFunc addTraceEvent)
 {
     gl::g_getCategoryEnabledFlag = getCategoryEnabledFlag;
     gl::g_addTraceEvent = addTraceEvent;
