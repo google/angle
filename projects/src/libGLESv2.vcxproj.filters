@@ -46,9 +46,6 @@
     <ClInclude Include="..\..\src\libGLESv2\Buffer.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\Renderbuffer.h">
-      <Filter>libGLESv2</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\Shader.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
@@ -68,6 +65,9 @@
       <Filter>libGLESv2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\validationES3.h">
+      <Filter>libGLESv2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\Renderbuffer.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\Program.h">
@@ -175,9 +175,6 @@
     <ClCompile Include="..\..\src\libGLESv2\ResourceManager.cpp">
       <Filter>libGLESv2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\libGLESv2\angletypes.cpp">
-      <Filter>libGLESv2</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\Texture.cpp">
       <Filter>libGLESv2</Filter>
     </ClCompile>
@@ -196,6 +193,9 @@
     <ClInclude Include="..\..\src\libGLESv2\formatutils.h">
       <Filter>libGLESv2</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\angletypes.cpp">
+      <Filter>libGLESv2</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\Framebuffer.cpp">
       <Filter>libGLESv2</Filter>
     </ClCompile>
@@ -484,12 +484,6 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthroughlum2d11ps.h">
       <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\buffertotexture11_ps_2f.h">
-      <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\buffertotexture11_ps_1ui.h">
-      <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthroughr3dui11ps.h">
       <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
@@ -529,9 +523,6 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\clearsint11vs.h">
       <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\buffertotexture11_ps_2i.h">
-      <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\swizzleui2dps.h">
       <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
@@ -548,9 +539,6 @@
       <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthrough2d11vs.h">
-      <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\buffertotexture11_ps_2ui.h">
       <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\swizzlef2dps.h">
@@ -581,12 +569,6 @@
       <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\clearsint11ps.h">
-      <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\buffertotexture11_ps_1i.h">
-      <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\buffertotexture11_ps_1f.h">
       <Filter>libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthroughrg3dui11ps.h">
@@ -746,9 +728,6 @@
       <Filter>common</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\common\version.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\common\system.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\common\utilities.h">

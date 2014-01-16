@@ -9,6 +9,10 @@
 #include "common/utilities.h"
 #include "common/mathutil.h"
 
+#if defined(_WIN32)
+#include <windows.h>
+#endif
+
 #include <set>
 
 namespace gl
@@ -432,6 +436,7 @@ bool IsTriangleMode(GLenum drawMode)
 
 std::string getTempPath()
 {
+#if defined (_WIN32)
     char path[MAX_PATH];
     DWORD pathLen = GetTempPathA(sizeof(path) / sizeof(path[0]), path);
     if (pathLen == 0)
@@ -448,6 +453,10 @@ std::string getTempPath()
     }
 
     return path;
+#else
+    UNIMPLEMENTED();
+    return "";
+#endif
 }
 
 void writeFile(const char* path, const void* content, size_t size)

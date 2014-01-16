@@ -49,9 +49,6 @@
     <ClInclude Include="..\..\src\common\commit.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\system.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClCompile Include="..\..\src\common\utilities.cpp">
       <Filter>common</Filter>
     </ClCompile>

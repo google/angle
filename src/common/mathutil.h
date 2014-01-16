@@ -9,10 +9,9 @@
 #ifndef LIBGLESV2_MATHUTIL_H_
 #define LIBGLESV2_MATHUTIL_H_
 
-#include "common/system.h"
 #include "common/debug.h"
 
-#ifdef _WINDOWS_
+#if defined(_WIN32)
 #include <intrin.h>
 #endif
 
@@ -99,6 +98,7 @@ inline unsigned int unorm(float x)
 
 inline bool supportsSSE2()
 {
+#if defined(_WIN32)
     static bool checked = false;
     static bool supports = false;
 
@@ -120,6 +120,10 @@ inline bool supportsSSE2()
     checked = true;
 
     return supports;
+#else
+    UNIMPLEMENTED();
+    return false;
+#endif
 }
 
 template <typename destType, typename sourceType>

@@ -121,7 +121,6 @@
     <ClInclude Include="..\..\src\common\mathutil.h"/>
     <ClInclude Include="..\..\src\common\event_tracer.h"/>
     <ClInclude Include="..\..\src\common\commit.h"/>
-    <ClInclude Include="..\..\src\common\system.h"/>
     <ClInclude Include="..\..\src\common\debug.h"/>
     <ClInclude Include="..\..\src\common\version.h"/>
     <ClInclude Include="..\..\src\common\utilities.h"/>
