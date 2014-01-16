@@ -31,9 +31,6 @@
     <ClCompile Include="..\..\src\libEGL\main.cpp">
       <Filter>libEGL</Filter>
     </ClCompile>
-    <None Include="..\..\src\libEGL\libEGL.def">
-      <Filter>libEGL</Filter>
-    </None>
     <ClCompile Include="..\..\src\libEGL\Display.cpp">
       <Filter>libEGL</Filter>
     </ClCompile>
@@ -46,13 +43,13 @@
     <ClCompile Include="..\..\src\libEGL\libEGL.cpp">
       <Filter>libEGL</Filter>
     </ClCompile>
+    <None Include="..\..\src\libEGL\libEGL.def">
+      <Filter>libEGL</Filter>
+    </None>
     <ClInclude Include="..\..\src\common\event_tracer.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\common\version.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\common\system.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\common\event_tracer.cpp">
@@ -70,11 +67,11 @@
     <ClInclude Include="..\..\src\common\debug.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\common\debug.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\src\common\angleutils.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\common\debug.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

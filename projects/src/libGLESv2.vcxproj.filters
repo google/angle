@@ -490,9 +490,6 @@
     <ClInclude Include="..\..\src\common\version.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\system.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\common\angleutils.h">
       <Filter>common</Filter>
     </ClInclude>

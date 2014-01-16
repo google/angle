@@ -7,7 +7,7 @@
 // debug.cpp: Debugging utilities.
 
 #include "common/debug.h"
-#include "common/system.h"
+#include <stdarg.h>
 
 #if defined(ANGLE_ENABLE_PERF)
 #include <d3d9.h>

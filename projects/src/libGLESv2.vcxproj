@@ -205,7 +205,6 @@
     <ClInclude Include="..\..\src\common\commit.h"/>
     <ClInclude Include="..\..\src\common\debug.h"/>
     <ClInclude Include="..\..\src\common\version.h"/>
-    <ClInclude Include="..\..\src\common\system.h"/>
     <ClInclude Include="..\..\src\common\angleutils.h"/>
     <ClInclude Include="..\..\src\third_party\murmurhash\MurmurHash3.h"/>
   </ItemGroup>
