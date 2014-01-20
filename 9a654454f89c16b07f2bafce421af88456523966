@@ -16,6 +16,24 @@
       "revId": "9a654454f89c16b07f2bafce421af88456523966",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "124f9a7f_852d4276",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-20T15:14:33Z",
+      "side": 1,
+      "message": "I know, these were the only two relevant limits I could find, and I thought it\u0027s reasonable to assume a larger maximum ref value would imply a larger mask. Thanks.",
+      "parentUuid": "124f9a7f_c5233a88",
+      "revId": "9a654454f89c16b07f2bafce421af88456523966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
