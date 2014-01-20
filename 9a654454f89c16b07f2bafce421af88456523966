@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "124f9a7f_c5233a88",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-20T14:57:34Z",
+      "side": 1,
+      "message": "D3D11_DEFAULT_STENCIL_READ_MASK is the default mask and not the actual format\u0027s maximum reference value. Anyway, this is probably good enough.",
+      "revId": "9a654454f89c16b07f2bafce421af88456523966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
