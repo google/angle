@@ -259,16 +259,6 @@
                 [
                     '../third_party/cygwin'
                 ],
-                'configurations':
-                {
-                    'Debug':
-                    {
-                        'defines':
-                        [
-                            'ANGLE_ENABLE_PERF',
-                        ],
-                    },
-                },
             },
         }],
         ['OS != "win" and OS != "mac"',

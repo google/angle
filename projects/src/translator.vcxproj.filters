@@ -55,12 +55,12 @@
     <ClInclude Include="..\..\src\common\commit.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\common\RefCountObject.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\src\common\angleutils.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\common\RefCountObject.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\DirectiveHandler.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>

@@ -31,6 +31,16 @@
                             ],
                         },
                     },
+                    'configurations':
+                    {
+                        'Debug':
+                        {
+                            'defines':
+                            [
+                                'ANGLE_ENABLE_PERF',
+                            ],
+                        },
+                    },
                 },
             ],
         },
