@@ -27,6 +27,7 @@
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/VertexArray.h"
 #include "libGLESv2/Sampler.h"
+#include "libGLESv2/validationES.h"
 
 #include "libEGL/Surface.h"
 
@@ -1388,9 +1389,9 @@ void Context::setRenderbufferStorage(GLsizei width, GLsizei height, GLenum inter
     renderbufferObject->setStorage(renderbuffer);
 }
 
-Framebuffer *Context::getFramebuffer(unsigned int handle)
+Framebuffer *Context::getFramebuffer(unsigned int handle) const
 {
-    FramebufferMap::iterator framebuffer = mFramebufferMap.find(handle);
+    FramebufferMap::const_iterator framebuffer = mFramebufferMap.find(handle);
 
     if (framebuffer == mFramebufferMap.end())
     {
@@ -1450,22 +1451,62 @@ ProgramBinary *Context::getCurrentProgramBinary()
     return mCurrentProgramBinary.get();
 }
 
-Texture2D *Context::getTexture2D()
+Texture *Context::getTargetTexture(GLenum target) const
+{
+    if (!ValidTextureTarget(this, target))
+    {
+        return NULL;
+    }
+
+    switch (target)
+    {
+      case GL_TEXTURE_2D:       return getTexture2D();
+      case GL_TEXTURE_CUBE_MAP: return getTextureCubeMap();
+      case GL_TEXTURE_3D:       return getTexture3D();
+      case GL_TEXTURE_2D_ARRAY: return getTexture2DArray();
+      default:                  return NULL;
+    }
+}
+
+GLuint Context::getTargetFramebufferHandle(GLenum target) const
+{
+    if (!ValidFramebufferTarget(target))
+    {
+        return GL_INVALID_INDEX;
+    }
+
+    if (target == GL_READ_FRAMEBUFFER_ANGLE)
+    {
+        return mState.readFramebuffer;
+    }
+    else
+    {
+        return mState.drawFramebuffer;
+    }
+}
+
+Framebuffer *Context::getTargetFramebuffer(GLenum target) const
+{
+    GLuint framebufferHandle = getTargetFramebufferHandle(target);
+    return (framebufferHandle == GL_INVALID_INDEX ? NULL : getFramebuffer(framebufferHandle));
+}
+
+Texture2D *Context::getTexture2D() const
 {
     return static_cast<Texture2D*>(getSamplerTexture(mState.activeSampler, TEXTURE_2D));
 }
 
-TextureCubeMap *Context::getTextureCubeMap()
+TextureCubeMap *Context::getTextureCubeMap() const
 {
     return static_cast<TextureCubeMap*>(getSamplerTexture(mState.activeSampler, TEXTURE_CUBE));
 }
 
-Texture3D *Context::getTexture3D()
+Texture3D *Context::getTexture3D() const
 {
     return static_cast<Texture3D*>(getSamplerTexture(mState.activeSampler, TEXTURE_3D));
 }
 
-Texture2DArray *Context::getTexture2DArray()
+Texture2DArray *Context::getTexture2DArray() const
 {
     return static_cast<Texture2DArray*>(getSamplerTexture(mState.activeSampler, TEXTURE_2D_ARRAY));
 }
@@ -1500,7 +1541,7 @@ Buffer *Context::getPixelUnpackBuffer()
     return mState.unpack.pixelBuffer.get();
 }
 
-Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type)
+Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type) const
 {
     GLuint texid = mState.samplerTexture[type][sampler].id();
 

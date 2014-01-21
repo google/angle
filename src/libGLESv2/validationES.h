@@ -14,14 +14,17 @@ namespace gl
 
 class Context;
 
-bool ValidTextureTarget(gl::Context *context, GLenum target);
-bool ValidMipLevel(const gl::Context *context, GLenum target, GLint level);
+bool ValidTextureTarget(const Context *context, GLenum target);
+bool ValidFramebufferTarget(GLenum target);
+bool ValidMipLevel(const Context *context, GLenum target, GLint level);
 bool ValidImageSize(const gl::Context *context, GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth);
 bool ValidCompressedImageSize(const gl::Context *context, GLenum internalFormat, GLsizei width, GLsizei height);
 
 bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum target, GLsizei samples,
                                            GLenum internalformat, GLsizei width, GLsizei height,
                                            bool angleExtension);
+bool ValidateFramebufferRenderbufferParameters(gl::Context *context, GLenum target, GLenum attachment,
+                                               GLenum renderbuffertarget, GLuint renderbuffer);
 
 bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
                                        GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask,

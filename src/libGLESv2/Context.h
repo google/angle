@@ -325,7 +325,7 @@ class Context
     Shader *getShader(GLuint handle);
     Program *getProgram(GLuint handle);
     Texture *getTexture(GLuint handle);
-    Framebuffer *getFramebuffer(GLuint handle);
+    Framebuffer *getFramebuffer(GLuint handle) const;
     Renderbuffer *getRenderbuffer(GLuint handle);
     VertexArray *getVertexArray(GLuint handle) const;
     Sampler *getSampler(GLuint handle) const;
@@ -334,17 +334,23 @@ class Context
     Buffer *getArrayBuffer();
     Buffer *getElementArrayBuffer();
     ProgramBinary *getCurrentProgramBinary();
-    Texture2D *getTexture2D();
-    TextureCubeMap *getTextureCubeMap();
-    Texture3D *getTexture3D();
-    Texture2DArray *getTexture2DArray();
+
+    Texture *getTargetTexture(GLenum target) const;
+    Texture2D *getTexture2D() const;
+    TextureCubeMap *getTextureCubeMap() const;
+    Texture3D *getTexture3D() const;
+    Texture2DArray *getTexture2DArray() const;
+
     Buffer *getGenericUniformBuffer();
     Buffer *getGenericTransformFeedbackBuffer();
     Buffer *getCopyReadBuffer();
     Buffer *getCopyWriteBuffer();
     Buffer *getPixelPackBuffer();
     Buffer *getPixelUnpackBuffer();
-    Texture *getSamplerTexture(unsigned int sampler, TextureType type);
+    Texture *getSamplerTexture(unsigned int sampler, TextureType type) const;
+
+    Framebuffer *getTargetFramebuffer(GLenum target) const;
+    GLuint getTargetFramebufferHandle(GLenum target) const;
     Framebuffer *getReadFramebuffer();
     Framebuffer *getDrawFramebuffer();
     VertexArray *getCurrentVertexArray() const;
