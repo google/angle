@@ -83,7 +83,7 @@ bool Image11::isDirty() const
 {
     // Make sure that this image is marked as dirty even if the staging texture hasn't been created yet
     // if initialization is required before use.
-    return ((mStagingTexture || gl_d3d11::RequiresTextureDataInitialization(mInternalFormat)) && mDirty);
+    return (mDirty && (mStagingTexture || gl_d3d11::RequiresTextureDataInitialization(mInternalFormat)));
 }
 
 bool Image11::copyToStorage(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)

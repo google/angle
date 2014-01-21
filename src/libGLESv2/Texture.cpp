@@ -819,8 +819,10 @@ bool Texture2D::isLevelComplete(int level) const
         return true;
     }
 
-    GLsizei width = getBaseLevelWidth();
-    GLsizei height = getBaseLevelHeight();
+    const rx::Image *baseImage = getBaseLevelImage();
+
+    GLsizei width = baseImage->getWidth();
+    GLsizei height = baseImage->getHeight();
 
     if (width <= 0 || height <= 0)
     {
@@ -836,7 +838,7 @@ bool Texture2D::isLevelComplete(int level) const
     ASSERT(level >= 1 && level <= (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
     rx::Image *image = mImageArray[level];
 
-    if (image->getInternalFormat() != getBaseLevelInternalFormat())
+    if (image->getInternalFormat() != baseImage->getInternalFormat())
     {
         return false;
     }
@@ -905,7 +907,7 @@ void Texture2D::updateStorage()
 {
     for (int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        if (isLevelComplete(level))
+        if (mImageArray[level]->isDirty() && isLevelComplete(level))
         {
             updateStorageLevel(level);
         }
