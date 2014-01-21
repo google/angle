@@ -2720,6 +2720,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             {
               case GL_BACK:
               case GL_FRONT:
+              case GL_DEPTH:
               case GL_STENCIL:
               case GL_DEPTH_STENCIL_ATTACHMENT:
                 if (context->getClientVersion() < 3)
