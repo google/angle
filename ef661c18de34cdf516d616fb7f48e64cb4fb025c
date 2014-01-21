@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2832ec4_a2ae1e10",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-21T21:42:05Z",
+      "side": 1,
+      "message": "Do we want to avoid adding more uses of auto from now on?",
+      "revId": "ef661c18de34cdf516d616fb7f48e64cb4fb025c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d29d0227_3bf23752",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-21T21:42:05Z",
+      "side": 1,
+      "message": "I think it\u0027s preferred if we check all errors that don\u0027t need the context, before calling getNonLostContext (as before). Or was there a reason for swapping this order?",
+      "revId": "ef661c18de34cdf516d616fb7f48e64cb4fb025c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
