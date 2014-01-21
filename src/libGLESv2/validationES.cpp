@@ -23,15 +23,19 @@ namespace gl
 
 bool ValidTextureTarget(const Context *context, GLenum target)
 {
-    if (context->getClientVersion() < 3)
+    switch (target)
     {
-        if (target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY)
-        {
-            return false;
-        }
-    }
+      case GL_TEXTURE_2D:
+      case GL_TEXTURE_CUBE_MAP:
+        return true;
 
-    return true;
+      case GL_TEXTURE_3D:
+      case GL_TEXTURE_2D_ARRAY:
+        return (context->getClientVersion() >= 3);
+
+      default:
+        return false;
+    }
 }
 
 bool ValidFramebufferTarget(GLenum target)
