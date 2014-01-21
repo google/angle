@@ -79,14 +79,8 @@ call:BuildShader Clear11.hlsl         PS_ClearSint             ps_4_0 compiled\c
 call:BuildShader BufferToTexture11.hlsl  VS_BufferToTexture        vs_4_0 compiled/buffertotexture11_vs.h      %debug%
 call:BuildShader BufferToTexture11.hlsl  GS_BufferToTexture        gs_4_0 compiled/buffertotexture11_gs.h      %debug%
 call:BuildShader BufferToTexture11.hlsl  PS_BufferToTexture_4F     ps_4_0 compiled/buffertotexture11_ps_4f.h   %debug%
-call:BuildShader BufferToTexture11.hlsl  PS_BufferToTexture_2F     ps_4_0 compiled/buffertotexture11_ps_2f.h   %debug%
-call:BuildShader BufferToTexture11.hlsl  PS_BufferToTexture_1F     ps_4_0 compiled/buffertotexture11_ps_1f.h   %debug%
 call:BuildShader BufferToTexture11.hlsl  PS_BufferToTexture_4I     ps_4_0 compiled/buffertotexture11_ps_4i.h   %debug%
-call:BuildShader BufferToTexture11.hlsl  PS_BufferToTexture_2I     ps_4_0 compiled/buffertotexture11_ps_2i.h   %debug%
-call:BuildShader BufferToTexture11.hlsl  PS_BufferToTexture_1I     ps_4_0 compiled/buffertotexture11_ps_1i.h   %debug%
 call:BuildShader BufferToTexture11.hlsl  PS_BufferToTexture_4UI    ps_4_0 compiled/buffertotexture11_ps_4ui.h  %debug%
-call:BuildShader BufferToTexture11.hlsl  PS_BufferToTexture_2UI    ps_4_0 compiled/buffertotexture11_ps_2ui.h  %debug%
-call:BuildShader BufferToTexture11.hlsl  PS_BufferToTexture_1UI    ps_4_0 compiled/buffertotexture11_ps_1ui.h  %debug%
 
 echo.
 

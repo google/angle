@@ -44,15 +44,6 @@ class PixelTransfer11
 
   private:
 
-    struct CopyShaderDesc
-    {
-        GLenum mSourceFormat;
-        bool mSignedInteger;
-
-        // For sorting keys in a std::map
-        bool operator<(const CopyShaderDesc &other) const;
-    };
-
     struct CopyShaderParams
     {
         unsigned int FirstPixelOffset;
@@ -68,13 +59,12 @@ class PixelTransfer11
     static void setBufferToTextureCopyParams(const gl::Box &destArea, const gl::Extents &destSize, GLenum internalFormat,
                                              const gl::PixelUnpackState &unpack, unsigned int offset, CopyShaderParams *parametersOut);
 
-    void addBufferToTextureShader(GLenum sourceFormat, bool signedInteger, ID3D11PixelShader *pixelShader);
     void buildShaderMap();
     ID3D11PixelShader *findBufferToTexturePS(GLenum internalFormat) const;
 
     Renderer11 *mRenderer;
 
-    std::map<CopyShaderDesc, ID3D11PixelShader *> mBufferToTexturePSMap;
+    std::map<GLenum, ID3D11PixelShader *> mBufferToTexturePSMap;
     ID3D11VertexShader *mBufferToTextureVS;
     ID3D11GeometryShader *mBufferToTextureGS;
     ID3D11Buffer *mParamsConstantBuffer;

@@ -28,25 +28,9 @@
 #include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_4f.h"
 #include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_4i.h"
 #include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_4ui.h"
-#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_2f.h"
-#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_2i.h"
-#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_2ui.h"
-#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_1f.h"
-#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_1i.h"
-#include "libGLESv2/renderer/d3d11/shaders/compiled/buffertotexture11_ps_1ui.h"
 
 namespace rx
 {
-
-bool PixelTransfer11::CopyShaderDesc::operator<(const CopyShaderDesc &other) const
-{
-    if (mSignedInteger != other.mSignedInteger)
-    {
-        return mSignedInteger;
-    }
-
-    return mSourceFormat < other.mSourceFormat;
-}
 
 PixelTransfer11::PixelTransfer11(Renderer11 *renderer)
     : mRenderer(renderer),
@@ -242,44 +226,26 @@ bool PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpack, un
     return true;
 }
 
-void PixelTransfer11::addBufferToTextureShader(GLenum sourceFormat, bool signedInteger, ID3D11PixelShader *pixelShader)
-{
-    ASSERT(pixelShader);
-
-    CopyShaderDesc shaderDesc = { 0 };
-    shaderDesc.mSourceFormat = sourceFormat;
-    shaderDesc.mSignedInteger = signedInteger;
-
-    ASSERT(mBufferToTexturePSMap.count(shaderDesc) == 0);
-
-    mBufferToTexturePSMap[shaderDesc] = pixelShader;
-}
-
 void PixelTransfer11::buildShaderMap()
 {
     ID3D11Device *device = mRenderer->getDevice();
 
-    addBufferToTextureShader(GL_RGBA,         false, d3d11::CompilePS(device, g_PS_BufferToTexture_4F,  "BufferToTexture RGBA ps"));
-    addBufferToTextureShader(GL_RG,           false, d3d11::CompilePS(device, g_PS_BufferToTexture_2F,  "BufferToTexture RG ps"));
-    addBufferToTextureShader(GL_RED,          false, d3d11::CompilePS(device, g_PS_BufferToTexture_1F,  "BufferToTexture R ps"));
-    addBufferToTextureShader(GL_RGBA_INTEGER, true,  d3d11::CompilePS(device, g_PS_BufferToTexture_4I,  "BufferToTexture RGBA-I ps"));
-    addBufferToTextureShader(GL_RG_INTEGER,   true,  d3d11::CompilePS(device, g_PS_BufferToTexture_2I,  "BufferToTexture RG-I ps"));
-    addBufferToTextureShader(GL_RED_INTEGER,  true,  d3d11::CompilePS(device, g_PS_BufferToTexture_1I,  "BufferToTexture R-I ps"));
-    addBufferToTextureShader(GL_RGBA_INTEGER, false, d3d11::CompilePS(device, g_PS_BufferToTexture_4UI, "BufferToTexture RGBA-UI ps"));
-    addBufferToTextureShader(GL_RG_INTEGER,   false, d3d11::CompilePS(device, g_PS_BufferToTexture_2UI, "BufferToTexture RG-UI ps"));
-    addBufferToTextureShader(GL_RED_INTEGER,  false, d3d11::CompilePS(device, g_PS_BufferToTexture_1UI, "BufferToTexture R-UI ps"));
+    mBufferToTexturePSMap[GL_FLOAT]        = d3d11::CompilePS(device, g_PS_BufferToTexture_4F,  "BufferToTexture RGBA ps");
+    mBufferToTexturePSMap[GL_INT]          = d3d11::CompilePS(device, g_PS_BufferToTexture_4I,  "BufferToTexture RGBA-I ps");
+    mBufferToTexturePSMap[GL_UNSIGNED_INT] = d3d11::CompilePS(device, g_PS_BufferToTexture_4UI, "BufferToTexture RGBA-UI ps");
 }
 
 ID3D11PixelShader *PixelTransfer11::findBufferToTexturePS(GLenum internalFormat) const
 {
     int clientVersion = mRenderer->getCurrentClientVersion();
+    GLenum componentType = gl::GetComponentType(internalFormat, clientVersion);
 
-    CopyShaderDesc shaderDesc = { 0 };
-    shaderDesc.mSourceFormat = gl::GetFormat(internalFormat, clientVersion);
-    shaderDesc.mSignedInteger = (gl::GetComponentType(internalFormat, clientVersion) == GL_INT);
+    if (componentType == GL_SIGNED_NORMALIZED || componentType == GL_UNSIGNED_NORMALIZED)
+    {
+        componentType = GL_FLOAT;
+    }
 
-    auto shaderMapIt = mBufferToTexturePSMap.find(shaderDesc);
-
+    auto shaderMapIt = mBufferToTexturePSMap.find(componentType);
     return (shaderMapIt == mBufferToTexturePSMap.end() ? NULL : shaderMapIt->second);
 }
 
