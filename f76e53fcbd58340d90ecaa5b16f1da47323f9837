@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b22faeb4_621f96ef",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1456,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-23T19:31:39Z",
+      "side": 1,
+      "message": "Done. See I347583ae1adcaaae9feeb1276f6150ceb8739885 for the fix to ValidTextureTarget.",
+      "parentUuid": "52b912a9_0a037ba1",
+      "revId": "f76e53fcbd58340d90ecaa5b16f1da47323f9837",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "52b912a9_2a08bfba",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 11
@@ -30,6 +48,24 @@
       "writtenOn": "2014-01-23T18:57:31Z",
       "side": 1,
       "message": "Extra space",
+      "revId": "f76e53fcbd58340d90ecaa5b16f1da47323f9837",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7239b600_e04f22a7",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 5034,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-23T19:31:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52b912a9_2a08bfba",
       "revId": "f76e53fcbd58340d90ecaa5b16f1da47323f9837",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
