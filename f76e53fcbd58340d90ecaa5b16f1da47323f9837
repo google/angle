@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52b912a9_0a037ba1",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1456,
+      "author": {
+        "id": 1105340
+      },
+      "writtenOn": "2014-01-23T18:57:31Z",
+      "side": 1,
+      "message": "This comment is somewhat misleading-- the texture target is what\u0027s being validated with respect to the current context\u0027s version. Also I\u0027m not a great fan of ValidTextureTarget not actually checking whether the target\u0027s actually one of the ES2 targets after the ES3 context section passes, but that\u0027s possibly not an issue for this ticket.",
+      "revId": "f76e53fcbd58340d90ecaa5b16f1da47323f9837",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52b912a9_2a08bfba",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 5034,
+      "author": {
+        "id": 1105340
+      },
+      "writtenOn": "2014-01-23T18:57:31Z",
+      "side": 1,
+      "message": "Extra space",
+      "revId": "f76e53fcbd58340d90ecaa5b16f1da47323f9837",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
