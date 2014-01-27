@@ -58,7 +58,7 @@ class Renderer11 : public Renderer
     virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 
     virtual void setRasterizerState(const gl::RasterizerState &rasterState);
-    virtual void setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
+    virtual void setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::Color &blendColor,
                                unsigned int sampleMask);
     virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
                                       int stencilBackRef, bool frontFaceCCW);
@@ -191,10 +191,10 @@ class Renderer11 : public Renderer
     void drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);
 
     void readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area,
-                         GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
+                         GLenum sourceFormat, GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
                          GLint packAlignment, void *pixels);
 
-    void maskedClear(const gl::ClearParameters &clearParams, bool usingExtendedDrawBuffers);
+    void maskedClear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer);
     rx::Range getViewportBounds() const;
 
     bool blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget, 

@@ -658,7 +658,7 @@ void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
     mForceSetRasterState = false;
 }
 
-void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
+void Renderer11::setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::Color &blendColor,
                                unsigned int sampleMask)
 {
     if (mForceSetBlendState ||
@@ -666,7 +666,7 @@ void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::Color
         memcmp(&blendColor, &mCurBlendColor, sizeof(gl::Color)) != 0 ||
         sampleMask != mCurSampleMask)
     {
-        ID3D11BlendState *dxBlendState = mStateCache.getBlendState(blendState);
+        ID3D11BlendState *dxBlendState = mStateCache.getBlendState(framebuffer, blendState);
         if (!dxBlendState)
         {
             ERR("NULL blend state returned by RenderStateCache::getBlendState, setting the default "
@@ -1535,10 +1535,14 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
 
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
 {
-     bool alphaUnmasked = (gl::GetAlphaSize(mRenderTargetDesc.format) == 0) || clearParams.colorMaskAlpha;
+     gl::Renderbuffer *firstRenderbuffer = frameBuffer->getFirstColorbuffer();
+     GLenum internalFormat = firstRenderbuffer ? firstRenderbuffer->getInternalFormat() : GL_NONE;
+
      bool needMaskedColorClear = (clearParams.mask & GL_COLOR_BUFFER_BIT) &&
-                                 !(clearParams.colorMaskRed && clearParams.colorMaskGreen &&
-                                   clearParams.colorMaskBlue && alphaUnmasked);
+                                 ((!clearParams.colorMaskRed && gl::GetRedSize(internalFormat) > 0) ||
+                                  (!clearParams.colorMaskGreen && gl::GetGreenSize(internalFormat) > 0) ||
+                                  (!clearParams.colorMaskBlue && gl::GetBlueSize(internalFormat) > 0) ||
+                                  (!clearParams.colorMaskAlpha && gl::GetAlphaSize(internalFormat) > 0));
 
      unsigned int stencilUnmasked = 0x0;
      if (frameBuffer->hasStencil())
@@ -1555,7 +1559,7 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
 
      if (needMaskedColorClear || needMaskedStencilClear || needScissoredClear)
      {
-         maskedClear(clearParams, frameBuffer->usingExtendedDrawBuffers());
+         maskedClear(clearParams, frameBuffer);
      }
      else
      {
@@ -1582,10 +1586,12 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
                             return;
                         }
 
-                        const float clearValues[4] = { clearParams.colorClearValue.red,
-                                                       clearParams.colorClearValue.green,
-                                                       clearParams.colorClearValue.blue,
-                                                       clearParams.colorClearValue.alpha };
+                        GLenum format = renderbufferObject->getInternalFormat();
+
+                        const float clearValues[4] = { (gl::GetRedSize(format) > 0)   ? clearParams.colorClearValue.red   : 0.0f,
+                                                       (gl::GetGreenSize(format) > 0) ? clearParams.colorClearValue.green : 0.0f,
+                                                       (gl::GetBlueSize(format) > 0)  ? clearParams.colorClearValue.blue  : 0.0f,
+                                                       (gl::GetAlphaSize(format) > 0) ? clearParams.colorClearValue.alpha : 1.0f };
                         mDeviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
                     }
                  }
@@ -1629,7 +1635,7 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
     }
 }
 
-void Renderer11::maskedClear(const gl::ClearParameters &clearParams, bool usingExtendedDrawBuffers)
+void Renderer11::maskedClear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
 {
     HRESULT result;
 
@@ -1749,7 +1755,7 @@ void Renderer11::maskedClear(const gl::ClearParameters &clearParams, bool usingE
     static const float blendFactors[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
     static const UINT sampleMask = 0xFFFFFFFF;
 
-    ID3D11BlendState *blendState = mStateCache.getBlendState(glBlendState);
+    ID3D11BlendState *blendState = mStateCache.getBlendState(frameBuffer, glBlendState);
 
     // Set the vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -1776,7 +1782,7 @@ void Renderer11::maskedClear(const gl::ClearParameters &clearParams, bool usingE
     mDeviceContext->RSSetState(mScissorEnabled ? mClearScissorRS : mClearNoScissorRS);
 
     // Apply shaders
-    ID3D11PixelShader *pixelShader = usingExtendedDrawBuffers ? mClearMultiplePS : mClearSinglePS;
+    ID3D11PixelShader *pixelShader = frameBuffer->usingExtendedDrawBuffers() ? mClearMultiplePS : mClearSinglePS;
 
     mDeviceContext->IASetInputLayout(mClearIL);
     mDeviceContext->VSSetShader(mClearVS, NULL, 0);
@@ -3003,7 +3009,7 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
         area.width = width;
         area.height = height;
 
-        readTextureData(colorBufferTexture, subresourceIndex, area, format, type, outputPitch,
+        readTextureData(colorBufferTexture, subresourceIndex, area, colorbuffer->getActualFormat(), format, type, outputPitch,
                         packReverseRowOrder, packAlignment, pixels);
 
         colorBufferTexture->Release();
@@ -3039,7 +3045,7 @@ TextureStorage *Renderer11::createTextureStorageCube(int levels, GLenum internal
     return new TextureStorage11_Cube(this, levels, internalformat, usage, forceRenderable, size);
 }
 
-static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum destFormat, GLenum destType)
+static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum sourceGLFormat, GLenum destFormat, GLenum destType)
 {
     if (sourceFormat == DXGI_FORMAT_A8_UNORM &&
         destFormat   == GL_ALPHA &&
@@ -3047,9 +3053,10 @@ static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum
     {
         return 1;
     }
-    else if (sourceFormat == DXGI_FORMAT_R8G8B8A8_UNORM &&
-             destFormat   == GL_RGBA &&
-             destType     == GL_UNSIGNED_BYTE)
+    else if (sourceFormat   == DXGI_FORMAT_R8G8B8A8_UNORM &&
+             sourceGLFormat == GL_RGBA8_OES &&
+             destFormat     == GL_RGBA &&
+             destType       == GL_UNSIGNED_BYTE)
     {
         return 4;
     }
@@ -3059,9 +3066,10 @@ static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum
     {
         return 4;
     }
-    else if (sourceFormat == DXGI_FORMAT_R16G16B16A16_FLOAT &&
-             destFormat   == GL_RGBA &&
-             destType     == GL_HALF_FLOAT_OES)
+    else if (sourceFormat   == DXGI_FORMAT_R16G16B16A16_FLOAT &&
+             sourceGLFormat == GL_RGBA16F_EXT &&
+             destFormat     == GL_RGBA &&
+             destType       == GL_HALF_FLOAT_OES)
     {
         return 8;
     }
@@ -3071,9 +3079,10 @@ static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum
     {
         return 12;
     }
-    else if (sourceFormat == DXGI_FORMAT_R32G32B32A32_FLOAT &&
-             destFormat   == GL_RGBA &&
-             destType     == GL_FLOAT)
+    else if (sourceFormat   == DXGI_FORMAT_R32G32B32A32_FLOAT &&
+             sourceGLFormat == GL_RGBA32F_EXT &&
+             destFormat     == GL_RGBA &&
+             destType       == GL_FLOAT)
     {
         return 16;
     }
@@ -3083,7 +3092,7 @@ static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum
     }
 }
 
-static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format, unsigned int x,
+static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format, GLenum glFormat, unsigned int x,
                                   unsigned int y, int inputPitch, gl::Color *outColor)
 {
     switch (format)
@@ -3094,7 +3103,15 @@ static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format,
             outColor->red =   (rgba & 0x000000FF) * (1.0f / 0x000000FF);
             outColor->green = (rgba & 0x0000FF00) * (1.0f / 0x0000FF00);
             outColor->blue =  (rgba & 0x00FF0000) * (1.0f / 0x00FF0000);
-            outColor->alpha = (rgba & 0xFF000000) * (1.0f / 0xFF000000);
+
+            if (gl::GetAlphaSize(glFormat) > 0)
+            {
+                outColor->alpha = (rgba & 0xFF000000) * (1.0f / 0xFF000000);
+            }
+            else
+            {
+                outColor->alpha = 1.0f;
+            }
         }
         break;
 
@@ -3112,7 +3129,15 @@ static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format,
             outColor->red =   *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 0);
             outColor->green = *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 1);
             outColor->blue =  *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 2);
-            outColor->alpha = *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 3);
+
+            if (gl::GetAlphaSize(glFormat) > 0)
+            {
+                outColor->alpha = *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 3);
+            }
+            else
+            {
+                outColor->alpha = 1.0f;
+            }
         }
         break;
 
@@ -3130,7 +3155,15 @@ static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format,
             outColor->red =   gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 0));
             outColor->green = gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 1));
             outColor->blue =  gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 2));
-            outColor->alpha = gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 3));
+
+            if (gl::GetAlphaSize(glFormat) > 0)
+            {
+                outColor->alpha = gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 3));
+            }
+            else
+            {
+                outColor->alpha = 1.0f;
+            }
         }
         break;
 
@@ -3292,7 +3325,7 @@ static inline void writePixelColor(const gl::Color &color, GLenum format, GLenum
 }
 
 void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area,
-                                 GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
+                                 GLenum sourceFormat, GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
                                  GLint packAlignment, void *pixels)
 {
     D3D11_TEXTURE2D_DESC textureDesc;
@@ -3381,7 +3414,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
         inputPitch = static_cast<int>(mapping.RowPitch);
     }
 
-    unsigned int fastPixelSize = getFastPixelCopySize(textureDesc.Format, format, type);
+    unsigned int fastPixelSize = getFastPixelCopySize(textureDesc.Format, sourceFormat, format, type);
     if (fastPixelSize != 0)
     {
         unsigned char *dest = static_cast<unsigned char*>(pixels);
@@ -3416,7 +3449,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
         {
             for (int i = 0; i < area.width; i++)
             {
-                readPixelColor(source, textureDesc.Format, i, j, inputPitch, &pixelColor);
+                readPixelColor(source, textureDesc.Format, sourceFormat, i, j, inputPitch, &pixelColor);
                 writePixelColor(pixelColor, format, type, i, j, outputPitch, pixels);
             }
         }

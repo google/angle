@@ -72,7 +72,7 @@ class Renderer9 : public Renderer
     virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 
     virtual void setRasterizerState(const gl::RasterizerState &rasterState);
-    virtual void setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
+    virtual void setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::Color &blendColor,
                                unsigned int sampleMask);
     virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
                                       int stencilBackRef, bool frontFaceCCW);

@@ -106,9 +106,15 @@ void Image11::generateMipmap(Image11 *dest, Image11 *src)
     dest->markDirty();
 }
 
+static bool FormatRequiresInitialization(DXGI_FORMAT dxgiFormat, GLenum internalFormat)
+{
+    return (dxgiFormat == DXGI_FORMAT_R8G8B8A8_UNORM && gl::GetAlphaSize(internalFormat) == 0) ||
+           (dxgiFormat == DXGI_FORMAT_R32G32B32A32_FLOAT && gl::GetAlphaSize(internalFormat) == 0);
+}
+
 bool Image11::isDirty() const
 {
-    return (mStagingTexture && mDirty);
+    return ((mStagingTexture || FormatRequiresInitialization(mDXGIFormat, mInternalFormat)) && mDirty);
 }
 
 bool Image11::updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
@@ -371,6 +377,27 @@ unsigned int Image11::getStagingSubresource()
     return mStagingSubresource;
 }
 
+template <typename T, size_t N>
+static void setDefaultData(ID3D11DeviceContext *deviceContext, ID3D11Texture2D *texture, UINT subresource,
+                           GLsizei width, GLsizei height, const T (&defaultData)[N])
+{
+    D3D11_MAPPED_SUBRESOURCE map;
+    deviceContext->Map(texture, subresource, D3D11_MAP_WRITE, 0, &map);
+
+    unsigned char* ptr = reinterpret_cast<unsigned char*>(map.pData);
+    size_t pixelSize = sizeof(T) * N;
+
+    for (GLsizei y = 0; y < height; y++)
+    {
+        for (GLsizei x = 0; x < width; x++)
+        {
+            memcpy(ptr + (y * map.RowPitch) + (x * pixelSize), defaultData, pixelSize);
+        }
+    }
+
+    deviceContext->Unmap(texture, subresource);
+}
+
 void Image11::createStagingTexture()
 {
     if (mStagingTexture)
@@ -418,6 +445,17 @@ void Image11::createStagingTexture()
     mStagingTexture = newTexture;
     mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
     mDirty = false;
+
+    if (mDXGIFormat == DXGI_FORMAT_R8G8B8A8_UNORM && gl::GetAlphaSize(mInternalFormat) == 0)
+    {
+        unsigned char defaultPixel[4] = { 0, 0, 0, 255 };
+        setDefaultData(mRenderer->getDeviceContext(), mStagingTexture, mStagingSubresource, mWidth, mHeight, defaultPixel);
+    }
+    else if (mDXGIFormat == DXGI_FORMAT_R32G32B32A32_FLOAT && gl::GetAlphaSize(mInternalFormat) == 0)
+    {
+        float defaultPixel[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+        setDefaultData(mRenderer->getDeviceContext(), mStagingTexture, mStagingSubresource, mWidth, mHeight, defaultPixel);
+    }
 }
 
 HRESULT Image11::map(D3D11_MAP mapType, D3D11_MAPPED_SUBRESOURCE *map)

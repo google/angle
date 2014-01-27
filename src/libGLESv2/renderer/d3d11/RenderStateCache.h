@@ -13,6 +13,11 @@
 #include "libGLESv2/angletypes.h"
 #include "common/angleutils.h"
 
+namespace gl
+{
+class Framebuffer;
+}
+
 namespace rx
 {
 
@@ -26,7 +31,7 @@ class RenderStateCache
     void clear();
 
     // Increments refcount on the returned blend state, Release() must be called.
-    ID3D11BlendState *getBlendState(const gl::BlendState &blendState);
+    ID3D11BlendState *getBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState);
     ID3D11RasterizerState *getRasterizerState(const gl::RasterizerState &rasterState,
                                               bool scissorEnabled, unsigned int depthSize);
     ID3D11DepthStencilState *getDepthStencilState(const gl::DepthStencilState &dsState);
@@ -38,14 +43,19 @@ class RenderStateCache
     unsigned long long mCounter;
 
     // Blend state cache
-    static std::size_t hashBlendState(const gl::BlendState &blendState);
-    static bool compareBlendStates(const gl::BlendState &a, const gl::BlendState &b);
+    struct BlendStateKey
+    {
+        gl::BlendState blendState;
+        bool rtChannels[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT][4];
+    };
+    static std::size_t hashBlendState(const BlendStateKey &blendState);
+    static bool compareBlendStates(const BlendStateKey &a, const BlendStateKey &b);
     static const unsigned int kMaxBlendStates;
 
-    typedef std::size_t (*BlendStateHashFunction)(const gl::BlendState &);
-    typedef bool (*BlendStateEqualityFunction)(const gl::BlendState &, const gl::BlendState &);
+    typedef std::size_t (*BlendStateHashFunction)(const BlendStateKey &);
+    typedef bool (*BlendStateEqualityFunction)(const BlendStateKey &, const BlendStateKey &);
     typedef std::pair<ID3D11BlendState*, unsigned long long> BlendStateCounterPair;
-    typedef std::unordered_map<gl::BlendState, BlendStateCounterPair, BlendStateHashFunction, BlendStateEqualityFunction> BlendStateMap;
+    typedef std::unordered_map<BlendStateKey, BlendStateCounterPair, BlendStateHashFunction, BlendStateEqualityFunction> BlendStateMap;
     BlendStateMap mBlendStateCache;
 
     // Rasterizer state cache
