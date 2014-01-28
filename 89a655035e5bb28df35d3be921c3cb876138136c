@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f2fa0681_a7ed1173",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-28T21:30:50Z",
+      "side": 1,
+      "message": "Can this have a comment or something to clarify that it\u0027s not specifically desktop GL formats? It\u0027s an unfortunate side effect of the naming of the APIs that GL without qualification is often assumed to mean desktop.",
+      "revId": "89a655035e5bb28df35d3be921c3cb876138136c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2996e85_f86ec93f",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-28T21:30:50Z",
+      "side": 1,
+      "message": "Any reason you\u0027ve switched from the insert semantic to the assignment one?",
+      "revId": "89a655035e5bb28df35d3be921c3cb876138136c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
