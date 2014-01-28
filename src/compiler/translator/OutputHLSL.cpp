@@ -13,6 +13,7 @@
 #include "compiler/translator/SearchSymbol.h"
 #include "compiler/translator/UnfoldShortCircuit.h"
 #include "compiler/translator/NodeSearch.h"
+#include "compiler/translator/RewriteElseBlocks.h"
 
 #include <algorithm>
 #include <cfloat>
@@ -20,13 +21,6 @@
 
 namespace sh
 {
-// Integer to TString conversion
-TString str(int i)
-{
-    char buffer[20];
-    snprintf(buffer, sizeof(buffer), "%d", i);
-    return buffer;
-}
 
 OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resources, ShShaderOutput outputType)
     : TIntermTraverser(true, true, true), mContext(context), mOutputType(outputType)
@@ -114,6 +108,13 @@ OutputHLSL::~OutputHLSL()
 void OutputHLSL::output()
 {
     mContainsLoopDiscontinuity = mContext.shaderType == SH_FRAGMENT_SHADER && containsLoopDiscontinuity(mContext.treeRoot);
+
+    // Work around D3D9 bug that would manifest in vertex shaders with selection blocks which
+    // use a vertex attribute as a condition, and some related computation in the else block.
+    if (mOutputType == SH_HLSL9_OUTPUT && mContext.shaderType == SH_VERTEX_SHADER)
+    {
+        RewriteElseBlocks(mContext.treeRoot);
+    }
 
     mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header
     header();
@@ -1098,6 +1099,10 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         {
             mReferencedVaryings[name] = node;
             out << decorate(name);
+        }
+        else if (qualifier == EvqInternal)
+        {
+            out << name;
         }
         else
         {
