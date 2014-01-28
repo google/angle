@@ -471,6 +471,9 @@ EGLBoolean __stdcall eglQuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint 
           case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
             *value = eglSurface->isPostSubBufferSupported();
             break;
+          case EGL_FIXED_SIZE_ANGLE:
+            *value = eglSurface->isFixedSize();
+            break;
           default:
             return egl::error(EGL_BAD_ATTRIBUTE, EGL_FALSE);
         }

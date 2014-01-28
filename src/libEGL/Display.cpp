@@ -191,6 +191,10 @@ EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGL
     const Config *configuration = mConfigSet.get(config);
     EGLint postSubBufferSupported = EGL_FALSE;
 
+    EGLint width = 0;
+    EGLint height = 0;
+    EGLint fixedSize = EGL_FALSE;
+
     if (attribList)
     {
         while (*attribList != EGL_NONE)
@@ -211,6 +215,15 @@ EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGL
               case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
                 postSubBufferSupported = attribList[1];
                 break;
+              case EGL_WIDTH:
+                width = attribList[1];
+                break;
+              case EGL_HEIGHT:
+                height = attribList[1];
+                break;
+              case EGL_FIXED_SIZE_ANGLE:
+                fixedSize = attribList[1];
+                break;
               case EGL_VG_COLORSPACE:
                 return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
               case EGL_VG_ALPHA_FORMAT:
@@ -221,6 +234,17 @@ EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGL
 
             attribList += 2;
         }
+    }
+
+    if (width < 0 || height < 0)
+    {
+        return error(EGL_BAD_PARAMETER, EGL_NO_SURFACE);
+    }
+
+    if (!fixedSize)
+    {
+        width = -1;
+        height = -1;
     }
 
     if (hasExistingWindowSurface(window))
@@ -234,7 +258,7 @@ EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGL
             return EGL_NO_SURFACE;
     }
 
-    Surface *surface = new Surface(this, configuration, window, postSubBufferSupported);
+    Surface *surface = new Surface(this, configuration, window, fixedSize, width, height, postSubBufferSupported);
 
     if (!surface->initialize())
     {
@@ -493,6 +517,8 @@ void Display::initExtensionString()
     }
 
     mExtensionString += "EGL_ANGLE_query_surface_pointer ";
+
+    mExtensionString += "EGL_ANGLE_window_fixed_size ";
 
     if (swiftShader)
     {

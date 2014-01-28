@@ -429,6 +429,11 @@ typedef EGLBoolean (EGLAPIENTRYP PFNEGLQUERYSTREAMTIMEKHRPROC)(EGLDisplay dpy, E
 /* reuse EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE */
 #endif
 
+#ifndef EGL_ANGLE_window_fixed_size
+#define EGL_ANGLE_window_fixed_size 1
+#define EGL_FIXED_SIZE_ANGLE        0x3201
+#endif
+
 #ifndef EGL_KHR_create_context
 #define EGL_KHR_create_context 1
 #define EGL_CONTEXT_MAJOR_VERSION_KHR			    EGL_CONTEXT_CLIENT_VERSION
