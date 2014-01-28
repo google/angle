@@ -347,6 +347,11 @@ typedef EGLuint64NV (EGLAPIENTRYP PFNEGLGETSYSTEMTIMENVPROC) (void);
 #define EGL_LOSE_CONTEXT_ON_RESET_EXT		0x31BF
 #endif
 
+#ifndef EGL_ANGLE_window_fixed_size
+#define EGL_ANGLE_window_fixed_size 1
+#define EGL_FIXED_SIZE_ANGLE	0x3201
+#endif
+
 #ifdef __cplusplus
 }
 #endif
