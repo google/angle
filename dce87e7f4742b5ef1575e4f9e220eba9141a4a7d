@@ -51,6 +51,24 @@
       "revId": "dce87e7f4742b5ef1575e4f9e220eba9141a4a7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2b4c6fd_cbcbe138",
+        "filename": "src/libEGL/Surface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2014-01-29T23:04:41Z",
+      "side": 1,
+      "message": "I\u0027m planning on making it impossible to resize a non-autodetecting surface. Chrome currently destroys and recreates the surface anyway on resize (both for pbuffer and window surfaces), so any additional code would be wasted from Chrome\u0027s perspective. And there\u0027s not much advantage to resizing an existing surface over creating a new one; the only difference is that part of the existing contents remain in the surface, but they\u0027re probably useless anyway now that the window\u0027s a different size.",
+      "parentUuid": "52811216_d6f54a9f",
+      "revId": "dce87e7f4742b5ef1575e4f9e220eba9141a4a7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
