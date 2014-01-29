@@ -34,6 +34,23 @@
       "revId": "dce87e7f4742b5ef1575e4f9e220eba9141a4a7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52811216_d6f54a9f",
+        "filename": "src/libEGL/Surface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-29T22:48:14Z",
+      "side": 1,
+      "message": "Is there any point in doing the comparison if autodetection is not enabled? It might be better to define sizeDirty above the if (mAutodetectSize \u0026\u0026 ...) clause, and flag it as true inside that clause if the client width/height do not correspond to the surface\u0027s.\n\nWhat is the intended behavior for non-autodetecting surfaces on native window resize? The specification (in sec 2.2.2.2) discusses the possibility for definition of extensions to give surface resize control explicitly to the client, but I think the language of the spec is pretty clear that expects surfaces to be resizable *somehow*.",
+      "revId": "dce87e7f4742b5ef1575e4f9e220eba9141a4a7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
