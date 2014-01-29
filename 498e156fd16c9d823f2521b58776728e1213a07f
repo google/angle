@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12731a25_e5c7f67d",
+        "filename": "src/compiler/translator/Common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-29T16:34:38Z",
+      "side": 1,
+      "message": "We\u0027re only using this for regular signed integers for now, so no need to make this a template. Just move the original str() from outputHLSL here.",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b297ae5d_82c13a70",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-29T16:34:38Z",
+      "side": 1,
+      "message": "Can\u0027t we just handle this in a visitSelection() ?",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f26f6639_04133645",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-29T16:34:38Z",
+      "side": 1,
+      "message": "Can we delete this without upsetting the pool deallocation?",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f26f6639_c4a11eb9",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-29T16:34:38Z",
+      "side": 1,
+      "message": "I think we can reuse the same object here. Nodes are allocated in a pool so you can use the weak pointers to them anywhere until the pool is deleted.\n\nThis also means you don\u0027t need MakeNewTemporary and you can be much more explicit about what you\u0027re doing here.",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f26f6639_e49e1a7e",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-29T16:34:38Z",
+      "side": 1,
+      "message": "I would call this \u0027storeCondition\u0027 instead of \u0027initializer\u0027 to make it clearer what\u0027s happening here.",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b297ae5d_62be36e6",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-29T16:34:38Z",
+      "side": 1,
+      "message": "Perhaps \u0027negatedCondition\u0027 ?",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12731a25_c5cafa88",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-01-29T16:34:38Z",
+      "side": 1,
+      "message": "Instead of creating a new sequence of two if statements, can\u0027t we keep the original if statement and replace its false block with an if(negatedCondition) ?",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
