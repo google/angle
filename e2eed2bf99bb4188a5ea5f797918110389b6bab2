@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f26f6639_c4003e62",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-29T21:06:55Z",
+      "side": 1,
+      "message": "Can you shorten this message in the first line and provide a longer description in the next paragraph? Thanks.",
+      "revId": "e2eed2bf99bb4188a5ea5f797918110389b6bab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
