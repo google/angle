@@ -372,7 +372,8 @@ class Renderer9 : public Renderer
     unsigned int mCurPixelTextureSerials[gl::MAX_TEXTURE_IMAGE_UNITS];
 
     unsigned int mAppliedIBSerial;
-    unsigned int mAppliedProgramBinarySerial;
+    IDirect3DVertexShader9 *mAppliedVertexShader;
+    IDirect3DPixelShader9 *mAppliedPixelShader;
     
     rx::dx_VertexConstants mVertexConstants;
     rx::dx_PixelConstants mPixelConstants;

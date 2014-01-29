@@ -341,8 +341,9 @@ class Renderer11 : public Renderer
     unsigned int mAppliedStorageIBSerial;
     unsigned int mAppliedIBOffset;
 
-    unsigned int mAppliedProgramBinarySerial;
-    bool mIsGeometryShaderActive;
+    ID3D11VertexShader *mAppliedVertexShader;
+    ID3D11GeometryShader *mAppliedGeometryShader;
+    ID3D11PixelShader *mAppliedPixelShader;
 
     dx_VertexConstants mVertexConstants;
     dx_VertexConstants mAppliedVertexConstants;

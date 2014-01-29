@@ -127,6 +127,9 @@ Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Rend
         mNullColorbufferCache[i].height = 0;
         mNullColorbufferCache[i].buffer = NULL;
     }
+
+    mAppliedVertexShader = NULL;
+    mAppliedPixelShader = NULL;
 }
 
 Renderer9::~Renderer9()
@@ -1719,24 +1722,31 @@ void Renderer9::drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indi
 
 void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
 {
-    unsigned int programBinarySerial = programBinary->getSerial();
-    if (programBinarySerial != mAppliedProgramBinarySerial)
+    ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
+    ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
+
+    IDirect3DVertexShader9 *vertexShader = (vertexExe ? ShaderExecutable9::makeShaderExecutable9(vertexExe)->getVertexShader() : NULL);
+    IDirect3DPixelShader9 *pixelShader = (pixelExe ? ShaderExecutable9::makeShaderExecutable9(pixelExe)->getPixelShader() : NULL);
+
+    bool dirtyUniforms = false;
+
+    if (vertexShader != mAppliedVertexShader)
     {
-        ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
-        ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
-
-        IDirect3DVertexShader9 *vertexShader = NULL;
-        if (vertexExe) vertexShader = ShaderExecutable9::makeShaderExecutable9(vertexExe)->getVertexShader();
-
-        IDirect3DPixelShader9 *pixelShader = NULL;
-        if (pixelExe) pixelShader = ShaderExecutable9::makeShaderExecutable9(pixelExe)->getPixelShader();
-
-        mDevice->SetPixelShader(pixelShader);
         mDevice->SetVertexShader(vertexShader);
-        programBinary->dirtyAllUniforms();
-        mDxUniformsDirty = true;
+        mAppliedVertexShader = vertexShader;
+        dirtyUniforms = true;
+    }
 
-        mAppliedProgramBinarySerial = programBinarySerial;
+    if (pixelShader != mAppliedPixelShader)
+    {
+        mDevice->SetPixelShader(pixelShader);
+        mAppliedPixelShader = pixelShader;
+        dirtyUniforms = true;
+    }
+
+    if (dirtyUniforms)
+    {
+        programBinary->dirtyAllUniforms();
     }
 }
 
@@ -2068,7 +2078,8 @@ void Renderer9::markAllStateDirty()
     }
 
     mAppliedIBSerial = 0;
-    mAppliedProgramBinarySerial = 0;
+    mAppliedVertexShader = NULL;
+    mAppliedPixelShader = NULL;
     mDxUniformsDirty = true;
 
     mVertexDeclarationCache.markStateDirty();

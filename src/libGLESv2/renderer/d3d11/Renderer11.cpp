@@ -91,7 +91,9 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
 
     mBGRATextureSupport = false;
 
-    mIsGeometryShaderActive = false;
+    mAppliedVertexShader = NULL;
+    mAppliedGeometryShader = NULL;
+    mAppliedPixelShader = NULL;
 }
 
 Renderer11::~Renderer11()
@@ -1403,45 +1405,46 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
 
 void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
 {
-    unsigned int programBinarySerial = programBinary->getSerial();
-    const bool updateProgramState = (programBinarySerial != mAppliedProgramBinarySerial);
+    ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
+    ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
+    ShaderExecutable *geometryExe = programBinary->getGeometryExecutable();
 
-    if (updateProgramState)
+    ID3D11VertexShader *vertexShader = (vertexExe ? ShaderExecutable11::makeShaderExecutable11(vertexExe)->getVertexShader() : NULL);
+    ID3D11PixelShader *pixelShader = (pixelExe ? ShaderExecutable11::makeShaderExecutable11(pixelExe)->getPixelShader() : NULL);
+    ID3D11GeometryShader *geometryShader = (geometryExe ? ShaderExecutable11::makeShaderExecutable11(geometryExe)->getGeometryShader() : NULL);
+
+    // Skip GS if we aren't drawing points
+    if (!mCurRasterState.pointDrawMode)
     {
-        ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
-        ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
-
-        ID3D11VertexShader *vertexShader = NULL;
-        if (vertexExe) vertexShader = ShaderExecutable11::makeShaderExecutable11(vertexExe)->getVertexShader();
-
-        ID3D11PixelShader *pixelShader = NULL;
-        if (pixelExe) pixelShader = ShaderExecutable11::makeShaderExecutable11(pixelExe)->getPixelShader();
-
-        mDeviceContext->PSSetShader(pixelShader, NULL, 0);
-        mDeviceContext->VSSetShader(vertexShader, NULL, 0);
-
-        programBinary->dirtyAllUniforms();
-
-        mAppliedProgramBinarySerial = programBinarySerial;
+        geometryShader = NULL;
     }
 
-    // Only use the geometry shader currently for point sprite drawing
-    const bool usesGeometryShader = (programBinary->usesGeometryShader() && mCurRasterState.pointDrawMode);
+    bool dirtyUniforms = false;
 
-    if (updateProgramState || usesGeometryShader != mIsGeometryShaderActive)
+    if (vertexShader != mAppliedVertexShader)
     {
-        if (usesGeometryShader)
-        {
-            ShaderExecutable *geometryExe = programBinary->getGeometryExecutable();
-            ID3D11GeometryShader *geometryShader = ShaderExecutable11::makeShaderExecutable11(geometryExe)->getGeometryShader();
-            mDeviceContext->GSSetShader(geometryShader, NULL, 0);
-        }
-        else
-        {
-            mDeviceContext->GSSetShader(NULL, NULL, 0);
-        }
+        mDeviceContext->VSSetShader(vertexShader, NULL, 0);
+        mAppliedVertexShader = vertexShader;
+        dirtyUniforms = true;
+    }
 
-        mIsGeometryShaderActive = usesGeometryShader;
+    if (geometryShader != mAppliedGeometryShader)
+    {
+        mDeviceContext->GSSetShader(geometryShader, NULL, 0);
+        mAppliedGeometryShader = geometryShader;
+        dirtyUniforms = true;
+    }
+
+    if (pixelShader != mAppliedPixelShader)
+    {
+        mDeviceContext->PSSetShader(pixelShader, NULL, 0);
+        mAppliedPixelShader = pixelShader;
+        dirtyUniforms = true;
+    }
+
+    if (dirtyUniforms)
+    {
+        programBinary->dirtyAllUniforms();
     }
 }
 
@@ -1633,7 +1636,9 @@ void Renderer11::markAllStateDirty()
     mAppliedStorageIBSerial = 0;
     mAppliedIBOffset = 0;
 
-    mAppliedProgramBinarySerial = 0;
+    mAppliedVertexShader = NULL;
+    mAppliedGeometryShader = NULL;
+    mAppliedPixelShader = NULL;
     memset(&mAppliedVertexConstants, 0, sizeof(dx_VertexConstants));
     memset(&mAppliedPixelConstants, 0, sizeof(dx_PixelConstants));
 
