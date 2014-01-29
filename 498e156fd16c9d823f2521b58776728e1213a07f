@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b297ae5d_22f4ae67",
+        "filename": "src/compiler/translator/Common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-29T19:47:58Z",
+      "side": 1,
+      "message": "Were you aware I copied this new str() method from the development branch? I thought it would make the patches more similar between branches, and generally align the code. Wasn\u0027t sure if you thought I had added new code here.",
+      "parentUuid": "12731a25_e5c7f67d",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b297ae5d_82c13a70",
         "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-01-29T16:34:38Z",
       "side": 1,
       "message": "Can\u0027t we just handle this in a visitSelection() ?",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12731a25_25e66e06",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-29T19:47:58Z",
+      "side": 1,
+      "message": "We need to change the pointer to the selection statement to the new aggregate block with \"define variable; if 1; if 2;\". Hence we need to make our edits in the aggregate, not the selection statement itself (which is replaced with the new aggregate).",
+      "parentUuid": "b297ae5d_82c13a70",
       "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "12731a25_45eb6acd",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-29T19:47:58Z",
+      "side": 1,
+      "message": "I believe this code is safe given the pool deallocation.",
+      "parentUuid": "f26f6639_04133645",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f26f6639_c4a11eb9",
         "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-01-29T16:34:38Z",
       "side": 1,
       "message": "I think we can reuse the same object here. Nodes are allocated in a pool so you can use the weak pointers to them anywhere until the pool is deleted.\n\nThis also means you don\u0027t need MakeNewTemporary and you can be much more explicit about what you\u0027re doing here.",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f26f6639_c4475e37",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-29T19:47:58Z",
+      "side": 1,
+      "message": "The deletion code in the compiler seems to cause a crash if we re-use the same TIntermSymbol node. I\u0027m unsure exactly on how the deletion interacts with the pool deallocator, however I think the three terminals are necessary for now.",
+      "parentUuid": "f26f6639_c4a11eb9",
       "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "f26f6639_e4445a35",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-29T19:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f26f6639_e49e1a7e",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b297ae5d_62be36e6",
         "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
         "patchSetId": 1
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "b297ae5d_4231f2d0",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-29T19:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b297ae5d_62be36e6",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12731a25_c5cafa88",
         "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
         "patchSetId": 1
@@ -115,6 +223,24 @@
       "writtenOn": "2014-01-29T16:34:38Z",
       "side": 1,
       "message": "Instead of creating a new sequence of two if statements, can\u0027t we keep the original if statement and replace its false block with an if(negatedCondition) ?",
+      "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12731a25_e5dc5600",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-29T19:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12731a25_c5cafa88",
       "revId": "498e156fd16c9d823f2521b58776728e1213a07f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
