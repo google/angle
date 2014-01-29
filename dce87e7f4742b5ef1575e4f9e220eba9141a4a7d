@@ -16,6 +16,24 @@
       "revId": "dce87e7f4742b5ef1575e4f9e220eba9141a4a7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2b4c6fd_b0080085",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2014-01-29T22:03:15Z",
+      "side": 1,
+      "message": "Good point. I guess we could check specifically if EGL_WIDTH or EGL_HEIGHT was set, and require them to be \u003e 0.",
+      "parentUuid": "f26f6639_0487b68f",
+      "revId": "dce87e7f4742b5ef1575e4f9e220eba9141a4a7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
