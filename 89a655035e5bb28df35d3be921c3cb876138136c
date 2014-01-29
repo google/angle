@@ -87,6 +87,24 @@
       "revId": "89a655035e5bb28df35d3be921c3cb876138136c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f26f6639_447e0ef9",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-29T20:32:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2b4c6fd_82149ed0",
+      "revId": "89a655035e5bb28df35d3be921c3cb876138136c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
