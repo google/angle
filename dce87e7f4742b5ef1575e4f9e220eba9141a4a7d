@@ -69,6 +69,24 @@
       "revId": "dce87e7f4742b5ef1575e4f9e220eba9141a4a7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2b4c6fd_8b4a79e2",
+        "filename": "src/libEGL/Surface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-29T23:22:57Z",
+      "side": 1,
+      "message": "Eh, I\u0027m not sure how comfortable I feel with leaving functionality holes in an extension because it\u0027s not useful to Chrome-- it seems like something ANGLE should avoid doing if possible, as a good citizen of the standard and an implementation used by multiple projects, rather than just an appendage of Chrome.\n\nOf course, my feelings would have a bit more weight if we fully implemented the EGL spec. We\u0027re already not the best citizen of the standard.\n\nIf we go forward with creating an extension which removes the spec language indicating that native window resizing should be handled or else control of resizing should be given to the client, it would probably be best to make creation of a non-resizing surface very explicit-- not just implied by the inclusion of EGL_WIDTH \u0026 EGL_HEIGHT.",
+      "parentUuid": "f2b4c6fd_cbcbe138",
+      "revId": "dce87e7f4742b5ef1575e4f9e220eba9141a4a7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
