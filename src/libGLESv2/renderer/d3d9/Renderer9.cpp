@@ -3457,4 +3457,15 @@ GLenum Renderer9::getNativeTextureFormat(GLenum internalFormat) const
     return d3d9_gl::GetInternalFormat(gl_d3d9::GetTextureFormat(internalFormat, this));
 }
 
+rx::VertexConversionType Renderer9::getVertexConversionType(const gl::VertexFormat &vertexFormat) const
+{
+    return d3d9::GetVertexConversionType(vertexFormat);
+}
+
+GLenum Renderer9::getVertexComponentType(const gl::VertexFormat &vertexFormat) const
+{
+    D3DDECLTYPE declType = d3d9::GetNativeVertexFormat(vertexFormat);
+    return d3d9::GetDeclTypeComponentType(declType);
+}
+
 }

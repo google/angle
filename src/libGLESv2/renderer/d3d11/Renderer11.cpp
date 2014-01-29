@@ -3523,6 +3523,16 @@ GLenum Renderer11::getNativeTextureFormat(GLenum internalFormat) const
     return d3d11_gl::GetInternalFormat(gl_d3d11::GetTexFormat(internalFormat, clientVersion), clientVersion);
 }
 
+rx::VertexConversionType Renderer11::getVertexConversionType(const gl::VertexFormat &vertexFormat) const
+{
+    return gl_d3d11::GetVertexConversionType(vertexFormat);
+}
+
+GLenum Renderer11::getVertexComponentType(const gl::VertexFormat &vertexFormat) const
+{
+    return d3d11::GetComponentType(gl_d3d11::GetNativeVertexFormat(vertexFormat));
+}
+
 Renderer11::MultisampleSupportInfo Renderer11::getMultisampleSupportInfo(DXGI_FORMAT format)
 {
     MultisampleSupportInfo supportInfo = { 0 };

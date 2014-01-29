@@ -223,6 +223,8 @@ class Renderer11 : public Renderer
 
     virtual bool getLUID(LUID *adapterLuid) const;
     virtual GLenum getNativeTextureFormat(GLenum internalFormat) const;
+    virtual rx::VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const;
+    virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
