@@ -234,7 +234,7 @@ void GenerateInitialTextureData(GLint internalFormat, GLuint clientVersion, GLui
         unsigned int mipHeight = std::max(height >> i, 1U);
         unsigned int mipDepth = std::max(depth >> i, 1U);
 
-        unsigned int rowWidth = d3d11::GetFormatPixelBytes(dxgiFormat, clientVersion) * mipWidth;
+        unsigned int rowWidth = d3d11::GetFormatPixelBytes(dxgiFormat) * mipWidth;
         unsigned int imageSize = rowWidth * height;
 
         outData->at(i).resize(rowWidth * mipHeight * mipDepth);

@@ -3188,7 +3188,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
         GLenum destInternalFormat = gl::GetSizedInternalFormat(format, type, clientVersion);
         GLuint destPixelSize = gl::GetPixelBytes(destInternalFormat, clientVersion);
 
-        ColorCopyFunction fastCopyFunc = d3d11::GetFastCopyFunction(textureDesc.Format, format, type, getCurrentClientVersion());
+        ColorCopyFunction fastCopyFunc = d3d11::GetFastCopyFunction(textureDesc.Format, format, type);
         if (fastCopyFunc)
         {
             // Fast copy is possible through some special function
@@ -3205,7 +3205,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
         }
         else
         {
-            ColorReadFunction readFunc = d3d11::GetColorReadFunction(textureDesc.Format, clientVersion);
+            ColorReadFunction readFunc = d3d11::GetColorReadFunction(textureDesc.Format);
             ColorWriteFunction writeFunc = gl::GetColorWriteFunction(format, type, clientVersion);
 
             unsigned char temp[16]; // Maximum size of any Color<T> type used.

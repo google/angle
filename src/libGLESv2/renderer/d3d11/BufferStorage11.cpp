@@ -294,7 +294,7 @@ ID3D11ShaderResourceView *BufferStorage11::getSRV(DXGI_FORMAT srvFormat)
 
     D3D11_SHADER_RESOURCE_VIEW_DESC bufferSRVDesc;
     bufferSRVDesc.Buffer.ElementOffset = 0;
-    bufferSRVDesc.Buffer.ElementWidth = mSize / d3d11::GetFormatPixelBytes(srvFormat, mRenderer->getCurrentClientVersion());
+    bufferSRVDesc.Buffer.ElementWidth = mSize / d3d11::GetFormatPixelBytes(srvFormat);
     bufferSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
     bufferSRVDesc.Format = srvFormat;
 

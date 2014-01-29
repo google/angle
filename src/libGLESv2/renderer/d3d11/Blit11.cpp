@@ -766,7 +766,7 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
     DXGI_FORMAT format = GetTextureFormat(source);
     ASSERT(format == GetTextureFormat(dest));
 
-    unsigned int pixelSize = d3d11::GetFormatPixelBytes(format, mRenderer->getCurrentClientVersion());
+    unsigned int pixelSize = d3d11::GetFormatPixelBytes(format);
     unsigned int copyOffset = 0;
     unsigned int copySize = pixelSize;
     if (stencilOnly)

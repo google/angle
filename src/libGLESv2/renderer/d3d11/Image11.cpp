@@ -46,7 +46,7 @@ void Image11::generateMipmap(GLuint clientVersion, Image11 *dest, Image11 *src)
     ASSERT(src->getWidth() == 1 || src->getWidth() / 2 == dest->getWidth());
     ASSERT(src->getHeight() == 1 || src->getHeight() / 2 == dest->getHeight());
 
-    MipGenerationFunction mipFunction = d3d11::GetMipGenerationFunction(src->getDXGIFormat(), clientVersion);
+    MipGenerationFunction mipFunction = d3d11::GetMipGenerationFunction(src->getDXGIFormat());
     ASSERT(mipFunction != NULL);
 
     D3D11_MAPPED_SUBRESOURCE destMapped;
@@ -157,7 +157,7 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei widt
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
     GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, type, clientVersion, width, unpackAlignment);
     GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, type, clientVersion, width, height, unpackAlignment);
-    GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat, clientVersion);
+    GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat);
 
     LoadImageFunction loadFunction = d3d11::GetImageLoadFunction(mInternalFormat, type, clientVersion);
     ASSERT(loadFunction != NULL);
@@ -183,9 +183,9 @@ void Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GL
     GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion, width, 1);
     GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion, width, height, 1);
 
-    GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat, clientVersion);
-    GLuint outputBlockWidth = d3d11::GetBlockWidth(mDXGIFormat, clientVersion);
-    GLuint outputBlockHeight = d3d11::GetBlockHeight(mDXGIFormat, clientVersion);
+    GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat);
+    GLuint outputBlockWidth = d3d11::GetBlockWidth(mDXGIFormat);
+    GLuint outputBlockHeight = d3d11::GetBlockHeight(mDXGIFormat);
 
     ASSERT(xoffset % outputBlockWidth == 0);
     ASSERT(yoffset % outputBlockHeight == 0);
@@ -326,7 +326,7 @@ void Image11::createStagingTexture()
         GLsizei height = mHeight;
 
         // adjust size if needed for compressed textures
-        d3d11::MakeValidSize(false, dxgiFormat, mRenderer->getCurrentClientVersion(), &width, &height, &lodOffset);
+        d3d11::MakeValidSize(false, dxgiFormat, &width, &height, &lodOffset);
 
         if (mTarget == GL_TEXTURE_3D)
         {

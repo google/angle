@@ -22,24 +22,24 @@ namespace d3d11
 
 typedef std::set<DXGI_FORMAT> DXGIFormatSet;
 
-MipGenerationFunction GetMipGenerationFunction(DXGI_FORMAT format, GLuint clientVersion);
+MipGenerationFunction GetMipGenerationFunction(DXGI_FORMAT format);
 LoadImageFunction GetImageLoadFunction(GLenum internalFormat, GLenum type, GLuint clientVersion);
 
-GLuint GetFormatPixelBytes(DXGI_FORMAT format, GLuint clientVersion);
-GLuint GetBlockWidth(DXGI_FORMAT format, GLuint clientVersion);
-GLuint GetBlockHeight(DXGI_FORMAT format, GLuint clientVersion);
+GLuint GetFormatPixelBytes(DXGI_FORMAT format);
+GLuint GetBlockWidth(DXGI_FORMAT format);
+GLuint GetBlockHeight(DXGI_FORMAT format);
 
 GLuint GetDepthBits(DXGI_FORMAT format);
 GLuint GetDepthOffset(DXGI_FORMAT format);
 GLuint GetStencilBits(DXGI_FORMAT format);
 GLuint GetStencilOffset(DXGI_FORMAT format);
 
-void MakeValidSize(bool isImage, DXGI_FORMAT format, GLuint clientVersion, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
+void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
 
 const DXGIFormatSet &GetAllUsedDXGIFormats();
 
-ColorReadFunction GetColorReadFunction(DXGI_FORMAT format, GLuint clientVersion);
-ColorCopyFunction GetFastCopyFunction(DXGI_FORMAT sourceFormat, GLenum destFormat, GLenum destType, GLuint clientVersion);
+ColorReadFunction GetColorReadFunction(DXGI_FORMAT format);
+ColorCopyFunction GetFastCopyFunction(DXGI_FORMAT sourceFormat, GLenum destFormat, GLenum destType);
 
 }
 
