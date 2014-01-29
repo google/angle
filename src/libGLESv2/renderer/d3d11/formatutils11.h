@@ -28,6 +28,7 @@ LoadImageFunction GetImageLoadFunction(GLenum internalFormat, GLenum type, GLuin
 GLuint GetFormatPixelBytes(DXGI_FORMAT format);
 GLuint GetBlockWidth(DXGI_FORMAT format);
 GLuint GetBlockHeight(DXGI_FORMAT format);
+GLenum GetComponentType(DXGI_FORMAT format);
 
 GLuint GetDepthBits(DXGI_FORMAT format);
 GLuint GetDepthOffset(DXGI_FORMAT format);
