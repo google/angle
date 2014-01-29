@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f26f6639_0487b68f",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-29T21:57:14Z",
+      "side": 1,
+      "message": "Would this patch allow the user to specify width \u0026 height as both -1 through EGL, and not produce an EGL error? Not sure if this is something we care too much about, but worth noting if so.",
+      "revId": "dce87e7f4742b5ef1575e4f9e220eba9141a4a7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
