@@ -69,6 +69,24 @@
       "revId": "89a655035e5bb28df35d3be921c3cb876138136c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2b4c6fd_82149ed0",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-01-29T18:52:29Z",
+      "side": 1,
+      "message": "The choice between the two doesn\u0027t matter much for a map where we a) will not have key collision, so the different collision behavior between the two doesn\u0027t affect us, and b) are using scalars for both key and value, so the wasted default initialization in operator[] probably doesn\u0027t matter. (I\u0027m assuming that\u0027s why you left the insert()s in place for maps which hold complex values.)\n\nI\u0027d prefer not to change some but not all of the map insertion behavior in our format table handling (this doesn\u0027t change the swizzle format tables, for example) with no reason other than personal preference. I wouldn\u0027t feel differently if it were all the instances-- since the originator of the code preferred to do it the other way, there are multiple personal preferences, and I\u0027d prefer not to open the door to style thrash and spending lots of time revising other people\u0027s code to suit one person or another. Unless there\u0027s a compelling reason to change from the already in-place code, let\u0027s stick with what\u0027s already there.",
+      "parentUuid": "f26f6639_84c0066b",
+      "revId": "89a655035e5bb28df35d3be921c3cb876138136c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
