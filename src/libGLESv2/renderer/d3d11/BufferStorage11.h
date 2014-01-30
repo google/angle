@@ -19,11 +19,14 @@ class DirectBufferStorage11;
 
 enum BufferUsage
 {
-    BUFFER_USAGE_VERTEX,
-    BUFFER_USAGE_INDEX,
-    BUFFER_USAGE_PIXEL,
-    BUFFER_USAGE_UNIFORM,
+    BUFFER_USAGE_STAGING = 0,
+    BUFFER_USAGE_VERTEX = 1,
+    BUFFER_USAGE_INDEX = 2,
+    BUFFER_USAGE_PIXEL_UNPACK = 3,
+    BUFFER_USAGE_UNIFORM = 4,
 };
+
+typedef size_t DataRevision;
 
 class BufferStorage11 : public BufferStorage
 {
@@ -47,30 +50,30 @@ class BufferStorage11 : public BufferStorage
   private:
     Renderer11 *mRenderer;
 
-    ID3D11Buffer *mStagingBuffer;
-    unsigned int mStagingBufferSize;
-
     std::map<BufferUsage, DirectBufferStorage11*> mDirectBuffers;
 
     typedef std::pair<ID3D11Buffer *, ID3D11ShaderResourceView *> BufferSRVPair;
     std::map<DXGI_FORMAT, BufferSRVPair> mBufferResourceViews;
 
-    unsigned int mSize;
-
-    void *mResolvedData;
-    unsigned int mResolvedDataSize;
-    bool mResolvedDataValid;
+    std::vector<unsigned char> mResolvedData;
+    DataRevision mResolvedDataRevision;
 
     unsigned int mReadUsageCount;
     unsigned int mWriteUsageCount;
 
+    size_t mSize;
+
     void markBufferUsage();
+
+    DirectBufferStorage11 *getStorage(BufferUsage usage);
+    DirectBufferStorage11 *getLatestStorage() const;
 };
 
 // Each instance of BufferStorageD3DBuffer11 is specialized for a class of D3D binding points
-// - vertex/index buffers
+// - vertex/transform feedback buffers
+// - index buffers
+// - pixel unpack buffers
 // - uniform buffers
-// - (possibly in the future, transform feedback buffers)
 class DirectBufferStorage11
 {
   public:
@@ -78,18 +81,22 @@ class DirectBufferStorage11
     ~DirectBufferStorage11();
 
     BufferUsage getUsage() const;
-    bool updateFromStagingBuffer(ID3D11Buffer *stagingBuffer, size_t size, size_t offset);
+    ID3D11Buffer *getD3DBuffer() const { return mDirectBuffer; }
+    size_t getSize() const {return mBufferSize; }
 
-    ID3D11Buffer *getD3DBuffer() { return mDirectBuffer; }
-    bool isDirty() const { return mDirty; }
-    void markDirty() { mDirty = true; }
+    bool copyFromStorage(DirectBufferStorage11 *source, size_t sourceOffset, size_t size, size_t destOffset);
+    void resize(size_t size, bool preserveData);
+
+    DataRevision getDataRevision() const { return mRevision; }
+    void setDataRevision(DataRevision rev) { mRevision = rev; }
 
   private:
     Renderer11 *mRenderer;
     const BufferUsage mUsage;
+    DataRevision mRevision;
+
     ID3D11Buffer *mDirectBuffer;
     size_t mBufferSize;
-    bool mDirty;
 
     static void fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Renderer *renderer, BufferUsage usage, unsigned int bufferSize);
 };
