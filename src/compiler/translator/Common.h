@@ -82,7 +82,7 @@ template <typename T>
 inline TString str(T i)
 {
     ASSERT(std::numeric_limits<T>::is_integer);
-    char buffer[(CHAR_BIT * sizeof(T) / 3) + 3];
+    char buffer[((8 * sizeof(T)) / 3) + 3];
     const char *formatStr = std::numeric_limits<T>::is_signed ? "%d" : "%u";
     snprintf(buffer, sizeof(buffer), formatStr, i);
     return buffer;
