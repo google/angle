@@ -49,18 +49,18 @@
     <ClInclude Include="..\..\src\common\version.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\common\event_tracer.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\src\common\commit.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\angleutils.h">
+    <ClCompile Include="..\..\src\common\event_tracer.cpp">
       <Filter>common</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClCompile Include="..\..\src\common\RefCountObject.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\common\angleutils.h">
+      <Filter>common</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\DirectiveHandler.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
@@ -160,6 +160,9 @@
     <ClCompile Include="..\..\src\compiler\translator\IntermTraverse.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\compiler\translator\RewriteElseBlocks.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorHLSL.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
@@ -244,6 +247,9 @@
     <ClInclude Include="..\..\src\compiler\translator\ConstantUnion.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\compiler\translator\RewriteElseBlocks.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\Diagnostics.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>

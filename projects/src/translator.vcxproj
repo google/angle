@@ -139,6 +139,7 @@
     <ClInclude Include="..\..\src\compiler\translator\DetectCallDepth.h"/>
     <ClInclude Include="..\..\src\compiler\translator\VariablePacker.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\RewriteElseBlocks.h"/>
     <ClInclude Include="..\..\src\compiler\translator\BuiltInFunctionEmulator.h"/>
     <ClInclude Include="..\..\src\compiler\translator\PoolAlloc.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Uniform.h"/>
@@ -214,6 +215,7 @@
     <ClCompile Include="..\..\src\compiler\translator\PoolAlloc.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ossource_win.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\OutputHLSL.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\RewriteElseBlocks.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\Diagnostics.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\glslang_tab.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\QualifierAlive.cpp"/>
