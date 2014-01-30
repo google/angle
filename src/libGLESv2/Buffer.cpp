@@ -58,25 +58,13 @@ void Buffer::bufferSubData(const void *data, GLsizeiptr size, GLintptr offset)
 {
     mBufferStorage->setData(data, size, offset);
     mIndexRangeCache.invalidateRange(offset, size);
-
-    if ((mStaticVertexBuffer && mStaticVertexBuffer->getBufferSize() != 0) || (mStaticIndexBuffer && mStaticIndexBuffer->getBufferSize() != 0))
-    {
-        invalidateStaticData();
-    }
-
-    mUnmodifiedDataUse = 0;
+    invalidateStaticData();
 }
 
 void Buffer::copyBufferSubData(Buffer* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size)
 {
     mBufferStorage->copyData(source->mBufferStorage, size, sourceOffset, destOffset);
-
-    if ((mStaticVertexBuffer && mStaticVertexBuffer->getBufferSize() != 0) || (mStaticIndexBuffer && mStaticIndexBuffer->getBufferSize() != 0))
-    {
-        invalidateStaticData();
-    }
-
-    mUnmodifiedDataUse = 0;
+    invalidateStaticData();
 }
 
 rx::BufferStorage *Buffer::getStorage() const
@@ -106,11 +94,14 @@ rx::StaticIndexBufferInterface *Buffer::getStaticIndexBuffer()
 
 void Buffer::invalidateStaticData()
 {
-    delete mStaticVertexBuffer;
-    mStaticVertexBuffer = NULL;
+    if ((mStaticVertexBuffer && mStaticVertexBuffer->getBufferSize() != 0) || (mStaticIndexBuffer && mStaticIndexBuffer->getBufferSize() != 0))
+    {
+        delete mStaticVertexBuffer;
+        mStaticVertexBuffer = NULL;
 
-    delete mStaticIndexBuffer;
-    mStaticIndexBuffer = NULL;
+        delete mStaticIndexBuffer;
+        mStaticIndexBuffer = NULL;
+    }
 
     mUnmodifiedDataUse = 0;
 }
