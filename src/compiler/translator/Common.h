@@ -11,6 +11,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <limits>
 
 #include "compiler/translator/PoolAlloc.h"
 #include "compiler/translator/compilerdebug.h"
