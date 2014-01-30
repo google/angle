@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <limits>
+#include <stdio.h>
 
 #include "compiler/translator/PoolAlloc.h"
 #include "compiler/translator/compilerdebug.h"
