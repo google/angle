@@ -1403,7 +1403,7 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
     }
 }
 
-void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
+void Renderer11::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard)
 {
     ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
     ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
@@ -1417,6 +1417,12 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
     if (!mCurRasterState.pointDrawMode)
     {
         geometryShader = NULL;
+    }
+
+    // Skip pixel shader if we're doing rasterizer discard.
+    if (rasterizerDiscard)
+    {
+        pixelShader = NULL;
     }
 
     bool dirtyUniforms = false;

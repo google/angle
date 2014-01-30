@@ -136,7 +136,7 @@ class Renderer
                              bool ignoreViewport) = 0;
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
-    virtual void applyShaders(gl::ProgramBinary *programBinary) = 0;
+    virtual void applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard) = 0;
     virtual void applyUniforms(const gl::ProgramBinary &programBinary) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount) = 0;
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],

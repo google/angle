@@ -21,6 +21,28 @@
 namespace gl
 {
 
+bool ValidCap(const Context *context, GLenum cap)
+{
+    switch (cap)
+    {
+      case GL_CULL_FACE:
+      case GL_POLYGON_OFFSET_FILL:
+      case GL_SAMPLE_ALPHA_TO_COVERAGE:
+      case GL_SAMPLE_COVERAGE:
+      case GL_SCISSOR_TEST:
+      case GL_STENCIL_TEST:
+      case GL_DEPTH_TEST:
+      case GL_BLEND:
+      case GL_DITHER:
+        return true;
+      case GL_PRIMITIVE_RESTART_FIXED_INDEX:
+      case GL_RASTERIZER_DISCARD:
+        return (context->getClientVersion() >= 3);
+      default:
+        return false;
+    }
+}
+
 bool ValidTextureTarget(const Context *context, GLenum target)
 {
     switch (target)

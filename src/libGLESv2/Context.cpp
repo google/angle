@@ -59,6 +59,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mState.depthClearValue = 1.0f;
     mState.stencilClearValue = 0;
 
+    mState.rasterizer.rasterizerDiscard = false;
     mState.rasterizer.cullFace = false;
     mState.rasterizer.cullMode = GL_BACK;
     mState.rasterizer.frontFace = GL_CCW;
@@ -405,6 +406,44 @@ bool Context::isContextLost()
     return mContextLost;
 }
 
+void Context::setCap(GLenum cap, bool enabled)
+{
+    switch (cap)
+    {
+      case GL_CULL_FACE:                     setCullFace(enabled);              break;
+      case GL_POLYGON_OFFSET_FILL:           setPolygonOffsetFill(enabled);     break;
+      case GL_SAMPLE_ALPHA_TO_COVERAGE:      setSampleAlphaToCoverage(enabled); break;
+      case GL_SAMPLE_COVERAGE:               setSampleCoverage(enabled);        break;
+      case GL_SCISSOR_TEST:                  setScissorTest(enabled);           break;
+      case GL_STENCIL_TEST:                  setStencilTest(enabled);           break;
+      case GL_DEPTH_TEST:                    setDepthTest(enabled);             break;
+      case GL_BLEND:                         setBlend(enabled);                 break;
+      case GL_DITHER:                        setDither(enabled);                break;
+      case GL_PRIMITIVE_RESTART_FIXED_INDEX: UNIMPLEMENTED();                   break;
+      case GL_RASTERIZER_DISCARD:            setRasterizerDiscard(enabled);     break;
+      default:                               UNREACHABLE();
+    }
+}
+
+bool Context::getCap(GLenum cap)
+{
+    switch (cap)
+    {
+      case GL_CULL_FACE:                     return isCullFaceEnabled();
+      case GL_POLYGON_OFFSET_FILL:           return isPolygonOffsetFillEnabled();
+      case GL_SAMPLE_ALPHA_TO_COVERAGE:      return isSampleAlphaToCoverageEnabled();
+      case GL_SAMPLE_COVERAGE:               return isSampleCoverageEnabled();
+      case GL_SCISSOR_TEST:                  return isScissorTestEnabled();
+      case GL_STENCIL_TEST:                  return isStencilTestEnabled();
+      case GL_DEPTH_TEST:                    return isDepthTestEnabled();
+      case GL_BLEND:                         return isBlendEnabled();
+      case GL_DITHER:                        return isDitherEnabled();
+      case GL_PRIMITIVE_RESTART_FIXED_INDEX: UNIMPLEMENTED(); return false;
+      case GL_RASTERIZER_DISCARD:            return isRasterizerDiscardEnabled();
+      default:                               UNREACHABLE(); return false;
+    }
+}
+
 void Context::setClearColor(float red, float green, float blue, float alpha)
 {
     mState.colorClearValue.red = red;
@@ -421,6 +460,16 @@ void Context::setClearDepth(float depth)
 void Context::setClearStencil(int stencil)
 {
     mState.stencilClearValue = stencil;
+}
+
+void Context::setRasterizerDiscard(bool enabled)
+{
+    mState.rasterizer.rasterizerDiscard = enabled;
+}
+
+bool Context::isRasterizerDiscardEnabled() const
+{
+    return mState.rasterizer.rasterizerDiscard;
 }
 
 void Context::setCullFace(bool enabled)
@@ -2400,10 +2449,10 @@ void Context::applyState(GLenum drawMode)
 }
 
 // Applies the shaders and shader constants to the Direct3D 9 device
-void Context::applyShaders(ProgramBinary *programBinary)
+void Context::applyShaders(ProgramBinary *programBinary, bool rasterizerDiscard)
 {
-    mRenderer->applyShaders(programBinary);
-    
+    mRenderer->applyShaders(programBinary, rasterizerDiscard);
+
     programBinary->applyUniforms();
 }
 
@@ -2550,6 +2599,11 @@ bool Context::applyUniformBuffers()
 
 void Context::clear(GLbitfield mask)
 {
+    if (isRasterizerDiscardEnabled())
+    {
+        return;
+    }
+
     ClearParameters clearParams = { 0 };
     for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
     {
@@ -2618,8 +2672,12 @@ void Context::clear(GLbitfield mask)
 
 void Context::clearBufferfv(GLenum buffer, int drawbuffer, const float *values)
 {
-    // glClearBufferfv can be called to clear the color buffer or depth buffer
+    if (isRasterizerDiscardEnabled())
+    {
+        return;
+    }
 
+    // glClearBufferfv can be called to clear the color buffer or depth buffer
     ClearParameters clearParams = { 0 };
 
     if (buffer == GL_COLOR)
@@ -2673,8 +2731,12 @@ void Context::clearBufferfv(GLenum buffer, int drawbuffer, const float *values)
 
 void Context::clearBufferuiv(GLenum buffer, int drawbuffer, const unsigned int *values)
 {
-    // glClearBufferuv can only be called to clear a color buffer
+    if (isRasterizerDiscardEnabled())
+    {
+        return;
+    }
 
+    // glClearBufferuv can only be called to clear a color buffer
     ClearParameters clearParams = { 0 };
     for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
     {
@@ -2704,8 +2766,12 @@ void Context::clearBufferuiv(GLenum buffer, int drawbuffer, const unsigned int *
 
 void Context::clearBufferiv(GLenum buffer, int drawbuffer, const int *values)
 {
-    // glClearBufferfv can be called to clear the color buffer or stencil buffer
+    if (isRasterizerDiscardEnabled())
+    {
+        return;
+    }
 
+    // glClearBufferfv can be called to clear the color buffer or stencil buffer
     ClearParameters clearParams = { 0 };
 
     if (buffer == GL_COLOR)
@@ -2760,8 +2826,12 @@ void Context::clearBufferiv(GLenum buffer, int drawbuffer, const int *values)
 
 void Context::clearBufferfi(GLenum buffer, int drawbuffer, float depth, int stencil)
 {
-    // glClearBufferfi can only be called to clear a depth stencil buffer
+    if (isRasterizerDiscardEnabled())
+    {
+        return;
+    }
 
+    // glClearBufferfi can only be called to clear a depth stencil buffer
     ClearParameters clearParams = { 0 };
     for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
     {
@@ -2851,7 +2921,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
         return gl::error(err);
     }
 
-    applyShaders(programBinary);
+    applyShaders(programBinary, mState.rasterizer.rasterizerDiscard);
     applyTextures(programBinary);
 
     if (!applyUniformBuffers())
@@ -2914,7 +2984,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
         return gl::error(err);
     }
 
-    applyShaders(programBinary);
+    applyShaders(programBinary, mState.rasterizer.rasterizerDiscard);
     applyTextures(programBinary);
 
     if (!applyUniformBuffers())

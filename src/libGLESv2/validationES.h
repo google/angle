@@ -14,6 +14,7 @@ namespace gl
 
 class Context;
 
+bool ValidCap(const Context *context, GLenum cap);
 bool ValidTextureTarget(const Context *context, GLenum target);
 bool ValidFramebufferTarget(GLenum target);
 bool ValidMipLevel(const Context *context, GLenum target, GLint level);

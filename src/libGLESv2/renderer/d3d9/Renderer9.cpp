@@ -1722,8 +1722,10 @@ void Renderer9::drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indi
     }
 }
 
-void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
+void Renderer9::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard)
 {
+    ASSERT(!rasterizerDiscard);
+
     ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
     ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
 
