@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32d9fe6f_f11fa2ef",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-31T16:51:08Z",
+      "side": 1,
+      "message": "brackets?",
+      "revId": "100b8c3ebd7c829e51d2443f6248e13cf938b475",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12731a25_0ee34f87",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-31T16:51:08Z",
+      "side": 1,
+      "message": "I\u0027m slightly concerned about the performance of iterating over the entire map every time we need the latest storage. Is there a clean way to keep track of a single latest and most up to date storage instead of a revision in every storage?",
+      "revId": "100b8c3ebd7c829e51d2443f6248e13cf938b475",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12731a25_ae74fb13",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-31T16:51:08Z",
+      "side": 1,
+      "message": "can we change this to UNPACK or PIXEL_UNPACK? not sure if that belongs in this ticket, but pack and unpack are quite different usages.",
+      "revId": "100b8c3ebd7c829e51d2443f6248e13cf938b475",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12731a25_ce713723",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-01-31T16:51:08Z",
+      "side": 1,
+      "message": "pixel unpack buffers (currently)",
+      "revId": "100b8c3ebd7c829e51d2443f6248e13cf938b475",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
