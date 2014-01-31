@@ -68,14 +68,6 @@ class VertexAttribute;
 class VertexArray;
 class Sampler;
 
-enum QueryType
-{
-    QUERY_ANY_SAMPLES_PASSED,
-    QUERY_ANY_SAMPLES_PASSED_CONSERVATIVE,
-
-    QUERY_TYPE_COUNT
-};
-
 // Helper structure to store all raw state
 struct State
 {
@@ -117,8 +109,10 @@ struct State
     unsigned int vertexArray;
 
     BindingPointer<Texture> samplerTexture[TEXTURE_TYPE_COUNT][IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
-    BindingPointer<Query> activeQuery[QUERY_TYPE_COUNT];
     GLuint samplers[IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
+
+    typedef std::map< GLenum, BindingPointer<Query> > ActiveQueryMap;
+    ActiveQueryMap activeQueries;
 
     BindingPointer<Buffer> genericUniformBuffer;
     OffsetBindingPointer<Buffer> uniformBuffers[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];

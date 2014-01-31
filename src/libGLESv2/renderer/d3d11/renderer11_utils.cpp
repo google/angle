@@ -213,6 +213,17 @@ FLOAT ConvertMaxLOD(GLenum minFilter, unsigned int lodOffset)
     return (minFilter == GL_NEAREST || minFilter == GL_LINEAR) ? static_cast<float>(lodOffset) : FLT_MAX;
 }
 
+D3D11_QUERY ConvertQueryType(GLenum queryType)
+{
+    switch (queryType)
+    {
+      case GL_ANY_SAMPLES_PASSED_EXT:
+      case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:   return D3D11_QUERY_OCCLUSION;
+      case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN: return D3D11_QUERY_SO_STATISTICS;
+      default: UNREACHABLE();                        return D3D11_QUERY_EVENT;
+    }
+}
+
 }
 
 namespace d3d11

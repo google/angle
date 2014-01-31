@@ -133,6 +133,23 @@ bool ValidCompressedImageSize(const gl::Context *context, GLenum internalFormat,
     return true;
 }
 
+bool ValidQueryType(const Context *context, GLenum queryType)
+{
+    META_ASSERT(GL_ANY_SAMPLES_PASSED == GL_ANY_SAMPLES_PASSED_EXT);
+    META_ASSERT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE == GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT);
+
+    switch (queryType)
+    {
+      case GL_ANY_SAMPLES_PASSED:
+      case GL_ANY_SAMPLES_PASSED_CONSERVATIVE:
+        return true;
+      case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN:
+        return (context->getClientVersion() >= 3);
+      default:
+        return false;
+    }
+}
+
 bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum target, GLsizei samples,
                                            GLenum internalformat, GLsizei width, GLsizei height,
                                            bool angleExtension)

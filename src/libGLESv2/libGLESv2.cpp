@@ -112,24 +112,20 @@ void __stdcall glBeginQueryEXT(GLenum target, GLuint id)
 
     try
     {
-        switch (target)
-        {
-          case GL_ANY_SAMPLES_PASSED_EXT: 
-          case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:
-              break;
-          default: 
-              return gl::error(GL_INVALID_ENUM);
-        }
-
-        if (id == 0)
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
+            if (!ValidQueryType(context, target))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (id == 0)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
             context->beginQuery(target, id);
         }
     }
@@ -1858,19 +1854,15 @@ void __stdcall glEndQueryEXT(GLenum target)
 
     try
     {
-        switch (target)
-        {
-          case GL_ANY_SAMPLES_PASSED_EXT: 
-          case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:
-              break;
-          default: 
-              return gl::error(GL_INVALID_ENUM);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
+            if (!ValidQueryType(context, target))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
             context->endQuery(target);
         }
     }
@@ -2231,16 +2223,16 @@ void __stdcall glGenQueriesEXT(GLsizei n, GLuint* ids)
 
     try
     {
-        if (n < 0)
-        {
-            return gl::error(GL_INVALID_VALUE);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
-            for (int i = 0; i < n; i++)
+            if (n < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            for (GLsizei i = 0; i < n; i++)
             {
                 ids[i] = context->createQuery();
             }
@@ -3122,19 +3114,24 @@ void __stdcall glGetQueryivEXT(GLenum target, GLenum pname, GLint *params)
 
     try
     {
-        switch (pname)
-        {
-          case GL_CURRENT_QUERY_EXT:
-            break;
-          default:
-            return gl::error(GL_INVALID_ENUM);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
-            params[0] = context->getActiveQuery(target);
+            if (!ValidQueryType(context, target))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            switch (pname)
+            {
+              case GL_CURRENT_QUERY_EXT:
+                params[0] = context->getActiveQuery(target);
+                break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -3149,14 +3146,6 @@ void __stdcall glGetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
 
     try
     {
-        switch (pname)
-        {
-          case GL_QUERY_RESULT_EXT:
-          case GL_QUERY_RESULT_AVAILABLE_EXT:
-            break;
-          default:
-            return gl::error(GL_INVALID_ENUM);
-        }
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
@@ -3182,7 +3171,7 @@ void __stdcall glGetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
                 params[0] = queryObject->isResultAvailable();
                 break;
               default:
-                ASSERT(false);
+                return gl::error(GL_INVALID_ENUM);
             }
         }
     }
@@ -4181,21 +4170,11 @@ GLboolean __stdcall glIsQueryEXT(GLuint id)
 
     try
     {
-        if (id == 0)
-        {
-            return GL_FALSE;
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
-            gl::Query *queryObject = context->getQuery(id, false, GL_NONE);
-
-            if (queryObject)
-            {
-                return GL_TRUE;
-            }
+            return (context->getQuery(id, false, GL_NONE) != NULL) ? GL_TRUE : GL_FALSE;
         }
     }
     catch(std::bad_alloc&)
@@ -6438,7 +6417,15 @@ void __stdcall glGenQueries(GLsizei n, GLuint* ids)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            glGenQueriesEXT(n, ids);
+            if (n < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            for (GLsizei i = 0; i < n; i++)
+            {
+                ids[i] = context->createQuery();
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -6462,7 +6449,15 @@ void __stdcall glDeleteQueries(GLsizei n, const GLuint* ids)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            glDeleteQueriesEXT(n, ids);
+            if (n < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            for (GLsizei i = 0; i < n; i++)
+            {
+                context->deleteQuery(ids[i]);
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -6486,8 +6481,7 @@ GLboolean __stdcall glIsQuery(GLuint id)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
-            // TODO: XFB queries
-            return glIsQueryEXT(id);
+            return (context->getQuery(id, false, GL_NONE) != NULL) ? GL_TRUE : GL_FALSE;
         }
     }
     catch(std::bad_alloc&)
@@ -6513,14 +6507,9 @@ void __stdcall glBeginQuery(GLenum target, GLuint id)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            switch (target)
+            if (!ValidQueryType(context, target))
             {
-              case GL_ANY_SAMPLES_PASSED:
-              case GL_ANY_SAMPLES_PASSED_CONSERVATIVE:
-              case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN:
-                  break;
-              default:
-                  return gl::error(GL_INVALID_ENUM);
+                return gl::error(GL_INVALID_ENUM);
             }
 
             if (id == 0)
@@ -6528,15 +6517,7 @@ void __stdcall glBeginQuery(GLenum target, GLuint id)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (target == GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN)
-            {
-                // TODO: XFB queries
-                UNIMPLEMENTED();
-            }
-            else
-            {
-                context->beginQuery(target, id);
-            }
+            context->beginQuery(target, id);
         }
     }
     catch(std::bad_alloc&)
@@ -6560,15 +6541,12 @@ void __stdcall glEndQuery(GLenum target)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (target == GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN)
+            if (!ValidQueryType(context, target))
             {
-                // TODO: XFB queries
-                UNIMPLEMENTED();
+                return gl::error(GL_INVALID_ENUM);
             }
-            else
-            {
-                glEndQueryEXT(target);
-            }
+
+            context->endQuery(target);
         }
     }
     catch(std::bad_alloc&)
@@ -6592,14 +6570,19 @@ void __stdcall glGetQueryiv(GLenum target, GLenum pname, GLint* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (target == GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN)
+            if (!ValidQueryType(context, target))
             {
-                // TODO: XFB queries
-                UNIMPLEMENTED();
+                return gl::error(GL_INVALID_ENUM);
             }
-            else
+
+            switch (pname)
             {
-                glGetQueryivEXT(target, pname, params);
+              case GL_CURRENT_QUERY:
+                params[0] = context->getActiveQuery(target);
+                break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
             }
         }
     }
@@ -6624,8 +6607,29 @@ void __stdcall glGetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // TODO: XFB queries
-            glGetQueryObjectuivEXT(id, pname, params);
+            gl::Query *queryObject = context->getQuery(id, false, GL_NONE);
+
+            if (!queryObject)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (context->getActiveQuery(queryObject->getType()) == id)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            switch(pname)
+            {
+              case GL_QUERY_RESULT:
+                params[0] = queryObject->getResult();
+                break;
+              case GL_QUERY_RESULT_AVAILABLE:
+                params[0] = queryObject->isResultAvailable();
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
         }
     }
     catch(std::bad_alloc&)

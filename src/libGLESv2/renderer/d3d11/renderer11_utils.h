@@ -34,6 +34,8 @@ D3D11_TEXTURE_ADDRESS_MODE ConvertTextureWrap(GLenum wrap);
 FLOAT ConvertMinLOD(GLenum minFilter, unsigned int lodOffset);
 FLOAT ConvertMaxLOD(GLenum minFilter, unsigned int lodOffset);
 
+D3D11_QUERY ConvertQueryType(GLenum queryType);
+
 }
 
 namespace d3d11

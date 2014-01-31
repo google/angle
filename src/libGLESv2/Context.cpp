@@ -171,6 +171,10 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     bindDrawFramebuffer(0);
     bindRenderbuffer(0);
 
+    mState.activeQueries[GL_ANY_SAMPLES_PASSED].set(NULL);
+    mState.activeQueries[GL_ANY_SAMPLES_PASSED_CONSERVATIVE].set(NULL);
+    mState.activeQueries[GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN].set(NULL);
+
     bindGenericUniformBuffer(0);
     for (int i = 0; i < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS; i++)
     {
@@ -267,11 +271,6 @@ Context::~Context()
         mState.vertexAttribCurrentValues[attribIndex].setFloatValues(defaultFloatValues);
     }
 
-    for (int i = 0; i < QUERY_TYPE_COUNT; i++)
-    {
-        mState.activeQuery[i].set(NULL);
-    }
-
     mState.arrayBuffer.set(NULL);
     mState.renderbuffer.set(NULL);
 
@@ -279,6 +278,11 @@ Context::~Context()
     mTextureCubeMapZero.set(NULL);
     mTexture3DZero.set(NULL);
     mTexture2DArrayZero.set(NULL);
+
+    for (State::ActiveQueryMap::iterator i = mState.activeQueries.begin(); i != mState.activeQueries.end(); i++)
+    {
+        i->second.set(NULL);
+    }
 
     mState.genericUniformBuffer.set(NULL);
     for (int i = 0; i < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS; i++)
@@ -749,28 +753,11 @@ GLuint Context::getArrayBufferHandle() const
 
 GLuint Context::getActiveQuery(GLenum target) const
 {
-    Query *queryObject = NULL;
-    
-    switch (target)
-    {
-      case GL_ANY_SAMPLES_PASSED_EXT:
-        queryObject = mState.activeQuery[QUERY_ANY_SAMPLES_PASSED].get();
-        break;
-      case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:
-        queryObject = mState.activeQuery[QUERY_ANY_SAMPLES_PASSED_CONSERVATIVE].get();
-        break;
-      default:
-        ASSERT(false);
-    }
+    // All query types should already exist in the activeQueries map
+    ASSERT(mState.activeQueries.find(target) != mState.activeQueries.end());
 
-    if (queryObject)
-    {
-        return queryObject->id();
-    }
-    else
-    {
-        return 0;
-    }
+    const Query *queryObject = mState.activeQueries.at(target).get();
+    return queryObject ? queryObject->id() : 0;
 }
 
 void Context::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
@@ -1322,26 +1309,12 @@ void Context::beginQuery(GLenum target, GLuint query)
     //    b) There are no active queries for the requested target (and in the case
     //       of GL_ANY_SAMPLES_PASSED_EXT and GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT,
     //       no query may be active for either if glBeginQuery targets either.
-    for (int i = 0; i < QUERY_TYPE_COUNT; i++)
+    for (State::ActiveQueryMap::iterator i = mState.activeQueries.begin(); i != mState.activeQueries.end(); i++)
     {
-        if (mState.activeQuery[i].get() != NULL)
+        if (i->second.get() != NULL)
         {
             return gl::error(GL_INVALID_OPERATION);
         }
-    }
-
-    QueryType qType;
-    switch (target)
-    {
-      case GL_ANY_SAMPLES_PASSED_EXT: 
-        qType = QUERY_ANY_SAMPLES_PASSED; 
-        break;
-      case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT: 
-        qType = QUERY_ANY_SAMPLES_PASSED_CONSERVATIVE; 
-        break;
-      default: 
-        ASSERT(false);
-        return;
     }
 
     Query *queryObject = getQuery(query, true, target);
@@ -1359,7 +1332,7 @@ void Context::beginQuery(GLenum target, GLuint query)
     }
 
     // set query as active for specified target
-    mState.activeQuery[qType].set(queryObject);
+    mState.activeQueries[target].set(queryObject);
 
     // begin query
     queryObject->begin();
@@ -1367,22 +1340,7 @@ void Context::beginQuery(GLenum target, GLuint query)
 
 void Context::endQuery(GLenum target)
 {
-    QueryType qType;
-
-    switch (target)
-    {
-      case GL_ANY_SAMPLES_PASSED_EXT: 
-        qType = QUERY_ANY_SAMPLES_PASSED; 
-        break;
-      case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT: 
-        qType = QUERY_ANY_SAMPLES_PASSED_CONSERVATIVE; 
-        break;
-      default: 
-        ASSERT(false);
-        return;
-    }
-
-    Query *queryObject = mState.activeQuery[qType].get();
+    Query *queryObject = mState.activeQueries[target].get();
 
     if (queryObject == NULL)
     {
@@ -1391,7 +1349,7 @@ void Context::endQuery(GLenum target)
 
     queryObject->end();
 
-    mState.activeQuery[qType].set(NULL);
+    mState.activeQueries[target].set(NULL);
 }
 
 void Context::setFramebufferZero(Framebuffer *buffer)
