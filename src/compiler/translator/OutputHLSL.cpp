@@ -769,12 +769,12 @@ void OutputHLSL::header()
             }
             else if (mOutputType == SH_HLSL11_OUTPUT)
             {
-                out << "float4 gl_texture2DProj(Texture2D t, SamplerState s, float3 uvw, float lod)\n"
+                out << "float4 gl_texture2DProjLod(Texture2D t, SamplerState s, float3 uvw, float lod)\n"
                        "{\n"
                        "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), lod);\n"
                        "}\n"
                        "\n"
-                       "float4 gl_texture2DProj(Texture2D t, SamplerState s, float4 uvw)\n"
+                       "float4 gl_texture2DProjLod(Texture2D t, SamplerState s, float4 uvw, float lod)\n"
                        "{\n"
                        "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), lod);\n"
                        "}\n"
