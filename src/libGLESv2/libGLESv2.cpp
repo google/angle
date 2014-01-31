@@ -8186,6 +8186,7 @@ void __stdcall glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* val
                 {
                     return gl::error(GL_INVALID_VALUE);
                 }
+                break;
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
