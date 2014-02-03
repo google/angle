@@ -67,6 +67,7 @@ class Buffer;
 class VertexAttribute;
 class VertexArray;
 class Sampler;
+class TransformFeedback;
 
 // Helper structure to store all raw state
 struct State
@@ -117,6 +118,7 @@ struct State
     BindingPointer<Buffer> genericUniformBuffer;
     OffsetBindingPointer<Buffer> uniformBuffers[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
 
+    BindingPointer<TransformFeedback> transformFeedback;
     BindingPointer<Buffer> genericTransformFeedbackBuffer;
     OffsetBindingPointer<Buffer> transformFeedbackBuffers[IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS];
 
@@ -253,6 +255,7 @@ class Context
     GLuint createTexture();
     GLuint createRenderbuffer();
     GLuint createSampler();
+    GLuint createTransformFeedback();
     GLsync createFenceSync(GLenum condition);
 
     void deleteBuffer(GLuint buffer);
@@ -261,6 +264,7 @@ class Context
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
     void deleteSampler(GLuint sampler);
+    void deleteTransformFeedback(GLuint transformFeedback);
     void deleteFenceSync(GLsync fenceSync);
 
     // Framebuffers are owned by the Context, so these methods do not pass through
@@ -301,6 +305,7 @@ class Context
     void useProgram(GLuint program);
     void linkProgram(GLuint program);
     void setProgramBinary(GLuint program, const void *binary, GLint length);
+    void bindTransformFeedback(GLuint transformFeedback);
 
     void beginQuery(GLenum target, GLuint query);
     void endQuery(GLenum target);
@@ -330,6 +335,7 @@ class Context
     VertexArray *getVertexArray(GLuint handle) const;
     Sampler *getSampler(GLuint handle) const;
     Query *getQuery(GLuint handle, bool create, GLenum type);
+    TransformFeedback *getTransformFeedback(GLuint handle) const;
 
     Buffer *getArrayBuffer();
     Buffer *getElementArrayBuffer();
@@ -354,6 +360,7 @@ class Context
     Framebuffer *getReadFramebuffer();
     Framebuffer *getDrawFramebuffer();
     VertexArray *getCurrentVertexArray() const;
+    TransformFeedback *getCurrentTransformFeedback() const;
 
     bool isSampler(GLuint samplerName) const;
 
@@ -463,6 +470,7 @@ class Context
     void detachFramebuffer(GLuint framebuffer);
     void detachRenderbuffer(GLuint renderbuffer);
     void detachVertexArray(GLuint vertexArray);
+    void detachTransformFeedback(GLuint transformFeedback);
     void detachSampler(GLuint sampler);
 
     void generateSwizzles(ProgramBinary *programBinary);
@@ -505,6 +513,11 @@ class Context
     typedef std::unordered_map<GLuint, VertexArray*> VertexArrayMap;
     VertexArrayMap mVertexArrayMap;
     HandleAllocator mVertexArrayHandleAllocator;
+
+    BindingPointer<TransformFeedback> mTransformFeedbackZero;
+    typedef std::unordered_map<GLuint, TransformFeedback*> TransformFeedbackMap;
+    TransformFeedbackMap mTransformFeedbackMap;
+    HandleAllocator mTransformFeedbackAllocator;
 
     std::vector<std::string> mExtensionStringList;
     const char *mCombinedExtensionsString;
