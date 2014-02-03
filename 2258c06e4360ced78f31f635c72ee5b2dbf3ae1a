@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f25046a6_dc9ced16",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-03T19:57:22Z",
+      "side": 1,
+      "message": "I\u0027d prefer if this was only defined in angletypes.cpp since it\u0027s currently only used there.",
+      "revId": "2258c06e4360ced78f31f635c72ee5b2dbf3ae1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
