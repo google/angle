@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -1180,6 +1180,44 @@ GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementAr
     return err;
 }
 
+void Renderer11::applyTransformFeedbackBuffers(gl::Buffer *transformFeedbackBuffers[], GLintptr offsets[])
+{
+    ID3D11Buffer* d3dBuffers[gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS];
+    UINT d3dOffsets[gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS];
+    bool requiresUpdate = false;
+    for (size_t i = 0; i < gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
+    {
+        if (transformFeedbackBuffers[i])
+        {
+            BufferStorage11 *storage = BufferStorage11::makeBufferStorage11(transformFeedbackBuffers[i]->getStorage());
+            ID3D11Buffer *buffer = storage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
+
+            d3dBuffers[i] = buffer;
+            d3dOffsets[i] = (mAppliedTFBuffers[i] != buffer) ? static_cast<UINT>(offsets[i]) : -1;
+        }
+        else
+        {
+            d3dBuffers[i] = NULL;
+            d3dOffsets[i] = 0;
+        }
+
+        if (d3dBuffers[i] != mAppliedTFBuffers[i] || offsets[i] != mAppliedTFOffsets[i])
+        {
+            requiresUpdate = true;
+        }
+    }
+
+    if (requiresUpdate)
+    {
+        mDeviceContext->SOSetTargets(ArraySize(d3dBuffers), d3dBuffers, d3dOffsets);
+        for (size_t i = 0; i < gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
+        {
+            mAppliedTFBuffers[i] = d3dBuffers[i];
+            mAppliedTFOffsets[i] = offsets[i];
+        }
+    }
+}
+
 void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
 {
     if (mode == GL_LINE_LOOP)
@@ -1683,6 +1721,13 @@ void Renderer11::markAllStateDirty()
     mAppliedVertexShader = NULL;
     mAppliedGeometryShader = NULL;
     mAppliedPixelShader = NULL;
+
+    for (size_t i = 0; i < gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
+    {
+        mAppliedTFBuffers[i] = NULL;
+        mAppliedTFOffsets[i] = 0;
+    }
+
     memset(&mAppliedVertexConstants, 0, sizeof(dx_VertexConstants));
     memset(&mAppliedPixelConstants, 0, sizeof(dx_PixelConstants));
 

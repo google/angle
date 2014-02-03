@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -2619,7 +2619,38 @@ bool Context::applyUniformBuffers()
     return programBinary->applyUniformBuffers(boundBuffers);
 }
 
+bool Context::applyTransformFeedbackBuffers()
+{
+    TransformFeedback *curTransformFeedback = getCurrentTransformFeedback();
+    if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
+    {
+        Buffer *transformFeedbackBuffers[IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS];
+        GLintptr transformFeedbackOffsets[IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS];
+        for (size_t i = 0; i < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
+        {
+            transformFeedbackBuffers[i] = mState.transformFeedbackBuffers[i].get();
+            transformFeedbackOffsets[i] = mState.transformFeedbackBuffers[i].getOffset();
+        }
+        mRenderer->applyTransformFeedbackBuffers(transformFeedbackBuffers, transformFeedbackOffsets);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
+void Context::markTransformFeedbackUsage()
+{
+    for (size_t i = 0; i < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
+    {
+        Buffer *buffer = mState.transformFeedbackBuffers[i].get();
+        if (buffer)
+        {
+            buffer->markTransformFeedbackUsage();
+        }
+    }
+}
 
 void Context::clear(GLbitfield mask)
 {
@@ -2945,6 +2976,8 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
         return gl::error(err);
     }
 
+    bool transformFeedbackActive = applyTransformFeedbackBuffers();
+
     applyShaders(programBinary);
     applyTextures(programBinary);
 
@@ -2961,6 +2994,11 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     if (!skipDraw(mode))
     {
         mRenderer->drawArrays(mode, count, instances);
+
+        if (transformFeedbackActive)
+        {
+            markTransformFeedbackUsage();
+        }
     }
 }
 
@@ -3007,6 +3045,11 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     {
         return gl::error(err);
     }
+
+    bool transformFeedbackActive = applyTransformFeedbackBuffers();
+    // Transform feedback is not allowed for DrawElements, this error should have been caught at the API validation
+    // layer.
+    ASSERT(!transformFeedbackActive);
 
     applyShaders(programBinary);
     applyTextures(programBinary);

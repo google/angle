@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -26,6 +26,7 @@ class BufferStorage
     virtual void copyData(BufferStorage* sourceStorage, unsigned int size,
                           unsigned int sourceOffset, unsigned int destOffset) = 0;
     virtual void clear() = 0;
+    virtual void markTransformFeedbackUsage() = 0;
     virtual unsigned int getSize() const = 0;
     virtual bool supportsDirectBinding() const = 0;
     unsigned int getSerial() const;

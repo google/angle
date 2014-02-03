@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -1445,6 +1445,11 @@ GLenum Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArr
     }
 
     return err;
+}
+
+void Renderer9::applyTransformFeedbackBuffers(gl::Buffer *transformFeedbackBuffers[], GLintptr offsets[])
+{
+    UNREACHABLE();
 }
 
 void Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances)

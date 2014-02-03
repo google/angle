@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -76,6 +76,11 @@ void BufferStorage9::copyData(BufferStorage* sourceStorage, unsigned int size,
 void BufferStorage9::clear()
 {
     mSize = 0;
+}
+
+void BufferStorage9::markTransformFeedbackUsage()
+{
+    UNREACHABLE();
 }
 
 unsigned int BufferStorage9::getSize() const

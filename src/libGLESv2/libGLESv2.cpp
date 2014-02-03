@@ -1670,6 +1670,16 @@ void __stdcall glDrawArrays(GLenum mode, GLint first, GLsizei count)
 
         if (context)
         {
+            gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
+            if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused() &&
+                curTransformFeedback->getDrawMode() != mode)
+            {
+                // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
+                // that does not match the current transform feedback object's draw mode (if transform feedback
+                // is active), (3.0.2, section 2.14, pg 86)
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
             context->drawArrays(mode, first, count, 0);
         }
     }
@@ -1696,6 +1706,16 @@ void __stdcall glDrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei coun
 
             if (context)
             {
+                gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
+                if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused() &&
+                    curTransformFeedback->getDrawMode() != mode)
+                {
+                    // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
+                    // that does not match the current transform feedback object's draw mode (if transform feedback
+                    // is active), (3.0.2, section 2.14, pg 86)
+                    return gl::error(GL_INVALID_OPERATION);
+                }
+
                 context->drawArrays(mode, first, count, primcount);
             }
         }
@@ -1730,13 +1750,21 @@ void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
               case GL_UNSIGNED_INT:
                 if (!context->supports32bitIndices())
                 {
-                    return gl::error(GL_INVALID_ENUM);    
+                    return gl::error(GL_INVALID_ENUM);
                 }
                 break;
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
-        
+
+            gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
+            if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
+            {
+                // It is an invalid operation to call DrawElements, DrawRangeElements or DrawElementsInstanced
+                // while transform feedback is active, (3.0.2, section 2.14, pg 86)
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
             context->drawElements(mode, count, type, indices, 0);
         }
     }
@@ -1772,13 +1800,21 @@ void __stdcall glDrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum t
                   case GL_UNSIGNED_INT:
                     if (!context->supports32bitIndices())
                     {
-                        return gl::error(GL_INVALID_ENUM);    
+                        return gl::error(GL_INVALID_ENUM);
                     }
                     break;
                   default:
                     return gl::error(GL_INVALID_ENUM);
                 }
-            
+
+                gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
+                if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
+                {
+                    // It is an invalid operation to call DrawElements, DrawRangeElements or DrawElementsInstanced
+                    // while transform feedback is active, (3.0.2, section 2.14, pg 86)
+                    return gl::error(GL_INVALID_OPERATION);
+                }
+
                 context->drawElements(mode, count, type, indices, primcount);
             }
         }
