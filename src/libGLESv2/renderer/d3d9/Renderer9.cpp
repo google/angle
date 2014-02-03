@@ -2535,6 +2535,16 @@ unsigned int Renderer9::getMaxTransformFeedbackBuffers() const
     return 0;
 }
 
+unsigned int Renderer9::getMaxTransformFeedbackSeparateComponents() const
+{
+    return 0;
+}
+
+unsigned int Renderer9::getMaxTransformFeedbackInterleavedComponents() const
+{
+    return 0;
+}
+
 unsigned int Renderer9::getMaxUniformBufferSize() const
 {
     return 0;
