@@ -235,7 +235,7 @@ void ResourceManager::deleteSampler(GLuint sampler)
 
     if (samplerObject != mSamplerMap.end())
     {
-        mRenderbufferHandleAllocator.release(samplerObject->first);
+        mSamplerHandleAllocator.release(samplerObject->first);
         if (samplerObject->second) samplerObject->second->release();
         mSamplerMap.erase(samplerObject);
     }
