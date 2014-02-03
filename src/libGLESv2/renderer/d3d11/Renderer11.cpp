@@ -2097,10 +2097,11 @@ unsigned int Renderer11::getMaxVaryingVectors() const
     switch (mFeatureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0:
-        return D3D11_VS_OUTPUT_REGISTER_COUNT;
+        return D3D11_VS_OUTPUT_REGISTER_COUNT - getReservedVaryings();
       case D3D_FEATURE_LEVEL_10_1:
+        return D3D10_1_VS_OUTPUT_REGISTER_COUNT - getReservedVaryings();
       case D3D_FEATURE_LEVEL_10_0:
-        return D3D10_VS_OUTPUT_REGISTER_COUNT;
+        return D3D10_VS_OUTPUT_REGISTER_COUNT - getReservedVaryings();
       default: UNREACHABLE();
         return 0;
     }
@@ -2152,6 +2153,13 @@ unsigned int Renderer11::getReservedFragmentUniformBuffers() const
     return 2;
 }
 
+unsigned int Renderer11::getReservedVaryings() const
+{
+    // We potentially reserve varyings for gl_Position, _dx_Position, gl_FragCoord and gl_PointSize
+    return 4;
+}
+
+
 unsigned int Renderer11::getMaxTransformFeedbackBuffers() const
 {
     META_ASSERT(gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS >= D3D11_SO_BUFFER_SLOT_COUNT &&
@@ -2162,11 +2170,33 @@ unsigned int Renderer11::getMaxTransformFeedbackBuffers() const
       case D3D_FEATURE_LEVEL_11_0:
         return D3D11_SO_BUFFER_SLOT_COUNT;
       case D3D_FEATURE_LEVEL_10_1:
+        return D3D10_1_SO_BUFFER_SLOT_COUNT;
       case D3D_FEATURE_LEVEL_10_0:
         return D3D10_SO_BUFFER_SLOT_COUNT;
       default: UNREACHABLE();
         return 0;
     }
+}
+
+unsigned int Renderer11::getMaxTransformFeedbackSeparateComponents() const
+{
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+        return getMaxTransformFeedbackInterleavedComponents() / getMaxTransformFeedbackBuffers();
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        // D3D 10 and 10.1 only allow one output per output slot if an output slot other than zero
+        // is used.
+        return 4;
+      default: UNREACHABLE();
+        return 0;
+    }
+}
+
+unsigned int Renderer11::getMaxTransformFeedbackInterleavedComponents() const
+{
+    return (getMaxVaryingVectors() * 4);
 }
 
 unsigned int Renderer11::getMaxUniformBufferSize() const

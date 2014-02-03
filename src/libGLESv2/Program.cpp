@@ -573,4 +573,22 @@ void Program::resetUniformBlockBindings()
     }
 }
 
+GLsizei Program::getTransformFeedbackVaryingCount() const
+{
+    UNIMPLEMENTED();
+    return 0;
+}
+
+GLsizei Program::getTransformFeedbackVaryingMaxLength() const
+{
+    UNIMPLEMENTED();
+    return 0;
+}
+
+GLenum Program::getTransformFeedbackBufferMode() const
+{
+    UNIMPLEMENTED();
+    return GL_NONE;
+}
+
 }
