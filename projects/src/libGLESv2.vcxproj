@@ -135,6 +135,7 @@
     <ClInclude Include="..\..\src\libGLESv2\Sampler.h"/>
     <ClInclude Include="..\..\src\libGLESv2\HandleAllocator.h"/>
     <ClInclude Include="..\..\src\libGLESv2\precompiled.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\TransformFeedback.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Context.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Query.h"/>
     <ClInclude Include="..\..\src\libGLESv2\ResourceManager.h"/>
@@ -294,6 +295,7 @@
     <ClCompile Include="..\..\src\libGLESv2\RenderbufferProxySet.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Context.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Fence.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\TransformFeedback.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\ProgramBinary.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\validationES.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Renderbuffer.cpp"/>
