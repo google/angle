@@ -9,6 +9,8 @@
 #ifndef TRANSLATOR_NODESEARCH_H_
 #define TRANSLATOR_NODESEARCH_H_
 
+#include "compiler/translator/intermediate.h"
+
 namespace sh
 {
 

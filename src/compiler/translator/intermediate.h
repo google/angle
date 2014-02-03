@@ -428,7 +428,7 @@ public:
 
 protected:
     TIntermOperator(TOperator o) : TIntermTyped(TType(EbtFloat, EbpUndefined)), op(o) {}
-    TIntermOperator(TOperator o, TType& t) : TIntermTyped(t), op(o) {}   
+    TIntermOperator(TOperator o, const TType& t) : TIntermTyped(t), op(o) {}
     TOperator op;
 };
 
@@ -468,7 +468,7 @@ protected:
 //
 class TIntermUnary : public TIntermOperator {
 public:
-    TIntermUnary(TOperator o, TType& t) : TIntermOperator(o, t), operand(0), useEmulatedFunction(false) {}
+    TIntermUnary(TOperator o, const TType& t) : TIntermOperator(o, t), operand(0), useEmulatedFunction(false) {}
     TIntermUnary(TOperator o) : TIntermOperator(o), operand(0), useEmulatedFunction(false) {}
 
     virtual void traverse(TIntermTraverser*);

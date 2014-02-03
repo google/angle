@@ -11,8 +11,12 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <limits>
+#include <stdio.h>
 
 #include "compiler/translator/PoolAlloc.h"
+#include "compiler/translator/compilerdebug.h"
+#include "common/angleutils.h"
 
 struct TSourceLoc {
     int first_file;
@@ -73,5 +77,16 @@ public:
     // use correct two-stage name lookup supported in gcc 3.4 and above
     TMap(const tAllocator& a) : std::map<K, D, CMP, tAllocator>(std::map<K, D, CMP, tAllocator>::key_compare(), a) {}
 };
+
+// Integer to TString conversion
+template <typename T>
+inline TString str(T i)
+{
+    ASSERT(std::numeric_limits<T>::is_integer);
+    char buffer[((8 * sizeof(T)) / 3) + 3];
+    const char *formatStr = std::numeric_limits<T>::is_signed ? "%d" : "%u";
+    snprintf(buffer, sizeof(buffer), formatStr, i);
+    return buffer;
+}
 
 #endif // _COMMON_INCLUDED_

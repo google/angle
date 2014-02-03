@@ -133,6 +133,7 @@
     <ClInclude Include="..\..\src\compiler\translator\OutputGLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\FlagStd140Structs.h"/>
     <ClInclude Include="..\..\src\compiler\translator\MapLongVariableNames.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\RewriteElseBlocks.h"/>
     <ClInclude Include="..\..\src\compiler\translator\PoolAlloc.h"/>
     <ClInclude Include="..\..\src\compiler\translator\BuiltInFunctionEmulator.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ValidateOutputs.h"/>
@@ -188,11 +189,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\third_party\compiler\ArrayBoundsClamper.cpp"/>
-    <ClCompile Include="..\..\src\common\event_tracer.cpp"/>
     <ClCompile Include="..\..\src\common\utilities.cpp"/>
     <ClCompile Include="..\..\src\common\RefCountObject.cpp"/>
     <ClCompile Include="..\..\src\common\mathutil.cpp"/>
     <ClCompile Include="..\..\src\common\debug.cpp"/>
+    <ClCompile Include="..\..\src\common\event_tracer.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\HLSLLayoutEncoder.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\InfoSink.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\OutputESSL.cpp"/>
@@ -209,6 +210,7 @@
     <ClCompile Include="..\..\src\compiler\translator\PoolAlloc.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\BlockLayoutEncoder.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ossource_win.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\RewriteElseBlocks.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\Diagnostics.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\QualifierAlive.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\util.cpp"/>

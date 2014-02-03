@@ -43,9 +43,6 @@
     <ClInclude Include="..\..\src\common\event_tracer.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\common\event_tracer.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\src\common\commit.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -67,6 +64,9 @@
     <ClInclude Include="..\..\src\common\version.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\common\event_tracer.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\common\utilities.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -116,6 +116,9 @@
       <Filter>compiler\translator</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\MapLongVariableNames.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\compiler\translator\RewriteElseBlocks.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorHLSL.cpp">
@@ -181,6 +184,9 @@
     <ClInclude Include="..\..\src\compiler\translator\ConstantUnion.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\compiler\translator\RewriteElseBlocks.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\Diagnostics.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>

@@ -16,6 +16,7 @@
 #include "compiler/translator/HLSLLayoutEncoder.h"
 #include "compiler/translator/FlagStd140Structs.h"
 #include "compiler/translator/NodeSearch.h"
+#include "compiler/translator/RewriteElseBlocks.h"
 
 #include <algorithm>
 #include <cfloat>
@@ -23,16 +24,6 @@
 
 namespace sh
 {
-// Integer to TString conversion
-template <typename T>
-TString str(T i)
-{
-    ASSERT(std::numeric_limits<T>::is_integer);
-    char buffer[(CHAR_BIT * sizeof(T) / 3) + 3];
-    const char *formatStr = std::numeric_limits<T>::is_signed ? "%d" : "%u";
-    snprintf(buffer, sizeof(buffer), formatStr, i);
-    return buffer;
-}
 
 TString OutputHLSL::TextureFunction::name() const
 {
@@ -172,6 +163,13 @@ void OutputHLSL::output()
     mContainsLoopDiscontinuity = mContext.shaderType == SH_FRAGMENT_SHADER && containsLoopDiscontinuity(mContext.treeRoot);
     const std::vector<TIntermTyped*> &flaggedStructs = FlagStd140ValueStructs(mContext.treeRoot);
     makeFlaggedStructMaps(flaggedStructs);
+
+    // Work around D3D9 bug that would manifest in vertex shaders with selection blocks which
+    // use a vertex attribute as a condition, and some related computation in the else block.
+    if (mOutputType == SH_HLSL9_OUTPUT && mContext.shaderType == SH_VERTEX_SHADER)
+    {
+        RewriteElseBlocks(mContext.treeRoot);
+    }
 
     mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header
     header();
@@ -1673,6 +1671,10 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         {
             mUsesFragDepth = true;
             out << "gl_Depth";
+        }
+        else if (qualifier == EvqInternal)
+        {
+            out << name;
         }
         else
         {
