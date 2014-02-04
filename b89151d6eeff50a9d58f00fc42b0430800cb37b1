@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52903299_8f1cd553",
+        "filename": "src/libGLESv2/renderer/d3d9/VertexBuffer9.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-04T18:30:57Z",
+      "side": 1,
+      "message": "Is this necessary?",
+      "revId": "b89151d6eeff50a9d58f00fc42b0430800cb37b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
