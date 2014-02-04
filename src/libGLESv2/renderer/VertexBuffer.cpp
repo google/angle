@@ -153,7 +153,15 @@ bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &att
     BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
     gl::VertexFormat vertexFormat(attrib, currentValue.Type);
 
-    bool isAligned = (attrib.stride() % 4 == 0) && (attrib.mOffset % 4 == 0);
+    // Alignment restrictions: In D3D, vertex data must be aligned to
+    //  the format stride, or to a 4-byte boundary, whichever is smaller.
+    //  (Undocumented, and experimentally confirmed)
+    unsigned int outputElementSize;
+    getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
+    size_t alignment = std::min(static_cast<size_t>(outputElementSize), 4u);
+
+    bool isAligned = (static_cast<size_t>(attrib.stride()) % alignment == 0) &&
+                     (static_cast<size_t>(attrib.mOffset) % alignment == 0);
     bool requiresConversion = (mRenderer->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) > 0;
 
     return storage && storage->supportsDirectBinding() && !requiresConversion && isAligned;
