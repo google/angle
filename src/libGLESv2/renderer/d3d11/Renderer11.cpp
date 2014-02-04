@@ -1476,8 +1476,8 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
         }
     }
 
-    ID3D11Buffer *vertexConstantBuffer = vertexExecutable->getConstantBuffer(mDevice, totalRegisterCountVS);
-    ID3D11Buffer *pixelConstantBuffer = pixelExecutable->getConstantBuffer(mDevice, totalRegisterCountPS);
+    ID3D11Buffer *vertexConstantBuffer = vertexExecutable->getConstantBuffer(this, totalRegisterCountVS);
+    ID3D11Buffer *pixelConstantBuffer = pixelExecutable->getConstantBuffer(this, totalRegisterCountPS);
 
     float (*mapVS)[4] = NULL;
     float (*mapPS)[4] = NULL;

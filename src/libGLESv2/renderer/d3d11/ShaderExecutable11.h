@@ -14,6 +14,8 @@
 
 namespace rx
 {
+class Renderer11;
+class UniformStorage11;
 
 class ShaderExecutable11 : public ShaderExecutable
 {
@@ -30,7 +32,7 @@ class ShaderExecutable11 : public ShaderExecutable
     ID3D11VertexShader *getVertexShader() const;
     ID3D11GeometryShader *getGeometryShader() const;
 
-    ID3D11Buffer *getConstantBuffer(ID3D11Device *device, unsigned int registerCount);
+    ID3D11Buffer *getConstantBuffer(Renderer11 *renderer, unsigned int registerCount);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable11);
@@ -39,6 +41,20 @@ class ShaderExecutable11 : public ShaderExecutable
     ID3D11VertexShader *mVertexExecutable;
     ID3D11GeometryShader *mGeometryExecutable;
 
+    UniformStorage11 *mUniformStorage;
+};
+
+class UniformStorage11 : public UniformStorage
+{
+  public:
+    UniformStorage11(Renderer11 *renderer, size_t initialSize);
+    virtual ~UniformStorage11();
+
+    static const UniformStorage11 *makeUniformStorage11(const UniformStorage *uniformStorage);
+
+    ID3D11Buffer *getConstantBuffer() const { return mConstantBuffer; }
+
+  private:
     ID3D11Buffer *mConstantBuffer;
 };
 
