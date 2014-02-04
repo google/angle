@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52903299_ef832140",
+        "filename": "src/libGLESv2/renderer/copyvertex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-04T18:12:32Z",
+      "side": 1,
+      "message": "Change copyimage.h to copyvertex.h",
+      "revId": "05dec00648befde653dbcab86efec0794d69ef00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52903299_8f88555e",
+        "filename": "src/libGLESv2/renderer/copyvertex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-04T18:12:32Z",
+      "side": 1,
+      "message": "This should be changed to the bitCast function.",
+      "revId": "05dec00648befde653dbcab86efec0794d69ef00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32757e3e_ce12e340",
+        "filename": "src/libGLESv2/renderer/d3d11/VertexBuffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-04T18:12:32Z",
+      "side": 1,
+      "message": "I\u0027d prefer that this was \u0027!\u003d 0\u0027 instead of \u0027\u003e 0\u0027.",
+      "revId": "05dec00648befde653dbcab86efec0794d69ef00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12723a58_6d7735a8",
+        "filename": "src/libGLESv2/renderer/d3d11/VertexBuffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-04T18:12:32Z",
+      "side": 1,
+      "message": "Here too.",
+      "revId": "05dec00648befde653dbcab86efec0794d69ef00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
