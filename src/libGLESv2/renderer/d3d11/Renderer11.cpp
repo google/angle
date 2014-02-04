@@ -1448,10 +1448,9 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
     }
 }
 
-void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray *uniformArray)
+void Renderer11::applyUniforms(const gl::ProgramBinary &programBinary)
 {
-    ShaderExecutable11 *vertexExecutable = ShaderExecutable11::makeShaderExecutable11(programBinary->getVertexExecutable());
-    ShaderExecutable11 *pixelExecutable = ShaderExecutable11::makeShaderExecutable11(programBinary->getPixelExecutable());
+    const gl::UniformArray &uniformArray = programBinary.getUniforms();
 
     unsigned int totalRegisterCountVS = 0;
     unsigned int totalRegisterCountPS = 0;
@@ -1459,25 +1458,30 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
     bool vertexUniformsDirty = false;
     bool pixelUniformsDirty = false;
 
-    for (gl::UniformArray::const_iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
+    for (size_t uniformIndex = 0; uniformIndex < uniformArray.size(); uniformIndex++)
     {
-        const gl::Uniform *uniform = *uniform_iterator;
+        const gl::Uniform &uniform = *uniformArray[uniformIndex];
 
-        if (uniform->isReferencedByVertexShader())
+        if (uniform.isReferencedByVertexShader() && !uniform.isSampler())
         {
-            totalRegisterCountVS += uniform->registerCount;
-            vertexUniformsDirty = vertexUniformsDirty || uniform->dirty;
+            totalRegisterCountVS += uniform.registerCount;
+            vertexUniformsDirty = (vertexUniformsDirty || uniform.dirty);
         }
 
-        if (uniform->isReferencedByFragmentShader())
+        if (uniform.isReferencedByFragmentShader() && !uniform.isSampler())
         {
-            totalRegisterCountPS += uniform->registerCount;
-            pixelUniformsDirty = pixelUniformsDirty || uniform->dirty;
+            totalRegisterCountPS += uniform.registerCount;
+            pixelUniformsDirty = (pixelUniformsDirty || uniform.dirty);
         }
     }
 
-    ID3D11Buffer *vertexConstantBuffer = vertexExecutable->getConstantBuffer(this, totalRegisterCountVS);
-    ID3D11Buffer *pixelConstantBuffer = pixelExecutable->getConstantBuffer(this, totalRegisterCountPS);
+    const UniformStorage11 *vertexUniformStorage = UniformStorage11::makeUniformStorage11(&programBinary.getVertexUniformStorage());
+    const UniformStorage11 *fragmentUniformStorage = UniformStorage11::makeUniformStorage11(&programBinary.getFragmentUniformStorage());
+    ASSERT(vertexUniformStorage);
+    ASSERT(fragmentUniformStorage);
+
+    ID3D11Buffer *vertexConstantBuffer = vertexUniformStorage->getConstantBuffer();
+    ID3D11Buffer *pixelConstantBuffer = fragmentUniformStorage->getConstantBuffer();
 
     float (*mapVS)[4] = NULL;
     float (*mapPS)[4] = NULL;
@@ -1498,11 +1502,11 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
         mapPS = (float(*)[4])map.pData;
     }
 
-    for (size_t uniformIndex = 0; uniformIndex < uniformArray->size(); uniformIndex++)
+    for (size_t uniformIndex = 0; uniformIndex < uniformArray.size(); uniformIndex++)
     {
-        gl::Uniform *uniform = (*uniformArray)[uniformIndex];
+        gl::Uniform *uniform = uniformArray[uniformIndex];
 
-        if (!gl::IsSampler(uniform->type))
+        if (!uniform->isSampler())
         {
             unsigned int componentCount = (4 - uniform->registerElement);
 
@@ -1519,8 +1523,6 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
                 memcpy(&mapPS[uniform->psRegisterIndex][uniform->registerElement], uniform->data, uniform->registerCount * sizeof(float) * componentCount);
             }
         }
-
-        uniform->dirty = false;
     }
 
     if (mapVS)
@@ -2839,6 +2841,11 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
     SafeRelease(binary);
 
     return executable;
+}
+
+rx::UniformStorage *Renderer11::createUniformStorage(size_t storageSize)
+{
+    return new UniformStorage11(this, storageSize);
 }
 
 VertexBuffer *Renderer11::createVertexBuffer()

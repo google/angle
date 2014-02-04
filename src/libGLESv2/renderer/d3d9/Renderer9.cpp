@@ -1750,11 +1750,13 @@ void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
     }
 }
 
-void Renderer9::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray *uniformArray)
+void Renderer9::applyUniforms(const gl::ProgramBinary &programBinary)
 {
-    for (std::vector<gl::Uniform*>::const_iterator ub = uniformArray->begin(), ue = uniformArray->end(); ub != ue; ++ub)
+    const gl::UniformArray &uniformArray = programBinary.getUniforms();
+
+    for (size_t uniformIndex = 0; uniformIndex < uniformArray.size(); uniformIndex++)
     {
-        gl::Uniform *targetUniform = *ub;
+        gl::Uniform *targetUniform = uniformArray[uniformIndex];
 
         if (targetUniform->dirty)
         {
@@ -1790,8 +1792,6 @@ void Renderer9::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray
               default:
                 UNREACHABLE();
             }
-
-            targetUniform->dirty = false;
         }
     }
 
@@ -3326,6 +3326,11 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
     SafeRelease(binary);
 
     return executable;
+}
+
+rx::UniformStorage *Renderer9::createUniformStorage(size_t storageSize)
+{
+    return new UniformStorage(storageSize);
 }
 
 bool Renderer9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)

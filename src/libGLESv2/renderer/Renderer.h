@@ -63,6 +63,7 @@ class SwapChain;
 class RenderTarget;
 class Image;
 class TextureStorage;
+class UniformStorage;
 
 typedef void * ShaderBlob;
 typedef void (*pCompileFunc)();
@@ -136,7 +137,7 @@ class Renderer
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
     virtual void applyShaders(gl::ProgramBinary *programBinary) = 0;
-    virtual void applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray *uniformArray) = 0;
+    virtual void applyUniforms(const gl::ProgramBinary &programBinary) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount) = 0;
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],
                                      GLint first, GLsizei count, GLsizei instances) = 0;
@@ -246,6 +247,7 @@ class Renderer
     // Shader operations
     virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type) = 0;
     virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type, D3DWorkaroundType workaround) = 0;
+    virtual UniformStorage *createUniformStorage(size_t storageSize) = 0;
 
     // Image operations
     virtual Image *createImage() = 0;

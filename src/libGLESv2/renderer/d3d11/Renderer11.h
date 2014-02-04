@@ -76,7 +76,7 @@ class Renderer11 : public Renderer
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count);
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
     virtual void applyShaders(gl::ProgramBinary *programBinary);
-    virtual void applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray *uniformArray);
+    virtual void applyUniforms(const gl::ProgramBinary &programBinary);
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],
                                      GLint first, GLsizei count, GLsizei instances);
     virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
@@ -185,6 +185,7 @@ class Renderer11 : public Renderer
     // Shader operations
     virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type);
     virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type, D3DWorkaroundType workaround);
+    virtual UniformStorage *createUniformStorage(size_t storageSize);
 
     // Image operations
     virtual Image *createImage();

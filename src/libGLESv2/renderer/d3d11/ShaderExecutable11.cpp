@@ -21,7 +21,6 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
     mPixelExecutable = executable;
     mVertexExecutable = NULL;
     mGeometryExecutable = NULL;
-    mUniformStorage = NULL;
 }
 
 ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11VertexShader *executable)
@@ -30,7 +29,6 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
     mVertexExecutable = executable;
     mPixelExecutable = NULL;
     mGeometryExecutable = NULL;
-    mUniformStorage = NULL;
 }
 
 ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11GeometryShader *executable)
@@ -39,7 +37,6 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
     mGeometryExecutable = executable;
     mVertexExecutable = NULL;
     mPixelExecutable = NULL;
-    mUniformStorage = NULL;
 }
 
 ShaderExecutable11::~ShaderExecutable11()
@@ -47,7 +44,6 @@ ShaderExecutable11::~ShaderExecutable11()
     SafeRelease(mVertexExecutable);
     SafeRelease(mPixelExecutable);
     SafeRelease(mGeometryExecutable);
-    SafeDelete(mUniformStorage);
 }
 
 ShaderExecutable11 *ShaderExecutable11::makeShaderExecutable11(ShaderExecutable *executable)
@@ -69,19 +65,6 @@ ID3D11PixelShader *ShaderExecutable11::getPixelShader() const
 ID3D11GeometryShader *ShaderExecutable11::getGeometryShader() const
 {
     return mGeometryExecutable;
-}
-
-ID3D11Buffer *ShaderExecutable11::getConstantBuffer(Renderer11 *renderer, unsigned int registerCount)
-{
-    size_t desiredSize = registerCount * 16u;
-
-    if (!mUniformStorage)
-    {
-        mUniformStorage = new UniformStorage11(renderer, desiredSize);
-    }
-
-    ASSERT(mUniformStorage->size() == desiredSize);
-    return mUniformStorage->getConstantBuffer();
 }
 
 UniformStorage11::UniformStorage11(Renderer11 *renderer, size_t initialSize)

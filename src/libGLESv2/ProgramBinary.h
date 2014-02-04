@@ -31,6 +31,7 @@ namespace rx
 class ShaderExecutable;
 class Renderer;
 struct TranslatedAttribute;
+class UniformStorage;
 }
 
 namespace gl
@@ -62,9 +63,9 @@ class ProgramBinary : public RefCountObject
     explicit ProgramBinary(rx::Renderer *renderer);
     ~ProgramBinary();
 
-    rx::ShaderExecutable *getPixelExecutable();
-    rx::ShaderExecutable *getVertexExecutable();
-    rx::ShaderExecutable *getGeometryExecutable();
+    rx::ShaderExecutable *getPixelExecutable() const;
+    rx::ShaderExecutable *getVertexExecutable() const;
+    rx::ShaderExecutable *getGeometryExecutable() const;
 
     GLuint getAttributeLocation(const char *name);
     int getSemanticIndex(int attributeIndex);
@@ -145,6 +146,10 @@ class ProgramBinary : public RefCountObject
 
     static std::string decorateAttribute(const std::string &name);    // Prepend an underscore
 
+    const UniformArray &getUniforms() const { return mUniforms; }
+    const rx::UniformStorage &getVertexUniformStorage() const { return *mVertexUniformStorage; }
+    const rx::UniformStorage &getFragmentUniformStorage() const { return *mFragmentUniformStorage; }
+
   private:
     DISALLOW_COPY_AND_ASSIGN(ProgramBinary);
 
@@ -173,6 +178,7 @@ class ProgramBinary : public RefCountObject
     bool defineUniformBlock(InfoLog &infoLog, GLenum shader, const sh::InterfaceBlock &interfaceBlock);
     bool assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex);
     void defineOutputVariables(FragmentShader *fragmentShader);
+    void initializeUniformStorage();
 
     std::string generateGeometryShaderHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
     std::string generatePointSpriteHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
@@ -220,6 +226,8 @@ class ProgramBinary : public RefCountObject
     UniformIndex mUniformIndex;
     typedef std::map<int, VariableLocation> ShaderVariableIndex;
     ShaderVariableIndex mOutputVariables;
+    rx::UniformStorage *mVertexUniformStorage;
+    rx::UniformStorage *mFragmentUniformStorage;
 
     bool mValidated;
 

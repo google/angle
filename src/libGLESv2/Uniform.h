@@ -34,6 +34,7 @@ struct Uniform
     bool isReferencedByFragmentShader() const;
     bool isInDefaultBlock() const;
     size_t dataSize() const;
+    bool isSampler() const;
 
     const GLenum type;
     const GLenum precision;

@@ -32,16 +32,12 @@ class ShaderExecutable11 : public ShaderExecutable
     ID3D11VertexShader *getVertexShader() const;
     ID3D11GeometryShader *getGeometryShader() const;
 
-    ID3D11Buffer *getConstantBuffer(Renderer11 *renderer, unsigned int registerCount);
-
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable11);
 
     ID3D11PixelShader *mPixelExecutable;
     ID3D11VertexShader *mVertexExecutable;
     ID3D11GeometryShader *mGeometryExecutable;
-
-    UniformStorage11 *mUniformStorage;
 };
 
 class UniformStorage11 : public UniformStorage

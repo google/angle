@@ -73,6 +73,11 @@ size_t Uniform::dataSize() const
     return UniformInternalSize(type) * elementCount();
 }
 
+bool Uniform::isSampler() const
+{
+    return gl::IsSampler(type);
+}
+
 UniformBlock::UniformBlock(const std::string &name, unsigned int elementIndex, unsigned int dataSize)
     : name(name),
       elementIndex(elementIndex),

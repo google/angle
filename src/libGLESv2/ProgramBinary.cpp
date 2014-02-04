@@ -83,7 +83,7 @@ namespace gl_d3d
 namespace 
 {
 
-unsigned int parseAndStripArrayIndex(std::string* name)
+unsigned int ParseAndStripArrayIndex(std::string* name)
 {
     unsigned int subscript = GL_INVALID_INDEX;
 
@@ -113,14 +113,21 @@ VariableLocation::VariableLocation(const std::string &name, unsigned int element
 
 unsigned int ProgramBinary::mCurrentSerial = 1;
 
-ProgramBinary::ProgramBinary(rx::Renderer *renderer) : mRenderer(renderer), RefCountObject(0), mSerial(issueSerial())
+ProgramBinary::ProgramBinary(rx::Renderer *renderer)
+    : RefCountObject(0),
+      mRenderer(renderer),
+      mPixelExecutable(NULL),
+      mVertexExecutable(NULL),
+      mGeometryExecutable(NULL),
+      mUsedVertexSamplerRange(0),
+      mUsedPixelSamplerRange(0),
+      mUsesPointSize(false),
+      mShaderVersion(100),
+      mVertexUniformStorage(NULL),
+      mFragmentUniformStorage(NULL),
+      mValidated(false),
+      mSerial(issueSerial())
 {
-    mPixelExecutable = NULL;
-    mVertexExecutable = NULL;
-    mGeometryExecutable = NULL;
-
-    mValidated = false;
-
     for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
     {
         mSemanticIndex[index] = -1;
@@ -135,23 +142,13 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer) : mRenderer(renderer), RefC
     {
         mSamplersVS[index].active = false;
     }
-
-    mUsedVertexSamplerRange = 0;
-    mUsedPixelSamplerRange = 0;
-    mUsesPointSize = false;
-    mShaderVersion = 100;
 }
 
 ProgramBinary::~ProgramBinary()
 {
-    delete mPixelExecutable;
-    mPixelExecutable = NULL;
-
-    delete mVertexExecutable;
-    mVertexExecutable = NULL;
-
-    delete mGeometryExecutable;
-    mGeometryExecutable = NULL;
+    SafeDelete(mPixelExecutable);
+    SafeDelete(mVertexExecutable);
+    SafeDelete(mGeometryExecutable);
 
     while (!mUniforms.empty())
     {
@@ -164,6 +161,9 @@ ProgramBinary::~ProgramBinary()
         delete mUniformBlocks.back();
         mUniformBlocks.pop_back();
     }
+
+    SafeDelete(mVertexUniformStorage);
+    SafeDelete(mFragmentUniformStorage);
 }
 
 unsigned int ProgramBinary::getSerial() const
@@ -181,17 +181,17 @@ unsigned int ProgramBinary::issueSerial()
     return mCurrentSerial++;
 }
 
-rx::ShaderExecutable *ProgramBinary::getPixelExecutable()
+rx::ShaderExecutable *ProgramBinary::getPixelExecutable() const
 {
     return mPixelExecutable;
 }
 
-rx::ShaderExecutable *ProgramBinary::getVertexExecutable()
+rx::ShaderExecutable *ProgramBinary::getVertexExecutable() const
 {
     return mVertexExecutable;
 }
 
-rx::ShaderExecutable *ProgramBinary::getGeometryExecutable()
+rx::ShaderExecutable *ProgramBinary::getGeometryExecutable() const
 {
     return mGeometryExecutable;
 }
@@ -306,7 +306,7 @@ TextureType ProgramBinary::getSamplerTextureType(SamplerType type, unsigned int 
 
 GLint ProgramBinary::getUniformLocation(std::string name)
 {
-    unsigned int subscript = parseAndStripArrayIndex(&name);
+    unsigned int subscript = ParseAndStripArrayIndex(&name);
 
     unsigned int numUniforms = mUniformIndex.size();
     for (unsigned int location = 0; location < numUniforms; location++)
@@ -329,7 +329,7 @@ GLint ProgramBinary::getUniformLocation(std::string name)
 
 GLuint ProgramBinary::getUniformIndex(std::string name)
 {
-    unsigned int subscript = parseAndStripArrayIndex(&name);
+    unsigned int subscript = ParseAndStripArrayIndex(&name);
 
     // The app is not allowed to specify array indices other than 0 for arrays of basic types
     if (subscript != 0 && subscript != GL_INVALID_INDEX)
@@ -354,7 +354,7 @@ GLuint ProgramBinary::getUniformIndex(std::string name)
 
 GLuint ProgramBinary::getUniformBlockIndex(std::string name)
 {
-    unsigned int subscript = parseAndStripArrayIndex(&name);
+    unsigned int subscript = ParseAndStripArrayIndex(&name);
 
     unsigned int numUniformBlocks = mUniformBlocks.size();
     for (unsigned int blockIndex = 0; blockIndex < numUniformBlocks; blockIndex++)
@@ -383,7 +383,7 @@ GLint ProgramBinary::getFragDataLocation(const char *name) const
 {
     std::string baseName(name);
     unsigned int arrayIndex;
-    arrayIndex = parseAndStripArrayIndex(&baseName);
+    arrayIndex = ParseAndStripArrayIndex(&baseName);
 
     for (auto locationIt = mOutputVariables.begin(); locationIt != mOutputVariables.end(); locationIt++)
     {
@@ -837,9 +837,9 @@ void ProgramBinary::dirtyAllUniforms()
 void ProgramBinary::applyUniforms()
 {
     // Retrieve sampler uniform values
-    for (std::vector<Uniform*>::iterator ub = mUniforms.begin(), ue = mUniforms.end(); ub != ue; ++ub)
+    for (size_t uniformIndex = 0; uniformIndex < mUniforms.size(); uniformIndex++)
     {
-        Uniform *targetUniform = *ub;
+        Uniform *targetUniform = mUniforms[uniformIndex];
 
         if (targetUniform->dirty)
         {
@@ -883,7 +883,12 @@ void ProgramBinary::applyUniforms()
         }
     }
 
-    mRenderer->applyUniforms(this, &mUniforms);
+    mRenderer->applyUniforms(*this);
+
+    for (size_t uniformIndex = 0; uniformIndex < mUniforms.size(); uniformIndex++)
+    {
+        mUniforms[uniformIndex]->dirty = false;
+    }
 }
 
 bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers)
@@ -1860,6 +1865,8 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         mGeometryExecutable = NULL;
     }
 
+    initializeUniformStorage();
+
     return true;
 }
 
@@ -2337,6 +2344,8 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const std::vector<sh::Uniform
             return false;
         }
     }
+
+    initializeUniformStorage();
 
     return true;
 }
@@ -3273,6 +3282,32 @@ void ProgramBinary::sortAttributesByLayout(rx::TranslatedAttribute attributes[MA
         sortedSemanticIndices[i] = mSemanticIndex[oldIndex];
         attributes[i] = oldTranslatedAttributes[oldIndex];
     }
+}
+
+void ProgramBinary::initializeUniformStorage()
+{
+    // Compute total default block size
+    unsigned int vertexRegisters = 0;
+    unsigned int fragmentRegisters = 0;
+    for (size_t uniformIndex = 0; uniformIndex < mUniforms.size(); uniformIndex++)
+    {
+        const Uniform &uniform = *mUniforms[uniformIndex];
+
+        if (!IsSampler(uniform.type))
+        {
+            if (uniform.isReferencedByVertexShader())
+            {
+                vertexRegisters = std::max(vertexRegisters, uniform.vsRegisterIndex + uniform.registerCount);
+            }
+            if (uniform.isReferencedByFragmentShader())
+            {
+                fragmentRegisters = std::max(fragmentRegisters, uniform.psRegisterIndex + uniform.registerCount);
+            }
+        }
+    }
+
+    mVertexUniformStorage = mRenderer->createUniformStorage(vertexRegisters * 16u);
+    mFragmentUniformStorage = mRenderer->createUniformStorage(fragmentRegisters * 16u);
 }
 
 }
