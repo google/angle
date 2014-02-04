@@ -15,6 +15,9 @@
 namespace gl
 {
 class Buffer;
+class ProgramBinary;
+class VertexAttribute;
+struct VertexAttribCurrentValueData;
 
 enum TextureType
 {
@@ -211,6 +214,28 @@ struct PixelPackState
         : alignment(alignmentIn),
           reverseRowOrder(reverseRowOrderIn)
     {}
+};
+
+struct VertexFormat
+{
+    GLenum      mType;
+    GLboolean   mNormalized;
+    GLuint      mComponents;
+    bool        mPureInteger;
+
+    VertexFormat();
+    VertexFormat(GLenum type, GLboolean normalized, GLuint components, bool pureInteger);
+    explicit VertexFormat(const VertexAttribute &attribute);
+    VertexFormat(const VertexAttribute &attribute, GLenum currentValueType);
+
+    static void GetInputLayout(VertexFormat *inputLayout,
+                               ProgramBinary *programBinary,
+                               const VertexAttribute *attributes,
+                               const gl::VertexAttribCurrentValueData *currentValues);
+
+    bool operator==(const VertexFormat &other) const;
+    bool operator!=(const VertexFormat &other) const;
+    bool operator<(const VertexFormat& other) const;
 };
 
 }
