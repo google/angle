@@ -33,8 +33,6 @@ class VertexBuffer9 : public VertexBuffer
     virtual bool requiresConversion(const gl::VertexAttribute &attrib) const;
     virtual bool requiresConversion(const gl::VertexAttribCurrentValueData &currentValue) const;
 
-    D3DDECLTYPE getDeclType(const gl::VertexAttribute &attrib) const;
-
     virtual unsigned int getBufferSize() const;
     virtual bool setBufferSize(unsigned int size);
     virtual bool discard();
@@ -49,38 +47,6 @@ class VertexBuffer9 : public VertexBuffer
     IDirect3DVertexBuffer9 *mVertexBuffer;
     unsigned int mBufferSize;
     bool mDynamicUsage;
-
-    // Attribute format conversion
-    enum { NUM_GL_VERTEX_ATTRIB_TYPES = 6 };
-
-    struct FormatConverter
-    {
-        bool identity;
-        std::size_t outputElementSize;
-        void (*convertArray)(const void *in, std::size_t stride, std::size_t n, void *out);
-        D3DDECLTYPE d3dDeclType;
-    };
-
-    static bool mTranslationsInitialized;
-    static void initializeTranslations(DWORD declTypes);
-
-    // [GL types as enumerated by typeIndex()][normalized][size - 1]
-    static FormatConverter mFormatConverters[NUM_GL_VERTEX_ATTRIB_TYPES][2][4];
-
-    struct TranslationDescription
-    {
-        DWORD capsFlag;
-        FormatConverter preferredConversion;
-        FormatConverter fallbackConversion;
-    };
-
-    // This table is used to generate mFormatConverters.
-    // [GL types as enumerated by typeIndex()][normalized][size - 1]
-    static const TranslationDescription mPossibleTranslations[NUM_GL_VERTEX_ATTRIB_TYPES][2][4];
-
-    static unsigned int typeIndex(GLenum type);
-    static const FormatConverter &formatConverter(const gl::VertexAttribute &attribute);
-    static const FormatConverter &getCurrentValueFormatConverter();
 
     static bool spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances,
                               unsigned int *outSpaceRequired);

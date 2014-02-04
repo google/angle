@@ -11,6 +11,7 @@
 #include "libGLESv2/VertexAttribute.h"
 #include "libGLESv2/renderer/d3d9/VertexBuffer9.h"
 #include "libGLESv2/renderer/d3d9/VertexDeclarationCache.h"
+#include "libGLESv2/renderer/d3d9/formatutils9.h"
 
 namespace rx
 {
@@ -131,9 +132,11 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
                 mAppliedVBs[stream].offset = attributes[i].offset;
             }
 
+            gl::VertexFormat vertexFormat(*attributes[i].attribute, GL_FLOAT);
+
             element->Stream = stream;
             element->Offset = 0;
-            element->Type = vertexBuffer->getDeclType(*attributes[i].attribute);
+            element->Type = d3d9::GetNativeVertexFormat(vertexFormat);
             element->Method = D3DDECLMETHOD_DEFAULT;
             element->Usage = D3DDECLUSAGE_TEXCOORD;
             element->UsageIndex = programBinary->getSemanticIndex(i);

@@ -490,6 +490,8 @@ EGLint Renderer9::initialize()
 
     initializeDevice();
 
+    d3d9::InitializeVertexTranslations(this);
+
     return EGL_SUCCESS;
 }
 

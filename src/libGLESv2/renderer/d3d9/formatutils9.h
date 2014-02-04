@@ -37,6 +37,17 @@ const D3DFormatSet &GetAllUsedD3DFormats();
 ColorReadFunction GetColorReadFunction(D3DFORMAT format);
 ColorCopyFunction GetFastCopyFunction(D3DFORMAT sourceFormat, GLenum destFormat, GLenum destType, GLuint clientVersion);
 
+VertexCopyFunction GetVertexCopyFunction(const gl::VertexFormat &vertexFormat);
+size_t GetVertexElementSize(const gl::VertexFormat &vertexFormat);
+VertexConversionType GetVertexConversionType(const gl::VertexFormat &vertexFormat);
+D3DDECLTYPE GetNativeVertexFormat(const gl::VertexFormat &vertexFormat);
+
+GLenum GetDeclTypeComponentType(D3DDECLTYPE declType);
+int GetDeclTypeComponentCount(D3DDECLTYPE declType);
+bool IsDeclTypeNormalized(D3DDECLTYPE declType);
+
+void InitializeVertexTranslations(const rx::Renderer9 *renderer);
+
 }
 
 namespace gl_d3d9
