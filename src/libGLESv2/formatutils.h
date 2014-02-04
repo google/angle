@@ -31,6 +31,9 @@ typedef void (*ColorReadFunction)(const void *source, void *dest);
 typedef void (*ColorWriteFunction)(const void *source, void *dest);
 typedef void (*ColorCopyFunction)(const void *source, void *dest);
 
+typedef void (*VertexCopyFunction)(const void *input, size_t stride, size_t count, void *output);
+
+
 namespace rx
 {
 

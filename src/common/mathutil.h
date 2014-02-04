@@ -129,10 +129,9 @@ inline bool supportsSSE2()
 template <typename destType, typename sourceType>
 destType bitCast(const sourceType &source)
 {
-    META_ASSERT(sizeof(destType) >= sizeof(sourceType));
-
+    size_t copySize = std::min(sizeof(destType), sizeof(sourceType));
     destType output;
-    memcpy(&output, &source, sizeof(sourceType));
+    memcpy(&output, &source, copySize);
     return output;
 }
 

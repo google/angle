@@ -60,6 +60,11 @@ DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat, const Renderer *renderer);
 bool RequiresTextureDataInitialization(GLint internalFormat);
 InitializeTextureDataFunction GetTextureDataInitializationFunction(GLint internalFormat);
 
+VertexCopyFunction GetVertexCopyFunction(const gl::VertexFormat &vertexFormat);
+size_t GetVertexElementSize(const gl::VertexFormat &vertexFormat);
+VertexConversionType GetVertexConversionType(const gl::VertexFormat &vertexFormat);
+DXGI_FORMAT GetNativeVertexFormat(const gl::VertexFormat &vertexFormat);
+
 }
 
 namespace d3d11_gl

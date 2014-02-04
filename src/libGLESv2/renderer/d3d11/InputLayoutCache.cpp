@@ -15,6 +15,7 @@
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/VertexAttribute.h"
 #include "libGLESv2/renderer/VertexDataManager.h"
+#include "libGLESv2/renderer/d3d11/formatutils11.h"
 
 #include "third_party/murmurhash/MurmurHash3.h"
 
@@ -99,9 +100,9 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
             BufferStorage11 *bufferStorage = attributes[i].storage ? BufferStorage11::makeBufferStorage11(attributes[i].storage) : NULL;
 
             D3D11_INPUT_CLASSIFICATION inputClass = attributes[i].divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
-            DXGI_FORMAT dxgiFormat = attributes[i].attribute->mArrayEnabled ?
-                                     VertexBuffer11::getAttributeDXGIFormat(*attributes[i].attribute) :
-                                     VertexBuffer11::getCurrentValueDXGIFormat(attributes[i].currentValueType);
+
+            gl::VertexFormat vertexFormat(*attributes[i].attribute, attributes[i].currentValueType);
+            DXGI_FORMAT dxgiFormat = gl_d3d11::GetNativeVertexFormat(vertexFormat);
 
             // Record the type of the associated vertex shader vector in our key
             // This will prevent mismatched vertex shaders from using the same input layout

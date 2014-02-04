@@ -240,4 +240,17 @@ struct VertexFormat
 
 }
 
+namespace rx
+{
+
+enum VertexConversionType
+{
+    VERTEX_CONVERT_NONE = 0,
+    VERTEX_CONVERT_CPU  = 1,
+    VERTEX_CONVERT_GPU  = 2,
+    VERTEX_CONVERT_BOTH = 3
+};
+
+}
+
 #endif // LIBGLESV2_ANGLETYPES_H_

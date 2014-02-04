@@ -38,9 +38,6 @@ class VertexBuffer11 : public VertexBuffer
     virtual bool setBufferSize(unsigned int size);
     virtual bool discard();
 
-    static DXGI_FORMAT getAttributeDXGIFormat(const gl::VertexAttribute &attrib);
-    static DXGI_FORMAT getCurrentValueDXGIFormat(GLenum currentValueType);
-
     ID3D11Buffer *getBuffer() const;
 
   private:
@@ -51,24 +48,6 @@ class VertexBuffer11 : public VertexBuffer
     ID3D11Buffer *mBuffer;
     unsigned int mBufferSize;
     bool mDynamicUsage;
-
-    typedef void (*VertexConversionFunction)(const void *, unsigned int, unsigned int, void *);
-    struct VertexConverter
-    {
-        VertexConversionFunction conversionFunc;
-        bool identity;
-        DXGI_FORMAT dxgiFormat;
-        unsigned int outputElementSize;
-    };
-
-    static const unsigned int  NUM_GL_FLOAT_VERTEX_ATTRIB_TYPES = 11;
-    static const VertexConverter mFloatVertexTranslations[NUM_GL_FLOAT_VERTEX_ATTRIB_TYPES][2][4]; // [GL types as enumerated by typeIndex()][normalized][size - 1]
-
-    static const unsigned int NUM_GL_INTEGER_VERTEX_ATTRIB_TYPES = 8;
-    static const VertexConverter mIntegerVertexTranslations[NUM_GL_INTEGER_VERTEX_ATTRIB_TYPES][4]; // [GL types as enumerated by typeIndex()][size - 1]
-
-    static const VertexConverter &getVertexConversion(const gl::VertexAttribute &attribute);
-    static const VertexConverter &getVertexConversion(GLenum type, bool pureInteger, bool normalized, int size);
 };
 
 }
