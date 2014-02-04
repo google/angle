@@ -11,6 +11,7 @@
 #include "libGLESv2/renderer/VertexBuffer.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/VertexAttribute.h"
+#include "libGLESv2/renderer/BufferStorage.h"
 
 namespace rx
 {
@@ -145,6 +146,18 @@ VertexBuffer* VertexBufferInterface::getVertexBuffer() const
     return mVertexBuffer;
 }
 
+bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &attrib,
+                                                  const gl::VertexAttribCurrentValueData &currentValue) const
+{
+    gl::Buffer *buffer = attrib.mBoundBuffer.get();
+    BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
+    gl::VertexFormat vertexFormat(attrib, currentValue.Type);
+
+    bool isAligned = (attrib.stride() % 4 == 0) && (attrib.mOffset % 4 == 0);
+    bool requiresConversion = (mRenderer->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) > 0;
+
+    return storage && storage->supportsDirectBinding() && !requiresConversion && isAligned;
+}
 
 StreamingVertexBufferInterface::StreamingVertexBufferInterface(rx::Renderer *renderer, std::size_t initialSize) : VertexBufferInterface(renderer, true)
 {

@@ -146,19 +146,6 @@ bool VertexBuffer9::getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei 
     return spaceRequired(attrib, count, instances, outSpaceRequired);
 }
 
-bool VertexBuffer9::requiresConversion(const gl::VertexAttribute &attrib) const
-{
-    gl::VertexFormat vertexFormat(attrib, GL_FLOAT);
-    return (d3d9::GetVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) > 0;
-}
-
-bool VertexBuffer9::requiresConversion(const gl::VertexAttribCurrentValueData &currentValue) const
-{
-    ASSERT(currentValue.Type == GL_FLOAT);
-    gl::VertexFormat vertexFormat(currentValue.Type, GL_FALSE, 4, GL_FALSE);
-    return (d3d9::GetVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) > 0;
-}
-
 unsigned int VertexBuffer9::getBufferSize() const
 {
     return mBufferSize;

@@ -35,9 +35,6 @@ class VertexBuffer
     virtual bool getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances,
                                   unsigned int *outSpaceRequired) const = 0;
 
-    virtual bool requiresConversion(const gl::VertexAttribute &attrib) const = 0;
-    virtual bool requiresConversion(const gl::VertexAttribCurrentValueData &currentValue) const = 0;
-
     virtual unsigned int getBufferSize() const = 0;
     virtual bool setBufferSize(unsigned int size) = 0;
     virtual bool discard() = 0;
@@ -68,6 +65,9 @@ class VertexBufferInterface
 
     virtual bool storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
                                       GLint start, GLsizei count, GLsizei instances, unsigned int *outStreamOffset);
+
+    bool directStoragePossible(const gl::VertexAttribute &attrib,
+                               const gl::VertexAttribCurrentValueData &currentValue) const;
 
     VertexBuffer* getVertexBuffer() const;
 

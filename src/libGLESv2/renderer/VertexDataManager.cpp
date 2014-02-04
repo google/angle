@@ -15,6 +15,7 @@
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/VertexAttribute.h"
 #include "libGLESv2/renderer/VertexBuffer.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace
 {
@@ -50,19 +51,6 @@ static int StreamingBufferElementCount(const gl::VertexAttribute &attribute, int
     }
 
     return vertexDrawCount;
-}
-
-static bool DirectStoragePossible(VertexBufferInterface *vb, const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue)
-{
-    gl::Buffer *buffer = attrib.mBoundBuffer.get();
-    BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
-
-    const bool isAligned = (attrib.stride() % 4 == 0) && (attrib.mOffset % 4 == 0);
-    const bool requiresConversion = attrib.mArrayEnabled ?
-                                    vb->getVertexBuffer()->requiresConversion(attrib) :
-                                    vb->getVertexBuffer()->requiresConversion(currentValue);
-
-    return storage && storage->supportsDirectBinding() && !requiresConversion && isAligned;
 }
 
 VertexDataManager::VertexDataManager(Renderer *renderer) : mRenderer(renderer)
@@ -118,7 +106,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
             StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
 
             if (staticBuffer && staticBuffer->getBufferSize() > 0 && !staticBuffer->lookupAttribute(attribs[i], NULL) &&
-                !DirectStoragePossible(staticBuffer, attribs[i], currentValues[i]))
+                !staticBuffer->directStoragePossible(attribs[i], currentValues[i]))
             {
                 buffer->invalidateStaticData();
             }
@@ -134,7 +122,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
             StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
             VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
-            if (!DirectStoragePossible(vertexBuffer, attribs[i], currentValues[i]))
+            if (!vertexBuffer->directStoragePossible(attribs[i], currentValues[i]))
             {
                 if (staticBuffer)
                 {
@@ -187,7 +175,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
                 BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
-                bool directStorage = DirectStoragePossible(vertexBuffer, attribs[i], currentValues[i]);
+                bool directStorage = vertexBuffer->directStoragePossible(attribs[i], currentValues[i]);
 
                 unsigned int streamOffset = 0;
                 unsigned int outputElementSize = 0;

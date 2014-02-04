@@ -173,18 +173,6 @@ bool VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei
     }
 }
 
-bool VertexBuffer11::requiresConversion(const gl::VertexAttribute &attrib) const
-{
-    gl::VertexFormat vertexFormat(attrib);
-    return (gl_d3d11::GetVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) != 0;
-}
-
-bool VertexBuffer11::requiresConversion(const gl::VertexAttribCurrentValueData &currentValue) const
-{
-    gl::VertexFormat vertexFormat(currentValue.Type, GL_FALSE, 4, GL_FALSE);
-    return (gl_d3d11::GetVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) != 0;
-}
-
 unsigned int VertexBuffer11::getBufferSize() const
 {
     return mBufferSize;
