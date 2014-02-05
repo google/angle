@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "129ebad0_0dead186",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001245
+      },
+      "writtenOn": "2014-02-05T18:49:23Z",
+      "side": 1,
+      "message": "Oops, sorry. Still baffled by gerrit.",
+      "parentUuid": "12195a30_550bacac",
+      "revId": "d9ccbbc962da8cf7c5160884d97693cdddac2173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "520752cb_57156c97",
         "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "f2aa06eb_ccb9efaf",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1001245
+      },
+      "writtenOn": "2014-02-05T18:49:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "520752cb_57156c97",
+      "revId": "d9ccbbc962da8cf7c5160884d97693cdddac2173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d2f982ff_fb03cf66",
         "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2014-02-05T03:31:04Z",
       "side": 1,
       "message": "Call this one EGL Extension XXX for now (sorry for not noting that before)",
+      "revId": "d9ccbbc962da8cf7c5160884d97693cdddac2173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32a1fe0c_0e600b64",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1001245
+      },
+      "writtenOn": "2014-02-05T18:49:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2f982ff_fb03cf66",
       "revId": "d9ccbbc962da8cf7c5160884d97693cdddac2173",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -82,6 +136,24 @@
       "side": 1,
       "message": "The TYPE enum should be kept, but a second section for \"accepted as values for the EGL_PLATFORM_ANGLE_D3D_TYPE_EXT attribute are:\", and token names for D3D9, D3D11, and WARP added there. Or, if it makes more sense, WARP could be an attribute (rather than a value) that takes EGL_TRUE/FALSE specified alongside TYPE.\n\nI think our token names and the extension name itself should probably carry the ANGLE suffix in place of EXT, since we\u0027re the only ones likely to implement it (although admittedly, vendor-specific suffixing seems a little less meaningful in the context of platform-specific extensions).",
       "parentUuid": "32f3be1c_a1d638e1",
+      "revId": "d9ccbbc962da8cf7c5160884d97693cdddac2173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2aa06eb_2cbfd392",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1001245
+      },
+      "writtenOn": "2014-02-05T18:49:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "520752cb_b7868890",
       "revId": "d9ccbbc962da8cf7c5160884d97693cdddac2173",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
