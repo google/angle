@@ -39,6 +39,7 @@ namespace gl
 {
 class InfoLog;
 class ProgramBinary;
+struct LinkedVarying;
 class VertexAttribute;
 class Buffer;
 class Texture;
@@ -238,8 +239,12 @@ class Renderer
     virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples) = 0;
 
     // Shader operations
-    virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type) = 0;
-    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type, D3DWorkaroundType workaround) = 0;
+    virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type,
+                                             const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
+                                             bool separatedOutputBuffers) = 0;
+    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type,
+                                                  const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
+                                                  bool separatedOutputBuffers, D3DWorkaroundType workaround) = 0;
     virtual UniformStorage *createUniformStorage(size_t storageSize) = 0;
 
     // Image operations

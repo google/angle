@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -252,7 +252,8 @@ bool Program::link()
     resetUniformBlockBindings();
 
     mProgramBinary.set(new ProgramBinary(mRenderer));
-    mLinked = mProgramBinary->link(mInfoLog, mAttributeBindings, mFragmentShader, mVertexShader);
+    mLinked = mProgramBinary->link(mInfoLog, mAttributeBindings, mFragmentShader, mVertexShader,
+                                   mTransformFeedbackVaryings, mTransformFeedbackBufferMode);
 
     return mLinked;
 }
@@ -297,7 +298,7 @@ bool Program::isLinked()
     return mLinked;
 }
 
-ProgramBinary* Program::getProgramBinary()
+ProgramBinary* Program::getProgramBinary() const
 {
     return mProgramBinary.get();
 }
@@ -573,22 +574,88 @@ void Program::resetUniformBlockBindings()
     }
 }
 
+void Program::setTransformFeedbackVaryings(GLsizei count, const GLchar *const *varyings, GLenum bufferMode)
+{
+    mTransformFeedbackVaryings.resize(count);
+    for (GLsizei i = 0; i < count; i++)
+    {
+        mTransformFeedbackVaryings[i] = varyings[i];
+    }
+
+    mTransformFeedbackBufferMode = bufferMode;
+}
+
+void Program::getTransformFeedbackVarying(GLuint index, GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name) const
+{
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary && index < programBinary->getTransformFeedbackVaryingCount())
+    {
+        const LinkedVarying &varying = programBinary->getTransformFeedbackVarying(index);
+        GLsizei lastNameIdx = std::min(bufSize - 1, static_cast<GLsizei>(varying.name.length()));
+        if (length)
+        {
+            *length = lastNameIdx;
+        }
+        if (size)
+        {
+            *size = varying.size;
+        }
+        if (type)
+        {
+            *type = varying.type;
+        }
+        if (name)
+        {
+            memcpy(name, varying.name.c_str(), lastNameIdx);
+            name[lastNameIdx] = '\0';
+        }
+    }
+}
+
 GLsizei Program::getTransformFeedbackVaryingCount() const
 {
-    UNIMPLEMENTED();
-    return 0;
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary)
+    {
+        return static_cast<GLsizei>(programBinary->getTransformFeedbackVaryingCount());
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 GLsizei Program::getTransformFeedbackVaryingMaxLength() const
 {
-    UNIMPLEMENTED();
-    return 0;
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary)
+    {
+        GLsizei maxSize = 0;
+        for (size_t i = 0; i < programBinary->getTransformFeedbackVaryingCount(); i++)
+        {
+            const LinkedVarying &varying = programBinary->getTransformFeedbackVarying(i);
+            maxSize = std::max(maxSize, static_cast<GLsizei>(varying.name.length() + 1));
+        }
+
+        return maxSize;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 GLenum Program::getTransformFeedbackBufferMode() const
 {
-    UNIMPLEMENTED();
-    return GL_NONE;
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary)
+    {
+        return programBinary->getTransformFeedbackBufferMode();
+    }
+    else
+    {
+        return mTransformFeedbackBufferMode;
+    }
 }
 
 }

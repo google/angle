@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -21,14 +21,16 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
     mPixelExecutable = executable;
     mVertexExecutable = NULL;
     mGeometryExecutable = NULL;
+    mStreamOutExecutable = NULL;
 }
 
-ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11VertexShader *executable)
+ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11VertexShader *executable, ID3D11GeometryShader *streamOut)
     : ShaderExecutable(function, length)
 {
     mVertexExecutable = executable;
     mPixelExecutable = NULL;
     mGeometryExecutable = NULL;
+    mStreamOutExecutable = streamOut;
 }
 
 ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11GeometryShader *executable)
@@ -37,6 +39,7 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
     mGeometryExecutable = executable;
     mVertexExecutable = NULL;
     mPixelExecutable = NULL;
+    mStreamOutExecutable = NULL;
 }
 
 ShaderExecutable11::~ShaderExecutable11()
@@ -44,6 +47,7 @@ ShaderExecutable11::~ShaderExecutable11()
     SafeRelease(mVertexExecutable);
     SafeRelease(mPixelExecutable);
     SafeRelease(mGeometryExecutable);
+    SafeRelease(mStreamOutExecutable);
 }
 
 ShaderExecutable11 *ShaderExecutable11::makeShaderExecutable11(ShaderExecutable *executable)
@@ -65,6 +69,11 @@ ID3D11PixelShader *ShaderExecutable11::getPixelShader() const
 ID3D11GeometryShader *ShaderExecutable11::getGeometryShader() const
 {
     return mGeometryExecutable;
+}
+
+ID3D11GeometryShader *ShaderExecutable11::getStreamOutShader() const
+{
+    return mStreamOutExecutable;
 }
 
 UniformStorage11::UniformStorage11(Renderer11 *renderer, size_t initialSize)

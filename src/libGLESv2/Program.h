@@ -78,7 +78,7 @@ class Program
     bool link();
     bool isLinked();
     bool setProgramBinary(const void *binary, GLsizei length);
-    ProgramBinary *getProgramBinary();
+    ProgramBinary *getProgramBinary() const;
 
     int getInfoLogLength() const;
     void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
@@ -98,6 +98,8 @@ class Program
     void bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding);
     GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const;
 
+    void setTransformFeedbackVaryings(GLsizei count, const GLchar *const *varyings, GLenum bufferMode);
+    void getTransformFeedbackVarying(GLuint index, GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name) const;
     GLsizei getTransformFeedbackVaryingCount() const;
     GLsizei getTransformFeedbackVaryingMaxLength() const;
     GLenum getTransformFeedbackBufferMode() const;
@@ -125,6 +127,9 @@ class Program
     AttributeBindings mAttributeBindings;
 
     GLuint mUniformBlockBindings[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
+
+    std::vector<std::string> mTransformFeedbackVaryings;
+    GLuint mTransformFeedbackBufferMode;
 
     BindingPointer<ProgramBinary> mProgramBinary;
     bool mLinked;

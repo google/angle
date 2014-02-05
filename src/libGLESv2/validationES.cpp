@@ -217,6 +217,28 @@ bool ValidQueryType(const Context *context, GLenum queryType)
     }
 }
 
+bool ValidProgram(const Context *context, GLuint id)
+{
+    // ES3 spec (section 2.11.1) -- "Commands that accept shader or program object names will generate the
+    // error INVALID_VALUE if the provided name is not the name of either a shader or program object and
+    // INVALID_OPERATION if the provided name identifies an object that is not the expected type."
+
+    if (context->getProgram(id) != NULL)
+    {
+        return true;
+    }
+    else if (context->getShader(id) != NULL)
+    {
+        // ID is the wrong type
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+    else
+    {
+        // No shader/program object has this ID
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+}
+
 bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum target, GLsizei samples,
                                            GLenum internalformat, GLsizei width, GLsizei height,
                                            bool angleExtension)

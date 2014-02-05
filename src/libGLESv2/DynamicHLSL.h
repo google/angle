@@ -29,6 +29,7 @@ class InfoLog;
 class FragmentShader;
 class VertexShader;
 struct VariableLocation;
+struct LinkedVarying;
 class VertexAttribute;
 struct VertexFormat;
 
@@ -37,11 +38,14 @@ class DynamicHLSL
   public:
     explicit DynamicHLSL(rx::Renderer *const renderer);
 
-    int packVaryings(InfoLog &infoLog, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader);
+    int packVaryings(InfoLog &infoLog, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader,
+                     VertexShader *vertexShader, const std::vector<std::string>& transformFeedbackVaryings);
     std::string generateInputLayoutHLSL(const VertexFormat inputLayout[], const sh::Attribute shaderAttributes[]) const;
     bool generateShaderLinkHLSL(InfoLog &infoLog, int registers, const sh::ShaderVariable *packing[][4],
                                 std::string& pixelHLSL, std::string& vertexHLSL,
                                 FragmentShader *fragmentShader, VertexShader *vertexShader,
+                                const std::vector<std::string>& transformFeedbackVaryings,
+                                std::vector<LinkedVarying> *linkedVaryings,
                                 std::map<int, VariableLocation> *programOutputVars) const;
 
     std::string generateGeometryShaderHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
@@ -53,7 +57,8 @@ class DynamicHLSL
 
     rx::Renderer *const mRenderer;
 
-    std::string generateVaryingHLSL(FragmentShader *fragmentShader, const std::string &varyingSemantic) const;
+    std::string generateVaryingHLSL(VertexShader *shader, const std::string &varyingSemantic,
+                                    std::vector<LinkedVarying> *linkedVaryings) const;
     void defineOutputVariables(FragmentShader *fragmentShader, std::map<int, VariableLocation> *programOutputVars) const;
     std::string generatePointSpriteHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
 

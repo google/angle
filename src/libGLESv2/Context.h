@@ -327,8 +327,8 @@ class Context
     Buffer *getBuffer(GLuint handle);
     FenceNV *getFenceNV(GLuint handle);
     FenceSync *getFenceSync(GLsync handle) const;
-    Shader *getShader(GLuint handle);
-    Program *getProgram(GLuint handle);
+    Shader *getShader(GLuint handle) const;
+    Program *getProgram(GLuint handle) const;
     Texture *getTexture(GLuint handle);
     Framebuffer *getFramebuffer(GLuint handle) const;
     Renderbuffer *getRenderbuffer(GLuint handle);

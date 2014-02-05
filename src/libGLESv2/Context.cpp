@@ -1065,12 +1065,12 @@ Buffer *Context::getBuffer(GLuint handle)
     return mResourceManager->getBuffer(handle);
 }
 
-Shader *Context::getShader(GLuint handle)
+Shader *Context::getShader(GLuint handle) const
 {
     return mResourceManager->getShader(handle);
 }
 
-Program *Context::getProgram(GLuint handle)
+Program *Context::getProgram(GLuint handle) const
 {
     return mResourceManager->getProgram(handle);
 }

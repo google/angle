@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -56,6 +56,24 @@ struct VariableLocation
     std::string name;
     unsigned int element;
     unsigned int index;
+};
+
+struct LinkedVarying
+{
+    LinkedVarying();
+    LinkedVarying(const std::string &name, GLenum type, GLsizei size, const std::string &semanticName,
+                  unsigned int semanticIndex, unsigned int semanticIndexCount);
+
+    // Original GL name
+    std::string name;
+
+    GLenum type;
+    GLsizei size;
+
+    // DirectX semantic information
+    std::string semanticName;
+    unsigned int semanticIndex;
+    unsigned int semanticIndexCount;
 };
 
 // This is the result of linking a program. It is the state that would be passed to ProgramBinary.
@@ -116,7 +134,8 @@ class ProgramBinary : public RefCountObject
     bool save(void* binary, GLsizei bufSize, GLsizei *length);
     GLint getLength();
 
-    bool link(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
+    bool link(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader,
+              const std::vector<std::string>& transformFeedbackVaryings, GLenum transformFeedbackBufferMode);
     void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders);
 
     void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name) const;
@@ -135,6 +154,10 @@ class ProgramBinary : public RefCountObject
     UniformBlock *getUniformBlockByIndex(GLuint blockIndex);
 
     GLint getFragDataLocation(const char *name) const;
+
+    size_t getTransformFeedbackVaryingCount() const;
+    const LinkedVarying &getTransformFeedbackVarying(size_t idx) const;
+    GLenum getTransformFeedbackBufferMode() const;
 
     void validate(InfoLog &infoLog);
     bool validateSamplers(InfoLog *infoLog);
@@ -169,6 +192,10 @@ class ProgramBinary : public RefCountObject
     bool defineUniform(GLenum shader, const sh::Uniform &constant, InfoLog &infoLog);
     bool areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::InterfaceBlock &vertexInterfaceBlock, const sh::InterfaceBlock &fragmentInterfaceBlock);
     bool linkUniformBlocks(InfoLog &infoLog, const sh::ActiveInterfaceBlocks &vertexUniformBlocks, const sh::ActiveInterfaceBlocks &fragmentUniformBlocks);
+    bool gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std::vector<LinkedVarying> &linkedVaryings,
+                                               const std::vector<std::string> &transformFeedbackVaryingNames,
+                                               GLenum transformFeedbackBufferMode,
+                                               std::vector<LinkedVarying> *outTransformFeedbackLinkedVaryings) const;
     void defineUniformBlockMembers(const std::vector<sh::InterfaceBlockField> &fields, const std::string &prefix, int blockIndex, BlockInfoItr *blockInfoItr, std::vector<unsigned int> *blockUniformIndexes);
     bool defineUniformBlock(InfoLog &infoLog, GLenum shader, const sh::InterfaceBlock &interfaceBlock);
     bool assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex);
@@ -215,6 +242,9 @@ class ProgramBinary : public RefCountObject
     sh::Attribute mShaderAttributes[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];
     int mAttributesByLayout[MAX_VERTEX_ATTRIBS];
+
+    GLenum mTransformFeedbackBufferMode;
+    std::vector<LinkedVarying> mTransformFeedbackLinkedVaryings;
 
     struct Sampler
     {

@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -103,6 +103,16 @@ bool ProgramBinary::VertexExecutable::matchesInputLayout(const VertexFormat attr
     }
 
     return true;
+}
+
+LinkedVarying::LinkedVarying()
+{
+}
+
+LinkedVarying::LinkedVarying(const std::string &name, GLenum type, GLsizei size, const std::string &semanticName,
+                             unsigned int semanticIndex, unsigned int semanticIndexCount)
+    : name(name), type(type), size(size), semanticName(semanticName), semanticIndex(semanticIndex), semanticIndexCount(semanticIndexCount)
+{
 }
 
 unsigned int ProgramBinary::mCurrentSerial = 1;
@@ -209,7 +219,11 @@ rx::ShaderExecutable *ProgramBinary::getVertexExecutableForInputLayout(const Ver
 
     // Generate new vertex executable
     InfoLog tempInfoLog;
-    rx::ShaderExecutable *vertexExecutable = mRenderer->compileToExecutable(tempInfoLog, vertexHLSL.c_str(), rx::SHADER_VERTEX, mVertexWorkarounds);
+    rx::ShaderExecutable *vertexExecutable = mRenderer->compileToExecutable(tempInfoLog, vertexHLSL.c_str(),
+                                                                            rx::SHADER_VERTEX,
+                                                                            mTransformFeedbackLinkedVaryings,
+                                                                            (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
+                                                                            mVertexWorkarounds);
 
     if (!vertexExecutable)
     {
@@ -430,6 +444,21 @@ GLint ProgramBinary::getFragDataLocation(const char *name) const
     }
 
     return -1;
+}
+
+size_t ProgramBinary::getTransformFeedbackVaryingCount() const
+{
+    return mTransformFeedbackLinkedVaryings.size();
+}
+
+const LinkedVarying &ProgramBinary::getTransformFeedbackVarying(size_t idx) const
+{
+    return mTransformFeedbackLinkedVaryings[idx];
+}
+
+GLenum ProgramBinary::getTransformFeedbackBufferMode() const
+{
+    return mTransformFeedbackBufferMode;
 }
 
 template <typename T>
@@ -972,8 +1001,6 @@ bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuff
 
 bool ProgramBinary::linkVaryings(InfoLog &infoLog, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
-    vertexShader->resetVaryingsRegisterAssignment();
-
     std::vector<sh::Varying> &fragmentVaryings = fragmentShader->getVaryings();
     std::vector<sh::Varying> &vertexVaryings = vertexShader->getVaryings();
 
@@ -1177,6 +1204,21 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         stream.read(&mUniformIndex[i].index);
     }
 
+    stream.read(&mTransformFeedbackBufferMode);
+    stream.read(&size);
+    mTransformFeedbackLinkedVaryings.resize(size);
+    for (size_t i = 0; i < mTransformFeedbackLinkedVaryings.size(); i++)
+    {
+        LinkedVarying &varying = mTransformFeedbackLinkedVaryings[i];
+
+        stream.read(&varying.name);
+        stream.read(&varying.type);
+        stream.read(&varying.size);
+        stream.read(&varying.semanticName);
+        stream.read(&varying.semanticIndex);
+        stream.read(&varying.semanticIndexCount);
+    }
+
     stream.read(&mVertexHLSL);
     stream.read(&mVertexWorkarounds);
 
@@ -1202,7 +1244,9 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         const char *vertexShaderFunction = (const char*) binary + stream.offset();
 
         rx::ShaderExecutable *shaderExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(vertexShaderFunction),
-                                                                           vertexShaderSize, rx::SHADER_VERTEX);
+                                                                           vertexShaderSize, rx::SHADER_VERTEX,
+                                                                           mTransformFeedbackLinkedVaryings,
+                                                                           (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
         if (!shaderExecutable)
         {
             infoLog.append("Could not create vertex shader.");
@@ -1219,7 +1263,8 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 
     const char *pixelShaderFunction = (const char*) binary + stream.offset();
     mPixelExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(pixelShaderFunction),
-                                                 pixelShaderSize, rx::SHADER_PIXEL);
+                                                 pixelShaderSize, rx::SHADER_PIXEL, mTransformFeedbackLinkedVaryings,
+                                                 (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
     if (!mPixelExecutable)
     {
         infoLog.append("Could not create pixel shader.");
@@ -1234,7 +1279,8 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     {
         const char *geometryShaderFunction = (const char*) binary + stream.offset();
         mGeometryExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(geometryShaderFunction),
-                                                        geometryShaderSize, rx::SHADER_GEOMETRY);
+                                                        geometryShaderSize, rx::SHADER_GEOMETRY, mTransformFeedbackLinkedVaryings,
+                                                        (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
         if (!mGeometryExecutable)
         {
             infoLog.append("Could not create geometry shader.");
@@ -1348,6 +1394,20 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         stream.write(mUniformIndex[i].index);
     }
 
+    stream.write(mTransformFeedbackBufferMode);
+    stream.write(mTransformFeedbackLinkedVaryings.size());
+    for (size_t i = 0; i < mTransformFeedbackLinkedVaryings.size(); i++)
+    {
+        const LinkedVarying &varying = mTransformFeedbackLinkedVaryings[i];
+
+        stream.write(varying.name);
+        stream.write(varying.type);
+        stream.write(varying.size);
+        stream.write(varying.semanticName);
+        stream.write(varying.semanticIndex);
+        stream.write(varying.semanticIndexCount);
+    }
+
     stream.write(mVertexHLSL);
     stream.write(mVertexWorkarounds);
 
@@ -1439,7 +1499,8 @@ GLint ProgramBinary::getLength()
     }
 }
 
-bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
+bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader,
+                         const std::vector<std::string>& transformFeedbackVaryings, GLenum transformFeedbackBufferMode)
 {
     if (!fragmentShader || !fragmentShader->isCompiled())
     {
@@ -1451,6 +1512,9 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         return false;
     }
 
+    mTransformFeedbackLinkedVaryings.clear();
+    mTransformFeedbackBufferMode = transformFeedbackBufferMode;
+
     mShaderVersion = vertexShader->getShaderVersion();
 
     std::string pixelHLSL = fragmentShader->getHLSL();
@@ -1459,7 +1523,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 
     // Map the varyings to the register file
     const sh::ShaderVariable *packing[IMPLEMENTATION_MAX_VARYING_VECTORS][4] = {NULL};
-    int registers = mDynamicHLSL->packVaryings(infoLog, packing, fragmentShader);
+    int registers = mDynamicHLSL->packVaryings(infoLog, packing, fragmentShader, vertexShader, transformFeedbackVaryings);
 
     if (registers < 0)
     {
@@ -1472,8 +1536,10 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     }
 
     mUsesPointSize = vertexShader->usesPointSize();
+    std::vector<LinkedVarying> linkedVaryings;
     if (!mDynamicHLSL->generateShaderLinkHLSL(infoLog, registers, packing, pixelHLSL, mVertexHLSL,
-                                              fragmentShader, vertexShader, &mOutputVariables))
+                                              fragmentShader, vertexShader, transformFeedbackVaryings,
+                                              &linkedVaryings, &mOutputVariables))
     {
         return false;
     }
@@ -1503,18 +1569,30 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         success = false;
     }
 
+    if (!gatherTransformFeedbackLinkedVaryings(infoLog, linkedVaryings, transformFeedbackVaryings,
+                                               transformFeedbackBufferMode, &mTransformFeedbackLinkedVaryings))
+    {
+        success = false;
+    }
+
     if (success)
     {
         VertexFormat defaultInputLayout[MAX_VERTEX_ATTRIBS];
         GetInputLayoutFromShader(vertexShader->activeAttributes(), defaultInputLayout);
 
         rx::ShaderExecutable *defaultVertexExecutable = getVertexExecutableForInputLayout(defaultInputLayout);
-        mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), rx::SHADER_PIXEL, fragmentShader->getD3DWorkarounds());
+        mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), rx::SHADER_PIXEL,
+                                                          mTransformFeedbackLinkedVaryings,
+                                                          (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
+                                                          fragmentShader->getD3DWorkarounds());
 
         if (usesGeometryShader())
         {
             std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(registers, packing, fragmentShader, vertexShader);
-            mGeometryExecutable = mRenderer->compileToExecutable(infoLog, geometryHLSL.c_str(), rx::SHADER_GEOMETRY, rx::ANGLE_D3D_WORKAROUND_NONE);
+            mGeometryExecutable = mRenderer->compileToExecutable(infoLog, geometryHLSL.c_str(), rx::SHADER_GEOMETRY,
+                                                                 mTransformFeedbackLinkedVaryings,
+                                                                 (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
+                                                                 rx::ANGLE_D3D_WORKAROUND_NONE);
         }
 
         if (!defaultVertexExecutable || !mPixelExecutable || (usesGeometryShader() && !mGeometryExecutable))
@@ -1530,6 +1608,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 
             SafeDelete(mGeometryExecutable);
             SafeDelete(mPixelExecutable);
+
+            mTransformFeedbackLinkedVaryings.clear();
         }
     }
 
@@ -2066,6 +2146,64 @@ bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const sh::ActiveInterfac
         {
             return false;
         }
+    }
+
+    return true;
+}
+
+bool ProgramBinary::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std::vector<LinkedVarying> &linkedVaryings,
+                                                          const std::vector<std::string> &transformFeedbackVaryingNames,
+                                                          GLenum transformFeedbackBufferMode,
+                                                          std::vector<LinkedVarying> *outTransformFeedbackLinkedVaryings) const
+{
+    size_t totalComponents = 0;
+    const size_t maxSeparateComponents = mRenderer->getMaxTransformFeedbackSeparateComponents();
+    const size_t maxInterleavedComponents = mRenderer->getMaxTransformFeedbackInterleavedComponents();
+
+    // Gather the linked varyings that are used for transform feedback, they should all exist.
+    outTransformFeedbackLinkedVaryings->clear();
+    for (size_t i = 0; i < transformFeedbackVaryingNames.size(); i++)
+    {
+        bool found = false;
+        for (size_t j = 0; j < linkedVaryings.size(); j++)
+        {
+            if (transformFeedbackVaryingNames[i] == linkedVaryings[j].name)
+            {
+                for (size_t k = 0; k < outTransformFeedbackLinkedVaryings->size(); k++)
+                {
+                    if (outTransformFeedbackLinkedVaryings->at(k).name == linkedVaryings[j].name)
+                    {
+                        infoLog.append("Two transform feedback varyings specify the same output variable (%s).", linkedVaryings[j].name.c_str());
+                        return false;
+                    }
+                }
+
+                size_t componentCount = linkedVaryings[j].semanticIndexCount * 4;
+                if (transformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
+                    componentCount > maxSeparateComponents)
+                {
+                    infoLog.append("Transform feedback varying's %s components (%u) exceed the maximum separate components (%u).",
+                                   linkedVaryings[j].name.c_str(), componentCount, maxSeparateComponents);
+                    return false;
+                }
+
+                totalComponents += componentCount;
+
+                outTransformFeedbackLinkedVaryings->push_back(linkedVaryings[j]);
+                found = true;
+                break;
+            }
+        }
+
+        // All transform feedback varyings are expected to exist since packVaryings checks for them.
+        ASSERT(found);
+    }
+
+    if (transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS && totalComponents > maxInterleavedComponents)
+    {
+        infoLog.append("Transform feedback varying total components (%u) exceed the maximum interleaved components (%u).",
+                       totalComponents, maxInterleavedComponents);
+        return false;
     }
 
     return true;

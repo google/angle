@@ -2886,45 +2886,76 @@ RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum forma
     return renderTarget;
 }
 
-ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length, rx::ShaderType type)
+ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length, rx::ShaderType type,
+                                             const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
+                                             bool separatedOutputBuffers)
 {
     ShaderExecutable11 *executable = NULL;
+    HRESULT result;
 
     switch (type)
     {
       case rx::SHADER_VERTEX:
         {
-            ID3D11VertexShader *vshader = NULL;
-            HRESULT result = mDevice->CreateVertexShader(function, length, NULL, &vshader);
+            ID3D11VertexShader *vertexShader = NULL;
+            ID3D11GeometryShader *streamOutShader = NULL;
+
+            result = mDevice->CreateVertexShader(function, length, NULL, &vertexShader);
             ASSERT(SUCCEEDED(result));
 
-            if (vshader)
+            if (transformFeedbackVaryings.size() > 0)
             {
-                executable = new ShaderExecutable11(function, length, vshader);
+                std::vector<D3D11_SO_DECLARATION_ENTRY> soDeclaration;
+                for (size_t i = 0; i < transformFeedbackVaryings.size(); i++)
+                {
+                    const gl::LinkedVarying &varying = transformFeedbackVaryings[i];
+                    for (size_t j = 0; j < transformFeedbackVaryings[i].semanticIndexCount; j++)
+                    {
+                        D3D11_SO_DECLARATION_ENTRY entry = { 0 };
+                        entry.Stream = 0;
+                        entry.SemanticName = transformFeedbackVaryings[i].semanticName.c_str();
+                        entry.SemanticIndex = transformFeedbackVaryings[i].semanticIndex + j;
+                        entry.StartComponent = 0;
+                        entry.ComponentCount = gl::VariableRowCount(type);
+                        entry.OutputSlot = (separatedOutputBuffers ? i : 0);
+                        soDeclaration.push_back(entry);
+                    }
+                }
+
+                result = mDevice->CreateGeometryShaderWithStreamOutput(function, length, soDeclaration.data(), soDeclaration.size(),
+                                                                       NULL, 0, 0, NULL, &streamOutShader);
+                ASSERT(SUCCEEDED(result));
+            }
+
+            if (vertexShader)
+            {
+                executable = new ShaderExecutable11(function, length, vertexShader, streamOutShader);
             }
         }
         break;
       case rx::SHADER_PIXEL:
         {
-            ID3D11PixelShader *pshader = NULL;
-            HRESULT result = mDevice->CreatePixelShader(function, length, NULL, &pshader);
+            ID3D11PixelShader *pixelShader = NULL;
+
+            result = mDevice->CreatePixelShader(function, length, NULL, &pixelShader);
             ASSERT(SUCCEEDED(result));
 
-            if (pshader)
+            if (pixelShader)
             {
-                executable = new ShaderExecutable11(function, length, pshader);
+                executable = new ShaderExecutable11(function, length, pixelShader);
             }
         }
         break;
       case rx::SHADER_GEOMETRY:
         {
-            ID3D11GeometryShader *gshader = NULL;
-            HRESULT result = mDevice->CreateGeometryShader(function, length, NULL, &gshader);
+            ID3D11GeometryShader *geometryShader = NULL;
+
+            result = mDevice->CreateGeometryShader(function, length, NULL, &geometryShader);
             ASSERT(SUCCEEDED(result));
 
-            if (gshader)
+            if (geometryShader)
             {
-                executable = new ShaderExecutable11(function, length, gshader);
+                executable = new ShaderExecutable11(function, length, geometryShader);
             }
         }
         break;
@@ -2936,7 +2967,9 @@ ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length
     return executable;
 }
 
-ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type, D3DWorkaroundType workaround)
+ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type,
+                                                  const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
+                                                  bool separatedOutputBuffers, D3DWorkaroundType workaround)
 {
     const char *profile = NULL;
 
@@ -2962,7 +2995,8 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
         return NULL;
     }
 
-    ShaderExecutable *executable = loadExecutable((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize(), type);
+    ShaderExecutable *executable = loadExecutable((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize(), type,
+                                                  transformFeedbackVaryings, separatedOutputBuffers);
     SafeRelease(binary);
 
     return executable;

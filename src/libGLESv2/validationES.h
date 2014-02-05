@@ -24,6 +24,7 @@ bool ValidMipLevel(const Context *context, GLenum target, GLint level);
 bool ValidImageSize(const gl::Context *context, GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth);
 bool ValidCompressedImageSize(const gl::Context *context, GLenum internalFormat, GLsizei width, GLsizei height);
 bool ValidQueryType(const gl::Context *context, GLenum queryType);
+bool ValidProgram(const gl::Context *context, GLuint id);
 
 bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum target, GLsizei samples,
                                            GLenum internalformat, GLsizei width, GLsizei height,

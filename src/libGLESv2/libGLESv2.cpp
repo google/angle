@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -7679,8 +7679,34 @@ void __stdcall glTransformFeedbackVaryings(GLuint program, GLsizei count, const 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glTransformFeedbackVaryings
-            UNIMPLEMENTED();
+            if (count < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            switch (bufferMode)
+            {
+              case GL_INTERLEAVED_ATTRIBS:
+                break;
+              case GL_SEPARATE_ATTRIBS:
+                if (static_cast<GLuint>(count) > context->getMaxTransformFeedbackBufferBindings())
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (!gl::ValidProgram(context, program))
+            {
+                return;
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+            ASSERT(programObject);
+
+            programObject->setTransformFeedbackVaryings(count, varyings, bufferMode);
         }
     }
     catch(std::bad_alloc&)
@@ -7706,8 +7732,25 @@ void __stdcall glGetTransformFeedbackVarying(GLuint program, GLuint index, GLsiz
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetTransformFeedbackVarying
-            UNIMPLEMENTED();
+            if (bufSize < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            if (!gl::ValidProgram(context, program))
+            {
+                return;
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+            ASSERT(programObject);
+
+            if (index >= static_cast<GLuint>(programObject->getTransformFeedbackVaryingCount()))
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            programObject->getTransformFeedbackVarying(index, bufSize, length, size, type, name);
         }
     }
     catch(std::bad_alloc&)
