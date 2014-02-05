@@ -16,6 +16,24 @@
       "revId": "b89151d6eeff50a9d58f00fc42b0430800cb37b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32f3be1c_e13a00fa",
+        "filename": "src/libGLESv2/renderer/d3d9/VertexBuffer9.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-05T15:13:43Z",
+      "side": 1,
+      "message": "No, removed.",
+      "parentUuid": "52903299_8f1cd553",
+      "revId": "b89151d6eeff50a9d58f00fc42b0430800cb37b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
