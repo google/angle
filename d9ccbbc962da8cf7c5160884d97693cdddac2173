@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32f3be1c_a1d638e1",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1001245
+      },
+      "writtenOn": "2014-02-05T02:40:41Z",
+      "side": 1,
+      "message": "I thought a token-per-thing would be nicer too. But, per http://www.khronos.org/registry/egl/extensions/EXT/EGL_EXT_platform_base.txt\n\n    All attribute names in \u003cattrib_list\u003e are immediately followed by the\n    corresponding desired value. The list is terminated with EGL_NONE. The\n    \u003cattrib_list\u003e is considered empty if either \u003cattrib_list\u003e is NULL or if\n    its first element is EGL_NONE. This specification defines no valid\n    attribute names for \u003cattrib_list\u003e.\n\nit seems like it\u0027s intended to be a list. Is it OK to have an attribute with no value?\n\nOr did you just mean to also define 0x3203-0x3205 as D3D9, D3D11, WARP, but also keep the _TYPE_EXT one?",
+      "revId": "d9ccbbc962da8cf7c5160884d97693cdddac2173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
