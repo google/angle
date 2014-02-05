@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f2fcc6ee_1fc947ee",
+        "filename": "src/libGLESv2/renderer/copyvertex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-05T15:13:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52903299_ef832140",
+      "revId": "05dec00648befde653dbcab86efec0794d69ef00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "52903299_8f88555e",
         "filename": "src/libGLESv2/renderer/copyvertex.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-02-04T18:12:32Z",
       "side": 1,
       "message": "This should be changed to the bitCast function.",
+      "revId": "05dec00648befde653dbcab86efec0794d69ef00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32f3be1c_c13b8400",
+        "filename": "src/libGLESv2/renderer/copyvertex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-05T15:13:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52903299_8f88555e",
       "revId": "05dec00648befde653dbcab86efec0794d69ef00",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "32f3be1c_a140f875",
+        "filename": "src/libGLESv2/renderer/d3d11/VertexBuffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-05T15:13:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32757e3e_ce12e340",
+      "revId": "05dec00648befde653dbcab86efec0794d69ef00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12723a58_6d7735a8",
         "filename": "src/libGLESv2/renderer/d3d11/VertexBuffer11.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-02-04T18:12:32Z",
       "side": 1,
       "message": "Here too.",
+      "revId": "05dec00648befde653dbcab86efec0794d69ef00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12f07a0e_40781009",
+        "filename": "src/libGLESv2/renderer/d3d11/VertexBuffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-05T15:13:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12723a58_6d7735a8",
       "revId": "05dec00648befde653dbcab86efec0794d69ef00",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
