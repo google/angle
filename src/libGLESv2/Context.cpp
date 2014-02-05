@@ -2491,14 +2491,14 @@ void Context::applyState(GLenum drawMode)
 }
 
 // Applies the shaders and shader constants to the Direct3D 9 device
-void Context::applyShaders(ProgramBinary *programBinary)
+void Context::applyShaders(ProgramBinary *programBinary, bool transformFeedbackActive)
 {
     const VertexAttribute *vertexAttributes = getCurrentVertexArray()->getVertexAttributes();
 
     VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS];
     VertexFormat::GetInputLayout(inputLayout, programBinary, vertexAttributes, mState.vertexAttribCurrentValues);
 
-    mRenderer->applyShaders(programBinary, mState.rasterizer.rasterizerDiscard, inputLayout);
+    mRenderer->applyShaders(programBinary, mState.rasterizer.rasterizerDiscard, transformFeedbackActive, inputLayout);
 
     programBinary->applyUniforms();
 }
@@ -2981,7 +2981,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
 
     bool transformFeedbackActive = applyTransformFeedbackBuffers();
 
-    applyShaders(programBinary);
+    applyShaders(programBinary, transformFeedbackActive);
     applyTextures(programBinary);
 
     if (!applyUniformBuffers())
@@ -2996,7 +2996,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
 
     if (!skipDraw(mode))
     {
-        mRenderer->drawArrays(mode, count, instances);
+        mRenderer->drawArrays(mode, count, instances, transformFeedbackActive);
 
         if (transformFeedbackActive)
         {
@@ -3054,7 +3054,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     // layer.
     ASSERT(!transformFeedbackActive);
 
-    applyShaders(programBinary);
+    applyShaders(programBinary, transformFeedbackActive);
     applyTextures(programBinary);
 
     if (!applyUniformBuffers())

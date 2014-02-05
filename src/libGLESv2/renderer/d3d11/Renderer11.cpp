@@ -99,6 +99,7 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
 
     mAppliedVertexShader = NULL;
     mAppliedGeometryShader = NULL;
+    mCurPointGeometryShader = NULL;
     mAppliedPixelShader = NULL;
 }
 
@@ -1217,9 +1218,41 @@ void Renderer11::applyTransformFeedbackBuffers(gl::Buffer *transformFeedbackBuff
     }
 }
 
-void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
+void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive)
 {
-    if (mode == GL_LINE_LOOP)
+    if (mode == GL_POINTS && transformFeedbackActive)
+    {
+        // Since point sprites are generated with a geometry shader, too many vertices will
+        // be written if transform feedback is active.  To work around this, draw only the points
+        // with the stream out shader and no pixel shader to feed the stream out buffers and then 
+        // draw again with the point sprite geometry shader to rasterize the point sprites.
+
+        mDeviceContext->PSSetShader(NULL, NULL, 0);
+
+        if (instances > 0)
+        {
+            mDeviceContext->DrawInstanced(count, instances, 0, 0);
+        }
+        else
+        {
+            mDeviceContext->Draw(count, 0);
+        }
+
+        mDeviceContext->GSSetShader(mCurPointGeometryShader, NULL, 0);
+        mDeviceContext->PSSetShader(mAppliedPixelShader, NULL, 0);
+
+        if (instances > 0)
+        {
+            mDeviceContext->DrawInstanced(count, instances, 0, 0);
+        }
+        else
+        {
+            mDeviceContext->Draw(count, 0);
+        }
+
+        mDeviceContext->GSSetShader(mAppliedGeometryShader, NULL, 0);
+    }
+    else if (mode == GL_LINE_LOOP)
     {
         drawLineLoop(count, GL_NONE, NULL, 0, NULL);
     }
@@ -1237,7 +1270,8 @@ void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
     }
 }
 
-void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances)
+void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
+                              gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances)
 {
     if (mode == GL_LINE_LOOP)
     {
@@ -1480,26 +1514,29 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
     }
 }
 
-void Renderer11::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard, const gl::VertexFormat inputLayout[])
+void Renderer11::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard, bool transformFeedbackActive, const gl::VertexFormat inputLayout[])
 {
     ShaderExecutable *vertexExe = programBinary->getVertexExecutableForInputLayout(inputLayout);
     ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
     ShaderExecutable *geometryExe = programBinary->getGeometryExecutable();
 
     ID3D11VertexShader *vertexShader = (vertexExe ? ShaderExecutable11::makeShaderExecutable11(vertexExe)->getVertexShader() : NULL);
-    ID3D11PixelShader *pixelShader = (pixelExe ? ShaderExecutable11::makeShaderExecutable11(pixelExe)->getPixelShader() : NULL);
-    ID3D11GeometryShader *geometryShader = (geometryExe ? ShaderExecutable11::makeShaderExecutable11(geometryExe)->getGeometryShader() : NULL);
 
-    // Skip GS if we aren't drawing points
-    if (!mCurRasterState.pointDrawMode)
+    ID3D11PixelShader *pixelShader = NULL;
+    // Skip pixel shader if we're doing rasterizer discard.
+    if (!rasterizerDiscard)
     {
-        geometryShader = NULL;
+        pixelShader = (pixelExe ? ShaderExecutable11::makeShaderExecutable11(pixelExe)->getPixelShader() : NULL);
     }
 
-    // Skip pixel shader if we're doing rasterizer discard.
-    if (rasterizerDiscard)
+    ID3D11GeometryShader *geometryShader = NULL;
+    if (transformFeedbackActive)
     {
-        pixelShader = NULL;
+        geometryShader = (vertexExe ? ShaderExecutable11::makeShaderExecutable11(vertexExe)->getStreamOutShader() : NULL);
+    }
+    else if (mCurRasterState.pointDrawMode)
+    {
+        geometryShader = (geometryExe ? ShaderExecutable11::makeShaderExecutable11(geometryExe)->getGeometryShader() : NULL);
     }
 
     bool dirtyUniforms = false;
@@ -1516,6 +1553,15 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerD
         mDeviceContext->GSSetShader(geometryShader, NULL, 0);
         mAppliedGeometryShader = geometryShader;
         dirtyUniforms = true;
+    }
+
+    if (geometryExe && mCurRasterState.pointDrawMode)
+    {
+        mCurPointGeometryShader = ShaderExecutable11::makeShaderExecutable11(geometryExe)->getGeometryShader();
+    }
+    else
+    {
+        mCurPointGeometryShader = NULL;
     }
 
     if (pixelShader != mAppliedPixelShader)
@@ -1723,6 +1769,7 @@ void Renderer11::markAllStateDirty()
 
     mAppliedVertexShader = NULL;
     mAppliedGeometryShader = NULL;
+    mCurPointGeometryShader = NULL;
     mAppliedPixelShader = NULL;
 
     for (size_t i = 0; i < gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
