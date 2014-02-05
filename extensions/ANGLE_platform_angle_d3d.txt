@@ -1,0 +1,112 @@
+
+Name
+
+    ANGLE_platform_angle_d3d
+
+Name Strings
+
+    EGL_ANGLE_platform_angle_d3d
+
+Contributors
+
+    Scott Graham, Google
+    Shannon Woods, Google
+
+Contacts
+
+    Scott Graham, Google (scottmg 'at' google 'dot' com)
+
+Status
+
+    Draft
+
+Version
+
+    Version 1, 2014-02-04
+
+Number
+
+    EGL Extension XXX
+
+Extension Type
+
+    EGL client extension
+
+Dependencies
+
+    Requires EGL_EXT_client_extensions to query its existence without
+    a display.
+
+    Requires EGL_EXT_platform_base.
+
+    This extension is written against the wording of version 9 of the
+    EGL_EXT_platform_base specification.
+
+Overview
+
+    This extension defines how to create EGL resources from resources using
+    the functions defined by EGL_EXT_platform_base.
+
+New Types
+
+    None
+
+New Procedures and Functions
+
+    None
+
+New Tokens
+
+    Accepted as the <platform> argument of eglGetPlatformDisplayEXT:
+
+        EGL_PLATFORM_ANGLE_D3D_ANGLE                       0x3201
+
+    Accepted as an attribute name in the <attrib_list> argument of
+    eglGetPlatformDisplayEXT:
+
+        EGL_PLATFORM_ANGLE_D3D_TYPE_ANGLE                  0x3202
+
+    Accepted as values for the EGL_PLATFORM_ANGLE_D3D_TYPE_ANGLE attribute:
+
+        EGL_PLATFORM_ANGLE_D3D_TYPE_D3D9_ANGLE             0x3203
+        EGL_PLATFORM_ANGLE_D3D_TYPE_D3D11_ANGLE            0x3204
+        EGL_PLATFORM_ANGLE_D3D_TYPE_D3D11_WARP_ANGLE       0x3205
+
+Additions to the EGL Specification
+
+    None.
+
+New Behavior
+
+    To determine if the EGL implementation supports this extension, clients
+    should query the EGL_EXTENSIONS string of EGL_NO_DISPLAY.
+
+    To obtain an EGLDisplay backed by a ANGLE D3D display, call
+    eglGetPlatformDisplayEXT with <platform> set to
+    EGL_PLATFORM_ANGLE_D3D_ANGLE.
+    
+    The <native_display> parameter is of type EGLNativeDisplayType. If
+    <native_display> is EGL_DEFAULT_DISPLAY a default display is returned.
+    Multiple calls with the same <native_display> will return the same
+    EGLDisplay handle. The value of EGL_PLATFORM_ANGLE_D3D_TYPE_ANGLE, if any,
+    is ignored if there was previously a EGLDisplay successfully created for a
+    given value of EGLNativeDisplayType.
+    
+    If no <attrib_list> is specified, a D3D9 device is created. Otherwise, the
+    value of EGL_PLATFORM_ANGLE_D3D_TYPE_ANGLE should be:
+      - EGL_PLATFORM_ANGLE_D3D_TYPE_D3D9_ANGLE for D3D9 hardware,
+      - EGL_PLATFORM_ANGLE_D3D_TYPE_D3D11_ANGLE for D3D11 hardware,
+      - EGL_PLATFORM_ANGLE_D3D_TYPE_D3D11_WARP_ANGLE for D3D11 WARP.
+        
+    If no display matching the requested <native_display> or of the type
+    requested by the value of EGL_PLATFORM_ANGLE_D3D_TYPE_ANGLE is available,
+    EGL_NO_DISPLAY is returned. No error condition is raised in this case.
+
+Issues
+
+    None
+
+Revision History
+
+    Version 1, 2014-02-04 (Scott Graham)
+        - Initial draft
