@@ -27,7 +27,7 @@
             [
                 'ANGLE_TRANSLATOR_IMPLEMENTATION',
             ],
-            'sources': [ '<!@(python enumerate_files.py compiler/translator third_party/compiler common -types *.cpp *.h *.y *.l )', ],
+            'sources': [ '<!@(python enumerate_files.py compiler/translator third_party/compiler common ../include -types *.cpp *.h *.y *.l )', ],
             'conditions':
             [
                 ['OS=="win"',
@@ -69,7 +69,7 @@
                     'ANGLE_TRANSLATOR_STATIC',
                 ],
             },
-            'sources': [ '<!@(python enumerate_files.py compiler/translator third_party/compiler common -types *.cpp *.h *.y *.l )', ],
+            'sources': [ '<!@(python enumerate_files.py compiler/translator third_party/compiler common ../include -types *.cpp *.h *.y *.l )', ],
             'conditions':
             [
                 ['OS=="win"',

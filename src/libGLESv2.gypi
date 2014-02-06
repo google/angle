@@ -7,8 +7,8 @@
     {
         'defines':
         [
-          'ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1',
-          'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT("d3dcompiler_46.dll"), TEXT("d3dcompiler_43.dll") }',
+            'ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL1',
+            'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT("d3dcompiler_46.dll"), TEXT("d3dcompiler_43.dll") }',
         ],
     },
 
@@ -28,7 +28,7 @@
                         '../include',
                         'libGLESv2',
                     ],
-                    'sources': [ '<!@(python enumerate_files.py common libGLESv2 third_party/murmurhash -types *.cpp *.h *.hlsl *.vs *.ps *.bat *.def libGLESv2.rc)' ],
+                    'sources': [ '<!@(python enumerate_files.py common libGLESv2 third_party/murmurhash ../include -types *.cpp *.h *.hlsl *.vs *.ps *.bat *.def libGLESv2.rc)', ],
                     # TODO(jschuh): http://crbug.com/167187 size_t -> int
                     'msvs_disabled_warnings': [ 4267 ],
                     'msvs_settings':

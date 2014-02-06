@@ -174,10 +174,10 @@
     <ClInclude Include="..\..\src\compiler\translator\VariablePacker.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang.h"/>
     <ClInclude Include="..\..\src\compiler\translator\SearchSymbol.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\BlockLayoutEncoder.h"/>
     <ClInclude Include="..\..\src\compiler\translator\MMap.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\BlockLayoutEncoder.h"/>
     <ClInclude Include="..\..\src\compiler\translator\VariableInfo.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang_tab.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ExtensionBehavior.h"/>
@@ -186,6 +186,17 @@
     <ClInclude Include="..\..\src\compiler\translator\depgraph\DependencyGraph.h"/>
     <ClInclude Include="..\..\src\compiler\translator\depgraph\DependencyGraphOutput.h"/>
     <ClInclude Include="..\..\src\compiler\translator\depgraph\DependencyGraphBuilder.h"/>
+    <ClInclude Include="..\..\include\KHR\khrplatform.h"/>
+    <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h"/>
+    <ClInclude Include="..\..\include\GLES2\gl2ext.h"/>
+    <ClInclude Include="..\..\include\GLES2\gl2.h"/>
+    <ClInclude Include="..\..\include\GLES2\gl2platform.h"/>
+    <ClInclude Include="..\..\include\GLES3\gl3ext.h"/>
+    <ClInclude Include="..\..\include\GLES3\gl3.h"/>
+    <ClInclude Include="..\..\include\GLES3\gl3platform.h"/>
+    <ClInclude Include="..\..\include\EGL\eglext.h"/>
+    <ClInclude Include="..\..\include\EGL\egl.h"/>
+    <ClInclude Include="..\..\include\EGL\eglplatform.h"/>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\third_party\compiler\ArrayBoundsClamper.cpp"/>
@@ -225,6 +236,7 @@
     <ClCompile Include="..\..\src\compiler\translator\InitializeParseContext.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\MapLongVariableNames.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\CodeGen.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\Intermediate.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\IntermTraverse.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\intermOut.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\glslang_tab.cpp"/>
@@ -239,7 +251,6 @@
     <ClCompile Include="..\..\src\compiler\translator\DetectDiscontinuity.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\UnfoldShortCircuit.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\compilerdebug.cpp"/>
-    <ClCompile Include="..\..\src\compiler\translator\Intermediate.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\VariableInfo.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\Compiler.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\Initialize.cpp"/>
