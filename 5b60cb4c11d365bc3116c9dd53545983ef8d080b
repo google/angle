@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "32a1fe0c_ab8b9e99",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1001245
+      },
+      "writtenOn": "2014-02-06T18:37:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2d6ce80_f05e3862",
+      "revId": "5b60cb4c11d365bc3116c9dd53545983ef8d080b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "32cadede_6cf70f6f",
         "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-02-06T16:47:14Z",
       "side": 1,
       "message": "Rather than specifying \u003cnative_display\u003e to be unused, we should specify that the native display type for ANGLE is EGLNativeDisplayType (we could be specific to Win32 and say that it\u0027s an HDC-- but it might be wiser to use just the EGL type, given that the type would be different in WinRT, and we\u0027re anticipating WinRT support patch contributions soon), and continue to support the language from EGL_EXT_platform_base and the EGL 1.4 specification that the same display is returned if the function is called repeatedly with the same display id.\n\nAlso, EGL_PLATFORM_ANGLE_D3D_EXT should be _ANGLE rather than _EXT here.",
+      "revId": "5b60cb4c11d365bc3116c9dd53545983ef8d080b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32a1fe0c_4b1e7ac2",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1001245
+      },
+      "writtenOn": "2014-02-06T18:37:58Z",
+      "side": 1,
+      "message": "Done. I started trying to fill out the language for repeated calls, but it seems there\u0027s nothing like \"eglUngetDisplay\"? So, if something other than EGL_DEFAULT_DISPLAY was ever passed, it doesn\u0027t seem like there would be a way to make a new Display if the value of the HDC happened to repeat, or was destroyed, etc.",
+      "parentUuid": "32cadede_6cf70f6f",
       "revId": "5b60cb4c11d365bc3116c9dd53545983ef8d080b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "32a1fe0c_4b495aa6",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1001245
+      },
+      "writtenOn": "2014-02-06T18:37:58Z",
+      "side": 1,
+      "message": "Done.\n\nI considered adding a D3D11_ELSE_D3D9 value too, but after clarifying what happens on failure, it seems OK to have the caller do D3D11, and then D3D9 if EGL_NO_DISPLAY is returned.",
+      "parentUuid": "b2d6ce80_b03b2001",
+      "revId": "5b60cb4c11d365bc3116c9dd53545983ef8d080b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "32cadede_8c240b3e",
         "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2014-02-06T16:47:14Z",
       "side": 1,
       "message": "I think this is mistakenly included in the wayland extension...",
+      "revId": "5b60cb4c11d365bc3116c9dd53545983ef8d080b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2aa06eb_13edcb70",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1001245
+      },
+      "writtenOn": "2014-02-06T18:37:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32cadede_8c240b3e",
       "revId": "5b60cb4c11d365bc3116c9dd53545983ef8d080b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
