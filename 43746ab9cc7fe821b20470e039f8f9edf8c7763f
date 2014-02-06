@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2a7c221_34271698",
+        "filename": "extensions/EGL_ANGLE_window_surface_size.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-06T19:12:28Z",
+      "side": 1,
+      "message": "I don\u0027t think these need to be broken out into subsections-- extensions generally identify the section in the first modification to it, and then say \"in paragraph XYZ of the same section\" for subsequent modifications.",
+      "revId": "43746ab9cc7fe821b20470e039f8f9edf8c7763f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32cadede_8cb52b65",
+        "filename": "extensions/EGL_ANGLE_window_surface_size.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-06T19:12:28Z",
+      "side": 1,
+      "message": "That\u0027s the third paragraph, I think.",
+      "revId": "43746ab9cc7fe821b20470e039f8f9edf8c7763f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2d6ce80_d3c5fe4b",
+        "filename": "extensions/EGL_ANGLE_window_surface_size.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-06T19:12:28Z",
+      "side": 1,
+      "message": "I\u0027m still uncomfortable with how this behaves as compared to other attributes in the list. The others have explicit defaults, while EGL_WIDTH and EGL_HEIGHT are not actually values with their own defaults, but implicit overrides of other behavior of the surface. If we\u0027re going to introduce unresizeable surfaces (which I don\u0027t think are great in the first place), that should be an attribute in and of itself, and it should be queriable-- maybe EGL_FIXED_SIZE_ANGLE or something similar?-- and default to EGL_FALSE. The defaults for EGL_WIDTH and EGL_HEIGHT can be then be specified to be the size of the native window.",
+      "revId": "43746ab9cc7fe821b20470e039f8f9edf8c7763f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2d6ce80_73489249",
+        "filename": "extensions/EGL_ANGLE_window_surface_size.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-06T19:12:28Z",
+      "side": 1,
+      "message": "However I count it, I can\u0027t get the EGL_WIDTH/EGL_HEIGHT paragraph to come out to 16. It\u0027s probably better to say \"in section 3.5.6, replace the last paragraph on page 37 with\".",
+      "revId": "43746ab9cc7fe821b20470e039f8f9edf8c7763f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2d6ce80_f3eac2c8",
+        "filename": "extensions/EGL_ANGLE_window_surface_size.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-06T19:12:28Z",
+      "side": 1,
+      "message": "Probably better to identify this as the first paragraph in section 3.9.1.1.",
+      "revId": "43746ab9cc7fe821b20470e039f8f9edf8c7763f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2a7c221_d43852b4",
+        "filename": "extensions/EGL_ANGLE_window_surface_size.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-06T19:12:28Z",
+      "side": 1,
+      "message": "The question of explicit resizing should be added to the issues list.",
+      "revId": "43746ab9cc7fe821b20470e039f8f9edf8c7763f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
