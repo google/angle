@@ -28,7 +28,7 @@
                         '../include',
                         'libGLESv2',
                     ],
-                    'sources': [ '<!@(python enumerate_files.py common libGLESv2 third_party/murmurhash ../include -types *.cpp *.h *.hlsl *.vs *.ps *.bat *.def libGLESv2.rc)', ],
+                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py common libGLESv2 third_party/murmurhash ../include -types *.cpp *.h *.hlsl *.vs *.ps *.bat *.def libGLESv2.rc)', ],
                     # TODO(jschuh): http://crbug.com/167187 size_t -> int
                     'msvs_disabled_warnings': [ 4267 ],
                     'msvs_settings':

@@ -8,6 +8,7 @@
         'angle_code': 1,
         'angle_post_build_script%': 0,
         'angle_relative_src_path%': '',
+        'angle_build_scripts_path': '..',
     },
     'includes':
     [

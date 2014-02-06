@@ -11,7 +11,7 @@ for i in range(1, len(sys.argv)):
     if arg == "-types":
         foundTypesArg = True
         continue
-    
+
     if foundTypesArg:
         filetypes.append(arg)
     else:
