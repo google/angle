@@ -27,7 +27,12 @@
             [
                 'ANGLE_TRANSLATOR_IMPLEMENTATION',
             ],
-            'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py compiler/translator third_party/compiler common ../include -types *.cpp *.h *.y *.l )', ],
+            'sources':
+            [
+                '<!@(python <(angle_build_scripts_path)/enumerate_files.py \
+                     -dirs compiler/translator third_party/compiler common ../include \
+                     -types *.cpp *.h *.y *.l)',
+            ],
             'conditions':
             [
                 ['OS=="win"',
