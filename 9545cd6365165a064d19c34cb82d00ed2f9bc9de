@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f29846f7_5c9d7d99",
+        "filename": "build/enumerate_files",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-06T16:14:48Z",
+      "side": 1,
+      "message": "keep/add the .py extension, chromium is okay with this (see chromium/build). moreover, I\u0027m not sure if this file belongs here. currently all of our /build folder is completely invisible to chromium, and it\u0027s a nice semantic distinction. how about in the root folder?",
+      "revId": "9545cd6365165a064d19c34cb82d00ed2f9bc9de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
