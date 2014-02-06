@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2d6ce80_f05e3862",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-06T16:47:14Z",
+      "side": 1,
+      "message": "This\u0027ll need to be ANGLE_platform_angle_d3d if we\u0027re doing vendor-specific suffixing.",
+      "revId": "5b60cb4c11d365bc3116c9dd53545983ef8d080b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32cadede_6cf70f6f",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-06T16:47:14Z",
+      "side": 1,
+      "message": "Rather than specifying \u003cnative_display\u003e to be unused, we should specify that the native display type for ANGLE is EGLNativeDisplayType (we could be specific to Win32 and say that it\u0027s an HDC-- but it might be wiser to use just the EGL type, given that the type would be different in WinRT, and we\u0027re anticipating WinRT support patch contributions soon), and continue to support the language from EGL_EXT_platform_base and the EGL 1.4 specification that the same display is returned if the function is called repeatedly with the same display id.\n\nAlso, EGL_PLATFORM_ANGLE_D3D_EXT should be _ANGLE rather than _EXT here.",
+      "revId": "5b60cb4c11d365bc3116c9dd53545983ef8d080b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2d6ce80_b03b2001",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-06T16:47:14Z",
+      "side": 1,
+      "message": "I would say \"created\", rather than \"assumed\". Also, given the language in the base extension and the specification about returning the same display any time the same display ID is passed, we should clarify what happens if a different EGL_PLATFORM_ANGLE_D3D_TYPE_ANGLE is passed than the one used when the device was created. (Also _EXT should be _ANGLE here too.)",
+      "revId": "5b60cb4c11d365bc3116c9dd53545983ef8d080b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32cadede_8c240b3e",
+        "filename": "extensions/EGL_EXT_platform_angle_d3d.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-06T16:47:14Z",
+      "side": 1,
+      "message": "I think this is mistakenly included in the wayland extension...",
+      "revId": "5b60cb4c11d365bc3116c9dd53545983ef8d080b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
