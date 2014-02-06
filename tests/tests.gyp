@@ -3,6 +3,10 @@
 # found in the LICENSE file.
 
 {
+    'variables':
+    {
+        'angle_build_scripts_path': '..',
+    },
     'targets':
     [
         {
@@ -73,7 +77,7 @@
             ],
             'sources':
             [
-                '<!@(python enumerate_files.py preprocessor_tests -types *.cpp *.h)'
+                '<!@(python <(angle_build_scripts_path)/enumerate_files.py preprocessor_tests -types *.cpp *.h)'
             ],
         },
 
@@ -95,7 +99,7 @@
             ],
             'sources':
             [
-                '<!@(python enumerate_files.py compiler_tests -types *.cpp *.h)'
+                '<!@(python <(angle_build_scripts_path)/enumerate_files.py compiler_tests -types *.cpp *.h)'
             ],
         },
     ],

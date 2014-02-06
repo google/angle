@@ -9,7 +9,7 @@
             'target_name': 'preprocessor',
             'type': 'static_library',
             'include_dirs': [ ],
-            'sources': [ '<!@(python enumerate_files.py compiler/preprocessor -types *.cpp *.h)' ],
+            'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py compiler/preprocessor -types *.cpp *.h)' ],
             'msvs_disabled_warnings': [ 4267 ],
         },
 
@@ -26,7 +26,7 @@
             [
                 'ANGLE_TRANSLATOR_IMPLEMENTATION',
             ],
-            'sources': [ '<!@(python enumerate_files.py compiler/translator third_party/compiler common -types *.cpp *.h *.y *.l )', ],
+            'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py compiler/translator third_party/compiler common ../include -types *.cpp *.h *.y *.l )', ],
             'conditions':
             [
                 ['OS=="win"',
@@ -68,7 +68,7 @@
                     'ANGLE_TRANSLATOR_STATIC',
                 ],
             },
-            'sources': [ '<!@(python enumerate_files.py compiler/translator third_party/compiler common -types *.cpp *.h *.y *.l )', ],
+            'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py compiler/translator third_party/compiler common ../include -types *.cpp *.h *.y *.l )', ],
             'conditions':
             [
                 ['OS=="win"',

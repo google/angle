@@ -28,7 +28,7 @@
                         'libGLESv2',
                         '<(SHARED_INTERMEDIATE_DIR)',
                     ],
-                    'sources': [ '<!@(python enumerate_files.py common libGLESv2 third_party/murmurhash -types *.cpp *.h *.hlsl *.vs *.ps *.bat *.def libGLESv2.rc)' ],
+                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py common libGLESv2 third_party/murmurhash ../include -types *.cpp *.h *.hlsl *.vs *.ps *.bat *.def libGLESv2.rc)', ],
                     'msvs_disabled_warnings': [ 4267 ],
                     'msvs_settings':
                     {
