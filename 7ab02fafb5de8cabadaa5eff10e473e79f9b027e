@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "523112d0_ca5fe325",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2763,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-07T23:31:58Z",
+      "side": 0,
+      "message": "Probably ought to put the early return above the comment, since it goes more with the body of the function.",
+      "revId": "7ab02fafb5de8cabadaa5eff10e473e79f9b027e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
