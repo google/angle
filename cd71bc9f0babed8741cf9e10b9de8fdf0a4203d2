@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2d6ce80_3ecb8161",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-07T23:03:10Z",
+      "side": 1,
+      "message": "Is this handled by another patch somewhere?",
+      "revId": "cd71bc9f0babed8741cf9e10b9de8fdf0a4203d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2d6ce80_1ec83d61",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-07T23:03:10Z",
+      "side": 1,
+      "message": "Can this be !\u003d 0 instead?",
+      "revId": "cd71bc9f0babed8741cf9e10b9de8fdf0a4203d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
