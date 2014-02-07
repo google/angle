@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92370ac3_6c6a9346",
+        "filename": "src/libGLESv2/DynamicHLSL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-07T23:01:00Z",
+      "side": 1,
+      "message": "You initialize this ahead of all the member function definitions-- did you mean it to be const?",
+      "revId": "a5239dccff7f492e3716f009d54381a172c3d14f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
