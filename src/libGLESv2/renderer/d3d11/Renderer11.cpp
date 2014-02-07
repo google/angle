@@ -2482,7 +2482,10 @@ unsigned int Renderer11::getMaxRenderTargets() const
         return D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT;  // 8
       case D3D_FEATURE_LEVEL_10_1:
       case D3D_FEATURE_LEVEL_10_0:
-        return D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT;  // 8
+        // Feature level 10.0 and 10.1 cards perform very poorly when the pixel shader
+        // outputs to multiple RTs that are not bound.
+        // TODO: Remove pixel shader outputs for render targets that are not bound.
+        return 1;
       default:
         UNREACHABLE();
         return 1;
