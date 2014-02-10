@@ -37,7 +37,13 @@
 #include <unordered_map>
 #include <vector>
 
+#if defined(ANGLE_ENABLE_D3D9)
 #include <d3d9.h>
+#include <D3Dcompiler.h>
+#endif // ANGLE_ENABLE_D3D9
+
+#if defined(ANGLE_ENABLE_D3D11)
 #include <D3D11.h>
 #include <dxgi.h>
 #include <D3Dcompiler.h>
+#endif // ANGLE_ENABLE_D3D11
