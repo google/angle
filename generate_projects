@@ -21,6 +21,7 @@ gyp_generators = "msvs"
 msvs_version = "2010e"
 build_samples = True
 build_tests = False
+release_symbols = False
 
 if __name__ == '__main__':
     gyp_cmd = os.path.join(gyp_dir, 'gyp')
@@ -33,6 +34,7 @@ if __name__ == '__main__':
     gyp_cmd += ' -D angle_build_tests=' + ('1' if build_tests else '0')
     gyp_cmd += ' -D angle_build_samples=' + ('1' if build_samples else '0')
     gyp_cmd += ' -D angle_relative_src_path=..\\..\\src\\'
+    gyp_cmd += ' -D release_symbols=' + ('true' if release_symbols else 'false')
     gyp_cmd += ' ' + os.path.join(script_dir, 'all.gyp')
 
     print 'Generating projects to ' + generation_dir + ' from gyp files...'

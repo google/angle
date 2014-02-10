@@ -12,6 +12,7 @@
         # angle_code is set to 0 for test code, sample code, and third party code.
         # When angle_code is 1, we build with additional warning flags on Mac and Linux.
         'angle_code%': 0,
+        'release_symbols%': 'true',
         'windows_sdk_path%': 'C:/Program Files (x86)/Windows Kits/8.0',
         'gcc_or_clang_warnings':
         [
@@ -91,7 +92,6 @@
                     'VCLinkerTool':
                     {
                         'FixedBaseAddress': '1',
-                        'GenerateDebugInformation': 'true',
                         'ImportLibrary': '$(OutDir)\\lib\\$(TargetName).lib',
                         'MapFileName': '$(OutDir)\\$(TargetName).map',
                         # Most of the executables we'll ever create are tests
@@ -141,6 +141,7 @@
                     },
                     'VCLinkerTool':
                     {
+                        'GenerateDebugInformation': 'true',
                         'LinkIncremental': '2',
                     },
                 },
@@ -164,6 +165,7 @@
                     },
                     'VCLinkerTool':
                     {
+                        'GenerateDebugInformation': '<(release_symbols)',
                         'LinkIncremental': '1',
                     },
                 },
