@@ -471,7 +471,7 @@ GLenum Texture2D::getActualFormat(GLint level) const
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
         return mImageArray[level]->getActualFormat();
     else
-        return D3DFMT_UNKNOWN;
+        return GL_NONE;
 }
 
 void Texture2D::redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height)
@@ -1103,7 +1103,7 @@ GLenum TextureCubeMap::getActualFormat(GLenum target, GLint level) const
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
         return mImageArray[targetToIndex(target)][level]->getActualFormat();
     else
-        return D3DFMT_UNKNOWN;
+        return GL_NONE;
 }
 
 void TextureCubeMap::setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
@@ -1744,7 +1744,7 @@ GLenum Texture3D::getInternalFormat(GLint level) const
 
 GLenum Texture3D::getActualFormat(GLint level) const
 {
-    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mImageArray[level]->getActualFormat() : D3DFMT_UNKNOWN;
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mImageArray[level]->getActualFormat() : GL_NONE;
 }
 
 bool Texture3D::isCompressed(GLint level) const
@@ -2290,7 +2290,7 @@ GLenum Texture2DArray::getInternalFormat(GLint level) const
 
 GLenum Texture2DArray::getActualFormat(GLint level) const
 {
-    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS && mLayerCounts[level] > 0) ? mImageArray[level][0]->getActualFormat() : D3DFMT_UNKNOWN;
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS && mLayerCounts[level] > 0) ? mImageArray[level][0]->getActualFormat() : GL_NONE;
 }
 
 bool Texture2DArray::isCompressed(GLint level) const
