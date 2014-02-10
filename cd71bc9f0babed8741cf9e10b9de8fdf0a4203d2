@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8f71a1c9_dfed332f",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-10T22:06:26Z",
+      "side": 1,
+      "message": "Did you ever discover a conclusive spec reading on mismatched vertex attribute to vertex shader input data types? If unspecified, we could let the user do an implied reinterpret_cast, if that makes D3D11 happy. I\u0027ve changed the comments to reflect this.",
+      "parentUuid": "b2d6ce80_3ecb8161",
+      "revId": "cd71bc9f0babed8741cf9e10b9de8fdf0a4203d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b2d6ce80_1ec83d61",
         "filename": "src/libGLESv2/DynamicHLSL.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-02-07T23:03:10Z",
       "side": 1,
       "message": "Can this be !\u003d 0 instead?",
+      "revId": "cd71bc9f0babed8741cf9e10b9de8fdf0a4203d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf9d5927_41b4f6fd",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-10T22:06:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2d6ce80_1ec83d61",
       "revId": "cd71bc9f0babed8741cf9e10b9de8fdf0a4203d2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
