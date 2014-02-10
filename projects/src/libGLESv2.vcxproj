@@ -161,7 +161,6 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\imageformats.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderExecutable.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\QueryImpl.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderCache.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\copyimage.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\IndexBuffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\loadimage.h"/>
@@ -248,6 +247,7 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\renderer9_utils.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\VertexDeclarationCache.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Blit9.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\ShaderCache.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\ShaderExecutable9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\SwapChain9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\formatutils9.h"/>

@@ -112,7 +112,7 @@
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\TransformFeedback.h">
-      <Filter>libGLESv2</Filter>
+      <Filter>src\libGLESv2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\Context.h">
       <Filter>src\libGLESv2</Filter>
@@ -139,7 +139,7 @@
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\TransformFeedback.cpp">
-      <Filter>libGLESv2</Filter>
+      <Filter>src\libGLESv2</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\ProgramBinary.h">
       <Filter>src\libGLESv2</Filter>
@@ -274,9 +274,6 @@
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\QueryImpl.h">
-      <Filter>src\libGLESv2\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderCache.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\VertexBuffer.cpp">
@@ -640,6 +637,9 @@
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Blit9.h">
+      <Filter>src\libGLESv2\renderer\d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\ShaderCache.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\RenderTarget9.cpp">

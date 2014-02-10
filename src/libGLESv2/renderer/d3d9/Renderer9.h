@@ -11,7 +11,7 @@
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
-#include "libGLESv2/renderer/ShaderCache.h"
+#include "libGLESv2/renderer/d3d9/ShaderCache.h"
 #include "libGLESv2/renderer/d3d9/VertexDeclarationCache.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/RenderTarget.h"
