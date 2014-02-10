@@ -2978,7 +2978,7 @@ bool Renderer11::getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned
 
             if (textureResource)
             {
-                HRESULT result = textureResource->QueryInterface(IID_ID3D11Texture2D, (void**)resource);
+                HRESULT result = textureResource->QueryInterface(__uuidof(ID3D11Texture2D), (void**)resource);
                 SafeRelease(textureResource);
 
                 if (SUCCEEDED(result))

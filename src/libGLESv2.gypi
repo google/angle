@@ -64,7 +64,6 @@
                                 {
                                     'AdditionalDependencies':
                                     [
-                                        'dxguid.lib',
                                         'd3d9.lib',
                                     ]
                                 }
@@ -82,14 +81,20 @@
                             [
                                 'ANGLE_ENABLE_D3D11',
                             ],
-                            'msvs_settings':
+                            'configurations':
                             {
-                                'VCLinkerTool':
+                                'Debug':
                                 {
-                                    'AdditionalDependencies':
-                                    [
-                                        'dxguid.lib',
-                                    ]
+                                    'msvs_settings':
+                                    {
+                                        'VCLinkerTool':
+                                        {
+                                            'AdditionalDependencies':
+                                            [
+                                                'dxguid.lib',
+                                            ]
+                                        }
+                                    },
                                 }
                             },
                         }],

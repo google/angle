@@ -207,7 +207,7 @@ EGLint Renderer9::initialize()
     {
         TRACE_EVENT0("gpu", "D3d9Ex_QueryInterface");
         ASSERT(mD3d9Ex);
-        mD3d9Ex->QueryInterface(IID_IDirect3D9, reinterpret_cast<void**>(&mD3d9));
+        mD3d9Ex->QueryInterface(__uuidof(IDirect3D9), reinterpret_cast<void**>(&mD3d9));
         ASSERT(mD3d9);
     }
     else
@@ -354,7 +354,7 @@ EGLint Renderer9::initialize()
     if (mD3d9Ex)
     {
         TRACE_EVENT0("gpu", "mDevice_QueryInterface");
-        result = mDevice->QueryInterface(IID_IDirect3DDevice9Ex, (void**) &mDeviceEx);
+        result = mDevice->QueryInterface(__uuidof(IDirect3DDevice9Ex), (void**)&mDeviceEx);
         ASSERT(SUCCEEDED(result));
     }
 
