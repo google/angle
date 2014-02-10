@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cf9d5927_7e742de8",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-10T20:42:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f71a1c9_7cbbd5c7",
+      "revId": "fb84b0da43a549b3aacd8d88e10a4dd4d60d9002",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af6ca5f1_fdc923ed",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "af6ca5f1_e0917689",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2258,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-10T20:42:57Z",
+      "side": 1,
+      "message": "I wrote it this way to match glGenQueries, I\u0027m fine with either, which would you prefer?",
+      "parentUuid": "af6ca5f1_fdc923ed",
+      "revId": "fb84b0da43a549b3aacd8d88e10a4dd4d60d9002",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf9d5927_7e8aedbe",
         "filename": "src/libGLESv2/renderer/d3d11/Query11.cpp",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2014-02-10T19:51:10Z",
       "side": 1,
       "message": "I\u0027d prefer if static methods got declared at the head of the file instead of in the midst of the member function definitions. Also, the name of the function is typoed.",
+      "revId": "fb84b0da43a549b3aacd8d88e10a4dd4d60d9002",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf9d5927_1e69690b",
+        "filename": "src/libGLESv2/renderer/d3d11/Query11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-10T20:42:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf9d5927_7e8aedbe",
       "revId": "fb84b0da43a549b3aacd8d88e10a4dd4d60d9002",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
