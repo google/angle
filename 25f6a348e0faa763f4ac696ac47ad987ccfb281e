@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf9d5927_a13e1ac9",
+        "filename": "samples/translator/translator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-02-10T21:23:05Z",
+      "side": 1,
+      "message": "ANGLE uses 4 explicit spaces instead of tabs. Also, the closing parenthesis can stay at the end of the string.",
+      "revId": "25f6a348e0faa763f4ac696ac47ad987ccfb281e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f71a1c9_3c955db6",
+        "filename": "src/compiler/translator/OutputGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-02-10T21:23:05Z",
+      "side": 1,
+      "message": "This iterates through both the \u0027left\u0027 and \u0027right\u0027 side of the array. That\u0027s probably not intended?\n\nAlso, instead of overwriting the input parameter, you could just return the replacement string directly, or the original string if it doesn\u0027t need replacing.",
+      "revId": "25f6a348e0faa763f4ac696ac47ad987ccfb281e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf9d5927_6167b2fc",
+        "filename": "src/compiler/translator/OutputGLSL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-02-10T21:23:05Z",
+      "side": 1,
+      "message": "I\u0027m not very fond of this function name. Could you rename it to something more descriptive like translateTextureFunction?",
+      "revId": "25f6a348e0faa763f4ac696ac47ad987ccfb281e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf9d5927_816c3ede",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-02-10T21:23:05Z",
+      "side": 1,
+      "message": "Please remove.",
+      "revId": "25f6a348e0faa763f4ac696ac47ad987ccfb281e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
