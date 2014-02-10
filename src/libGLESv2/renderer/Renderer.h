@@ -65,9 +65,6 @@ class Image;
 class TextureStorage;
 class UniformStorage;
 
-typedef void * ShaderBlob;
-typedef void (*pCompileFunc)();
-
 struct ConfigDesc
 {
     GLenum  renderTargetFormat;
@@ -101,7 +98,6 @@ class Renderer
 {
   public:
     explicit Renderer(egl::Display *display);
-    virtual ~Renderer();
 
     virtual EGLint initialize() = 0;
     virtual bool resetDevice() = 0;
@@ -276,16 +272,11 @@ class Renderer
     virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const = 0;
 
   protected:
-    bool initializeCompiler();
-    ShaderBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, UINT optimizationFlags, bool alternateFlags);
-
     egl::Display *mDisplay;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer);
 
-    HMODULE mD3dCompilerModule;
-    pCompileFunc mD3DCompileFunc;
     int mCurrentClientVersion;
 };
 

@@ -11,6 +11,7 @@
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
+#include "libGLESv2/renderer/d3d/HLSLCompiler.h"
 #include "libGLESv2/renderer/d3d9/ShaderCache.h"
 #include "libGLESv2/renderer/d3d9/VertexDeclarationCache.h"
 #include "libGLESv2/renderer/Renderer.h"
@@ -260,6 +261,8 @@ class Renderer9 : public Renderer
     IDirect3D9Ex *mD3d9Ex;  // Might be null if D3D9Ex is not supported.
     IDirect3DDevice9 *mDevice;
     IDirect3DDevice9Ex *mDeviceEx;  // Might be null if D3D9Ex is not supported.
+
+    HLSLCompiler mCompiler;
 
     Blit9 *mBlit;
 

@@ -14,6 +14,7 @@
 #include "common/mathutil.h"
 
 #include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/d3d/HLSLCompiler.h"
 #include "libGLESv2/renderer/d3d11/RenderStateCache.h"
 #include "libGLESv2/renderer/d3d11/InputLayoutCache.h"
 #include "libGLESv2/renderer/RenderTarget.h"
@@ -249,6 +250,8 @@ class Renderer11 : public Renderer
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HDC mDc;
+
+    HLSLCompiler mCompiler;
 
     bool mDeviceLost;
 

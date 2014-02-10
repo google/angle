@@ -156,6 +156,8 @@ void Renderer9::deinitialize()
     SafeRelease(mD3d9);
     SafeRelease(mD3d9Ex);
 
+    mCompiler.release();
+
     if (mDeviceWindow)
     {
         DestroyWindow(mDeviceWindow);
@@ -173,7 +175,7 @@ Renderer9 *Renderer9::makeRenderer9(Renderer *renderer)
 
 EGLint Renderer9::initialize()
 {
-    if (!initializeCompiler())
+    if (!mCompiler.initialize())
     {
         return EGL_NOT_INITIALIZED;
     }
@@ -3348,7 +3350,7 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
     // Work-around a D3D9 compiler bug that presents itself when using conditional discard, by disabling optimization
     UINT optimizationFlags = (workaround == ANGLE_D3D_WORKAROUND_SM3_OPTIMIZER ? D3DCOMPILE_SKIP_OPTIMIZATION : ANGLE_COMPILE_OPTIMIZATION_LEVEL);
 
-    ID3DBlob *binary = (ID3DBlob*)compileToBinary(infoLog, shaderHLSL, profile, optimizationFlags, true);
+    ID3DBlob *binary = (ID3DBlob*)mCompiler.compileToBinary(infoLog, shaderHLSL, profile, optimizationFlags, true);
     if (!binary)
     {
         return NULL;

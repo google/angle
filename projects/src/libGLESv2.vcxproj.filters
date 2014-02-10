@@ -19,6 +19,9 @@
     <Filter Include="src\libGLESv2\renderer\d3d11\shaders\compiled">
       <UniqueIdentifier>{F444E9E6-7D51-0546-F1E4-B6C8FCDA5FC6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\libGLESv2\renderer\d3d">
+      <UniqueIdentifier>{3AC19AE3-A12C-4021-D645-4CEA5BC956DB}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\libGLESv2\renderer\d3d9">
       <UniqueIdentifier>{8BB193D2-4A8B-A094-A81E-D5E262AB1F92}</UniqueIdentifier>
     </Filter>
@@ -618,6 +621,12 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgb3dui11ps.h">
       <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.cpp">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.h">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\VertexDeclarationCache.cpp">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClCompile>
@@ -672,9 +681,6 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Query9.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Fence9.h">
-      <Filter>src\libGLESv2\renderer\d3d9</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\TextureStorage9.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
@@ -690,6 +696,9 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\SwapChain9.cpp">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Fence9.h">
+      <Filter>src\libGLESv2\renderer\d3d9</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\BufferStorage9.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
