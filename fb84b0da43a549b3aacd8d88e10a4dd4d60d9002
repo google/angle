@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "cf9d5927_7e42ed7f",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2258,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-10T20:59:42Z",
+      "side": 1,
+      "message": "The ES3 entry points are different cases, because we have to evaluate \"is this a valid entry point in this context\" before any other error. I\u0027d honestly not worry about making these parallel, since the ES3 entry points all parallel each other in that respect.",
+      "parentUuid": "af6ca5f1_e0917689",
+      "revId": "fb84b0da43a549b3aacd8d88e10a4dd4d60d9002",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf9d5927_7e8aedbe",
         "filename": "src/libGLESv2/renderer/d3d11/Query11.cpp",
         "patchSetId": 1
