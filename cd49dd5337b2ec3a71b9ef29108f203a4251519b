@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "efce9d4a_80266645",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-02-11T21:44:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fc2111e_9c4491d6",
+      "revId": "cd49dd5337b2ec3a71b9ef29108f203a4251519b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "efce9d4a_406cfe8a",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-02-11T21:34:14Z",
       "side": 1,
       "message": "optimizes -\u003e optimize",
+      "revId": "cd49dd5337b2ec3a71b9ef29108f203a4251519b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "efce9d4a_201bf203",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-02-11T21:44:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "efce9d4a_406cfe8a",
       "revId": "cd49dd5337b2ec3a71b9ef29108f203a4251519b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "0fc2111e_fca0351f",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-02-11T21:44:15Z",
+      "side": 1,
+      "message": "I\u0027ve tested with multiple examples, and they all end up in the right place.",
+      "parentUuid": "8fbfe18b_728a2ebf",
+      "revId": "cd49dd5337b2ec3a71b9ef29108f203a4251519b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8fbfe18b_92724226",
         "filename": "src/compiler/translator/InitializeVariables.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2014-02-11T21:34:14Z",
       "side": 1,
       "message": "Split across multiple lines for clarity.",
+      "revId": "cd49dd5337b2ec3a71b9ef29108f203a4251519b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8fbfe18b_d2a3da29",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-02-11T21:44:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8fbfe18b_92724226",
       "revId": "cd49dd5337b2ec3a71b9ef29108f203a4251519b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
