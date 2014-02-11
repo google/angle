@@ -132,7 +132,7 @@ class Context
   public:
     Context(int clientVersion, const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
 
-    ~Context();
+    virtual ~Context();
 
     void makeCurrent(egl::Surface *surface);
 
