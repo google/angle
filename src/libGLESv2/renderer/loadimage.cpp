@@ -893,9 +893,9 @@ void loadG8R24DataToR24G8(int width, int height, int depth,
 
             for (int x = 0; x < width; x++)
             {
-                unsigned int depth = source[x] >> 8;
-                unsigned int stencil = source[x] & 0xFF;
-                dest[x] = depth | (stencil << 24);
+                unsigned int d = source[x] >> 8;
+                unsigned int s = source[x] & 0xFF;
+                dest[x] = d | (s << 24);
             }
         }
     }
