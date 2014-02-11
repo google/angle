@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "efa77d88_e4f97a9b",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-11T16:45:35Z",
+      "side": 0,
+      "message": "What\u0027 this software only code all about?",
+      "revId": "7ffd5741b360bae34630c20f377491ed088d53ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
