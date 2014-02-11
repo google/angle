@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "af6ca5f1_20cd2e4c",
+        "filename": "extensions/EGL_ANGLE_window_fixed_size.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-11T23:01:17Z",
+      "side": 1,
+      "message": "Nit: These sections don\u0027t traditionally get indented-- the modifed or added section just needs to be set off in quotes (and also set off with a carriage return, which you\u0027ve done).",
+      "revId": "493f725cc6380f2d2acc1e0c4638a4f6327db331",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2fc51524_d4167469",
+        "filename": "extensions/EGL_ANGLE_window_fixed_size.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-11T23:01:17Z",
+      "side": 1,
+      "message": "To make clearer that this concerns the surface responding to changes in window size over its lifetime, not just at creation, I\u0027d suggest changing the first sentence to:\n\n\"EGL_FIXED_SIZE_ANGLE specifies whether the surface must be resized by the implementation when the native window is resized.\"",
+      "revId": "493f725cc6380f2d2acc1e0c4638a4f6327db331",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6fb46db0_eb22ad85",
+        "filename": "extensions/EGL_ANGLE_window_fixed_size.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-11T23:01:17Z",
+      "side": 1,
+      "message": "These sentences should make clear that this describes the lifetime behavior of the surface. I suggest:\n\n\"If its value is EGL_TRUE, the window surface\u0027s size in pixels is specified by the EGL_WIDTH and EGL_HEIGHT attributes, and will not change throughout the lifetime of the surface. If its value is EGL_FALSE, then the window surface must be resized by the implementation subsequent to the native window being resized, and prior to copying its contents to the native window (e.g. in eglSwapBuffers, as described in section 3.9.1.1). The default value is EGL_FALSE.\"",
+      "revId": "493f725cc6380f2d2acc1e0c4638a4f6327db331",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "afbae599_8dff8516",
+        "filename": "extensions/EGL_ANGLE_window_fixed_size.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-11T23:01:17Z",
+      "side": 1,
+      "message": "I\u0027m a little hesitant about the interaction between EGL_FIXED_SIZE_ANGLE and EGL_WIDTH and EGL_HEIGHT (specifically the part where the latter two must be specified if and only if the first is), because there aren\u0027t other attributes that behave that way. Would it maybe be better to specify defaults for all the values, and then say that EGL_WIDTH and EGL_HEIGHT are ignored if EGL_FIXED_SIZE_ANGLE is EGL_FALSE?",
+      "revId": "493f725cc6380f2d2acc1e0c4638a4f6327db331",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6fb46db0_cb4ec956",
+        "filename": "extensions/EGL_ANGLE_window_fixed_size.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-11T23:01:17Z",
+      "side": 1,
+      "message": "I\u0027d reference the EGL_FIXED_SIZE_ANGLE enum directly here.",
+      "revId": "493f725cc6380f2d2acc1e0c4638a4f6327db331",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
