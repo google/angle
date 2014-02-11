@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0fc2111e_9c4491d6",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-02-11T21:34:14Z",
+      "side": 1,
+      "message": "beginning -\u003e beginning of",
+      "revId": "cd49dd5337b2ec3a71b9ef29108f203a4251519b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "efce9d4a_406cfe8a",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-02-11T21:34:14Z",
+      "side": 1,
+      "message": "optimizes -\u003e optimize",
+      "revId": "cd49dd5337b2ec3a71b9ef29108f203a4251519b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8fbfe18b_728a2ebf",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-02-11T21:34:14Z",
+      "side": 1,
+      "message": "Are you 100% sure these initialization expressions will show up at the desired place in the translated source?",
+      "revId": "cd49dd5337b2ec3a71b9ef29108f203a4251519b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8fbfe18b_92724226",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-02-11T21:34:14Z",
+      "side": 1,
+      "message": "Split across multiple lines for clarity.",
+      "revId": "cd49dd5337b2ec3a71b9ef29108f203a4251519b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
