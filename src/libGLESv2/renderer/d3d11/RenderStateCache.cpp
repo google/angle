@@ -115,10 +115,10 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::Framebuffer *framebu
         }
     }
 
-    BlendStateMap::iterator i = mBlendStateCache.find(key);
-    if (i != mBlendStateCache.end())
+    BlendStateMap::iterator keyIter = mBlendStateCache.find(key);
+    if (keyIter != mBlendStateCache.end())
     {
-        BlendStateCounterPair &state = i->second;
+        BlendStateCounterPair &state = keyIter->second;
         state.second = mCounter++;
         return state.first;
     }
@@ -210,10 +210,10 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
     key.scissorEnabled = scissorEnabled;
     key.depthSize = depthSize;
 
-    RasterizerStateMap::iterator i = mRasterizerStateCache.find(key);
-    if (i != mRasterizerStateCache.end())
+    RasterizerStateMap::iterator keyIter = mRasterizerStateCache.find(key);
+    if (keyIter != mRasterizerStateCache.end())
     {
-        RasterizerStateCounterPair &state = i->second;
+        RasterizerStateCounterPair &state = keyIter->second;
         state.second = mCounter++;
         return state.first;
     }
@@ -292,10 +292,10 @@ ID3D11DepthStencilState *RenderStateCache::getDepthStencilState(const gl::DepthS
         return NULL;
     }
 
-    DepthStencilStateMap::iterator i = mDepthStencilStateCache.find(dsState);
-    if (i != mDepthStencilStateCache.end())
+    DepthStencilStateMap::iterator keyIter = mDepthStencilStateCache.find(dsState);
+    if (keyIter != mDepthStencilStateCache.end())
     {
-        DepthStencilStateCounterPair &state = i->second;
+        DepthStencilStateCounterPair &state = keyIter->second;
         state.second = mCounter++;
         return state.first;
     }
@@ -370,10 +370,10 @@ ID3D11SamplerState *RenderStateCache::getSamplerState(const gl::SamplerState &sa
         return NULL;
     }
 
-    SamplerStateMap::iterator i = mSamplerStateCache.find(samplerState);
-    if (i != mSamplerStateCache.end())
+    SamplerStateMap::iterator keyIter = mSamplerStateCache.find(samplerState);
+    if (keyIter != mSamplerStateCache.end())
     {
-        SamplerStateCounterPair &state = i->second;
+        SamplerStateCounterPair &state = keyIter->second;
         state.second = mCounter++;
         return state.first;
     }
