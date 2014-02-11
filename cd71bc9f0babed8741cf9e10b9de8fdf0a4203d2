@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "6fb46db0_ab7115b3",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-11T22:10:49Z",
+      "side": 1,
+      "message": "This should be covered by:\n\n\"When values for a vertex shader attribute variable are sourced from an enabled generic vertex attribute array, the array must be specified by a command compatible with the data type of the variable. The values loaded into a shader attribute variable bound to generic attribute [index] are undefined if the array for [index] was not specified by: \n  * VertexAttribPointer, for floating-point base type attributes\n  * VertexAttribIPointer with [type] BYTE, SHORT, or INT for signed integer base type attributes; or\n  * VertexAttribIPointer with [type] UNSIGNED_BYTE, UNSIGNED_SHORT, or UNSIGNED_INT for unsigned integer base type attributes.\" (ES 3.0.2 spec, sec 2.8 Vertex Arrays, pg 25)\n\nSo it\u0027s undefined and we\u0027re at liberty to do whatever makes D3D11 happy. (Unless I\u0027ve misunderstood what situation we\u0027re talking about. The default vertex attrib values are also specified to be undefined if the base type specified in the shader and the type used to define them in the API do not match.)",
+      "parentUuid": "8f71a1c9_dfed332f",
+      "revId": "cd71bc9f0babed8741cf9e10b9de8fdf0a4203d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b2d6ce80_1ec83d61",
         "filename": "src/libGLESv2/DynamicHLSL.cpp",
         "patchSetId": 1
