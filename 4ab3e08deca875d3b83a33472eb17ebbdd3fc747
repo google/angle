@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afbae599_cd825d73",
+        "filename": "src/libEGL/libEGL.def",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-11T23:52:34Z",
+      "side": 1,
+      "message": "In libGLESv2.def, we list the extension entry points in a separate section. I also note that we haven\u0027t listed the other entry points added via extension (eglQuerySurfacePointerANGLE and eglPostSubBufferNV) in EGL in this defs file. I\u0027m not sure why that is. (They do appear in eglGetProcAddress, which eglGetPlatformDisplayEXT should as well.)",
+      "revId": "4ab3e08deca875d3b83a33472eb17ebbdd3fc747",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "afbae599_edc961ed",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-11T23:52:34Z",
+      "side": 1,
+      "message": "Please stick some parens around the right hand side of the assignment-- helps with the reading when there\u0027s a comparison and an assignment in the same statement.",
+      "revId": "4ab3e08deca875d3b83a33472eb17ebbdd3fc747",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
