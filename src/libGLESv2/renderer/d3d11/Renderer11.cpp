@@ -3330,7 +3330,7 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
 
     bool stretchRequired = readRect.width != drawRect.width || readRect.height != drawRect.height;
 
-    bool flipRequired = readRect.width < 0 || readRect.height < 0 || drawRect.width < 0 || readRect.height < 0;
+    bool flipRequired = readRect.width < 0 || readRect.height < 0 || drawRect.width < 0 || drawRect.height < 0;
 
     bool outOfBounds = readRect.x < 0 || readRect.x + readRect.width > readSize.width ||
                        readRect.y < 0 || readRect.y + readRect.height > readSize.height ||
