@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "efce9d4a_7bd1ab42",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-02-11T22:30:30Z",
+      "side": 1,
+      "message": "Extra whitespace at end of line.",
+      "revId": "a0c4e9681d26184bc72d38a98f1658535546f849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
