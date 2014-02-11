@@ -20,6 +20,7 @@ struct TVariableInfo {
     TPersistString mappedName;
     ShDataType type;
     int size;
+    bool isArray;
     TPrecision precision;
     bool staticUse;
 };

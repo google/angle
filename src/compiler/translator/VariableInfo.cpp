@@ -163,10 +163,12 @@ void getBuiltInVariableInfo(const TType& type,
         varInfo.name = (name + "[0]").c_str();
         varInfo.mappedName = (mappedName + "[0]").c_str();
         varInfo.size = type.getArraySize();
+        varInfo.isArray = true;
     } else {
         varInfo.name = name.c_str();
         varInfo.mappedName = mappedName.c_str();
         varInfo.size = 1;
+        varInfo.isArray = false;
     }
     varInfo.precision = type.getPrecision();
     varInfo.type = getVariableDataType(type);
@@ -214,6 +216,7 @@ TVariableInfo* findVariable(const TType& type,
 TVariableInfo::TVariableInfo()
     : type(SH_NONE),
       size(0),
+      isArray(false),
       precision(EbpUndefined),
       staticUse(false)
 {
@@ -222,6 +225,7 @@ TVariableInfo::TVariableInfo()
 TVariableInfo::TVariableInfo(ShDataType type, int size)
     : type(type),
       size(size),
+      isArray(false),
       precision(EbpUndefined),
       staticUse(false)
 {

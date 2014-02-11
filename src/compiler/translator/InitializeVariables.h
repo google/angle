@@ -4,17 +4,34 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_INITIALIZE_GL_POSITION_H_
-#define COMPILER_INITIALIZE_GL_POSITION_H_
+#ifndef COMPILER_INITIALIZE_VARIABLES_H_
+#define COMPILER_INITIALIZE_VARIABLES_H_
 
 #include "compiler/translator/intermediate.h"
 
-class InitializeGLPosition : public TIntermTraverser
+class InitializeVariables : public TIntermTraverser
 {
-public:
-    InitializeGLPosition() : mCodeInserted(false) { }
+  public:
+    struct InitVariableInfo
+    {
+        TString name;
+        TType type;
 
-protected:
+        InitVariableInfo(const TString& _name, const TType& _type)
+            : name(_name),
+              type(_type)
+        {
+        }
+    };
+    typedef TVector<InitVariableInfo> InitVariableInfoList;
+
+    InitializeVariables(const InitVariableInfoList& vars)
+        : mCodeInserted(false),
+          mVariables(vars)
+    {
+    }
+
+  protected:
     virtual bool visitBinary(Visit visit, TIntermBinary* node) { return false; }
     virtual bool visitUnary(Visit visit, TIntermUnary* node) { return false; }
     virtual bool visitSelection(Visit visit, TIntermSelection* node) { return false; }
@@ -23,11 +40,11 @@ protected:
 
     virtual bool visitAggregate(Visit visit, TIntermAggregate* node);
 
-private:
-    // Insert AST node in the beginning of main() for "gl_Position = vec4(0.0, 0.0, 0.0, 1.0);".
-    void insertCode(TIntermSequence& sequence);
+  private:
+    void insertInitCode(TIntermSequence& sequence);
 
+    InitVariableInfoList mVariables;
     bool mCodeInserted;
 };
 
-#endif  // COMPILER_INITIALIZE_GL_POSITION_H_
+#endif  // COMPILER_INITIALIZE_VARIABLES_H_
