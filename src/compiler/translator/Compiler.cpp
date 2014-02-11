@@ -8,8 +8,8 @@
 #include "compiler/translator/DetectCallDepth.h"
 #include "compiler/translator/ForLoopUnroll.h"
 #include "compiler/translator/Initialize.h"
-#include "compiler/translator/InitializeGLPosition.h"
 #include "compiler/translator/InitializeParseContext.h"
+#include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/MapLongVariableNames.h"
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/RenameFunction.h"
@@ -29,43 +29,51 @@ bool isWebGLBasedSpec(ShShaderSpec spec)
 }
 
 namespace {
-class TScopedPoolAllocator {
-public:
-    TScopedPoolAllocator(TPoolAllocator* allocator) : mAllocator(allocator) {
+class TScopedPoolAllocator
+{
+  public:
+    TScopedPoolAllocator(TPoolAllocator* allocator) : mAllocator(allocator)
+    {
         mAllocator->push();
         SetGlobalPoolAllocator(mAllocator);
     }
-    ~TScopedPoolAllocator() {
+    ~TScopedPoolAllocator()
+    {
         SetGlobalPoolAllocator(NULL);
         mAllocator->pop();
     }
 
-private:
+  private:
     TPoolAllocator* mAllocator;
 };
 
-class TScopedSymbolTableLevel {
-public:
-    TScopedSymbolTableLevel(TSymbolTable* table) : mTable(table) {
+class TScopedSymbolTableLevel
+{
+  public:
+    TScopedSymbolTableLevel(TSymbolTable* table) : mTable(table)
+    {
         ASSERT(mTable->atBuiltInLevel());
         mTable->push();
     }
-    ~TScopedSymbolTableLevel() {
+    ~TScopedSymbolTableLevel()
+    {
         while (!mTable->atBuiltInLevel())
             mTable->pop();
     }
 
-private:
+  private:
     TSymbolTable* mTable;
 };
 }  // namespace
 
-TShHandleBase::TShHandleBase() {
+TShHandleBase::TShHandleBase()
+{
     allocator.push();
     SetGlobalPoolAllocator(&allocator);
 }
 
-TShHandleBase::~TShHandleBase() {
+TShHandleBase::~TShHandleBase()
+{
     SetGlobalPoolAllocator(NULL);
     allocator.popAll();
 }
@@ -151,7 +159,8 @@ bool TCompiler::compile(const char* const shaderStrings[],
     bool success =
         (PaParseStrings(numStrings - firstSource, &shaderStrings[firstSource], NULL, &parseContext) == 0) &&
         (parseContext.treeRoot != NULL);
-    if (success) {
+    if (success)
+    {
         TIntermNode* root = parseContext.treeRoot;
         success = intermediate.postProcess(root);
 
@@ -190,26 +199,31 @@ bool TCompiler::compile(const char* const shaderStrings[],
         if (success && (compileOptions & SH_MAP_LONG_VARIABLE_NAMES) && hashFunction == NULL)
             mapLongVariableNames(root);
 
-        if (success && shaderType == SH_VERTEX_SHADER && (compileOptions & SH_INIT_GL_POSITION)) {
-            InitializeGLPosition initGLPosition;
-            root->traverse(&initGLPosition);
-        }
+        if (success && shaderType == SH_VERTEX_SHADER && (compileOptions & SH_INIT_GL_POSITION))
+            initializeGLPosition(root);
 
-	if (success && (compileOptions & SH_UNFOLD_SHORT_CIRCUIT)) {
+        if (success && (compileOptions & SH_UNFOLD_SHORT_CIRCUIT))
+        {
             UnfoldShortCircuitAST unfoldShortCircuit;
             root->traverse(&unfoldShortCircuit);
             unfoldShortCircuit.updateTree();
-	}
+        }
 
-        if (success && (compileOptions & SH_VARIABLES)) {
+        if (success && (compileOptions & SH_VARIABLES))
+        {
             collectVariables(root);
-            if (compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS) {
+            if (compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS)
+            {
                 success = enforcePackingRestrictions();
-                if (!success) {
+                if (!success)
+                {
                     infoSink.info.prefix(EPrefixError);
                     infoSink.info << "too many uniforms";
                 }
             }
+            if (success && shaderType == SH_VERTEX_SHADER &&
+                (compileOptions & SH_INIT_VARYINGS_WITHOUT_STATIC_USE))
+                initializeVaryingsWithoutStaticUse(root);
         }
 
         if (success && (compileOptions & SH_INTERMEDIATE_TREE))
@@ -258,12 +272,14 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
         symbolTable.setDefaultPrecision(integer, EbpHigh);
         symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
         break;
-      default: assert(false && "Language not supported");
+      default:
+        assert(false && "Language not supported");
     }
     // We set defaults for all the sampler types, even those that are
     // only available if an extension exists.
     for (int samplerType = EbtGuardSamplerBegin + 1;
-         samplerType < EbtGuardSamplerEnd; ++samplerType) {
+         samplerType < EbtGuardSamplerEnd; ++samplerType)
+    {
         sampler.type = static_cast<TBasicType>(samplerType);
         symbolTable.setDefaultPrecision(sampler, EbpLow);
     }
@@ -295,24 +311,25 @@ bool TCompiler::detectCallDepth(TIntermNode* root, TInfoSink& infoSink, bool lim
 {
     DetectCallDepth detect(infoSink, limitCallStackDepth, maxCallStackDepth);
     root->traverse(&detect);
-    switch (detect.detectCallDepth()) {
-        case DetectCallDepth::kErrorNone:
-            return true;
-        case DetectCallDepth::kErrorMissingMain:
-            infoSink.info.prefix(EPrefixError);
-            infoSink.info << "Missing main()";
-            return false;
-        case DetectCallDepth::kErrorRecursion:
-            infoSink.info.prefix(EPrefixError);
-            infoSink.info << "Function recursion detected";
-            return false;
-        case DetectCallDepth::kErrorMaxDepthExceeded:
-            infoSink.info.prefix(EPrefixError);
-            infoSink.info << "Function call stack too deep";
-            return false;
-        default:
-            UNREACHABLE();
-            return false;
+    switch (detect.detectCallDepth())
+    {
+      case DetectCallDepth::kErrorNone:
+        return true;
+      case DetectCallDepth::kErrorMissingMain:
+        infoSink.info.prefix(EPrefixError);
+        infoSink.info << "Missing main()";
+        return false;
+      case DetectCallDepth::kErrorRecursion:
+        infoSink.info.prefix(EPrefixError);
+        infoSink.info << "Function recursion detected";
+        return false;
+      case DetectCallDepth::kErrorMaxDepthExceeded:
+        infoSink.info.prefix(EPrefixError);
+        infoSink.info << "Function call stack too deep";
+        return false;
+      default:
+        UNREACHABLE();
+        return false;
     }
 }
 
@@ -322,7 +339,8 @@ void TCompiler::rewriteCSSShader(TIntermNode* root)
     root->traverse(&renamer);
 }
 
-bool TCompiler::validateLimitations(TIntermNode* root) {
+bool TCompiler::validateLimitations(TIntermNode* root)
+{
     ValidateLimitations validate(shaderType, infoSink.info);
     root->traverse(&validate);
     return validate.numErrors() == 0;
@@ -330,26 +348,30 @@ bool TCompiler::validateLimitations(TIntermNode* root) {
 
 bool TCompiler::enforceTimingRestrictions(TIntermNode* root, bool outputGraph)
 {
-    if (shaderSpec != SH_WEBGL_SPEC) {
+    if (shaderSpec != SH_WEBGL_SPEC)
+    {
         infoSink.info << "Timing restrictions must be enforced under the WebGL spec.";
         return false;
     }
 
-    if (shaderType == SH_FRAGMENT_SHADER) {
+    if (shaderType == SH_FRAGMENT_SHADER)
+    {
         TDependencyGraph graph(root);
 
         // Output any errors first.
         bool success = enforceFragmentShaderTimingRestrictions(graph);
         
         // Then, output the dependency graph.
-        if (outputGraph) {
+        if (outputGraph)
+        {
             TDependencyGraphOutput output(infoSink.info);
             output.outputAllSpanningTrees(graph);
         }
         
         return success;
     }
-    else {
+    else
+    {
         return enforceVertexShaderTimingRestrictions(root);
     }
 }
@@ -369,7 +391,8 @@ bool TCompiler::limitExpressionComplexity(TIntermNode* root)
         samplerSymbol->traverse(&graphTraverser);
     }
 
-    if (traverser.getMaxDepth() > maxExpressionComplexity) {
+    if (traverser.getMaxDepth() > maxExpressionComplexity)
+    {
         infoSink.info << "Expression too complex.";
         return false;
     }
@@ -400,6 +423,70 @@ bool TCompiler::enforcePackingRestrictions()
 {
     VariablePacker packer;
     return packer.CheckVariablesWithinPackingLimits(maxUniformVectors, uniforms);
+}
+
+void TCompiler::initializeGLPosition(TIntermNode* root)
+{
+    InitializeVariables::InitVariableInfoList variables;
+    InitializeVariables::InitVariableInfo var(
+        "gl_Position", TType(EbtFloat, EbpUndefined, EvqPosition, 4));
+    variables.push_back(var);
+    InitializeVariables initializer(variables);
+    root->traverse(&initializer);
+}
+
+void TCompiler::initializeVaryingsWithoutStaticUse(TIntermNode* root)
+{
+    InitializeVariables::InitVariableInfoList variables;
+    for (size_t ii = 0; ii < varyings.size(); ++ii)
+    {
+        const TVariableInfo& varying = varyings[ii];
+        if (varying.staticUse)
+            continue;
+        unsigned char size = 0;
+        bool matrix = false;
+        switch (varying.type)
+        {
+          case SH_FLOAT:
+            size = 1;
+            break;
+          case SH_FLOAT_VEC2:
+            size = 2;
+            break;
+          case SH_FLOAT_VEC3:
+            size = 3;
+            break;
+          case SH_FLOAT_VEC4:
+            size = 4;
+            break;
+          case SH_FLOAT_MAT2:
+            size = 2;
+            matrix = true;
+            break;
+          case SH_FLOAT_MAT3:
+            size = 3;
+            matrix = true;
+            break;
+          case SH_FLOAT_MAT4:
+            size = 4;
+            matrix = true;
+            break;
+          default:
+            ASSERT(false);
+        }
+        TType type(EbtFloat, EbpUndefined, EvqVaryingOut, size, matrix, varying.isArray);
+        TString name = varying.name.c_str();
+        if (varying.isArray)
+        {
+            type.setArraySize(varying.size);
+            name = name.substr(0, name.find_first_of('['));
+        }
+
+        InitializeVariables::InitVariableInfo var(name, type);
+        variables.push_back(var);
+    }
+    InitializeVariables initializer(variables);
+    root->traverse(&initializer);
 }
 
 void TCompiler::mapLongVariableNames(TIntermNode* root)

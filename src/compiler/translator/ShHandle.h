@@ -100,6 +100,16 @@ protected:
     // Returns true if, after applying the packing rules in the GLSL 1.017 spec
     // Appendix A, section 7, the shader does not use too many uniforms.
     bool enforcePackingRestrictions();
+    // Insert statements to initialize varyings without static use in the beginning
+    // of main(). It is to work around a Mac driver where such varyings in a vertex
+    // shader may be optimized out incorrectly at compile time, causing a link failure.
+    // This function should only be applied to vertex shaders.
+    void initializeVaryingsWithoutStaticUse(TIntermNode* root);
+    // Insert gl_Position = vec4(0,0,0,0) to the beginning of main().
+    // It is to work around a Linux driver bug where missing this causes compile failure
+    // while spec says it is allowed.
+    // This function should only be applied to vertex shaders.
+    void initializeGLPosition(TIntermNode* root);
     // Returns true if the shader passes the restrictions that aim to prevent timing attacks.
     bool enforceTimingRestrictions(TIntermNode* root, bool outputGraph);
     // Returns true if the shader does not use samplers.
