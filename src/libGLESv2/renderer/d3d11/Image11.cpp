@@ -215,7 +215,7 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y
 {
     gl::Renderbuffer *colorbuffer = source->getReadColorbuffer();
 
-    if (colorbuffer && colorbuffer->getActualFormat() == (GLuint)mActualFormat)
+    if (colorbuffer && colorbuffer->getActualFormat() == mActualFormat)
     {
         // No conversion needed-- use copyback fastpath
         ID3D11Texture2D *colorBufferTexture = NULL;
