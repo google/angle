@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2faef565_c6fc828e",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 10184,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-11T16:49:48Z",
+      "side": 1,
+      "message": "I think this changes the behaviour... currently !textureObject will return true (see the return statement below).. is this intentional?",
+      "revId": "86a49077f30e7b92e4d92cc9339119d373a0bfd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
