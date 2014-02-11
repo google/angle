@@ -76,7 +76,7 @@ std::size_t RenderStateCache::hashBlendState(const BlendStateKey &blendState)
 
 bool RenderStateCache::compareBlendStates(const BlendStateKey &a, const BlendStateKey &b)
 {
-    return memcmp(&a, &b, sizeof(gl::BlendState)) == 0;
+    return memcmp(&a, &b, sizeof(BlendStateKey)) == 0;
 }
 
 ID3D11BlendState *RenderStateCache::getBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState)
