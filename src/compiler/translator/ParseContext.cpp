@@ -1421,7 +1421,7 @@ void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
         defaultMatrixPacking = layoutQualifier.matrixPacking;
     }
 
-    if (layoutQualifier.blockStorage != EmpUnspecified)
+    if (layoutQualifier.blockStorage != EbsUnspecified)
     {
         defaultBlockStorage = layoutQualifier.blockStorage;
     }
