@@ -792,9 +792,9 @@ void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilS
         // GL specifies we should clamp the ref value to the nearest bit depth when doing stencil ops
         META_ASSERT(D3D11_DEFAULT_STENCIL_READ_MASK == 0xFF);
         META_ASSERT(D3D11_DEFAULT_STENCIL_WRITE_MASK == 0xFF);
-        UINT stencilRef = std::min(stencilRef, 0xFFu);
+        UINT dxStencilRef = std::min<UINT>(stencilRef, 0xFFu);
 
-        mDeviceContext->OMSetDepthStencilState(dxDepthStencilState, stencilRef);
+        mDeviceContext->OMSetDepthStencilState(dxDepthStencilState, dxStencilRef);
 
         mCurDepthStencilState = depthStencilState;
         mCurStencilRef = stencilRef;
