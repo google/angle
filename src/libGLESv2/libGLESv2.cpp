@@ -10183,16 +10183,14 @@ bool __stdcall glBindTexImage(egl::Surface *surface)
         if (context)
         {
             gl::Texture2D *textureObject = context->getTexture2D();
+            ASSERT(textureObject != NULL);
 
             if (textureObject->isImmutable())
             {
                 return false;
             }
 
-            if (textureObject)
-            {
-                textureObject->bindTexImage(surface);
-            }
+            textureObject->bindTexImage(surface);
         }
     }
     catch(std::bad_alloc&)
