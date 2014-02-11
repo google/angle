@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2fc51524_91ff9e16",
+        "filename": "src/libGLESv2/constants.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-11T21:50:13Z",
+      "side": 1,
+      "message": "Nit: all the XFB constants should probably get grouped together, no space.",
+      "revId": "9bf5e96d6e05062609261ea28fd339f23ace29e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "afbae599_8df54569",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3035,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-11T21:50:13Z",
+      "side": 1,
+      "message": "Is GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH missing from this switch?",
+      "revId": "9bf5e96d6e05062609261ea28fd339f23ace29e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "afbae599_adf2897c",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3083,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-11T21:50:13Z",
+      "side": 1,
+      "message": "What about GL_TRANSFORM_FEEDBACK_BUFFER_MODE?",
+      "revId": "9bf5e96d6e05062609261ea28fd339f23ace29e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
