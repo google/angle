@@ -781,7 +781,8 @@ bool Texture2D::isSamplerComplete(const SamplerState &samplerState) const
     // depth and stencil format (see table 3.13), the value of TEXTURE_COMPARE_-
     // MODE is NONE, and either the magnification filter is not NEAREST or the mini-
     // fication filter is neither NEAREST nor NEAREST_MIPMAP_NEAREST.
-    if (gl::GetDepthBits(getInternalFormat(0), mRenderer->getCurrentClientVersion()) > 0)
+    if (gl::GetDepthBits(getInternalFormat(0), mRenderer->getCurrentClientVersion()) > 0 &&
+        mRenderer->getCurrentClientVersion() > 2)
     {
         if (mSamplerState.compareMode == GL_NONE)
         {
