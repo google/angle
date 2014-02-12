@@ -199,6 +199,9 @@
     <ClCompile Include="..\..\src\compiler\translator\RemoveTree.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\compiler\translator\InitializeVariables.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\SymbolTable.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
@@ -298,18 +301,18 @@
     <ClCompile Include="..\..\src\compiler\translator\UnfoldShortCircuit.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\compiler\translator\InitializeGLPosition.cpp">
+    <ClCompile Include="..\..\src\compiler\translator\Uniform.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
-    <None Include="..\..\src\compiler\translator\glslang.y">
-      <Filter>compiler\translator</Filter>
-    </None>
     <ClInclude Include="..\..\src\compiler\translator\MMap.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\Compiler.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\compilerdebug.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
@@ -325,12 +328,9 @@
     <ClInclude Include="..\..\src\compiler\translator\ForLoopUnroll.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\compiler\translator\InitializeGLPosition.h">
+    <None Include="..\..\src\compiler\translator\glslang.y">
       <Filter>compiler\translator</Filter>
-    </ClInclude>
-    <ClCompile Include="..\..\src\compiler\translator\Uniform.cpp">
-      <Filter>compiler\translator</Filter>
-    </ClCompile>
+    </None>
     <ClInclude Include="..\..\src\compiler\translator\ExtensionBehavior.h">
       <Filter>compiler\translator</Filter>
     </ClInclude>

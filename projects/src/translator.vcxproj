@@ -166,11 +166,11 @@
     <ClInclude Include="..\..\src\compiler\translator\InitializeDll.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang_tab.h"/>
     <ClInclude Include="..\..\src\compiler\translator\MMap.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h"/>
     <ClInclude Include="..\..\src\compiler\translator\localintermediate.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ShHandle.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputGLSLBase.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ForLoopUnroll.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\InitializeGLPosition.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ExtensionBehavior.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Pragma.h"/>
     <ClInclude Include="..\..\src\compiler\translator\intermediate.h"/>
@@ -210,6 +210,7 @@
     <ClCompile Include="..\..\src\compiler\translator\ParseContext.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorGLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\RemoveTree.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\InitializeVariables.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\SymbolTable.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\InitializeDll.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\PoolAlloc.cpp"/>
@@ -222,10 +223,9 @@
     <ClCompile Include="..\..\src\compiler\translator\util.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ShaderLang.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\UnfoldShortCircuit.cpp"/>
-    <ClCompile Include="..\..\src\compiler\translator\InitializeGLPosition.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\Uniform.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\Compiler.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\compilerdebug.cpp"/>
-    <ClCompile Include="..\..\src\compiler\translator\Uniform.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\VariableInfo.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\DetectDiscontinuity.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\VariablePacker.cpp"/>
