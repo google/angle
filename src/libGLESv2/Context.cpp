@@ -3710,6 +3710,7 @@ void Context::initExtensionString()
 
         mExtensionStringList.push_back("GL_EXT_texture_storage");
         mExtensionStringList.push_back("GL_EXT_frag_depth");
+        mExtensionStringList.push_back("GL_EXT_blend_minmax");
 
         // ANGLE-specific extensions
         if (supportsDepthTextures())

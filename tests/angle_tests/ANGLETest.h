@@ -19,10 +19,10 @@
 #include <EGL/eglext.h>
 #include <algorithm>
 
-#define EXPECT_GL_ERROR(err) EXPECT_EQ(glGetError(), (err))
+#define EXPECT_GL_ERROR(err) EXPECT_EQ((err), glGetError())
 #define EXPECT_GL_NO_ERROR() EXPECT_GL_ERROR(GL_NO_ERROR)
 
-#define ASSERT_GL_ERROR(err) EXPECT_EQ(glGetError(), (err))
+#define ASSERT_GL_ERROR(err) ASSERT_EQ((err), glGetError())
 #define ASSERT_GL_NO_ERROR() ASSERT_GL_ERROR(GL_NO_ERROR)
 
 #define EXPECT_PIXEL_EQ(x, y, r, g, b, a) \
@@ -30,10 +30,10 @@
     GLubyte pixel[4]; \
     glReadPixels((x), (y), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel); \
     EXPECT_GL_NO_ERROR(); \
-    EXPECT_EQ(pixel[0], (r)); \
-    EXPECT_EQ(pixel[1], (g)); \
-    EXPECT_EQ(pixel[2], (b)); \
-    EXPECT_EQ(pixel[3], (a)); \
+    EXPECT_EQ((r), pixel[0]); \
+    EXPECT_EQ((g), pixel[1]); \
+    EXPECT_EQ((b), pixel[2]); \
+    EXPECT_EQ((a), pixel[3]); \
 }
 
 #define SHADER_SOURCE(...) #__VA_ARGS__

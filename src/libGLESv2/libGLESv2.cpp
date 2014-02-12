@@ -384,14 +384,8 @@ void __stdcall glBlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
           case GL_FUNC_ADD:
           case GL_FUNC_SUBTRACT:
           case GL_FUNC_REVERSE_SUBTRACT:
-            break;
-
           case GL_MIN:
           case GL_MAX:
-            if (context && context->getClientVersion() < 3)
-            {
-                return gl::error(GL_INVALID_ENUM);
-            }
             break;
 
           default:
@@ -403,14 +397,8 @@ void __stdcall glBlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
           case GL_FUNC_ADD:
           case GL_FUNC_SUBTRACT:
           case GL_FUNC_REVERSE_SUBTRACT:
-            break;
-
           case GL_MIN:
           case GL_MAX:
-            if (context && context->getClientVersion() < 3)
-            {
-                return gl::error(GL_INVALID_ENUM);
-            }
             break;
 
           default:
