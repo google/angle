@@ -34,6 +34,24 @@
       "revId": "86a49077f30e7b92e4d92cc9339119d373a0bfd0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f0c0978_d298e2aa",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 10184,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-12T22:00:59Z",
+      "side": 1,
+      "message": "The function reports directly to a public error. I looked at it a bit, it seems as though it\u0027s an internal error to ever return a non-null texture (either we return texture \"zero\" or we create a new texture on bind). I\u0027d recommend making this an ASSERT if we can\u0027t ever trigger the code.",
+      "parentUuid": "2faef565_46b652e3",
+      "revId": "86a49077f30e7b92e4d92cc9339119d373a0bfd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
