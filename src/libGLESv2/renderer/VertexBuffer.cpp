@@ -12,6 +12,7 @@
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/VertexAttribute.h"
 #include "libGLESv2/renderer/BufferStorage.h"
+#include "common/mathutil.h"
 
 namespace rx
 {
@@ -120,6 +121,9 @@ bool VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &att
 
     mWritePosition += spaceRequired;
 
+    // Align to 16-byte boundary
+    mWritePosition = rx::roundUp(mWritePosition, 16u);
+
     return true;
 }
 
@@ -138,6 +142,10 @@ bool VertexBufferInterface::reserveVertexSpace(const gl::VertexAttribute &attrib
     }
 
     mReservedSpace += requiredSpace;
+
+    // Align to 16-byte boundary
+    mReservedSpace = rx::roundUp(mReservedSpace, 16u);
+
     return true;
 }
 
