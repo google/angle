@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2f6c3514_6a0abf7c",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-02-12T20:38:11Z",
+      "side": 1,
+      "message": "Here is where I need to resolve the conflicts, as the above line doesn\u0027t exist in master branch.",
+      "revId": "f7db13ef345bd6199d4ea0d7786f0de20885f2f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
