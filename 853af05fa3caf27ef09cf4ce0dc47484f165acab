@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f0c0978_2fe0e9e9",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-12T18:57:39Z",
+      "side": 0,
+      "message": "Hurray, we finally go around to deleting this.",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 6
+      },
+      "revId": "853af05fa3caf27ef09cf4ce0dc47484f165acab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "affd8574_9513e677",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-12T18:57:39Z",
+      "side": 1,
+      "message": "Why +3? Also, this could be a std::vector\u003cchar\u003e to avoid the explicit deletion.",
+      "range": {
+        "startLine": 177,
+        "startChar": 56,
+        "endLine": 177,
+        "endChar": 58
+      },
+      "revId": "0abe7d2a68ccfff69dd3ae76e88487d09afee9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "affd8574_75fda2d9",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1152,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-12T18:57:39Z",
+      "side": 1,
+      "message": "It could be dangerous to load an entire struct at once since member packing can change between builds.",
+      "range": {
+        "startLine": 1152,
+        "startChar": 8,
+        "endLine": 1152,
+        "endChar": 120
+      },
+      "revId": "0abe7d2a68ccfff69dd3ae76e88487d09afee9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cff71998_8bd0ed1c",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1314,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-12T18:57:39Z",
+      "side": 1,
+      "message": "Same as above.",
+      "range": {
+        "startLine": 1314,
+        "startChar": 8,
+        "endLine": 1314,
+        "endChar": 137
+      },
+      "revId": "0abe7d2a68ccfff69dd3ae76e88487d09afee9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f0c0978_cf45dd31",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-12T18:57:39Z",
+      "side": 1,
+      "message": "These should be moved to the cpp file.",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 5
+      },
+      "revId": "0abe7d2a68ccfff69dd3ae76e88487d09afee9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
