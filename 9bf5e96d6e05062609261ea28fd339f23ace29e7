@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "af2665f6_4a8d536a",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2381,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-12T16:57:40Z",
+      "side": 1,
+      "message": "IIRC GetQueryParameterInfo is specific to GetInteger/GetFloat types of queries, not GetProgramParameter or other object queries. You should remove this added line.",
+      "revId": "9bf5e96d6e05062609261ea28fd339f23ace29e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2fc51524_91ff9e16",
         "filename": "src/libGLESv2/constants.h",
         "patchSetId": 1
