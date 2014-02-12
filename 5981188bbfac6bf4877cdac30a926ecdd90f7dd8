@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cff71998_2e6747fd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-12T21:31:07Z",
+      "side": 1,
+      "message": "many sorries, the syntax should be BUG\u003dangle:#",
+      "revId": "5981188bbfac6bf4877cdac30a926ecdd90f7dd8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
