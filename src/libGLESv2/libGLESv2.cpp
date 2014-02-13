@@ -3441,20 +3441,20 @@ const GLubyte* __stdcall glGetString(GLenum name)
           case GL_VERSION:
             if (context->getClientVersion() == 2)
             {
-                return (GLubyte*)"OpenGL ES 2.0 (ANGLE " VERSION_STRING ")";
+                return (GLubyte*)"OpenGL ES 2.0 (ANGLE " ANGLE_VERSION_STRING ")";
             }
             else
             {
-                return (GLubyte*)"OpenGL ES 3.0 (ANGLE " VERSION_STRING ")";
+                return (GLubyte*)"OpenGL ES 3.0 (ANGLE " ANGLE_VERSION_STRING ")";
             }
           case GL_SHADING_LANGUAGE_VERSION:
             if (context->getClientVersion() == 2)
             {
-                return (GLubyte*)"OpenGL ES GLSL ES 1.00 (ANGLE " VERSION_STRING ")";
+                return (GLubyte*)"OpenGL ES GLSL ES 1.00 (ANGLE " ANGLE_VERSION_STRING ")";
             }
             else
             {
-                return (GLubyte*)"OpenGL ES GLSL ES 3.00 (ANGLE " VERSION_STRING ")";
+                return (GLubyte*)"OpenGL ES GLSL ES 3.00 (ANGLE " ANGLE_VERSION_STRING ")";
             }
           case GL_EXTENSIONS:
             return (GLubyte*)((context != NULL) ? context->getCombinedExtensionsString() : "");

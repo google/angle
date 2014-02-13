@@ -84,9 +84,6 @@
     <ClCompile Include="..\..\src\common\debug.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\common\commit.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\common\mathutil.h">
       <Filter>src\common</Filter>
     </ClInclude>

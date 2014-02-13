@@ -18,6 +18,7 @@
                         '.',
                         '../include',
                         'libGLESv2',
+                        '<(SHARED_INTERMEDIATE_DIR)',
                     ],
                     'sources':
                     [

@@ -111,9 +111,9 @@
   <ItemGroup>
     <CustomBuild Include="..\..\src\commit_id.bat">
       <FileType>Document</FileType>
-      <Command>call call ..\..\src\commit_id.bat</Command>
+      <Command>call call ..\..\src\commit_id.bat $(OutDir)obj\global_intermediate</Command>
       <Message>Generating commit ID header...</Message>
-      <Outputs>..\..\src\common\commit.h</Outputs>
+      <Outputs>$(OutDir)obj\global_intermediate\commit.h</Outputs>
     </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>

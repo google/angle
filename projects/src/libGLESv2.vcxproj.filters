@@ -741,9 +741,6 @@
     <ClCompile Include="..\..\src\common\event_tracer.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\common\commit.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
     <ClCompile Include="..\..\src\common\RefCountObject.cpp">
       <Filter>src\common</Filter>
     </ClCompile>

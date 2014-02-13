@@ -66,9 +66,6 @@
     <ClInclude Include="..\..\src\common\event_tracer.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\commit.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
     <ClCompile Include="..\..\src\common\utilities.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
@@ -153,6 +150,9 @@
     <ClInclude Include="..\..\src\compiler\translator\PoolAlloc.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\BuiltInFunctionEmulator.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
@@ -166,6 +166,9 @@
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\RemoveTree.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\compiler\translator\InitializeVariables.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\compiler\translator\UnfoldShortCircuit.h">
@@ -252,9 +255,9 @@
     <ClInclude Include="..\..\src\compiler\translator\InitializeDll.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\compiler\translator\InitializeGLPosition.cpp">
+    <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h">
       <Filter>src\compiler\translator</Filter>
-    </ClCompile>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\localintermediate.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
@@ -265,9 +268,6 @@
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\ForLoopUnroll.h">
-      <Filter>src\compiler\translator</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\compiler\translator\InitializeGLPosition.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\ShaderVariable.h">
@@ -282,9 +282,6 @@
     <ClCompile Include="..\..\src\compiler\translator\VariablePacker.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\compiler\translator\InitializeParseContext.h">
-      <Filter>src\compiler\translator</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorHLSL.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
@@ -375,7 +372,7 @@
     <ClCompile Include="..\..\src\compiler\translator\SymbolTable.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h">
+    <ClInclude Include="..\..\src\compiler\translator\InitializeParseContext.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\DirectiveHandler.cpp">
