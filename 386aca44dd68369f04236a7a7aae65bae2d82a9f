@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4fb329fa_7763b024",
+        "filename": "src/libGLESv2/ResourceManager.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-13T21:59:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cff71998_d10bc4a9",
+      "revId": "386aca44dd68369f04236a7a7aae65bae2d82a9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af2665f6_b0f5603b",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-02-13T02:46:35Z",
       "side": 1,
       "message": "Section ID would be helpful in these comments, too.",
+      "revId": "386aca44dd68369f04236a7a7aae65bae2d82a9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4fb329fa_3759387b",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 9543,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-13T21:59:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af2665f6_b0f5603b",
       "revId": "386aca44dd68369f04236a7a7aae65bae2d82a9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
