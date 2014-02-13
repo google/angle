@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "4f0c0978_52c5124b",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-13T15:32:34Z",
+      "side": 1,
+      "message": "Done, I like the +3 to be extra-safe. Was a suggestion from a Noogler training class -- +1 can be unsafe or barely enough, +3 is always safe :)",
+      "parentUuid": "affd8574_9513e677",
+      "revId": "0abe7d2a68ccfff69dd3ae76e88487d09afee9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "affd8574_75fda2d9",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 2
@@ -42,6 +60,24 @@
         "endLine": 1152,
         "endChar": 120
       },
+      "revId": "0abe7d2a68ccfff69dd3ae76e88487d09afee9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f0c0978_b2d39e28",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-13T15:32:34Z",
+      "side": 1,
+      "message": "Done, to be consistent with the rest of the code here -- IMO cross-platform alignment defines are correct.",
+      "parentUuid": "affd8574_75fda2d9",
       "revId": "0abe7d2a68ccfff69dd3ae76e88487d09afee9a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -71,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "6fae2d95_f82251b3",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1314,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-13T15:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cff71998_8bd0ed1c",
+      "revId": "0abe7d2a68ccfff69dd3ae76e88487d09afee9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f0c0978_cf45dd31",
         "filename": "src/libGLESv2/ProgramBinary.h",
         "patchSetId": 2
@@ -88,6 +142,24 @@
         "endLine": 84,
         "endChar": 5
       },
+      "revId": "0abe7d2a68ccfff69dd3ae76e88487d09afee9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cff71998_0e3c0b46",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-13T15:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f0c0978_cf45dd31",
       "revId": "0abe7d2a68ccfff69dd3ae76e88487d09afee9a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
