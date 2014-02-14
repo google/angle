@@ -21,6 +21,7 @@
 
 #include "compiler/translator/ShaderVariable.h"
 #include "common/angleutils.h"
+#include "libGLESv2/angletypes.h"
 
 namespace rx
 {
@@ -33,7 +34,7 @@ class ResourceManager;
 
 class Shader
 {
-    friend class ProgramBinary;
+    friend class DynamicHLSL;
 
   public:
     Shader(ResourceManager *manager, const rx::Renderer *renderer, GLuint handle);
@@ -53,6 +54,7 @@ class Shader
     void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
     const std::vector<sh::Uniform> &getUniforms() const;
     const sh::ActiveInterfaceBlocks &getInterfaceBlocks() const;
+    std::vector<sh::Varying> &getVaryings();
 
     virtual void compile() = 0;
     virtual void uncompile();
@@ -65,12 +67,16 @@ class Shader
     bool isFlaggedForDeletion() const;
     void flagForDeletion();
     int getShaderVersion() const;
+    void resetVaryingsRegisterAssignment();
 
     static void releaseCompiler();
 
+    bool usesDepthRange() const { return mUsesDepthRange; }
+    bool usesPointSize() const { return mUsesPointSize; }
+    rx::D3DWorkaroundType getD3DWorkarounds() const;
+
   protected:
     void parseVaryings(void *compiler);
-    void resetVaryingsRegisterAssignment();
 
     void compileToHLSL(void *compiler);
 
@@ -117,7 +123,7 @@ class Shader
 
 class VertexShader : public Shader
 {
-    friend class ProgramBinary;
+    friend class DynamicHLSL;
 
   public:
     VertexShader(ResourceManager *manager, const rx::Renderer *renderer, GLuint handle);
@@ -128,6 +134,8 @@ class VertexShader : public Shader
     virtual void compile();
     virtual void uncompile();
     int getSemanticIndex(const std::string &attributeName);
+
+    const std::vector<sh::Attribute> &activeAttributes() const { return mActiveAttributes; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexShader);

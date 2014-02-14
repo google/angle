@@ -32,6 +32,7 @@ class ShaderExecutable;
 class Renderer;
 struct TranslatedAttribute;
 class UniformStorage;
+class DynamicHLSL;
 }
 
 namespace gl
@@ -144,8 +145,6 @@ class ProgramBinary : public RefCountObject
     void initAttributesByLayout();
     void sortAttributesByLayout(rx::TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS], int sortedSemanticIndices[MAX_VERTEX_ATTRIBS]) const;
 
-    static std::string decorateAttribute(const std::string &name);    // Prepend an underscore
-
     const UniformArray &getUniforms() const { return mUniforms; }
     const rx::UniformStorage &getVertexUniformStorage() const { return *mVertexUniformStorage; }
     const rx::UniformStorage &getFragmentUniformStorage() const { return *mFragmentUniformStorage; }
@@ -153,12 +152,7 @@ class ProgramBinary : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(ProgramBinary);
 
-    int packVaryings(InfoLog &infoLog, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader);
-    bool linkVaryings(InfoLog &infoLog, int registers, const sh::ShaderVariable *packing[][4],
-                      std::string& pixelHLSL, std::string& vertexHLSL,
-                      FragmentShader *fragmentShader, VertexShader *vertexShader);
-    std::string generateVaryingHLSL(FragmentShader *fragmentShader, const std::string &varyingSemantic) const;
-
+    bool linkVaryings(InfoLog &infoLog, FragmentShader *fragmentShader, VertexShader *vertexShader);
     bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
 
     typedef sh::BlockMemberInfoArray::const_iterator BlockInfoItr;
@@ -180,9 +174,6 @@ class ProgramBinary : public RefCountObject
     void defineOutputVariables(FragmentShader *fragmentShader);
     void initializeUniformStorage();
 
-    std::string generateGeometryShaderHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
-    std::string generatePointSpriteHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
-
     template <typename T>
     bool setUniform(GLint location, GLsizei count, const T* v, GLenum targetUniformType);
 
@@ -195,6 +186,7 @@ class ProgramBinary : public RefCountObject
     static TextureType getTextureType(GLenum samplerType, InfoLog &infoLog);
 
     rx::Renderer *const mRenderer;
+    DynamicHLSL *mDynamicHLSL;
 
     rx::ShaderExecutable *mPixelExecutable;
     rx::ShaderExecutable *mVertexExecutable;
@@ -222,10 +214,8 @@ class ProgramBinary : public RefCountObject
 
     UniformArray mUniforms;
     UniformBlockArray mUniformBlocks;
-    typedef std::vector<VariableLocation> UniformIndex;
-    UniformIndex mUniformIndex;
-    typedef std::map<int, VariableLocation> ShaderVariableIndex;
-    ShaderVariableIndex mOutputVariables;
+    std::vector<VariableLocation> mUniformIndex;
+    std::map<int, VariableLocation> mOutputVariables;
     rx::UniformStorage *mVertexUniformStorage;
     rx::UniformStorage *mFragmentUniformStorage;
 
@@ -236,6 +226,7 @@ class ProgramBinary : public RefCountObject
     static unsigned int issueSerial();
     static unsigned int mCurrentSerial;
 };
+
 }
 
 #endif   // LIBGLESV2_PROGRAM_BINARY_H_

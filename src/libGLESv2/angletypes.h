@@ -253,6 +253,12 @@ enum VertexConversionType
     VERTEX_CONVERT_BOTH = 3
 };
 
+enum D3DWorkaroundType
+{
+    ANGLE_D3D_WORKAROUND_NONE,
+    ANGLE_D3D_WORKAROUND_SM3_OPTIMIZER
+};
+
 }
 
 #endif // LIBGLESV2_ANGLETYPES_H_

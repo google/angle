@@ -140,16 +140,17 @@
     <ClInclude Include="..\..\src\libGLESv2\Query.h"/>
     <ClInclude Include="..\..\src\libGLESv2\ResourceManager.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Texture.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\DynamicHLSL.h"/>
     <ClInclude Include="..\..\src\libGLESv2\ProgramBinary.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Buffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\validationES2.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Fence.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\angletypes.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\VertexArray.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Uniform.h"/>
     <ClInclude Include="..\..\src\libGLESv2\constants.h"/>
     <ClInclude Include="..\..\src\libGLESv2\main.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Framebuffer.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\VertexArray.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\angletypes.h"/>
     <ClInclude Include="..\..\src\libGLESv2\formatutils.h"/>
     <ClInclude Include="..\..\src\libGLESv2\RenderbufferProxySet.h"/>
     <ClInclude Include="..\..\src\libGLESv2\validationES.h"/>
@@ -288,6 +289,7 @@
     <ClCompile Include="..\..\src\libGLESv2\libGLESv2.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\validationES2.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\precompiled.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\DynamicHLSL.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\queryconversions.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\HandleAllocator.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\formatutils.cpp"/>
@@ -353,8 +355,8 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\TextureStorage9.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\Fence9.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\Blit9.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\SwapChain9.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\VertexBuffer9.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\SwapChain9.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\formatutils9.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\Query9.cpp"/>
     <ClCompile Include="..\..\src\common\event_tracer.cpp"/>

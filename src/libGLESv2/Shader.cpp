@@ -125,6 +125,11 @@ const sh::ActiveInterfaceBlocks &Shader::getInterfaceBlocks() const
     return mActiveInterfaceBlocks;
 }
 
+std::vector<sh::Varying> &Shader::getVaryings()
+{
+    return mVaryings;
+}
+
 bool Shader::isCompiled() const
 {
     return !mHlsl.empty();
@@ -366,6 +371,16 @@ void Shader::compileToHLSL(void *compiler)
 
         TRACE("\n%s", mInfoLog.c_str());
     }
+}
+
+rx::D3DWorkaroundType Shader::getD3DWorkarounds() const
+{
+    if (mUsesDiscardRewriting)
+    {
+        return rx::ANGLE_D3D_WORKAROUND_SM3_OPTIMIZER;
+    }
+
+    return rx::ANGLE_D3D_WORKAROUND_NONE;
 }
 
 // [OpenGL ES SL 3.00.4] Section 11 p. 120
