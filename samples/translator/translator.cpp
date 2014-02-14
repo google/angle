@@ -340,7 +340,7 @@ void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType, bool mapLongV
             case SH_SAMPLER_EXTERNAL_OES: typeName = "GL_SAMPLER_EXTERNAL_OES"; break;
             default: assert(0);
         }
-        printf("%u: name:%s type:%s size:%d", i, name, typeName, size);
+        printf("%lu: name:%s type:%s size:%d", i, name, typeName, size);
         if (mapLongVariableNames)
             printf(" mapped name:%s", mappedName);
         printf("\n");
