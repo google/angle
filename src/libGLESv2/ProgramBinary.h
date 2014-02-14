@@ -212,6 +212,7 @@ class ProgramBinary : public RefCountObject
     rx::ShaderExecutable *mPixelExecutable;
 
     sh::Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
+    sh::Attribute mShaderAttributes[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];
     int mAttributesByLayout[MAX_VERTEX_ATTRIBS];
 
