@@ -293,32 +293,65 @@ public:
         return insert(level, *constant);
     }
 
-    bool insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name, TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0)
+    void insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name, TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0)
     {
+        if (ptype1->getBasicType() == EbtGSampler2D)
+        {
+            bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler2D), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler2D), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler2D), ptype2, ptype3, ptype4);
+            return;
+        }
+        else if (ptype1->getBasicType() == EbtGSampler3D)
+        {
+            bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler3D), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler3D), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler3D), ptype2, ptype3, ptype4);
+            return;
+        }
+        else if (ptype1->getBasicType() == EbtGSamplerCube)
+        {
+            bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSamplerCube), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISamplerCube), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSamplerCube), ptype2, ptype3, ptype4);
+            return;
+        }
+        else if (ptype1->getBasicType() == EbtGSampler2DArray)
+        {
+            bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler2DArray), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler2DArray), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler2DArray), ptype2, ptype3, ptype4);
+            return;
+        }
+
         TFunction *function = new TFunction(NewPoolTString(name), *rvalue);
 
         TParameter param1 = {NULL, ptype1};
         function->addParameter(param1);
 
-        if(ptype2)
+        if (ptype2)
         {
             TParameter param2 = {NULL, ptype2};
             function->addParameter(param2);
         }
 
-        if(ptype3)
+        if (ptype3)
         {
             TParameter param3 = {NULL, ptype3};
             function->addParameter(param3);
         }
 
-        if(ptype4)
+        if (ptype4)
         {
             TParameter param4 = {NULL, ptype4};
             function->addParameter(param4);
         }
 
-        return insert(level, *function);
+        insert(level, *function);
     }
 
     TSymbol *find(const TString &name, int shaderVersion, bool *builtIn = false, bool *sameScope = false);

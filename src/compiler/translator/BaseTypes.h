@@ -42,7 +42,8 @@ enum TBasicType
     EbtInt,
     EbtUInt,
     EbtBool,
-    EbtGuardSamplerBegin,  // non type:  see implementation of IsSampler()
+    EbtGVec4,              // non type: represents vec4, ivec4 and uvec4
+    EbtGuardSamplerBegin,  // non type: see implementation of IsSampler()
     EbtSampler2D,
     EbtSampler3D,
     EbtSamplerCube,
@@ -60,7 +61,11 @@ enum TBasicType
     EbtSampler2DShadow,
     EbtSamplerCubeShadow,
     EbtSampler2DArrayShadow,
-    EbtGuardSamplerEnd,    // non type:  see implementation of IsSampler()
+    EbtGuardSamplerEnd,    // non type: see implementation of IsSampler()
+    EbtGSampler2D,         // non type: represents sampler2D, isampler2D and usampler2D
+    EbtGSampler3D,         // non type: represents sampler3D, isampler3D and usampler3D
+    EbtGSamplerCube,       // non type: represents samplerCube, isamplerCube and usamplerCube
+    EbtGSampler2DArray,    // non type: represents sampler2DArray, isampler2DArray and usampler2DArray
     EbtStruct,
     EbtInterfaceBlock,
     EbtAddress,            // should be deprecated??
