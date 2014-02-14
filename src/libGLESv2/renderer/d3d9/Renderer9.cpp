@@ -1873,12 +1873,8 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
         }
     }
 
-    D3DCOLOR color = D3DCOLOR_ARGB(gl::unorm<8>(clearParams.colorFClearValue.alpha),
-                                   gl::unorm<8>(clearParams.colorFClearValue.red),
-                                   gl::unorm<8>(clearParams.colorFClearValue.green),
-                                   gl::unorm<8>(clearParams.colorFClearValue.blue));
     float depth = gl::clamp01(clearParams.depthClearValue);
-    int stencil = clearParams.stencilClearValue & 0x000000FF;
+    DWORD stencil = clearParams.stencilClearValue & 0x000000FF;
 
     unsigned int stencilUnmasked = 0x0;
     if (clearParams.clearStencil && frameBuffer->hasStencil())
@@ -1893,8 +1889,39 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
 
     const bool needMaskedStencilClear = clearParams.clearStencil &&
                                         (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
-    const bool needMaskedColorClear = clearColor && !(clearParams.colorMaskRed && clearParams.colorMaskGreen &&
-                                                      clearParams.colorMaskBlue && alphaUnmasked);
+
+    bool needMaskedColorClear = false;
+    D3DCOLOR color = D3DCOLOR_ARGB(255, 0, 0, 0);
+    if (clearColor)
+    {
+        gl::Renderbuffer *renderbuffer = frameBuffer->getFirstColorbuffer();
+        GLenum internalFormat = renderbuffer->getInternalFormat();
+        GLenum actualFormat = renderbuffer->getActualFormat();
+
+        GLuint clientVersion = getCurrentClientVersion();
+        GLuint internalRedBits = gl::GetRedBits(internalFormat, clientVersion);
+        GLuint internalGreenBits = gl::GetGreenBits(internalFormat, clientVersion);
+        GLuint internalBlueBits = gl::GetBlueBits(internalFormat, clientVersion);
+        GLuint internalAlphaBits = gl::GetAlphaBits(internalFormat, clientVersion);
+
+        GLuint actualRedBits = gl::GetRedBits(actualFormat, clientVersion);
+        GLuint actualGreenBits = gl::GetGreenBits(actualFormat, clientVersion);
+        GLuint actualBlueBits = gl::GetBlueBits(actualFormat, clientVersion);
+        GLuint actualAlphaBits = gl::GetAlphaBits(actualFormat, clientVersion);
+
+        color = D3DCOLOR_ARGB(gl::unorm<8>((internalAlphaBits == 0 && actualAlphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
+                              gl::unorm<8>((internalRedBits   == 0 && actualRedBits   > 0) ? 0.0f : clearParams.colorFClearValue.red),
+                              gl::unorm<8>((internalGreenBits == 0 && actualGreenBits > 0) ? 0.0f : clearParams.colorFClearValue.green),
+                              gl::unorm<8>((internalBlueBits  == 0 && actualBlueBits  > 0) ? 0.0f : clearParams.colorFClearValue.blue));
+
+        if ((internalRedBits   > 0 && !clearParams.colorMaskRed) ||
+            (internalGreenBits > 0 && !clearParams.colorMaskGreen) ||
+            (internalBlueBits  > 0 && !clearParams.colorMaskBlue) ||
+            (internalAlphaBits > 0 && !clearParams.colorMaskAlpha))
+        {
+            needMaskedColorClear = true;
+        }
+    }
 
     if (needMaskedColorClear || needMaskedStencilClear)
     {

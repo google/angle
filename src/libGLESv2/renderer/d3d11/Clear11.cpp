@@ -231,34 +231,32 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
                         "point to floating point values (color attachment %u has internal format 0x%X).", colorAttachment, internalFormat);
                 }
 
-                if ((gl::GetRedBits(internalFormat, clientVersion)   == 0 || !clearParams.colorMaskRed  ) &&
-                    (gl::GetGreenBits(internalFormat, clientVersion) == 0 || !clearParams.colorMaskGreen) &&
-                    (gl::GetBlueBits(internalFormat, clientVersion)  == 0 || !clearParams.colorMaskBlue ) &&
-                    (gl::GetAlphaBits(internalFormat, clientVersion) == 0 || !clearParams.colorMaskAlpha))
+                GLuint internalRedBits = gl::GetRedBits(internalFormat, clientVersion);
+                GLuint internalGreenBits = gl::GetGreenBits(internalFormat, clientVersion);
+                GLuint internalBlueBits = gl::GetBlueBits(internalFormat, clientVersion);
+                GLuint internalAlphaBits = gl::GetAlphaBits(internalFormat, clientVersion);
+
+                if ((internalRedBits   == 0 || !clearParams.colorMaskRed) &&
+                    (internalGreenBits == 0 || !clearParams.colorMaskGreen) &&
+                    (internalBlueBits  == 0 || !clearParams.colorMaskBlue) &&
+                    (internalAlphaBits == 0 || !clearParams.colorMaskAlpha))
                 {
                     // Every channel either does not exist in the render target or is masked out
                     continue;
                 }
                 else if (needScissoredClear || clearParams.colorClearType != GL_FLOAT ||
-                         (gl::GetRedBits(internalFormat, clientVersion)   > 0 && !clearParams.colorMaskRed  ) ||
-                         (gl::GetGreenBits(internalFormat, clientVersion) > 0 && !clearParams.colorMaskGreen) ||
-                         (gl::GetBlueBits(internalFormat, clientVersion)  > 0 && !clearParams.colorMaskBlue ) ||
-                         (gl::GetAlphaBits(internalFormat, clientVersion) > 0 && !clearParams.colorMaskAlpha))
+                         (internalRedBits   > 0 && !clearParams.colorMaskRed)   ||
+                         (internalGreenBits > 0 && !clearParams.colorMaskGreen) ||
+                         (internalBlueBits  > 0 && !clearParams.colorMaskBlue)  ||
+                         (internalAlphaBits > 0 && !clearParams.colorMaskAlpha))
                 {
                     // A scissored or masked clear is required
-                    maskedClearRenderTargets.push_back(renderTarget);
-                }
-                else if (((gl::GetRedBits(internalFormat, clientVersion)   == 0) && (gl::GetRedBits(actualFormat, clientVersion)   > 0))  ||
-                         ((gl::GetGreenBits(internalFormat, clientVersion) == 0) && (gl::GetGreenBits(actualFormat, clientVersion) > 0)) ||
-                         ((gl::GetBlueBits(internalFormat, clientVersion)  == 0) && (gl::GetBlueBits(actualFormat, clientVersion)  > 0)) ||
-                         ((gl::GetAlphaBits(internalFormat, clientVersion) == 0) && (gl::GetAlphaBits(actualFormat, clientVersion) > 0)))
-                {
-                    // The actual format has a channel that the internal format does not
                     maskedClearRenderTargets.push_back(renderTarget);
                 }
                 else
                 {
                     // ID3D11DeviceContext::ClearRenderTargetView is possible
+
                     ID3D11RenderTargetView *framebufferRTV = renderTarget->getRenderTargetView();
                     if (!framebufferRTV)
                     {
@@ -266,10 +264,21 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
                         return;
                     }
 
-                    const float clearValues[4] = { clearParams.colorFClearValue.red,
-                                                   clearParams.colorFClearValue.green,
-                                                   clearParams.colorFClearValue.blue,
-                                                   clearParams.colorFClearValue.alpha };
+                    // Check if the actual format has a channel that the internal format does not and set them to the
+                    // default values
+                    GLuint actualRedBits   = gl::GetRedBits(actualFormat, clientVersion);
+                    GLuint actualGreenBits = gl::GetGreenBits(actualFormat, clientVersion);
+                    GLuint actualBlueBits  = gl::GetBlueBits(actualFormat, clientVersion);
+                    GLuint actualAlphaBits = gl::GetAlphaBits(actualFormat, clientVersion);
+
+                    const float clearValues[4] =
+                    {
+                        ((internalRedBits   == 0 && actualRedBits   > 0) ? 0.0f : clearParams.colorFClearValue.red),
+                        ((internalGreenBits == 0 && actualGreenBits > 0) ? 0.0f : clearParams.colorFClearValue.green),
+                        ((internalBlueBits  == 0 && actualBlueBits  > 0) ? 0.0f : clearParams.colorFClearValue.blue),
+                        ((internalAlphaBits == 0 && actualAlphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
+                    };
+
                     deviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
                 }
             }
