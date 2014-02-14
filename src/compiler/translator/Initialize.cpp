@@ -5,7 +5,7 @@
 //
 
 //
-// Create strings that declare built-in definitions, add built-ins that
+// Create symbols that declare built-in definitions, add built-ins that
 // cannot be expressed in the files, and establish mappings between 
 // built-in functions and operators.
 //
@@ -385,90 +385,37 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
         symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "textureCubeLod", samplerCube, float3, float1);
     }
 
-    TType *sampler3D = new TType(EbtSampler3D);
-    TType *sampler2DArray = new TType(EbtSampler2DArray);
+    TType *gvec4 = new TType(EbtGVec4);
+
+    TType *gsampler2D = new TType(EbtGSampler2D);
+    TType *gsamplerCube = new TType(EbtGSamplerCube);
+    TType *gsampler3D = new TType(EbtGSampler3D);
+    TType *gsampler2DArray = new TType(EbtGSampler2DArray);
 
     //
     // Texture Functions for GLSL ES 3.0
     //
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", sampler2D, float2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", sampler3D, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", samplerCube, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", sampler2DArray, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler2D, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler2D, float4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler3D, float4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureLod", sampler2D, float2, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureLod", sampler3D, float3, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureLod", samplerCube, float3, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureLod", sampler2DArray, float3, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "texture", gsampler2D, float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "texture", gsampler3D, float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "texture", gsamplerCube, float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "texture", gsampler2DArray, float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureProj", gsampler2D, float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureProj", gsampler2D, float4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureProj", gsampler3D, float4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureLod", gsampler2D, float2, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureLod", gsampler3D, float3, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureLod", gsamplerCube, float3, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureLod", gsampler2DArray, float3, float1);
 
     if (type == SH_FRAGMENT_SHADER)
     {
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", sampler2D, float2, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", sampler3D, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", samplerCube, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", sampler2DArray, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler2D, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler2D, float4, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler3D, float4, float1);
-    }
-
-    TType *isampler2D = new TType(EbtISampler2D);
-    TType *isampler3D = new TType(EbtISampler3D);
-    TType *isamplerCube = new TType(EbtISamplerCube);
-    TType *isampler2DArray = new TType(EbtISampler2DArray);
-
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler2D, float2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler3D, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isamplerCube, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler2DArray, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler2D, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler2D, float4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler3D, float4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureLod", isampler2D, float2, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureLod", isampler3D, float3, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureLod", isamplerCube, float3, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureLod", isampler2DArray, float3, float1);
-
-    if (type == SH_FRAGMENT_SHADER)
-    {
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler2D, float2, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler3D, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isamplerCube, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler2DArray, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler2D, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler2D, float4, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler3D, float4, float1);
-    }
-
-    TType *usampler2D = new TType(EbtUSampler2D);
-    TType *usampler3D = new TType(EbtUSampler3D);
-    TType *usamplerCube = new TType(EbtUSamplerCube);
-    TType *usampler2DArray = new TType(EbtUSampler2DArray);
-    TType *uint4 = new TType(EbtUInt, 4);
-
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usampler2D, float2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usampler3D, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usamplerCube, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usampler2DArray, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler2D, float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler2D, float4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler3D, float4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureLod", usampler2D, float2, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureLod", usampler3D, float3, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureLod", usamplerCube, float3, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureLod", usampler2DArray, float3, float1);
-
-    if (type == SH_FRAGMENT_SHADER)
-    {
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usampler2D, float2, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usampler3D, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usamplerCube, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usampler2DArray, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler2D, float3, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler2D, float4, float1);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler3D, float4, float1);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "texture", gsampler2D, float2, float1);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "texture", gsampler3D, float3, float1);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "texture", gsamplerCube, float3, float1);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "texture", gsampler2DArray, float3, float1);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureProj", gsampler2D, float3, float1);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureProj", gsampler2D, float4, float1);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureProj", gsampler3D, float4, float1);
     }
 
     TType *sampler2DShadow = new TType(EbtSampler2DShadow);
@@ -489,18 +436,10 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "textureProj", sampler2DShadow, float4, float1);
     }
 
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", sampler2D, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", isampler2D, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", usampler2D, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", sampler3D, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", isampler3D, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", usampler3D, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", samplerCube, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", isamplerCube, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", usamplerCube, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", sampler2DArray, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", isampler2DArray, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", usampler2DArray, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", gsampler2D, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", gsampler3D, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", gsamplerCube, int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", gsampler2DArray, int1);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", sampler2DShadow, int1);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", samplerCubeShadow, int1);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", sampler2DArrayShadow, int1);
@@ -523,26 +462,18 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "fwidth", float4);
     }
 
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler2D, float2, int2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler2D, float2, int2, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler2D, float2, int2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler2D, float2, int2, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler2D, float2, int2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler2D, float2, int2, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler3D, float3, int3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler3D, float3, int3, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler3D, float3, int3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler3D, float3, int3, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler3D, float3, int3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler3D, float3, int3, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "textureOffset", sampler2DShadow, float3, int3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "textureOffset", sampler2DShadow, float3, int3, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler2DArray, float3, int2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureOffset", sampler2DArray, float3, int2, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler2DArray, float3, int2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureOffset", isampler2DArray, float3, int2, float1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler2DArray, float3, int2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureOffset", usampler2DArray, float3, int2, float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureOffset", gsampler2D, float2, int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureOffset", gsampler3D, float3, int3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "textureOffset", sampler2DShadow, float3, int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureOffset", gsampler2DArray, float3, int2);
+
+    if(type == SH_FRAGMENT_SHADER)
+    {
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureOffset", gsampler2D, float2, int2, float1);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureOffset", gsampler3D, float3, int3, float1);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "textureOffset", sampler2DShadow, float3, int2, float1);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureOffset", gsampler2DArray, float3, int2, float1);
+    }
 
     //
     // Depth range in window coordinates
