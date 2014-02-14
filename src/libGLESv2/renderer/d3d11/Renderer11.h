@@ -75,7 +75,7 @@ class Renderer11 : public Renderer
 
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count);
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
-    virtual void applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard);
+    virtual void applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard, const gl::VertexFormat inputLayout[]);
     virtual void applyUniforms(const gl::ProgramBinary &programBinary);
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],
                                      GLint first, GLsizei count, GLsizei instances);

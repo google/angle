@@ -30,6 +30,7 @@
 #include "libGLESv2/renderer/d3d9/BufferStorage9.h"
 #include "libGLESv2/renderer/d3d9/Query9.h"
 #include "libGLESv2/renderer/d3d9/Fence9.h"
+#include "libGLESv2/angletypes.h"
 
 #include "libEGL/Display.h"
 
@@ -1722,11 +1723,11 @@ void Renderer9::drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indi
     }
 }
 
-void Renderer9::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard)
+void Renderer9::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard, const gl::VertexFormat inputLayout[])
 {
     ASSERT(!rasterizerDiscard);
 
-    ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
+    ShaderExecutable *vertexExe = programBinary->getVertexExecutableForInputLayout(inputLayout);
     ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
 
     IDirect3DVertexShader9 *vertexShader = (vertexExe ? ShaderExecutable9::makeShaderExecutable9(vertexExe)->getVertexShader() : NULL);

@@ -50,11 +50,52 @@ unsigned int ParseAndStripArrayIndex(std::string* name)
     return subscript;
 }
 
+void GetInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAttributes, VertexFormat inputLayout[MAX_VERTEX_ATTRIBS])
+{
+    for (size_t attributeIndex = 0; attributeIndex < shaderAttributes.size(); attributeIndex++)
+    {
+        const sh::Attribute &shaderAttr = shaderAttributes[attributeIndex];
+        VertexFormat *defaultFormat = &inputLayout[attributeIndex];
+
+        if (shaderAttr.type != GL_NONE)
+        {
+            defaultFormat->mType        = UniformComponentType(shaderAttr.type);
+            defaultFormat->mNormalized  = false;
+            defaultFormat->mPureInteger = (defaultFormat->mType != GL_FLOAT); // note: inputs can not be bool
+            defaultFormat->mComponents  = UniformComponentCount(shaderAttr.type);
+        }
+    }
+}
+
 }
 
 VariableLocation::VariableLocation(const std::string &name, unsigned int element, unsigned int index) 
     : name(name), element(element), index(index)
 {
+}
+
+ProgramBinary::VertexExecutable::VertexExecutable(rx::Renderer *const renderer,
+                                                  const VertexFormat inputLayout[],
+                                                  rx::ShaderExecutable *shaderExecutable)
+    : mShaderExecutable(shaderExecutable)
+{
+    for (size_t attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
+    {
+        mInputs[attributeIndex] = inputLayout[attributeIndex];
+    }
+}
+
+bool ProgramBinary::VertexExecutable::matchesInputLayout(const VertexFormat attributes[]) const
+{
+    for (size_t attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
+    {
+        if (mInputs[attributeIndex] != attributes[attributeIndex])
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 unsigned int ProgramBinary::mCurrentSerial = 1;
@@ -63,8 +104,8 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer)
     : RefCountObject(0),
       mRenderer(renderer),
       mDynamicHLSL(NULL),
+      mVertexWorkarounds(rx::ANGLE_D3D_WORKAROUND_NONE),
       mPixelExecutable(NULL),
-      mVertexExecutable(NULL),
       mGeometryExecutable(NULL),
       mUsedVertexSamplerRange(0),
       mUsedPixelSamplerRange(0),
@@ -95,9 +136,14 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer)
 
 ProgramBinary::~ProgramBinary()
 {
-    SafeDelete(mPixelExecutable);
-    SafeDelete(mVertexExecutable);
+    while (!mVertexExecutables.empty())
+    {
+        delete mVertexExecutables.back();
+        mVertexExecutables.pop_back();
+    }
+
     SafeDelete(mGeometryExecutable);
+    SafeDelete(mPixelExecutable);
 
     while (!mUniforms.empty())
     {
@@ -136,9 +182,32 @@ rx::ShaderExecutable *ProgramBinary::getPixelExecutable() const
     return mPixelExecutable;
 }
 
-rx::ShaderExecutable *ProgramBinary::getVertexExecutable() const
+rx::ShaderExecutable *ProgramBinary::getVertexExecutableForInputLayout(const VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS])
 {
-    return mVertexExecutable;
+    for (size_t executableIndex = 0; executableIndex < mVertexExecutables.size(); executableIndex++)
+    {
+        if (mVertexExecutables[executableIndex]->matchesInputLayout(inputLayout))
+        {
+            return mVertexExecutables[executableIndex]->shaderExecutable();
+        }
+    }
+
+    // Generate new vertex executable
+    InfoLog tempInfoLog;
+    rx::ShaderExecutable *vertexExecutable = mRenderer->compileToExecutable(tempInfoLog, mVertexHLSL.c_str(), rx::SHADER_VERTEX, mVertexWorkarounds);
+
+    if (!vertexExecutable)
+    {
+        std::vector<char> tempCharBuffer(tempInfoLog.getLength()+3);
+        tempInfoLog.getLog(tempInfoLog.getLength(), NULL, &tempCharBuffer[0]);
+        ERR("Error compiling dynamic vertex executable:\n%s\n", &tempCharBuffer[0]);
+    }
+    else
+    {
+        mVertexExecutables.push_back(new VertexExecutable(mRenderer, inputLayout, vertexExecutable));
+    }
+
+    return vertexExecutable;
 }
 
 rx::ShaderExecutable *ProgramBinary::getGeometryExecutable() const
@@ -1091,14 +1160,72 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         stream.read(&mUniformIndex[i].index);
     }
 
+    stream.read(&mVertexHLSL);
+    stream.read(&mVertexWorkarounds);
+
+    unsigned int vertexShaderCount;
+    stream.read(&vertexShaderCount);
+
+    for (unsigned int vertexShaderIndex = 0; vertexShaderIndex < vertexShaderCount; vertexShaderIndex++)
+    {
+        VertexFormat vertexInputs[gl::MAX_VERTEX_ATTRIBS];
+
+        for (size_t inputIndex = 0; inputIndex < gl::MAX_VERTEX_ATTRIBS; inputIndex++)
+        {
+            VertexFormat *vertexInput = &vertexInputs[inputIndex];
+            stream.read(&vertexInput->mType);
+            stream.read(&vertexInput->mNormalized);
+            stream.read(&vertexInput->mComponents);
+            stream.read(&vertexInput->mPureInteger);
+        }
+
+        unsigned int vertexShaderSize;
+        stream.read(&vertexShaderSize);
+
+        const char *vertexShaderFunction = (const char*) binary + stream.offset();
+
+        rx::ShaderExecutable *shaderExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(vertexShaderFunction),
+                                                                           vertexShaderSize, rx::SHADER_VERTEX);
+        if (!shaderExecutable)
+        {
+            infoLog.append("Could not create vertex shader.");
+            return false;
+        }
+
+        mVertexExecutables.push_back(new VertexExecutable(mRenderer, vertexInputs, shaderExecutable));
+
+        stream.skip(vertexShaderSize);
+    }
+
     unsigned int pixelShaderSize;
     stream.read(&pixelShaderSize);
 
-    unsigned int vertexShaderSize;
-    stream.read(&vertexShaderSize);
+    const char *pixelShaderFunction = (const char*) binary + stream.offset();
+    mPixelExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(pixelShaderFunction),
+                                                 pixelShaderSize, rx::SHADER_PIXEL);
+    if (!mPixelExecutable)
+    {
+        infoLog.append("Could not create pixel shader.");
+        return false;
+    }
+    stream.skip(pixelShaderSize);
 
     unsigned int geometryShaderSize;
     stream.read(&geometryShaderSize);
+
+    if (geometryShaderSize > 0)
+    {
+        const char *geometryShaderFunction = (const char*) binary + stream.offset();
+        mGeometryExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(geometryShaderFunction),
+                                                        geometryShaderSize, rx::SHADER_GEOMETRY);
+        if (!mGeometryExecutable)
+        {
+            infoLog.append("Could not create geometry shader.");
+            SafeDelete(mPixelExecutable);
+            return false;
+        }
+        stream.skip(geometryShaderSize);
+    }
 
     const char *ptr = (const char*) binary + stream.offset();
 
@@ -1110,52 +1237,6 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     {
         infoLog.append("Invalid program binary.");
         return false;
-    }
-
-    const char *pixelShaderFunction = ptr;
-    ptr += pixelShaderSize;
-
-    const char *vertexShaderFunction = ptr;
-    ptr += vertexShaderSize;
-
-    const char *geometryShaderFunction = geometryShaderSize > 0 ? ptr : NULL;
-    ptr += geometryShaderSize;
-
-    mPixelExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(pixelShaderFunction),
-                                                 pixelShaderSize, rx::SHADER_PIXEL);
-    if (!mPixelExecutable)
-    {
-        infoLog.append("Could not create pixel shader.");
-        return false;
-    }
-
-    mVertexExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(vertexShaderFunction),
-                                                  vertexShaderSize, rx::SHADER_VERTEX);
-    if (!mVertexExecutable)
-    {
-        infoLog.append("Could not create vertex shader.");
-        delete mPixelExecutable;
-        mPixelExecutable = NULL;
-        return false;
-    }
-
-    if (geometryShaderFunction != NULL && geometryShaderSize > 0)
-    {
-        mGeometryExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(geometryShaderFunction),
-                                                        geometryShaderSize, rx::SHADER_GEOMETRY);
-        if (!mGeometryExecutable)
-        {
-            infoLog.append("Could not create geometry shader.");
-            delete mPixelExecutable;
-            mPixelExecutable = NULL;
-            delete mVertexExecutable;
-            mVertexExecutable = NULL;
-            return false;
-        }
-    }
-    else
-    {
-        mGeometryExecutable = NULL;
     }
 
     initializeUniformStorage();
@@ -1200,7 +1281,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     stream.write(mShaderVersion);
 
     stream.write(mUniforms.size());
-    for (unsigned int uniformIndex = 0; uniformIndex < mUniforms.size(); ++uniformIndex)
+    for (size_t uniformIndex = 0; uniformIndex < mUniforms.size(); ++uniformIndex)
     {
         const Uniform &uniform = *mUniforms[uniformIndex];
 
@@ -1222,7 +1303,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     }
 
     stream.write(mUniformBlocks.size());
-    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < mUniformBlocks.size(); ++uniformBlockIndex)
+    for (size_t uniformBlockIndex = 0; uniformBlockIndex < mUniformBlocks.size(); ++uniformBlockIndex)
     {
         const UniformBlock& uniformBlock = *mUniformBlocks[uniformBlockIndex];
 
@@ -1241,28 +1322,60 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     }
 
     stream.write(mUniformIndex.size());
-    for (unsigned int i = 0; i < mUniformIndex.size(); ++i)
+    for (size_t i = 0; i < mUniformIndex.size(); ++i)
     {
         stream.write(mUniformIndex[i].name);
         stream.write(mUniformIndex[i].element);
         stream.write(mUniformIndex[i].index);
     }
 
+    stream.write(mVertexHLSL);
+    stream.write(mVertexWorkarounds);
+
+    UINT vertexShadersTotalSize = 0;
+
+    stream.write(mVertexExecutables.size());
+    for (size_t vertexExecutableIndex = 0; vertexExecutableIndex < mVertexExecutables.size(); vertexExecutableIndex++)
+    {
+        VertexExecutable *vertexExecutable = mVertexExecutables[vertexExecutableIndex];
+
+        for (size_t inputIndex = 0; inputIndex < gl::MAX_VERTEX_ATTRIBS; inputIndex++)
+        {
+            const VertexFormat &vertexInput = vertexExecutable->inputs()[inputIndex];
+            stream.write(vertexInput.mType);
+            stream.write(vertexInput.mNormalized);
+            stream.write(vertexInput.mComponents);
+            stream.write(vertexInput.mPureInteger);
+        }
+
+        UINT vertexShaderSize = vertexExecutable->shaderExecutable()->getLength();
+        stream.write(vertexShaderSize);
+
+        unsigned char *vertexBlob = static_cast<unsigned char *>(vertexExecutable->shaderExecutable()->getFunction());
+        stream.write(vertexBlob, vertexShaderSize);
+    }
+
     UINT pixelShaderSize = mPixelExecutable->getLength();
     stream.write(pixelShaderSize);
 
-    UINT vertexShaderSize = mVertexExecutable->getLength();
-    stream.write(vertexShaderSize);
+    unsigned char *pixelBlob = static_cast<unsigned char *>(mPixelExecutable->getFunction());
+    stream.write(pixelBlob, pixelShaderSize);
 
     UINT geometryShaderSize = (mGeometryExecutable != NULL) ? mGeometryExecutable->getLength() : 0;
     stream.write(geometryShaderSize);
+
+    if (mGeometryExecutable != NULL && geometryShaderSize > 0)
+    {
+        unsigned char *geometryBlob = static_cast<unsigned char *>(mGeometryExecutable->getFunction());
+        stream.write(geometryBlob, geometryShaderSize);
+    }
 
     GUID identifier = mRenderer->getAdapterIdentifier();
 
     GLsizei streamLength = stream.length();
     const void *streamData = stream.data();
 
-    GLsizei totalLength = streamLength + sizeof(GUID) + pixelShaderSize + vertexShaderSize + geometryShaderSize;
+    GLsizei totalLength = streamLength + sizeof(GUID);
     if (totalLength > bufSize)
     {
         if (length)
@@ -1282,18 +1395,6 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
 
         memcpy(ptr, &identifier, sizeof(GUID));
         ptr += sizeof(GUID);
-
-        memcpy(ptr, mPixelExecutable->getFunction(), pixelShaderSize);
-        ptr += pixelShaderSize;
-
-        memcpy(ptr, mVertexExecutable->getFunction(), vertexShaderSize);
-        ptr += vertexShaderSize;
-
-        if (mGeometryExecutable != NULL && geometryShaderSize > 0)
-        {
-            memcpy(ptr, mGeometryExecutable->getFunction(), geometryShaderSize);
-            ptr += geometryShaderSize;
-        }
 
         ASSERT(ptr - totalLength == binary);
     }
@@ -1334,7 +1435,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     mShaderVersion = vertexShader->getShaderVersion();
 
     std::string pixelHLSL = fragmentShader->getHLSL();
-    std::string vertexHLSL = vertexShader->getHLSL();
+    mVertexHLSL = vertexShader->getHLSL();
+    mVertexWorkarounds = vertexShader->getD3DWorkarounds();
 
     // Map the varyings to the register file
     const sh::ShaderVariable *packing[IMPLEMENTATION_MAX_VARYING_VECTORS][4] = {NULL};
@@ -1351,7 +1453,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     }
 
     mUsesPointSize = vertexShader->usesPointSize();
-    if (!mDynamicHLSL->generateShaderLinkHLSL(infoLog, registers, packing, pixelHLSL, vertexHLSL, fragmentShader, vertexShader, &mOutputVariables))
+    if (!mDynamicHLSL->generateShaderLinkHLSL(infoLog, registers, packing, pixelHLSL, mVertexHLSL,
+                                              fragmentShader, vertexShader, &mOutputVariables))
     {
         return false;
     }
@@ -1383,8 +1486,11 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 
     if (success)
     {
-        mVertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), rx::SHADER_VERTEX, vertexShader->getD3DWorkarounds());
-        mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), rx::SHADER_PIXEL, vertexShader->getD3DWorkarounds());
+        VertexFormat defaultInputLayout[MAX_VERTEX_ATTRIBS];
+        GetInputLayoutFromShader(vertexShader->activeAttributes(), defaultInputLayout);
+
+        rx::ShaderExecutable *defaultVertexExecutable = getVertexExecutableForInputLayout(defaultInputLayout);
+        mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), rx::SHADER_PIXEL, fragmentShader->getD3DWorkarounds());
 
         if (usesGeometryShader())
         {
@@ -1392,17 +1498,19 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
             mGeometryExecutable = mRenderer->compileToExecutable(infoLog, geometryHLSL.c_str(), rx::SHADER_GEOMETRY, rx::ANGLE_D3D_WORKAROUND_NONE);
         }
 
-        if (!mVertexExecutable || !mPixelExecutable || (usesGeometryShader() && !mGeometryExecutable))
+        if (!defaultVertexExecutable || !mPixelExecutable || (usesGeometryShader() && !mGeometryExecutable))
         {
             infoLog.append("Failed to create D3D shaders.");
             success = false;
 
-            delete mVertexExecutable;
-            mVertexExecutable = NULL;
-            delete mPixelExecutable;
-            mPixelExecutable = NULL;
-            delete mGeometryExecutable;
-            mGeometryExecutable = NULL;
+            while (!mVertexExecutables.empty())
+            {
+                delete mVertexExecutables.back();
+                mVertexExecutables.pop_back();
+            }
+
+            SafeDelete(mGeometryExecutable);
+            SafeDelete(mPixelExecutable);
         }
     }
 

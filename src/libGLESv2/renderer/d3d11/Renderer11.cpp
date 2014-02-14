@@ -1403,9 +1403,9 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
     }
 }
 
-void Renderer11::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard)
+void Renderer11::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard, const gl::VertexFormat inputLayout[])
 {
-    ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
+    ShaderExecutable *vertexExe = programBinary->getVertexExecutableForInputLayout(inputLayout);
     ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
     ShaderExecutable *geometryExe = programBinary->getGeometryExecutable();
 

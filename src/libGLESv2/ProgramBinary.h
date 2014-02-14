@@ -25,6 +25,7 @@
 #include "libGLESv2/Uniform.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Constants.h"
+#include "libGLESv2/renderer/VertexDataManager.h"
 
 namespace rx
 {
@@ -65,7 +66,7 @@ class ProgramBinary : public RefCountObject
     ~ProgramBinary();
 
     rx::ShaderExecutable *getPixelExecutable() const;
-    rx::ShaderExecutable *getVertexExecutable() const;
+    rx::ShaderExecutable *getVertexExecutableForInputLayout(const VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS]);
     rx::ShaderExecutable *getGeometryExecutable() const;
 
     GLuint getAttributeLocation(const char *name);
@@ -185,12 +186,30 @@ class ProgramBinary : public RefCountObject
 
     static TextureType getTextureType(GLenum samplerType, InfoLog &infoLog);
 
+    class VertexExecutable
+    {
+      public:
+        VertexExecutable(rx::Renderer *const renderer,
+                         const VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS],
+                         rx::ShaderExecutable *shaderExecutable);
+        bool matchesInputLayout(const VertexFormat attributes[gl::MAX_VERTEX_ATTRIBS]) const;
+
+        const VertexFormat *inputs() const { return mInputs; }
+        rx::ShaderExecutable *shaderExecutable() const { return mShaderExecutable; }
+
+      private:
+        VertexFormat mInputs[gl::MAX_VERTEX_ATTRIBS];
+        rx::ShaderExecutable *mShaderExecutable;
+    };
+
     rx::Renderer *const mRenderer;
     DynamicHLSL *mDynamicHLSL;
 
-    rx::ShaderExecutable *mPixelExecutable;
-    rx::ShaderExecutable *mVertexExecutable;
+    std::string mVertexHLSL;
+    rx::D3DWorkaroundType mVertexWorkarounds;
+    std::vector<VertexExecutable *> mVertexExecutables;
     rx::ShaderExecutable *mGeometryExecutable;
+    rx::ShaderExecutable *mPixelExecutable;
 
     sh::Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];

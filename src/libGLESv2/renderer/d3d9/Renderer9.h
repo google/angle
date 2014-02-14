@@ -58,17 +58,6 @@ class Renderer9 : public Renderer
     IDirect3DPixelShader9 *createPixelShader(const DWORD *function, size_t length);
     HRESULT createVertexBuffer(UINT Length, DWORD Usage, IDirect3DVertexBuffer9 **ppVertexBuffer);
     HRESULT createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, IDirect3DIndexBuffer9 **ppIndexBuffer);
-#if 0
-    void *createTexture2D();
-    void *createTextureCube();
-    void *createQuery();
-    void *createIndexBuffer();
-    void *createVertexbuffer();
-
-    // state setup
-    void applyShaders();
-    void applyConstants();
-#endif
     virtual void generateSwizzle(gl::Texture *texture);
     virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
     virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
@@ -86,7 +75,7 @@ class Renderer9 : public Renderer
                              bool ignoreViewport);
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
-    virtual void applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard);
+    virtual void applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard, const gl::VertexFormat inputLayout[]);
     virtual void applyUniforms(const gl::ProgramBinary &programBinary);
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount);
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],

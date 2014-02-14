@@ -22,6 +22,21 @@
 namespace rx
 {
 
+static void GetInputLayout(const TranslatedAttribute translatedAttributes[gl::MAX_VERTEX_ATTRIBS],
+                           gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS])
+{
+    for (unsigned int attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
+    {
+        const TranslatedAttribute &translatedAttribute = translatedAttributes[attributeIndex];
+
+        if (translatedAttributes[attributeIndex].active)
+        {
+            inputLayout[attributeIndex] = gl::VertexFormat(*translatedAttribute.attribute,
+                                                           translatedAttribute.currentValueType);
+        }
+    }
+}
+
 const unsigned int InputLayoutCache::kMaxInputLayouts = 1024;
 
 InputLayoutCache::InputLayoutCache() : mInputLayoutMap(kMaxInputLayouts, hashInputLayout, compareInputLayouts)
@@ -135,7 +150,9 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
     }
     else
     {
-        ShaderExecutable11 *shader = ShaderExecutable11::makeShaderExecutable11(programBinary->getVertexExecutable());
+        gl::VertexFormat shaderInputLayout[gl::MAX_VERTEX_ATTRIBS];
+        GetInputLayout(attributes, shaderInputLayout);
+        ShaderExecutable11 *shader = ShaderExecutable11::makeShaderExecutable11(programBinary->getVertexExecutableForInputLayout(shaderInputLayout));
 
         D3D11_INPUT_ELEMENT_DESC descs[gl::MAX_VERTEX_ATTRIBS];
         for (unsigned int j = 0; j < ilKey.elementCount; ++j)

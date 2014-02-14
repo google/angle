@@ -2407,9 +2407,14 @@ void Context::applyState(GLenum drawMode)
 }
 
 // Applies the shaders and shader constants to the Direct3D 9 device
-void Context::applyShaders(ProgramBinary *programBinary, bool rasterizerDiscard)
+void Context::applyShaders(ProgramBinary *programBinary)
 {
-    mRenderer->applyShaders(programBinary, rasterizerDiscard);
+    const VertexAttribute *vertexAttributes = getCurrentVertexArray()->getVertexAttributes();
+
+    VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS];
+    VertexFormat::GetInputLayout(inputLayout, programBinary, vertexAttributes, mState.vertexAttribCurrentValues);
+
+    mRenderer->applyShaders(programBinary, mState.rasterizer.rasterizerDiscard, inputLayout);
 
     programBinary->applyUniforms();
 }
@@ -2879,7 +2884,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
         return gl::error(err);
     }
 
-    applyShaders(programBinary, mState.rasterizer.rasterizerDiscard);
+    applyShaders(programBinary);
     applyTextures(programBinary);
 
     if (!applyUniformBuffers())
@@ -2942,7 +2947,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
         return gl::error(err);
     }
 
-    applyShaders(programBinary, mState.rasterizer.rasterizerDiscard);
+    applyShaders(programBinary);
     applyTextures(programBinary);
 
     if (!applyUniformBuffers())
