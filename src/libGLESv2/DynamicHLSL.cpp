@@ -71,6 +71,8 @@ std::string ArrayString(unsigned int i)
     return (i == GL_INVALID_INDEX ? "" : "[" + Str(i) + "]");
 }
 
+const std::string DynamicHLSL::VERTEX_ATTRIBUTE_STUB_STRING = "@@ VERTEX ATTRIBUTES @@";
+
 DynamicHLSL::DynamicHLSL(rx::Renderer *const renderer)
     : mRenderer(renderer)
 {
@@ -270,6 +272,49 @@ std::string DynamicHLSL::generateVaryingHLSL(FragmentShader *fragmentShader, con
     return varyingHLSL;
 }
 
+std::string DynamicHLSL::generateInputLayoutHLSL(const VertexFormat inputLayout[], const sh::Attribute shaderAttributes[]) const
+{
+    std::string vertexHLSL;
+
+    vertexHLSL += "struct VS_INPUT\n"
+                  "{\n";
+
+    int semanticIndex = 0;
+    for (unsigned int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    {
+        const sh::Attribute &attribute = shaderAttributes[attributeIndex];
+
+        if (!attribute.name.empty())
+        {
+            vertexHLSL += "    " + gl_d3d::TypeString(TransposeMatrixType(attribute.type)) + " ";
+            vertexHLSL += decorateAttribute(attribute.name) + " : TEXCOORD" + Str(semanticIndex) + ";\n";
+
+            semanticIndex += AttributeRegisterCount(attribute.type);
+        }
+    }
+
+    vertexHLSL += "};\n"
+                  "\n"
+                  "void initAttributes(VS_INPUT input)\n"
+                  "{\n";
+
+    for (unsigned int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    {
+        const sh::ShaderVariable &attribute = shaderAttributes[attributeIndex];
+
+        if (!attribute.name.empty())
+        {
+            vertexHLSL += "    " + decorateAttribute(attribute.name) + " = ";
+            vertexHLSL += generateAttributeConversionHLSL(inputLayout[attributeIndex], attribute);
+            vertexHLSL += "(input." + decorateAttribute(attribute.name) + ");\n";
+        }
+    }
+
+    vertexHLSL += "}\n";
+
+    return vertexHLSL;
+}
+
 bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const sh::ShaderVariable *packing[][4],
                                          std::string& pixelHLSL, std::string& vertexHLSL,
                                          FragmentShader *fragmentShader, VertexShader *vertexShader,
@@ -341,23 +386,10 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
         }
     }
 
-    vertexHLSL += "struct VS_INPUT\n"
-                  "{\n";
+    // Add stub string to be replaced when shader is dynamically defined by its layout
+    vertexHLSL += "\n" + VERTEX_ATTRIBUTE_STUB_STRING + "\n";
 
-    int semanticIndex = 0;
-    const std::vector<sh::Attribute> &activeAttributes = vertexShader->mActiveAttributes;
-    for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
-    {
-        const sh::Attribute &attribute = activeAttributes[attributeIndex];
-        vertexHLSL += "    " + gl_d3d::TypeString(TransposeMatrixType(attribute.type)) + " ";
-        vertexHLSL += decorateAttribute(attribute.name) + " : TEXCOORD" + Str(semanticIndex) + ";\n";
-
-        semanticIndex += AttributeRegisterCount(attribute.type);
-    }
-
-    vertexHLSL += "};\n"
-                  "\n"
-                  "struct VS_OUTPUT\n"
+    vertexHLSL += "struct VS_OUTPUT\n"
                   "{\n";
 
     if (shaderModel < 4)
@@ -385,20 +417,8 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
     vertexHLSL += "};\n"
                   "\n"
                   "VS_OUTPUT main(VS_INPUT input)\n"
-                  "{\n";
-
-    for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
-    {
-        const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
-        vertexHLSL += "    " + decorateAttribute(attribute.name) + " = ";
-
-        if (IsMatrixType(attribute.type))   // Matrix
-        {
-            vertexHLSL += "transpose";
-        }
-
-        vertexHLSL += "(input." + decorateAttribute(attribute.name) + ");\n";
-    }
+                  "{\n"
+                  "    initAttributes(input);\n";
 
     if (shaderModel >= 4)
     {
@@ -880,6 +900,20 @@ std::string DynamicHLSL::decorateAttribute(const std::string &name)
     }
 
     return name;
+}
+
+std::string DynamicHLSL::generateAttributeConversionHLSL(const VertexFormat &vertexFormat, const sh::ShaderVariable &shaderAttrib) const
+{
+    // Matrix
+    if (IsMatrixType(shaderAttrib.type))
+    {
+        return "transpose";
+    }
+
+    // TODO: un-normalized integer data
+
+    // No conversion necessary
+    return "";
 }
 
 }

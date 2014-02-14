@@ -192,9 +192,17 @@ rx::ShaderExecutable *ProgramBinary::getVertexExecutableForInputLayout(const Ver
         }
     }
 
+    // Generate new dynamic layout with attribute conversions
+    const std::string &layoutHLSL = mDynamicHLSL->generateInputLayoutHLSL(inputLayout, mShaderAttributes);
+
+    // Generate new shader source by replacing the attributes stub with the defined input layout
+    std::string vertexHLSL = mVertexHLSL;
+    size_t insertPos = vertexHLSL.find(DynamicHLSL::VERTEX_ATTRIBUTE_STUB_STRING);
+    vertexHLSL.replace(insertPos, DynamicHLSL::VERTEX_ATTRIBUTE_STUB_STRING.length(), layoutHLSL);
+
     // Generate new vertex executable
     InfoLog tempInfoLog;
-    rx::ShaderExecutable *vertexExecutable = mRenderer->compileToExecutable(tempInfoLog, mVertexHLSL.c_str(), rx::SHADER_VERTEX, mVertexWorkarounds);
+    rx::ShaderExecutable *vertexExecutable = mRenderer->compileToExecutable(tempInfoLog, vertexHLSL.c_str(), rx::SHADER_VERTEX, mVertexWorkarounds);
 
     if (!vertexExecutable)
     {
