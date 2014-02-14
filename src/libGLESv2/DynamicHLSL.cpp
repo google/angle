@@ -14,45 +14,9 @@
 #include "libGLESv2/renderer/Renderer.h"
 #include "common/utilities.h"
 #include "libGLESv2/ProgramBinary.h"
+#include "libGLESv2/formatutils.h"
 
 #include "compiler/translator/HLSLLayoutEncoder.h"
-
-namespace gl_d3d
-{
-
-std::string TypeString(GLenum type)
-{
-    switch (type)
-    {
-        case GL_FLOAT:        return "float";
-        case GL_FLOAT_VEC2:   return "float2";
-        case GL_FLOAT_VEC3:   return "float3";
-        case GL_FLOAT_VEC4:   return "float4";
-        case GL_INT:          return "int";
-        case GL_INT_VEC2:     return "int2";
-        case GL_INT_VEC3:     return "int3";
-        case GL_INT_VEC4:     return "int4";
-        case GL_UNSIGNED_INT: return "uint";
-        case GL_UNSIGNED_INT_VEC2: return "uint2";
-        case GL_UNSIGNED_INT_VEC3: return "uint3";
-        case GL_UNSIGNED_INT_VEC4: return "uint4";
-        case GL_FLOAT_MAT2:   return "float2x2";
-        case GL_FLOAT_MAT3:   return "float3x3";
-        case GL_FLOAT_MAT4:   return "float4x4";
-        case GL_FLOAT_MAT2x3: return "float2x3";
-        case GL_FLOAT_MAT3x2: return "float3x2";
-        case GL_FLOAT_MAT2x4: return "float2x4";
-        case GL_FLOAT_MAT4x2: return "float4x2";
-        case GL_FLOAT_MAT3x4: return "float3x4";
-        case GL_FLOAT_MAT4x3: return "float4x3";
-        default:  UNREACHABLE(); return "invalid-gl-type";
-    }
-}
-
-}
-
-namespace gl
-{
 
 static std::string Str(int i)
 {
@@ -61,10 +25,58 @@ static std::string Str(int i)
     return buffer;
 }
 
-static std::string ArrayString(int i)
+namespace gl_d3d
 {
-    return "[" + Str(i) + "]";
+
+std::string HLSLComponentTypeString(GLenum componentType)
+{
+    switch (componentType)
+    {
+      case GL_UNSIGNED_INT:         return "uint";
+      case GL_INT:                  return "int";
+      case GL_UNSIGNED_NORMALIZED:
+      case GL_SIGNED_NORMALIZED:
+      case GL_FLOAT:                return "float";
+      default: UNREACHABLE();       return "not-component-type";
+    }
 }
+
+std::string HLSLComponentTypeString(GLenum componentType, int componentCount)
+{
+    return HLSLComponentTypeString(componentType) + (componentCount > 1 ? Str(componentCount) : "");
+}
+
+std::string HLSLMatrixTypeString(GLenum type)
+{
+    switch (type)
+    {
+      case GL_FLOAT_MAT2:     return "float2x2";
+      case GL_FLOAT_MAT3:     return "float3x3";
+      case GL_FLOAT_MAT4:     return "float4x4";
+      case GL_FLOAT_MAT2x3:   return "float2x3";
+      case GL_FLOAT_MAT3x2:   return "float3x2";
+      case GL_FLOAT_MAT2x4:   return "float2x4";
+      case GL_FLOAT_MAT4x2:   return "float4x2";
+      case GL_FLOAT_MAT3x4:   return "float3x4";
+      case GL_FLOAT_MAT4x3:   return "float4x3";
+      default: UNREACHABLE(); return "not-matrix-type";
+    }
+}
+
+std::string HLSLTypeString(GLenum type)
+{
+    if (gl::IsMatrixType(type))
+    {
+        return HLSLMatrixTypeString(type);
+    }
+
+    return HLSLComponentTypeString(gl::UniformComponentType(type), gl::UniformComponentCount(type));
+}
+
+}
+
+namespace gl
+{
 
 std::string ArrayString(unsigned int i)
 {
@@ -259,9 +271,10 @@ std::string DynamicHLSL::generateVaryingHLSL(FragmentShader *fragmentShader, con
                     std::string n = Str(varying->registerIndex + elementIndex * variableRows + row);
 
                     // matrices within structs are not transposed, hence we do not use the special struct prefix "rm"
-                    std::string typeString = varying->isStruct() ? "_" + varying->structName :
-                                             gl_d3d::TypeString(UniformComponentType(transposedType)) + Str(VariableColumnCount(transposedType));
-
+                    GLenum componentType = gl::UniformComponentType(transposedType);
+                    int columnCount = gl::VariableColumnCount(transposedType);
+                    std::string componentTypeString = gl_d3d::HLSLComponentTypeString(componentType, columnCount);
+                    std::string typeString = (varying->isStruct() ? "_" + varying->structName : componentTypeString);
                     varyingHLSL += typeString + " v" + n + " : " + varyingSemantic + n + ";\n";
                 }
             }
@@ -282,14 +295,24 @@ std::string DynamicHLSL::generateInputLayoutHLSL(const VertexFormat inputLayout[
     int semanticIndex = 0;
     for (unsigned int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        const sh::Attribute &attribute = shaderAttributes[attributeIndex];
+        const VertexFormat &vertexFormat = inputLayout[attributeIndex];
+        const sh::Attribute &shaderAttribute = shaderAttributes[attributeIndex];
 
-        if (!attribute.name.empty())
+        if (!shaderAttribute.name.empty())
         {
-            vertexHLSL += "    " + gl_d3d::TypeString(TransposeMatrixType(attribute.type)) + " ";
-            vertexHLSL += decorateAttribute(attribute.name) + " : TEXCOORD" + Str(semanticIndex) + ";\n";
+            if (IsMatrixType(shaderAttribute.type))
+            {
+                // Matrix types are always transposed
+                vertexHLSL += "    " + gl_d3d::HLSLMatrixTypeString(TransposeMatrixType(shaderAttribute.type));
+            }
+            else
+            {
+                GLenum componentType = mRenderer->getVertexComponentType(vertexFormat);
+                vertexHLSL += "    " + gl_d3d::HLSLComponentTypeString(componentType, UniformComponentCount(shaderAttribute.type));
+            }
 
-            semanticIndex += AttributeRegisterCount(attribute.type);
+            vertexHLSL += " " + decorateAttribute(shaderAttribute.name) + " : TEXCOORD" + Str(semanticIndex) + ";\n";
+            semanticIndex += AttributeRegisterCount(shaderAttribute.type);
         }
     }
 
@@ -300,13 +323,26 @@ std::string DynamicHLSL::generateInputLayoutHLSL(const VertexFormat inputLayout[
 
     for (unsigned int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        const sh::ShaderVariable &attribute = shaderAttributes[attributeIndex];
+        const VertexFormat &vertexFormat = inputLayout[attributeIndex];
+        const sh::Attribute &shaderAttribute = shaderAttributes[attributeIndex];
 
-        if (!attribute.name.empty())
+        if (!shaderAttribute.name.empty())
         {
-            vertexHLSL += "    " + decorateAttribute(attribute.name) + " = ";
-            vertexHLSL += generateAttributeConversionHLSL(inputLayout[attributeIndex], attribute);
-            vertexHLSL += "(input." + decorateAttribute(attribute.name) + ");\n";
+            vertexHLSL += "    " + decorateAttribute(shaderAttribute.name) + " = ";
+
+            // Mismatched vertex attribute to vertex input may result in an undefined
+            // data reinterpretation (eg for pure integer->float, float->pure integer)
+            // TODO: issue warning with gl debug info extension, when supported
+            if ((mRenderer->getVertexConversionType(vertexFormat) & rx::VERTEX_CONVERT_GPU) != 0)
+            {
+                vertexHLSL += generateAttributeConversionHLSL(vertexFormat, shaderAttribute);
+            }
+            else
+            {
+                vertexHLSL += "input." + decorateAttribute(shaderAttribute.name);
+            }
+
+            vertexHLSL += ";\n";
         }
     }
 
@@ -581,7 +617,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
             const sh::ShaderVariable &outputVariable = shaderOutputVars[outputLocation.index];
             const std::string &elementString = (outputLocation.element == GL_INVALID_INDEX ? "" : Str(outputLocation.element));
 
-            pixelHLSL += "    " + gl_d3d::TypeString(outputVariable.type) +
+            pixelHLSL += "    " + gl_d3d::HLSLTypeString(outputVariable.type) +
                          " out_" + outputLocation.name + elementString +
                          " : " + targetSemantic + Str(locationIt->first) + ";\n";
         }
@@ -904,16 +940,32 @@ std::string DynamicHLSL::decorateAttribute(const std::string &name)
 
 std::string DynamicHLSL::generateAttributeConversionHLSL(const VertexFormat &vertexFormat, const sh::ShaderVariable &shaderAttrib) const
 {
+    std::string attribString = "input." + decorateAttribute(shaderAttrib.name);
+
     // Matrix
     if (IsMatrixType(shaderAttrib.type))
     {
-        return "transpose";
+        return "transpose(" + attribString + ")";
     }
 
-    // TODO: un-normalized integer data
+    GLenum shaderComponentType = UniformComponentType(shaderAttrib.type);
+    int shaderComponentCount = UniformComponentCount(shaderAttrib.type);
+
+    std::string padString = "";
+
+    // Perform integer to float conversion (if necessary)
+    bool requiresTypeConversion = (shaderComponentType == GL_FLOAT && vertexFormat.mType != GL_FLOAT);
+
+    // TODO: normalization for 32-bit integer formats
+    ASSERT(!requiresTypeConversion || !vertexFormat.mNormalized);
+
+    if (requiresTypeConversion || !padString.empty())
+    {
+        return "float" + Str(shaderComponentCount) + "(" + attribString + padString + ")";
+    }
 
     // No conversion necessary
-    return "";
+    return attribString;
 }
 
 }
