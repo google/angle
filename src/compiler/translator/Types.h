@@ -140,6 +140,11 @@ class TType
 public:
     POOL_ALLOCATOR_NEW_DELETE();
     TType() {}
+    TType(TBasicType t, unsigned char ps = 1, unsigned char ss = 1) :
+            type(t), precision(EbpUndefined), qualifier(EvqGlobal), primarySize(ps), secondarySize(ss), array(false), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
+            interfaceBlock(0), structure(0)
+    {
+    }
     TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, unsigned char ps = 1, unsigned char ss = 1, bool a = false) :
             type(t), precision(p), qualifier(q), primarySize(ps), secondarySize(ss), array(a), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
             interfaceBlock(0), structure(0)

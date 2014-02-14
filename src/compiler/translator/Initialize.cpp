@@ -16,15 +16,15 @@
 
 void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltInResources &resources, TSymbolTable &symbolTable)
 {
-    TType *float1 = new TType(EbtFloat, EbpUndefined, EvqGlobal, 1);
-    TType *float2 = new TType(EbtFloat, EbpUndefined, EvqGlobal, 2);
-    TType *float3 = new TType(EbtFloat, EbpUndefined, EvqGlobal, 3);
-    TType *float4 = new TType(EbtFloat, EbpUndefined, EvqGlobal, 4);
+    TType *float1 = new TType(EbtFloat);
+    TType *float2 = new TType(EbtFloat, 2);
+    TType *float3 = new TType(EbtFloat, 3);
+    TType *float4 = new TType(EbtFloat, 4);
 
-    TType *int1 = new TType(EbtInt, EbpUndefined, EvqGlobal, 1);
-    TType *int2 = new TType(EbtInt, EbpUndefined, EvqGlobal, 2);
-    TType *int3 = new TType(EbtInt, EbpUndefined, EvqGlobal, 3);
-    TType *int4 = new TType(EbtInt, EbpUndefined, EvqGlobal, 4);
+    TType *int1 = new TType(EbtInt);
+    TType *int2 = new TType(EbtInt, 2);
+    TType *int3 = new TType(EbtInt, 3);
+    TType *int4 = new TType(EbtInt, 4);
 
     //
     // Angle and Trigonometric Functions.
@@ -235,9 +235,9 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "refract", float3, float3, float1);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float4, "refract", float4, float4, float1);
 
-    TType *mat2 = new TType(EbtFloat, EbpUndefined, EvqGlobal, 2, 2);
-    TType *mat3 = new TType(EbtFloat, EbpUndefined, EvqGlobal, 3, 3);
-    TType *mat4 = new TType(EbtFloat, EbpUndefined, EvqGlobal, 4, 4);
+    TType *mat2 = new TType(EbtFloat, 2, 2);
+    TType *mat3 = new TType(EbtFloat, 3, 3);
+    TType *mat4 = new TType(EbtFloat, 4, 4);
 
     //
     // Matrix Functions.
@@ -246,10 +246,10 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     symbolTable.insertBuiltIn(COMMON_BUILTINS, mat3, "matrixCompMult", mat3, mat3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, mat4, "matrixCompMult", mat4, mat4);
 
-    TType *bool1 = new TType(EbtBool, EbpUndefined, EvqGlobal, 1);
-    TType *bool2 = new TType(EbtBool, EbpUndefined, EvqGlobal, 2);
-    TType *bool3 = new TType(EbtBool, EbpUndefined, EvqGlobal, 3);
-    TType *bool4 = new TType(EbtBool, EbpUndefined, EvqGlobal, 4);
+    TType *bool1 = new TType(EbtBool);
+    TType *bool2 = new TType(EbtBool, 2);
+    TType *bool3 = new TType(EbtBool, 3);
+    TType *bool4 = new TType(EbtBool, 4);
 
     //
     // Vector relational functions.
@@ -322,8 +322,8 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool3, "not", bool3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, bool4, "not", bool4);
 
-    TType *sampler2D = new TType(EbtSampler2D, EbpUndefined, EvqGlobal, 1);
-    TType *samplerCube = new TType(EbtSamplerCube, EbpUndefined, EvqGlobal, 1);
+    TType *sampler2D = new TType(EbtSampler2D);
+    TType *samplerCube = new TType(EbtSamplerCube);
 
     //
     // Texture Functions for GLSL ES 1.0
@@ -335,7 +335,7 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
 
     if (resources.OES_EGL_image_external)
     {
-        TType *samplerExternalOES = new TType(EbtSamplerExternalOES, EbpUndefined, EvqGlobal, 1);
+        TType *samplerExternalOES = new TType(EbtSamplerExternalOES);
 
         symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2D", samplerExternalOES, float2);
         symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProj", samplerExternalOES, float3);
@@ -344,7 +344,7 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
 
     if (resources.ARB_texture_rectangle)
     {
-        TType *sampler2DRect = new TType(EbtSampler2DRect, EbpUndefined, EvqGlobal, 1);
+        TType *sampler2DRect = new TType(EbtSampler2DRect);
 
         symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DRect", sampler2DRect, float2);
         symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DRectProj", sampler2DRect, float3);
@@ -385,8 +385,8 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
         symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "textureCubeLod", samplerCube, float3, float1);
     }
 
-    TType *sampler3D = new TType(EbtSampler3D, EbpUndefined, EvqGlobal, 1);
-    TType *sampler2DArray = new TType(EbtSampler2DArray, EbpUndefined, EvqGlobal, 1);
+    TType *sampler3D = new TType(EbtSampler3D);
+    TType *sampler2DArray = new TType(EbtSampler2DArray);
 
     //
     // Texture Functions for GLSL ES 3.0
@@ -414,10 +414,10 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler3D, float4, float1);
     }
 
-    TType *isampler2D = new TType(EbtISampler2D, EbpUndefined, EvqGlobal, 1);
-    TType *isampler3D = new TType(EbtISampler3D, EbpUndefined, EvqGlobal, 1);
-    TType *isamplerCube = new TType(EbtISamplerCube, EbpUndefined, EvqGlobal, 1);
-    TType *isampler2DArray = new TType(EbtISampler2DArray, EbpUndefined, EvqGlobal, 1);
+    TType *isampler2D = new TType(EbtISampler2D);
+    TType *isampler3D = new TType(EbtISampler3D);
+    TType *isamplerCube = new TType(EbtISamplerCube);
+    TType *isampler2DArray = new TType(EbtISampler2DArray);
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler2D, float2);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler3D, float3);
@@ -442,11 +442,11 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler3D, float4, float1);
     }
 
-    TType *usampler2D = new TType(EbtUSampler2D, EbpUndefined, EvqGlobal, 1);
-    TType *usampler3D = new TType(EbtUSampler3D, EbpUndefined, EvqGlobal, 1);
-    TType *usamplerCube = new TType(EbtUSamplerCube, EbpUndefined, EvqGlobal, 1);
-    TType *usampler2DArray = new TType(EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1);
-    TType *uint4 = new TType(EbtUInt, EbpUndefined, EvqGlobal, 4);
+    TType *usampler2D = new TType(EbtUSampler2D);
+    TType *usampler3D = new TType(EbtUSampler3D);
+    TType *usamplerCube = new TType(EbtUSamplerCube);
+    TType *usampler2DArray = new TType(EbtUSampler2DArray);
+    TType *uint4 = new TType(EbtUInt, 4);
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usampler2D, float2);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usampler3D, float3);
@@ -471,9 +471,9 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler3D, float4, float1);
     }
 
-    TType *sampler2DShadow = new TType(EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1);
-    TType *samplerCubeShadow = new TType(EbtSamplerCubeShadow, EbpUndefined, EvqGlobal, 1);
-    TType *sampler2DArrayShadow = new TType(EbtSampler2DArrayShadow, EbpUndefined, EvqGlobal, 1);
+    TType *sampler2DShadow = new TType(EbtSampler2DShadow);
+    TType *samplerCubeShadow = new TType(EbtSamplerCubeShadow);
+    TType *sampler2DArrayShadow = new TType(EbtSampler2DArrayShadow);
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "texture", sampler2DShadow, float3);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "texture", samplerCubeShadow, float4);
