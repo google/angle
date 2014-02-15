@@ -1161,6 +1161,10 @@ void OutputHLSL::header()
                                     out << "    lod += bias;\n";
                                 }
                             }
+                            else if (textureFunction->method == TextureFunction::LOD)
+                            {
+                                out << "    x.GetDimensions(0, width, height, levels);\n";
+                            }
 
                             out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
                         }
@@ -2352,6 +2356,17 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 else if (name == "textureLodOffset")
                 {
                     textureFunction.method = TextureFunction::LOD;
+                    textureFunction.offset = true;
+                }
+                else if (name == "textureProjLod")
+                {
+                    textureFunction.method = TextureFunction::LOD;
+                    textureFunction.proj = true;
+                }
+                else if (name == "textureProjLodOffset")
+                {
+                    textureFunction.method = TextureFunction::LOD;
+                    textureFunction.proj = true;
                     textureFunction.offset = true;
                 }
                 else UNREACHABLE();
@@ -3928,7 +3943,6 @@ GLenum OutputHLSL::glVariableType(const TType &type)
       case EbtSampler2DArrayShadow: return GL_SAMPLER_2D_ARRAY_SHADOW;
       default: UNREACHABLE();
     }
-
 
     return GL_NONE;
 }
