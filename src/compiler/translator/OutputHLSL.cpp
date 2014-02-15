@@ -2343,6 +2343,17 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     textureFunction.method = TextureFunction::IMPLICIT;
                     textureFunction.offset = true;
                 }
+                else if (name == "textureProjOffset")
+                {
+                    textureFunction.method = TextureFunction::IMPLICIT;
+                    textureFunction.offset = true;
+                    textureFunction.proj = true;
+                }
+                else if (name == "textureLodOffset")
+                {
+                    textureFunction.method = TextureFunction::LOD;
+                    textureFunction.offset = true;
+                }
                 else UNREACHABLE();
 
                 if (textureFunction.method == TextureFunction::IMPLICIT)   // Could require lod 0 or have a bias argument
