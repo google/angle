@@ -1420,7 +1420,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-{ return ES2_reserved_ES3_keyword(context, CASE); }
+{ return ES2_ident_ES3_keyword(context, CASE); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
@@ -1428,7 +1428,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-{ return ES2_reserved_ES3_keyword(context, CENTROID); }
+{ return ES2_ident_ES3_keyword(context, CENTROID); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
@@ -1436,7 +1436,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-{ return ES2_reserved_ES3_keyword(context, SMOOTH); }
+{ return ES2_ident_ES3_keyword(context, SMOOTH); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
@@ -1644,7 +1644,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, SAMPLER2DSHADOW); }
+{ return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP

@@ -102,12 +102,12 @@ O           [0-7]
 "if"           { return IF; }
 "else"         { return ELSE; }
 "switch"       { return ES2_reserved_ES3_keyword(context, SWITCH); }
-"case"         { return ES2_reserved_ES3_keyword(context, CASE); }
+"case"         { return ES2_ident_ES3_keyword(context, CASE); }
 "default"      { return ES2_reserved_ES3_keyword(context, DEFAULT); }
 
-"centroid"     { return ES2_reserved_ES3_keyword(context, CENTROID); }
+"centroid"     { return ES2_ident_ES3_keyword(context, CENTROID); }
 "flat"         { return ES2_reserved_ES3_keyword(context, FLAT); }
-"smooth"       { return ES2_reserved_ES3_keyword(context, SMOOTH); }
+"smooth"       { return ES2_ident_ES3_keyword(context, SMOOTH); }
 
 "in"           { return IN_QUAL; }
 "out"          { return OUT_QUAL; }
@@ -167,7 +167,7 @@ O           [0-7]
 "usampler3D"           { return ES2_ident_ES3_keyword(context, USAMPLER3D); }
 "usamplerCube"         { return ES2_ident_ES3_keyword(context, USAMPLERCUBE); }
 "usampler2DArray"      { return ES2_ident_ES3_keyword(context, USAMPLER2DARRAY); }
-"sampler2DShadow"      { return ES2_ident_ES3_keyword(context, SAMPLER2DSHADOW); }
+"sampler2DShadow"      { return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
 "samplerCubeShadow"    { return ES2_ident_ES3_keyword(context, SAMPLERCUBESHADOW); }
 "sampler2DArrayShadow" { return ES2_ident_ES3_keyword(context, SAMPLER2DARRAYSHADOW); }
 
