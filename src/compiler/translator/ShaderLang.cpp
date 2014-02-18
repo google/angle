@@ -17,6 +17,8 @@
 #include "compiler/translator/TranslatorHLSL.h"
 #include "compiler/translator/VariablePacker.h"
 
+static bool isInitialized = false;
+
 //
 // This is the platform independent interface between an OGL driver
 // and the shading language compiler.
@@ -49,8 +51,8 @@ static bool checkMappedNameMaxLength(const ShHandle handle, size_t expectedValue
 //
 int ShInitialize()
 {
-    static const bool kInitialized = InitProcess();
-    return kInitialized ? 1 : 0;
+    isInitialized = InitProcess();
+    return isInitialized ? 1 : 0;
 }
 
 //
@@ -59,6 +61,7 @@ int ShInitialize()
 int ShFinalize()
 {
     DetachProcess();
+    isInitialized = false;
     return 1;
 }
 
