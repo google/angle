@@ -55,11 +55,12 @@ TString OutputHLSL::TextureFunction::name() const
 
     switch(method)
     {
-      case IMPLICIT:                 break;
-      case BIAS:                     break;
-      case LOD:      name += "Lod";  break;
-      case LOD0:     name += "Lod0"; break;
-      case SIZE:     name += "Size"; break;
+      case IMPLICIT:                  break;
+      case BIAS:                      break;
+      case LOD:      name += "Lod";   break;
+      case LOD0:     name += "Lod0";  break;
+      case SIZE:     name += "Size";  break;
+      case FETCH:    name += "Fetch"; break;
       default: UNREACHABLE();
     }
 
@@ -1000,13 +1001,25 @@ void OutputHLSL::header()
         }
         else UNREACHABLE();
 
-        switch(textureFunction->coords)
+        if (textureFunction->method == TextureFunction::FETCH)   // Integer coordinates
         {
-          case 1: out << ", int lod";  break;
-          case 2: out << ", float2 t"; break;
-          case 3: out << ", float3 t"; break;
-          case 4: out << ", float4 t"; break;
-          default: UNREACHABLE();
+            switch(textureFunction->coords)
+            {
+              case 2: out << ", int2 t"; break;
+              case 3: out << ", int3 t"; break;
+              default: UNREACHABLE();
+            }
+        }
+        else   // Floating-point coordinates (except textureSize)
+        {
+            switch(textureFunction->coords)
+            {
+              case 1: out << ", int lod";  break;   // textureSize()
+              case 2: out << ", float2 t"; break;
+              case 3: out << ", float3 t"; break;
+              case 4: out << ", float4 t"; break;
+              default: UNREACHABLE();
+            }
         }
 
         switch(textureFunction->method)
@@ -1016,6 +1029,7 @@ void OutputHLSL::header()
           case TextureFunction::LOD:      out << ", float lod";  break;
           case TextureFunction::LOD0:                            break;
           case TextureFunction::SIZE:                            break;
+          case TextureFunction::FETCH:    out << ", int mip";    break;
           default: UNREACHABLE();
         }
 
@@ -1103,7 +1117,8 @@ void OutputHLSL::header()
         }
         else
         {
-            if (IsIntegerSampler(textureFunction->sampler))
+            if (IsIntegerSampler(textureFunction->sampler) &&
+                textureFunction->method != TextureFunction::FETCH)
             {
                 if (IsSampler2D(textureFunction->sampler))
                 {
@@ -1228,7 +1243,8 @@ void OutputHLSL::header()
             }
             else if (mOutputType == SH_HLSL11_OUTPUT)
             {
-                if (IsIntegerSampler(textureFunction->sampler))
+                if (IsIntegerSampler(textureFunction->sampler) ||
+                    textureFunction->method == TextureFunction::FETCH)
                 {
                     out << "x.Load(";
                 }
@@ -1256,7 +1272,8 @@ void OutputHLSL::header()
             TString addressz = "";
             TString close = "";
 
-            if (IsIntegerSampler(textureFunction->sampler))
+            if (IsIntegerSampler(textureFunction->sampler) ||
+                textureFunction->method == TextureFunction::FETCH)
             {
                 switch(hlslCoords)
                 {
@@ -1265,19 +1282,23 @@ void OutputHLSL::header()
                   default: UNREACHABLE();
                 }
             
-                addressx = "int(floor(width * frac((";
-                addressy = "int(floor(height * frac((";
-
-                if (IsSamplerArray(textureFunction->sampler))
+                // Convert from normalized floating-point to integer
+                if (textureFunction->method != TextureFunction::FETCH)
                 {
-                    addressz = "int(max(0, min(layers - 1, floor(0.5 + ";
-                }
-                else
-                {
-                    addressz = "int(floor(depth * frac((";
-                }
+                    addressx = "int(floor(width * frac((";
+                    addressy = "int(floor(height * frac((";
 
-                close = "))))";
+                    if (IsSamplerArray(textureFunction->sampler))
+                    {
+                        addressz = "int(max(0, min(layers - 1, floor(0.5 + ";
+                    }
+                    else
+                    {
+                        addressz = "int(floor(depth * frac((";
+                    }
+
+                    close = "))))";
+                }
             }
             else
             {
@@ -1338,7 +1359,8 @@ void OutputHLSL::header()
                     out << ", " + addressz + ("t.z" + proj) + close;
                 }
 
-                if (IsIntegerSampler(textureFunction->sampler))
+                if (IsIntegerSampler(textureFunction->sampler) ||
+                    textureFunction->method == TextureFunction::FETCH)
                 {
                     out << ", mip)";
                 }
@@ -2367,6 +2389,15 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 {
                     textureFunction.method = TextureFunction::LOD;
                     textureFunction.proj = true;
+                    textureFunction.offset = true;
+                }
+                else if (name == "texelFetch")
+                {
+                    textureFunction.method = TextureFunction::FETCH;
+                }
+                else if (name == "texelFetchOffset")
+                {
+                    textureFunction.method = TextureFunction::FETCH;
                     textureFunction.offset = true;
                 }
                 else UNREACHABLE();

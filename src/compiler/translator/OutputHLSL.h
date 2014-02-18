@@ -104,7 +104,8 @@ class OutputHLSL : public TIntermTraverser
             BIAS,
             LOD,
             LOD0,
-            SIZE   // textureSize()
+            SIZE,   // textureSize()
+            FETCH
         };
 
         TBasicType sampler;
