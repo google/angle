@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "ef577db2_2442b2c9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-18T20:13:46Z",
+      "side": 1,
+      "message": "public issue?",
+      "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef577db2_c49b9e1b",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2661,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-18T20:13:46Z",
+      "side": 1,
+      "message": "if possible, we should generate invalid op at the API level. this would also eliminate the need for the extra \u0027active\u0027 parameter.",
+      "range": {
+        "startLine": 2661,
+        "startChar": 11,
+        "endLine": 2661,
+        "endChar": 39
+      },
+      "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0fdcd12e_e02ffc6a",
         "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
         "patchSetId": 1
@@ -31,6 +71,70 @@
       "side": 1,
       "message": "I tested and made sure that there were no performance issues with this dual binding.  If something eventually causes performance issues, we can split the enums.",
       "parentUuid": "0fdcd12e_e02ffc6a",
+      "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef7e9d24_6c489be9",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-18T20:13:46Z",
+      "side": 1,
+      "message": "my 2 cents -- XFB and vertex buffers belong together. a common use is as mini-compute shaders that write to vertex buffers.",
+      "parentUuid": "ef577db2_64750a57",
+      "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef7e9d24_ec3b2b4e",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-18T20:13:46Z",
+      "side": 1,
+      "message": "Please use \"BUFFER_USAGE_VERTEX_XFB\" or something similar, with one value here.",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 58
+      },
+      "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "afdf457e_82733a2b",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-18T20:13:46Z",
+      "side": 1,
+      "message": "meganit: XFB?",
+      "range": {
+        "startLine": 1179,
+        "startChar": 20,
+        "endLine": 1179,
+        "endChar": 22
+      },
       "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
