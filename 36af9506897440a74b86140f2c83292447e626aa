@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afdf457e_82a33ac1",
+        "filename": "src/compiler/translator/glslang_tab.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-18T15:43:40Z",
+      "side": 1,
+      "message": "How did this get updated? Is there a .y or .l file that needs to be updated?",
+      "range": {
+        "startLine": 68,
+        "startChar": 25,
+        "endLine": 68,
+        "endChar": 26
+      },
+      "revId": "36af9506897440a74b86140f2c83292447e626aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
