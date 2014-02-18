@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afdf457e_62aa7665",
+        "filename": "src/common/version.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-18T17:44:57Z",
+      "side": 1,
+      "message": "you\u0027ll need to re-merge this change -- we recently switched to using git to track version numbers automatically. you won\u0027t need to manually update the version number.",
+      "revId": "e7a78ddcaae288a20fdc0ddf85e8cff8677c8731",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
