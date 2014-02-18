@@ -257,7 +257,7 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
     if (YY_START == COMMENT)
     {
-        yyextra->diagnostics->report(pp::Diagnostics::EOF_IN_COMMENT,
+        yyextra->diagnostics->report(pp::Diagnostics::PP_EOF_IN_COMMENT,
                                      pp::SourceLocation(yyfileno, yylineno),
                                      "");
     }
@@ -307,7 +307,7 @@ void Tokenizer::lex(Token* token)
     token->type = yylex(&token->text, &token->location, mHandle);
     if (token->text.size() > kMaxTokenLength)
     {
-        mContext.diagnostics->report(Diagnostics::TOKEN_TOO_LONG,
+        mContext.diagnostics->report(Diagnostics::PP_TOKEN_TOO_LONG,
                                      token->location, token->text);
         token->text.erase(kMaxTokenLength);
     }
