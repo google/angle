@@ -16,6 +16,24 @@
       "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef577db2_64750a57",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-18T18:13:17Z",
+      "side": 1,
+      "message": "I tested and made sure that there were no performance issues with this dual binding.  If something eventually causes performance issues, we can split the enums.",
+      "parentUuid": "0fdcd12e_e02ffc6a",
+      "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
