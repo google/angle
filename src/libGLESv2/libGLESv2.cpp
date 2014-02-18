@@ -2129,10 +2129,14 @@ void __stdcall glGenerateMipmap(GLenum target)
 
             // Internally, all texture formats are sized so checking if the format
             // is color renderable and filterable will not fail.
+
+            bool validRenderable = (gl::IsColorRenderingSupported(internalFormat, context) ||
+                                    gl::IsSizedInternalFormat(internalFormat, context->getClientVersion()));
+
             if (gl::IsDepthRenderingSupported(internalFormat, context) ||
                 gl::IsFormatCompressed(internalFormat, context->getClientVersion()) ||
-                !gl::IsColorRenderingSupported(internalFormat, context) ||
-                !gl::IsTextureFilteringSupported(internalFormat, context))
+                !gl::IsTextureFilteringSupported(internalFormat, context) ||
+                !validRenderable)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
