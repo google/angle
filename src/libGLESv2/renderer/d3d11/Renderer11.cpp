@@ -33,6 +33,12 @@
 #include "libGLESv2/renderer/d3d11/PixelTransfer11.h"
 #include "libEGL/Display.h"
 
+// Enable ANGLE_SKIP_DXGI_1_2_CHECK if there is not a possibility of using cross-process
+// HWNDs or the Windows 7 Platform Update (KB2670838) is expected to be installed.
+#ifndef ANGLE_SKIP_DXGI_1_2_CHECK
+#define ANGLE_SKIP_DXGI_1_2_CHECK 0
+#endif
+
 #ifdef _DEBUG
 // this flag enables suppressing some spurious warnings that pop up in certain WebGL samples
 // and conformance tests. to enable all warnings, remove this define.
@@ -183,6 +189,36 @@ EGLint Renderer11::initialize()
             return EGL_NOT_INITIALIZED;   // Cleanup done by destructor through glDestroyRenderer
         }
     }
+
+#if !ANGLE_SKIP_DXGI_1_2_CHECK
+    // In order to create a swap chain for an HWND owned by another process, DXGI 1.2 is required.
+    // The easiest way to check is to query for a IDXGIDevice2.
+    bool requireDXGI1_2 = false;
+    HWND hwnd = WindowFromDC(mDc);
+    if (hwnd)
+    {
+        DWORD currentProcessId = GetCurrentProcessId();
+        DWORD wndProcessId;
+        GetWindowThreadProcessId(hwnd, &wndProcessId);
+        requireDXGI1_2 = (currentProcessId != wndProcessId);
+    }
+    else
+    {
+        requireDXGI1_2 = true;
+    }
+
+    if (requireDXGI1_2)
+    {
+        IDXGIDevice2 *dxgiDevice2 = NULL;
+        result = mDevice->QueryInterface(__uuidof(IDXGIDevice2), (void**)&dxgiDevice2);
+        if (FAILED(result))
+        {
+            ERR("DXGI 1.2 required to present to HWNDs owned by another process.\n");
+            return EGL_NOT_INITIALIZED;
+        }
+        SafeRelease(dxgiDevice2);
+    }
+#endif
 
     IDXGIDevice *dxgiDevice = NULL;
     result = mDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
