@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afdf457e_c20a627e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-18T20:25:14Z",
+      "side": 1,
+      "message": "ye old public issue nit",
+      "revId": "dd4533a0ea1c5cc41cb1e96fed05a6d6a78b4704",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
