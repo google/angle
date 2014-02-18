@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cf26394f_671c1a80",
+        "filename": "extensions/EGL_ANGLE_window_fixed_size.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2014-02-18T18:53:43Z",
+      "side": 1,
+      "message": "It looks to me like the standard (as much as there is one) is to do this under \"Contacts\", so I\u0027ll do it there.",
+      "parentUuid": "cfe559f4_5b02639e",
+      "revId": "4c47904b96f02d51caa450fc3a95a131513b3b07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0fdcd12e_5da6db5e",
         "filename": "extensions/EGL_ANGLE_window_fixed_size.txt",
         "patchSetId": 4
@@ -64,6 +82,24 @@
       "writtenOn": "2014-02-13T17:33:04Z",
       "side": 1,
       "message": "This error is no longer called out in the extension text. We should either specify an error for zero values when fixed size is set, or silently allow creation of zero-sized surfaces if the application asks for them. The extension text would be cleaner with the latter, but it\u0027d be less friendly to careless users. I... could go either way on this one.",
+      "revId": "4c47904b96f02d51caa450fc3a95a131513b3b07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf26394f_c7208e82",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2014-02-18T18:53:43Z",
+      "side": 1,
+      "message": "I think D3D9 gives an error if we try to create a 0-size surface, so we can\u0027t just do that (we could emulate with 1x1 surfaces, but that\u0027s tricky to get perfect). It would also be weird to specify that the implementation must error out when the default values of EGL_WIDTH or EGL_HEIGHT are used.\n\nWith this I was mostly trying to match what we were doing with pbuffer surfaces, where we have the same issue. We could try generating EGL_BAD_ALLOC instead (because we can\u0027t allocate a swapchain like that), which is allowed by the spec, but that error is less obvious.",
+      "parentUuid": "0fdcd12e_fdfc0723",
       "revId": "4c47904b96f02d51caa450fc3a95a131513b3b07",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
