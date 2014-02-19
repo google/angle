@@ -61,6 +61,7 @@ TString OutputHLSL::TextureFunction::name() const
       case LOD0:     name += "Lod0";  break;
       case SIZE:     name += "Size";  break;
       case FETCH:    name += "Fetch"; break;
+      case GRAD:     name += "Grad";  break;
       default: UNREACHABLE();
     }
 
@@ -1022,6 +1023,33 @@ void OutputHLSL::header()
             }
         }
 
+        if (textureFunction->method == TextureFunction::GRAD)
+        {
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:
+              case EbtISampler2D:
+              case EbtUSampler2D:
+              case EbtSampler2DArray:
+              case EbtISampler2DArray:
+              case EbtUSampler2DArray:
+              case EbtSampler2DShadow:
+              case EbtSampler2DArrayShadow:
+                out << ", float2 ddx, float2 ddy";
+                break;
+              case EbtSampler3D:
+              case EbtISampler3D:
+              case EbtUSampler3D:
+              case EbtSamplerCube:
+              case EbtISamplerCube:
+              case EbtUSamplerCube:
+              case EbtSamplerCubeShadow:
+                out << ", float3 ddx, float3 ddy";
+                break;
+              default: UNREACHABLE();
+            }
+        }
+
         switch(textureFunction->method)
         {
           case TextureFunction::IMPLICIT:                        break;
@@ -1030,6 +1058,7 @@ void OutputHLSL::header()
           case TextureFunction::LOD0:                            break;
           case TextureFunction::SIZE:                            break;
           case TextureFunction::FETCH:    out << ", int mip";    break;
+          case TextureFunction::GRAD:                            break;
           default: UNREACHABLE();
         }
 
@@ -1146,6 +1175,11 @@ void OutputHLSL::header()
                                     out << "    lod += bias;\n";
                                 }
                             }
+                            else if (textureFunction->method == TextureFunction::GRAD)
+                            {
+                                out << "    x.GetDimensions(0, width, height, layers, levels);\n"
+                                       "    float lod = log2(max(length(ddx), length(ddy)));\n";
+                            }
 
                             out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
                         }
@@ -1180,6 +1214,11 @@ void OutputHLSL::header()
                             {
                                 out << "    x.GetDimensions(0, width, height, levels);\n";
                             }
+                            else if (textureFunction->method == TextureFunction::GRAD)
+                            {
+                                out << "    x.GetDimensions(0, width, height, levels);\n"
+                                       "    float lod = log2(max(length(ddx), length(ddy)));\n";
+                            }
 
                             out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
                         }
@@ -1210,6 +1249,11 @@ void OutputHLSL::header()
                             {
                                 out << "    lod += bias;\n";
                             }
+                        }
+                        else if (textureFunction->method == TextureFunction::GRAD)
+                        {
+                            out << "    x.GetDimensions(0, width, height, depth, levels);\n"
+                                   "    float lod = log2(max(length(ddx), length(ddy)));\n";
                         }
 
                         out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
@@ -1243,8 +1287,23 @@ void OutputHLSL::header()
             }
             else if (mOutputType == SH_HLSL11_OUTPUT)
             {
-                if (IsIntegerSampler(textureFunction->sampler) ||
-                    textureFunction->method == TextureFunction::FETCH)
+                if (textureFunction->method == TextureFunction::GRAD)
+                {
+                    if (IsIntegerSampler(textureFunction->sampler))
+                    {
+                        out << "x.Load(";
+                    }
+                    else if (IsShadowSampler(textureFunction->sampler))
+                    {
+                        out << "x.SampleCmpLevelZero(s, ";
+                    }
+                    else
+                    {
+                        out << "x.SampleGrad(s, ";
+                    }
+                }
+                else if (IsIntegerSampler(textureFunction->sampler) ||
+                         textureFunction->method == TextureFunction::FETCH)
                 {
                     out << "x.Load(";
                 }
@@ -1359,8 +1418,29 @@ void OutputHLSL::header()
                     out << ", " + addressz + ("t.z" + proj) + close;
                 }
 
-                if (IsIntegerSampler(textureFunction->sampler) ||
-                    textureFunction->method == TextureFunction::FETCH)
+                if (textureFunction->method == TextureFunction::GRAD)
+                {
+                    if (IsIntegerSampler(textureFunction->sampler))
+                    {
+                         out << ", mip)";
+                    }
+                    else if (IsShadowSampler(textureFunction->sampler))
+                    {
+                       // Compare value
+                        switch(textureFunction->coords)
+                        {
+                          case 3: out << "), t.z"; break;
+                          case 4: out << "), t.w"; break;
+                          default: UNREACHABLE();
+                        }
+                    }
+                    else
+                    {
+                        out << "), ddx, ddy";
+                    }
+                }
+                else if (IsIntegerSampler(textureFunction->sampler) ||
+                         textureFunction->method == TextureFunction::FETCH)
                 {
                     out << ", mip)";
                 }
@@ -2399,6 +2479,10 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 {
                     textureFunction.method = TextureFunction::FETCH;
                     textureFunction.offset = true;
+                }
+                else if (name == "textureGrad")
+                {
+                    textureFunction.method = TextureFunction::GRAD;
                 }
                 else UNREACHABLE();
 
