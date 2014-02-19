@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6fb70d4d_90ded481",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-19T23:14:12Z",
+      "side": 1,
+      "message": "What does this requirement mean for any projects out there that may be using EGL_ANGLE_direct3d_display, but not trying to use an HWND cross-process? This won\u0027t be an issue once the newer, cleaner extension is out, but if someone\u0027s passed a display ID of EGL_D3D11_ONLY_DISPLAY_ANGLE, that\u0027ll still get propagated into mDc, and they may be single-process. Can we put this behind an on-by-default compiler flag, so that projects that want to do run-time selection of renderer via the old extension, but not use a window handle cross-process, can still do so if they turn off the flag? I don\u0027t know that such a project exists, but if it does, we should try not to break it.",
+      "revId": "74ee549cc58ca3f26f993a51cd26dac1a22559a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
