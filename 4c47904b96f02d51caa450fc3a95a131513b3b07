@@ -124,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "ef577db2_aab8aba9",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-19T22:20:00Z",
+      "side": 1,
+      "message": "I think it\u0027s fine either way. We can handle zero-sized surfaces correctly. I think we fixed that at the time Shannon was thinking of. It\u0027s also okay to stop zero sized surfaces from happening as they are basically do nothing beneficial.",
+      "parentUuid": "4f696973_9be3bb45",
+      "revId": "4c47904b96f02d51caa450fc3a95a131513b3b07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0fdcd12e_fd15e79a",
         "filename": "src/libEGL/Surface.cpp",
         "patchSetId": 4
