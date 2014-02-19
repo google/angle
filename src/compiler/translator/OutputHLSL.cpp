@@ -1076,6 +1076,7 @@ void OutputHLSL::header()
               case EbtUSampler3D:           out << ", int3 offset"; break;
               case EbtUSampler2DArray:      out << ", int2 offset"; break;
               case EbtSampler2DShadow:      out << ", int2 offset"; break;
+              case EbtSampler2DArrayShadow: out << ", int2 offset"; break;
               default: UNREACHABLE();
             }
         }
@@ -2483,6 +2484,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 else if (name == "textureGrad")
                 {
                     textureFunction.method = TextureFunction::GRAD;
+                }
+                else if (name == "textureGradOffset")
+                {
+                    textureFunction.method = TextureFunction::GRAD;
+                    textureFunction.offset = true;
                 }
                 else UNREACHABLE();
 

@@ -293,38 +293,38 @@ public:
         return insert(level, *constant);
     }
 
-    void insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name, TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0)
+    void insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name, TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0, TType *ptype5 = 0)
     {
         if (ptype1->getBasicType() == EbtGSampler2D)
         {
             bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler2D), ptype2, ptype3, ptype4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler2D), ptype2, ptype3, ptype4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler2D), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler2D), ptype2, ptype3, ptype4, ptype5);
+            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler2D), ptype2, ptype3, ptype4, ptype5);
+            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler2D), ptype2, ptype3, ptype4, ptype5);
             return;
         }
         else if (ptype1->getBasicType() == EbtGSampler3D)
         {
             bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler3D), ptype2, ptype3, ptype4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler3D), ptype2, ptype3, ptype4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler3D), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler3D), ptype2, ptype3, ptype4, ptype5);
+            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler3D), ptype2, ptype3, ptype4, ptype5);
+            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler3D), ptype2, ptype3, ptype4, ptype5);
             return;
         }
         else if (ptype1->getBasicType() == EbtGSamplerCube)
         {
             bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSamplerCube), ptype2, ptype3, ptype4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISamplerCube), ptype2, ptype3, ptype4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSamplerCube), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSamplerCube), ptype2, ptype3, ptype4, ptype5);
+            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISamplerCube), ptype2, ptype3, ptype4, ptype5);
+            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSamplerCube), ptype2, ptype3, ptype4, ptype5);
             return;
         }
         else if (ptype1->getBasicType() == EbtGSampler2DArray)
         {
             bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler2DArray), ptype2, ptype3, ptype4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler2DArray), ptype2, ptype3, ptype4);
-            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler2DArray), ptype2, ptype3, ptype4);
+            insertBuiltIn(level, gvec4 ? new TType(EbtFloat, 4) : rvalue, name, new TType(EbtSampler2DArray), ptype2, ptype3, ptype4, ptype5);
+            insertBuiltIn(level, gvec4 ? new TType(EbtInt, 4) : rvalue, name, new TType(EbtISampler2DArray), ptype2, ptype3, ptype4, ptype5);
+            insertBuiltIn(level, gvec4 ? new TType(EbtUInt, 4) : rvalue, name, new TType(EbtUSampler2DArray), ptype2, ptype3, ptype4, ptype5);
             return;
         }
 
@@ -349,6 +349,12 @@ public:
         {
             TParameter param4 = {NULL, ptype4};
             function->addParameter(param4);
+        }
+
+        if (ptype5)
+        {
+            TParameter param5 = {NULL, ptype5};
+            function->addParameter(param5);
         }
 
         insert(level, *function);
