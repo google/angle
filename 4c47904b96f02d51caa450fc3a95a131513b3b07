@@ -106,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "4f696973_9be3bb45",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-19T22:00:32Z",
+      "side": 1,
+      "message": "Ah-- strictly speaking, our behavior for pbuffer surfaces is also out of spec (although, for EGL, a lot of our behavior is across the board). As far as silent creation of a 0x0, I was thinking just return without error, but not actually create anything D3D-side? Not sure-- I\u0027m just particularly concerned about obeying the spec on a vendor-specific extension that we write ourselves and are likely to be the only implementors of.\n\nJamie-- I think you had some run-ins with 0x0 windows around this time last year. Do you have any opinion/insight on this one?",
+      "parentUuid": "cf26394f_c7208e82",
+      "revId": "4c47904b96f02d51caa450fc3a95a131513b3b07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0fdcd12e_fd15e79a",
         "filename": "src/libEGL/Surface.cpp",
         "patchSetId": 4
