@@ -30,6 +30,10 @@ class BufferStorage
     virtual bool supportsDirectBinding() const = 0;
     unsigned int getSerial() const;
 
+    virtual bool isMapped() const = 0;
+    virtual void *map(GLbitfield access) = 0;
+    virtual void unmap() = 0;
+
   protected:
     void updateSerial();
 

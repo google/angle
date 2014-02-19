@@ -88,4 +88,22 @@ bool BufferStorage9::supportsDirectBinding() const
     return false;
 }
 
+// We do not suppot buffer mapping facility in D3D9
+bool BufferStorage9::isMapped() const
+{
+    UNREACHABLE();
+    return false;
+}
+
+void *BufferStorage9::map(GLbitfield access)
+{
+    UNREACHABLE();
+    return NULL;
+}
+
+void BufferStorage9::unmap()
+{
+    UNREACHABLE();
+}
+
 }

@@ -47,6 +47,10 @@ class BufferStorage11 : public BufferStorage
     ID3D11Buffer *getBuffer(BufferUsage usage);
     ID3D11ShaderResourceView *getSRV(DXGI_FORMAT srvFormat);
 
+    virtual bool isMapped() const;
+    virtual void *map(GLbitfield access);
+    virtual void unmap();
+
   private:
     Renderer11 *mRenderer;
 

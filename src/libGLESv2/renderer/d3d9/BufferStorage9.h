@@ -30,6 +30,10 @@ class BufferStorage9 : public BufferStorage
     virtual unsigned int getSize() const;
     virtual bool supportsDirectBinding() const;
 
+    virtual bool isMapped() const;
+    virtual void *map(GLbitfield access);
+    virtual void unmap();
+
   private:
     DISALLOW_COPY_AND_ASSIGN(BufferStorage9);
 

@@ -248,6 +248,24 @@ DirectBufferStorage11 *BufferStorage11::getLatestStorage() const
     return latestStorage;
 }
 
+// TODO: map implementation in D3D11
+bool BufferStorage11::isMapped() const
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+void *BufferStorage11::map(GLbitfield access)
+{
+    UNIMPLEMENTED();
+    return NULL;
+}
+
+void BufferStorage11::unmap()
+{
+    UNIMPLEMENTED();
+}
+
 DirectBufferStorage11::DirectBufferStorage11(Renderer11 *renderer, BufferUsage usage)
     : mRenderer(renderer),
       mUsage(usage),
