@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "afdf457e_85c7c4d8",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2661,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-19T16:53:31Z",
+      "side": 1,
+      "message": "Agreed on the API level but since we\u0027re doing lots of other error checking in Context::draw* I\u0027m going to leave it here for now and make a ticket to move all them at once.\n\nThe active parameter is needed for later things.",
+      "parentUuid": "ef577db2_c49b9e1b",
+      "range": {
+        "startLine": 2661,
+        "startChar": 11,
+        "endLine": 2661,
+        "endChar": 39
+      },
+      "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0fdcd12e_e02ffc6a",
         "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
         "patchSetId": 1
@@ -106,6 +130,30 @@
       "writtenOn": "2014-02-18T20:13:46Z",
       "side": 1,
       "message": "Please use \"BUFFER_USAGE_VERTEX_XFB\" or something similar, with one value here.",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 58
+      },
+      "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef577db2_a78304a8",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-19T16:53:31Z",
+      "side": 1,
+      "message": "I still prefer to have the enums this way since it allows us to merge/split them by only modifying BufferStorage11 instead of all the places the enum is used.",
+      "parentUuid": "ef7e9d24_ec3b2b4e",
       "range": {
         "startLine": 24,
         "startChar": 0,
