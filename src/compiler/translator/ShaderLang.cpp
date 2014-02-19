@@ -180,27 +180,27 @@ void ShGetInfo(const ShHandle handle, ShShaderInfo pname, size_t* params)
         *params = compiler->getUniforms().size();
         break;
     case SH_ACTIVE_UNIFORM_MAX_LENGTH:
-        *params = 1 +  MAX_SYMBOL_NAME_LEN;
+        *params = 1 + GetGlobalMaxTokenSize();
         break;
     case SH_ACTIVE_ATTRIBUTES:
         *params = compiler->getAttribs().size();
         break;
     case SH_ACTIVE_ATTRIBUTE_MAX_LENGTH:
-        *params = 1 + MAX_SYMBOL_NAME_LEN;
+        *params = 1 + GetGlobalMaxTokenSize();
         break;
     case SH_VARYINGS:
         *params = compiler->getVaryings().size();
         break;
     case SH_VARYING_MAX_LENGTH:
-        *params = 1 + MAX_SYMBOL_NAME_LEN;
+        *params = 1 + GetGlobalMaxTokenSize();
         break;
     case SH_MAPPED_NAME_MAX_LENGTH:
         // Use longer length than MAX_SHORTENED_IDENTIFIER_SIZE to
         // handle array and struct dereferences.
-        *params = 1 + MAX_SYMBOL_NAME_LEN;
+        *params = 1 + GetGlobalMaxTokenSize();
         break;
     case SH_NAME_MAX_LENGTH:
-        *params = 1 + MAX_SYMBOL_NAME_LEN;
+        *params = 1 + GetGlobalMaxTokenSize();
         break;
     case SH_HASHED_NAME_MAX_LENGTH:
         if (compiler->getHashFunction() == NULL) {
@@ -307,14 +307,14 @@ void ShGetVariableInfo(const ShHandle handle,
     // This size must match that queried by
     // SH_ACTIVE_UNIFORM_MAX_LENGTH, SH_ACTIVE_ATTRIBUTE_MAX_LENGTH, SH_VARYING_MAX_LENGTH
     // in ShGetInfo, below.
-    size_t variableLength = 1 + MAX_SYMBOL_NAME_LEN;
+    size_t variableLength = 1 + GetGlobalMaxTokenSize();
     ASSERT(checkVariableMaxLengths(handle, variableLength));
     strncpy(name, varInfo.name.c_str(), variableLength);
     name[variableLength - 1] = 0;
     if (mappedName) {
         // This size must match that queried by
         // SH_MAPPED_NAME_MAX_LENGTH in ShGetInfo, below.
-        size_t maxMappedNameLength = 1 + MAX_SYMBOL_NAME_LEN;
+        size_t maxMappedNameLength = 1 + GetGlobalMaxTokenSize();
         ASSERT(checkMappedNameMaxLength(handle, maxMappedNameLength));
         strncpy(mappedName, varInfo.mappedName.c_str(), maxMappedNameLength);
         mappedName[maxMappedNameLength - 1] = 0;

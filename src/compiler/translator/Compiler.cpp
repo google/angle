@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -27,6 +27,21 @@
 bool isWebGLBasedSpec(ShShaderSpec spec)
 {
      return spec == SH_WEBGL_SPEC || spec == SH_CSS_SHADERS_SPEC;
+}
+
+size_t GetGlobalMaxTokenSize()
+{
+    TParseContext *parseContext = GetGlobalParseContext();
+    // WebGL defines a max token legnth of 256, while ES2 leaves max token
+    // size undefined. ES3 defines a max size of 1024 characters.
+    if (isWebGLBasedSpec(parseContext->shaderSpec))
+    {
+        return 256;
+    }
+    else
+    {
+        return 1024;
+    }
 }
 
 namespace {

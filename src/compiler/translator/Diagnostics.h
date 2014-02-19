@@ -22,8 +22,6 @@ class TDiagnostics : public pp::Diagnostics
     int numErrors() const { return mNumErrors; }
     int numWarnings() const { return mNumWarnings; }
 
-    void setShaderVersion(int version);
-
     void writeInfo(Severity severity,
                    const pp::SourceLocation& loc,
                    const std::string& reason,

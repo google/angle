@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -32,7 +32,6 @@ class Tokenizer : public Lexer
         bool leadingSpace;
         bool lineStart;
     };
-    static const std::size_t kMaxTokenLength;
 
     Tokenizer(Diagnostics* diagnostics);
     ~Tokenizer();

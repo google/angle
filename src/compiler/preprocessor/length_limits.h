@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2011-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -14,7 +14,6 @@
 // These constants are factored out from the rest of the headers to
 // make it easier to reference them from the compiler sources.
 
-// These lengths do not include the NULL terminator.
-#define MAX_SYMBOL_NAME_LEN 1024
+size_t GetGlobalMaxTokenSize();
 
 #endif // !(defined(__LENGTH_LIMITS_H)
