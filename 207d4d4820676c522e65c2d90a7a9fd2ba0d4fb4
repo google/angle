@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f5bf1e1_2ef5abf5",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2014-02-19T19:14:43Z",
+      "side": 1,
+      "message": "I think mDc will actually be EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE in this case, not a real HDC.",
+      "revId": "207d4d4820676c522e65c2d90a7a9fd2ba0d4fb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
