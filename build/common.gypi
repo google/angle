@@ -30,6 +30,8 @@
             '-Wpointer-arith',
             '-Wundef',
             '-Wwrite-strings',
+            '-Wno-reorder',
+            '-Wno-format-nonliteral',
         ],
     },
     'target_defaults':
