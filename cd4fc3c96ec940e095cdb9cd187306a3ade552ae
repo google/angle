@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afdf457e_85a4e421",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1803,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-19T17:06:40Z",
+      "side": 1,
+      "message": "add this enum to GetQueryParameterInfo",
+      "range": {
+        "startLine": 1803,
+        "startChar": 11,
+        "endLine": 1803,
+        "endChar": 59
+      },
+      "revId": "cd4fc3c96ec940e095cdb9cd187306a3ade552ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef577db2_e7e6dc95",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1805,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-19T17:06:40Z",
+      "side": 1,
+      "message": "add this enum to GetQueryParameterInfo",
+      "range": {
+        "startLine": 1805,
+        "startChar": 11,
+        "endLine": 1805,
+        "endChar": 56
+      },
+      "revId": "cd4fc3c96ec940e095cdb9cd187306a3ade552ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef7e9d24_af099588",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-19T17:06:40Z",
+      "side": 1,
+      "message": "same as the lower function here",
+      "range": {
+        "startLine": 2138,
+        "startChar": 15,
+        "endLine": 2138,
+        "endChar": 46
+      },
+      "revId": "cd4fc3c96ec940e095cdb9cd187306a3ade552ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "afdf457e_65a1e00f",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2143,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-19T17:06:40Z",
+      "side": 1,
+      "message": "but different here.. is this intentional?",
+      "range": {
+        "startLine": 2143,
+        "startChar": 15,
+        "endLine": 2143,
+        "endChar": 46
+      },
+      "revId": "cd4fc3c96ec940e095cdb9cd187306a3ade552ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "afdf457e_c56eec15",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2154,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-19T17:06:40Z",
+      "side": 1,
+      "message": "same as upper function",
+      "range": {
+        "startLine": 2154,
+        "startChar": 15,
+        "endLine": 2154,
+        "endChar": 46
+      },
+      "revId": "cd4fc3c96ec940e095cdb9cd187306a3ade552ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "afdf457e_a573e8ff",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2159,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-19T17:06:40Z",
+      "side": 1,
+      "message": "different from upper function",
+      "range": {
+        "startLine": 2159,
+        "startChar": 15,
+        "endLine": 2159,
+        "endChar": 17
+      },
+      "revId": "cd4fc3c96ec940e095cdb9cd187306a3ade552ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
