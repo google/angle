@@ -16,6 +16,24 @@
       "revId": "207d4d4820676c522e65c2d90a7a9fd2ba0d4fb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef577db2_cab40703",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-19T19:36:00Z",
+      "side": 1,
+      "message": "Hrm, I think you\u0027re right... We use real DCs in all our tests and samples.. whoops.  It still ends up having the right behavior in chrome\u0027s case (returns a NULL HWND, resulting in a 0 PID, resulting in the DXGI 1.2 check) but I\u0027m going to update the error checking to be more explicit.",
+      "parentUuid": "0f5bf1e1_2ef5abf5",
+      "revId": "207d4d4820676c522e65c2d90a7a9fd2ba0d4fb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
