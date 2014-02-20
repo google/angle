@@ -142,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "2f78b56e_1cbe9d94",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2014-02-20T23:11:14Z",
+      "side": 1,
+      "message": "I just tried without this check and creating a 0x0 surface fails in D3D. I\u0027ll try adding language to the spec to say that creating a 0-width or 0-height surface is disallowed.",
+      "parentUuid": "ef577db2_aab8aba9",
+      "revId": "4c47904b96f02d51caa450fc3a95a131513b3b07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0fdcd12e_fd15e79a",
         "filename": "src/libEGL/Surface.cpp",
         "patchSetId": 4
