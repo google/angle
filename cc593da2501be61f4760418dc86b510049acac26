@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4fbc0932_cf6d5d18",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-20T16:05:40Z",
+      "side": 1,
+      "message": "Can it be #define 0ed somewhere please?",
+      "revId": "cc593da2501be61f4760418dc86b510049acac26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
