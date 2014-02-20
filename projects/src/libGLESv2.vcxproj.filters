@@ -99,6 +99,9 @@
     <ClInclude Include="..\..\src\libGLESv2\Program.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\main.h">
+      <Filter>src\libGLESv2</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\queryconversions.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
@@ -183,9 +186,6 @@
     <ClCompile Include="..\..\src\libGLESv2\Buffer.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\libGLESv2\Program.cpp">
-      <Filter>src\libGLESv2</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\Shader.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
@@ -198,9 +198,6 @@
     <ClCompile Include="..\..\src\libGLESv2\main.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\libGLESv2\main.h">
-      <Filter>src\libGLESv2</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\Framebuffer.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -231,6 +228,9 @@
     <ClInclude Include="..\..\src\libGLESv2\formatutils.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\Program.cpp">
+      <Filter>src\libGLESv2</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\angletypes.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
@@ -357,9 +357,6 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\renderer11_utils.h">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\BufferStorage11.h">
-      <Filter>src\libGLESv2\renderer\d3d11</Filter>
-    </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\TextureStorage11.cpp">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClCompile>
@@ -378,9 +375,6 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\TextureStorage11.h">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\SwapChain11.cpp">
-      <Filter>src\libGLESv2\renderer\d3d11</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\ShaderExecutable11.h">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClInclude>
@@ -396,9 +390,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\Fence11.h">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\Renderer11.h">
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\Renderer11.cpp">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\IndexBuffer11.h">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClInclude>
@@ -420,6 +414,12 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\Blit11.cpp">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\BufferStorage11.h">
+      <Filter>src\libGLESv2\renderer\d3d11</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\SwapChain11.cpp">
+      <Filter>src\libGLESv2\renderer\d3d11</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\PixelTransfer11.cpp">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClCompile>
@@ -429,6 +429,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\Image11.h">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\Renderer11.h">
+      <Filter>src\libGLESv2\renderer\d3d11</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\formatutils11.h">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClInclude>
@@ -436,9 +439,6 @@
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\Image11.cpp">
-      <Filter>src\libGLESv2\renderer\d3d11</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\Renderer11.cpp">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d11\RenderStateCache.cpp">
@@ -453,10 +453,10 @@
     <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\generate_shaders.bat">
       <Filter>src\libGLESv2\renderer\d3d11\shaders</Filter>
     </None>
-    <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\Swizzle11.hlsl">
+    <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\Passthrough2D11.hlsl">
       <Filter>src\libGLESv2\renderer\d3d11\shaders</Filter>
     </None>
-    <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\Passthrough2D11.hlsl">
+    <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\Swizzle11.hlsl">
       <Filter>src\libGLESv2\renderer\d3d11\shaders</Filter>
     </None>
     <None Include="..\..\src\libGLESv2\renderer\d3d11\shaders\Passthrough3D11.hlsl">
@@ -478,6 +478,9 @@
       <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgba3d11ps.h">
+      <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthrough2d11vs.h">
       <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthroughrg2d11ps.h">
@@ -510,13 +513,13 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\clearuint11vs.h">
       <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgba2di11ps.h">
-      <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgba3dui11ps.h">
       <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthroughlum3d11ps.h">
+      <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthroughrgba2di11ps.h">
       <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\swizzleui2darrayps.h">
@@ -579,9 +582,6 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\buffertotexture11_ps_4i.h">
       <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\passthrough2d11vs.h">
-      <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\shaders\compiled\swizzlef2dps.h">
       <Filter>src\libGLESv2\renderer\d3d11\shaders\compiled</Filter>
     </ClInclude>
@@ -642,13 +642,13 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\renderer9_utils.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\IndexBuffer9.cpp">
-      <Filter>src\libGLESv2\renderer\d3d9</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\ShaderExecutable9.cpp">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\VertexDeclarationCache.h">
+      <Filter>src\libGLESv2\renderer\d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Fence9.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Blit9.h">
@@ -657,6 +657,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\ShaderCache.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\Blit9.cpp">
+      <Filter>src\libGLESv2\renderer\d3d9</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\RenderTarget9.cpp">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClCompile>
@@ -675,28 +678,25 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\SwapChain9.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\Fence9.cpp">
+      <Filter>src\libGLESv2\renderer\d3d9</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\formatutils9.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Query9.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\TextureStorage9.h">
-      <Filter>src\libGLESv2\renderer\d3d9</Filter>
-    </ClInclude>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\Fence9.cpp">
-      <Filter>src\libGLESv2\renderer\d3d9</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\Blit9.cpp">
-      <Filter>src\libGLESv2\renderer\d3d9</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\VertexBuffer9.cpp">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\SwapChain9.cpp">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Fence9.h">
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\IndexBuffer9.cpp">
+      <Filter>src\libGLESv2\renderer\d3d9</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\VertexBuffer9.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\BufferStorage9.h">
@@ -711,7 +711,7 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\formatutils9.cpp">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\VertexBuffer9.h">
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\TextureStorage9.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\Query9.cpp">
@@ -720,13 +720,13 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Image9.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
+    <None Include="..\..\src\libGLESv2\renderer\d3d9\shaders\Blit.ps">
+      <Filter>src\libGLESv2\renderer\d3d9\shaders</Filter>
+    </None>
     <None Include="..\..\src\libGLESv2\renderer\d3d9\shaders\Blit.vs">
       <Filter>src\libGLESv2\renderer\d3d9\shaders</Filter>
     </None>
     <None Include="..\..\src\libGLESv2\renderer\d3d9\shaders\generate_shaders.bat">
-      <Filter>src\libGLESv2\renderer\d3d9\shaders</Filter>
-    </None>
-    <None Include="..\..\src\libGLESv2\renderer\d3d9\shaders\Blit.ps">
       <Filter>src\libGLESv2\renderer\d3d9\shaders</Filter>
     </None>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\shaders\compiled\luminanceps.h">
