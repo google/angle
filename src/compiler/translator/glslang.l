@@ -40,6 +40,7 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 #include "compiler/translator/ParseContext.h"
 #include "compiler/preprocessor/Token.h"
 #include "compiler/translator/util.h"
+#include "compiler/translator/length_limits.h"
 #include "glslang_tab.h"
 
 /* windows only pragma */
@@ -549,6 +550,8 @@ int glslang_scan(size_t count, const char* const string[], const int length[],
     }
     if (context->fragmentPrecisionHigh)
         context->preprocessor.predefineMacro("GL_FRAGMENT_PRECISION_HIGH", 1);
+
+    context->preprocessor.setMaxTokenSize(GetGlobalMaxTokenSize());
 
     return 0;
 }

@@ -33,7 +33,7 @@ class TranslatorHLSL;
 // Helper function to identify specs that are based on the WebGL spec,
 // like the CSS Shaders spec.
 //
-bool isWebGLBasedSpec(ShShaderSpec spec);
+bool IsWebGLBasedSpec(ShShaderSpec spec);
 
 //
 // The base class used to back handles returned to the driver.

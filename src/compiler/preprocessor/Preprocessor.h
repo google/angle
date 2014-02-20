@@ -40,6 +40,9 @@ class Preprocessor
 
     void lex(Token* token);
 
+    // Set maximum preprocessor token size
+    void setMaxTokenSize(size_t maxTokenSize);
+
   private:
     PP_DISALLOW_COPY_AND_ASSIGN(Preprocessor);
 

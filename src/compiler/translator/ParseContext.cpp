@@ -435,7 +435,7 @@ bool TParseContext::reservedErrorCheck(const TSourceLoc& line, const TString& id
             error(line, reservedErrMsg, "gl_");
             return true;
         }
-        if (isWebGLBasedSpec(shaderSpec)) {
+        if (IsWebGLBasedSpec(shaderSpec)) {
             if (identifier.compare(0, 6, "webgl_") == 0) {
                 error(line, reservedErrMsg, "webgl_");
                 return true;
@@ -2029,7 +2029,7 @@ const int kWebGLMaxStructNesting = 4;
 
 bool TParseContext::structNestingErrorCheck(const TSourceLoc& line, const TField& field)
 {
-    if (!isWebGLBasedSpec(shaderSpec)) {
+    if (!IsWebGLBasedSpec(shaderSpec)) {
         return false;
     }
 

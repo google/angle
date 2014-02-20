@@ -40,6 +40,7 @@ class Tokenizer : public Lexer
 
     void setFileNumber(int file);
     void setLineNumber(int line);
+    void setMaxTokenSize(size_t maxTokenSize);
 
     virtual void lex(Token* token);
 
@@ -50,6 +51,7 @@ class Tokenizer : public Lexer
 
     void* mHandle;  // Scanner handle.
     Context mContext;  // Scanner extra.
+    size_t mMaxTokenSize; // Maximum token size
 };
 
 }  // namespace pp

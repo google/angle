@@ -24,7 +24,7 @@
 #include "compiler/translator/timing/RestrictVertexShaderTiming.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 
-bool isWebGLBasedSpec(ShShaderSpec spec)
+bool IsWebGLBasedSpec(ShShaderSpec spec)
 {
      return spec == SH_WEBGL_SPEC || spec == SH_CSS_SHADERS_SPEC;
 }
@@ -34,7 +34,7 @@ size_t GetGlobalMaxTokenSize()
     TParseContext *parseContext = GetGlobalParseContext();
     // WebGL defines a max token legnth of 256, while ES2 leaves max token
     // size undefined. ES3 defines a max size of 1024 characters.
-    if (isWebGLBasedSpec(parseContext->shaderSpec))
+    if (IsWebGLBasedSpec(parseContext->shaderSpec))
     {
         return 256;
     }
@@ -149,7 +149,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
         return true;
 
     // If compiling for WebGL, validate loop and indexing as well.
-    if (isWebGLBasedSpec(shaderSpec))
+    if (IsWebGLBasedSpec(shaderSpec))
         compileOptions |= SH_VALIDATE_LOOP_INDEXING;
 
     // First string is path of source file if flag is set. The actual source follows.
@@ -392,14 +392,14 @@ bool TCompiler::enforceTimingRestrictions(TIntermNode* root, bool outputGraph)
 
         // Output any errors first.
         bool success = enforceFragmentShaderTimingRestrictions(graph);
-        
+
         // Then, output the dependency graph.
         if (outputGraph)
         {
             TDependencyGraphOutput output(infoSink.info);
             output.outputAllSpanningTrees(graph);
         }
-        
+
         return success;
     }
     else

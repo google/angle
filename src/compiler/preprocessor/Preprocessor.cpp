@@ -110,4 +110,9 @@ void Preprocessor::lex(Token* token)
     }
 }
 
+void Preprocessor::setMaxTokenSize(size_t maxTokenSize)
+{
+    mImpl->tokenizer.setMaxTokenSize(maxTokenSize);
+}
+
 }  // namespace pp

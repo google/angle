@@ -24,7 +24,6 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 
 %{
 #include "Tokenizer.h"
-#include "length_limits.h"
 
 #include "DiagnosticsBase.h"
 #include "Token.h"
@@ -298,14 +297,19 @@ void Tokenizer::setLineNumber(int line)
     yyset_lineno(line, mHandle);
 }
 
+void Tokenizer::setMaxTokenSize(size_t maxTokenSize)
+{
+    mMaxTokenSize = maxTokenSize;
+}
+
 void Tokenizer::lex(Token* token)
 {
     token->type = yylex(&token->text, &token->location, mHandle);
-    if (token->text.size() > GetGlobalMaxTokenSize())
+    if (token->text.size() > mMaxTokenSize)
     {
         mContext.diagnostics->report(Diagnostics::PP_TOKEN_TOO_LONG,
                                      token->location, token->text);
-        token->text.erase(GetGlobalMaxTokenSize());
+        token->text.erase(mMaxTokenSize);
     }
 
     token->flags = 0;
