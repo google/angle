@@ -1808,8 +1808,6 @@ TextureType ProgramBinary::getTextureType(GLenum samplerType, InfoLog &infoLog)
         return TEXTURE_CUBE;
       case GL_INT_SAMPLER_CUBE:
       case GL_UNSIGNED_INT_SAMPLER_CUBE:
-        //UNIMPLEMENTED();
-        infoLog.append("Integer cube texture sampling is currently not supported by ANGLE and returns a black color.");
         return TEXTURE_CUBE;
       case GL_SAMPLER_2D_ARRAY:
       case GL_INT_SAMPLER_2D_ARRAY:

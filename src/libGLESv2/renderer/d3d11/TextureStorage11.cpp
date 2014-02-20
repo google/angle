@@ -846,9 +846,23 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(GLenum swizzleRed, GLenu
 
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
         srvDesc.Format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-        srvDesc.TextureCube.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
-        srvDesc.TextureCube.MostDetailedMip = 0;
+
+        // Unnormalized integer cube maps are not supported by DX11; we emulate them as an array of six 2D textures
+        if (d3d11::GetComponentType(mTextureFormat) == GL_INT ||
+            d3d11::GetComponentType(mTextureFormat) == GL_UNSIGNED_INT)
+        {
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+            srvDesc.Texture2DArray.MostDetailedMip = 0;
+            srvDesc.Texture2DArray.MipLevels = 1;
+            srvDesc.Texture2DArray.FirstArraySlice = 0;
+            srvDesc.Texture2DArray.ArraySize = 6;
+        }
+        else
+        {
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+            srvDesc.TextureCube.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
+            srvDesc.TextureCube.MostDetailedMip = 0;
+        }
 
         ID3D11Texture2D *sourceTexture = swizzleRequired ? getSwizzleTexture() : mTexture;
         HRESULT result = device->CreateShaderResourceView(sourceTexture, &srvDesc, resultSRV);
@@ -974,7 +988,6 @@ unsigned int TextureStorage11_Cube::getTextureLevelDepth(int mipLevel) const
 {
     return 6;
 }
-
 
 TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget,
                                          GLsizei width, GLsizei height, GLsizei depth)

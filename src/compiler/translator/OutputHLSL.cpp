@@ -988,11 +988,11 @@ void OutputHLSL::header()
               case EbtSampler2DArray:       out << "Texture2DArray x, SamplerState s";           hlslCoords = 3; break;
               case EbtISampler2D:           out << "Texture2D<int4> x, SamplerState s";          hlslCoords = 2; break;
               case EbtISampler3D:           out << "Texture3D<int4> x, SamplerState s";          hlslCoords = 3; break;
-              case EbtISamplerCube:         out << "TextureCube<int4> x, SamplerState s";        hlslCoords = 3; break;
+              case EbtISamplerCube:         out << "Texture2DArray<int4> x, SamplerState s";     hlslCoords = 3; break;
               case EbtISampler2DArray:      out << "Texture2DArray<int4> x, SamplerState s";     hlslCoords = 3; break;
               case EbtUSampler2D:           out << "Texture2D<uint4> x, SamplerState s";         hlslCoords = 2; break;
               case EbtUSampler3D:           out << "Texture3D<uint4> x, SamplerState s";         hlslCoords = 3; break;
-              case EbtUSamplerCube:         out << "TextureCube<uint4> x, SamplerState s";       hlslCoords = 3; break;
+              case EbtUSamplerCube:         out << "Texture2DArray<uint4> x, SamplerState s";    hlslCoords = 3; break;
               case EbtUSampler2DArray:      out << "Texture2DArray<uint4> x, SamplerState s";    hlslCoords = 3; break;
               case EbtSampler2DShadow:      out << "Texture2D x, SamplerComparisonState s";      hlslCoords = 2; break;
               case EbtSamplerCubeShadow:    out << "TextureCube x, SamplerComparisonState s";    hlslCoords = 3; break;
@@ -1131,24 +1131,38 @@ void OutputHLSL::header()
               default: UNREACHABLE();
             }
         }
-        else if (IsIntegerSampler(textureFunction->sampler) && IsSamplerCube(textureFunction->sampler))
-        {
-            // Currently unsupported because TextureCube does not support Load
-            // This will require emulation using a Texture2DArray with 6 faces
-            if (textureFunction->sampler == EbtISamplerCube)
-            {
-                out << "    return int4(0, 0, 0, 0);";
-            }
-            else if (textureFunction->sampler == EbtUSamplerCube)
-            {
-                out << "    return uint4(0, 0, 0, 0);";
-            }
-            else UNREACHABLE();
-        }
         else
         {
-            if (IsIntegerSampler(textureFunction->sampler) &&
-                textureFunction->method != TextureFunction::FETCH)
+            if (IsIntegerSampler(textureFunction->sampler) && IsSamplerCube(textureFunction->sampler))
+            {
+                out << "    float width; float height; float layers; float levels;\n";
+
+                out << "    uint mip = 0;\n";
+
+                out << "    x.GetDimensions(mip, width, height, layers, levels);\n";
+
+                out << "    bool xMajor = abs(t.x) > abs(t.y) && abs(t.x) > abs(t.z);\n";
+                out << "    bool yMajor = abs(t.y) > abs(t.z) && abs(t.y) > abs(t.x);\n";
+                out << "    bool zMajor = abs(t.z) > abs(t.x) && abs(t.z) > abs(t.y);\n";
+                out << "    bool negative = (xMajor && t.x < 0.0f) || (yMajor && t.y < 0.0f) || (zMajor && t.z < 0.0f);\n";
+
+                // FACE_POSITIVE_X = 000b
+                // FACE_NEGATIVE_X = 001b
+                // FACE_POSITIVE_Y = 010b
+                // FACE_NEGATIVE_Y = 011b
+                // FACE_POSITIVE_Z = 100b
+                // FACE_NEGATIVE_Z = 101b
+                out << "    int face = (int)negative + (int)yMajor * 2 + (int)zMajor * 4;\n";
+
+                out << "    float u = xMajor ? -t.z : (yMajor && t.y < 0.0f ? -t.x : t.x);\n";
+                out << "    float v = yMajor ? t.z : (negative ? t.y : -t.y);\n";
+                out << "    float m = xMajor ? t.x : (yMajor ? t.y : t.z);\n";
+
+                out << "    t.x = (u * 0.5f / m) + 0.5f;\n";
+                out << "    t.y = (v * 0.5f / m) + 0.5f;\n";
+            }
+            else if (IsIntegerSampler(textureFunction->sampler) &&
+                     textureFunction->method != TextureFunction::FETCH)
             {
                 if (IsSampler2D(textureFunction->sampler))
                 {
@@ -1352,6 +1366,10 @@ void OutputHLSL::header()
                     {
                         addressz = "int(max(0, min(layers - 1, floor(0.5 + ";
                     }
+                    else if (IsSamplerCube(textureFunction->sampler))
+                    {
+                        addressz = "((((";
+                    }
                     else
                     {
                         addressz = "int(floor(depth * frac((";
@@ -1416,18 +1434,25 @@ void OutputHLSL::header()
             {
                 if (hlslCoords >= 3)
                 {
-                    out << ", " + addressz + ("t.z" + proj) + close;
+                    if (IsIntegerSampler(textureFunction->sampler) && IsSamplerCube(textureFunction->sampler))
+                    {
+                        out << ", face";
+                    }
+                    else
+                    {
+                        out << ", " + addressz + ("t.z" + proj) + close;
+                    }
                 }
 
                 if (textureFunction->method == TextureFunction::GRAD)
                 {
                     if (IsIntegerSampler(textureFunction->sampler))
                     {
-                         out << ", mip)";
+                        out << ", mip)";
                     }
                     else if (IsShadowSampler(textureFunction->sampler))
                     {
-                       // Compare value
+                        // Compare value
                         switch(textureFunction->coords)
                         {
                           case 3: out << "), t.z"; break;
@@ -3329,11 +3354,11 @@ TString OutputHLSL::textureString(const TType &type)
       case EbtSampler3D:            return "Texture3D";
       case EbtISampler2D:           return "Texture2D<int4>";
       case EbtISampler3D:           return "Texture3D<int4>";
-      case EbtISamplerCube:         return "TextureCube<int4>";
+      case EbtISamplerCube:         return "Texture2DArray<int4>";
       case EbtISampler2DArray:      return "Texture2DArray<int4>";
       case EbtUSampler2D:           return "Texture2D<uint4>";
       case EbtUSampler3D:           return "Texture3D<uint4>";
-      case EbtUSamplerCube:         return "TextureCube<uint4>";
+      case EbtUSamplerCube:         return "Texture2DArray<uint4>";
       case EbtUSampler2DArray:      return "Texture2DArray<uint4>";
       case EbtSampler2DShadow:      return "Texture2D";
       case EbtSamplerCubeShadow:    return "TextureCube";

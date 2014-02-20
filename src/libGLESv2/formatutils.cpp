@@ -1353,7 +1353,7 @@ GLenum GetType(GLenum internalFormat, GLuint clientVersion)
     }
 }
 
-GLuint GetComponentType(GLenum internalFormat, GLuint clientVersion)
+GLenum GetComponentType(GLenum internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
@@ -1363,7 +1363,7 @@ GLuint GetComponentType(GLenum internalFormat, GLuint clientVersion)
     else
     {
         UNREACHABLE();
-        return false;
+        return GL_NONE;
     }
 }
 
