@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f9e91d0_add9fd9d",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-20T20:46:00Z",
+      "side": 1,
+      "message": "Can these be !\u003ds instead of \u003es?",
+      "revId": "e6e2b64b6fb92a48823aad203e9b27e8e8838f5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf6e39b0_d3bfb4b0",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-20T20:46:00Z",
+      "side": 1,
+      "message": "Since ConvertMapBits doesn\u0027t handle all the flags present in the GL access pattern, is there any name we could give it so that it makes clearer the distinction between the map access type and flags in D3D?",
+      "revId": "e6e2b64b6fb92a48823aad203e9b27e8e8838f5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf6e39b0_13784c4f",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-02-20T20:46:00Z",
+      "side": 1,
+      "message": "Do we have a way to handle flush behavior?",
+      "revId": "e6e2b64b6fb92a48823aad203e9b27e8e8838f5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
