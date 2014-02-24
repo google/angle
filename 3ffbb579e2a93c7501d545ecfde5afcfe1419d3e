@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f538dfd_d330866d",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-02-24T17:09:43Z",
+      "side": 1,
+      "message": "Since we\u0027re not intending on reusing the same variable, I think it would be better to rename these to colorFormatSupport and depthFormatSupport to keep them distinct and avoid potential confusion/bugs later on.",
+      "range": {
+        "startLine": 450,
+        "startChar": 78,
+        "endLine": 450,
+        "endChar": 91
+      },
+      "revId": "3ffbb579e2a93c7501d545ecfde5afcfe1419d3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f4e0155_b4892ecb",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3294,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-02-24T17:09:43Z",
+      "side": 1,
+      "message": "The first one isn\u0027t used, so just remove it and keep the name of this one.",
+      "range": {
+        "startLine": 3294,
+        "startChar": 20,
+        "endLine": 3294,
+        "endChar": 27
+      },
+      "revId": "3ffbb579e2a93c7501d545ecfde5afcfe1419d3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
