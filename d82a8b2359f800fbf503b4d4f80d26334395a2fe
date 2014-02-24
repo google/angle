@@ -40,6 +40,24 @@
       "revId": "d82a8b2359f800fbf503b4d4f80d26334395a2fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bce78593_82b65a05",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-24T19:22:20Z",
+      "side": 1,
+      "message": "we link against classes like sh::Attribute, sh::Varying, and use some helper methods (HLSLRegisterCount, couple others). And a few other things. These show up as missing externals (constructors, methods, etc).\n\nWe\u0027d either need to export, link statically, or put these classes in a common shared library which we can export from more liberally.",
+      "parentUuid": "5cf6894a_7f9f6f08",
+      "revId": "d82a8b2359f800fbf503b4d4f80d26334395a2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
