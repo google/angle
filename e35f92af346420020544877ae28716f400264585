@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bce78593_c20fc2ba",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1156,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-02-24T21:10:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bce78593_c2e0e2e7",
+      "range": {
+        "startLine": 1156,
+        "startChar": 39,
+        "endLine": 1156,
+        "endChar": 55
+      },
+      "revId": "e35f92af346420020544877ae28716f400264585",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bce78593_a2ddde31",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-02-24T19:51:44Z",
       "side": 1,
       "message": "If the above is correct, this could become yMajor * 2.",
+      "range": {
+        "startLine": 1157,
+        "startChar": 36,
+        "endLine": 1157,
+        "endChar": 50
+      },
+      "revId": "e35f92af346420020544877ae28716f400264585",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7cf18d4f_c09c5e0f",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1157,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-02-24T21:10:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bce78593_a2ddde31",
       "range": {
         "startLine": 1157,
         "startChar": 36,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7cf18d4f_a0995a1d",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1158,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-02-24T21:10:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bce78593_820adaef",
+      "range": {
+        "startLine": 1158,
+        "startChar": 36,
+        "endLine": 1158,
+        "endChar": 50
+      },
+      "revId": "e35f92af346420020544877ae28716f400264585",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7cf18d4f_c0e0dee7",
         "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
         "patchSetId": 1
@@ -82,6 +154,24 @@
       "writtenOn": "2014-02-24T19:51:44Z",
       "side": 1,
       "message": "Can we add a comment here about why the special case exists?",
+      "revId": "e35f92af346420020544877ae28716f400264585",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7cf18d4f_608b52c5",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 849,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-02-24T21:10:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7cf18d4f_c0e0dee7",
       "revId": "e35f92af346420020544877ae28716f400264585",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
