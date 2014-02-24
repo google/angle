@@ -13,7 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\samples\samples.gyp"/>
-    <ClCompile Include="..\..\samples\gles2_book\Common\esTransform.c">
+    <ClCompile Include="..\..\samples\gles2_book\Common\esShader.c">
       <Filter>gles2_book\Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\samples\gles2_book\Common\esUtil.c">
@@ -25,7 +25,7 @@
     <ClInclude Include="..\..\samples\gles2_book\Common\esUtil.h">
       <Filter>gles2_book\Common</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\samples\gles2_book\Common\esShader.c">
+    <ClCompile Include="..\..\samples\gles2_book\Common\esTransform.c">
       <Filter>gles2_book\Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\samples\gles2_book\Common\esShapes.c">

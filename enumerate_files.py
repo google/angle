@@ -5,6 +5,7 @@ import sys
 dirs = [ ]
 types = [ ]
 excludes = [ ]
+files = [ ]
 
 # Default to accepting a list of directories first
 curArray = dirs
@@ -49,5 +50,9 @@ for rootdir in dirs:
                             break
 
                     if not excluded:
-                        print fullPath
+                        files.append(fullPath)
                         break
+
+files.sort()
+for file in files:
+    print file

@@ -130,8 +130,8 @@
     <ClInclude Include="..\..\include\KHR\khrplatform.h"/>
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h"/>
     <ClInclude Include="..\..\include\GLES2\gl2.h"/>
-    <ClInclude Include="..\..\include\GLES2\gl2ext.h"/>
     <ClInclude Include="..\..\include\GLES2\gl2platform.h"/>
+    <ClInclude Include="..\..\include\GLES2\gl2ext.h"/>
     <ClInclude Include="..\..\include\GLES3\gl3ext.h"/>
     <ClInclude Include="..\..\include\GLES3\gl3.h"/>
     <ClInclude Include="..\..\include\GLES3\gl3platform.h"/>
@@ -145,8 +145,8 @@
     <ClCompile Include="..\..\src\libEGL\main.cpp"/>
     <ClCompile Include="..\..\src\libEGL\Display.cpp"/>
     <ClCompile Include="..\..\src\libEGL\libEGL.cpp"/>
-    <ClCompile Include="..\..\src\common\RefCountObject.cpp"/>
     <ClCompile Include="..\..\src\common\mathutil.cpp"/>
+    <ClCompile Include="..\..\src\common\RefCountObject.cpp"/>
     <ClCompile Include="..\..\src\common\debug.cpp"/>
     <ClCompile Include="..\..\src\common\event_tracer.cpp"/>
     <ClCompile Include="..\..\src\common\utilities.cpp"/>
