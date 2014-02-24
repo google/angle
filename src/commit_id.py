@@ -7,7 +7,7 @@ def grab_output(*command):
 commit_id_size = 12
 
 try:
-    commit_id = grab_output('gat', 'rev-parse', '--short=%d' % commit_id_size, 'HEAD')
+    commit_id = grab_output('git', 'rev-parse', '--short=%d' % commit_id_size, 'HEAD')
     commit_date = grab_output('git', 'show', '-s', '--format=%ci', 'HEAD')
 except:
     commit_id = 'invalid-hash'
