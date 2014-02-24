@@ -196,6 +196,24 @@
     },
     {
       "key": {
+        "uuid": "9cec817b_c1a90274",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-24T20:43:52Z",
+      "side": 1,
+      "message": "Aha. Yes, there\u0027s no point in allowing 0x0 if we immediately round up to 1x1.",
+      "parentUuid": "5cf6894a_62a47857",
+      "revId": "4c47904b96f02d51caa450fc3a95a131513b3b07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0fdcd12e_fd15e79a",
         "filename": "src/libEGL/Surface.cpp",
         "patchSetId": 4
