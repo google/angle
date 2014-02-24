@@ -95,32 +95,36 @@ void InfoLog::append(const char *format, ...)
         return;
     }
 
-    char info[1024];
-
     va_list vararg;
     va_start(vararg, format);
-    vsnprintf(info, sizeof(info), format, vararg);
+    size_t infoLength = vsnprintf(NULL, 0, format, vararg);
     va_end(vararg);
 
-    size_t infoLength = strlen(info);
+    char *logPointer = NULL;
 
     if (!mInfoLog)
     {
         mInfoLog = new char[infoLength + 2];
-        strcpy(mInfoLog, info);
-        strcpy(mInfoLog + infoLength, "\n");
+        logPointer = mInfoLog;
     }
     else
     {
-        size_t logLength = strlen(mInfoLog);
-        char *newLog = new char[logLength + infoLength + 2];
+        size_t currentlogLength = strlen(mInfoLog);
+        char *newLog = new char[currentlogLength + infoLength + 2];
         strcpy(newLog, mInfoLog);
-        strcpy(newLog + logLength, info);
-        strcpy(newLog + logLength + infoLength, "\n");
 
         delete[] mInfoLog;
         mInfoLog = newLog;
+
+        logPointer = mInfoLog + currentlogLength;
     }
+
+    va_start(vararg, format);
+    vsnprintf(logPointer, infoLength, format, vararg);
+    va_end(vararg);
+
+    logPointer[infoLength] = 0;
+    strcpy(logPointer + infoLength, "\n");
 }
 
 void InfoLog::reset()
