@@ -22,6 +22,24 @@
       "revId": "d82a8b2359f800fbf503b4d4f80d26334395a2fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cf6894a_7f9f6f08",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-02-24T19:19:22Z",
+      "side": 1,
+      "message": "The purpose of component build is so you don\u0027t need to link it in as a static library, to avoid multiple copies of the same binary.\n\nSo I am wondering why without linking the static lib breaks the component build?",
+      "parentUuid": "7cf18d4f_80009620",
+      "revId": "d82a8b2359f800fbf503b4d4f80d26334395a2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
