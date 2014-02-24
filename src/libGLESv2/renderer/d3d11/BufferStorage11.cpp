@@ -15,8 +15,42 @@
 namespace rx
 {
 
+namespace gl_d3d11
+{
+
+D3D11_MAP GetD3DMapTypeFromBits(GLbitfield access)
+{
+    bool readBit = ((access & GL_MAP_READ_BIT) != 0);
+    bool writeBit = ((access & GL_MAP_WRITE_BIT) != 0);
+    bool discardBit = ((access & (GL_MAP_INVALIDATE_BUFFER_BIT)) != 0);
+
+    ASSERT(!readBit || !discardBit);
+    ASSERT(readBit || writeBit);
+
+    if (readBit && !writeBit)
+    {
+        return D3D11_MAP_READ;
+    }
+    else if (writeBit && !readBit)
+    {
+        return (discardBit ? D3D11_MAP_WRITE_DISCARD : D3D11_MAP_WRITE);
+    }
+    else if (writeBit && readBit)
+    {
+        return D3D11_MAP_READ_WRITE;
+    }
+    else
+    {
+        UNREACHABLE();
+        return D3D11_MAP_READ;
+    }
+}
+
+}
+
 BufferStorage11::BufferStorage11(Renderer11 *renderer)
     : mRenderer(renderer),
+      mIsMapped(false),
       mResolvedDataRevision(0),
       mReadUsageCount(0),
       mWriteUsageCount(0),
@@ -40,7 +74,7 @@ BufferStorage11 *BufferStorage11::makeBufferStorage11(BufferStorage *bufferStora
 
 void *BufferStorage11::getData()
 {
-    DirectBufferStorage11 *stagingBuffer = getStorage(BUFFER_USAGE_STAGING);
+    DirectBufferStorage11 *stagingBuffer = getStagingBuffer();
     if (stagingBuffer->getDataRevision() > mResolvedDataRevision)
     {
         if (stagingBuffer->getSize() > mResolvedData.size())
@@ -69,7 +103,7 @@ void *BufferStorage11::getData()
 
 void BufferStorage11::setData(const void* data, unsigned int size, unsigned int offset)
 {
-    DirectBufferStorage11 *stagingBuffer = getStorage(BUFFER_USAGE_STAGING);
+    DirectBufferStorage11 *stagingBuffer = getStagingBuffer();
 
     // Explicitly resize the staging buffer, preserving data if the new data will not
     // completely fill the buffer
@@ -111,7 +145,7 @@ void BufferStorage11::copyData(BufferStorage* sourceStorage, unsigned int size,
         DirectBufferStorage11 *dest = getLatestStorage();
         if (!dest)
         {
-            dest = getStorage(BUFFER_USAGE_STAGING);
+            dest = getStagingBuffer();
         }
 
         DirectBufferStorage11 *source = sourceStorage11->getLatestStorage();
@@ -248,22 +282,45 @@ DirectBufferStorage11 *BufferStorage11::getLatestStorage() const
     return latestStorage;
 }
 
-// TODO: map implementation in D3D11
 bool BufferStorage11::isMapped() const
 {
-    UNIMPLEMENTED();
-    return false;
+    return mIsMapped;
 }
 
 void *BufferStorage11::map(GLbitfield access)
 {
-    UNIMPLEMENTED();
-    return NULL;
+    ASSERT(!mIsMapped);
+
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    HRESULT result;
+    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+    D3D11_MAP d3dMapType = gl_d3d11::GetD3DMapTypeFromBits(access);
+    UINT d3dMapFlag = ((access & GL_MAP_UNSYNCHRONIZED_BIT) != 0 ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0);
+    ID3D11Buffer *stagingBuffer = getStagingBuffer()->getD3DBuffer();
+
+    result = context->Map(stagingBuffer, 0, d3dMapType, d3dMapFlag, &mappedResource);
+    ASSERT(SUCCEEDED(result));
+
+    mIsMapped = true;
+
+    return mappedResource.pData;
 }
 
 void BufferStorage11::unmap()
 {
-    UNIMPLEMENTED();
+    ASSERT(mIsMapped);
+
+    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+    ID3D11Buffer *stagingBuffer = getStagingBuffer()->getD3DBuffer();
+
+    context->Unmap(stagingBuffer, 0);
+
+    mIsMapped = false;
+}
+
+DirectBufferStorage11 *BufferStorage11::getStagingBuffer()
+{
+    return getStorage(BUFFER_USAGE_STAGING);
 }
 
 DirectBufferStorage11::DirectBufferStorage11(Renderer11 *renderer, BufferUsage usage)

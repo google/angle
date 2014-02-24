@@ -53,6 +53,7 @@ class BufferStorage11 : public BufferStorage
 
   private:
     Renderer11 *mRenderer;
+    bool mIsMapped;
 
     std::map<BufferUsage, DirectBufferStorage11*> mDirectBuffers;
 
@@ -68,6 +69,7 @@ class BufferStorage11 : public BufferStorage
     size_t mSize;
 
     void markBufferUsage();
+    DirectBufferStorage11 *getStagingBuffer();
 
     DirectBufferStorage11 *getStorage(BufferUsage usage);
     DirectBufferStorage11 *getLatestStorage() const;
