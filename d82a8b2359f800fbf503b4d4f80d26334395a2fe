@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cf18d4f_80009620",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-24T18:36:58Z",
+      "side": 1,
+      "message": "mo, wanted your input on this change, as you had commented on something similar. we need to link against some classes in the compiler from libGLESv2.. this fixes the component build.",
+      "range": {
+        "startLine": 29,
+        "startChar": 39,
+        "endLine": 29,
+        "endChar": 56
+      },
+      "revId": "d82a8b2359f800fbf503b4d4f80d26334395a2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
