@@ -75,9 +75,9 @@
                 'third_party/googletest/include',
                 'third_party/googlemock/include',
             ],
-            'sources':
+            'includes':
             [
-                '<!@(python <(angle_build_scripts_path)/enumerate_files.py preprocessor_tests -types *.cpp *.h)'
+                'preprocessor_tests/preprocessor_tests.gypi',
             ],
         },
 
@@ -97,9 +97,9 @@
                 'third_party/googletest/include',
                 'third_party/googlemock/include',
             ],
-            'sources':
+            'includes':
             [
-                '<!@(python <(angle_build_scripts_path)/enumerate_files.py compiler_tests -types *.cpp *.h)'
+                'compiler_tests/compiler_tests.gypi',
             ],
         },
     ],
