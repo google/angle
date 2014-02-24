@@ -19,15 +19,21 @@
 namespace gl
 {
 
-Buffer::Buffer(rx::Renderer *renderer, GLuint id) : RefCountObject(id)
+Buffer::Buffer(rx::Renderer *renderer, GLuint id)
+    : RefCountObject(id),
+      mRenderer(renderer),
+      mUsage(GL_DYNAMIC_DRAW),
+      mAccessFlags(0),
+      mMapped(GL_FALSE),
+      mMapPointer(NULL),
+      mMapOffset(0),
+      mMapLength(0),
+      mBufferStorage(NULL),
+      mStaticVertexBuffer(NULL),
+      mStaticIndexBuffer(NULL),
+      mUnmodifiedDataUse(0)
 {
-    mRenderer = renderer;
-    mUsage = GL_DYNAMIC_DRAW;
-
     mBufferStorage = renderer->createBufferStorage();
-    mStaticVertexBuffer = NULL;
-    mStaticIndexBuffer = NULL;
-    mUnmodifiedDataUse = 0;
 }
 
 Buffer::~Buffer()
@@ -67,6 +73,34 @@ void Buffer::copyBufferSubData(Buffer* source, GLintptr sourceOffset, GLintptr d
     invalidateStaticData();
 }
 
+GLvoid *Buffer::mapRange(GLintptr offset, GLsizeiptr length, GLbitfield access)
+{
+    ASSERT(!mMapped);
+
+    void *dataPointer = mBufferStorage->map(access);
+
+    mMapped = GL_TRUE;
+    mMapPointer = static_cast<GLvoid*>(static_cast<GLubyte*>(dataPointer) + offset);
+    mMapOffset = static_cast<GLint64>(offset);
+    mMapLength = static_cast<GLint64>(length);
+    mAccessFlags = static_cast<GLint>(access);
+
+    return mMapPointer;
+}
+
+void Buffer::unmap()
+{
+    ASSERT(mMapped);
+
+    mBufferStorage->unmap();
+
+    mMapped = GL_FALSE;
+    mMapPointer = NULL;
+    mMapOffset = 0;
+    mMapLength = 0;
+    mAccessFlags = 0;
+}
+
 rx::BufferStorage *Buffer::getStorage() const
 {
     return mBufferStorage;
@@ -80,6 +114,31 @@ unsigned int Buffer::size() const
 GLenum Buffer::usage() const
 {
     return mUsage;
+}
+
+GLint Buffer::accessFlags() const
+{
+    return mAccessFlags;
+}
+
+GLboolean Buffer::mapped() const
+{
+    return mMapped;
+}
+
+GLvoid *Buffer::mapPointer() const
+{
+    return mMapPointer;
+}
+
+GLint64 Buffer::mapOffset() const
+{
+    return mMapOffset;
+}
+
+GLint64 Buffer::mapLength() const
+{
+    return mMapLength;
 }
 
 rx::StaticVertexBufferInterface *Buffer::getStaticVertexBuffer()
