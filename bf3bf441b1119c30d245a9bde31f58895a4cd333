@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bce78593_82e3faf7",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-24T19:44:59Z",
+      "side": 1,
+      "message": "nit: this might call for some line wrapping",
+      "revId": "bf3bf441b1119c30d245a9bde31f58895a4cd333",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
