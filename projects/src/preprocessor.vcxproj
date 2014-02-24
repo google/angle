@@ -114,7 +114,6 @@
     <None Include="..\..\src\compiler\preprocessor\Tokenizer.l"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\compiler\preprocessor\length_limits.h"/>
     <ClInclude Include="..\..\src\compiler\preprocessor\Tokenizer.h"/>
     <ClInclude Include="..\..\src\compiler\preprocessor\Lexer.h"/>
     <ClInclude Include="..\..\src\compiler\preprocessor\Token.h"/>
@@ -124,9 +123,9 @@
     <ClInclude Include="..\..\src\compiler\preprocessor\Macro.h"/>
     <ClInclude Include="..\..\src\compiler\preprocessor\pp_utils.h"/>
     <ClInclude Include="..\..\src\compiler\preprocessor\Input.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\SourceLocation.h"/>
     <ClInclude Include="..\..\src\compiler\preprocessor\numeric_lex.h"/>
     <ClInclude Include="..\..\src\compiler\preprocessor\DirectiveParser.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\SourceLocation.h"/>
     <ClInclude Include="..\..\src\compiler\preprocessor\DiagnosticsBase.h"/>
     <ClInclude Include="..\..\src\compiler\preprocessor\DirectiveHandlerBase.h"/>
   </ItemGroup>

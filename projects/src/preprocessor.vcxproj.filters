@@ -19,9 +19,6 @@
     <None Include="..\..\src\compiler\preprocessor\ExpressionParser.y">
       <Filter>compiler\preprocessor</Filter>
     </None>
-    <ClInclude Include="..\..\src\compiler\preprocessor\length_limits.h">
-      <Filter>compiler\preprocessor</Filter>
-    </ClInclude>
     <ClCompile Include="..\..\src\compiler\preprocessor\Tokenizer.cpp">
       <Filter>compiler\preprocessor</Filter>
     </ClCompile>
@@ -73,18 +70,18 @@
     <ClInclude Include="..\..\src\compiler\preprocessor\Input.h">
       <Filter>compiler\preprocessor</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\compiler\preprocessor\DirectiveParser.cpp">
+    <ClInclude Include="..\..\src\compiler\preprocessor\SourceLocation.h">
       <Filter>compiler\preprocessor</Filter>
-    </ClCompile>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\preprocessor\numeric_lex.h">
       <Filter>compiler\preprocessor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\compiler\preprocessor\DirectiveParser.h">
       <Filter>compiler\preprocessor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\compiler\preprocessor\SourceLocation.h">
+    <ClCompile Include="..\..\src\compiler\preprocessor\DirectiveParser.cpp">
       <Filter>compiler\preprocessor</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="..\..\src\compiler\preprocessor\DiagnosticsBase.h">
       <Filter>compiler\preprocessor</Filter>
     </ClInclude>

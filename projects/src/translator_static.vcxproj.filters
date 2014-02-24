@@ -138,6 +138,9 @@
     <ClInclude Include="..\..\src\compiler\translator\MapLongVariableNames.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\compiler\translator\length_limits.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\RewriteElseBlocks.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>

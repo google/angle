@@ -132,6 +132,7 @@
     <ClInclude Include="..\..\src\compiler\translator\OutputGLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\FlagStd140Structs.h"/>
     <ClInclude Include="..\..\src\compiler\translator\MapLongVariableNames.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\length_limits.h"/>
     <ClInclude Include="..\..\src\compiler\translator\RewriteElseBlocks.h"/>
     <ClInclude Include="..\..\src\compiler\translator\PoolAlloc.h"/>
     <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h"/>
