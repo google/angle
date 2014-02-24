@@ -125,13 +125,21 @@
     <ClInclude Include="..\..\src\common\RefCountObject.h"/>
     <ClInclude Include="..\..\src\common\debug.h"/>
     <ClInclude Include="..\..\src\common\angleutils.h"/>
+    <ClInclude Include="..\..\include\KHR\khrplatform.h"/>
+    <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h"/>
+    <ClInclude Include="..\..\include\GLES2\gl2.h"/>
+    <ClInclude Include="..\..\include\GLES2\gl2platform.h"/>
+    <ClInclude Include="..\..\include\GLES2\gl2ext.h"/>
+    <ClInclude Include="..\..\include\EGL\egl.h"/>
+    <ClInclude Include="..\..\include\EGL\eglext.h"/>
+    <ClInclude Include="..\..\include\EGL\eglplatform.h"/>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\libEGL\Surface.cpp"/>
     <ClCompile Include="..\..\src\libEGL\Config.cpp"/>
+    <ClCompile Include="..\..\src\libEGL\libEGL.cpp"/>
     <ClCompile Include="..\..\src\libEGL\main.cpp"/>
     <ClCompile Include="..\..\src\libEGL\Display.cpp"/>
-    <ClCompile Include="..\..\src\libEGL\libEGL.cpp"/>
     <ClCompile Include="..\..\src\common\event_tracer.cpp"/>
     <ClCompile Include="..\..\src\common\RefCountObject.cpp"/>
     <ClCompile Include="..\..\src\common\debug.cpp"/>

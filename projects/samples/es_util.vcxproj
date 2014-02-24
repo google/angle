@@ -114,9 +114,9 @@
     <ClInclude Include="..\..\samples\gles2_book\Common\esUtil.h"/>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\samples\gles2_book\Common\esTransform.c"/>
-    <ClCompile Include="..\..\samples\gles2_book\Common\esUtil.c"/>
     <ClCompile Include="..\..\samples\gles2_book\Common\esShader.c"/>
+    <ClCompile Include="..\..\samples\gles2_book\Common\esUtil.c"/>
+    <ClCompile Include="..\..\samples\gles2_book\Common\esTransform.c"/>
     <ClCompile Include="..\..\samples\gles2_book\Common\esShapes.c"/>
     <ClCompile Include="..\..\samples\gles2_book\Common\Win32\esUtil_win32.c"/>
     <ClCompile Include="..\..\samples\gles2_book\Common\Win32\esUtil_TGA.c"/>
