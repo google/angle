@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c3ac1c3_3705a0a6",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-02-25T18:48:00Z",
+      "side": 1,
+      "message": "This naming is problematic as the input shader might already use the same name.  You should use reserved names \"_webgl_\".",
+      "revId": "e53c98ba6cd85074d8f2dae76b34321c7786da3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
