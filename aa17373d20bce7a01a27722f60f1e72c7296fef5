@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c156131_3ced7de3",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1108910
+      },
+      "writtenOn": "2014-02-25T15:07:07Z",
+      "side": 1,
+      "message": "Jamie, will an assertion check be an acceptable way to address your comment?  Problem is, InsertBuiltInFunctions() is currently not aware of ShShaderOutput so initialization would need to happen in a different place...",
+      "revId": "aa17373d20bce7a01a27722f60f1e72c7296fef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
