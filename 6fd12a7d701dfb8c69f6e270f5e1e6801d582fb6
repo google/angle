@@ -90,6 +90,30 @@
     },
     {
       "key": {
+        "uuid": "bce78593_0b9945ee",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2661,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-02-26T16:30:26Z",
+      "side": 1,
+      "message": "The active parameter is needed for marking the transform feedback usage (in this patch) and in the later patches (shader generation and draw support patches) it\u0027s needed for applyShaders, drawElements and drawArrays.",
+      "parentUuid": "bce78593_0bcee5f9",
+      "range": {
+        "startLine": 2661,
+        "startChar": 11,
+        "endLine": 2661,
+        "endChar": 39
+      },
+      "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0fdcd12e_e02ffc6a",
         "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
         "patchSetId": 1
