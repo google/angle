@@ -66,6 +66,30 @@
     },
     {
       "key": {
+        "uuid": "bce78593_0bcee5f9",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2661,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-26T16:11:37Z",
+      "side": 1,
+      "message": "I looked in the later patches, but could you clarify why would you need the parameter later? Wouldn\u0027t it be the case that if you return a boolean representing \"is feedback active\", you wouldn\u0027t need the active bool pointer parameter? (Instead of returning a GLenum.)",
+      "parentUuid": "afdf457e_85c7c4d8",
+      "range": {
+        "startLine": 2661,
+        "startChar": 11,
+        "endLine": 2661,
+        "endChar": 39
+      },
+      "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0fdcd12e_e02ffc6a",
         "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
         "patchSetId": 1
@@ -154,6 +178,30 @@
       "side": 1,
       "message": "I still prefer to have the enums this way since it allows us to merge/split them by only modifying BufferStorage11 instead of all the places the enum is used.",
       "parentUuid": "ef7e9d24_ec3b2b4e",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 58
+      },
+      "revId": "6fd12a7d701dfb8c69f6e270f5e1e6801d582fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc35c5d3_58305500",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-26T16:11:37Z",
+      "side": 1,
+      "message": "Do you have an idea of why we would have to merge/split enums? Is that a common concern?",
+      "parentUuid": "ef577db2_a78304a8",
       "range": {
         "startLine": 24,
         "startChar": 0,
