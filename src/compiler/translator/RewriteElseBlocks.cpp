@@ -48,6 +48,14 @@ bool ElseBlockRewriter::visitAggregate(Visit visit, TIntermAggregate *node)
                 TIntermSelection *selection = statement->getAsSelectionNode();
                 if (selection && selection->getFalseBlock() != NULL)
                 {
+                    // Check for if / else if
+                    TIntermSelection *elseIfBranch = selection->getFalseBlock()->getAsSelectionNode();
+                    if (elseIfBranch)
+                    {
+                        selection->replaceChildNode(elseIfBranch, rewriteSelection(elseIfBranch));
+                        delete elseIfBranch;
+                    }
+
                     node->getSequence()[statementIndex] = rewriteSelection(selection);
                     delete selection;
                 }
