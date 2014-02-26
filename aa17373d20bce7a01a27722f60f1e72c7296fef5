@@ -16,6 +16,24 @@
       "revId": "aa17373d20bce7a01a27722f60f1e72c7296fef5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7cf18d4f_14e4c4c2",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-26T15:55:41Z",
+      "side": 1,
+      "message": "Hey, yes, that\u0027s great. I clarified with Nicolas that the app (should) already forbid the extension on non-GL targets through the ShBuiltInResources. Thanks!",
+      "parentUuid": "9c156131_3ced7de3",
+      "revId": "aa17373d20bce7a01a27722f60f1e72c7296fef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
