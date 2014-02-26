@@ -51,7 +51,10 @@ static bool checkMappedNameMaxLength(const ShHandle handle, size_t expectedValue
 //
 int ShInitialize()
 {
-    isInitialized = InitProcess();
+    if (!isInitialized)
+    {
+        isInitialized = InitProcess();
+    }
     return isInitialized ? 1 : 0;
 }
 
