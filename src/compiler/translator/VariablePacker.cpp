@@ -197,6 +197,14 @@ bool VariablePacker::CheckVariablesWithinPackingLimits(int maxVectors, const TVa
     bottomNonFullRow_ = maxRows_ - 1;
     TVariableInfoList variables(in_variables);
 
+    // Check whether each variable fits in the available vectors.
+    for (size_t i = 0; i < variables.size(); i++) {
+        const TVariableInfo& variable = variables[i];
+        if (variable.size > maxVectors / GetNumRows(variable.type)) {
+            return false;
+        }
+    }
+
     // As per GLSL 1.017 Appendix A, Section 7 variables are packed in specific
     // order by type, then by size of array, largest first.
     std::sort(variables.begin(), variables.end(), TVariableInfoComparer());
