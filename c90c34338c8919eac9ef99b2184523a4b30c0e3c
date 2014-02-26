@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cf18d4f_f47cc0cb",
+        "filename": "src/compiler/translator/RewriteElseBlocks.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-02-26T18:50:58Z",
+      "side": 1,
+      "message": "Could you move this to the EOpFunction case below? Set the type of PreVisit, and clear it on PostVisit. That would make it easier to see what goes on here.",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 54,
+        "endChar": 5
+      },
+      "revId": "c90c34338c8919eac9ef99b2184523a4b30c0e3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
