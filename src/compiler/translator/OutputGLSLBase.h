@@ -9,8 +9,8 @@
 
 #include <set>
 
-#include "compiler/translator/ForLoopUnroll.h"
 #include "compiler/translator/intermediate.h"
+#include "compiler/translator/LoopInfo.h"
 #include "compiler/translator/ParseContext.h"
 
 class TOutputGLSLBase : public TIntermTraverser
@@ -65,7 +65,8 @@ private:
     typedef std::set<TString> DeclaredStructs;
     DeclaredStructs mDeclaredStructs;
 
-    ForLoopUnroll mLoopUnroll;
+    // Stack of loops that need to be unrolled.
+    TLoopStack mLoopUnrollStack;
 
     ShArrayIndexClampingStrategy mClampingStrategy;
 
