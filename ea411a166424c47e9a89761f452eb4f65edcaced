@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cf89137_605c56b8",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-02-26T23:56:40Z",
+      "side": 1,
+      "message": "This is the only newly added logic to deal with \"break\".\n\nAll the rest is refactoring.",
+      "revId": "ea411a166424c47e9a89761f452eb4f65edcaced",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
