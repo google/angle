@@ -142,9 +142,14 @@ typedef enum {
   SH_SOURCE_PATH             = 0x0020,
   SH_MAP_LONG_VARIABLE_NAMES = 0x0040,
   SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX = 0x0080,
+  // If a sampler array index happens to be a loop index,
+  //   1) if its type is integer, unroll the loop.
+  //   2) if its type is float, fail the shader compile.
+  // This is to work around a mac driver bug.
+  SH_UNROLL_FOR_LOOP_WITH_SAMPLER_ARRAY_INDEX = 0x0100,
 
   // This is needed only as a workaround for certain OpenGL driver bugs.
-  SH_EMULATE_BUILT_IN_FUNCTIONS = 0x0100,
+  SH_EMULATE_BUILT_IN_FUNCTIONS = 0x0200,
 
   // This is an experimental flag to enforce restrictions that aim to prevent
   // timing attacks.
@@ -152,7 +157,7 @@ typedef enum {
   // texture information via the timing channel.
   // To use this flag, you must compile the shader under the WebGL spec
   // (using the SH_WEBGL_SPEC flag).
-  SH_TIMING_RESTRICTIONS = 0x0200,
+  SH_TIMING_RESTRICTIONS = 0x0400,
 
   // This flag prints the dependency graph that is used to enforce timing
   // restrictions on fragment shaders.
@@ -160,7 +165,7 @@ typedef enum {
   // - The shader spec is SH_WEBGL_SPEC.
   // - The compile options contain the SH_TIMING_RESTRICTIONS flag.
   // - The shader type is SH_FRAGMENT_SHADER.
-  SH_DEPENDENCY_GRAPH = 0x0400,
+  SH_DEPENDENCY_GRAPH = 0x0800,
 
   // Enforce the GLSL 1.017 Appendix A section 7 packing restrictions.
   // This flag only enforces (and can only enforce) the packing
@@ -168,7 +173,7 @@ typedef enum {
   // shaders. ShCheckVariablesWithinPackingLimits() lets embedders
   // enforce the packing restrictions for varying variables during
   // program link time.
-  SH_ENFORCE_PACKING_RESTRICTIONS = 0x0800,
+  SH_ENFORCE_PACKING_RESTRICTIONS = 0x1000,
 
   // This flag ensures all indirect (expression-based) array indexing
   // is clamped to the bounds of the array. This ensures, for example,
@@ -176,32 +181,32 @@ typedef enum {
   // vec234, or mat234 type. The ShArrayIndexClampingStrategy enum,
   // specified in the ShBuiltInResources when constructing the
   // compiler, selects the strategy for the clamping implementation.
-  SH_CLAMP_INDIRECT_ARRAY_BOUNDS = 0x1000,
+  SH_CLAMP_INDIRECT_ARRAY_BOUNDS = 0x2000,
 
   // This flag limits the complexity of an expression.
-  SH_LIMIT_EXPRESSION_COMPLEXITY = 0x2000,
+  SH_LIMIT_EXPRESSION_COMPLEXITY = 0x4000,
 
   // This flag limits the depth of the call stack.
-  SH_LIMIT_CALL_STACK_DEPTH = 0x4000,
+  SH_LIMIT_CALL_STACK_DEPTH = 0x8000,
 
   // This flag initializes gl_Position to vec4(0,0,0,0) at the
   // beginning of the vertex shader's main(), and has no effect in the
   // fragment shader. It is intended as a workaround for drivers which
   // incorrectly fail to link programs if gl_Position is not written.
-  SH_INIT_GL_POSITION = 0x8000,
+  SH_INIT_GL_POSITION = 0x10000,
 
   // This flag replaces
   //   "a && b" with "a ? b : false",
   //   "a || b" with "a ? true : b".
   // This is to work around a MacOSX driver bug that |b| is executed
   // independent of |a|'s value.
-  SH_UNFOLD_SHORT_CIRCUIT = 0x10000,
+  SH_UNFOLD_SHORT_CIRCUIT = 0x20000,
 
   // This flag initializes varyings without static use in vertex shader
   // at the beginning of main(), and has no effects in the fragment shader.
   // It is intended as a workaround for drivers which incorrectly optimize
   // out such varyings and cause a link failure.
-  SH_INIT_VARYINGS_WITHOUT_STATIC_USE = 0x20000,
+  SH_INIT_VARYINGS_WITHOUT_STATIC_USE = 0x40000,
 } ShCompileOptions;
 
 // Defines alternate strategies for implementing array index clamping.

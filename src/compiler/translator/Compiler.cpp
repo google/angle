@@ -178,7 +178,21 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
         // Unroll for-loop markup needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX))
-            ForLoopUnroll::MarkForLoopsWithIntegerIndicesForUnrolling(root);
+	{
+	    ForLoopUnrollMarker marker(ForLoopUnrollMarker::kIntegerIndex);
+            root->traverse(&marker);
+        }
+        if (success && (compileOptions & SH_UNROLL_FOR_LOOP_WITH_SAMPLER_ARRAY_INDEX))
+	{
+	    ForLoopUnrollMarker marker(ForLoopUnrollMarker::kSamplerArrayIndex);
+            root->traverse(&marker);
+            if (marker.samplerArrayIndexIsFloatLoopIndex())
+            {
+                infoSink.info.prefix(EPrefixError);
+                infoSink.info << "sampler array index is float loop index";
+                success = false;
+            }
+        }
 
         // Built-in function emulation needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_EMULATE_BUILT_IN_FUNCTIONS))

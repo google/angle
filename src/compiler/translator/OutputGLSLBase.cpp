@@ -159,8 +159,8 @@ const ConstantUnion* TOutputGLSLBase::writeConstantUnion(const TType& type,
 void TOutputGLSLBase::visitSymbol(TIntermSymbol* node)
 {
     TInfoSinkBase& out = objSink();
-    if (mLoopUnroll.NeedsToReplaceSymbolWithValue(node))
-        out << mLoopUnroll.GetLoopIndexValue(node);
+    if (mLoopUnrollStack.needsToReplaceSymbolWithValue(node))
+        out << mLoopUnrollStack.getLoopIndexValue(node);
     else
         out << hashVariableName(node->getSymbol());
 
@@ -643,7 +643,8 @@ bool TOutputGLSLBase::visitLoop(Visit visit, TIntermLoop* node)
     TLoopType loopType = node->getType();
     if (loopType == ELoopFor)  // for loop
     {
-        if (!node->getUnrollFlag()) {
+        if (!node->getUnrollFlag())
+        {
             out << "for (";
             if (node->getInit())
                 node->getInit()->traverse(this);
@@ -656,6 +657,18 @@ bool TOutputGLSLBase::visitLoop(Visit visit, TIntermLoop* node)
             if (node->getExpression())
                 node->getExpression()->traverse(this);
             out << ")\n";
+        }
+        else
+        {
+            // Need to put a one-iteration loop here to handle break.
+            TIntermSequence &declSeq =
+                node->getInit()->getAsAggregate()->getSequence();
+            TIntermSymbol *indexSymbol =
+                declSeq[0]->getAsBinaryNode()->getLeft()->getAsSymbolNode();
+            TString name = hashVariableName(indexSymbol->getSymbol());
+            out << "for (int " << name << " = 0; "
+                << name << " < 1; "
+                << "++" << name << ")\n";
         }
     }
     else if (loopType == ELoopWhile)  // while loop
@@ -674,15 +687,15 @@ bool TOutputGLSLBase::visitLoop(Visit visit, TIntermLoop* node)
     // Loop body.
     if (node->getUnrollFlag())
     {
-        TLoopIndexInfo indexInfo;
-        mLoopUnroll.FillLoopIndexInfo(node, indexInfo);
-        mLoopUnroll.Push(indexInfo);
-        while (mLoopUnroll.SatisfiesLoopCondition())
+        out << "{\n";
+        mLoopUnrollStack.push(node);
+        while (mLoopUnrollStack.satisfiesLoopCondition())
         {
             visitCodeBlock(node->getBody());
-            mLoopUnroll.Step();
+            mLoopUnrollStack.step();
         }
-        mLoopUnroll.Pop();
+        mLoopUnrollStack.pop();
+        out << "}\n";
     }
     else
     {
