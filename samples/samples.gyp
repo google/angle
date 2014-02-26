@@ -12,7 +12,7 @@
         {
             'target_name': 'essl_to_glsl',
             'type': 'executable',
-            'dependencies': [ '../src/angle.gyp:translator_static', ],
+            'dependencies': [ '../src/angle.gyp:translator', ],
             'include_dirs': [ '../include', ],
             'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py translator -types *.cpp *.h)' ],
         },
@@ -26,7 +26,7 @@
                 {
                     'target_name': 'essl_to_hlsl',
                     'type': 'executable',
-                    'dependencies': [ '../src/angle.gyp:translator_static', ],
+                    'dependencies': [ '../src/angle.gyp:translator', ],
                     'include_dirs':
                     [
                         '../include',

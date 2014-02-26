@@ -86,7 +86,7 @@
             'type': 'executable',
             'dependencies':
             [
-                '../src/angle.gyp:translator_static',
+                '../src/angle.gyp:translator',
                 'gtest',
                 'gmock',
             ],
