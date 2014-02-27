@@ -40,6 +40,10 @@ if len(types) == 0:
 for rootdir in dirs:
     for root, dirnames, filenames in os.walk(rootdir):
         for file in filenames:
+            # Skip files that are "hidden"
+            if file.startswith("."):
+                continue;
+
             fullPath = os.path.join(root, file).replace("\\", "/")
             for type in types:
                 if fnmatch.fnmatchcase(fullPath, type):
