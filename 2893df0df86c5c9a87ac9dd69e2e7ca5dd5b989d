@@ -16,6 +16,24 @@
       "revId": "2893df0df86c5c9a87ac9dd69e2e7ca5dd5b989d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc35c5d3_86e3faf7",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-02-27T20:59:06Z",
+      "side": 1,
+      "message": "My thinking on keeping the two defines, was that we could leave the source code as it is, so as to make it explicitly clear we want the component build to work properly in the future.\n\nI could also (as you propose) just get rid of them for now, restoring the defines when we have time to implement component build. What do you prefer?",
+      "parentUuid": "1cf89137_be395a57",
+      "revId": "2893df0df86c5c9a87ac9dd69e2e7ca5dd5b989d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
