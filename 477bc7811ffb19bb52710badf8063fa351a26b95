@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c26d1b5_99a91e63",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-02-27T20:39:53Z",
+      "side": 0,
+      "message": "You should also get rid of the use of this define.",
+      "revId": "477bc7811ffb19bb52710badf8063fa351a26b95",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
