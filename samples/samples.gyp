@@ -71,6 +71,35 @@
                 },
 
                 {
+                    'target_name': 'sample_util',
+                    'type': 'static_library',
+                    'dependencies':
+                    [
+                        '../src/angle.gyp:libEGL',
+                        '../src/angle.gyp:libGLESv2',
+                    ],
+                    'include_dirs':
+                    [
+                        '../include',
+                        'angle/sample_util',
+                    ],
+                    'sources':
+                    [
+                        '<!@(python <(angle_path)/enumerate_files.py angle/sample_util -types *.cpp *.h)'
+                    ],
+                    'msvs_disabled_warnings': [ 4201 ],
+                    'direct_dependent_settings':
+                    {
+                        'msvs_disabled_warnings': [ 4201 ],
+                        'include_dirs':
+                        [
+                            '../include',
+                            'angle/sample_util',
+                        ],
+                    },
+                },
+
+                {
                     'target_name': 'hello_triangle',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],

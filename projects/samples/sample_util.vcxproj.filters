@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="angle">
+      <UniqueIdentifier>{2039F76D-4C9A-B8A0-444A-4766C6F6104A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="angle\sample_util">
+      <UniqueIdentifier>{60D21765-6E5A-8668-B584-931D7874AF54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="angle\sample_util\win32">
+      <UniqueIdentifier>{789FEF16-EFE7-512E-F91B-DF7E0D72FB79}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\samples\samples.gyp"/>
+    <ClCompile Include="..\..\samples\angle\sample_util\Window.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\samples\angle\sample_util\Window.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\samples\angle\sample_util\Vector.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\samples\angle\sample_util\Vector.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\samples\angle\sample_util\keyboard.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\samples\angle\sample_util\shader_utils.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\samples\angle\sample_util\path_utils.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\samples\angle\sample_util\Timer.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\samples\angle\sample_util\shader_utils.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\samples\angle\sample_util\mouse.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\samples\angle\sample_util\Event.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\samples\angle\sample_util\SampleApplication.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\samples\angle\sample_util\random_utils.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\samples\angle\sample_util\tga_utils.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\samples\angle\sample_util\tga_utils.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\samples\angle\sample_util\random_utils.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\samples\angle\sample_util\SampleApplication.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\samples\angle\sample_util\win32\Win32Timer.h">
+      <Filter>angle\sample_util\win32</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\samples\angle\sample_util\win32\Win32Timer.cpp">
+      <Filter>angle\sample_util\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\samples\angle\sample_util\win32\Win32Window.cpp">
+      <Filter>angle\sample_util\win32</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\samples\angle\sample_util\win32\Win32Window.h">
+      <Filter>angle\sample_util\win32</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\samples\angle\sample_util\win32\Win32_path_utils.cpp">
+      <Filter>angle\sample_util\win32</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
