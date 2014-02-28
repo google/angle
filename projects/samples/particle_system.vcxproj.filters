@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="gles2_book">
-      <UniqueIdentifier>{01DCD872-C931-E1FA-4F9F-EBFA79587BB6}</UniqueIdentifier>
+    <Filter Include="angle">
+      <UniqueIdentifier>{2039F76D-4C9A-B8A0-444A-4766C6F6104A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gles2_book\ParticleSystem">
-      <UniqueIdentifier>{05979F6F-F708-2C87-17F3-3B3AA4892DDF}</UniqueIdentifier>
+    <Filter Include="angle\particle_system">
+      <UniqueIdentifier>{BF3D6113-EF81-F63D-D06D-FD080BFBE471}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\samples\samples.gyp"/>
-    <ClCompile Include="..\..\samples\gles2_book\ParticleSystem\ParticleSystem.c">
-      <Filter>gles2_book\ParticleSystem</Filter>
+    <ClCompile Include="..\..\samples\angle\particle_system\ParticleSystem.cpp">
+      <Filter>angle\particle_system</Filter>
     </ClCompile>
-    <None Include="..\..\samples\gles2_book\ParticleSystem\smoke.tga">
-      <Filter>gles2_book\ParticleSystem</Filter>
+    <None Include="..\..\samples\angle\particle_system\smoke.tga">
+      <Filter>angle\particle_system</Filter>
     </None>
   </ItemGroup>
 </Project>
