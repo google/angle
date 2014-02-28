@@ -109,8 +109,8 @@
                 {
                     'target_name': 'mip_map_2d',
                     'type': 'executable',
-                    'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/MipMap2D -types *.c *.h)' ],
+                    'dependencies': [ 'sample_util' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/mip_map_2d -types *.cpp *.h)' ],
                 },
 
                 {
