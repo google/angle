@@ -169,6 +169,10 @@
       <Project>{8C20B90A-FBCB-B63F-435A-3299A1C38B2C}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\samples\simple_instancing.vcxproj">
+      <Project>{130A534E-6BA3-DB9C-B0D2-5ACE5CCB2632}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\samples\simple_texture_2d.vcxproj">
       <Project>{0BD6333E-E82C-7665-C386-CDA40096413D}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

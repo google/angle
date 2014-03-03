@@ -8,6 +8,43 @@
 
 #include <math.h>
 
+Vector2::Vector2()
+    : x(0.0),
+      y(0.0)
+{
+}
+
+Vector2::Vector2(float x, float y)
+    : x(x),
+      y(y)
+{
+}
+
+float Vector2::length(const Vector2 &vec)
+{
+    float lenSquared = lengthSquared(vec);
+    return (lenSquared != 0.0f) ? sqrt(lenSquared) : 0.0f;
+}
+
+float Vector2::lengthSquared(const Vector2 &vec)
+{
+    return vec.x * vec.x +
+           vec.y * vec.y;
+}
+
+Vector2 Vector2::normalize(const Vector2 &vec)
+{
+    Vector2 ret(0.0f, 0.0f);
+    float len = length(vec);
+    if (len != 0.0f)
+    {
+        float invLen = 1.0f / len;
+        ret.x = vec.x * invLen;
+        ret.y = vec.y * invLen;
+    }
+    return ret;
+}
+
 Vector3::Vector3()
     : x(0.0),
       y(0.0),

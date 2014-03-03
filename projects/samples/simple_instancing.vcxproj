@@ -11,14 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{297C46B0-9263-A9EA-82B1-EA221E7D7C7F}</ProjectGuid>
+    <ProjectGuid>{130A534E-6BA3-DB9C-B0D2-5ACE5CCB2632}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>sample_util</RootNamespace>
+    <RootNamespace>simple_instancing</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <PropertyGroup Label="Configuration">
     <CharacterSet>Unicode</CharacterSet>
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
   <ImportGroup Label="ExtensionSettings"/>
@@ -33,7 +33,7 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
-    <TargetPath>$(OutDir)lib\$(ProjectName)$(TargetExt)</TargetPath>
+    <TargetPath>$(OutDir)\$(ProjectName)$(TargetExt)</TargetPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -54,7 +54,6 @@
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
     </Lib>
     <Link>
       <AdditionalDependencies>kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib</AdditionalDependencies>
@@ -63,6 +62,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
       <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
@@ -89,7 +89,6 @@
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
     </Lib>
     <Link>
       <AdditionalDependencies>kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib</AdditionalDependencies>
@@ -98,6 +97,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
       <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
@@ -110,34 +110,13 @@
     <None Include="..\..\samples\samples.gyp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\samples\angle\sample_util\Window.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\Vector.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\keyboard.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\shader_utils.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\path_utils.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\Timer.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\mouse.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\Event.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\random_utils.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\tga_utils.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\SampleApplication.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\texture_utils.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\win32\Win32Timer.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\win32\Win32Window.h"/>
+    <ClCompile Include="..\..\samples\angle\simple_instancing\SimpleInstancing.cpp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\samples\angle\sample_util\Window.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\texture_utils.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\Vector.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\shader_utils.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\SampleApplication.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\tga_utils.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\random_utils.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\win32\Win32Timer.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\win32\Win32Window.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\win32\Win32_path_utils.cpp"/>
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="sample_util.vcxproj">
+      <Project>{297C46B0-9263-A9EA-82B1-EA221E7D7C7F}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\src\libEGL.vcxproj">
       <Project>{FBAEE4F6-562A-588F-01F9-72DCABB3B061}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

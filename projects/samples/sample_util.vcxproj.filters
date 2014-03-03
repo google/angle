@@ -19,6 +19,9 @@
     <ClInclude Include="..\..\samples\angle\sample_util\Window.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\samples\angle\sample_util\texture_utils.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\samples\angle\sample_util\Vector.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
@@ -62,6 +65,9 @@
       <Filter>angle\sample_util</Filter>
     </ClCompile>
     <ClInclude Include="..\..\samples\angle\sample_util\SampleApplication.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\samples\angle\sample_util\texture_utils.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\samples\angle\sample_util\win32\Win32Timer.h">

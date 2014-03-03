@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="angle">
+      <UniqueIdentifier>{2039F76D-4C9A-B8A0-444A-4766C6F6104A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="angle\simple_instancing">
+      <UniqueIdentifier>{AEBC5A90-1DEF-098F-9A8A-219A1BA9B797}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\samples\samples.gyp"/>
+    <ClCompile Include="..\..\samples\angle\simple_instancing\SimpleInstancing.cpp">
+      <Filter>angle\simple_instancing</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

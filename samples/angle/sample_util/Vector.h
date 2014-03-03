@@ -7,6 +7,26 @@
 #ifndef SAMPLE_UTIL_VECTOR_H
 #define SAMPLE_UTIL_VECTOR_H
 
+struct Vector2
+{
+    union
+    {
+        struct
+        {
+            float x, y;
+        };
+        float data[2];
+    };
+
+    Vector2();
+    Vector2(float x, float y);
+
+    static float length(const Vector2 &vec);
+    static float lengthSquared(const Vector2 &vec);
+
+    static Vector2 normalize(const Vector2 &vec);
+};
+
 struct Vector3
 {
     union

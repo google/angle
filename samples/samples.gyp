@@ -142,6 +142,13 @@
                 },
 
                 {
+                    'target_name': 'simple_instancing',
+                    'type': 'executable',
+                    'dependencies': [ 'sample_util' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/simple_instancing -types *.cpp *.h)' ],
+                },
+
+                {
                     'target_name': 'simple_texture_2d',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],
