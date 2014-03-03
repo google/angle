@@ -165,8 +165,8 @@
                 {
                     'target_name': 'simple_texture_2d',
                     'type': 'executable',
-                    'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/Simple_Texture2D -types *.c *.h)' ],
+                    'dependencies': [ 'sample_util' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/simple_texture_2d -types *.cpp *.h)' ],
                 },
 
                 {
