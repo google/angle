@@ -149,6 +149,20 @@
                 },
 
                 {
+                    'target_name': 'multiple_draw_buffers',
+                    'type': 'executable',
+                    'dependencies': [ 'sample_util' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/multiple_draw_buffers -types *.cpp *.h *.glsl)' ],
+                    'copies':
+                    [
+                        {
+                            'destination': '<(PRODUCT_DIR)',
+                            'files': [ '<!@(python <(angle_path)/enumerate_files.py angle/multiple_draw_buffers -types *.glsl)' ],
+                        }
+                    ]
+                },
+
+                {
                     'target_name': 'simple_texture_2d',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],

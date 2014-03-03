@@ -8,6 +8,27 @@
 
 #include <vector>
 #include <iostream>
+#include <fstream>
+
+static std::string ReadFileToString(const std::string &source)
+{
+    std::ifstream stream(source);
+    if (!stream)
+    {
+        std::cerr << "Failed to load shader file: " << source;
+        return "";
+    }
+
+    std::string result;
+
+    stream.seekg(0, std::ios::end);
+    result.reserve(stream.tellg());
+    stream.seekg(0, std::ios::beg);
+
+    result.assign((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+
+    return result;
+}
 
 GLuint CompileShader(GLenum type, const std::string &source)
 {
@@ -35,6 +56,17 @@ GLuint CompileShader(GLenum type, const std::string &source)
     }
 
     return shader;
+}
+
+GLuint CompileShaderFromFile(GLenum type, const std::string &sourcePath)
+{
+    std::string source = ReadFileToString(sourcePath);
+    if (source.empty())
+    {
+        return 0;
+    }
+
+    return CompileShader(type, source);
 }
 
 GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource)
@@ -78,4 +110,16 @@ GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource)
     }
 
     return program;
+}
+
+GLuint CompileProgramFromFiles(const std::string &vsPath, const std::string &fsPath)
+{
+    std::string vsSource = ReadFileToString(vsPath);
+    std::string fsSource = ReadFileToString(fsPath);
+    if (vsSource.empty() || fsSource.empty())
+    {
+        return 0;
+    }
+
+    return CompileProgram(vsSource, fsSource);
 }

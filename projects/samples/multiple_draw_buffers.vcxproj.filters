@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="angle">
+      <UniqueIdentifier>{2039F76D-4C9A-B8A0-444A-4766C6F6104A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="angle\multiple_draw_buffers">
+      <UniqueIdentifier>{D0BAF5AC-C79C-4569-5154-A04FD87C707E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\samples\samples.gyp"/>
+    <None Include="..\..\samples\angle\multiple_draw_buffers\multiple_draw_buffers_copy_fs.glsl">
+      <Filter>angle\multiple_draw_buffers</Filter>
+    </None>
+    <None Include="..\..\samples\angle\multiple_draw_buffers\multiple_draw_buffers_vs.glsl">
+      <Filter>angle\multiple_draw_buffers</Filter>
+    </None>
+    <ClCompile Include="..\..\samples\angle\multiple_draw_buffers\MultipleDrawBuffers.cpp">
+      <Filter>angle\multiple_draw_buffers</Filter>
+    </ClCompile>
+    <None Include="..\..\samples\angle\multiple_draw_buffers\multiple_draw_buffers_fs.glsl">
+      <Filter>angle\multiple_draw_buffers</Filter>
+    </None>
+  </ItemGroup>
+</Project>

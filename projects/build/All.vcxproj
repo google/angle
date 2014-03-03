@@ -173,6 +173,10 @@
       <Project>{130A534E-6BA3-DB9C-B0D2-5ACE5CCB2632}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\samples\multiple_draw_buffers.vcxproj">
+      <Project>{58BE89D7-25D5-CC84-EDBF-412C12C59709}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\samples\simple_texture_2d.vcxproj">
       <Project>{0BD6333E-E82C-7665-C386-CDA40096413D}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
