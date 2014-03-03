@@ -342,9 +342,15 @@
     <ClInclude Include="..\..\src\compiler\translator\VariableInfo.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\compiler\translator\LoopInfo.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\OutputHLSL.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\compiler\translator\LoopInfo.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\Uniform.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
