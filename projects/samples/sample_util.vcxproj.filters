@@ -22,27 +22,30 @@
     <ClCompile Include="..\..\samples\angle\sample_util\texture_utils.cpp">
       <Filter>angle\sample_util</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\samples\angle\sample_util\Vector.h">
+    <ClInclude Include="..\..\samples\angle\sample_util\path_utils.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
     <ClCompile Include="..\..\samples\angle\sample_util\Vector.cpp">
       <Filter>angle\sample_util</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\samples\angle\sample_util\Vector.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\samples\angle\sample_util\keyboard.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\samples\angle\sample_util\shader_utils.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\samples\angle\sample_util\path_utils.h">
+    <ClCompile Include="..\..\samples\angle\sample_util\shader_utils.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\samples\angle\sample_util\Matrix.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\samples\angle\sample_util\Timer.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\samples\angle\sample_util\shader_utils.cpp">
-      <Filter>angle\sample_util</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\samples\angle\sample_util\mouse.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
@@ -73,6 +76,9 @@
     <ClInclude Include="..\..\samples\angle\sample_util\SampleApplication.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\samples\angle\sample_util\Matrix.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\samples\angle\sample_util\texture_utils.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>

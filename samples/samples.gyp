@@ -179,8 +179,8 @@
                 {
                     'target_name': 'simple_vertex_shader',
                     'type': 'executable',
-                    'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/Simple_VertexShader -types *.c *.h)' ],
+                    'dependencies': [ 'sample_util' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/simple_vertex_shader -types *.cpp *.h)' ],
                 },
 
                 {

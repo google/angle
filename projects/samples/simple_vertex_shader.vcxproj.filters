@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="gles2_book">
-      <UniqueIdentifier>{01DCD872-C931-E1FA-4F9F-EBFA79587BB6}</UniqueIdentifier>
+    <Filter Include="angle">
+      <UniqueIdentifier>{2039F76D-4C9A-B8A0-444A-4766C6F6104A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gles2_book\Simple_VertexShader">
-      <UniqueIdentifier>{13D4600F-2070-2CFD-75DC-23AE9927F5C9}</UniqueIdentifier>
+    <Filter Include="angle\simple_vertex_shader">
+      <UniqueIdentifier>{B50155D0-892A-4C65-4754-9C5D58289F2E}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\samples\samples.gyp"/>
-    <ClCompile Include="..\..\samples\gles2_book\Simple_VertexShader\Simple_VertexShader.c">
-      <Filter>gles2_book\Simple_VertexShader</Filter>
+    <ClCompile Include="..\..\samples\angle\simple_vertex_shader\SimpleVertexShader.cpp">
+      <Filter>angle\simple_vertex_shader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
