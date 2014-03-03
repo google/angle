@@ -36,3 +36,41 @@ GLuint CreateSimpleTexture2D()
 
     return texture;
 }
+
+GLuint CreateSimpleTextureCubemap()
+{
+    // Generate a texture object
+    GLuint texture;
+    glGenTextures(1, &texture);
+
+    // Bind the texture object
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+
+    // Load the texture faces
+    GLubyte pixels[6][3] =
+    {
+        // Face 0 - Red
+        255, 0, 0,
+        // Face 1 - Green,
+        0, 255, 0,
+        // Face 3 - Blue
+        0, 0, 255,
+        // Face 4 - Yellow
+        255, 255, 0,
+        // Face 5 - Purple
+        255, 0, 255,
+        // Face 6 - White
+        255, 255, 255
+    };
+
+    for (size_t i = 0; i < 6; i++)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixels[i]);
+    }
+
+    // Set the filtering mode
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    return texture;
+}

@@ -10,5 +10,6 @@
 #include <GLES2/gl2.h>
 
 GLuint CreateSimpleTexture2D();
+GLuint CreateSimpleTextureCubemap();
 
 #endif // SAMPLE_UTIL_TEXTURE_UTILS_H

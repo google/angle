@@ -172,8 +172,8 @@
                 {
                     'target_name': 'simple_texture_cubemap',
                     'type': 'executable',
-                    'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/Simple_TextureCubemap -types *.c *.h)' ],
+                    'dependencies': [ 'sample_util' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/simple_texture_cubemap -types *.cpp *.h)' ],
                 },
 
                 {
