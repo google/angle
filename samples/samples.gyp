@@ -184,10 +184,10 @@
                 },
 
                 {
-                    'target_name': 'stencil_test',
+                    'target_name': 'stencil_operations',
                     'type': 'executable',
-                    'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/Stencil_Test -types *.c *.h)' ],
+                    'dependencies': [ 'sample_util' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/stencil_operations -types *.cpp *.h)' ],
                 },
 
                 {

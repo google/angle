@@ -189,8 +189,8 @@
       <Project>{459E5678-892C-4EF9-6ED8-0D9E5272B4FF}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\samples\stencil_test.vcxproj">
-      <Project>{14B6D991-023A-E6E2-1D1B-257A7B7C910A}</Project>
+    <ProjectReference Include="..\samples\stencil_operations.vcxproj">
+      <Project>{92582B26-5131-8C32-39D9-5768C7FA12B4}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\samples\texture_wrap.vcxproj">
