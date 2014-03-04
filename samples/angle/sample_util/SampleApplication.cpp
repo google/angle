@@ -47,9 +47,29 @@ void SampleApplication::draw()
 {
 }
 
+void SampleApplication::swap()
+{
+    eglSwapBuffers(mWindow->getDisplay(), mSurface);
+}
+
 Window *SampleApplication::getWindow() const
 {
     return mWindow.get();
+}
+
+EGLConfig SampleApplication::getConfig() const
+{
+    return mConfig;
+}
+
+EGLSurface SampleApplication::getSurface() const
+{
+    return mSurface;
+}
+
+EGLContext SampleApplication::getContext() const
+{
+    return mContext;
 }
 
 int SampleApplication::run()
@@ -95,8 +115,7 @@ int SampleApplication::run()
         }
 
         draw();
-
-        eglSwapBuffers(mWindow->getDisplay(), mSurface);
+        swap();
 
         mWindow->messageLoop();
 
@@ -141,7 +160,13 @@ bool SampleApplication::initializeGL()
         return false;
     }
 
-    mSurface = eglCreateWindowSurface(mWindow->getDisplay(), mConfig, mWindow->getNativeWindow(), NULL);
+    const EGLint surfaceAttributes[] =
+    {
+        EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_TRUE,
+        EGL_NONE, EGL_NONE,
+    };
+
+    mSurface = eglCreateWindowSurface(mWindow->getDisplay(), mConfig, mWindow->getNativeWindow(), surfaceAttributes);
     if (mSurface == EGL_NO_SURFACE)
     {
         eglGetError(); // Clear error and try again

@@ -200,8 +200,8 @@
                 {
                     'target_name': 'post_sub_buffer',
                     'type': 'executable',
-                    'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/PostSubBuffer -types *.c *.h)' ],
+                    'dependencies': [ 'sample_util' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/post_sub_buffer -types *.cpp *.h)' ],
                 },
             ],
         }

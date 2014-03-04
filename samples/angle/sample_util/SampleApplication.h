@@ -13,6 +13,8 @@
 #include <GLES3/gl3ext.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
 
 #include "Window.h"
 #include "Timer.h"
@@ -34,7 +36,12 @@ class SampleApplication
     virtual void step(float dt, double totalTime);
     virtual void draw();
 
+    virtual void swap();
+
     Window *getWindow() const;
+    EGLConfig getConfig() const;
+    EGLSurface getSurface() const;
+    EGLContext getContext() const;
 
     bool popEvent(Event *event);
 
