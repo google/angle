@@ -222,11 +222,10 @@ TIntermTyped* TIntermediate::addBinaryMath(TOperator op, TIntermTyped* left, TIn
     //
     // See if we can fold constants.
     //
-    TIntermTyped* typedReturnNode = 0;
     TIntermConstantUnion *leftTempConstant = left->getAsConstantUnion();
     TIntermConstantUnion *rightTempConstant = right->getAsConstantUnion();
     if (leftTempConstant && rightTempConstant) {
-        typedReturnNode = leftTempConstant->fold(node->getOp(), rightTempConstant, infoSink);
+        TIntermTyped *typedReturnNode = leftTempConstant->fold(node->getOp(), rightTempConstant, infoSink);
 
         if (typedReturnNode)
             return typedReturnNode;
@@ -1251,6 +1250,10 @@ bool CompareStructure(const TType& leftNodeType, ConstantUnion* rightUnionArray,
 TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNode, TInfoSink& infoSink)
 {
     ConstantUnion *unionArray = getUnionArrayPointer();
+
+    if (!unionArray)
+        return 0;
+
     size_t objectSize = getType().getObjectSize();
 
     if (constantNode)
@@ -1259,6 +1262,9 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
         TIntermConstantUnion *node = constantNode->getAsConstantUnion();
         ConstantUnion *rightUnionArray = node->getUnionArrayPointer();
         TType returnType = getType();
+
+        if (!rightUnionArray)
+            return 0;
 
         // for a case like float f = 1.2 + vec4(2,3,4,5);
         if (constantNode->getType().getObjectSize() == 1 && objectSize > 1)
