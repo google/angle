@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bcd145e4_92dd5cfb",
+        "filename": "samples/angle/sample_util/randomutil.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-04T16:47:00Z",
+      "side": 1,
+      "message": "nit: missing license",
+      "revId": "62f71e837a3f501b7d39cacb72796d208f122d76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cb929a9_273a3ae1",
+        "filename": "samples/angle/sample_util/win32/Win32Timer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-04T16:47:00Z",
+      "side": 1,
+      "message": "ditto, license missing",
+      "revId": "62f71e837a3f501b7d39cacb72796d208f122d76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
