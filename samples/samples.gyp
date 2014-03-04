@@ -44,33 +44,6 @@
                 },
 
                 {
-                    'target_name': 'es_util',
-                    'type': 'static_library',
-                    'dependencies':
-                    [
-                        '../src/angle.gyp:libEGL',
-                        '../src/angle.gyp:libGLESv2',
-                    ],
-                    'include_dirs':
-                    [
-                        'gles2_book/Common',
-                        '../include',
-                    ],
-                    'sources':
-                    [
-                        '<!@(python <(angle_path)/enumerate_files.py gles2_book/Common -types *.c *.h)'
-                    ],
-                    'direct_dependent_settings':
-                    {
-                        'include_dirs':
-                        [
-                            'gles2_book/Common',
-                            '../include',
-                        ],
-                    },
-                },
-
-                {
                     'target_name': 'sample_util',
                     'type': 'static_library',
                     'dependencies':
