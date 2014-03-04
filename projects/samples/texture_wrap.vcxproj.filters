@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="gles2_book">
-      <UniqueIdentifier>{01DCD872-C931-E1FA-4F9F-EBFA79587BB6}</UniqueIdentifier>
+    <Filter Include="angle">
+      <UniqueIdentifier>{2039F76D-4C9A-B8A0-444A-4766C6F6104A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gles2_book\TextureWrap">
-      <UniqueIdentifier>{5F6A5AB7-398C-61AB-1A2A-396E85CA0134}</UniqueIdentifier>
+    <Filter Include="angle\texture_wrap">
+      <UniqueIdentifier>{14D5AFA5-3272-1D58-63E6-F5DE89477808}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\samples\samples.gyp"/>
-    <ClCompile Include="..\..\samples\gles2_book\TextureWrap\TextureWrap.c">
-      <Filter>gles2_book\TextureWrap</Filter>
+    <ClCompile Include="..\..\samples\angle\texture_wrap\TextureWrap.cpp">
+      <Filter>angle\texture_wrap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

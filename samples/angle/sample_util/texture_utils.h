@@ -12,4 +12,6 @@
 GLuint CreateSimpleTexture2D();
 GLuint CreateSimpleTextureCubemap();
 
+GLuint CreateMipMappedTexture2D();
+
 #endif // SAMPLE_UTIL_TEXTURE_UTILS_H

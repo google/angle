@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-//            Based on MipMap2D.c from
+//            Based on TextureWrap.c from
 // Book:      OpenGL(R) ES 2.0 Programming Guide
 // Authors:   Aaftab Munshi, Dan Ginsburg, Dave Shreiner
 // ISBN-10:   0321502795
@@ -17,11 +17,11 @@
 #include "shader_utils.h"
 #include "texture_utils.h"
 
-class MipMap2DSample : public SampleApplication
+class TextureWrapSample : public SampleApplication
 {
   public:
-    MipMap2DSample::MipMap2DSample()
-        : SampleApplication("MipMap2D", 1280, 720)
+      TextureWrapSample::TextureWrapSample()
+        : SampleApplication("TextureWrap", 1280, 720)
     {
     }
 
@@ -69,10 +69,7 @@ class MipMap2DSample : public SampleApplication
         mOffsetLoc = glGetUniformLocation(mProgram, "u_offset");
 
         // Load the texture
-        mTextureID = CreateMipMappedTexture2D();
-
-        // Check Anisotropy limits
-        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &mMaxAnisotropy);
+        mTexture = CreateMipMappedTexture2D();
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -82,23 +79,22 @@ class MipMap2DSample : public SampleApplication
     virtual void destroy()
     {
         glDeleteProgram(mProgram);
-        glDeleteTextures(1, &mTextureID);
     }
 
     virtual void draw()
     {
-        const GLfloat vertices[] =
+        GLfloat vertices[] =
         {
-            -0.25f,  0.5f, 0.0f, 5.0f, // Position 0
-             0.0f,  0.0f,              // TexCoord 0
-            -0.25f, -0.5f, 0.0f, 1.0f, // Position 1
-             0.0f,  1.0f,              // TexCoord 1
-             0.25f, -0.5f, 0.0f, 1.0f, // Position 2
-             1.0f,  1.0f,              // TexCoord 2
-             0.25f,  0.5f, 0.0f, 5.0f, // Position 3
-             1.0f,  0.0f               // TexCoord 3
+            -0.3f,  0.3f, 0.0f, 1.0f, // Position 0
+            -1.0f, -1.0f,             // TexCoord 0 
+            -0.3f, -0.3f, 0.0f, 1.0f, // Position 1
+            -1.0f,  2.0f,             // TexCoord 1
+             0.3f, -0.3f, 0.0f, 1.0f, // Position 2
+             2.0f,  2.0f,             // TexCoord 2
+             0.3f,  0.3f, 0.0f, 1.0f, // Position 3
+             2.0f, -1.0f              // TexCoord 3
         };
-        const GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+        GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
 
         // Set the viewport
         glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
@@ -110,60 +106,55 @@ class MipMap2DSample : public SampleApplication
         glUseProgram(mProgram);
 
         // Load the vertex position
-        glVertexAttribPointer(mPositionLoc, 4, GL_FLOAT,  GL_FALSE, 6 * sizeof(GLfloat), vertices);
+        glVertexAttribPointer(mPositionLoc, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), vertices);
+        glEnableVertexAttribArray(mPositionLoc);
+
         // Load the texture coordinate
         glVertexAttribPointer(mTexCoordLoc, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), vertices + 4);
-
-        glEnableVertexAttribArray(mPositionLoc);
         glEnableVertexAttribArray(mTexCoordLoc);
-
-        // Bind the texture
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mTextureID);
 
         // Set the sampler texture unit to 0
         glUniform1i(mSamplerLoc, 0);
 
-        // Draw quad with nearest sampling
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glUniform1f(mOffsetLoc, -0.6f);
-        glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+        // Draw quad with repeat wrap mode
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glUniform1f(mOffsetLoc, -0.7f);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 
-        // Draw quad with trilinear filtering
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        // Draw quad with clamp to edge wrap mode
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glUniform1f(mOffsetLoc, 0.0f);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 
-        // Draw quad with anisotropic filtering
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, mMaxAnisotropy);
-        glUniform1f(mOffsetLoc, 0.6f);
+        // Draw quad with mirrored repeat
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+        glUniform1f(mOffsetLoc, 0.7f);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1.0f);
     }
 
-  private:
+private:
     // Handle to a program object
-    GLuint mProgram;
+     GLuint mProgram;
 
-    // Attribute locations
-    GLint mPositionLoc;
-    GLint mTexCoordLoc;
+     // Attribute locations
+     GLint mPositionLoc;
+     GLint mTexCoordLoc;
 
-    // Sampler location
-    GLint mSamplerLoc;
+     // Sampler location
+     GLint mSamplerLoc;
 
-    // Offset location
-    GLint mOffsetLoc;
+     // Offset location
+     GLint mOffsetLoc;
 
-    // Texture handle
-    GLuint mTextureID;
-
-    float mMaxAnisotropy;
+     // Texture handle
+     GLuint mTexture;
 };
 
 int main(int argc, char **argv)
 {
-    MipMap2DSample app;
+    TextureWrapSample app;
     return app.run();
 }
