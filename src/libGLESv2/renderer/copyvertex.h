@@ -11,11 +11,14 @@
 
 #include "common/mathutil.h"
 
-template <typename T, unsigned int componentCount, bool widen, unsigned int defaultValueBits>
+// 'widenDefaultValueBits' gives the default value for the alpha channel (4th component)
+//  the sentinel value 0 means we do not want to widen the input or add an alpha channel
+template <typename T, unsigned int componentCount, unsigned int widenDefaultValueBits>
 inline void copyVertexData(const void *input, size_t stride, size_t count, void *output)
 {
     const unsigned int attribSize = sizeof(T) * componentCount;
-    const T defaultValue = gl::bitCast<T>(defaultValueBits);
+    const T defaultValue = gl::bitCast<T>(widenDefaultValueBits);
+    const bool widen = (widenDefaultValueBits != 0);
 
     if (attribSize == stride && !widen)
     {
