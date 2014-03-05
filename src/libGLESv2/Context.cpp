@@ -1525,7 +1525,7 @@ Buffer *Context::getArrayBuffer()
     return mState.arrayBuffer.get();
 }
 
-Buffer *Context::getElementArrayBuffer()
+Buffer *Context::getElementArrayBuffer() const
 {
     return getCurrentVertexArray()->getElementArrayBuffer();
 }
@@ -4051,6 +4051,33 @@ void Context::invalidateFrameBuffer(GLenum target, GLsizei numAttachments, const
             }
         }
     }
+}
+
+bool Context::hasMappedBuffer(GLenum target) const
+{
+    if (target == GL_ARRAY_BUFFER)
+    {
+        for (unsigned int attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; attribIndex++)
+        {
+            const gl::VertexAttribute &vertexAttrib = getVertexAttribState(attribIndex);
+            gl::Buffer *boundBuffer = vertexAttrib.mBoundBuffer.get();
+            if (vertexAttrib.mArrayEnabled && boundBuffer && boundBuffer->mapped())
+            {
+                return true;
+            }
+        }
+    }
+    else if (target == GL_ELEMENT_ARRAY_BUFFER)
+    {
+        Buffer *elementBuffer = getElementArrayBuffer();
+        return (elementBuffer && elementBuffer->mapped());
+    }
+    else if (target == GL_TRANSFORM_FEEDBACK_BUFFER)
+    {
+        UNIMPLEMENTED();
+    }
+    else UNREACHABLE();
+    return false;
 }
 
 }

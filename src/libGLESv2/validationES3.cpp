@@ -272,7 +272,11 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
             return gl::error(GL_INVALID_OPERATION, false);
         }
 
-        // TODO: ...the buffer object's data store is currently mapped.
+        // ...the buffer object's data store is currently mapped.
+        if (pixelUnpackBuffer->mapped())
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
     }
 
     return true;

@@ -339,7 +339,7 @@ class Context
 
     Buffer *getTargetBuffer(GLenum target) const;
     Buffer *getArrayBuffer();
-    Buffer *getElementArrayBuffer();
+    Buffer *getElementArrayBuffer() const;
     ProgramBinary *getCurrentProgramBinary();
 
     Texture *getTargetTexture(GLenum target) const;
@@ -453,6 +453,8 @@ class Context
 
     void invalidateFrameBuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments,
                                GLint x, GLint y, GLsizei width, GLsizei height);
+
+    bool hasMappedBuffer(GLenum target) const;
 
     rx::Renderer *getRenderer() { return mRenderer; }
 
