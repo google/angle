@@ -5253,7 +5253,7 @@ void __stdcall glUniform2f(GLint location, GLfloat x, GLfloat y)
 {
     GLfloat xy[2] = {x, y};
 
-    glUniform2fv(location, 1, (GLfloat*)&xy);
+    glUniform2fv(location, 1, xy);
 }
 
 void __stdcall glUniform2fv(GLint location, GLsizei count, const GLfloat* v)
@@ -5296,9 +5296,9 @@ void __stdcall glUniform2fv(GLint location, GLsizei count, const GLfloat* v)
 
 void __stdcall glUniform2i(GLint location, GLint x, GLint y)
 {
-    GLint xy[4] = {x, y};
+    GLint xy[2] = {x, y};
 
-    glUniform2iv(location, 1, (GLint*)&xy);
+    glUniform2iv(location, 1, xy);
 }
 
 void __stdcall glUniform2iv(GLint location, GLsizei count, const GLint* v)
@@ -5343,7 +5343,7 @@ void __stdcall glUniform3f(GLint location, GLfloat x, GLfloat y, GLfloat z)
 {
     GLfloat xyz[3] = {x, y, z};
 
-    glUniform3fv(location, 1, (GLfloat*)&xyz);
+    glUniform3fv(location, 1, xyz);
 }
 
 void __stdcall glUniform3fv(GLint location, GLsizei count, const GLfloat* v)
@@ -5388,7 +5388,7 @@ void __stdcall glUniform3i(GLint location, GLint x, GLint y, GLint z)
 {
     GLint xyz[3] = {x, y, z};
 
-    glUniform3iv(location, 1, (GLint*)&xyz);
+    glUniform3iv(location, 1, xyz);
 }
 
 void __stdcall glUniform3iv(GLint location, GLsizei count, const GLint* v)
@@ -5433,7 +5433,7 @@ void __stdcall glUniform4f(GLint location, GLfloat x, GLfloat y, GLfloat z, GLfl
 {
     GLfloat xyzw[4] = {x, y, z, w};
 
-    glUniform4fv(location, 1, (GLfloat*)&xyzw);
+    glUniform4fv(location, 1, xyzw);
 }
 
 void __stdcall glUniform4fv(GLint location, GLsizei count, const GLfloat* v)
@@ -5478,7 +5478,7 @@ void __stdcall glUniform4i(GLint location, GLint x, GLint y, GLint z, GLint w)
 {
     GLint xyzw[4] = {x, y, z, w};
 
-    glUniform4iv(location, 1, (GLint*)&xyzw);
+    glUniform4iv(location, 1, xyzw);
 }
 
 void __stdcall glUniform4iv(GLint location, GLsizei count, const GLint* v)
