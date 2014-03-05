@@ -16,6 +16,24 @@
       "revId": "6b349f199fc378e4ab000c6b6839d0238d8b3dce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd641da_f7acd885",
+        "filename": "src/libGLESv2/renderer/copyvertex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-05T20:11:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c8d0df2_43cf1847",
+      "revId": "6b349f199fc378e4ab000c6b6839d0238d8b3dce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
