@@ -8,6 +8,8 @@
 // validationES.h: Validation functions for generic OpenGL ES entry point parameters
 
 #include "libGLESv2/validationES.h"
+#include "libGLESv2/validationES2.h"
+#include "libGLESv2/validationES3.h"
 #include "libGLESv2/Context.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/Framebuffer.h"
@@ -769,6 +771,57 @@ bool ValidateSamplerObjectParameter(GLenum pname)
       default:
         return gl::error(GL_INVALID_ENUM, false);
     }
+}
+
+bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsizei width, GLsizei height,
+                                  GLenum format, GLenum type, GLsizei *bufSize, GLvoid *pixels)
+{
+    gl::Framebuffer *framebuffer = context->getReadFramebuffer();
+
+    if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
+    {
+        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
+    }
+
+    if (context->getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    GLenum currentInternalFormat, currentFormat, currentType;
+    int clientVersion = context->getClientVersion();
+
+    // Failure in getCurrentReadFormatType indicates that no color attachment is currently bound,
+    // and attempting to read back if that's the case is an error. The error will be registered
+    // by getCurrentReadFormat.
+    // Note: we need to explicitly check for framebuffer completeness here, before we call
+    // getCurrentReadFormatType, because it generates a different (wrong) error for incomplete FBOs
+    if (!context->getCurrentReadFormatType(&currentInternalFormat, &currentFormat, &currentType))
+        return false;
+
+    bool validReadFormat = (clientVersion < 3) ? ValidES2ReadFormatType(format, type) :
+                                                 ValidES3ReadFormatType(currentInternalFormat, format, type);
+
+    if (!(currentFormat == format && currentType == type) && !validReadFormat)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    GLenum sizedInternalFormat = IsSizedInternalFormat(format, clientVersion) ? format :
+                                 GetSizedInternalFormat(format, type, clientVersion);
+
+    GLsizei outputPitch = GetRowPitch(sizedInternalFormat, type, clientVersion, width, context->getPackAlignment());
+    // sized query sanity check
+    if (bufSize)
+    {
+        int requiredSize = outputPitch * height;
+        if (requiredSize > *bufSize)
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+    }
+
+    return true;
 }
 
 }

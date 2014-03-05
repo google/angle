@@ -40,6 +40,9 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum pname, GLint param)
 
 bool ValidateSamplerObjectParameter(GLenum pname);
 
+bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsizei width, GLsizei height,
+                                  GLenum format, GLenum type, GLsizei *bufSize, GLvoid *pixels);
+
 }
 
 #endif // LIBGLESV2_VALIDATION_ES_H

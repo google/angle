@@ -4397,20 +4397,10 @@ void __stdcall glReadnPixelsEXT(GLint x, GLint y, GLsizei width, GLsizei height,
 
         if (context)
         {
-            GLenum currentInternalFormat, currentFormat, currentType;
-
-            // Failure in getCurrentReadFormatType indicates that no color attachment is currently bound,
-            // and attempting to read back if that's the case is an error. The error will be registered
-            // by getCurrentReadFormat.
-            if (!context->getCurrentReadFormatType(&currentInternalFormat, &currentFormat, &currentType))
-                return;
-
-            bool validReadFormat = (context->getClientVersion() < 3) ? gl::ValidES2ReadFormatType(format, type) :
-                                                                       gl::ValidES3ReadFormatType(currentInternalFormat, format, type);
-
-            if (!(currentFormat == format && currentType == type) && !validReadFormat)
+            if (!gl::ValidateReadPixelsParameters(context, x, y, width, height,
+                                                  format, type, &bufSize, data))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                return;
             }
 
             context->readPixels(x, y, width, height, format, type, &bufSize, data);
@@ -4440,20 +4430,10 @@ void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
 
         if (context)
         {
-            GLenum currentInternalFormat, currentFormat, currentType;
-
-            // Failure in getCurrentReadFormatType indicates that no color attachment is currently bound,
-            // and attempting to read back if that's the case is an error. The error will be registered
-            // by getCurrentReadFormat.
-            if (!context->getCurrentReadFormatType(&currentInternalFormat, &currentFormat, &currentType))
-                return;
-
-            bool validReadFormat = (context->getClientVersion() < 3) ? gl::ValidES2ReadFormatType(format, type) :
-                                                                       gl::ValidES3ReadFormatType(currentInternalFormat, format, type);
-
-            if (!(currentFormat == format && currentType == type) && !validReadFormat)
+            if (!gl::ValidateReadPixelsParameters(context, x, y, width, height,
+                                                  format, type, NULL, pixels))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                return;
             }
 
             context->readPixels(x, y, width, height, format, type, NULL, pixels);

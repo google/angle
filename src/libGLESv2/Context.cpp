@@ -2933,31 +2933,11 @@ void Context::clearBufferfi(GLenum buffer, int drawbuffer, float depth, int sten
 void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
                          GLenum format, GLenum type, GLsizei *bufSize, void* pixels)
 {
-    Framebuffer *framebuffer = getReadFramebuffer();
+    gl::Framebuffer *framebuffer = getReadFramebuffer();
 
-    if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
-    {
-        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
-    }
-
-    if (getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
-    {
-        return gl::error(GL_INVALID_OPERATION);
-    }
-
-    GLenum sizedInternalFormat = IsSizedInternalFormat(format, mClientVersion) ? format
-                                                                               : GetSizedInternalFormat(format, type, mClientVersion);
-
-    GLsizei outputPitch = GetRowPitch(sizedInternalFormat, type, mClientVersion, width, getPackAlignment());
-    // sized query sanity check
-    if (bufSize)
-    {
-        int requiredSize = outputPitch * height;
-        if (requiredSize > *bufSize)
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-    }
+    bool isSized = IsSizedInternalFormat(format, mClientVersion);
+    GLenum sizedInternalFormat = (isSized ? format : GetSizedInternalFormat(format, type, mClientVersion));
+    GLuint outputPitch = GetRowPitch(sizedInternalFormat, type, mClientVersion, width, getPackAlignment());
 
     mRenderer->readPixels(framebuffer, x, y, width, height, format, type, outputPitch, getPackReverseRowOrder(), getPackAlignment(), pixels);
 }
