@@ -337,6 +337,7 @@ class Context
     Query *getQuery(GLuint handle, bool create, GLenum type);
     TransformFeedback *getTransformFeedback(GLuint handle) const;
 
+    Buffer *getTargetBuffer(GLenum target) const;
     Buffer *getArrayBuffer();
     Buffer *getElementArrayBuffer();
     ProgramBinary *getCurrentProgramBinary();

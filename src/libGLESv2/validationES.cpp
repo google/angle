@@ -73,7 +73,28 @@ bool ValidFramebufferTarget(GLenum target)
     }
 }
 
-bool ValidMipLevel(const gl::Context *context, GLenum target, GLint level)
+bool ValidBufferTarget(const Context *context, GLenum target)
+{
+    switch (target)
+    {
+      case GL_ARRAY_BUFFER:
+      case GL_ELEMENT_ARRAY_BUFFER:
+        return true;
+
+      case GL_COPY_READ_BUFFER:
+      case GL_COPY_WRITE_BUFFER:
+      case GL_PIXEL_PACK_BUFFER:
+      case GL_PIXEL_UNPACK_BUFFER:
+      case GL_TRANSFORM_FEEDBACK_BUFFER:
+      case GL_UNIFORM_BUFFER:
+        return (context->getClientVersion() >= 3);
+
+      default:
+        return false;
+    }
+}
+
+bool ValidMipLevel(const Context *context, GLenum target, GLint level)
 {
     int maxLevel = 0;
     switch (target)

@@ -189,19 +189,9 @@ void __stdcall glBindBuffer(GLenum target, GLuint buffer)
 
         if (context)
         {
-            // Check ES3 specific targets
-            switch (target)
+            if (!gl::ValidBufferTarget(context, target))
             {
-              case GL_COPY_READ_BUFFER:
-              case GL_COPY_WRITE_BUFFER:
-              case GL_PIXEL_PACK_BUFFER:
-              case GL_PIXEL_UNPACK_BUFFER:
-              case GL_UNIFORM_BUFFER:
-              case GL_TRANSFORM_FEEDBACK_BUFFER:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
+                return gl::error(GL_INVALID_ENUM);
             }
 
             switch (target)
@@ -595,52 +585,12 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, 
 
         if (context)
         {
-            // Check ES3 specific targets
-            switch (target)
+            if (!gl::ValidBufferTarget(context, target))
             {
-              case GL_COPY_READ_BUFFER:
-              case GL_COPY_WRITE_BUFFER:
-              case GL_PIXEL_PACK_BUFFER:
-              case GL_PIXEL_UNPACK_BUFFER:
-              case GL_UNIFORM_BUFFER:
-              case GL_TRANSFORM_FEEDBACK_BUFFER:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-            }
-
-            gl::Buffer *buffer;
-
-            switch (target)
-            {
-              case GL_ARRAY_BUFFER:
-                buffer = context->getArrayBuffer();
-                break;
-              case GL_ELEMENT_ARRAY_BUFFER:
-                buffer = context->getElementArrayBuffer();
-                break;
-              case GL_COPY_READ_BUFFER:
-                buffer = context->getCopyReadBuffer();
-                break;
-              case GL_COPY_WRITE_BUFFER:
-                buffer = context->getCopyWriteBuffer();
-                break;
-              case GL_PIXEL_PACK_BUFFER:
-                buffer = context->getPixelPackBuffer();
-                break;
-              case GL_PIXEL_UNPACK_BUFFER:
-                buffer = context->getPixelUnpackBuffer();
-                break;
-              case GL_TRANSFORM_FEEDBACK_BUFFER:
-                buffer = context->getGenericTransformFeedbackBuffer();
-                break;
-              case GL_UNIFORM_BUFFER:
-                buffer = context->getGenericUniformBuffer();
-                break;
-              default:
                 return gl::error(GL_INVALID_ENUM);
             }
+
+            gl::Buffer *buffer = context->getTargetBuffer(target);
 
             if (!buffer)
             {
@@ -677,52 +627,12 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
 
         if (context)
         {
-            // Check ES3 specific targets
-            switch (target)
+            if (!gl::ValidBufferTarget(context, target))
             {
-              case GL_COPY_READ_BUFFER:
-              case GL_COPY_WRITE_BUFFER:
-              case GL_PIXEL_PACK_BUFFER:
-              case GL_PIXEL_UNPACK_BUFFER:
-              case GL_UNIFORM_BUFFER:
-              case GL_TRANSFORM_FEEDBACK_BUFFER:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-            }
-
-            gl::Buffer *buffer;
-
-            switch (target)
-            {
-              case GL_ARRAY_BUFFER:
-                buffer = context->getArrayBuffer();
-                break;
-              case GL_ELEMENT_ARRAY_BUFFER:
-                buffer = context->getElementArrayBuffer();
-                break;
-              case GL_COPY_READ_BUFFER:
-                buffer = context->getCopyReadBuffer();
-                break;
-              case GL_COPY_WRITE_BUFFER:
-                buffer = context->getCopyWriteBuffer();
-                break;
-              case GL_PIXEL_PACK_BUFFER:
-                buffer = context->getPixelPackBuffer();
-                break;
-              case GL_PIXEL_UNPACK_BUFFER:
-                buffer = context->getPixelUnpackBuffer();
-                break;
-              case GL_TRANSFORM_FEEDBACK_BUFFER:
-                buffer = context->getGenericTransformFeedbackBuffer();
-                break;
-              case GL_UNIFORM_BUFFER:
-                buffer = context->getGenericUniformBuffer();
-                break;
-              default:
                 return gl::error(GL_INVALID_ENUM);
             }
+
+            gl::Buffer *buffer = context->getTargetBuffer(target);
 
             if (!buffer)
             {
@@ -2543,18 +2453,12 @@ void __stdcall glGetBufferParameteriv(GLenum target, GLenum pname, GLint* params
 
         if (context)
         {
-            gl::Buffer *buffer;
-
-            switch (target)
+            if (!gl::ValidBufferTarget(context, target))
             {
-              case GL_ARRAY_BUFFER:
-                buffer = context->getArrayBuffer();
-                break;
-              case GL_ELEMENT_ARRAY_BUFFER:
-                buffer = context->getElementArrayBuffer();
-                break;
-              default: return gl::error(GL_INVALID_ENUM);
+                return gl::error(GL_INVALID_ENUM);
             }
+
+            gl::Buffer *buffer = context->getTargetBuffer(target);
 
             if (!buffer)
             {
@@ -8399,67 +8303,13 @@ void __stdcall glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintp
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            gl::Buffer *readBuffer = NULL;
-            switch (readTarget)
+            if (!gl::ValidBufferTarget(context, readTarget) || !gl::ValidBufferTarget(context, readTarget))
             {
-              case GL_ARRAY_BUFFER:
-                readBuffer = context->getArrayBuffer();
-                break;
-              case GL_COPY_READ_BUFFER:
-                readBuffer = context->getCopyReadBuffer();
-                break;
-              case GL_COPY_WRITE_BUFFER:
-                readBuffer = context->getCopyWriteBuffer();
-                break;
-              case GL_ELEMENT_ARRAY_BUFFER:
-                readBuffer = context->getElementArrayBuffer();
-                break;
-              case GL_PIXEL_PACK_BUFFER:
-                readBuffer = context->getPixelPackBuffer();
-                break;
-              case GL_PIXEL_UNPACK_BUFFER:
-                readBuffer = context->getPixelUnpackBuffer();
-                break;
-              case GL_TRANSFORM_FEEDBACK_BUFFER:
-                readBuffer = context->getGenericTransformFeedbackBuffer();
-                break;
-              case GL_UNIFORM_BUFFER:
-                readBuffer = context->getGenericUniformBuffer();
-                break;
-              default:
                 return gl::error(GL_INVALID_ENUM);
             }
 
-            gl::Buffer *writeBuffer = NULL;
-            switch (writeTarget)
-            {
-              case GL_ARRAY_BUFFER:
-                writeBuffer = context->getArrayBuffer();
-                break;
-              case GL_COPY_READ_BUFFER:
-                writeBuffer = context->getCopyReadBuffer();
-                break;
-              case GL_COPY_WRITE_BUFFER:
-                writeBuffer = context->getCopyWriteBuffer();
-                break;
-              case GL_ELEMENT_ARRAY_BUFFER:
-                writeBuffer = context->getElementArrayBuffer();
-                break;
-              case GL_PIXEL_PACK_BUFFER:
-                writeBuffer = context->getPixelPackBuffer();
-                break;
-              case GL_PIXEL_UNPACK_BUFFER:
-                writeBuffer = context->getPixelUnpackBuffer();
-                break;
-              case GL_TRANSFORM_FEEDBACK_BUFFER:
-                writeBuffer = context->getGenericTransformFeedbackBuffer();
-                break;
-              case GL_UNIFORM_BUFFER:
-                writeBuffer = context->getGenericUniformBuffer();
-                break;
-              default:
-                return gl::error(GL_INVALID_ENUM);
-            }
+            gl::Buffer *readBuffer = context->getTargetBuffer(readTarget);
+            gl::Buffer *writeBuffer = context->getTargetBuffer(writeTarget);
 
             if (!readBuffer || !writeBuffer)
             {

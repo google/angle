@@ -1504,6 +1504,22 @@ Query *Context::getQuery(unsigned int handle, bool create, GLenum type)
     }
 }
 
+Buffer *Context::getTargetBuffer(GLenum target) const
+{
+    switch (target)
+    {
+      case GL_ARRAY_BUFFER:              return mState.arrayBuffer.get();
+      case GL_COPY_READ_BUFFER:          return mState.copyReadBuffer.get();
+      case GL_COPY_WRITE_BUFFER:         return mState.copyWriteBuffer.get();
+      case GL_ELEMENT_ARRAY_BUFFER:      return getCurrentVertexArray()->getElementArrayBuffer();
+      case GL_PIXEL_PACK_BUFFER:         return mState.pack.pixelBuffer.get();
+      case GL_PIXEL_UNPACK_BUFFER:       return mState.unpack.pixelBuffer.get();
+      case GL_TRANSFORM_FEEDBACK_BUFFER: return mState.genericTransformFeedbackBuffer.get();
+      case GL_UNIFORM_BUFFER:            return mState.genericUniformBuffer.get();
+      default: UNREACHABLE();            return NULL;
+    }
+}
+
 Buffer *Context::getArrayBuffer()
 {
     return mState.arrayBuffer.get();
