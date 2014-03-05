@@ -94,6 +94,27 @@ bool ValidBufferTarget(const Context *context, GLenum target)
     }
 }
 
+bool ValidBufferParameter(const Context *context, GLenum pname)
+{
+    switch (pname)
+    {
+      case GL_BUFFER_USAGE:
+      case GL_BUFFER_SIZE:
+        return true;
+
+      // GL_BUFFER_MAP_POINTER is a special case, and may only be
+      // queried with GetBufferPointerv
+      case GL_BUFFER_ACCESS_FLAGS:
+      case GL_BUFFER_MAPPED:
+      case GL_BUFFER_MAP_OFFSET:
+      case GL_BUFFER_MAP_LENGTH:
+        return (context->getClientVersion() >= 3);
+
+      default:
+        return false;
+    }
+}
+
 bool ValidMipLevel(const Context *context, GLenum target, GLint level)
 {
     int maxLevel = 0;

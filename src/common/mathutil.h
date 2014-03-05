@@ -65,6 +65,19 @@ inline int clampToInt(unsigned int x)
     return static_cast<int>(std::min(x, static_cast<unsigned int>(std::numeric_limits<int>::max())));
 }
 
+template <typename DestT, typename SrcT>
+inline DestT clampCast(SrcT value)
+{
+    // This assumes SrcT can properly represent DestT::min/max
+    // Unfortunately we can't use META_ASSERT without C++11 constexpr support
+    ASSERT(static_cast<DestT>(static_cast<SrcT>(std::numeric_limits<DestT>::min())) == std::numeric_limits<DestT>::min());
+    ASSERT(static_cast<DestT>(static_cast<SrcT>(std::numeric_limits<DestT>::max())) == std::numeric_limits<DestT>::max());
+
+    SrcT lo = static_cast<SrcT>(std::numeric_limits<DestT>::min());
+    SrcT hi = static_cast<SrcT>(std::numeric_limits<DestT>::max());
+    return static_cast<DestT>(value > lo ? (value > hi ? hi : value) : lo);
+}
+
 template<typename T, typename MIN, typename MAX>
 inline T clamp(T x, MIN min, MAX max)
 {

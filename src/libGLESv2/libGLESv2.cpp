@@ -2487,6 +2487,11 @@ void __stdcall glGetBufferParameteriv(GLenum target, GLenum pname, GLint* params
                 return gl::error(GL_INVALID_ENUM);
             }
 
+            if (!gl::ValidBufferParameter(context, pname))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
             gl::Buffer *buffer = context->getTargetBuffer(target);
 
             if (!buffer)
@@ -2498,12 +2503,24 @@ void __stdcall glGetBufferParameteriv(GLenum target, GLenum pname, GLint* params
             switch (pname)
             {
               case GL_BUFFER_USAGE:
-                *params = buffer->usage();
+                *params = static_cast<GLint>(buffer->usage());
                 break;
               case GL_BUFFER_SIZE:
-                *params = buffer->size();
+                *params = gl::clampCast<GLint>(buffer->size());
                 break;
-              default: return gl::error(GL_INVALID_ENUM);
+              case GL_BUFFER_ACCESS_FLAGS:
+                *params = buffer->accessFlags();
+                break;
+              case GL_BUFFER_MAPPED:
+                *params = static_cast<GLint>(buffer->mapped());
+                break;
+              case GL_BUFFER_MAP_OFFSET:
+                *params = gl::clampCast<GLint>(buffer->mapOffset());
+                break;
+              case GL_BUFFER_MAP_LENGTH:
+                *params = gl::clampCast<GLint>(buffer->mapLength());
+                break;
+              default: UNREACHABLE(); break;
             }
         }
     }
@@ -6657,8 +6674,24 @@ void __stdcall glGetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetBufferPointerv
-            UNIMPLEMENTED();
+            if (!gl::ValidBufferTarget(context, target))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (pname != GL_BUFFER_MAP_POINTER)
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            gl::Buffer *buffer = context->getTargetBuffer(target);
+
+            if (!buffer || !buffer->mapped())
+            {
+                *params = NULL;
+            }
+
+            *params = buffer->mapPointer();
         }
     }
     catch(std::bad_alloc&)
@@ -9228,8 +9261,46 @@ void __stdcall glGetBufferParameteri64v(GLenum target, GLenum pname, GLint64* pa
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetBufferParameteri64v
-            UNIMPLEMENTED();
+            if (!gl::ValidBufferTarget(context, target))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (!gl::ValidBufferParameter(context, pname))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            gl::Buffer *buffer = context->getTargetBuffer(target);
+
+            if (!buffer)
+            {
+                // A null buffer means that "0" is bound to the requested buffer target
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            switch (pname)
+            {
+              case GL_BUFFER_USAGE:
+                *params = static_cast<GLint64>(buffer->usage());
+                break;
+              case GL_BUFFER_SIZE:
+                *params = buffer->size();
+                break;
+              case GL_BUFFER_ACCESS_FLAGS:
+                *params = static_cast<GLint64>(buffer->accessFlags());
+                break;
+              case GL_BUFFER_MAPPED:
+                *params = static_cast<GLint64>(buffer->mapped());
+                break;
+              case GL_BUFFER_MAP_OFFSET:
+                *params = buffer->mapOffset();
+                break;
+              case GL_BUFFER_MAP_LENGTH:
+                *params = buffer->mapLength();
+                break;
+              default: UNREACHABLE(); break;
+            }
         }
     }
     catch(std::bad_alloc&)

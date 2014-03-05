@@ -47,7 +47,7 @@ class Buffer : public RefCountObject
     GLint64 mapLength() const;
 
     rx::BufferStorage *getStorage() const;
-    unsigned int size() const;
+    GLint64 size() const;
 
     void markTransformFeedbackUsage();
 

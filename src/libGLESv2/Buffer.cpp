@@ -106,9 +106,9 @@ rx::BufferStorage *Buffer::getStorage() const
     return mBufferStorage;
 }
 
-unsigned int Buffer::size() const
+GLint64 Buffer::size() const
 {
-    return mBufferStorage->getSize();
+    return static_cast<GLint64>(mBufferStorage->getSize());
 }
 
 GLenum Buffer::usage() const
