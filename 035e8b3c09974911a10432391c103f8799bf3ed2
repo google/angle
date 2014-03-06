@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c6be9dc_26ed48e3",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-06T00:15:34Z",
+      "side": 1,
+      "message": "Was the move away from the MSVC \"secure\" printf functions intentional?",
+      "revId": "035e8b3c09974911a10432391c103f8799bf3ed2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
