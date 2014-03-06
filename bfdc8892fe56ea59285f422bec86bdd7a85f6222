@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c80f5c3_cac9f396",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7051,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-06T01:04:44Z",
+      "side": 1,
+      "message": "Could these use reinterpret_cast as all the other instances of pointers returned from error() do?",
+      "revId": "bfdc8892fe56ea59285f422bec86bdd7a85f6222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c80f5c3_aa9a779f",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7070,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-06T01:04:44Z",
+      "side": 1,
+      "message": "Why did IsUnsignedAdditionSafe end up in the renderer namespace again? (not really something that needs fixing in this ticket, I just don\u0027t remember and it seems weird.)",
+      "revId": "bfdc8892fe56ea59285f422bec86bdd7a85f6222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c6be9dc_2696a839",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7143,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-06T01:04:44Z",
+      "side": 1,
+      "message": "Missing the check for negative offset or length here.",
+      "revId": "bfdc8892fe56ea59285f422bec86bdd7a85f6222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc79fdb5_ddbc5f9d",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7167,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-06T01:04:44Z",
+      "side": 1,
+      "message": "Can this get a \"currently\"?",
+      "revId": "bfdc8892fe56ea59285f422bec86bdd7a85f6222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
