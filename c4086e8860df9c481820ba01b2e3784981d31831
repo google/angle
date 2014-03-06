@@ -67,6 +67,24 @@
     },
     {
       "key": {
+        "uuid": "1cab3158_0bd94168",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4358,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-06T14:46:26Z",
+      "side": 1,
+      "message": "OK, won\u0027t take any action immediately.",
+      "parentUuid": "3c80f5c3_7f8bc3c4",
+      "revId": "c4086e8860df9c481820ba01b2e3784981d31831",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc79fdb5_1d0417e1",
         "filename": "src/libGLESv2/validationES.cpp",
         "patchSetId": 1
@@ -84,6 +102,24 @@
     },
     {
       "key": {
+        "uuid": "9cd641da_1a0501a6",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-06T14:46:26Z",
+      "side": 1,
+      "message": "Yes. With pack buffers, pixels becomes a pointer offset into the buffer, which we need to check together with the read size to make sure it doesn\u0027t overflow.",
+      "parentUuid": "fc79fdb5_1d0417e1",
+      "revId": "c4086e8860df9c481820ba01b2e3784981d31831",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c6be9dc_86e8d4d4",
         "filename": "src/libGLESv2/validationES.cpp",
         "patchSetId": 1
@@ -95,6 +131,24 @@
       "writtenOn": "2014-03-06T00:11:13Z",
       "side": 1,
       "message": "Would you mind adding a comment that even though getCurrentReadFormatType also checks framebuffer completeness, ValidateReadPixelsParameters needs to do the same check first, because glReadPixels returns GL_INVALID_FRAMEBUFFER_OPERATION if the framebuffer is incomplete, while the check in getCurrentReadFormatType is for calls to that function from glGet functions, where if the framebuffer is incomplete and read format/read type are being queried, it returns GL_INVALID_OPERATION instead.\n\n(Oy. Refactoring all the validation out into one place is a really good idea. That took... a frightening amount of code history and spec spelunkage to figure out.)",
+      "revId": "c4086e8860df9c481820ba01b2e3784981d31831",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cb929a9_f0761619",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-06T14:46:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c6be9dc_86e8d4d4",
       "revId": "c4086e8860df9c481820ba01b2e3784981d31831",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
