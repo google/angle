@@ -7,7 +7,7 @@
     {
         'angle_code': 1,
         'angle_post_build_script%': 0,
-        'angle_relative_src_path%': '',
+        'angle_relative_src_path%': '.',
         'angle_build_scripts_path': '..',
     },
     'includes':
@@ -37,7 +37,7 @@
                                 'message': 'Generating commit ID header...',
                                 'inputs': [ 'commit_id.bat' ],
                                 'outputs': ['<(SHARED_INTERMEDIATE_DIR)/commit.h'],
-                                'action': ['<(angle_relative_src_path)commit_id.bat', '<(SHARED_INTERMEDIATE_DIR)'],
+                                'action': ['<(angle_relative_src_path)/commit_id.bat', '<(SHARED_INTERMEDIATE_DIR)'],
                             }
                         ] #actions
                     },
@@ -53,7 +53,7 @@
                                 'message': 'Copying D3D Compiler DLL...',
                                 'inputs': [ 'copy_compiler_dll.bat' ],
                                 'outputs': [ '<(PRODUCT_DIR)/D3DCompiler_46.dll' ],
-                                'action': ["<(angle_relative_src_path)copy_compiler_dll.bat", "$(PlatformName)", "<(windows_sdk_path)", "<(PRODUCT_DIR)" ],
+                                'action': ["<(angle_relative_src_path)/copy_compiler_dll.bat", "$(PlatformName)", "<(windows_sdk_path)", "<(PRODUCT_DIR)" ],
                             }
                         ] #actions
                     },
@@ -102,7 +102,7 @@
                                 'message': 'Generating commit ID header...',
                                 'inputs': [ 'commit_id.py' ],
                                 'outputs': ['<(SHARED_INTERMEDIATE_DIR)/commit.h'],
-                                'action': ['python', '<(angle_relative_src_path)commit_id.py', '<(SHARED_INTERMEDIATE_DIR)/commit.h'],
+                                'action': ['python', '<(angle_relative_src_path)/commit_id.py', '<(SHARED_INTERMEDIATE_DIR)/commit.h'],
                             }
                         ] #actions
                     },
