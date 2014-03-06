@@ -46,6 +46,58 @@
       "revId": "c4086e8860df9c481820ba01b2e3784981d31831",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c80f5c3_7f8bc3c4",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4358,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-06T00:11:13Z",
+      "side": 1,
+      "message": "Hm. I mostly made the request for consistency and because I got asked to do the same by Daniel. But after doing some spec checking, I think it may be more appropriate not to do error checking when there is no current context. (The ES spec itself doesn\u0027t say so, because contexts are outside of its view, but MSDN and the GLX spec say \"commands have no effect\" and commands are undefined\", respectively. EGL doesn\u0027t actually say anything about ES or GL API commands called while there is no current context.)\n\nDoing some code archaeology, it looks like the order of operations goes all the way back to Nicolas\u0027s original prototype; I\u0027d check with him to see if there was a reason for error checking before context retrieval that is still relevant, but in the absence of that, I think we should move to validating after context checks. That said-- consistency would be nice, so we should probably do all of them in bulk as their own ticket/issue.",
+      "parentUuid": "9c63a1f1_d2b9baaa",
+      "revId": "c4086e8860df9c481820ba01b2e3784981d31831",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc79fdb5_1d0417e1",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-06T00:11:13Z",
+      "side": 1,
+      "message": "Is pixels/data actually needed?",
+      "revId": "c4086e8860df9c481820ba01b2e3784981d31831",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c6be9dc_86e8d4d4",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-06T00:11:13Z",
+      "side": 1,
+      "message": "Would you mind adding a comment that even though getCurrentReadFormatType also checks framebuffer completeness, ValidateReadPixelsParameters needs to do the same check first, because glReadPixels returns GL_INVALID_FRAMEBUFFER_OPERATION if the framebuffer is incomplete, while the check in getCurrentReadFormatType is for calls to that function from glGet functions, where if the framebuffer is incomplete and read format/read type are being queried, it returns GL_INVALID_OPERATION instead.\n\n(Oy. Refactoring all the validation out into one place is a really good idea. That took... a frightening amount of code history and spec spelunkage to figure out.)",
+      "revId": "c4086e8860df9c481820ba01b2e3784981d31831",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
