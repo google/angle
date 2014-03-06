@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9cd641da_5afb895f",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7051,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-06T14:44:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c80f5c3_cac9f396",
+      "revId": "bfdc8892fe56ea59285f422bec86bdd7a85f6222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3c80f5c3_aa9a779f",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-06T01:04:44Z",
       "side": 1,
       "message": "Why did IsUnsignedAdditionSafe end up in the renderer namespace again? (not really something that needs fixing in this ticket, I just don\u0027t remember and it seems weird.)",
+      "revId": "bfdc8892fe56ea59285f422bec86bdd7a85f6222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cb929a9_708b06c5",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7070,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-06T14:44:37Z",
+      "side": 1,
+      "message": "I don\u0027t recall. The semantic distinctions of the namespaces as they apply to helper functions isn\u0027t super clear it seems.",
+      "parentUuid": "3c80f5c3_aa9a779f",
       "revId": "bfdc8892fe56ea59285f422bec86bdd7a85f6222",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "9cd641da_7a00cd96",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7143,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-06T14:44:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c6be9dc_2696a839",
+      "revId": "bfdc8892fe56ea59285f422bec86bdd7a85f6222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc79fdb5_ddbc5f9d",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2014-03-06T01:04:44Z",
       "side": 1,
       "message": "Can this get a \"currently\"?",
+      "revId": "bfdc8892fe56ea59285f422bec86bdd7a85f6222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cb929a9_10808a9c",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-06T14:44:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc79fdb5_ddbc5f9d",
       "revId": "bfdc8892fe56ea59285f422bec86bdd7a85f6222",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
