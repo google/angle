@@ -16,6 +16,24 @@
       "revId": "035e8b3c09974911a10432391c103f8799bf3ed2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd641da_5a64e9f7",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-06T00:48:37Z",
+      "side": 1,
+      "message": "Yes, they simply verify the length of the array through a template parameter which doesn\u0027t work with a varying sized buffer.",
+      "parentUuid": "5c6be9dc_26ed48e3",
+      "revId": "035e8b3c09974911a10432391c103f8799bf3ed2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
