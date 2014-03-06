@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1cab3158_cbd6c916",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-06T16:40:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5cb929a9_b0709e1b",
+      "revId": "90da8adc4f80eee4b2cd446a0747ff984c8197f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cb929a9_0deb9560",
         "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -30,6 +48,30 @@
       "writtenOn": "2014-03-06T14:49:14Z",
       "side": 1,
       "message": "don\u0027t need this if we have the condition above on line 1518 (alternately could revert to how it was before)",
+      "range": {
+        "startLine": 1534,
+        "startChar": 8,
+        "endLine": 1534,
+        "endChar": 25
+      },
+      "revId": "90da8adc4f80eee4b2cd446a0747ff984c8197f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cab3158_ebd38523",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1534,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-06T16:40:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5cb929a9_0deb9560",
       "range": {
         "startLine": 1534,
         "startChar": 8,
