@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1cab3158_999cab0e",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-07T17:40:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c6be9dc_a305c530",
+      "revId": "33f0ca444eb4fff47e5d0f68eac44b1a3654adbb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c6be9dc_2311b56c",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-07T16:59:46Z",
       "side": 1,
       "message": "Similar nit-- would prefer variables that don\u0027t govern the incrementing or end of the loop not to be declared in the loop declaration line.",
+      "revId": "33f0ca444eb4fff47e5d0f68eac44b1a3654adbb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd641da_609c9c5b",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-07T17:40:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c6be9dc_2311b56c",
       "revId": "33f0ca444eb4fff47e5d0f68eac44b1a3654adbb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
