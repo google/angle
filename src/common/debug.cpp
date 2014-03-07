@@ -30,15 +30,15 @@ static void output(bool traceFileDebugOnly, PerfOutputFunction perfFunc, const c
     static std::vector<char> asciiMessageBuffer(512);
 
     // Attempt to just print to the current buffer
-    int len = std::vsnprintf(&asciiMessageBuffer[0], asciiMessageBuffer.size(), format, vararg);
+    int len = vsnprintf(&asciiMessageBuffer[0], asciiMessageBuffer.size(), format, vararg);
     if (len < 0 || static_cast<size_t>(len) >= asciiMessageBuffer.size())
     {
         // Buffer was not large enough, calculate the required size and resize the buffer
-        len = std::vsnprintf(NULL, 0, format, vararg);
+        len = vsnprintf(NULL, 0, format, vararg);
         asciiMessageBuffer.resize(len + 1);
 
         // Print again
-        std::vsnprintf(&asciiMessageBuffer[0], asciiMessageBuffer.size(), format, vararg);
+        vsnprintf(&asciiMessageBuffer[0], asciiMessageBuffer.size(), format, vararg);
     }
 
     // NULL terminate the buffer to be safe
