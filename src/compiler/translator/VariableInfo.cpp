@@ -354,9 +354,9 @@ bool CollectVariables::visitAggregate(Visit, TIntermAggregate* node)
                 if (mHashFunction == NULL)
                     processedSymbol = variable->getSymbol();
                 else
-                    processedSymbol = TIntermTraverser::hash(variable->getOriginalSymbol(), mHashFunction);
+                    processedSymbol = TIntermTraverser::hash(variable->getSymbol(), mHashFunction);
                 getVariableInfo(variable->getType(),
-                                variable->getOriginalSymbol(),
+                                variable->getSymbol(),
                                 processedSymbol,
                                 *infoList,
                                 mHashFunction);

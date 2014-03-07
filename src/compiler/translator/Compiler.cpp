@@ -10,7 +10,6 @@
 #include "compiler/translator/Initialize.h"
 #include "compiler/translator/InitializeParseContext.h"
 #include "compiler/translator/InitializeVariables.h"
-#include "compiler/translator/MapLongVariableNames.h"
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/RenameFunction.h"
 #include "compiler/translator/ShHandle.h"
@@ -104,13 +103,10 @@ TCompiler::TCompiler(ShShaderType type, ShShaderSpec spec)
       clampingStrategy(SH_CLAMP_WITH_CLAMP_INTRINSIC),
       builtInFunctionEmulator(type)
 {
-    longNameMap = LongNameMap::GetInstance();
 }
 
 TCompiler::~TCompiler()
 {
-    ASSERT(longNameMap);
-    longNameMap->Release();
 }
 
 bool TCompiler::Init(const ShBuiltInResources& resources)
@@ -201,13 +197,13 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
         // Unroll for-loop markup needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX))
-	{
-	    ForLoopUnrollMarker marker(ForLoopUnrollMarker::kIntegerIndex);
+        {
+            ForLoopUnrollMarker marker(ForLoopUnrollMarker::kIntegerIndex);
             root->traverse(&marker);
         }
         if (success && (compileOptions & SH_UNROLL_FOR_LOOP_WITH_SAMPLER_ARRAY_INDEX))
-	{
-	    ForLoopUnrollMarker marker(ForLoopUnrollMarker::kSamplerArrayIndex);
+        {
+            ForLoopUnrollMarker marker(ForLoopUnrollMarker::kSamplerArrayIndex);
             root->traverse(&marker);
             if (marker.samplerArrayIndexIsFloatLoopIndex())
             {
@@ -228,13 +224,6 @@ bool TCompiler::compile(const char* const shaderStrings[],
         // Disallow expressions deemed too complex.
         if (success && (compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY))
             success = limitExpressionComplexity(root);
-
-        // Call mapLongVariableNames() before collectAttribsUniforms() so in
-        // collectAttribsUniforms() we already have the mapped symbol names and
-        // we could composite mapped and original variable names.
-        // Also, if we hash all the names, then no need to do this for long names.
-        if (success && (compileOptions & SH_MAP_LONG_VARIABLE_NAMES) && hashFunction == NULL)
-            mapLongVariableNames(root);
 
         if (success && shaderType == SH_VERTEX_SHADER && (compileOptions & SH_INIT_GL_POSITION))
             initializeGLPosition(root);
@@ -533,18 +522,6 @@ void TCompiler::initializeVaryingsWithoutStaticUse(TIntermNode* root)
     }
     InitializeVariables initializer(variables);
     root->traverse(&initializer);
-}
-
-void TCompiler::mapLongVariableNames(TIntermNode* root)
-{
-    ASSERT(longNameMap);
-    MapLongVariableNames map(longNameMap);
-    root->traverse(&map);
-}
-
-int TCompiler::getMappedNameMaxLength() const
-{
-    return MAX_SHORTENED_IDENTIFIER_SIZE + 1;
 }
 
 const TExtensionBehavior& TCompiler::getExtensionBehavior() const

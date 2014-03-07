@@ -24,7 +24,6 @@
 #include "compiler/translator/VariableInfo.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 
-class LongNameMap;
 class TCompiler;
 class TDependencyGraph;
 class TranslatorHLSL;
@@ -72,7 +71,6 @@ public:
     const TVariableInfoList& getAttribs() const { return attribs; }
     const TVariableInfoList& getUniforms() const { return uniforms; }
     const TVariableInfoList& getVaryings() const { return varyings; }
-    int getMappedNameMaxLength() const;
 
     ShHashFunction64 getHashFunction() const { return hashFunction; }
     NameMap& getNameMap() { return nameMap; }
@@ -96,8 +94,6 @@ protected:
     bool validateLimitations(TIntermNode* root);
     // Collect info for all attribs, uniforms, varyings.
     void collectVariables(TIntermNode* root);
-    // Map long variable names into shorter ones.
-    void mapLongVariableNames(TIntermNode* root);
     // Translate to object code.
     virtual void translate(TIntermNode* root) = 0;
     // Returns true if, after applying the packing rules in the GLSL 1.017 spec
@@ -158,9 +154,6 @@ private:
     TVariableInfoList attribs;  // Active attributes in the compiled shader.
     TVariableInfoList uniforms;  // Active uniforms in the compiled shader.
     TVariableInfoList varyings;  // Varyings in the compiled shader.
-
-    // Cached copy of the ref-counted singleton.
-    LongNameMap* longNameMap;
 
     // name hashing.
     ShHashFunction64 hashFunction;
