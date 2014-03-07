@@ -356,7 +356,7 @@ public:
     // per process globalpoolallocator, then it causes increased memory usage per compile
     // it is essential to use "symbol = sym" to assign to symbol
     TIntermSymbol(int i, const TString& sym, const TType& t) : 
-            TIntermTyped(t), id(i)  { symbol = sym; originalSymbol = sym; } 
+        TIntermTyped(t), id(i)  { symbol = sym; }
 
     virtual bool hasSideEffects() const { return false; }
 
@@ -364,9 +364,6 @@ public:
     const TString& getSymbol() const { return symbol; }
 
     void setId(int newId) { id = newId; }
-    void setSymbol(const TString& sym) { symbol = sym; }
-
-    const TString& getOriginalSymbol() const { return originalSymbol; }
 
     virtual void traverse(TIntermTraverser*);
     virtual TIntermSymbol* getAsSymbolNode() { return this; }
@@ -375,7 +372,6 @@ public:
 protected:
     int id;
     TString symbol;
-    TString originalSymbol;
 };
 
 // A Raw node stores raw code, that the translator will insert verbatim
