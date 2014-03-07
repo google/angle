@@ -384,9 +384,15 @@
     <ClCompile Include="..\..\src\compiler\translator\FlagStd140Structs.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\compiler\translator\LoopInfo.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\OutputHLSL.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\compiler\translator\LoopInfo.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\MapLongVariableNames.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
