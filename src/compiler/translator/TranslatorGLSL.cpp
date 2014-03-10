@@ -31,6 +31,9 @@ void TranslatorGLSL::translate(TIntermNode* root) {
     // Write GLSL version.
     writeVersion(getShaderType(), root, sink);
 
+    // Write extension behaviour as needed
+    writeExtensionBehavior();
+
     // Write emulated built-in functions if needed.
     getBuiltInFunctionEmulator().OutputEmulatedFunctionDefinition(
         sink, false);
@@ -41,4 +44,21 @@ void TranslatorGLSL::translate(TIntermNode* root) {
     // Write translated shader.
     TOutputGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(), getSymbolTable());
     root->traverse(&outputGLSL);
+}
+
+void TranslatorGLSL::writeExtensionBehavior() {
+    TInfoSinkBase& sink = getInfoSink().obj;
+    const TExtensionBehavior& extensionBehavior = getExtensionBehavior();
+    for (TExtensionBehavior::const_iterator iter = extensionBehavior.begin();
+         iter != extensionBehavior.end(); ++iter) {
+        if (iter->second == EBhUndefined)
+            continue;
+
+        // For GLSL output, we don't need to emit most extensions explicitly,
+        // but some we need to translate.
+        if (iter->first == "GL_EXT_shader_texture_lod") {
+            sink << "#extension GL_ARB_shader_texture_lod : "
+                 << getBehaviorString(iter->second) << "\n";
+        }
+    }
 }

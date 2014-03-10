@@ -256,6 +256,7 @@ typedef struct
     int ARB_texture_rectangle;
     int EXT_draw_buffers;
     int EXT_frag_depth;
+    int EXT_shader_texture_lod;
 
     // Set to 1 if highp precision is supported in the fragment language.
     // Default is 0.

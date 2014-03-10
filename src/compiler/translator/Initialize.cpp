@@ -350,6 +350,22 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
         symbolTable.insertBuiltIn(float4, "texture2DRectProj", sampler2DRect, float4);
     }
 
+    if (resources.EXT_shader_texture_lod)
+    {
+        /* The *Grad* variants are new to both vertex and fragment shaders; the fragment
+         * shader specific pieces are added separately belyw
+         * added separately below.
+         */
+        symbolTable.insertBuiltIn(float4, "texture2DGradEXT", sampler2D, float2, float2, float2);
+        symbolTable.insertBuiltIn(float4, "texture2DProjGradEXT", sampler2D, float3, float2, float2);
+        symbolTable.insertBuiltIn(float4, "texture2DProjGradEXT", sampler2D, float4, float2, float2);
+        symbolTable.insertBuiltIn(float4, "textureCubeGradEXT", samplerCube, float3, float3, float3);
+
+        symbolTable.relateToExtension("texture2DGradEXT", "GL_EXT_shader_texture_lod");
+        symbolTable.relateToExtension("texture2DProjGradEXT", "GL_EXT_shader_texture_lod");
+        symbolTable.relateToExtension("textureCubeGradEXT", "GL_EXT_shader_texture_lod");
+    }
+
     if (type == SH_FRAGMENT_SHADER)
     {
         symbolTable.insertBuiltIn(float4, "texture2D", sampler2D, float2, float1);
@@ -374,9 +390,21 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
             symbolTable.insertBuiltIn(float3, "fwidth", float3);
             symbolTable.insertBuiltIn(float4, "fwidth", float4);
         }
+
+        if (resources.EXT_shader_texture_lod)
+        {
+            symbolTable.insertBuiltIn(float4, "texture2DLodEXT", sampler2D, float2, float1);
+            symbolTable.insertBuiltIn(float4, "texture2DProjLodEXT", sampler2D, float3, float1);
+            symbolTable.insertBuiltIn(float4, "texture2DProjLodEXT", sampler2D, float4, float1);
+            symbolTable.insertBuiltIn(float4, "textureCubeLodEXT", samplerCube, float3, float1);
+
+            symbolTable.relateToExtension("texture2DLodEXT", "GL_EXT_shader_texture_lod");
+            symbolTable.relateToExtension("texture2DProjLodEXT", "GL_EXT_shader_texture_lod");
+            symbolTable.relateToExtension("textureCubeLodEXT", "GL_EXT_shader_texture_lod");
+        }
     }
 
-    if(type == SH_VERTEX_SHADER)
+    if (type == SH_VERTEX_SHADER)
     {
         symbolTable.insertBuiltIn(float4, "texture2DLod", sampler2D, float2, float1);
         symbolTable.insertBuiltIn(float4, "texture2DProjLod", sampler2D, float3, float1);
@@ -561,4 +589,6 @@ void InitExtensionBehavior(const ShBuiltInResources& resources,
         extBehavior["GL_EXT_draw_buffers"] = EBhUndefined;
     if (resources.EXT_frag_depth)
         extBehavior["GL_EXT_frag_depth"] = EBhUndefined;
+    if (resources.EXT_shader_texture_lod)
+        extBehavior["GL_EXT_shader_texture_lod"] = EBhUndefined;
 }
