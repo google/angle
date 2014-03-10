@@ -280,7 +280,7 @@ public:
         return insert(*constant);
     }
 
-    bool insertBuiltIn(TType *rvalue, const char *name, TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0)
+    bool insertBuiltIn(TType *rvalue, const char *name, TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0)
     {
         TFunction *function = new TFunction(NewPoolTString(name), *rvalue);
 
@@ -299,10 +299,16 @@ public:
             function->addParameter(param3);
         }
 
+        if(ptype4)
+        {
+            TParameter param4 = {NULL, ptype4};
+            function->addParameter(param4);
+        }
+
         return insert(*function);
     }
 
-    TSymbol* find(const TString& name, bool* builtIn = 0, bool *sameScope = 0) 
+    TSymbol* find(const TString& name, bool* builtIn = 0, bool *sameScope = 0)
     {
         int level = currentLevel();
         TSymbol* symbol;

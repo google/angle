@@ -798,8 +798,9 @@ TString TOutputGLSLBase::hashVariableName(const TString& name)
 TString TOutputGLSLBase::hashFunctionName(const TString& mangled_name)
 {
     TString name = TFunction::unmangleName(mangled_name);
-    if (mSymbolTable.findBuiltIn(mangled_name) != NULL || name == "main")
-        return name;
+    if (mSymbolTable.findBuiltIn(mangled_name) != NULL || name == "main") {
+        return translateTextureFunction(name);
+    }
     return hashName(name);
 }
 
