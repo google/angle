@@ -117,9 +117,9 @@
     <ClCompile Include="..\..\src\compiler\translator\OutputGLSL.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\compiler\translator\MapLongVariableNames.h">
+    <ClCompile Include="..\..\src\compiler\translator\TranslatorESSL.cpp">
       <Filter>src\compiler\translator</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorHLSL.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
@@ -213,9 +213,6 @@
     <ClInclude Include="..\..\src\compiler\translator\TranslatorESSL.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\compiler\translator\TranslatorESSL.cpp">
-      <Filter>src\compiler\translator</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\src\compiler\translator\InitializeDll.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
@@ -294,9 +291,6 @@
     <ClInclude Include="..\..\src\compiler\translator\SearchSymbol.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\compiler\translator\MapLongVariableNames.cpp">
-      <Filter>src\compiler\translator</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\CodeGen.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
@@ -423,13 +417,13 @@
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h">
       <Filter>include\GLSLANG</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\GLES2\gl2platform.h">
+      <Filter>include\GLES2</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\GLES2\gl2ext.h">
       <Filter>include\GLES2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\GLES2\gl2.h">
-      <Filter>include\GLES2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\GLES2\gl2platform.h">
       <Filter>include\GLES2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\EGL\eglext.h">
