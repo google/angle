@@ -178,7 +178,6 @@
     <ClInclude Include="..\..\src\compiler\translator\BlockLayoutEncoder.h"/>
     <ClInclude Include="..\..\src\compiler\translator\VariableInfo.h"/>
     <ClInclude Include="..\..\src\compiler\translator\LoopInfo.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\MapLongVariableNames.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang_tab.h"/>
     <ClInclude Include="..\..\src\compiler\translator\RewriteElseBlocks.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ExtensionBehavior.h"/>
@@ -213,7 +212,6 @@
     <ClCompile Include="..\..\src\compiler\translator\BuiltInFunctionEmulator.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\glslang_lex.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\OutputGLSL.cpp"/>
-    <ClCompile Include="..\..\src\compiler\translator\TranslatorESSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorHLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\OutputGLSLBase.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ShaderVariable.cpp"/>
@@ -230,12 +228,12 @@
     <ClCompile Include="..\..\src\compiler\translator\util.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ShaderLang.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ValidateOutputs.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\TranslatorESSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\VariablePacker.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\parseConst.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\VersionGLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\DetectCallDepth.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\InitializeParseContext.cpp"/>
-    <ClCompile Include="..\..\src\compiler\translator\MapLongVariableNames.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\CodeGen.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\Intermediate.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\IntermTraverse.cpp"/>
