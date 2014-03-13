@@ -345,8 +345,8 @@ class Renderer11 : public Renderer
     D3D11_PRIMITIVE_TOPOLOGY mCurrentPrimitiveTopology;
 
     // Currently applied index buffer
-    unsigned int mAppliedIBSerial;
-    unsigned int mAppliedStorageIBSerial;
+    ID3D11Buffer *mAppliedIB;
+    DXGI_FORMAT mAppliedIBFormat;
     unsigned int mAppliedIBOffset;
 
     // Currently applied transform feedback buffers

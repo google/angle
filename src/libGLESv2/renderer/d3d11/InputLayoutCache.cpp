@@ -47,7 +47,7 @@ InputLayoutCache::InputLayoutCache() : mInputLayoutMap(kMaxInputLayouts, hashInp
     mCurrentIL = NULL;
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        mCurrentBuffers[i] = -1;
+        mCurrentBuffers[i] = NULL;
         mCurrentVertexStrides[i] = -1;
         mCurrentVertexOffsets[i] = -1;
     }
@@ -80,7 +80,7 @@ void InputLayoutCache::markDirty()
     mCurrentIL = NULL;
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        mCurrentBuffers[i] = -1;
+        mCurrentBuffers[i] = NULL;
         mCurrentVertexStrides[i] = -1;
         mCurrentVertexOffsets[i] = -1;
     }
@@ -101,7 +101,6 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
     InputLayoutKey ilKey = { 0 };
 
     ID3D11Buffer *vertexBuffers[gl::MAX_VERTEX_ATTRIBS] = { NULL };
-    unsigned int vertexBufferSerials[gl::MAX_VERTEX_ATTRIBS] = { 0 };
     UINT vertexStrides[gl::MAX_VERTEX_ATTRIBS] = { 0 };
     UINT vertexOffsets[gl::MAX_VERTEX_ATTRIBS] = { 0 };
 
@@ -135,7 +134,6 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
 
             vertexBuffers[i] = bufferStorage ? bufferStorage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK)
                                              : vertexBuffer->getBuffer();
-            vertexBufferSerials[i] = bufferStorage ? bufferStorage->getSerial() : vertexBuffer->getSerial();
             vertexStrides[i] = attributes[i].stride;
             vertexOffsets[i] = attributes[i].offset;
         }
@@ -200,11 +198,11 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
 
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        if (vertexBufferSerials[i] != mCurrentBuffers[i] || vertexStrides[i] != mCurrentVertexStrides[i] ||
+        if (vertexBuffers[i] != mCurrentBuffers[i] || vertexStrides[i] != mCurrentVertexStrides[i] ||
             vertexOffsets[i] != mCurrentVertexOffsets[i])
         {
             mDeviceContext->IASetVertexBuffers(i, 1, &vertexBuffers[i], &vertexStrides[i], &vertexOffsets[i]);
-            mCurrentBuffers[i] = vertexBufferSerials[i];
+            mCurrentBuffers[i] = vertexBuffers[i];
             mCurrentVertexStrides[i] = vertexStrides[i];
             mCurrentVertexOffsets[i] = vertexOffsets[i];
         }
