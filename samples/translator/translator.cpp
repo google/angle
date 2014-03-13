@@ -27,7 +27,7 @@ static void usage();
 static ShShaderType FindShaderType(const char* fileName);
 static bool CompileFile(char* fileName, ShHandle compiler, int compileOptions);
 static void LogMsg(const char* msg, const char* name, const int num, const char* logName);
-static void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType, bool mapLongVariableNames);
+static void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType);
 
 // If NUM_SOURCE_STRINGS is set to a value > 1, the input file data is
 // broken into that many chunks.
