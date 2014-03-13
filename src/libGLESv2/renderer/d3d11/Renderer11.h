@@ -291,8 +291,8 @@ class Renderer11 : public Renderer
     // Currently applied primitive topology
     D3D11_PRIMITIVE_TOPOLOGY mCurrentPrimitiveTopology;
 
-    unsigned int mAppliedIBSerial;
-    unsigned int mAppliedStorageIBSerial;
+    ID3D11Buffer *mAppliedIB;
+    DXGI_FORMAT mAppliedIBFormat;
     unsigned int mAppliedIBOffset;
 
     unsigned int mAppliedProgramBinarySerial;

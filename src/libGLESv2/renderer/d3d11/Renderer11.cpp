@@ -1092,28 +1092,27 @@ GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementAr
 
     if (err == GL_NO_ERROR)
     {
+        IndexBuffer11* indexBuffer = IndexBuffer11::makeIndexBuffer11(indexInfo->indexBuffer);
+
+        ID3D11Buffer *buffer = NULL;
+        DXGI_FORMAT bufferFormat = indexBuffer->getIndexFormat();
+
         if (indexInfo->storage)
         {
-            if (indexInfo->serial != mAppliedStorageIBSerial || indexInfo->startOffset != mAppliedIBOffset)
-            {
-                BufferStorage11 *storage = BufferStorage11::makeBufferStorage11(indexInfo->storage);
-                IndexBuffer11* indexBuffer = IndexBuffer11::makeIndexBuffer11(indexInfo->indexBuffer);
-
-                mDeviceContext->IASetIndexBuffer(storage->getBuffer(BUFFER_USAGE_INDEX), indexBuffer->getIndexFormat(), indexInfo->startOffset);
-
-                mAppliedIBSerial = 0;
-                mAppliedStorageIBSerial = storage->getSerial();
-                mAppliedIBOffset = indexInfo->startOffset;
-            }
+            BufferStorage11 *storage = BufferStorage11::makeBufferStorage11(indexInfo->storage);
+            buffer = storage->getBuffer(BUFFER_USAGE_INDEX);
         }
-        else if (indexInfo->serial != mAppliedIBSerial || indexInfo->startOffset != mAppliedIBOffset)
+        else
         {
-            IndexBuffer11* indexBuffer = IndexBuffer11::makeIndexBuffer11(indexInfo->indexBuffer);
+            buffer = indexBuffer->getBuffer();
+        }
 
-            mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexInfo->startOffset);
+        if (buffer != mAppliedIB || bufferFormat != mAppliedIBFormat || indexInfo->startOffset != mAppliedIBOffset)
+        {
+            mDeviceContext->IASetIndexBuffer(buffer, bufferFormat, indexInfo->startOffset);
 
-            mAppliedIBSerial = indexInfo->serial;
-            mAppliedStorageIBSerial = 0;
+            mAppliedIB = buffer;
+            mAppliedIBFormat = bufferFormat;
             mAppliedIBOffset = indexInfo->startOffset;
         }
     }
@@ -1251,13 +1250,15 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
         return gl::error(GL_OUT_OF_MEMORY);
     }
 
-    if (mAppliedIBSerial != mLineLoopIB->getSerial() || mAppliedIBOffset != indexBufferOffset)
-    {
-        IndexBuffer11 *indexBuffer = IndexBuffer11::makeIndexBuffer11(mLineLoopIB->getIndexBuffer());
+    IndexBuffer11 *indexBuffer = IndexBuffer11::makeIndexBuffer11(mLineLoopIB->getIndexBuffer());
+    ID3D11Buffer *d3dIndexBuffer = indexBuffer->getBuffer();
+    DXGI_FORMAT indexFormat = indexBuffer->getIndexFormat();
 
+    if (mAppliedIB != d3dIndexBuffer || mAppliedIBFormat != indexFormat || mAppliedIBOffset != indexBufferOffset)
+    {
         mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexBufferOffset);
-        mAppliedIBSerial = mLineLoopIB->getSerial();
-        mAppliedStorageIBSerial = 0;
+        mAppliedIB = d3dIndexBuffer;
+        mAppliedIBFormat = indexFormat;
         mAppliedIBOffset = indexBufferOffset;
     }
 
@@ -1360,13 +1361,15 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
         return gl::error(GL_OUT_OF_MEMORY);
     }
 
-    if (mAppliedIBSerial != mTriangleFanIB->getSerial() || mAppliedIBOffset != indexBufferOffset)
-    {
-        IndexBuffer11 *indexBuffer = IndexBuffer11::makeIndexBuffer11(mTriangleFanIB->getIndexBuffer());
+    IndexBuffer11 *indexBuffer = IndexBuffer11::makeIndexBuffer11(mTriangleFanIB->getIndexBuffer());
+    ID3D11Buffer *d3dIndexBuffer = indexBuffer->getBuffer();
+    DXGI_FORMAT indexFormat = indexBuffer->getIndexFormat();
 
+    if (mAppliedIB != d3dIndexBuffer || mAppliedIBFormat != indexFormat || mAppliedIBOffset != indexBufferOffset)
+    {
         mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexBufferOffset);
-        mAppliedIBSerial = mTriangleFanIB->getSerial();
-        mAppliedStorageIBSerial = 0;
+        mAppliedIB = d3dIndexBuffer;
+        mAppliedIBFormat = indexFormat;
         mAppliedIBOffset = indexBufferOffset;
     }
 
@@ -1866,8 +1869,8 @@ void Renderer11::markAllStateDirty()
     mForceSetScissor = true;
     mForceSetViewport = true;
 
-    mAppliedIBSerial = 0;
-    mAppliedStorageIBSerial = 0;
+    mAppliedIB = NULL;
+    mAppliedIBFormat = DXGI_FORMAT_UNKNOWN;
     mAppliedIBOffset = 0;
 
     mAppliedProgramBinarySerial = 0;
