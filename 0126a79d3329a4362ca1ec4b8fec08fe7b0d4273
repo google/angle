@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cefcdff_10d0e405",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-03-14T18:25:18Z",
+      "side": 1,
+      "message": "What is the purpose of this code? It\u0027s not obvious to me what it did before, and if we still need it now.",
+      "range": {
+        "startLine": 390,
+        "startChar": 4,
+        "endLine": 399,
+        "endChar": 5
+      },
+      "revId": "0126a79d3329a4362ca1ec4b8fec08fe7b0d4273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
