@@ -22,6 +22,30 @@
       "revId": "0126a79d3329a4362ca1ec4b8fec08fe7b0d4273",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcca7990_3372c8b5",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-14T18:26:51Z",
+      "side": 1,
+      "message": "Right, forgot to ask you about this. Gman put it in a long time ago, but I\u0027m not sure if it does anything.",
+      "parentUuid": "7cefcdff_10d0e405",
+      "range": {
+        "startLine": 390,
+        "startChar": 4,
+        "endLine": 399,
+        "endChar": 5
+      },
+      "revId": "0126a79d3329a4362ca1ec4b8fec08fe7b0d4273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
