@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cefcdff_70c97068",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1053,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-14T18:15:46Z",
+      "side": 1,
+      "message": "nit: for std::vectors, we prefer using a for loop with a size_t numerical index",
+      "range": {
+        "startLine": 1053,
+        "startChar": 38,
+        "endLine": 1053,
+        "endChar": 52
+      },
+      "revId": "984a534e4372c1369c81a6456986e725eddb0916",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcca7990_9362bce8",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1248,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-14T18:15:46Z",
+      "side": 1,
+      "message": "nit: My personal preference here would be to make a clearly named helper function that checks \"GLenum \u003d\u003d GL_U_NORM || GLenum \u003d\u003d GL_S_NORM || GLenum \u003d\u003d GL_FLOAT\"",
+      "range": {
+        "startLine": 1243,
+        "startChar": 21,
+        "endLine": 1248,
+        "endChar": 78
+      },
+      "revId": "984a534e4372c1369c81a6456986e725eddb0916",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
