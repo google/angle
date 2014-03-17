@@ -22,10 +22,11 @@ D3D11_MAP GetD3DMapTypeFromBits(GLbitfield access)
 {
     bool readBit = ((access & GL_MAP_READ_BIT) != 0);
     bool writeBit = ((access & GL_MAP_WRITE_BIT) != 0);
-    bool discardBit = ((access & (GL_MAP_INVALIDATE_BUFFER_BIT)) != 0);
 
-    ASSERT(!readBit || !discardBit);
     ASSERT(readBit || writeBit);
+
+    // Note : we ignore the discard bit, because in D3D11, staging buffers
+    //  don't accept the map-discard flag (discard only works for DYNAMIC usage)
 
     if (readBit && !writeBit)
     {
@@ -33,7 +34,7 @@ D3D11_MAP GetD3DMapTypeFromBits(GLbitfield access)
     }
     else if (writeBit && !readBit)
     {
-        return (discardBit ? D3D11_MAP_WRITE_DISCARD : D3D11_MAP_WRITE);
+        return D3D11_MAP_WRITE;
     }
     else if (writeBit && readBit)
     {
