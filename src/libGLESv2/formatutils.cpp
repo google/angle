@@ -7,9 +7,10 @@
 
 // formatutils.cpp: Queries for GL image formats.
 
+#include "common/mathutil.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Context.h"
-#include "common/mathutil.h"
+#include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/imageformats.h"
 #include "libGLESv2/renderer/copyimage.h"
@@ -965,6 +966,107 @@ static TypeSet BuildES3ValidTypeSet()
     return set;
 }
 
+struct EffectiveInternalFormatInfo
+{
+    GLenum mEffectiveFormat;
+    GLenum mDestFormat;
+    GLuint mMinRedBits;
+    GLuint mMaxRedBits;
+    GLuint mMinGreenBits;
+    GLuint mMaxGreenBits;
+    GLuint mMinBlueBits;
+    GLuint mMaxBlueBits;
+    GLuint mMinAlphaBits;
+    GLuint mMaxAlphaBits;
+
+    EffectiveInternalFormatInfo(GLenum effectiveFormat, GLenum destFormat, GLuint minRedBits, GLuint maxRedBits,
+                                GLuint minGreenBits, GLuint maxGreenBits, GLuint minBlueBits, GLuint maxBlueBits,
+                                GLuint minAlphaBits, GLuint maxAlphaBits)
+        : mEffectiveFormat(effectiveFormat), mDestFormat(destFormat), mMinRedBits(minRedBits),
+          mMaxRedBits(maxRedBits), mMinGreenBits(minGreenBits), mMaxGreenBits(maxGreenBits),
+          mMinBlueBits(minBlueBits), mMaxBlueBits(maxBlueBits), mMinAlphaBits(minAlphaBits),
+          mMaxAlphaBits(maxAlphaBits) {};
+};
+
+typedef std::vector<EffectiveInternalFormatInfo> EffectiveInternalFormatList;
+
+static EffectiveInternalFormatList BuildSizedEffectiveInternalFormatList()
+{
+    EffectiveInternalFormatList list;
+
+    // OpenGL ES 3.0.3 Specification, Table 3.17, pg 141: Effective internal format coresponding to destination internal format and
+    //                                                    linear source buffer component sizes.
+    //                                                                            | Source channel min/max sizes |
+    //                                         Effective Internal Format |  N/A   |  R   |  G   |  B   |  A      |
+    list.push_back(EffectiveInternalFormatInfo(GL_ALPHA8_EXT,              GL_NONE, 0,  0, 0,  0, 0,  0, 1, 8));
+    list.push_back(EffectiveInternalFormatInfo(GL_R8,                      GL_NONE, 1,  8, 0,  0, 0,  0, 0, 0));
+    list.push_back(EffectiveInternalFormatInfo(GL_RG8,                     GL_NONE, 1,  8, 1,  8, 0,  0, 0, 0));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB565,                  GL_NONE, 1,  5, 1,  6, 1,  5, 0, 0));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB8,                    GL_NONE, 6,  8, 7,  8, 6,  8, 0, 0));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGBA4,                   GL_NONE, 1,  4, 1,  4, 1,  4, 1, 4));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB5_A1,                 GL_NONE, 5,  5, 5,  5, 5,  5, 1, 1));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGBA8,                   GL_NONE, 5,  8, 5,  8, 5,  8, 2, 8));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB10_A2,                GL_NONE, 9, 10, 9, 10, 9, 10, 2, 2));
+
+    return list;
+}
+
+
+static EffectiveInternalFormatList BuildUnsizedEffectiveInternalFormatList()
+{
+    EffectiveInternalFormatList list;
+
+    // OpenGL ES 3.0.3 Specification, Table 3.17, pg 141: Effective internal format coresponding to destination internal format and
+    //                                                    linear source buffer component sizes.
+    //                                                                                        |          Source channel min/max sizes            |
+    //                                         Effective Internal Format |    Dest Format     |     R     |      G     |      B     |      A     |
+    list.push_back(EffectiveInternalFormatInfo(GL_ALPHA8_EXT,              GL_ALPHA,           0, UINT_MAX, 0, UINT_MAX, 0, UINT_MAX, 1,        8));
+    list.push_back(EffectiveInternalFormatInfo(GL_LUMINANCE8_EXT,          GL_LUMINANCE,       1,        8, 0, UINT_MAX, 0, UINT_MAX, 0, UINT_MAX));
+    list.push_back(EffectiveInternalFormatInfo(GL_LUMINANCE8_ALPHA8_EXT,   GL_LUMINANCE_ALPHA, 1,        8, 0, UINT_MAX, 0, UINT_MAX, 1,        8));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB565,                  GL_RGB,             1,        5, 1,        6, 1,        5, 0, UINT_MAX));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB8,                    GL_RGB,             6,        8, 7,        8, 6,        8, 0, UINT_MAX));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGBA4,                   GL_RGBA,            1,        4, 1,        4, 1,        4, 1,        4));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB5_A1,                 GL_RGBA,            5,        5, 5,        5, 5,        5, 1,        1));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGBA8,                   GL_RGBA,            5,        8, 5,        8, 5,        8, 5,        8));
+
+    return list;
+}
+
+static bool GetEffectiveInternalFormat(const InternalFormatInfo &srcFormat, const InternalFormatInfo &destFormat,
+                                       GLuint clientVersion, GLenum *outEffectiveFormat)
+{
+    const EffectiveInternalFormatList *list = NULL;
+    GLenum targetFormat = GL_NONE;
+
+    if (gl::IsSizedInternalFormat(destFormat.mFormat, clientVersion))
+    {
+        static const EffectiveInternalFormatList sizedList = BuildSizedEffectiveInternalFormatList();
+        list = &sizedList;
+    }
+    else
+    {
+        static const EffectiveInternalFormatList unsizedList = BuildUnsizedEffectiveInternalFormatList();
+        list = &unsizedList;
+        targetFormat = destFormat.mFormat;
+    }
+
+    for (size_t curFormat = 0; curFormat < list->size(); ++curFormat)
+    {
+        const EffectiveInternalFormatInfo& formatInfo = list->at(curFormat);
+        if ((formatInfo.mDestFormat == targetFormat) &&
+            (formatInfo.mMinRedBits   <= srcFormat.mRedBits   && formatInfo.mMaxRedBits   >= srcFormat.mRedBits)   &&
+            (formatInfo.mMinGreenBits <= srcFormat.mGreenBits && formatInfo.mMaxGreenBits >= srcFormat.mGreenBits) &&
+            (formatInfo.mMinBlueBits  <= srcFormat.mBlueBits  && formatInfo.mMaxBlueBits  >= srcFormat.mBlueBits)  &&
+            (formatInfo.mMinAlphaBits <= srcFormat.mAlphaBits && formatInfo.mMaxAlphaBits >= srcFormat.mAlphaBits))
+        {
+            *outEffectiveFormat = formatInfo.mEffectiveFormat;
+            return true;
+        }
+    }
+
+    return false;
+}
+
 struct CopyConversion
 {
     GLenum mTextureFormat;
@@ -1104,7 +1206,7 @@ bool IsValidFormatCombination(GLenum internalFormat, GLenum format, GLenum type,
     }
 }
 
-bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBufferInternalFormat, GLuint clientVersion)
+bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBufferInternalFormat, GLuint readBufferHandle, GLuint clientVersion)
 {
     InternalFormatInfo textureInternalFormatInfo;
     InternalFormatInfo framebufferInternalFormatInfo;
@@ -1123,30 +1225,112 @@ bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBu
                                                              framebufferInternalFormatInfo.mFormat);
             if (conversionSet.find(conversion) != conversionSet.end())
             {
-                // Section 3.8.5 of the GLES3 3.0.2 spec states that source and destination formats
-                // must both be signed or unsigned or fixed/floating point and both source and destinations
-                // must be either both SRGB or both not SRGB
+                // Section 3.8.5 of the GLES 3.0.3 spec states that source and destination formats
+                // must both be signed, unsigned, or fixed point and both source and destinations
+                // must be either both SRGB or both not SRGB. EXT_color_buffer_float adds allowed
+                // conversion between fixed and floating point.
 
                 if ((textureInternalFormatInfo.mColorEncoding == GL_SRGB) != (framebufferInternalFormatInfo.mColorEncoding == GL_SRGB))
                 {
                     return false;
                 }
 
-                if ((textureInternalFormatInfo.mComponentType == GL_INT          && framebufferInternalFormatInfo.mComponentType == GL_INT         ) ||
-                    (textureInternalFormatInfo.mComponentType == GL_UNSIGNED_INT && framebufferInternalFormatInfo.mComponentType == GL_UNSIGNED_INT))
+                if (((textureInternalFormatInfo.mComponentType == GL_INT) != (framebufferInternalFormatInfo.mComponentType == GL_INT)) ||
+                    ((textureInternalFormatInfo.mComponentType == GL_UNSIGNED_INT) != (framebufferInternalFormatInfo.mComponentType == GL_UNSIGNED_INT)))
                 {
-                    return true;
+                    return false;
                 }
 
-                if ((textureInternalFormatInfo.mComponentType     == GL_UNSIGNED_NORMALIZED ||
-                     textureInternalFormatInfo.mComponentType     == GL_SIGNED_NORMALIZED   ||
-                     textureInternalFormatInfo.mComponentType     == GL_FLOAT               ) &&
-                    (framebufferInternalFormatInfo.mComponentType == GL_UNSIGNED_NORMALIZED ||
-                     framebufferInternalFormatInfo.mComponentType == GL_SIGNED_NORMALIZED   ||
-                     framebufferInternalFormatInfo.mComponentType == GL_FLOAT               ))
+                if (gl::IsFloatOrFixedComponentType(textureInternalFormatInfo.mComponentType) &&
+                    !gl::IsFloatOrFixedComponentType(framebufferInternalFormatInfo.mComponentType))
                 {
-                    return true;
+                    return false;
                 }
+
+                // GLES specification 3.0.3, sec 3.8.5, pg 139-140:
+                // The effective internal format of the source buffer is determined with the following rules applied in order:
+                //    * If the source buffer is a texture or renderbuffer that was created with a sized internal format then the
+                //      effective internal format is the source buffer's sized internal format.
+                //    * If the source buffer is a texture that was created with an unsized base internal format, then the
+                //      effective internal format is the source image array's effective internal format, as specified by table
+                //      3.12, which is determined from the <format> and <type> that were used when the source image array was
+                //      specified by TexImage*.
+                //    * Otherwise the effective internal format is determined by the row in table 3.17 or 3.18 where
+                //      Destination Internal Format matches internalformat and where the [source channel sizes] are consistent
+                //      with the values of the source buffer's [channel sizes]. Table 3.17 is used if the
+                //      FRAMEBUFFER_ATTACHMENT_ENCODING is LINEAR and table 3.18 is used if the FRAMEBUFFER_ATTACHMENT_ENCODING
+                //      is SRGB.
+                InternalFormatInfo sourceEffectiveFormat;
+                if (readBufferHandle != 0)
+                {
+                    // Not the default framebuffer, therefore the read buffer must be a user-created texture or renderbuffer
+                    if (gl::IsSizedInternalFormat(framebufferInternalFormatInfo.mFormat, clientVersion))
+                    {
+                        sourceEffectiveFormat = framebufferInternalFormatInfo;
+                    }
+                    else
+                    {
+                        // Renderbuffers cannot be created with an unsized internal format, so this must be an unsized-format
+                        // texture. We can use the same table we use when creating textures to get its effective sized format.
+                        GLenum effectiveFormat = gl::GetSizedInternalFormat(framebufferInternalFormatInfo.mFormat,
+                                                                            framebufferInternalFormatInfo.mType, clientVersion);
+                        gl::GetInternalFormatInfo(effectiveFormat, clientVersion, &sourceEffectiveFormat);
+                    }
+                }
+                else
+                {
+                    // The effective internal format must be derived from the source framebuffer's channel sizes.
+                    // This is done in GetEffectiveInternalFormat for linear buffers (table 3.17)
+                    if (framebufferInternalFormatInfo.mColorEncoding == GL_LINEAR)
+                    {
+                        GLenum effectiveFormat;
+                        if (GetEffectiveInternalFormat(framebufferInternalFormatInfo, textureInternalFormatInfo, clientVersion, &effectiveFormat))
+                        {
+                            gl::GetInternalFormatInfo(effectiveFormat, clientVersion, &sourceEffectiveFormat);
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else if (framebufferInternalFormatInfo.mColorEncoding == GL_SRGB)
+                    {
+                        // SRGB buffers can only be copied to sized format destinations according to table 3.18
+                        if (gl::IsSizedInternalFormat(textureInternalFormat, clientVersion) &&
+                            (framebufferInternalFormatInfo.mRedBits   >= 1 && framebufferInternalFormatInfo.mRedBits   <= 8) &&
+                            (framebufferInternalFormatInfo.mGreenBits >= 1 && framebufferInternalFormatInfo.mGreenBits <= 8) &&
+                            (framebufferInternalFormatInfo.mBlueBits  >= 1 && framebufferInternalFormatInfo.mBlueBits  <= 8) &&
+                            (framebufferInternalFormatInfo.mAlphaBits >= 1 && framebufferInternalFormatInfo.mAlphaBits <= 8))
+                        {
+                            gl::GetInternalFormatInfo(GL_SRGB8_ALPHA8, clientVersion, &sourceEffectiveFormat);
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        UNREACHABLE();
+                    }
+                }
+
+                if (gl::IsSizedInternalFormat(textureInternalFormatInfo.mFormat, clientVersion))
+                {
+                    // Section 3.8.5 of the GLES 3.0.3 spec, pg 139, requires that, if the destination format is sized,
+                    // component sizes of the source and destination formats must exactly match
+                    if (textureInternalFormatInfo.mRedBits != sourceEffectiveFormat.mRedBits ||
+                        textureInternalFormatInfo.mGreenBits != sourceEffectiveFormat.mGreenBits ||
+                        textureInternalFormatInfo.mBlueBits != sourceEffectiveFormat.mBlueBits ||
+                        textureInternalFormatInfo.mAlphaBits != sourceEffectiveFormat.mAlphaBits)
+                    {
+                        return false;
+                    }
+                }
+
+
+                return true; // A conversion function exists, and no rule in the specification has precluded conversion
+                             // between these formats.
             }
 
             return false;
@@ -1321,6 +1505,20 @@ bool IsSpecialInterpretationType(GLenum type)
     else
     {
         UNREACHABLE();
+        return false;
+    }
+}
+
+bool IsFloatOrFixedComponentType(GLenum type)
+{
+    if (type == GL_UNSIGNED_NORMALIZED ||
+        type == GL_SIGNED_NORMALIZED ||
+        type == GL_FLOAT)
+    {
+        return true;
+    }
+    else
+    {
         return false;
     }
 }

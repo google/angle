@@ -435,12 +435,21 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
             return gl::error(GL_INVALID_VALUE, false);
         }
 
-        if (!gl::IsValidCopyTexImageCombination(textureInternalFormat, colorbufferInternalFormat,
+        if (!gl::IsValidCopyTexImageCombination(textureInternalFormat, colorbufferInternalFormat, context->getReadFramebufferHandle(),
                                                 context->getClientVersion()))
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }
     }
+    else
+    {
+        if (!gl::IsValidCopyTexImageCombination(internalformat, colorbufferInternalFormat, context->getReadFramebufferHandle(),
+                                                context->getClientVersion()))
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+    }
+
 
     // If width or height is zero, it is a no-op.  Return false without setting an error.
     return (width > 0 && height > 0);

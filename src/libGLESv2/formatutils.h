@@ -50,7 +50,7 @@ bool IsValidFormat(GLenum format, GLuint clientVersion);
 bool IsValidType(GLenum type, GLuint clientVersion);
 
 bool IsValidFormatCombination(GLenum internalFormat, GLenum format, GLenum type, GLuint clientVersion);
-bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBufferInternalFormat, GLuint clientVersion);
+bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBufferInternalFormat, GLuint readBufferHandle, GLuint clientVersion);
 
 bool IsSizedInternalFormat(GLenum internalFormat, GLuint clientVersion);
 GLenum GetSizedInternalFormat(GLenum format, GLenum type, GLuint clientVersion);
@@ -66,6 +66,7 @@ GLuint GetStencilBits(GLenum internalFormat, GLuint clientVersion);
 
 GLuint GetTypeBytes(GLenum type);
 bool IsSpecialInterpretationType(GLenum type);
+bool IsFloatOrFixedComponentType(GLenum type);
 
 GLenum GetFormat(GLenum internalFormat, GLuint clientVersion);
 GLenum GetType(GLenum internalFormat, GLuint clientVersion);
