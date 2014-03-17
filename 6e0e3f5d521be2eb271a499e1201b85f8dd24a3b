@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc0ea5b3_2a5c9fdb",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1009,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T20:53:31Z",
+      "side": 1,
+      "message": "nit: I\u0027d prefer the channel size numbers aligned on the left side instead of right.",
+      "range": {
+        "startLine": 1001,
+        "startChar": 4,
+        "endLine": 1009,
+        "endChar": 112
+      },
+      "revId": "6e0e3f5d521be2eb271a499e1201b85f8dd24a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcb1990e_4e43562e",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1023,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T20:53:31Z",
+      "side": 1,
+      "message": "This should be the UINT_MAX macro from \u003climits.h\u003e, I don\u0027t believe MAXUINT is portable.",
+      "range": {
+        "startLine": 1023,
+        "startChar": 98,
+        "endLine": 1023,
+        "endChar": 105
+      },
+      "revId": "6e0e3f5d521be2eb271a499e1201b85f8dd24a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcb49dfd_777a67cf",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1055,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T20:53:31Z",
+      "side": 1,
+      "message": "nit: I\u0027d prefer list-\u003eat(curFormat) or on the previous line: const EffectiveInternalFormatInfo\u0026 formatInfo \u003d list-\u003eat(curFormat) and then use formatInfo for all checks.",
+      "range": {
+        "startLine": 1055,
+        "startChar": 13,
+        "endLine": 1055,
+        "endChar": 31
+      },
+      "revId": "6e0e3f5d521be2eb271a499e1201b85f8dd24a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc0ea5b3_0d71f51e",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1237,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T20:53:31Z",
+      "side": 1,
+      "message": "I think to reverse this check, we need to make it like the SRGB check above, ((textureInternalFormatInfo.mComponentType \u003d\u003d GL_INT) !\u003d (framebufferInternalFormatInfo.mComponentType \u003d\u003d GL_INT)) since this way doesn\u0027t check both directions of the implication.",
+      "range": {
+        "startLine": 1237,
+        "startChar": 21,
+        "endLine": 1237,
+        "endChar": 138
+      },
+      "revId": "6e0e3f5d521be2eb271a499e1201b85f8dd24a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcb1990e_0d3553ef",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1274,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T20:53:31Z",
+      "side": 1,
+      "message": "nit: Trailing space",
+      "range": {
+        "startLine": 1274,
+        "startChar": 114,
+        "endLine": 1274,
+        "endChar": 115
+      },
+      "revId": "6e0e3f5d521be2eb271a499e1201b85f8dd24a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc0ea5b3_8d6cc58e",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1295,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T20:53:31Z",
+      "side": 1,
+      "message": "Can this change to either an else if(framebufferInternalFormatInfo.mColorEncoding \u003d\u003d GL_SRGB) with an else UNREACHABLE() or have an assertion in the else to make sure we\u0027re future-proof here?",
+      "range": {
+        "startLine": 1295,
+        "startChar": 20,
+        "endLine": 1295,
+        "endChar": 24
+      },
+      "revId": "6e0e3f5d521be2eb271a499e1201b85f8dd24a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcdfd954_df26eb46",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1320,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T20:53:31Z",
+      "side": 1,
+      "message": "Do we need to check mLuminanceBits too?",
+      "range": {
+        "startLine": 1317,
+        "startChar": 24,
+        "endLine": 1320,
+        "endChar": 96
+      },
+      "revId": "6e0e3f5d521be2eb271a499e1201b85f8dd24a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcb1990e_2d0fef01",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1518,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T20:53:31Z",
+      "side": 1,
+      "message": "nit: this can be simplified into return (type \u003d\u003d GL_UNSIGNED_NORMALIZED || type \u003d\u003d GL_SIGNED_NORMALIZED || type \u003d\u003d GL_FLOAT);",
+      "range": {
+        "startLine": 1509,
+        "startChar": 4,
+        "endLine": 1518,
+        "endChar": 5
+      },
+      "revId": "6e0e3f5d521be2eb271a499e1201b85f8dd24a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
