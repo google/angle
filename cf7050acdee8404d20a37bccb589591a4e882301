@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fccd7da7_c8be3fb5",
+        "filename": "src/libGLESv2/precompiled.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-17T17:56:09Z",
+      "side": 1,
+      "message": "should this be in another patch? seems like there\u0027s a ref to 10_1 defines elsewhere prior to this patch",
+      "range": {
+        "startLine": 46,
+        "startChar": 9,
+        "endLine": 46,
+        "endChar": 20
+      },
+      "revId": "cf7050acdee8404d20a37bccb589591a4e882301",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cd6d13f_b667cea9",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-17T17:56:09Z",
+      "side": 1,
+      "message": "ref to 10_1 here",
+      "range": {
+        "startLine": 2211,
+        "startChar": 11,
+        "endLine": 2211,
+        "endChar": 33
+      },
+      "revId": "cf7050acdee8404d20a37bccb589591a4e882301",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
