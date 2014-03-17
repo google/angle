@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcdfd954_fa21b530",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2147,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-17T22:03:22Z",
+      "side": 1,
+      "message": "So InfoLog violates our style guide in that it\u0027s a non-const reference, but it\u0027s handled that way *everywhere*, so... don\u0027t do anything about it just now, but we should probably figure something out.",
+      "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcb1990e_f0ce7c49",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2157,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-17T22:03:22Z",
+      "side": 1,
+      "message": "Is there any potential downside to resizing the output vector before we know whether the component count has been exceeded, as ProgramBinary\u0027s linked varying vector is used directly? Does that vector have any meaning for a program that was not successfully linked? I don\u0027t think it ever gets accessed for a query, etc, but I\u0027m a little hesitant about modifying internal state when we don\u0027t know whether we\u0027re going to successfully link.",
+      "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc0ea5b3_6dc99168",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 7687,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-17T22:03:22Z",
+      "side": 1,
+      "message": "Count needs to be checked to make sure it\u0027s non-negative no matter the bufferMode.",
+      "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcb1990e_cdb08bd8",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 7697,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-17T22:03:22Z",
+      "side": 1,
+      "message": "If program doesn\u0027t refer to a valid program object, it needs to return INVALID_VALUE. (This doesn\u0027t get called out specifically in the XFB entry point specs, but is a blanket error described in 2.11.1 -- \"Commands that accept shader or program object names will generate the error INVALID_VALUE if the provided name is not the name of either a shader or program object and INVALID_OPERATION if the provided name identiﬁes an object that is not the expected type.\" This is probably a good candidate for a validation helper function.)",
+      "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc0ea5b3_2dff1917",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 7726,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-17T22:03:22Z",
+      "side": 1,
+      "message": "Need to check validity of program (as above) and check bufSize \u003e\u003d 0 (all sizei vars invoke INVALID_VALUE if negative).",
+      "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc0ea5b3_90205c2a",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2898,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-17T22:03:22Z",
+      "side": 1,
+      "message": "Nit: soshader should get camelcased.",
+      "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
