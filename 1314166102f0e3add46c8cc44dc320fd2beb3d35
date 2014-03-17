@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dcdfd954_71917085",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2158,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T17:49:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5cf4c9d0_8fcef548",
+      "range": {
+        "startLine": 2158,
+        "startChar": 9,
+        "endLine": 2158,
+        "endChar": 21
+      },
+      "revId": "1314166102f0e3add46c8cc44dc320fd2beb3d35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cf4c9d0_afc9b944",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2014-03-17T13:31:11Z",
       "side": 1,
       "message": "nit: size_t",
+      "range": {
+        "startLine": 2161,
+        "startChar": 13,
+        "endLine": 2161,
+        "endChar": 25
+      },
+      "revId": "1314166102f0e3add46c8cc44dc320fd2beb3d35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcb49dfd_779b87a6",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2161,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T17:49:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5cf4c9d0_afc9b944",
       "range": {
         "startLine": 2161,
         "startChar": 13,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "fcb49dfd_57988ba7",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2165,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T17:49:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcca7990_93099cc4",
+      "range": {
+        "startLine": 2165,
+        "startChar": 21,
+        "endLine": 2165,
+        "endChar": 33
+      },
+      "revId": "1314166102f0e3add46c8cc44dc320fd2beb3d35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cf4c9d0_efcfc147",
         "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2014-03-17T13:31:11Z",
       "side": 1,
       "message": "nit: \"seperate\" is not a word -- could you fix the usages to \"separate\" ?",
+      "range": {
+        "startLine": 2885,
+        "startChar": 50,
+        "endLine": 2885,
+        "endChar": 59
+      },
+      "revId": "1314166102f0e3add46c8cc44dc320fd2beb3d35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcb49dfd_d7f13bbc",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2885,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T17:49:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5cf4c9d0_efcfc147",
       "range": {
         "startLine": 2885,
         "startChar": 50,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "fcb49dfd_f7ec37e8",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2910,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T17:49:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5cf4c9d0_cfd4fdda",
+      "range": {
+        "startLine": 2910,
+        "startChar": 53,
+        "endLine": 2910,
+        "endChar": 132
+      },
+      "revId": "1314166102f0e3add46c8cc44dc320fd2beb3d35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcca7990_b30498aa",
         "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
         "patchSetId": 5
@@ -128,6 +248,30 @@
       "writtenOn": "2014-03-17T13:31:11Z",
       "side": 1,
       "message": "please make this stuff a separate patch -- it will change ANGLE behaviour in significant non-xform-feedback-ways",
+      "range": {
+        "startLine": 2995,
+        "startChar": 0,
+        "endLine": 3011,
+        "endChar": 5
+      },
+      "revId": "1314166102f0e3add46c8cc44dc320fd2beb3d35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcb49dfd_37e3bffa",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3011,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-17T17:49:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcca7990_b30498aa",
       "range": {
         "startLine": 2995,
         "startChar": 0,
