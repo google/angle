@@ -1502,7 +1502,7 @@ static D3D11VertexFormatInfoMap BuildD3D11VertexFormatInfoMap()
     addVertexFormatInfo(&map, GL_INT_2_10_10_10_REV,          GL_TRUE,   4, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32A32_FLOAT, &copyPackedVertexData<true, true,  true>);
 
     // GL_UNSIGNED_INT_2_10_10_10_REV
-    addVertexFormatInfo(&map, GL_UNSIGNED_INT_2_10_10_10_REV, GL_FALSE,  4, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32A32_FLOAT, &copyPackedVertexData<true, false, true>);
+    addVertexFormatInfo(&map, GL_UNSIGNED_INT_2_10_10_10_REV, GL_FALSE,  4, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32A32_FLOAT, &copyPackedVertexData<false, false, true>);
     addVertexFormatInfo(&map, GL_UNSIGNED_INT_2_10_10_10_REV, GL_TRUE,   4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R10G10B10A2_UNORM,  &copyPackedUnsignedVertexData);
 
     //
