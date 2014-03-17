@@ -3023,23 +3023,42 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
                                                   const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                                   bool separatedOutputBuffers, D3DWorkaroundType workaround)
 {
-    const char *profile = NULL;
-
+    const char *profileType = NULL;
     switch (type)
     {
       case rx::SHADER_VERTEX:
-        profile = "vs_4_0";
+        profileType = "vs";
         break;
       case rx::SHADER_PIXEL:
-        profile = "ps_4_0";
+        profileType = "ps";
         break;
       case rx::SHADER_GEOMETRY:
-        profile = "gs_4_0";
+        profileType = "gs";
         break;
       default:
         UNREACHABLE();
         return NULL;
     }
+
+    const char *profileVersion = NULL;
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+        profileVersion = "5_0";
+        break;
+      case D3D_FEATURE_LEVEL_10_1:
+        profileVersion = "4_1";
+        break;
+      case D3D_FEATURE_LEVEL_10_0:
+        profileVersion = "4_0";
+        break;
+      default:
+        UNREACHABLE();
+        return NULL;
+    }
+
+    char profile[32];
+    snprintf(profile, ArraySize(profile), "%s_%s", profileType, profileVersion);
 
     ID3DBlob *binary = (ID3DBlob*)mCompiler.compileToBinary(infoLog, shaderHLSL, profile, D3DCOMPILE_OPTIMIZATION_LEVEL0, false);
     if (!binary)
