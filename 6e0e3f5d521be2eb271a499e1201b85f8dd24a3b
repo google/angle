@@ -163,6 +163,24 @@
     },
     {
       "key": {
+        "uuid": "dcdfd954_00a9b460",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1320,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-17T23:37:16Z",
+      "side": 1,
+      "message": "About luminance bits -- I don\u0027t think that LUMINANCE8 or LUMINANCE8_ALPHA8 are valid internalformat parameters for CopyTexImage. They\u0027re added by EXT_texture_storage, and that extension doesn\u0027t add them as valid formats to give CopyTexImage. From the perspective of ES3, luminance formats are legacy, so it doesn\u0027t add sized versions of them itself. So while we should expect to handle LUMINANCE, I think the sized luminance formats aren\u0027t actually relevant here.",
+      "parentUuid": "dcdfd954_df26eb46",
+      "revId": "6e0e3f5d521be2eb271a499e1201b85f8dd24a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcb1990e_2d0fef01",
         "filename": "src/libGLESv2/formatutils.cpp",
         "patchSetId": 4
