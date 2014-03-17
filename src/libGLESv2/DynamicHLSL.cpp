@@ -287,68 +287,66 @@ std::string DynamicHLSL::generateVaryingHLSL(FragmentShader *fragmentShader, con
 
 std::string DynamicHLSL::generateInputLayoutHLSL(const VertexFormat inputLayout[], const sh::Attribute shaderAttributes[]) const
 {
-    std::string vertexHLSL;
-
-    vertexHLSL += "struct VS_INPUT\n"
-                  "{\n";
+    std::string structHLSL, initHLSL;
 
     int semanticIndex = 0;
+    unsigned int inputIndex = 0;
+
     for (unsigned int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        const VertexFormat &vertexFormat = inputLayout[attributeIndex];
+        ASSERT(inputIndex < MAX_VERTEX_ATTRIBS);
+
+        const VertexFormat &vertexFormat = inputLayout[inputIndex];
         const sh::Attribute &shaderAttribute = shaderAttributes[attributeIndex];
 
         if (!shaderAttribute.name.empty())
         {
+            // HLSL code for input structure
             if (IsMatrixType(shaderAttribute.type))
             {
                 // Matrix types are always transposed
-                vertexHLSL += "    " + gl_d3d::HLSLMatrixTypeString(TransposeMatrixType(shaderAttribute.type));
+                structHLSL += "    " + gl_d3d::HLSLMatrixTypeString(TransposeMatrixType(shaderAttribute.type));
             }
             else
             {
                 GLenum componentType = mRenderer->getVertexComponentType(vertexFormat);
-                vertexHLSL += "    " + gl_d3d::HLSLComponentTypeString(componentType, UniformComponentCount(shaderAttribute.type));
+                structHLSL += "    " + gl_d3d::HLSLComponentTypeString(componentType, UniformComponentCount(shaderAttribute.type));
             }
 
-            vertexHLSL += " " + decorateAttribute(shaderAttribute.name) + " : TEXCOORD" + Str(semanticIndex) + ";\n";
+            structHLSL += " " + decorateAttribute(shaderAttribute.name) + " : TEXCOORD" + Str(semanticIndex) + ";\n";
             semanticIndex += AttributeRegisterCount(shaderAttribute.type);
-        }
-    }
 
-    vertexHLSL += "};\n"
-                  "\n"
-                  "void initAttributes(VS_INPUT input)\n"
-                  "{\n";
-
-    for (unsigned int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
-    {
-        const VertexFormat &vertexFormat = inputLayout[attributeIndex];
-        const sh::Attribute &shaderAttribute = shaderAttributes[attributeIndex];
-
-        if (!shaderAttribute.name.empty())
-        {
-            vertexHLSL += "    " + decorateAttribute(shaderAttribute.name) + " = ";
+            // HLSL code for initialization
+            initHLSL += "    " + decorateAttribute(shaderAttribute.name) + " = ";
 
             // Mismatched vertex attribute to vertex input may result in an undefined
             // data reinterpretation (eg for pure integer->float, float->pure integer)
             // TODO: issue warning with gl debug info extension, when supported
-            if ((mRenderer->getVertexConversionType(vertexFormat) & rx::VERTEX_CONVERT_GPU) != 0)
+            if (IsMatrixType(shaderAttribute.type) ||
+                (mRenderer->getVertexConversionType(vertexFormat) & rx::VERTEX_CONVERT_GPU) != 0)
             {
-                vertexHLSL += generateAttributeConversionHLSL(vertexFormat, shaderAttribute);
+                initHLSL += generateAttributeConversionHLSL(vertexFormat, shaderAttribute);
             }
             else
             {
-                vertexHLSL += "input." + decorateAttribute(shaderAttribute.name);
+                initHLSL += "input." + decorateAttribute(shaderAttribute.name);
             }
 
-            vertexHLSL += ";\n";
+            initHLSL += ";\n";
         }
+
+        inputIndex += VariableRowCount(shaderAttribute.type);
     }
 
-    vertexHLSL += "}\n";
-
-    return vertexHLSL;
+    return "struct VS_INPUT\n"
+           "{\n" +
+           structHLSL +
+           "};\n"
+           "\n"
+           "void initAttributes(VS_INPUT input)\n"
+           "{\n" +
+           initHLSL +
+           "}\n";
 }
 
 bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const sh::ShaderVariable *packing[][4],

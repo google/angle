@@ -52,17 +52,24 @@ unsigned int ParseAndStripArrayIndex(std::string* name)
 
 void GetInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAttributes, VertexFormat inputLayout[MAX_VERTEX_ATTRIBS])
 {
+    size_t layoutIndex = 0;
     for (size_t attributeIndex = 0; attributeIndex < shaderAttributes.size(); attributeIndex++)
     {
+        ASSERT(layoutIndex < MAX_VERTEX_ATTRIBS);
+
         const sh::Attribute &shaderAttr = shaderAttributes[attributeIndex];
-        VertexFormat *defaultFormat = &inputLayout[attributeIndex];
 
         if (shaderAttr.type != GL_NONE)
         {
-            defaultFormat->mType        = UniformComponentType(shaderAttr.type);
-            defaultFormat->mNormalized  = false;
-            defaultFormat->mPureInteger = (defaultFormat->mType != GL_FLOAT); // note: inputs can not be bool
-            defaultFormat->mComponents  = UniformComponentCount(shaderAttr.type);
+            for (size_t rowIndex = 0; static_cast<int>(rowIndex) < VariableRowCount(shaderAttr.type); rowIndex++, layoutIndex++)
+            {
+                VertexFormat *defaultFormat = &inputLayout[layoutIndex];
+
+                defaultFormat->mType = UniformComponentType(shaderAttr.type);
+                defaultFormat->mNormalized = false;
+                defaultFormat->mPureInteger = (defaultFormat->mType != GL_FLOAT); // note: inputs can not be bool
+                defaultFormat->mComponents = VariableColumnCount(shaderAttr.type);
+            }
         }
     }
 }
