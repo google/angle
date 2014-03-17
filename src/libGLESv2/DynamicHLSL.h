@@ -58,7 +58,7 @@ class DynamicHLSL
     std::string generatePointSpriteHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
 
     // Prepend an underscore
-    static std::string decorateAttribute(const std::string &name);
+    static std::string decorateVariable(const std::string &name);
 
     std::string generateAttributeConversionHLSL(const VertexFormat &vertexFormat, const sh::ShaderVariable &shaderAttrib) const;
 };
