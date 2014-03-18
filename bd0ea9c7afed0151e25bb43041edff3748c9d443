@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcb1990e_aaa3d819",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-03-18T20:18:45Z",
+      "side": 0,
+      "message": "You can get rid of this, right?",
+      "revId": "bd0ea9c7afed0151e25bb43041edff3748c9d443",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

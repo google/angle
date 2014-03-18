@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcb1990e_4a433484",
+        "filename": "src/angle.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-03-18T20:18:45Z",
+      "side": 1,
+      "message": "Do you really need the includes for this target and the three below?",
+      "revId": "a44202b928c49109307b5d82e95c33a7fabae3ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c08adab_71996aee",
+        "filename": "tests/tests.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-03-18T20:18:45Z",
+      "side": 1,
+      "message": "Same here, do you need the includes here?",
+      "revId": "a44202b928c49109307b5d82e95c33a7fabae3ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c08adab_11a0ee0b",
+        "filename": "tests/tests.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-03-18T20:18:45Z",
+      "side": 1,
+      "message": "Do you need it here?",
+      "revId": "a44202b928c49109307b5d82e95c33a7fabae3ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
