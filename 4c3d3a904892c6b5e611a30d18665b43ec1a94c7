@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c08adab_cbde29aa",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-18T17:54:57Z",
+      "side": 1,
+      "message": "Should we consider the double draw a performance caveat?",
+      "revId": "4c3d3a904892c6b5e611a30d18665b43ec1a94c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
