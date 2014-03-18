@@ -43,7 +43,6 @@
 #endif // ANGLE_ENABLE_D3D9
 
 #if defined(ANGLE_ENABLE_D3D11)
-#include <D3D10_1.h>
 #include <D3D11.h>
 #include <dxgi.h>
 #include <dxgi1_2.h>
