@@ -457,6 +457,11 @@ bool ValidateES2CopyTexImageParameters(gl::Context* context, GLenum target, GLin
                                        GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height,
                                        GLint border)
 {
+    if (!ValidTexture2DDestinationTarget(context, target))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
     if (!gl::IsInternalTextureTarget(target, context->getClientVersion()))
     {
         return gl::error(GL_INVALID_ENUM, false);

@@ -62,6 +62,29 @@ bool ValidTextureTarget(const Context *context, GLenum target)
     }
 }
 
+// This function differs from ValidTextureTarget in that the target must be
+// usable as the destination of a 2D operation-- so a cube face is valid, but
+// GL_TEXTURE_CUBE_MAP is not.
+bool ValidTexture2DDestinationTarget(const Context *context, GLenum target)
+{
+    switch (target)
+    {
+      case GL_TEXTURE_2D:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+        return true;
+      case GL_TEXTURE_2D_ARRAY:
+      case GL_TEXTURE_3D:
+        return (context->getClientVersion() >= 3);
+      default:
+        return false;
+    }
+}
+
 bool ValidFramebufferTarget(GLenum target)
 {
     META_ASSERT(GL_DRAW_FRAMEBUFFER_ANGLE == GL_DRAW_FRAMEBUFFER && GL_READ_FRAMEBUFFER_ANGLE == GL_READ_FRAMEBUFFER);
