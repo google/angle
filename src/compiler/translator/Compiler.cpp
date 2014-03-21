@@ -160,6 +160,10 @@ bool TCompiler::compile(const char* const shaderStrings[],
         TIntermNode* root = parseContext.treeRoot;
         success = intermediate.postProcess(root);
 
+        // Disallow expressions deemed too complex.
+        if (success && (compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY))
+            success = limitExpressionComplexity(root);
+
         if (success)
             success = detectCallDepth(root, infoSink, (compileOptions & SH_LIMIT_CALL_STACK_DEPTH) != 0);
 
@@ -197,10 +201,6 @@ bool TCompiler::compile(const char* const shaderStrings[],
         // Clamping uniform array bounds needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_CLAMP_INDIRECT_ARRAY_BOUNDS))
             arrayBoundsClamper.MarkIndirectArrayBoundsForClamping(root);
-
-        // Disallow expressions deemed too complex.
-        if (success && (compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY))
-            success = limitExpressionComplexity(root);
 
         if (success && shaderType == SH_VERTEX_SHADER && (compileOptions & SH_INIT_GL_POSITION))
             initializeGLPosition(root);
@@ -381,8 +381,15 @@ bool TCompiler::enforceTimingRestrictions(TIntermNode* root, bool outputGraph)
 
 bool TCompiler::limitExpressionComplexity(TIntermNode* root)
 {
-    TIntermTraverser traverser;
+    TMaxDepthTraverser traverser(maxExpressionComplexity+1);
     root->traverse(&traverser);
+
+    if (traverser.getMaxDepth() > maxExpressionComplexity)
+    {
+        infoSink.info << "Expression too complex.";
+        return false;
+    }
+
     TDependencyGraph graph(root);
 
     for (TFunctionCallVector::const_iterator iter = graph.beginUserDefinedFunctionCalls();
@@ -394,11 +401,6 @@ bool TCompiler::limitExpressionComplexity(TIntermNode* root)
         samplerSymbol->traverse(&graphTraverser);
     }
 
-    if (traverser.getMaxDepth() > maxExpressionComplexity)
-    {
-        infoSink.info << "Expression too complex.";
-        return false;
-    }
     return true;
 }
 
