@@ -13,6 +13,7 @@
 #include "libGLESv2/renderer/Renderer.h"
 #include "common/utilities.h"
 #include "third_party/trace_event/trace_event.h"
+#include "libGLESv2/Shader.h"
 
 #if defined (ANGLE_ENABLE_D3D9)
 #include "libGLESv2/renderer/d3d9/Renderer9.h"
@@ -33,6 +34,11 @@ namespace rx
 Renderer::Renderer(egl::Display *display) : mDisplay(display)
 {
     mCurrentClientVersion = 2;
+}
+
+Renderer::~Renderer()
+{
+    gl::Shader::releaseCompiler();
 }
 
 }
