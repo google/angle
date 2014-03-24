@@ -22,6 +22,30 @@
       "revId": "b4c1c45fd276525d4801df7e18bda98239b744da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cf3951c_84f98a63",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-03-24T14:52:42Z",
+      "side": 1,
+      "message": "My understanding is you do need it in the base class. I did not actually consult the C++ spec on the matter -- but without the virtual destructor in the base class we never call Renderer11::~ when a program exits.",
+      "parentUuid": "1cf0910e_63a7169e",
+      "range": {
+        "startLine": 101,
+        "startChar": 4,
+        "endLine": 101,
+        "endChar": 26
+      },
+      "revId": "b4c1c45fd276525d4801df7e18bda98239b744da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
