@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "3cf3951c_a4ff6649",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2157,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-24T14:37:55Z",
+      "side": 1,
+      "message": "There are several members of ProgramBinary that are essentially undefined if linking fails so we\u0027re ok there.  That said, I removed the resize and now insert each varying as it\u0027s validated so there is no chance of uninitialized varyings in the vector.",
+      "parentUuid": "dcb1990e_f0ce7c49",
+      "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc0ea5b3_6dc99168",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 7
@@ -47,6 +65,24 @@
       "writtenOn": "2014-03-17T22:03:22Z",
       "side": 1,
       "message": "Count needs to be checked to make sure it\u0027s non-negative no matter the bufferMode.",
+      "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cf3951c_04057aa5",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 7687,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-24T14:37:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc0ea5b3_6dc99168",
       "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "1cf0910e_83aa2266",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 7697,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-24T14:37:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcb1990e_cdb08bd8",
+      "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc0ea5b3_2dff1917",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 7
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "3cf3951c_e4096ec3",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 7726,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-24T14:37:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc0ea5b3_2dff1917",
+      "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc0ea5b3_90205c2a",
         "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
         "patchSetId": 7
@@ -98,6 +170,24 @@
       "writtenOn": "2014-03-17T22:03:22Z",
       "side": 1,
       "message": "Nit: soshader should get camelcased.",
+      "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcfc9dee_e2b4c2fc",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2898,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-24T14:37:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc0ea5b3_90205c2a",
       "revId": "138bd2aaf903442318eea00d7d7e62ed92d5a8b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
