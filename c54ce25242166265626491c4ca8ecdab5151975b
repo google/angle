@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3cf3951c_64f6fe70",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3327,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-24T14:53:57Z",
+      "side": 1,
+      "message": "We iterate in several places using the area parameter.  Does that mean we\u0027ll be potentially reading out of bounds?",
+      "range": {
+        "startLine": 3324,
+        "startChar": 12,
+        "endLine": 3327,
+        "endChar": 17
+      },
+      "revId": "c54ce25242166265626491c4ca8ecdab5151975b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
