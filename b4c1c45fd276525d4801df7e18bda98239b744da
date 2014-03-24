@@ -46,6 +46,30 @@
       "revId": "b4c1c45fd276525d4801df7e18bda98239b744da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcfc9dee_021bae5a",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-24T15:14:31Z",
+      "side": 1,
+      "message": "My mistake, this rule only applies for the derived classes that don\u0027t implement a destructor (they use their parent class\u0027s destructor to determine if the auto-generated one is virtual).",
+      "parentUuid": "3cf3951c_84f98a63",
+      "range": {
+        "startLine": 101,
+        "startChar": 4,
+        "endLine": 101,
+        "endChar": 26
+      },
+      "revId": "b4c1c45fd276525d4801df7e18bda98239b744da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
