@@ -3254,8 +3254,8 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
     return true;
 }
 
-void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
-                            GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels)
+void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
+                            GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, void* pixels)
 {
     ID3D11Texture2D *colorBufferTexture = NULL;
     unsigned int subresourceIndex = 0;
@@ -3270,8 +3270,7 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
         area.width = width;
         area.height = height;
 
-        readTextureData(colorBufferTexture, subresourceIndex, area, format, type, outputPitch,
-                        packReverseRowOrder, packAlignment, pixels);
+        readTextureData(colorBufferTexture, subresourceIndex, area, format, type, outputPitch, pack, pixels);
 
         SafeRelease(colorBufferTexture);
     }
@@ -3315,9 +3314,8 @@ TextureStorage *Renderer11::createTextureStorage2DArray(GLenum internalformat, b
     return new TextureStorage11_2DArray(this, internalformat, renderTarget, width, height, depth, levels);
 }
 
-void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area,
-                                 GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
-                                 GLint packAlignment, void *pixels)
+void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
+                                 GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, void *pixels)
 {
     ASSERT(area.width >= 0);
     ASSERT(area.height >= 0);
@@ -3416,7 +3414,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
 
     unsigned char *source;
     int inputPitch;
-    if (packReverseRowOrder)
+    if (pack.reverseRowOrder)
     {
         source = static_cast<unsigned char*>(mapping.pData) + mapping.RowPitch * (safeArea.height - 1);
         inputPitch = -static_cast<int>(mapping.RowPitch);

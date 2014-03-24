@@ -286,8 +286,10 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y
         GLsizei rowOffset = gl::GetPixelBytes(mActualFormat, clientVersion) * xoffset;
         void *dataOffset = static_cast<unsigned char*>(mappedImage.pData) + mappedImage.RowPitch * yoffset + rowOffset + zoffset * mappedImage.DepthPitch;
 
-        mRenderer->readPixels(source, x, y, width, height, gl::GetFormat(mInternalFormat, clientVersion),
-                              gl::GetType(mInternalFormat, clientVersion), mappedImage.RowPitch, false, 4, dataOffset);
+        GLenum format = gl::GetFormat(mInternalFormat, clientVersion);
+        GLenum type = gl::GetType(mInternalFormat, clientVersion);
+
+        mRenderer->readPixels(source, x, y, width, height, format, type, mappedImage.RowPitch, gl::PixelPackState(), dataOffset);
 
         unmap();
     }

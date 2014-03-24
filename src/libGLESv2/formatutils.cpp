@@ -1708,7 +1708,7 @@ bool IsStencilRenderingSupported(GLenum internalFormat, const Context *context)
 GLuint GetRowPitch(GLenum internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLint alignment)
 {
     ASSERT(alignment > 0 && isPow2(alignment));
-    return (GetBlockSize(internalFormat, type, clientVersion, width, 1) + alignment - 1) & ~(alignment - 1);
+    return rx::roundUp(GetBlockSize(internalFormat, type, clientVersion, width, 1), static_cast<GLuint>(alignment));
 }
 
 GLuint GetDepthPitch(GLenum internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLsizei height, GLint alignment)
