@@ -8,7 +8,6 @@
         'angle_code': 1,
         'angle_post_build_script%': 0,
         'angle_relative_src_path%': '.',
-        'angle_build_scripts_path': '..',
     },
 
     'includes':
@@ -79,9 +78,9 @@
                             {
                                 'action_name': 'ANGLE Post-Build Script',
                                 'message': 'Running <(angle_post_build_script)...',
-                                'inputs': [ '<(angle_post_build_script)', '<!@(["python", "<(angle_post_build_script)", "inputs", "<(CONFIGURATION_NAME)", "$(PlatformName)", "<(PRODUCT_DIR)"])' ],
-                                'outputs': [ '<!@(python <(angle_post_build_script) outputs "<(CONFIGURATION_NAME)" "$(PlatformName)" "<(PRODUCT_DIR)")' ],
-                                'action': ['python', '<(angle_post_build_script)', 'run', '<(CONFIGURATION_NAME)', '$(PlatformName)', '<(PRODUCT_DIR)'],
+                                'inputs': [ '<(angle_post_build_script)', '<!@(["python", "<(angle_post_build_script)", "inputs", "<(angle_path)", "<(CONFIGURATION_NAME)", "$(PlatformName)", "<(PRODUCT_DIR)"])' ],
+                                'outputs': [ '<!@(python <(angle_post_build_script) outputs "<(angle_path)" "<(CONFIGURATION_NAME)" "$(PlatformName)" "<(PRODUCT_DIR)")' ],
+                                'action': ['python', '<(angle_post_build_script)', 'run', '<(angle_path)', '<(CONFIGURATION_NAME)', '$(PlatformName)', '<(PRODUCT_DIR)'],
                             }
                         ] #actions
                     }

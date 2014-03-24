@@ -9,7 +9,7 @@
             'target_name': 'preprocessor',
             'type': 'static_library',
             'include_dirs': [ ],
-            'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py compiler/preprocessor -types *.cpp *.h *.y *.l )' ],
+            'sources': [ '<!@(python <(angle_path)/enumerate_files.py compiler/preprocessor -types *.cpp *.h *.y *.l )' ],
             # TODO(jschuh): http://crbug.com/167187 size_t -> int
             'msvs_disabled_warnings': [ 4267 ],
         },
@@ -39,7 +39,7 @@
             ],
             'sources':
             [
-                '<!@(python <(angle_build_scripts_path)/enumerate_files.py \
+                '<!@(python <(angle_path)/enumerate_files.py \
                      -dirs compiler/translator third_party/compiler common ../include \
                      -types *.cpp *.h *.y *.l)',
             ],

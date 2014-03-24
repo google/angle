@@ -3,10 +3,6 @@
 # found in the LICENSE file.
 
 {
-    'variables':
-    {
-        'angle_build_scripts_path': '..',
-    },
     'targets':
     [
         {
@@ -14,7 +10,7 @@
             'type': 'executable',
             'dependencies': [ '../src/angle.gyp:translator', ],
             'include_dirs': [ '../include', ],
-            'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py translator -types *.cpp *.h)' ],
+            'sources': [ '<!@(python <(angle_path)/enumerate_files.py translator -types *.cpp *.h)' ],
         },
     ],
     'conditions':
@@ -34,7 +30,7 @@
                     ],
                     'sources':
                     [
-                        '<!@(python <(angle_build_scripts_path)/enumerate_files.py translator -types *.cpp *.h)',
+                        '<!@(python <(angle_path)/enumerate_files.py translator -types *.cpp *.h)',
                     ],
                 },
 
@@ -43,7 +39,7 @@
                     'type': 'executable',
                     'sources':
                     [
-                        '<!@(python <(angle_build_scripts_path)/enumerate_files.py dds_to_header -types *.cpp)',
+                        '<!@(python <(angle_path)/enumerate_files.py dds_to_header -types *.cpp)',
                     ],
                 },
 
@@ -62,7 +58,7 @@
                     ],
                     'sources':
                     [
-                        '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/Common -types *.c *.h)'
+                        '<!@(python <(angle_path)/enumerate_files.py gles2_book/Common -types *.c *.h)'
                     ],
                     'direct_dependent_settings':
                     {
@@ -78,26 +74,26 @@
                     'target_name': 'hello_triangle',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/Hello_Triangle -types *.c *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/Hello_Triangle -types *.c *.h)' ],
                 },
 
                 {
                     'target_name': 'mip_map_2d',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/MipMap2D -types *.c *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/MipMap2D -types *.c *.h)' ],
                 },
 
                 {
                     'target_name': 'multi_texture',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/MultiTexture -types *.c *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/MultiTexture -types *.c *.h)' ],
                     'copies':
                     [
                         {
                             'destination': '<(PRODUCT_DIR)',
-                            'files': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/MultiTexture -types *.tga)' ],
+                            'files': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/MultiTexture -types *.tga)' ],
                         }
                     ]
                 },
@@ -106,12 +102,12 @@
                     'target_name': 'particle_system',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/ParticleSystem -types *.c *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/ParticleSystem -types *.c *.h)' ],
                     'copies':
                     [
                         {
                             'destination': '<(PRODUCT_DIR)',
-                            'files': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/ParticleSystem -types *.tga)' ],
+                            'files': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/ParticleSystem -types *.tga)' ],
                         }
                     ]
                 },
@@ -120,42 +116,42 @@
                     'target_name': 'simple_texture_2d',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/Simple_Texture2D -types *.c *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/Simple_Texture2D -types *.c *.h)' ],
                 },
 
                 {
                     'target_name': 'simple_texture_cubemap',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/Simple_TextureCubemap -types *.c *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/Simple_TextureCubemap -types *.c *.h)' ],
                 },
 
                 {
                     'target_name': 'simple_vertex_shader',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/Simple_VertexShader -types *.c *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/Simple_VertexShader -types *.c *.h)' ],
                 },
 
                 {
                     'target_name': 'stencil_test',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/Stencil_Test -types *.c *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/Stencil_Test -types *.c *.h)' ],
                 },
 
                 {
                     'target_name': 'texture_wrap',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/TextureWrap -types *.c *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/TextureWrap -types *.c *.h)' ],
                 },
 
                 {
                     'target_name': 'post_sub_buffer',
                     'type': 'executable',
                     'dependencies': [ 'es_util' ],
-                    'sources': [ '<!@(python <(angle_build_scripts_path)/enumerate_files.py gles2_book/PostSubBuffer -types *.c *.h)' ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py gles2_book/PostSubBuffer -types *.c *.h)' ],
                 },
             ],
         }
