@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc465d41_cc562f98",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-25T20:50:21Z",
+      "side": 1,
+      "message": "Would it be possible to do this with larger memcpys instead of pixel-by-pixel if the float \u0026 byte versions were split up? Will this underperform what\u0027s currently on the es3proto branch?",
+      "revId": "f2322b5594ca8d22bbc3910d7045e1f796644fbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
