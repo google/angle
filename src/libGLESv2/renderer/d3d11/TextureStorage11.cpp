@@ -21,6 +21,29 @@
 namespace rx
 {
 
+template <typename T>
+static void GenerateInitialTextureData(size_t width, size_t height, size_t layers, T defaultAlpha,
+                                       std::vector<T> *outData, std::vector<D3D11_SUBRESOURCE_DATA> *outSubresourceData)
+{
+    outData->resize(width * height * 4);
+    for (size_t i = 0; i < outData->size(); i += 4)
+    {
+        outData->at(i + 0) = T(0);
+        outData->at(i + 1) = T(0);
+        outData->at(i + 2) = T(0);
+        outData->at(i + 3) = defaultAlpha;
+    }
+
+    size_t mipLevels = gl::log2(std::max(width, height)) + 1;
+    outSubresourceData->resize(mipLevels * layers);
+    for (size_t i = 0; i < outSubresourceData->size(); i++)
+    {
+        outSubresourceData->at(i).pSysMem = outData->data();
+        outSubresourceData->at(i).SysMemPitch = sizeof(T) * width * 4;
+        outSubresourceData->at(i).SysMemSlicePitch = sizeof(T)* outData->size();
+    }
+}
+
 TextureStorage11::TextureStorage11(Renderer *renderer, UINT bindFlags)
     : mBindFlags(bindFlags),
       mLodOffset(0),
@@ -267,7 +290,31 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
         desc.CPUAccessFlags = 0;
         desc.MiscFlags = 0;
 
-        HRESULT result = device->CreateTexture2D(&desc, NULL, &mTexture);
+        HRESULT result;
+
+        // If there is no alpha channel in the source format but there is an alpha channel in the destination
+        // format, we need to initialize the texture data so the alpha channel is correct when sampling
+        // this texture.
+        if (mTextureFormat == DXGI_FORMAT_R8G8B8A8_UNORM && gl::GetAlphaSize(internalformat) == 0)
+        {
+            std::vector<unsigned char> initialData;
+            std::vector<D3D11_SUBRESOURCE_DATA> subresourceData;
+            GenerateInitialTextureData<unsigned char>(width, height, 1, 255, &initialData, &subresourceData);
+
+            result = device->CreateTexture2D(&desc, subresourceData.data(), &mTexture);
+        }
+        else if (mTextureFormat == DXGI_FORMAT_R32G32B32A32_FLOAT && gl::GetAlphaSize(internalformat) == 0)
+        {
+            std::vector<float> initialData;
+            std::vector<D3D11_SUBRESOURCE_DATA> subresourceData;
+            GenerateInitialTextureData<float>(width, height, 1, 1.0f, &initialData, &subresourceData);
+
+            result = device->CreateTexture2D(&desc, subresourceData.data(), &mTexture);
+        }
+        else
+        {
+            result = device->CreateTexture2D(&desc, NULL, &mTexture);
+        }
 
         // this can happen from windows TDR
         if (d3d11::isDeviceLostError(result))
@@ -489,7 +536,32 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
         desc.CPUAccessFlags = 0;
         desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-        HRESULT result = device->CreateTexture2D(&desc, NULL, &mTexture);
+        HRESULT result;
+
+        // If there is no alpha channel in the source format but there is an alpha channel in the destination
+        // format, we need to initialize the texture data so the alpha channel is correct when sampling
+        // this texture.
+        if (mTextureFormat == DXGI_FORMAT_R8G8B8A8_UNORM && gl::GetAlphaSize(internalformat) == 0)
+        {
+            std::vector<unsigned char> initialData;
+            std::vector<D3D11_SUBRESOURCE_DATA> subresourceData;
+            GenerateInitialTextureData<unsigned char>(size, size, 6, 255, &initialData, &subresourceData);
+
+            result = device->CreateTexture2D(&desc, subresourceData.data(), &mTexture);
+        }
+        else if (mTextureFormat == DXGI_FORMAT_R32G32B32A32_FLOAT && gl::GetAlphaSize(internalformat) == 0)
+        {
+            std::vector<float> initialData;
+            std::vector<D3D11_SUBRESOURCE_DATA> subresourceData;
+            GenerateInitialTextureData<float>(size, size, 6, 1.0f, &initialData, &subresourceData);
+
+            result = device->CreateTexture2D(&desc, subresourceData.data(), &mTexture);
+        }
+        else
+        {
+            result = device->CreateTexture2D(&desc, NULL, &mTexture);
+        }
+
 
         if (FAILED(result))
         {
