@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc435932_eb9af15b",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-25T20:01:17Z",
+      "side": 1,
+      "message": "Can this have a comment about it being safe to cast w/o assertion because we checked when we set it? (Or an assertion would be fine too, and would catch any mistakes in future changes.)",
+      "revId": "ee95e63d6e499aaf0da07b7268868416705e9467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc435932_ebc3d147",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-25T20:01:17Z",
+      "side": 1,
+      "message": "This is really nitty, but would you mind putting the dynamic type assert and the cast adjacent to one another?",
+      "revId": "ee95e63d6e499aaf0da07b7268868416705e9467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
