@@ -219,6 +219,8 @@ class ProgramBinary : public RefCountObject
         VertexExecutable(rx::Renderer *const renderer,
                          const VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS],
                          rx::ShaderExecutable *shaderExecutable);
+        ~VertexExecutable();
+
         bool matchesInputLayout(const VertexFormat attributes[gl::MAX_VERTEX_ATTRIBS]) const;
 
         const VertexFormat *inputs() const { return mInputs; }

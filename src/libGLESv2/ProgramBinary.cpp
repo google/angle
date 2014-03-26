@@ -92,6 +92,11 @@ ProgramBinary::VertexExecutable::VertexExecutable(rx::Renderer *const renderer,
     }
 }
 
+ProgramBinary::VertexExecutable::~VertexExecutable()
+{
+    delete mShaderExecutable;
+}
+
 bool ProgramBinary::VertexExecutable::matchesInputLayout(const VertexFormat attributes[]) const
 {
     for (size_t attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)

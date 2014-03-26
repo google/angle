@@ -78,6 +78,7 @@ void SwapChain11::releaseOffscreenTexture()
     SafeRelease(mOffscreenSRView);
     SafeRelease(mDepthStencilTexture);
     SafeRelease(mDepthStencilDSView);
+    SafeRelease(mDepthStencilSRView);
 }
 
 EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHeight)
