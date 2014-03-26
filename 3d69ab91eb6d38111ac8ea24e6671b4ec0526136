@@ -22,6 +22,24 @@
       "revId": "3d69ab91eb6d38111ac8ea24e6671b4ec0526136",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79f19f4f_432f380b",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-26T17:05:32Z",
+      "side": 1,
+      "message": "Nope-- the ordering got swapped because I\u0027d pulled pixel pack/unpack up to es2 + PBOs initially, and then recollapsed them. (It makes more sense if you look at patch set 1.) I can put the order back if it\u0027s desired, but I\u0027m going to pull them back out again for NV_pixel_buffer_object, so there\u0027s not a lot of point.",
+      "parentUuid": "b910773f_5a5b9571",
+      "revId": "3d69ab91eb6d38111ac8ea24e6671b4ec0526136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
