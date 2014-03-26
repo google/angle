@@ -22,6 +22,24 @@
       "revId": "c54ce25242166265626491c4ca8ecdab5151975b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9e79793_e5f09047",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3327,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-26T14:44:27Z",
+      "side": 1,
+      "message": "I suspect you\u0027re right-- we should be using the constrained read dimensions in the pixel copies below.",
+      "parentUuid": "3cf3951c_64f6fe70",
+      "revId": "c54ce25242166265626491c4ca8ecdab5151975b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
