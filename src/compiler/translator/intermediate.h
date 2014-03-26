@@ -664,4 +664,30 @@ protected:
     TVector<TIntermNode *> path;
 };
 
+//
+// For traversing the tree, and computing max depth.
+// Takes a maximum depth limit to prevent stack overflow.
+//
+class TMaxDepthTraverser : public TIntermTraverser
+{
+public:
+    POOL_ALLOCATOR_NEW_DELETE();
+    TMaxDepthTraverser(int depthLimit)
+      : TIntermTraverser(true, true, false, false),
+        depthLimit(depthLimit)
+    {}
+
+    virtual bool visitBinary(Visit visit, TIntermBinary*) { return depthCheck(); }
+    virtual bool visitUnary(Visit visit, TIntermUnary*) { return depthCheck(); }
+    virtual bool visitSelection(Visit visit, TIntermSelection*) { return depthCheck(); }
+    virtual bool visitAggregate(Visit visit, TIntermAggregate*) { return depthCheck(); }
+    virtual bool visitLoop(Visit visit, TIntermLoop*) { return depthCheck(); }
+    virtual bool visitBranch(Visit visit, TIntermBranch*) { return depthCheck(); }
+
+protected:
+    int depthLimit;
+
+    bool depthCheck() const { return maxDepth < depthLimit; }
+};
+
 #endif // __INTERMEDIATE_H
