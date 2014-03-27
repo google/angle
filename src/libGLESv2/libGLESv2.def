@@ -176,6 +176,8 @@ EXPORTS
     glMapBufferOES                  @285
     glUnmapBufferOES                @286
     glGetBufferPointervOES          @287
+    glMapBufferRangeEXT             @288
+    glFlushMappedBufferRangeEXT     @289
 
     ; GLES 3.0 Functions
     glReadBuffer                    @180

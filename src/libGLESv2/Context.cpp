@@ -3771,7 +3771,9 @@ void Context::initExtensionString()
         if (supportsPBOs())
         {
             mExtensionStringList.push_back("GL_OES_mapbuffer");
+            mExtensionStringList.push_back("GL_EXT_map_buffer_range");
         }
+
         if (mRenderer->getDerivativeInstructionSupport())
         {
             mExtensionStringList.push_back("GL_OES_standard_derivatives");

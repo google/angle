@@ -7074,72 +7074,7 @@ GLvoid* __stdcall glMapBufferRange(GLenum target, GLintptr offset, GLsizeiptr le
                 return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
             }
 
-            if (!gl::ValidBufferTarget(context, target))
-            {
-                return gl::error(GL_INVALID_ENUM, reinterpret_cast<GLvoid*>(NULL));
-            }
-
-            if (offset < 0 || length < 0)
-            {
-                return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLvoid*>(NULL));
-            }
-
-            gl::Buffer *buffer = context->getTargetBuffer(target);
-
-            if (buffer == NULL)
-            {
-                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
-            }
-
-            // Check for buffer overflow
-            size_t offsetSize = static_cast<size_t>(offset);
-            size_t lengthSize = static_cast<size_t>(length);
-
-            if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
-                offsetSize + lengthSize > static_cast<size_t>(buffer->size()))
-            {
-                return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLvoid*>(NULL));
-            }
-
-            // Check for invalid bits in the mask
-            GLbitfield allAccessBits = GL_MAP_READ_BIT |
-                                       GL_MAP_WRITE_BIT |
-                                       GL_MAP_INVALIDATE_RANGE_BIT |
-                                       GL_MAP_INVALIDATE_BUFFER_BIT |
-                                       GL_MAP_FLUSH_EXPLICIT_BIT |
-                                       GL_MAP_UNSYNCHRONIZED_BIT;
-
-            if (access & ~(allAccessBits))
-            {
-                return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLvoid*>(NULL));
-            }
-
-            if (length == 0 || buffer->mapped())
-            {
-                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
-            }
-
-            // Check for invalid bit combinations
-            if ((access & (GL_MAP_READ_BIT | GL_MAP_WRITE_BIT)) == 0)
-            {
-                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
-            }
-
-            GLbitfield writeOnlyBits = GL_MAP_INVALIDATE_RANGE_BIT |
-                                       GL_MAP_INVALIDATE_BUFFER_BIT |
-                                       GL_MAP_UNSYNCHRONIZED_BIT;
-
-            if ((access & GL_MAP_READ_BIT) != 0 && (access & writeOnlyBits) != 0)
-            {
-                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
-            }
-
-            if ((access & GL_MAP_WRITE_BIT) == 0 && (access & GL_MAP_FLUSH_EXPLICIT_BIT) != 0)
-            {
-                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
-            }
-
-            return buffer->mapRange(offset, length, access);
+            return glMapBufferRangeEXT(target, offset, length, access);
         }
     }
     catch(std::bad_alloc&)
@@ -7165,39 +7100,7 @@ void __stdcall glFlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeip
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (offset < 0 || length < 0)
-            {
-                return gl::error(GL_INVALID_VALUE);
-            }
-
-            if (!gl::ValidBufferTarget(context, target))
-            {
-                return gl::error(GL_INVALID_ENUM);
-            }
-
-            gl::Buffer *buffer = context->getTargetBuffer(target);
-
-            if (buffer == NULL)
-            {
-                return gl::error(GL_INVALID_OPERATION);
-            }
-
-            if (!buffer->mapped() || (buffer->accessFlags() & GL_MAP_FLUSH_EXPLICIT_BIT) == 0)
-            {
-                return gl::error(GL_INVALID_OPERATION);
-            }
-
-            // Check for buffer overflow
-            size_t offsetSize = static_cast<size_t>(offset);
-            size_t lengthSize = static_cast<size_t>(length);
-
-            if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
-                offsetSize + lengthSize > static_cast<size_t>(buffer->mapLength()))
-            {
-                return gl::error(GL_INVALID_VALUE);
-            }
-
-            // We do not currently support a non-trivial implementation of FlushMappedBufferRange
+            glFlushMappedBufferRangeEXT(target, offset, length);
         }
     }
     catch(std::bad_alloc&)
@@ -10407,6 +10310,144 @@ GLboolean __stdcall glUnmapBufferOES(GLenum target)
     return GL_FALSE;
 }
 
+void* __stdcall glMapBufferRangeEXT (GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access)
+{
+    EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d, GLbitfield access = 0x%X)",
+          target, offset, length, access);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (!gl::ValidBufferTarget(context, target))
+            {
+                return gl::error(GL_INVALID_ENUM, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            if (offset < 0 || length < 0)
+            {
+                return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            gl::Buffer *buffer = context->getTargetBuffer(target);
+
+            if (buffer == NULL)
+            {
+                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            // Check for buffer overflow
+            size_t offsetSize = static_cast<size_t>(offset);
+            size_t lengthSize = static_cast<size_t>(length);
+
+            if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
+                offsetSize + lengthSize > static_cast<size_t>(buffer->size()))
+            {
+                return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            // Check for invalid bits in the mask
+            GLbitfield allAccessBits = GL_MAP_READ_BIT |
+                                       GL_MAP_WRITE_BIT |
+                                       GL_MAP_INVALIDATE_RANGE_BIT |
+                                       GL_MAP_INVALIDATE_BUFFER_BIT |
+                                       GL_MAP_FLUSH_EXPLICIT_BIT |
+                                       GL_MAP_UNSYNCHRONIZED_BIT;
+
+            if (access & ~(allAccessBits))
+            {
+                return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            if (length == 0 || buffer->mapped())
+            {
+                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            // Check for invalid bit combinations
+            if ((access & (GL_MAP_READ_BIT | GL_MAP_WRITE_BIT)) == 0)
+            {
+                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            GLbitfield writeOnlyBits = GL_MAP_INVALIDATE_RANGE_BIT |
+                                       GL_MAP_INVALIDATE_BUFFER_BIT |
+                                       GL_MAP_UNSYNCHRONIZED_BIT;
+
+            if ((access & GL_MAP_READ_BIT) != 0 && (access & writeOnlyBits) != 0)
+            {
+                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            if ((access & GL_MAP_WRITE_BIT) == 0 && (access & GL_MAP_FLUSH_EXPLICIT_BIT) != 0)
+            {
+                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            return buffer->mapRange(offset, length, access);
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, reinterpret_cast<GLvoid*>(NULL));
+    }
+
+    return NULL;
+}
+
+void __stdcall glFlushMappedBufferRangeEXT (GLenum target, GLintptr offset, GLsizeiptr length)
+{
+    EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d)", target, offset, length);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (offset < 0 || length < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            if (!gl::ValidBufferTarget(context, target))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            gl::Buffer *buffer = context->getTargetBuffer(target);
+
+            if (buffer == NULL)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!buffer->mapped() || (buffer->accessFlags() & GL_MAP_FLUSH_EXPLICIT_BIT) == 0)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            // Check for buffer overflow
+            size_t offsetSize = static_cast<size_t>(offset);
+            size_t lengthSize = static_cast<size_t>(length);
+
+            if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
+                offsetSize + lengthSize > static_cast<size_t>(buffer->mapLength()))
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            // We do not currently support a non-trivial implementation of FlushMappedBufferRange
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
 __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname)
 {
     struct Extension
@@ -10448,7 +10489,9 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
         {"glProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glProgramBinaryOES},
         {"glGetBufferPointervOES", (__eglMustCastToProperFunctionPointerType)glGetBufferPointervOES},
         {"glMapBufferOES", (__eglMustCastToProperFunctionPointerType)glMapBufferOES},
-        {"glUnmapBufferOES", (__eglMustCastToProperFunctionPointerType)glUnmapBufferOES},    };
+        {"glUnmapBufferOES", (__eglMustCastToProperFunctionPointerType)glUnmapBufferOES},
+        {"glMapBufferRangeEXT", (__eglMustCastToProperFunctionPointerType)glMapBufferRangeEXT},
+        {"glFlushMappedBufferRangeEXT", (__eglMustCastToProperFunctionPointerType)glFlushMappedBufferRangeEXT},    };
 
     for (unsigned int ext = 0; ext < ArraySize(glExtensions); ext++)
     {
