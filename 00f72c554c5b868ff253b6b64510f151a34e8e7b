@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99157331_1f650b2a",
+        "filename": "src/compiler/translator/generate_parser.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-27T15:32:31Z",
+      "side": 1,
+      "message": "Why comment out this line?",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 17
+      },
+      "revId": "00f72c554c5b868ff253b6b64510f151a34e8e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39fba735_044a5a9c",
+        "filename": "src/compiler/translator/glslang_tab.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-27T15:32:31Z",
+      "side": 1,
+      "message": "Was this generated with the 32 or 64 bit bison? I thought we wanted the one without the bugged version string. (I may be remembering incorrectly)",
+      "range": {
+        "startLine": 1,
+        "startChar": 42,
+        "endLine": 1,
+        "endChar": 48
+      },
+      "revId": "00f72c554c5b868ff253b6b64510f151a34e8e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
