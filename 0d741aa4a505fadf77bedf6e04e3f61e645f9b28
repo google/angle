@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d91a8b66_d6f0a247",
+        "filename": "samples/angle/multiple_draw_buffers/MultipleDrawBuffers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-27T21:32:38Z",
+      "side": 1,
+      "message": "Should be MultipleRenderTargets",
+      "revId": "0d741aa4a505fadf77bedf6e04e3f61e645f9b28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
