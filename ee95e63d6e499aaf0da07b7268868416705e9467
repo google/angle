@@ -2,6 +2,144 @@
   "comments": [
     {
       "key": {
+        "uuid": "b910773f_20c30e4c",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-27T15:28:29Z",
+      "side": 1,
+      "message": "Looks like visual studio had it\u0027s way with the formatting.",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 7
+      },
+      "revId": "ee95e63d6e499aaf0da07b7268868416705e9467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99157331_df7d53c6",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-27T15:28:29Z",
+      "side": 1,
+      "message": "And here.",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 44
+      },
+      "revId": "ee95e63d6e499aaf0da07b7268868416705e9467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39fba735_a47726e4",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-27T15:28:29Z",
+      "side": 1,
+      "message": "And here.",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 10
+      },
+      "revId": "ee95e63d6e499aaf0da07b7268868416705e9467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99157331_bf7a9fca",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-27T15:28:29Z",
+      "side": 1,
+      "message": "And here.",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 7
+      },
+      "revId": "ee95e63d6e499aaf0da07b7268868416705e9467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39fba735_84566a4a",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-27T15:28:29Z",
+      "side": 1,
+      "message": "And here.",
+      "range": {
+        "startLine": 92,
+        "startChar": 8,
+        "endLine": 92,
+        "endChar": 40
+      },
+      "revId": "ee95e63d6e499aaf0da07b7268868416705e9467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39fba735_645b5e72",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-27T15:28:29Z",
+      "side": 1,
+      "message": "And here.",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 8
+      },
+      "revId": "ee95e63d6e499aaf0da07b7268868416705e9467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc435932_eb9af15b",
         "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
         "patchSetId": 2
@@ -13,6 +151,24 @@
       "writtenOn": "2014-03-25T20:01:17Z",
       "side": 1,
       "message": "Can this have a comment about it being safe to cast w/o assertion because we checked when we set it? (Or an assertion would be fine too, and would catch any mistakes in future changes.)",
+      "revId": "ee95e63d6e499aaf0da07b7268868416705e9467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99157331_3f60cf19",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-27T15:28:29Z",
+      "side": 1,
+      "message": "Yep, an ASSERT(HAS_DYNAMIC_TYPE(...)) would be useful here too.",
+      "parentUuid": "dc435932_eb9af15b",
       "revId": "ee95e63d6e499aaf0da07b7268868416705e9467",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
