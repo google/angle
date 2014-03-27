@@ -43,7 +43,7 @@ class VertexAttribute
 
     GLsizei stride() const
     {
-        return mStride ? mStride : typeSize();
+        return (mArrayEnabled ? (mStride ? mStride : typeSize()) : 16);
     }
 
     void setState(gl::Buffer *boundBuffer, GLint size, GLenum type, bool normalized,
