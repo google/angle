@@ -463,8 +463,8 @@ GLenum GetDeclTypeComponentType(D3DDECLTYPE declType)
       case D3DDECLTYPE_FLOAT3:   return GL_FLOAT;
       case D3DDECLTYPE_FLOAT4:   return GL_FLOAT;
       case D3DDECLTYPE_UBYTE4:   return GL_UNSIGNED_INT;
-      case D3DDECLTYPE_SHORT2:   return GL_SHORT;
-      case D3DDECLTYPE_SHORT4:   return GL_SHORT;
+      case D3DDECLTYPE_SHORT2:   return GL_INT;
+      case D3DDECLTYPE_SHORT4:   return GL_INT;
       case D3DDECLTYPE_UBYTE4N:  return GL_UNSIGNED_NORMALIZED;
       case D3DDECLTYPE_SHORT4N:  return GL_SIGNED_NORMALIZED;
       case D3DDECLTYPE_USHORT4N: return GL_UNSIGNED_NORMALIZED;
