@@ -57,6 +57,8 @@ enum
     IMPLEMENTATION_MAX_TEXTURE_LEVELS = 15   // 1+log2 of MAX_TEXTURE_SIZE
 };
 
+bool IsMipmapFiltered(const SamplerState &samplerState);
+
 class Texture : public RefCountObject
 {
   public:

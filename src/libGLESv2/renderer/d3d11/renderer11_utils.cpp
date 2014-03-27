@@ -203,16 +203,6 @@ D3D11_TEXTURE_ADDRESS_MODE ConvertTextureWrap(GLenum wrap)
     return D3D11_TEXTURE_ADDRESS_WRAP;
 }
 
-FLOAT ConvertMinLOD(GLenum minFilter, unsigned int lodOffset)
-{
-    return (minFilter == GL_NEAREST || minFilter == GL_LINEAR) ? static_cast<float>(lodOffset) : -FLT_MAX;
-}
-
-FLOAT ConvertMaxLOD(GLenum minFilter, unsigned int lodOffset)
-{
-    return (minFilter == GL_NEAREST || minFilter == GL_LINEAR) ? static_cast<float>(lodOffset) : FLT_MAX;
-}
-
 D3D11_QUERY ConvertQueryType(GLenum queryType)
 {
     switch (queryType)

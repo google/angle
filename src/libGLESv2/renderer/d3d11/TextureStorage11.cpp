@@ -288,11 +288,9 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
 {
     mTexture = swapchain->getOffscreenTexture();
     mTexture->AddRef();
-    mSRV = swapchain->getRenderTargetShaderResource();
-    mSRV->AddRef();
-
     mSwizzleTexture = NULL;
-    mSwizzleSRV = NULL;
+
+    memset(mSRV, NULL, sizeof(mSRV));
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
@@ -309,8 +307,9 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
     mTextureHeight = texDesc.Height;
     mTextureDepth = 1;
 
+    ID3D11ShaderResourceView *srv = swapchain->getRenderTargetShaderResource();
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-    mSRV->GetDesc(&srvDesc);
+    srv->GetDesc(&srvDesc);
     mShaderResourceFormat = srvDesc.Format;
 
     ID3D11RenderTargetView* offscreenRTV = swapchain->getRenderTarget();
@@ -330,9 +329,10 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int baseLevel, int 
     : TextureStorage11(renderer, baseLevel, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
-    mSRV = NULL;
     mSwizzleTexture = NULL;
-    mSwizzleSRV = NULL;
+
+    memset(mSRV, NULL, sizeof(mSRV));
+
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
         mLevelSRVs[i] = NULL;
@@ -400,9 +400,11 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int baseLevel, int 
 TextureStorage11_2D::~TextureStorage11_2D()
 {
     SafeRelease(mTexture);
-    SafeRelease(mSRV);
     SafeRelease(mSwizzleTexture);
-    SafeRelease(mSwizzleSRV);
+
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 2; j++)
+            SafeRelease(mSRV[i][j]);
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
@@ -501,7 +503,8 @@ ID3D11ShaderResourceView *TextureStorage11_2D::getSRV(const gl::SamplerState &sa
 {
     bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
                            samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
-    ID3D11ShaderResourceView **resultSRV = swizzleRequired ? &mSwizzleSRV : &mSRV;
+    bool mipmapping = gl::IsMipmapFiltered(samplerState);
+    ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 
     if (swizzleRequired)
     {
@@ -515,8 +518,8 @@ ID3D11ShaderResourceView *TextureStorage11_2D::getSRV(const gl::SamplerState &sa
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
         srvDesc.Format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-        srvDesc.Texture2D.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
-        srvDesc.Texture2D.MostDetailedMip = 0;
+        srvDesc.Texture2D.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
+        srvDesc.Texture2D.MostDetailedMip = mLodOffset;
 
         ID3D11Texture2D *sourceTexture = swizzleRequired ? getSwizzleTexture() : mTexture;
         HRESULT result = device->CreateShaderResourceView(sourceTexture, &srvDesc, resultSRV);
@@ -643,9 +646,10 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int baseLevel, 
     : TextureStorage11(renderer, baseLevel, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
-    mSRV = NULL;
     mSwizzleTexture = NULL;
-    mSwizzleSRV = NULL;
+
+    memset(mSRV, NULL, sizeof(mSRV));
+
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
         mLevelSRVs[level] = NULL;
@@ -711,9 +715,11 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int baseLevel, 
 TextureStorage11_Cube::~TextureStorage11_Cube()
 {
     SafeRelease(mTexture);
-    SafeRelease(mSRV);
     SafeRelease(mSwizzleTexture);
-    SafeRelease(mSwizzleSRV);
+
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 2; j++)
+            SafeRelease(mSRV[i][j]);
 
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
@@ -833,7 +839,8 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(const gl::SamplerState &
 {
     bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
                            samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
-    ID3D11ShaderResourceView **resultSRV = swizzleRequired ? &mSwizzleSRV : &mSRV;
+    bool mipmapping = gl::IsMipmapFiltered(samplerState);
+    ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 
     if (swizzleRequired)
     {
@@ -852,7 +859,7 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(const gl::SamplerState &
             d3d11::GetComponentType(mTextureFormat) == GL_UNSIGNED_INT)
         {
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-            srvDesc.Texture2DArray.MostDetailedMip = 0;
+            srvDesc.Texture2DArray.MostDetailedMip = mLodOffset;
             srvDesc.Texture2DArray.MipLevels = 1;
             srvDesc.Texture2DArray.FirstArraySlice = 0;
             srvDesc.Texture2DArray.ArraySize = 6;
@@ -860,8 +867,8 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(const gl::SamplerState &
         else
         {
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-            srvDesc.TextureCube.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
-            srvDesc.TextureCube.MostDetailedMip = 0;
+            srvDesc.TextureCube.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
+            srvDesc.TextureCube.MostDetailedMip = mLodOffset;
         }
 
         ID3D11Texture2D *sourceTexture = swizzleRequired ? getSwizzleTexture() : mTexture;
@@ -994,9 +1001,9 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int baseLevel, int 
     : TextureStorage11(renderer, baseLevel, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
-    mSRV = NULL;
     mSwizzleTexture = NULL;
-    mSwizzleSRV = NULL;
+
+    memset(mSRV, NULL, sizeof(mSRV));
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
@@ -1063,9 +1070,11 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int baseLevel, int 
 TextureStorage11_3D::~TextureStorage11_3D()
 {
     SafeRelease(mTexture);
-    SafeRelease(mSRV);
     SafeRelease(mSwizzleTexture);
-    SafeRelease(mSwizzleSRV);
+
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 2; j++)
+            SafeRelease(mSRV[i][j]);
 
     for (RenderTargetMap::iterator i = mLevelLayerRenderTargets.begin(); i != mLevelLayerRenderTargets.end(); i++)
     {
@@ -1096,7 +1105,8 @@ ID3D11ShaderResourceView *TextureStorage11_3D::getSRV(const gl::SamplerState &sa
 {
     bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
                            samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
-    ID3D11ShaderResourceView **resultSRV = swizzleRequired ? &mSwizzleSRV : &mSRV;
+    bool mipmapping = gl::IsMipmapFiltered(samplerState);
+    ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 
     if (swizzleRequired)
     {
@@ -1110,8 +1120,8 @@ ID3D11ShaderResourceView *TextureStorage11_3D::getSRV(const gl::SamplerState &sa
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
         srvDesc.Format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
-        srvDesc.Texture3D.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
-        srvDesc.Texture3D.MostDetailedMip = 0;
+        srvDesc.Texture3D.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
+        srvDesc.Texture3D.MostDetailedMip = mLodOffset;
 
         ID3D11Texture3D *sourceTexture = swizzleRequired ? getSwizzleTexture() : mTexture;
         HRESULT result = device->CreateShaderResourceView(sourceTexture, &srvDesc, resultSRV);
@@ -1344,9 +1354,9 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int baseL
     : TextureStorage11(renderer, baseLevel, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), renderTarget))
 {
     mTexture = NULL;
-    mSRV = NULL;
     mSwizzleTexture = NULL;
-    mSwizzleSRV = NULL;
+
+    memset(mSRV, NULL, sizeof(mSRV));
 
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
@@ -1414,9 +1424,11 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int baseL
 TextureStorage11_2DArray::~TextureStorage11_2DArray()
 {
     SafeRelease(mTexture);
-    SafeRelease(mSRV);
     SafeRelease(mSwizzleTexture);
-    SafeRelease(mSwizzleSRV);
+
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 2; j++)
+            SafeRelease(mSRV[i][j]);
 
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
@@ -1446,7 +1458,8 @@ ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRV(const gl::SamplerStat
 {
     bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
                            samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
-    ID3D11ShaderResourceView **resultSRV = swizzleRequired ? &mSwizzleSRV : &mSRV;
+    bool mipmapping = gl::IsMipmapFiltered(samplerState);
+    ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 
     if (swizzleRequired)
     {
@@ -1460,8 +1473,8 @@ ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRV(const gl::SamplerStat
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
         srvDesc.Format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-        srvDesc.Texture2DArray.MostDetailedMip = 0;
-        srvDesc.Texture2DArray.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
+        srvDesc.Texture2DArray.MostDetailedMip = mLodOffset;
+        srvDesc.Texture2DArray.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
         srvDesc.Texture2DArray.FirstArraySlice = 0;
         srvDesc.Texture2DArray.ArraySize = mTextureDepth;
 
