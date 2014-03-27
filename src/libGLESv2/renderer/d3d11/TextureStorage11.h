@@ -33,7 +33,7 @@ class TextureStorage11 : public TextureStorage
     UINT getBindFlags() const;
 
     virtual ID3D11Resource *getBaseTexture() const = 0;
-    virtual ID3D11ShaderResourceView *getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha) = 0;
+    virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState) = 0;
     virtual RenderTarget *getRenderTarget(int level) { return NULL; }
     virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level) { return NULL; }
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer) { return NULL; }
@@ -117,7 +117,7 @@ class TextureStorage11_2D : public TextureStorage11
     static TextureStorage11_2D *makeTextureStorage11_2D(TextureStorage *storage);
 
     virtual ID3D11Resource *getBaseTexture() const;
-    virtual ID3D11ShaderResourceView *getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
+    virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState);
     virtual RenderTarget *getRenderTarget(int level);
 
     virtual void generateMipmap(int level);
@@ -152,7 +152,7 @@ class TextureStorage11_Cube : public TextureStorage11
     static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
 
     virtual ID3D11Resource *getBaseTexture() const;
-    virtual ID3D11ShaderResourceView *getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
+    virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState);
     virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level);
 
     virtual void generateMipmap(int faceIndex, int level);
@@ -188,7 +188,7 @@ class TextureStorage11_3D : public TextureStorage11
     static TextureStorage11_3D *makeTextureStorage11_3D(TextureStorage *storage);
 
     virtual ID3D11Resource *getBaseTexture() const;
-    virtual ID3D11ShaderResourceView *getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
+    virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState);
     virtual RenderTarget *getRenderTarget(int mipLevel);
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer);
 
@@ -230,7 +230,7 @@ class TextureStorage11_2DArray : public TextureStorage11
     static TextureStorage11_2DArray *makeTextureStorage11_2DArray(TextureStorage *storage);
 
     virtual ID3D11Resource *getBaseTexture() const;
-    virtual ID3D11ShaderResourceView *getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
+    virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState);
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer);
 
     virtual void generateMipmap(int level);

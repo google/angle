@@ -641,8 +641,9 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
         if (texStorage)
         {
             TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage->getStorageInstance());
-            textureSRV = storage11->getSRV(texture->getSwizzleRed(), texture->getSwizzleGreen(), texture->getSwizzleBlue(),
-                                           texture->getSwizzleAlpha());
+            gl::SamplerState samplerState;
+            texture->getSamplerState(&samplerState);
+            textureSRV = storage11->getSRV(samplerState);
         }
 
         // If we get NULL back from getSRV here, something went wrong in the texture class and we're unexpectedly

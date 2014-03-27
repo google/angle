@@ -497,15 +497,15 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
     }
 }
 
-ID3D11ShaderResourceView *TextureStorage11_2D::getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha)
+ID3D11ShaderResourceView *TextureStorage11_2D::getSRV(const gl::SamplerState &samplerState)
 {
-    bool swizzleRequired = swizzleRed != GL_RED || swizzleGreen != GL_GREEN || swizzleBlue != GL_BLUE ||
-                           swizzleAlpha != GL_ALPHA;
+    bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
+                           samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
     ID3D11ShaderResourceView **resultSRV = swizzleRequired ? &mSwizzleSRV : &mSRV;
 
     if (swizzleRequired)
     {
-        verifySwizzleExists(swizzleRed, swizzleGreen, swizzleBlue, swizzleAlpha);
+        verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
     if (!(*resultSRV))
@@ -829,15 +829,15 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
     }
 }
 
-ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha)
+ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(const gl::SamplerState &samplerState)
 {
-    bool swizzleRequired = swizzleRed != GL_RED || swizzleGreen != GL_GREEN || swizzleBlue != GL_BLUE ||
-                           swizzleAlpha != GL_ALPHA;
+    bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
+                           samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
     ID3D11ShaderResourceView **resultSRV = swizzleRequired ? &mSwizzleSRV : &mSRV;
 
     if (swizzleRequired)
     {
-        verifySwizzleExists(swizzleRed, swizzleGreen, swizzleBlue, swizzleAlpha);
+        verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
     if (!(*resultSRV))
@@ -1092,15 +1092,15 @@ ID3D11Resource *TextureStorage11_3D::getBaseTexture() const
     return mTexture;
 }
 
-ID3D11ShaderResourceView *TextureStorage11_3D::getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha)
+ID3D11ShaderResourceView *TextureStorage11_3D::getSRV(const gl::SamplerState &samplerState)
 {
-    bool swizzleRequired = swizzleRed != GL_RED || swizzleGreen != GL_GREEN || swizzleBlue != GL_BLUE ||
-                           swizzleAlpha != GL_ALPHA;
+    bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
+                           samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
     ID3D11ShaderResourceView **resultSRV = swizzleRequired ? &mSwizzleSRV : &mSRV;
 
     if (swizzleRequired)
     {
-        verifySwizzleExists(swizzleRed, swizzleGreen, swizzleBlue, swizzleAlpha);
+        verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
     if (!(*resultSRV))
@@ -1442,15 +1442,15 @@ ID3D11Resource *TextureStorage11_2DArray::getBaseTexture() const
     return mTexture;
 }
 
-ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRV(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha)
+ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRV(const gl::SamplerState &samplerState)
 {
-    bool swizzleRequired = swizzleRed != GL_RED || swizzleGreen != GL_GREEN || swizzleBlue != GL_BLUE ||
-                           swizzleAlpha != GL_ALPHA;
+    bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
+                           samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
     ID3D11ShaderResourceView **resultSRV = swizzleRequired ? &mSwizzleSRV : &mSRV;
 
     if (swizzleRequired)
     {
-        verifySwizzleExists(swizzleRed, swizzleGreen, swizzleBlue, swizzleAlpha);
+        verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
     if (!(*resultSRV))
