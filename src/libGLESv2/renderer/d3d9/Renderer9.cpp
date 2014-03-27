@@ -2458,6 +2458,12 @@ bool Renderer9::getTextureFilterAnisotropySupport() const
     return mSupportsTextureFilterAnisotropy;
 }
 
+bool Renderer9::getPBOSupport() const
+{
+    // D3D9 cannot support PBOs
+    return false;
+}
+
 float Renderer9::getTextureMaxAnisotropy() const
 {
     if (mSupportsTextureFilterAnisotropy)

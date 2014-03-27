@@ -2013,6 +2013,11 @@ bool Renderer11::getTextureFilterAnisotropySupport() const
     return true;
 }
 
+bool Renderer11::getPBOSupport() const
+{
+    return true;
+}
+
 float Renderer11::getTextureMaxAnisotropy() const
 {
     switch (mFeatureLevel)

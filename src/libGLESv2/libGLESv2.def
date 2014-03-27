@@ -173,6 +173,9 @@ EXPORTS
     glProgramBinaryOES              @175
     glGetProgramBinaryOES           @176
     glDrawBuffersEXT                @179
+    glMapBufferOES                  @285
+    glUnmapBufferOES                @286
+    glGetBufferPointervOES          @287
 
     ; GLES 3.0 Functions
     glReadBuffer                    @180

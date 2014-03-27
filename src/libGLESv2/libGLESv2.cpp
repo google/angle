@@ -6624,23 +6624,7 @@ GLboolean __stdcall glUnmapBuffer(GLenum target)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
-            if (!gl::ValidBufferTarget(context, target))
-            {
-                return gl::error(GL_INVALID_ENUM, GL_FALSE);
-            }
-
-            gl::Buffer *buffer = context->getTargetBuffer(target);
-
-            if (buffer == NULL || !buffer->mapped())
-            {
-                return gl::error(GL_INVALID_OPERATION, GL_FALSE);
-            }
-
-            // TODO: detect if we had corruption. if so, throw an error and return false.
-
-            buffer->unmap();
-
-            return GL_TRUE;
+            return glUnmapBufferOES(target);
         }
     }
     catch(std::bad_alloc&)
@@ -6666,24 +6650,7 @@ void __stdcall glGetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!gl::ValidBufferTarget(context, target))
-            {
-                return gl::error(GL_INVALID_ENUM);
-            }
-
-            if (pname != GL_BUFFER_MAP_POINTER)
-            {
-                return gl::error(GL_INVALID_ENUM);
-            }
-
-            gl::Buffer *buffer = context->getTargetBuffer(target);
-
-            if (!buffer || !buffer->mapped())
-            {
-                *params = NULL;
-            }
-
-            *params = buffer->mapPointer();
+            glGetBufferPointervOES(target, pname, params);
         }
     }
     catch(std::bad_alloc&)
@@ -10319,6 +10286,127 @@ void __stdcall glDrawBuffersEXT(GLsizei n, const GLenum *bufs)
     }
 }
 
+void __stdcall glGetBufferPointervOES(GLenum target, GLenum pname, void** params)
+{
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLvoid** params = 0x%0.8p)", target, pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (!context->supportsPBOs())
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!gl::ValidBufferTarget(context, target))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (pname != GL_BUFFER_MAP_POINTER)
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            gl::Buffer *buffer = context->getTargetBuffer(target);
+
+            if (!buffer || !buffer->mapped())
+            {
+                *params = NULL;
+            }
+
+            *params = buffer->mapPointer();
+        }
+    }
+    catch (std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void * __stdcall glMapBufferOES(GLenum target, GLenum access)
+{
+    EVENT("(GLenum target = 0x%X, GLbitfield access = 0x%X)", target, access);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (!gl::ValidBufferTarget(context, target))
+            {
+                return gl::error(GL_INVALID_ENUM, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            gl::Buffer *buffer = context->getTargetBuffer(target);
+
+            if (buffer == NULL)
+            {
+                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            if (access != GL_WRITE_ONLY_OES)
+            {
+                return gl::error(GL_INVALID_ENUM, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            if (buffer->mapped())
+            {
+                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            }
+
+            return buffer->mapRange(0, buffer->size(), GL_MAP_WRITE_BIT);
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, reinterpret_cast<GLvoid*>(NULL));
+    }
+
+    return NULL;
+}
+
+GLboolean __stdcall glUnmapBufferOES(GLenum target)
+{
+    EVENT("(GLenum target = 0x%X)", target);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (!gl::ValidBufferTarget(context, target))
+            {
+                return gl::error(GL_INVALID_ENUM, GL_FALSE);
+            }
+
+            gl::Buffer *buffer = context->getTargetBuffer(target);
+
+            if (buffer == NULL || !buffer->mapped())
+            {
+                return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            }
+
+            // TODO: detect if we had corruption. if so, throw an error and return false.
+
+            buffer->unmap();
+
+            return GL_TRUE;
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, GL_FALSE);
+    }
+
+    return GL_FALSE;
+}
+
 __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname)
 {
     struct Extension
@@ -10357,7 +10445,10 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
         {"glDrawArraysInstancedANGLE", (__eglMustCastToProperFunctionPointerType)glDrawArraysInstancedANGLE},
         {"glDrawElementsInstancedANGLE", (__eglMustCastToProperFunctionPointerType)glDrawElementsInstancedANGLE},
         {"glGetProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glGetProgramBinaryOES},
-        {"glProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glProgramBinaryOES},    };
+        {"glProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glProgramBinaryOES},
+        {"glGetBufferPointervOES", (__eglMustCastToProperFunctionPointerType)glGetBufferPointervOES},
+        {"glMapBufferOES", (__eglMustCastToProperFunctionPointerType)glMapBufferOES},
+        {"glUnmapBufferOES", (__eglMustCastToProperFunctionPointerType)glUnmapBufferOES},    };
 
     for (unsigned int ext = 0; ext < ArraySize(glExtensions); ext++)
     {

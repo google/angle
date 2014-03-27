@@ -137,6 +137,7 @@ class Renderer11 : public Renderer
     virtual bool getOcclusionQuerySupport() const;
     virtual bool getInstancingSupport() const;
     virtual bool getTextureFilterAnisotropySupport() const;
+    virtual bool getPBOSupport() const;
     virtual float getTextureMaxAnisotropy() const;
     virtual bool getShareHandleSupport() const;
     virtual bool getDerivativeInstructionSupport() const;
