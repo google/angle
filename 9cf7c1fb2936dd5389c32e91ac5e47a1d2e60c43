@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b910773f_c0f8d295",
+        "filename": "src/libGLESv2/renderer/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-27T15:12:34Z",
+      "side": 1,
+      "message": "Is it safe to use mActualFormat instead of mInternalFormat here? This could potentially allow copying RGBA data into a luminance texture without conversion or RGBA into a RGB without defaulting the alpha channel.",
+      "range": {
+        "startLine": 289,
+        "startChar": 38,
+        "endLine": 289,
+        "endChar": 51
+      },
+      "revId": "9cf7c1fb2936dd5389c32e91ac5e47a1d2e60c43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b910773f_80b41ad8",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3097,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-03-27T15:12:34Z",
+      "side": 1,
+      "message": "Should we add an assertion that pack.pixelBuffer is not set?",
+      "range": {
+        "startLine": 3096,
+        "startChar": 0,
+        "endLine": 3097,
+        "endChar": 105
+      },
+      "revId": "9cf7c1fb2936dd5389c32e91ac5e47a1d2e60c43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
