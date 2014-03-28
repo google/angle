@@ -443,6 +443,52 @@ struct B8G8R8A8
     }
 };
 
+struct B8G8R8X8
+{
+    unsigned char B;
+    unsigned char G;
+    unsigned char R;
+    unsigned char X;
+
+    static void readColor(gl::ColorF *dst, const B8G8R8X8 *src)
+    {
+        dst->red = gl::normalizedToFloat(src->R);
+        dst->green = gl::normalizedToFloat(src->G);
+        dst->blue = gl::normalizedToFloat(src->B);
+        dst->alpha = 1.0f;
+    }
+
+    static void readColor(gl::ColorUI *dst, const B8G8R8X8 *src)
+    {
+        dst->red = src->R;
+        dst->green = src->G;
+        dst->blue = src->B;
+        dst->alpha = 1;
+    }
+
+    static void writeColor(B8G8R8X8 *dst, const gl::ColorF *src)
+    {
+        dst->R = gl::floatToNormalized<unsigned char>(src->red);
+        dst->G = gl::floatToNormalized<unsigned char>(src->green);
+        dst->B = gl::floatToNormalized<unsigned char>(src->blue);
+        dst->X = 255;
+    }
+
+    static void writeColor(B8G8R8X8 *dst, const gl::ColorUI *src)
+    {
+        dst->R = static_cast<unsigned char>(src->red);
+        dst->G = static_cast<unsigned char>(src->green);
+        dst->B = static_cast<unsigned char>(src->blue);
+        dst->X = 255;
+    }
+
+    static void average(B8G8R8X8 *dst, const B8G8R8X8 *src1, const B8G8R8X8 *src2)
+    {
+        *(unsigned int*)dst = (((*(unsigned int*)src1 ^ *(unsigned int*)src2) & 0xFEFEFEFE) >> 1) + (*(unsigned int*)src1 & *(unsigned int*)src2);
+        dst->X = 255;
+    }
+};
+
 struct B5G5R5A1
 {
     unsigned short BGRA;
