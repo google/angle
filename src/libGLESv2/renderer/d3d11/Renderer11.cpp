@@ -3319,12 +3319,35 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
                                  GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
                                  GLint packAlignment, void *pixels)
 {
+    ASSERT(area.width >= 0);
+    ASSERT(area.height >= 0);
+
     D3D11_TEXTURE2D_DESC textureDesc;
     texture->GetDesc(&textureDesc);
 
+    // Clamp read region to the defined texture boundaries, preventing out of bounds reads
+    // and reads of uninitialized data.
+    gl::Rectangle safeArea;
+    safeArea.x      = gl::clamp(area.x, 0, static_cast<int>(textureDesc.Width));
+    safeArea.y      = gl::clamp(area.y, 0, static_cast<int>(textureDesc.Height));
+    safeArea.width  = gl::clamp(area.width + std::min(area.x, 0), 0,
+                                static_cast<int>(textureDesc.Width) - safeArea.x);
+    safeArea.height = gl::clamp(area.height + std::min(area.y, 0), 0,
+                                static_cast<int>(textureDesc.Height) - safeArea.y);
+
+    ASSERT(safeArea.x >= 0 && safeArea.y >= 0);
+    ASSERT(safeArea.x + safeArea.width  <= static_cast<int>(textureDesc.Width));
+    ASSERT(safeArea.y + safeArea.height <= static_cast<int>(textureDesc.Height));
+
+    if (safeArea.width == 0 || safeArea.height == 0)
+    {
+        // no work to do
+        return;
+    }
+
     D3D11_TEXTURE2D_DESC stagingDesc;
-    stagingDesc.Width = area.width;
-    stagingDesc.Height = area.height;
+    stagingDesc.Width = safeArea.width;
+    stagingDesc.Height = safeArea.height;
     stagingDesc.MipLevels = 1;
     stagingDesc.ArraySize = 1;
     stagingDesc.Format = textureDesc.Format;
@@ -3377,12 +3400,12 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
     }
 
     D3D11_BOX srcBox;
-    srcBox.left = area.x;
-    srcBox.right = area.x + area.width;
-    srcBox.top = area.y;
-    srcBox.bottom = area.y + area.height;
-    srcBox.front = 0;
-    srcBox.back = 1;
+    srcBox.left   = static_cast<UINT>(safeArea.x);
+    srcBox.right  = static_cast<UINT>(safeArea.x + safeArea.width);
+    srcBox.top    = static_cast<UINT>(safeArea.y);
+    srcBox.bottom = static_cast<UINT>(safeArea.y + safeArea.height);
+    srcBox.front  = 0;
+    srcBox.back   = 1;
 
     mDeviceContext->CopySubresourceRegion(stagingTex, 0, 0, 0, 0, srcTex, subResource, &srcBox);
 
@@ -3395,7 +3418,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
     int inputPitch;
     if (packReverseRowOrder)
     {
-        source = static_cast<unsigned char*>(mapping.pData) + mapping.RowPitch * (area.height - 1);
+        source = static_cast<unsigned char*>(mapping.pData) + mapping.RowPitch * (safeArea.height - 1);
         inputPitch = -static_cast<int>(mapping.RowPitch);
     }
     else
@@ -3416,9 +3439,9 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
     {
         // Direct copy possible
         unsigned char *dest = static_cast<unsigned char*>(pixels);
-        for (int y = 0; y < area.height; y++)
+        for (int y = 0; y < safeArea.height; y++)
         {
-            memcpy(dest + y * outputPitch, source + y * inputPitch, area.width * sourcePixelSize);
+            memcpy(dest + y * outputPitch, source + y * inputPitch, safeArea.width * sourcePixelSize);
         }
     }
     else
@@ -3430,9 +3453,9 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
         if (fastCopyFunc)
         {
             // Fast copy is possible through some special function
-            for (int y = 0; y < area.height; y++)
+            for (int y = 0; y < safeArea.height; y++)
             {
-                for (int x = 0; x < area.width; x++)
+                for (int x = 0; x < safeArea.width; x++)
                 {
                     void *dest = static_cast<unsigned char*>(pixels) + y * outputPitch + x * destPixelSize;
                     void *src = static_cast<unsigned char*>(source) + y * inputPitch + x * sourcePixelSize;
@@ -3451,9 +3474,9 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
                         sizeof(temp) >= sizeof(gl::ColorUI) &&
                         sizeof(temp) >= sizeof(gl::ColorI));
 
-            for (int y = 0; y < area.height; y++)
+            for (int y = 0; y < safeArea.height; y++)
             {
-                for (int x = 0; x < area.width; x++)
+                for (int x = 0; x < safeArea.width; x++)
                 {
                     void *dest = static_cast<unsigned char*>(pixels) + y * outputPitch + x * destPixelSize;
                     void *src = static_cast<unsigned char*>(source) + y * inputPitch + x * sourcePixelSize;

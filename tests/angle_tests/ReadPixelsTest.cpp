@@ -22,22 +22,27 @@ TEST_F(ReadPixelsTest, out_of_bounds)
 
     GLsizei pixelsWidth = 32;
     GLsizei pixelsHeight = 32;
-    std::vector<GLubyte> pixels(pixelsWidth * pixelsHeight * 4);
+    GLint offset = 16;
+    std::vector<GLubyte> pixels((pixelsWidth + offset) * (pixelsHeight + offset) * 4);
 
-    glReadPixels(-pixelsWidth / 2, -pixelsHeight / 2, pixelsWidth, pixelsHeight, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+    glReadPixels(-offset, -offset, pixelsWidth + offset, pixelsHeight + offset, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
     EXPECT_GL_NO_ERROR();
 
     for (int y = pixelsHeight / 2; y < pixelsHeight; y++)
     {
         for (int x = pixelsWidth / 2; x < pixelsWidth; x++)
         {
-            const GLubyte* pixel = pixels.data() + ((y * pixelsWidth + x) * 4);
+            const GLubyte* pixel = pixels.data() + ((y * (pixelsWidth + offset) + x) * 4);
+            unsigned int r = static_cast<unsigned int>(pixel[0]);
+            unsigned int g = static_cast<unsigned int>(pixel[1]);
+            unsigned int b = static_cast<unsigned int>(pixel[2]);
+            unsigned int a = static_cast<unsigned int>(pixel[3]);
 
             // Expect that all pixels which fell within the framebuffer are red
-            EXPECT_EQ(pixel[0], 255);
-            EXPECT_EQ(pixel[1], 0);
-            EXPECT_EQ(pixel[2], 0);
-            EXPECT_EQ(pixel[3], 255);
+            EXPECT_EQ(255, r);
+            EXPECT_EQ(0,   g);
+            EXPECT_EQ(0,   b);
+            EXPECT_EQ(255, a);
         }
     }
 }
