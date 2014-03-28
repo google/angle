@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3929e785_31b24aca",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3279,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-28T16:00:04Z",
+      "side": 1,
+      "message": "This math is a bit hard to follow. Should it expect to be able to handle incoming negative-origin areas? If I follow through this section with an input area: { x \u003d -500, y \u003d -500, w \u003d 30, y \u003d 30 } and texture size 256x256, safeArea becomes { x \u003d 0, y \u003d 0, w \u003d -470, h \u003d -470 } (check my math on it, though), which seems like it could cause problems.\n\nCould gl::clamp() be used here to simplify things a bit? Similar to how the scissor dimensions are clamped to the render target dimensions in Renderer9::setScissorRectangle()? You could fairly easily describe the clamped area as x1, y1, x2, y2, that way, and then determine the clamped width \u0026 height with max(x2 - x1, 0), max(y2 - y1, 0).",
+      "revId": "a197195dd8548b47b7d3a3baff8944601d6ea2e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
