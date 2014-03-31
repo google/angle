@@ -43,7 +43,7 @@ class TextureStorage9 : public TextureStorage
     virtual int getTopLevel() const;
     virtual bool isRenderTarget() const;
     virtual bool isManaged() const;
-    virtual int getMaxLevel() const;
+    virtual int getLevelCount() const;
 
   protected:
     int mTopLevel;
@@ -62,7 +62,7 @@ class TextureStorage9_2D : public TextureStorage9
 {
   public:
     TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain);
-    TextureStorage9_2D(Renderer *renderer, int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height);
+    TextureStorage9_2D(Renderer *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels);
     virtual ~TextureStorage9_2D();
 
     static TextureStorage9_2D *makeTextureStorage9_2D(TextureStorage *storage);
@@ -84,7 +84,7 @@ class TextureStorage9_2D : public TextureStorage9
 class TextureStorage9_Cube : public TextureStorage9
 {
   public:
-    TextureStorage9_Cube(Renderer *renderer, int maxLevel, GLenum internalformat, bool renderTarget, int size);
+    TextureStorage9_Cube(Renderer *renderer, GLenum internalformat, bool renderTarget, int size, int levels);
     virtual ~TextureStorage9_Cube();
 
     static TextureStorage9_Cube *makeTextureStorage9_Cube(TextureStorage *storage);

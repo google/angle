@@ -83,7 +83,7 @@ int TextureStorage9::getTopLevel() const
     return mTopLevel;
 }
 
-int TextureStorage9::getMaxLevel() const
+int TextureStorage9::getLevelCount() const
 {
     return getBaseTexture() ? (getBaseTexture()->GetLevelCount() - getTopLevel()) : 0;
 }
@@ -98,7 +98,7 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain
     initializeRenderTarget();
 }
 
-TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height)
+TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels)
     : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), renderTarget))
 {
     mTexture = NULL;
@@ -110,7 +110,7 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int maxLevel, GLenum 
         IDirect3DDevice9 *device = mRenderer->getDevice();
         D3DFORMAT format = gl_d3d9::GetTextureFormat(internalformat, mRenderer);
         d3d9::MakeValidSize(false, format, &width, &height, &mTopLevel);
-        UINT creationLevels = (maxLevel ? maxLevel + mTopLevel : 0);
+        UINT creationLevels = (levels == 0) ? 0 : mTopLevel + levels;
 
         HRESULT result = device->CreateTexture(width, height, creationLevels, getUsage(), format, getPool(), &mTexture, NULL);
 
@@ -193,7 +193,7 @@ void TextureStorage9_2D::initializeRenderTarget()
     }
 }
 
-TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int maxLevel, GLenum internalformat, bool renderTarget, int size)
+TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, GLenum internalformat, bool renderTarget, int size, int levels)
     : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), renderTarget))
 {
     mTexture = NULL;
@@ -210,7 +210,7 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int maxLevel, GLe
         int height = size;
         D3DFORMAT format = gl_d3d9::GetTextureFormat(internalformat, mRenderer);
         d3d9::MakeValidSize(false, format, &size, &height, &mTopLevel);
-        UINT creationLevels = (maxLevel ? maxLevel + mTopLevel : 0);
+        UINT creationLevels = (levels == 0) ? 0 : mTopLevel + levels;
 
         HRESULT result = device->CreateCubeTexture(size, creationLevels, getUsage(), format, getPool(), &mTexture, NULL);
 
