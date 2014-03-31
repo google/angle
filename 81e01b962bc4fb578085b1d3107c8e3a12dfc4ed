@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39c56724_6e448f8c",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-31T23:11:21Z",
+      "side": 1,
+      "message": "I\u0027m not a big fan of calling the parameter that controls mip chain creation just \"mipmaps\", because it\u0027s easy to conflate with whether mip filtering is enabled. Maybe createMipChain (or a less lengthy version if you can think of one)?",
+      "revId": "81e01b962bc4fb578085b1d3107c8e3a12dfc4ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99d653da_11608c19",
+        "filename": "src/libGLESv2/renderer/d3d9/TextureStorage9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-31T23:11:21Z",
+      "side": 1,
+      "message": "Will we now always be creating either a full mip chain, or a single level? Were there situations in which we were purposefully creating different numbers of mip levels than would exist for the texture dimensions? I don\u0027t think the non-4x4 DXT case would have been one of those situations, since we\u0027re sizing it up above in MakeValidSize, but am not sure if there are others.",
+      "revId": "81e01b962bc4fb578085b1d3107c8e3a12dfc4ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
