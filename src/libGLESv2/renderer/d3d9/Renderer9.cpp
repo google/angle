@@ -2805,7 +2805,7 @@ bool Renderer9::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStora
         TextureStorage9_2D *source9 = TextureStorage9_2D::makeTextureStorage9_2D(source->getStorageInstance());
         TextureStorage9_2D *dest9 = TextureStorage9_2D::makeTextureStorage9_2D(dest->getStorageInstance());
 
-        int levels = source9->getMaxLevel() - source9->getBaseLevel();
+        int levels = source9->getMaxLevel();
         for (int i = 0; i < levels; ++i)
         {
             IDirect3DSurface9 *srcSurf = source9->getSurfaceLevel(i, false);
@@ -2834,7 +2834,7 @@ bool Renderer9::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureSto
     {
         TextureStorage9_Cube *source9 = TextureStorage9_Cube::makeTextureStorage9_Cube(source->getStorageInstance());
         TextureStorage9_Cube *dest9 = TextureStorage9_Cube::makeTextureStorage9_Cube(dest->getStorageInstance());
-        int levels = source9->getMaxLevel() - source9->getBaseLevel();
+        int levels = source9->getMaxLevel();
         for (int f = 0; f < 6; f++)
         {
             for (int i = 0; i < levels; i++)
@@ -3480,17 +3480,17 @@ TextureStorage *Renderer9::createTextureStorage2D(SwapChain *swapChain)
     return new TextureStorage9_2D(this, swapChain9);
 }
 
-TextureStorage *Renderer9::createTextureStorage2D(int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height)
+TextureStorage *Renderer9::createTextureStorage2D(int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height)
 {
-    return new TextureStorage9_2D(this, baseLevel, maxLevel, internalformat, renderTarget, width, height);
+    return new TextureStorage9_2D(this, maxLevel, internalformat, renderTarget, width, height);
 }
 
-TextureStorage *Renderer9::createTextureStorageCube(int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, int size)
+TextureStorage *Renderer9::createTextureStorageCube(int maxLevel, GLenum internalformat, bool renderTarget, int size)
 {
-    return new TextureStorage9_Cube(this, baseLevel, maxLevel, internalformat, renderTarget, size);
+    return new TextureStorage9_Cube(this, maxLevel, internalformat, renderTarget, size);
 }
 
-TextureStorage *Renderer9::createTextureStorage3D(int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth)
+TextureStorage *Renderer9::createTextureStorage3D(int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth)
 {
     // 3D textures are not supported by the D3D9 backend.
     UNREACHABLE();
@@ -3498,7 +3498,7 @@ TextureStorage *Renderer9::createTextureStorage3D(int baseLevel, int maxLevel, G
     return NULL;
 }
 
-TextureStorage *Renderer9::createTextureStorage2DArray(int baseLevel, int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth)
+TextureStorage *Renderer9::createTextureStorage2DArray(int maxLevel, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth)
 {
     // 2D array textures are not supported by the D3D9 backend.
     UNREACHABLE();
