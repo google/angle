@@ -400,7 +400,7 @@ GLint Texture::creationLevels(GLsizei width, GLsizei height, GLsizei depth) cons
     if ((isPow2(width) && isPow2(height) && isPow2(depth)) || mRenderer->getNonPower2TextureSupport())
     {
         // Maximum number of levels
-        return static_cast<GLint>(log2(std::max(std::max(width, height), depth)));
+        return log2(std::max(std::max(width, height), depth)) + 1;
     }
     else
     {
@@ -411,7 +411,7 @@ GLint Texture::creationLevels(GLsizei width, GLsizei height, GLsizei depth) cons
 
 int Texture::mipLevels() const
 {
-    return static_cast<int>(log2(std::max(std::max(getBaseLevelWidth(), getBaseLevelHeight()), getBaseLevelDepth())));
+    return log2(std::max(std::max(getBaseLevelWidth(), getBaseLevelHeight()), getBaseLevelDepth())) + 1;
 }
 
 Texture2D::Texture2D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_2D)
@@ -800,9 +800,9 @@ bool Texture2D::isSamplerComplete(const SamplerState &samplerState) const
 // Tests for 2D texture (mipmap) completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool Texture2D::isMipmapComplete() const
 {
-    int q = mipLevels();
+    int levelCount = mipLevels();
 
-    for (int level = 0; level <= q; level++)
+    for (int level = 0; level < levelCount; level++)
     {
         if (!isLevelComplete(level))
         {
@@ -953,8 +953,8 @@ bool Texture2D::ensureRenderTarget()
 void Texture2D::generateMipmaps()
 {
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
-    int q = mipLevels();
-    for (int level = 1; level <= q; level++)
+    int levelCount = mipLevels();
+    for (int level = 1; level < levelCount; level++)
     {
         redefineImage(level, getBaseLevelInternalFormat(),
                       std::max(getBaseLevelWidth() >> level, 1),
@@ -963,7 +963,7 @@ void Texture2D::generateMipmaps()
 
     if (mTexStorage && mTexStorage->isRenderTarget())
     {
-        for (int level = 1; level <= q; level++)
+        for (int level = 1; level < levelCount; level++)
         {
             mTexStorage->generateMipmap(level);
 
@@ -972,7 +972,7 @@ void Texture2D::generateMipmaps()
     }
     else
     {
-        for (int level = 1; level <= q; level++)
+        for (int level = 1; level < levelCount; level++)
         {
             mRenderer->generateMipmap(mImageArray[level], mImageArray[level - 1]);
         }
@@ -1255,11 +1255,11 @@ bool TextureCubeMap::isMipmapCubeComplete() const
         return false;
     }
 
-    int q = mipLevels();
+    int levelCount = mipLevels();
 
     for (int face = 0; face < 6; face++)
     {
-        for (int level = 1; level <= q; level++)
+        for (int level = 1; level < levelCount; level++)
         {
             if (!isFaceLevelComplete(face, level))
             {
@@ -1585,10 +1585,10 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
 void TextureCubeMap::generateMipmaps()
 {
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
-    int q = mipLevels();
+    int levelCount = mipLevels();
     for (int faceIndex = 0; faceIndex < 6; faceIndex++)
     {
-        for (int level = 1; level <= q; level++)
+        for (int level = 1; level < levelCount; level++)
         {
             int faceLevelSize = (std::max(mImageArray[faceIndex][0]->getWidth() >> level, 1));
             redefineImage(faceIndex, level, mImageArray[faceIndex][0]->getInternalFormat(), faceLevelSize, faceLevelSize);
@@ -1599,7 +1599,7 @@ void TextureCubeMap::generateMipmaps()
     {
         for (int faceIndex = 0; faceIndex < 6; faceIndex++)
         {
-            for (int level = 1; level <= q; level++)
+            for (int level = 1; level < levelCount; level++)
             {
                 mTexStorage->generateMipmap(faceIndex, level);
 
@@ -1611,7 +1611,7 @@ void TextureCubeMap::generateMipmaps()
     {
         for (int faceIndex = 0; faceIndex < 6; faceIndex++)
         {
-            for (int level = 1; level <= q; level++)
+            for (int level = 1; level < levelCount; level++)
             {
                 mRenderer->generateMipmap(mImageArray[faceIndex][level], mImageArray[faceIndex][level - 1]);
             }
@@ -1853,8 +1853,8 @@ void Texture3D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 void Texture3D::generateMipmaps()
 {
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
-    int q = mipLevels();
-    for (int level = 1; level <= q; level++)
+    int levelCount = mipLevels();
+    for (int level = 1; level < levelCount; level++)
     {
         redefineImage(level, getBaseLevelInternalFormat(),
                       std::max(getBaseLevelWidth() >> level, 1),
@@ -1864,7 +1864,7 @@ void Texture3D::generateMipmaps()
 
     if (mTexStorage && mTexStorage->isRenderTarget())
     {
-        for (int level = 1; level <= q; level++)
+        for (int level = 1; level < levelCount; level++)
         {
             mTexStorage->generateMipmap(level);
 
@@ -1873,7 +1873,7 @@ void Texture3D::generateMipmaps()
     }
     else
     {
-        for (int level = 1; level <= q; level++)
+        for (int level = 1; level < levelCount; level++)
         {
             mRenderer->generateMipmap(mImageArray[level], mImageArray[level - 1]);
         }
@@ -1959,9 +1959,9 @@ bool Texture3D::isSamplerComplete(const SamplerState &samplerState) const
 
 bool Texture3D::isMipmapComplete() const
 {
-    int q = mipLevels();
+    int levelCount = mipLevels();
 
-    for (int level = 0; level <= q; level++)
+    for (int level = 0; level < levelCount; level++)
     {
         if (!isLevelComplete(level))
         {
@@ -2407,15 +2407,15 @@ void Texture2DArray::generateMipmaps()
     GLenum baseFormat = getBaseLevelInternalFormat();
 
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
-    int q = mipLevels();
-    for (int level = 1; level <= q; level++)
+    int levelCount = mipLevels();
+    for (int level = 1; level < levelCount; level++)
     {
         redefineImage(level, baseFormat, std::max(baseWidth >> level, 1), std::max(baseHeight >> level, 1), baseDepth);
     }
 
     if (mTexStorage && mTexStorage->isRenderTarget())
     {
-        for (int level = 1; level <= q; level++)
+        for (int level = 1; level < levelCount; level++)
         {
             mTexStorage->generateMipmap(level);
 
@@ -2427,7 +2427,7 @@ void Texture2DArray::generateMipmaps()
     }
     else
     {
-        for (int level = 1; level <= q; level++)
+        for (int level = 1; level < levelCount; level++)
         {
             for (int layer = 0; layer < mLayerCounts[level]; layer++)
             {
@@ -2515,9 +2515,9 @@ bool Texture2DArray::isSamplerComplete(const SamplerState &samplerState) const
 
 bool Texture2DArray::isMipmapComplete() const
 {
-    int q = mipLevels();
+    int levelCount = mipLevels();
 
-    for (int level = 1; level <= q; level++)
+    for (int level = 1; level < levelCount; level++)
     {
         if (!isLevelComplete(level))
         {
