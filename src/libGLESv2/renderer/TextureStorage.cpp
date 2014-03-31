@@ -52,9 +52,9 @@ unsigned int TextureStorageInterface::issueTextureSerial()
     return mCurrentTextureSerial++;
 }
 
-int TextureStorageInterface::getLodOffset() const
+int TextureStorageInterface::getTopLevel() const
 {
-    return mInstance->getLodOffset();
+    return mInstance->getTopLevel();
 }
 
 int TextureStorageInterface::getBaseLevel() const

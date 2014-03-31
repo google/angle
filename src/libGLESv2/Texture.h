@@ -96,7 +96,7 @@ class Texture : public RefCountObject
     GLenum getSwizzleBlue() const;
     GLenum getSwizzleAlpha() const;
     bool isSwizzled() const;
-    int getLodOffset();
+    int getTopLevel();
     void getSamplerState(SamplerState *sampler);
     GLenum getUsage() const;
 

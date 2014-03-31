@@ -48,7 +48,7 @@ bool TextureStorage11::SwizzleCacheValue::operator!=(const SwizzleCacheValue &ot
 
 TextureStorage11::TextureStorage11(Renderer *renderer, int baseLevel, UINT bindFlags)
     : mBindFlags(bindFlags),
-      mLodOffset(0),
+      mTopLevel(0),
       mMipLevels(0),
       mBaseLevel(baseLevel),
       mTextureFormat(DXGI_FORMAT_UNKNOWN),
@@ -96,9 +96,10 @@ UINT TextureStorage11::getBindFlags() const
 {
     return mBindFlags;
 }
-int TextureStorage11::getLodOffset() const
+
+int TextureStorage11::getTopLevel() const
 {
-    return mLodOffset;
+    return mTopLevel;
 }
 
 bool TextureStorage11::isRenderTarget() const
@@ -121,7 +122,7 @@ int TextureStorage11::getMaxLevel() const
     int levels = 0;
     if (getBaseTexture())
     {
-        levels = mMipLevels - getLodOffset();
+        levels = mMipLevels - getTopLevel();
     }
     return getBaseLevel() + levels;
 }
@@ -216,7 +217,7 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsign
                         copyArea.depth  == texSize.depth;
 
         ID3D11Resource *dstTexture = getBaseTexture();
-        unsigned int dstSubresource = getSubresourceIndex(level + mLodOffset, layerTarget);
+        unsigned int dstSubresource = getSubresourceIndex(level + mTopLevel, layerTarget);
 
         ASSERT(dstTexture);
 
@@ -355,14 +356,14 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int baseLevel, int 
     if (width > 0 && height > 0)
     {
         // adjust size if needed for compressed textures
-        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mTopLevel);
 
         ID3D11Device *device = mRenderer->getDevice();
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = width;      // Compressed texture size constraints?
         desc.Height = height;
-        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mTopLevel) : 0);
         desc.ArraySize = 1;
         desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;
@@ -519,7 +520,7 @@ ID3D11ShaderResourceView *TextureStorage11_2D::getSRV(const gl::SamplerState &sa
         srvDesc.Format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
         srvDesc.Texture2D.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
-        srvDesc.Texture2D.MostDetailedMip = mLodOffset;
+        srvDesc.Texture2D.MostDetailedMip = mTopLevel;
 
         ID3D11Texture2D *sourceTexture = swizzleRequired ? getSwizzleTexture() : mTexture;
         HRESULT result = device->CreateShaderResourceView(sourceTexture, &srvDesc, resultSRV);
@@ -553,7 +554,7 @@ ID3D11Texture2D *TextureStorage11_2D::getSwizzleTexture()
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = mTextureWidth;
         desc.Height = mTextureHeight;
-        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mTopLevel) : 0);
         desc.ArraySize = 1;
         desc.Format = mSwizzleTextureFormat;
         desc.SampleDesc.Count = 1;
@@ -676,14 +677,14 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int baseLevel, 
     {
         // adjust size if needed for compressed textures
         int height = size;
-        d3d11::MakeValidSize(false, mTextureFormat, &size, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, &size, &height, &mTopLevel);
 
         ID3D11Device *device = mRenderer->getDevice();
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = size;
         desc.Height = size;
-        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mTopLevel) : 0);
         desc.ArraySize = 6;
         desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;
@@ -859,7 +860,7 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(const gl::SamplerState &
             d3d11::GetComponentType(mTextureFormat) == GL_UNSIGNED_INT)
         {
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-            srvDesc.Texture2DArray.MostDetailedMip = mLodOffset;
+            srvDesc.Texture2DArray.MostDetailedMip = mTopLevel;
             srvDesc.Texture2DArray.MipLevels = 1;
             srvDesc.Texture2DArray.FirstArraySlice = 0;
             srvDesc.Texture2DArray.ArraySize = 6;
@@ -868,7 +869,7 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(const gl::SamplerState &
         {
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
             srvDesc.TextureCube.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
-            srvDesc.TextureCube.MostDetailedMip = mLodOffset;
+            srvDesc.TextureCube.MostDetailedMip = mTopLevel;
         }
 
         ID3D11Texture2D *sourceTexture = swizzleRequired ? getSwizzleTexture() : mTexture;
@@ -903,7 +904,7 @@ ID3D11Texture2D *TextureStorage11_Cube::getSwizzleTexture()
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = mTextureWidth;
         desc.Height = mTextureHeight;
-        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mTopLevel) : 0);
         desc.ArraySize = 6;
         desc.Format = mSwizzleTextureFormat;
         desc.SampleDesc.Count = 1;
@@ -1027,7 +1028,7 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int baseLevel, int 
     if (width > 0 && height > 0 && depth > 0)
     {
         // adjust size if needed for compressed textures
-        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mTopLevel);
 
         ID3D11Device *device = mRenderer->getDevice();
 
@@ -1035,7 +1036,7 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int baseLevel, int 
         desc.Width = width;
         desc.Height = height;
         desc.Depth = depth;
-        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mTopLevel) : 0);
         desc.Format = mTextureFormat;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = getBindFlags();
@@ -1121,7 +1122,7 @@ ID3D11ShaderResourceView *TextureStorage11_3D::getSRV(const gl::SamplerState &sa
         srvDesc.Format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
         srvDesc.Texture3D.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
-        srvDesc.Texture3D.MostDetailedMip = mLodOffset;
+        srvDesc.Texture3D.MostDetailedMip = mTopLevel;
 
         ID3D11Texture3D *sourceTexture = swizzleRequired ? getSwizzleTexture() : mTexture;
         HRESULT result = device->CreateShaderResourceView(sourceTexture, &srvDesc, resultSRV);
@@ -1260,7 +1261,7 @@ ID3D11Texture3D *TextureStorage11_3D::getSwizzleTexture()
         desc.Width = mTextureWidth;
         desc.Height = mTextureHeight;
         desc.Depth = mTextureDepth;
-        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mTopLevel) : 0);
         desc.Format = mSwizzleTextureFormat;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
@@ -1379,14 +1380,14 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int baseL
     if (width > 0 && height > 0 && depth > 0)
     {
         // adjust size if needed for compressed textures
-        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mTopLevel);
 
         ID3D11Device *device = mRenderer->getDevice();
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = width;
         desc.Height = height;
-        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mTopLevel) : 0);
         desc.ArraySize = depth;
         desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;
@@ -1473,7 +1474,7 @@ ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRV(const gl::SamplerStat
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
         srvDesc.Format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-        srvDesc.Texture2DArray.MostDetailedMip = mLodOffset;
+        srvDesc.Texture2DArray.MostDetailedMip = mTopLevel;
         srvDesc.Texture2DArray.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
         srvDesc.Texture2DArray.FirstArraySlice = 0;
         srvDesc.Texture2DArray.ArraySize = mTextureDepth;
@@ -1579,7 +1580,7 @@ ID3D11Texture2D *TextureStorage11_2DArray::getSwizzleTexture()
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = mTextureWidth;
         desc.Height = mTextureHeight;
-        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mLodOffset) : 0);
+        desc.MipLevels = ((levelCount() > 0) ? (levelCount() + mTopLevel) : 0);
         desc.ArraySize = mTextureDepth;
         desc.Format = mSwizzleTextureFormat;
         desc.SampleDesc.Count = 1;

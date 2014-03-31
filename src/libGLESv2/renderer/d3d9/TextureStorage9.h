@@ -40,14 +40,14 @@ class TextureStorage9 : public TextureStorage
     virtual void generateMipmap(int level) {};
     virtual void generateMipmap(int face, int level) {};
 
-    virtual int getLodOffset() const;
+    virtual int getTopLevel() const;
     virtual bool isRenderTarget() const;
     virtual bool isManaged() const;
     virtual int getBaseLevel() const;
     virtual int getMaxLevel() const;
 
   protected:
-    int mLodOffset;
+    int mTopLevel;
     int mBaseLevel;
     Renderer9 *mRenderer;
 

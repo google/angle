@@ -41,7 +41,7 @@ class TextureStorage11 : public TextureStorage
     virtual void generateMipmap(int level) {};
     virtual void generateMipmap(int face, int level) {};
 
-    virtual int getLodOffset() const;
+    virtual int getTopLevel() const;
     virtual bool isRenderTarget() const;
     virtual bool isManaged() const;
     virtual int getBaseLevel() const;
@@ -71,7 +71,7 @@ class TextureStorage11 : public TextureStorage
     virtual unsigned int getTextureLevelDepth(int mipLevel) const = 0;
 
     Renderer11 *mRenderer;
-    int mLodOffset;
+    int mTopLevel;
     unsigned int mMipLevels;
     int mBaseLevel;
 

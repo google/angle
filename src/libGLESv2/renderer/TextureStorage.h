@@ -25,7 +25,7 @@ class TextureStorage
     TextureStorage() {};
     virtual ~TextureStorage() {};
 
-    virtual int getLodOffset() const = 0;
+    virtual int getTopLevel() const = 0;
     virtual bool isRenderTarget() const = 0;
     virtual bool isManaged() const = 0;
     virtual int getBaseLevel() const = 0;
@@ -54,7 +54,7 @@ class TextureStorageInterface
 
     unsigned int getTextureSerial() const;
 
-    virtual int getLodOffset() const;
+    virtual int getTopLevel() const;
     virtual bool isRenderTarget() const;
     virtual bool isManaged() const;
     virtual int getBaseLevel() const;

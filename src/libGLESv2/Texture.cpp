@@ -217,16 +217,16 @@ bool Texture::isSwizzled() const
            mSamplerState.swizzleAlpha != GL_ALPHA;
 }
 
-int Texture::getLodOffset()
+int Texture::getTopLevel()
 {
     rx::TextureStorageInterface *texture = getNativeTexture();
-    return texture ? texture->getLodOffset() : 0;
+    return texture ? texture->getTopLevel() : 0;
 }
 
 void Texture::getSamplerState(SamplerState *sampler)
 {
     *sampler = mSamplerState;
-    sampler->lodOffset = getLodOffset();
+    sampler->lodOffset = getTopLevel();
 }
 
 GLenum Texture::getUsage() const
