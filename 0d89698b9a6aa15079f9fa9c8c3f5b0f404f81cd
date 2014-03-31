@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99d653da_313ef0ec",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-03-31T23:31:44Z",
+      "side": 1,
+      "message": "I think the confusion arose here because mipLevels(), below, returns the number of the smallest mip level, with the largest starting at 0, rather than the actual number of mip levels (as would be returned by GetLevelCount()). The names of one or both of these functions is misleading.\n\nThat said, Nicolas\u0027s patches appear to reduce the usefulness of this function to determining if there is more than one level. Can the two of you coordinate on what\u0027s the proper way to solve the issue?",
+      "revId": "0d89698b9a6aa15079f9fa9c8c3f5b0f404f81cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
