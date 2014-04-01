@@ -22,12 +22,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "preprocessor", "preprocesso
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator", "translator.vcxproj", "{C15697F6-5057-016E-BD29-422971875679}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator_static", "translator_static.vcxproj", "{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}.Debug|Win32.Build.0 = Debug|Win32
+		{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}.Release|Win32.ActiveCfg = Release|Win32
+		{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}.Release|Win32.Build.0 = Release|Win32
 		{22DC02D5-1598-943C-13E1-82185B469F81}.Debug|Win32.ActiveCfg = Debug|Win32
 		{22DC02D5-1598-943C-13E1-82185B469F81}.Debug|Win32.Build.0 = Debug|Win32
 		{22DC02D5-1598-943C-13E1-82185B469F81}.Release|Win32.ActiveCfg = Release|Win32
