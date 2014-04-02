@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9ce6f4a_600b3af5",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-02T19:16:13Z",
+      "side": 1,
+      "message": "Unnecessary gl:: namespace uses in this file.",
+      "range": {
+        "startLine": 92,
+        "startChar": 24,
+        "endLine": 92,
+        "endChar": 28
+      },
+      "revId": "4716d965ad00765d3ee49a9242babeca67e22b70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9ce6f4a_c0dc6e35",
+        "filename": "src/libGLESv2/DynamicHLSL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-02T19:16:13Z",
+      "side": 1,
+      "message": "Unnecessary gl:: namespace uses in this file.",
+      "range": {
+        "startLine": 37,
+        "startChar": 45,
+        "endLine": 37,
+        "endChar": 49
+      },
+      "revId": "4716d965ad00765d3ee49a9242babeca67e22b70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9ce6f4a_a0dfe227",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-02T19:16:13Z",
+      "side": 1,
+      "message": "Unnecessary gl:: namespace uses in this file.",
+      "range": {
+        "startLine": 53,
+        "startChar": 48,
+        "endLine": 53,
+        "endChar": 52
+      },
+      "revId": "4716d965ad00765d3ee49a9242babeca67e22b70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ba379a_5e7cd595",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-02T19:16:13Z",
+      "side": 1,
+      "message": "Unnecessary gl:: namespace uses in this file.",
+      "range": {
+        "startLine": 186,
+        "startChar": 92,
+        "endLine": 186,
+        "endChar": 96
+      },
+      "revId": "4716d965ad00765d3ee49a9242babeca67e22b70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ba379a_be3dd1cc",
+        "filename": "src/libGLESv2/Shader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-02T19:16:13Z",
+      "side": 1,
+      "message": "Unnecessary gl:: namespace uses in this file.",
+      "range": {
+        "startLine": 118,
+        "startChar": 18,
+        "endLine": 118,
+        "endChar": 22
+      },
+      "revId": "4716d965ad00765d3ee49a9242babeca67e22b70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ba379a_fe43495e",
+        "filename": "src/libGLESv2/Shader.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-02T19:16:13Z",
+      "side": 1,
+      "message": "Unnecessary gl:: namespace uses in this file.",
+      "range": {
+        "startLine": 55,
+        "startChar": 22,
+        "endLine": 55,
+        "endChar": 26
+      },
+      "revId": "4716d965ad00765d3ee49a9242babeca67e22b70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ba379a_9e400d54",
+        "filename": "src/libGLESv2/Uniform.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-02T19:16:13Z",
+      "side": 1,
+      "message": "Unnecessary gl:: namespace uses in this file.",
+      "range": {
+        "startLine": 16,
+        "startChar": 57,
+        "endLine": 16,
+        "endChar": 61
+      },
+      "revId": "4716d965ad00765d3ee49a9242babeca67e22b70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9cb6b3b_b4f40669",
+        "filename": "src/libGLESv2/Uniform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-02T19:16:13Z",
+      "side": 1,
+      "message": "Unnecessary namespace.",
+      "range": {
+        "startLine": 44,
+        "startChar": 10,
+        "endLine": 44,
+        "endChar": 14
+      },
+      "revId": "4716d965ad00765d3ee49a9242babeca67e22b70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
