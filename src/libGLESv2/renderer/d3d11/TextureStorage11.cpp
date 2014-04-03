@@ -493,34 +493,60 @@ ID3D11ShaderResourceView *TextureStorage11_2D::getSRV(const gl::SamplerState &sa
 {
     bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
-    ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 
     if (swizzleRequired)
     {
         verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
-    if (!(*resultSRV))
+    if (!mSRV[swizzleRequired][mipmapping])
     {
-        ID3D11Device *device = mRenderer->getDevice();
-
-        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        srvDesc.Format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-        srvDesc.Texture2D.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
-        srvDesc.Texture2D.MostDetailedMip = mTopLevel;
-
-        ID3D11Texture2D *sourceTexture = swizzleRequired ? getSwizzleTexture() : mTexture;
-        HRESULT result = device->CreateShaderResourceView(sourceTexture, &srvDesc, resultSRV);
-
-        if (result == E_OUTOFMEMORY)
-        {
-            return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
-        }
-        ASSERT(SUCCEEDED(result));
+        int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;   // -1 creates all levels
+        DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
+        ID3D11Texture2D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
+        mSRV[swizzleRequired][mipmapping] = createSRV(0, mipLevels, format, texture);
     }
 
-    return *resultSRV;
+    return mSRV[swizzleRequired][mipmapping];
+}
+
+ID3D11ShaderResourceView *TextureStorage11_2D::getSRVLevel(int mipLevel)
+{
+    if (mipLevel >= 0 && mipLevel < getLevelCount())
+    {
+        if (!mLevelSRVs[mipLevel])
+        {
+            mLevelSRVs[mipLevel] = createSRV(mipLevel, 1, mShaderResourceFormat, mTexture);
+        }
+
+        return mLevelSRVs[mipLevel];
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+ID3D11ShaderResourceView *TextureStorage11_2D::createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture)
+{
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format = format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MostDetailedMip = mTopLevel + baseLevel;
+    srvDesc.Texture2D.MipLevels = mipLevels;
+
+    ID3D11ShaderResourceView *SRV = NULL;
+
+    ID3D11Device *device = mRenderer->getDevice();
+    HRESULT result = device->CreateShaderResourceView(texture, &srvDesc, &SRV);
+
+    if (result == E_OUTOFMEMORY)
+    {
+        gl::error(GL_OUT_OF_MEMORY);
+    }
+    ASSERT(SUCCEEDED(result));
+
+    return SRV;
 }
 
 void TextureStorage11_2D::generateMipmap(int level)
@@ -592,38 +618,6 @@ ID3D11RenderTargetView *TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel
         }
 
         return mSwizzleRenderTargets[mipLevel];
-    }
-    else
-    {
-        return NULL;
-    }
-}
-
-ID3D11ShaderResourceView *TextureStorage11_2D::getSRVLevel(int mipLevel)
-{
-    if (mipLevel >= 0 && mipLevel < getLevelCount())
-    {
-        if (!mLevelSRVs[mipLevel])
-        {
-            ID3D11Device *device = mRenderer->getDevice();
-            HRESULT result;
-
-            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-            srvDesc.Format = mShaderResourceFormat;
-            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-            srvDesc.Texture2D.MostDetailedMip = mTopLevel + mipLevel;
-            srvDesc.Texture2D.MipLevels = 1;
-
-            result = device->CreateShaderResourceView(mTexture, &srvDesc, &mLevelSRVs[mipLevel]);
-
-            if (result == E_OUTOFMEMORY)
-            {
-                return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
-            }
-            ASSERT(SUCCEEDED(result));
-        }
-
-        return mLevelSRVs[mipLevel];
     }
     else
     {
@@ -833,48 +827,76 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(const gl::SamplerState &
 {
     bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
-    ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 
     if (swizzleRequired)
     {
         verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
-    if (!(*resultSRV))
+    if (!mSRV[swizzleRequired][mipmapping])
     {
-        ID3D11Device *device = mRenderer->getDevice();
-
-        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        srvDesc.Format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-
         // Unnormalized integer cube maps are not supported by DX11; we emulate them as an array of six 2D textures
-        if (d3d11::GetComponentType(mTextureFormat) == GL_INT ||
-            d3d11::GetComponentType(mTextureFormat) == GL_UNSIGNED_INT)
-        {
-            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-            srvDesc.Texture2DArray.MostDetailedMip = mTopLevel;
-            srvDesc.Texture2DArray.MipLevels = 1;
-            srvDesc.Texture2DArray.FirstArraySlice = 0;
-            srvDesc.Texture2DArray.ArraySize = 6;
-        }
-        else
-        {
-            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-            srvDesc.TextureCube.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
-            srvDesc.TextureCube.MostDetailedMip = mTopLevel;
-        }
+        bool unnormalizedInteger = (d3d11::GetComponentType(mTextureFormat) == GL_INT ||
+                                    d3d11::GetComponentType(mTextureFormat) == GL_UNSIGNED_INT);
 
-        ID3D11Texture2D *sourceTexture = swizzleRequired ? getSwizzleTexture() : mTexture;
-        HRESULT result = device->CreateShaderResourceView(sourceTexture, &srvDesc, resultSRV);
-
-        if (result == E_OUTOFMEMORY)
-        {
-            return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
-        }
-        ASSERT(SUCCEEDED(result));
+        int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;   // -1 creates all levels
+        DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
+        ID3D11Texture2D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
+        mSRV[swizzleRequired][mipmapping] = createSRV(unnormalizedInteger, 0, mipLevels, format, texture);
     }
 
-    return *resultSRV;
+    return mSRV[swizzleRequired][mipmapping];
+}
+
+ID3D11ShaderResourceView *TextureStorage11_Cube::getSRVLevel(int mipLevel)
+{
+    if (mipLevel >= 0 && mipLevel < getLevelCount())
+    {
+        if (!mLevelSRVs[mipLevel])
+        {
+            mLevelSRVs[mipLevel] = createSRV(true, mipLevel, 1, mShaderResourceFormat, mTexture);
+        }
+
+        return mLevelSRVs[mipLevel];
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+ID3D11ShaderResourceView *TextureStorage11_Cube::createSRV(bool arraySRV, int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture)
+{
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format = format;
+
+    if (arraySRV)
+    {
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+        srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + baseLevel;
+        srvDesc.Texture2DArray.MipLevels = 1;
+        srvDesc.Texture2DArray.FirstArraySlice = 0;
+        srvDesc.Texture2DArray.ArraySize = 6;
+    }
+    else
+    {
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+        srvDesc.TextureCube.MipLevels = mipLevels;
+        srvDesc.TextureCube.MostDetailedMip = mTopLevel + baseLevel;
+    }
+
+    ID3D11ShaderResourceView *SRV = NULL;
+
+    ID3D11Device *device = mRenderer->getDevice();
+    HRESULT result = device->CreateShaderResourceView(texture, &srvDesc, &SRV);
+
+    if (result == E_OUTOFMEMORY)
+    {
+        gl::error(GL_OUT_OF_MEMORY);
+    }
+    ASSERT(SUCCEEDED(result));
+
+    return SRV;
 }
 
 void TextureStorage11_Cube::generateMipmap(int faceIndex, int level)
@@ -949,40 +971,6 @@ ID3D11RenderTargetView *TextureStorage11_Cube::getSwizzleRenderTarget(int mipLev
         }
 
         return mSwizzleRenderTargets[mipLevel];
-    }
-    else
-    {
-        return NULL;
-    }
-}
-
-ID3D11ShaderResourceView *TextureStorage11_Cube::getSRVLevel(int mipLevel)
-{
-    if (mipLevel >= 0 && mipLevel < getLevelCount())
-    {
-        if (!mLevelSRVs[mipLevel])
-        {
-            ID3D11Device *device = mRenderer->getDevice();
-            HRESULT result;
-
-            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-            srvDesc.Format = mShaderResourceFormat;
-            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-            srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + mipLevel;
-            srvDesc.Texture2DArray.MipLevels = 1;
-            srvDesc.Texture2DArray.FirstArraySlice = 0;
-            srvDesc.Texture2DArray.ArraySize = 6;
-
-            result = device->CreateShaderResourceView(mTexture, &srvDesc, &mLevelSRVs[mipLevel]);
-
-            if (result == E_OUTOFMEMORY)
-            {
-                return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
-            }
-            ASSERT(SUCCEEDED(result));
-        }
-
-        return mLevelSRVs[mipLevel];
     }
     else
     {
@@ -1104,34 +1092,60 @@ ID3D11ShaderResourceView *TextureStorage11_3D::getSRV(const gl::SamplerState &sa
 {
     bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
-    ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 
     if (swizzleRequired)
     {
         verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
-    if (!(*resultSRV))
+    if (!mSRV[swizzleRequired][mipmapping])
     {
-        ID3D11Device *device = mRenderer->getDevice();
-
-        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        srvDesc.Format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
-        srvDesc.Texture3D.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
-        srvDesc.Texture3D.MostDetailedMip = mTopLevel;
-
-        ID3D11Texture3D *sourceTexture = swizzleRequired ? getSwizzleTexture() : mTexture;
-        HRESULT result = device->CreateShaderResourceView(sourceTexture, &srvDesc, resultSRV);
-
-        if (result == E_OUTOFMEMORY)
-        {
-            return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
-        }
-        ASSERT(SUCCEEDED(result));
+        int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;   // -1 creates all levels
+        DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
+        ID3D11Texture3D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
+        mSRV[swizzleRequired][mipmapping] = createSRV(0, mipLevels, format, texture);
     }
 
-    return *resultSRV;
+    return mSRV[swizzleRequired][mipmapping];
+}
+
+ID3D11ShaderResourceView *TextureStorage11_3D::getSRVLevel(int mipLevel)
+{
+    if (mipLevel >= 0 && mipLevel < getLevelCount())
+    {
+        if (!mLevelSRVs[mipLevel])
+        {
+            mLevelSRVs[mipLevel] = createSRV(mipLevel, 1, mShaderResourceFormat, mTexture);
+        }
+
+        return mLevelSRVs[mipLevel];
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+ID3D11ShaderResourceView *TextureStorage11_3D::createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture)
+{
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format = format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
+    srvDesc.Texture3D.MostDetailedMip = baseLevel;
+    srvDesc.Texture3D.MipLevels = mipLevels;
+
+    ID3D11ShaderResourceView *SRV = NULL;
+
+    ID3D11Device *device = mRenderer->getDevice();
+    HRESULT result = device->CreateShaderResourceView(texture, &srvDesc, &SRV);
+
+    if (result == E_OUTOFMEMORY)
+    {
+        gl::error(GL_OUT_OF_MEMORY);
+    }
+    ASSERT(SUCCEEDED(result));
+
+    return SRV;
 }
 
 RenderTarget *TextureStorage11_3D::getRenderTarget(int mipLevel)
@@ -1315,38 +1329,6 @@ ID3D11RenderTargetView *TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel
     }
 }
 
-ID3D11ShaderResourceView *TextureStorage11_3D::getSRVLevel(int mipLevel)
-{
-    if (mipLevel >= 0 && mipLevel < getLevelCount())
-    {
-        if (!mLevelSRVs[mipLevel])
-        {
-            ID3D11Device *device = mRenderer->getDevice();
-            HRESULT result;
-
-            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-            srvDesc.Format = mShaderResourceFormat;
-            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
-            srvDesc.Texture3D.MostDetailedMip = mTopLevel + mipLevel;
-            srvDesc.Texture3D.MipLevels = 1;
-
-            result = device->CreateShaderResourceView(mTexture, &srvDesc, &mLevelSRVs[mipLevel]);
-
-            if (result == E_OUTOFMEMORY)
-            {
-                return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
-            }
-            ASSERT(SUCCEEDED(result));
-        }
-
-        return mLevelSRVs[mipLevel];
-    }
-    else
-    {
-        return NULL;
-    }
-}
-
 unsigned int TextureStorage11_3D::getTextureLevelDepth(int mipLevel) const
 {
     return std::max(mTextureDepth >> mipLevel, 1U);
@@ -1462,36 +1444,62 @@ ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRV(const gl::SamplerStat
 {
     bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
-    ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 
     if (swizzleRequired)
     {
         verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
-    if (!(*resultSRV))
+    if (!mSRV[swizzleRequired][mipmapping])
     {
-        ID3D11Device *device = mRenderer->getDevice();
-
-        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        srvDesc.Format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-        srvDesc.Texture2DArray.MostDetailedMip = mTopLevel;
-        srvDesc.Texture2DArray.MipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
-        srvDesc.Texture2DArray.FirstArraySlice = 0;
-        srvDesc.Texture2DArray.ArraySize = mTextureDepth;
-
-        ID3D11Texture2D *sourceTexture = swizzleRequired ? getSwizzleTexture() : mTexture;
-        HRESULT result = device->CreateShaderResourceView(sourceTexture, &srvDesc, resultSRV);
-
-        if (result == E_OUTOFMEMORY)
-        {
-            return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
-        }
-        ASSERT(SUCCEEDED(result));
+        int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;   // -1 creates all levels
+        DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
+        ID3D11Texture2D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
+        mSRV[swizzleRequired][mipmapping] = createSRV(0, mipLevels, format, texture);
     }
 
-    return *resultSRV;
+    return mSRV[swizzleRequired][mipmapping];
+}
+
+ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRVLevel(int mipLevel)
+{
+    if (mipLevel >= 0 && mipLevel < getLevelCount())
+    {
+        if (!mLevelSRVs[mipLevel])
+        {
+            mLevelSRVs[mipLevel] = createSRV(mipLevel, 1, mShaderResourceFormat, mTexture);
+        }
+
+        return mLevelSRVs[mipLevel];
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+ID3D11ShaderResourceView *TextureStorage11_2DArray::createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture)
+{
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format = format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+    srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + baseLevel;
+    srvDesc.Texture2DArray.MipLevels = mipLevels;
+    srvDesc.Texture2DArray.FirstArraySlice = 0;
+    srvDesc.Texture2DArray.ArraySize = mTextureDepth;
+
+    ID3D11ShaderResourceView *SRV = NULL;
+
+    ID3D11Device *device = mRenderer->getDevice();
+    HRESULT result = device->CreateShaderResourceView(texture, &srvDesc, &SRV);
+
+    if (result == E_OUTOFMEMORY)
+    {
+        gl::error(GL_OUT_OF_MEMORY);
+    }
+    ASSERT(SUCCEEDED(result));
+
+    return SRV;
 }
 
 RenderTarget *TextureStorage11_2DArray::getRenderTargetLayer(int mipLevel, int layer)
@@ -1635,40 +1643,6 @@ ID3D11RenderTargetView *TextureStorage11_2DArray::getSwizzleRenderTarget(int mip
         }
 
         return mSwizzleRenderTargets[mipLevel];
-    }
-    else
-    {
-        return NULL;
-    }
-}
-
-ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRVLevel(int mipLevel)
-{
-    if (mipLevel >= 0 && mipLevel < getLevelCount())
-    {
-        if (!mLevelSRVs[mipLevel])
-        {
-            ID3D11Device *device = mRenderer->getDevice();
-            HRESULT result;
-
-            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-            srvDesc.Format = mShaderResourceFormat;
-            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-            srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + mipLevel;
-            srvDesc.Texture2DArray.MipLevels = 1;
-            srvDesc.Texture2DArray.FirstArraySlice = 0;
-            srvDesc.Texture2DArray.ArraySize = mTextureDepth;
-
-            result = device->CreateShaderResourceView(mTexture, &srvDesc, &mLevelSRVs[mipLevel]);
-
-            if (result == E_OUTOFMEMORY)
-            {
-                return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
-            }
-            ASSERT(SUCCEEDED(result));
-        }
-
-        return mLevelSRVs[mipLevel];
     }
     else
     {
