@@ -134,7 +134,7 @@ int TextureStorage11::getLevelDepth(int mipLevel) const
 UINT TextureStorage11::getSubresourceIndex(int mipLevel, int layerTarget) const
 {
     UINT index = 0;
-    if (getBaseTexture())
+    if (getResource())
     {
         index = D3D11CalcSubresource(mipLevel, layerTarget, mMipLevels);
     }
@@ -205,7 +205,7 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsign
                         copyArea.height == texSize.height &&
                         copyArea.depth  == texSize.depth;
 
-        ID3D11Resource *dstTexture = getBaseTexture();
+        ID3D11Resource *dstTexture = getResource();
         unsigned int dstSubresource = getSubresourceIndex(level + mTopLevel, layerTarget);
 
         ASSERT(dstTexture);
@@ -410,7 +410,7 @@ TextureStorage11_2D *TextureStorage11_2D::makeTextureStorage11_2D(TextureStorage
     return static_cast<TextureStorage11_2D*>(storage);
 }
 
-ID3D11Resource *TextureStorage11_2D::getBaseTexture() const
+ID3D11Resource *TextureStorage11_2D::getResource() const
 {
     return mTexture;
 }
@@ -491,8 +491,7 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
 
 ID3D11ShaderResourceView *TextureStorage11_2D::getSRV(const gl::SamplerState &samplerState)
 {
-    bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
-                           samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
+    bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
     ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 
@@ -733,7 +732,7 @@ TextureStorage11_Cube *TextureStorage11_Cube::makeTextureStorage11_Cube(TextureS
     return static_cast<TextureStorage11_Cube*>(storage);
 }
 
-ID3D11Resource *TextureStorage11_Cube::getBaseTexture() const
+ID3D11Resource *TextureStorage11_Cube::getResource() const
 {
     return mTexture;
 }
@@ -832,8 +831,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
 
 ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(const gl::SamplerState &samplerState)
 {
-    bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
-                           samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
+    bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
     ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 
@@ -1097,15 +1095,14 @@ TextureStorage11_3D *TextureStorage11_3D::makeTextureStorage11_3D(TextureStorage
     return static_cast<TextureStorage11_3D*>(storage);
 }
 
-ID3D11Resource *TextureStorage11_3D::getBaseTexture() const
+ID3D11Resource *TextureStorage11_3D::getResource() const
 {
     return mTexture;
 }
 
 ID3D11ShaderResourceView *TextureStorage11_3D::getSRV(const gl::SamplerState &samplerState)
 {
-    bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
-                           samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
+    bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
     ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 
@@ -1456,15 +1453,14 @@ TextureStorage11_2DArray *TextureStorage11_2DArray::makeTextureStorage11_2DArray
     return static_cast<TextureStorage11_2DArray*>(storage);
 }
 
-ID3D11Resource *TextureStorage11_2DArray::getBaseTexture() const
+ID3D11Resource *TextureStorage11_2DArray::getResource() const
 {
     return mTexture;
 }
 
 ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRV(const gl::SamplerState &samplerState)
 {
-    bool swizzleRequired = samplerState.swizzleRed != GL_RED || samplerState.swizzleGreen != GL_GREEN ||
-                           samplerState.swizzleBlue != GL_BLUE || samplerState.swizzleAlpha != GL_ALPHA;
+    bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
     ID3D11ShaderResourceView **resultSRV = &mSRV[swizzleRequired][mipmapping];
 

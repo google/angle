@@ -14,6 +14,12 @@
 namespace gl
 {
 
+bool SamplerState::swizzleRequired() const
+{
+    return swizzleRed != GL_RED || swizzleGreen != GL_GREEN ||
+           swizzleBlue != GL_BLUE || swizzleAlpha != GL_ALPHA;
+}
+
 static void MinMax(int a, int b, int *minimum, int *maximum)
 {
     if (a < b)

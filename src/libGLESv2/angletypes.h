@@ -162,6 +162,8 @@ struct SamplerState
     GLenum swizzleGreen;
     GLenum swizzleBlue;
     GLenum swizzleAlpha;
+
+    bool swizzleRequired() const;
 };
 
 struct ClearParameters

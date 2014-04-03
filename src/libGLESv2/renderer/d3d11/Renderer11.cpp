@@ -2576,7 +2576,7 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStor
         TextureStorage11_2D *source11 = TextureStorage11_2D::makeTextureStorage11_2D(source->getStorageInstance());
         TextureStorage11_2D *dest11 = TextureStorage11_2D::makeTextureStorage11_2D(dest->getStorageInstance());
 
-        mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+        mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
         dest11->invalidateSwizzleCache();
 
@@ -2593,7 +2593,7 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureSt
         TextureStorage11_Cube *source11 = TextureStorage11_Cube::makeTextureStorage11_Cube(source->getStorageInstance());
         TextureStorage11_Cube *dest11 = TextureStorage11_Cube::makeTextureStorage11_Cube(dest->getStorageInstance());
 
-        mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+        mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
         dest11->invalidateSwizzleCache();
 
@@ -2610,7 +2610,7 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterface3D *dest, TextureStor
         TextureStorage11_3D *source11 = TextureStorage11_3D::makeTextureStorage11_3D(source->getStorageInstance());
         TextureStorage11_3D *dest11 = TextureStorage11_3D::makeTextureStorage11_3D(dest->getStorageInstance());
 
-        mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+        mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
         dest11->invalidateSwizzleCache();
 
@@ -2627,7 +2627,7 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterface2DArray *dest, Textur
         TextureStorage11_2DArray *source11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(source->getStorageInstance());
         TextureStorage11_2DArray *dest11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(dest->getStorageInstance());
 
-        mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+        mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
         dest11->invalidateSwizzleCache();
 
