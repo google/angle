@@ -91,6 +91,30 @@
       "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9966f57_0c9d1756",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-04T18:41:21Z",
+      "side": 1,
+      "message": "actually, cancel the above -- i see it\u0027s fixed in Idd13aea4b4074aabbc4c183a3814.",
+      "parentUuid": "f9966f57_4c055fde",
+      "range": {
+        "startLine": 861,
+        "startChar": 43,
+        "endLine": 861,
+        "endChar": 48
+      },
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
