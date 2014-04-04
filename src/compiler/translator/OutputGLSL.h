@@ -21,7 +21,6 @@ public:
 protected:
     virtual bool writeVariablePrecision(TPrecision);
     virtual void visitSymbol(TIntermSymbol* node);
-    virtual TString translateTextureFunction(TString& name);
 };
 
 #endif  // CROSSCOMPILERGLSL_OUTPUTGLSL_H_

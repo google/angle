@@ -50,8 +50,6 @@ protected:
     TString hashVariableName(const TString& name);
     // Same as hashName(), but without hashing built-in functions.
     TString hashFunctionName(const TString& mangled_name);
-    // Used to translate function names for differences between ESSL and GLSL
-    virtual TString translateTextureFunction(TString& name) { return name; }
 
 private:
     bool structDeclared(const TStructure* structure) const;
