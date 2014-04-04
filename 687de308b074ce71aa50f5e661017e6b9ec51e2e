@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "398d6745_8ed57b0d",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-04T18:27:01Z",
+      "side": 1,
+      "message": "I find the sentinel value 0 being converted to another sentinel value -1 a bit confusing -- can you clear this up with a comment, enum or extra parameter?",
+      "range": {
+        "startLine": 505,
+        "startChar": 38,
+        "endLine": 505,
+        "endChar": 72
+      },
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "398d6745_6e0a0fef",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-04T18:27:01Z",
+      "side": 1,
+      "message": "suggestion: this function should return the SRV, instead of passing the pointer-to-pointer out argument",
+      "range": {
+        "startLine": 531,
+        "startChar": 0,
+        "endLine": 531,
+        "endChar": 4
+      },
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "198a632f_edc28521",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-04T18:27:01Z",
+      "side": 1,
+      "message": "see above, this gl::error even expects to be returning NULL",
+      "range": {
+        "startLine": 544,
+        "startChar": 8,
+        "endLine": 544,
+        "endChar": 82
+      },
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9966f57_4c055fde",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-04T18:27:01Z",
+      "side": 1,
+      "message": "this is a bit pedantic (sorry) but the id \u0027array\u0027 is the same as a std container class (similar to vector) -- can you name it \u00272darray\u0027 \u0027isarray\u0027 or something akin to that",
+      "range": {
+        "startLine": 861,
+        "startChar": 43,
+        "endLine": 861,
+        "endChar": 48
+      },
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
