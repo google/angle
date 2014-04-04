@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "198a632f_ade15db5",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-04T18:38:28Z",
+      "side": 1,
+      "message": "very very nitty, but missing one whitespace character here",
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9966f57_0cb437d6",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-04T18:38:28Z",
+      "side": 1,
+      "message": "trailing whitespace -- there\u0027s a few places in the patch where it popped in, can you remove it all?",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 16
+      },
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9966f57_4cbe3fb6",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-04T18:38:28Z",
+      "side": 1,
+      "message": "we traditionally use std::pair for pairs (with optional typedef)",
+      "range": {
+        "startLine": 113,
+        "startChar": 11,
+        "endLine": 113,
+        "endChar": 18
+      },
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
