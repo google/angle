@@ -790,7 +790,10 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum pname, GLint param)
 
       case GL_TEXTURE_BASE_LEVEL:
       case GL_TEXTURE_MAX_LEVEL:
-        UNIMPLEMENTED();
+        if (param < 0)
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
         return true;
 
       default:

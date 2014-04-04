@@ -153,7 +153,11 @@ struct SamplerState
     GLenum wrapT;
     GLenum wrapR;
     float maxAnisotropy;
-    int lodOffset;
+
+    GLint baseLevel;
+    GLint maxLevel;
+    GLfloat minLod;
+    GLfloat maxLod;
 
     GLenum compareMode;
     GLenum compareFunc;

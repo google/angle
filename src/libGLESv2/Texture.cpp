@@ -59,7 +59,10 @@ Texture::Texture(rx::Renderer *renderer, GLuint id, GLenum target) : RefCountObj
     mSamplerState.wrapT = GL_REPEAT;
     mSamplerState.wrapR = GL_REPEAT;
     mSamplerState.maxAnisotropy = 1.0f;
-    mSamplerState.lodOffset = 0;
+    mSamplerState.baseLevel = 0;
+    mSamplerState.maxLevel = 1000;
+    mSamplerState.minLod = -1000.0f;
+    mSamplerState.maxLod = 1000.0f;
     mSamplerState.compareMode = GL_NONE;
     mSamplerState.compareFunc = GL_LEQUAL;
     mSamplerState.swizzleRed = GL_RED;
@@ -154,6 +157,26 @@ void Texture::setSwizzleAlpha(GLenum swizzle)
     mSamplerState.swizzleAlpha = swizzle;
 }
 
+void Texture::setBaseLevel(GLint baseLevel)
+{
+    mSamplerState.baseLevel = baseLevel;
+}
+
+void Texture::setMaxLevel(GLint maxLevel)
+{
+    mSamplerState.maxLevel = maxLevel;
+}
+
+void Texture::setMinLod(GLfloat minLod)
+{
+    mSamplerState.minLod = minLod;
+}
+
+void Texture::setMaxLod(GLfloat maxLod)
+{
+    mSamplerState.maxLod = maxLod;
+}
+
 void Texture::setUsage(GLenum usage)
 {
     mUsage = usage;
@@ -209,6 +232,26 @@ GLenum Texture::getSwizzleAlpha() const
     return mSamplerState.swizzleAlpha;
 }
 
+GLint Texture::getBaseLevel() const
+{
+    return mSamplerState.baseLevel;
+}
+
+GLint Texture::getMaxLevel() const
+{
+    return mSamplerState.maxLevel;
+}
+
+GLfloat Texture::getMinLod() const
+{
+    return mSamplerState.minLod;
+}
+
+GLfloat Texture::getMaxLod() const
+{
+    return mSamplerState.maxLod;
+}
+
 bool Texture::isSwizzled() const
 {
     return mSamplerState.swizzleRed   != GL_RED   ||
@@ -217,16 +260,14 @@ bool Texture::isSwizzled() const
            mSamplerState.swizzleAlpha != GL_ALPHA;
 }
 
-int Texture::getTopLevel()
-{
-    rx::TextureStorageInterface *texture = getNativeTexture();
-    return texture ? texture->getTopLevel() : 0;
-}
-
 void Texture::getSamplerState(SamplerState *sampler)
 {
     *sampler = mSamplerState;
-    sampler->lodOffset = getTopLevel();
+
+    // Offset the effective base level by the texture storage's top level
+    rx::TextureStorageInterface *texture = getNativeTexture();
+    int topLevel = texture ? texture->getTopLevel() : 0;
+    sampler->baseLevel = topLevel + mSamplerState.baseLevel;
 }
 
 GLenum Texture::getUsage() const

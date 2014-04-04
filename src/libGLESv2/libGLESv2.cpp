@@ -3546,6 +3546,34 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
                 }
                 *params = (GLfloat)texture->getSwizzleAlpha();
                 break;
+              case GL_TEXTURE_BASE_LEVEL:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = (GLfloat)texture->getBaseLevel();
+                break;
+              case GL_TEXTURE_MAX_LEVEL:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = (GLfloat)texture->getMaxLevel();
+                break;
+              case GL_TEXTURE_MIN_LOD:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = texture->getMinLod();
+                break;
+              case GL_TEXTURE_MAX_LOD:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = texture->getMaxLod();
+                break;
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -3644,7 +3672,34 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 }
                 *params = texture->getSwizzleAlpha();
                 break;
-
+              case GL_TEXTURE_BASE_LEVEL:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = texture->getBaseLevel();
+                break;
+              case GL_TEXTURE_MAX_LEVEL:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = texture->getMaxLevel();
+                break;
+              case GL_TEXTURE_MIN_LOD:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = (GLint)texture->getMinLod();
+                break;
+              case GL_TEXTURE_MAX_LOD:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = (GLint)texture->getMaxLod();
+                break;
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -4963,21 +5018,17 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
               case GL_TEXTURE_MIN_FILTER:           texture->setMinFilter(gl::uiround<GLenum>(param));   break;
               case GL_TEXTURE_MAG_FILTER:           texture->setMagFilter(gl::uiround<GLenum>(param));   break;
               case GL_TEXTURE_USAGE_ANGLE:          texture->setUsage(gl::uiround<GLenum>(param));       break;
-              case GL_TEXTURE_MAX_ANISOTROPY_EXT:   texture->setMaxAnisotropy(static_cast<GLfloat>(param), context->getTextureMaxAnisotropy()); break;
+              case GL_TEXTURE_MAX_ANISOTROPY_EXT:   texture->setMaxAnisotropy(param, context->getTextureMaxAnisotropy()); break;
               case GL_TEXTURE_COMPARE_MODE:         texture->setCompareMode(gl::uiround<GLenum>(param)); break;
               case GL_TEXTURE_COMPARE_FUNC:         texture->setCompareFunc(gl::uiround<GLenum>(param)); break;
               case GL_TEXTURE_SWIZZLE_R:            texture->setSwizzleRed(gl::uiround<GLenum>(param));   break;
               case GL_TEXTURE_SWIZZLE_G:            texture->setSwizzleGreen(gl::uiround<GLenum>(param)); break;
               case GL_TEXTURE_SWIZZLE_B:            texture->setSwizzleBlue(gl::uiround<GLenum>(param));  break;
               case GL_TEXTURE_SWIZZLE_A:            texture->setSwizzleAlpha(gl::uiround<GLenum>(param)); break;
-
-              case GL_TEXTURE_BASE_LEVEL:
-              case GL_TEXTURE_MAX_LEVEL:
-              case GL_TEXTURE_MIN_LOD:
-              case GL_TEXTURE_MAX_LOD:
-                UNIMPLEMENTED();
-                break;
-
+              case GL_TEXTURE_BASE_LEVEL:           texture->setBaseLevel(gl::iround<GLint>(param));      break;
+              case GL_TEXTURE_MAX_LEVEL:            texture->setMaxLevel(gl::iround<GLint>(param));       break;
+              case GL_TEXTURE_MIN_LOD:              texture->setMinLod(param);                            break;
+              case GL_TEXTURE_MAX_LOD:              texture->setMaxLod(param);                            break;
               default: UNREACHABLE(); break;
             }
         }
@@ -5030,14 +5081,10 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
               case GL_TEXTURE_SWIZZLE_G:            texture->setSwizzleGreen((GLenum)param); break;
               case GL_TEXTURE_SWIZZLE_B:            texture->setSwizzleBlue((GLenum)param);  break;
               case GL_TEXTURE_SWIZZLE_A:            texture->setSwizzleAlpha((GLenum)param); break;
-
-              case GL_TEXTURE_BASE_LEVEL:
-              case GL_TEXTURE_MAX_LEVEL:
-              case GL_TEXTURE_MIN_LOD:
-              case GL_TEXTURE_MAX_LOD:
-                UNIMPLEMENTED();
-                break;
-
+              case GL_TEXTURE_BASE_LEVEL:           texture->setBaseLevel(param);            break;
+              case GL_TEXTURE_MAX_LEVEL:            texture->setMaxLevel(param);             break;
+              case GL_TEXTURE_MIN_LOD:              texture->setMinLod((GLfloat)param);      break;
+              case GL_TEXTURE_MAX_LOD:              texture->setMaxLod((GLfloat)param);      break;
               default: UNREACHABLE(); break;
             }
         }

@@ -30,13 +30,15 @@ Sampler::Sampler(GLuint id)
 
 void Sampler::getState(SamplerState *samplerState) const
 {
-    samplerState->minFilter = mMinFilter;
-    samplerState->magFilter = mMagFilter;
-    samplerState->wrapS     = mWrapS;
-    samplerState->wrapT     = mWrapT;
-    samplerState->wrapR     = mWrapR;
-
-    // TODO: comparison mode/func, min/max LOD
+    samplerState->minFilter   = mMinFilter;
+    samplerState->magFilter   = mMagFilter;
+    samplerState->wrapS       = mWrapS;
+    samplerState->wrapT       = mWrapT;
+    samplerState->wrapR       = mWrapR;
+    samplerState->minLod      = mMinLod;
+    samplerState->maxLod      = mMaxLod;
+    samplerState->compareMode = mComparisonMode;
+    samplerState->compareFunc = mComparisonFunc;
 }
 
 }

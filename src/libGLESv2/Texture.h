@@ -83,6 +83,10 @@ class Texture : public RefCountObject
     void setSwizzleGreen(GLenum swizzle);
     void setSwizzleBlue(GLenum swizzle);
     void setSwizzleAlpha(GLenum swizzle);
+    void setBaseLevel(GLint baseLevel);
+    void setMaxLevel(GLint maxLevel);
+    void setMinLod(GLfloat minLod);
+    void setMaxLod(GLfloat maxLod);
     void setUsage(GLenum usage);
 
     GLenum getMinFilter() const;
@@ -95,8 +99,11 @@ class Texture : public RefCountObject
     GLenum getSwizzleGreen() const;
     GLenum getSwizzleBlue() const;
     GLenum getSwizzleAlpha() const;
+    GLint getBaseLevel() const;
+    GLint getMaxLevel() const;
+    GLfloat getMinLod() const;
+    GLfloat getMaxLod() const;
     bool isSwizzled() const;
-    int getTopLevel();
     void getSamplerState(SamplerState *sampler);
     GLenum getUsage() const;
 
