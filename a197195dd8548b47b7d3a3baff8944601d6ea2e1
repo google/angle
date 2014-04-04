@@ -16,6 +16,24 @@
       "revId": "a197195dd8548b47b7d3a3baff8944601d6ea2e1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "398d6745_8e4c9b61",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3279,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-04T18:10:25Z",
+      "side": 1,
+      "message": "Done (gl::clamp) and fixed the over-negative area... I think it helped significantly. if you\u0027d still like it split more into more sub-variables (x1, etc) let me know.",
+      "parentUuid": "3929e785_31b24aca",
+      "revId": "a197195dd8548b47b7d3a3baff8944601d6ea2e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
