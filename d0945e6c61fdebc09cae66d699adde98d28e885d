@@ -22,6 +22,23 @@
       "revId": "d0945e6c61fdebc09cae66d699adde98d28e885d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "999e536b_d72714c6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-04T21:03:26Z",
+      "side": 1,
+      "message": "Eh, I actually kind of prefer the \"why this change is being made\" rather than \"what specific thing got changed\" as the first line of the commit message. But an elaboration would certainly work for me.",
+      "revId": "d0945e6c61fdebc09cae66d699adde98d28e885d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
