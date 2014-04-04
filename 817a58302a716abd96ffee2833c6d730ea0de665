@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9be0bc6_39a3e751",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3336,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-04T20:43:23Z",
+      "side": 1,
+      "message": "Could this first argument just be \"area.width + std::min(area.x, 0)\"? negativeX is a bit confusing-- it\u0027s area.x negated, but it\u0027s also always zero or positive. I think it would be clearer just to put the min(x, 0) inline. This is definitely much clearer than previously, though!",
+      "revId": "817a58302a716abd96ffee2833c6d730ea0de665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
