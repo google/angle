@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "b9995785_d8d1050e",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-04T20:59:50Z",
+      "side": 1,
+      "message": "I wouldn\u0027t mind a comment about the D3D automatic mip chain creation sentinel either. (And it\u0027s probably my bad that it wasn\u0027t already here.)",
+      "parentUuid": "398d6745_8ed57b0d",
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "398d6745_6e0a0fef",
         "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
         "patchSetId": 1
@@ -112,6 +130,41 @@
         "endLine": 861,
         "endChar": 48
       },
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9995785_f8cec96c",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-04T20:59:50Z",
+      "side": 1,
+      "message": "I\u0027d still prefer it to get fixed in this patch. *pedant hat*",
+      "parentUuid": "f9966f57_0c9d1756",
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9be0bc6_d9fd931d",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1430,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-04T20:59:50Z",
+      "side": 1,
+      "message": "We do this check a couple of times-- would this be a good case for a helper func? It\u0027s a small scrap of code, but ternaries are easy to fiddle wrong.",
       "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
