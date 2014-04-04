@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9995785_b8e8c11f",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-04T20:23:31Z",
+      "side": 1,
+      "message": "The top level/base level/max level distinction is especially fuzzy here. Could you please comment here (and possibly other places the various variables are used) to remind readers which item is which?",
+      "revId": "6e3c50c18ea31a891de169d489ee8d61f667255c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
