@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "198a632f_6d0935c0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-04T18:44:53Z",
+      "side": 1,
+      "message": "the comment is a bit confusing. maybe \u0027Eliminate array cube map SRV parameter.\u0027 with more description after a line break.",
+      "range": {
+        "startLine": 7,
+        "startChar": 22,
+        "endLine": 7,
+        "endChar": 53
+      },
+      "revId": "d0945e6c61fdebc09cae66d699adde98d28e885d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
