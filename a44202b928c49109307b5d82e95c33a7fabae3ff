@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "398d6745_915f5eaa",
+        "filename": "src/angle.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-07T18:39:48Z",
+      "side": 1,
+      "message": "We need it for copy_compiler_dll to use the windows_sdk_path variable.  Removed it for the others.",
+      "parentUuid": "dcb1990e_4a433484",
+      "revId": "a44202b928c49109307b5d82e95c33a7fabae3ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c08adab_71996aee",
         "filename": "tests/tests.gyp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-18T20:18:45Z",
       "side": 1,
       "message": "Same here, do you need the includes here?",
+      "revId": "a44202b928c49109307b5d82e95c33a7fabae3ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9966f57_af1955d6",
+        "filename": "tests/tests.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-07T18:39:48Z",
+      "side": 1,
+      "message": "We need the include here to remove some warnings that cause the build to fail.",
+      "parentUuid": "7c08adab_71996aee",
       "revId": "a44202b928c49109307b5d82e95c33a7fabae3ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false

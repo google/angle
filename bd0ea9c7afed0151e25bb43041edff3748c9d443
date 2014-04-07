@@ -16,6 +16,24 @@
       "revId": "bd0ea9c7afed0151e25bb43041edff3748c9d443",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "198a632f_d3464c3f",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-07T18:39:48Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "dcb1990e_aaa3d819",
+      "revId": "bd0ea9c7afed0151e25bb43041edff3748c9d443",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
