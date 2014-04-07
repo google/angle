@@ -1896,9 +1896,6 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
         stencilUnmasked = (0x1 << stencilSize) - 1;
     }
 
-    bool alphaUnmasked = gl::GetAlphaBits(mRenderTargetDesc.format, getCurrentClientVersion()) == 0 ||
-                         clearParams.colorMaskAlpha;
-
     const bool needMaskedStencilClear = clearParams.clearStencil &&
                                         (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
 

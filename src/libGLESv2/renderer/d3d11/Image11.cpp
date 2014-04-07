@@ -280,6 +280,11 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y
         // This format requires conversion, so we must copy the texture to staging and manually convert via readPixels
         D3D11_MAPPED_SUBRESOURCE mappedImage;
         HRESULT result = map(D3D11_MAP_WRITE, &mappedImage);
+        if (FAILED(result))
+        {
+            ERR("Failed to map texture for Image11::copy, HRESULT: 0x%X.", result);
+            return;
+        }
 
         // determine the offset coordinate into the destination buffer
         GLuint clientVersion = mRenderer->getCurrentClientVersion();

@@ -102,7 +102,6 @@ void Std140BlockEncoder::getBlockLayoutInfo(GLenum type, unsigned int arraySize,
     // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
     ASSERT(gl::UniformComponentSize(gl::UniformComponentType(type)) == BytesPerComponent);
 
-    int numComponents = gl::UniformComponentCount(type);
     size_t baseAlignment = 0;
     int matrixStride = 0;
     int arrayStride = 0;

@@ -1416,8 +1416,6 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     stream.write(mVertexHLSL);
     stream.write(mVertexWorkarounds);
 
-    UINT vertexShadersTotalSize = 0;
-
     stream.write(mVertexExecutables.size());
     for (size_t vertexExecutableIndex = 0; vertexExecutableIndex < mVertexExecutables.size(); vertexExecutableIndex++)
     {

@@ -2547,9 +2547,7 @@ void Context::generateSwizzles(ProgramBinary *programBinary)
 void Context::generateSwizzles(ProgramBinary *programBinary, SamplerType type)
 {
     // Range of Direct3D samplers of given sampler type
-    int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : mRenderer->getMaxVertexTextureImageUnits();
     int samplerRange = programBinary->getUsedSamplerRange(type);
-
     for (int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
         Texture *texture = NULL;

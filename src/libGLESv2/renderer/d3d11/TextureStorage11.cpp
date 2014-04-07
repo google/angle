@@ -585,6 +585,11 @@ ID3D11RenderTargetView *TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel
             rtvDesc.Texture2D.MipSlice = mTopLevel + mipLevel;
 
             HRESULT result = device->CreateRenderTargetView(mSwizzleTexture, &rtvDesc, &mSwizzleRenderTargets[mipLevel]);
+            if (result == E_OUTOFMEMORY)
+            {
+                return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11RenderTargetView*>(NULL));
+            }
+            ASSERT(SUCCEEDED(result));
         }
 
         return mSwizzleRenderTargets[mipLevel];
@@ -937,6 +942,12 @@ ID3D11RenderTargetView *TextureStorage11_Cube::getSwizzleRenderTarget(int mipLev
             rtvDesc.Texture2DArray.ArraySize = 6;
 
             HRESULT result = device->CreateRenderTargetView(mSwizzleTexture, &rtvDesc, &mSwizzleRenderTargets[mipLevel]);
+
+            if (result == E_OUTOFMEMORY)
+            {
+                return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11RenderTargetView*>(NULL));
+            }
+            ASSERT(SUCCEEDED(result));
         }
 
         return mSwizzleRenderTargets[mipLevel];
@@ -1291,6 +1302,12 @@ ID3D11RenderTargetView *TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel
             rtvDesc.Texture3D.WSize = -1;
 
             HRESULT result = device->CreateRenderTargetView(mSwizzleTexture, &rtvDesc, &mSwizzleRenderTargets[mipLevel]);
+
+            if (result == E_OUTOFMEMORY)
+            {
+                return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11RenderTargetView*>(NULL));
+            }
+            ASSERT(SUCCEEDED(result));
         }
 
         return mSwizzleRenderTargets[mipLevel];
@@ -1613,6 +1630,12 @@ ID3D11RenderTargetView *TextureStorage11_2DArray::getSwizzleRenderTarget(int mip
             rtvDesc.Texture2DArray.ArraySize = mTextureDepth;
 
             HRESULT result = device->CreateRenderTargetView(mSwizzleTexture, &rtvDesc, &mSwizzleRenderTargets[mipLevel]);
+
+            if (result == E_OUTOFMEMORY)
+            {
+                return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11RenderTargetView*>(NULL));
+            }
+            ASSERT(SUCCEEDED(result));
         }
 
         return mSwizzleRenderTargets[mipLevel];

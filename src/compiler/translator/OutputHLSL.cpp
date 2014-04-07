@@ -3534,10 +3534,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
                                      structureString(*structure, true, false) +
                                      "#pragma pack_matrix(column_major)\n";
 
-            const TString &std140Prefix = "std";
             TString std140String = structureString(*structure, false, true);
-
-            const TString &std140RowMajorPrefix = "std_rm";
             TString std140RowMajorString = "#pragma pack_matrix(row_major)\n" +
                                            structureString(*structure, true, true) +
                                            "#pragma pack_matrix(column_major)\n";
@@ -3889,7 +3886,6 @@ Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &name,
 
     if (!structure)
     {
-        const bool isRowMajorMatrix = (type.isMatrix() && type.getLayoutQualifier().matrixPacking == EmpRowMajor);
         Uniform uniform(glVariableType(type), glVariablePrecision(type), name.c_str(),
                         (unsigned int)type.getArraySize(), (unsigned int)registerIndex, 0);
         output.push_back(uniform);

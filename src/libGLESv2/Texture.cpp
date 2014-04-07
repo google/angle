@@ -1363,8 +1363,6 @@ void TextureCubeMap::setCompleteTexStorage(rx::TextureStorageInterfaceCube *newC
 
     if (mTexStorage && mTexStorage->isManaged())
     {
-        int levels = mTexStorage->getLevelCount();
-
         for (int faceIndex = 0; faceIndex < 6; faceIndex++)
         {
             for (int level = 0; level < mTexStorage->getLevelCount(); level++)

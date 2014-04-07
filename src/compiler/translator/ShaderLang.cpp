@@ -215,6 +215,7 @@ void ShGetInfo(const ShHandle handle, ShShaderInfo pname, size_t* params)
             // 64 bits hashing output requires 16 bytes for hex 
             // representation.
             const char HashedNamePrefix[] = HASHED_NAME_PREFIX;
+            (void)HashedNamePrefix;
             *params = 16 + sizeof(HashedNamePrefix);
         }
         break;

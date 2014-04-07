@@ -688,10 +688,6 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
 
 bool Renderer11::setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[])
 {
-    // convert buffers to ID3D11Buffer*
-    ID3D11Buffer *vertexConstantBuffers[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS] = { NULL };
-    ID3D11Buffer *pixelConstantBuffers[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS] = { NULL };
-
     for (unsigned int uniformBufferIndex = 0; uniformBufferIndex < gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS; uniformBufferIndex++)
     {
         const gl::Buffer *uniformBuffer = vertexUniformBuffers[uniformBufferIndex];
@@ -733,8 +729,6 @@ bool Renderer11::setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], con
                                                      1, &constantBuffer);
                 mCurrentConstantBufferPS[uniformBufferIndex] = bufferStorage->getSerial();
             }
-
-            pixelConstantBuffers[uniformBufferIndex] = constantBuffer;
         }
     }
 
@@ -2962,12 +2956,12 @@ ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length
                 for (size_t i = 0; i < transformFeedbackVaryings.size(); i++)
                 {
                     const gl::LinkedVarying &varying = transformFeedbackVaryings[i];
-                    for (size_t j = 0; j < transformFeedbackVaryings[i].semanticIndexCount; j++)
+                    for (size_t j = 0; j < varying.semanticIndexCount; j++)
                     {
                         D3D11_SO_DECLARATION_ENTRY entry = { 0 };
                         entry.Stream = 0;
-                        entry.SemanticName = transformFeedbackVaryings[i].semanticName.c_str();
-                        entry.SemanticIndex = transformFeedbackVaryings[i].semanticIndex + j;
+                        entry.SemanticName = varying.semanticName.c_str();
+                        entry.SemanticIndex = varying.semanticIndex + j;
                         entry.StartComponent = 0;
                         entry.ComponentCount = gl::VariableRowCount(type);
                         entry.OutputSlot = (separatedOutputBuffers ? i : 0);
