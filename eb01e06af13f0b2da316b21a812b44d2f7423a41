@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "198a632f_73b758b9",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-07T20:36:13Z",
+      "side": 1,
+      "message": "Does this need to be an abstract method? It seems (so far) to be only called on the staging buffer which is known to be a NativeBuffer11.",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 29
+      },
+      "revId": "eb01e06af13f0b2da316b21a812b44d2f7423a41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
