@@ -13,12 +13,18 @@
 #include <EGL/eglext.h>
 #include <list>
 
+enum RendererType
+{
+    RENDERER_D3D9,
+    RENDERER_D3D11
+};
+
 class Window
 {
   public:
     Window();
 
-    virtual bool initialize(const std::string &name, size_t width, size_t height) = 0;
+    virtual bool initialize(const std::string &name, size_t width, size_t height, RendererType requestedRenderer) = 0;
     virtual void destroy() = 0;
 
     int getWidth() const;

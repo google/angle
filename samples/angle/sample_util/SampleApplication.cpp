@@ -13,8 +13,12 @@
 #error unsupported OS.
 #endif
 
-SampleApplication::SampleApplication(const std::string& name, size_t width, size_t height)
-    : mClientVersion(2),
+SampleApplication::SampleApplication(const std::string& name, size_t width, size_t height,
+                                     EGLint glesMajorVersion, RendererType requestedRenderer)
+    : mSurface(EGL_NO_SURFACE),
+      mContext(EGL_NO_CONTEXT),
+      mClientVersion(glesMajorVersion),
+      mRequestedRenderer(requestedRenderer),
       mWidth(width),
       mHeight(height),
       mName(name),
@@ -74,7 +78,12 @@ EGLContext SampleApplication::getContext() const
 
 int SampleApplication::run()
 {
-    if (!mWindow->initialize(mName, mWidth, mHeight) || !initializeGL())
+    if (!mWindow->initialize(mName, mWidth, mHeight, mRequestedRenderer))
+    {
+        return -1;
+    }
+
+    if (!initializeGL())
     {
         return -1;
     }

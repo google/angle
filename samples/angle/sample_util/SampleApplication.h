@@ -27,7 +27,8 @@
 class SampleApplication
 {
   public:
-    SampleApplication(const std::string& name, size_t width, size_t height);
+    SampleApplication(const std::string& name, size_t width, size_t height,
+                      EGLint glesMajorVersion = 2, RendererType requestedRenderer = RENDERER_D3D11);
     virtual ~SampleApplication();
 
     virtual bool initialize();
@@ -57,6 +58,7 @@ class SampleApplication
     EGLContext mContext;
 
     GLuint mClientVersion;
+    RendererType mRequestedRenderer;
     size_t mWidth;
     size_t mHeight;
     std::string mName;
