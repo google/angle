@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{22DC02D5-1598-943C-13E1-82185B469F81}</ProjectGuid>
+    <ProjectGuid>{63FB0B97-D1D9-5158-8E85-7F5B1E403817}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>copy_compiler_dll</RootNamespace>
+    <RootNamespace>copy_scripts</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <PropertyGroup Label="Configuration">
@@ -109,18 +109,24 @@
     <None Include="..\..\src\angle.gyp"/>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="..\..\src\commit_id.py">
+      <FileType>Document</FileType>
+      <Command>call mkdir &quot;$(OutDir)obj\global_intermediate&quot; 2&gt;nul &amp; set ERRORLEVEL=0 &amp; copy /Y &quot;..\..\src\commit_id.py&quot; &quot;$(OutDir)obj\global_intermediate\commit_id.py&quot;</Command>
+      <Message>Copying commit_id.py to $(OutDir)obj/global_intermediate\commit_id.py</Message>
+      <Outputs>$(OutDir)obj\global_intermediate\commit_id.py</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\commit_id.bat">
+      <FileType>Document</FileType>
+      <Command>call mkdir &quot;$(OutDir)obj\global_intermediate&quot; 2&gt;nul &amp; set ERRORLEVEL=0 &amp; copy /Y &quot;..\..\src\commit_id.bat&quot; &quot;$(OutDir)obj\global_intermediate\commit_id.bat&quot;</Command>
+      <Message>Copying commit_id.bat to $(OutDir)obj/global_intermediate\commit_id.bat</Message>
+      <Outputs>$(OutDir)obj\global_intermediate\commit_id.bat</Outputs>
+    </CustomBuild>
     <CustomBuild Include="..\..\src\copy_compiler_dll.bat">
       <FileType>Document</FileType>
-      <Command>call call $(OutDir)obj\global_intermediate\copy_compiler_dll.bat &quot;$(Platform)&quot; &quot;C:\Program Files (x86)\Windows Kits\8.0&quot; &quot;$(OutDir)&quot;</Command>
-      <Message>Copying D3D Compiler DLL...</Message>
-      <Outputs>$(OutDir)\D3DCompiler_46.dll</Outputs>
+      <Command>call mkdir &quot;$(OutDir)obj\global_intermediate&quot; 2&gt;nul &amp; set ERRORLEVEL=0 &amp; copy /Y &quot;..\..\src\copy_compiler_dll.bat&quot; &quot;$(OutDir)obj\global_intermediate\copy_compiler_dll.bat&quot;</Command>
+      <Message>Copying copy_compiler_dll.bat to $(OutDir)obj/global_intermediate\copy_compiler_dll.bat</Message>
+      <Outputs>$(OutDir)obj\global_intermediate\copy_compiler_dll.bat</Outputs>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="copy_scripts.vcxproj">
-      <Project>{63FB0B97-D1D9-5158-8E85-7F5B1E403817}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <ImportGroup Label="ExtensionTargets"/>

@@ -109,12 +109,18 @@
     <None Include="..\..\src\angle.gyp"/>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\..\src\commit_id.bat">
+    <CustomBuild Include="$(OutDir)obj\global_intermediate\commit_id.bat">
       <FileType>Document</FileType>
-      <Command>call call ..\..\src\commit_id.bat &quot;$(OutDir)obj\global_intermediate&quot;</Command>
+      <Command>call call $(OutDir)obj\global_intermediate\commit_id.bat &quot;$(OutDir)obj\global_intermediate&quot;</Command>
       <Message>Generating commit ID header...</Message>
       <Outputs>$(OutDir)obj\global_intermediate\commit.h</Outputs>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="copy_scripts.vcxproj">
+      <Project>{63FB0B97-D1D9-5158-8E85-7F5B1E403817}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <ImportGroup Label="ExtensionTargets"/>

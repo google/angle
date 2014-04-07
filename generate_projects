@@ -33,7 +33,6 @@ if __name__ == '__main__':
     gyp_cmd += ' -G msvs_version=' + msvs_version
     gyp_cmd += ' -D angle_build_tests=' + ('1' if build_tests else '0')
     gyp_cmd += ' -D angle_build_samples=' + ('1' if build_samples else '0')
-    gyp_cmd += ' -D angle_relative_src_path=' + os.path.join('..', '..', 'src')
     gyp_cmd += ' -D release_symbols=' + ('true' if release_symbols else 'false')
     gyp_cmd += ' ' + os.path.join(script_dir, 'all.gyp')
 
