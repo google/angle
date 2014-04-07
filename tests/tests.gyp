@@ -8,6 +8,7 @@
         {
             'target_name': 'gtest',
             'type': 'static_library',
+            'includes': [ '../build/common_defines.gypi', ],
             'include_dirs':
             [
                 'third_party/googletest',
@@ -33,6 +34,7 @@
         {
             'target_name': 'gmock',
             'type': 'static_library',
+            'includes': [ '../build/common_defines.gypi', ],
             'include_dirs':
             [
                 'third_party/googlemock',
@@ -73,6 +75,7 @@
             ],
             'includes':
             [
+                '../build/common_defines.gypi',
                 'preprocessor_tests/preprocessor_tests.gypi',
             ],
         },
@@ -95,6 +98,7 @@
             ],
             'includes':
             [
+                '../build/common_defines.gypi',
                 'compiler_tests/compiler_tests.gypi',
             ],
         },
@@ -109,6 +113,7 @@
                 {
                     'target_name': 'angle_tests',
                     'type': 'executable',
+                    'includes': [ '../build/common_defines.gypi', ],
                     'dependencies':
                     [
                         '../src/angle.gyp:libGLESv2',
@@ -131,6 +136,7 @@
                 {
                     'target_name': 'standalone_tests',
                     'type': 'executable',
+                    'includes': [ '../build/common_defines.gypi', ],
                     'dependencies':
                     [
                         'gtest',

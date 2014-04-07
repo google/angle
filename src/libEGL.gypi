@@ -25,8 +25,7 @@
                              -dirs common libEGL ../include \
                              -types *.cpp *.h *.def *.rc)',
                     ],
-                    # TODO(jschuh): http://crbug.com/167187 size_t -> int
-                    'msvs_disabled_warnings': [ 4267 ],
+                    'includes': [ '../build/common_defines.gypi', ],
                     'msvs_settings':
                     {
                         'VCLinkerTool':

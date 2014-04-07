@@ -82,6 +82,7 @@
                     'target_name': 'copy_compiler_dll',
                     'type': 'none',
                     'dependencies': [ 'copy_scripts', ],
+                    'includes': [ '../build/common_defines.gypi', ],
                     'actions':
                     [
                         {
@@ -109,6 +110,7 @@
                 {
                     'target_name': 'post_build',
                     'type': 'none',
+                    'includes': [ '../build/common_defines.gypi', ],
                     'dependencies': [ 'libGLESv2', 'libEGL' ],
                     'actions':
                     [

@@ -27,6 +27,7 @@
                     'target_name': 'libGLESv2',
                     'type': 'shared_library',
                     'dependencies': [ 'translator', 'commit_id', 'copy_compiler_dll' ],
+                    'includes': [ '../build/common_defines.gypi', ],
                     'include_dirs':
                     [
                         '.',
@@ -40,9 +41,6 @@
                              -types *.cpp *.h *.hlsl *.vs *.ps *.bat *.def *.rc \
                              -excludes */d3d/* */d3d9/* */d3d11/*)',
                     ],
-                    # TODO(jschuh): http://crbug.com/167187 size_t -> int
-                    'msvs_disabled_warnings': [ 4267 ],
-
                     'conditions':
                     [
                         ['angle_enable_d3d9==1',

@@ -3,18 +3,16 @@
 # found in the LICENSE file.
 
 {
+    'includes': [ 'common_defines.gypi', ],
     'variables':
     {
-        'component%': 'static_library',
         'angle_build_tests%': '1',
         'angle_build_samples%': '1',
-        'angle_path%': '<(DEPTH)',
         # angle_code is set to 1 for the core ANGLE targets defined in src/build_angle.gyp.
         # angle_code is set to 0 for test code, sample code, and third party code.
         # When angle_code is 1, we build with additional warning flags on Mac and Linux.
         'angle_code%': 0,
         'release_symbols%': 'true',
-        'windows_sdk_path%': 'C:/Program Files (x86)/Windows Kits/8.0',
         'gcc_or_clang_warnings':
         [
             '-Wall',
@@ -77,18 +75,6 @@
                         #'ExceptionHandling': '0',
                         'EnableFunctionLevelLinking': 'true',
                         'MinimalRebuild': 'false',
-                        'PreprocessorDefinitions':
-                        [
-                            '_CRT_SECURE_NO_DEPRECATE',
-                            '_SCL_SECURE_NO_WARNINGS',
-                            '_HAS_EXCEPTIONS=0',
-                            '_WIN32_WINNT=0x0600',
-                            '_WINDOWS',
-                            'NOMINMAX',
-                            'WIN32',
-                            'WIN32_LEAN_AND_MEAN',
-                            'WINVER=0x0600',
-                        ],
                         'RuntimeTypeInfo': 'false',
                         'WarningLevel': '4',
                     },
@@ -100,34 +86,12 @@
                         # Most of the executables we'll ever create are tests
                         # and utilities with console output.
                         'SubSystem': '1',    # /SUBSYSTEM:CONSOLE
-                        'AdditionalDependencies':
-                        [
-                            'kernel32.lib',
-                            'gdi32.lib',
-                            'winspool.lib',
-                            'comdlg32.lib',
-                            'advapi32.lib',
-                            'shell32.lib',
-                            'ole32.lib',
-                            'oleaut32.lib',
-                            'user32.lib',
-                            'uuid.lib',
-                            'odbc32.lib',
-                            'odbccp32.lib',
-                            'delayimp.lib',
-                        ],
                     },
                     'VCResourceCompilerTool':
                     {
                         'Culture': '1033',
                     },
                 },
-                'msvs_disabled_warnings': [ 4100, 4127, 4189, 4239, 4244, 4245, 4512, 4702, 4530, 4718 ],
-                'msvs_system_include_dirs':
-                [
-                    '<(windows_sdk_path)/Include/shared',
-                    '<(windows_sdk_path)/Include/um',
-                ],
             },    # Common_Base
 
             'Debug_Base':
@@ -138,7 +102,6 @@
                     'VCCLCompilerTool':
                     {
                         'Optimization': '0',    # /Od
-                        'PreprocessorDefinitions': [ '_DEBUG' ],
                         'BasicRuntimeChecks': '3',
                         'RuntimeLibrary': '1',    # /MTd (debug static)
                     },
@@ -163,7 +126,6 @@
                     'VCCLCompilerTool':
                     {
                         'Optimization': '2',    # /Os
-                        'PreprocessorDefinitions': ['NDEBUG'],
                         'RuntimeLibrary': '0',    # /MT (static)
                     },
                     'VCLinkerTool':
@@ -212,7 +174,8 @@
                             '<(windows_sdk_path)/Lib/win8/um/x64',
                         ],
                     },
-                    'VCLibrarianTool': {
+                    'VCLibrarianTool':
+                    {
                         'AdditionalLibraryDirectories':
                         [
                             '<(windows_sdk_path)/Lib/win8/um/x64',
@@ -245,13 +208,6 @@
                 }],
             ],
         },    # configurations
-        'conditions':
-        [
-            ['component=="shared_library"',
-            {
-                'defines': [ 'COMPONENT_BUILD' ],
-            }],
-        ],
     },    # target_defaults
     'conditions':
     [

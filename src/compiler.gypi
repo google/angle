@@ -8,10 +8,8 @@
         {
             'target_name': 'preprocessor',
             'type': 'static_library',
-            'include_dirs': [ ],
+            'includes': [ '../build/common_defines.gypi', ],
             'sources': [ '<!@(python <(angle_path)/enumerate_files.py compiler/preprocessor -types *.cpp *.h *.y *.l )' ],
-            # TODO(jschuh): http://crbug.com/167187 size_t -> int
-            'msvs_disabled_warnings': [ 4267 ],
         },
 
         {
@@ -32,6 +30,7 @@
 
             'type': 'static_library',
             'dependencies': [ 'preprocessor' ],
+            'includes': [ '../build/common_defines.gypi', ],
             'include_dirs':
             [
                 '.',
