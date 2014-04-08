@@ -22,6 +22,30 @@
       "revId": "eb01e06af13f0b2da316b21a812b44d2f7423a41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59f4dbd0_cfe63d08",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-08T14:43:42Z",
+      "side": 1,
+      "message": "We call it dynamically in a later patch, yes. Pack buffers also implement ::map. It\u0027s also potentially important for any subsequent storage implementations (if any) to implement ::map.",
+      "parentUuid": "198a632f_73b758b9",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 29
+      },
+      "revId": "eb01e06af13f0b2da316b21a812b44d2f7423a41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
