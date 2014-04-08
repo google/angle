@@ -15,7 +15,6 @@ namespace rx
 {
 class Renderer;
 class Renderer11;
-class DirectBufferStorage11;
 
 enum BufferUsage
 {
@@ -53,10 +52,13 @@ class BufferStorage11 : public BufferStorage
     virtual void unmap();
 
   private:
+    class TypedBufferStorage11;
+    class NativeBuffer11;
+
     Renderer11 *mRenderer;
     bool mIsMapped;
 
-    std::map<BufferUsage, DirectBufferStorage11*> mDirectBuffers;
+    std::map<BufferUsage, TypedBufferStorage11*> mTypedBuffers;
 
     typedef std::pair<ID3D11Buffer *, ID3D11ShaderResourceView *> BufferSRVPair;
     std::map<DXGI_FORMAT, BufferSRVPair> mBufferResourceViews;
@@ -70,42 +72,10 @@ class BufferStorage11 : public BufferStorage
     size_t mSize;
 
     void markBufferUsage();
-    DirectBufferStorage11 *getStagingBuffer();
+    NativeBuffer11 *getStagingBuffer();
 
-    DirectBufferStorage11 *getStorage(BufferUsage usage);
-    DirectBufferStorage11 *getLatestStorage() const;
-};
-
-// Each instance of BufferStorageD3DBuffer11 is specialized for a class of D3D binding points
-// - vertex/transform feedback buffers
-// - index buffers
-// - pixel unpack buffers
-// - uniform buffers
-class DirectBufferStorage11
-{
-  public:
-    DirectBufferStorage11(Renderer11 *renderer, BufferUsage usage);
-    ~DirectBufferStorage11();
-
-    BufferUsage getUsage() const;
-    ID3D11Buffer *getD3DBuffer() const { return mDirectBuffer; }
-    size_t getSize() const {return mBufferSize; }
-
-    bool copyFromStorage(DirectBufferStorage11 *source, size_t sourceOffset, size_t size, size_t destOffset);
-    void resize(size_t size, bool preserveData);
-
-    DataRevision getDataRevision() const { return mRevision; }
-    void setDataRevision(DataRevision rev) { mRevision = rev; }
-
-  private:
-    Renderer11 *mRenderer;
-    const BufferUsage mUsage;
-    DataRevision mRevision;
-
-    ID3D11Buffer *mDirectBuffer;
-    size_t mBufferSize;
-
-    static void fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Renderer *renderer, BufferUsage usage, unsigned int bufferSize);
+    TypedBufferStorage11 *getStorage(BufferUsage usage);
+    TypedBufferStorage11 *getLatestStorage() const;
 };
 
 }
