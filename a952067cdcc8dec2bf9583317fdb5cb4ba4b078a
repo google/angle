@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9544bb3_83bb5e54",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-10T21:01:15Z",
+      "side": 1,
+      "message": "When I asked the infra folks, they said the syntax for this was BUG\u003dangle:###, but I\u0027m not sure whether that integration is actually currently working.",
+      "revId": "a952067cdcc8dec2bf9583317fdb5cb4ba4b078a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9df977e_221a2eca",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-10T21:01:15Z",
+      "side": 1,
+      "message": "Worth calling out in a comment that the usesDiscard optimization workaround will supersede the nested break optimization. (What should we expect for shaders that use both? Will compilation hang?)",
+      "revId": "a952067cdcc8dec2bf9583317fdb5cb4ba4b078a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9df977e_c2b1c278",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-10T21:01:15Z",
+      "side": 1,
+      "message": "Can we stick a comment here, and possibly on the optimization level setting in the build file, to call out that we really don\u0027t want to inadvertently change this ever again?",
+      "revId": "a952067cdcc8dec2bf9583317fdb5cb4ba4b078a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
