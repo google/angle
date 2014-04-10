@@ -3169,9 +3169,17 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
         return NULL;
     }
 
-    // ANGLE issue 486:
-    // Work-around a D3D9 compiler bug that presents itself when using conditional discard, by disabling optimization
-    UINT optimizationFlags = (workaround == ANGLE_D3D_WORKAROUND_SM3_OPTIMIZER ? D3DCOMPILE_SKIP_OPTIMIZATION : ANGLE_COMPILE_OPTIMIZATION_LEVEL);
+    UINT optimizationFlags = ANGLE_COMPILE_OPTIMIZATION_LEVEL;
+
+    if (workaround == ANGLE_D3D_WORKAROUND_SKIP_OPTIMIZATION)
+    {
+        optimizationFlags = D3DCOMPILE_SKIP_OPTIMIZATION;
+    }
+    else if (workaround == ANGLE_D3D_WORKAROUND_MAX_OPTIMIZATION)
+    {
+        optimizationFlags = D3DCOMPILE_OPTIMIZATION_LEVEL3;
+    }
+    else ASSERT(workaround == ANGLE_D3D_WORKAROUND_NONE);
 
     ID3DBlob *binary = (ID3DBlob*)compileToBinary(infoLog, shaderHLSL, profile, optimizationFlags, true);
     if (!binary)

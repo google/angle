@@ -308,6 +308,7 @@ void Shader::parseVaryings()
         mUsesDepthRange = strstr(mHlsl, "GL_USES_DEPTH_RANGE") != NULL;
         mUsesFragDepth = strstr(mHlsl, "GL_USES_FRAG_DEPTH") != NULL;
         mUsesDiscardRewriting = strstr(mHlsl, "ANGLE_USES_DISCARD_REWRITING") != NULL;
+        mUsesNestedBreak = strstr(mHlsl, "ANGLE_USES_NESTED_BREAK") != NULL;
     }
 }
 
@@ -342,6 +343,7 @@ void Shader::uncompile()
     mUsesDepthRange = false;
     mUsesFragDepth = false;
     mUsesDiscardRewriting = false;
+    mUsesNestedBreak = false;
 
     mActiveUniforms.clear();
 }
