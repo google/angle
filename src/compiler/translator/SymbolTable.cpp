@@ -51,6 +51,8 @@ TString TType::buildMangledName() const
       case EbtSampler3D:            mangledName += "s3";     break;
       case EbtSamplerCube:          mangledName += "sC";     break;
       case EbtSampler2DArray:       mangledName += "s2a";    break;
+      case EbtSamplerExternalOES:   mangledName += "sext";   break;
+      case EbtSampler2DRect:        mangledName += "s2r";    break;
       case EbtISampler2D:           mangledName += "is2";    break;
       case EbtISampler3D:           mangledName += "is3";    break;
       case EbtISamplerCube:         mangledName += "isC";    break;
