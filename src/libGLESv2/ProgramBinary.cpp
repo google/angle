@@ -34,12 +34,27 @@ std::string str(int i)
     return buffer;
 }
 
-static rx::D3DWorkaroundType DiscardWorkaround(bool usesDiscard)
+static rx::D3DWorkaroundType DiscardWorkaround(bool usesDiscard, bool nestedBreak)
 {
-    return (usesDiscard ? rx::ANGLE_D3D_WORKAROUND_SM3_OPTIMIZER : rx::ANGLE_D3D_WORKAROUND_NONE);
+    if (usesDiscard)
+    {
+        // ANGLE issue 486:
+        // Work-around a D3D9 compiler bug that presents itself when using conditional discard, by disabling optimization
+        return rx::ANGLE_D3D_WORKAROUND_SKIP_OPTIMIZATION;
+    }
+
+    if (nestedBreak)
+    {
+        // ANGLE issue 603:
+        // Work-around a D3D9 compiler bug that presents itself when using break in a nested loop, by maximizing optimization
+        // We want to keep the use of ANGLE_D3D_WORKAROUND_MAX_OPTIMIZATION minimal to prevent hangs, so usesDiscard takes precedence
+        return rx::ANGLE_D3D_WORKAROUND_MAX_OPTIMIZATION;
+    }
+
+    return rx::ANGLE_D3D_WORKAROUND_NONE;
 }
 
-UniformLocation::UniformLocation(const std::string &name, unsigned int element, unsigned int index) 
+UniformLocation::UniformLocation(const std::string &name, unsigned int element, unsigned int index)
     : name(name), element(element), index(index)
 {
 }
@@ -1979,8 +1994,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 
     if (success)
     {
-        mVertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), rx::SHADER_VERTEX, DiscardWorkaround(vertexShader->mUsesDiscardRewriting));
-        mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), rx::SHADER_PIXEL, DiscardWorkaround(fragmentShader->mUsesDiscardRewriting));
+        mVertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), rx::SHADER_VERTEX, DiscardWorkaround(vertexShader->mUsesDiscardRewriting, vertexShader->mUsesNestedBreak));
+        mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), rx::SHADER_PIXEL, DiscardWorkaround(fragmentShader->mUsesDiscardRewriting, fragmentShader->mUsesNestedBreak));
 
         if (usesGeometryShader())
         {
