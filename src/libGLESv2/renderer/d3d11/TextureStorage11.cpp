@@ -46,6 +46,47 @@ bool TextureStorage11::SwizzleCacheValue::operator!=(const SwizzleCacheValue &ot
     return !(*this == other);
 }
 
+TextureStorage11::SRVKey::SRVKey(int baseLevel, int mipLevels, bool swizzle)
+    : baseLevel(baseLevel), mipLevels(mipLevels), swizzle(swizzle)
+{
+}
+
+bool TextureStorage11::SRVKey::operator==(const SRVKey &rhs) const
+{
+    return baseLevel == rhs.baseLevel &&
+           mipLevels == rhs.mipLevels &&
+           swizzle == rhs.swizzle;
+}
+
+TextureStorage11::SRVCache::~SRVCache()
+{
+    for (size_t i = 0; i < cache.size(); i++)
+    {
+        SafeRelease(cache[i].srv);
+    }
+}
+
+ID3D11ShaderResourceView *TextureStorage11::SRVCache::find(const SRVKey &key) const
+{
+    for (size_t i = 0; i < cache.size(); i++)
+    {
+        if (cache[i].key == key)
+        {
+            return cache[i].srv;
+        }
+    }
+
+    return NULL;
+}
+
+ID3D11ShaderResourceView *TextureStorage11::SRVCache::add(const SRVKey &key, ID3D11ShaderResourceView *srv)
+{
+    SRVPair pair = {key, srv};
+    cache.push_back(pair);
+
+    return srv;
+}
+
 TextureStorage11::TextureStorage11(Renderer *renderer, UINT bindFlags)
     : mBindFlags(bindFlags),
       mTopLevel(0),
@@ -280,8 +321,6 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
     mTexture->AddRef();
     mSwizzleTexture = NULL;
 
-    memset(mSRV, NULL, sizeof(mSRV));
-
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
         mLevelSRVs[i] = NULL;
@@ -320,8 +359,6 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, GLenum internalform
 {
     mTexture = NULL;
     mSwizzleTexture = NULL;
-
-    memset(mSRV, NULL, sizeof(mSRV));
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
@@ -391,10 +428,6 @@ TextureStorage11_2D::~TextureStorage11_2D()
 {
     SafeRelease(mTexture);
     SafeRelease(mSwizzleTexture);
-
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 2; j++)
-            SafeRelease(mSRV[i][j]);
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
@@ -493,21 +526,27 @@ ID3D11ShaderResourceView *TextureStorage11_2D::getSRV(const gl::SamplerState &sa
 {
     bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
+    int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
 
     if (swizzleRequired)
     {
         verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
-    if (!mSRV[swizzleRequired][mipmapping])
+    SRVKey key(0, mipLevels, swizzleRequired);
+    ID3D11ShaderResourceView *srv = srvCache.find(key);
+
+    if(srv)
     {
-        int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;   // -1 creates all levels
-        DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-        ID3D11Texture2D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
-        mSRV[swizzleRequired][mipmapping] = createSRV(0, mipLevels, format, texture);
+        return srv;
     }
 
-    return mSRV[swizzleRequired][mipmapping];
+    DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
+    ID3D11Texture2D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
+
+    srv = createSRV(0, mipLevels, format, texture);
+
+    return srvCache.add(key, srv);
 }
 
 ID3D11ShaderResourceView *TextureStorage11_2D::getSRVLevel(int mipLevel)
@@ -636,8 +675,6 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, GLenum internal
     mTexture = NULL;
     mSwizzleTexture = NULL;
 
-    memset(mSRV, NULL, sizeof(mSRV));
-
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
         mLevelSRVs[level] = NULL;
@@ -704,10 +741,6 @@ TextureStorage11_Cube::~TextureStorage11_Cube()
 {
     SafeRelease(mTexture);
     SafeRelease(mSwizzleTexture);
-
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 2; j++)
-            SafeRelease(mSRV[i][j]);
 
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
@@ -827,25 +860,31 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(const gl::SamplerState &
 {
     bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
+    int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
 
     if (swizzleRequired)
     {
         verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
-    if (!mSRV[swizzleRequired][mipmapping])
-    {
-        // Unnormalized integer cube maps are not supported by DX11; we emulate them as an array of six 2D textures
-        bool unnormalizedInteger = (d3d11::GetComponentType(mTextureFormat) == GL_INT ||
-                                    d3d11::GetComponentType(mTextureFormat) == GL_UNSIGNED_INT);
+    SRVKey key(0, mipLevels, swizzleRequired);
+    ID3D11ShaderResourceView *srv = srvCache.find(key);
 
-        int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;   // -1 creates all levels
-        DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-        ID3D11Texture2D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
-        mSRV[swizzleRequired][mipmapping] = createSRV(unnormalizedInteger, 0, mipLevels, format, texture);
+    if(srv)
+    {
+        return srv;
     }
 
-    return mSRV[swizzleRequired][mipmapping];
+    // Unnormalized integer cube maps are not supported by DX11; we emulate them as an array of six 2D textures
+    bool unnormalizedInteger = (d3d11::GetComponentType(mTextureFormat) == GL_INT ||
+                                d3d11::GetComponentType(mTextureFormat) == GL_UNSIGNED_INT);
+
+    DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
+    ID3D11Texture2D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
+
+    srv = createSRV(unnormalizedInteger, 0, mipLevels, format, texture);
+
+    return srvCache.add(key, srv);
 }
 
 ID3D11ShaderResourceView *TextureStorage11_Cube::getSRVLevel(int mipLevel)
@@ -990,8 +1029,6 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, GLenum internalform
     mTexture = NULL;
     mSwizzleTexture = NULL;
 
-    memset(mSRV, NULL, sizeof(mSRV));
-
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
         mLevelRenderTargets[i] = NULL;
@@ -1059,10 +1096,6 @@ TextureStorage11_3D::~TextureStorage11_3D()
     SafeRelease(mTexture);
     SafeRelease(mSwizzleTexture);
 
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 2; j++)
-            SafeRelease(mSRV[i][j]);
-
     for (RenderTargetMap::iterator i = mLevelLayerRenderTargets.begin(); i != mLevelLayerRenderTargets.end(); i++)
     {
         SafeDelete(i->second);
@@ -1092,21 +1125,27 @@ ID3D11ShaderResourceView *TextureStorage11_3D::getSRV(const gl::SamplerState &sa
 {
     bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
+    int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
 
     if (swizzleRequired)
     {
         verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
-    if (!mSRV[swizzleRequired][mipmapping])
+    SRVKey key(0, mipLevels, swizzleRequired);
+    ID3D11ShaderResourceView *srv = srvCache.find(key);
+
+    if(srv)
     {
-        int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;   // -1 creates all levels
-        DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-        ID3D11Texture3D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
-        mSRV[swizzleRequired][mipmapping] = createSRV(0, mipLevels, format, texture);
+        return srv;
     }
 
-    return mSRV[swizzleRequired][mipmapping];
+    DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
+    ID3D11Texture3D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
+
+    srv = createSRV(0, mipLevels, format, texture);
+
+    return srvCache.add(key, srv);
 }
 
 ID3D11ShaderResourceView *TextureStorage11_3D::getSRVLevel(int mipLevel)
@@ -1342,8 +1381,6 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, GLenum in
     mTexture = NULL;
     mSwizzleTexture = NULL;
 
-    memset(mSRV, NULL, sizeof(mSRV));
-
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
         mLevelSRVs[level] = NULL;
@@ -1412,10 +1449,6 @@ TextureStorage11_2DArray::~TextureStorage11_2DArray()
     SafeRelease(mTexture);
     SafeRelease(mSwizzleTexture);
 
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 2; j++)
-            SafeRelease(mSRV[i][j]);
-
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
         SafeRelease(mLevelSRVs[level]);
@@ -1444,21 +1477,27 @@ ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRV(const gl::SamplerStat
 {
     bool swizzleRequired = samplerState.swizzleRequired();
     bool mipmapping = gl::IsMipmapFiltered(samplerState);
+    int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;
 
     if (swizzleRequired)
     {
         verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
 
-    if (!mSRV[swizzleRequired][mipmapping])
+    SRVKey key(0, mipLevels, swizzleRequired);
+    ID3D11ShaderResourceView *srv = srvCache.find(key);
+
+    if(srv)
     {
-        int mipLevels = mipmapping ? (mMipLevels == 0 ? -1 : mMipLevels) : 1;   // -1 creates all levels
-        DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-        ID3D11Texture2D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
-        mSRV[swizzleRequired][mipmapping] = createSRV(0, mipLevels, format, texture);
+        return srv;
     }
 
-    return mSRV[swizzleRequired][mipmapping];
+    DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
+    ID3D11Texture2D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
+
+    srv = createSRV(0, mipLevels, format, texture);
+
+    return srvCache.add(key, srv);
 }
 
 ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRVLevel(int mipLevel)

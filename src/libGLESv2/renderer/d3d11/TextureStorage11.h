@@ -99,6 +99,33 @@ class TextureStorage11 : public TextureStorage
     };
     SwizzleCacheValue mSwizzleCache[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
+    struct SRVKey
+    {
+        SRVKey(int baseLevel = 0, int mipLevels = 0, bool swizzle = false);
+
+        bool operator==(const SRVKey &rhs) const;
+
+        int baseLevel;
+        int mipLevels;
+        bool swizzle;
+    };
+
+    struct SRVPair
+    {
+        SRVKey key;
+        ID3D11ShaderResourceView *srv;
+    };
+
+    struct SRVCache
+    {
+        ~SRVCache();
+
+        ID3D11ShaderResourceView *find(const SRVKey &key) const;
+        ID3D11ShaderResourceView *add(const SRVKey &key, ID3D11ShaderResourceView *srv);
+
+        std::vector<SRVPair> cache;
+    };
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11);
 
@@ -139,7 +166,7 @@ class TextureStorage11_2D : public TextureStorage11
     ID3D11Texture2D *mSwizzleTexture;
     ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    ID3D11ShaderResourceView *mSRV[2][2];   // [swizzle][mipmapping]
+    SRVCache srvCache;
     ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
@@ -176,7 +203,7 @@ class TextureStorage11_Cube : public TextureStorage11
     ID3D11Texture2D *mSwizzleTexture;
     ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    ID3D11ShaderResourceView *mSRV[2][2];   // [swizzle][mipmapping]
+    SRVCache srvCache;
     ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
@@ -219,7 +246,7 @@ class TextureStorage11_3D : public TextureStorage11
     ID3D11Texture3D *mSwizzleTexture;
     ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    ID3D11ShaderResourceView *mSRV[2][2];   // [swizzle][mipmapping]
+    SRVCache srvCache;
     ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
@@ -260,7 +287,7 @@ class TextureStorage11_2DArray : public TextureStorage11
     ID3D11Texture2D *mSwizzleTexture;
     ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    ID3D11ShaderResourceView *mSRV[2][2];   // [swizzle][mipmapping]
+    SRVCache srvCache;
     ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
