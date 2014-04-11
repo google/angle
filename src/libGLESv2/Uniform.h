@@ -16,17 +16,17 @@
 
 #include "common/debug.h"
 #include "angletypes.h"
-#include "compiler/translator/ShaderVariable.h"
+#include "common/shadervars.h"
 
 namespace gl
 {
 
 // Helper struct representing a single shader uniform
-struct Uniform
+struct LinkedUniform
 {
-    Uniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize, const int blockIndex, const sh::BlockMemberInfo &blockInfo);
+    LinkedUniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize, const int blockIndex, const BlockMemberInfo &blockInfo);
 
-    ~Uniform();
+    ~LinkedUniform();
 
     bool isArray() const;
     unsigned int elementCount() const;
@@ -41,7 +41,7 @@ struct Uniform
     const std::string name;
     const unsigned int arraySize;
     const int blockIndex;
-    const sh::BlockMemberInfo blockInfo;
+    const BlockMemberInfo blockInfo;
 
     unsigned char *data;
     bool dirty;
@@ -54,8 +54,6 @@ struct Uniform
     // inside aggregate types, which are packed according C-like structure rules.
     unsigned int registerElement;
 };
-
-typedef std::vector<Uniform*> UniformArray;
 
 // Helper struct representing a single shader uniform block
 struct UniformBlock
@@ -76,8 +74,6 @@ struct UniformBlock
     unsigned int psRegisterIndex;
     unsigned int vsRegisterIndex;
 };
-
-typedef std::vector<UniformBlock*> UniformBlockArray;
 
 }
 

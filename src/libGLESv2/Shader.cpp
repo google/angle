@@ -115,17 +115,17 @@ void Shader::getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer)
     getSourceImpl(mHlsl, bufSize, length, buffer);
 }
 
-const std::vector<sh::Uniform> &Shader::getUniforms() const
+const std::vector<Uniform> &Shader::getUniforms() const
 {
     return mActiveUniforms;
 }
 
-const sh::ActiveInterfaceBlocks &Shader::getInterfaceBlocks() const
+const std::vector<InterfaceBlock> &Shader::getInterfaceBlocks() const
 {
     return mActiveInterfaceBlocks;
 }
 
-std::vector<sh::Varying> &Shader::getVaryings()
+std::vector<Varying> &Shader::getVaryings()
 {
     return mVaryings;
 }
@@ -225,7 +225,7 @@ void Shader::parseVaryings(void *compiler)
 {
     if (!mHlsl.empty())
     {
-        std::vector<sh::Varying> *activeVaryings;
+        std::vector<Varying> *activeVaryings;
         ShGetInfoPointer(compiler, SH_ACTIVE_VARYINGS_ARRAY, reinterpret_cast<void**>(&activeVaryings));
         mVaryings = *activeVaryings;
 
@@ -357,11 +357,11 @@ void Shader::compileToHLSL(void *compiler)
 
         void *activeUniforms;
         ShGetInfoPointer(compiler, SH_ACTIVE_UNIFORMS_ARRAY, &activeUniforms);
-        mActiveUniforms = *(std::vector<sh::Uniform>*)activeUniforms;
+        mActiveUniforms = *(std::vector<Uniform>*)activeUniforms;
 
         void *activeInterfaceBlocks;
         ShGetInfoPointer(compiler, SH_ACTIVE_INTERFACE_BLOCKS_ARRAY, &activeInterfaceBlocks);
-        mActiveInterfaceBlocks = *(sh::ActiveInterfaceBlocks*)activeInterfaceBlocks;
+        mActiveInterfaceBlocks = *(std::vector<InterfaceBlock>*)activeInterfaceBlocks;
     }
     else
     {
@@ -440,7 +440,7 @@ static const GLenum varyingPriorityList[] =
 };
 
 // true if varying x has a higher priority in packing than y
-bool Shader::compareVarying(const sh::ShaderVariable &x, const sh::ShaderVariable &y)
+bool Shader::compareVarying(const ShaderVariable &x, const ShaderVariable &y)
 {
     if (x.type == y.type)
     {
@@ -511,7 +511,7 @@ int VertexShader::getSemanticIndex(const std::string &attributeName)
         int semanticIndex = 0;
         for (unsigned int attributeIndex = 0; attributeIndex < mActiveAttributes.size(); attributeIndex++)
         {
-            const sh::ShaderVariable &attribute = mActiveAttributes[attributeIndex];
+            const ShaderVariable &attribute = mActiveAttributes[attributeIndex];
 
             if (attribute.name == attributeName)
             {
@@ -532,7 +532,7 @@ void VertexShader::parseAttributes()
     {
         void *activeAttributes;
         ShGetInfoPointer(mVertexCompiler, SH_ACTIVE_ATTRIBUTES_ARRAY, &activeAttributes);
-        mActiveAttributes = *(std::vector<sh::Attribute>*)activeAttributes;
+        mActiveAttributes = *(std::vector<Attribute>*)activeAttributes;
     }
 }
 
@@ -563,7 +563,7 @@ void FragmentShader::compile()
     {
         void *activeOutputVariables;
         ShGetInfoPointer(mFragmentCompiler, SH_ACTIVE_OUTPUT_VARIABLES_ARRAY, &activeOutputVariables);
-        mActiveOutputVariables = *(std::vector<sh::Attribute>*)activeOutputVariables;
+        mActiveOutputVariables = *(std::vector<Attribute>*)activeOutputVariables;
     }
 }
 
@@ -574,7 +574,7 @@ void FragmentShader::uncompile()
     mActiveOutputVariables.clear();
 }
 
-const std::vector<sh::Attribute> &FragmentShader::getOutputVariables() const
+const std::vector<Attribute> &FragmentShader::getOutputVariables() const
 {
     return mActiveOutputVariables;
 }

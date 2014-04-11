@@ -102,9 +102,21 @@
     <ClCompile Include="..\..\src\common\utilities.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\common\shadervars.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\common\angleutils.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\common\shadervars.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\blocklayout.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\src\common\blocklayout.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\include\KHR\khrplatform.h">
       <Filter>include\KHR</Filter>
     </ClInclude>

@@ -1,12 +1,15 @@
 //
-// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// shadervars.cpp:
+//   Implementation for GL shader variable member functions.
+//
 
-#include "compiler/translator/ShaderVariable.h"
+#include "common/shadervars.h"
 
-namespace sh
+namespace gl
 {
 
 ShaderVariable::ShaderVariable(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn)

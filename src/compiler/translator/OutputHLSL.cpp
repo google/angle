@@ -8,12 +8,12 @@
 
 #include "common/angleutils.h"
 #include "common/utilities.h"
+#include "common/blocklayout.h"
 #include "compiler/translator/compilerdebug.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/DetectDiscontinuity.h"
 #include "compiler/translator/SearchSymbol.h"
 #include "compiler/translator/UnfoldShortCircuit.h"
-#include "compiler/translator/HLSLLayoutEncoder.h"
 #include "compiler/translator/FlagStd140Structs.h"
 #include "compiler/translator/NodeSearch.h"
 #include "compiler/translator/RewriteElseBlocks.h"
@@ -220,27 +220,27 @@ TInfoSinkBase &OutputHLSL::getBodyStream()
     return mBody;
 }
 
-const std::vector<Uniform> &OutputHLSL::getUniforms()
+const std::vector<gl::Uniform> &OutputHLSL::getUniforms()
 {
     return mActiveUniforms;
 }
 
-const ActiveInterfaceBlocks &OutputHLSL::getInterfaceBlocks() const
+const std::vector<gl::InterfaceBlock> &OutputHLSL::getInterfaceBlocks() const
 {
     return mActiveInterfaceBlocks;
 }
 
-const std::vector<Attribute> &OutputHLSL::getOutputVariables() const
+const std::vector<gl::Attribute> &OutputHLSL::getOutputVariables() const
 {
     return mActiveOutputVariables;
 }
 
-const std::vector<Attribute> &OutputHLSL::getAttributes() const
+const std::vector<gl::Attribute> &OutputHLSL::getAttributes() const
 {
     return mActiveAttributes;
 }
 
-const std::vector<Varying> &OutputHLSL::getVaryings() const
+const std::vector<gl::Varying> &OutputHLSL::getVaryings() const
 {
     return mActiveVaryings;
 }
@@ -473,25 +473,25 @@ TString OutputHLSL::std140PostPaddingString(const TType &type, bool useHLSLRowMa
 }
 
 // Use the same layout for packed and shared
-void setBlockLayout(InterfaceBlock *interfaceBlock, BlockLayoutType newLayout)
+void setBlockLayout(gl::InterfaceBlock *interfaceBlock, gl::BlockLayoutType newLayout)
 {
     interfaceBlock->layout = newLayout;
     interfaceBlock->blockInfo.clear();
 
     switch (newLayout)
     {
-      case BLOCKLAYOUT_SHARED:
-      case BLOCKLAYOUT_PACKED:
+      case gl::BLOCKLAYOUT_SHARED:
+      case gl::BLOCKLAYOUT_PACKED:
         {
-            HLSLBlockEncoder hlslEncoder(&interfaceBlock->blockInfo);
+            gl::HLSLBlockEncoder hlslEncoder(&interfaceBlock->blockInfo);
             hlslEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
             interfaceBlock->dataSize = hlslEncoder.getBlockSize();
         }
         break;
 
-      case BLOCKLAYOUT_STANDARD:
+      case gl::BLOCKLAYOUT_STANDARD:
         {
-            Std140BlockEncoder stdEncoder(&interfaceBlock->blockInfo);
+            gl::Std140BlockEncoder stdEncoder(&interfaceBlock->blockInfo);
             stdEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
             interfaceBlock->dataSize = stdEncoder.getBlockSize();
         }
@@ -503,14 +503,14 @@ void setBlockLayout(InterfaceBlock *interfaceBlock, BlockLayoutType newLayout)
     }
 }
 
-BlockLayoutType convertBlockLayoutType(TLayoutBlockStorage blockStorage)
+gl::BlockLayoutType convertBlockLayoutType(TLayoutBlockStorage blockStorage)
 {
     switch (blockStorage)
     {
-      case EbsPacked: return BLOCKLAYOUT_PACKED;
-      case EbsShared: return BLOCKLAYOUT_SHARED;
-      case EbsStd140: return BLOCKLAYOUT_STANDARD;
-      default: UNREACHABLE(); return BLOCKLAYOUT_SHARED;
+      case EbsPacked: return gl::BLOCKLAYOUT_PACKED;
+      case EbsShared: return gl::BLOCKLAYOUT_SHARED;
+      case EbsStd140: return gl::BLOCKLAYOUT_STANDARD;
+      default: UNREACHABLE(); return gl::BLOCKLAYOUT_SHARED;
     }
 }
 
@@ -599,7 +599,7 @@ void OutputHLSL::header()
         const TFieldList &fieldList = interfaceBlock.fields();
 
         unsigned int arraySize = static_cast<unsigned int>(interfaceBlock.arraySize());
-        sh::InterfaceBlock activeBlock(interfaceBlock.name().c_str(), arraySize, mInterfaceBlockRegister);
+        gl::InterfaceBlock activeBlock(interfaceBlock.name().c_str(), arraySize, mInterfaceBlockRegister);
         for (unsigned int typeIndex = 0; typeIndex < fieldList.size(); typeIndex++)
         {
             const TField &field = *fieldList[typeIndex];
@@ -609,7 +609,7 @@ void OutputHLSL::header()
 
         mInterfaceBlockRegister += std::max(1u, arraySize);
 
-        BlockLayoutType blockLayoutType = convertBlockLayoutType(interfaceBlock.blockStorage());
+        gl::BlockLayoutType blockLayoutType = convertBlockLayoutType(interfaceBlock.blockStorage());
         setBlockLayout(&activeBlock, blockLayoutType);
 
         if (interfaceBlock.matrixPacking() == EmpRowMajor)
@@ -668,7 +668,7 @@ void OutputHLSL::header()
 
         attributes += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
 
-        Attribute attributeVar(glVariableType(type), glVariablePrecision(type), name.c_str(),
+        gl::Attribute attributeVar(glVariableType(type), glVariablePrecision(type), name.c_str(),
                                (unsigned int)type.getArraySize(), type.getLayoutQualifier().location);
         mActiveAttributes.push_back(attributeVar);
     }
@@ -713,7 +713,7 @@ void OutputHLSL::header()
                 out << "static " + typeString(variableType) + " out_" + variableName + arrayString(variableType) +
                        " = " + initializer(variableType) + ";\n";
 
-                Attribute outputVar(glVariableType(variableType), glVariablePrecision(variableType), variableName.c_str(),
+                gl::Attribute outputVar(glVariableType(variableType), glVariablePrecision(variableType), variableName.c_str(),
                                     (unsigned int)variableType.getArraySize(), layoutQualifier.location);
                 mActiveOutputVariables.push_back(outputVar);
             }
@@ -3880,20 +3880,20 @@ TString OutputHLSL::decorateField(const TString &string, const TStructure &struc
     return string;
 }
 
-void OutputHLSL::declareInterfaceBlockField(const TType &type, const TString &name, std::vector<InterfaceBlockField>& output)
+void OutputHLSL::declareInterfaceBlockField(const TType &type, const TString &name, std::vector<gl::InterfaceBlockField>& output)
 {
     const TStructure *structure = type.getStruct();
 
     if (!structure)
     {
         const bool isRowMajorMatrix = (type.isMatrix() && type.getLayoutQualifier().matrixPacking == EmpRowMajor);
-        InterfaceBlockField field(glVariableType(type), glVariablePrecision(type), name.c_str(),
-                        (unsigned int)type.getArraySize(), isRowMajorMatrix);
+        gl::InterfaceBlockField field(glVariableType(type), glVariablePrecision(type), name.c_str(),
+                                      (unsigned int)type.getArraySize(), isRowMajorMatrix);
         output.push_back(field);
    }
     else
     {
-        InterfaceBlockField structField(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), false);
+        gl::InterfaceBlockField structField(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), false);
 
         const TFieldList &fields = structure->fields();
 
@@ -3912,22 +3912,22 @@ void OutputHLSL::declareInterfaceBlockField(const TType &type, const TString &na
     }
 }
 
-Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform>& output)
+gl::Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<gl::Uniform>& output)
 {
     const TStructure *structure = type.getStruct();
 
     if (!structure)
     {
-        Uniform uniform(glVariableType(type), glVariablePrecision(type), name.c_str(),
-                        (unsigned int)type.getArraySize(), (unsigned int)registerIndex, 0);
+        gl::Uniform uniform(glVariableType(type), glVariablePrecision(type), name.c_str(),
+                            (unsigned int)type.getArraySize(), (unsigned int)registerIndex, 0);
         output.push_back(uniform);
 
         return uniform;
    }
     else
     {
-        Uniform structUniform(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(),
-                              (unsigned int)registerIndex, GL_INVALID_INDEX);
+        gl::Uniform structUniform(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(),
+                                  (unsigned int)registerIndex, GL_INVALID_INDEX);
 
         const TFieldList &fields = structure->fields();
 
@@ -3948,13 +3948,13 @@ Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &name,
     }
 }
 
-InterpolationType getInterpolationType(TQualifier qualifier)
+gl::InterpolationType getInterpolationType(TQualifier qualifier)
 {
     switch (qualifier)
     {
       case EvqFlatIn:
       case EvqFlatOut:
-        return INTERPOLATION_FLAT;
+        return gl::INTERPOLATION_FLAT;
 
       case EvqSmoothIn:
       case EvqSmoothOut:
@@ -3962,30 +3962,30 @@ InterpolationType getInterpolationType(TQualifier qualifier)
       case EvqFragmentIn:
       case EvqVaryingIn:
       case EvqVaryingOut:
-        return INTERPOLATION_SMOOTH;
+        return gl::INTERPOLATION_SMOOTH;
 
       case EvqCentroidIn:
       case EvqCentroidOut:
-        return INTERPOLATION_CENTROID;
+        return gl::INTERPOLATION_CENTROID;
 
       default: UNREACHABLE();
-        return INTERPOLATION_SMOOTH;
+        return gl::INTERPOLATION_SMOOTH;
     }
 }
 
-void OutputHLSL::declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<Varying>& fieldsOut)
+void OutputHLSL::declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<gl::Varying>& fieldsOut)
 {
     const TStructure *structure = type.getStruct();
 
-    InterpolationType interpolation = getInterpolationType(baseTypeQualifier);
+    gl::InterpolationType interpolation = getInterpolationType(baseTypeQualifier);
     if (!structure)
     {
-        Varying varying(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), interpolation);
+        gl::Varying varying(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), interpolation);
         fieldsOut.push_back(varying);
     }
     else
     {
-        Varying structVarying(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), interpolation);
+        gl::Varying structVarying(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), interpolation);
         const TFieldList &fields = structure->fields();
 
         structVarying.structName = structure->name().c_str();
@@ -4004,15 +4004,15 @@ int OutputHLSL::declareUniformAndAssignRegister(const TType &type, const TString
 {
     int registerIndex = (IsSampler(type.getBasicType()) ? mSamplerRegister : mUniformRegister);
 
-    const Uniform &uniform = declareUniformToList(type, name, registerIndex, mActiveUniforms);
+    const gl::Uniform &uniform = declareUniformToList(type, name, registerIndex, mActiveUniforms);
 
     if (IsSampler(type.getBasicType()))
     {
-        mSamplerRegister += HLSLVariableRegisterCount(uniform);
+        mSamplerRegister += gl::HLSLVariableRegisterCount(uniform);
     }
     else
     {
-        mUniformRegister += HLSLVariableRegisterCount(uniform);
+        mUniformRegister += gl::HLSLVariableRegisterCount(uniform);
     }
 
     return registerIndex;

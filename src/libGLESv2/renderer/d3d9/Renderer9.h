@@ -241,9 +241,9 @@ class Renderer9 : public Renderer
 
     void deinitialize();
 
-    void applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v);
-    void applyUniformniv(gl::Uniform *targetUniform, const GLint *v);
-    void applyUniformnbv(gl::Uniform *targetUniform, const GLint *v);
+    void applyUniformnfv(gl::LinkedUniform *targetUniform, const GLfloat *v);
+    void applyUniformniv(gl::LinkedUniform *targetUniform, const GLint *v);
+    void applyUniformnbv(gl::LinkedUniform *targetUniform, const GLint *v);
 
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
     void drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);

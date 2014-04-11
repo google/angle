@@ -1574,7 +1574,7 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerD
 
 void Renderer11::applyUniforms(const gl::ProgramBinary &programBinary)
 {
-    const gl::UniformArray &uniformArray = programBinary.getUniforms();
+    const std::vector<gl::LinkedUniform*> &uniformArray = programBinary.getUniforms();
 
     unsigned int totalRegisterCountVS = 0;
     unsigned int totalRegisterCountPS = 0;
@@ -1584,7 +1584,7 @@ void Renderer11::applyUniforms(const gl::ProgramBinary &programBinary)
 
     for (size_t uniformIndex = 0; uniformIndex < uniformArray.size(); uniformIndex++)
     {
-        const gl::Uniform &uniform = *uniformArray[uniformIndex];
+        const gl::LinkedUniform &uniform = *uniformArray[uniformIndex];
 
         if (uniform.isReferencedByVertexShader() && !uniform.isSampler())
         {
@@ -1628,7 +1628,7 @@ void Renderer11::applyUniforms(const gl::ProgramBinary &programBinary)
 
     for (size_t uniformIndex = 0; uniformIndex < uniformArray.size(); uniformIndex++)
     {
-        gl::Uniform *uniform = uniformArray[uniformIndex];
+        gl::LinkedUniform *uniform = uniformArray[uniformIndex];
 
         if (!uniform->isSampler())
         {

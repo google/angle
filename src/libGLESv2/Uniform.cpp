@@ -12,7 +12,8 @@
 namespace gl
 {
 
-Uniform::Uniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize, const int blockIndex, const sh::BlockMemberInfo &blockInfo)
+LinkedUniform::LinkedUniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize,
+                             const int blockIndex, const BlockMemberInfo &blockInfo)
     : type(type),
       precision(precision),
       name(name),
@@ -37,45 +38,45 @@ Uniform::Uniform(GLenum type, GLenum precision, const std::string &name, unsigne
     }
 }
 
-Uniform::~Uniform()
+LinkedUniform::~LinkedUniform()
 {
     delete[] data;
 }
 
-bool Uniform::isArray() const
+bool LinkedUniform::isArray() const
 {
     return arraySize > 0;
 }
 
-unsigned int Uniform::elementCount() const
+unsigned int LinkedUniform::elementCount() const
 {
     return arraySize > 0 ? arraySize : 1;
 }
 
-bool Uniform::isReferencedByVertexShader() const
+bool LinkedUniform::isReferencedByVertexShader() const
 {
     return vsRegisterIndex != GL_INVALID_INDEX;
 }
 
-bool Uniform::isReferencedByFragmentShader() const
+bool LinkedUniform::isReferencedByFragmentShader() const
 {
     return psRegisterIndex != GL_INVALID_INDEX;
 }
 
-bool Uniform::isInDefaultBlock() const
+bool LinkedUniform::isInDefaultBlock() const
 {
     return blockIndex == -1;
 }
 
-size_t Uniform::dataSize() const
+size_t LinkedUniform::dataSize() const
 {
     ASSERT(type != GL_STRUCT_ANGLEX);
     return UniformInternalSize(type) * elementCount();
 }
 
-bool Uniform::isSampler() const
+bool LinkedUniform::isSampler() const
 {
-    return gl::IsSampler(type);
+    return IsSampler(type);
 }
 
 UniformBlock::UniformBlock(const std::string &name, unsigned int elementIndex, unsigned int dataSize)

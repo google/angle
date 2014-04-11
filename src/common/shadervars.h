@@ -1,11 +1,14 @@
 //
-// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// shadervars.h:
+//  Types to represent GL variables (varyings, uniforms, etc)
+//
 
-#ifndef COMPILER_SHADERVARIABLE_H_
-#define COMPILER_SHADERVARIABLE_H_
+#ifndef COMMON_SHADERVARIABLE_H_
+#define COMMON_SHADERVARIABLE_H_
 
 #include <string>
 #include <vector>
@@ -15,7 +18,7 @@
 #include <GLES3/gl3.h>
 #include <GLES2/gl2.h>
 
-namespace sh
+namespace gl
 {
 
 enum InterpolationType
@@ -119,8 +122,6 @@ struct InterfaceBlock
     unsigned int registerIndex;
 };
 
-typedef std::vector<InterfaceBlock> ActiveInterfaceBlocks;
-
 }
 
-#endif   // COMPILER_SHADERVARIABLE_H_
+#endif // COMMON_SHADERVARIABLE_H_

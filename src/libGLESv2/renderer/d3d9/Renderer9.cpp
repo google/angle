@@ -1768,11 +1768,11 @@ void Renderer9::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDi
 
 void Renderer9::applyUniforms(const gl::ProgramBinary &programBinary)
 {
-    const gl::UniformArray &uniformArray = programBinary.getUniforms();
+    const std::vector<gl::LinkedUniform*> &uniformArray = programBinary.getUniforms();
 
     for (size_t uniformIndex = 0; uniformIndex < uniformArray.size(); uniformIndex++)
     {
-        gl::Uniform *targetUniform = uniformArray[uniformIndex];
+        gl::LinkedUniform *targetUniform = uniformArray[uniformIndex];
 
         if (targetUniform->dirty)
         {
@@ -1820,7 +1820,7 @@ void Renderer9::applyUniforms(const gl::ProgramBinary &programBinary)
     }
 }
 
-void Renderer9::applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v)
+void Renderer9::applyUniformnfv(gl::LinkedUniform *targetUniform, const GLfloat *v)
 {
     if (targetUniform->isReferencedByFragmentShader())
     {
@@ -1833,7 +1833,7 @@ void Renderer9::applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v)
     }
 }
 
-void Renderer9::applyUniformniv(gl::Uniform *targetUniform, const GLint *v)
+void Renderer9::applyUniformniv(gl::LinkedUniform *targetUniform, const GLint *v)
 {
     ASSERT(targetUniform->registerCount <= MAX_VERTEX_CONSTANT_VECTORS_D3D9);
     GLfloat vector[MAX_VERTEX_CONSTANT_VECTORS_D3D9][4];
@@ -1849,7 +1849,7 @@ void Renderer9::applyUniformniv(gl::Uniform *targetUniform, const GLint *v)
     applyUniformnfv(targetUniform, (GLfloat*)vector);
 }
 
-void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, const GLint *v)
+void Renderer9::applyUniformnbv(gl::LinkedUniform *targetUniform, const GLint *v)
 {
     ASSERT(targetUniform->registerCount <= MAX_VERTEX_CONSTANT_VECTORS_D3D9);
     GLfloat vector[MAX_VERTEX_CONSTANT_VECTORS_D3D9][4];

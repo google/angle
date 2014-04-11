@@ -127,6 +127,8 @@
     <ClInclude Include="..\..\src\common\version.h"/>
     <ClInclude Include="..\..\src\common\utilities.h"/>
     <ClInclude Include="..\..\src\common\angleutils.h"/>
+    <ClInclude Include="..\..\src\common\shadervars.h"/>
+    <ClInclude Include="..\..\src\common\blocklayout.h"/>
     <ClInclude Include="..\..\include\KHR\khrplatform.h"/>
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h"/>
     <ClInclude Include="..\..\include\GLES2\gl2.h"/>
@@ -150,6 +152,8 @@
     <ClCompile Include="..\..\src\common\debug.cpp"/>
     <ClCompile Include="..\..\src\common\event_tracer.cpp"/>
     <ClCompile Include="..\..\src\common\utilities.cpp"/>
+    <ClCompile Include="..\..\src\common\shadervars.cpp"/>
+    <ClCompile Include="..\..\src\common\blocklayout.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\libEGL\libEGL.rc"/>

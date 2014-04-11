@@ -19,7 +19,7 @@
 #include <list>
 #include <vector>
 
-#include "compiler/translator/ShaderVariable.h"
+#include "common/shadervars.h"
 #include "common/angleutils.h"
 #include "libGLESv2/angletypes.h"
 
@@ -52,9 +52,9 @@ class Shader
     void getSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
     int getTranslatedSourceLength() const;
     void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
-    const std::vector<sh::Uniform> &getUniforms() const;
-    const sh::ActiveInterfaceBlocks &getInterfaceBlocks() const;
-    std::vector<sh::Varying> &getVaryings();
+    const std::vector<Uniform> &getUniforms() const;
+    const std::vector<InterfaceBlock> &getInterfaceBlocks() const;
+    std::vector<Varying> &getVaryings();
 
     virtual void compile() = 0;
     virtual void uncompile();
@@ -82,11 +82,11 @@ class Shader
 
     void getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *length, char *buffer) const;
 
-    static bool compareVarying(const sh::ShaderVariable &x, const sh::ShaderVariable &y);
+    static bool compareVarying(const ShaderVariable &x, const ShaderVariable &y);
 
     const rx::Renderer *const mRenderer;
 
-    std::vector<sh::Varying> mVaryings;
+    std::vector<Varying> mVaryings;
 
     bool mUsesMultipleRenderTargets;
     bool mUsesFragColor;
@@ -116,8 +116,8 @@ class Shader
     std::string mSource;
     std::string mHlsl;
     std::string mInfoLog;
-    std::vector<sh::Uniform> mActiveUniforms;
-    sh::ActiveInterfaceBlocks mActiveInterfaceBlocks;
+    std::vector<Uniform> mActiveUniforms;
+    std::vector<InterfaceBlock> mActiveInterfaceBlocks;
 
     ResourceManager *mResourceManager;
 };
@@ -136,14 +136,14 @@ class VertexShader : public Shader
     virtual void uncompile();
     int getSemanticIndex(const std::string &attributeName);
 
-    const std::vector<sh::Attribute> &activeAttributes() const { return mActiveAttributes; }
+    const std::vector<Attribute> &activeAttributes() const { return mActiveAttributes; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexShader);
 
     void parseAttributes();
 
-    std::vector<sh::Attribute> mActiveAttributes;
+    std::vector<Attribute> mActiveAttributes;
 };
 
 class FragmentShader : public Shader
@@ -156,12 +156,12 @@ class FragmentShader : public Shader
     virtual GLenum getType();
     virtual void compile();
     virtual void uncompile();
-    const std::vector<sh::Attribute> &getOutputVariables() const;
+    const std::vector<Attribute> &getOutputVariables() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(FragmentShader);
 
-    std::vector<sh::Attribute> mActiveOutputVariables;
+    std::vector<Attribute> mActiveOutputVariables;
 };
 }
 

@@ -117,11 +117,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\third_party\compiler\ArrayBoundsClamper.h"/>
+    <ClInclude Include="..\..\src\common\shadervars.h"/>
     <ClInclude Include="..\..\src\common\RefCountObject.h"/>
     <ClInclude Include="..\..\src\common\mathutil.h"/>
     <ClInclude Include="..\..\src\common\event_tracer.h"/>
     <ClInclude Include="..\..\src\common\debug.h"/>
     <ClInclude Include="..\..\src\common\version.h"/>
+    <ClInclude Include="..\..\src\common\blocklayout.h"/>
     <ClInclude Include="..\..\src\common\utilities.h"/>
     <ClInclude Include="..\..\src\common\angleutils.h"/>
     <ClInclude Include="..\..\src\compiler\translator\BaseTypes.h"/>
@@ -133,16 +135,15 @@
     <ClInclude Include="..\..\src\compiler\translator\FlagStd140Structs.h"/>
     <ClInclude Include="..\..\src\compiler\translator\length_limits.h"/>
     <ClInclude Include="..\..\src\compiler\translator\PoolAlloc.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h"/>
     <ClInclude Include="..\..\src\compiler\translator\BuiltInFunctionEmulator.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ValidateOutputs.h"/>
     <ClInclude Include="..\..\src\compiler\translator\UnfoldShortCircuit.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorGLSL.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\InitializeDll.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\SymbolTable.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeGlobals.h"/>
     <ClInclude Include="..\..\src\compiler\translator\osinclude.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Initialize.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\HLSLLayoutEncoder.h"/>
     <ClInclude Include="..\..\src\compiler\translator\QualifierAlive.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ConstantUnion.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ParseContext.h"/>
@@ -152,13 +153,12 @@
     <ClInclude Include="..\..\src\compiler\translator\DirectiveHandler.h"/>
     <ClInclude Include="..\..\src\compiler\translator\NodeSearch.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorESSL.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\SymbolTable.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\InitializeDll.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h"/>
     <ClInclude Include="..\..\src\compiler\translator\localintermediate.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ShHandle.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputGLSLBase.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ForLoopUnroll.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\ShaderVariable.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Pragma.h"/>
     <ClInclude Include="..\..\src\compiler\translator\intermediate.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorHLSL.h"/>
@@ -175,7 +175,6 @@
     <ClInclude Include="..\..\src\compiler\translator\SearchSymbol.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeParseContext.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\BlockLayoutEncoder.h"/>
     <ClInclude Include="..\..\src\compiler\translator\VariableInfo.h"/>
     <ClInclude Include="..\..\src\compiler\translator\LoopInfo.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang_tab.h"/>
@@ -205,7 +204,8 @@
     <ClCompile Include="..\..\src\common\RefCountObject.cpp"/>
     <ClCompile Include="..\..\src\common\mathutil.cpp"/>
     <ClCompile Include="..\..\src\common\debug.cpp"/>
-    <ClCompile Include="..\..\src\compiler\translator\HLSLLayoutEncoder.cpp"/>
+    <ClCompile Include="..\..\src\common\shadervars.cpp"/>
+    <ClCompile Include="..\..\src\common\blocklayout.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\InfoSink.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\OutputESSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ValidateLimitations.cpp"/>
@@ -214,13 +214,11 @@
     <ClCompile Include="..\..\src\compiler\translator\OutputGLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorHLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\OutputGLSLBase.cpp"/>
-    <ClCompile Include="..\..\src\compiler\translator\ShaderVariable.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ParseContext.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\RemoveTree.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\InitializeVariables.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\InitializeDll.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\PoolAlloc.cpp"/>
-    <ClCompile Include="..\..\src\compiler\translator\BlockLayoutEncoder.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ossource_win.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\RewriteElseBlocks.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\Diagnostics.cpp"/>
@@ -230,6 +228,7 @@
     <ClCompile Include="..\..\src\compiler\translator\ValidateOutputs.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorESSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\VariablePacker.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\DirectiveHandler.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\parseConst.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\VersionGLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\DetectCallDepth.cpp"/>
@@ -244,7 +243,6 @@
     <ClCompile Include="..\..\src\compiler\translator\UnfoldShortCircuitAST.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorGLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\SymbolTable.cpp"/>
-    <ClCompile Include="..\..\src\compiler\translator\DirectiveHandler.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\FlagStd140Structs.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\LoopInfo.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\OutputHLSL.cpp"/>

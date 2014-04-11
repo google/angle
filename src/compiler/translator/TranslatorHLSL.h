@@ -8,27 +8,27 @@
 #define COMPILER_TRANSLATORHLSL_H_
 
 #include "compiler/translator/ShHandle.h"
-#include "compiler/translator/ShaderVariable.h"
+#include "common/shadervars.h"
 
 class TranslatorHLSL : public TCompiler {
 public:
     TranslatorHLSL(ShShaderType type, ShShaderSpec spec, ShShaderOutput output);
 
     virtual TranslatorHLSL *getAsTranslatorHLSL() { return this; }
-    const std::vector<sh::Uniform> &getUniforms() { return mActiveUniforms; }
-    const sh::ActiveInterfaceBlocks &getInterfaceBlocks() const { return mActiveInterfaceBlocks; }
-    const std::vector<sh::Attribute> &getOutputVariables() { return mActiveOutputVariables; }
-    const std::vector<sh::Attribute> &getAttributes() { return mActiveAttributes; }
-    const std::vector<sh::Varying> &getVaryings() { return mActiveVaryings; }
+    const std::vector<gl::Uniform> &getUniforms() { return mActiveUniforms; }
+    const std::vector<gl::InterfaceBlock> &getInterfaceBlocks() const { return mActiveInterfaceBlocks; }
+    const std::vector<gl::Attribute> &getOutputVariables() { return mActiveOutputVariables; }
+    const std::vector<gl::Attribute> &getAttributes() { return mActiveAttributes; }
+    const std::vector<gl::Varying> &getVaryings() { return mActiveVaryings; }
 
 protected:
     virtual void translate(TIntermNode* root);
 
-    std::vector<sh::Uniform> mActiveUniforms;
-    sh::ActiveInterfaceBlocks mActiveInterfaceBlocks;
-    std::vector<sh::Attribute> mActiveOutputVariables;
-    std::vector<sh::Attribute> mActiveAttributes;
-    std::vector<sh::Varying> mActiveVaryings;
+    std::vector<gl::Uniform> mActiveUniforms;
+    std::vector<gl::InterfaceBlock> mActiveInterfaceBlocks;
+    std::vector<gl::Attribute> mActiveOutputVariables;
+    std::vector<gl::Attribute> mActiveAttributes;
+    std::vector<gl::Varying> mActiveVaryings;
     ShShaderOutput mOutputType;
 };
 

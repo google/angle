@@ -15,8 +15,7 @@
 #include "common/utilities.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/formatutils.h"
-
-#include "compiler/translator/HLSLLayoutEncoder.h"
+#include "common/blocklayout.h"
 
 static std::string Str(int i)
 {
@@ -90,12 +89,12 @@ DynamicHLSL::DynamicHLSL(rx::Renderer *const renderer)
 {
 }
 
-static bool packVarying(sh::Varying *varying, const int maxVaryingVectors, const sh::ShaderVariable *packing[][4])
+static bool packVarying(Varying *varying, const int maxVaryingVectors, const ShaderVariable *packing[][4])
 {
     GLenum transposedType = TransposeMatrixType(varying->type);
 
     // matrices within varying structs are not transposed
-    int registers = (varying->isStruct() ? sh::HLSLVariableRegisterCount(*varying) : gl::VariableRowCount(transposedType)) * varying->elementCount();
+    int registers = (varying->isStruct() ? HLSLVariableRegisterCount(*varying) : VariableRowCount(transposedType)) * varying->elementCount();
     int elements = (varying->isStruct() ? 4 : VariableColumnCount(transposedType));
     bool success = false;
 
@@ -219,7 +218,7 @@ static bool packVarying(sh::Varying *varying, const int maxVaryingVectors, const
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
 // Returns the number of used varying registers, or -1 if unsuccesful
-int DynamicHLSL::packVaryings(InfoLog &infoLog, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader,
+int DynamicHLSL::packVaryings(InfoLog &infoLog, const ShaderVariable *packing[][4], FragmentShader *fragmentShader,
                               VertexShader *vertexShader, const std::vector<std::string>& transformFeedbackVaryings)
 {
     const int maxVaryingVectors = mRenderer->getMaxVaryingVectors();
@@ -231,7 +230,7 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog, const sh::ShaderVariable *packin
 
     for (unsigned int varyingIndex = 0; varyingIndex < fragmentShader->mVaryings.size(); varyingIndex++)
     {
-        sh::Varying *varying = &fragmentShader->mVaryings[varyingIndex];
+        Varying *varying = &fragmentShader->mVaryings[varyingIndex];
         if (packVarying(varying, maxVaryingVectors, packing))
         {
             packedVaryings.insert(varying->name);
@@ -251,7 +250,7 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog, const sh::ShaderVariable *packin
             bool found = false;
             for (unsigned int varyingIndex = 0; varyingIndex < vertexShader->mVaryings.size(); varyingIndex++)
             {
-                sh::Varying *varying = &vertexShader->mVaryings[varyingIndex];
+                Varying *varying = &vertexShader->mVaryings[varyingIndex];
                 if (transformFeedbackVarying == varying->name)
                 {
                     if (!packVarying(varying, maxVaryingVectors, packing))
@@ -294,7 +293,7 @@ std::string DynamicHLSL::generateVaryingHLSL(VertexShader *shader, const std::st
 
     for (unsigned int varyingIndex = 0; varyingIndex < shader->mVaryings.size(); varyingIndex++)
     {
-        sh::Varying *varying = &shader->mVaryings[varyingIndex];
+        Varying *varying = &shader->mVaryings[varyingIndex];
         if (varying->registerAssigned())
         {
             GLenum transposedType = TransposeMatrixType(varying->type);
@@ -306,9 +305,9 @@ std::string DynamicHLSL::generateVaryingHLSL(VertexShader *shader, const std::st
                 {
                     switch (varying->interpolation)
                     {
-                      case sh::INTERPOLATION_SMOOTH:   varyingHLSL += "    ";                 break;
-                      case sh::INTERPOLATION_FLAT:     varyingHLSL += "    nointerpolation "; break;
-                      case sh::INTERPOLATION_CENTROID: varyingHLSL += "    centroid ";        break;
+                      case INTERPOLATION_SMOOTH:   varyingHLSL += "    ";                 break;
+                      case INTERPOLATION_FLAT:     varyingHLSL += "    nointerpolation "; break;
+                      case INTERPOLATION_CENTROID: varyingHLSL += "    centroid ";        break;
                       default:  UNREACHABLE();
                     }
 
@@ -325,8 +324,8 @@ std::string DynamicHLSL::generateVaryingHLSL(VertexShader *shader, const std::st
                     }
                     else
                     {
-                        GLenum componentType = gl::UniformComponentType(transposedType);
-                        int columnCount = gl::VariableColumnCount(transposedType);
+                        GLenum componentType = UniformComponentType(transposedType);
+                        int columnCount = VariableColumnCount(transposedType);
                         typeString = gl_d3d::HLSLComponentTypeString(componentType, columnCount);
                     }
                     varyingHLSL += typeString + " v" + n + " : " + varyingSemantic + n + ";\n";
@@ -345,7 +344,7 @@ std::string DynamicHLSL::generateVaryingHLSL(VertexShader *shader, const std::st
     return varyingHLSL;
 }
 
-std::string DynamicHLSL::generateInputLayoutHLSL(const VertexFormat inputLayout[], const sh::Attribute shaderAttributes[]) const
+std::string DynamicHLSL::generateInputLayoutHLSL(const VertexFormat inputLayout[], const Attribute shaderAttributes[]) const
 {
     std::string structHLSL, initHLSL;
 
@@ -357,7 +356,7 @@ std::string DynamicHLSL::generateInputLayoutHLSL(const VertexFormat inputLayout[
         ASSERT(inputIndex < MAX_VERTEX_ATTRIBS);
 
         const VertexFormat &vertexFormat = inputLayout[inputIndex];
-        const sh::Attribute &shaderAttribute = shaderAttributes[attributeIndex];
+        const Attribute &shaderAttribute = shaderAttributes[attributeIndex];
 
         if (!shaderAttribute.name.empty())
         {
@@ -409,7 +408,7 @@ std::string DynamicHLSL::generateInputLayoutHLSL(const VertexFormat inputLayout[
            "}\n";
 }
 
-bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const sh::ShaderVariable *packing[][4],
+bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const ShaderVariable *packing[][4],
                                          std::string& pixelHLSL, std::string& vertexHLSL,
                                          FragmentShader *fragmentShader, VertexShader *vertexShader,
                                          const std::vector<std::string>& transformFeedbackVaryings,
@@ -568,7 +567,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
 
     for (unsigned int vertVaryingIndex = 0; vertVaryingIndex < vertexShader->mVaryings.size(); vertVaryingIndex++)
     {
-        sh::Varying *varying = &vertexShader->mVaryings[vertVaryingIndex];
+        Varying *varying = &vertexShader->mVaryings[vertVaryingIndex];
         if (varying->registerAssigned())
         {
             for (unsigned int elementIndex = 0; elementIndex < varying->elementCount(); elementIndex++)
@@ -687,11 +686,11 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
     {
         defineOutputVariables(fragmentShader, programOutputVars);
 
-        const std::vector<sh::Attribute> &shaderOutputVars = fragmentShader->getOutputVariables();
+        const std::vector<Attribute> &shaderOutputVars = fragmentShader->getOutputVariables();
         for (auto locationIt = programOutputVars->begin(); locationIt != programOutputVars->end(); locationIt++)
         {
             const VariableLocation &outputLocation = locationIt->second;
-            const sh::ShaderVariable &outputVariable = shaderOutputVars[outputLocation.index];
+            const ShaderVariable &outputVariable = shaderOutputVars[outputLocation.index];
             const std::string &elementString = (outputLocation.element == GL_INVALID_INDEX ? "" : Str(outputLocation.element));
 
             pixelHLSL += "    " + gl_d3d::HLSLTypeString(outputVariable.type) +
@@ -767,7 +766,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
 
     for (unsigned int varyingIndex = 0; varyingIndex < fragmentShader->mVaryings.size(); varyingIndex++)
     {
-        sh::Varying *varying = &fragmentShader->mVaryings[varyingIndex];
+        Varying *varying = &fragmentShader->mVaryings[varyingIndex];
         if (varying->registerAssigned())
         {
             for (unsigned int elementIndex = 0; elementIndex < varying->elementCount(); elementIndex++)
@@ -851,11 +850,11 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
 
 void DynamicHLSL::defineOutputVariables(FragmentShader *fragmentShader, std::map<int, VariableLocation> *programOutputVars) const
 {
-    const std::vector<sh::Attribute> &shaderOutputVars = fragmentShader->getOutputVariables();
+    const std::vector<Attribute> &shaderOutputVars = fragmentShader->getOutputVariables();
 
     for (unsigned int outputVariableIndex = 0; outputVariableIndex < shaderOutputVars.size(); outputVariableIndex++)
     {
-        const sh::Attribute &outputVariable = shaderOutputVars[outputVariableIndex];
+        const Attribute &outputVariable = shaderOutputVars[outputVariableIndex];
         const int baseLocation = outputVariable.location == -1 ? 0 : outputVariable.location;
 
         if (outputVariable.arraySize > 0)
@@ -875,14 +874,14 @@ void DynamicHLSL::defineOutputVariables(FragmentShader *fragmentShader, std::map
     }
 }
 
-std::string DynamicHLSL::generateGeometryShaderHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const
+std::string DynamicHLSL::generateGeometryShaderHLSL(int registers, const ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const
 {
     // for now we only handle point sprite emulation
     ASSERT(vertexShader->mUsesPointSize && mRenderer->getMajorShaderModel() >= 4);
     return generatePointSpriteHLSL(registers, packing, fragmentShader, vertexShader);
 }
 
-std::string DynamicHLSL::generatePointSpriteHLSL(int registers, const sh::ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const
+std::string DynamicHLSL::generatePointSpriteHLSL(int registers, const ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const
 {
     ASSERT(registers >= 0);
     ASSERT(vertexShader->mUsesPointSize);
@@ -1015,7 +1014,7 @@ std::string DynamicHLSL::decorateVariable(const std::string &name)
     return name;
 }
 
-std::string DynamicHLSL::generateAttributeConversionHLSL(const VertexFormat &vertexFormat, const sh::ShaderVariable &shaderAttrib) const
+std::string DynamicHLSL::generateAttributeConversionHLSL(const VertexFormat &vertexFormat, const ShaderVariable &shaderAttrib) const
 {
     std::string attribString = "input." + decorateVariable(shaderAttrib.name);
 

@@ -17,7 +17,7 @@
 
 #include "compiler/translator/intermediate.h"
 #include "compiler/translator/ParseContext.h"
-#include "compiler/translator/ShaderVariable.h"
+#include "common/shadervars.h"
 
 namespace sh
 {
@@ -32,11 +32,11 @@ class OutputHLSL : public TIntermTraverser
     void output();
 
     TInfoSinkBase &getBodyStream();
-    const std::vector<Uniform> &getUniforms();
-    const ActiveInterfaceBlocks &getInterfaceBlocks() const;
-    const std::vector<Attribute> &getOutputVariables() const;
-    const std::vector<Attribute> &getAttributes() const;
-    const std::vector<Varying> &getVaryings() const;
+    const std::vector<gl::Uniform> &getUniforms();
+    const std::vector<gl::InterfaceBlock> &getInterfaceBlocks() const;
+    const std::vector<gl::Attribute> &getOutputVariables() const;
+    const std::vector<gl::Attribute> &getAttributes() const;
+    const std::vector<gl::Varying> &getVaryings() const;
 
     TString typeString(const TType &type);
     TString textureString(const TType &type);
@@ -184,10 +184,10 @@ class OutputHLSL : public TIntermTraverser
     TString registerString(TIntermSymbol *operand);
     int samplerRegister(TIntermSymbol *sampler);
     int uniformRegister(TIntermSymbol *uniform);
-    void declareInterfaceBlockField(const TType &type, const TString &name, std::vector<InterfaceBlockField>& output);
-    Uniform declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform>& output);
+    void declareInterfaceBlockField(const TType &type, const TString &name, std::vector<gl::InterfaceBlockField>& output);
+    gl::Uniform declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<gl::Uniform>& output);
     void declareUniform(const TType &type, const TString &name, int index);
-    void declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<Varying>& fieldsOut);
+    void declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<gl::Varying>& fieldsOut);
 
     // Returns the uniform's register index
     int declareUniformAndAssignRegister(const TType &type, const TString &name);
@@ -210,11 +210,11 @@ class OutputHLSL : public TIntermTraverser
     static bool isVaryingOut(TQualifier qualifier);
     static bool isVarying(TQualifier qualifier);
 
-    std::vector<Uniform> mActiveUniforms;
-    ActiveInterfaceBlocks mActiveInterfaceBlocks;
-    std::vector<Attribute> mActiveOutputVariables;
-    std::vector<Attribute> mActiveAttributes;
-    std::vector<Varying> mActiveVaryings;
+    std::vector<gl::Uniform> mActiveUniforms;
+    std::vector<gl::InterfaceBlock> mActiveInterfaceBlocks;
+    std::vector<gl::Attribute> mActiveOutputVariables;
+    std::vector<gl::Attribute> mActiveAttributes;
+    std::vector<gl::Varying> mActiveVaryings;
     std::map<TString, int> mStd140StructElementIndexes;
     std::map<TIntermTyped*, TString> mFlaggedStructMappedNames;
     std::map<TIntermTyped*, TString> mFlaggedStructOriginalNames;
