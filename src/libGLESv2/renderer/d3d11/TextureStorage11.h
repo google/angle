@@ -33,7 +33,7 @@ class TextureStorage11 : public TextureStorage
     UINT getBindFlags() const;
 
     virtual ID3D11Resource *getResource() const = 0;
-    virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState) = 0;
+    virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState);
     virtual RenderTarget *getRenderTarget(int level) { return NULL; }
     virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level) { return NULL; }
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer) { return NULL; }
@@ -62,8 +62,11 @@ class TextureStorage11 : public TextureStorage
     int getLevelHeight(int mipLevel) const;
     int getLevelDepth(int mipLevel) const;
 
+    virtual ID3D11Resource *getSwizzleTexture() = 0;
     virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel) = 0;
-    virtual ID3D11ShaderResourceView *getSRVLevel(int mipLevel) = 0;
+    ID3D11ShaderResourceView *getSRVLevel(int mipLevel);
+
+    virtual ID3D11ShaderResourceView *createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture) = 0;
 
     void verifySwizzleExists(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
 
@@ -130,6 +133,9 @@ class TextureStorage11 : public TextureStorage
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11);
 
     const UINT mBindFlags;
+
+    SRVCache srvCache;
+    ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
 class TextureStorage11_2D : public TextureStorage11
@@ -142,32 +148,26 @@ class TextureStorage11_2D : public TextureStorage11
     static TextureStorage11_2D *makeTextureStorage11_2D(TextureStorage *storage);
 
     virtual ID3D11Resource *getResource() const;
-    virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState);
     virtual RenderTarget *getRenderTarget(int level);
 
     virtual void generateMipmap(int level);
 
   protected:
-    ID3D11Texture2D *getSwizzleTexture();
+    virtual ID3D11Resource *getSwizzleTexture();
     virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
-
-    virtual ID3D11ShaderResourceView *getSRVLevel(int mipLevel);
 
     virtual unsigned int getTextureLevelDepth(int mipLevel) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2D);
 
-    ID3D11ShaderResourceView *createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture);
+    virtual ID3D11ShaderResourceView *createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture);
 
     ID3D11Texture2D *mTexture;
     RenderTarget11 *mRenderTarget[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     ID3D11Texture2D *mSwizzleTexture;
     ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-
-    SRVCache srvCache;
-    ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
 class TextureStorage11_Cube : public TextureStorage11
@@ -179,32 +179,26 @@ class TextureStorage11_Cube : public TextureStorage11
     static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
 
     virtual ID3D11Resource *getResource() const;
-    virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState);
     virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level);
 
     virtual void generateMipmap(int faceIndex, int level);
 
   protected:
-    ID3D11Texture2D *getSwizzleTexture();
+    virtual ID3D11Resource *getSwizzleTexture();
     virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
-
-    virtual ID3D11ShaderResourceView *getSRVLevel(int mipLevel);
 
     virtual unsigned int getTextureLevelDepth(int mipLevel) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_Cube);
 
-    ID3D11ShaderResourceView *createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture);
+    virtual ID3D11ShaderResourceView *createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture);
 
     ID3D11Texture2D *mTexture;
     RenderTarget11 *mRenderTarget[6][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     ID3D11Texture2D *mSwizzleTexture;
     ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-
-    SRVCache srvCache;
-    ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
 class TextureStorage11_3D : public TextureStorage11
@@ -217,24 +211,21 @@ class TextureStorage11_3D : public TextureStorage11
     static TextureStorage11_3D *makeTextureStorage11_3D(TextureStorage *storage);
 
     virtual ID3D11Resource *getResource() const;
-    virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState);
     virtual RenderTarget *getRenderTarget(int mipLevel);
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer);
 
     virtual void generateMipmap(int level);
 
   protected:
-    ID3D11Texture3D *getSwizzleTexture();
+    virtual ID3D11Resource *getSwizzleTexture();
     virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
-
-    virtual ID3D11ShaderResourceView *getSRVLevel(int mipLevel);
 
     virtual unsigned int getTextureLevelDepth(int mipLevel) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_3D);
 
-    ID3D11ShaderResourceView *createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture);
+    virtual ID3D11ShaderResourceView *createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture);
 
     typedef std::pair<int, int> LevelLayerKey;
     typedef std::map<LevelLayerKey, RenderTarget11*> RenderTargetMap;
@@ -245,9 +236,6 @@ class TextureStorage11_3D : public TextureStorage11
     ID3D11Texture3D *mTexture;
     ID3D11Texture3D *mSwizzleTexture;
     ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-
-    SRVCache srvCache;
-    ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
 class TextureStorage11_2DArray : public TextureStorage11
@@ -260,23 +248,20 @@ class TextureStorage11_2DArray : public TextureStorage11
     static TextureStorage11_2DArray *makeTextureStorage11_2DArray(TextureStorage *storage);
 
     virtual ID3D11Resource *getResource() const;
-    virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState);
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer);
 
     virtual void generateMipmap(int level);
 
   protected:
-    ID3D11Texture2D *getSwizzleTexture();
+    virtual ID3D11Resource *getSwizzleTexture();
     virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
-
-    virtual ID3D11ShaderResourceView *getSRVLevel(int mipLevel);
 
     virtual unsigned int getTextureLevelDepth(int mipLevel) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2DArray);
 
-    ID3D11ShaderResourceView *createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture);
+    virtual ID3D11ShaderResourceView *createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture);
 
     typedef std::pair<int, int> LevelLayerKey;
     typedef std::map<LevelLayerKey, RenderTarget11*> RenderTargetMap;
@@ -286,9 +271,6 @@ class TextureStorage11_2DArray : public TextureStorage11
 
     ID3D11Texture2D *mSwizzleTexture;
     ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-
-    SRVCache srvCache;
-    ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
 }
