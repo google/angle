@@ -5,3 +5,4 @@
 *.bat              eol=crlf
 *.rc               eol=crlf
 **/compiled/*.h    eol=crlf
+*.sh               eol=lf
