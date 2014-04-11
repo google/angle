@@ -8,7 +8,6 @@
         'angle_code': 1,
         'angle_post_build_script%': 0,
     },
-
     'includes':
     [
         'compiler.gypi',

@@ -115,8 +115,8 @@
     <ClCompile Include="..\..\samples\translator\translator.cpp"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\translator.vcxproj">
-      <Project>{C15697F6-5057-016E-BD29-422971875679}</Project>
+    <ProjectReference Include="..\src\translator_static.vcxproj">
+      <Project>{19386E01-D811-FA3B-9F1E-122BB0C0E9F5}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\src\preprocessor.vcxproj">

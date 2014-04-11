@@ -135,9 +135,6 @@
     <ClInclude Include="..\..\src\compiler\translator\FlagStd140Structs.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\compiler\translator\TranslatorESSL.cpp">
-      <Filter>src\compiler\translator</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\src\compiler\translator\length_limits.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
@@ -249,6 +246,9 @@
     <ClInclude Include="..\..\src\compiler\translator\TranslatorESSL.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\compiler\translator\TranslatorESSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\compiler\translator\SymbolTable.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
@@ -330,9 +330,6 @@
     <ClInclude Include="..\..\src\compiler\translator\SearchSymbol.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\compiler\translator\MapLongVariableNames.cpp">
-      <Filter>src\compiler\translator</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\CodeGen.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
@@ -384,10 +381,13 @@
     <ClCompile Include="..\..\src\compiler\translator\FlagStd140Structs.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\compiler\translator\LoopInfo.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\OutputHLSL.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\compiler\translator\MapLongVariableNames.h">
+    <ClInclude Include="..\..\src\compiler\translator\LoopInfo.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\DetectDiscontinuity.cpp">

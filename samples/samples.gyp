@@ -9,7 +9,7 @@
             'target_name': 'essl_to_glsl',
             'type': 'executable',
             'includes': [ '../build/common_defines.gypi', ],
-            'dependencies': [ '../src/angle.gyp:translator', ],
+            'dependencies': [ '../src/angle.gyp:translator_static', ],
             'include_dirs': [ '../include', ],
             'sources': [ '<!@(python <(angle_path)/enumerate_files.py translator -types *.cpp *.h)' ],
         },
@@ -24,7 +24,7 @@
                     'target_name': 'essl_to_hlsl',
                     'type': 'executable',
                     'includes': [ '../build/common_defines.gypi', ],
-                    'dependencies': [ '../src/angle.gyp:translator', ],
+                    'dependencies': [ '../src/angle.gyp:translator_static', ],
                     'include_dirs':
                     [
                         '../include',

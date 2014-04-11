@@ -14,8 +14,55 @@
 
         {
             'target_name': 'translator',
+            'type': '<(component)',
+            'dependencies': [ 'preprocessor' ],
+            'includes': [ '../build/common_defines.gypi', ],
+            'include_dirs':
+            [
+                '.',
+                '../include',
+            ],
+            'defines':
+            [
+                'ANGLE_TRANSLATOR_IMPLEMENTATION',
+            ],
+            'sources':
+            [
+                '<!@(python <(angle_path)/enumerate_files.py \
+                     -dirs compiler/translator third_party/compiler common ../include \
+                     -types *.cpp *.h *.y *.l)',
+            ],
+            'conditions':
+            [
+                ['OS=="win"',
+                    {
+                        'msvs_disabled_warnings': [ 4267 ],
+                        'sources/': [ [ 'exclude', 'compiler/translator/ossource_posix.cpp' ], ],
+                    },
+                    { # else: posix
+                        'sources/': [ [ 'exclude', 'compiler/translator/ossource_win.cpp' ], ],
+                    }
+                ],
+            ],
+            'msvs_settings':
+            {
+              'VCLibrarianTool':
+              {
+                'AdditionalOptions': ['/ignore:4221']
+              },
+            },
+        },
 
-            # TODO(jmadill): https://code.google.com/p/angleproject/issues/detail?id=569 component build
+        {
+            'target_name': 'translator_static',
+            'type': 'static_library',
+            'dependencies': [ 'preprocessor' ],
+            'includes': [ '../build/common_defines.gypi', ],
+            'include_dirs':
+            [
+                '.',
+                '../include',
+            ],
             'defines':
             [
                 'ANGLE_TRANSLATOR_STATIC',
@@ -27,15 +74,6 @@
                     'ANGLE_TRANSLATOR_STATIC',
                 ],
             },
-
-            'type': 'static_library',
-            'dependencies': [ 'preprocessor' ],
-            'includes': [ '../build/common_defines.gypi', ],
-            'include_dirs':
-            [
-                '.',
-                '../include',
-            ],
             'sources':
             [
                 '<!@(python <(angle_path)/enumerate_files.py \
