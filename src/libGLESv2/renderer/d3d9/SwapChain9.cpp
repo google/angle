@@ -316,6 +316,14 @@ EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
         return EGL_BAD_ALLOC;
     }
 
+    // On Windows 8 systems, IDirect3DSwapChain9::Present sometimes returns 0x88760873 when the windows is
+    // in the process of entering/exiting fullscreen. This code doesn't seem to have any documentation.  The
+    // device appears to be ok after emitting this error so simply return a failure to swap.
+    if (result == 0x88760873)
+    {
+        return EGL_BAD_NATIVE_WINDOW;
+    }
+
     // http://crbug.com/313210
     // If our swap failed, trigger a device lost event. Resetting will work around an AMD-specific
     // device removed bug with lost contexts when reinstalling drivers.
