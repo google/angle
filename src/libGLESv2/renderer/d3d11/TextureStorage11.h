@@ -195,7 +195,7 @@ class TextureStorage11_Cube : public TextureStorage11
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_Cube);
 
-    ID3D11ShaderResourceView *createSRV(bool arraySRV, int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture);
+    ID3D11ShaderResourceView *createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture);
 
     ID3D11Texture2D *mTexture;
     RenderTarget11 *mRenderTarget[6][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];

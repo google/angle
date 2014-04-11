@@ -875,14 +875,10 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV(const gl::SamplerState &
         return srv;
     }
 
-    // Unnormalized integer cube maps are not supported by DX11; we emulate them as an array of six 2D textures
-    bool unnormalizedInteger = (d3d11::GetComponentType(mTextureFormat) == GL_INT ||
-                                d3d11::GetComponentType(mTextureFormat) == GL_UNSIGNED_INT);
-
     DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
     ID3D11Texture2D *texture = swizzleRequired ? getSwizzleTexture() : mTexture;
 
-    srv = createSRV(unnormalizedInteger, 0, mipLevels, format, texture);
+    srv = createSRV(0, mipLevels, format, texture);
 
     return srvCache.add(key, srv);
 }
@@ -893,7 +889,7 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRVLevel(int mipLevel)
     {
         if (!mLevelSRVs[mipLevel])
         {
-            mLevelSRVs[mipLevel] = createSRV(true, mipLevel, 1, mShaderResourceFormat, mTexture);
+            mLevelSRVs[mipLevel] = createSRV(mipLevel, 1, mShaderResourceFormat, mTexture);
         }
 
         return mLevelSRVs[mipLevel];
@@ -904,12 +900,16 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRVLevel(int mipLevel)
     }
 }
 
-ID3D11ShaderResourceView *TextureStorage11_Cube::createSRV(bool arraySRV, int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture)
+ID3D11ShaderResourceView *TextureStorage11_Cube::createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture)
 {
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
     srvDesc.Format = format;
 
-    if (arraySRV)
+    // Unnormalized integer cube maps are not supported by DX11; we emulate them as an array of six 2D textures
+    bool unnormalizedInteger = (d3d11::GetComponentType(mTextureFormat) == GL_INT ||
+                                d3d11::GetComponentType(mTextureFormat) == GL_UNSIGNED_INT);
+
+    if(unnormalizedInteger)
     {
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
         srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + baseLevel;
