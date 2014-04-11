@@ -43,6 +43,48 @@
     },
     {
       "key": {
+        "uuid": "d9544bb3_928f2216",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-11T21:13:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9995785_d8d1050e",
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9544bb3_f28a1607",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-11T21:13:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "398d6745_8ed57b0d",
+      "range": {
+        "startLine": 505,
+        "startChar": 38,
+        "endLine": 505,
+        "endChar": 72
+      },
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "398d6745_6e0a0fef",
         "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
         "patchSetId": 1
@@ -54,6 +96,30 @@
       "writtenOn": "2014-04-04T18:27:01Z",
       "side": 1,
       "message": "suggestion: this function should return the SRV, instead of passing the pointer-to-pointer out argument",
+      "range": {
+        "startLine": 531,
+        "startChar": 0,
+        "endLine": 531,
+        "endChar": 4
+      },
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99e49352_3521c884",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-11T21:13:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "398d6745_6e0a0fef",
       "range": {
         "startLine": 531,
         "startChar": 0,
@@ -154,6 +220,72 @@
     },
     {
       "key": {
+        "uuid": "99e49352_d5385cb4",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-11T21:13:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9966f57_0c9d1756",
+      "range": {
+        "startLine": 861,
+        "startChar": 43,
+        "endLine": 861,
+        "endChar": 48
+      },
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9df977e_b1804a39",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-11T21:13:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9995785_f8cec96c",
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9544bb3_125d72d7",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-11T21:13:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9966f57_4c055fde",
+      "range": {
+        "startLine": 861,
+        "startChar": 43,
+        "endLine": 861,
+        "endChar": 48
+      },
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9be0bc6_d9fd931d",
         "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
         "patchSetId": 1
@@ -165,6 +297,24 @@
       "writtenOn": "2014-04-04T20:59:50Z",
       "side": 1,
       "message": "We do this check a couple of times-- would this be a good case for a helper func? It\u0027s a small scrap of code, but ternaries are easy to fiddle wrong.",
+      "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "398d6745_0edb4bbb",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1430,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-11T21:13:24Z",
+      "side": 1,
+      "message": "This will be entirely replaced by the last patch in this series, so besides the comment that I added for clarification in case we ever need to peek at this code again, I think there\u0027s little point in refactoring what will be removed.",
+      "parentUuid": "d9be0bc6_d9fd931d",
       "revId": "687de308b074ce71aa50f5e661017e6b9ec51e2e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
