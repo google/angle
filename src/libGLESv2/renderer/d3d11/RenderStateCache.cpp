@@ -409,8 +409,8 @@ ID3D11SamplerState *RenderStateCache::getSamplerState(const gl::SamplerState &sa
         samplerDesc.BorderColor[1] = 0.0f;
         samplerDesc.BorderColor[2] = 0.0f;
         samplerDesc.BorderColor[3] = 0.0f;
-        samplerDesc.MinLOD = -FLT_MAX;
-        samplerDesc.MaxLOD = +FLT_MAX;
+        samplerDesc.MinLOD = samplerState.minLod;
+        samplerDesc.MaxLOD = samplerState.maxLod;
 
         ID3D11SamplerState *dx11SamplerState = NULL;
         HRESULT result = mDevice->CreateSamplerState(&samplerDesc, &dx11SamplerState);
