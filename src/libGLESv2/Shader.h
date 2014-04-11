@@ -99,6 +99,7 @@ class Shader
     bool mUsesFragDepth;
     int mShaderVersion;
     bool mUsesDiscardRewriting;
+    bool mUsesNestedBreak;
 
     static void *mFragmentCompiler;
     static void *mVertexCompiler;

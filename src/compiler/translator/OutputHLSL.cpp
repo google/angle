@@ -121,6 +121,7 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     mUsesAtan2_3 = false;
     mUsesAtan2_4 = false;
     mUsesDiscardRewriting = false;
+    mUsesNestedBreak = false;
 
     mNumRenderTargets = resources.EXT_draw_buffers ? resources.MaxDrawBuffers : 1;
 
@@ -131,6 +132,7 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     mContainsLoopDiscontinuity = false;
     mOutputLod0Function = false;
     mInsideDiscontinuousLoop = false;
+    mNestedLoopDepth = 0;
 
     mExcessiveLoopIndex = NULL;
 
@@ -673,6 +675,11 @@ void OutputHLSL::header()
     if (mUsesDiscardRewriting)
     {
         out << "#define ANGLE_USES_DISCARD_REWRITING" << "\n";
+    }
+
+    if (mUsesNestedBreak)
+    {
+        out << "#define ANGLE_USES_NESTED_BREAK" << "\n";
     }
 
     if (mContext.shaderType == SH_FRAGMENT_SHADER)
@@ -2797,6 +2804,8 @@ void OutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
 
 bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 {
+    mNestedLoopDepth++;
+
     bool wasDiscontinuous = mInsideDiscontinuousLoop;
 
     if (mContainsLoopDiscontinuity && !mInsideDiscontinuousLoop)
@@ -2808,6 +2817,9 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
     {
         if (handleExcessiveLoop(node))
         {
+            mInsideDiscontinuousLoop = wasDiscontinuous;
+            mNestedLoopDepth--;
+
             return false;
         }
     }
@@ -2871,6 +2883,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
     out << "}\n";
 
     mInsideDiscontinuousLoop = wasDiscontinuous;
+    mNestedLoopDepth--;
 
     return false;
 }
@@ -2887,6 +2900,11 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
       case EOpBreak:
         if (visit == PreVisit)
         {
+            if (mNestedLoopDepth > 1)
+            {
+                mUsesNestedBreak = true;
+            }
+
             if (mExcessiveLoopIndex)
             {
                 out << "{Break";

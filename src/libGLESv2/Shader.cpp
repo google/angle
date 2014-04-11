@@ -238,6 +238,7 @@ void Shader::parseVaryings(void *compiler)
         mUsesDepthRange            = mHlsl.find("GL_USES_DEPTH_RANGE")  != std::string::npos;
         mUsesFragDepth             = mHlsl.find("GL_USES_FRAG_DEPTH")   != std::string::npos;
         mUsesDiscardRewriting      = mHlsl.find("ANGLE_USES_DISCARD_REWRITING") != std::string::npos;
+        mUsesNestedBreak           = mHlsl.find("ANGLE_USES_NESTED_BREAK") != std::string::npos;
     }
 }
 
@@ -270,6 +271,7 @@ void Shader::uncompile()
     mUsesFragDepth = false;
     mShaderVersion = 100;
     mUsesDiscardRewriting = false;
+    mUsesNestedBreak = false;
 
     mActiveUniforms.clear();
     mActiveInterfaceBlocks.clear();
@@ -377,7 +379,17 @@ rx::D3DWorkaroundType Shader::getD3DWorkarounds() const
 {
     if (mUsesDiscardRewriting)
     {
-        return rx::ANGLE_D3D_WORKAROUND_SM3_OPTIMIZER;
+        // ANGLE issue 486:
+        // Work-around a D3D9 compiler bug that presents itself when using conditional discard, by disabling optimization
+        return rx::ANGLE_D3D_WORKAROUND_SKIP_OPTIMIZATION;
+    }
+
+    if (mUsesNestedBreak)
+    {
+        // ANGLE issue 603:
+        // Work-around a D3D9 compiler bug that presents itself when using break in a nested loop, by maximizing optimization
+        // We want to keep the use of ANGLE_D3D_WORKAROUND_MAX_OPTIMIZATION minimal to prevent hangs, so usesDiscard takes precedence
+        return rx::ANGLE_D3D_WORKAROUND_MAX_OPTIMIZATION;
     }
 
     return rx::ANGLE_D3D_WORKAROUND_NONE;
