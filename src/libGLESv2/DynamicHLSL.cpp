@@ -393,9 +393,9 @@ std::string DynamicHLSL::generateInputLayoutHLSL(const VertexFormat inputLayout[
             }
 
             initHLSL += ";\n";
-        }
 
-        inputIndex += VariableRowCount(shaderAttribute.type);
+            inputIndex += VariableRowCount(TransposeMatrixType(shaderAttribute.type));
+        }
     }
 
     return "struct VS_INPUT\n"

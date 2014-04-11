@@ -61,14 +61,16 @@ void GetInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAttributes
 
         if (shaderAttr.type != GL_NONE)
         {
-            for (size_t rowIndex = 0; static_cast<int>(rowIndex) < VariableRowCount(shaderAttr.type); rowIndex++, layoutIndex++)
+            GLenum transposedType = TransposeMatrixType(shaderAttr.type);
+
+            for (size_t rowIndex = 0; static_cast<int>(rowIndex) < VariableRowCount(transposedType); rowIndex++, layoutIndex++)
             {
                 VertexFormat *defaultFormat = &inputLayout[layoutIndex];
 
-                defaultFormat->mType = UniformComponentType(shaderAttr.type);
+                defaultFormat->mType = UniformComponentType(transposedType);
                 defaultFormat->mNormalized = false;
                 defaultFormat->mPureInteger = (defaultFormat->mType != GL_FLOAT); // note: inputs can not be bool
-                defaultFormat->mComponents = VariableColumnCount(shaderAttr.type);
+                defaultFormat->mComponents = VariableColumnCount(transposedType);
             }
         }
     }
