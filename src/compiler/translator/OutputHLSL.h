@@ -104,6 +104,7 @@ class OutputHLSL : public TIntermTraverser
             BIAS,
             LOD,
             LOD0,
+            LOD0BIAS,
             SIZE,   // textureSize()
             FETCH,
             GRAD
