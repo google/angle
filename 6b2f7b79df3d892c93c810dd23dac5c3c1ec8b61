@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9544bb3_6c496aef",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-14T18:36:05Z",
+      "side": 1,
+      "message": "Would prefer that these wern\u0027t prefixed with m since they\u0027re public struct members but I\u0027m fine either way since we do it both ways in our code.",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 22
+      },
+      "revId": "6b2f7b79df3d892c93c810dd23dac5c3c1ec8b61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
