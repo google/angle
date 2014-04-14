@@ -84,9 +84,19 @@ const char *RegisterPrefix(const TType &type)
 bool OutputHLSL::TextureFunction::operator<(const TextureFunction &rhs) const
 {
     if (sampler < rhs.sampler) return true;
+    if (sampler > rhs.sampler) return false;
+
     if (coords < rhs.coords)   return true;
+    if (coords > rhs.coords)   return false;
+
     if (!proj && rhs.proj)     return true;
+    if (proj && !rhs.proj)     return false;
+
+    if (!offset && rhs.offset) return true;
+    if (offset && !rhs.offset) return false;
+
     if (method < rhs.method)   return true;
+    if (method > rhs.method)   return false;
 
     return false;
 }
