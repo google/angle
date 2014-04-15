@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9544bb3_560e75be",
+        "filename": "src/compiler/translator/OutputGLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-15T22:42:50Z",
+      "side": 1,
+      "message": "Trailing whitespace/missing newline nit.",
+      "revId": "874d3d718d228fa607bb35cc424eaf2ba5af37c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9544bb3_f64be1f2",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 803,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-15T22:42:50Z",
+      "side": 1,
+      "message": "In one of the other files in this patch, you change a clause from K\u0026R bracing to Allman. Is there a convention for the translator?",
+      "revId": "874d3d718d228fa607bb35cc424eaf2ba5af37c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

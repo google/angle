@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99e49352_be0f7049",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-15T22:42:50Z",
+      "side": 0,
+      "message": "Here\u0027s the K\u0026R-to-Allman change I mention in another comment.",
+      "revId": "57138e037561bf059b57e7757b68d54b8f2e47c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
