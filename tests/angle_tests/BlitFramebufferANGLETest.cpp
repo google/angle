@@ -38,6 +38,12 @@ protected:
         mMRTFBO = 0;
         mMRTColorBuffer0 = 0;
         mMRTColorBuffer1 = 0;
+
+        mRGBAColorbuffer = 0;
+        mRGBAFBO = 0;
+
+        mBGRAMultisampledRenderbuffer = 0;
+        mBGRAMultisampledFBO = 0;
     }
 
     virtual void SetUp()
@@ -116,7 +122,7 @@ protected:
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mUserDepthStencilBuffer);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, mUserDepthStencilBuffer);
 
-        ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+        ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         ASSERT_GL_NO_ERROR();
 
         glGenFramebuffers(1, &mSmallFBO);
@@ -131,7 +137,7 @@ protected:
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mSmallDepthStencilBuffer);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, mSmallDepthStencilBuffer);
 
-        ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+        ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         ASSERT_GL_NO_ERROR();
 
         glGenFramebuffers(1, &mColorOnlyFBO);
@@ -141,7 +147,7 @@ protected:
         glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth(), getWindowHeight());
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorOnlyColorBuffer, 0);
 
-        ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+        ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         ASSERT_GL_NO_ERROR();
 
         glGenFramebuffers(1, &mDiffFormatFBO);
@@ -151,7 +157,7 @@ protected:
         glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGB565, getWindowWidth(), getWindowHeight());
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mDiffFormatColorBuffer, 0);
 
-        ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+        ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         ASSERT_GL_NO_ERROR();
 
         glGenFramebuffers(1, &mDiffSizeFBO);
@@ -161,7 +167,7 @@ protected:
         glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth()*2, getWindowHeight()*2);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mDiffSizeColorBuffer, 0);
 
-        ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+        ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         ASSERT_GL_NO_ERROR();
 
         if (extensionEnabled("GL_EXT_draw_buffers"))
@@ -177,8 +183,34 @@ protected:
             glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth(), getWindowHeight());
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, mMRTColorBuffer1, 0);
 
-            ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+            ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
             ASSERT_GL_NO_ERROR();
+        }
+
+        if (extensionEnabled("GL_ANGLE_framebuffer_multisample"))
+        {
+            // Test blit between RGBA and multisampled BGRA
+            glGenTextures(1, &mRGBAColorbuffer);
+            glBindTexture(GL_TEXTURE_2D, mRGBAColorbuffer);
+            glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8_OES, getWindowWidth(), getWindowHeight());
+
+            glGenFramebuffers(1, &mRGBAFBO);
+            glBindFramebuffer(GL_FRAMEBUFFER, mRGBAFBO);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mRGBAColorbuffer, 0);
+
+            ASSERT_GL_NO_ERROR();
+            ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+            glGenRenderbuffers(1, &mBGRAMultisampledRenderbuffer);
+            glBindRenderbuffer(GL_RENDERBUFFER, mBGRAMultisampledRenderbuffer);
+            glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, 1, GL_BGRA8_EXT, getWindowWidth(), getWindowHeight());
+
+            glGenFramebuffers(1, &mBGRAMultisampledFBO);
+            glBindFramebuffer(GL_FRAMEBUFFER, mBGRAMultisampledFBO);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mBGRAMultisampledRenderbuffer);
+
+            ASSERT_GL_NO_ERROR();
+            ASSERT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
@@ -213,6 +245,26 @@ protected:
             glDeleteTextures(1, &mMRTColorBuffer1);
         }
 
+        if (mRGBAColorbuffer != 0)
+        {
+            glDeleteTextures(1, &mRGBAColorbuffer);
+        }
+
+        if (mRGBAFBO != 0)
+        {
+            glDeleteFramebuffers(1, &mBGRAMultisampledFBO);
+        }
+
+        if (mBGRAMultisampledRenderbuffer != 0)
+        {
+            glDeleteRenderbuffers(1, &mBGRAMultisampledRenderbuffer);
+        }
+
+        if (mBGRAMultisampledFBO != 0)
+        {
+            glDeleteFramebuffers(1, &mBGRAMultisampledFBO);
+        }
+
         ANGLETest::TearDown();
     }
 
@@ -241,6 +293,12 @@ protected:
     GLuint mMRTFBO;
     GLuint mMRTColorBuffer0;
     GLuint mMRTColorBuffer1;
+
+    GLuint mRGBAColorbuffer;
+    GLuint mRGBAFBO;
+
+    GLuint mBGRAMultisampledRenderbuffer;
+    GLuint mBGRAMultisampledFBO;
 };
 
 // Draw to user-created framebuffer, blit whole-buffer color to original framebuffer.
@@ -799,4 +857,16 @@ TEST_F(BlitFramebufferANGLETest, errors)
     glBlitFramebufferANGLE(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(), getWindowHeight(),
                            GL_COLOR_BUFFER_BIT, GL_NEAREST);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    if (extensionEnabled("GL_ANGLE_framebuffer_multisample"))
+    {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, mBGRAMultisampledFBO);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mRGBAFBO);
+        EXPECT_GL_NO_ERROR();
+
+        glBlitFramebufferANGLE(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(), getWindowHeight(),
+                               GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+
 }
