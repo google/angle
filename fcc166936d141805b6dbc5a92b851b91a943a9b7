@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d9544bb3_c5c071d0",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-15T15:46:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "198a632f_ade15db5",
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9966f57_0cb437d6",
         "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2014-04-04T18:38:28Z",
       "side": 1,
       "message": "trailing whitespace -- there\u0027s a few places in the patch where it popped in, can you remove it all?",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 16
+      },
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b97b175f_3690d082",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-15T15:46:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9966f57_0cb437d6",
       "range": {
         "startLine": 105,
         "startChar": 0,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "d9544bb3_85a3592c",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-15T15:46:03Z",
+      "side": 1,
+      "message": "I don\u0027t see any advantage to using std::pair here. With an explicit struct the first and second fields have a useful name.",
+      "parentUuid": "f9966f57_4cbe3fb6",
+      "range": {
+        "startLine": 113,
+        "startChar": 11,
+        "endLine": 113,
+        "endChar": 18
+      },
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9995785_b8c44151",
         "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
         "patchSetId": 1
@@ -76,6 +142,24 @@
       "writtenOn": "2014-04-04T20:53:45Z",
       "side": 1,
       "message": "Are you avoiding a map on purpose here?",
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b97b175f_d66964d0",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-15T15:46:03Z",
+      "side": 1,
+      "message": "Yes, maps have quite a bit of memory overhead and each node is a separate allocation. Searching also takes several pointer indirection. A vector\u0027s elements are just compactly allocated as an array and searching through them is very fast when the number of elements is small. Given that each TextureStorage carries this cache, and in the most common case there\u0027s only one element, this is the most efficient.",
+      "parentUuid": "b9995785_b8c44151",
       "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
