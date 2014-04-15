@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9544bb3_36f8995b",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-15T22:32:11Z",
+      "side": 1,
+      "message": "Ye old whitespace nit.",
+      "revId": "57138e037561bf059b57e7757b68d54b8f2e47c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
