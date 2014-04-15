@@ -131,6 +131,30 @@
     },
     {
       "key": {
+        "uuid": "b97b175f_568f14d3",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-15T17:32:54Z",
+      "side": 1,
+      "message": "It ties into the std::map issue. See below.",
+      "parentUuid": "d9544bb3_85a3592c",
+      "range": {
+        "startLine": 113,
+        "startChar": 11,
+        "endLine": 113,
+        "endChar": 18
+      },
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9995785_b8c44151",
         "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
         "patchSetId": 1
@@ -160,6 +184,24 @@
       "side": 1,
       "message": "Yes, maps have quite a bit of memory overhead and each node is a separate allocation. Searching also takes several pointer indirection. A vector\u0027s elements are just compactly allocated as an array and searching through them is very fast when the number of elements is small. Given that each TextureStorage carries this cache, and in the most common case there\u0027s only one element, this is the most efficient.",
       "parentUuid": "b9995785_b8c44151",
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9544bb3_2010531d",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-15T17:32:54Z",
+      "side": 1,
+      "message": "I agree with your analysis -- I\u0027m uncertain on how much our use of std::map causes a real performance loss. Do you think we should avoid using map in performance critical code that could slow down draw calls? Or is it something that is negligible and we can afford to use map for code clarity.",
+      "parentUuid": "b97b175f_d66964d0",
       "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
