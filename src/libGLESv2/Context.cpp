@@ -3812,6 +3812,7 @@ void Context::initExtensionString()
 
         mExtensionStringList.push_back("GL_EXT_read_format_bgra");
         mExtensionStringList.push_back("GL_EXT_robustness");
+        mExtensionStringList.push_back("GL_EXT_shader_texture_lod");
 
         if (supportsDXT1Textures())
         {
