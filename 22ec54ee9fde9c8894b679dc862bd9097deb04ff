@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9436b32_71727026",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-04-16T20:27:56Z",
+      "side": 1,
+      "message": "Should we do the same assertion as above about the type?",
+      "range": {
+        "startLine": 443,
+        "startChar": 4,
+        "endLine": 443,
+        "endChar": 76
+      },
+      "revId": "22ec54ee9fde9c8894b679dc862bd9097deb04ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
