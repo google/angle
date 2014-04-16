@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "193a63a9_900a7aef",
+        "filename": "src/libGLESv2/angletypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-16T16:46:00Z",
+      "side": 1,
+      "message": "trailing whitespace nit",
+      "range": {
+        "startLine": 156,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 4
+      },
+      "revId": "81adfef6443558b02fca37418834b5be30190b5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
