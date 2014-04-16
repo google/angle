@@ -155,6 +155,30 @@
     },
     {
       "key": {
+        "uuid": "d9436b32_6e81afe5",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-16T17:37:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b97b175f_568f14d3",
+      "range": {
+        "startLine": 113,
+        "startChar": 11,
+        "endLine": 113,
+        "endChar": 18
+      },
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9995785_b8c44151",
         "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
         "patchSetId": 1
@@ -238,6 +262,24 @@
       "side": 1,
       "message": "RE unordered map -- it isn\u0027t available on older compilers, such as OSX GCC, which might be relevant for the ANGLE refactor. The code as it stands is good with me -- just maybe you could more clearly define \u0027performance critical\u0027 so we have a consistent rule for when to avoid std::map or other tree-like structures?",
       "parentUuid": "d9436b32_cb2e150e",
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9436b32_4e5dd3d6",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-16T17:37:39Z",
+      "side": 1,
+      "message": "Indeed we\u0027ll have to check the availability of unordered_map when refactoring for Mac OS support. But this will be part of a bigger effort and I\u0027m sure this won\u0027t be the only thing to look out for.\n\nWe should have a more broad discussion about when to use which data structure, if/when we run into issues with availability.",
+      "parentUuid": "f9466f41_cca70f5a",
       "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
