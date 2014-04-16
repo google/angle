@@ -639,7 +639,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
 
     if (fragmentShader->mUsesFragCoord)
     {
-        pixelHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + ";\n";
+        pixelHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + Str(fragCoordSemanticIndex) + ";\n";
     }
 
     if (fragmentShader->mUsesPointCoord && shaderModel >= 3)
