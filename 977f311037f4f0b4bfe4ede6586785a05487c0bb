@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "193a63a9_13f4d439",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-16T19:16:48Z",
+      "side": 1,
+      "message": "some people use git command line tools to review log messages, or other tools that don\u0027t automatically wrap lines. I can\u0027t disagree with how you feel but I\u0027d prefer if you would agree to wrap the lines. :) sorry for being pokey",
+      "parentUuid": "f9466f41_b20f78fe",
+      "range": {
+        "startLine": 9,
+        "startChar": 103,
+        "endLine": 9,
+        "endChar": 104
+      },
+      "revId": "977f311037f4f0b4bfe4ede6586785a05487c0bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9436b32_d185e447",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 5
