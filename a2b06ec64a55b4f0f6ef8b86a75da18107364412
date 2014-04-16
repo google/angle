@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "193a63a9_3330f015",
+        "filename": "src/libGLESv2/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1082,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-16T19:32:38Z",
+      "side": 1,
+      "message": "return false?",
+      "range": {
+        "startLine": 1082,
+        "startChar": 12,
+        "endLine": 1082,
+        "endChar": 17
+      },
+      "revId": "a2b06ec64a55b4f0f6ef8b86a75da18107364412",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9466f41_d21c04fa",
+        "filename": "src/libGLESv2/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-16T19:32:38Z",
+      "side": 1,
+      "message": "return false?",
+      "range": {
+        "startLine": 798,
+        "startChar": 12,
+        "endLine": 798,
+        "endChar": 17
+      },
+      "revId": "a2b06ec64a55b4f0f6ef8b86a75da18107364412",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
