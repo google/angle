@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9466f41_327628ab",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-16T18:45:07Z",
+      "side": 1,
+      "message": "nit: can you wrap these lines to 80 char columns (or at least where the red line is in the review)",
+      "range": {
+        "startLine": 9,
+        "startChar": 103,
+        "endLine": 9,
+        "endChar": 104
+      },
+      "revId": "977f311037f4f0b4bfe4ede6586785a05487c0bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9436b32_d185e447",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-16T18:45:07Z",
+      "side": 1,
+      "message": "\"bais\" .. is this a bug?",
+      "range": {
+        "startLine": 1229,
+        "startChar": 51,
+        "endLine": 1229,
+        "endChar": 55
+      },
+      "revId": "977f311037f4f0b4bfe4ede6586785a05487c0bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
