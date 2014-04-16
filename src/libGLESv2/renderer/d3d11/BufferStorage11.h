@@ -22,6 +22,7 @@ enum BufferUsage
     BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK,
     BUFFER_USAGE_INDEX,
     BUFFER_USAGE_PIXEL_UNPACK,
+    BUFFER_USAGE_PIXEL_PACK,
     BUFFER_USAGE_UNIFORM,
 };
 
@@ -54,6 +55,7 @@ class BufferStorage11 : public BufferStorage
   private:
     class TypedBufferStorage11;
     class NativeBuffer11;
+    class PackStorage11;
 
     Renderer11 *mRenderer;
     bool mIsMapped;
