@@ -45,6 +45,30 @@
       "revId": "977f311037f4f0b4bfe4ede6586785a05487c0bb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "193a63a9_73f51863",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-16T19:01:17Z",
+      "side": 1,
+      "message": "Yes it is. Thanks for noticing!\n\nFixed.",
+      "parentUuid": "d9436b32_d185e447",
+      "range": {
+        "startLine": 1229,
+        "startChar": 51,
+        "endLine": 1229,
+        "endChar": 55
+      },
+      "revId": "977f311037f4f0b4bfe4ede6586785a05487c0bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
