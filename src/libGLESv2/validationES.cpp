@@ -847,8 +847,8 @@ bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsize
     if (!context->getCurrentReadFormatType(&currentInternalFormat, &currentFormat, &currentType))
         return false;
 
-    bool validReadFormat = (clientVersion < 3) ? ValidES2ReadFormatType(format, type) :
-                                                 ValidES3ReadFormatType(currentInternalFormat, format, type);
+    bool validReadFormat = (clientVersion < 3) ? ValidES2ReadFormatType(context, format, type) :
+                                                 ValidES3ReadFormatType(context, currentInternalFormat, format, type);
 
     if (!(currentFormat == format && currentType == type) && !validReadFormat)
     {

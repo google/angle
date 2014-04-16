@@ -1044,7 +1044,7 @@ bool ValidateES2FramebufferTextureParameters(gl::Context *context, GLenum target
 }
 
 // check for combinations of format and type that are valid for ReadPixels
-bool ValidES2ReadFormatType(GLenum format, GLenum type)
+bool ValidES2ReadFormatType(gl::Context *context, GLenum format, GLenum type)
 {
     switch (format)
     {
@@ -1068,6 +1068,21 @@ bool ValidES2ReadFormatType(GLenum format, GLenum type)
             return false;
         }
         break;
+      case GL_RG_EXT:
+      case GL_RED_EXT:
+        if (!context->supportsRGTextures())
+        {
+            return false;
+        }
+        switch (type)
+        {
+          case GL_UNSIGNED_BYTE:
+            break;
+          default:
+            return false;
+        }
+        break;
+
       default:
         return false;
     }

@@ -729,7 +729,7 @@ bool ValidateES3FramebufferTextureParameters(gl::Context *context, GLenum target
     return true;
 }
 
-bool ValidES3ReadFormatType(GLenum internalFormat, GLenum format, GLenum type)
+bool ValidES3ReadFormatType(gl::Context *context, GLenum internalFormat, GLenum format, GLenum type)
 {
     switch (format)
     {
@@ -781,6 +781,20 @@ bool ValidES3ReadFormatType(GLenum internalFormat, GLenum format, GLenum type)
           case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
             break;
           default:
+            return false;
+        }
+        break;
+      case GL_RG_EXT:
+      case GL_RED_EXT:
+        if (!context->supportsRGTextures())
+        {
+            return false;
+        }
+        switch (type)
+        {
+        case GL_UNSIGNED_BYTE:
+            break;
+        default:
             return false;
         }
         break;

@@ -29,7 +29,7 @@ bool ValidateES3FramebufferTextureParameters(gl::Context *context, GLenum target
                                              GLenum textarget, GLuint texture, GLint level, GLint layer,
                                              bool layerCall);
 
-bool ValidES3ReadFormatType(GLenum internalFormat, GLenum format, GLenum type);
+bool ValidES3ReadFormatType(gl::Context *context, GLenum internalFormat, GLenum format, GLenum type);
 
 bool ValidateInvalidateFramebufferParameters(gl::Context *context, GLenum target, GLsizei numAttachments,
                                              const GLenum* attachments);

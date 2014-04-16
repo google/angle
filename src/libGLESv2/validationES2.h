@@ -28,7 +28,7 @@ bool ValidateES2TexStorageParameters(gl::Context *context, GLenum target, GLsize
 bool ValidateES2FramebufferTextureParameters(gl::Context *context, GLenum target, GLenum attachment,
                                              GLenum textarget, GLuint texture, GLint level);
 
-bool ValidES2ReadFormatType(GLenum format, GLenum type);
+bool ValidES2ReadFormatType(gl::Context *context, GLenum format, GLenum type);
 
 }
 
