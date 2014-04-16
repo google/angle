@@ -95,8 +95,6 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mDriverConstantBufferVS = NULL;
     mDriverConstantBufferPS = NULL;
 
-    mBGRATextureSupport = false;
-
     mAppliedVertexShader = NULL;
     mAppliedGeometryShader = NULL;
     mCurPointGeometryShader = NULL;
@@ -284,154 +282,6 @@ EGLint Renderer11::initialize()
     }
 
     initializeDevice();
-
-    // BGRA texture support is optional in feature levels 10 and 10_1
-    UINT formatSupport;
-    result = mDevice->CheckFormatSupport(DXGI_FORMAT_B8G8R8A8_UNORM, &formatSupport);
-    if (FAILED(result))
-    {
-        ERR("Error checking BGRA format support: 0x%08X", result);
-    }
-    else
-    {
-        const int flags = (D3D11_FORMAT_SUPPORT_TEXTURE2D | D3D11_FORMAT_SUPPORT_RENDER_TARGET);
-        mBGRATextureSupport = (formatSupport & flags) == flags;
-    }
-
-    // Check floating point texture support
-    static const unsigned int requiredTextureFlags = D3D11_FORMAT_SUPPORT_TEXTURE2D | D3D11_FORMAT_SUPPORT_TEXTURECUBE;
-    static const unsigned int requiredRenderableFlags = D3D11_FORMAT_SUPPORT_RENDER_TARGET;
-    static const unsigned int requiredFilterFlags = D3D11_FORMAT_SUPPORT_SHADER_SAMPLE;
-
-    DXGI_FORMAT float16Formats[] =
-    {
-        DXGI_FORMAT_R16_FLOAT,
-        DXGI_FORMAT_R16G16_FLOAT,
-        DXGI_FORMAT_R16G16B16A16_FLOAT,
-    };
-
-    DXGI_FORMAT float32Formats[] =
-    {
-        DXGI_FORMAT_R32_FLOAT,
-        DXGI_FORMAT_R32G32_FLOAT,
-        DXGI_FORMAT_R32G32B32A32_FLOAT,
-    };
-
-    mFloat16TextureSupport = true;
-    mFloat16FilterSupport = true;
-    mFloat16RenderSupport = true;
-    for (unsigned int i = 0; i < ArraySize(float16Formats); i++)
-    {
-        if (SUCCEEDED(mDevice->CheckFormatSupport(float16Formats[i], &formatSupport)))
-        {
-            mFloat16TextureSupport = mFloat16TextureSupport && (formatSupport & requiredTextureFlags) == requiredTextureFlags;
-            mFloat16FilterSupport = mFloat16FilterSupport && (formatSupport & requiredFilterFlags) == requiredFilterFlags;
-            mFloat16RenderSupport = mFloat16RenderSupport && (formatSupport & requiredRenderableFlags) == requiredRenderableFlags;
-        }
-        else
-        {
-            mFloat16TextureSupport = false;
-            mFloat16RenderSupport = false;
-            mFloat16FilterSupport = false;
-        }
-    }
-
-    mFloat32TextureSupport = true;
-    mFloat32FilterSupport = true;
-    mFloat32RenderSupport = true;
-    for (unsigned int i = 0; i < ArraySize(float32Formats); i++)
-    {
-        if (SUCCEEDED(mDevice->CheckFormatSupport(float32Formats[i], &formatSupport)))
-        {
-            mFloat32TextureSupport = mFloat32TextureSupport && (formatSupport & requiredTextureFlags) == requiredTextureFlags;
-            mFloat32FilterSupport = mFloat32FilterSupport && (formatSupport & requiredFilterFlags) == requiredFilterFlags;
-            mFloat32RenderSupport = mFloat32RenderSupport && (formatSupport & requiredRenderableFlags) == requiredRenderableFlags;
-        }
-        else
-        {
-            mFloat32TextureSupport = false;
-            mFloat32FilterSupport = false;
-            mFloat32RenderSupport = false;
-        }
-    }
-
-    DXGI_FORMAT rgTextureFormats[] =
-    {
-        DXGI_FORMAT_R8_UNORM,
-        DXGI_FORMAT_R8G8_UNORM,
-        DXGI_FORMAT_R16_FLOAT,
-        DXGI_FORMAT_R16G16_FLOAT,
-        DXGI_FORMAT_R32_FLOAT,
-        DXGI_FORMAT_R32G32_FLOAT,
-    };
-
-    mRGTextureSupport = true;
-    for (unsigned int i = 0; i < ArraySize(rgTextureFormats); i++)
-    {
-        if (SUCCEEDED(mDevice->CheckFormatSupport(rgTextureFormats[i], &formatSupport)))
-        {
-            mRGTextureSupport = mRGTextureSupport && (formatSupport & requiredTextureFlags) == requiredTextureFlags;
-            mRGTextureSupport = mRGTextureSupport && (formatSupport & requiredFilterFlags) == requiredFilterFlags;
-            mRGTextureSupport = mRGTextureSupport && (formatSupport & requiredRenderableFlags) == requiredRenderableFlags;
-        }
-        else
-        {
-            mRGTextureSupport = false;
-        }
-    }
-
-    // Check compressed texture support
-    const unsigned int requiredCompressedTextureFlags = D3D11_FORMAT_SUPPORT_TEXTURE2D;
-
-    if (SUCCEEDED(mDevice->CheckFormatSupport(DXGI_FORMAT_BC1_UNORM, &formatSupport)))
-    {
-        mDXT1TextureSupport = (formatSupport & requiredCompressedTextureFlags) == requiredCompressedTextureFlags;
-    }
-    else
-    {
-        mDXT1TextureSupport = false;
-    }
-
-    if (SUCCEEDED(mDevice->CheckFormatSupport(DXGI_FORMAT_BC3_UNORM, &formatSupport)))
-    {
-        mDXT3TextureSupport = (formatSupport & requiredCompressedTextureFlags) == requiredCompressedTextureFlags;
-    }
-    else
-    {
-        mDXT3TextureSupport = false;
-    }
-
-    if (SUCCEEDED(mDevice->CheckFormatSupport(DXGI_FORMAT_BC5_UNORM, &formatSupport)))
-    {
-        mDXT5TextureSupport = (formatSupport & requiredCompressedTextureFlags) == requiredCompressedTextureFlags;
-    }
-    else
-    {
-        mDXT5TextureSupport = false;
-    }
-
-    // Check depth texture support
-    DXGI_FORMAT depthTextureFormats[] =
-    {
-        DXGI_FORMAT_D16_UNORM,
-        DXGI_FORMAT_D24_UNORM_S8_UINT,
-    };
-
-    static const unsigned int requiredDepthTextureFlags = D3D11_FORMAT_SUPPORT_DEPTH_STENCIL |
-                                                          D3D11_FORMAT_SUPPORT_TEXTURE2D;
-
-    mDepthTextureSupport = true;
-    for (unsigned int i = 0; i < ArraySize(depthTextureFormats); i++)
-    {
-        if (SUCCEEDED(mDevice->CheckFormatSupport(depthTextureFormats[i], &formatSupport)))
-        {
-            mDepthTextureSupport = mDepthTextureSupport && ((formatSupport & requiredDepthTextureFlags) == requiredDepthTextureFlags);
-        }
-        else
-        {
-            mDepthTextureSupport = false;
-        }
-    }
 
     return EGL_SUCCESS;
 }
@@ -1969,110 +1819,6 @@ GUID Renderer11::getAdapterIdentifier() const
     return adapterId;
 }
 
-bool Renderer11::getBGRATextureSupport() const
-{
-    return mBGRATextureSupport;
-}
-
-bool Renderer11::getDXT1TextureSupport() const
-{
-    return mDXT1TextureSupport;
-}
-
-bool Renderer11::getDXT3TextureSupport() const
-{
-    return mDXT3TextureSupport;
-}
-
-bool Renderer11::getDXT5TextureSupport() const
-{
-    return mDXT5TextureSupport;
-}
-
-bool Renderer11::getDepthTextureSupport() const
-{
-    return mDepthTextureSupport;
-}
-
-bool Renderer11::getFloat32TextureSupport() const
-{
-    return mFloat32TextureSupport;
-}
-
-bool Renderer11::getFloat32TextureFilteringSupport() const
-{
-    return mFloat32FilterSupport;
-}
-
-bool Renderer11::getFloat32TextureRenderingSupport() const
-{
-    return mFloat32RenderSupport;
-}
-
-bool Renderer11::getFloat16TextureSupport() const
-{
-    return mFloat16TextureSupport;
-}
-
-bool Renderer11::getFloat16TextureFilteringSupport() const
-{
-    return mFloat16FilterSupport;
-}
-
-bool Renderer11::getFloat16TextureRenderingSupport() const
-{
-    return mFloat16RenderSupport;
-}
-
-bool Renderer11::getRGB565TextureSupport() const
-{
-    return false;
-}
-
-bool Renderer11::getLuminanceTextureSupport() const
-{
-    return false;
-}
-
-bool Renderer11::getLuminanceAlphaTextureSupport() const
-{
-    return false;
-}
-
-bool Renderer11::getRGTextureSupport() const
-{
-    return mRGTextureSupport;
-}
-
-bool Renderer11::getTextureFilterAnisotropySupport() const
-{
-    return true;
-}
-
-bool Renderer11::getPBOSupport() const
-{
-    return true;
-}
-
-float Renderer11::getTextureMaxAnisotropy() const
-{
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-        return D3D11_MAX_MAXANISOTROPY;
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-        return D3D10_MAX_MAXANISOTROPY;
-      default: UNREACHABLE();
-        return 0;
-    }
-}
-
-bool Renderer11::getEventQuerySupport() const
-{
-    return true;
-}
-
 Range Renderer11::getViewportBounds() const
 {
     switch (mFeatureLevel)
@@ -2257,64 +2003,12 @@ unsigned int Renderer11::getMaxUniformBufferSize() const
     }
 }
 
-bool Renderer11::getNonPower2TextureSupport() const
-{
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-        return true;
-      default: UNREACHABLE();
-        return false;
-    }
-}
-
-bool Renderer11::getOcclusionQuerySupport() const
-{
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-        return true;
-      default: UNREACHABLE();
-        return false;
-    }
-}
-
-bool Renderer11::getInstancingSupport() const
-{
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-        return true;
-      default: UNREACHABLE();
-        return false;
-    }
-}
-
 bool Renderer11::getShareHandleSupport() const
 {
     // We only currently support share handles with BGRA surfaces, because
     // chrome needs BGRA. Once chrome fixes this, we should always support them.
     // PIX doesn't seem to support using share handles, so disable them.
-    return getBGRATextureSupport() && !gl::perfActive();
-}
-
-bool Renderer11::getDerivativeInstructionSupport() const
-{
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-        return true;
-      default: UNREACHABLE();
-        return false;
-    }
+    return getCaps().extensions.textureFormatBGRA8888 && !gl::perfActive();
 }
 
 bool Renderer11::getPostSubBufferSupport() const
@@ -2430,17 +2124,6 @@ int Renderer11::getMaxTextureArrayLayers() const
       case D3D_FEATURE_LEVEL_10_1:
       case D3D_FEATURE_LEVEL_10_0: return D3D10_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION;   // 512
       default: UNREACHABLE();      return 0;
-    }
-}
-
-bool Renderer11::get32BitIndexSupport() const
-{
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0: 
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0: return D3D10_REQ_DRAWINDEXED_INDEX_COUNT_2_TO_EXP >= 32;   // true
-      default: UNREACHABLE();      return false;
     }
 }
 
@@ -3142,7 +2825,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     }
 
     // We cannot support direct copies to non-color-renderable formats
-    if (!gl::IsColorRenderingSupported(internalFormat, this))
+    if (!getCaps().textureCaps.get(internalFormat).colorRendering)
     {
         return false;
     }
@@ -3851,6 +3534,11 @@ Renderer11::MultisampleSupportInfo Renderer11::getMultisampleSupportInfo(DXGI_FO
     }
 
     return supportInfo;
+}
+
+gl::Caps Renderer11::generateCaps() const
+{
+    return d3d11_gl::GenerateCaps(mDevice);
 }
 
 }

@@ -87,6 +87,9 @@
     <ClInclude Include="..\..\src\libGLESv2\Renderbuffer.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\Caps.h">
+      <Filter>src\libGLESv2</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\HandleAllocator.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
@@ -246,6 +249,9 @@
     <ClInclude Include="..\..\src\libGLESv2\formatutils.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\Caps.cpp">
+      <Filter>src\libGLESv2</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\Framebuffer.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>

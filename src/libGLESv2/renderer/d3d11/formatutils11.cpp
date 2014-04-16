@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -1297,10 +1297,9 @@ DXGI_FORMAT GetRenderableFormat(GLenum internalFormat, GLuint clientVersion)
     return targetFormat;
 }
 
-DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat, const Renderer *renderer)
+DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat, bool renderableFormat, GLuint clientVersion)
 {
-    GLuint clientVersion = renderer->getCurrentClientVersion();
-    if (gl::GetComponentCount(internalFormat, clientVersion) != 4 || !gl::IsColorRenderingSupported(internalFormat, renderer))
+    if (!renderableFormat || gl::GetComponentCount(internalFormat, clientVersion) != 4)
     {
         const SwizzleFormatInfo &swizzleInfo = GetSwizzleFormatInfo(internalFormat, clientVersion);
         return swizzleInfo.mTexFormat;
@@ -1311,10 +1310,9 @@ DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat, const Renderer *renderer)
     }
 }
 
-DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat, const Renderer *renderer)
+DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat, bool renderableFormat, GLuint clientVersion)
 {
-    GLuint clientVersion = renderer->getCurrentClientVersion();
-    if (gl::GetComponentCount(internalFormat, clientVersion) != 4 || !gl::IsColorRenderingSupported(internalFormat, renderer))
+    if (!renderableFormat || gl::GetComponentCount(internalFormat, clientVersion) != 4)
     {
         const SwizzleFormatInfo &swizzleInfo = GetSwizzleFormatInfo(internalFormat, clientVersion);
         return swizzleInfo.mSRVFormat;
@@ -1325,10 +1323,9 @@ DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat, const Renderer *renderer)
     }
 }
 
-DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat, const Renderer *renderer)
+DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat, bool renderableFormat, GLuint clientVersion)
 {
-    GLuint clientVersion = renderer->getCurrentClientVersion();
-    if (gl::GetComponentCount(internalFormat, clientVersion) != 4 || !gl::IsColorRenderingSupported(internalFormat, renderer))
+    if (!renderableFormat || gl::GetComponentCount(internalFormat, clientVersion) != 4)
     {
         const SwizzleFormatInfo &swizzleInfo = GetSwizzleFormatInfo(internalFormat, clientVersion);
         return swizzleInfo.mRTVFormat;

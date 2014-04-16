@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -53,9 +53,9 @@ DXGI_FORMAT GetRTVFormat(GLenum internalFormat, GLuint clientVersion);
 DXGI_FORMAT GetDSVFormat(GLenum internalFormat, GLuint clientVersion);
 DXGI_FORMAT GetRenderableFormat(GLenum internalFormat, GLuint clientVersion);
 
-DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat, const Renderer *renderer);
-DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat, const Renderer *renderer);
-DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat, const Renderer *renderer);
+DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat, bool renderableFormat, GLuint clientVersion);
+DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat, bool renderableFormat, GLuint clientVersion);
+DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat, bool renderableFormat, GLuint clientVersion);
 
 bool RequiresTextureDataInitialization(GLint internalFormat);
 InitializeTextureDataFunction GetTextureDataInitializationFunction(GLint internalFormat);

@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -44,7 +44,7 @@ RenderTarget9::RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, 
     mRenderer = Renderer9::makeRenderer9(renderer);
     mRenderTarget = NULL;
 
-    D3DFORMAT renderFormat = gl_d3d9::GetRenderFormat(internalFormat, mRenderer);
+    D3DFORMAT renderFormat = gl_d3d9::GetRenderFormat(internalFormat);
     int supportedSamples = mRenderer->getNearestSupportedSamples(renderFormat, samples);
 
     if (supportedSamples == -1)

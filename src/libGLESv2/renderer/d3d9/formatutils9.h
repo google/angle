@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -23,7 +23,7 @@ namespace d3d9
 typedef std::set<D3DFORMAT> D3DFormatSet;
 
 MipGenerationFunction GetMipGenerationFunction(D3DFORMAT format);
-LoadImageFunction GetImageLoadFunction(GLenum internalFormat, const Renderer9 *renderer);
+LoadImageFunction GetImageLoadFunction(GLenum internalFormat);
 
 GLuint GetFormatPixelBytes(D3DFORMAT format);
 GLuint GetBlockWidth(D3DFORMAT format);
@@ -53,8 +53,8 @@ void InitializeVertexTranslations(const rx::Renderer9 *renderer);
 namespace gl_d3d9
 {
 
-D3DFORMAT GetTextureFormat(GLenum internalFormat, const Renderer9 *renderer);
-D3DFORMAT GetRenderFormat(GLenum internalFormat, const Renderer9 *renderer);
+D3DFORMAT GetTextureFormat(GLenum internalForma);
+D3DFORMAT GetRenderFormat(GLenum internalFormat);
 
 D3DMULTISAMPLE_TYPE GetMultisampleType(GLsizei samples);
 

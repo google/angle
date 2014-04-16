@@ -145,9 +145,9 @@ bool Image9::redefine(rx::Renderer *renderer, GLenum target, GLenum internalform
         mInternalFormat = internalformat;
 
         // compute the d3d format that will be used
-        mD3DFormat = gl_d3d9::GetTextureFormat(internalformat, mRenderer);
+        mD3DFormat = gl_d3d9::GetTextureFormat(internalformat);
         mActualFormat = d3d9_gl::GetInternalFormat(mD3DFormat);
-        mRenderable = gl_d3d9::GetRenderFormat(internalformat, mRenderer) != D3DFMT_UNKNOWN;
+        mRenderable = gl_d3d9::GetRenderFormat(internalformat) != D3DFMT_UNKNOWN;
 
         SafeRelease(mSurface);
         mDirty = gl_d3d9::RequiresTextureDataInitialization(mInternalFormat);
@@ -388,7 +388,7 @@ void Image9::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
     GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, type, clientVersion, width, unpackAlignment);
 
-    LoadImageFunction loadFunction = d3d9::GetImageLoadFunction(mInternalFormat, mRenderer);
+    LoadImageFunction loadFunction = d3d9::GetImageLoadFunction(mInternalFormat);
     ASSERT(loadFunction != NULL);
 
     RECT lockRect =
@@ -422,7 +422,7 @@ void Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLs
     ASSERT(xoffset % d3d9::GetBlockWidth(mD3DFormat) == 0);
     ASSERT(yoffset % d3d9::GetBlockHeight(mD3DFormat) == 0);
 
-    LoadImageFunction loadFunction = d3d9::GetImageLoadFunction(mInternalFormat, mRenderer);
+    LoadImageFunction loadFunction = d3d9::GetImageLoadFunction(mInternalFormat);
     ASSERT(loadFunction != NULL);
 
     RECT lockRect =

@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -102,7 +102,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
     }
 
     result = device->CreateTexture(backbufferWidth, backbufferHeight, 1, D3DUSAGE_RENDERTARGET,
-                                   gl_d3d9::GetTextureFormat(mBackBufferFormat, mRenderer),
+                                   gl_d3d9::GetTextureFormat(mBackBufferFormat),
                                    D3DPOOL_DEFAULT, &mOffscreenTexture, pShareHandle);
     if (FAILED(result))
     {
@@ -153,9 +153,9 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
     if (mWindow)
     {
         D3DPRESENT_PARAMETERS presentParameters = {0};
-        presentParameters.AutoDepthStencilFormat = gl_d3d9::GetRenderFormat(mDepthBufferFormat, mRenderer);
+        presentParameters.AutoDepthStencilFormat = gl_d3d9::GetRenderFormat(mDepthBufferFormat);
         presentParameters.BackBufferCount = 1;
-        presentParameters.BackBufferFormat = gl_d3d9::GetRenderFormat(mBackBufferFormat, mRenderer);
+        presentParameters.BackBufferFormat = gl_d3d9::GetRenderFormat(mBackBufferFormat);
         presentParameters.EnableAutoDepthStencil = FALSE;
         presentParameters.Flags = 0;
         presentParameters.hDeviceWindow = mWindow;
@@ -207,7 +207,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
     if (mDepthBufferFormat != GL_NONE)
     {
         result = device->CreateDepthStencilSurface(backbufferWidth, backbufferHeight,
-                                                   gl_d3d9::GetRenderFormat(mDepthBufferFormat, mRenderer),
+                                                   gl_d3d9::GetRenderFormat(mDepthBufferFormat),
                                                    D3DMULTISAMPLE_NONE, 0, FALSE, &mDepthStencil, NULL);
 
         if (FAILED(result))

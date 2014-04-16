@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -31,14 +31,27 @@
 namespace rx
 {
 
-Renderer::Renderer(egl::Display *display) : mDisplay(display)
+Renderer::Renderer(egl::Display *display)
+    : mDisplay(display),
+      mCapsInitialized(false),
+      mCurrentClientVersion(2)
 {
-    mCurrentClientVersion = 2;
 }
 
 Renderer::~Renderer()
 {
     gl::Shader::releaseCompiler();
+}
+
+const gl::Caps &Renderer::getCaps() const
+{
+    if (!mCapsInitialized)
+    {
+        mCaps = generateCaps();
+        mCapsInitialized = true;
+    }
+
+    return mCaps;
 }
 
 }

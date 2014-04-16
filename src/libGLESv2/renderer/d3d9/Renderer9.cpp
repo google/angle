@@ -35,7 +35,6 @@
 #include "libEGL/Display.h"
 
 #include "third_party/trace_event/trace_event.h"
-#include "third_party/systeminfo/SystemInfo.h"
 
 // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
 #define REF_RAST 0
@@ -146,10 +145,10 @@ Renderer9::~Renderer9()
         }
     }
 
-    deinitialize();
+    release();
 }
 
-void Renderer9::deinitialize()
+void Renderer9::release()
 {
     releaseDeviceResources();
 
@@ -264,15 +263,6 @@ EGLint Renderer9::initialize()
         mD3d9->GetAdapterIdentifier(mAdapter, 0, &mAdapterIdentifier);
     }
 
-    // ATI cards on XP have problems with non-power-of-two textures.
-    mSupportsNonPower2Textures = !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_POW2) &&
-        !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_CUBEMAP_POW2) &&
-        !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) &&
-        !(!isWindowsVistaOrGreater() && mAdapterIdentifier.VendorId == VENDOR_ID_AMD);
-
-    // Must support a minimum of 2:1 anisotropy for max anisotropy to be considered supported, per the spec
-    mSupportsTextureFilterAnisotropy = ((mDeviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY) && (mDeviceCaps.MaxAnisotropy >= 2));
-
     mMinSwapInterval = 4;
     mMaxSwapInterval = 0;
 
@@ -358,36 +348,6 @@ EGLint Renderer9::initialize()
         mPixelShaderCache.initialize(mDevice);
     }
 
-    // Check occlusion query support
-    IDirect3DQuery9 *occlusionQuery = NULL;
-    {
-        TRACE_EVENT0("gpu", "device_CreateQuery");
-        if (SUCCEEDED(mDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, &occlusionQuery)) && occlusionQuery)
-        {
-            SafeRelease(occlusionQuery);
-            mOcclusionQuerySupport = true;
-        }
-        else
-        {
-            mOcclusionQuerySupport = false;
-        }
-    }
-
-    // Check event query support
-    IDirect3DQuery9 *eventQuery = NULL;
-    {
-        TRACE_EVENT0("gpu", "device_CreateQuery2");
-        if (SUCCEEDED(mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &eventQuery)) && eventQuery)
-        {
-            SafeRelease(eventQuery);
-            mEventQuerySupport = true;
-        }
-        else
-        {
-            mEventQuerySupport = false;
-        }
-    }
-
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
@@ -397,93 +357,6 @@ EGLint Renderer9::initialize()
     mVertexTextureSupport = mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0) &&
                             SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
                                                                D3DUSAGE_QUERY_VERTEXTEXTURE, D3DRTYPE_TEXTURE, D3DFMT_R16F));
-
-    // Check RGB565 texture support
-    mRGB565TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
-                                                               D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_R5G6B5));
-
-    // Check depth texture support
-    // we use INTZ for depth textures in Direct3D9
-    // we also want NULL texture support to ensure the we can make depth-only FBOs
-    // see http://aras-p.info/texts/D3D9GPUHacks.html
-    mDepthTextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
-                                                              D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_TEXTURE, D3DFMT_INTZ)) &&
-                           SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
-                                                              D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, D3DFMT_NULL));
-
-    // Check 32 bit floating point texture support
-    mFloat32FilterSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
-                                                               D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
-                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
-                                                               D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
-
-    mFloat32RenderSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
-                                                               D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
-                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
-                                                               D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
-
-    if (!mFloat32FilterSupport && !mFloat32RenderSupport)
-    {
-        mFloat32TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
-                                                                    D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
-                                 SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
-                                                                    D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
-    }
-    else
-    {
-        mFloat32TextureSupport = true;
-    }
-
-    // Check 16 bit floating point texture support
-    mFloat16FilterSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
-                                                               D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
-                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
-                                                               D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
-
-    mFloat16RenderSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
-                                                               D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
-                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
-                                                               D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
-
-    if (!mFloat16FilterSupport && !mFloat16RenderSupport)
-    {
-        mFloat16TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
-                                                                    D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
-                                 SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
-                                                                    D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
-    }
-    else
-    {
-        mFloat16TextureSupport = true;
-    }
-
-    D3DFORMAT rgTextureFormats[] =
-    {
-        D3DFMT_R16F,
-        D3DFMT_G16R16F,
-        D3DFMT_R32F,
-        D3DFMT_G32R32F,
-    };
-
-    mRGTextureSupport = true;
-    for (unsigned int i = 0; i < ArraySize(rgTextureFormats); i++)
-    {
-        D3DFORMAT fmt = rgTextureFormats[i];
-        mRGTextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, D3DRTYPE_TEXTURE, fmt)) &&
-                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, fmt)) &&
-                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, D3DRTYPE_CUBETEXTURE, fmt)) &&
-                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, D3DRTYPE_CUBETEXTURE, fmt));
-    }
-
-
-    // Check DXT texture support
-    mDXT1TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1));
-    mDXT3TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT3));
-    mDXT5TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT5));
-
-    // Check luminance[alpha] texture support
-    mLuminanceTextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_L8));
-    mLuminanceAlphaTextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8L8));
 
     initializeDevice();
 
@@ -787,7 +660,7 @@ void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::Sampl
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, samplerState.baseLevel);
-        if (mSupportsTextureFilterAnisotropy)
+        if (getCaps().extensions.textureFilterAnisotropic)
         {
             mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, (DWORD)samplerState.maxAnisotropy);
         }
@@ -1523,7 +1396,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
 
     unsigned int startIndex = 0;
 
-    if (get32BitIndexSupport())
+    if (getCaps().extensions.elementIndexUint)
     {
         if (!mLineLoopIB)
         {
@@ -2318,7 +2191,7 @@ bool Renderer9::resetRemovedDevice()
     // The hardware adapter has been removed. Application must destroy the device, do enumeration of
     // adapters and create another Direct3D device. If application continues rendering without
     // calling Reset, the rendering calls will succeed. Applies to Direct3D 9Ex only.
-    deinitialize();
+    release();
     return (initialize() == EGL_SUCCESS);
 }
 
@@ -2376,107 +2249,6 @@ Renderer9::MultisampleSupportInfo Renderer9::getMultiSampleSupport(D3DFORMAT for
     }
 
     return support;
-}
-
-bool Renderer9::getBGRATextureSupport() const
-{
-    // DirectX 9 always supports BGRA
-    return true;
-}
-
-bool Renderer9::getDXT1TextureSupport() const
-{
-    return mDXT1TextureSupport;
-}
-
-bool Renderer9::getDXT3TextureSupport() const
-{
-    return mDXT3TextureSupport;
-}
-
-bool Renderer9::getDXT5TextureSupport() const
-{
-    return mDXT5TextureSupport;
-}
-
-bool Renderer9::getDepthTextureSupport() const
-{
-    return mDepthTextureSupport;
-}
-
-bool Renderer9::getFloat32TextureSupport() const
-{
-    return mFloat32TextureSupport;
-}
-
-bool Renderer9::getFloat32TextureFilteringSupport() const
-{
-    return mFloat32FilterSupport;
-}
-
-bool Renderer9::getFloat32TextureRenderingSupport() const
-{
-    return mFloat32RenderSupport;
-}
-
-bool Renderer9::getFloat16TextureSupport() const
-{
-    return mFloat16TextureSupport;
-}
-
-bool Renderer9::getFloat16TextureFilteringSupport() const
-{
-    return mFloat16FilterSupport;
-}
-
-bool Renderer9::getFloat16TextureRenderingSupport() const
-{
-    return mFloat16RenderSupport;
-}
-
-bool Renderer9::getRGB565TextureSupport() const
-{
-    return mRGB565TextureSupport;
-}
-
-bool Renderer9::getLuminanceTextureSupport() const
-{
-    return mLuminanceTextureSupport;
-}
-
-bool Renderer9::getLuminanceAlphaTextureSupport() const
-{
-    return mLuminanceAlphaTextureSupport;
-}
-
-bool Renderer9::getRGTextureSupport() const
-{
-    return mRGTextureSupport;
-}
-
-bool Renderer9::getTextureFilterAnisotropySupport() const
-{
-    return mSupportsTextureFilterAnisotropy;
-}
-
-bool Renderer9::getPBOSupport() const
-{
-    // D3D9 cannot support PBOs
-    return false;
-}
-
-float Renderer9::getTextureMaxAnisotropy() const
-{
-    if (mSupportsTextureFilterAnisotropy)
-    {
-        return static_cast<float>(mDeviceCaps.MaxAnisotropy);
-    }
-    return 1.0f;
-}
-
-bool Renderer9::getEventQuerySupport() const
-{
-    return mEventQuerySupport;
 }
 
 unsigned int Renderer9::getMaxVertexTextureImageUnits() const
@@ -2557,30 +2329,10 @@ unsigned int Renderer9::getMaxUniformBufferSize() const
     return 0;
 }
 
-bool Renderer9::getNonPower2TextureSupport() const
-{
-    return mSupportsNonPower2Textures;
-}
-
-bool Renderer9::getOcclusionQuerySupport() const
-{
-    return mOcclusionQuerySupport;
-}
-
-bool Renderer9::getInstancingSupport() const
-{
-    return mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
-}
-
 bool Renderer9::getShareHandleSupport() const
 {
     // PIX doesn't seem to support using share handles, so disable them.
     return (mD3d9Ex != NULL) && !gl::perfActive();
-}
-
-bool Renderer9::getDerivativeInstructionSupport() const
-{
-    return (mDeviceCaps.PS20Caps.Caps & D3DPS20CAPS_GRADIENTINSTRUCTIONS) != 0;
 }
 
 bool Renderer9::getPostSubBufferSupport() const
@@ -2642,11 +2394,6 @@ int Renderer9::getMaxTextureArrayLayers() const
     return 1;
 }
 
-bool Renderer9::get32BitIndexSupport() const
-{
-    return mDeviceCaps.MaxVertexIndex >= (1 << 16);
-}
-
 DWORD Renderer9::getCapsDeclTypes() const
 {
     return mDeviceCaps.DeclTypes;
@@ -2669,14 +2416,14 @@ int Renderer9::getMaxSupportedSamples() const
 
 GLsizei Renderer9::getMaxSupportedFormatSamples(GLenum internalFormat) const
 {
-    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat, this);
+    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat);
     MultisampleSupportMap::const_iterator itr = mMultiSampleSupport.find(format);
     return (itr != mMultiSampleSupport.end()) ? mMaxSupportedSamples : 0;
 }
 
 GLsizei Renderer9::getNumSampleCounts(GLenum internalFormat) const
 {
-    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat, this);
+    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat);
     MultisampleSupportMap::const_iterator iter = mMultiSampleSupport.find(format);
 
     unsigned int numCounts = 0;
@@ -2697,7 +2444,7 @@ GLsizei Renderer9::getNumSampleCounts(GLenum internalFormat) const
 
 void Renderer9::getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const
 {
-    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat, this);
+    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat);
     MultisampleSupportMap::const_iterator iter = mMultiSampleSupport.find(format);
 
     if (iter != mMultiSampleSupport.end())
@@ -2744,53 +2491,6 @@ unsigned int Renderer9::getMaxRenderTargets() const
 {
     // we do not support MRT in d3d9
     return 1;
-}
-
-D3DFORMAT Renderer9::ConvertTextureInternalFormat(GLenum internalformat)
-{
-    switch (internalformat)
-    {
-      case GL_DEPTH_COMPONENT16:
-      case GL_DEPTH_COMPONENT32_OES:
-      case GL_DEPTH24_STENCIL8_OES:
-        return D3DFMT_INTZ;
-      case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-      case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-        return D3DFMT_DXT1;
-      case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-        return D3DFMT_DXT3;
-      case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-        return D3DFMT_DXT5;
-      case GL_RGBA32F_EXT:
-      case GL_RGB32F_EXT:
-      case GL_ALPHA32F_EXT:
-      case GL_LUMINANCE32F_EXT:
-      case GL_LUMINANCE_ALPHA32F_EXT:
-        return D3DFMT_A32B32G32R32F;
-      case GL_RGBA16F_EXT:
-      case GL_RGB16F_EXT:
-      case GL_ALPHA16F_EXT:
-      case GL_LUMINANCE16F_EXT:
-      case GL_LUMINANCE_ALPHA16F_EXT:
-        return D3DFMT_A16B16G16R16F;
-      case GL_LUMINANCE8_EXT:
-        if (getLuminanceTextureSupport())
-        {
-            return D3DFMT_L8;
-        }
-        break;
-      case GL_LUMINANCE8_ALPHA8_EXT:
-        if (getLuminanceAlphaTextureSupport())
-        {
-            return D3DFMT_A8L8;
-        }
-        break;
-      case GL_RGB8_OES:
-      case GL_RGB565:
-        return D3DFMT_X8R8G8B8;
-    }
-
-    return D3DFMT_A8R8G8B8;
 }
 
 bool Renderer9::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source)
@@ -3560,7 +3260,7 @@ bool Renderer9::getLUID(LUID *adapterLuid) const
 
 GLenum Renderer9::getNativeTextureFormat(GLenum internalFormat) const
 {
-    return d3d9_gl::GetInternalFormat(gl_d3d9::GetTextureFormat(internalFormat, this));
+    return d3d9_gl::GetInternalFormat(gl_d3d9::GetTextureFormat(internalFormat));
 }
 
 rx::VertexConversionType Renderer9::getVertexConversionType(const gl::VertexFormat &vertexFormat) const
@@ -3572,6 +3272,11 @@ GLenum Renderer9::getVertexComponentType(const gl::VertexFormat &vertexFormat) c
 {
     D3DDECLTYPE declType = d3d9::GetNativeVertexFormat(vertexFormat);
     return d3d9::GetDeclTypeComponentType(declType);
+}
+
+gl::Caps Renderer9::generateCaps() const
+{
+    return d3d9_gl::GenerateCaps(mD3d9, mDevice, mDeviceType, mAdapter);
 }
 
 }

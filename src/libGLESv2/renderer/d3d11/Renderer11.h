@@ -98,26 +98,10 @@ class Renderer11 : public Renderer
     virtual bool testDeviceLost(bool notify);
     virtual bool testDeviceResettable();
 
-    // Renderer capabilities
     virtual DWORD getAdapterVendor() const;
     virtual std::string getRendererDescription() const;
     virtual GUID getAdapterIdentifier() const;
 
-    virtual bool getBGRATextureSupport() const;
-    virtual bool getDXT1TextureSupport() const;
-    virtual bool getDXT3TextureSupport() const;
-    virtual bool getDXT5TextureSupport() const;
-    virtual bool getEventQuerySupport() const;
-    virtual bool getFloat32TextureSupport() const;
-    virtual bool getFloat32TextureFilteringSupport() const;
-    virtual bool getFloat32TextureRenderingSupport() const;
-    virtual bool getFloat16TextureSupport() const;
-    virtual bool getFloat16TextureFilteringSupport() const;
-    virtual bool getFloat16TextureRenderingSupport() const;
-    virtual bool getRGB565TextureSupport() const;
-    virtual bool getLuminanceTextureSupport() const;
-    virtual bool getLuminanceAlphaTextureSupport() const;
-    virtual bool getRGTextureSupport() const;
     virtual unsigned int getMaxVertexTextureImageUnits() const;
     virtual unsigned int getMaxCombinedTextureImageUnits() const;
     virtual unsigned int getReservedVertexUniformVectors() const;
@@ -134,15 +118,7 @@ class Renderer11 : public Renderer
     virtual unsigned int getMaxTransformFeedbackSeparateComponents() const;
     virtual unsigned int getMaxTransformFeedbackInterleavedComponents() const;
     virtual unsigned int getMaxUniformBufferSize() const;
-    virtual bool getNonPower2TextureSupport() const;
-    virtual bool getDepthTextureSupport() const;
-    virtual bool getOcclusionQuerySupport() const;
-    virtual bool getInstancingSupport() const;
-    virtual bool getTextureFilterAnisotropySupport() const;
-    virtual bool getPBOSupport() const;
-    virtual float getTextureMaxAnisotropy() const;
     virtual bool getShareHandleSupport() const;
-    virtual bool getDerivativeInstructionSupport() const;
     virtual bool getPostSubBufferSupport() const;
     virtual int getMaxRecommendedElementsIndices() const;
     virtual int getMaxRecommendedElementsVertices() const;
@@ -154,7 +130,6 @@ class Renderer11 : public Renderer
     virtual int getMaxTextureHeight() const;
     virtual int getMaxTextureDepth() const;
     virtual int getMaxTextureArrayLayers() const;
-    virtual bool get32BitIndexSupport() const;
     virtual int getMinSwapInterval() const;
     virtual int getMaxSwapInterval() const;
 
@@ -242,6 +217,8 @@ class Renderer11 : public Renderer
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
 
+    virtual gl::Caps generateCaps() const;
+
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
     void drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);
 
@@ -272,23 +249,6 @@ class Renderer11 : public Renderer
     void release();
 
     RenderStateCache mStateCache;
-
-    // Support flags
-    bool mFloat16TextureSupport;
-    bool mFloat16FilterSupport;
-    bool mFloat16RenderSupport;
-
-    bool mFloat32TextureSupport;
-    bool mFloat32FilterSupport;
-    bool mFloat32RenderSupport;
-
-    bool mDXT1TextureSupport;
-    bool mDXT3TextureSupport;
-    bool mDXT5TextureSupport;
-
-    bool mRGTextureSupport;
-
-    bool mDepthTextureSupport;
 
     // Multisample format support
     struct MultisampleSupportInfo
@@ -406,9 +366,6 @@ class Renderer11 : public Renderer
     DXGI_ADAPTER_DESC mAdapterDescription;
     char mDescription[128];
     IDXGIFactory *mDxgiFactory;
-
-    // Cached device caps
-    bool mBGRATextureSupport;
 };
 
 }

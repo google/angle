@@ -37,15 +37,6 @@
 
 namespace gl
 {
-static const char* makeStaticString(const std::string& str)
-{
-    static std::set<std::string> strings;
-    std::set<std::string>::iterator it = strings.find(str);
-    if (it != strings.end())
-      return it->c_str();
-
-    return strings.insert(str).first->c_str();
-}
 
 Context::Context(int clientVersion, const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess) : mRenderer(renderer)
 {
@@ -203,7 +194,6 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mState.currentProgram = 0;
     mCurrentProgramBinary.set(NULL);
 
-    mCombinedExtensionsString = NULL;
     mRendererString = NULL;
 
     mInvalidEnum = false;
@@ -218,12 +208,6 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mResetStrategy = (notifyResets ? GL_LOSE_CONTEXT_ON_RESET_EXT : GL_NO_RESET_NOTIFICATION_EXT);
     mRobustAccess = robustAccess;
 
-    mSupportsBGRATextures = false;
-    mSupportsDXT1Textures = false;
-    mSupportsDXT3Textures = false;
-    mSupportsDXT5Textures = false;
-    mSupportsEventQueries = false;
-    mSupportsOcclusionQueries = false;
     mNumCompressedTextureFormats = 0;
 }
 
@@ -328,8 +312,6 @@ void Context::makeCurrent(egl::Surface *surface)
         mMajorShaderModel = mRenderer->getMajorShaderModel();
         mMaximumPointSize = mRenderer->getMaxPointSize();
         mSupportsVertexTexture = mRenderer->getVertexTextureSupport();
-        mSupportsNonPower2Texture = mRenderer->getNonPower2TextureSupport();
-        mSupportsInstancing = mRenderer->getInstancingSupport();
 
         mMaxViewportDimension = mRenderer->getMaxViewportDimension();
         mMax2DTextureDimension = std::min(std::min(mRenderer->getMaxTextureWidth(), mRenderer->getMaxTextureHeight()),
@@ -343,50 +325,29 @@ void Context::makeCurrent(egl::Surface *surface)
         mMaxCubeTextureLevel = log2(mMaxCubeTextureDimension) + 1;
         mMax3DTextureLevel = log2(mMax3DTextureDimension) + 1;
         mMax2DArrayTextureLevel = log2(mMax2DTextureDimension) + 1;
-        mMaxTextureAnisotropy = mRenderer->getTextureMaxAnisotropy();
         TRACE("Max2DTextureDimension=%d, MaxCubeTextureDimension=%d, Max3DTextureDimension=%d, Max2DArrayTextureLayers = %d, "
               "Max2DTextureLevel=%d, MaxCubeTextureLevel=%d, Max3DTextureLevel=%d, Max2DArrayTextureLevel=%d, "
-              "MaxRenderbufferDimension=%d, MaxTextureAnisotropy=%f",
+              "MaxRenderbufferDimension=%d",
               mMax2DTextureDimension, mMaxCubeTextureDimension, mMax3DTextureDimension, mMax2DArrayTextureLayers,
               mMax2DTextureLevel, mMaxCubeTextureLevel, mMax3DTextureLevel, mMax2DArrayTextureLevel,
-              mMaxRenderbufferDimension, mMaxTextureAnisotropy);
-
-        mSupportsEventQueries = mRenderer->getEventQuerySupport();
-        mSupportsOcclusionQueries = mRenderer->getOcclusionQuerySupport();
-        mSupportsBGRATextures = mRenderer->getBGRATextureSupport();
-        mSupportsDXT1Textures = mRenderer->getDXT1TextureSupport();
-        mSupportsDXT3Textures = mRenderer->getDXT3TextureSupport();
-        mSupportsDXT5Textures = mRenderer->getDXT5TextureSupport();
-        mSupportsFloat32Textures = mRenderer->getFloat32TextureSupport();
-        mSupportsFloat32LinearFilter = mRenderer->getFloat32TextureFilteringSupport();
-        mSupportsFloat32RenderableTextures = mRenderer->getFloat32TextureRenderingSupport();
-        mSupportsFloat16Textures = mRenderer->getFloat16TextureSupport();
-        mSupportsFloat16LinearFilter = mRenderer->getFloat16TextureFilteringSupport();
-        mSupportsFloat16RenderableTextures = mRenderer->getFloat16TextureRenderingSupport();
-        mSupportsLuminanceTextures = mRenderer->getLuminanceTextureSupport();
-        mSupportsLuminanceAlphaTextures = mRenderer->getLuminanceAlphaTextureSupport();
-        mSupportsRGTextures = mRenderer->getRGTextureSupport();
-        mSupportsDepthTextures = mRenderer->getDepthTextureSupport();
-        mSupportsTextureFilterAnisotropy = mRenderer->getTextureFilterAnisotropySupport();
-        mSupports32bitIndices = mRenderer->get32BitIndexSupport();
-        mSupportsPBOs = mRenderer->getPBOSupport();
+              mMaxRenderbufferDimension);
 
         mNumCompressedTextureFormats = 0;
-        if (supportsDXT1Textures())
+        if (getCaps().extensions.textureCompressionDXT1)
         {
             mNumCompressedTextureFormats += 2;
         }
-        if (supportsDXT3Textures())
+        if (getCaps().extensions.textureCompressionDXT3)
         {
             mNumCompressedTextureFormats += 1;
         }
-        if (supportsDXT5Textures())
+        if (getCaps().extensions.textureCompressionDXT5)
         {
             mNumCompressedTextureFormats += 1;
         }
 
-        initExtensionString();
         initRendererString();
+        initExtensionStrings();
 
         mState.viewport.x = 0;
         mState.viewport.y = 0;
@@ -1412,25 +1373,23 @@ void Context::setFramebufferZero(Framebuffer *buffer)
 
 void Context::setRenderbufferStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples)
 {
-    const bool color = gl::IsColorRenderingSupported(internalformat, this);
-    const bool depth = gl::IsDepthRenderingSupported(internalformat, this);
-    const bool stencil = gl::IsStencilRenderingSupported(internalformat, this);
+    const TextureCaps &formatCaps = getCaps().textureCaps.get(internalformat);
 
     RenderbufferStorage *renderbuffer = NULL;
 
-    if (color)
+    if (formatCaps.colorRendering)
     {
         renderbuffer = new gl::Colorbuffer(mRenderer,width, height, internalformat, samples);
     }
-    else if (depth && stencil)
+    else if (formatCaps.depthRendering && formatCaps.stencilRendering)
     {
         renderbuffer = new gl::DepthStencilbuffer(mRenderer, width, height, samples);
     }
-    else if (depth)
+    else if (formatCaps.depthRendering)
     {
         renderbuffer = new gl::Depthbuffer(mRenderer, width, height, samples);
     }
-    else if (stencil)
+    else if (formatCaps.stencilRendering)
     {
         renderbuffer = new gl::Stencilbuffer(mRenderer, width, height, samples);
     }
@@ -1700,8 +1659,8 @@ void Context::getFloatv(GLenum pname, GLfloat *params)
         params[3] = mState.blendColor.alpha;
         break;
       case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
-        ASSERT(supportsTextureFilterAnisotropy());
-        *params = mMaxTextureAnisotropy;
+        ASSERT(getCaps().extensions.textureFilterAnisotropic);
+        *params = getCaps().extensions.maxTextureAnisotropy;
         break;
       default:
         UNREACHABLE();
@@ -1849,16 +1808,16 @@ void Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_COMPRESSED_TEXTURE_FORMATS:
         {
-            if (supportsDXT1Textures())
+            if (getCaps().extensions.textureCompressionDXT1)
             {
                 *params++ = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
                 *params++ = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
             }
-            if (supportsDXT3Textures())
+            if (getCaps().extensions.textureCompressionDXT3)
             {
                 *params++ = GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE;
             }
-            if (supportsDXT5Textures())
+            if (getCaps().extensions.textureCompressionDXT5)
             {
                 *params++ = GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE;
             }
@@ -1976,7 +1935,7 @@ void Context::getIntegerv(GLenum pname, GLint *params)
         *params = mState.unpack.pixelBuffer.id();
         break;
       case GL_NUM_EXTENSIONS:
-        *params = static_cast<GLint>(getNumExtensions());
+        *params = static_cast<GLint>(mExtensionStrings.size());
         break;
       default:
         UNREACHABLE();
@@ -2180,7 +2139,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         return true;
       case GL_MAX_SAMPLES_ANGLE:
         {
-            if (getMaxSupportedSamples() != 0)
+            if (getCaps().extensions.framebufferMultisample)
             {
                 *type = GL_INT;
                 *numParams = 1;
@@ -2194,7 +2153,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_PIXEL_PACK_BUFFER_BINDING:
       case GL_PIXEL_UNPACK_BUFFER_BINDING:
         {
-            if (supportsPBOs())
+            if (getCaps().extensions.pixelBufferObject)
             {
                 *type = GL_INT;
                 *numParams = 1;
@@ -2268,7 +2227,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         }
         return true;
       case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
-        if (!supportsTextureFilterAnisotropy())
+        if (!getCaps().extensions.maxTextureAnisotropy)
         {
             return false;
         }
@@ -3131,6 +3090,11 @@ int Context::getClientVersion() const
     return mClientVersion;
 }
 
+const Caps &Context::getCaps() const
+{
+    return mRenderer->getCaps();
+}
+
 int Context::getMajorShaderModel() const
 {
     return mMajorShaderModel;
@@ -3188,66 +3152,6 @@ unsigned int Context::getMaximumRenderTargets() const
     return mRenderer->getMaxRenderTargets();
 }
 
-bool Context::supportsEventQueries() const
-{
-    return mSupportsEventQueries;
-}
-
-bool Context::supportsOcclusionQueries() const
-{
-    return mSupportsOcclusionQueries;
-}
-
-bool Context::supportsBGRATextures() const
-{
-    return mSupportsBGRATextures;
-}
-
-bool Context::supportsDXT1Textures() const
-{
-    return mSupportsDXT1Textures;
-}
-
-bool Context::supportsDXT3Textures() const
-{
-    return mSupportsDXT3Textures;
-}
-
-bool Context::supportsDXT5Textures() const
-{
-    return mSupportsDXT5Textures;
-}
-
-bool Context::supportsFloat32Textures() const
-{
-    return mSupportsFloat32Textures;
-}
-
-bool Context::supportsFloat32LinearFilter() const
-{
-    return mSupportsFloat32LinearFilter;
-}
-
-bool Context::supportsFloat32RenderableTextures() const
-{
-    return mSupportsFloat32RenderableTextures;
-}
-
-bool Context::supportsFloat16Textures() const
-{
-    return mSupportsFloat16Textures;
-}
-
-bool Context::supportsFloat16LinearFilter() const
-{
-    return mSupportsFloat16LinearFilter;
-}
-
-bool Context::supportsFloat16RenderableTextures() const
-{
-    return mSupportsFloat16RenderableTextures;
-}
-
 int Context::getMaximumRenderbufferDimension() const
 {
     return mMaxRenderbufferDimension;
@@ -3291,56 +3195,6 @@ int Context::getMaximum3DTextureLevel() const
 int Context::getMaximum2DArrayTextureLevel() const
 {
     return mMax2DArrayTextureLevel;
-}
-
-bool Context::supportsLuminanceTextures() const
-{
-    return mSupportsLuminanceTextures;
-}
-
-bool Context::supportsLuminanceAlphaTextures() const
-{
-    return mSupportsLuminanceAlphaTextures;
-}
-
-bool Context::supportsRGTextures() const
-{
-    return mSupportsRGTextures;
-}
-
-bool Context::supportsDepthTextures() const
-{
-    return mSupportsDepthTextures;
-}
-
-bool Context::supports32bitIndices() const
-{
-    return mSupports32bitIndices;
-}
-
-bool Context::supportsNonPower2Texture() const
-{
-    return mSupportsNonPower2Texture;
-}
-
-bool Context::supportsInstancing() const
-{
-    return mSupportsInstancing;
-}
-
-bool Context::supportsTextureFilterAnisotropy() const
-{
-    return mSupportsTextureFilterAnisotropy;
-}
-
-bool Context::supportsPBOs() const
-{
-    return mSupportsPBOs;
-}
-
-float Context::getTextureMaxAnisotropy() const
-{
-    return mMaxTextureAnisotropy;
 }
 
 void Context::getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type)
@@ -3692,175 +3546,6 @@ GLfloat Context::getSamplerParameterf(GLuint sampler, GLenum pname)
     }
 }
 
-// keep list sorted in following order
-// OES extensions
-// EXT extensions
-// Vendor extensions
-void Context::initExtensionString()
-{
-    // Do not report extension in GLES 3 contexts for now
-    if (mClientVersion == 2)
-    {
-        // OES extensions
-        if (supports32bitIndices())
-        {
-            mExtensionStringList.push_back("GL_OES_element_index_uint");
-        }
-
-        mExtensionStringList.push_back("GL_OES_packed_depth_stencil");
-        mExtensionStringList.push_back("GL_OES_get_program_binary");
-        mExtensionStringList.push_back("GL_OES_rgb8_rgba8");
-
-        if (supportsPBOs())
-        {
-            mExtensionStringList.push_back("NV_pixel_buffer_object");
-            mExtensionStringList.push_back("GL_OES_mapbuffer");
-            mExtensionStringList.push_back("GL_EXT_map_buffer_range");
-        }
-
-        if (mRenderer->getDerivativeInstructionSupport())
-        {
-            mExtensionStringList.push_back("GL_OES_standard_derivatives");
-        }
-
-        if (supportsFloat16Textures())
-        {
-            mExtensionStringList.push_back("GL_OES_texture_half_float");
-        }
-        if (supportsFloat16LinearFilter())
-        {
-            mExtensionStringList.push_back("GL_OES_texture_half_float_linear");
-        }
-        if (supportsFloat32Textures())
-        {
-            mExtensionStringList.push_back("GL_OES_texture_float");
-        }
-        if (supportsFloat32LinearFilter())
-        {
-            mExtensionStringList.push_back("GL_OES_texture_float_linear");
-        }
-
-        if (supportsRGTextures())
-        {
-            mExtensionStringList.push_back("GL_EXT_texture_rg");
-        }
-
-        if (supportsNonPower2Texture())
-        {
-            mExtensionStringList.push_back("GL_OES_texture_npot");
-        }
-
-        // Multi-vendor (EXT) extensions
-        if (supportsOcclusionQueries())
-        {
-            mExtensionStringList.push_back("GL_EXT_occlusion_query_boolean");
-        }
-
-        mExtensionStringList.push_back("GL_EXT_read_format_bgra");
-        mExtensionStringList.push_back("GL_EXT_robustness");
-        mExtensionStringList.push_back("GL_EXT_shader_texture_lod");
-
-        if (supportsDXT1Textures())
-        {
-            mExtensionStringList.push_back("GL_EXT_texture_compression_dxt1");
-        }
-
-        if (supportsTextureFilterAnisotropy())
-        {
-            mExtensionStringList.push_back("GL_EXT_texture_filter_anisotropic");
-        }
-
-        if (supportsBGRATextures())
-        {
-            mExtensionStringList.push_back("GL_EXT_texture_format_BGRA8888");
-        }
-
-        if (mRenderer->getMaxRenderTargets() > 1)
-        {
-            mExtensionStringList.push_back("GL_EXT_draw_buffers");
-        }
-
-        mExtensionStringList.push_back("GL_EXT_texture_storage");
-        mExtensionStringList.push_back("GL_EXT_frag_depth");
-        mExtensionStringList.push_back("GL_EXT_blend_minmax");
-
-        // ANGLE-specific extensions
-        if (supportsDepthTextures())
-        {
-            mExtensionStringList.push_back("GL_ANGLE_depth_texture");
-        }
-
-        mExtensionStringList.push_back("GL_ANGLE_framebuffer_blit");
-        if (getMaxSupportedSamples() != 0)
-        {
-            mExtensionStringList.push_back("GL_ANGLE_framebuffer_multisample");
-        }
-
-        if (supportsInstancing())
-        {
-            mExtensionStringList.push_back("GL_ANGLE_instanced_arrays");
-        }
-
-        mExtensionStringList.push_back("GL_ANGLE_pack_reverse_row_order");
-
-        if (supportsDXT3Textures())
-        {
-            mExtensionStringList.push_back("GL_ANGLE_texture_compression_dxt3");
-        }
-        if (supportsDXT5Textures())
-        {
-            mExtensionStringList.push_back("GL_ANGLE_texture_compression_dxt5");
-        }
-
-        mExtensionStringList.push_back("GL_ANGLE_texture_usage");
-        mExtensionStringList.push_back("GL_ANGLE_translated_shader_source");
-
-        // Other vendor-specific extensions
-        if (supportsEventQueries())
-        {
-            mExtensionStringList.push_back("GL_NV_fence");
-        }
-    }
-
-    if (mClientVersion == 3)
-    {
-        mExtensionStringList.push_back("GL_EXT_color_buffer_float");
-
-        mExtensionStringList.push_back("GL_EXT_read_format_bgra");
-
-        if (supportsBGRATextures())
-        {
-            mExtensionStringList.push_back("GL_EXT_texture_format_BGRA8888");
-        }
-    }
-
-    // Join the extension strings to one long string for use with GetString
-    std::stringstream strstr;
-    for (unsigned int extensionIndex = 0; extensionIndex < mExtensionStringList.size(); extensionIndex++)
-    {
-        strstr << mExtensionStringList[extensionIndex];
-        strstr << " ";
-    }
-
-    mCombinedExtensionsString = makeStaticString(strstr.str());
-}
-
-const char *Context::getCombinedExtensionsString() const
-{
-    return mCombinedExtensionsString;
-}
-
-const char *Context::getExtensionString(const GLuint index) const
-{
-    ASSERT(index < mExtensionStringList.size());
-    return mExtensionStringList[index].c_str();
-}
-
-unsigned int Context::getNumExtensions() const
-{
-    return mExtensionStringList.size();
-}
-
 void Context::initRendererString()
 {
     std::ostringstream rendererString;
@@ -3868,12 +3553,40 @@ void Context::initRendererString()
     rendererString << mRenderer->getRendererDescription();
     rendererString << ")";
 
-    mRendererString = makeStaticString(rendererString.str());
+    mRendererString = MakeStaticString(rendererString.str());
 }
 
 const char *Context::getRendererString() const
 {
     return mRendererString;
+}
+
+void Context::initExtensionStrings()
+{
+    std::ostringstream combinedStringStream;
+
+    std::vector<std::string> extensions = getCaps().extensions.getStrings(mClientVersion);
+    for (size_t i = 0; i < extensions.size(); i++)
+    {
+        combinedStringStream << extensions[i] << " ";
+        mExtensionStrings.push_back(MakeStaticString(extensions[i]));
+    }
+    mExtensionString = MakeStaticString(combinedStringStream.str());
+}
+
+const char *Context::getExtensionString() const
+{
+    return mExtensionString;
+}
+
+const char *Context::getExtensionString(size_t idx) const
+{
+    return mExtensionStrings[idx];
+}
+
+size_t Context::getExtensionStringCount() const
+{
+    return mExtensionStrings.size();
 }
 
 size_t Context::getBoundFramebufferTextureSerials(FramebufferTextureSerialArray *outSerialArray)

@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -41,7 +41,7 @@ bool IndexBuffer9::initialize(unsigned int bufferSize, GLenum indexType, bool dy
         }
         else if (indexType == GL_UNSIGNED_INT)
         {
-            if (mRenderer->get32BitIndexSupport())
+            if (mRenderer->getCaps().extensions.elementIndexUint)
             {
                 format = D3DFMT_INDEX32;
             }

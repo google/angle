@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -11,6 +11,7 @@
 #define LIBGLESV2_RENDERER_RENDERER11_UTILS_H
 
 #include "libGLESv2/angletypes.h"
+#include "libGLESv2/Caps.h"
 
 namespace rx
 {
@@ -33,6 +34,13 @@ D3D11_FILTER ConvertFilter(GLenum minFilter, GLenum magFilter, float maxAnisotro
 D3D11_TEXTURE_ADDRESS_MODE ConvertTextureWrap(GLenum wrap);
 
 D3D11_QUERY ConvertQueryType(GLenum queryType);
+
+}
+
+namespace d3d11_gl
+{
+
+gl::Caps GenerateCaps(ID3D11Device *device);
 
 }
 
@@ -157,6 +165,14 @@ inline void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBu
 
     context->Unmap(constantBuffer, 0);
 }
+
+bool GetNPOTTextureSupport(D3D_FEATURE_LEVEL featureLevel);
+float GetMaximumAnisotropy(D3D_FEATURE_LEVEL featureLevel);
+bool GetOcclusionQuerySupport(D3D_FEATURE_LEVEL featureLevel);
+bool GetEventQuerySupport(D3D_FEATURE_LEVEL featureLevel);
+bool GetInstancingSupport(D3D_FEATURE_LEVEL featureLevel);
+bool GetDerivativeInstructionSupport(D3D_FEATURE_LEVEL featureLevel);
+size_t GetMaximumSimultaneousRenderTargets(D3D_FEATURE_LEVEL featureLevel);
 
 }
 

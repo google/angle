@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -216,6 +216,111 @@ D3D11_QUERY ConvertQueryType(GLenum queryType)
 
 }
 
+
+namespace d3d11_gl
+{
+
+static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, GLuint clientVersion, ID3D11Device *device)
+{
+    gl::TextureCaps textureCaps;
+
+    DXGI_FORMAT textureFormat = gl_d3d11::GetTexFormat(internalFormat, clientVersion);
+    DXGI_FORMAT srvFormat = gl_d3d11::GetSRVFormat(internalFormat, clientVersion);
+    DXGI_FORMAT rtvFormat = gl_d3d11::GetRTVFormat(internalFormat, clientVersion);
+    DXGI_FORMAT dsvFormat = gl_d3d11::GetDSVFormat(internalFormat, clientVersion);
+    DXGI_FORMAT renderFormat = gl_d3d11::GetRenderableFormat(internalFormat, clientVersion);
+
+    UINT formatSupport;
+    if (SUCCEEDED(device->CheckFormatSupport(textureFormat, &formatSupport)))
+    {
+        textureCaps.texture2D = (formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) != 0;
+        textureCaps.textureCubeMap = (formatSupport & D3D11_FORMAT_SUPPORT_TEXTURECUBE) != 0;
+        textureCaps.texture3D = (formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE3D) != 0;
+        textureCaps.texture2DArray = (formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) != 0;
+    }
+
+    if (SUCCEEDED(device->CheckFormatSupport(renderFormat, &formatSupport)) &&
+        (formatSupport & D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET))
+    {
+        for (size_t sampleCount = 1; sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; sampleCount++)
+        {
+            UINT qualityCount = 0;
+            if (SUCCEEDED(device->CheckMultisampleQualityLevels(renderFormat, sampleCount, &qualityCount)) &&
+                qualityCount > 0)
+            {
+                textureCaps.sampleCounts.insert(sampleCount);
+            }
+        }
+    }
+
+    if (SUCCEEDED(device->CheckFormatSupport(srvFormat, &formatSupport)))
+    {
+        textureCaps.filtering = (formatSupport & D3D11_FORMAT_SUPPORT_SHADER_SAMPLE) != 0;
+    }
+
+    if (SUCCEEDED(device->CheckFormatSupport(rtvFormat, &formatSupport)))
+    {
+        textureCaps.colorRendering = (formatSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET) != 0;
+    }
+
+    if (SUCCEEDED(device->CheckFormatSupport(dsvFormat, &formatSupport)))
+    {
+        textureCaps.depthRendering = gl::GetDepthBits(internalFormat, clientVersion) > 0 &&
+                                     (formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0;
+        textureCaps.stencilRendering = gl::GetStencilBits(internalFormat, clientVersion) > 0 &&
+                                       (formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0;
+    }
+
+    return textureCaps;
+}
+
+gl::Caps GenerateCaps(ID3D11Device *device)
+{
+    gl::Caps caps;
+
+    const GLuint maxClientVersion = 3;
+    const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats(maxClientVersion);
+    for (gl::FormatSet::const_iterator internalFormat = allFormats.begin(); internalFormat != allFormats.end(); ++internalFormat)
+    {
+        caps.textureCaps.insert(*internalFormat, GenerateTextureFormatCaps(*internalFormat, maxClientVersion, device));
+    }
+
+    D3D_FEATURE_LEVEL featureLevel = device->GetFeatureLevel();
+
+    caps.extensions.setTextureExtensionSupport(caps.textureCaps);
+    caps.extensions.elementIndexUint = true;
+    caps.extensions.packedDepthStencil = true;
+    caps.extensions.getProgramBinary = true;
+    caps.extensions.rgb8rgba8 = true;
+    caps.extensions.readFormatBGRA = true;
+    caps.extensions.pixelBufferObject = true;
+    caps.extensions.mapBuffer = true;
+    caps.extensions.mapBufferRange = true;
+    caps.extensions.textureNPOT = d3d11::GetNPOTTextureSupport(featureLevel);
+    caps.extensions.drawBuffers = d3d11::GetMaximumSimultaneousRenderTargets(featureLevel) > 1;
+    caps.extensions.textureStorage = true;
+    caps.extensions.textureFilterAnisotropic = true;
+    caps.extensions.maxTextureAnisotropy = d3d11::GetMaximumAnisotropy(featureLevel);
+    caps.extensions.occlusionQueryBoolean = d3d11::GetOcclusionQuerySupport(featureLevel);
+    caps.extensions.fence = d3d11::GetEventQuerySupport(featureLevel);
+    caps.extensions.timerQuery = false; // Unimplemented
+    caps.extensions.robustness = true;
+    caps.extensions.blendMinMax = true;
+    caps.extensions.framebufferBlit = true;
+    caps.extensions.framebufferMultisample = true;
+    caps.extensions.instancedArrays = d3d11::GetInstancingSupport(featureLevel);
+    caps.extensions.packReverseRowOrder = true;
+    caps.extensions.standardDerivatives = d3d11::GetDerivativeInstructionSupport(featureLevel);
+    caps.extensions.shaderTextureLOD = true;
+    caps.extensions.fragDepth = true;
+    caps.extensions.textureUsage = true; // This could be false since it has no effect in D3D11
+    caps.extensions.translatedShaderSource = true;
+
+    return caps;
+}
+
+}
+
 namespace d3d11
 {
 
@@ -273,6 +378,141 @@ HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 #else
     return S_OK;
 #endif
+}
+
+bool GetNPOTTextureSupport(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return true;
+
+      // From http://msdn.microsoft.com/en-us/library/windows/desktop/ff476876.aspx
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return false;
+
+      default: UNREACHABLE();      return false;
+    }
+}
+
+float GetMaximumAnisotropy(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_MAX_MAXANISOTROPY;
+
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_MAX_MAXANISOTROPY;
+
+      // From http://msdn.microsoft.com/en-us/library/windows/desktop/ff476876.aspx
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:  return 16;
+
+      case D3D_FEATURE_LEVEL_9_1:  return D3D_FL9_1_DEFAULT_MAX_ANISOTROPY;
+
+      default: UNREACHABLE();      return 0;
+    }
+}
+
+bool GetOcclusionQuerySupport(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return true;
+
+      // From http://msdn.microsoft.com/en-us/library/windows/desktop/ff476150.aspx ID3D11Device::CreateQuery
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:  return true;
+      case D3D_FEATURE_LEVEL_9_1:  return false;
+
+      default: UNREACHABLE();      return false;
+    }
+}
+
+bool GetEventQuerySupport(D3D_FEATURE_LEVEL featureLevel)
+{
+    // From http://msdn.microsoft.com/en-us/library/windows/desktop/ff476150.aspx ID3D11Device::CreateQuery
+
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return true;
+
+      default: UNREACHABLE();      return false;
+    }
+}
+
+bool GetInstancingSupport(D3D_FEATURE_LEVEL featureLevel)
+{
+    // From http://msdn.microsoft.com/en-us/library/windows/desktop/ff476150.aspx ID3D11Device::CreateInputLayout
+
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+      case D3D_FEATURE_LEVEL_9_3:  return true;
+
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return false;
+
+      default: UNREACHABLE();      return false;
+    }
+}
+
+bool GetDerivativeInstructionSupport(D3D_FEATURE_LEVEL featureLevel)
+{
+    // http://msdn.microsoft.com/en-us/library/windows/desktop/bb509588.aspx states that shader model
+    // ps_2_x is required for the ddx (and other derivative functions).
+
+    // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476876.aspx states that feature level
+    // 9.3 supports shader model ps_2_x.
+
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+      case D3D_FEATURE_LEVEL_9_3:  return true;
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return false;
+
+      default: UNREACHABLE();      return false;
+    }
+}
+
+size_t GetMaximumSimultaneousRenderTargets(D3D_FEATURE_LEVEL featureLevel)
+{
+    // From http://msdn.microsoft.com/en-us/library/windows/desktop/ff476150.aspx ID3D11Device::CreateInputLayout
+
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT;
+
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT;
+
+      case D3D_FEATURE_LEVEL_9_3:  return D3D_FL9_3_SIMULTANEOUS_RENDER_TARGET_COUNT;
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return D3D_FL9_1_SIMULTANEOUS_RENDER_TARGET_COUNT;
+
+      default: UNREACHABLE();      return 0;
+    }
 }
 
 }

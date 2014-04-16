@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -184,6 +184,8 @@ void Shader::initializeCompiler()
             ShBuiltInResources resources;
             ShInitBuiltInResources(&resources);
 
+            const gl::Caps &caps = mRenderer->getCaps();
+
             resources.MaxVertexAttribs = MAX_VERTEX_ATTRIBS;
             resources.MaxVertexUniformVectors = mRenderer->getMaxVertexUniformVectors();
             resources.MaxVaryingVectors = mRenderer->getMaxVaryingVectors();
@@ -192,8 +194,8 @@ void Shader::initializeCompiler()
             resources.MaxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
             resources.MaxFragmentUniformVectors = mRenderer->getMaxFragmentUniformVectors();
             resources.MaxDrawBuffers = mRenderer->getMaxRenderTargets();
-            resources.OES_standard_derivatives = mRenderer->getDerivativeInstructionSupport();
-            resources.EXT_draw_buffers = mRenderer->getMaxRenderTargets() > 1;
+            resources.OES_standard_derivatives = caps.extensions.standardDerivatives;
+            resources.EXT_draw_buffers = caps.extensions.drawBuffers;
             resources.EXT_shader_texture_lod = 1;
             // resources.OES_EGL_image_external = mRenderer->getShareHandleSupport() ? 1 : 0; // TODO: commented out until the extension is actually supported.
             resources.FragmentPrecisionHigh = 1;   // Shader Model 2+ always supports FP24 (s16e7) which corresponds to highp

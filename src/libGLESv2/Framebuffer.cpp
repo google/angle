@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -476,18 +476,18 @@ GLenum Framebuffer::completeness() const
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
 
+            GLenum internalformat = colorbuffer->getInternalFormat();
+            const TextureCaps &formatCaps = mRenderer->getCaps().textureCaps.get(internalformat);
             if (mColorbuffers[colorAttachment].type() == GL_RENDERBUFFER)
             {
-                if (!gl::IsColorRenderingSupported(colorbuffer->getInternalFormat(), mRenderer))
+                if (!formatCaps.colorRendering)
                 {
                     return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
                 }
             }
             else if (IsInternalTextureTarget(mColorbuffers[colorAttachment].type(), mRenderer->getCurrentClientVersion()))
             {
-                GLenum internalformat = colorbuffer->getInternalFormat();
-
-                if (!gl::IsColorRenderingSupported(internalformat, mRenderer))
+                if (!formatCaps.colorRendering)
                 {
                     return GL_FRAMEBUFFER_UNSUPPORTED;
                 }
@@ -566,21 +566,26 @@ GLenum Framebuffer::completeness() const
             return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
         }
 
+        GLenum internalformat = depthbuffer->getInternalFormat();
+        const TextureCaps &formatCaps = mRenderer->getCaps().textureCaps.get(internalformat);
         if (mDepthbuffer.type() == GL_RENDERBUFFER)
         {
-            if (!gl::IsDepthRenderingSupported(depthbuffer->getInternalFormat(), mRenderer))
+            if (!formatCaps.depthRendering)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
         }
         else if (IsInternalTextureTarget(mDepthbuffer.type(), mRenderer->getCurrentClientVersion()))
         {
-            GLenum internalformat = depthbuffer->getInternalFormat();
-
             // depth texture attachments require OES/ANGLE_depth_texture
-            if (!mRenderer->getDepthTextureSupport())
+            if (!mRenderer->getCaps().extensions.depthTextures)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+
+            if (!formatCaps.depthRendering)
+            {
+                return GL_FRAMEBUFFER_UNSUPPORTED;
             }
 
             if (gl::GetDepthBits(internalformat, clientVersion) == 0)
@@ -625,22 +630,27 @@ GLenum Framebuffer::completeness() const
             return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
         }
 
+        GLenum internalformat = stencilbuffer->getInternalFormat();
+        const TextureCaps &formatCaps = mRenderer->getCaps().textureCaps.get(internalformat);
         if (mStencilbuffer.type() == GL_RENDERBUFFER)
         {
-            if (!gl::IsStencilRenderingSupported(stencilbuffer->getInternalFormat(), mRenderer))
+            if (!formatCaps.stencilRendering)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
         }
         else if (IsInternalTextureTarget(mStencilbuffer.type(), mRenderer->getCurrentClientVersion()))
         {
-            GLenum internalformat = stencilbuffer->getInternalFormat();
-
             // texture stencil attachments come along as part
             // of OES_packed_depth_stencil + OES/ANGLE_depth_texture
-            if (!mRenderer->getDepthTextureSupport())
+            if (!mRenderer->getCaps().extensions.depthTextures)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+
+            if (!formatCaps.stencilRendering)
+            {
+                return GL_FRAMEBUFFER_UNSUPPORTED;
             }
 
             if (gl::GetStencilBits(internalformat, clientVersion) == 0)

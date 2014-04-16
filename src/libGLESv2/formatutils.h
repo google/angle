@@ -13,6 +13,7 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
+#include "libGLESv2/Caps.h"
 #include "libGLESv2/angletypes.h"
 
 typedef void (*MipGenerationFunction)(unsigned int sourceWidth, unsigned int sourceHeight, unsigned int sourceDepth,
@@ -32,19 +33,12 @@ typedef void (*ColorCopyFunction)(const void *source, void *dest);
 
 typedef void (*VertexCopyFunction)(const void *input, size_t stride, size_t count, void *output);
 
-namespace rx
-{
-
-class Renderer;
-
-}
-
 namespace gl
 {
 
-class Context;
+typedef std::set<GLenum> FormatSet;
 
-bool IsValidInternalFormat(GLenum internalFormat, const Context *context);
+bool IsValidInternalFormat(GLenum internalFormat, const Extensions &extensions, GLuint clientVersion);
 bool IsValidFormat(GLenum format, GLuint clientVersion);
 bool IsValidType(GLenum type, GLuint clientVersion);
 
@@ -74,15 +68,6 @@ GLenum GetComponentType(GLenum internalFormat, GLuint clientVersion);
 GLuint GetComponentCount(GLenum internalFormat, GLuint clientVersion);
 GLenum GetColorEncoding(GLenum internalFormat, GLuint clientVersion);
 
-bool IsColorRenderingSupported(GLenum internalFormat, const rx::Renderer *renderer);
-bool IsColorRenderingSupported(GLenum internalFormat, const Context *context);
-bool IsTextureFilteringSupported(GLenum internalFormat, const rx::Renderer *renderer);
-bool IsTextureFilteringSupported(GLenum internalFormat, const Context *context);
-bool IsDepthRenderingSupported(GLenum internalFormat, const rx::Renderer *renderer);
-bool IsDepthRenderingSupported(GLenum internalFormat, const Context *context);
-bool IsStencilRenderingSupported(GLenum internalFormat, const rx::Renderer *renderer);
-bool IsStencilRenderingSupported(GLenum internalFormat, const Context *context);
-
 GLuint GetRowPitch(GLenum internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLint alignment);
 GLuint GetDepthPitch(GLenum internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLsizei height, GLint alignment);
 GLuint GetBlockSize(GLenum internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLsizei height);
@@ -90,6 +75,8 @@ GLuint GetBlockSize(GLenum internalFormat, GLenum type, GLuint clientVersion, GL
 bool IsFormatCompressed(GLenum internalFormat, GLuint clientVersion);
 GLuint GetCompressedBlockWidth(GLenum internalFormat, GLuint clientVersion);
 GLuint GetCompressedBlockHeight(GLenum internalFormat, GLuint clientVersion);
+
+const FormatSet &GetAllSizedInternalFormats(GLuint clientVersion);
 
 ColorWriteFunction GetColorWriteFunction(GLenum format, GLenum type, GLuint clientVersion);
 

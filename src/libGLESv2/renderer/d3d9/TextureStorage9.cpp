@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -49,7 +49,7 @@ DWORD TextureStorage9::GetTextureUsage(GLenum internalformat, Renderer9 *rendere
     {
         d3dusage |= D3DUSAGE_DEPTHSTENCIL;
     }
-    else if (renderTarget && (gl_d3d9::GetRenderFormat(internalformat, renderer) != D3DFMT_UNKNOWN))
+    else if (renderTarget && (gl_d3d9::GetRenderFormat(internalformat) != D3DFMT_UNKNOWN))
     {
         d3dusage |= D3DUSAGE_RENDERTARGET;
     }
@@ -108,7 +108,7 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, GLenum internalformat
     if (width > 0 && height > 0)
     {
         IDirect3DDevice9 *device = mRenderer->getDevice();
-        D3DFORMAT format = gl_d3d9::GetTextureFormat(internalformat, mRenderer);
+        D3DFORMAT format = gl_d3d9::GetTextureFormat(internalformat);
         d3d9::MakeValidSize(false, format, &width, &height, &mTopLevel);
         UINT creationLevels = (levels == 0) ? 0 : mTopLevel + levels;
 
@@ -209,7 +209,7 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, GLenum internalfo
     {
         IDirect3DDevice9 *device = mRenderer->getDevice();
         int height = size;
-        D3DFORMAT format = gl_d3d9::GetTextureFormat(internalformat, mRenderer);
+        D3DFORMAT format = gl_d3d9::GetTextureFormat(internalformat);
         d3d9::MakeValidSize(false, format, &size, &height, &mTopLevel);
         UINT creationLevels = (levels == 0) ? 0 : mTopLevel + levels;
 
