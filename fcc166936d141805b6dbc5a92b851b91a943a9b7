@@ -205,6 +205,24 @@
       "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9436b32_cb2e150e",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-16T14:16:29Z",
+      "side": 1,
+      "message": "Yes, we should avoid std::map in performance critical code, except for maps that often have elements inserted and removed. We\u0027ve already started using std::unordered_map in several places for performance reasons. But even unordered_map is slow when the number of elements is tiny, because the hash takes longer to compute than iterating through part of an array.\n\nI don\u0027t think the use of std::map increases code clarity. It seems obvious that SRVCache is supposed to be a cache of SRV\u0027s.\n\nI could add a comment stating that we expect the cache to be small, and hence a vector to be faster than a map?",
+      "parentUuid": "d9544bb3_2010531d",
+      "revId": "fcc166936d141805b6dbc5a92b851b91a943a9b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
