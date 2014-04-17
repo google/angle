@@ -139,9 +139,14 @@ class BufferStorage11::PackStorage11 : public BufferStorage11::TypedBufferStorag
     virtual void *map(GLbitfield access);
     virtual void unmap();
 
+    void packPixels(ID3D11Texture2D *srcTexure, UINT srcSubresource, const PackPixelsParams &params);
+
   private:
     ID3D11Texture2D *mStagingTexture;
+    DXGI_FORMAT mTextureFormat;
+    gl::Extents mTextureSize;
     unsigned char *mMemoryBuffer;
+    PackPixelsParams mPackParams;
 };
 
 BufferStorage11::BufferStorage11(Renderer11 *renderer)
@@ -339,6 +344,16 @@ ID3D11ShaderResourceView *BufferStorage11::getSRV(DXGI_FORMAT srvFormat)
     return bufferSRV;
 }
 
+void BufferStorage11::packPixels(ID3D11Texture2D *srcTexture, UINT srcSubresource, const PackPixelsParams &params)
+{
+    PackStorage11 *packStorage = getPackStorage();
+
+    TypedBufferStorage11 *latestStorage = getLatestStorage();
+
+    packStorage->packPixels(srcTexture, srcSubresource, params);
+    packStorage->setDataRevision(latestStorage ? latestStorage->getDataRevision() + 1 : 1);
+}
+
 BufferStorage11::TypedBufferStorage11 *BufferStorage11::getStorage(BufferUsage usage)
 {
     TypedBufferStorage11 *directBuffer = NULL;
@@ -350,8 +365,16 @@ BufferStorage11::TypedBufferStorage11 *BufferStorage11::getStorage(BufferUsage u
 
     if (!directBuffer)
     {
-        // buffer is not allocated, create it
-        directBuffer = new NativeBuffer11(mRenderer, usage);
+        if (usage == BUFFER_USAGE_PIXEL_PACK)
+        {
+            directBuffer = new PackStorage11(mRenderer);
+        }
+        else
+        {
+            // buffer is not allocated, create it
+            directBuffer = new NativeBuffer11(mRenderer, usage);
+        }
+
         mTypedBuffers.insert(std::make_pair(usage, directBuffer));
     }
 
@@ -415,6 +438,13 @@ BufferStorage11::NativeBuffer11 *BufferStorage11::getStagingBuffer()
     return static_cast<NativeBuffer11*>(stagingStorage);
 }
 
+BufferStorage11::PackStorage11 *BufferStorage11::getPackStorage()
+{
+    TypedBufferStorage11 *packStorage = getStorage(BUFFER_USAGE_PIXEL_PACK);
+    ASSERT(HAS_DYNAMIC_TYPE(PackStorage11*, packStorage));
+    return static_cast<PackStorage11*>(packStorage);
+}
+
 BufferStorage11::TypedBufferStorage11::TypedBufferStorage11(Renderer11 *renderer, BufferUsage usage)
     : mRenderer(renderer),
       mUsage(usage),
@@ -438,6 +468,14 @@ BufferStorage11::NativeBuffer11::~NativeBuffer11()
 bool BufferStorage11::NativeBuffer11::copyFromStorage(TypedBufferStorage11 *source, size_t sourceOffset,
                                                       size_t size, size_t destOffset)
 {
+    if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK)
+    {
+        UNIMPLEMENTED();
+        return false;
+    }
+
+    ASSERT(HAS_DYNAMIC_TYPE(source, NativeBuffer11));
+
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
     size_t requiredSize = sourceOffset + size;
@@ -576,6 +614,7 @@ void BufferStorage11::NativeBuffer11::unmap()
 BufferStorage11::PackStorage11::PackStorage11(Renderer11 *renderer)
     : TypedBufferStorage11(renderer, BUFFER_USAGE_PIXEL_PACK),
       mStagingTexture(NULL),
+      mTextureFormat(DXGI_FORMAT_UNKNOWN),
       mMemoryBuffer(NULL)
 {
 }
@@ -607,6 +646,70 @@ void *BufferStorage11::PackStorage11::map(GLbitfield access)
 void BufferStorage11::PackStorage11::unmap()
 {
     UNIMPLEMENTED();
+}
+
+void BufferStorage11::PackStorage11::packPixels(ID3D11Texture2D *srcTexure, UINT srcSubresource, const PackPixelsParams &params)
+{
+    mPackParams = params;
+    mBufferSize = mPackParams.outputPitch * mPackParams.area.height;
+
+    D3D11_TEXTURE2D_DESC textureDesc;
+    srcTexure->GetDesc(&textureDesc);
+
+    if (mStagingTexture != NULL &&
+        (mTextureFormat != textureDesc.Format ||
+         mTextureSize.width != params.area.width ||
+         mTextureSize.height != params.area.height))
+    {
+        SafeRelease(mStagingTexture);
+        mTextureSize.width = 0;
+        mTextureSize.height = 0;
+        mTextureFormat = DXGI_FORMAT_UNKNOWN;
+    }
+
+    if (mStagingTexture == NULL)
+    {
+        ID3D11Device *device = mRenderer->getDevice();
+        HRESULT hr;
+
+        mTextureSize.width = params.area.width;
+        mTextureSize.height = params.area.height;
+        mTextureFormat = textureDesc.Format;
+
+        D3D11_TEXTURE2D_DESC stagingDesc;
+        stagingDesc.Width = params.area.width;
+        stagingDesc.Height = params.area.height;
+        stagingDesc.MipLevels = 1;
+        stagingDesc.ArraySize = 1;
+        stagingDesc.Format = mTextureFormat;
+        stagingDesc.SampleDesc.Count = 1;
+        stagingDesc.SampleDesc.Quality = 0;
+        stagingDesc.Usage = D3D11_USAGE_STAGING;
+        stagingDesc.BindFlags = 0;
+        stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        stagingDesc.MiscFlags = 0;
+
+        hr = device->CreateTexture2D(&stagingDesc, NULL, &mStagingTexture);
+        ASSERT(SUCCEEDED(hr));
+    }
+
+    ID3D11Texture2D* srcTex = NULL;
+    if (textureDesc.SampleDesc.Count > 1)
+    {
+        UNIMPLEMENTED();
+    }
+
+    ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
+    D3D11_BOX srcBox;
+    srcBox.left   = params.area.x;
+    srcBox.right  = params.area.x + params.area.width;
+    srcBox.top    = params.area.y;
+    srcBox.bottom = params.area.y + params.area.height;
+    srcBox.front  = 0;
+    srcBox.back   = 1;
+
+    // Asynchronous copy
+    immediateContext->CopySubresourceRegion(mStagingTexture, 0, 0, 0, 0, srcTexure, srcSubresource, &srcBox);
 }
 
 }

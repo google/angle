@@ -63,6 +63,7 @@ class BufferStorage11 : public BufferStorage
 
     ID3D11Buffer *getBuffer(BufferUsage usage);
     ID3D11ShaderResourceView *getSRV(DXGI_FORMAT srvFormat);
+    void packPixels(ID3D11Texture2D *srcTexure, UINT srcSubresource, const PackPixelsParams &params);
 
     virtual bool isMapped() const;
     virtual void *map(GLbitfield access);
@@ -91,6 +92,7 @@ class BufferStorage11 : public BufferStorage
 
     void markBufferUsage();
     NativeBuffer11 *getStagingBuffer();
+    PackStorage11 *getPackStorage();
 
     TypedBufferStorage11 *getStorage(BufferUsage usage);
     TypedBufferStorage11 *getLatestStorage() const;
