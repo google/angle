@@ -17,6 +17,7 @@
 
 #include <limits>
 #include <algorithm>
+#include <string.h>
 
 namespace gl
 {

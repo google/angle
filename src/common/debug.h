@@ -119,7 +119,9 @@ namespace gl
 #if defined(_MSC_VER) && _MSC_VER >= 1600
 #define META_ASSERT_MSG(condition, msg) static_assert(condition, msg)
 #else
-#define META_ASSERT_MSG(condition, msg) typedef int COMPILE_TIME_ASSERT_##__LINE__[static_cast<bool>(condition)?1:-1]
+#define META_ASSERT_CONCAT(a, b) a ## b
+#define META_ASSERT_CONCAT2(a, b) META_ASSERT_CONCAT(a, b)
+#define META_ASSERT_MSG(condition, msg) typedef int META_ASSERT_CONCAT2(COMPILE_TIME_ASSERT_, __LINE__)[static_cast<bool>(condition)?1:-1]
 #endif
 #define META_ASSERT(condition) META_ASSERT_MSG(condition, "compile time assertion failed.")
 

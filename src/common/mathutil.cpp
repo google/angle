@@ -8,6 +8,7 @@
 
 #include "common/mathutil.h"
 #include <algorithm>
+#include <math.h>
 
 namespace gl
 {
