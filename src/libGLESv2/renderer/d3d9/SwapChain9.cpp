@@ -361,7 +361,7 @@ EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     // device appears to be ok after emitting this error so simply return a failure to swap.
     if (result == 0x88760873)
     {
-        return EGL_BAD_NATIVE_WINDOW;
+        return EGL_BAD_MATCH;
     }
 
     // http://crbug.com/313210
