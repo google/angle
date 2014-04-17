@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "453f8fb5_16fdfcd5",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-17T15:57:49Z",
+      "side": 0,
+      "message": "shouldn\u0027t these go back into build/common.gypi?",
+      "range": {
+        "startLine": 31,
+        "startChar": 16,
+        "endLine": 31,
+        "endChar": 38
+      },
+      "revId": "5ee624d4081a3e0fd5911b9e5bcd052c07dfda13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
