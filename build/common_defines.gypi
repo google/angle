@@ -28,11 +28,9 @@
                 '_CRT_SECURE_NO_DEPRECATE',
                 '_SCL_SECURE_NO_WARNINGS',
                 '_HAS_EXCEPTIONS=0',
-                '_WIN32_WINNT=0x0600',
                 '_WINDOWS',
                 'WIN32',
                 'WIN32_LEAN_AND_MEAN',
-                'WINVER=0x0600',
             ],
         },
         'VCLinkerTool':
