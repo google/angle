@@ -78,6 +78,10 @@
                 '../build/common_defines.gypi',
                 'preprocessor_tests/preprocessor_tests.gypi',
             ],
+            'sources':
+            [
+                'preprocessor_tests/preprocessor_test_main.cpp',
+            ],
         },
 
         {
@@ -100,6 +104,10 @@
             [
                 '../build/common_defines.gypi',
                 'compiler_tests/compiler_tests.gypi',
+            ],
+            'sources':
+            [
+                'compiler_tests/compiler_test_main.cpp',
             ],
         },
     ],

@@ -5,6 +5,9 @@
 {
     'sources':
     [
-        '<!@(python <(angle_path)/enumerate_files.py <(angle_path)/tests/compiler_tests/ -types *.cpp *.h)'
+        '<!@(python <(angle_path)/enumerate_files.py \
+          -dirs <(angle_path)/tests/compiler_tests \
+          -types *.cpp *.h \
+          -excludes */compiler_test_main.cpp)'
     ],
 }
