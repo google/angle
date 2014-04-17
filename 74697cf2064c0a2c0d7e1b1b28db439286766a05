@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "453f8fb5_33cb7287",
+        "filename": "src/libGLESv2/renderer/d3d9/SwapChain9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-04-17T04:05:07Z",
+      "side": 1,
+      "message": "I think EGL_BAD_MATCH would have been a better option. It\u0027s intended to be returned when \"the size of target is not the same as the size of the color buffer\", which appears to be what this error code signifies or is related to.",
+      "range": {
+        "startLine": 364,
+        "startChar": 15,
+        "endLine": 364,
+        "endChar": 36
+      },
+      "revId": "74697cf2064c0a2c0d7e1b1b28db439286766a05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
