@@ -4192,6 +4192,8 @@ bool OutputHLSL::isVaryingOut(TQualifier qualifier)
       case EvqCentroidOut:
       case EvqVertexOut:
         return true;
+
+      default: break;
     }
 
     return false;
@@ -4208,6 +4210,8 @@ bool OutputHLSL::isVaryingIn(TQualifier qualifier)
       case EvqCentroidIn:
       case EvqFragmentIn:
         return true;
+
+      default: break;
     }
 
     return false;

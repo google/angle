@@ -638,6 +638,8 @@ bool TParseContext::structQualifierErrorCheck(const TSourceLoc& line, const TPub
             error(line, "cannot be used with a structure", getQualifierString(pType.qualifier));
             return true;
         }
+
+      default: break;
     }
 
     if (pType.qualifier != EvqUniform && samplerErrorCheck(line, pType, "samplers must be uniform"))

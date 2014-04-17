@@ -360,7 +360,7 @@ public:
         insert(level, *function);
     }
 
-    TSymbol *find(const TString &name, int shaderVersion, bool *builtIn = false, bool *sameScope = false);
+    TSymbol *find(const TString &name, int shaderVersion, bool *builtIn = NULL, bool *sameScope = NULL);
     TSymbol *findBuiltIn(const TString &name, int shaderVersion);
     
     TSymbolTableLevel *getOuterLevel() {
