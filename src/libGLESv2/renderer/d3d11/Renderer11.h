@@ -33,6 +33,7 @@ class StreamingIndexBufferInterface;
 class Blit11;
 class Clear11;
 class PixelTransfer11;
+struct PackPixelsParams;
 
 enum
 {
@@ -231,6 +232,7 @@ class Renderer11 : public Renderer
     bool getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource);
     void unapplyRenderTargets();
     void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);
+    void packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams &params, void *pixelsOut);
 
     virtual bool getLUID(LUID *adapterLuid) const;
     virtual GLenum getNativeTextureFormat(GLenum internalFormat) const;
