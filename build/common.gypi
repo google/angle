@@ -75,7 +75,7 @@
                         #'ExceptionHandling': '0',
                         'EnableFunctionLevelLinking': 'true',
                         'MinimalRebuild': 'false',
-                        'RuntimeTypeInfo': 'false',
+                        'RuntimeTypeInfo': 'true',
                         'WarningLevel': '4',
                     },
                     'VCLinkerTool':

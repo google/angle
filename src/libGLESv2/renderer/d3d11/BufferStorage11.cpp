@@ -301,7 +301,7 @@ ID3D11Buffer *BufferStorage11::getBuffer(BufferUsage usage)
     markBufferUsage();
 
     TypedBufferStorage11 *typedBuffer = getStorage(usage);
-    ASSERT(HAS_DYNAMIC_TYPE(typedBuffer, NativeBuffer11));
+    ASSERT(HAS_DYNAMIC_TYPE(NativeBuffer11*, typedBuffer));
 
     return static_cast<NativeBuffer11*>(typedBuffer)->getNativeBuffer();
 }
@@ -309,7 +309,7 @@ ID3D11Buffer *BufferStorage11::getBuffer(BufferUsage usage)
 ID3D11ShaderResourceView *BufferStorage11::getSRV(DXGI_FORMAT srvFormat)
 {
     TypedBufferStorage11 *storage = getStorage(BUFFER_USAGE_PIXEL_UNPACK);
-    ASSERT(HAS_DYNAMIC_TYPE(storage, NativeBuffer11));
+    ASSERT(HAS_DYNAMIC_TYPE(NativeBuffer11*, storage));
     ID3D11Buffer *buffer = static_cast<NativeBuffer11*>(storage)->getNativeBuffer();
 
     auto bufferSRVIt = mBufferResourceViews.find(srvFormat);
@@ -474,7 +474,7 @@ bool BufferStorage11::NativeBuffer11::copyFromStorage(TypedBufferStorage11 *sour
         return false;
     }
 
-    ASSERT(HAS_DYNAMIC_TYPE(source, NativeBuffer11));
+    ASSERT(HAS_DYNAMIC_TYPE(NativeBuffer11*, source));
 
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
@@ -496,7 +496,7 @@ bool BufferStorage11::NativeBuffer11::copyFromStorage(TypedBufferStorage11 *sour
     srcBox.front = 0;
     srcBox.back = 1;
 
-    ASSERT(HAS_DYNAMIC_TYPE(source, NativeBuffer11));
+    ASSERT(HAS_DYNAMIC_TYPE(NativeBuffer11*, source));
     ID3D11Buffer *sourceBuffer = static_cast<NativeBuffer11*>(source)->getNativeBuffer();
 
     context->CopySubresourceRegion(mNativeBuffer, 0, destOffset, 0, 0, sourceBuffer, 0, &srcBox);

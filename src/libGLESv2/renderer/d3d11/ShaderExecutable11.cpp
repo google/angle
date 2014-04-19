@@ -104,7 +104,7 @@ UniformStorage11::~UniformStorage11()
 
 const UniformStorage11 *UniformStorage11::makeUniformStorage11(const UniformStorage *uniformStorage)
 {
-    ASSERT(HAS_DYNAMIC_TYPE(UniformStorage11*, uniformStorage));
+    ASSERT(HAS_DYNAMIC_TYPE(const UniformStorage11*, uniformStorage));
     return static_cast<const UniformStorage11*>(uniformStorage);
 }
 
