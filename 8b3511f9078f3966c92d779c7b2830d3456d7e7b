@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45db0f06_d03d1c4e",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-21T21:56:09Z",
+      "side": 1,
+      "message": "You may have already explained this to me long ago when you were planning out this feature but-- why do we need to copy out from the staging texture to CPU memory? Could we just map the staging texture and expose its memory directly?",
+      "revId": "8b3511f9078f3966c92d779c7b2830d3456d7e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45db0f06_90f23479",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 674,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-21T21:56:09Z",
+      "side": 1,
+      "message": "SafeDelete?",
+      "range": {
+        "startLine": 673,
+        "startChar": 4,
+        "endLine": 674,
+        "endChar": 25
+      },
+      "revId": "8b3511f9078f3966c92d779c7b2830d3456d7e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
