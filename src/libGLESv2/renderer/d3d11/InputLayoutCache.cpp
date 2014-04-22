@@ -100,19 +100,12 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
 
     InputLayoutKey ilKey = { 0 };
 
-    ID3D11Buffer *vertexBuffers[gl::MAX_VERTEX_ATTRIBS] = { NULL };
-    UINT vertexStrides[gl::MAX_VERTEX_ATTRIBS] = { 0 };
-    UINT vertexOffsets[gl::MAX_VERTEX_ATTRIBS] = { 0 };
-
     static const char* semanticName = "TEXCOORD";
 
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         if (attributes[i].active)
         {
-            VertexBuffer11 *vertexBuffer = VertexBuffer11::makeVertexBuffer11(attributes[i].vertexBuffer);
-            BufferStorage11 *bufferStorage = attributes[i].storage ? BufferStorage11::makeBufferStorage11(attributes[i].storage) : NULL;
-
             D3D11_INPUT_CLASSIFICATION inputClass = attributes[i].divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
 
             gl::VertexFormat vertexFormat(*attributes[i].attribute, attributes[i].currentValueType);
@@ -131,11 +124,6 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
             ilKey.elements[ilKey.elementCount].desc.InputSlotClass = inputClass;
             ilKey.elements[ilKey.elementCount].desc.InstanceDataStepRate = attributes[i].divisor;
             ilKey.elementCount++;
-
-            vertexBuffers[i] = bufferStorage ? bufferStorage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK)
-                                             : vertexBuffer->getBuffer();
-            vertexStrides[i] = attributes[i].stride;
-            vertexOffsets[i] = attributes[i].offset;
         }
     }
 
@@ -198,13 +186,27 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
 
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        if (vertexBuffers[i] != mCurrentBuffers[i] || vertexStrides[i] != mCurrentVertexStrides[i] ||
-            vertexOffsets[i] != mCurrentVertexOffsets[i])
+        ID3D11Buffer *buffer = NULL;
+
+        if (attributes[i].active)
         {
-            mDeviceContext->IASetVertexBuffers(i, 1, &vertexBuffers[i], &vertexStrides[i], &vertexOffsets[i]);
-            mCurrentBuffers[i] = vertexBuffers[i];
-            mCurrentVertexStrides[i] = vertexStrides[i];
-            mCurrentVertexOffsets[i] = vertexOffsets[i];
+            VertexBuffer11 *vertexBuffer = VertexBuffer11::makeVertexBuffer11(attributes[i].vertexBuffer);
+            BufferStorage11 *bufferStorage = attributes[i].storage ? BufferStorage11::makeBufferStorage11(attributes[i].storage) : NULL;
+
+            buffer = bufferStorage ? bufferStorage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK)
+                                   : vertexBuffer->getBuffer();
+        }
+
+        UINT vertexStride = attributes[i].stride;
+        UINT vertexOffset = attributes[i].offset;
+
+        if (buffer != mCurrentBuffers[i] || vertexStride != mCurrentVertexStrides[i] ||
+            vertexOffset != mCurrentVertexOffsets[i])
+        {
+            mDeviceContext->IASetVertexBuffers(i, 1, &buffer, &vertexStride, &vertexOffset);
+            mCurrentBuffers[i] = buffer;
+            mCurrentVertexStrides[i] = vertexStride;
+            mCurrentVertexOffsets[i] = vertexOffset;
         }
     }
 
