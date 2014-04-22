@@ -165,18 +165,25 @@ bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &att
         return false;
     }
 
-    gl::VertexFormat vertexFormat(attrib, currentValue.Type);
-
     // Alignment restrictions: In D3D, vertex data must be aligned to
     //  the format stride, or to a 4-byte boundary, whichever is smaller.
     //  (Undocumented, and experimentally confirmed)
-    unsigned int outputElementSize;
-    getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
-    size_t alignment = std::min(static_cast<size_t>(outputElementSize), 4u);
+    size_t alignment = 4;
+    bool requiresConversion = false;
+
+    if (attrib.mType != GL_FLOAT)
+    {
+        gl::VertexFormat vertexFormat(attrib, currentValue.Type);
+
+        unsigned int outputElementSize;
+        getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
+        alignment = std::min(static_cast<size_t>(outputElementSize), 4u);
+
+        requiresConversion = (mRenderer->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) != 0;
+    }
 
     bool isAligned = (static_cast<size_t>(attrib.stride()) % alignment == 0) &&
                      (static_cast<size_t>(attrib.mOffset) % alignment == 0);
-    bool requiresConversion = (mRenderer->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) > 0;
 
     return !requiresConversion && isAligned;
 }
