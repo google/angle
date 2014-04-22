@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c54c5fb5_dc364dfd",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-22T14:59:53Z",
+      "side": 1,
+      "message": "Staging textures are packed by row, with (potential) extra space at the end of each row.\n\nSee RowPitch: http://msdn.microsoft.com/en-us/library/windows/desktop/ff476182(v\u003dvs.85).aspx\n\nIn my experience RowPitch \u003d\u003d \"TextureRowStride\" if the texture is a power of 2. Pack buffers on the other hand are even more problematic, they\u0027re expected to be packed according to the app-specified pack state parameters (see Table 4.4 in the 3 spec).\n\nSome kind of logic is helpful to transfer the pixels as specified by the pack parameters.",
+      "parentUuid": "45db0f06_d03d1c4e",
+      "revId": "8b3511f9078f3966c92d779c7b2830d3456d7e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45db0f06_90f23479",
         "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2014-04-21T21:56:09Z",
       "side": 1,
       "message": "SafeDelete?",
+      "range": {
+        "startLine": 673,
+        "startChar": 4,
+        "endLine": 674,
+        "endChar": 25
+      },
+      "revId": "8b3511f9078f3966c92d779c7b2830d3456d7e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45394f00_0087a6fd",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 674,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-22T14:59:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45db0f06_90f23479",
       "range": {
         "startLine": 673,
         "startChar": 4,
