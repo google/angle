@@ -129,7 +129,7 @@ TEST(InputTest, ReadMultipleStrings)
     EXPECT_STREQ("fo", buf);
     EXPECT_EQ(1u, input2.read(buf, maxSize));
     EXPECT_EQ('o', buf[0]);
-    EXPECT_EQ(0, input2.read(buf, maxSize));
+    EXPECT_EQ(0u, input2.read(buf, maxSize));
 
     maxSize = 3;
     pp::Input input3(count, str, NULL);
