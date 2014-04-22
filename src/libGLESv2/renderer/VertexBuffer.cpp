@@ -159,6 +159,12 @@ bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &att
 {
     gl::Buffer *buffer = attrib.mBoundBuffer.get();
     BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
+
+    if (!storage || !storage->supportsDirectBinding())
+    {
+        return false;
+    }
+
     gl::VertexFormat vertexFormat(attrib, currentValue.Type);
 
     // Alignment restrictions: In D3D, vertex data must be aligned to
@@ -172,7 +178,7 @@ bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &att
                      (static_cast<size_t>(attrib.mOffset) % alignment == 0);
     bool requiresConversion = (mRenderer->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) > 0;
 
-    return storage && storage->supportsDirectBinding() && !requiresConversion && isAligned;
+    return !requiresConversion && isAligned;
 }
 
 StreamingVertexBufferInterface::StreamingVertexBufferInterface(rx::Renderer *renderer, std::size_t initialSize) : VertexBufferInterface(renderer, true)
