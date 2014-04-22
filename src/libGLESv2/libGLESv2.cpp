@@ -5166,14 +5166,14 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
         {
             if (context->getClientVersion() < 3 &&
                 !ValidateES2TexImageParameters(context, target, level, GL_NONE, false, true,
-                                               0, 0, width, height, 0, format, type, pixels))
+                                               xoffset, yoffset, width, height, 0, format, type, pixels))
             {
                 return;
             }
 
             if (context->getClientVersion() >= 3 &&
                 !ValidateES3TexImageParameters(context, target, level, GL_NONE, false, true,
-                                               0, 0, 0, width, height, 1, 0, format, type, pixels))
+                                               xoffset, yoffset, 0, width, height, 1, 0, format, type, pixels))
             {
                 return;
             }

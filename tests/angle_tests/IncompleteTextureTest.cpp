@@ -126,7 +126,7 @@ TEST_F(IncompleteTextureTest, update_texture)
     fillTextureData(redTextureData, 255, 0, 0, 255);
     for (size_t i = 0; i < 7; i++)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, redTextureWidth >> i, redTextureHeight >> i, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+        glTexImage2D(GL_TEXTURE_2D, i, GL_RGBA, redTextureWidth >> i, redTextureHeight >> i, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                      redTextureData.data());
     }
 
@@ -143,7 +143,7 @@ TEST_F(IncompleteTextureTest, update_texture)
 
     for (size_t i = 0; i < 6; i++)
     {
-        glTexSubImage2D(GL_TEXTURE_2D, 0, greenTextureWidth >> i, greenTextureHeight >> i,
+        glTexSubImage2D(GL_TEXTURE_2D, i, greenTextureWidth >> i, greenTextureHeight >> i,
                         greenTextureWidth >> i, greenTextureHeight >> i, GL_RGBA, GL_UNSIGNED_BYTE,
                         greenTextureData.data());
     }
