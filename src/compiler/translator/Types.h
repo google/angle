@@ -141,23 +141,23 @@ public:
     POOL_ALLOCATOR_NEW_DELETE();
     TType() {}
     TType(TBasicType t, unsigned char ps = 1, unsigned char ss = 1) :
-            type(t), precision(EbpUndefined), qualifier(EvqGlobal), primarySize(ps), secondarySize(ss), array(false), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
+            type(t), precision(EbpUndefined), qualifier(EvqGlobal), layoutQualifier(TLayoutQualifier::create()), primarySize(ps), secondarySize(ss), array(false), arraySize(0),
             interfaceBlock(0), structure(0)
     {
     }
     TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, unsigned char ps = 1, unsigned char ss = 1, bool a = false) :
-            type(t), precision(p), qualifier(q), primarySize(ps), secondarySize(ss), array(a), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
+            type(t), precision(p), qualifier(q), layoutQualifier(TLayoutQualifier::create()), primarySize(ps), secondarySize(ss), array(a), arraySize(0),
             interfaceBlock(0), structure(0)
     {
     }
     explicit TType(const TPublicType &p);
     TType(TStructure* userDef, TPrecision p = EbpUndefined) :
-            type(EbtStruct), precision(p), qualifier(EvqTemporary), primarySize(1), secondarySize(1), array(false), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
+            type(EbtStruct), precision(p), qualifier(EvqTemporary), layoutQualifier(TLayoutQualifier::create()), primarySize(1), secondarySize(1), array(false), arraySize(0),
             interfaceBlock(0), structure(userDef)
     {
     }
     TType(TInterfaceBlock* interfaceBlockIn, TQualifier qualifierIn, TLayoutQualifier layoutQualifierIn, int arraySizeIn) :
-            type(EbtInterfaceBlock), precision(EbpUndefined), qualifier(qualifierIn), primarySize(1), secondarySize(1), array(arraySizeIn > 0), layoutQualifier(layoutQualifierIn), arraySize(arraySizeIn),
+            type(EbtInterfaceBlock), precision(EbpUndefined), qualifier(qualifierIn), layoutQualifier(layoutQualifierIn), primarySize(1), secondarySize(1), array(arraySizeIn > 0), arraySize(arraySizeIn),
             interfaceBlock(interfaceBlockIn), structure(0)
     {
     }
