@@ -49,7 +49,12 @@ protected:
             glDisableVertexAttribArray(mTestAttrib);
             glDisableVertexAttribArray(mExpectedAttrib);
 
-            EXPECT_PIXEL_EQ(midPixelX, midPixelY, 255, 255, 255, 255);
+            // We need to offset our checks from triangle edges to ensure we don't fall on a single tri
+            // Avoid making assumptions of drawQuad with four checks to check the four possible tri regions
+            EXPECT_PIXEL_EQ((midPixelX + viewportSize[0]) / 2, midPixelY, 255, 255, 255, 255);
+            EXPECT_PIXEL_EQ((midPixelX + viewportSize[2]) / 2, midPixelY, 255, 255, 255, 255);
+            EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[1]) / 2, 255, 255, 255, 255);
+            EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[3]) / 2, 255, 255, 255, 255);
         }
     }
 
@@ -68,7 +73,7 @@ protected:
             void main(void)
             {
                 gl_Position = position;
-                color = vec4(lessThan(abs(test - expected), vec4(1.0 / 128.0)));
+                color = vec4(lessThan(abs(test - expected), vec4(1.0 / 64.0)));
             }
         );
 
