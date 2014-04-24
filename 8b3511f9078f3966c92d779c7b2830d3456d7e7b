@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "659e536e_b1cb8051",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-24T17:00:06Z",
+      "side": 1,
+      "message": "The potential fast path is: when texture has an identity format with a power-of-two width, and the pack parameters are configured to as not to skip any space, we can save a memcpy on read, and two if read+write. I\u0027d say this is a future optimization that we could do in a follow-up ticket, if we agree it\u0027s a good path.",
+      "parentUuid": "65b9f3d7_5ce17136",
+      "revId": "8b3511f9078f3966c92d779c7b2830d3456d7e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45db0f06_90f23479",
         "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
         "patchSetId": 1
