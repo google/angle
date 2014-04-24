@@ -3879,6 +3879,13 @@ void Context::initExtensionString()
     if (mClientVersion == 3)
     {
         mExtensionStringList.push_back("GL_EXT_color_buffer_float");
+
+        mExtensionStringList.push_back("GL_EXT_read_format_bgra");
+
+        if (supportsBGRATextures())
+        {
+            mExtensionStringList.push_back("GL_EXT_texture_format_BGRA8888");
+        }
     }
 
     // Join the extension strings to one long string for use with GetString
