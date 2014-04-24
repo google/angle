@@ -4,13 +4,12 @@
 // found in the LICENSE file.
 //
 
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "ANGLETest.h"
 
 int main(int argc, char** argv)
 {
-    testing::InitGoogleMock(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     testing::AddGlobalTestEnvironment(new ANGLETestEnvironment());
     int rt = RUN_ALL_TESTS();
     return rt;

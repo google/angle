@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 //
 
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "GLSLANG/ShaderLang.h"
 
@@ -30,7 +29,7 @@ class CompilerTestEnvironment : public testing::Environment
 
 int main(int argc, char** argv)
 {
-    testing::InitGoogleMock(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     testing::AddGlobalTestEnvironment(new CompilerTestEnvironment());
     int rt = RUN_ALL_TESTS();
     return rt;

@@ -91,14 +91,12 @@
             [
                 '../src/angle.gyp:translator_static',
                 'gtest',
-                'gmock',
             ],
             'include_dirs':
             [
                 '../include',
                 '../src',
                 'third_party/googletest/include',
-                'third_party/googlemock/include',
             ],
             'includes':
             [
@@ -127,14 +125,12 @@
                         '../src/angle.gyp:libGLESv2',
                         '../src/angle.gyp:libEGL',
                         'gtest',
-                        'gmock',
                     ],
                     'include_dirs':
                     [
                         '../include',
                         'angle_tests',
                         'third_party/googletest/include',
-                        'third_party/googlemock/include',
                     ],
                     'sources':
                     [
