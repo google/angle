@@ -147,11 +147,12 @@ class BufferStorage11::PackStorage11 : public BufferStorage11::TypedBufferStorag
     gl::Extents mTextureSize;
     unsigned char *mMemoryBuffer;
     PackPixelsParams mPackParams;
+    bool mDataModified;
 };
 
 BufferStorage11::BufferStorage11(Renderer11 *renderer)
     : mRenderer(renderer),
-      mIsMapped(false),
+      mMappedStorage(NULL),
       mResolvedDataRevision(0),
       mReadUsageCount(0),
       mWriteUsageCount(0),
@@ -414,21 +415,33 @@ BufferStorage11::TypedBufferStorage11 *BufferStorage11::getLatestStorage() const
 
 bool BufferStorage11::isMapped() const
 {
-    return mIsMapped;
+    return mMappedStorage != NULL;
 }
 
 void *BufferStorage11::map(GLbitfield access)
 {
-    ASSERT(!mIsMapped);
-    mIsMapped = true;
-    return getStagingBuffer()->map(access);
+    ASSERT(!mMappedStorage);
+
+    TypedBufferStorage11 *latestStorage = getLatestStorage();
+
+    if (latestStorage->getUsage() == BUFFER_USAGE_PIXEL_PACK ||
+        latestStorage->getUsage() == BUFFER_USAGE_STAGING)
+    {
+        mMappedStorage = latestStorage;
+    }
+    else
+    {
+        mMappedStorage = getStagingBuffer();
+    }
+
+    return mMappedStorage->map(access);
 }
 
 void BufferStorage11::unmap()
 {
-    ASSERT(mIsMapped);
-    mIsMapped = false;
-    getStagingBuffer()->unmap();
+    ASSERT(mMappedStorage);
+    mMappedStorage->unmap();
+    mMappedStorage = NULL;
 }
 
 BufferStorage11::NativeBuffer11 *BufferStorage11::getStagingBuffer()
@@ -475,6 +488,11 @@ bool BufferStorage11::NativeBuffer11::copyFromStorage(TypedBufferStorage11 *sour
     }
 
     ASSERT(HAS_DYNAMIC_TYPE(NativeBuffer11*, source));
+
+    if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK)
+    {
+        return false;
+    }
 
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
@@ -615,7 +633,8 @@ BufferStorage11::PackStorage11::PackStorage11(Renderer11 *renderer)
     : TypedBufferStorage11(renderer, BUFFER_USAGE_PIXEL_PACK),
       mStagingTexture(NULL),
       mTextureFormat(DXGI_FORMAT_UNKNOWN),
-      mMemoryBuffer(NULL)
+      mMemoryBuffer(NULL),
+      mDataModified(false)
 {
 }
 
@@ -639,13 +658,24 @@ void BufferStorage11::PackStorage11::resize(size_t size, bool preserveData)
 
 void *BufferStorage11::PackStorage11::map(GLbitfield access)
 {
-    UNIMPLEMENTED();
-    return NULL;
+    ASSERT(!mMemoryBuffer);
+
+    // TODO: fast path
+    //  We might be able to optimize out one or more memcpy calls by detecting when
+    //  and if D3D packs the staging texture memory identically to how we would fill
+    //  the pack buffer according to the current pack state.
+
+    mMemoryBuffer = new unsigned char[mBufferSize];
+    mRenderer->packPixels(mStagingTexture, mPackParams, mMemoryBuffer);
+    mDataModified = (mDataModified || (access & GL_MAP_WRITE_BIT) != 0);
+
+    return mMemoryBuffer;
 }
 
 void BufferStorage11::PackStorage11::unmap()
 {
-    UNIMPLEMENTED();
+    ASSERT(mMemoryBuffer);
+    SafeDeleteArray(mMemoryBuffer);
 }
 
 void BufferStorage11::PackStorage11::packPixels(ID3D11Texture2D *srcTexure, UINT srcSubresource, const PackPixelsParams &params)
