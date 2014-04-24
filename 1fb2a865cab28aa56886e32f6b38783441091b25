@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5c40363_d50c7ca3",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-24T17:47:52Z",
+      "side": 1,
+      "message": "Should also add a comment here specifying where the BGRA internal formats come from",
+      "revId": "1fb2a865cab28aa56886e32f6b38783441091b25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
