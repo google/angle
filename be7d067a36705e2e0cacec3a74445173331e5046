@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5be8bc4_d36734ef",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-24T16:38:56Z",
+      "side": 1,
+      "message": "we don\u0027t currently expose this extension in es3.. ?",
+      "range": {
+        "startLine": 322,
+        "startChar": 12,
+        "endLine": 322,
+        "endChar": 42
+      },
+      "revId": "be7d067a36705e2e0cacec3a74445173331e5046",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
