@@ -75,7 +75,7 @@ class BufferStorage11 : public BufferStorage
     class PackStorage11;
 
     Renderer11 *mRenderer;
-    bool mIsMapped;
+    TypedBufferStorage11 *mMappedStorage;
 
     std::map<BufferUsage, TypedBufferStorage11*> mTypedBuffers;
 
