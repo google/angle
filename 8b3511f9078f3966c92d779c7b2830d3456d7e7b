@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "65b9f3d7_5ce17136",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-24T16:51:00Z",
+      "side": 1,
+      "message": "Do we anticipate any fast-pathable situations, where pack parameters \u0026 DX pitch gel and make the copy unnecessary? If there are any situations at all where we can get out of the application code\u0027s way on this one, it\u0027d be good to make those paths available.",
+      "parentUuid": "c54c5fb5_dc364dfd",
+      "revId": "8b3511f9078f3966c92d779c7b2830d3456d7e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45db0f06_90f23479",
         "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
         "patchSetId": 1
