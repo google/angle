@@ -3814,7 +3814,7 @@ TString OutputHLSL::scopeString(unsigned int depthLimit)
 
     for (unsigned int i = 0; i < mScopeBracket.size() && i < depthLimit; i++)
     {
-        string += "_" + str(i);
+        string += "_" + str(mScopeBracket[i]);
     }
 
     return string;
