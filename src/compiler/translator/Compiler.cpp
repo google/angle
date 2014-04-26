@@ -28,12 +28,11 @@ bool IsWebGLBasedSpec(ShShaderSpec spec)
      return spec == SH_WEBGL_SPEC || spec == SH_CSS_SHADERS_SPEC;
 }
 
-size_t GetGlobalMaxTokenSize()
+size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
 {
-    TParseContext *parseContext = GetGlobalParseContext();
     // WebGL defines a max token legnth of 256, while ES2 leaves max token
     // size undefined. ES3 defines a max size of 1024 characters.
-    if (IsWebGLBasedSpec(parseContext->shaderSpec))
+    if (IsWebGLBasedSpec(spec))
     {
         return 256;
     }
@@ -261,7 +260,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
     // Cleanup memory.
     intermediate.remove(parseContext.treeRoot);
-
+    SetGlobalParseContext(NULL);
     return success;
 }
 

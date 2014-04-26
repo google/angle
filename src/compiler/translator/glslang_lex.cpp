@@ -3353,7 +3353,7 @@ int glslang_scan(size_t count, const char* const string[], const int length[],
     if (context->fragmentPrecisionHigh)
         context->preprocessor.predefineMacro("GL_FRAGMENT_PRECISION_HIGH", 1);
 
-    context->preprocessor.setMaxTokenSize(GetGlobalMaxTokenSize());
+    context->preprocessor.setMaxTokenSize(GetGlobalMaxTokenSize(context->shaderSpec));
 
     return 0;
 }
