@@ -14,8 +14,6 @@
 // This should not be included by driver code.
 //
 
-#include "GLSLANG/ShaderLang.h"
-
 #include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/ExtensionBehavior.h"
 #include "compiler/translator/HashNames.h"
