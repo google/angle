@@ -7,7 +7,6 @@
 #ifndef _LOCAL_INTERMEDIATE_INCLUDED_
 #define _LOCAL_INTERMEDIATE_INCLUDED_
 
-#include "GLSLANG/ShaderLang.h"
 #include "compiler/translator/intermediate.h"
 
 struct TVectorFields {
