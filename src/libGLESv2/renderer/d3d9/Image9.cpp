@@ -328,6 +328,8 @@ bool Image9::copyToStorage(TextureStorageInterface2DArray *storage, int level, G
 
 bool Image9::copyToSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
+    ASSERT(width > 0 && height > 0);
+
     if (!destSurface)
         return false;
 

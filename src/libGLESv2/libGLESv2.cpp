@@ -5178,6 +5178,12 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                 return;
             }
 
+            // Zero sized uploads are valid but no-ops
+            if (width == 0 || height == 0)
+            {
+                return;
+            }
+
             switch (target)
             {
               case GL_TEXTURE_2D:
@@ -6224,6 +6230,12 @@ void __stdcall glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint 
                 return;
             }
 
+            // Zero sized uploads are valid but no-ops
+            if (width == 0 || height == 0 || depth == 0)
+            {
+                return;
+            }
+
             switch(target)
             {
               case GL_TEXTURE_3D:
@@ -6270,6 +6282,12 @@ void __stdcall glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
 
             if (!ValidateES3CopyTexImageParameters(context, target, level, GL_NONE, false, xoffset, yoffset, zoffset,
                                                    x, y, width, height, 0))
+            {
+                return;
+            }
+
+            // Zero sized copies are valid but no-ops
+            if (width == 0 || height == 0)
             {
                 return;
             }
@@ -6387,6 +6405,12 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
             // validateES3TexImageFormat sets the error code if there is an error
             if (!ValidateES3TexImageParameters(context, target, level, GL_NONE, true, true,
                                                0, 0, 0, width, height, depth, 0, GL_NONE, GL_NONE, data))
+            {
+                return;
+            }
+
+            // Zero sized uploads are valid but no-ops
+            if (width == 0 || height == 0)
             {
                 return;
             }
