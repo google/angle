@@ -479,38 +479,36 @@ void TCompiler::initializeVaryingsWithoutStaticUse(TIntermNode* root)
         const TVariableInfo& varying = varyings[ii];
         if (varying.staticUse)
             continue;
-        unsigned char size = 0;
-        bool matrix = false;
+        unsigned char primarySize = 1, secondarySize = 1;
         switch (varying.type)
         {
           case SH_FLOAT:
-            size = 1;
             break;
           case SH_FLOAT_VEC2:
-            size = 2;
+            primarySize = 2;
             break;
           case SH_FLOAT_VEC3:
-            size = 3;
+            primarySize = 3;
             break;
           case SH_FLOAT_VEC4:
-            size = 4;
+            primarySize = 4;
             break;
           case SH_FLOAT_MAT2:
-            size = 2;
-            matrix = true;
+            primarySize = 2;
+            secondarySize = 2;
             break;
           case SH_FLOAT_MAT3:
-            size = 3;
-            matrix = true;
+            primarySize = 3;
+            secondarySize = 3;
             break;
           case SH_FLOAT_MAT4:
-            size = 4;
-            matrix = true;
+            primarySize = 4;
+            secondarySize = 4;
             break;
           default:
             ASSERT(false);
         }
-        TType type(EbtFloat, EbpUndefined, EvqVaryingOut, size, matrix, varying.isArray);
+        TType type(EbtFloat, EbpUndefined, EvqVaryingOut, primarySize, secondarySize, varying.isArray);
         TString name = varying.name.c_str();
         if (varying.isArray)
         {
