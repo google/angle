@@ -63,8 +63,11 @@ int ShInitialize()
 //
 int ShFinalize()
 {
-    DetachProcess();
-    isInitialized = false;
+    if (isInitialized)
+    {
+        DetachProcess();
+        isInitialized = false;
+    }
     return 1;
 }
 
