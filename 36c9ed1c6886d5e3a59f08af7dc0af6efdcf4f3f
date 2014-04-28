@@ -16,6 +16,24 @@
       "revId": "36c9ed1c6886d5e3a59f08af7dc0af6efdcf4f3f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c557ffb2_c715e0a4",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-04-28T18:22:13Z",
+      "side": 1,
+      "message": "Actually these match the TType constructor parameters\u0027 names.\n\nI think they are for the rowSize/colSize, and for vectors, one is set to 1.",
+      "parentUuid": "e55a43dc_e8954beb",
+      "revId": "36c9ed1c6886d5e3a59f08af7dc0af6efdcf4f3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
