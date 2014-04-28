@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e55a43dc_e8954beb",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-04-28T18:19:38Z",
+      "side": 1,
+      "message": "Could you name these something like \"elementSize\" and \"matrixSize\" for clarity?",
+      "revId": "36c9ed1c6886d5e3a59f08af7dc0af6efdcf4f3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
