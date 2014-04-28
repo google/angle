@@ -47,8 +47,8 @@ static bool validateSubImageParams2D(bool compressed, GLsizei width, GLsizei hei
 
     if (compressed)
     {
-        if ((width % 4 != 0 && width != texture->getWidth(0)) ||
-            (height % 4 != 0 && height != texture->getHeight(0)))
+        if ((width % 4 != 0 && width != texture->getWidth(level)) ||
+            (height % 4 != 0 && height != texture->getHeight(level)))
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }
