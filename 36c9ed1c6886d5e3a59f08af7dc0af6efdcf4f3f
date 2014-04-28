@@ -34,6 +34,24 @@
       "revId": "36c9ed1c6886d5e3a59f08af7dc0af6efdcf4f3f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "458b0f70_d0883c15",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-04-28T18:27:36Z",
+      "side": 1,
+      "message": "To confirm with Mo, he\u0027s following the existing convention. For vectors, secondarySize is always 1.",
+      "parentUuid": "c557ffb2_c715e0a4",
+      "revId": "36c9ed1c6886d5e3a59f08af7dc0af6efdcf4f3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
