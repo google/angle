@@ -141,3 +141,41 @@ TEST_F(ReadPixelsTest, pbo_with_other_target)
     glUnmapBuffer(GL_ARRAY_BUFFER);
     EXPECT_GL_NO_ERROR();
 }
+
+TEST_F(ReadPixelsTest, pbo_with_existing_data)
+{
+    // Clear backbuffer to red
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Read 16x16 region from red backbuffer to PBO
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+    glReadPixels(0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+    // Clear backbuffer to green
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Read 16x16 region from green backbuffer to PBO at offset 16
+    glReadPixels(0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid*>(16));
+    GLvoid * mappedPtr = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, 32, GL_MAP_READ_BIT);
+    unsigned char *dataPtr = static_cast<unsigned char *>(mappedPtr);
+    EXPECT_GL_NO_ERROR();
+
+    // Test pixel 0 is red (existing data)
+    EXPECT_EQ(255, dataPtr[0]);
+    EXPECT_EQ(0, dataPtr[1]);
+    EXPECT_EQ(0, dataPtr[2]);
+    EXPECT_EQ(255, dataPtr[3]);
+
+    // Test pixel 16 is green (new data)
+    EXPECT_EQ(0, dataPtr[16 * 4 + 0]);
+    EXPECT_EQ(255, dataPtr[16 * 4 + 1]);
+    EXPECT_EQ(0, dataPtr[16 * 4 + 2]);
+    EXPECT_EQ(255, dataPtr[16 * 4 + 3]);
+
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+    EXPECT_GL_NO_ERROR();
+}
