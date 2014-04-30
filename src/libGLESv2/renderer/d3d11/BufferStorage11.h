@@ -84,9 +84,7 @@ class BufferStorage11 : public BufferStorage
 
     std::vector<unsigned char> mResolvedData;
     DataRevision mResolvedDataRevision;
-
     unsigned int mReadUsageCount;
-    unsigned int mWriteUsageCount;
 
     size_t mSize;
 
