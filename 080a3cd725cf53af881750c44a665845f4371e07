@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a0a3c15_3873492d",
+        "filename": "src/angle.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-30T22:57:16Z",
+      "side": 1,
+      "message": "I\u0027m not great at gyp syntax-- is there an implied else here?",
+      "revId": "080a3cd725cf53af881750c44a665845f4371e07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
