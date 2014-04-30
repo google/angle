@@ -101,6 +101,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\..\src\angle.gyp"/>
+    <None Include="..\..\.git\index">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="$(OutDir)obj\global_intermediate\commit_id.bat">
@@ -108,6 +111,7 @@
       <Command>call call $(OutDir)obj\global_intermediate\commit_id.bat &quot;$(OutDir)obj\global_intermediate&quot;</Command>
       <Message>Generating commit ID header...</Message>
       <Outputs>$(OutDir)obj\global_intermediate\commit.h</Outputs>
+      <AdditionalInputs>..\..\.git\index</AdditionalInputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
