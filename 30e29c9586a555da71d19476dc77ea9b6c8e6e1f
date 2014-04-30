@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a0a3c15_7879c10a",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-30T22:51:28Z",
+      "side": 1,
+      "message": "We\u0027ve got an OS !\u003d win, an OS \u003d\u003d win, and an OS !\u003d win \u0026\u0026 OS !\u003d mac. Could we collapse these a bit? (And I\u0027m not clear on syntax-- will the later non-win + non-mac section add to target_defaults, or replace it?",
+      "revId": "30e29c9586a555da71d19476dc77ea9b6c8e6e1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
