@@ -8,6 +8,6 @@
         '<!@(python <(angle_path)/enumerate_files.py \
           -dirs <(angle_path)/tests/compiler_tests \
           -types *.cpp *.h \
-          -excludes */compiler_test_main.cpp)'
+          -excludes <(angle_path)/tests/compiler_tests/compiler_test_main.cpp)'
     ],
 }

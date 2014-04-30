@@ -217,6 +217,12 @@
             {
                 'msvs_cygwin_dirs': ['../third_party/cygwin'],
             },
+        },
+        { # OS != win
+            'target_defaults':
+            {
+                'cflags': [ '-fPIC' ],
+            },
         }],
         ['OS != "win" and OS != "mac"',
         {

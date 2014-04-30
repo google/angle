@@ -557,7 +557,7 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     // Depth range in window coordinates
     //
     TFieldList *fields = NewPoolTFieldList();
-    TSourceLoc zeroSourceLoc = {0};
+    TSourceLoc zeroSourceLoc = {0, 0, 0, 0};
     TField *near = new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1), NewPoolTString("near"), zeroSourceLoc);
     TField *far = new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1), NewPoolTString("far"), zeroSourceLoc);
     TField *diff = new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1), NewPoolTString("diff"), zeroSourceLoc);
