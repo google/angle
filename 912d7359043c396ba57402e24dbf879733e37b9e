@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a0a3c15_f81031e2",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 739,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-04-30T22:09:48Z",
+      "side": 1,
+      "message": "Do we want to be able to bypass this if we detect somehow that the first use of the buffer is to fill it completely? (Is there a way to detect that at all?)",
+      "revId": "912d7359043c396ba57402e24dbf879733e37b9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
