@@ -16,6 +16,24 @@
       "revId": "a875777ebf4a42fed49533dfa97713aa28f38978",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a3f9cb5_85cf703a",
+        "filename": "tests/angle_tests/ANGLETest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-01T19:56:16Z",
+      "side": 1,
+      "message": "I think it\u0027s the only way to make them one-liners, otherwise we\u0027d have to check the return value of another function and return based on that.",
+      "parentUuid": "4a587c41_2e28b372",
+      "revId": "a875777ebf4a42fed49533dfa97713aa28f38978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
