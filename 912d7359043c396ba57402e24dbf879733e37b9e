@@ -63,6 +63,24 @@
       "revId": "912d7359043c396ba57402e24dbf879733e37b9e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a587c41_8ed9df02",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 739,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-01T20:08:14Z",
+      "side": 1,
+      "message": "took out this comment. thinking about it more, I don\u0027t think we allow ourselves to read outside of the copied region of the texture.",
+      "parentUuid": "4a0a3c15_f81031e2",
+      "revId": "912d7359043c396ba57402e24dbf879733e37b9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
