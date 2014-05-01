@@ -16,6 +16,29 @@
       "revId": "e980fcdab67ab865d79a72ede7b8f71009c57310",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea205093_842430d4",
+        "filename": "tests/angle_tests/ReadPixelsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-01T15:49:38Z",
+      "side": 1,
+      "message": "These can be aligned while fixing the other nit.",
+      "range": {
+        "startLine": 137,
+        "startChar": 14,
+        "endLine": 137,
+        "endChar": 17
+      },
+      "revId": "e980fcdab67ab865d79a72ede7b8f71009c57310",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
