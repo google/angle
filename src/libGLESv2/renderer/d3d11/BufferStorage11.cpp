@@ -494,11 +494,6 @@ bool BufferStorage11::NativeBuffer11::copyFromStorage(TypedBufferStorage11 *sour
 
     ASSERT(HAS_DYNAMIC_TYPE(NativeBuffer11*, source));
 
-    if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK)
-    {
-        return false;
-    }
-
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
     size_t requiredSize = sourceOffset + size;
@@ -658,19 +653,31 @@ bool BufferStorage11::PackStorage11::copyFromStorage(TypedBufferStorage11 *sourc
 
 void BufferStorage11::PackStorage11::resize(size_t size, bool preserveData)
 {
-    UNIMPLEMENTED();
+    if (size != mBufferSize)
+    {
+        unsigned char *existingData = mMemoryBuffer;
+
+        // Allocate new memory buffer
+        mMemoryBuffer = new unsigned char[size];
+        memset(mMemoryBuffer, 0, sizeof(unsigned char) * size);
+
+        if (existingData && preserveData)
+        {
+            memcpy(mMemoryBuffer, existingData, std::min(mBufferSize, size));
+        }
+
+        mBufferSize = size;
+    }
 }
 
 void *BufferStorage11::PackStorage11::map(GLbitfield access)
 {
-    ASSERT(!mMemoryBuffer);
-
     // TODO: fast path
     //  We might be able to optimize out one or more memcpy calls by detecting when
     //  and if D3D packs the staging texture memory identically to how we would fill
     //  the pack buffer according to the current pack state.
 
-    mMemoryBuffer = new unsigned char[mBufferSize];
+    ASSERT(mMemoryBuffer);
     mRenderer->packPixels(mStagingTexture, mPackParams, mMemoryBuffer);
     mDataModified = (mDataModified || (access & GL_MAP_WRITE_BIT) != 0);
 
@@ -679,14 +686,12 @@ void *BufferStorage11::PackStorage11::map(GLbitfield access)
 
 void BufferStorage11::PackStorage11::unmap()
 {
-    ASSERT(mMemoryBuffer);
-    SafeDeleteArray(mMemoryBuffer);
+    // No-op
 }
 
 void BufferStorage11::PackStorage11::packPixels(ID3D11Texture2D *srcTexure, UINT srcSubresource, const PackPixelsParams &params)
 {
     mPackParams = params;
-    mBufferSize = mPackParams.outputPitch * mPackParams.area.height;
 
     D3D11_TEXTURE2D_DESC textureDesc;
     srcTexure->GetDesc(&textureDesc);
