@@ -16,6 +16,24 @@
       "revId": "30e29c9586a555da71d19476dc77ea9b6c8e6e1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a3f9cb5_f94b8b90",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-01T14:22:59Z",
+      "side": 1,
+      "message": "Collapsed these a bit. I can confirm they append, not replace.",
+      "parentUuid": "4a0a3c15_7879c10a",
+      "revId": "30e29c9586a555da71d19476dc77ea9b6c8e6e1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
