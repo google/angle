@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4a3f9cb5_ca558730",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-01T19:01:37Z",
+      "side": 1,
+      "message": "We\u0027re already in a corner case here: the user is resizing an existing buffer, while the buffer already has contents that must be preserved.\n\nThe potential risk of having some obscure security bug with mem* operations is real, and when the buffer is big enough to make memset non-instant, there\u0027s probably going to be bigger performance factors. I\u0027d rather leave the code as fool-proof as possible all considered.\n\nI think Shannon\u0027s comment was addressed here as well?",
+      "parentUuid": "4a3f9cb5_a4d4baf2",
+      "range": {
+        "startLine": 666,
+        "startChar": 8,
+        "endLine": 671,
+        "endChar": 9
+      },
+      "revId": "912d7359043c396ba57402e24dbf879733e37b9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a0a3c15_f81031e2",
         "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
         "patchSetId": 1
