@@ -16,6 +16,24 @@
       "revId": "080a3cd725cf53af881750c44a665845f4371e07",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a292485_9d634f54",
+        "filename": "src/angle.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-01T14:12:01Z",
+      "side": 1,
+      "message": "this is an else clause, correct. I added a comment to adhere to the style they use in the chromium gyp files.",
+      "parentUuid": "4a0a3c15_3873492d",
+      "revId": "080a3cd725cf53af881750c44a665845f4371e07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
