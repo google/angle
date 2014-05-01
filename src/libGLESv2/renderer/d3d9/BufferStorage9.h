@@ -23,12 +23,11 @@ class BufferStorage9 : public BufferStorage
     static BufferStorage9 *makeBufferStorage9(BufferStorage *bufferStorage);
 
     virtual void *getData();
-    virtual void setData(const void* data, unsigned int size, unsigned int offset);
-    virtual void copyData(BufferStorage* sourceStorage, unsigned int size,
-                          unsigned int sourceOffset, unsigned int destOffset);
+    virtual void setData(const void* data, size_t size, size_t offset);
+    virtual void copyData(BufferStorage* sourceStorage, size_t size, size_t sourceOffset, size_t destOffset);
     virtual void clear();
     virtual void markTransformFeedbackUsage();
-    virtual unsigned int getSize() const;
+    virtual size_t getSize() const;
     virtual bool supportsDirectBinding() const;
 
     virtual bool isMapped() const;
@@ -38,10 +37,8 @@ class BufferStorage9 : public BufferStorage
   private:
     DISALLOW_COPY_AND_ASSIGN(BufferStorage9);
 
-    void *mMemory;
-    unsigned int mAllocatedSize;
-
-    unsigned int mSize;
+    std::vector<char> mMemory;
+    size_t mSize;
 };
 
 }

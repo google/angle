@@ -177,7 +177,7 @@ bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &att
 
         unsigned int outputElementSize;
         getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
-        alignment = std::min(static_cast<size_t>(outputElementSize), 4u);
+        alignment = std::min<size_t>(outputElementSize, 4);
 
         requiresConversion = (mRenderer->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) != 0;
     }

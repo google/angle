@@ -22,12 +22,11 @@ class BufferStorage
 
     // The data returned is only guaranteed valid until next non-const method.
     virtual void *getData() = 0;
-    virtual void setData(const void* data, unsigned int size, unsigned int offset) = 0;
-    virtual void copyData(BufferStorage* sourceStorage, unsigned int size,
-                          unsigned int sourceOffset, unsigned int destOffset) = 0;
+    virtual void setData(const void* data, size_t size, size_t offset) = 0;
+    virtual void copyData(BufferStorage* sourceStorage, size_t size, size_t sourceOffset, size_t destOffset) = 0;
     virtual void clear() = 0;
     virtual void markTransformFeedbackUsage() = 0;
-    virtual unsigned int getSize() const = 0;
+    virtual size_t getSize() const = 0;
     virtual bool supportsDirectBinding() const = 0;
     unsigned int getSerial() const;
 

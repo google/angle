@@ -644,7 +644,13 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if ((size_t)size + offset > buffer->size())
+            // Check for possible overflow of size + offset
+            if (!rx::IsUnsignedAdditionSafe<size_t>(size, offset))
+            {
+                return gl::error(GL_OUT_OF_MEMORY);
+            }
+
+            if (size + offset > buffer->size())
             {
                 return gl::error(GL_INVALID_VALUE);
             }

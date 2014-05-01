@@ -77,21 +77,15 @@
                             [
                                 'ANGLE_ENABLE_D3D11',
                             ],
-                            'configurations':
+                            'msvs_settings':
                             {
-                                'Debug':
+                                'VCLinkerTool':
                                 {
-                                    'msvs_settings':
-                                    {
-                                        'VCLinkerTool':
-                                        {
-                                            'AdditionalDependencies':
-                                            [
-                                                'dxguid.lib',
-                                            ]
-                                        }
-                                    },
-                                }
+                                    'AdditionalDependencies':
+                                    [
+                                        'dxguid.lib',
+                                    ],
+                                },
                             },
                         }],
                     ],

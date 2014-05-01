@@ -53,12 +53,11 @@ class BufferStorage11 : public BufferStorage
     static BufferStorage11 *makeBufferStorage11(BufferStorage *bufferStorage);
 
     virtual void *getData();
-    virtual void setData(const void* data, unsigned int size, unsigned int offset);
-    virtual void copyData(BufferStorage* sourceStorage, unsigned int size,
-                          unsigned int sourceOffset, unsigned int destOffset);
+    virtual void setData(const void* data, size_t size, size_t offset);
+    virtual void copyData(BufferStorage* sourceStorage, size_t size, size_t sourceOffset, size_t destOffset);
     virtual void clear();
     virtual void markTransformFeedbackUsage();
-    virtual unsigned int getSize() const;
+    virtual size_t getSize() const;
     virtual bool supportsDirectBinding() const;
 
     ID3D11Buffer *getBuffer(BufferUsage usage);

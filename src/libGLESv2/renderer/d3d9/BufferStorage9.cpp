@@ -14,15 +14,12 @@ namespace rx
 {
 
 BufferStorage9::BufferStorage9()
+    : mSize(0)
 {
-    mMemory = NULL;
-    mAllocatedSize = 0;
-    mSize = 0;
 }
 
 BufferStorage9::~BufferStorage9()
 {
-    SafeDeleteArray(mMemory);
 }
 
 BufferStorage9 *BufferStorage9::makeBufferStorage9(BufferStorage *bufferStorage)
@@ -33,43 +30,29 @@ BufferStorage9 *BufferStorage9::makeBufferStorage9(BufferStorage *bufferStorage)
 
 void *BufferStorage9::getData()
 {
-    return mMemory;
+    return mMemory.data();
 }
 
-void BufferStorage9::setData(const void* data, unsigned int size, unsigned int offset)
+void BufferStorage9::setData(const void* data, size_t size, size_t offset)
 {
-    if (!mMemory || offset + size > mAllocatedSize)
+    if (offset + size > mMemory.size())
     {
-        unsigned int newAllocatedSize = offset + size;
-        void *newMemory = new char[newAllocatedSize];
-
-        if (offset > 0 && mMemory && mAllocatedSize > 0)
-        {
-            memcpy(newMemory, mMemory, std::min(offset, mAllocatedSize));
-        }
-
-        delete[] mMemory;
-        mMemory = newMemory;
-        mAllocatedSize = newAllocatedSize;
+        mMemory.resize(offset + size);
     }
 
     mSize = std::max(mSize, offset + size);
     if (data)
     {
-        memcpy(reinterpret_cast<char*>(mMemory) + offset, data, size);
+        memcpy(mMemory.data() + offset, data, size);
     }
 }
 
-void BufferStorage9::copyData(BufferStorage* sourceStorage, unsigned int size,
-                              unsigned int sourceOffset, unsigned int destOffset)
+void BufferStorage9::copyData(BufferStorage* sourceStorage, size_t size, size_t sourceOffset, size_t destOffset)
 {
     BufferStorage9* source = makeBufferStorage9(sourceStorage);
     if (source)
     {
-        void* sourceMemory = reinterpret_cast<char*>(source->mMemory) + sourceOffset;
-        void* destMemory = reinterpret_cast<char*>(mMemory) + destOffset;
-
-        memcpy(destMemory, sourceMemory, size);
+        memcpy(mMemory.data() + destOffset, source->mMemory.data() + sourceOffset, size);
     }
 }
 
@@ -83,7 +66,7 @@ void BufferStorage9::markTransformFeedbackUsage()
     UNREACHABLE();
 }
 
-unsigned int BufferStorage9::getSize() const
+size_t BufferStorage9::getSize() const
 {
     return mSize;
 }

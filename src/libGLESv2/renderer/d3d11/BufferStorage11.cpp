@@ -204,7 +204,7 @@ void *BufferStorage11::getData()
     return mResolvedData.data();
 }
 
-void BufferStorage11::setData(const void* data, unsigned int size, unsigned int offset)
+void BufferStorage11::setData(const void* data, size_t size, size_t offset)
 {
     size_t requiredSize = size + offset;
     mSize = std::max(mSize, requiredSize);
@@ -239,8 +239,7 @@ void BufferStorage11::setData(const void* data, unsigned int size, unsigned int 
     }
 }
 
-void BufferStorage11::copyData(BufferStorage* sourceStorage, unsigned int size,
-                               unsigned int sourceOffset, unsigned int destOffset)
+void BufferStorage11::copyData(BufferStorage* sourceStorage, size_t size, size_t sourceOffset, size_t destOffset)
 {
     BufferStorage11* sourceStorage11 = makeBufferStorage11(sourceStorage);
     if (sourceStorage11)
@@ -258,7 +257,7 @@ void BufferStorage11::copyData(BufferStorage* sourceStorage, unsigned int size,
             dest->setDataRevision(dest->getDataRevision() + 1);
         }
 
-        mSize = std::max(mSize, destOffset + size);
+        mSize = std::max<size_t>(mSize, destOffset + size);
     }
 }
 
@@ -274,7 +273,7 @@ void BufferStorage11::markTransformFeedbackUsage()
     transformFeedbackStorage->setDataRevision(transformFeedbackStorage->getDataRevision() + 1);
 }
 
-unsigned int BufferStorage11::getSize() const
+size_t BufferStorage11::getSize() const
 {
     return mSize;
 }

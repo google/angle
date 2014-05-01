@@ -180,7 +180,7 @@ int main(int argc, char **argv)
 
     std::size_t height = header.dwHeight;
     std::size_t width = header.dwWidth;
-    std::size_t levels = std::max(1U, static_cast<std::size_t>(header.dwMipMapCount));
+    std::size_t levels = std::max<size_t>(1, header.dwMipMapCount);
 
     std::ofstream oss(outputFile);
     oss << "// Automatically generated header from " << inputFile << ", a " << width << "x" << height;
@@ -197,8 +197,8 @@ int main(int argc, char **argv)
 
     for (std::size_t i = 0; i < levels; ++i)
     {
-        std::size_t widthAtLevel = std::max(width >> i, 1U);
-        std::size_t heightAtLevel = std::max(height >> i, 1U);
+        std::size_t widthAtLevel = std::max<size_t>(width >> i, 1);
+        std::size_t heightAtLevel = std::max<size_t>(height >> i, 1);
         std::size_t sizeAtLevel = static_cast<std::size_t>(std::ceil(widthAtLevel / static_cast<float>(blockWidth)) *
                                                            std::ceil(heightAtLevel / static_cast<float>(blockHeight))) *
                                   blockSize;
