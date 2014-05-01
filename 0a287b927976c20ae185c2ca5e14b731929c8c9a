@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2a5d0832_2747ba63",
+        "filename": "tests/angle_tests/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-01T19:24:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25a61bd4_42b0d4e1",
+      "range": {
+        "startLine": 113,
+        "startChar": 17,
+        "endLine": 113,
+        "endChar": 22
+      },
+      "revId": "0a287b927976c20ae185c2ca5e14b731929c8c9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45a14fb9_804db6a8",
         "filename": "tests/angle_tests/ANGLETest.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2014-04-25T21:38:02Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 114,
+        "startChar": 17,
+        "endLine": 114,
+        "endChar": 25
+      },
+      "revId": "0a287b927976c20ae185c2ca5e14b731929c8c9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a3f9cb5_65600cde",
+        "filename": "tests/angle_tests/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-01T19:24:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45a14fb9_804db6a8",
       "range": {
         "startLine": 114,
         "startChar": 17,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "4a3f9cb5_a565d4e9",
+        "filename": "tests/angle_tests/SwizzleTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-01T19:24:58Z",
+      "side": 1,
+      "message": "Unfortunately, no.  The TEST_F macro generates an entire class and then a function declaration that the code following it will be inside.  There isn\u0027t a way (as far as I could figure out) to embed the version information without needing another macro at the end of each test as well.",
+      "parentUuid": "850ee7b3_aae08f34",
+      "range": {
+        "startLine": 218,
+        "startChar": 4,
+        "endLine": 218,
+        "endChar": 30
+      },
+      "revId": "0a287b927976c20ae185c2ca5e14b731929c8c9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5e29f1a_0c09f747",
         "filename": "tests/angle_tests/angle_test_main.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2014-04-25T21:38:02Z",
       "side": 1,
       "message": "should be D3D11_only for these, don\u0027t think we want to fall back to D3D9 if we are testing D3D11 ? also ES3 requires it anyway",
+      "range": {
+        "startLine": 22,
+        "startChar": 51,
+        "endLine": 22,
+        "endChar": 84
+      },
+      "revId": "0a287b927976c20ae185c2ca5e14b731929c8c9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a5d0832_e7408248",
+        "filename": "tests/angle_tests/angle_test_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-01T19:24:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5e29f1a_0c09f747",
       "range": {
         "startLine": 22,
         "startChar": 51,
