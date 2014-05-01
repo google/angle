@@ -3264,7 +3264,16 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
         area.width = width;
         area.height = height;
 
-        readTextureData(colorBufferTexture, subresourceIndex, area, format, type, outputPitch, pack, pixels);
+        if (pack.pixelBuffer.get() != NULL)
+        {
+            rx::BufferStorage11 *packBufferStorage = BufferStorage11::makeBufferStorage11(pack.pixelBuffer.get()->getStorage());
+            PackPixelsParams packParams(area, format, type, outputPitch, pack, reinterpret_cast<ptrdiff_t>(pixels));
+            packBufferStorage->packPixels(colorBufferTexture, subresourceIndex, packParams);
+        }
+        else
+        {
+            readTextureData(colorBufferTexture, subresourceIndex, area, format, type, outputPitch, pack, pixels);
+        }
 
         SafeRelease(colorBufferTexture);
     }
