@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "4a3f9cb5_a4d4baf2",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-01T15:54:23Z",
+      "side": 1,
+      "message": "Can this logic be changed so that it only memset\u0027s the area of the buffer that doesn\u0027t have data being copied into it?  It may hurt us to memset a very large buffer and then copy into it right away.",
+      "range": {
+        "startLine": 666,
+        "startChar": 8,
+        "endLine": 671,
+        "endChar": 9
+      },
+      "revId": "912d7359043c396ba57402e24dbf879733e37b9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a0a3c15_f81031e2",
         "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
         "patchSetId": 1
