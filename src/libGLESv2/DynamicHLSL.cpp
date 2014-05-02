@@ -1027,21 +1027,36 @@ std::string DynamicHLSL::generateAttributeConversionHLSL(const VertexFormat &ver
     GLenum shaderComponentType = UniformComponentType(shaderAttrib.type);
     int shaderComponentCount = UniformComponentCount(shaderAttrib.type);
 
-    std::string padString = "";
-
     // Perform integer to float conversion (if necessary)
     bool requiresTypeConversion = (shaderComponentType == GL_FLOAT && vertexFormat.mType != GL_FLOAT);
 
-    // TODO: normalization for 32-bit integer formats
-    ASSERT(!requiresTypeConversion || !vertexFormat.mNormalized);
-
-    if (requiresTypeConversion || !padString.empty())
+    if (requiresTypeConversion)
     {
-        return "float" + Str(shaderComponentCount) + "(" + attribString + padString + ")";
+        // TODO: normalization for 32-bit integer formats
+        ASSERT(!vertexFormat.mNormalized && !vertexFormat.mPureInteger);
+        return "float" + Str(shaderComponentCount) + "(" + attribString + ")";
     }
 
     // No conversion necessary
     return attribString;
+}
+
+void DynamicHLSL::getInputLayoutSignature(const VertexFormat inputLayout[], GLenum signature[]) const
+{
+    for (size_t inputIndex = 0; inputIndex < MAX_VERTEX_ATTRIBS; inputIndex++)
+    {
+        const VertexFormat &vertexFormat = inputLayout[inputIndex];
+
+        if (vertexFormat.mType == GL_NONE)
+        {
+            signature[inputIndex] = GL_NONE;
+        }
+        else
+        {
+            bool gpuConverted = ((mRenderer->getVertexConversionType(vertexFormat) & rx::VERTEX_CONVERT_GPU) != 0);
+            signature[inputIndex] = (gpuConverted ? GL_TRUE : GL_FALSE);
+        }
+    }
 }
 
 }

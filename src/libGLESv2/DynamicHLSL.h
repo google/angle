@@ -45,6 +45,7 @@ class DynamicHLSL
                                 std::map<int, VariableLocation> *programOutputVars) const;
 
     std::string generateGeometryShaderHLSL(int registers, const ShaderVariable *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
+    void getInputLayoutSignature(const VertexFormat inputLayout[], GLenum signature[]) const;
 
     static const std::string VERTEX_ATTRIBUTE_STUB_STRING;
 
