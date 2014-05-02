@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a520423_cd96ba6b",
+        "filename": "samples/dds_to_header/main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-02T14:55:30Z",
+      "side": 1,
+      "message": "Bleh, that\u0027s really long just to represent 1. Might become worthwhile to write our own max() implementation which is 64-bit safe. Anyway, approved for now.",
+      "range": {
+        "startLine": 183,
+        "startChar": 34,
+        "endLine": 183,
+        "endChar": 53
+      },
+      "revId": "34a1a9363aa86dfa31b079e6fb60d9902ebbd42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a66bc13_3e33111c",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-02T14:55:30Z",
+      "side": 1,
+      "message": "If size and offset were 32-bit variables it would be better to separately cast them to 64-bit before adding them together to prevent overflow. That said, aren\u0027t GLintptr and GLsizeiptr already 64-bit on 64-bit platforms?",
+      "range": {
+        "startLine": 647,
+        "startChar": 28,
+        "endLine": 647,
+        "endChar": 34
+      },
+      "revId": "34a1a9363aa86dfa31b079e6fb60d9902ebbd42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a66bc13_fe14b95d",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-02T14:55:30Z",
+      "side": 1,
+      "message": "Should be cast to 64-bit before the addition, not after.",
+      "range": {
+        "startLine": 261,
+        "startChar": 44,
+        "endLine": 261,
+        "endChar": 50
+      },
+      "revId": "34a1a9363aa86dfa31b079e6fb60d9902ebbd42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
