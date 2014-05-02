@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a520423_63c59571",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1078,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-02T17:49:11Z",
+      "side": 1,
+      "message": "I believe this should only take the shortcut if both types are GL_FLOAT. Matrices are GL_FLOAT so that test can be removed.",
+      "range": {
+        "startLine": 1073,
+        "startChar": 4,
+        "endLine": 1078,
+        "endChar": 5
+      },
+      "revId": "9522b79f2489b5843651f7cc47228d3028ab8d59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
