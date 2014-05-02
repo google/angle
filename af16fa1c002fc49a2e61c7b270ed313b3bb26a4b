@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a71c0c6_a896036a",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-02T17:43:24Z",
+      "side": 1,
+      "message": "Is there a way to split this into two patches? Dealing with \u0027new\u0027 returning NULL seems different from handling CreateBuffer failing. We need to figure out if/why catching bad_alloc exceptions isn\u0027t working properly and deal with that separately (and if we have to rewrite allocations, we should do it for all of ANGLE at once). For this particular bug it seems that propagating the CreateBuffer failure is all that is necessary?",
+      "range": {
+        "startLine": 606,
+        "startChar": 8,
+        "endLine": 606,
+        "endChar": 50
+      },
+      "revId": "af16fa1c002fc49a2e61c7b270ed313b3bb26a4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
