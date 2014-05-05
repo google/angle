@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a2fd4b4_82e0da35",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-05T14:50:35Z",
+      "side": 1,
+      "message": "nit: feel free to put the bracket on the next line. We\u0027ve gradually started to prettify the compiler code.",
+      "range": {
+        "startLine": 457,
+        "startChar": 18,
+        "endLine": 457,
+        "endChar": 19
+      },
+      "revId": "3fb2eefa494d8294b80950138b54911f7b5a8a82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aacbb83b_25f9c2e9",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-05T14:50:35Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 465,
+        "startChar": 18,
+        "endLine": 465,
+        "endChar": 19
+      },
+      "revId": "3fb2eefa494d8294b80950138b54911f7b5a8a82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
