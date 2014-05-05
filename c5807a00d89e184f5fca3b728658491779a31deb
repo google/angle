@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aacbb83b_9a2ed1c3",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-05T14:47:15Z",
+      "side": 1,
+      "message": "32-bit is plenty for these variables, and we wouldn\u0027t want them to be 64-bit on a 32-bit architecture. There should be other ways to avoid compiler warnings caused by these variables.",
+      "range": {
+        "startLine": 45,
+        "startChar": 13,
+        "endLine": 45,
+        "endChar": 17
+      },
+      "revId": "c5807a00d89e184f5fca3b728658491779a31deb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aba749a_7ec199c4",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-05T14:47:15Z",
+      "side": 1,
+      "message": "Same as above.",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 8
+      },
+      "revId": "c5807a00d89e184f5fca3b728658491779a31deb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
