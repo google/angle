@@ -95,7 +95,7 @@ struct BlockMemberInfo
     int matrixStride;
     bool isRowMajorMatrix;
 
-    static const BlockMemberInfo defaultBlockInfo;
+    static BlockMemberInfo getDefaultBlockInfo();
 };
 
 typedef std::vector<BlockMemberInfo> BlockMemberInfoArray;
