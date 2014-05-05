@@ -69,6 +69,30 @@
       "revId": "c5807a00d89e184f5fca3b728658491779a31deb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a2fd4b4_82f9faeb",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-05T15:07:03Z",
+      "side": 1,
+      "message": "It\u0027s worth noting as well, that on Windows 32-bit long is 4 bytes.",
+      "parentUuid": "8aba749a_7e8f59aa",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 8
+      },
+      "revId": "c5807a00d89e184f5fca3b728658491779a31deb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
