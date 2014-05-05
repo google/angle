@@ -22,6 +22,30 @@
       "revId": "af16fa1c002fc49a2e61c7b270ed313b3bb26a4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aacbb83b_5a8aa99b",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-05T13:51:09Z",
+      "side": 1,
+      "message": "I had it as one patch because there is a D3D9/11 fix to the same failing unit test. I could certainly split 9/11 to two patches.\n\nI\u0027m not sure about the bad_alloc -- bear in mind in Chromium we compile with the disable exceptions flag.\n\nDid you notice that the two fixes (std::nothrow addition and propagating CreatBuffer failures) were for D3D9 and D3D11?",
+      "parentUuid": "6a71c0c6_a896036a",
+      "range": {
+        "startLine": 606,
+        "startChar": 8,
+        "endLine": 606,
+        "endChar": 50
+      },
+      "revId": "af16fa1c002fc49a2e61c7b270ed313b3bb26a4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
