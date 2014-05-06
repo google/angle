@@ -96,9 +96,6 @@
     <ClInclude Include="..\..\src\common\utilities.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\common\shadervars.cpp">
-      <Filter>src\common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\common\blocklayout.cpp">
       <Filter>src\common</Filter>
     </ClCompile>

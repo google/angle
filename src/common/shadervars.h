@@ -21,6 +21,7 @@
 namespace gl
 {
 
+// Varying interpolation qualifier, see section 4.3.9 of the ESSL 3.00.4 spec
 enum InterpolationType
 {
     INTERPOLATION_SMOOTH,
@@ -28,6 +29,15 @@ enum InterpolationType
     INTERPOLATION_FLAT
 };
 
+// Uniform block layout qualifier, see section 4.3.8.3 of the ESSL 3.00.4 spec
+enum BlockLayoutType
+{
+    BLOCKLAYOUT_STANDARD,
+    BLOCKLAYOUT_PACKED,
+    BLOCKLAYOUT_SHARED
+};
+
+// Base class for all variables defined in shaders, including Varyings, Uniforms, etc
 struct ShaderVariable
 {
     GLenum type;
@@ -35,11 +45,18 @@ struct ShaderVariable
     std::string name;
     unsigned int arraySize;
 
-    ShaderVariable(GLenum type, GLenum precision, const char *name, unsigned int arraySize);
+    ShaderVariable(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn)
+      : type(typeIn),
+        precision(precisionIn),
+        name(nameIn),
+        arraySize(arraySizeIn)
+    {}
+
     bool isArray() const { return arraySize > 0; }
     unsigned int elementCount() const { return std::max(1u, arraySize); }
 };
 
+// Uniform registers (and element indices) are assigned when outputting shader code
 struct Uniform : public ShaderVariable
 {
     unsigned int registerIndex;
@@ -47,7 +64,11 @@ struct Uniform : public ShaderVariable
     std::vector<Uniform> fields;
 
     Uniform(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn,
-            unsigned int registerIndexIn, unsigned int elementIndexIn);
+            unsigned int registerIndexIn, unsigned int elementIndexIn)
+      : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
+        registerIndex(registerIndexIn),
+        elementIndex(elementIndexIn)
+    {}
 
     bool isStruct() const { return !fields.empty(); }
 };
@@ -56,8 +77,15 @@ struct Attribute : public ShaderVariable
 {
     int location;
 
-    Attribute();
-    Attribute(GLenum type, GLenum precision, const char *name, unsigned int arraySize, int location);
+    Attribute()
+      : ShaderVariable(GL_NONE, GL_NONE, "", 0),
+        location(-1)
+    {}
+
+    Attribute(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, int locationIn)
+      : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
+        location(locationIn)
+    {}
 };
 
 struct InterfaceBlockField : public ShaderVariable
@@ -65,7 +93,10 @@ struct InterfaceBlockField : public ShaderVariable
     bool isRowMajorMatrix;
     std::vector<InterfaceBlockField> fields;
 
-    InterfaceBlockField(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, bool isRowMajorMatrix);
+    InterfaceBlockField(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, bool isRowMajorMatrix)
+      : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
+        isRowMajorMatrix(isRowMajorMatrix)
+    {}
 
     bool isStruct() const { return !fields.empty(); }
 };
@@ -78,39 +109,47 @@ struct Varying : public ShaderVariable
     unsigned int elementIndex;     // First register element for varyings, assigned during link
     std::string structName;
 
-    Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, InterpolationType interpolationIn);
+    Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, InterpolationType interpolationIn)
+      : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
+        interpolation(interpolationIn),
+        registerIndex(GL_INVALID_INDEX),
+        elementIndex(GL_INVALID_INDEX)
+    {}
 
     bool isStruct() const { return !fields.empty(); }
     bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }
 
-    void resetRegisterAssignment();
+    void resetRegisterAssignment()
+    {
+        registerIndex = GL_INVALID_INDEX;
+        elementIndex = GL_INVALID_INDEX;
+    }
 };
 
 struct BlockMemberInfo
 {
-    BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix);
-
     int offset;
     int arrayStride;
     int matrixStride;
     bool isRowMajorMatrix;
 
-    static BlockMemberInfo getDefaultBlockInfo();
+    static BlockMemberInfo getDefaultBlockInfo()
+    {
+        return BlockMemberInfo(-1, -1, -1, false);
+    }
+
+    BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
+      : offset(offset),
+        arrayStride(arrayStride),
+        matrixStride(matrixStride),
+        isRowMajorMatrix(isRowMajorMatrix)
+    {}
 };
 
 typedef std::vector<BlockMemberInfo> BlockMemberInfoArray;
 
-enum BlockLayoutType
-{
-    BLOCKLAYOUT_STANDARD,
-    BLOCKLAYOUT_PACKED,
-    BLOCKLAYOUT_SHARED
-};
-
 struct InterfaceBlock
 {
-    InterfaceBlock(const char *name, unsigned int arraySize, unsigned int registerIndex);
-
     std::string name;
     unsigned int arraySize;
     size_t dataSize;
@@ -120,6 +159,14 @@ struct InterfaceBlock
     std::vector<BlockMemberInfo> blockInfo;
 
     unsigned int registerIndex;
+
+    InterfaceBlock(const char *name, unsigned int arraySize, unsigned int registerIndex)
+      : name(name),
+        arraySize(arraySize),
+        layout(BLOCKLAYOUT_SHARED),
+        registerIndex(registerIndex),
+        isRowMajorLayout(false)
+    {}
 };
 
 }

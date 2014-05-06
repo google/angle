@@ -204,7 +204,6 @@
     <ClCompile Include="..\..\src\common\RefCountObject.cpp"/>
     <ClCompile Include="..\..\src\common\mathutil.cpp"/>
     <ClCompile Include="..\..\src\common\debug.cpp"/>
-    <ClCompile Include="..\..\src\common\shadervars.cpp"/>
     <ClCompile Include="..\..\src\common\blocklayout.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\InfoSink.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\OutputESSL.cpp"/>

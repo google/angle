@@ -179,7 +179,7 @@ class ProgramBinary : public RefCountObject
     bool linkVaryings(InfoLog &infoLog, FragmentShader *fragmentShader, VertexShader *vertexShader);
     bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
 
-    typedef BlockMemberInfoArray::const_iterator BlockInfoItr;
+    typedef std::vector<BlockMemberInfo>::const_iterator BlockInfoItr;
 
     template <class ShaderVarType>
     bool linkValidateFields(InfoLog &infoLog, const std::string &varName, const ShaderVarType &vertexVar, const ShaderVarType &fragmentVar);

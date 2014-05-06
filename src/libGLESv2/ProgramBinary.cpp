@@ -1574,9 +1574,9 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     // special case for gl_DepthRange, the only built-in uniform (also a struct)
     if (vertexShader->usesDepthRange() || fragmentShader->usesDepthRange())
     {
-        mUniforms.push_back(new LinkedUniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.near", 0, -1, gl::BlockMemberInfo::getDefaultBlockInfo()));
-        mUniforms.push_back(new LinkedUniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.far", 0, -1, gl::BlockMemberInfo::getDefaultBlockInfo()));
-        mUniforms.push_back(new LinkedUniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.diff", 0, -1, gl::BlockMemberInfo::getDefaultBlockInfo()));
+        mUniforms.push_back(new LinkedUniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.near", 0, -1, BlockMemberInfo::getDefaultBlockInfo()));
+        mUniforms.push_back(new LinkedUniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.far", 0, -1, BlockMemberInfo::getDefaultBlockInfo()));
+        mUniforms.push_back(new LinkedUniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.diff", 0, -1, BlockMemberInfo::getDefaultBlockInfo()));
     }
 
     if (!linkUniformBlocks(infoLog, vertexShader->getInterfaceBlocks(), fragmentShader->getInterfaceBlocks()))
@@ -2022,7 +2022,8 @@ bool ProgramBinary::defineUniform(GLenum shader, const gl::Uniform &constant, In
     }
     else
     {
-        uniform = new LinkedUniform(constant.type, constant.precision, constant.name, constant.arraySize, -1, gl::BlockMemberInfo::getDefaultBlockInfo());
+        uniform = new LinkedUniform(constant.type, constant.precision, constant.name, constant.arraySize,
+                                    -1, BlockMemberInfo::getDefaultBlockInfo());
         uniform->registerElement = constant.elementIndex;
     }
 
