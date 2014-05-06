@@ -103,7 +103,7 @@ EGLDisplay __stdcall eglGetDisplay(EGLNativeDisplayType display_id)
     {
         return egl::Display::getDisplay(display_id);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_DISPLAY);
     }
@@ -133,7 +133,7 @@ EGLBoolean __stdcall eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor)
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -156,7 +156,7 @@ EGLBoolean __stdcall eglTerminate(EGLDisplay dpy)
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -189,7 +189,7 @@ const char *__stdcall eglQueryString(EGLDisplay dpy, EGLint name)
 
         return egl::error(EGL_BAD_PARAMETER, (const char*)NULL);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, (const char*)NULL);
     }
@@ -224,7 +224,7 @@ EGLBoolean __stdcall eglGetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint co
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -261,7 +261,7 @@ EGLBoolean __stdcall eglChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, 
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -288,7 +288,7 @@ EGLBoolean __stdcall eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -317,7 +317,7 @@ EGLSurface __stdcall eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, EG
 
         return display->createWindowSurface(window, config, attrib_list);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
@@ -339,7 +339,7 @@ EGLSurface __stdcall eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, c
 
         return display->createOffscreenSurface(config, NULL, attrib_list);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
@@ -363,7 +363,7 @@ EGLSurface __stdcall eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config, EG
 
         return egl::success(EGL_NO_SURFACE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
@@ -392,7 +392,7 @@ EGLBoolean __stdcall eglDestroySurface(EGLDisplay dpy, EGLSurface surface)
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -480,7 +480,7 @@ EGLBoolean __stdcall eglQuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint 
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -520,7 +520,7 @@ EGLBoolean __stdcall eglQuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surf
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -547,7 +547,7 @@ EGLBoolean __stdcall eglBindAPI(EGLenum api)
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -563,7 +563,7 @@ EGLenum __stdcall eglQueryAPI(void)
 
         return egl::success(API);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -579,7 +579,7 @@ EGLBoolean __stdcall eglWaitClient(void)
 
         return egl::success(0);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -595,7 +595,7 @@ EGLBoolean __stdcall eglReleaseThread(void)
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -623,7 +623,7 @@ EGLSurface __stdcall eglCreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum bu
 
         return display->createOffscreenSurface(config, (HANDLE)buffer, attrib_list);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
@@ -648,7 +648,7 @@ EGLBoolean __stdcall eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface, EGLint
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -695,7 +695,7 @@ EGLBoolean __stdcall eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint 
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -739,7 +739,7 @@ EGLBoolean __stdcall eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLi
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -769,7 +769,7 @@ EGLBoolean __stdcall eglSwapInterval(EGLDisplay dpy, EGLint interval)
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -852,7 +852,7 @@ EGLContext __stdcall eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLConte
 
         return display->createContext(config, client_version, static_cast<gl::Context*>(share_context), reset_notification, robust_access);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_CONTEXT);
     }
@@ -881,7 +881,7 @@ EGLBoolean __stdcall eglDestroyContext(EGLDisplay dpy, EGLContext ctx)
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -935,7 +935,7 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
 
         return egl::success(EGL_TRUE);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -951,7 +951,7 @@ EGLContext __stdcall eglGetCurrentContext(void)
 
         return egl::success(context);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_CONTEXT);
     }
@@ -978,7 +978,7 @@ EGLSurface __stdcall eglGetCurrentSurface(EGLint readdraw)
             return egl::error(EGL_BAD_PARAMETER, EGL_NO_SURFACE);
         }
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
@@ -994,7 +994,7 @@ EGLDisplay __stdcall eglGetCurrentDisplay(void)
 
         return egl::success(dpy);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_DISPLAY);
     }
@@ -1019,7 +1019,7 @@ EGLBoolean __stdcall eglQueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attr
 
         return egl::success(0);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1035,7 +1035,7 @@ EGLBoolean __stdcall eglWaitGL(void)
 
         return egl::success(0);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1051,7 +1051,7 @@ EGLBoolean __stdcall eglWaitNative(EGLint engine)
 
         return egl::success(0);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1086,7 +1086,7 @@ EGLBoolean __stdcall eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
             return egl::success(EGL_TRUE);
         }
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1117,7 +1117,7 @@ EGLBoolean __stdcall eglCopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativ
 
         return egl::success(0);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1157,7 +1157,7 @@ EGLBoolean __stdcall eglPostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLi
             return egl::success(EGL_TRUE);
         }
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1194,7 +1194,7 @@ __eglMustCastToProperFunctionPointerType __stdcall eglGetProcAddress(const char 
 
         return glGetProcAddress(procname);
     }
-    catch(std::bad_alloc&)
+    catch (...)
     {
         return egl::error(EGL_BAD_ALLOC, (__eglMustCastToProperFunctionPointerType)NULL);
     }
