@@ -9,6 +9,7 @@
 
 #include "libGLESv2/renderer/d3d9/BufferStorage9.h"
 #include "common/debug.h"
+#include "libGLESv2/main.h"
 
 namespace rx
 {

@@ -121,7 +121,8 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, con
 
         if (!needsConversion && inputStride == elementSize)
         {
-            memcpy(mapPtr, input, count * inputStride);
+            size_t copySize = static_cast<size_t>(count) * static_cast<size_t>(inputStride);
+            memcpy(mapPtr, input, copySize);
         }
         else
         {
