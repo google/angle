@@ -209,7 +209,7 @@ void loadLuminanceHalfFloatDataToRGBA(int width, int height, int depth,
                 dest[4 * x + 0] = source[x];
                 dest[4 * x + 1] = source[x];
                 dest[4 * x + 2] = source[x];
-                dest[4 * x + 3] = 0x3C00; // SEEEEEMMMMMMMMMM, S = 0, E = 15, M = 0: 16bit flpt representation of 1
+                dest[4 * x + 3] = gl::Float16One;
             }
         }
     }
