@@ -93,6 +93,30 @@
       "revId": "c5807a00d89e184f5fca3b728658491779a31deb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a3ee8ea_48770eb1",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-06T17:58:24Z",
+      "side": 1,
+      "message": "glGetUniformLocation returns a 32-bit integer, and DX11 also uses almost no 64-bit values other than for pointers. So I think it\u0027s still going to be a long, long, long time before 32-bit integers become a limitation. By that time we won\u0027t be using OpenGL ES any more for massively advanced graphics which uses GBs of constant data.\n\nEither way on a 32-bit platform these variables should not be any larger than 32-bit.",
+      "parentUuid": "8aba749a_7e8f59aa",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 8
+      },
+      "revId": "c5807a00d89e184f5fca3b728658491779a31deb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
