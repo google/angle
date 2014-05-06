@@ -33,7 +33,7 @@ class Blit9;
 class Renderer9 : public Renderer
 {
   public:
-    Renderer9(egl::Display *display, HDC hDc, bool softwareDevice);
+    Renderer9(egl::Display *display, HDC hDc);
     virtual ~Renderer9();
 
     static Renderer9 *makeRenderer9(Renderer *renderer);
@@ -266,7 +266,6 @@ class Renderer9 : public Renderer
 
     UINT mAdapter;
     D3DDEVTYPE mDeviceType;
-    bool mSoftwareDevice;   // FIXME: Deprecate
     IDirect3D9 *mD3d9;  // Always valid after successful initialization.
     IDirect3D9Ex *mD3d9Ex;  // Might be null if D3D9Ex is not supported.
     IDirect3DDevice9 *mDevice;

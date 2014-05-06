@@ -91,7 +91,7 @@ enum
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 = 4
 };
 
-Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Renderer(display), mDc(hDc), mSoftwareDevice(softwareDevice)
+Renderer9::Renderer9(egl::Display *display, HDC hDc) : Renderer(display), mDc(hDc)
 {
     mD3d9Module = NULL;
 
@@ -180,16 +180,8 @@ EGLint Renderer9::initialize()
         return EGL_NOT_INITIALIZED;
     }
 
-    if (mSoftwareDevice)
-    {
-        TRACE_EVENT0("gpu", "GetModuleHandle_swiftshader");
-        mD3d9Module = GetModuleHandle(TEXT("swiftshader_d3d9.dll"));
-    }
-    else
-    {
-        TRACE_EVENT0("gpu", "GetModuleHandle_d3d9");
-        mD3d9Module = GetModuleHandle(TEXT("d3d9.dll"));
-    }
+    TRACE_EVENT0("gpu", "GetModuleHandle_d3d9");
+    mD3d9Module = GetModuleHandle(TEXT("d3d9.dll"));
 
     if (mD3d9Module == NULL)
     {

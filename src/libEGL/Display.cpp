@@ -502,7 +502,6 @@ bool Display::hasExistingWindowSurface(HWND window)
 
 void Display::initExtensionString()
 {
-    HMODULE swiftShader = GetModuleHandle(TEXT("swiftshader_d3d9.dll"));
     bool shareHandleSupported = mRenderer->getShareHandleSupport();
 
     mExtensionString = "";
@@ -519,11 +518,6 @@ void Display::initExtensionString()
     mExtensionString += "EGL_ANGLE_query_surface_pointer ";
 
     mExtensionString += "EGL_ANGLE_window_fixed_size ";
-
-    if (swiftShader)
-    {
-        mExtensionString += "EGL_ANGLE_software_display ";
-    }
 
     if (shareHandleSupported)
     {
