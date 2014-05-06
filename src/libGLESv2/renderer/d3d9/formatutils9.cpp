@@ -469,6 +469,7 @@ GLenum GetDeclTypeComponentType(D3DDECLTYPE declType)
       case D3DDECLTYPE_SHORT4N:  return GL_SIGNED_NORMALIZED;
       case D3DDECLTYPE_USHORT4N: return GL_UNSIGNED_NORMALIZED;
       case D3DDECLTYPE_SHORT2N:  return GL_SIGNED_NORMALIZED;
+      case D3DDECLTYPE_USHORT2N: return GL_UNSIGNED_NORMALIZED;
       default: UNREACHABLE();    return GL_NONE;
     }
 }
