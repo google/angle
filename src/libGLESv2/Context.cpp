@@ -3780,6 +3780,7 @@ void Context::initExtensionString()
 
         if (supportsPBOs())
         {
+            mExtensionStringList.push_back("NV_pixel_buffer_object");
             mExtensionStringList.push_back("GL_OES_mapbuffer");
             mExtensionStringList.push_back("GL_EXT_map_buffer_range");
         }
