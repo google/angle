@@ -2257,6 +2257,20 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             }
         }
         return true;
+      case GL_PIXEL_PACK_BUFFER_BINDING:
+      case GL_PIXEL_UNPACK_BUFFER_BINDING:
+        {
+            if (supportsPBOs())
+            {
+                *type = GL_INT;
+                *numParams = 1;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return true;
       case GL_MAX_VIEWPORT_DIMS:
         {
             *type = GL_INT;
@@ -2343,8 +2357,6 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_TRANSFORM_FEEDBACK_BINDING:
       case GL_COPY_READ_BUFFER_BINDING:
       case GL_COPY_WRITE_BUFFER_BINDING:
-      case GL_PIXEL_PACK_BUFFER_BINDING:
-      case GL_PIXEL_UNPACK_BUFFER_BINDING:
       case GL_TEXTURE_BINDING_3D:
       case GL_TEXTURE_BINDING_2D_ARRAY:
       case GL_MAX_3D_TEXTURE_SIZE:
