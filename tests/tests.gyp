@@ -3,6 +3,10 @@
 # found in the LICENSE file.
 
 {
+    'variables':
+    {
+        'angle_build_conformance_tests%': '0',
+    },
     'targets':
     [
         {
@@ -158,6 +162,137 @@
                         '<!@(python <(angle_path)/enumerate_files.py standalone_tests -types *.cpp *.h)'
                     ],
                 },
+            ],
+            'conditions':
+            [
+                ['angle_build_conformance_tests',
+                {
+                    'variables':
+                    {
+                        'gles_conformance_tests_output_dir': '<(SHARED_INTERMEDIATE_DIR)/conformance_tests',
+                        'gles_conformance_tests_input_dir': 'third_party/gles_conformance_tests/conform/GTF_ES/glsl/GTF',
+                        'gles_conformance_tests_generator_script': 'gles_conformance_tests/generate_gles_conformance_tests.py',
+                    },
+                    'targets':
+                    [
+                        {
+                            'target_name': 'gles2_conformance_tests',
+                            'type': 'executable',
+                            'includes': [ '../build/common_defines.gypi', ],
+                            'dependencies':
+                            [
+                                '../src/angle.gyp:libGLESv2',
+                                '../src/angle.gyp:libEGL',
+                                'gtest',
+                                'third_party/gles_conformance_tests/conform/GTF_ES/glsl/GTF/es_cts.gyp:es_cts_test_data',
+                                'third_party/gles_conformance_tests/conform/GTF_ES/glsl/GTF/es_cts.gyp:es2_cts',
+                            ],
+                            'variables':
+                            {
+                                'gles2_conformance_tests_input_file': '<(gles_conformance_tests_input_dir)/mustpass_es20.run',
+                                'gles2_conformance_tests_generated_file': '<(gles_conformance_tests_output_dir)/generated_gles2_conformance_tests.cpp',
+                            },
+                            'sources':
+                            [
+                                '<!@(python <(angle_path)/enumerate_files.py gles_conformance_tests -types *.cpp *.h *.inl)',
+                                '<(gles2_conformance_tests_generated_file)',
+                            ],
+                            'include_dirs':
+                            [
+                                '../include',
+                                'gles_conformance_tests',
+                                'third_party/googletest/include',
+                            ],
+                            'defines':
+                            [
+                                'CONFORMANCE_TESTS_TYPE=CONFORMANCE_TESTS_ES2',
+                            ],
+                            'actions':
+                            [
+                                {
+                                    'action_name': 'generate_gles2_conformance_tests',
+                                    'message': 'Generating ES2 conformance tests...',
+                                    'msvs_cygwin_shell': 0,
+                                    'inputs':
+                                    [
+                                        '<(gles_conformance_tests_generator_script)',
+                                        '<(gles2_conformance_tests_input_file)',
+                                    ],
+                                    'outputs':
+                                    [
+                                        '<(gles2_conformance_tests_generated_file)',
+                                    ],
+                                    'action':
+                                    [
+                                        'python',
+                                        '<(gles_conformance_tests_generator_script)',
+                                        '<(gles2_conformance_tests_input_file)',
+                                        '<(gles_conformance_tests_input_dir)',
+                                        '<(gles2_conformance_tests_generated_file)',
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            'target_name': 'gles3_conformance_tests',
+                            'type': 'executable',
+                            'includes': [ '../build/common_defines.gypi', ],
+                            'dependencies':
+                            [
+                                '../src/angle.gyp:libGLESv2',
+                                '../src/angle.gyp:libEGL',
+                                'gtest',
+                                'third_party/gles_conformance_tests/conform/GTF_ES/glsl/GTF/es_cts.gyp:es_cts_test_data',
+                                'third_party/gles_conformance_tests/conform/GTF_ES/glsl/GTF/es_cts.gyp:es3_cts',
+                            ],
+                            'variables':
+                            {
+                                'gles3_conformance_tests_input_file': '<(gles_conformance_tests_input_dir)/mustpass_es30.run',
+                                'gles3_conformance_tests_generated_file': '<(gles_conformance_tests_output_dir)/generated_gles3_conformance_tests.cpp',
+                            },
+                            'sources':
+                            [
+                                '<!@(python <(angle_path)/enumerate_files.py gles_conformance_tests -types *.cpp *.h *.inl)',
+                                '<(gles3_conformance_tests_generated_file)',
+                            ],
+                            'include_dirs':
+                            [
+                                '../include',
+                                'gles_conformance_tests',
+                                'third_party/googletest/include',
+                            ],
+                            'defines':
+                            [
+                                'CONFORMANCE_TESTS_TYPE=CONFORMANCE_TESTS_ES3',
+                            ],
+                            'actions':
+                            [
+                                {
+                                    'action_name': 'generate_gles3_conformance_tests',
+                                    'message': 'Generating ES3 conformance tests...',
+                                    'msvs_cygwin_shell': 0,
+                                    'inputs':
+                                    [
+                                        '<(gles_conformance_tests_generator_script)',
+                                        '<(gles3_conformance_tests_input_file)',
+                                    ],
+                                    'outputs':
+                                    [
+                                        '<(gles3_conformance_tests_generated_file)',
+                                    ],
+                                    'action':
+                                    [
+                                        'python',
+                                        '<(gles_conformance_tests_generator_script)',
+                                        '<(gles3_conformance_tests_input_file)',
+                                        '<(gles_conformance_tests_input_dir)',
+                                        '<(gles3_conformance_tests_generated_file)',
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                }],
             ],
         }],
     ],
