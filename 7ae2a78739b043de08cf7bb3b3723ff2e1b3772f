@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a58b470_f45cf8aa",
+        "filename": "tests/angle_tests/PBOExtensionTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-07T14:23:51Z",
+      "side": 1,
+      "message": "strange question, and probably impossible to occur, but what happens if the api layer returns PBO ext is available but texstorage/rgba8 are not? (with below tests)",
+      "range": {
+        "startLine": 22,
+        "startChar": 30,
+        "endLine": 22,
+        "endChar": 49
+      },
+      "revId": "7ae2a78739b043de08cf7bb3b3723ff2e1b3772f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
