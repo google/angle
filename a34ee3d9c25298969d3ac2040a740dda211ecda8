@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "2ab988aa_a10292d3",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-07T20:07:11Z",
+      "side": 1,
+      "message": "Possibly worth a comment to note that the read \u0026 write offset bounds are checked up at the API level? (Can we arrive here from anywhere other than glCopyBufferSubData?)",
+      "range": {
+        "startLine": 579,
+        "startChar": 8,
+        "endLine": 579,
+        "endChar": 49
+      },
+      "revId": "a34ee3d9c25298969d3ac2040a740dda211ecda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2a3ee8ea_c1481997",
         "filename": "tests/angle_tests/ReadPixelsTest.cpp",
         "patchSetId": 1
