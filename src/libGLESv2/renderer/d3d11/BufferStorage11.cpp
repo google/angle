@@ -478,7 +478,7 @@ BufferStorage11::TypedBufferStorage11 *BufferStorage11::getLatestStorage() const
     for (auto it = mTypedBuffers.begin(); it != mTypedBuffers.end(); it++)
     {
         TypedBufferStorage11 *storage = it->second;
-        if (storage->getDataRevision() > latestRevision)
+        if (!latestStorage || storage->getDataRevision() > latestRevision)
         {
             latestStorage = storage;
             latestRevision = storage->getDataRevision();
