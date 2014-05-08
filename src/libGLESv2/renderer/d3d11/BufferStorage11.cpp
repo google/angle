@@ -389,7 +389,7 @@ void BufferStorage11::packPixels(ID3D11Texture2D *srcTexture, UINT srcSubresourc
 
     TypedBufferStorage11 *latestStorage = getLatestStorage();
 
-    if (packStorage && latestStorage)
+    if (packStorage)
     {
         packStorage->packPixels(srcTexture, srcSubresource, params);
         packStorage->setDataRevision(latestStorage ? latestStorage->getDataRevision() + 1 : 1);
@@ -474,6 +474,7 @@ void *BufferStorage11::map(GLbitfield access)
     ASSERT(!mMappedStorage);
 
     TypedBufferStorage11 *latestStorage = getLatestStorage();
+    ASSERT(latestStorage);
 
     if (latestStorage->getUsage() == BUFFER_USAGE_PIXEL_PACK ||
         latestStorage->getUsage() == BUFFER_USAGE_STAGING)
