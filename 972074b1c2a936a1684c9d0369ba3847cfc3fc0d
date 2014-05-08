@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eaedb0ca_33885011",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-08T15:23:47Z",
+      "side": 1,
+      "message": "I\u0027m not sure this assertion is needed.  Is it possible that latest storage could be NULL if there was an allocation failure?\n\nhttps://chromium-review.googlesource.com/#/c/198826/ fixes this by adding a null check on latest storage which triggers the out of memory error below.",
+      "range": {
+        "startLine": 477,
+        "startChar": 4,
+        "endLine": 477,
+        "endChar": 26
+      },
+      "revId": "972074b1c2a936a1684c9d0369ba3847cfc3fc0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
