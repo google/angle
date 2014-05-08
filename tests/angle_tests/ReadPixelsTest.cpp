@@ -240,3 +240,56 @@ TEST_F(ReadPixelsTest, pbo_and_sub_data_offset)
     glUnmapBuffer(GL_ARRAY_BUFFER);
     EXPECT_GL_NO_ERROR();
 }
+
+TEST_F(ReadPixelsTest, draw_with_pbo)
+{
+    unsigned char data[4] = { 1, 2, 3, 4 };
+
+    glBindTexture(GL_TEXTURE_2D, mTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    EXPECT_GL_NO_ERROR();
+
+    // glReadBuffer(GL_COLOR_ATTACHMENT0); // FIXME: currently UNIMPLEMENTED
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, mFBO);
+    EXPECT_GL_NO_ERROR();
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+    EXPECT_GL_NO_ERROR();
+
+    float positionData[] = { 0.5f, 0.5f };
+
+    glUseProgram(mProgram);
+    glViewport(0, 0, 1, 1);
+    glBindBuffer(GL_ARRAY_BUFFER, mPositionVBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, 1 * 2 * 4, positionData);
+    EXPECT_GL_NO_ERROR();
+
+    GLint positionLocation = glGetAttribLocation(mProgram, "aPosition");
+    EXPECT_NE(-1, positionLocation);
+
+    GLint testLocation = glGetAttribLocation(mProgram, "aTest");
+    EXPECT_NE(-1, testLocation);
+
+    glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+    EXPECT_GL_NO_ERROR();
+
+    glBindBuffer(GL_ARRAY_BUFFER, mPBO);
+    glVertexAttribPointer(testLocation, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(testLocation);
+    EXPECT_GL_NO_ERROR();
+
+    glDrawArrays(GL_POINTS, 0, 1);
+    EXPECT_GL_NO_ERROR();
+
+    memset(data, 0, 4);
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(1, data[0]);
+    EXPECT_EQ(2, data[1]);
+    EXPECT_EQ(3, data[2]);
+    EXPECT_EQ(4, data[3]);
+}

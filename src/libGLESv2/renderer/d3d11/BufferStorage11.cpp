@@ -82,6 +82,7 @@ class BufferStorage11::TypedBufferStorage11
     DataRevision getDataRevision() const { return mRevision; }
     BufferUsage getUsage() const { return mUsage; }
     size_t getSize() const { return mBufferSize; }
+    bool isMappable() const { return (mUsage == BUFFER_USAGE_STAGING || mUsage == BUFFER_USAGE_PIXEL_PACK); }
 
     void setDataRevision(DataRevision rev) { mRevision = rev; }
 
@@ -274,6 +275,17 @@ void BufferStorage11::copyData(BufferStorage* sourceStorage, size_t size, size_t
         TypedBufferStorage11 *source = sourceStorage11->getLatestStorage();
         if (source && dest)
         {
+            // If copying to/from a pixel pack buffer, we must have a staging or
+            // pack buffer partner, because other native buffers can't be mapped
+            if (dest->getUsage() == BUFFER_USAGE_PIXEL_PACK && !source->isMappable())
+            {
+                source = sourceStorage11->getStagingBuffer();
+            }
+            else if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK && !dest->isMappable())
+            {
+                dest = getStagingBuffer();
+            }
+
             dest->copyFromStorage(source, sourceOffset, size, destOffset);
             dest->setDataRevision(dest->getDataRevision() + 1);
         }
@@ -433,6 +445,18 @@ BufferStorage11::TypedBufferStorage11 *BufferStorage11::getStorage(BufferUsage u
     TypedBufferStorage11 *latestBuffer = getLatestStorage();
     if (latestBuffer && latestBuffer->getDataRevision() > directBuffer->getDataRevision())
     {
+        // if copying from a pack buffer to a non-staging native buffer, we must first
+        // copy through the staging buffer, because other native buffers can't be mapped
+        if (latestBuffer->getUsage() == BUFFER_USAGE_PIXEL_PACK && !directBuffer->isMappable())
+        {
+            NativeBuffer11 *stagingBuffer = getStagingBuffer();
+
+            stagingBuffer->copyFromStorage(latestBuffer, 0, latestBuffer->getSize(), 0);
+            directBuffer->setDataRevision(latestBuffer->getDataRevision());
+
+            latestBuffer = stagingBuffer;
+        }
+
         // if copyFromStorage returns true, the D3D buffer has been recreated
         // and we should update our serial
         if (directBuffer->copyFromStorage(latestBuffer, 0, latestBuffer->getSize(), 0))
