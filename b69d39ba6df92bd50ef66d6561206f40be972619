@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eaedb0ca_9383047a",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-08T19:05:37Z",
+      "side": 0,
+      "message": "ref",
+      "range": {
+        "startLine": 418,
+        "startChar": 58,
+        "endLine": 418,
+        "endChar": 67
+      },
+      "revId": "b69d39ba6df92bd50ef66d6561206f40be972619",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
