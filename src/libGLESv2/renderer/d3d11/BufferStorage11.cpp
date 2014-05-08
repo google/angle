@@ -553,14 +553,6 @@ BufferStorage11::NativeBuffer11::~NativeBuffer11()
 bool BufferStorage11::NativeBuffer11::copyFromStorage(TypedBufferStorage11 *source, size_t sourceOffset,
                                                       size_t size, size_t destOffset)
 {
-    if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK)
-    {
-        UNIMPLEMENTED();
-        return false;
-    }
-
-    ASSERT(HAS_DYNAMIC_TYPE(NativeBuffer11*, source));
-
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
     size_t requiredSize = sourceOffset + size;
@@ -573,18 +565,39 @@ bool BufferStorage11::NativeBuffer11::copyFromStorage(TypedBufferStorage11 *sour
         resize(source->getSize(), preserveData);
     }
 
-    D3D11_BOX srcBox;
-    srcBox.left = sourceOffset;
-    srcBox.right = sourceOffset + size;
-    srcBox.top = 0;
-    srcBox.bottom = 1;
-    srcBox.front = 0;
-    srcBox.back = 1;
+    if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK)
+    {
+        ASSERT(HAS_DYNAMIC_TYPE(PackStorage11*, source));
 
-    ASSERT(HAS_DYNAMIC_TYPE(NativeBuffer11*, source));
-    ID3D11Buffer *sourceBuffer = static_cast<NativeBuffer11*>(source)->getNativeBuffer();
+        unsigned char *sourcePointer = static_cast<unsigned char *>(source->map(GL_MAP_READ_BIT)) + sourceOffset;
 
-    context->CopySubresourceRegion(mNativeBuffer, 0, destOffset, 0, 0, sourceBuffer, 0, &srcBox);
+        D3D11_MAPPED_SUBRESOURCE mappedResource;
+        HRESULT hr = context->Map(mNativeBuffer, 0, D3D11_MAP_WRITE, 0, &mappedResource);
+        ASSERT(SUCCEEDED(hr));
+
+        unsigned char *destPointer = static_cast<unsigned char *>(mappedResource.pData) + destOffset;
+
+        // Offset bounds are validated at the API layer
+        ASSERT(sourceOffset + size <= destOffset + mBufferSize);
+        memcpy(destPointer, sourcePointer, size);
+    }
+    else
+    {
+        ASSERT(HAS_DYNAMIC_TYPE(NativeBuffer11*, source));
+
+        D3D11_BOX srcBox;
+        srcBox.left = sourceOffset;
+        srcBox.right = sourceOffset + size;
+        srcBox.top = 0;
+        srcBox.bottom = 1;
+        srcBox.front = 0;
+        srcBox.back = 1;
+
+        ASSERT(HAS_DYNAMIC_TYPE(NativeBuffer11*, source));
+        ID3D11Buffer *sourceBuffer = static_cast<NativeBuffer11*>(source)->getNativeBuffer();
+
+        context->CopySubresourceRegion(mNativeBuffer, 0, destOffset, 0, 0, sourceBuffer, 0, &srcBox);
+    }
 
     return createBuffer;
 }
