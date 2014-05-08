@@ -1757,6 +1757,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_VERTEX_UNIFORM_VECTORS:               *params = mRenderer->getMaxVertexUniformVectors();              break;
       case GL_MAX_VERTEX_UNIFORM_COMPONENTS:            *params = mRenderer->getMaxVertexUniformVectors() * 4;          break;
       case GL_MAX_VARYING_VECTORS:                      *params = mRenderer->getMaxVaryingVectors();                    break;
+      case GL_MAX_VARYING_COMPONENTS:                   *params = mRenderer->getMaxVaryingVectors() * 4;                break;
       case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:         *params = mRenderer->getMaxCombinedTextureImageUnits();         break;
       case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:           *params = mRenderer->getMaxVertexTextureImageUnits();           break;
       case GL_MAX_TEXTURE_IMAGE_UNITS:                  *params = gl::MAX_TEXTURE_IMAGE_UNITS;                          break;
@@ -2364,6 +2365,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_MAX_VERTEX_UNIFORM_BLOCKS:
       case GL_MAX_FRAGMENT_UNIFORM_BLOCKS:
       case GL_MAX_COMBINED_UNIFORM_BLOCKS:
+      case GL_MAX_VARYING_COMPONENTS:
       case GL_VERTEX_ARRAY_BINDING:
       case GL_MAX_VERTEX_UNIFORM_COMPONENTS:
       case GL_MAX_FRAGMENT_UNIFORM_COMPONENTS:
