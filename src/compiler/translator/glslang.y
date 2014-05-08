@@ -1254,6 +1254,11 @@ type_specifier
     | precision_qualifier type_specifier_no_prec {
         $$ = $2;
         $$.precision = $1;
+
+        if (!SupportsPrecision($2.type) {
+            context->error(@1, "illegal type for precision qualifier", getBasicString($2.type));
+            context->recover();
+        }
     }
     ;
 

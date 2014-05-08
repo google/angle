@@ -289,6 +289,11 @@ inline bool IsShadowSampler(TBasicType type)
     return false;
 }
 
+inline bool SupportsPrecision(TBasicType type)
+{
+    return type == EbtFloat || type == EbtInt || type == EbtUInt || IsSampler(type);
+}
+
 //
 // Qualifiers and built-ins.  These are mainly used to see what can be read
 // or written, and by the machine dependent translator to know which registers

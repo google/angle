@@ -3937,6 +3937,11 @@ yyreduce:
     {
         (yyval.interm.type) = (yyvsp[(2) - (2)].interm.type);
         (yyval.interm.type).precision = (yyvsp[(1) - (2)].interm.precision);
+
+        if (!SupportsPrecision((yyvsp[(2) - (2)].interm.type).type)) {
+            context->error((yylsp[(1) - (1)]), "illegal type for precision qualifier", getBasicString((yyvsp[(2) - (2)].interm.type).type));
+            context->recover();
+        }
     }
     break;
 

@@ -377,7 +377,7 @@ public:
     void dump(TInfoSink &infoSink) const;
 
     bool setDefaultPrecision(const TPublicType& type, TPrecision prec) {
-        if (!supportsPrecision(type.type))
+        if (!SupportsPrecision(type.type))
             return false;
         if (type.isAggregate())
             return false; // Not allowed to set for aggregate types
@@ -389,7 +389,7 @@ public:
     // Searches down the precisionStack for a precision qualifier for the specified TBasicType
     TPrecision getDefaultPrecision( TBasicType type){
 
-        if (!supportsPrecision(type))
+        if (!SupportsPrecision(type))
             return EbpUndefined;
 
         // unsigned integers use the same precision as signed
@@ -412,11 +412,6 @@ public:
 
 private:
     ESymbolLevel currentLevel() const { return static_cast<ESymbolLevel>(table.size() - 1); }
-
-    bool supportsPrecision(TBasicType type) {
-      // Only supports precision for int, float, and sampler types.
-      return type == EbtFloat || type == EbtInt || type == EbtUInt || IsSampler(type);
-    }
 
     std::vector<TSymbolTableLevel*> table;
     typedef TMap<TBasicType, TPrecision> PrecisionStackLevel;
