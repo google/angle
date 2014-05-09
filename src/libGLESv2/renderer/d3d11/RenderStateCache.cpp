@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -196,8 +196,7 @@ bool RenderStateCache::compareRasterizerStates(const RasterizerStateKey &a, cons
     return memcmp(&a, &b, sizeof(RasterizerStateKey)) == 0;
 }
 
-ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::RasterizerState &rasterState,
-                                                            bool scissorEnabled, unsigned int depthSize)
+ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::RasterizerState &rasterState, bool scissorEnabled)
 {
     if (!mDevice)
     {
@@ -208,7 +207,6 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
     RasterizerStateKey key = { 0 };
     key.rasterizerState = rasterState;
     key.scissorEnabled = scissorEnabled;
-    key.depthSize = depthSize;
 
     RasterizerStateMap::iterator keyIter = mRasterizerStateCache.find(key);
     if (keyIter != mRasterizerStateCache.end())
@@ -257,12 +255,12 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
         if (rasterState.polygonOffsetFill)
         {
             rasterDesc.SlopeScaledDepthBias = rasterState.polygonOffsetFactor;
-            rasterDesc.DepthBias = ldexp(rasterState.polygonOffsetUnits, -static_cast<int>(depthSize));
+            rasterDesc.DepthBias = (INT)rasterState.polygonOffsetUnits;
         }
         else
         {
             rasterDesc.SlopeScaledDepthBias = 0.0f;
-            rasterDesc.DepthBias = 0.0f;
+            rasterDesc.DepthBias = 0;
         }
 
         ID3D11RasterizerState *dx11RasterizerState = NULL;
