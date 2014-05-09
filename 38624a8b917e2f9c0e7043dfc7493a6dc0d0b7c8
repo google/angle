@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2abfc8df_373cf8b4",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-09T21:57:03Z",
+      "side": 1,
+      "message": "i\u0027m unsure as to why we need a full \"equals\" test here -\u003e isn\u0027t name sufficient? I only see this called in writeVariableType, and seems like just using the name would be as good -- if you redeclare a struct with the same name and the same scope, is that error not caught?",
+      "range": {
+        "startLine": 830,
+        "startChar": 12,
+        "endLine": 830,
+        "endChar": 46
+      },
+      "revId": "38624a8b917e2f9c0e7043dfc7493a6dc0d0b7c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aba3cef_b8fd994f",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-09T21:57:03Z",
+      "side": 1,
+      "message": "ANGLE style is to keep the \u0026 and * next to the variable, though the translator code inconsistent",
+      "range": {
+        "startLine": 167,
+        "startChar": 36,
+        "endLine": 167,
+        "endChar": 37
+      },
+      "revId": "38624a8b917e2f9c0e7043dfc7493a6dc0d0b7c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
