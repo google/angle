@@ -30,6 +30,8 @@ public:
     const TString& name() const { return *mName; }
     const TSourceLoc& line() const { return mLine; }
 
+    bool equals(const TField &other) const;
+
 private:
     DISALLOW_COPY_AND_ASSIGN(TField);
     TType* mType;
@@ -60,6 +62,8 @@ public:
             mObjectSize = calculateObjectSize();
         return mObjectSize;
     };
+
+    virtual bool equals(const TFieldListCollection &other) const;
 
 protected:
     TFieldListCollection(const TString* name, TFieldList* fields)
@@ -121,6 +125,8 @@ public:
     int arraySize() const { return mArraySize; }
     TLayoutBlockStorage blockStorage() const { return mBlockStorage; }
     TLayoutMatrixPacking matrixPacking() const { return mMatrixPacking; }
+
+    virtual bool equals(const TInterfaceBlock &other) const;
 
 private:
     DISALLOW_COPY_AND_ASSIGN(TInterfaceBlock);
@@ -209,6 +215,10 @@ public:
 
         return mangled;
     }
+
+    // This is different from operator== as we also compare
+    // precision here.
+    bool equals(const TType &other) const;
 
     bool sameElementType(const TType& right) const {
         return      type == right.type          &&
