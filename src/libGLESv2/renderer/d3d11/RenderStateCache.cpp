@@ -258,13 +258,22 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
         rasterDesc.FillMode = D3D11_FILL_SOLID;
         rasterDesc.CullMode = cullMode;
         rasterDesc.FrontCounterClockwise = (rasterState.frontFace == GL_CCW) ? FALSE: TRUE;
-        rasterDesc.DepthBias = ldexp(rasterState.polygonOffsetUnits, -static_cast<int>(depthSize));
         rasterDesc.DepthBiasClamp = 0.0f; // MSDN documentation of DepthBiasClamp implies a value of zero will preform no clamping, must be tested though.
-        rasterDesc.SlopeScaledDepthBias = rasterState.polygonOffsetFactor;
         rasterDesc.DepthClipEnable = TRUE;
         rasterDesc.ScissorEnable = scissorEnabled ? TRUE : FALSE;
         rasterDesc.MultisampleEnable = rasterState.multiSample;
         rasterDesc.AntialiasedLineEnable = FALSE;
+
+        if (rasterState.polygonOffsetFill)
+        {
+            rasterDesc.SlopeScaledDepthBias = rasterState.polygonOffsetFactor;
+            rasterDesc.DepthBias = ldexp(rasterState.polygonOffsetUnits, -static_cast<int>(depthSize));
+        }
+        else
+        {
+            rasterDesc.SlopeScaledDepthBias = 0.0f;
+            rasterDesc.DepthBias = 0.0f;
+        }
 
         ID3D11RasterizerState *dx11RasterizerState = NULL;
         HRESULT result = mDevice->CreateRasterizerState(&rasterDesc, &dx11RasterizerState);
