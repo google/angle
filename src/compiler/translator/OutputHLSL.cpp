@@ -2781,7 +2781,7 @@ TString OutputHLSL::qualifierString(TQualifier qualifier)
     switch(qualifier)
     {
       case EvqIn:            return "in";
-      case EvqOut:           return "out";
+      case EvqOut:           return "inout";   // 'out' results in an HLSL error if not all fields are written, for GLSL it's undefined
       case EvqInOut:         return "inout";
       case EvqConstReadOnly: return "const";
       default: UNREACHABLE();
@@ -2900,11 +2900,44 @@ TString OutputHLSL::arrayString(const TType &type)
     return "[" + str(type.getArraySize()) + "]";
 }
 
+static size_t getTypeComponentCount(const TType &type)
+{
+    if (type.getStruct())
+    {
+        size_t compCount = 0;
+
+        const TFieldList &fields = type.getStruct()->fields();
+        for (size_t i = 0; i < fields.size(); i++)
+        {
+            const TField *field = fields[i];
+            const TType *fieldType = field->type();
+
+            compCount += getTypeComponentCount(*fieldType);
+            if (!fieldType->getStruct())
+            {
+                // Add padding size
+                compCount += 4 - fieldType->getNominalSize();
+            }
+        }
+
+        if (type.isArray())
+        {
+            compCount *= type.getArraySize();
+        }
+
+        return compCount;
+    }
+    else
+    {
+        return type.getObjectSize();
+    }
+}
+
 TString OutputHLSL::initializer(const TType &type)
 {
     TString string;
 
-    size_t size = type.getObjectSize();
+    size_t size = getTypeComponentCount(type);
     for (size_t component = 0; component < size; component++)
     {
         string += "0";
@@ -2950,11 +2983,32 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
 
         const TFieldList &fields = type.getStruct()->fields();
 
+        unsigned int padCount = 0;
+
         for (unsigned int i = 0; i < fields.size(); i++)
         {
             const TField *field = fields[i];
 
             structure += "    " + typeString(*field->type()) + " " + decorateField(field->name(), type) + arrayString(*field->type()) + ";\n";
+
+            if (!field->type()->getStruct())
+            {
+                // Add padding to prevent tight packing (crbug.com/359225)
+                unsigned int padRequired = 4 - field->type()->getNominalSize();
+                if (padRequired > 0)
+                {
+                    structure += "    ";
+                    switch (padRequired)
+                    {
+                      case 1: structure += "float ";  break;
+                      case 2: structure += "float2 "; break;
+                      case 3: structure += "float3 "; break;
+                    }
+
+                    structure += "pad" + str(padCount) + ";\n";
+                    padCount++;
+                }
+            }
         }
 
         structure += "};\n";
@@ -3056,6 +3110,35 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
             }
         }
         else UNREACHABLE();
+    }
+    else if (ctorType.getStruct())
+    {
+        const TFieldList &fields = type.getStruct()->fields();
+        ASSERT(ctorParameters.size() == fields.size());
+        for (unsigned int parameterIndex = 0; parameterIndex < ctorParameters.size(); parameterIndex++)
+        {
+            const TField *field = fields[parameterIndex];
+
+            bool moreParameters = parameterIndex + 1 < ctorParameters.size();
+
+            constructor += "x" + str(parameterIndex);
+
+            if (!field->type()->getStruct())
+            {
+                unsigned int padRequired = 4 - field->type()->getNominalSize();
+                switch (padRequired)
+                {
+                  case 1: constructor += ", 0.0";  break;
+                  case 2: constructor += ", float2(0.0, 0.0)"; break;
+                  case 3: constructor += ", float3(0.0, 0.0, 0.0)"; break;
+                }
+            }
+
+            if (moreParameters)
+            {
+                constructor += ", ";
+            }
+        }
     }
     else
     {
