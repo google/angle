@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ead0503d_d5da5c83",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2488,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-09T19:29:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca962c58_8c4bc791",
+      "range": {
+        "startLine": 2488,
+        "startChar": 37,
+        "endLine": 2488,
+        "endChar": 42
+      },
+      "revId": "12c26d8bc3930ec0dbc6cfb6a950fa46af6b8c56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea89303b_907bda47",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "2abfc8df_b7dfe871",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2698,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-09T19:29:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea89303b_907bda47",
+      "range": {
+        "startLine": 2698,
+        "startChar": 12,
+        "endLine": 2698,
+        "endChar": 44
+      },
+      "revId": "12c26d8bc3930ec0dbc6cfb6a950fa46af6b8c56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4aa31cb3_3046a887",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2014-05-09T18:07:45Z",
       "side": 1,
       "message": "Nit: indent",
+      "range": {
+        "startLine": 2706,
+        "startChar": 0,
+        "endLine": 2708,
+        "endChar": 58
+      },
+      "revId": "12c26d8bc3930ec0dbc6cfb6a950fa46af6b8c56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2abfc8df_57e76c4a",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2708,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-09T19:29:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4aa31cb3_3046a887",
       "range": {
         "startLine": 2706,
         "startChar": 0,
