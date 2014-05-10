@@ -3045,7 +3045,36 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
     char profile[32];
     snprintf(profile, ArraySize(profile), "%s_%s", profileType, profileVersion);
 
-    ID3DBlob *binary = (ID3DBlob*)mCompiler.compileToBinary(infoLog, shaderHLSL, profile, D3DCOMPILE_OPTIMIZATION_LEVEL0, false);
+    UINT flags = D3DCOMPILE_OPTIMIZATION_LEVEL0;
+
+    if (gl::perfActive())
+    {
+#ifndef NDEBUG
+        flags = D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+        flags |= D3DCOMPILE_DEBUG;
+
+        std::string sourcePath = getTempPath();
+        std::string sourceText = std::string("#line 2 \"") + sourcePath + std::string("\"\n\n") + std::string(shaderHLSL);
+        writeFile(sourcePath.c_str(), sourceText.c_str(), sourceText.size());
+    }
+
+    // Sometimes D3DCompile will fail with the default compilation flags for complicated shaders when it would otherwise pass with alternative options.
+    // Try the default flags first and if compilation fails, try some alternatives.
+    const UINT extraFlags[] =
+    {
+        flags
+    };
+
+    const static char *extraFlagNames[] =
+    {
+        "default"
+    };
+
+    int attempts = ArraySize(extraFlags);
+
+    ID3DBlob *binary = (ID3DBlob*)mCompiler.compileToBinary(infoLog, shaderHLSL, profile, extraFlags, extraFlagNames, attempts);
     if (!binary)
     {
         return NULL;

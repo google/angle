@@ -3380,19 +3380,50 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
         return NULL;
     }
 
-    UINT optimizationFlags = ANGLE_COMPILE_OPTIMIZATION_LEVEL;
+    UINT flags = ANGLE_COMPILE_OPTIMIZATION_LEVEL;
 
     if (workaround == ANGLE_D3D_WORKAROUND_SKIP_OPTIMIZATION)
     {
-        optimizationFlags = D3DCOMPILE_SKIP_OPTIMIZATION;
+        flags = D3DCOMPILE_SKIP_OPTIMIZATION;
     }
     else if (workaround == ANGLE_D3D_WORKAROUND_MAX_OPTIMIZATION)
     {
-        optimizationFlags = D3DCOMPILE_OPTIMIZATION_LEVEL3;
+        flags = D3DCOMPILE_OPTIMIZATION_LEVEL3;
     }
     else ASSERT(workaround == ANGLE_D3D_WORKAROUND_NONE);
 
-    ID3DBlob *binary = (ID3DBlob*)mCompiler.compileToBinary(infoLog, shaderHLSL, profile, optimizationFlags, true);
+    if (gl::perfActive())
+    {
+#ifndef NDEBUG
+        flags = D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+        flags |= D3DCOMPILE_DEBUG;
+
+        std::string sourcePath = getTempPath();
+        std::string sourceText = std::string("#line 2 \"") + sourcePath + std::string("\"\n\n") + std::string(shaderHLSL);
+        writeFile(sourcePath.c_str(), sourceText.c_str(), sourceText.size());
+    }
+
+    // Sometimes D3DCompile will fail with the default compilation flags for complicated shaders when it would otherwise pass with alternative options.
+    // Try the default flags first and if compilation fails, try some alternatives.
+    const UINT extraFlags[] =
+    {
+        flags,
+        flags | D3DCOMPILE_AVOID_FLOW_CONTROL,
+        flags | D3DCOMPILE_PREFER_FLOW_CONTROL
+    };
+
+    const static char *extraFlagNames[] =
+    {
+        "default",
+        "avoid flow control",
+        "prefer flow control"
+    };
+
+    int attempts = ArraySize(extraFlags);
+
+    ID3DBlob *binary = (ID3DBlob*)mCompiler.compileToBinary(infoLog, shaderHLSL, profile, extraFlags, extraFlagNames, attempts);
     if (!binary)
     {
         return NULL;
