@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a30447d_76e050aa",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-12T16:35:15Z",
+      "side": 1,
+      "message": "Technically I believe these would be called non-POD types. Works for me though.",
+      "range": {
+        "startLine": 129,
+        "startChar": 47,
+        "endLine": 129,
+        "endChar": 58
+      },
+      "revId": "c3f1d8190aa7fe68033d12e603982ed256692349",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a1b4808_f7d300e7",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-12T16:35:15Z",
+      "side": 1,
+      "message": "And doesn\u0027t work correctly for other types? :-P\n\nCould be rephrased as \"writeInt also handles bool types\".",
+      "range": {
+        "startLine": 165,
+        "startChar": 7,
+        "endLine": 165,
+        "endChar": 46
+      },
+      "revId": "c3f1d8190aa7fe68033d12e603982ed256692349",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea2cd02f_15d31495",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-12T16:35:15Z",
+      "side": 1,
+      "message": "Same if you decide to change it.",
+      "range": {
+        "startLine": 203,
+        "startChar": 47,
+        "endLine": 203,
+        "endChar": 58
+      },
+      "revId": "c3f1d8190aa7fe68033d12e603982ed256692349",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
