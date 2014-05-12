@@ -947,7 +947,9 @@ rx::TextureStorageInterface2D *Texture2D::createCompleteStorage(bool renderTarge
 
 void Texture2D::updateStorage()
 {
-    for (int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
+    ASSERT(mTexStorage != NULL);
+    GLint storageLevels = mTexStorage->getLevelCount();
+    for (int level = 0; level < storageLevels; level++)
     {
         if (mImageArray[level]->isDirty() && isLevelComplete(level))
         {
@@ -1418,11 +1420,13 @@ void TextureCubeMap::setCompleteTexStorage(rx::TextureStorageInterfaceCube *newC
 
 void TextureCubeMap::updateStorage()
 {
+    ASSERT(mTexStorage != NULL);
+    GLint storageLevels = mTexStorage->getLevelCount();
     for (int face = 0; face < 6; face++)
     {
-        for (int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
+        for (int level = 0; level < storageLevels; level++)
         {
-            if (isFaceLevelComplete(face, level))
+            if (mImageArray[face][level]->isDirty() && isFaceLevelComplete(face, level))
             {
                 updateStorageFaceLevel(face, level);
             }
@@ -2130,9 +2134,11 @@ void Texture3D::setCompleteTexStorage(rx::TextureStorageInterface3D *newComplete
 
 void Texture3D::updateStorage()
 {
-    for (int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
+    ASSERT(mTexStorage != NULL);
+    GLint storageLevels = mTexStorage->getLevelCount();
+    for (int level = 0; level < storageLevels; level++)
     {
-        if (isLevelComplete(level))
+        if (mImageArray[level]->isDirty() && isLevelComplete(level))
         {
             updateStorageLevel(level);
         }
@@ -2684,7 +2690,9 @@ void Texture2DArray::setCompleteTexStorage(rx::TextureStorageInterface2DArray *n
 
 void Texture2DArray::updateStorage()
 {
-    for (int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
+    ASSERT(mTexStorage != NULL);
+    GLint storageLevels = mTexStorage->getLevelCount();
+    for (int level = 0; level < storageLevels; level++)
     {
         if (isLevelComplete(level))
         {
