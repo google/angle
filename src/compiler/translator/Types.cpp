@@ -19,9 +19,7 @@ TType::TType(const TPublicType &p)
       interfaceBlock(0), structure(0)
 {
     if (p.userDef)
-    {
         structure = p.userDef->getStruct();
-    }
 }
 
 bool TType::equals(const TType &other) const
@@ -34,13 +32,9 @@ bool TType::equals(const TType &other) const
         return false;
     }
     if (interfaceBlock && !interfaceBlock->equals(*(other.interfaceBlock)))
-    {
         return false;
-    }
     if (structure && !structure->equals(*(other.structure)))
-    {
         return false;
-    }
     return true;
 }
 
@@ -89,30 +83,77 @@ TString TType::buildMangledName() const
 
     switch (type)
     {
-      case EbtFloat:                mangledName += 'f';      break;
-      case EbtInt:                  mangledName += 'i';      break;
-      case EbtUInt:                 mangledName += 'u';      break;
-      case EbtBool:                 mangledName += 'b';      break;
-      case EbtSampler2D:            mangledName += "s2";     break;
-      case EbtSampler3D:            mangledName += "s3";     break;
-      case EbtSamplerCube:          mangledName += "sC";     break;
-      case EbtSampler2DArray:       mangledName += "s2a";    break;
-      case EbtSamplerExternalOES:   mangledName += "sext";   break;
-      case EbtSampler2DRect:        mangledName += "s2r";    break;
-      case EbtISampler2D:           mangledName += "is2";    break;
-      case EbtISampler3D:           mangledName += "is3";    break;
-      case EbtISamplerCube:         mangledName += "isC";    break;
-      case EbtISampler2DArray:      mangledName += "is2a";   break;
-      case EbtUSampler2D:           mangledName += "us2";    break;
-      case EbtUSampler3D:           mangledName += "us3";    break;
-      case EbtUSamplerCube:         mangledName += "usC";    break;
-      case EbtUSampler2DArray:      mangledName += "us2a";   break;
-      case EbtSampler2DShadow:      mangledName += "s2s";    break;
-      case EbtSamplerCubeShadow:    mangledName += "sCs";    break;
-      case EbtSampler2DArrayShadow: mangledName += "s2as";   break;
-      case EbtStruct:               mangledName += structure->mangledName(); break;
-      case EbtInterfaceBlock:       mangledName += interfaceBlock->mangledName(); break;
-      default:                      UNREACHABLE();
+      case EbtFloat:
+        mangledName += 'f';
+        break;
+      case EbtInt:
+        mangledName += 'i';
+        break;
+      case EbtUInt:
+        mangledName += 'u';
+        break;
+      case EbtBool:
+        mangledName += 'b';
+        break;
+      case EbtSampler2D:
+        mangledName += "s2";
+        break;
+      case EbtSampler3D:
+        mangledName += "s3";
+        break;
+      case EbtSamplerCube:
+        mangledName += "sC";
+        break;
+      case EbtSampler2DArray:
+        mangledName += "s2a";
+        break;
+      case EbtSamplerExternalOES:
+        mangledName += "sext";
+        break;
+      case EbtSampler2DRect:
+        mangledName += "s2r";
+        break;
+      case EbtISampler2D:
+        mangledName += "is2";
+        break;
+      case EbtISampler3D:
+        mangledName += "is3";
+        break;
+      case EbtISamplerCube:
+        mangledName += "isC";
+        break;
+      case EbtISampler2DArray:
+        mangledName += "is2a";
+        break;
+      case EbtUSampler2D:
+        mangledName += "us2";
+        break;
+      case EbtUSampler3D:
+        mangledName += "us3";
+        break;
+      case EbtUSamplerCube:
+        mangledName += "usC";
+        break;
+      case EbtUSampler2DArray:
+        mangledName += "us2a";
+        break;
+      case EbtSampler2DShadow:
+        mangledName += "s2s";
+        break;
+      case EbtSamplerCubeShadow:
+        mangledName += "sCs";
+        break;
+      case EbtSampler2DArrayShadow:
+        mangledName += "s2as";
+        break;
+      case EbtStruct:
+        mangledName += structure->mangledName();
+        break;
+      case EbtInterfaceBlock:
+        mangledName += interfaceBlock->mangledName();
+        break;
+      default:
+        UNREACHABLE();
     }
 
     if (isMatrix())
@@ -160,8 +201,9 @@ size_t TType::getObjectSize() const
 
 bool TStructure::containsArrays() const
 {
-    for (size_t i = 0; i < mFields->size(); ++i) {
-        const TType* fieldType = (*mFields)[i]->type();
+    for (size_t i = 0; i < mFields->size(); ++i)
+    {
+        const TType *fieldType = (*mFields)[i]->type();
         if (fieldType->isArray() || fieldType->isStructureContainingArrays())
             return true;
     }
@@ -183,7 +225,8 @@ TString TFieldListCollection::buildMangledName() const
 size_t TFieldListCollection::calculateObjectSize() const
 {
     size_t size = 0;
-    for (size_t i = 0; i < mFields->size(); ++i) {
+    for (size_t i = 0; i < mFields->size(); ++i)
+    {
         size_t fieldSize = (*mFields)[i]->type()->getObjectSize();
         if (fieldSize > INT_MAX - size)
             size = INT_MAX;
@@ -196,8 +239,7 @@ size_t TFieldListCollection::calculateObjectSize() const
 int TStructure::calculateDeepestNesting() const
 {
     int maxNesting = 0;
-    for (size_t i = 0; i < mFields->size(); ++i) {
+    for (size_t i = 0; i < mFields->size(); ++i)
         maxNesting = std::max(maxNesting, (*mFields)[i]->type()->getDeepestStructNesting());
-    }
     return 1 + maxNesting;
 }
