@@ -474,6 +474,16 @@ GLenum ProgramBinary::getTransformFeedbackBufferMode() const
 }
 
 template <typename T>
+static inline void SetIfDirty(T *dest, const T& source, bool *dirtyFlag)
+{
+    ASSERT(dest != NULL);
+    ASSERT(dirtyFlag != NULL);
+
+    *dirtyFlag = *dirtyFlag || (memcmp(dest, &source, sizeof(T)) != 0);
+    *dest = source;
+}
+
+template <typename T>
 bool ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum targetUniformType)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
@@ -485,7 +495,6 @@ bool ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum
     const GLenum targetBoolType = UniformBoolVectorType(targetUniformType);
 
     LinkedUniform *targetUniform = mUniforms[mUniformIndex[location].index];
-    targetUniform->dirty = true;
 
     int elementCount = targetUniform->elementCount();
 
@@ -502,11 +511,11 @@ bool ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum
         {
             for (int c = 0; c < components; c++)
             {
-                target[c] = v[c];
+                SetIfDirty(target + c, v[c], &targetUniform->dirty);
             }
             for (int c = components; c < 4; c++)
             {
-                target[c] = 0;
+                SetIfDirty(target + c, T(0), &targetUniform->dirty);
             }
             target += 4;
             v += components;
@@ -520,11 +529,11 @@ bool ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum
         {
             for (int c = 0; c < components; c++)
             {
-                boolParams[c] = (v[c] == static_cast<T>(0)) ? GL_FALSE : GL_TRUE;
+                SetIfDirty(boolParams + c, (v[c] == static_cast<T>(0)) ? GL_FALSE : GL_TRUE, &targetUniform->dirty);
             }
             for (int c = components; c < 4; c++)
             {
-                boolParams[c] = GL_FALSE;
+                SetIfDirty(boolParams + c, GL_FALSE, &targetUniform->dirty);
             }
             boolParams += 4;
             v += components;
@@ -559,8 +568,9 @@ bool ProgramBinary::setUniform4fv(GLint location, GLsizei count, const GLfloat *
 }
 
 template<typename T>
-void transposeMatrix(T *target, const GLfloat *value, int targetWidth, int targetHeight, int srcWidth, int srcHeight)
+bool transposeMatrix(T *target, const GLfloat *value, int targetWidth, int targetHeight, int srcWidth, int srcHeight)
 {
+    bool dirty = false;
     int copyWidth = std::min(targetHeight, srcWidth);
     int copyHeight = std::min(targetWidth, srcHeight);
 
@@ -568,7 +578,7 @@ void transposeMatrix(T *target, const GLfloat *value, int targetWidth, int targe
     {
         for (int y = 0; y < copyHeight; y++)
         {
-            target[x * targetWidth + y] = static_cast<T>(value[y * srcWidth + x]);
+            SetIfDirty(target + (x * targetWidth + y), static_cast<T>(value[y * srcWidth + x]), &dirty);
         }
     }
     // clear unfilled right side
@@ -576,7 +586,7 @@ void transposeMatrix(T *target, const GLfloat *value, int targetWidth, int targe
     {
         for (int x = copyHeight; x < targetWidth; x++)
         {
-            target[y * targetWidth + x] = static_cast<T>(0);
+            SetIfDirty(target + (y * targetWidth + x), static_cast<T>(0), &dirty);
         }
     }
     // clear unfilled bottom.
@@ -584,14 +594,17 @@ void transposeMatrix(T *target, const GLfloat *value, int targetWidth, int targe
     {
         for (int x = 0; x < targetWidth; x++)
         {
-            target[y * targetWidth + x] = static_cast<T>(0);
+            SetIfDirty(target + (y * targetWidth + x), static_cast<T>(0), &dirty);
         }
     }
+
+    return dirty;
 }
 
 template<typename T>
-void expandMatrix(T *target, const GLfloat *value, int targetWidth, int targetHeight, int srcWidth, int srcHeight)
+bool expandMatrix(T *target, const GLfloat *value, int targetWidth, int targetHeight, int srcWidth, int srcHeight)
 {
+    bool dirty = false;
     int copyWidth = std::min(targetWidth, srcWidth);
     int copyHeight = std::min(targetHeight, srcHeight);
 
@@ -599,7 +612,7 @@ void expandMatrix(T *target, const GLfloat *value, int targetWidth, int targetHe
     {
         for (int x = 0; x < copyWidth; x++)
         {
-            target[y * targetWidth + x] = static_cast<T>(value[y * srcWidth + x]);
+            SetIfDirty(target + (y * targetWidth + x), static_cast<T>(value[y * srcWidth + x]), &dirty);
         }
     }
     // clear unfilled right side
@@ -607,7 +620,7 @@ void expandMatrix(T *target, const GLfloat *value, int targetWidth, int targetHe
     {
         for (int x = copyWidth; x < targetWidth; x++)
         {
-            target[y * targetWidth + x] = static_cast<T>(0);
+            SetIfDirty(target + (y * targetWidth + x), static_cast<T>(0), &dirty);
         }
     }
     // clear unfilled bottom.
@@ -615,9 +628,11 @@ void expandMatrix(T *target, const GLfloat *value, int targetWidth, int targetHe
     {
         for (int x = 0; x < targetWidth; x++)
         {
-            target[y * targetWidth + x] = static_cast<T>(0);
+            SetIfDirty(target + (y * targetWidth + x), static_cast<T>(0), &dirty);
         }
     }
+
+    return dirty;
 }
 
 template <int cols, int rows>
@@ -629,7 +644,6 @@ bool ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, GLboolean 
     }
 
     LinkedUniform *targetUniform = mUniforms[mUniformIndex[location].index];
-    targetUniform->dirty = true;
 
     if (targetUniform->type != targetUniformType)
     {
@@ -650,11 +664,11 @@ bool ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, GLboolean 
         // Internally store matrices as transposed versions to accomodate HLSL matrix indexing
         if (transpose == GL_FALSE)
         {
-            transposeMatrix<GLfloat>(target, value, 4, rows, rows, cols);
+            targetUniform->dirty = transposeMatrix<GLfloat>(target, value, 4, rows, rows, cols) || targetUniform->dirty;
         }
         else
         {
-            expandMatrix<GLfloat>(target, value, 4, rows, cols, rows);
+            targetUniform->dirty = expandMatrix<GLfloat>(target, value, 4, rows, cols, rows) || targetUniform->dirty;
         }
         target += targetMatrixStride;
         value += cols * rows;
@@ -716,7 +730,6 @@ bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
     }
 
     LinkedUniform *targetUniform = mUniforms[mUniformIndex[location].index];
-    targetUniform->dirty = true;
 
     int elementCount = targetUniform->elementCount();
 
@@ -731,10 +744,10 @@ bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 
         for (int i = 0; i < count; i++)
         {
-            target[0] = v[0];
-            target[1] = 0;
-            target[2] = 0;
-            target[3] = 0;
+            SetIfDirty(target + 0, v[0], &targetUniform->dirty);
+            SetIfDirty(target + 1, 0, &targetUniform->dirty);
+            SetIfDirty(target + 2, 0, &targetUniform->dirty);
+            SetIfDirty(target + 3, 0, &targetUniform->dirty);
             target += 4;
             v += 1;
         }
@@ -745,10 +758,10 @@ bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 
         for (int i = 0; i < count; i++)
         {
-            boolParams[0] = (v[0] == 0) ? GL_FALSE : GL_TRUE;
-            boolParams[1] = GL_FALSE;
-            boolParams[2] = GL_FALSE;
-            boolParams[3] = GL_FALSE;
+            SetIfDirty(boolParams + 0, (v[0] == 0) ? GL_FALSE : GL_TRUE, &targetUniform->dirty);
+            SetIfDirty(boolParams + 1, GL_FALSE, &targetUniform->dirty);
+            SetIfDirty(boolParams + 2, GL_FALSE, &targetUniform->dirty);
+            SetIfDirty(boolParams + 3, GL_FALSE, &targetUniform->dirty);
             boolParams += 4;
             v += 1;
         }
