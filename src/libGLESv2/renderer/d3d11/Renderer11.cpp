@@ -2908,13 +2908,15 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
     const UINT extraFlags[] =
     {
         flags,
-        flags | D3DCOMPILE_SKIP_VALIDATION
+        flags | D3DCOMPILE_SKIP_VALIDATION,
+        flags | D3DCOMPILE_SKIP_OPTIMIZATION
     };
 
     const static char *extraFlagNames[] =
     {
         "default",
-        "skip validation"
+        "skip validation",
+        "skip optimization"
     };
 
     int attempts = ArraySize(extraFlags);
