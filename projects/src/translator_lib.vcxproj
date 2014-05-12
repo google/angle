@@ -137,7 +137,6 @@
     <ClInclude Include="..\..\src\compiler\translator\PoolAlloc.h"/>
     <ClInclude Include="..\..\src\compiler\translator\BuiltInFunctionEmulator.h"/>
     <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\ValidateOutputs.h"/>
     <ClInclude Include="..\..\src\compiler\translator\UnfoldShortCircuit.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorGLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\SymbolTable.h"/>
@@ -154,6 +153,7 @@
     <ClInclude Include="..\..\src\compiler\translator\NodeSearch.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorESSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeDll.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\ValidateOutputs.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h"/>
     <ClInclude Include="..\..\src\compiler\translator\localintermediate.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ShHandle.h"/>
@@ -214,6 +214,7 @@
     <ClCompile Include="..\..\src\compiler\translator\TranslatorHLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\OutputGLSLBase.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ParseContext.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\Types.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\RemoveTree.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\InitializeVariables.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\InitializeDll.cpp"/>
