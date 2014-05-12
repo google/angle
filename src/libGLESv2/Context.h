@@ -24,6 +24,7 @@
 #include <set>
 #include <map>
 #include <unordered_map>
+#include <array>
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
@@ -464,11 +465,15 @@ class Context
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
 
+    // TODO: std::array may become unavailable using older versions of GCC
+    typedef std::array<unsigned int, IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS> FramebufferTextureSerialArray;
+
     bool applyRenderTarget(GLenum drawMode, bool ignoreViewport);
     void applyState(GLenum drawMode);
     void applyShaders(ProgramBinary *programBinary, bool transformFeedbackActive);
-    void applyTextures(ProgramBinary *programBinary);
-    void applyTextures(ProgramBinary *programBinary, SamplerType type);
+    void applyTextures(SamplerType shaderType, Texture *textures[], TextureType *textureTypes, SamplerState *samplers,
+                       size_t textureCount, const FramebufferTextureSerialArray& framebufferSerials,
+                       size_t framebufferSerialCount);
     bool applyUniformBuffers();
     bool applyTransformFeedbackBuffers();
     void markTransformFeedbackUsage();
@@ -481,10 +486,9 @@ class Context
     void detachTransformFeedback(GLuint transformFeedback);
     void detachSampler(GLuint sampler);
 
-    void generateSwizzles(ProgramBinary *programBinary);
-    void generateSwizzles(ProgramBinary *programBinary, SamplerType type);
-    bool getCurrentTextureAndSamplerState(ProgramBinary *programBinary, SamplerType type, int index, Texture **outTexture,
-                                   TextureType *outTextureType, SamplerState *outSampler);
+    void generateSwizzles(Texture *textures[], size_t count);
+    size_t getCurrentTexturesAndSamplerStates(ProgramBinary *programBinary, SamplerType type, Texture **outTextures,
+                                              TextureType *outTextureTypes, SamplerState *outSamplers);
     Texture *getIncompleteTexture(TextureType type);
 
     bool skipDraw(GLenum drawMode);
@@ -492,8 +496,7 @@ class Context
     void initExtensionString();
     void initRendererString();
 
-    typedef std::set<unsigned> FramebufferTextureSerialSet;
-    FramebufferTextureSerialSet getBoundFramebufferTextureSerials();
+    size_t getBoundFramebufferTextureSerials(FramebufferTextureSerialArray *outSerialArray);
 
     rx::Renderer *const mRenderer;
 

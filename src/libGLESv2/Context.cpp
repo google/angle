@@ -2500,113 +2500,87 @@ void Context::applyShaders(ProgramBinary *programBinary, bool transformFeedbackA
     programBinary->applyUniforms();
 }
 
-bool Context::getCurrentTextureAndSamplerState(ProgramBinary *programBinary, SamplerType type, int index, Texture **outTexture,
-                                               TextureType *outTextureType, SamplerState *outSampler)
+size_t Context::getCurrentTexturesAndSamplerStates(ProgramBinary *programBinary, SamplerType type, Texture **outTextures,
+                                                   TextureType *outTextureTypes, SamplerState *outSamplers)
 {
-    int textureUnit = programBinary->getSamplerMapping(type, index);   // OpenGL texture image unit index
-
-    if (textureUnit != -1)
+    size_t samplerRange = programBinary->getUsedSamplerRange(type);
+    for (size_t i = 0; i < samplerRange; i++)
     {
-        TextureType textureType = programBinary->getSamplerTextureType(type, index);
-        Texture *texture = getSamplerTexture(textureUnit, textureType);
-
-        SamplerState samplerState;
-        texture->getSamplerState(&samplerState);
-
-        if (mState.samplers[textureUnit] != 0)
+        outTextureTypes[i] = programBinary->getSamplerTextureType(type, i);
+        GLint textureUnit = programBinary->getSamplerMapping(type, i);   // OpenGL texture image unit index
+        if (textureUnit != -1)
         {
-            Sampler *samplerObject = getSampler(mState.samplers[textureUnit]);
-            samplerObject->getState(&samplerState);
+            outTextures[i] = getSamplerTexture(textureUnit, outTextureTypes[i]);
+            outTextures[i]->getSamplerState(&outSamplers[i]);
+            if (mState.samplers[textureUnit] != 0)
+            {
+                Sampler *samplerObject = getSampler(mState.samplers[textureUnit]);
+                samplerObject->getState(&outSamplers[i]);
+            }
         }
-
-        *outTexture = texture;
-        *outTextureType = textureType;
-        *outSampler = samplerState;
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-void Context::generateSwizzles(ProgramBinary *programBinary)
-{
-    generateSwizzles(programBinary, SAMPLER_PIXEL);
-
-    if (mSupportsVertexTexture)
-    {
-        generateSwizzles(programBinary, SAMPLER_VERTEX);
-    }
-}
-
-void Context::generateSwizzles(ProgramBinary *programBinary, SamplerType type)
-{
-    // Range of Direct3D samplers of given sampler type
-    int samplerRange = programBinary->getUsedSamplerRange(type);
-    for (int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
-    {
-        Texture *texture = NULL;
-        TextureType textureType;
-        SamplerState samplerState;
-        if (getCurrentTextureAndSamplerState(programBinary, type, samplerIndex, &texture, &textureType, &samplerState) && texture->isSwizzled())
+        else
         {
-            mRenderer->generateSwizzle(texture);
+            outTextures[i] = NULL;
         }
     }
+
+    return samplerRange;
 }
 
-// Applies the textures and sampler states to the Direct3D 9 device
-void Context::applyTextures(ProgramBinary *programBinary)
+void Context::generateSwizzles(Texture *textures[], size_t count)
 {
-    applyTextures(programBinary, SAMPLER_PIXEL);
-
-    if (mSupportsVertexTexture)
+    for (size_t i = 0; i < count; i++)
     {
-        applyTextures(programBinary, SAMPLER_VERTEX);
+        if (textures[i] && textures[i]->isSwizzled())
+        {
+            mRenderer->generateSwizzle(textures[i]);
+        }
     }
 }
 
 // For each Direct3D sampler of either the pixel or vertex stage,
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).
-void Context::applyTextures(ProgramBinary *programBinary, SamplerType type)
+void Context::applyTextures(SamplerType shaderType, Texture *textures[], TextureType *textureTypes, SamplerState *samplers,
+                            size_t textureCount, const FramebufferTextureSerialArray& framebufferSerials,
+                            size_t framebufferSerialCount)
 {
-    FramebufferTextureSerialSet boundFramebufferTextures = getBoundFramebufferTextureSerials();
-
     // Range of Direct3D samplers of given sampler type
-    int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : mRenderer->getMaxVertexTextureImageUnits();
-    int samplerRange = programBinary->getUsedSamplerRange(type);
+    size_t samplerCount = (shaderType == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS
+                                                        : mRenderer->getMaxVertexTextureImageUnits();
 
-    for (int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
+    for (size_t samplerIndex = 0; samplerIndex < textureCount; samplerIndex++)
     {
-        Texture *texture = NULL;
-        TextureType textureType;
-        SamplerState samplerState;
-        if (getCurrentTextureAndSamplerState(programBinary, type, samplerIndex, &texture, &textureType, &samplerState))
+        Texture *texture = textures[samplerIndex];
+        const SamplerState &sampler = samplers[samplerIndex];
+        TextureType textureType = textureTypes[samplerIndex];
+
+        if (texture)
         {
-            if (texture->isSamplerComplete(samplerState) &&
-                boundFramebufferTextures.find(texture->getTextureSerial()) == boundFramebufferTextures.end())
+            // TODO: std::binary_search may become unavailable using older versions of GCC
+            if (texture->isSamplerComplete(sampler) &&
+                !std::binary_search(framebufferSerials.begin(), framebufferSerials.begin() + framebufferSerialCount, texture->getTextureSerial()))
             {
-                mRenderer->setSamplerState(type, samplerIndex, samplerState);
-                mRenderer->setTexture(type, samplerIndex, texture);
+                mRenderer->setSamplerState(shaderType, samplerIndex, sampler);
+                mRenderer->setTexture(shaderType, samplerIndex, texture);
                 texture->resetDirty();
             }
             else
             {
-                mRenderer->setTexture(type, samplerIndex, getIncompleteTexture(textureType));
+                Texture *incompleteTexture = getIncompleteTexture(textureType);
+                mRenderer->setTexture(shaderType, samplerIndex, incompleteTexture);
+                incompleteTexture->resetDirty();
             }
         }
         else
         {
-            mRenderer->setTexture(type, samplerIndex, NULL);
+            mRenderer->setTexture(shaderType, samplerIndex, NULL);
         }
     }
 
-    for (int samplerIndex = samplerRange; samplerIndex < samplerCount; samplerIndex++)
+    for (size_t samplerIndex = textureCount; samplerIndex < samplerCount; samplerIndex++)
     {
-        mRenderer->setTexture(type, samplerIndex, NULL);
+        mRenderer->setTexture(shaderType, samplerIndex, NULL);
     }
 }
 
@@ -2954,7 +2928,18 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     ProgramBinary *programBinary = getCurrentProgramBinary();
     programBinary->applyUniforms();
 
-    generateSwizzles(programBinary);
+    Texture *vsTextures[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
+    TextureType vsTextureTypes[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
+    SamplerState vsSamplers[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
+    size_t vsTextureCount = getCurrentTexturesAndSamplerStates(programBinary, SAMPLER_VERTEX, vsTextures, vsTextureTypes, vsSamplers);
+
+    Texture *psTextures[MAX_TEXTURE_IMAGE_UNITS];
+    TextureType psTextureTypes[MAX_TEXTURE_IMAGE_UNITS];
+    SamplerState psSamplers[MAX_TEXTURE_IMAGE_UNITS];
+    size_t psTextureCount = getCurrentTexturesAndSamplerStates(programBinary, SAMPLER_PIXEL, psTextures, psTextureTypes, psSamplers);
+
+    generateSwizzles(vsTextures, vsTextureCount);
+    generateSwizzles(psTextures, psTextureCount);
 
     if (!mRenderer->applyPrimitiveType(mode, count))
     {
@@ -2977,7 +2962,12 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     bool transformFeedbackActive = applyTransformFeedbackBuffers();
 
     applyShaders(programBinary, transformFeedbackActive);
-    applyTextures(programBinary);
+
+    FramebufferTextureSerialArray frameBufferSerials;
+    size_t framebufferSerialCount = getBoundFramebufferTextureSerials(&frameBufferSerials);
+
+    applyTextures(SAMPLER_VERTEX, vsTextures, vsTextureTypes, vsSamplers, vsTextureCount, frameBufferSerials, framebufferSerialCount);
+    applyTextures(SAMPLER_PIXEL, psTextures, psTextureTypes, psSamplers, psTextureCount, frameBufferSerials, framebufferSerialCount);
 
     if (!applyUniformBuffers())
     {
@@ -3016,7 +3006,18 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     ProgramBinary *programBinary = getCurrentProgramBinary();
     programBinary->applyUniforms();
 
-    generateSwizzles(programBinary);
+    Texture *vsTextures[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
+    TextureType vsTextureTypes[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
+    SamplerState vsSamplers[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
+    size_t vsTextureCount = getCurrentTexturesAndSamplerStates(programBinary, SAMPLER_VERTEX, vsTextures, vsTextureTypes, vsSamplers);
+
+    Texture *psTextures[MAX_TEXTURE_IMAGE_UNITS];
+    TextureType psTextureTypes[MAX_TEXTURE_IMAGE_UNITS];
+    SamplerState psSamplers[MAX_TEXTURE_IMAGE_UNITS];
+    size_t psTextureCount = getCurrentTexturesAndSamplerStates(programBinary, SAMPLER_PIXEL, psTextures, psTextureTypes, psSamplers);
+
+    generateSwizzles(vsTextures, vsTextureCount);
+    generateSwizzles(psTextures, psTextureCount);
 
     if (!mRenderer->applyPrimitiveType(mode, count))
     {
@@ -3050,7 +3051,12 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     ASSERT(!transformFeedbackActive);
 
     applyShaders(programBinary, transformFeedbackActive);
-    applyTextures(programBinary);
+
+    FramebufferTextureSerialArray frameBufferSerials;
+    size_t framebufferSerialCount = getBoundFramebufferTextureSerials(&frameBufferSerials);
+
+    applyTextures(SAMPLER_VERTEX, vsTextures, vsTextureTypes, vsSamplers, vsTextureCount, frameBufferSerials, framebufferSerialCount);
+    applyTextures(SAMPLER_PIXEL, psTextures, psTextureTypes, psSamplers, psTextureCount, frameBufferSerials, framebufferSerialCount);
 
     if (!applyUniformBuffers())
     {
@@ -3928,9 +3934,9 @@ const char *Context::getRendererString() const
     return mRendererString;
 }
 
-Context::FramebufferTextureSerialSet Context::getBoundFramebufferTextureSerials()
+size_t Context::getBoundFramebufferTextureSerials(FramebufferTextureSerialArray *outSerialArray)
 {
-    FramebufferTextureSerialSet set;
+    size_t serialCount = 0;
 
     Framebuffer *drawFramebuffer = getDrawFramebuffer();
     for (unsigned int i = 0; i < IMPLEMENTATION_MAX_DRAW_BUFFERS; i++)
@@ -3938,17 +3944,19 @@ Context::FramebufferTextureSerialSet Context::getBoundFramebufferTextureSerials(
         Renderbuffer *renderBuffer = drawFramebuffer->getColorbuffer(i);
         if (renderBuffer && renderBuffer->getTextureSerial() != 0)
         {
-            set.insert(renderBuffer->getTextureSerial());
+            (*outSerialArray)[serialCount++] = renderBuffer->getTextureSerial();
         }
     }
 
     Renderbuffer *depthStencilBuffer = drawFramebuffer->getDepthOrStencilbuffer();
     if (depthStencilBuffer && depthStencilBuffer->getTextureSerial() != 0)
     {
-        set.insert(depthStencilBuffer->getTextureSerial());
+        (*outSerialArray)[serialCount++] = depthStencilBuffer->getTextureSerial();
     }
 
-    return set;
+    std::sort(outSerialArray->begin(), outSerialArray->begin() + serialCount);
+
+    return serialCount;
 }
 
 void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
