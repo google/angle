@@ -184,6 +184,9 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
         mCurrentIL = inputLayout;
     }
 
+    bool dirtyBuffers = false;
+    size_t minDiff = gl::MAX_VERTEX_ATTRIBS;
+    size_t maxDiff = 0;
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         ID3D11Buffer *buffer = NULL;
@@ -203,11 +206,21 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
         if (buffer != mCurrentBuffers[i] || vertexStride != mCurrentVertexStrides[i] ||
             vertexOffset != mCurrentVertexOffsets[i])
         {
-            mDeviceContext->IASetVertexBuffers(i, 1, &buffer, &vertexStride, &vertexOffset);
+            dirtyBuffers = true;
+            minDiff = std::min(minDiff, i);
+            maxDiff = std::max(maxDiff, i);
+
             mCurrentBuffers[i] = buffer;
             mCurrentVertexStrides[i] = vertexStride;
             mCurrentVertexOffsets[i] = vertexOffset;
         }
+    }
+
+    if (dirtyBuffers)
+    {
+        ASSERT(minDiff <= maxDiff && maxDiff < gl::MAX_VERTEX_ATTRIBS);
+        mDeviceContext->IASetVertexBuffers(minDiff, maxDiff - minDiff + 1, mCurrentBuffers + minDiff,
+                                           mCurrentVertexStrides + minDiff, mCurrentVertexOffsets + minDiff);
     }
 
     return GL_NO_ERROR;
