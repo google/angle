@@ -22,6 +22,30 @@
       "revId": "5faee31093360c5e1b8595111a51f5d5a6f3eee1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca570cb3_443fae44",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-13T17:23:01Z",
+      "side": 1,
+      "message": "Oooh, whoops, yes, fixed.",
+      "parentUuid": "ca570cb3_e42fba13",
+      "range": {
+        "startLine": 667,
+        "startChar": 56,
+        "endLine": 667,
+        "endChar": 57
+      },
+      "revId": "5faee31093360c5e1b8595111a51f5d5a6f3eee1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
