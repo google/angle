@@ -678,8 +678,7 @@ void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
 {
     if (mForceSetRasterState || memcmp(&rasterState, &mCurRasterState, sizeof(gl::RasterizerState)) != 0)
     {
-        ID3D11RasterizerState *dxRasterState = mStateCache.getRasterizerState(rasterState, mScissorEnabled,
-                                                                              mCurDepthSize);
+        ID3D11RasterizerState *dxRasterState = mStateCache.getRasterizerState(rasterState, mScissorEnabled);
         if (!dxRasterState)
         {
             ERR("NULL rasterizer state returned by RenderStateCache::getRasterizerState, setting the default"
@@ -1004,9 +1003,6 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         stencilbufferSerial = depthStencil->getSerial();
     }
 
-    // Extract the depth stencil sizes and view
-    unsigned int depthSize = 0;
-    unsigned int stencilSize = 0;
     ID3D11DepthStencilView* framebufferDSV = NULL;
     if (depthStencil)
     {
@@ -1034,9 +1030,6 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
             renderTargetHeight = depthStencil->getHeight();
             renderTargetFormat = depthStencil->getActualFormat();
         }
-
-        depthSize = depthStencil->getDepthSize();
-        stencilSize = depthStencil->getStencilSize();
     }
 
     // Apply the render target and depth stencil
@@ -1053,13 +1046,10 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         mForceSetViewport = true;
         mForceSetScissor = true;
 
-        if (!mDepthStencilInitialized || depthSize != mCurDepthSize)
+        if (!mDepthStencilInitialized)
         {
-            mCurDepthSize = depthSize;
             mForceSetRasterState = true;
         }
-
-        mCurStencilSize = stencilSize;
 
         for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)
         {

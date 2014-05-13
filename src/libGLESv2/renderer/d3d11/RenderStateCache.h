@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -32,8 +32,7 @@ class RenderStateCache
 
     // Increments refcount on the returned blend state, Release() must be called.
     ID3D11BlendState *getBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState);
-    ID3D11RasterizerState *getRasterizerState(const gl::RasterizerState &rasterState,
-                                              bool scissorEnabled, unsigned int depthSize);
+    ID3D11RasterizerState *getRasterizerState(const gl::RasterizerState &rasterState, bool scissorEnabled);
     ID3D11DepthStencilState *getDepthStencilState(const gl::DepthStencilState &dsState);
     ID3D11SamplerState *getSamplerState(const gl::SamplerState &samplerState);
 
@@ -63,7 +62,6 @@ class RenderStateCache
     {
         gl::RasterizerState rasterizerState;
         bool scissorEnabled;
-        unsigned int depthSize;
     };
     static std::size_t hashRasterizerState(const RasterizerStateKey &rasterState);
     static bool compareRasterizerStates(const RasterizerStateKey &a, const RasterizerStateKey &b);

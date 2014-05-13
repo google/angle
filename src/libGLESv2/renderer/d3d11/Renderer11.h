@@ -247,8 +247,6 @@ class Renderer11 : public Renderer
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
     rx::RenderTarget::Desc mRenderTargetDesc;
-    unsigned int mCurDepthSize;
-    unsigned int mCurStencilSize;
 
     // Currently applied sampler states
     bool mForceSetVertexSamplerStates[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
