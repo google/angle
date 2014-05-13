@@ -22,6 +22,24 @@
       "revId": "0f55498b0c9ce676a7d38a49501314594b4dd15b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a698874_d6bb4a63",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-05-13T16:42:08Z",
+      "side": 0,
+      "message": "I see your point.  My feeling is it reduces lines of code and makes reading easier.  Most places end up never expand to multiple lines, so it\u0027s better to add braces when the needs arise.",
+      "parentUuid": "0a30447d_9c998d28",
+      "revId": "0f55498b0c9ce676a7d38a49501314594b4dd15b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
