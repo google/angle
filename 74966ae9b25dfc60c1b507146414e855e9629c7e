@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea2cd02f_fef2f54f",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 951,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-13T14:21:19Z",
+      "side": 1,
+      "message": "nit: can we refer to this as \u0027storageLevels\u0027, to more clearly distinguish \u0027level\u0027 and \u0027levels\u0027 (same for below)",
+      "range": {
+        "startLine": 951,
+        "startChar": 10,
+        "endLine": 951,
+        "endChar": 16
+      },
+      "revId": "74966ae9b25dfc60c1b507146414e855e9629c7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
