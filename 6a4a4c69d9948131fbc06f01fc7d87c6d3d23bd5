@@ -22,6 +22,30 @@
       "revId": "6a4a4c69d9948131fbc06f01fc7d87c6d3d23bd5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca570cb3_c4edde6e",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-13T17:43:42Z",
+      "side": 1,
+      "message": "That may help encapsulate the logic here, but transposeMatrix and expandMatrix don\u0027t always output to LinkedUniform objects.    SetIfDirty doesn\u0027t have to be tied to any type of object, I think it makes sense to keep it as a global helper function.",
+      "parentUuid": "0a30447d_ff4673dd",
+      "range": {
+        "startLine": 514,
+        "startChar": 16,
+        "endLine": 514,
+        "endChar": 68
+      },
+      "revId": "6a4a4c69d9948131fbc06f01fc7d87c6d3d23bd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
