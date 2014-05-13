@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea2cd02f_befc7d21",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-13T14:50:13Z",
+      "side": 1,
+      "message": "nit: ASSERT(dirtyFlag) seems cleaner. it seems like it would be a good thing to use the dirtyFlag parameter if you\u0027re using this function.",
+      "range": {
+        "startLine": 479,
+        "startChar": 8,
+        "endLine": 479,
+        "endChar": 20
+      },
+      "revId": "6c19ce1fb3e799e426a8cac834af2ecb90cfa7b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea2cd02f_beca3dde",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-13T14:50:13Z",
+      "side": 1,
+      "message": "suggestion: returns bool if the matrix changed. eliminates the optional NULL parameter",
+      "range": {
+        "startLine": 571,
+        "startChar": 0,
+        "endLine": 571,
+        "endChar": 4
+      },
+      "revId": "6c19ce1fb3e799e426a8cac834af2ecb90cfa7b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
