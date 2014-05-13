@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "2a1b4808_5d5beb0c",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3953,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-13T14:52:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a30447d_fcf20150",
+      "range": {
+        "startLine": 3953,
+        "startChar": 79,
+        "endLine": 3953,
+        "endChar": 81
+      },
+      "revId": "501634ecb609df7f8db817cfd4540dc92b2ba3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea2cd02f_1e67b162",
         "filename": "src/libGLESv2/Context.h",
         "patchSetId": 1
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "ea2cd02f_1eba515b",
+        "filename": "src/libGLESv2/Context.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-13T14:52:34Z",
+      "side": 1,
+      "message": "std::array should be in GCC 4.7 (that was the minimum version we have to support, right?) according to http://gcc.gnu.org/gcc-4.7/cxx0x_status.html and https://stackoverflow.com/questions/15417298/array-not-a-member-of-namespacestd",
+      "parentUuid": "ea2cd02f_1e67b162",
+      "range": {
+        "startLine": 466,
+        "startChar": 12,
+        "endLine": 466,
+        "endChar": 22
+      },
+      "revId": "501634ecb609df7f8db817cfd4540dc92b2ba3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a30447d_dcedc56e",
         "filename": "src/libGLESv2/Context.h",
         "patchSetId": 1
@@ -82,6 +130,30 @@
       "writtenOn": "2014-05-13T14:19:39Z",
       "side": 1,
       "message": "nit: is this an array? if so, use [] stylistically, for a suggestion to the reader",
+      "range": {
+        "startLine": 486,
+        "startChar": 36,
+        "endLine": 486,
+        "endChar": 44
+      },
+      "revId": "501634ecb609df7f8db817cfd4540dc92b2ba3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea2cd02f_fec0b5c3",
+        "filename": "src/libGLESv2/Context.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-13T14:52:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a30447d_dcedc56e",
       "range": {
         "startLine": 486,
         "startChar": 36,
