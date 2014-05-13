@@ -2316,7 +2316,7 @@ void ppfree (void * ptr , yyscan_t yyscanner)
 
 namespace pp {
 
-Tokenizer::Tokenizer(Diagnostics* diagnostics)
+Tokenizer::Tokenizer(Diagnostics *diagnostics)
     : mHandle(0),
       mMaxTokenSize(256)
 {
@@ -2328,9 +2328,10 @@ Tokenizer::~Tokenizer()
     destroyScanner();
 }
 
-bool Tokenizer::init(size_t count, const char* const string[], const int length[])
+bool Tokenizer::init(size_t count, const char * const string[], const int length[])
 {
-    if ((count > 0) && (string == 0)) return false;
+    if ((count > 0) && (string == 0))
+        return false;
 
     mContext.input = Input(count, string, length);
     return initScanner();
@@ -2353,7 +2354,7 @@ void Tokenizer::setMaxTokenSize(size_t maxTokenSize)
     mMaxTokenSize = maxTokenSize;
 }
 
-void Tokenizer::lex(Token* token)
+void Tokenizer::lex(Token *token)
 {
     token->type = pplex(&token->text,&token->location,mHandle);
     if (token->text.size() > mMaxTokenSize)
