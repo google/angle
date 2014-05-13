@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2a1b4808_bd1567a3",
+        "filename": "src/libGLESv2/Context.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-13T16:02:10Z",
+      "side": 1,
+      "message": "GCC 4.2 I think. :/ At least for OSX. Not sure if we\u0027re going to drop support for GCC. Can you prz make a comment?",
+      "parentUuid": "ea2cd02f_1eba515b",
+      "range": {
+        "startLine": 466,
+        "startChar": 12,
+        "endLine": 466,
+        "endChar": 22
+      },
+      "revId": "501634ecb609df7f8db817cfd4540dc92b2ba3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a30447d_dcedc56e",
         "filename": "src/libGLESv2/Context.h",
         "patchSetId": 1
