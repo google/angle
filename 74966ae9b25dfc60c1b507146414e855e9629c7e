@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ea2cd02f_dee4d974",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 951,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-13T14:57:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea2cd02f_fef2f54f",
+      "range": {
+        "startLine": 951,
+        "startChar": 10,
+        "endLine": 951,
+        "endChar": 16
+      },
+      "revId": "74966ae9b25dfc60c1b507146414e855e9629c7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a30447d_bcfc8921",
         "filename": "src/libGLESv2/Texture.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-05-13T14:22:20Z",
       "side": 1,
       "message": "might as well add this for 3d and 2d array for consistency",
+      "range": {
+        "startLine": 1429,
+        "startChar": 16,
+        "endLine": 1429,
+        "endChar": 51
+      },
+      "revId": "74966ae9b25dfc60c1b507146414e855e9629c7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a30447d_3c22b909",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1429,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-13T14:57:15Z",
+      "side": 1,
+      "message": "Done, couldn\u0027t do it for Texture2DArray though since it validates slightly differently.",
+      "parentUuid": "0a30447d_bcfc8921",
       "range": {
         "startLine": 1429,
         "startChar": 16,
