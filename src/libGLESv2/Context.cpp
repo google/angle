@@ -2188,7 +2188,9 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_NUM_SHADER_BINARY_FORMATS:
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
       case GL_ARRAY_BUFFER_BINDING:
-      case GL_FRAMEBUFFER_BINDING:
+      //case GL_FRAMEBUFFER_BINDING: // equivalent to DRAW_FRAMEBUFFER_BINDING_ANGLE
+      case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:
+      case GL_READ_FRAMEBUFFER_BINDING_ANGLE:
       case GL_RENDERBUFFER_BINDING:
       case GL_CURRENT_PROGRAM:
       case GL_PACK_ALIGNMENT:
