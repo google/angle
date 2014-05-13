@@ -22,6 +22,29 @@
       "revId": "74966ae9b25dfc60c1b507146414e855e9629c7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a30447d_bcfc8921",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1429,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-13T14:22:20Z",
+      "side": 1,
+      "message": "might as well add this for 3d and 2d array for consistency",
+      "range": {
+        "startLine": 1429,
+        "startChar": 16,
+        "endLine": 1429,
+        "endChar": 51
+      },
+      "revId": "74966ae9b25dfc60c1b507146414e855e9629c7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
