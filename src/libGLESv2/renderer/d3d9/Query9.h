@@ -21,10 +21,11 @@ class Query9 : public QueryImpl
     Query9(rx::Renderer9 *renderer, GLenum type);
     virtual ~Query9();
 
-    void begin();
-    void end();
-    GLuint getResult();
-    GLboolean isResultAvailable();
+    virtual void begin();
+    virtual void end();
+    virtual GLuint getResult();
+    virtual GLboolean isResultAvailable();
+    virtual bool isStarted() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Query9);

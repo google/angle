@@ -59,11 +59,7 @@ void Query11::begin()
 
 void Query11::end()
 {
-    if (mQuery == NULL)
-    {
-        return gl::error(GL_INVALID_OPERATION);
-    }
-
+    ASSERT(mQuery);
     mRenderer->getDeviceContext()->End(mQuery);
 
     mStatus = GL_FALSE;
@@ -149,6 +145,11 @@ GLboolean Query11::testQuery()
     }
 
     return GL_TRUE; // prevent blocking when query is null
+}
+
+bool Query11::isStarted() const
+{
+    return (mQuery != NULL);
 }
 
 }

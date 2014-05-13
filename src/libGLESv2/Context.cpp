@@ -782,13 +782,18 @@ bool Context::isQueryActive() const
     return false;
 }
 
-GLuint Context::getActiveQuery(GLenum target) const
+const Query *Context::getActiveQuery(GLenum target) const
 {
     // All query types should already exist in the activeQueries map
     ASSERT(mState.activeQueries.find(target) != mState.activeQueries.end());
 
-    const Query *queryObject = mState.activeQueries.at(target).get();
-    return queryObject ? queryObject->id() : 0;
+    return mState.activeQueries.at(target).get();
+}
+
+GLuint Context::getActiveQueryId(GLenum target) const
+{
+    const Query *query = getActiveQuery(target);
+    return (query ? query->id() : 0u);
 }
 
 void Context::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
@@ -1383,11 +1388,7 @@ void Context::beginQuery(GLenum target, GLuint query)
 void Context::endQuery(GLenum target)
 {
     Query *queryObject = mState.activeQueries[target].get();
-
-    if (queryObject == NULL)
-    {
-        return gl::error(GL_INVALID_OPERATION);
-    }
+    ASSERT(queryObject);
 
     queryObject->end();
 

@@ -46,6 +46,7 @@ bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsize
                                   GLenum format, GLenum type, GLsizei *bufSize, GLvoid *pixels);
 
 bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id);
+bool ValidateEndQuery(gl::Context *context, GLenum target);
 
 }
 

@@ -924,4 +924,26 @@ bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id)
     return true;
 }
 
+bool ValidateEndQuery(gl::Context *context, GLenum target)
+{
+    if (!ValidQueryType(context, target))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    const Query *queryObject = context->getActiveQuery(target);
+
+    if (queryObject == NULL)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (!queryObject->isStarted())
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return true;
+}
+
 }

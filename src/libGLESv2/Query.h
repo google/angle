@@ -38,6 +38,7 @@ class Query : public RefCountObject
     GLboolean isResultAvailable();
 
     GLenum getType() const;
+    bool isStarted() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Query);

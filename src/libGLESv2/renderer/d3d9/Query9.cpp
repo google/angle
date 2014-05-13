@@ -43,10 +43,7 @@ void Query9::begin()
 
 void Query9::end()
 {
-    if (mQuery == NULL)
-    {
-        return gl::error(GL_INVALID_OPERATION);
-    }
+    ASSERT(mQuery);
 
     HRESULT result = mQuery->Issue(D3DISSUE_END);
     ASSERT(SUCCEEDED(result));
@@ -116,6 +113,11 @@ GLboolean Query9::testQuery()
     }
 
     return GL_TRUE; // prevent blocking when query is null
+}
+
+bool Query9::isStarted() const
+{
+    return (mQuery != NULL);
 }
 
 }

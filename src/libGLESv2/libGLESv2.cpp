@@ -1823,9 +1823,9 @@ void __stdcall glEndQueryEXT(GLenum target)
 
         if (context)
         {
-            if (!ValidQueryType(context, target))
+            if (!ValidateEndQuery(context, target))
             {
-                return gl::error(GL_INVALID_ENUM);
+                return;
             }
 
             context->endQuery(target);
@@ -3118,7 +3118,7 @@ void __stdcall glGetQueryivEXT(GLenum target, GLenum pname, GLint *params)
             switch (pname)
             {
               case GL_CURRENT_QUERY_EXT:
-                params[0] = context->getActiveQuery(target);
+                params[0] = context->getActiveQueryId(target);
                 break;
 
               default:
@@ -3149,7 +3149,7 @@ void __stdcall glGetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (context->getActiveQuery(queryObject->getType()) == id)
+            if (context->getActiveQueryId(queryObject->getType()) == id)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
@@ -6554,7 +6554,6 @@ void __stdcall glBeginQuery(GLenum target, GLuint id)
             {
                 return;
             }
-
             context->beginQuery(target, id);
         }
     }
@@ -6579,9 +6578,9 @@ void __stdcall glEndQuery(GLenum target)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!ValidQueryType(context, target))
+            if (!ValidateEndQuery(context, target))
             {
-                return gl::error(GL_INVALID_ENUM);
+                return;
             }
 
             context->endQuery(target);
@@ -6616,7 +6615,7 @@ void __stdcall glGetQueryiv(GLenum target, GLenum pname, GLint* params)
             switch (pname)
             {
               case GL_CURRENT_QUERY:
-                params[0] = context->getActiveQuery(target);
+                params[0] = static_cast<GLint>(context->getActiveQueryId(target));
                 break;
 
               default:
@@ -6652,7 +6651,7 @@ void __stdcall glGetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (context->getActiveQuery(queryObject->getType()) == id)
+            if (context->getActiveQueryId(queryObject->getType()) == id)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
