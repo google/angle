@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a30447d_ff4673dd",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-13T17:35:53Z",
+      "side": 1,
+      "message": "target comes from targetUniform, and targetUniform-\u003edirty is passed into SetIfDirty here as well, so can we instead have a set method as part of LinkedUniform instead where these details are more encapsulated?",
+      "range": {
+        "startLine": 514,
+        "startChar": 16,
+        "endLine": 514,
+        "endChar": 68
+      },
+      "revId": "6a4a4c69d9948131fbc06f01fc7d87c6d3d23bd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
