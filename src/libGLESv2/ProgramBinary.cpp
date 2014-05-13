@@ -1053,15 +1053,18 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 {
     BinaryInputStream stream(binary, length);
 
-    int format = stream.readInt<int>();
+    int format = 0;
+    stream.read(&format);
     if (format != GL_PROGRAM_BINARY_ANGLE)
     {
         infoLog.append("Invalid program binary format.");
         return false;
     }
 
-    int majorVersion = stream.readInt<int>();
-    int minorVersion = stream.readInt<int>();
+    int majorVersion = 0;
+    int minorVersion = 0;
+    stream.read(&majorVersion);
+    stream.read(&minorVersion);
     if (majorVersion != ANGLE_MAJOR_VERSION || minorVersion != ANGLE_MINOR_VERSION)
     {
         infoLog.append("Invalid program binary version.");
@@ -1069,14 +1072,15 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     }
 
     unsigned char commitString[ANGLE_COMMIT_HASH_SIZE];
-    stream.readBytes(commitString, ANGLE_COMMIT_HASH_SIZE);
+    stream.read(commitString, ANGLE_COMMIT_HASH_SIZE);
     if (memcmp(commitString, ANGLE_COMMIT_HASH, sizeof(unsigned char) * ANGLE_COMMIT_HASH_SIZE) != 0)
     {
         infoLog.append("Invalid program binary version.");
         return false;
     }
 
-    int compileFlags = stream.readInt<int>();
+    int compileFlags = 0;
+    stream.read(&compileFlags);
     if (compileFlags != ANGLE_COMPILE_OPTIMIZATION_LEVEL)
     {
         infoLog.append("Mismatched compilation flags.");
@@ -1085,131 +1089,153 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
-        stream.readInt(&mLinkedAttribute[i].type);
-        stream.readString(&mLinkedAttribute[i].name);
-        stream.readInt(&mShaderAttributes[i].type);
-        stream.readString(&mShaderAttributes[i].name);
-        stream.readInt(&mSemanticIndex[i]);
+        stream.read(&mLinkedAttribute[i].type);
+        std::string name;
+        stream.read(&name);
+        mLinkedAttribute[i].name = name;
+        stream.read(&mShaderAttributes[i].type);
+        stream.read(&mShaderAttributes[i].name);
+        stream.read(&mSemanticIndex[i]);
     }
 
     initAttributesByLayout();
 
     for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
     {
-        stream.readBool(&mSamplersPS[i].active);
-        stream.readInt(&mSamplersPS[i].logicalTextureUnit);
-        stream.readInt(&mSamplersPS[i].textureType);
+        stream.read(&mSamplersPS[i].active);
+        stream.read(&mSamplersPS[i].logicalTextureUnit);
+        
+        int textureType;
+        stream.read(&textureType);
+        mSamplersPS[i].textureType = (TextureType) textureType;
     }
 
     for (unsigned int i = 0; i < IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; ++i)
     {
-        stream.readBool(&mSamplersVS[i].active);
-        stream.readInt(&mSamplersVS[i].logicalTextureUnit);
-        stream.readInt(&mSamplersVS[i].textureType);
+        stream.read(&mSamplersVS[i].active);
+        stream.read(&mSamplersVS[i].logicalTextureUnit);
+        
+        int textureType;
+        stream.read(&textureType);
+        mSamplersVS[i].textureType = (TextureType) textureType;
     }
 
-    stream.readInt(&mUsedVertexSamplerRange);
-    stream.readInt(&mUsedPixelSamplerRange);
-    stream.readBool(&mUsesPointSize);
-    stream.readInt(&mShaderVersion);
+    stream.read(&mUsedVertexSamplerRange);
+    stream.read(&mUsedPixelSamplerRange);
+    stream.read(&mUsesPointSize);
+    stream.read(&mShaderVersion);
 
-    const unsigned int uniformCount = stream.readInt<unsigned int>();
+    size_t size;
+    stream.read(&size);
     if (stream.error())
     {
         infoLog.append("Invalid program binary.");
         return false;
     }
 
-    mUniforms.resize(uniformCount);
-    for (unsigned int uniformIndex = 0; uniformIndex < uniformCount; uniformIndex++)
+    mUniforms.resize(size);
+    for (unsigned int i = 0; i < size; ++i)
     {
-        GLenum type = stream.readInt<GLenum>();
-        GLenum precision = stream.readInt<GLenum>();
-        std::string name = stream.readString();
-        unsigned int arraySize = stream.readInt<unsigned int>();
-        int blockIndex = stream.readInt<int>();
+        GLenum type;
+        GLenum precision;
+        std::string name;
+        unsigned int arraySize;
+        int blockIndex;
 
-        int offset = stream.readInt<int>();
-        int arrayStride = stream.readInt<int>();
-        int matrixStride = stream.readInt<int>();
-        bool isRowMajorMatrix = stream.readBool();
+        stream.read(&type);
+        stream.read(&precision);
+        stream.read(&name);
+        stream.read(&arraySize);
+        stream.read(&blockIndex);
+
+        int offset;
+        int arrayStride;
+        int matrixStride;
+        bool isRowMajorMatrix;
+
+        stream.read(&offset);
+        stream.read(&arrayStride);
+        stream.read(&matrixStride);
+        stream.read(&isRowMajorMatrix);
 
         const gl::BlockMemberInfo blockInfo(offset, arrayStride, matrixStride, isRowMajorMatrix);
 
-        LinkedUniform *uniform = new LinkedUniform(type, precision, name, arraySize, blockIndex, blockInfo);
+        mUniforms[i] = new LinkedUniform(type, precision, name, arraySize, blockIndex, blockInfo);
         
-        stream.readInt(&uniform->psRegisterIndex);
-        stream.readInt(&uniform->vsRegisterIndex);
-        stream.readInt(&uniform->registerCount);
-        stream.readInt(&uniform->registerElement);
-
-        mUniforms[uniformIndex] = uniform;
+        stream.read(&mUniforms[i]->psRegisterIndex);
+        stream.read(&mUniforms[i]->vsRegisterIndex);
+        stream.read(&mUniforms[i]->registerCount);
+        stream.read(&mUniforms[i]->registerElement);
     }
 
-    unsigned int uniformBlockCount = stream.readInt<unsigned int>();
+    stream.read(&size);
     if (stream.error())
     {
         infoLog.append("Invalid program binary.");
         return false;
     }
 
-    mUniformBlocks.resize(uniformBlockCount);
-    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < uniformBlockCount; ++uniformBlockIndex)
+    mUniformBlocks.resize(size);
+    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < size; ++uniformBlockIndex)
     {
-        std::string name = stream.readString();
-        unsigned int elementIndex = stream.readInt<unsigned int>();
-        unsigned int dataSize = stream.readInt<unsigned int>();
+        std::string name;
+        unsigned int elementIndex;
+        unsigned int dataSize;
 
-        UniformBlock *uniformBlock = new UniformBlock(name, elementIndex, dataSize);
+        stream.read(&name);
+        stream.read(&elementIndex);
+        stream.read(&dataSize);
 
-        stream.readInt(&uniformBlock->psRegisterIndex);
-        stream.readInt(&uniformBlock->vsRegisterIndex);
+        mUniformBlocks[uniformBlockIndex] = new UniformBlock(name, elementIndex, dataSize);
 
-        unsigned int numMembers = stream.readInt<unsigned int>();
-        uniformBlock->memberUniformIndexes.resize(numMembers);
+        UniformBlock& uniformBlock = *mUniformBlocks[uniformBlockIndex];
+        stream.read(&uniformBlock.psRegisterIndex);
+        stream.read(&uniformBlock.vsRegisterIndex);
+
+        size_t numMembers;
+        stream.read(&numMembers);
+        uniformBlock.memberUniformIndexes.resize(numMembers);
         for (unsigned int blockMemberIndex = 0; blockMemberIndex < numMembers; blockMemberIndex++)
         {
-            stream.readInt(&uniformBlock->memberUniformIndexes[blockMemberIndex]);
+            stream.read(&uniformBlock.memberUniformIndexes[blockMemberIndex]);
         }
-
-        mUniformBlocks[uniformBlockIndex] = uniformBlock;
     }
 
-    const unsigned int uniformIndexCount = stream.readInt<unsigned int>();
+    stream.read(&size);
     if (stream.error())
     {
         infoLog.append("Invalid program binary.");
         return false;
     }
 
-    mUniformIndex.resize(uniformIndexCount);
-    for (unsigned int uniformIndexIndex = 0; uniformIndexIndex < uniformIndexCount; uniformIndexIndex++)
+    mUniformIndex.resize(size);
+    for (unsigned int i = 0; i < size; ++i)
     {
-        stream.readString(&mUniformIndex[uniformIndexIndex].name);
-        stream.readInt(&mUniformIndex[uniformIndexIndex].element);
-        stream.readInt(&mUniformIndex[uniformIndexIndex].index);
+        stream.read(&mUniformIndex[i].name);
+        stream.read(&mUniformIndex[i].element);
+        stream.read(&mUniformIndex[i].index);
     }
 
-    stream.readInt(&mTransformFeedbackBufferMode);
-    const unsigned int transformFeedbackVaryingCount = stream.readInt<unsigned int>();
-    mTransformFeedbackLinkedVaryings.resize(transformFeedbackVaryingCount);
-    for (unsigned int varyingIndex = 0; varyingIndex < transformFeedbackVaryingCount; varyingIndex++)
+    stream.read(&mTransformFeedbackBufferMode);
+    stream.read(&size);
+    mTransformFeedbackLinkedVaryings.resize(size);
+    for (size_t i = 0; i < mTransformFeedbackLinkedVaryings.size(); i++)
     {
-        LinkedVarying &varying = mTransformFeedbackLinkedVaryings[varyingIndex];
+        LinkedVarying &varying = mTransformFeedbackLinkedVaryings[i];
 
-        stream.readString(&varying.name);
-        stream.readInt(&varying.type);
-        stream.readInt(&varying.size);
-        stream.readString(&varying.semanticName);
-        stream.readInt(&varying.semanticIndex);
-        stream.readInt(&varying.semanticIndexCount);
+        stream.read(&varying.name);
+        stream.read(&varying.type);
+        stream.read(&varying.size);
+        stream.read(&varying.semanticName);
+        stream.read(&varying.semanticIndex);
+        stream.read(&varying.semanticIndexCount);
     }
 
-    stream.readString(&mVertexHLSL);
+    stream.read(&mVertexHLSL);
+    stream.read(&mVertexWorkarounds);
 
-    stream.readInt(&mVertexWorkarounds);
-
-    const unsigned int vertexShaderCount = stream.readInt<unsigned int>();
+    unsigned int vertexShaderCount;
+    stream.read(&vertexShaderCount);
 
     for (unsigned int vertexShaderIndex = 0; vertexShaderIndex < vertexShaderCount; vertexShaderIndex++)
     {
@@ -1218,13 +1244,14 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         for (size_t inputIndex = 0; inputIndex < MAX_VERTEX_ATTRIBS; inputIndex++)
         {
             VertexFormat *vertexInput = &inputLayout[inputIndex];
-            stream.readInt(&vertexInput->mType);
-            stream.readInt(&vertexInput->mNormalized);
-            stream.readInt(&vertexInput->mComponents);
-            stream.readBool(&vertexInput->mPureInteger);
+            stream.read(&vertexInput->mType);
+            stream.read(&vertexInput->mNormalized);
+            stream.read(&vertexInput->mComponents);
+            stream.read(&vertexInput->mPureInteger);
         }
 
-        unsigned int vertexShaderSize = stream.readInt<unsigned int>();
+        unsigned int vertexShaderSize;
+        stream.read(&vertexShaderSize);
 
         const char *vertexShaderFunction = (const char*) binary + stream.offset();
 
@@ -1248,7 +1275,8 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         stream.skip(vertexShaderSize);
     }
 
-    unsigned int pixelShaderSize = stream.readInt<unsigned int>();
+    unsigned int pixelShaderSize;
+    stream.read(&pixelShaderSize);
 
     const char *pixelShaderFunction = (const char*) binary + stream.offset();
     mPixelExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(pixelShaderFunction),
@@ -1261,7 +1289,8 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     }
     stream.skip(pixelShaderSize);
 
-    unsigned int geometryShaderSize = stream.readInt<unsigned int>();
+    unsigned int geometryShaderSize;
+    stream.read(&geometryShaderSize);
 
     if (geometryShaderSize > 0)
     {
@@ -1299,107 +1328,107 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
 {
     BinaryOutputStream stream;
 
-    stream.writeInt(GL_PROGRAM_BINARY_ANGLE);
-    stream.writeInt(ANGLE_MAJOR_VERSION);
-    stream.writeInt(ANGLE_MINOR_VERSION);
-    stream.writeBytes(reinterpret_cast<unsigned char*>(ANGLE_COMMIT_HASH), ANGLE_COMMIT_HASH_SIZE);
-    stream.writeInt(ANGLE_COMPILE_OPTIMIZATION_LEVEL);
+    stream.write(GL_PROGRAM_BINARY_ANGLE);
+    stream.write(ANGLE_MAJOR_VERSION);
+    stream.write(ANGLE_MINOR_VERSION);
+    stream.write(ANGLE_COMMIT_HASH, ANGLE_COMMIT_HASH_SIZE);
+    stream.write(ANGLE_COMPILE_OPTIMIZATION_LEVEL);
 
     for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
-        stream.writeInt(mLinkedAttribute[i].type);
-        stream.writeString(mLinkedAttribute[i].name);
-        stream.writeInt(mShaderAttributes[i].type);
-        stream.writeString(mShaderAttributes[i].name);
-        stream.writeInt(mSemanticIndex[i]);
+        stream.write(mLinkedAttribute[i].type);
+        stream.write(mLinkedAttribute[i].name);
+        stream.write(mShaderAttributes[i].type);
+        stream.write(mShaderAttributes[i].name);
+        stream.write(mSemanticIndex[i]);
     }
 
     for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
     {
-        stream.writeInt(mSamplersPS[i].active);
-        stream.writeInt(mSamplersPS[i].logicalTextureUnit);
-        stream.writeInt(mSamplersPS[i].textureType);
+        stream.write(mSamplersPS[i].active);
+        stream.write(mSamplersPS[i].logicalTextureUnit);
+        stream.write((int) mSamplersPS[i].textureType);
     }
 
     for (unsigned int i = 0; i < IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; ++i)
     {
-        stream.writeInt(mSamplersVS[i].active);
-        stream.writeInt(mSamplersVS[i].logicalTextureUnit);
-        stream.writeInt(mSamplersVS[i].textureType);
+        stream.write(mSamplersVS[i].active);
+        stream.write(mSamplersVS[i].logicalTextureUnit);
+        stream.write((int) mSamplersVS[i].textureType);
     }
 
-    stream.writeInt(mUsedVertexSamplerRange);
-    stream.writeInt(mUsedPixelSamplerRange);
-    stream.writeInt(mUsesPointSize);
-    stream.writeInt(mShaderVersion);
+    stream.write(mUsedVertexSamplerRange);
+    stream.write(mUsedPixelSamplerRange);
+    stream.write(mUsesPointSize);
+    stream.write(mShaderVersion);
 
-    stream.writeInt(mUniforms.size());
+    stream.write(mUniforms.size());
     for (size_t uniformIndex = 0; uniformIndex < mUniforms.size(); ++uniformIndex)
     {
         const LinkedUniform &uniform = *mUniforms[uniformIndex];
 
-        stream.writeInt(uniform.type);
-        stream.writeInt(uniform.precision);
-        stream.writeString(uniform.name);
-        stream.writeInt(uniform.arraySize);
-        stream.writeInt(uniform.blockIndex);
+        stream.write(uniform.type);
+        stream.write(uniform.precision);
+        stream.write(uniform.name);
+        stream.write(uniform.arraySize);
+        stream.write(uniform.blockIndex);
 
-        stream.writeInt(uniform.blockInfo.offset);
-        stream.writeInt(uniform.blockInfo.arrayStride);
-        stream.writeInt(uniform.blockInfo.matrixStride);
-        stream.writeInt(uniform.blockInfo.isRowMajorMatrix);
+        stream.write(uniform.blockInfo.offset);
+        stream.write(uniform.blockInfo.arrayStride);
+        stream.write(uniform.blockInfo.matrixStride);
+        stream.write(uniform.blockInfo.isRowMajorMatrix);
 
-        stream.writeInt(uniform.psRegisterIndex);
-        stream.writeInt(uniform.vsRegisterIndex);
-        stream.writeInt(uniform.registerCount);
-        stream.writeInt(uniform.registerElement);
+        stream.write(uniform.psRegisterIndex);
+        stream.write(uniform.vsRegisterIndex);
+        stream.write(uniform.registerCount);
+        stream.write(uniform.registerElement);
     }
 
-    stream.writeInt(mUniformBlocks.size());
+    stream.write(mUniformBlocks.size());
     for (size_t uniformBlockIndex = 0; uniformBlockIndex < mUniformBlocks.size(); ++uniformBlockIndex)
     {
         const UniformBlock& uniformBlock = *mUniformBlocks[uniformBlockIndex];
 
-        stream.writeString(uniformBlock.name);
-        stream.writeInt(uniformBlock.elementIndex);
-        stream.writeInt(uniformBlock.dataSize);
+        stream.write(uniformBlock.name);
+        stream.write(uniformBlock.elementIndex);
+        stream.write(uniformBlock.dataSize);
 
-        stream.writeInt(uniformBlock.memberUniformIndexes.size());
+        stream.write(uniformBlock.memberUniformIndexes.size());
         for (unsigned int blockMemberIndex = 0; blockMemberIndex < uniformBlock.memberUniformIndexes.size(); blockMemberIndex++)
         {
-            stream.writeInt(uniformBlock.memberUniformIndexes[blockMemberIndex]);
+            stream.write(uniformBlock.memberUniformIndexes[blockMemberIndex]);
         }
 
-        stream.writeInt(uniformBlock.psRegisterIndex);
-        stream.writeInt(uniformBlock.vsRegisterIndex);
+        stream.write(uniformBlock.psRegisterIndex);
+        stream.write(uniformBlock.vsRegisterIndex);
     }
 
-    stream.writeInt(mUniformIndex.size());
+    stream.write(mUniformIndex.size());
     for (size_t i = 0; i < mUniformIndex.size(); ++i)
     {
-        stream.writeString(mUniformIndex[i].name);
-        stream.writeInt(mUniformIndex[i].element);
-        stream.writeInt(mUniformIndex[i].index);
+        stream.write(mUniformIndex[i].name);
+        stream.write(mUniformIndex[i].element);
+        stream.write(mUniformIndex[i].index);
     }
 
-    stream.writeInt(mTransformFeedbackBufferMode);
-    stream.writeInt(mTransformFeedbackLinkedVaryings.size());
+    stream.write(mTransformFeedbackBufferMode);
+    stream.write(mTransformFeedbackLinkedVaryings.size());
     for (size_t i = 0; i < mTransformFeedbackLinkedVaryings.size(); i++)
     {
         const LinkedVarying &varying = mTransformFeedbackLinkedVaryings[i];
 
-        stream.writeString(varying.name);
-        stream.writeInt(varying.type);
-        stream.writeInt(varying.size);
-        stream.writeString(varying.semanticName);
-        stream.writeInt(varying.semanticIndex);
-        stream.writeInt(varying.semanticIndexCount);
+        stream.write(varying.name);
+        stream.write(varying.type);
+        stream.write(varying.size);
+        stream.write(varying.semanticName);
+        stream.write(varying.semanticIndex);
+        stream.write(varying.semanticIndexCount);
     }
 
-    stream.writeString(mVertexHLSL);
-    stream.writeInt(mVertexWorkarounds);
+    stream.write(mVertexHLSL);
+    stream.write(mVertexWorkarounds);
 
-    stream.writeInt(mVertexExecutables.size());
+    stream.write(mVertexExecutables.size());
     for (size_t vertexExecutableIndex = 0; vertexExecutableIndex < mVertexExecutables.size(); vertexExecutableIndex++)
     {
         VertexExecutable *vertexExecutable = mVertexExecutables[vertexExecutableIndex];
@@ -1407,32 +1436,32 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         for (size_t inputIndex = 0; inputIndex < gl::MAX_VERTEX_ATTRIBS; inputIndex++)
         {
             const VertexFormat &vertexInput = vertexExecutable->inputs()[inputIndex];
-            stream.writeInt(vertexInput.mType);
-            stream.writeInt(vertexInput.mNormalized);
-            stream.writeInt(vertexInput.mComponents);
-            stream.writeInt(vertexInput.mPureInteger);
+            stream.write(vertexInput.mType);
+            stream.write(vertexInput.mNormalized);
+            stream.write(vertexInput.mComponents);
+            stream.write(vertexInput.mPureInteger);
         }
 
-        size_t vertexShaderSize = vertexExecutable->shaderExecutable()->getLength();
-        stream.writeInt(vertexShaderSize);
+        UINT vertexShaderSize = vertexExecutable->shaderExecutable()->getLength();
+        stream.write(vertexShaderSize);
 
         unsigned char *vertexBlob = static_cast<unsigned char *>(vertexExecutable->shaderExecutable()->getFunction());
-        stream.writeBytes(vertexBlob, vertexShaderSize);
+        stream.write(vertexBlob, vertexShaderSize);
     }
 
-    size_t pixelShaderSize = mPixelExecutable->getLength();
-    stream.writeInt(pixelShaderSize);
+    UINT pixelShaderSize = mPixelExecutable->getLength();
+    stream.write(pixelShaderSize);
 
     unsigned char *pixelBlob = static_cast<unsigned char *>(mPixelExecutable->getFunction());
-    stream.writeBytes(pixelBlob, pixelShaderSize);
+    stream.write(pixelBlob, pixelShaderSize);
 
-    size_t geometryShaderSize = (mGeometryExecutable != NULL) ? mGeometryExecutable->getLength() : 0;
-    stream.writeInt(geometryShaderSize);
+    UINT geometryShaderSize = (mGeometryExecutable != NULL) ? mGeometryExecutable->getLength() : 0;
+    stream.write(geometryShaderSize);
 
     if (mGeometryExecutable != NULL && geometryShaderSize > 0)
     {
         unsigned char *geometryBlob = static_cast<unsigned char *>(mGeometryExecutable->getFunction());
-        stream.writeBytes(geometryBlob, geometryShaderSize);
+        stream.write(geometryBlob, geometryShaderSize);
     }
 
     GUID identifier = mRenderer->getAdapterIdentifier();

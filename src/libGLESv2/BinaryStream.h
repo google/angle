@@ -25,50 +25,39 @@ class BinaryInputStream
         mLength = length;
     }
 
-    // readInt will generate an error for bool types
-    template <class IntT>
-    IntT readInt()
+    template <typename T>
+    void read(T *v, size_t num)
     {
-        int value;
-        read(&value);
-        return static_cast<IntT>(value);
+        union
+        {
+            T dummy;  // Compilation error for non-trivial types
+        } dummy;
+        (void) dummy;
+
+        if (mError)
+        {
+            return;
+        }
+
+        size_t length = num * sizeof(T);
+
+        if (mOffset + length > mLength)
+        {
+            mError = true;
+            return;
+        }
+
+        memcpy(v, mData + mOffset, length);
+        mOffset += length;
     }
 
-    template <class IntT>
-    void readInt(IntT *outValue)
+    template <typename T>
+    void read(T * v)
     {
-        int value;
-        read(&value);
-        *outValue = static_cast<IntT>(value);
+        read(v, 1);
     }
 
-    bool readBool()
-    {
-        int value;
-        read(&value);
-        return (value > 0);
-    }
-
-    void readBool(bool *outValue)
-    {
-        int value;
-        read(&value);
-        *outValue = (value > 0);
-    }
-
-    void readBytes(unsigned char outArray[], size_t count)
-    {
-        read<unsigned char>(outArray, count);
-    }
-
-    std::string readString()
-    {
-        std::string outString;
-        readString(&outString);
-        return outString;
-    }
-
-    void readString(std::string *v)
+    void read(std::string *v)
     {
         size_t length;
         read(&length);
@@ -120,39 +109,6 @@ class BinaryInputStream
     size_t mOffset;
     const char *mData;
     size_t mLength;
-
-    template <typename T>
-    void read(T *v, size_t num)
-    {
-        union
-        {
-            T dummy;  // Compilation error for non-POD types
-        } dummy;
-        (void)dummy;
-
-        if (mError)
-        {
-            return;
-        }
-
-        size_t length = num * sizeof(T);
-
-        if (mOffset + length > mLength)
-        {
-            mError = true;
-            return;
-        }
-
-        memcpy(v, mData + mOffset, length);
-        mOffset += length;
-    }
-
-    template <typename T>
-    void read(T * v)
-    {
-        read(v, 1);
-    }
-
 };
 
 class BinaryOutputStream
@@ -162,23 +118,31 @@ class BinaryOutputStream
     {
     }
 
-    // writeInt also handles bool types
-    template <class IntT>
-    void writeInt(IntT v)
+    template <typename T>
+    void write(const T *v, size_t num)
     {
-        int intValue = static_cast<int>(v);
+        union
+        {
+            T dummy;  // Compilation error for non-trivial types
+        } dummy;
+        (void) dummy;
+
+        const char *asBytes = reinterpret_cast<const char*>(v);
+        mData.insert(mData.end(), asBytes, asBytes + num * sizeof(T));
+    }
+
+    template <typename T>
+    void write(const T &v)
+    {
         write(&v, 1);
     }
 
-    void writeString(const std::string &v)
+    void write(const std::string &v)
     {
-        writeInt(v.length());
-        write(v.c_str(), v.length());
-    }
+        size_t length = v.length();
+        write(length);
 
-    void writeBytes(unsigned char *bytes, size_t count)
-    {
-        write(bytes, count);
+        write(v.c_str(), length);
     }
 
     size_t length() const
@@ -194,20 +158,6 @@ class BinaryOutputStream
   private:
     DISALLOW_COPY_AND_ASSIGN(BinaryOutputStream);
     std::vector<char> mData;
-
-    template <typename T>
-    void write(const T *v, size_t num)
-    {
-        union
-        {
-            T dummy;  // Compilation error for non-POD types
-        } dummy;
-        (void) dummy;
-
-        const char *asBytes = reinterpret_cast<const char*>(v);
-        mData.insert(mData.end(), asBytes, asBytes + num * sizeof(T));
-    }
-
 };
 }
 
