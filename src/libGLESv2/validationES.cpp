@@ -16,6 +16,7 @@
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/main.h"
+#include "libGLESv2/Query.h"
 
 #include "common/mathutil.h"
 #include "common/utilities.h"
@@ -869,6 +870,55 @@ bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsize
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }
+    }
+
+    return true;
+}
+
+bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id)
+{
+    if (!ValidQueryType(context, target))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (id == 0)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    // From EXT_occlusion_query_boolean: If BeginQueryEXT is called with an <id>
+    // of zero, if the active query object name for <target> is non-zero (for the
+    // targets ANY_SAMPLES_PASSED_EXT and ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, if
+    // the active query for either target is non-zero), if <id> is the name of an
+    // existing query object whose type does not match <target>, or if <id> is the
+    // active query object name for any query type, the error INVALID_OPERATION is
+    // generated.
+
+    // Ensure no other queries are active
+    // NOTE: If other queries than occlusion are supported, we will need to check
+    // separately that:
+    //    a) The query ID passed is not the current active query for any target/type
+    //    b) There are no active queries for the requested target (and in the case
+    //       of GL_ANY_SAMPLES_PASSED_EXT and GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT,
+    //       no query may be active for either if glBeginQuery targets either.
+    if (context->isQueryActive())
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    Query *queryObject = context->getQuery(id, true, target);
+
+    // check that name was obtained with glGenQueries
+    if (!queryObject)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    // check for type mismatch
+    if (queryObject->getType() != target)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
     }
 
     return true;

@@ -117,14 +117,9 @@ void __stdcall glBeginQueryEXT(GLenum target, GLuint id)
 
         if (context)
         {
-            if (!ValidQueryType(context, target))
+            if (!ValidateBeginQuery(context, target, id))
             {
-                return gl::error(GL_INVALID_ENUM);
-            }
-
-            if (id == 0)
-            {
-                return gl::error(GL_INVALID_OPERATION);
+                return;
             }
 
             context->beginQuery(target, id);
@@ -6555,14 +6550,9 @@ void __stdcall glBeginQuery(GLenum target, GLuint id)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!ValidQueryType(context, target))
+            if (!ValidateBeginQuery(context, target, id))
             {
-                return gl::error(GL_INVALID_ENUM);
-            }
-
-            if (id == 0)
-            {
-                return gl::error(GL_INVALID_OPERATION);
+                return;
             }
 
             context->beginQuery(target, id);

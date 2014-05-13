@@ -227,6 +227,7 @@ class Context
 
     GLuint getArrayBufferHandle() const;
 
+    bool isQueryActive() const;
     GLuint getActiveQuery(GLenum target) const;
 
     void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);

@@ -45,6 +45,8 @@ bool ValidateSamplerObjectParameter(GLenum pname);
 bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsizei width, GLsizei height,
                                   GLenum format, GLenum type, GLsizei *bufSize, GLvoid *pixels);
 
+bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id);
+
 }
 
 #endif // LIBGLESV2_VALIDATION_ES_H

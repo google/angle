@@ -768,6 +768,20 @@ GLuint Context::getArrayBufferHandle() const
     return mState.arrayBuffer.id();
 }
 
+bool Context::isQueryActive() const
+{
+    for (State::ActiveQueryMap::const_iterator i = mState.activeQueries.begin();
+         i != mState.activeQueries.end(); i++)
+    {
+        if (i->second.get() != NULL)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 GLuint Context::getActiveQuery(GLenum target) const
 {
     // All query types should already exist in the activeQueries map
@@ -1356,42 +1370,8 @@ void Context::bindTransformFeedback(GLuint transformFeedback)
 
 void Context::beginQuery(GLenum target, GLuint query)
 {
-    // From EXT_occlusion_query_boolean: If BeginQueryEXT is called with an <id>  
-    // of zero, if the active query object name for <target> is non-zero (for the  
-    // targets ANY_SAMPLES_PASSED_EXT and ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, if  
-    // the active query for either target is non-zero), if <id> is the name of an 
-    // existing query object whose type does not match <target>, or if <id> is the
-    // active query object name for any query type, the error INVALID_OPERATION is
-    // generated.
-
-    // Ensure no other queries are active
-    // NOTE: If other queries than occlusion are supported, we will need to check
-    // separately that:
-    //    a) The query ID passed is not the current active query for any target/type
-    //    b) There are no active queries for the requested target (and in the case
-    //       of GL_ANY_SAMPLES_PASSED_EXT and GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT,
-    //       no query may be active for either if glBeginQuery targets either.
-    for (State::ActiveQueryMap::iterator i = mState.activeQueries.begin(); i != mState.activeQueries.end(); i++)
-    {
-        if (i->second.get() != NULL)
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-    }
-
     Query *queryObject = getQuery(query, true, target);
-
-    // check that name was obtained with glGenQueries
-    if (!queryObject)
-    {
-        return gl::error(GL_INVALID_OPERATION);
-    }
-
-    // check for type mismatch
-    if (queryObject->getType() != target)
-    {
-        return gl::error(GL_INVALID_OPERATION);
-    }
+    ASSERT(queryObject);
 
     // set query as active for specified target
     mState.activeQueries[target].set(queryObject);
