@@ -62,6 +62,11 @@ bool TFieldListCollection::equals(const TFieldListCollection &other) const
     return true;
 }
 
+bool TStructure::equals(const TStructure &other) const
+{
+    return TFieldListCollection::equals(other);
+}
+
 bool TInterfaceBlock::equals(const TInterfaceBlock &other) const
 {
     if (!TFieldListCollection::equals(other))

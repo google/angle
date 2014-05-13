@@ -88,8 +88,6 @@ class TFieldListCollection
         return mObjectSize;
     };
 
-    virtual bool equals(const TFieldListCollection &other) const;
-
   protected:
     TFieldListCollection(const TString *name, TFieldList *fields)
         : mName(name),
@@ -100,6 +98,8 @@ class TFieldListCollection
     TString buildMangledName() const;
     size_t calculateObjectSize() const;
     virtual TString mangledNamePrefix() const = 0;
+
+    bool equals(const TFieldListCollection &other) const;
 
     const TString *mName;
     TFieldList *mFields;
@@ -126,6 +126,8 @@ class TStructure : public TFieldListCollection
         return mDeepestNesting;
     }
     bool containsArrays() const;
+
+    bool equals(const TStructure &other) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TStructure);
@@ -177,7 +179,7 @@ class TInterfaceBlock : public TFieldListCollection
         return mMatrixPacking;
     }
 
-    virtual bool equals(const TInterfaceBlock &other) const;
+    bool equals(const TInterfaceBlock &other) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TInterfaceBlock);
