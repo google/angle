@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea2cd02f_3e64ed5a",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2578,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-13T14:19:39Z",
+      "side": 1,
+      "message": "same q about binary_search. it\u0027s okay with me if we use them and they\u0027re not on old GCC, but should put a comment.",
+      "range": {
+        "startLine": 2578,
+        "startChar": 22,
+        "endLine": 2578,
+        "endChar": 35
+      },
+      "revId": "501634ecb609df7f8db817cfd4540dc92b2ba3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a30447d_fcf20150",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3953,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-13T14:19:39Z",
+      "side": 1,
+      "message": "nit []",
+      "range": {
+        "startLine": 3953,
+        "startChar": 79,
+        "endLine": 3953,
+        "endChar": 81
+      },
+      "revId": "501634ecb609df7f8db817cfd4540dc92b2ba3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea2cd02f_1e67b162",
+        "filename": "src/libGLESv2/Context.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-13T14:19:39Z",
+      "side": 1,
+      "message": "Is std::array on old GCC? Maybe we\u0027ll use different code after the refactor, but Context.h will at some point theoretically be GCC-visible. okay with me if we use them and they\u0027re not on old GCC, but should put a comment.",
+      "range": {
+        "startLine": 466,
+        "startChar": 12,
+        "endLine": 466,
+        "endChar": 22
+      },
+      "revId": "501634ecb609df7f8db817cfd4540dc92b2ba3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a30447d_dcedc56e",
+        "filename": "src/libGLESv2/Context.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-13T14:19:39Z",
+      "side": 1,
+      "message": "nit: is this an array? if so, use [] stylistically, for a suggestion to the reader",
+      "range": {
+        "startLine": 486,
+        "startChar": 36,
+        "endLine": 486,
+        "endChar": 44
+      },
+      "revId": "501634ecb609df7f8db817cfd4540dc92b2ba3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
