@@ -10,6 +10,7 @@
 
 #include "compiler/translator/Types.h"
 
+#include <algorithm>
 #include <climits>
 
 TType::TType(const TPublicType &p)
