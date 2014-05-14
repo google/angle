@@ -2907,12 +2907,14 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
     // Try the default flags first and if compilation fails, try some alternatives.
     const UINT extraFlags[] =
     {
-        flags
+        flags,
+        flags | D3DCOMPILE_SKIP_VALIDATION
     };
 
     const static char *extraFlagNames[] =
     {
-        "default"
+        "default",
+        "skip validation"
     };
 
     int attempts = ArraySize(extraFlags);
