@@ -1013,17 +1013,17 @@ bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuff
 
 bool ProgramBinary::linkVaryings(InfoLog &infoLog, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
-    std::vector<gl::Varying> &fragmentVaryings = fragmentShader->getVaryings();
-    std::vector<gl::Varying> &vertexVaryings = vertexShader->getVaryings();
+    std::vector<PackedVarying> &fragmentVaryings = fragmentShader->getVaryings();
+    std::vector<PackedVarying> &vertexVaryings = vertexShader->getVaryings();
 
     for (size_t fragVaryingIndex = 0; fragVaryingIndex < fragmentVaryings.size(); fragVaryingIndex++)
     {
-        gl::Varying *input = &fragmentVaryings[fragVaryingIndex];
+        PackedVarying *input = &fragmentVaryings[fragVaryingIndex];
         bool matched = false;
 
         for (size_t vertVaryingIndex = 0; vertVaryingIndex < vertexVaryings.size(); vertVaryingIndex++)
         {
-            gl::Varying *output = &vertexVaryings[vertVaryingIndex];
+            PackedVarying *output = &vertexVaryings[vertVaryingIndex];
             if (output->name == input->name)
             {
                 if (!linkValidateVariables(infoLog, output->name, *input, *output))
@@ -1536,7 +1536,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     mVertexWorkarounds = vertexShader->getD3DWorkarounds();
 
     // Map the varyings to the register file
-    const gl::ShaderVariable *packing[IMPLEMENTATION_MAX_VARYING_VECTORS][4] = {NULL};
+    VaryingPacking packing = { NULL };
     int registers = mDynamicHLSL->packVaryings(infoLog, packing, fragmentShader, vertexShader, transformFeedbackVaryings);
 
     if (registers < 0)
@@ -1602,7 +1602,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 
         if (usesGeometryShader())
         {
-            std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(registers, packing, fragmentShader, vertexShader);
+            std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(registers, fragmentShader, vertexShader);
             mGeometryExecutable = mRenderer->compileToExecutable(infoLog, geometryHLSL.c_str(), rx::SHADER_GEOMETRY,
                                                                  mTransformFeedbackLinkedVaryings,
                                                                  (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),

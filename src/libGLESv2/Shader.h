@@ -32,6 +32,23 @@ namespace gl
 {
 class ResourceManager;
 
+struct PackedVarying : public Varying
+{
+    unsigned int registerIndex; // Assigned during link
+
+    PackedVarying(const Varying &varying)
+      : Varying(varying),
+        registerIndex(GL_INVALID_INDEX)
+    {}
+
+    bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }
+
+    void resetRegisterAssignment()
+    {
+        registerIndex = GL_INVALID_INDEX;
+    }
+};
+
 class Shader
 {
     friend class DynamicHLSL;
@@ -54,7 +71,7 @@ class Shader
     void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
     const std::vector<Uniform> &getUniforms() const;
     const std::vector<InterfaceBlock> &getInterfaceBlocks() const;
-    std::vector<Varying> &getVaryings();
+    std::vector<PackedVarying> &getVaryings();
 
     virtual void compile() = 0;
     virtual void uncompile();
@@ -82,11 +99,11 @@ class Shader
 
     void getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *length, char *buffer) const;
 
-    static bool compareVarying(const ShaderVariable &x, const ShaderVariable &y);
+    static bool compareVarying(const PackedVarying &x, const PackedVarying &y);
 
     const rx::Renderer *const mRenderer;
 
-    std::vector<Varying> mVaryings;
+    std::vector<PackedVarying> mVaryings;
 
     bool mUsesMultipleRenderTargets;
     bool mUsesFragColor;

@@ -60,7 +60,7 @@ struct ShaderVariable
 struct Uniform : public ShaderVariable
 {
     unsigned int registerIndex;
-    unsigned int elementIndex;     // For struct varyings
+    unsigned int elementIndex; // Offset within a register, for struct members
     std::vector<Uniform> fields;
 
     Uniform(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn,
@@ -105,22 +105,14 @@ struct Varying : public ShaderVariable
 {
     InterpolationType interpolation;
     std::vector<Varying> fields;
-    unsigned int registerIndex;    // Assigned during link
     std::string structName;
 
     Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, InterpolationType interpolationIn)
       : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
-        interpolation(interpolationIn),
-        registerIndex(GL_INVALID_INDEX)
+        interpolation(interpolationIn)
     {}
 
     bool isStruct() const { return !fields.empty(); }
-    bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }
-
-    void resetRegisterAssignment()
-    {
-        registerIndex = GL_INVALID_INDEX;
-    }
 };
 
 struct BlockMemberInfo
