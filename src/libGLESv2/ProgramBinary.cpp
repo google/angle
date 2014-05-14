@@ -1032,7 +1032,6 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, FragmentShader *fragmentShade
                 }
 
                 output->registerIndex = input->registerIndex;
-                output->elementIndex = input->elementIndex;
 
                 matched = true;
                 break;

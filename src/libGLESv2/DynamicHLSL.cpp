@@ -118,7 +118,6 @@ static bool packVarying(Varying *varying, const int maxVaryingVectors, const Sha
             if (available)
             {
                 varying->registerIndex = r;
-                varying->elementIndex = 0;
 
                 for (int y = 0; y < registers; y++)
                 {
@@ -152,7 +151,6 @@ static bool packVarying(Varying *varying, const int maxVaryingVectors, const Sha
                 if (available)
                 {
                     varying->registerIndex = r;
-                    varying->elementIndex = 2;
 
                     for (int y = 0; y < registers; y++)
                     {
@@ -205,8 +203,6 @@ static bool packVarying(Varying *varying, const int maxVaryingVectors, const Sha
                     break;
                 }
             }
-
-            varying->elementIndex = column;
 
             success = true;
         }

@@ -106,14 +106,12 @@ struct Varying : public ShaderVariable
     InterpolationType interpolation;
     std::vector<Varying> fields;
     unsigned int registerIndex;    // Assigned during link
-    unsigned int elementIndex;     // First register element for varyings, assigned during link
     std::string structName;
 
     Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, InterpolationType interpolationIn)
       : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
         interpolation(interpolationIn),
-        registerIndex(GL_INVALID_INDEX),
-        elementIndex(GL_INVALID_INDEX)
+        registerIndex(GL_INVALID_INDEX)
     {}
 
     bool isStruct() const { return !fields.empty(); }
@@ -122,7 +120,6 @@ struct Varying : public ShaderVariable
     void resetRegisterAssignment()
     {
         registerIndex = GL_INVALID_INDEX;
-        elementIndex = GL_INVALID_INDEX;
     }
 };
 
