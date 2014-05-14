@@ -136,7 +136,7 @@ void getVariableInfo(const TType& type,
                      TVariableInfoList& infoList,
                      ShHashFunction64 hashFunction)
 {
-    if (type.getBasicType() == EbtStruct) {
+    if (type.getBasicType() == EbtStruct || type.isInterfaceBlock()) {
         if (type.isArray()) {
             for (int i = 0; i < type.getArraySize(); ++i) {
                 TString lname = name + arrayBrackets(i);
@@ -183,7 +183,9 @@ void getUserDefinedVariableInfo(const TType& type,
 {
     ASSERT(type.getBasicType() == EbtStruct || type.isInterfaceBlock());
 
-    const TFieldList& fields = type.getStruct()->fields();
+    const TFieldList& fields = type.isInterfaceBlock() ?
+        type.getInterfaceBlock()->fields() :
+        type.getStruct()->fields();
     for (size_t i = 0; i < fields.size(); ++i) {
         const TType& fieldType = *(fields[i]->type());
         const TString& fieldName = fields[i]->name();
@@ -370,4 +372,3 @@ bool CollectVariables::visitAggregate(Visit, TIntermAggregate* node)
 
     return visitChildren;
 }
-
