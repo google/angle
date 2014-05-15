@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a3274d1_6d5d31a4",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-15T18:22:59Z",
+      "side": 1,
+      "message": "I think in the future, this should be a global helper that takes the GL state as a parameter.  This would further separate the context and state and would lower the number of helper functions we have on context.\n\nThis can be done in a separate CL later since currently there is no way of getting the state out of the context.",
+      "range": {
+        "startLine": 771,
+        "startChar": 0,
+        "endLine": 783,
+        "endChar": 1
+      },
+      "revId": "5b3bfb5929b9f798bd0795979f5b621e997c1fbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
