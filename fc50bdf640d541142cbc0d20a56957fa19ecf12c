@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa1c9852_83bf9eef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-15T13:31:13Z",
+      "side": 1,
+      "message": "I added a reference to the ANGLE issue here",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 13
+      },
+      "revId": "fc50bdf640d541142cbc0d20a56957fa19ecf12c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1c9852_636622f6",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-15T13:31:13Z",
+      "side": 1,
+      "message": "nitpicky, but can you edit out this whitespace change?",
+      "range": {
+        "startLine": 374,
+        "startChar": 1,
+        "endLine": 374,
+        "endChar": 1
+      },
+      "revId": "fc50bdf640d541142cbc0d20a56957fa19ecf12c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
