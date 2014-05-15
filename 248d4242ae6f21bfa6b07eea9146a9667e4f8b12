@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a2cfc7a_6b399dc4",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-15T19:01:04Z",
+      "side": 1,
+      "message": "Can we re-write this to just be *outValue \u003d readInt\u003cIntT\u003e();?  It\u0027ll be less error prone if we have to change it later.",
+      "range": {
+        "startLine": 40,
+        "startChar": 8,
+        "endLine": 42,
+        "endChar": 45
+      },
+      "revId": "248d4242ae6f21bfa6b07eea9146a9667e4f8b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a2cfc7a_8b46d135",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-15T19:01:04Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 54,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 32
+      },
+      "revId": "248d4242ae6f21bfa6b07eea9146a9667e4f8b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a2cfc7a_2bdde526",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-15T19:01:04Z",
+      "side": 1,
+      "message": "We can replace this with std::is_fundamental since we won\u0027t be running this code on non-windows machines.",
+      "range": {
+        "startLine": 127,
+        "startChar": 8,
+        "endLine": 131,
+        "endChar": 20
+      },
+      "revId": "248d4242ae6f21bfa6b07eea9146a9667e4f8b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a3274d1_ad1ba9d6",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-15T19:01:04Z",
+      "side": 1,
+      "message": "Formatting.",
+      "range": {
+        "startLine": 151,
+        "startChar": 16,
+        "endLine": 151,
+        "endChar": 19
+      },
+      "revId": "248d4242ae6f21bfa6b07eea9146a9667e4f8b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a2cfc7a_eb13cd2c",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-15T19:01:04Z",
+      "side": 1,
+      "message": "Since we\u0027re potentially shortening param\u0027s size here, we should add an assertion (or error) if the input value is greater than std::numeric_limits\u003cint\u003e::max()",
+      "range": {
+        "startLine": 169,
+        "startChar": 8,
+        "endLine": 169,
+        "endChar": 47
+      },
+      "revId": "248d4242ae6f21bfa6b07eea9146a9667e4f8b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a2cfc7a_0b0901fa",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-15T19:01:04Z",
+      "side": 1,
+      "message": "Same as above about std::is_fundamental",
+      "range": {
+        "startLine": 201,
+        "startChar": 8,
+        "endLine": 205,
+        "endChar": 21
+      },
+      "revId": "248d4242ae6f21bfa6b07eea9146a9667e4f8b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a2cfc7a_abbe35c1",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1140,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-15T19:01:04Z",
+      "side": 1,
+      "message": "Good chance to fix this too.",
+      "range": {
+        "startLine": 1140,
+        "startChar": 0,
+        "endLine": 1140,
+        "endChar": 8
+      },
+      "revId": "248d4242ae6f21bfa6b07eea9146a9667e4f8b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
