@@ -394,20 +394,21 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         IDXGIFactory *factory = mRenderer->getDxgiFactory();
 
         DXGI_SWAP_CHAIN_DESC swapChainDesc = {0};
-        swapChainDesc.BufferCount = 2;
-        swapChainDesc.BufferDesc.Format = gl_d3d11::GetTexFormat(mBackBufferFormat, mRenderer->getCurrentClientVersion());
         swapChainDesc.BufferDesc.Width = backbufferWidth;
         swapChainDesc.BufferDesc.Height = backbufferHeight;
-        swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-        swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
         swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-        swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        swapChainDesc.Flags = 0;
-        swapChainDesc.OutputWindow = mWindow;
+        swapChainDesc.BufferDesc.Format = gl_d3d11::GetTexFormat(mBackBufferFormat, mRenderer->getCurrentClientVersion());
+        swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+        swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
         swapChainDesc.SampleDesc.Count = 1;
         swapChainDesc.SampleDesc.Quality = 0;
+        swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        swapChainDesc.BufferCount = 2;
+        swapChainDesc.OutputWindow = mWindow;
         swapChainDesc.Windowed = TRUE;
+        swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+        swapChainDesc.Flags = 0;
 
         HRESULT result = factory->CreateSwapChain(device, &swapChainDesc, &mSwapChain);
 
