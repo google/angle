@@ -39,6 +39,30 @@
       "revId": "3376e223c8d7f4fddf83751ccafc7cbfac43e628",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a3274d1_b345ca7b",
+        "filename": "tests/tests.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-16T15:07:21Z",
+      "side": 1,
+      "message": "I named the checkout folder after the repository, I can change it but that will also require a new commit to angle-internal\u0027s DEPS",
+      "parentUuid": "8a3274d1_13877688",
+      "range": {
+        "startLine": 179,
+        "startChar": 44,
+        "endLine": 179,
+        "endChar": 65
+      },
+      "revId": "3376e223c8d7f4fddf83751ccafc7cbfac43e628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
