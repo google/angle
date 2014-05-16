@@ -28,7 +28,7 @@ debug.txt
 *.orig
 *.rej
 .gclient_entries
-third_party
+/third_party
 tests/third_party
 out
 lib/*

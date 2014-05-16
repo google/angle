@@ -35,6 +35,7 @@
 #include "libEGL/Display.h"
 
 #include "third_party/trace_event/trace_event.h"
+#include "third_party/systeminfo/SystemInfo.h"
 
 // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
 #define REF_RAST 0
@@ -266,7 +267,7 @@ EGLint Renderer9::initialize()
     mSupportsNonPower2Textures = !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_POW2) &&
         !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_CUBEMAP_POW2) &&
         !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) &&
-        !(getComparableOSVersion() < versionWindowsVista && mAdapterIdentifier.VendorId == VENDOR_ID_AMD);
+        !(!isWindowsVistaOrGreater() && mAdapterIdentifier.VendorId == VENDOR_ID_AMD);
 
     // Must support a minimum of 2:1 anisotropy for max anisotropy to be considered supported, per the spec
     mSupportsTextureFilterAnisotropy = ((mDeviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY) && (mDeviceCaps.MaxAnisotropy >= 2));

@@ -161,7 +161,7 @@ D3D11_FILTER ConvertFilter(GLenum minFilter, GLenum magFilter, float maxAnisotro
 
     if (maxAnisotropy > 1.0f)
     {
-        return D3D11_ENCODE_ANISOTROPIC_FILTER(comparison);
+        return D3D11_ENCODE_ANISOTROPIC_FILTER(static_cast<D3D11_COMPARISON_FUNC>(comparison));
     }
     else
     {
@@ -186,7 +186,7 @@ D3D11_FILTER ConvertFilter(GLenum minFilter, GLenum magFilter, float maxAnisotro
           default:         UNREACHABLE();
         }
 
-        return D3D11_ENCODE_BASIC_FILTER(dxMin, dxMag, dxMip, comparison);
+        return D3D11_ENCODE_BASIC_FILTER(dxMin, dxMag, dxMip, static_cast<D3D11_COMPARISON_FUNC>(comparison));
     }
 }
 

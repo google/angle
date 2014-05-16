@@ -453,6 +453,7 @@ void Win32Window::destroy()
     {
         eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         eglTerminate(mDisplay);
+        mDisplay = EGL_NO_DISPLAY;
     }
 
     if (mNativeDisplay)
