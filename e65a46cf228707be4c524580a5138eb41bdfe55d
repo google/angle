@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a2cfc7a_51864602",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-16T14:57:15Z",
+      "side": 1,
+      "message": "kinda seems odd to have to have the requirement for dEQP to not use Unicode to propagate back to our entire development workflow. Does this affect all samples and tests, or just the two or three places where you changed L to TEXT and added \"A\" to Win32 methods?",
+      "range": {
+        "startLine": 65,
+        "startChar": 44,
+        "endLine": 65,
+        "endChar": 51
+      },
+      "revId": "e65a46cf228707be4c524580a5138eb41bdfe55d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
