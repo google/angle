@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a3274d1_33847a81",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-16T14:51:29Z",
+      "side": 1,
+      "message": "ye old public issue",
+      "revId": "3376e223c8d7f4fddf83751ccafc7cbfac43e628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a3274d1_13877688",
+        "filename": "tests/tests.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-16T14:51:29Z",
+      "side": 1,
+      "message": "let\u0027s call the folders \u0027gles_conform_support\u0027 or \u0027gles_conform_test\u0027 to align with Chromium. at the very least, let\u0027s put \u0027gles\u0027 in the directory name, and make the dir name match the project.",
+      "range": {
+        "startLine": 179,
+        "startChar": 44,
+        "endLine": 179,
+        "endChar": 65
+      },
+      "revId": "3376e223c8d7f4fddf83751ccafc7cbfac43e628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
