@@ -2450,12 +2450,10 @@ void __stdcall glGetBooleanv(GLenum pname, GLboolean* params)
         {
             GLenum nativeType;
             unsigned int numParams = 0;
-            if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
-                return gl::error(GL_INVALID_ENUM);
-
-            // pname is valid, but there are no parameters to return
-            if (numParams == 0)
+            if (!ValidateStateQuery(context, pname, &nativeType, &numParams))
+            {
                 return;
+            }
 
             if (nativeType == GL_BOOL)
             {
@@ -2598,12 +2596,10 @@ void __stdcall glGetFloatv(GLenum pname, GLfloat* params)
         {
             GLenum nativeType;
             unsigned int numParams = 0;
-            if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
-                return gl::error(GL_INVALID_ENUM);
-
-            // pname is valid, but that there are no parameters to return.
-            if (numParams == 0)
+            if (!ValidateStateQuery(context, pname, &nativeType, &numParams))
+            {
                 return;
+            }
 
             if (nativeType == GL_FLOAT)
             {
@@ -2957,12 +2953,11 @@ void __stdcall glGetIntegerv(GLenum pname, GLint* params)
         {
             GLenum nativeType;
             unsigned int numParams = 0;
-            if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
-                return gl::error(GL_INVALID_ENUM);
 
-            // pname is valid, but there are no parameters to return
-            if (numParams == 0)
+            if (!ValidateStateQuery(context, pname, &nativeType, &numParams))
+            {
                 return;
+            }
 
             if (nativeType == GL_INT)
             {
@@ -8779,12 +8774,10 @@ void __stdcall glGetInteger64v(GLenum pname, GLint64* params)
 
             GLenum nativeType;
             unsigned int numParams = 0;
-            if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
-                return gl::error(GL_INVALID_ENUM);
-
-            // pname is valid, but that there are no parameters to return.
-            if (numParams == 0)
+            if (!ValidateStateQuery(context, pname, &nativeType, &numParams))
+            {
                 return;
+            }
 
             if (nativeType == GL_INT_64_ANGLEX)
             {

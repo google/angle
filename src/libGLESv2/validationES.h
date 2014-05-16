@@ -52,6 +52,8 @@ bool ValidateUniform(gl::Context *context, GLenum uniformType, GLint location, G
 bool ValidateUniformMatrix(gl::Context *context, GLenum matrixType, GLint location, GLsizei count,
                            GLboolean transpose);
 
+bool ValidateStateQuery(gl::Context *context, GLenum pname, GLenum *nativeType, unsigned int *numParams);
+
 }
 
 #endif // LIBGLESV2_VALIDATION_ES_H

@@ -225,6 +225,7 @@ class Context
     GLuint getRenderbufferHandle() const;
     GLuint getVertexArrayHandle() const;
     GLuint getSamplerHandle(GLuint textureUnit) const;
+    unsigned int getActiveSampler() const;
 
     GLuint getArrayBufferHandle() const;
 
@@ -368,10 +369,10 @@ class Context
 
     bool isSampler(GLuint samplerName) const;
 
-    bool getBooleanv(GLenum pname, GLboolean *params);
-    bool getFloatv(GLenum pname, GLfloat *params);
-    bool getIntegerv(GLenum pname, GLint *params);
-    bool getInteger64v(GLenum pname, GLint64 *params);
+    void getBooleanv(GLenum pname, GLboolean *params);
+    void getFloatv(GLenum pname, GLfloat *params);
+    void getIntegerv(GLenum pname, GLint *params);
+    void getInteger64v(GLenum pname, GLint64 *params);
 
     bool getIndexedIntegerv(GLenum target, GLuint index, GLint *data);
     bool getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data);
@@ -448,7 +449,7 @@ class Context
     bool supportsTextureFilterAnisotropy() const;
     bool supportsPBOs() const;
 
-    bool getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type);
+    void getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type);
 
     float getTextureMaxAnisotropy() const;
 

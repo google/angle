@@ -763,6 +763,11 @@ GLuint Context::getSamplerHandle(GLuint textureUnit) const
     return mState.samplers[textureUnit];
 }
 
+unsigned int Context::getActiveSampler() const
+{
+    return mState.activeSampler;
+}
+
 GLuint Context::getArrayBufferHandle() const
 {
     return mState.arrayBuffer.id();
@@ -961,7 +966,7 @@ void Context::deleteBuffer(GLuint buffer)
     {
         detachBuffer(buffer);
     }
-    
+
     mResourceManager->deleteBuffer(buffer);
 }
 
@@ -991,7 +996,7 @@ void Context::deleteRenderbuffer(GLuint renderbuffer)
     {
         detachRenderbuffer(renderbuffer);
     }
-    
+
     mResourceManager->deleteRenderbuffer(renderbuffer);
 }
 
@@ -1330,7 +1335,7 @@ void Context::useProgram(GLuint program)
             newProgram->addRef();
             mCurrentProgramBinary.set(newProgram->getProgramBinary());
         }
-        
+
         if (oldProgram)
         {
             oldProgram->release();
@@ -1626,7 +1631,7 @@ Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type) cons
     return mState.samplerTexture[type][sampler].get();
 }
 
-bool Context::getBooleanv(GLenum pname, GLboolean *params)
+void Context::getBooleanv(GLenum pname, GLboolean *params)
 {
     switch (pname)
     {
@@ -1652,13 +1657,12 @@ bool Context::getBooleanv(GLenum pname, GLboolean *params)
       case GL_TRANSFORM_FEEDBACK_ACTIVE: *params = getCurrentTransformFeedback()->isStarted(); break;
       case GL_TRANSFORM_FEEDBACK_PAUSED: *params = getCurrentTransformFeedback()->isPaused();  break;
       default:
-        return false;
+        UNREACHABLE();
+        break;
     }
-
-    return true;
 }
 
-bool Context::getFloatv(GLenum pname, GLfloat *params)
+void Context::getFloatv(GLenum pname, GLfloat *params)
 {
     // Please note: DEPTH_CLEAR_VALUE is included in our internal getFloatv implementation
     // because it is stored as a float, despite the fact that the GL ES 2.0 spec names
@@ -1696,41 +1700,30 @@ bool Context::getFloatv(GLenum pname, GLfloat *params)
         params[3] = mState.blendColor.alpha;
         break;
       case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
-        if (!supportsTextureFilterAnisotropy())
-        {
-            return false;
-        }
+        ASSERT(supportsTextureFilterAnisotropy());
         *params = mMaxTextureAnisotropy;
         break;
       default:
-        return false;
+        UNREACHABLE();
+        break;
     }
-
-    return true;
 }
 
-bool Context::getIntegerv(GLenum pname, GLint *params)
+void Context::getIntegerv(GLenum pname, GLint *params)
 {
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
     {
         unsigned int colorAttachment = (pname - GL_DRAW_BUFFER0_EXT);
-
-        if (colorAttachment >= mRenderer->getMaxRenderTargets())
-        {
-            // return true to stop further operation in the parent call
-            return gl::error(GL_INVALID_OPERATION, true);
-        }
-
+        ASSERT(colorAttachment < mRenderer->getMaxRenderTargets());
         Framebuffer *framebuffer = getDrawFramebuffer();
-
         *params = framebuffer->getDrawBufferState(colorAttachment);
-        return true;
+        return;
     }
 
     // Please note: DEPTH_CLEAR_VALUE is not included in our internal getIntegerv implementation
     // because it is stored as a float, despite the fact that the GL ES 2.0 spec names
     // GetIntegerv as its native query function. As it would require conversion in any
-    // case, this should make no difference to the calling application. You may find it in 
+    // case, this should make no difference to the calling application. You may find it in
     // Context::getFloatv.
     switch (pname)
     {
@@ -1802,24 +1795,13 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS: *params = mRenderer->getMaxTransformFeedbackInterleavedComponents(); break;
       case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS:       *params = mRenderer->getMaxTransformFeedbackBuffers();               break;
       case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS:    *params = mRenderer->getMaxTransformFeedbackSeparateComponents();    break;
-      case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   
+      case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
         params[0] = mNumCompressedTextureFormats;
         break;
       case GL_MAX_SAMPLES_ANGLE:
-        {
-            GLsizei maxSamples = getMaxSupportedSamples();
-            if (maxSamples != 0)
-            {
-                *params = maxSamples;
-            }
-            else
-            {
-                return false;
-            }
-
-            break;
-        }
-      case GL_SAMPLE_BUFFERS:                   
+        *params = static_cast<GLint>(getMaxSupportedSamples());
+        break;
+      case GL_SAMPLE_BUFFERS:
       case GL_SAMPLES:
         {
             gl::Framebuffer *framebuffer = getDrawFramebuffer();
@@ -1842,7 +1824,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
                     break;
                 }
             }
-            else 
+            else
             {
                 *params = 0;
             }
@@ -1852,13 +1834,11 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
         {
             GLenum internalFormat, format, type;
-            if (getCurrentReadFormatType(&internalFormat, &format, &type))
-            {
-                if (pname == GL_IMPLEMENTATION_COLOR_READ_FORMAT)
-                    *params = format;
-                else
-                    *params = type;
-            }
+            getCurrentReadFormatType(&internalFormat, &format, &type);
+            if (pname == GL_IMPLEMENTATION_COLOR_READ_FORMAT)
+                *params = format;
+            else
+                *params = type;
         }
         break;
       case GL_MAX_VIEWPORT_DIMS:
@@ -1953,48 +1933,20 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         }
         break;
       case GL_TEXTURE_BINDING_2D:
-        {
-            if (mState.activeSampler > mRenderer->getMaxCombinedTextureImageUnits() - 1)
-            {
-                gl::error(GL_INVALID_OPERATION);
-                return false;
-            }
-
-            *params = mState.samplerTexture[TEXTURE_2D][mState.activeSampler].id();
-        }
+        ASSERT(mState.activeSampler < mRenderer->getMaxCombinedTextureImageUnits());
+        *params = mState.samplerTexture[TEXTURE_2D][mState.activeSampler].id();
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
-        {
-            if (mState.activeSampler > mRenderer->getMaxCombinedTextureImageUnits() - 1)
-            {
-                gl::error(GL_INVALID_OPERATION);
-                return false;
-            }
-
-            *params = mState.samplerTexture[TEXTURE_CUBE][mState.activeSampler].id();
-        }
+        ASSERT(mState.activeSampler < mRenderer->getMaxCombinedTextureImageUnits());
+        *params = mState.samplerTexture[TEXTURE_CUBE][mState.activeSampler].id();
         break;
       case GL_TEXTURE_BINDING_3D:
-        {
-            if (mState.activeSampler > mRenderer->getMaxCombinedTextureImageUnits() - 1)
-            {
-                gl::error(GL_INVALID_OPERATION);
-                return false;
-            }
-
-            *params = mState.samplerTexture[TEXTURE_3D][mState.activeSampler].id();
-        }
+        ASSERT(mState.activeSampler < mRenderer->getMaxCombinedTextureImageUnits());
+        *params = mState.samplerTexture[TEXTURE_3D][mState.activeSampler].id();
         break;
       case GL_TEXTURE_BINDING_2D_ARRAY:
-        {
-            if (mState.activeSampler > mRenderer->getMaxCombinedTextureImageUnits() - 1)
-            {
-                gl::error(GL_INVALID_OPERATION);
-                return false;
-            }
-
-            *params = mState.samplerTexture[TEXTURE_2D_ARRAY][mState.activeSampler].id();
-        }
+        ASSERT(mState.activeSampler < mRenderer->getMaxCombinedTextureImageUnits());
+        *params = mState.samplerTexture[TEXTURE_2D_ARRAY][mState.activeSampler].id();
         break;
       case GL_RESET_NOTIFICATION_STRATEGY_EXT:
         *params = mResetStrategy;
@@ -2027,13 +1979,12 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         *params = static_cast<GLint>(getNumExtensions());
         break;
       default:
-        return false;
+        UNREACHABLE();
+        break;
     }
-
-    return true;
 }
 
-bool Context::getInteger64v(GLenum pname, GLint64 *params)
+void Context::getInteger64v(GLenum pname, GLint64 *params)
 {
     switch (pname)
     {
@@ -2062,10 +2013,9 @@ bool Context::getInteger64v(GLenum pname, GLint64 *params)
         *params = 0;
         break;
       default:
-        return false;
+        UNREACHABLE();
+        break;
     }
-
-    return true;
 }
 
 bool Context::getIndexedIntegerv(GLenum target, GLuint index, GLint *data)
@@ -2138,7 +2088,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
     // Please note: the query type returned for DEPTH_CLEAR_VALUE in this implementation
     // is FLOAT rather than INT, as would be suggested by the GL ES 2.0 spec. This is due
     // to the fact that it is stored internally as a float, and so would require conversion
-    // if returned from Context::getIntegerv. Since this conversion is already implemented 
+    // if returned from Context::getIntegerv. Since this conversion is already implemented
     // in the case that one calls glGetIntegerv to retrieve a float-typed state variable, we
     // place DEPTH_CLEAR_VALUE with the floats. This should make no difference to the calling
     // application.
@@ -2457,7 +2407,7 @@ void Context::applyState(GLenum drawMode)
     {
         if (mState.sampleCoverageValue != 0)
         {
-            
+
             float threshold = 0.5f;
 
             for (int i = 0; i < samples; ++i)
@@ -3167,7 +3117,7 @@ GLenum Context::getResetStatus()
             mResetStatus = GL_NO_ERROR;
         }
     }
-    
+
     return status;
 }
 
@@ -3393,25 +3343,17 @@ float Context::getTextureMaxAnisotropy() const
     return mMaxTextureAnisotropy;
 }
 
-bool Context::getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type)
+void Context::getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type)
 {
     Framebuffer *framebuffer = getReadFramebuffer();
-    if (!framebuffer || framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
+    ASSERT(framebuffer && framebuffer->completeness() == GL_FRAMEBUFFER_COMPLETE);
 
     Renderbuffer *renderbuffer = framebuffer->getReadColorbuffer();
-    if (!renderbuffer)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
+    ASSERT(renderbuffer);
 
     *internalFormat = renderbuffer->getActualFormat();
     *format = gl::GetFormat(renderbuffer->getActualFormat(), mClientVersion);
     *type = gl::GetType(renderbuffer->getActualFormat(), mClientVersion);
-
-    return true;
 }
 
 void Context::detachBuffer(GLuint buffer)
@@ -3621,7 +3563,7 @@ bool Context::skipDraw(GLenum drawMode)
         // undefined when not written, just skip drawing to avoid unexpected results.
         if (!getCurrentProgramBinary()->usesPointSize())
         {
-            // This is stictly speaking not an error, but developers should be 
+            // This is stictly speaking not an error, but developers should be
             // notified of risking undefined behavior.
             ERR("Point rendering without writing to gl_PointSize.");
 
