@@ -74,11 +74,14 @@ public:
     NameMap& getNameMap() { return nameMap; }
     TSymbolTable& getSymbolTable() { return symbolTable; }
     ShShaderSpec getShaderSpec() const { return shaderSpec; }
+    std::string getBuiltInResourcesString() const { return builtInResourcesString; }
 
 protected:
     ShShaderType getShaderType() const { return shaderType; }
     // Initialize symbol-table with built-in symbols.
     bool InitBuiltInSymbolTable(const ShBuiltInResources& resources);
+    // Compute the string representation of the built-in resources
+    void setResourceString();
     // Clears the results from the previous compilation.
     void clearResults();
     // Return true if function recursion is detected or call depth exceeded.
@@ -134,6 +137,7 @@ private:
     int maxCallStackDepth;
 
     ShBuiltInResources compileResources;
+    std::string builtInResourcesString;
 
     // Built-in symbol table for the given language, spec, and resources.
     // It is preserved from compile-to-compile.

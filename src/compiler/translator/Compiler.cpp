@@ -267,6 +267,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
 bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
 {
     compileResources = resources;
+    setResourceString();
 
     assert(symbolTable.isEmpty());
     symbolTable.push();   // COMMON_BUILTINS
@@ -316,6 +317,34 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     IdentifyBuiltIns(shaderType, shaderSpec, resources, symbolTable);
 
     return true;
+}
+
+void TCompiler::setResourceString()
+{
+    std::ostringstream strstream;
+    strstream << ":MaxVertexAttribs:" << compileResources.MaxVertexAttribs
+              << ":MaxVertexUniformVectors:" << compileResources.MaxVertexUniformVectors
+              << ":MaxVaryingVectors:" << compileResources.MaxVaryingVectors
+              << ":MaxVertexTextureImageUnits:" << compileResources.MaxVertexTextureImageUnits
+              << ":MaxCombinedTextureImageUnits:" << compileResources.MaxCombinedTextureImageUnits
+              << ":MaxTextureImageUnits:" << compileResources.MaxTextureImageUnits
+              << ":MaxFragmentUniformVectors:" << compileResources.MaxFragmentUniformVectors
+              << ":MaxDrawBuffers:" << compileResources.MaxDrawBuffers
+              << ":OES_standard_derivatives:" << compileResources.OES_standard_derivatives
+              << ":OES_EGL_image_external:" << compileResources.OES_EGL_image_external
+              << ":ARB_texture_rectangle:" << compileResources.ARB_texture_rectangle
+              << ":EXT_draw_buffers:" << compileResources.EXT_draw_buffers
+              << ":FragmentPrecisionHigh:" << compileResources.FragmentPrecisionHigh
+              << ":MaxExpressionComplexity:" << compileResources.MaxExpressionComplexity
+              << ":MaxCallStackDepth:" << compileResources.MaxCallStackDepth
+              << ":EXT_frag_depth:" << compileResources.EXT_frag_depth
+              << ":EXT_shader_texture_lod:" << compileResources.EXT_shader_texture_lod
+              << ":MaxVertexOutputVectors:" << compileResources.MaxVertexOutputVectors
+              << ":MaxFragmentInputVectors:" << compileResources.MaxFragmentInputVectors
+              << ":MinProgramTexelOffset:" << compileResources.MinProgramTexelOffset
+              << ":MaxProgramTexelOffset:" << compileResources.MaxProgramTexelOffset;
+
+    builtInResourcesString = strstream.str();
 }
 
 void TCompiler::clearResults()

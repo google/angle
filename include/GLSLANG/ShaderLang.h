@@ -37,7 +37,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 123
+#define ANGLE_SH_VERSION 124
 
 //
 // The names of the following enums have been derived by replacing GL prefix
@@ -157,6 +157,7 @@ typedef enum {
   SH_ACTIVE_OUTPUT_VARIABLES_ARRAY  = 0x6007,
   SH_ACTIVE_ATTRIBUTES_ARRAY        = 0x6008,
   SH_ACTIVE_VARYINGS_ARRAY          = 0x6009,
+  SH_RESOURCES_STRING_LENGTH        = 0x600A
 } ShShaderInfo;
 
 // Compile options.
@@ -319,12 +320,23 @@ COMPILER_EXPORT void ShInitBuiltInResources(ShBuiltInResources* resources);
 
 //
 // ShHandle held by but opaque to the driver.  It is allocated,
-// managed, and de-allocated by the compiler. It's contents 
+// managed, and de-allocated by the compiler. Its contents
 // are defined by and used by the compiler.
 //
 // If handle creation fails, 0 will be returned.
 //
 typedef void* ShHandle;
+
+//
+// Returns the a concatenated list of the items in ShBuiltInResources as a string.
+// This function must be updated whenever ShBuiltInResources is changed.
+// Parameters:
+// handle: Specifies the handle of the compiler to be used.
+// outStringLen: Specifies the size of the buffer, in number of characters. The size
+//               of the buffer required to store the resources string can be obtained
+//               by calling ShGetInfo with SH_RESOURCES_STRING_LENGTH.
+// outStr: Returns a null-terminated string representing all the built-in resources.
+COMPILER_EXPORT void ShGetBuiltInResourcesString(const ShHandle handle, size_t outStringLen, char *outStr);
 
 //
 // Driver calls these to create and destroy compiler objects.
