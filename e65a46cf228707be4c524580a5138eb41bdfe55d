@@ -22,6 +22,30 @@
       "revId": "e65a46cf228707be4c524580a5138eb41bdfe55d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1c9852_a9f0f9b8",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-16T15:04:25Z",
+      "side": 1,
+      "message": "It is a bit frustrating, DEQP has a few places that will #error if _UNICODE is defined. As far as this change goes, it doesn\u0027t effect us at all since we have no real unicode support anyways.  The places where I changed L to TEXT or explicitly used the ASCII win32 functions are good changes to make so we can compile with or without unicode support enabled.",
+      "parentUuid": "4a2cfc7a_51864602",
+      "range": {
+        "startLine": 65,
+        "startChar": 44,
+        "endLine": 65,
+        "endChar": 51
+      },
+      "revId": "e65a46cf228707be4c524580a5138eb41bdfe55d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
