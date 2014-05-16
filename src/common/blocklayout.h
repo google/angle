@@ -77,6 +77,7 @@ class HLSLBlockEncoder : public BlockLayoutEncoder
 
     virtual void enterAggregateType();
     virtual void exitAggregateType();
+    void skipRegisters(unsigned int numRegisters);
 
   protected:
     virtual void getBlockLayoutInfo(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int *arrayStrideOut, int *matrixStrideOut);

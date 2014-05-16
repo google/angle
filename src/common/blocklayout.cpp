@@ -227,6 +227,11 @@ void HLSLBlockEncoder::advanceOffset(GLenum type, unsigned int arraySize, bool i
     }
 }
 
+void HLSLBlockEncoder::skipRegisters(unsigned int numRegisters)
+{
+    mCurrentOffset += (numRegisters * ComponentsPerRegister);
+}
+
 void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, gl::Uniform *variable, HLSLBlockEncoder *encoder, const std::vector<gl::BlockMemberInfo> &blockInfo)
 {
     // because this method computes offsets (element indexes) instead of any total sizes,
@@ -236,9 +241,19 @@ void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, gl::Uniform *va
     {
         encoder->enterAggregateType();
 
+        variable->registerIndex = baseRegisterIndex;
+
         for (size_t fieldIndex = 0; fieldIndex < variable->fields.size(); fieldIndex++)
         {
             HLSLVariableGetRegisterInfo(baseRegisterIndex, &variable->fields[fieldIndex], encoder, blockInfo);
+        }
+
+        // Since the above loop only encodes one element of an array, ensure we don't lose track of the
+        // current register offset
+        if (variable->isArray())
+        {
+            unsigned int structRegisterCount = (HLSLVariableRegisterCount(*variable) / variable->arraySize);
+            encoder->skipRegisters(structRegisterCount * (variable->arraySize - 1));
         }
 
         encoder->exitAggregateType();

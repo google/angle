@@ -24,6 +24,7 @@
 #include "libGLESv2/Context.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/DynamicHLSL.h"
+#include "common/blocklayout.h"
 
 #undef near
 #undef far
@@ -1810,25 +1811,6 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const std::vector<gl::Uniform
     return true;
 }
 
-int totalRegisterCount(const gl::Uniform &uniform)
-{
-    int registerCount = 0;
-
-    if (!uniform.fields.empty())
-    {
-        for (unsigned int fieldIndex = 0; fieldIndex < uniform.fields.size(); fieldIndex++)
-        {
-            registerCount += totalRegisterCount(uniform.fields[fieldIndex]);
-        }
-    }
-    else
-    {
-        registerCount = 1;
-    }
-
-    return (uniform.arraySize > 0) ? uniform.arraySize * registerCount : registerCount;
-}
-
 TextureType ProgramBinary::getTextureType(GLenum samplerType, InfoLog &infoLog)
 {
     switch(samplerType)
@@ -1865,23 +1847,25 @@ bool ProgramBinary::defineUniform(GLenum shader, const gl::Uniform &constant, In
     {
         if (constant.arraySize > 0)
         {
-            unsigned int elementRegisterIndex = constant.registerIndex;
+            const unsigned int elementRegisterCount = HLSLVariableRegisterCount(constant) / constant.arraySize;
 
             for (unsigned int elementIndex = 0; elementIndex < constant.arraySize; elementIndex++)
             {
+                const unsigned int elementRegisterOffset = elementRegisterCount * elementIndex;
+
                 for (size_t fieldIndex = 0; fieldIndex < constant.fields.size(); fieldIndex++)
                 {
                     const gl::Uniform &field = constant.fields[fieldIndex];
                     const std::string &uniformName = constant.name + ArrayString(elementIndex) + "." + field.name;
+                    const unsigned int fieldRegisterIndex = field.registerIndex + elementRegisterOffset;
                     gl::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize,
-                                             elementRegisterIndex, field.elementIndex);
+                                             fieldRegisterIndex, field.elementIndex);
 
                     fieldUniform.fields = field.fields;
                     if (!defineUniform(shader, fieldUniform, infoLog))
                     {
                         return false;
                     }
-                    elementRegisterIndex += totalRegisterCount(field);
                 }
             }
         }
