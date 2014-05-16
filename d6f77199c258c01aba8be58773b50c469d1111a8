@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a3274d1_1e6dbd41",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-16T19:02:57Z",
+      "side": 1,
+      "message": "This should work if you use std::is_fundamental\u003cT\u003e::value",
+      "range": {
+        "startLine": 190,
+        "startChar": 8,
+        "endLine": 190,
+        "endChar": 50
+      },
+      "revId": "d6f77199c258c01aba8be58773b50c469d1111a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
