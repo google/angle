@@ -62,7 +62,7 @@
                 {
                     'OutputDirectory': '$(SolutionDir)$(ConfigurationName)_$(Platform)',
                     'IntermediateDirectory': '$(OutDir)\\obj\\$(ProjectName)',
-                    'CharacterSet': '1',    # UNICODE
+                    'CharacterSet': '0',    # ASCII
                 },
                 'msvs_settings':
                 {

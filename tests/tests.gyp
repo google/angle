@@ -6,6 +6,7 @@
     'variables':
     {
         'angle_build_conformance_tests%': '0',
+        'angle_build_deqp_tests%': '0',
     },
     'targets':
     [
@@ -287,6 +288,70 @@
                                         '<(gles3_conformance_tests_input_file)',
                                         '<(gles_conformance_tests_input_dir)',
                                         '<(gles3_conformance_tests_generated_file)',
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                }],
+                ['angle_build_deqp_tests',
+                {
+                    'targets':
+                    [
+                        {
+                            'target_name': 'deqp_tests',
+                            'type': 'executable',
+                            'includes': [ '../build/common_defines.gypi', ],
+                            'dependencies':
+                            [
+                                '../src/angle.gyp:libGLESv2',
+                                '../src/angle.gyp:libEGL',
+                                'gtest',
+                                'third_party/deqp/src/deqp/modules/gles3/gles3.gyp:deqp-gles3',
+                                'third_party/deqp/src/deqp/framework/platform/platform.gyp:tcutil-platform',
+                            ],
+                            'include_dirs':
+                            [
+                                '../include',
+                                'third_party/googletest/include',
+                                'deqp_tests',
+                            ],
+                            'variables':
+                            {
+                                'deqp_tests_output_dir': '<(SHARED_INTERMEDIATE_DIR)/deqp_tests',
+                                'deqp_tests_input_file': 'deqp_tests/deqp_tests.txt',
+                                'deqp_tests_generated_file': '<(deqp_tests_output_dir)/generated_deqp_tests.cpp',
+                            },
+                            'sources':
+                            [
+                                '<!@(python <(angle_path)/enumerate_files.py deqp_tests -types *.cpp *.h *.inl)',
+                                '<(deqp_tests_generated_file)',
+                            ],
+                            'actions':
+                            [
+                                {
+                                    'action_name': 'generate_deqp_tests',
+                                    'message': 'Generating dEQP tests...',
+                                    'msvs_cygwin_shell': 0,
+                                    'variables':
+                                    {
+                                        'deqp_tests_generator_script': 'deqp_tests/generate_deqp_tests.py',
+                                    },
+                                    'inputs':
+                                    [
+                                        '<(deqp_tests_generator_script)',
+                                        '<(deqp_tests_input_file)',
+                                    ],
+                                    'outputs':
+                                    [
+                                        '<(deqp_tests_generated_file)',
+                                    ],
+                                    'action':
+                                    [
+                                        'python',
+                                        '<(deqp_tests_generator_script)',
+                                        '<(deqp_tests_input_file)',
+                                        '<(deqp_tests_generated_file)',
                                     ],
                                 },
                             ],

@@ -41,8 +41,8 @@ DWORD WINAPI EGLThreadTest::ThreadingTestEntryPoint(LPVOID lpParameter)
 
 void EGLThreadTest::ThreadingTest()
 {
-    mEGL = LoadLibrary(L"libEGL.dll");
-    mGLESv2 = LoadLibrary(L"libGLESv2.dll");
+    mEGL = LoadLibrary(TEXT("libEGL.dll"));
+    mGLESv2 = LoadLibrary(TEXT("libGLESv2.dll"));
 
     EXPECT_TRUE(mEGL != NULL);
     EXPECT_TRUE(mGLESv2 != NULL);
