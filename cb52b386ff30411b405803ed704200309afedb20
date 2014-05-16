@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa1c9852_495f85c6",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1607,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-16T16:56:03Z",
+      "side": 1,
+      "message": "I\u0027m not sure this is correct -- when we return an incomplete Texture from getSamplerTexture, we can return it all the way to the API layer, and this texture will have \"id\" of (uint)-1. Won\u0027t this cause undesirable consequences where we reference the bound texture\u0027s id?",
+      "range": {
+        "startLine": 1607,
+        "startChar": 15,
+        "endLine": 1607,
+        "endChar": 42
+      },
+      "revId": "cb52b386ff30411b405803ed704200309afedb20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
