@@ -3942,14 +3942,14 @@ size_t Context::getBoundFramebufferTextureSerials(FramebufferTextureSerialArray 
     for (unsigned int i = 0; i < IMPLEMENTATION_MAX_DRAW_BUFFERS; i++)
     {
         Renderbuffer *renderBuffer = drawFramebuffer->getColorbuffer(i);
-        if (renderBuffer && renderBuffer->getTextureSerial() != 0)
+        if (renderBuffer && renderBuffer->isTexture())
         {
             (*outSerialArray)[serialCount++] = renderBuffer->getTextureSerial();
         }
     }
 
     Renderbuffer *depthStencilBuffer = drawFramebuffer->getDepthOrStencilbuffer();
-    if (depthStencilBuffer && depthStencilBuffer->getTextureSerial() != 0)
+    if (depthStencilBuffer && depthStencilBuffer->isTexture())
     {
         (*outSerialArray)[serialCount++] = depthStencilBuffer->getTextureSerial();
     }

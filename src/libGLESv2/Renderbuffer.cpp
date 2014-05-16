@@ -106,6 +106,11 @@ unsigned int RenderbufferTexture2D::getSerial() const
     return mTexture2D->getRenderTargetSerial(mLevel);
 }
 
+bool RenderbufferTexture2D::isTexture() const
+{
+    return true;
+}
+
 unsigned int RenderbufferTexture2D::getTextureSerial() const
 {
     return mTexture2D->getTextureSerial();
@@ -179,6 +184,11 @@ GLsizei RenderbufferTextureCubeMap::getSamples() const
 unsigned int RenderbufferTextureCubeMap::getSerial() const
 {
     return mTextureCubeMap->getRenderTargetSerial(mFaceTarget, mLevel);
+}
+
+bool RenderbufferTextureCubeMap::isTexture() const
+{
+    return true;
 }
 
 unsigned int RenderbufferTextureCubeMap::getTextureSerial() const
@@ -256,6 +266,11 @@ unsigned int RenderbufferTexture3DLayer::getSerial() const
     return mTexture3D->getRenderTargetSerial(mLevel, mLayer);
 }
 
+bool RenderbufferTexture3DLayer::isTexture() const
+{
+    return true;
+}
+
 unsigned int RenderbufferTexture3DLayer::getTextureSerial() const
 {
     return mTexture3D->getTextureSerial();
@@ -327,6 +342,11 @@ GLsizei RenderbufferTexture2DArrayLayer::getSamples() const
 unsigned int RenderbufferTexture2DArrayLayer::getSerial() const
 {
     return mTexture2DArray->getRenderTargetSerial(mLevel, mLayer);
+}
+
+bool RenderbufferTexture2DArrayLayer::isTexture() const
+{
+    return true;
 }
 
 unsigned int RenderbufferTexture2DArrayLayer::getTextureSerial() const
@@ -451,6 +471,11 @@ unsigned int Renderbuffer::getSerial() const
     return mInstance->getSerial();
 }
 
+bool Renderbuffer::isTexture() const
+{
+    return mInstance->isTexture();
+}
+
 unsigned int Renderbuffer::getTextureSerial() const
 {
     return mInstance->getTextureSerial();
@@ -527,6 +552,16 @@ unsigned int RenderbufferStorage::issueSerials(GLuint count)
     unsigned int firstSerial = mCurrentSerial;
     mCurrentSerial += count;
     return firstSerial;
+}
+
+bool RenderbufferStorage::isTexture() const
+{
+    return false;
+}
+
+unsigned int RenderbufferStorage::getTextureSerial() const
+{
+    return -1;
 }
 
 Colorbuffer::Colorbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain)
