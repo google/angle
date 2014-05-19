@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf1dbc5e_83a54892",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-05-19T23:25:07Z",
+      "side": 1,
+      "message": "Document new outStringLen parameter: \"Size of the buffer outStr points to.\"",
+      "revId": "ba3c73e063968ca31ec9ec37e99948a5e18e1060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf1dbc5e_23b434be",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-05-19T23:25:07Z",
+      "side": 1,
+      "message": "I think the \"It is assumed\" sentence can be removed now.",
+      "revId": "ba3c73e063968ca31ec9ec37e99948a5e18e1060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_dc244119",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-05-19T23:25:07Z",
+      "side": 1,
+      "message": "For safety please also manually null-terminate the output: outString[outStringLen] \u003d \u0027\\0\u0027.",
+      "revId": "ba3c73e063968ca31ec9ec37e99948a5e18e1060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
