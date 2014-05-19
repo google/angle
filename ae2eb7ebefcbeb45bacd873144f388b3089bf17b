@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f10a43e_c8efcdd8",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-05-19T22:25:34Z",
+      "side": 1,
+      "message": "Trailing whitespace?",
+      "revId": "ae2eb7ebefcbeb45bacd873144f388b3089bf17b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f10a43e_28e089e1",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-05-19T22:25:34Z",
+      "side": 1,
+      "message": "typo: accormodate",
+      "revId": "ae2eb7ebefcbeb45bacd873144f388b3089bf17b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f1ab865_19152b0f",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-05-19T22:25:34Z",
+      "side": 1,
+      "message": "typo: \"resources tring\"",
+      "revId": "ae2eb7ebefcbeb45bacd873144f388b3089bf17b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f10a43e_a8bed9c0",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-05-19T22:25:34Z",
+      "side": 1,
+      "message": "Consider naming SH_RESOURCES_STRING_LENGTH for symmetry with function name?\n\nAdd \".\" and documentation of parameters similarly to other functions in this header?",
+      "revId": "ae2eb7ebefcbeb45bacd873144f388b3089bf17b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf1dbc5e_68d1ebdb",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-05-19T22:25:34Z",
+      "side": 1,
+      "message": "Even though it wouldn\u0027t match the style of the other functions in the header, should we consider taking in an \"outStringLength\" argument so that we can do strncpy instead of strcpy here?",
+      "revId": "ae2eb7ebefcbeb45bacd873144f388b3089bf17b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
