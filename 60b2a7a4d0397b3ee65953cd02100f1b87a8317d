@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f0fa825_e64bf092",
+        "filename": "tests/deqp_tests/deqp_tests.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-19T22:57:32Z",
+      "side": 1,
+      "message": "We should double-check that we can expect dEQP test names not to contain nonpublic information.",
+      "range": {
+        "startLine": 1,
+        "startChar": 22,
+        "endLine": 1,
+        "endChar": 34
+      },
+      "revId": "60b2a7a4d0397b3ee65953cd02100f1b87a8317d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
