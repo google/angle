@@ -484,22 +484,14 @@ static inline void SetIfDirty(T *dest, const T& source, bool *dirtyFlag)
 }
 
 template <typename T>
-bool ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum targetUniformType)
+void ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum targetUniformType)
 {
-    if (location < 0 || location >= (int)mUniformIndex.size())
-    {
-        return false;
-    }
-
     const int components = UniformComponentCount(targetUniformType);
     const GLenum targetBoolType = UniformBoolVectorType(targetUniformType);
 
-    LinkedUniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    LinkedUniform *targetUniform = getUniformByLocation(location);
 
     int elementCount = targetUniform->elementCount();
-
-    if (elementCount == 1 && count > 1)
-        return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
     count = std::min(elementCount - (int)mUniformIndex[location].element, count);
 
@@ -539,32 +531,27 @@ bool ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum
             v += components;
         }
     }
-    else
-    {
-        return false;
-    }
-
-    return true;
+    else UNREACHABLE();
 }
 
-bool ProgramBinary::setUniform1fv(GLint location, GLsizei count, const GLfloat* v)
+void ProgramBinary::setUniform1fv(GLint location, GLsizei count, const GLfloat* v)
 {
-    return setUniform(location, count, v, GL_FLOAT);
+    setUniform(location, count, v, GL_FLOAT);
 }
 
-bool ProgramBinary::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
+void ProgramBinary::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    return setUniform(location, count, v, GL_FLOAT_VEC2);
+    setUniform(location, count, v, GL_FLOAT_VEC2);
 }
 
-bool ProgramBinary::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
+void ProgramBinary::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    return setUniform(location, count, v, GL_FLOAT_VEC3);
+    setUniform(location, count, v, GL_FLOAT_VEC3);
 }
 
-bool ProgramBinary::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
+void ProgramBinary::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    return setUniform(location, count, v, GL_FLOAT_VEC4);
+    setUniform(location, count, v, GL_FLOAT_VEC4);
 }
 
 template<typename T>
@@ -636,24 +623,11 @@ bool expandMatrix(T *target, const GLfloat *value, int targetWidth, int targetHe
 }
 
 template <int cols, int rows>
-bool ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value, GLenum targetUniformType)
+void ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value, GLenum targetUniformType)
 {
-    if (location < 0 || location >= (int)mUniformIndex.size())
-    {
-        return false;
-    }
-
-    LinkedUniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
-    if (targetUniform->type != targetUniformType)
-    {
-        return false;
-    }
+    LinkedUniform *targetUniform = getUniformByLocation(location);
 
     int elementCount = targetUniform->elementCount();
-
-    if (elementCount == 1 && count > 1)
-        return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
     count = std::min(elementCount - (int)mUniformIndex[location].element, count);
     const unsigned int targetMatrixStride = (4 * rows);
@@ -673,68 +647,58 @@ bool ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, GLboolean 
         target += targetMatrixStride;
         value += cols * rows;
     }
-
-    return true;
 }
 
-bool ProgramBinary::setUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramBinary::setUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<2, 2>(location, count, transpose, value, GL_FLOAT_MAT2);
+    setUniformMatrixfv<2, 2>(location, count, transpose, value, GL_FLOAT_MAT2);
 }
 
-bool ProgramBinary::setUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramBinary::setUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<3, 3>(location, count, transpose, value, GL_FLOAT_MAT3);
+    setUniformMatrixfv<3, 3>(location, count, transpose, value, GL_FLOAT_MAT3);
 }
 
-bool ProgramBinary::setUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramBinary::setUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<4, 4>(location, count, transpose, value, GL_FLOAT_MAT4);
+    setUniformMatrixfv<4, 4>(location, count, transpose, value, GL_FLOAT_MAT4);
 }
 
-bool ProgramBinary::setUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramBinary::setUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<2, 3>(location, count, transpose, value, GL_FLOAT_MAT2x3);
+    setUniformMatrixfv<2, 3>(location, count, transpose, value, GL_FLOAT_MAT2x3);
 }
 
-bool ProgramBinary::setUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramBinary::setUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<3, 2>(location, count, transpose, value, GL_FLOAT_MAT3x2);
+    setUniformMatrixfv<3, 2>(location, count, transpose, value, GL_FLOAT_MAT3x2);
 }
 
-bool ProgramBinary::setUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramBinary::setUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<2, 4>(location, count, transpose, value, GL_FLOAT_MAT2x4);
+    setUniformMatrixfv<2, 4>(location, count, transpose, value, GL_FLOAT_MAT2x4);
 }
 
-bool ProgramBinary::setUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramBinary::setUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<4, 2>(location, count, transpose, value, GL_FLOAT_MAT4x2);
+    setUniformMatrixfv<4, 2>(location, count, transpose, value, GL_FLOAT_MAT4x2);
 }
 
-bool ProgramBinary::setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramBinary::setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<3, 4>(location, count, transpose, value, GL_FLOAT_MAT3x4);
+    setUniformMatrixfv<3, 4>(location, count, transpose, value, GL_FLOAT_MAT3x4);
 }
 
-bool ProgramBinary::setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramBinary::setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<4, 3>(location, count, transpose, value, GL_FLOAT_MAT4x3);
+    setUniformMatrixfv<4, 3>(location, count, transpose, value, GL_FLOAT_MAT4x3);
 }
 
-bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
+void ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
-    if (location < 0 || location >= (int)mUniformIndex.size())
-    {
-        return false;
-    }
-
     LinkedUniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
     int elementCount = targetUniform->elementCount();
-
-    if (elementCount == 1 && count > 1)
-        return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
     count = std::min(elementCount - (int)mUniformIndex[location].element, count);
 
@@ -766,57 +730,47 @@ bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
             v += 1;
         }
     }
-    else
-    {
-        return false;
-    }
-
-    return true;
+    else UNREACHABLE();
 }
 
-bool ProgramBinary::setUniform2iv(GLint location, GLsizei count, const GLint *v)
+void ProgramBinary::setUniform2iv(GLint location, GLsizei count, const GLint *v)
 {
-    return setUniform(location, count, v, GL_INT_VEC2);
+    setUniform(location, count, v, GL_INT_VEC2);
 }
 
-bool ProgramBinary::setUniform3iv(GLint location, GLsizei count, const GLint *v)
+void ProgramBinary::setUniform3iv(GLint location, GLsizei count, const GLint *v)
 {
-    return setUniform(location, count, v, GL_INT_VEC3);
+    setUniform(location, count, v, GL_INT_VEC3);
 }
 
-bool ProgramBinary::setUniform4iv(GLint location, GLsizei count, const GLint *v)
+void ProgramBinary::setUniform4iv(GLint location, GLsizei count, const GLint *v)
 {
-    return setUniform(location, count, v, GL_INT_VEC4);
+    setUniform(location, count, v, GL_INT_VEC4);
 }
 
-bool ProgramBinary::setUniform1uiv(GLint location, GLsizei count, const GLuint *v)
+void ProgramBinary::setUniform1uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    return setUniform(location, count, v, GL_UNSIGNED_INT);
+    setUniform(location, count, v, GL_UNSIGNED_INT);
 }
 
-bool ProgramBinary::setUniform2uiv(GLint location, GLsizei count, const GLuint *v)
+void ProgramBinary::setUniform2uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    return setUniform(location, count, v, GL_UNSIGNED_INT_VEC2);
+    setUniform(location, count, v, GL_UNSIGNED_INT_VEC2);
 }
 
-bool ProgramBinary::setUniform3uiv(GLint location, GLsizei count, const GLuint *v)
+void ProgramBinary::setUniform3uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    return setUniform(location, count, v, GL_UNSIGNED_INT_VEC3);
+    setUniform(location, count, v, GL_UNSIGNED_INT_VEC3);
 }
 
-bool ProgramBinary::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
+void ProgramBinary::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    return setUniform(location, count, v, GL_UNSIGNED_INT_VEC4);
+    setUniform(location, count, v, GL_UNSIGNED_INT_VEC4);
 }
 
 template <typename T>
 bool ProgramBinary::getUniformv(GLint location, GLsizei *bufSize, T *params, GLenum uniformType)
 {
-    if (location < 0 || location >= (int)mUniformIndex.size())
-    {
-        return false;
-    }
-
     LinkedUniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
     // sized queries -- ensure the provided buffer is large enough
@@ -2470,6 +2424,18 @@ GLint ProgramBinary::getActiveUniformi(GLuint index, GLenum pname) const
         break;
     }
     return 0;
+}
+
+bool ProgramBinary::isValidUniformLocation(GLint location) const
+{
+    ASSERT(rx::IsIntegerCastSafe<GLint>(mUniformIndex.size()));
+    return (location >= 0 && location < static_cast<GLint>(mUniformIndex.size()));
+}
+
+LinkedUniform *ProgramBinary::getUniformByLocation(GLint location) const
+{
+    ASSERT(location >= 0 && static_cast<size_t>(location) < mUniformIndex.size());
+    return mUniforms[mUniformIndex[location].index];
 }
 
 void ProgramBinary::getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const

@@ -100,27 +100,27 @@ class ProgramBinary : public RefCountObject
     GLint getUniformLocation(std::string name);
     GLuint getUniformIndex(std::string name);
     GLuint getUniformBlockIndex(std::string name);
-    bool setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
-    bool setUniform2fv(GLint location, GLsizei count, const GLfloat *v);
-    bool setUniform3fv(GLint location, GLsizei count, const GLfloat *v);
-    bool setUniform4fv(GLint location, GLsizei count, const GLfloat *v);
-    bool setUniform1iv(GLint location, GLsizei count, const GLint *v);
-    bool setUniform2iv(GLint location, GLsizei count, const GLint *v);
-    bool setUniform3iv(GLint location, GLsizei count, const GLint *v);
-    bool setUniform4iv(GLint location, GLsizei count, const GLint *v);
-    bool setUniform1uiv(GLint location, GLsizei count, const GLuint *v);
-    bool setUniform2uiv(GLint location, GLsizei count, const GLuint *v);
-    bool setUniform3uiv(GLint location, GLsizei count, const GLuint *v);
-    bool setUniform4uiv(GLint location, GLsizei count, const GLuint *v);
-    bool setUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    bool setUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    bool setUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    bool setUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    bool setUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    bool setUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    bool setUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    bool setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    bool setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
+    void setUniform2fv(GLint location, GLsizei count, const GLfloat *v);
+    void setUniform3fv(GLint location, GLsizei count, const GLfloat *v);
+    void setUniform4fv(GLint location, GLsizei count, const GLfloat *v);
+    void setUniform1iv(GLint location, GLsizei count, const GLint *v);
+    void setUniform2iv(GLint location, GLsizei count, const GLint *v);
+    void setUniform3iv(GLint location, GLsizei count, const GLint *v);
+    void setUniform4iv(GLint location, GLsizei count, const GLint *v);
+    void setUniform1uiv(GLint location, GLsizei count, const GLuint *v);
+    void setUniform2uiv(GLint location, GLsizei count, const GLuint *v);
+    void setUniform3uiv(GLint location, GLsizei count, const GLuint *v);
+    void setUniform4uiv(GLint location, GLsizei count, const GLuint *v);
+    void setUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void setUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void setUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void setUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void setUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void setUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void setUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
 
     bool getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params);
     bool getUniformiv(GLint location, GLsizei *bufSize, GLint *params);
@@ -146,6 +146,8 @@ class ProgramBinary : public RefCountObject
     GLint getActiveUniformCount() const;
     GLint getActiveUniformMaxLength() const;
     GLint getActiveUniformi(GLuint index, GLenum pname) const;
+    bool isValidUniformLocation(GLint location) const;
+    LinkedUniform *getUniformByLocation(GLint location) const;
 
     void getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const;
     void getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const;
@@ -203,10 +205,10 @@ class ProgramBinary : public RefCountObject
     void initializeUniformStorage();
 
     template <typename T>
-    bool setUniform(GLint location, GLsizei count, const T* v, GLenum targetUniformType);
+    void setUniform(GLint location, GLsizei count, const T* v, GLenum targetUniformType);
 
     template <int cols, int rows>
-    bool setUniformMatrixfv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value, GLenum targetUniformType);
+    void setUniformMatrixfv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value, GLenum targetUniformType);
 
     template <typename T>
     bool getUniformv(GLint location, GLsizei *bufSize, T *params, GLenum uniformType);
