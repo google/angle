@@ -946,4 +946,40 @@ bool ValidateEndQuery(gl::Context *context, GLenum target)
     return true;
 }
 
+bool ValidateUniformMatrix(gl::Context *context, GLenum matrixType, GLint location, GLsizei count,
+                           GLboolean transpose)
+{
+    if (count < 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    // Check for ES3 uniform entry points
+    int rows = VariableRowCount(matrixType);
+    int cols = VariableColumnCount(matrixType);
+    if (rows != cols && context->getClientVersion() < 3)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (transpose != GL_FALSE && context->getClientVersion() < 3)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+    if (!programBinary)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (location == -1)
+    {
+        // Silently ignore the uniform command
+        return false;
+    }
+
+    return true;
+}
+
 }
