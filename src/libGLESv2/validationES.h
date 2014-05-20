@@ -48,6 +48,7 @@ bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsize
 bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id);
 bool ValidateEndQuery(gl::Context *context, GLenum target);
 
+bool ValidateUniform(gl::Context *context, GLenum uniformType, GLint location, GLsizei count);
 bool ValidateUniformMatrix(gl::Context *context, GLenum matrixType, GLint location, GLsizei count,
                            GLboolean transpose);
 

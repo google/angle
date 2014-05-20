@@ -946,23 +946,9 @@ bool ValidateEndQuery(gl::Context *context, GLenum target)
     return true;
 }
 
-bool ValidateUniformMatrix(gl::Context *context, GLenum matrixType, GLint location, GLsizei count,
-                           GLboolean transpose)
+static bool ValidateUniformCommonBase(gl::Context *context, GLint location, GLsizei count)
 {
     if (count < 0)
-    {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    // Check for ES3 uniform entry points
-    int rows = VariableRowCount(matrixType);
-    int cols = VariableColumnCount(matrixType);
-    if (rows != cols && context->getClientVersion() < 3)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    if (transpose != GL_FALSE && context->getClientVersion() < 3)
     {
         return gl::error(GL_INVALID_VALUE, false);
     }
@@ -980,6 +966,36 @@ bool ValidateUniformMatrix(gl::Context *context, GLenum matrixType, GLint locati
     }
 
     return true;
+}
+
+bool ValidateUniform(gl::Context *context, GLenum uniformType, GLint location, GLsizei count)
+{
+    // Check for ES3 uniform entry points
+    if (UniformComponentType(uniformType) == GL_UNSIGNED_INT && context->getClientVersion() < 3)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return ValidateUniformCommonBase(context, location, count);
+}
+
+bool ValidateUniformMatrix(gl::Context *context, GLenum matrixType, GLint location, GLsizei count,
+                           GLboolean transpose)
+{
+    // Check for ES3 uniform entry points
+    int rows = VariableRowCount(matrixType);
+    int cols = VariableColumnCount(matrixType);
+    if (rows != cols && context->getClientVersion() < 3)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (transpose != GL_FALSE && context->getClientVersion() < 3)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    return ValidateUniformCommonBase(context, location, count);
 }
 
 }
