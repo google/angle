@@ -22,6 +22,30 @@
       "revId": "713e9edcaa077172570871faae9571a93172a19a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_98f11d75",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3923,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-20T14:20:11Z",
+      "side": 1,
+      "message": "In the worst case, there could be IMPLEMENTATION_MAX_DRAW_BUFFERS -1\u0027s if there is a renderbuffer bound to every slot but there is no usecase for that.\n\nAnyways, I\u0027ve added an explicit check for -1\u0027s so they can be skipped.  I didn\u0027t want to add a new constant for this value since all serials will most likely be removed in the refactor.",
+      "parentUuid": "aa1c9852_89cedd3c",
+      "range": {
+        "startLine": 3923,
+        "startChar": 8,
+        "endLine": 3923,
+        "endChar": 25
+      },
+      "revId": "713e9edcaa077172570871faae9571a93172a19a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
