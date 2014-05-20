@@ -76,6 +76,30 @@
     },
     {
       "key": {
+        "uuid": "7f3504d1_66d136dc",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-20T19:35:51Z",
+      "side": 1,
+      "message": "These are not included in Chrome\u0027s current computation of this string (see http://src.chromium.org/viewvc/chrome/trunk/src/gpu/command_buffer/service/shader_translator.cc) -- despite them being longstanding parts of ShBuiltInResources, possibly because they don\u0027t affect the end result of compilation? (I\u0027m not sure.) Either they\u0027re missing from Chrome\u0027s current code, and need to be added, or they\u0027re not pertinent, in which case I can add a comment about them.",
+      "parentUuid": "aa1c9852_405bcf0c",
+      "range": {
+        "startLine": 345,
+        "startChar": 14,
+        "endLine": 345,
+        "endChar": 85
+      },
+      "revId": "ba3c73e063968ca31ec9ec37e99948a5e18e1060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa1c9852_60e0cbaa",
         "filename": "src/compiler/translator/ShHandle.h",
         "patchSetId": 4
@@ -87,6 +111,30 @@
       "writtenOn": "2014-05-20T14:41:32Z",
       "side": 1,
       "message": "nit: get \"built-in\" resource string for no ambiguity (we use the term built-in in this file already)",
+      "range": {
+        "startLine": 77,
+        "startChar": 16,
+        "endLine": 77,
+        "endChar": 33
+      },
+      "revId": "ba3c73e063968ca31ec9ec37e99948a5e18e1060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_2671ee5e",
+        "filename": "src/compiler/translator/ShHandle.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-20T19:35:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa1c9852_60e0cbaa",
       "range": {
         "startLine": 77,
         "startChar": 16,
@@ -128,6 +176,24 @@
       "side": 1,
       "message": "and hence should be outStringLen-1 I think",
       "parentUuid": "9f1ab865_dc244119",
+      "revId": "ba3c73e063968ca31ec9ec37e99948a5e18e1060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_0666eaa8",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-20T19:35:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f3f0cb7_50eb8c44",
       "revId": "ba3c73e063968ca31ec9ec37e99948a5e18e1060",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
