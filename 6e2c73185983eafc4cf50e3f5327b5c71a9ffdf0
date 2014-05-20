@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "7f3504d1_7bf7936f",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-20T17:52:33Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 2432,
+        "startChar": 11,
+        "endLine": 2432,
+        "endChar": 52
+      },
+      "revId": "6e2c73185983eafc4cf50e3f5327b5c71a9ffdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f3f0cb7_139f4e52",
         "filename": "src/libGLESv2/validationES.cpp",
         "patchSetId": 4
@@ -13,6 +36,30 @@
       "writtenOn": "2014-05-20T17:37:24Z",
       "side": 1,
       "message": "I don\u0027t think there is a guarantee from GL that there aren\u0027t holes in the uniform locations. \n\nIt might make more sense for ProgramBinary to return a null LinkedUniform if the location isn\u0027t valid and then use that to determine if it is an INVALID_OPERATION.",
+      "range": {
+        "startLine": 970,
+        "startChar": 24,
+        "endLine": 970,
+        "endChar": 74
+      },
+      "revId": "6e2c73185983eafc4cf50e3f5327b5c71a9ffdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1c9852_bbce723c",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 970,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-20T17:52:33Z",
+      "side": 1,
+      "message": "I disagree, I think we can indeed guarantee there aren\u0027t holes in our uniform index. This refactor patch preserved our existing logic, see the two ref\u0027d code locations.",
+      "parentUuid": "3f3f0cb7_139f4e52",
       "range": {
         "startLine": 970,
         "startChar": 24,
