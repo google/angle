@@ -69,6 +69,30 @@
       "revId": "6e2c73185983eafc4cf50e3f5327b5c71a9ffdf0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_1b41a76c",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 970,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-20T18:34:01Z",
+      "side": 1,
+      "message": "I agree that it can\u0027t happen in the way we assign our uniforms but there may be holes eventually in a GL back end when we have to query the location of each uniform.",
+      "parentUuid": "aa1c9852_bbce723c",
+      "range": {
+        "startLine": 970,
+        "startChar": 24,
+        "endLine": 970,
+        "endChar": 74
+      },
+      "revId": "6e2c73185983eafc4cf50e3f5327b5c71a9ffdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
