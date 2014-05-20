@@ -100,6 +100,30 @@
     },
     {
       "key": {
+        "uuid": "aa1c9852_16511d96",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-20T20:47:28Z",
+      "side": 1,
+      "message": "I do think they\u0027re relevant, but the default values are fine. So not including them here to reflect what Chrome does currently should be fine too.",
+      "parentUuid": "7f3504d1_66d136dc",
+      "range": {
+        "startLine": 345,
+        "startChar": 14,
+        "endLine": 345,
+        "endChar": 85
+      },
+      "revId": "ba3c73e063968ca31ec9ec37e99948a5e18e1060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa1c9852_60e0cbaa",
         "filename": "src/compiler/translator/ShHandle.h",
         "patchSetId": 4
