@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f3f0cb7_10e5046d",
+        "filename": "src/libGLESv2/renderer/d3d11/SwapChain11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-20T14:51:15Z",
+      "side": 1,
+      "message": "extra whitespace, can you nuke?",
+      "range": {
+        "startLine": 412,
+        "startChar": 0,
+        "endLine": 412,
+        "endChar": 8
+      },
+      "revId": "719e053a4ec9a1105c5a8f883dbcf3e48988078b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
