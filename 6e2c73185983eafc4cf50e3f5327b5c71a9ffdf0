@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f3f0cb7_139f4e52",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 970,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-20T17:37:24Z",
+      "side": 1,
+      "message": "I don\u0027t think there is a guarantee from GL that there aren\u0027t holes in the uniform locations. \n\nIt might make more sense for ProgramBinary to return a null LinkedUniform if the location isn\u0027t valid and then use that to determine if it is an INVALID_OPERATION.",
+      "range": {
+        "startLine": 970,
+        "startChar": 24,
+        "endLine": 970,
+        "endChar": 74
+      },
+      "revId": "6e2c73185983eafc4cf50e3f5327b5c71a9ffdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
