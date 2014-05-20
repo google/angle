@@ -36,6 +36,29 @@
     },
     {
       "key": {
+        "uuid": "aa1c9852_405bcf0c",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-20T13:39:14Z",
+      "side": 1,
+      "message": "ShBuiltInResources also has ArrayIndexClampingStrategy and HashFunction fields.",
+      "range": {
+        "startLine": 345,
+        "startChar": 14,
+        "endLine": 345,
+        "endChar": 85
+      },
+      "revId": "ba3c73e063968ca31ec9ec37e99948a5e18e1060",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f1ab865_dc244119",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 4
