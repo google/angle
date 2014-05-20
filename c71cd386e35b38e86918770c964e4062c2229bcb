@@ -93,6 +93,30 @@
       "revId": "c71cd386e35b38e86918770c964e4062c2229bcb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_7ba0b397",
+        "filename": "src/third_party/systeminfo/SystemInfo.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-20T17:33:36Z",
+      "side": 1,
+      "message": "Agreed that we should have a namespace.  Maybe just \"util\" or \"system_info\"",
+      "parentUuid": "aa1c9852_bba2f29d",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 22
+      },
+      "revId": "c71cd386e35b38e86918770c964e4062c2229bcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
