@@ -22,6 +22,30 @@
       "revId": "2b54bf86fa1b33cd2be139c75f55419d2906a4f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1c9852_a00803b4",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-20T14:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f3504d1_52495446",
+      "range": {
+        "startLine": 965,
+        "startChar": 0,
+        "endLine": 969,
+        "endChar": 5
+      },
+      "revId": "2b54bf86fa1b33cd2be139c75f55419d2906a4f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
