@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f3504d1_1c12bae6",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1804,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-21T18:51:41Z",
+      "side": 1,
+      "message": "Mind taking care of the EOL whitespace in this file while you\u0027re in here?",
+      "range": {
+        "startLine": 1804,
+        "startChar": 29,
+        "endLine": 1804,
+        "endChar": 48
+      },
+      "revId": "6c1bc9326f74129cd03bd367364d664cb243d470",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f5ee42c_d032d428",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1054,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-21T18:51:41Z",
+      "side": 1,
+      "message": "Comment conflicts with value returned in following line.",
+      "range": {
+        "startLine": 1054,
+        "startChar": 22,
+        "endLine": 1054,
+        "endChar": 26
+      },
+      "revId": "6c1bc9326f74129cd03bd367364d664cb243d470",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_9c1eaaf6",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-21T18:51:41Z",
+      "side": 1,
+      "message": "Nittiest nit ever: can the break go on the following line? We usually don\u0027t mix single-line and multi-line switch cases.",
+      "range": {
+        "startLine": 1088,
+        "startChar": 15,
+        "endLine": 1088,
+        "endChar": 20
+      },
+      "revId": "6c1bc9326f74129cd03bd367364d664cb243d470",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
