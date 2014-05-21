@@ -457,122 +457,17 @@ bool ValidateES2CopyTexImageParameters(gl::Context* context, GLenum target, GLin
                                        GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height,
                                        GLint border)
 {
-    if (!ValidTexture2DDestinationTarget(context, target))
-    {
-        return gl::error(GL_INVALID_ENUM, false);
-    }
+    GLenum textureInternalFormat = GL_NONE;
 
-    if (!gl::IsInternalTextureTarget(target, context->getClientVersion()))
+    if (!ValidateCopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
+                                            xoffset, yoffset, 0, x, y, width, height, border, &textureInternalFormat))
     {
-        return gl::error(GL_INVALID_ENUM, false);
-    }
-
-    if (level < 0 || xoffset < 0 || yoffset < 0 || width < 0 || height < 0)
-    {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    if (std::numeric_limits<GLsizei>::max() - xoffset < width || std::numeric_limits<GLsizei>::max() - yoffset < height)
-    {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    // Verify zero border
-    if (border != 0)
-    {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    // Validate dimensions based on Context limits and validate the texture
-    if (!ValidMipLevel(context, target, level))
-    {
-        return gl::error(GL_INVALID_VALUE, false);
+        return false;
     }
 
     gl::Framebuffer *framebuffer = context->getReadFramebuffer();
-
-    if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
-    {
-        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
-    }
-
-    if (context->getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
     GLenum colorbufferFormat = framebuffer->getReadColorbuffer()->getInternalFormat();
-    gl::Texture *texture = NULL;
-    GLenum textureFormat = GL_RGBA;
-
-    switch (target)
-    {
-      case GL_TEXTURE_2D:
-        {
-            if (width > (context->getMaximum2DTextureDimension() >> level) ||
-                height > (context->getMaximum2DTextureDimension() >> level))
-            {
-                return gl::error(GL_INVALID_VALUE, false);
-            }
-
-            gl::Texture2D *tex2d = context->getTexture2D();
-            if (tex2d)
-            {
-                if (isSubImage && !validateSubImageParams2D(false, width, height, xoffset, yoffset, level, GL_NONE, GL_NONE, tex2d))
-                {
-                    return false; // error already registered by validateSubImageParams
-                }
-                texture = tex2d;
-                textureFormat = gl::GetFormat(tex2d->getInternalFormat(level), context->getClientVersion());
-            }
-        }
-        break;
-
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-        {
-            if (!isSubImage && width != height)
-            {
-                return gl::error(GL_INVALID_VALUE, false);
-            }
-
-            if (width > (context->getMaximumCubeTextureDimension() >> level) ||
-                height > (context->getMaximumCubeTextureDimension() >> level))
-            {
-                return gl::error(GL_INVALID_VALUE, false);
-            }
-
-            gl::TextureCubeMap *texcube = context->getTextureCubeMap();
-            if (texcube)
-            {
-                if (isSubImage && !validateSubImageParamsCube(false, width, height, xoffset, yoffset, target, level, GL_NONE, GL_NONE, texcube))
-                {
-                    return false; // error already registered by validateSubImageParams
-                }
-                texture = texcube;
-                textureFormat = gl::GetFormat(texcube->getInternalFormat(target, level), context->getClientVersion());
-            }
-        }
-        break;
-
-      default:
-        return gl::error(GL_INVALID_ENUM, false);
-    }
-
-    if (!texture)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    if (texture->isImmutable() && !isSubImage)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
+    GLenum textureFormat = gl::GetFormat(textureInternalFormat, context->getClientVersion());
 
     // [OpenGL ES 2.0.24] table 3.9
     if (isSubImage)

@@ -286,160 +286,19 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
                                        bool isSubImage, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y,
                                        GLsizei width, GLsizei height, GLint border)
 {
-    if (!ValidTexture2DDestinationTarget(context, target))
+    GLenum textureInternalFormat;
+    if (!ValidateCopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
+                                            xoffset, yoffset, zoffset, x, y, width, height, border, &textureInternalFormat))
     {
-        return gl::error(GL_INVALID_ENUM, false);
-    }
-
-    if (level < 0 || xoffset < 0 || yoffset < 0 || zoffset < 0 || width < 0 || height < 0)
-    {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    if (std::numeric_limits<GLsizei>::max() - xoffset < width || std::numeric_limits<GLsizei>::max() - yoffset < height)
-    {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    if (border != 0)
-    {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    if (!ValidMipLevel(context, target, level))
-    {
-        return gl::error(GL_INVALID_VALUE, false);
+        return false;
     }
 
     gl::Framebuffer *framebuffer = context->getReadFramebuffer();
-
-    if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
-    {
-        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
-    }
-
-    if (context->getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
     gl::Renderbuffer *source = framebuffer->getReadColorbuffer();
     GLenum colorbufferInternalFormat = source->getInternalFormat();
-    gl::Texture *texture = NULL;
-    GLenum textureInternalFormat = GL_NONE;
-    bool textureCompressed = false;
-    bool textureIsDepth = false;
-    GLint textureLevelWidth = 0;
-    GLint textureLevelHeight = 0;
-    GLint textureLevelDepth = 0;
-    switch (target)
-    {
-      case GL_TEXTURE_2D:
-        {
-            gl::Texture2D *texture2d = context->getTexture2D();
-            if (texture2d)
-            {
-                textureInternalFormat = texture2d->getInternalFormat(level);
-                textureCompressed = texture2d->isCompressed(level);
-                textureIsDepth = texture2d->isDepth(level);
-                textureLevelWidth = texture2d->getWidth(level);
-                textureLevelHeight = texture2d->getHeight(level);
-                textureLevelDepth = 1;
-                texture = texture2d;
-            }
-        }
-        break;
-
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-        {
-            gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
-            if (textureCube)
-            {
-                textureInternalFormat = textureCube->getInternalFormat(target, level);
-                textureCompressed = textureCube->isCompressed(target, level);
-                textureIsDepth = false;
-                textureLevelWidth = textureCube->getWidth(target, level);
-                textureLevelHeight = textureCube->getHeight(target, level);
-                textureLevelDepth = 1;
-                texture = textureCube;
-            }
-        }
-        break;
-
-      case GL_TEXTURE_2D_ARRAY:
-        {
-            gl::Texture2DArray *texture2dArray = context->getTexture2DArray();
-            if (texture2dArray)
-            {
-                textureInternalFormat = texture2dArray->getInternalFormat(level);
-                textureCompressed = texture2dArray->isCompressed(level);
-                textureIsDepth = texture2dArray->isDepth(level);
-                textureLevelWidth = texture2dArray->getWidth(level);
-                textureLevelHeight = texture2dArray->getHeight(level);
-                textureLevelDepth = texture2dArray->getLayers(level);
-                texture = texture2dArray;
-            }
-        }
-        break;
-
-      case GL_TEXTURE_3D:
-        {
-            gl::Texture3D *texture3d = context->getTexture3D();
-            if (texture3d)
-            {
-                textureInternalFormat = texture3d->getInternalFormat(level);
-                textureCompressed = texture3d->isCompressed(level);
-                textureIsDepth = texture3d->isDepth(level);
-                textureLevelWidth = texture3d->getWidth(level);
-                textureLevelHeight = texture3d->getHeight(level);
-                textureLevelDepth = texture3d->getDepth(level);
-                texture = texture3d;
-            }
-        }
-        break;
-
-      default:
-        return gl::error(GL_INVALID_ENUM, false);
-    }
-
-    if (!texture)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    if (texture->isImmutable() && !isSubImage)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    if (textureIsDepth)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    if (textureCompressed)
-    {
-        if ((width % 4 != 0 && width != textureLevelWidth) ||
-            (height % 4 != 0 && height != textureLevelHeight))
-        {
-            return gl::error(GL_INVALID_OPERATION, false);
-        }
-    }
 
     if (isSubImage)
     {
-        if (xoffset + width > textureLevelWidth ||
-            yoffset + height > textureLevelHeight ||
-            zoffset >= textureLevelDepth)
-        {
-            return gl::error(GL_INVALID_VALUE, false);
-        }
-
         if (!gl::IsValidCopyTexImageCombination(textureInternalFormat, colorbufferInternalFormat, context->getReadFramebufferHandle(),
                                                 context->getClientVersion()))
         {
@@ -454,8 +313,6 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
             return gl::error(GL_INVALID_OPERATION, false);
         }
     }
-
-
 
     // If width or height is zero, it is a no-op.  Return false without setting an error.
     return (width > 0 && height > 0);

@@ -6124,12 +6124,6 @@ void __stdcall glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
                 return;
             }
 
-            // Zero sized copies are valid but no-ops
-            if (width == 0 || height == 0)
-            {
-                return;
-            }
-
             gl::Framebuffer *framebuffer = context->getReadFramebuffer();
             gl::Texture *texture = NULL;
             switch (target)

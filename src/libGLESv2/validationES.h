@@ -54,6 +54,10 @@ bool ValidateUniformMatrix(gl::Context *context, GLenum matrixType, GLint locati
 
 bool ValidateStateQuery(gl::Context *context, GLenum pname, GLenum *nativeType, unsigned int *numParams);
 
+bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLint level, GLenum internalformat, bool isSubImage,
+                                        GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height,
+                                        GLint border, GLenum *textureInternalFormatOut);
+
 }
 
 #endif // LIBGLESV2_VALIDATION_ES_H

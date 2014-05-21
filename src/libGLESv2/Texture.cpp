@@ -698,11 +698,6 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
 
 void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    if (xoffset + width > mImageArray[level]->getWidth() || yoffset + height > mImageArray[level]->getHeight() || zoffset != 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
     // the current level we're copying to is defined (with appropriate format, width & height)
     bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
@@ -1562,13 +1557,6 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 {
     int faceIndex = targetToIndex(target);
 
-    GLsizei size = mImageArray[faceIndex][level]->getWidth();
-
-    if (xoffset + width > size || yoffset + height > size || zoffset != 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     // We can only make our texture storage to a render target if the level we're copying *to* is complete
     // and the base level is cube-complete. The base level must be cube complete (common case) because we cannot
     // rely on the "getBaseLevel*" methods reliably otherwise.
@@ -1676,11 +1664,7 @@ rx::TextureStorageInterface *TextureCubeMap::getBaseLevelStorage()
 
 Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target, GLint level)
 {
-    if (!IsCubemapTextureTarget(target))
-    {
-        return gl::error(GL_INVALID_OPERATION, (Renderbuffer *)NULL);
-    }
-
+    ASSERT(!IsCubemapTextureTarget(target));
     int faceIndex = targetToIndex(target);
 
     Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, faceIndex);
@@ -1935,11 +1919,6 @@ rx::TextureStorageInterface *Texture3D::getBaseLevelStorage()
 
 void Texture3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    if (xoffset + width > mImageArray[level]->getWidth() || yoffset + height > mImageArray[level]->getHeight() || zoffset >= mImageArray[level]->getDepth())
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
     // the current level we're copying to is defined (with appropriate format, width & height)
     bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
@@ -2494,11 +2473,6 @@ rx::TextureStorageInterface *Texture2DArray::getBaseLevelStorage()
 
 void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    if (xoffset + width > getWidth(level) || yoffset + height > getHeight(level) || zoffset >= getLayers(level) || getLayers(level) == 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
     // the current level we're copying to is defined (with appropriate format, width & height)
     bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
