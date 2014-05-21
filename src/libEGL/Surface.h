@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -47,9 +47,6 @@ class Surface
     bool swap();
     bool postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height);
 
-    virtual EGLint getWidth() const;
-    virtual EGLint getHeight() const;
-
     virtual EGLint isPostSubBufferSupported() const;
 
     virtual rx::SwapChain *getSwapChain() const;
@@ -57,6 +54,12 @@ class Surface
     void setSwapInterval(EGLint interval);
     bool checkForOutOfDateSwapChain();   // Returns true if swapchain changed due to resize or interval update
 
+    virtual EGLint getConfigID() const;
+    virtual EGLint getWidth() const;
+    virtual EGLint getHeight() const;
+    virtual EGLint getPixelAspectRatio() const;
+    virtual EGLenum getRenderBuffer() const;
+    virtual EGLenum getSwapBehavior() const;
     virtual EGLenum getTextureFormat() const;
     virtual EGLenum getTextureTarget() const;
     virtual EGLenum getFormat() const;

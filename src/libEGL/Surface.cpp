@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -358,18 +358,8 @@ bool Surface::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
         // Spec is not clear about how this should be handled.
         return true;
     }
-    
+
     return swapRect(x, y, width, height);
-}
-
-EGLint Surface::getWidth() const
-{
-    return mWidth;
-}
-
-EGLint Surface::getHeight() const
-{
-    return mHeight;
 }
 
 EGLint Surface::isPostSubBufferSupported() const
@@ -388,12 +378,42 @@ void Surface::setSwapInterval(EGLint interval)
     {
         return;
     }
-    
+
     mSwapInterval = interval;
     mSwapInterval = std::max(mSwapInterval, mRenderer->getMinSwapInterval());
     mSwapInterval = std::min(mSwapInterval, mRenderer->getMaxSwapInterval());
 
     mSwapIntervalDirty = true;
+}
+
+EGLint Surface::getConfigID() const
+{
+    return mConfig->mConfigID;
+}
+
+EGLint Surface::getWidth() const
+{
+    return mWidth;
+}
+
+EGLint Surface::getHeight() const
+{
+    return mHeight;
+}
+
+EGLint Surface::getPixelAspectRatio() const
+{
+    return mPixelAspectRatio;
+}
+
+EGLenum Surface::getRenderBuffer() const
+{
+    return mRenderBuffer;
+}
+
+EGLenum Surface::getSwapBehavior() const
+{
+    return mSwapBehavior;
 }
 
 EGLenum Surface::getTextureFormat() const
