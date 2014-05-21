@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7f3504d1_39feb089",
+        "filename": "samples/angle/sample_util/win32/Win32Window.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-21T14:24:05Z",
+      "side": 1,
+      "message": "LoadCursor in this case will map to LoadCursorA but I prefer to be explicit since we\u0027re assigning it to an A structure.",
+      "parentUuid": "7f3504d1_991d9c55",
+      "range": {
+        "startLine": 391,
+        "startChar": 26,
+        "endLine": 391,
+        "endChar": 37
+      },
+      "revId": "60b2a7a4d0397b3ee65953cd02100f1b87a8317d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f0fa825_e64bf092",
         "filename": "tests/deqp_tests/deqp_tests.txt",
         "patchSetId": 2
