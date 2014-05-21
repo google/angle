@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f5ee42c_cdc91d5d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-21T14:00:44Z",
+      "side": 1,
+      "message": "nit: BUG\u003dangle:###",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "0d1cc8741e2b537b9a70267c0924cc9c382cf2b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_b962a0df",
+        "filename": "src/common/blocklayout.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-21T14:00:44Z",
+      "side": 1,
+      "message": "nit: ANGLE style is to have opening braces on a new line",
+      "range": {
+        "startLine": 349,
+        "startChar": 15,
+        "endLine": 349,
+        "endChar": 16
+      },
+      "revId": "0d1cc8741e2b537b9a70267c0924cc9c382cf2b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_f96828c5",
+        "filename": "src/common/blocklayout.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-21T14:00:44Z",
+      "side": 1,
+      "message": "suggestion: since HLSL9BloockEncoder is so close to HLSLBlockEncoder, take \"output type\" as a parameter in the constructor, and use a conditional inside the struct packing method. I think this would be a smaller change with less duplicate code.",
+      "range": {
+        "startLine": 92,
+        "startChar": 6,
+        "endLine": 92,
+        "endChar": 22
+      },
+      "revId": "0d1cc8741e2b537b9a70267c0924cc9c382cf2b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f5ee42c_8d00c5cd",
+        "filename": "src/common/blocklayout.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-21T14:00:44Z",
+      "side": 1,
+      "message": "Suggestion: instead of using a default parameter, use a ShOutputType parameter (or make a new enum for D3D type), and catch the existing usages of this method. It\u0027ls likely any time you want to call this method you\u0027ll want to also explicitly specify D3D version.",
+      "range": {
+        "startLine": 108,
+        "startChar": 85,
+        "endLine": 108,
+        "endChar": 102
+      },
+      "revId": "0d1cc8741e2b537b9a70267c0924cc9c382cf2b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3504d1_59529411",
+        "filename": "src/common/blocklayout.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-21T14:00:44Z",
+      "side": 1,
+      "message": "same here, use an explicit enum parameter without a default value",
+      "range": {
+        "startLine": 114,
+        "startChar": 64,
+        "endLine": 114,
+        "endChar": 81
+      },
+      "revId": "0d1cc8741e2b537b9a70267c0924cc9c382cf2b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
