@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f6c24f1_daea2585",
+        "filename": "src/libGLESv2/renderer/d3d9/formatutils9.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-22T18:43:46Z",
+      "side": 0,
+      "message": "This and the other changes removing the Renderer argument needed to be made or else there would be a circular dependency for checking if a texture format is supported.",
+      "range": {
+        "startLine": 26,
+        "startChar": 60,
+        "endLine": 26,
+        "endChar": 87
+      },
+      "revId": "3639892dee8ec8cecf4bae4b0585a7cefde98d80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
