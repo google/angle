@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3f3f0cb7_bce966cf",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1804,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-23T14:33:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f3504d1_1c12bae6",
+      "range": {
+        "startLine": 1804,
+        "startChar": 29,
+        "endLine": 1804,
+        "endChar": 48
+      },
+      "revId": "6c1bc9326f74129cd03bd367364d664cb243d470",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f3f0cb7_176613a9",
         "filename": "src/libGLESv2/validationES.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2014-05-21T21:16:39Z",
       "side": 1,
       "message": "Nitty but we could use the non-ext enums.",
+      "range": {
+        "startLine": 1048,
+        "startChar": 17,
+        "endLine": 1048,
+        "endChar": 36
+      },
+      "revId": "6c1bc9326f74129cd03bd367364d664cb243d470",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f5ee42c_e754f5da",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1048,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-23T14:33:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f3f0cb7_176613a9",
       "range": {
         "startLine": 1048,
         "startChar": 17,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7f5ee42c_c751f1e8",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1054,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-23T14:33:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f5ee42c_d032d428",
+      "range": {
+        "startLine": 1054,
+        "startChar": 22,
+        "endLine": 1054,
+        "endChar": 26
+      },
+      "revId": "6c1bc9326f74129cd03bd367364d664cb243d470",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f3504d1_6f1906dd",
         "filename": "src/libGLESv2/validationES.cpp",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2014-05-21T21:16:39Z",
       "side": 1,
       "message": "This should be moved back two spaces.",
+      "range": {
+        "startLine": 1065,
+        "startChar": 10,
+        "endLine": 1069,
+        "endChar": 16
+      },
+      "revId": "6c1bc9326f74129cd03bd367364d664cb243d470",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f5ee42c_a74efd48",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1069,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-23T14:33:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f3504d1_6f1906dd",
       "range": {
         "startLine": 1065,
         "startChar": 10,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "3f3f0cb7_9c16a21d",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1075,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-23T14:33:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f3f0cb7_379fd752",
+      "range": {
+        "startLine": 1075,
+        "startChar": 16,
+        "endLine": 1075,
+        "endChar": 32
+      },
+      "revId": "6c1bc9326f74129cd03bd367364d664cb243d470",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f3504d1_9c1eaaf6",
         "filename": "src/libGLESv2/validationES.cpp",
         "patchSetId": 3
@@ -128,6 +248,30 @@
       "writtenOn": "2014-05-21T18:51:41Z",
       "side": 1,
       "message": "Nittiest nit ever: can the break go on the following line? We usually don\u0027t mix single-line and multi-line switch cases.",
+      "range": {
+        "startLine": 1088,
+        "startChar": 15,
+        "endLine": 1088,
+        "endChar": 20
+      },
+      "revId": "6c1bc9326f74129cd03bd367364d664cb243d470",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f3f0cb7_7c1bfe46",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-23T14:33:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f3504d1_9c1eaaf6",
       "range": {
         "startLine": 1088,
         "startChar": 15,
