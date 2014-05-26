@@ -378,7 +378,8 @@ class Renderer9 : public Renderer
     unsigned int mAppliedIBSerial;
     IDirect3DVertexShader9 *mAppliedVertexShader;
     IDirect3DPixelShader9 *mAppliedPixelShader;
-    
+    unsigned int mAppliedProgramSerial;
+
     rx::dx_VertexConstants mVertexConstants;
     rx::dx_PixelConstants mPixelConstants;
     bool mDxUniformsDirty;

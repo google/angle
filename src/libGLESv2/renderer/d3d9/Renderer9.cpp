@@ -132,6 +132,7 @@ Renderer9::Renderer9(egl::Display *display, HDC hDc) : Renderer(display), mDc(hD
 
     mAppliedVertexShader = NULL;
     mAppliedPixelShader = NULL;
+    mAppliedProgramSerial = 0;
 }
 
 Renderer9::~Renderer9()
@@ -1738,25 +1739,29 @@ void Renderer9::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDi
     IDirect3DVertexShader9 *vertexShader = (vertexExe ? ShaderExecutable9::makeShaderExecutable9(vertexExe)->getVertexShader() : NULL);
     IDirect3DPixelShader9 *pixelShader = (pixelExe ? ShaderExecutable9::makeShaderExecutable9(pixelExe)->getPixelShader() : NULL);
 
-    bool dirtyUniforms = false;
-
     if (vertexShader != mAppliedVertexShader)
     {
         mDevice->SetVertexShader(vertexShader);
         mAppliedVertexShader = vertexShader;
-        dirtyUniforms = true;
     }
 
     if (pixelShader != mAppliedPixelShader)
     {
         mDevice->SetPixelShader(pixelShader);
         mAppliedPixelShader = pixelShader;
-        dirtyUniforms = true;
     }
 
-    if (dirtyUniforms)
+    // D3D9 has a quirk where creating multiple shaders with the same content
+    // can return the same shader pointer. Because GL programs store different data
+    // per-program, checking the program serial guarantees we upload fresh
+    // uniform data even if our shader pointers are the same.
+    // https://code.google.com/p/angleproject/issues/detail?id=661
+    unsigned int programSerial = programBinary->getSerial();
+    if (programSerial != mAppliedProgramSerial)
     {
         programBinary->dirtyAllUniforms();
+        mDxUniformsDirty = true;
+        mAppliedProgramSerial = programSerial;
     }
 }
 
@@ -2114,6 +2119,7 @@ void Renderer9::markAllStateDirty()
     mAppliedIBSerial = 0;
     mAppliedVertexShader = NULL;
     mAppliedPixelShader = NULL;
+    mAppliedProgramSerial = 0;
     mDxUniformsDirty = true;
 
     mVertexDeclarationCache.markStateDirty();
