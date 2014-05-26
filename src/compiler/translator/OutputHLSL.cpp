@@ -3303,7 +3303,7 @@ TString OutputHLSL::qualifierString(TQualifier qualifier)
     switch(qualifier)
     {
       case EvqIn:            return "in";
-      case EvqOut:           return "out";
+      case EvqOut:           return "inout"; // 'out' results in an HLSL error if not all fields are written, for GLSL it's undefined
       case EvqInOut:         return "inout";
       case EvqConstReadOnly: return "const";
       default: UNREACHABLE();
