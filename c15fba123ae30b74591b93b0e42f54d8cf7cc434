@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfa77c89_67f26c4f",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1207,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-26T14:56:35Z",
+      "side": 1,
+      "message": "Just noticed this too.  2D array texture depth limits are limited by a separate constant, GL_MAX_ARRAY_TEXTURE_LAYERS.",
+      "range": {
+        "startLine": 1207,
+        "startChar": 16,
+        "endLine": 1207,
+        "endChar": 70
+      },
+      "revId": "c15fba123ae30b74591b93b0e42f54d8cf7cc434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
