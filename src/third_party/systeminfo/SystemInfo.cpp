@@ -23,11 +23,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <windows.h>
+
 #if _WIN32_WINNT_WINBLUE
 #include <versionhelpers.h>
 #endif
-
-#include <windows.h>
 
 namespace rx {
 
