@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bfa77c89_a764e45d",
+        "filename": "src/libGLESv2/renderer/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-26T14:23:31Z",
+      "side": 1,
+      "message": "I removed it -- it came from missing validation causing a different D3D error.",
+      "parentUuid": "3f39cc01_205d8a22",
+      "range": {
+        "startLine": 466,
+        "startChar": 46,
+        "endLine": 466,
+        "endChar": 68
+      },
+      "revId": "79f6eea740f199db1323ee5d9bf5f3490abb5e84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfa77c89_04f936a0",
         "filename": "src/libGLESv2/validationES.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2014-05-23T20:22:32Z",
       "side": 1,
       "message": "the maximum dimension should be inclusive.",
+      "range": {
+        "startLine": 1280,
+        "startChar": 4,
+        "endLine": 1280,
+        "endChar": 102
+      },
+      "revId": "79f6eea740f199db1323ee5d9bf5f3490abb5e84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f2fc4b5_857bc498",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1280,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-26T14:23:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfa77c89_04f936a0",
       "range": {
         "startLine": 1280,
         "startChar": 4,
