@@ -126,12 +126,6 @@ class Renderer11 : public Renderer
     virtual bool getSRGBTextureSupport() const;
 
     virtual int getMajorShaderModel() const;
-    virtual float getMaxPointSize() const;
-    virtual int getMaxViewportDimension() const;
-    virtual int getMaxTextureWidth() const;
-    virtual int getMaxTextureHeight() const;
-    virtual int getMaxTextureDepth() const;
-    virtual int getMaxTextureArrayLayers() const;
     virtual int getMinSwapInterval() const;
     virtual int getMaxSwapInterval() const;
 
@@ -140,8 +134,6 @@ class Renderer11 : public Renderer
     virtual GLsizei getNumSampleCounts(GLenum internalFormat) const;
     virtual void getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const;
     int getNearestSupportedSamples(DXGI_FORMAT format, unsigned int requested) const;
-
-    virtual unsigned int getMaxRenderTargets() const;
 
     // Pixel operations
     virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source);
@@ -229,8 +221,6 @@ class Renderer11 : public Renderer
 
     void readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
                          GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, void *pixels);
-
-    rx::Range getViewportBounds() const;
 
     bool blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
                               RenderTarget *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,

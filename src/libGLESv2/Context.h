@@ -404,19 +404,8 @@ class Context
     const Caps &getCaps() const;
 
     int getMajorShaderModel() const;
-    float getMaximumPointSize() const;
     unsigned int getMaximumCombinedTextureImageUnits() const;
     unsigned int getMaximumCombinedUniformBufferBindings() const;
-    int getMaximumRenderbufferDimension() const;
-    int getMaximum2DTextureDimension() const;
-    int getMaximumCubeTextureDimension() const;
-    int getMaximum3DTextureDimension() const;
-    int getMaximum2DArrayTextureLayers() const;
-    int getMaximum2DTextureLevel() const;
-    int getMaximumCubeTextureLevel() const;
-    int getMaximum3DTextureLevel() const;
-    int getMaximum2DArrayTextureLevel() const;
-    unsigned int getMaximumRenderTargets() const;
     GLsizei getMaxSupportedSamples() const;
     GLsizei getMaxSupportedFormatSamples(GLenum internalFormat) const;
     GLsizei getNumSampleCounts(GLenum internalFormat) const;
@@ -533,18 +522,7 @@ class Context
     Framebuffer *mBoundDrawFramebuffer;
 
     int mMajorShaderModel;
-    float mMaximumPointSize;
     bool mSupportsVertexTexture;
-    int  mMaxViewportDimension;
-    int  mMaxRenderbufferDimension;
-    int  mMax2DTextureDimension;
-    int  mMaxCubeTextureDimension;
-    int  mMax3DTextureDimension;
-    int  mMax2DArrayTextureLayers;
-    int  mMax2DTextureLevel;
-    int  mMaxCubeTextureLevel;
-    int  mMax3DTextureLevel;
-    int  mMax2DArrayTextureLevel;
     int mNumCompressedTextureFormats;
 
     ResourceManager *mResourceManager;

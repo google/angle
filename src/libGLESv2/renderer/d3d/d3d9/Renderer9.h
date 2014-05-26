@@ -127,12 +127,6 @@ class Renderer9 : public Renderer
     virtual bool getSRGBTextureSupport() const;
 
     virtual int getMajorShaderModel() const;
-    virtual float getMaxPointSize() const;
-    virtual int getMaxViewportDimension() const;
-    virtual int getMaxTextureWidth() const;
-    virtual int getMaxTextureHeight() const;
-    virtual int getMaxTextureDepth() const;
-    virtual int getMaxTextureArrayLayers() const;
     DWORD getCapsDeclTypes() const;
     virtual int getMinSwapInterval() const;
     virtual int getMaxSwapInterval() const;
@@ -142,8 +136,6 @@ class Renderer9 : public Renderer
     virtual GLsizei getNumSampleCounts(GLenum internalFormat) const;
     virtual void getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const;
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
-
-    virtual unsigned int getMaxRenderTargets() const;
 
     // Pixel operations
     virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source);

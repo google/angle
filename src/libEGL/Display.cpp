@@ -82,16 +82,16 @@ bool Display::initialize()
 
     EGLint minSwapInterval = mRenderer->getMinSwapInterval();
     EGLint maxSwapInterval = mRenderer->getMaxSwapInterval();
-    EGLint maxTextureWidth = mRenderer->getMaxTextureWidth();
-    EGLint maxTextureHeight = mRenderer->getMaxTextureHeight();
+    EGLint maxTextureSize = mRenderer->getCaps().max2DTextureSize;
 
     rx::ConfigDesc *descList;
     int numConfigs = mRenderer->generateConfigs(&descList);
     ConfigSet configSet;
 
     for (int i = 0; i < numConfigs; ++i)
-        configSet.add(descList[i], minSwapInterval, maxSwapInterval,
-                      maxTextureWidth, maxTextureHeight);
+    {
+        configSet.add(descList[i], minSwapInterval, maxSwapInterval, maxTextureSize, maxTextureSize);
+    }
 
     // Give the sorted configs a unique ID and store them internally
     EGLint index = 1;

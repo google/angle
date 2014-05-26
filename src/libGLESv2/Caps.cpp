@@ -340,6 +340,23 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
 }
 
 Caps::Caps()
+    : maxElementIndex(0),
+      max3DTextureSize(0),
+      max2DTextureSize(0),
+      maxArrayTextureLayers(0),
+      maxLODBias(0),
+      maxCubeMapTextureSize(0),
+      maxRenderbufferSize(0),
+      maxDrawBuffers(0),
+      maxColorAttachments(0),
+      maxViewportWidth(0),
+      maxViewportHeight(0),
+      minAliasedPointSize(0),
+      maxAliasedPointSize(0),
+      minAliasedLineWidth(0),
+      maxAliasedLineWidth(0),
+      textureCaps(),
+      extensions()
 {
 }
 

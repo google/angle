@@ -349,7 +349,7 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
         // be a compatible clear type.
 
         // Bind all the render targets which need clearing
-        ASSERT(maskedClearRenderTargets.size() <= mRenderer->getMaxRenderTargets());
+        ASSERT(maskedClearRenderTargets.size() <= mRenderer->getCaps().maxDrawBuffers);
         std::vector<ID3D11RenderTargetView*> rtvs(maskedClearRenderTargets.size());
         for (unsigned int i = 0; i < maskedClearRenderTargets.size(); i++)
         {

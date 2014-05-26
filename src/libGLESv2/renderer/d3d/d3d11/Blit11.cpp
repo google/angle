@@ -186,7 +186,7 @@ Blit11::Blit11(rx::Renderer11 *renderer)
 
     D3D11_BUFFER_DESC vbDesc;
     vbDesc.ByteWidth = std::max(sizeof(d3d11::PositionLayerTexCoord3DVertex), sizeof(d3d11::PositionTexCoordVertex)) *
-                       6 * renderer->getMaxTextureDepth();
+                       6 * renderer->getCaps().max3DTextureSize;
     vbDesc.Usage = D3D11_USAGE_DYNAMIC;
     vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

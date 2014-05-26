@@ -2368,41 +2368,6 @@ int Renderer9::getMajorShaderModel() const
     return D3DSHADER_VERSION_MAJOR(mDeviceCaps.PixelShaderVersion);
 }
 
-float Renderer9::getMaxPointSize() const
-{
-    // Point size clamped at 1.0f for SM2
-    return getMajorShaderModel() == 3 ? mDeviceCaps.MaxPointSize : 1.0f;
-}
-
-int Renderer9::getMaxViewportDimension() const
-{
-    int maxTextureDimension = std::min(std::min(getMaxTextureWidth(), getMaxTextureHeight()),
-                                       (int)gl::IMPLEMENTATION_MAX_2D_TEXTURE_SIZE);
-    return maxTextureDimension;
-}
-
-int Renderer9::getMaxTextureWidth() const
-{
-    return (int)mDeviceCaps.MaxTextureWidth;
-}
-
-int Renderer9::getMaxTextureHeight() const
-{
-    return (int)mDeviceCaps.MaxTextureHeight;
-}
-
-int Renderer9::getMaxTextureDepth() const
-{
-    // 3D textures are not available in the D3D9 backend.
-    return 1;
-}
-
-int Renderer9::getMaxTextureArrayLayers() const
-{
-    // 2D array textures are not available in the D3D9 backend.
-    return 1;
-}
-
 DWORD Renderer9::getCapsDeclTypes() const
 {
     return mDeviceCaps.DeclTypes;
@@ -2494,12 +2459,6 @@ int Renderer9::getNearestSupportedSamples(D3DFORMAT format, int requested) const
     }
 
     return -1;
-}
-
-unsigned int Renderer9::getMaxRenderTargets() const
-{
-    // we do not support MRT in d3d9
-    return 1;
 }
 
 bool Renderer9::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source)

@@ -131,6 +131,8 @@ bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint le
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
+    const gl::Caps &caps = context->getCaps();
+
     gl::Texture *texture = NULL;
     bool textureCompressed = false;
     GLenum textureInternalFormat = GL_NONE;
@@ -140,8 +142,8 @@ bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint le
     {
       case GL_TEXTURE_2D:
         {
-            if (width > (context->getMaximum2DTextureDimension() >> level) ||
-                height > (context->getMaximum2DTextureDimension() >> level))
+            if (static_cast<GLuint>(width) > (caps.max2DTextureSize >> level) ||
+                static_cast<GLuint>(height) > (caps.max2DTextureSize >> level))
             {
                 return gl::error(GL_INVALID_VALUE, false);
             }
@@ -178,8 +180,8 @@ bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint le
                 return gl::error(GL_INVALID_VALUE, false);
             }
 
-            if (width > (context->getMaximumCubeTextureDimension() >> level) ||
-                height > (context->getMaximumCubeTextureDimension() >> level))
+            if (static_cast<GLuint>(width) > (caps.maxCubeMapTextureSize >> level) ||
+                static_cast<GLuint>(height) > (caps.maxCubeMapTextureSize >> level))
             {
                 return gl::error(GL_INVALID_VALUE, false);
             }
@@ -712,18 +714,20 @@ bool ValidateES2TexStorageParameters(gl::Context *context, GLenum target, GLsize
         return gl::error(GL_INVALID_ENUM, false);
     }
 
+    const gl::Caps &caps = context->getCaps();
+
     switch (target)
     {
       case GL_TEXTURE_2D:
-        if (width > context->getMaximum2DTextureDimension() ||
-            height > context->getMaximum2DTextureDimension())
+        if (static_cast<GLuint>(width) > caps.max2DTextureSize ||
+            static_cast<GLuint>(height) > caps.max2DTextureSize)
         {
             return gl::error(GL_INVALID_VALUE, false);
         }
         break;
       case GL_TEXTURE_CUBE_MAP:
-        if (width > context->getMaximumCubeTextureDimension() ||
-            height > context->getMaximumCubeTextureDimension())
+        if (static_cast<GLuint>(width) > caps.maxCubeMapTextureSize ||
+            static_cast<GLuint>(height) > caps.maxCubeMapTextureSize)
         {
             return gl::error(GL_INVALID_VALUE, false);
         }

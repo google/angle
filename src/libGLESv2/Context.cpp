@@ -311,27 +311,7 @@ void Context::makeCurrent(egl::Surface *surface)
     if (!mHasBeenCurrent)
     {
         mMajorShaderModel = mRenderer->getMajorShaderModel();
-        mMaximumPointSize = mRenderer->getMaxPointSize();
         mSupportsVertexTexture = mRenderer->getVertexTextureSupport();
-
-        mMaxViewportDimension = mRenderer->getMaxViewportDimension();
-        mMax2DTextureDimension = std::min(std::min(mRenderer->getMaxTextureWidth(), mRenderer->getMaxTextureHeight()),
-                                          (int)gl::IMPLEMENTATION_MAX_2D_TEXTURE_SIZE);
-        mMaxCubeTextureDimension = std::min(mMax2DTextureDimension, (int)gl::IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
-        mMax3DTextureDimension = std::min(std::min(mMax2DTextureDimension, mRenderer->getMaxTextureDepth()),
-                                          (int)gl::IMPLEMENTATION_MAX_3D_TEXTURE_SIZE);
-        mMax2DArrayTextureLayers = mRenderer->getMaxTextureArrayLayers();
-        mMaxRenderbufferDimension = mMax2DTextureDimension;
-        mMax2DTextureLevel = log2(mMax2DTextureDimension) + 1;
-        mMaxCubeTextureLevel = log2(mMaxCubeTextureDimension) + 1;
-        mMax3DTextureLevel = log2(mMax3DTextureDimension) + 1;
-        mMax2DArrayTextureLevel = log2(mMax2DTextureDimension) + 1;
-        TRACE("Max2DTextureDimension=%d, MaxCubeTextureDimension=%d, Max3DTextureDimension=%d, Max2DArrayTextureLayers = %d, "
-              "Max2DTextureLevel=%d, MaxCubeTextureLevel=%d, Max3DTextureLevel=%d, Max2DArrayTextureLevel=%d, "
-              "MaxRenderbufferDimension=%d",
-              mMax2DTextureDimension, mMaxCubeTextureDimension, mMax3DTextureDimension, mMax2DArrayTextureLayers,
-              mMax2DTextureLevel, mMaxCubeTextureLevel, mMax3DTextureLevel, mMax2DArrayTextureLevel,
-              mMaxRenderbufferDimension);
 
         mNumCompressedTextureFormats = 0;
         if (getCaps().extensions.textureCompressionDXT1)
@@ -1656,12 +1636,12 @@ void Context::getFloatv(GLenum pname, GLfloat *params)
       case GL_POLYGON_OFFSET_FACTOR:    *params = mState.rasterizer.polygonOffsetFactor;    break;
       case GL_POLYGON_OFFSET_UNITS:     *params = mState.rasterizer.polygonOffsetUnits;     break;
       case GL_ALIASED_LINE_WIDTH_RANGE:
-        params[0] = gl::ALIASED_LINE_WIDTH_RANGE_MIN;
-        params[1] = gl::ALIASED_LINE_WIDTH_RANGE_MAX;
+        params[0] = getCaps().minAliasedLineWidth;
+        params[1] = getCaps().maxAliasedLineWidth;
         break;
       case GL_ALIASED_POINT_SIZE_RANGE:
-        params[0] = gl::ALIASED_POINT_SIZE_RANGE_MIN;
-        params[1] = getMaximumPointSize();
+        params[0] = getCaps().minAliasedPointSize;
+        params[1] = getCaps().maxAliasedPointSize;
         break;
       case GL_DEPTH_RANGE:
         params[0] = mState.zNear;
@@ -1691,10 +1671,12 @@ void Context::getFloatv(GLenum pname, GLfloat *params)
 
 void Context::getIntegerv(GLenum pname, GLint *params)
 {
+    const Caps &caps = getCaps();
+
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
     {
         unsigned int colorAttachment = (pname - GL_DRAW_BUFFER0_EXT);
-        ASSERT(colorAttachment < mRenderer->getMaxRenderTargets());
+        ASSERT(colorAttachment < caps.maxDrawBuffers);
         Framebuffer *framebuffer = getDrawFramebuffer();
         *params = framebuffer->getDrawBufferState(colorAttachment);
         return;
@@ -1717,9 +1699,9 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_TEXTURE_IMAGE_UNITS:                  *params = gl::MAX_TEXTURE_IMAGE_UNITS;                          break;
       case GL_MAX_FRAGMENT_UNIFORM_VECTORS:             *params = mRenderer->getMaxFragmentUniformVectors();            break;
       case GL_MAX_FRAGMENT_UNIFORM_COMPONENTS:          *params = mRenderer->getMaxFragmentUniformVectors() * 4;        break;
-      case GL_MAX_RENDERBUFFER_SIZE:                    *params = getMaximumRenderbufferDimension();                    break;
-      case GL_MAX_COLOR_ATTACHMENTS_EXT:                *params = mRenderer->getMaxRenderTargets();                     break;
-      case GL_MAX_DRAW_BUFFERS_EXT:                     *params = mRenderer->getMaxRenderTargets();                     break;
+      case GL_MAX_RENDERBUFFER_SIZE:                    *params = caps.maxRenderbufferSize;                             break;
+      case GL_MAX_COLOR_ATTACHMENTS_EXT:                *params = caps.maxColorAttachments;                             break;
+      case GL_MAX_DRAW_BUFFERS_EXT:                     *params = caps.maxDrawBuffers;                                  break;
       case GL_NUM_SHADER_BINARY_FORMATS:                *params = 0;                                                    break;
       case GL_SHADER_BINARY_FORMATS:                    /* no shader binary formats are supported */                    break;
       case GL_ARRAY_BUFFER_BINDING:                     *params = mState.arrayBuffer.id();                              break;
@@ -1759,10 +1741,10 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_STENCIL_BACK_WRITEMASK:                   *params = clampToInt(mState.depthStencil.stencilBackWritemask); break;
       case GL_STENCIL_CLEAR_VALUE:                      *params = mState.stencilClearValue;                             break;
       case GL_SUBPIXEL_BITS:                            *params = 4;                                                    break;
-      case GL_MAX_TEXTURE_SIZE:                         *params = getMaximum2DTextureDimension();                       break;
-      case GL_MAX_CUBE_MAP_TEXTURE_SIZE:                *params = getMaximumCubeTextureDimension();                     break;
-      case GL_MAX_3D_TEXTURE_SIZE:                      *params = getMaximum3DTextureDimension();                       break;
-      case GL_MAX_ARRAY_TEXTURE_LAYERS:                 *params = getMaximum2DArrayTextureLayers();                     break;
+      case GL_MAX_TEXTURE_SIZE:                         *params = caps.max2DTextureSize;                                break;
+      case GL_MAX_CUBE_MAP_TEXTURE_SIZE:                *params = caps.maxCubeMapTextureSize;                           break;
+      case GL_MAX_3D_TEXTURE_SIZE:                      *params = caps.max3DTextureSize;                                break;
+      case GL_MAX_ARRAY_TEXTURE_LAYERS:                 *params = caps.maxArrayTextureLayers;                           break;
       case GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT:          *params = getUniformBufferOffsetAlignment();                    break;
       case GL_MAX_UNIFORM_BUFFER_BINDINGS:              *params = getMaximumCombinedUniformBufferBindings();            break;
       case GL_MAX_VERTEX_UNIFORM_BLOCKS:                *params = mRenderer->getMaxVertexShaderUniformBuffers();        break;
@@ -1823,8 +1805,8 @@ void Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_MAX_VIEWPORT_DIMS:
         {
-            params[0] = mMaxViewportDimension;
-            params[1] = mMaxViewportDimension;
+            params[0] = getCaps().maxViewportWidth;
+            params[1] = getCaps().maxViewportHeight;
         }
         break;
       case GL_COMPRESSED_TEXTURE_FORMATS:
@@ -1969,7 +1951,7 @@ void Context::getInteger64v(GLenum pname, GLint64 *params)
     switch (pname)
     {
       case GL_MAX_ELEMENT_INDEX:
-        *params = static_cast<GLint64>(std::numeric_limits<unsigned int>::max());
+        *params = getCaps().maxElementIndex;
         break;
       case GL_MAX_UNIFORM_BLOCK_SIZE:
         *params = static_cast<GLint64>(mRenderer->getMaxUniformBufferSize());
@@ -3118,11 +3100,6 @@ int Context::getMajorShaderModel() const
     return mMajorShaderModel;
 }
 
-float Context::getMaximumPointSize() const
-{
-    return mMaximumPointSize;
-}
-
 unsigned int Context::getMaximumCombinedTextureImageUnits() const
 {
     return mRenderer->getMaxCombinedTextureImageUnits();
@@ -3163,56 +3140,6 @@ GLintptr Context::getUniformBufferOffsetAlignment() const
 {
     // setting a large alignment forces uniform buffers to bind with zero offset
     return static_cast<GLintptr>(std::numeric_limits<GLint>::max());
-}
-
-unsigned int Context::getMaximumRenderTargets() const
-{
-    return mRenderer->getMaxRenderTargets();
-}
-
-int Context::getMaximumRenderbufferDimension() const
-{
-    return mMaxRenderbufferDimension;
-}
-
-int Context::getMaximum2DTextureDimension() const
-{
-    return mMax2DTextureDimension;
-}
-
-int Context::getMaximumCubeTextureDimension() const
-{
-    return mMaxCubeTextureDimension;
-}
-
-int Context::getMaximum3DTextureDimension() const
-{
-    return mMax3DTextureDimension;
-}
-
-int Context::getMaximum2DArrayTextureLayers() const
-{
-    return mMax2DArrayTextureLayers;
-}
-
-int Context::getMaximum2DTextureLevel() const
-{
-    return mMax2DTextureLevel;
-}
-
-int Context::getMaximumCubeTextureLevel() const
-{
-    return mMaxCubeTextureLevel;
-}
-
-int Context::getMaximum3DTextureLevel() const
-{
-    return mMax3DTextureLevel;
-}
-
-int Context::getMaximum2DArrayTextureLevel() const
-{
-    return mMax2DArrayTextureLevel;
 }
 
 void Context::getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type)

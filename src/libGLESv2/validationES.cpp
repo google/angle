@@ -148,23 +148,23 @@ bool ValidBufferParameter(const Context *context, GLenum pname)
 
 bool ValidMipLevel(const Context *context, GLenum target, GLint level)
 {
-    int maxLevel = 0;
+    size_t maxDimension = 0;
     switch (target)
     {
-      case GL_TEXTURE_2D:                  maxLevel = context->getMaximum2DTextureLevel();      break;
+      case GL_TEXTURE_2D:                  maxDimension = context->getCaps().max2DTextureSize;       break;
       case GL_TEXTURE_CUBE_MAP:
       case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
       case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
       case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
       case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
       case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z: maxLevel = context->getMaximumCubeTextureLevel();    break;
-      case GL_TEXTURE_3D:                  maxLevel = context->getMaximum3DTextureLevel();      break;
-      case GL_TEXTURE_2D_ARRAY:            maxLevel = context->getMaximum2DArrayTextureLevel(); break;
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z: maxDimension = context->getCaps().maxCubeMapTextureSize;  break;
+      case GL_TEXTURE_3D:                  maxDimension = context->getCaps().max3DTextureSize;       break;
+      case GL_TEXTURE_2D_ARRAY:            maxDimension = context->getCaps().max2DTextureSize;       break;
       default: UNREACHABLE();
     }
 
-    return level < maxLevel;
+    return level <= gl::log2(maxDimension);
 }
 
 bool ValidImageSize(const gl::Context *context, GLenum target, GLint level,
@@ -252,7 +252,7 @@ bool ValidateAttachmentTarget(const gl::Context *context, GLenum attachment)
     {
         const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
 
-        if (colorAttachment >= context->getMaximumRenderTargets())
+        if (colorAttachment >= context->getCaps().maxColorAttachments)
         {
             return gl::error(GL_INVALID_VALUE, false);
         }
@@ -324,7 +324,7 @@ bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum ta
         return gl::error(GL_INVALID_ENUM, false);
     }
 
-    if (std::max(width, height) > context->getMaximumRenderbufferDimension())
+    if (static_cast<GLuint>(std::max(width, height)) > context->getCaps().maxRenderbufferSize)
     {
         return gl::error(GL_INVALID_VALUE, false);
     }
@@ -1061,7 +1061,7 @@ bool ValidateStateQuery(gl::Context *context, GLenum pname, GLenum *nativeType, 
     {
         unsigned int colorAttachment = (pname - GL_DRAW_BUFFER0);
 
-        if (colorAttachment >= context->getMaximumRenderTargets())
+        if (colorAttachment >= context->getCaps().maxDrawBuffers)
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }
@@ -1151,6 +1151,8 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
+    const gl::Caps &caps = context->getCaps();
+
     gl::Texture *texture = NULL;
     GLenum textureInternalFormat = GL_NONE;
     bool textureCompressed = false;
@@ -1158,7 +1160,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
     GLint textureLevelWidth = 0;
     GLint textureLevelHeight = 0;
     GLint textureLevelDepth = 0;
-    int maxDimension = 0;
+    GLuint maxDimension = 0;
 
     switch (target)
     {
@@ -1174,7 +1176,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
                 textureLevelHeight = texture2d->getHeight(level);
                 textureLevelDepth = 1;
                 texture = texture2d;
-                maxDimension = context->getMaximum2DTextureDimension();
+                maxDimension = caps.max2DTextureSize;
             }
         }
         break;
@@ -1196,7 +1198,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
                 textureLevelHeight = textureCube->getHeight(target, level);
                 textureLevelDepth = 1;
                 texture = textureCube;
-                maxDimension = context->getMaximumCubeTextureDimension();
+                maxDimension = caps.maxCubeMapTextureSize;
             }
         }
         break;
@@ -1213,7 +1215,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
                 textureLevelHeight = texture2dArray->getHeight(level);
                 textureLevelDepth = texture2dArray->getLayers(level);
                 texture = texture2dArray;
-                maxDimension = context->getMaximum2DTextureDimension();
+                maxDimension = caps.max2DTextureSize;
             }
         }
         break;
@@ -1230,7 +1232,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
                 textureLevelHeight = texture3d->getHeight(level);
                 textureLevelDepth = texture3d->getDepth(level);
                 texture = texture3d;
-                maxDimension = context->getMaximum3DTextureDimension();
+                maxDimension = caps.max3DTextureSize;
             }
         }
         break;

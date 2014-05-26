@@ -193,7 +193,7 @@ void Shader::initializeCompiler()
             resources.MaxCombinedTextureImageUnits = mRenderer->getMaxCombinedTextureImageUnits();
             resources.MaxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
             resources.MaxFragmentUniformVectors = mRenderer->getMaxFragmentUniformVectors();
-            resources.MaxDrawBuffers = mRenderer->getMaxRenderTargets();
+            resources.MaxDrawBuffers = caps.maxDrawBuffers;
             resources.OES_standard_derivatives = caps.extensions.standardDerivatives;
             resources.EXT_draw_buffers = caps.extensions.drawBuffers;
             resources.EXT_shader_texture_lod = 1;
