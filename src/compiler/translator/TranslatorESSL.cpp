@@ -9,7 +9,7 @@
 #include "compiler/translator/OutputESSL.h"
 
 TranslatorESSL::TranslatorESSL(ShShaderType type, ShShaderSpec spec)
-    : TCompiler(type, spec) {
+    : TCompiler(type, spec, SH_ESSL_OUTPUT) {
 }
 
 void TranslatorESSL::translate(TIntermNode* root) {

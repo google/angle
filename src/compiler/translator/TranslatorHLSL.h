@@ -29,7 +29,6 @@ protected:
     std::vector<gl::Attribute> mActiveOutputVariables;
     std::vector<gl::Attribute> mActiveAttributes;
     std::vector<gl::Varying> mActiveVaryings;
-    ShShaderOutput mOutputType;
 };
 
 #endif  // COMPILER_TRANSLATORHLSL_H_

@@ -22,7 +22,7 @@ static void writeVersion(ShShaderType type, TIntermNode* root,
 }
 
 TranslatorGLSL::TranslatorGLSL(ShShaderType type, ShShaderSpec spec)
-    : TCompiler(type, spec) {
+    : TCompiler(type, spec, SH_GLSL_OUTPUT) {
 }
 
 void TranslatorGLSL::translate(TIntermNode* root) {

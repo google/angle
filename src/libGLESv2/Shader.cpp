@@ -583,4 +583,21 @@ const std::vector<Attribute> &FragmentShader::getOutputVariables() const
     return mActiveOutputVariables;
 }
 
+ShShaderOutput Shader::getCompilerOutputType(GLenum shader)
+{
+    void *compiler = NULL;
+
+    switch (shader)
+    {
+      case GL_VERTEX_SHADER:   compiler = mVertexCompiler;   break;
+      case GL_FRAGMENT_SHADER: compiler = mFragmentCompiler; break;
+      default: UNREACHABLE();  return SH_HLSL9_OUTPUT;
+    }
+
+    size_t outputType = 0;
+    ShGetInfo(compiler, SH_OUTPUT_TYPE, &outputType);
+
+    return static_cast<ShShaderOutput>(outputType);
+}
+
 }

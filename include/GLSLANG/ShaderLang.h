@@ -37,7 +37,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 124
+#define ANGLE_SH_VERSION 125
 
 //
 // The names of the following enums have been derived by replacing GL prefix
@@ -157,7 +157,8 @@ typedef enum {
   SH_ACTIVE_OUTPUT_VARIABLES_ARRAY  = 0x6007,
   SH_ACTIVE_ATTRIBUTES_ARRAY        = 0x6008,
   SH_ACTIVE_VARYINGS_ARRAY          = 0x6009,
-  SH_RESOURCES_STRING_LENGTH        = 0x600A
+  SH_RESOURCES_STRING_LENGTH        = 0x600A,
+  SH_OUTPUT_TYPE                    = 0x600B
 } ShShaderInfo;
 
 // Compile options.
@@ -416,6 +417,7 @@ COMPILER_EXPORT int ShCompile(
 //                            null termination character.
 // SH_HASHED_NAMES_COUNT: the number of hashed names from the latest compile.
 // SH_SHADER_VERSION: the version of the shader language
+// SH_OUTPUT_TYPE: the currently set language output type
 //
 // params: Requested parameter
 COMPILER_EXPORT void ShGetInfo(const ShHandle handle,

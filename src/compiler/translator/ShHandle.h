@@ -54,7 +54,7 @@ protected:
 //
 class TCompiler : public TShHandleBase {
 public:
-    TCompiler(ShShaderType type, ShShaderSpec spec);
+    TCompiler(ShShaderType type, ShShaderSpec spec, ShShaderOutput output);
     virtual ~TCompiler();
     virtual TCompiler* getAsCompiler() { return this; }
 
@@ -74,6 +74,7 @@ public:
     NameMap& getNameMap() { return nameMap; }
     TSymbolTable& getSymbolTable() { return symbolTable; }
     ShShaderSpec getShaderSpec() const { return shaderSpec; }
+    ShShaderOutput getOutputType() const { return outputType; }
     std::string getBuiltInResourcesString() const { return builtInResourcesString; }
 
 protected:
@@ -131,6 +132,7 @@ protected:
 private:
     ShShaderType shaderType;
     ShShaderSpec shaderSpec;
+    ShShaderOutput outputType;
 
     int maxUniformVectors;
     int maxExpressionComplexity;

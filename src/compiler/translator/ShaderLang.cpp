@@ -249,6 +249,9 @@ void ShGetInfo(const ShHandle handle, ShShaderInfo pname, size_t* params)
     case SH_RESOURCES_STRING_LENGTH:
         *params = compiler->getBuiltInResourcesString().length() + 1;
         break;
+    case SH_OUTPUT_TYPE:
+        *params = compiler->getOutputType();
+        break;
     default: UNREACHABLE();
     }
 }

@@ -92,9 +92,10 @@ TShHandleBase::~TShHandleBase()
     allocator.popAll();
 }
 
-TCompiler::TCompiler(ShShaderType type, ShShaderSpec spec)
+TCompiler::TCompiler(ShShaderType type, ShShaderSpec spec, ShShaderOutput output)
     : shaderType(type),
       shaderSpec(spec),
+      outputType(output),
       maxUniformVectors(0),
       maxExpressionComplexity(0),
       maxCallStackDepth(0),
