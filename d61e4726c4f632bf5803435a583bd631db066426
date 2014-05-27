@@ -22,6 +22,30 @@
       "revId": "d61e4726c4f632bf5803435a583bd631db066426",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f62b822_53434425",
+        "filename": "src/common/RefCountObject.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-27T20:19:51Z",
+      "side": 0,
+      "message": "It was causing issues when there were two headers which defined this macro.  I didn\u0027t observe any issues with removing it.  Moved it to the gyp file in the previous patch.",
+      "parentUuid": "df68b004_95d66480",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 18
+      },
+      "revId": "d61e4726c4f632bf5803435a583bd631db066426",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
