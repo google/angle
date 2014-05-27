@@ -483,7 +483,7 @@ void setBlockLayout(gl::InterfaceBlock *interfaceBlock, gl::BlockLayoutType newL
       case gl::BLOCKLAYOUT_SHARED:
       case gl::BLOCKLAYOUT_PACKED:
         {
-            gl::HLSLBlockEncoder hlslEncoder(&interfaceBlock->blockInfo);
+            gl::HLSLBlockEncoder hlslEncoder(&interfaceBlock->blockInfo, gl::HLSLBlockEncoder::ENCODE_PACKED);
             hlslEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
             interfaceBlock->dataSize = hlslEncoder.getBlockSize();
         }
@@ -3940,7 +3940,7 @@ gl::Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &n
         }
 
         // assign register offset information -- this will override the information in any sub-structures.
-        HLSLVariableGetRegisterInfo(registerIndex, &structUniform);
+        HLSLVariableGetRegisterInfo(registerIndex, &structUniform, mOutputType);
 
         output.push_back(structUniform);
 
@@ -4008,11 +4008,11 @@ int OutputHLSL::declareUniformAndAssignRegister(const TType &type, const TString
 
     if (IsSampler(type.getBasicType()))
     {
-        mSamplerRegister += gl::HLSLVariableRegisterCount(uniform);
+        mSamplerRegister += gl::HLSLVariableRegisterCount(uniform, mOutputType);
     }
     else
     {
-        mUniformRegister += gl::HLSLVariableRegisterCount(uniform);
+        mUniformRegister += gl::HLSLVariableRegisterCount(uniform, mOutputType);
     }
 
     return registerIndex;

@@ -14,6 +14,7 @@
 #define GL_APICALL
 #include <GLES3/gl3.h>
 #include <GLES2/gl2.h>
+#include <GLSLANG/ShaderLang.h>
 #include <cstddef>
 
 namespace gl
@@ -67,31 +68,44 @@ class Std140BlockEncoder : public BlockLayoutEncoder
     virtual void advanceOffset(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int arrayStride, int matrixStride);
 };
 
-// Block layout packed according to the default D3D11 register packing rules
+// Block layout packed according to the D3D9 or default D3D10+ register packing rules
 // See http://msdn.microsoft.com/en-us/library/windows/desktop/bb509632(v=vs.85).aspx
+// The strategy should be ENCODE_LOOSE for D3D9 constnat blocks, and ENCODE_PACKED
+// for everything else (D3D10+ constant blocks and all attributes/varyings).
 
 class HLSLBlockEncoder : public BlockLayoutEncoder
 {
   public:
-    HLSLBlockEncoder(std::vector<BlockMemberInfo> *blockInfoOut);
+    enum HLSLBlockEncoderStrategy
+    {
+        ENCODE_PACKED,
+        ENCODE_LOOSE
+    };
+
+    HLSLBlockEncoder(std::vector<BlockMemberInfo> *blockInfoOut,
+                     HLSLBlockEncoderStrategy strategy);
 
     virtual void enterAggregateType();
     virtual void exitAggregateType();
     void skipRegisters(unsigned int numRegisters);
 
+    bool isPacked() const { return mEncoderStrategy == ENCODE_PACKED; }
+
   protected:
     virtual void getBlockLayoutInfo(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int *arrayStrideOut, int *matrixStrideOut);
     virtual void advanceOffset(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int arrayStride, int matrixStride);
+
+    HLSLBlockEncoderStrategy mEncoderStrategy;
 };
 
 // This method assigns values to the variable's "registerIndex" and "elementIndex" fields.
 // "elementIndex" is only used for structures.
-void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, Uniform *variable);
+void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, Uniform *variable, ShShaderOutput outputType);
 
 // This method returns the number of used registers for a ShaderVariable. It is dependent on the HLSLBlockEncoder
 // class to count the number of used registers in a struct (which are individually packed according to the same rules).
 unsigned int HLSLVariableRegisterCount(const Varying &variable);
-unsigned int HLSLVariableRegisterCount(const Uniform &variable);
+unsigned int HLSLVariableRegisterCount(const Uniform &variable, ShShaderOutput outputType);
 
 }
 

@@ -155,8 +155,9 @@ void Std140BlockEncoder::advanceOffset(GLenum type, unsigned int arraySize, bool
     }
 }
 
-HLSLBlockEncoder::HLSLBlockEncoder(std::vector<BlockMemberInfo> *blockInfoOut)
-    : BlockLayoutEncoder(blockInfoOut)
+HLSLBlockEncoder::HLSLBlockEncoder(std::vector<BlockMemberInfo> *blockInfoOut, HLSLBlockEncoderStrategy strategy)
+    : BlockLayoutEncoder(blockInfoOut),
+      mEncoderStrategy(strategy)
 {
 }
 
@@ -177,9 +178,18 @@ void HLSLBlockEncoder::getBlockLayoutInfo(GLenum type, unsigned int arraySize, b
     int matrixStride = 0;
     int arrayStride = 0;
 
-    if (gl::IsMatrixType(type))
+    // if variables are not to be packed, or we're about to
+    // pack a matrix or array, skip to the start of the next
+    // register
+    if (!isPacked() ||
+        gl::IsMatrixType(type) ||
+        arraySize > 0)
     {
         nextRegister();
+    }
+
+    if (gl::IsMatrixType(type))
+    {
         matrixStride = ComponentsPerRegister;
 
         if (arraySize > 0)
@@ -190,10 +200,9 @@ void HLSLBlockEncoder::getBlockLayoutInfo(GLenum type, unsigned int arraySize, b
     }
     else if (arraySize > 0)
     {
-        nextRegister();
         arrayStride = ComponentsPerRegister;
     }
-    else
+    else if (isPacked())
     {
         int numComponents = gl::UniformComponentCount(type);
         if ((numComponents + (mCurrentOffset % ComponentsPerRegister)) > ComponentsPerRegister)
@@ -221,9 +230,13 @@ void HLSLBlockEncoder::advanceOffset(GLenum type, unsigned int arraySize, bool i
         mCurrentOffset += ComponentsPerRegister * (numRegisters - 1);
         mCurrentOffset += numComponents;
     }
-    else
+    else if (isPacked())
     {
         mCurrentOffset += gl::UniformComponentCount(type);
+    }
+    else
+    {
+        mCurrentOffset += ComponentsPerRegister;
     }
 }
 
@@ -232,7 +245,8 @@ void HLSLBlockEncoder::skipRegisters(unsigned int numRegisters)
     mCurrentOffset += (numRegisters * ComponentsPerRegister);
 }
 
-void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, gl::Uniform *variable, HLSLBlockEncoder *encoder, const std::vector<gl::BlockMemberInfo> &blockInfo)
+void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, gl::Uniform *variable, HLSLBlockEncoder *encoder,
+                                 const std::vector<gl::BlockMemberInfo> &blockInfo, ShShaderOutput outputType)
 {
     // because this method computes offsets (element indexes) instead of any total sizes,
     // we can ignore the array size of the variable
@@ -245,14 +259,14 @@ void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, gl::Uniform *va
 
         for (size_t fieldIndex = 0; fieldIndex < variable->fields.size(); fieldIndex++)
         {
-            HLSLVariableGetRegisterInfo(baseRegisterIndex, &variable->fields[fieldIndex], encoder, blockInfo);
+            HLSLVariableGetRegisterInfo(baseRegisterIndex, &variable->fields[fieldIndex], encoder, blockInfo, outputType);
         }
 
         // Since the above loop only encodes one element of an array, ensure we don't lose track of the
         // current register offset
         if (variable->isArray())
         {
-            unsigned int structRegisterCount = (HLSLVariableRegisterCount(*variable) / variable->arraySize);
+            unsigned int structRegisterCount = (HLSLVariableRegisterCount(*variable, outputType) / variable->arraySize);
             encoder->skipRegisters(structRegisterCount * (variable->arraySize - 1));
         }
 
@@ -268,11 +282,13 @@ void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, gl::Uniform *va
     }
 }
 
-void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, gl::Uniform *variable)
+void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, gl::Uniform *variable, ShShaderOutput outputType)
 {
     std::vector<BlockMemberInfo> blockInfo;
-    HLSLBlockEncoder encoder(&blockInfo);
-    HLSLVariableGetRegisterInfo(baseRegisterIndex, variable, &encoder, blockInfo);
+    HLSLBlockEncoder encoder(&blockInfo,
+                             outputType == SH_HLSL9_OUTPUT ? HLSLBlockEncoder::ENCODE_LOOSE
+                                                           : HLSLBlockEncoder::ENCODE_PACKED);
+    HLSLVariableGetRegisterInfo(baseRegisterIndex, variable, &encoder, blockInfo, outputType);
 }
 
 template <class ShaderVarType>
@@ -301,16 +317,19 @@ void HLSLVariableRegisterCount(const ShaderVarType &variable, HLSLBlockEncoder *
 
 unsigned int HLSLVariableRegisterCount(const Varying &variable)
 {
-    HLSLBlockEncoder encoder(NULL);
+    HLSLBlockEncoder encoder(NULL, HLSLBlockEncoder::ENCODE_PACKED);
     HLSLVariableRegisterCount(variable, &encoder);
 
     const size_t registerBytes = (encoder.BytesPerComponent * encoder.ComponentsPerRegister);
     return static_cast<unsigned int>(rx::roundUp<size_t>(encoder.getBlockSize(), registerBytes) / registerBytes);
 }
 
-unsigned int HLSLVariableRegisterCount(const Uniform &variable)
+unsigned int HLSLVariableRegisterCount(const Uniform &variable, ShShaderOutput outputType)
 {
-    HLSLBlockEncoder encoder(NULL);
+    HLSLBlockEncoder encoder(NULL,
+                             outputType == SH_HLSL9_OUTPUT ? HLSLBlockEncoder::ENCODE_LOOSE
+                                                           : HLSLBlockEncoder::ENCODE_PACKED);
+
     HLSLVariableRegisterCount(variable, &encoder);
 
     const size_t registerBytes = (encoder.BytesPerComponent * encoder.ComponentsPerRegister);

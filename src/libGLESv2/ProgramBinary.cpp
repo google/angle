@@ -1847,7 +1847,8 @@ bool ProgramBinary::defineUniform(GLenum shader, const gl::Uniform &constant, In
     {
         if (constant.arraySize > 0)
         {
-            const unsigned int elementRegisterCount = HLSLVariableRegisterCount(constant) / constant.arraySize;
+            ShShaderOutput outputType = Shader::getCompilerOutputType(shader);
+            const unsigned int elementRegisterCount = HLSLVariableRegisterCount(constant, outputType) / constant.arraySize;
 
             for (unsigned int elementIndex = 0; elementIndex < constant.arraySize; elementIndex++)
             {
