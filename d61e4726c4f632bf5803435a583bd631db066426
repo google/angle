@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df68b004_95d66480",
+        "filename": "src/common/RefCountObject.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-27T15:48:11Z",
+      "side": 0,
+      "message": "can you explain the removing GL_APICALL? I remember having compile/link errors regarding the define -- it was some time ago.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 18
+      },
+      "revId": "d61e4726c4f632bf5803435a583bd631db066426",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

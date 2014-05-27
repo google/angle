@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f62b822_73a480da",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-27T15:48:11Z",
+      "side": 1,
+      "message": "this seems like a candidate for a small separate patch?",
+      "range": {
+        "startLine": 95,
+        "startChar": 4,
+        "endLine": 95,
+        "endChar": 119
+      },
+      "revId": "621c0c3d27162a0afefa10dcfc7a27c1f44d86c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfa77c89_2a80bb37",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 10012,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-27T15:48:11Z",
+      "side": 1,
+      "message": "I feel like there\u0027s a separate bug here, which could be a in a split patch. In general all of the extension query renaming could be a separate set of patches.",
+      "range": {
+        "startLine": 10012,
+        "startChar": 12,
+        "endLine": 10012,
+        "endChar": 58
+      },
+      "revId": "621c0c3d27162a0afefa10dcfc7a27c1f44d86c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f62b822_f397f062",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 10060,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-27T15:48:11Z",
+      "side": 1,
+      "message": "see above comment, etcetera",
+      "range": {
+        "startLine": 10060,
+        "startChar": 13,
+        "endLine": 10060,
+        "endChar": 58
+      },
+      "revId": "621c0c3d27162a0afefa10dcfc7a27c1f44d86c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f62b822_d3947461",
+        "filename": "src/libGLESv2/renderer/d3d11/formatutils11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1300,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-27T15:48:11Z",
+      "side": 1,
+      "message": "shouldn\u0027t renderableFormat be determined from internalFormat?",
+      "range": {
+        "startLine": 1300,
+        "startChar": 32,
+        "endLine": 1300,
+        "endChar": 75
+      },
+      "revId": "621c0c3d27162a0afefa10dcfc7a27c1f44d86c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f62b822_b39d7889",
+        "filename": "src/libGLESv2/renderer/d3d9/renderer9_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-27T15:48:11Z",
+      "side": 1,
+      "message": "I\u0027d advocate that Caps generation is a natural fit for a member of the Caps class itself. Using either an abstract method or overloaded constructor, you could have a design where the caps initializes its member functions, and then becomes an immutable (const). You then can get rid of every setter function! You could even retire the getter functions and rely on the constness of the objects to protect the member variables.\n\nAt the very least it would clean up the code from calling many setter functions and replace it with assignments. Caps already requires a custom d3d9/d3d11/etc hook, so no extra work for the implementer of a new back-end.",
+      "range": {
+        "startLine": 255,
+        "startChar": 23,
+        "endLine": 255,
+        "endChar": 48
+      },
+      "revId": "621c0c3d27162a0afefa10dcfc7a27c1f44d86c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
