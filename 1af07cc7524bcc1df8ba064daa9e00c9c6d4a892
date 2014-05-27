@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "df68b004_58cb612e",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-27T19:05:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bffa1c80_acea2383",
+      "range": {
+        "startLine": 420,
+        "startChar": 33,
+        "endLine": 420,
+        "endChar": 37
+      },
+      "revId": "1af07cc7524bcc1df8ba064daa9e00c9c6d4a892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bffa1c80_ccf16f74",
         "filename": "src/libGLESv2/Shader.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2014-05-27T18:58:57Z",
       "side": 1,
       "message": "ShShaderOutput is an enum, which are typically 32-bit. ShGetInfo writes a size_t, which is 64-bit on 64-bit architectures.\n\nCould you also check for other cases like this?",
+      "range": {
+        "startLine": 597,
+        "startChar": 4,
+        "endLine": 598,
+        "endChar": 80
+      },
+      "revId": "1af07cc7524bcc1df8ba064daa9e00c9c6d4a892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df68b004_b8df15e7",
+        "filename": "src/libGLESv2/Shader.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-27T19:05:28Z",
+      "side": 1,
+      "message": "Good catch. I checked and all uses of ShGetInfo use a size_t pointer.",
+      "parentUuid": "bffa1c80_ccf16f74",
       "range": {
         "startLine": 597,
         "startChar": 4,
