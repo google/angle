@@ -10,14 +10,10 @@
 #ifndef LIBGLESV2_CONTEXT_H_
 #define LIBGLESV2_CONTEXT_H_
 
-#ifndef GL_APICALL
-#define GL_APICALL
-#endif
 #include <GLES3/gl3.h>
 #include <GLES3/gl3ext.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
-#define EGLAPI
 #include <EGL/egl.h>
 
 #include <string>

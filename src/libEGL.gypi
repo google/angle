@@ -25,6 +25,12 @@
                              -dirs common libEGL ../include \
                              -types *.cpp *.h *.def *.rc)',
                     ],
+                    'defines':
+                    [
+                        'GL_APICALL=',
+                        'GL_GLEXT_PROTOTYPES=',
+                        'EGLAPI=',
+                    ],
                     'includes': [ '../build/common_defines.gypi', ],
                     'msvs_settings':
                     {

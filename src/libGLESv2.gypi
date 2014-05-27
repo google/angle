@@ -40,6 +40,12 @@
                              -types *.cpp *.h *.hlsl *.vs *.ps *.bat *.def *.rc \
                              -excludes */d3d/* */d3d9/* */d3d11/*)',
                     ],
+                    'defines':
+                    [
+                        'GL_APICALL=',
+                        'GL_GLEXT_PROTOTYPES=',
+                        'EGLAPI=',
+                    ],
                     'conditions':
                     [
                         ['angle_enable_d3d9==1',

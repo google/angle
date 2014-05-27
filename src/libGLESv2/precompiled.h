@@ -6,15 +6,12 @@
 
 // precompiled.h: Precompiled header file for libGLESv2.
 
-#define GL_APICALL
 #include <GLES3/gl3.h>
 #include <GLES3/gl3ext.h>
 #include <GLES2/gl2.h>
 
-#define GL_GLEXT_PROTOTYPES
 #include <GLES2/gl2ext.h>
 
-#define EGLAPI
 #include <EGL/egl.h>
 
 #include <assert.h>

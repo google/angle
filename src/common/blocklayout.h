@@ -11,7 +11,6 @@
 #define COMMON_BLOCKLAYOUT_H_
 
 #include <vector>
-#define GL_APICALL
 #include <GLES3/gl3.h>
 #include <GLES2/gl2.h>
 #include <GLSLANG/ShaderLang.h>

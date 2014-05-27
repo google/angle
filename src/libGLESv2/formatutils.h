@@ -9,7 +9,6 @@
 #ifndef LIBGLESV2_FORMATUTILS_H_
 #define LIBGLESV2_FORMATUTILS_H_
 
-#define GL_APICALL
 #include <GLES3/gl3.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
