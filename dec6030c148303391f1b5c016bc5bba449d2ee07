@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bffa1c80_ecd6ebf7",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-05-27T18:15:53Z",
+      "side": 1,
+      "message": "Retrieving the output type should probably be part of TCompiler instead of just TranslatorHLSL (we have enums for translation to ESSL and GLSL as well). This way we also don\u0027t need this cast here and don\u0027t have to check below whether the pointer is valid.",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 196,
+        "endChar": 65
+      },
+      "revId": "dec6030c148303391f1b5c016bc5bba449d2ee07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
