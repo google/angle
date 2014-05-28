@@ -117,6 +117,7 @@ inline ID3D11VertexShader *CompileVS(ID3D11Device *device, const BYTE (&byteCode
 {
     ID3D11VertexShader *vs = NULL;
     HRESULT result = device->CreateVertexShader(byteCode, N, NULL, &vs);
+    UNUSED_ASSERTION_VARIABLE(result);
     ASSERT(SUCCEEDED(result));
     SetDebugName(vs, name);
     return vs;
@@ -127,6 +128,7 @@ inline ID3D11GeometryShader *CompileGS(ID3D11Device *device, const BYTE (&byteCo
 {
     ID3D11GeometryShader *gs = NULL;
     HRESULT result = device->CreateGeometryShader(byteCode, N, NULL, &gs);
+    UNUSED_ASSERTION_VARIABLE(result);
     ASSERT(SUCCEEDED(result));
     SetDebugName(gs, name);
     return gs;
@@ -137,6 +139,7 @@ inline ID3D11PixelShader *CompilePS(ID3D11Device *device, const BYTE (&byteCode)
 {
     ID3D11PixelShader *ps = NULL;
     HRESULT result = device->CreatePixelShader(byteCode, N, NULL, &ps);
+    UNUSED_ASSERTION_VARIABLE(result);
     ASSERT(SUCCEEDED(result));
     SetDebugName(ps, name);
     return ps;

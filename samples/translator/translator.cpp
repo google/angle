@@ -66,7 +66,6 @@ int main(int argc, char* argv[])
     ShHandle fragmentCompiler = 0;
     char* buffer = 0;
     size_t bufferLen = 0;
-    int numAttribs = 0, numUniforms = 0;
     ShShaderSpec spec = SH_GLES2_SPEC;
     ShShaderOutput output = SH_ESSL_OUTPUT;
 

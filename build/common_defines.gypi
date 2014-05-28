@@ -13,7 +13,7 @@
     [
         'NOMINMAX',
     ],
-    'msvs_disabled_warnings': [ 4100, 4127, 4189, 4239, 4244, 4245, 4512, 4702, 4530, 4718, 4189, 4267 ],
+    'msvs_disabled_warnings': [ 4100, 4127, 4239, 4244, 4245, 4512, 4702, 4530, 4718, 4267 ],
     'msvs_system_include_dirs':
     [
         '<(windows_sdk_path)/Include/shared',

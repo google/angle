@@ -593,6 +593,7 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     if (result == DXGI_ERROR_DEVICE_REMOVED)
     {
         HRESULT removedReason = device->GetDeviceRemovedReason();
+        UNUSED_ASSERTION_VARIABLE(removedReason);
         ERR("Present failed: the D3D11 device was removed: 0x%08X", removedReason);
         return EGL_CONTEXT_LOST;
     }

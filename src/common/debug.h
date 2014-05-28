@@ -77,8 +77,10 @@ namespace gl
         ERR("\t! Assert failed in %s(%d): "#expression"\n", __FUNCTION__, __LINE__); \
         assert(expression); \
     } while(0)
+#define UNUSED_ASSERTION_VARIABLE(variable)
 #else
 #define ASSERT(expression) (void(0))
+#define UNUSED_ASSERTION_VARIABLE(variable) ((void)variable)
 #endif
 
 // A macro to indicate unimplemented functionality

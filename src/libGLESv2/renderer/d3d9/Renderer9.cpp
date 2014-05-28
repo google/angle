@@ -676,6 +676,7 @@ IDirect3DQuery9* Renderer9::allocateEventQuery()
     if (mEventQueryPool.empty())
     {
         HRESULT result = mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &query);
+        UNUSED_ASSERTION_VARIABLE(result);
         ASSERT(SUCCEEDED(result));
     }
     else

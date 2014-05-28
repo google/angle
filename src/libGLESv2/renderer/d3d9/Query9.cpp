@@ -38,6 +38,7 @@ void Query9::begin()
     }
 
     HRESULT result = mQuery->Issue(D3DISSUE_BEGIN);
+    UNUSED_ASSERTION_VARIABLE(result);
     ASSERT(SUCCEEDED(result));
 }
 
@@ -46,6 +47,7 @@ void Query9::end()
     ASSERT(mQuery);
 
     HRESULT result = mQuery->Issue(D3DISSUE_END);
+    UNUSED_ASSERTION_VARIABLE(result);
     ASSERT(SUCCEEDED(result));
 
     mStatus = GL_FALSE;

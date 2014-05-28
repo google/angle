@@ -292,6 +292,7 @@ void Surface::unsubclassWindow()
     if(parentWndFunc)
     {
         LONG_PTR prevWndFunc = SetWindowLongPtr(mWindow, GWLP_WNDPROC, parentWndFunc);
+        UNUSED_ASSERTION_VARIABLE(prevWndFunc);
         ASSERT(prevWndFunc == reinterpret_cast<LONG_PTR>(SurfaceWindowProc));
     }
 

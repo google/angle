@@ -43,6 +43,7 @@ void Fence9::set()
     }
 
     HRESULT result = mQuery->Issue(D3DISSUE_END);
+    UNUSED_ASSERTION_VARIABLE(result);
     ASSERT(SUCCEEDED(result));
 }
 

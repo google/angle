@@ -388,6 +388,7 @@ ID3D11ShaderResourceView *BufferStorage11::getSRV(DXGI_FORMAT srvFormat)
     bufferSRVDesc.Format = srvFormat;
 
     HRESULT result = device->CreateShaderResourceView(buffer, &bufferSRVDesc, &bufferSRV);
+    UNUSED_ASSERTION_VARIABLE(result);
     ASSERT(SUCCEEDED(result));
 
     mBufferResourceViews[srvFormat] = BufferSRVPair(buffer, bufferSRV);
@@ -597,6 +598,7 @@ bool BufferStorage11::NativeBuffer11::copyFromStorage(TypedBufferStorage11 *sour
 
         D3D11_MAPPED_SUBRESOURCE mappedResource;
         HRESULT hr = context->Map(mNativeBuffer, 0, D3D11_MAP_WRITE, 0, &mappedResource);
+        UNUSED_ASSERTION_VARIABLE(hr);
         ASSERT(SUCCEEDED(hr));
 
         unsigned char *destPointer = static_cast<unsigned char *>(mappedResource.pData) + destOffset;
@@ -723,6 +725,7 @@ void *BufferStorage11::NativeBuffer11::map(GLbitfield access)
     UINT d3dMapFlag = ((access & GL_MAP_UNSYNCHRONIZED_BIT) != 0 ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0);
 
     HRESULT result = context->Map(mNativeBuffer, 0, d3dMapType, d3dMapFlag, &mappedResource);
+    UNUSED_ASSERTION_VARIABLE(result);
     ASSERT(SUCCEEDED(result));
 
     return mappedResource.pData;
@@ -831,7 +834,6 @@ void BufferStorage11::PackStorage11::packPixels(ID3D11Texture2D *srcTexure, UINT
         ASSERT(SUCCEEDED(hr));
     }
 
-    ID3D11Texture2D* srcTex = NULL;
     if (textureDesc.SampleDesc.Count > 1)
     {
         UNIMPLEMENTED();

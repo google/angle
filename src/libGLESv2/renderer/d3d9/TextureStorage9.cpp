@@ -145,6 +145,7 @@ IDirect3DSurface9 *TextureStorage9_2D::getSurfaceLevel(int level, bool dirty)
     if (mTexture)
     {
         HRESULT result = mTexture->GetSurfaceLevel(level + mTopLevel, &surface);
+        UNUSED_ASSERTION_VARIABLE(result);
         ASSERT(SUCCEEDED(result));
 
         // With managed textures the driver needs to be informed of updates to the lower mipmap levels
@@ -250,6 +251,7 @@ IDirect3DSurface9 *TextureStorage9_Cube::getCubeMapSurface(GLenum faceTarget, in
     {
         D3DCUBEMAP_FACES face = gl_d3d9::ConvertCubeFace(faceTarget);
         HRESULT result = mTexture->GetCubeMapSurface(face, level + mTopLevel, &surface);
+        UNUSED_ASSERTION_VARIABLE(result);
         ASSERT(SUCCEEDED(result));
 
         // With managed textures the driver needs to be informed of updates to the lower mipmap levels
