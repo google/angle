@@ -52,6 +52,24 @@
       "revId": "5662dc7bd78ed99ba83ed48256dbcaa3efa4b02d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffde5426_a41186e3",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T20:34:21Z",
+      "side": 1,
+      "message": "I\u0027m interested in keeping it as narrow-case as possible, because it\u0027s an explicit ugliness just to quiet an otherwise useful compiler warning.",
+      "parentUuid": "ffc73462_191d4f53",
+      "revId": "5662dc7bd78ed99ba83ed48256dbcaa3efa4b02d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
