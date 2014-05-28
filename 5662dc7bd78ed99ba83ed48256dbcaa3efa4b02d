@@ -34,6 +34,24 @@
       "revId": "5662dc7bd78ed99ba83ed48256dbcaa3efa4b02d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffc73462_191d4f53",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-28T20:04:57Z",
+      "side": 1,
+      "message": "Since (void)x; is a no-op, it doesn\u0027t make any difference in the compiled code.  I think it makes more sense to keep it defined like this always since we could use it for other reasons such as unused function parameters.",
+      "parentUuid": "bfe85ccc_7f062bb7",
+      "revId": "5662dc7bd78ed99ba83ed48256dbcaa3efa4b02d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
