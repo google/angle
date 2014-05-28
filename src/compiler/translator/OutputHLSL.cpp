@@ -193,7 +193,7 @@ void OutputHLSL::header()
         const TString &name = varying->second->getSymbol();
 
         // Program linking depends on this exact format
-        varyings += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+        varyings += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type, mOutputType) + ";\n";
     }
 
     for (ReferencedSymbols::const_iterator attribute = mReferencedAttributes.begin(); attribute != mReferencedAttributes.end(); attribute++)
@@ -201,7 +201,7 @@ void OutputHLSL::header()
         const TType &type = attribute->second->getType();
         const TString &name = attribute->second->getSymbol();
 
-        attributes += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+        attributes += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type, mOutputType) + ";\n";
     }
 
     if (mUsesDiscardRewriting)
@@ -1772,7 +1772,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         {
                             symbol->traverse(this);
                             out << arrayString(symbol->getType());
-                            out << " = " + initializer(symbol->getType());
+                            out << " = " + initializer(symbol->getType(), mOutputType);
                         }
                         else
                         {
@@ -2900,7 +2900,7 @@ TString OutputHLSL::arrayString(const TType &type)
     return "[" + str(type.getArraySize()) + "]";
 }
 
-static size_t getTypeComponentCount(const TType &type)
+static size_t getTypeComponentCount(const TType &type, ShShaderOutput outputType)
 {
     if (type.getStruct())
     {
@@ -2912,8 +2912,8 @@ static size_t getTypeComponentCount(const TType &type)
             const TField *field = fields[i];
             const TType *fieldType = field->type();
 
-            compCount += getTypeComponentCount(*fieldType);
-            if (!fieldType->getStruct())
+            compCount += getTypeComponentCount(*fieldType, outputType);
+            if (!fieldType->getStruct() && outputType == SH_HLSL11_OUTPUT)
             {
                 // Add padding size
                 compCount += 4 - fieldType->getNominalSize();
@@ -2933,11 +2933,11 @@ static size_t getTypeComponentCount(const TType &type)
     }
 }
 
-TString OutputHLSL::initializer(const TType &type)
+TString OutputHLSL::initializer(const TType &type, ShShaderOutput outputType)
 {
     TString string;
 
-    size_t size = getTypeComponentCount(type);
+    size_t size = getTypeComponentCount(type, outputType);
     for (size_t component = 0; component < size; component++)
     {
         string += "0";
@@ -2991,7 +2991,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
 
             structure += "    " + typeString(*field->type()) + " " + decorateField(field->name(), type) + arrayString(*field->type()) + ";\n";
 
-            if (!field->type()->getStruct())
+            if (!field->type()->getStruct() && mOutputType == SH_HLSL11_OUTPUT)
             {
                 // Add padding to prevent tight packing (crbug.com/359225)
                 unsigned int padRequired = 4 - field->type()->getNominalSize();
@@ -3123,7 +3123,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
 
             constructor += "x" + str(parameterIndex);
 
-            if (!field->type()->getStruct())
+            if (!field->type()->getStruct() && mOutputType == SH_HLSL11_OUTPUT)
             {
                 unsigned int padRequired = 4 - field->type()->getNominalSize();
                 switch (padRequired)
