@@ -1,0 +1,176 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f939869_4b7b8599",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T22:41:49Z",
+      "side": 1,
+      "message": "Did we catch this case elsewhere before, or is this a novel error for us?",
+      "range": {
+        "startLine": 589,
+        "startChar": 23,
+        "endLine": 589,
+        "endChar": 49
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f939869_6b804139",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T22:41:49Z",
+      "side": 1,
+      "message": "Same question as above for depth.",
+      "range": {
+        "startLine": 652,
+        "startChar": 28,
+        "endLine": 652,
+        "endChar": 44
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf969c56_0cd51752",
+        "filename": "src/libGLESv2/caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T22:41:49Z",
+      "side": 1,
+      "message": "There may be extensions we explicitly don\u0027t wish to advertise above a given client version. We should have a mechanism for excluding them here.",
+      "range": {
+        "startLine": 21,
+        "startChar": 64,
+        "endLine": 21,
+        "endChar": 80
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf969c56_4cdf1f72",
+        "filename": "src/libGLESv2/caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T22:41:49Z",
+      "side": 1,
+      "message": "worth asserting that the vector pointer isn\u0027t NULL?",
+      "range": {
+        "startLine": 26,
+        "startChar": 8,
+        "endLine": 26,
+        "endChar": 23
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df89903b_6de4d549",
+        "filename": "src/libGLESv2/caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T22:41:49Z",
+      "side": 1,
+      "message": "Can this get a table header?",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f939869_4bdf0572",
+        "filename": "src/libGLESv2/caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T22:41:49Z",
+      "side": 1,
+      "message": "Why did you go with the approach of making texture and extension support queries global helper functions instead of methods of Caps?",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f939869_0b717db9",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T22:41:49Z",
+      "side": 1,
+      "message": "Can this have some comments? Function pointer syntax + templates is kind of bizarre-looking.",
+      "range": {
+        "startLine": 477,
+        "startChar": 0,
+        "endLine": 489,
+        "endChar": 1
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf969c56_ac81633c",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T22:41:49Z",
+      "side": 1,
+      "message": "Any reason to have this stored in the 9 and 11 renderers, instead of the base class?",
+      "range": {
+        "startLine": 372,
+        "startChar": 3,
+        "endLine": 372,
+        "endChar": 19
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
