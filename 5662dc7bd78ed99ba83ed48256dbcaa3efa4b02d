@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfe85ccc_7f062bb7",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T20:01:20Z",
+      "side": 1,
+      "message": "If this is only used to quiet warnings occurring because ASSERTs don\u0027t actually use the variables on which they depend when in non-debug builds, can we define it only for non-debug cases?",
+      "revId": "5662dc7bd78ed99ba83ed48256dbcaa3efa4b02d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
