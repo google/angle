@@ -37,7 +37,7 @@ class OutputHLSL : public TIntermTraverser
     TString textureString(const TType &type);
     static TString qualifierString(TQualifier qualifier);
     static TString arrayString(const TType &type);
-    static TString initializer(const TType &type);
+    static TString initializer(const TType &type, ShShaderOutput outputType);
     static TString decorate(const TString &string);                      // Prepends an underscore to avoid naming clashes
     static TString decorateUniform(const TString &string, const TType &type);
     static TString decorateField(const TString &string, const TType &structure);
