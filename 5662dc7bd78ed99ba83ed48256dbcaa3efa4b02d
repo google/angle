@@ -88,6 +88,24 @@
       "revId": "5662dc7bd78ed99ba83ed48256dbcaa3efa4b02d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffde5426_24281610",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T20:43:51Z",
+      "side": 1,
+      "message": "In debug builds, for the variables where this is necessary, it\u0027s already not doing what the name states-- the variable is not unused, it\u0027s being checked in an ASSERT. Otherwise, we\u0027d just remove the variable.",
+      "parentUuid": "bfc13c54_77800a39",
+      "revId": "5662dc7bd78ed99ba83ed48256dbcaa3efa4b02d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
