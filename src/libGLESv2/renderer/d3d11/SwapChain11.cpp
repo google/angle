@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -326,7 +326,7 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
 
     // Resize swap chain
     DXGI_FORMAT backbufferDXGIFormat = gl_d3d11::GetTexFormat(mBackBufferFormat, mRenderer->getCurrentClientVersion());
-    HRESULT result = mSwapChain->ResizeBuffers(2, backbufferWidth, backbufferHeight, backbufferDXGIFormat, 0);
+    HRESULT result = mSwapChain->ResizeBuffers(1, backbufferWidth, backbufferHeight, backbufferDXGIFormat, 0);
 
     if (FAILED(result))
     {
@@ -404,7 +404,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         swapChainDesc.SampleDesc.Count = 1;
         swapChainDesc.SampleDesc.Quality = 0;
         swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        swapChainDesc.BufferCount = 2;
+        swapChainDesc.BufferCount = 1;
         swapChainDesc.OutputWindow = mWindow;
         swapChainDesc.Windowed = TRUE;
         swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
