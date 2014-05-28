@@ -70,6 +70,24 @@
       "revId": "5662dc7bd78ed99ba83ed48256dbcaa3efa4b02d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc13c54_77800a39",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-28T20:40:44Z",
+      "side": 1,
+      "message": "If we define it to do nothing in debug builds then it\u0027s not really doing what the name states (unless I name it something like RELEASE_ONLY_UNUSED_VARIABLE) but either way, it\u0027s still used in all the same places and has the same effect.",
+      "parentUuid": "ffde5426_a41186e3",
+      "revId": "5662dc7bd78ed99ba83ed48256dbcaa3efa4b02d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
