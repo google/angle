@@ -16,6 +16,24 @@
       "revId": "5662dc7bd78ed99ba83ed48256dbcaa3efa4b02d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffc73462_f9941361",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-28T20:03:40Z",
+      "side": 1,
+      "message": "I\u0027m fine with either way, but I\u0027d suggest if it\u0027s DEBUG only we call it DEBUG_ONLY_VARIABLE or something along the line of mentioning the usage in the macro.",
+      "parentUuid": "bfe85ccc_7f062bb7",
+      "revId": "5662dc7bd78ed99ba83ed48256dbcaa3efa4b02d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
