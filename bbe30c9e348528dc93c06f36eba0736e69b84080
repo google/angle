@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf969c56_ec8b6b58",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1755,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-05-28T22:45:12Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 1755,
+        "startChar": 21,
+        "endLine": 1755,
+        "endChar": 27
+      },
+      "revId": "bbe30c9e348528dc93c06f36eba0736e69b84080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
