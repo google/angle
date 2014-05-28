@@ -32,6 +32,7 @@
         {
             'target_name': 'commit_id',
             'type': 'none',
+            'includes': [ '../build/common_defines.gypi', ],
             'dependencies': [ 'copy_scripts', ],
             'conditions':
             [
