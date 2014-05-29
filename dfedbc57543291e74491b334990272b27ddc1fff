@@ -327,6 +327,30 @@
       "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fbfa8df_9714e413",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-29T15:15:51Z",
+      "side": 1,
+      "message": "I\u0027m in agreement that we should put the caps in a common base class. I like code re-use, and it\u0027s pretty okay in my book to have a design where, if you have a pure interface, you can implement a shared base class before dividing two new implementation classes -- after all D3D9 and D3D11 have a non-trivial amount of overlap.",
+      "parentUuid": "1fbfa8df_572e4c81",
+      "range": {
+        "startLine": 372,
+        "startChar": 3,
+        "endLine": 372,
+        "endChar": 19
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
