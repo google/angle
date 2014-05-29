@@ -351,6 +351,30 @@
       "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fcab88f_53b4240c",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-29T15:23:28Z",
+      "side": 1,
+      "message": "Currently the only overlap they have is the mDisplay and mCurrentClientVersion (which will be removed soon).\n\nHaving a pure virtual method, getCaps, makes it obvious to an implementer that it\u0027s part of the interface to generate a caps object, instead of having to know that a protected one from the parent needs to be filled in by a child.\n\nThe only other option I can think of is to have Caps be in the Renderer class but have generateCaps be a pure method.",
+      "parentUuid": "1fbfa8df_9714e413",
+      "range": {
+        "startLine": 372,
+        "startChar": 3,
+        "endLine": 372,
+        "endChar": 19
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
