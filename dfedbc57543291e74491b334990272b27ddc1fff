@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bfcdbca8_5469acc6",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-29T15:10:52Z",
+      "side": 1,
+      "message": "I added this check (and the one below for stencil) only to match the checks done in the color buffer case.  We were not having an issue here, afiak.",
+      "parentUuid": "9f939869_4b7b8599",
+      "range": {
+        "startLine": 589,
+        "startChar": 23,
+        "endLine": 589,
+        "endChar": 49
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f939869_6b804139",
         "filename": "src/libGLESv2/Framebuffer.cpp",
         "patchSetId": 7
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "9fcab88f_d3c7147a",
+        "filename": "src/libGLESv2/caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-29T15:10:52Z",
+      "side": 1,
+      "message": "Done, added a maxClientVersion.  If we come across any more complex cases in the future, we can solve them with specific edge cases.",
+      "parentUuid": "bf969c56_0cd51752",
+      "range": {
+        "startLine": 21,
+        "startChar": 64,
+        "endLine": 21,
+        "endChar": 80
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf969c56_4cdf1f72",
         "filename": "src/libGLESv2/caps_utils.cpp",
         "patchSetId": 7
@@ -82,6 +130,30 @@
       "writtenOn": "2014-05-28T22:41:49Z",
       "side": 1,
       "message": "worth asserting that the vector pointer isn\u0027t NULL?",
+      "range": {
+        "startLine": 26,
+        "startChar": 8,
+        "endLine": 26,
+        "endChar": 23
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fbfa8df_d7213c94",
+        "filename": "src/libGLESv2/caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-29T15:10:52Z",
+      "side": 1,
+      "message": "This function is only use internally by GetExtensionStrings so we\u0027re safe.",
+      "parentUuid": "bf969c56_4cdf1f72",
       "range": {
         "startLine": 26,
         "startChar": 8,
@@ -111,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "bfcdbca8_f4431827",
+        "filename": "src/libGLESv2/caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-29T15:10:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df89903b_6de4d549",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f939869_4bdf0572",
         "filename": "src/libGLESv2/caps_utils.h",
         "patchSetId": 7
@@ -122,6 +212,24 @@
       "writtenOn": "2014-05-28T22:41:49Z",
       "side": 1,
       "message": "Why did you go with the approach of making texture and extension support queries global helper functions instead of methods of Caps?",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fbfa8df_773150dd",
+        "filename": "src/libGLESv2/caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-29T15:10:52Z",
+      "side": 1,
+      "message": "Two main reasons,\n\nSince the results of these functions are cached in the caps object, I would either need to set up some sort of caching of the result in the caps object itself or have these as static methods of the Caps object which would add confusion about which to use.\n\nAlso, I wanted to keep the Caps object as much of a POD type as possible without any methods.",
+      "parentUuid": "9f939869_4bdf0572",
       "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -151,6 +259,30 @@
     },
     {
       "key": {
+        "uuid": "1fbfa8df_d71a5c42",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-29T15:10:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f939869_0b717db9",
+      "range": {
+        "startLine": 477,
+        "startChar": 0,
+        "endLine": 489,
+        "endChar": 1
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf969c56_ac81633c",
         "filename": "src/libGLESv2/renderer/d3d11/Renderer11.h",
         "patchSetId": 7
@@ -162,6 +294,30 @@
       "writtenOn": "2014-05-28T22:41:49Z",
       "side": 1,
       "message": "Any reason to have this stored in the 9 and 11 renderers, instead of the base class?",
+      "range": {
+        "startLine": 372,
+        "startChar": 3,
+        "endLine": 372,
+        "endChar": 19
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fbfa8df_572e4c81",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-05-29T15:10:52Z",
+      "side": 1,
+      "message": "Main reason is that I want the Renderer class to be as pure an interface as possible.  Also, I would then have to either make the Caps object protected or use protected getter/setter functions in Renderer.",
+      "parentUuid": "bf969c56_ac81633c",
       "range": {
         "startLine": 372,
         "startChar": 3,
