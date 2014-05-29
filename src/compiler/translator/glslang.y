@@ -1255,7 +1255,7 @@ type_specifier
         $$ = $2;
         $$.precision = $1;
 
-        if (!SupportsPrecision($2.type) {
+        if (!SupportsPrecision($2.type)) {
             context->error(@1, "illegal type for precision qualifier", getBasicString($2.type));
             context->recover();
         }
