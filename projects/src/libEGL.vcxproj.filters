@@ -78,6 +78,9 @@
     <ClInclude Include="..\..\src\common\RefCountObject.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\common\tls.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\common\debug.h">
       <Filter>src\common</Filter>
     </ClInclude>
@@ -90,6 +93,9 @@
     <ClInclude Include="..\..\src\common\event_tracer.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\common\platform.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\common\version.h">
       <Filter>src\common</Filter>
     </ClInclude>
@@ -99,6 +105,9 @@
     <ClCompile Include="..\..\src\common\event_tracer.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\common\tls.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\common\utilities.cpp">
       <Filter>src\common</Filter>
     </ClCompile>

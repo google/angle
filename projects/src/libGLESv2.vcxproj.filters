@@ -753,6 +753,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\shaders\compiled\standardvs.h">
       <Filter>src\libGLESv2\renderer\d3d9\shaders\compiled</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\common\tls.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\common\mathutil.h">
       <Filter>src\common</Filter>
     </ClInclude>
@@ -762,6 +765,9 @@
     <ClInclude Include="..\..\src\common\blocklayout.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\common\tls.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\common\debug.h">
       <Filter>src\common</Filter>
     </ClInclude>
@@ -795,6 +801,9 @@
     <ClCompile Include="..\..\src\common\debug.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\common\platform.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\common\version.h">
       <Filter>src\common</Filter>
     </ClInclude>

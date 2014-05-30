@@ -9,6 +9,8 @@
 #ifndef COMMON_ANGLEUTILS_H_
 #define COMMON_ANGLEUTILS_H_
 
+#include "common/platform.h"
+
 #include <stddef.h>
 
 // A macro to disallow the copy constructor and operator= functions

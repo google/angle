@@ -11,6 +11,8 @@
 #ifndef LIBGLESV2_PIXELTRANSFER11_H_
 #define LIBGLESV2_PIXELTRANSFER11_H_
 
+#include "common/platform.h"
+
 namespace gl
 {
 

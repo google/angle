@@ -8,10 +8,7 @@
 
 #include "common/utilities.h"
 #include "common/mathutil.h"
-
-#if defined(_WIN32)
-#include <windows.h>
-#endif
+#include "common/platform.h"
 
 #include <set>
 
@@ -436,7 +433,7 @@ bool IsTriangleMode(GLenum drawMode)
 
 std::string getTempPath()
 {
-#if defined (_WIN32)
+#if ANGLE_PLATFORM_WINDOWS
     char path[MAX_PATH];
     DWORD pathLen = GetTempPathA(sizeof(path) / sizeof(path[0]), path);
     if (pathLen == 0)
