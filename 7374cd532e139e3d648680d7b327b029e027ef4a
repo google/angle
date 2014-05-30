@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfcdbca8_fa4d4185",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-05-30T15:01:56Z",
+      "side": 1,
+      "message": "also a nit, but can you include a reference to the BUG\u003d here?",
+      "revId": "7374cd532e139e3d648680d7b327b029e027ef4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
