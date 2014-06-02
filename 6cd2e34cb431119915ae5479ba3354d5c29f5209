@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fbfa8df_16144da4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-02T14:22:15Z",
+      "side": 1,
+      "message": "nitpick: we use the syntax BUG\u003d#####",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 64
+      },
+      "revId": "6cd2e34cb431119915ae5479ba3354d5c29f5209",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fbfa8df_d60db59b",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-02T14:22:15Z",
+      "side": 1,
+      "message": "see GenerateResources and Shader::initializeCompiler() for places to add initialization for MaxTexureCoords",
+      "range": {
+        "startLine": 281,
+        "startChar": 4,
+        "endLine": 281,
+        "endChar": 25
+      },
+      "revId": "6cd2e34cb431119915ae5479ba3354d5c29f5209",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
