@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fbfa8df_6f2287c3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2582,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-03T18:00:46Z",
+      "side": 1,
+      "message": "Is there any way we can combine TStructure and TVariable in a way we can avoid having to associate them like this? Or perhaps assign a symbol table ID to the TStructure in the same way TVariable\u0027s get an ID from the symbol table?",
+      "range": {
+        "startLine": 2582,
+        "startChar": 8,
+        "endLine": 2582,
+        "endChar": 52
+      },
+      "revId": "355d584e0638f6d0344792cc1f682b6c05cb42f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
