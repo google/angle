@@ -390,6 +390,7 @@ if (is_win) {
       "src/libGLESv2/renderer/imageformats.h",
       "src/libGLESv2/renderer/loadimage.cpp",
       "src/libGLESv2/renderer/loadimage.h",
+      "src/libGLESv2/renderer/loadimage.inl",
       "src/libGLESv2/renderer/loadimageSSE2.cpp",
       "src/libGLESv2/renderer/vertexconversion.h",
       "src/libGLESv2/resource.h",

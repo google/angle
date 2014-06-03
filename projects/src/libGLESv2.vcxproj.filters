@@ -264,6 +264,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\TextureStorage.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
+    <None Include="..\..\src\libGLESv2\renderer\loadimage.inl">
+      <Filter>src\libGLESv2\renderer</Filter>
+    </None>
     <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderExecutable.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>

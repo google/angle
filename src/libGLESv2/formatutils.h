@@ -14,16 +14,18 @@
 #include "libGLESv2/Caps.h"
 #include "libGLESv2/angletypes.h"
 
+#include <cstddef>
+
 typedef void (*MipGenerationFunction)(unsigned int sourceWidth, unsigned int sourceHeight, unsigned int sourceDepth,
                                       const unsigned char *sourceData, int sourceRowPitch, int sourceDepthPitch,
                                       unsigned char *destData, int destRowPitch, int destDepthPitch);
 
-typedef void (*LoadImageFunction)(int width, int height, int depth,
-                                  const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
-                                  void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
+typedef void (*LoadImageFunction)(size_t width, size_t height, size_t depth,
+                                  const uint8_t *input, size_t inputRowPitch, size_t inputDepthPitch,
+                                  uint8_t *output, size_t outputRowPitch, size_t outputDepthPitch);
 
-typedef void (*InitializeTextureDataFunction)(int width, int height, int depth,
-                                              void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
+typedef void (*InitializeTextureDataFunction)(size_t width, size_t height, size_t depth,
+                                              uint8_t *output, size_t outputRowPitch, size_t outputDepthPitch);
 
 typedef void (*ColorReadFunction)(const void *source, void *dest);
 typedef void (*ColorWriteFunction)(const void *source, void *dest);
