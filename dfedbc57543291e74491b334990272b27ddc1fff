@@ -166,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "7f1c24fb_9dcc27a0",
+        "filename": "src/libGLESv2/caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-03T23:43:12Z",
+      "side": 1,
+      "message": "If it weren\u0027t only being used internally, an ASSERT wouldn\u0027t cut it. :P But given that it\u0027s just a tack-on helper for the function below, eh, it\u0027s fine.",
+      "parentUuid": "1fbfa8df_d7213c94",
+      "range": {
+        "startLine": 26,
+        "startChar": 8,
+        "endLine": 26,
+        "endChar": 23
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df89903b_6de4d549",
         "filename": "src/libGLESv2/caps_utils.cpp",
         "patchSetId": 7
@@ -230,6 +254,24 @@
       "side": 1,
       "message": "Two main reasons,\n\nSince the results of these functions are cached in the caps object, I would either need to set up some sort of caching of the result in the caps object itself or have these as static methods of the Caps object which would add confusion about which to use.\n\nAlso, I wanted to keep the Caps object as much of a POD type as possible without any methods.",
       "parentUuid": "9f939869_4bdf0572",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fef0c01_8542504f",
+        "filename": "src/libGLESv2/caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-03T23:43:12Z",
+      "side": 1,
+      "message": "Hmmm...\n\nI definitely understand the first point, although it feels a little artificial to worry about, given that the information already exists in the caps\u0027s texture format caps table.\n\nIt makes me a little itchy to have a big collection of global methods whose only purpose is to inspect the contents of a data structure, so that the structure didn\u0027t have to have the methods itself. I guess it sort of parallels what we have going on with the format tables, but it feels like the sort of thing we shouldn\u0027t proliferate.\n\nJamie, do you have an opinion one way or the other on this particular point?",
+      "parentUuid": "1fbfa8df_773150dd",
       "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -366,6 +408,30 @@
       "side": 1,
       "message": "Currently the only overlap they have is the mDisplay and mCurrentClientVersion (which will be removed soon).\n\nHaving a pure virtual method, getCaps, makes it obvious to an implementer that it\u0027s part of the interface to generate a caps object, instead of having to know that a protected one from the parent needs to be filled in by a child.\n\nThe only other option I can think of is to have Caps be in the Renderer class but have generateCaps be a pure method.",
       "parentUuid": "1fbfa8df_9714e413",
+      "range": {
+        "startLine": 372,
+        "startChar": 3,
+        "endLine": 372,
+        "endChar": 19
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f1c24fb_3dab9b78",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-03T23:43:12Z",
+      "side": 1,
+      "message": "I don\u0027t think having a pure virtual generateCaps is a bad idea-- it\u0027d force generation by any later implementer of a Renderer child class, but retain a common base class ownership.",
+      "parentUuid": "9fcab88f_53b4240c",
       "range": {
         "startLine": 372,
         "startChar": 3,
