@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "5f212030_9ccc29a0",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1207,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-03T19:49:32Z",
+      "side": 1,
+      "message": "I\u0027ll double check. If you\u0027re right, I\u0027ll add that and figure out where we might be missing test coverage of if it\u0027s a breaking test.\n\nJust FYI -- there are plenty of bugs evident in dEQP I didn\u0027t address in this patch -- just crop of easy stuff.",
+      "parentUuid": "7f1c24fb_da1dc5fb",
+      "range": {
+        "startLine": 1207,
+        "startChar": 16,
+        "endLine": 1207,
+        "endChar": 70
+      },
+      "revId": "c15fba123ae30b74591b93b0e42f54d8cf7cc434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fef0c01_6ab05b79",
         "filename": "src/libGLESv2/validationES3.cpp",
         "patchSetId": 4
@@ -107,6 +131,30 @@
       "writtenOn": "2014-06-03T19:40:56Z",
       "side": 1,
       "message": "I\u0027m not sure I understand why this error message is changing. The two error cases I\u0027m aware of for internalformat are a) the format is an enum which represents an format which is supported, but is not a valid combination with the enums passed for format \u0026 type, it generates INVALID_OPERATION (handled below with IsValidFormatCombination), and b) the format is not an enum which represents a supported format, in which case INVALID_ENUM should apply under the blanket rule for that error (spec v.3.0.2 p18 for ref). I don\u0027t see a different error being specified anywhere for this case-- did I miss it? Or is dEQP either expecting the wrong error, or expecting multiple errors to resolve in a specific order maybe?",
+      "range": {
+        "startLine": 193,
+        "startChar": 12,
+        "endLine": 193,
+        "endChar": 54
+      },
+      "revId": "c15fba123ae30b74591b93b0e42f54d8cf7cc434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_b14a68e2",
+        "filename": "src/libGLESv2/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-03T19:49:32Z",
+      "side": 1,
+      "message": "I think dEQP is expecting when you pass in 0 or 0xFFFFFFF for internal format, you get invalid-value, not invalid-enum. Maybe we could raise a question with the dEQP peeps?",
+      "parentUuid": "3fef0c01_6ab05b79",
       "range": {
         "startLine": 193,
         "startChar": 12,
