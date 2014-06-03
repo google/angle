@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df4350e0_b7c5781b",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-03T22:44:08Z",
+      "side": 1,
+      "message": "Can we consolidate these? IsInternalTextureTarget is just this function with an UNREACHABLE because it assumes its input has already passed validation.",
+      "revId": "87cdd2d8cb28ab2067025366eb5661829c9c4959",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
