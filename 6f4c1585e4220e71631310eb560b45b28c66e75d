@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfd51034_4768f232",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-03T23:59:54Z",
+      "side": 1,
+      "message": "Ah. I... was previously unaware you could even do that. O.o",
+      "revId": "6f4c1585e4220e71631310eb560b45b28c66e75d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
