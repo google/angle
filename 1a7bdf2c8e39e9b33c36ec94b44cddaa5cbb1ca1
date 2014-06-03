@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df4350e0_66366420",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-03T18:12:58Z",
+      "side": 1,
+      "message": "I assume the ASSERT was intended to check that the pointers are equal if (and only if) the ID\u0027s are equal?",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 59
+      },
+      "revId": "1a7bdf2c8e39e9b33c36ec94b44cddaa5cbb1ca1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
