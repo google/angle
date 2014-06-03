@@ -69,6 +69,53 @@
       "revId": "c15fba123ae30b74591b93b0e42f54d8cf7cc434",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f1c24fb_da1dc5fb",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1207,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-03T19:40:56Z",
+      "side": 1,
+      "message": "We\u0027re not actually ever validating depth against the max layers (or against the max 3d dimension, in the case of 3d textures), though, it looks like...",
+      "parentUuid": "9f62b822_33d5e852",
+      "range": {
+        "startLine": 1207,
+        "startChar": 16,
+        "endLine": 1207,
+        "endChar": 70
+      },
+      "revId": "c15fba123ae30b74591b93b0e42f54d8cf7cc434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fef0c01_6ab05b79",
+        "filename": "src/libGLESv2/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-03T19:40:56Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand why this error message is changing. The two error cases I\u0027m aware of for internalformat are a) the format is an enum which represents an format which is supported, but is not a valid combination with the enums passed for format \u0026 type, it generates INVALID_OPERATION (handled below with IsValidFormatCombination), and b) the format is not an enum which represents a supported format, in which case INVALID_ENUM should apply under the blanket rule for that error (spec v.3.0.2 p18 for ref). I don\u0027t see a different error being specified anywhere for this case-- did I miss it? Or is dEQP either expecting the wrong error, or expecting multiple errors to resolve in a specific order maybe?",
+      "range": {
+        "startLine": 193,
+        "startChar": 12,
+        "endLine": 193,
+        "endChar": 54
+      },
+      "revId": "c15fba123ae30b74591b93b0e42f54d8cf7cc434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
