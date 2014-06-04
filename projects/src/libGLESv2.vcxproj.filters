@@ -153,6 +153,9 @@
     <ClInclude Include="..\..\src\libGLESv2\Buffer.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\FramebufferAttachment.cpp">
+      <Filter>src\libGLESv2</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\RenderbufferProxySet.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -231,6 +234,9 @@
     <ClCompile Include="..\..\src\libGLESv2\ProgramBinary.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\libGLESv2\FramebufferAttachment.h">
+      <Filter>src\libGLESv2</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\Sampler.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>

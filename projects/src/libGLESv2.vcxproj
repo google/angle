@@ -152,6 +152,7 @@
     <ClInclude Include="..\..\src\libGLESv2\Fence.h"/>
     <ClInclude Include="..\..\src\libGLESv2\angletypes.h"/>
     <ClInclude Include="..\..\src\libGLESv2\main.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\FramebufferAttachment.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Framebuffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\formatutils.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\IndexDataManager.h"/>
@@ -304,6 +305,7 @@
     <ClCompile Include="..\..\src\libGLESv2\Float16ToFloat32.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\ResourceManager.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\validationES3.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\FramebufferAttachment.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Query.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\libGLESv2.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\formatutils.cpp"/>
