@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df4350e0_5c8c5471",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-04T14:57:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1fbfa8df_6f560739",
+      "revId": "55e4bbeb979be1d9f8a735361b75cd37eef9fec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df4350e0_716620aa",
         "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.h",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2014-06-03T19:33:32Z",
       "side": 1,
       "message": "unnecessary -- already included in angleutils.h",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 28
+      },
+      "revId": "55e4bbeb979be1d9f8a735361b75cd37eef9fec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_66b420d6",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-04T14:57:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df4350e0_716620aa",
       "range": {
         "startLine": 5,
         "startChar": 0,
