@@ -314,6 +314,24 @@
     },
     {
       "key": {
+        "uuid": "1f1b2808_0c1b0348",
+        "filename": "src/libGLESv2/caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-04T18:28:47Z",
+      "side": 1,
+      "message": "Geoff, this is all minor style stuff, so I\u0027m okay with whatever. Note below in this file every function takes a \"TextureFormatCapsMap\" as a first parameter, this is equivalent to a \"this\" pointer, right? Like the \"C object oriented\" style.",
+      "parentUuid": "df4350e0_1fd1dedc",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f939869_0b717db9",
         "filename": "src/libGLESv2/formatutils.cpp",
         "patchSetId": 7
