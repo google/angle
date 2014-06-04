@@ -441,6 +441,30 @@
       "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_1c224c98",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-04T15:46:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f1c24fb_3dab9b78",
+      "range": {
+        "startLine": 372,
+        "startChar": 3,
+        "endLine": 372,
+        "endChar": 19
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
