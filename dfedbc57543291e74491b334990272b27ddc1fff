@@ -332,6 +332,24 @@
     },
     {
       "key": {
+        "uuid": "1f1b2808_ac99b76e",
+        "filename": "src/libGLESv2/caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-04T18:31:51Z",
+      "side": 1,
+      "message": "TextureFormatCapsMap is a typedef of std::map in this case, there is one that is a member of the Caps struct.",
+      "parentUuid": "1f1b2808_0c1b0348",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f939869_0b717db9",
         "filename": "src/libGLESv2/formatutils.cpp",
         "patchSetId": 7
