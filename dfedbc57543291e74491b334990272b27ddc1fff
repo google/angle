@@ -278,6 +278,24 @@
     },
     {
       "key": {
+        "uuid": "df4350e0_5f076635",
+        "filename": "src/libGLESv2/caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-04T17:25:07Z",
+      "side": 1,
+      "message": "Also itchy! I\u0027m a big fan of \"quality-of-life\" type changes, such as making you life better with member functions. In this case where we have a bunch of functions that would be happy member functions.\n\nThat being said I don\u0027t quite follow the first point.",
+      "parentUuid": "3fef0c01_8542504f",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f939869_0b717db9",
         "filename": "src/libGLESv2/formatutils.cpp",
         "patchSetId": 7
