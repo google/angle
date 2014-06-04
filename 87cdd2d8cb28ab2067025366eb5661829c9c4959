@@ -34,6 +34,24 @@
       "revId": "87cdd2d8cb28ab2067025366eb5661829c9c4959",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df2c3030_f8976def",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-04T17:39:51Z",
+      "side": 1,
+      "message": "Looking at it more closely, we can solve the problem by removing IsInternalTextureTarget with the Renderbuffers/FBO attachments refactor -- let me add it to that task and I can either leave or take out the comment.",
+      "parentUuid": "1f1b2808_c6140c15",
+      "revId": "87cdd2d8cb28ab2067025366eb5661829c9c4959",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
