@@ -16,9 +16,9 @@
 
 #include <cstddef>
 
-typedef void (*MipGenerationFunction)(unsigned int sourceWidth, unsigned int sourceHeight, unsigned int sourceDepth,
-                                      const unsigned char *sourceData, int sourceRowPitch, int sourceDepthPitch,
-                                      unsigned char *destData, int destRowPitch, int destDepthPitch);
+typedef void (*MipGenerationFunction)(size_t sourceWidth, size_t sourceHeight, size_t sourceDepth,
+                                      const uint8_t *sourceData, size_t sourceRowPitch, size_t sourceDepthPitch,
+                                      uint8_t *destData, size_t destRowPitch, size_t destDepthPitch);
 
 typedef void (*LoadImageFunction)(size_t width, size_t height, size_t depth,
                                   const uint8_t *input, size_t inputRowPitch, size_t inputDepthPitch,

@@ -114,6 +114,7 @@
     <None Include="..\..\src\angle.gyp"/>
     <None Include="..\..\src\libGLESv2\libGLESv2.def"/>
     <None Include="..\..\src\libGLESv2\renderer\loadimage.inl"/>
+    <None Include="..\..\src\libGLESv2\renderer\generatemip.inl"/>
     <None Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\Swizzle11.hlsl"/>
     <None Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\generate_shaders.bat"/>
     <None Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\Passthrough3D11.hlsl"/>
@@ -330,12 +331,12 @@
     <ClCompile Include="..\..\src\libGLESv2\Texture.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\ResourceManager.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\copyimage.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\TextureStorage.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\loadimage.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\loadimageSSE2.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\Image.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\Renderer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\IndexRangeCache.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\TextureStorage.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\BufferD3D.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\IndexBuffer.cpp"/>

@@ -387,6 +387,7 @@ if (is_win) {
       "src/libGLESv2/renderer/copyimage.h",
       "src/libGLESv2/renderer/copyvertex.h",
       "src/libGLESv2/renderer/generatemip.h",
+      "src/libGLESv2/renderer/generatemip.inl",
       "src/libGLESv2/renderer/imageformats.h",
       "src/libGLESv2/renderer/loadimage.cpp",
       "src/libGLESv2/renderer/loadimage.h",

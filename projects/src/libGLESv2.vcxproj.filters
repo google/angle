@@ -267,6 +267,9 @@
     <None Include="..\..\src\libGLESv2\renderer\loadimage.inl">
       <Filter>src\libGLESv2\renderer</Filter>
     </None>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\TextureStorage.cpp">
+      <Filter>src\libGLESv2\renderer</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderExecutable.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
@@ -327,9 +330,9 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\IndexRangeCache.cpp">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\TextureStorage.cpp">
+    <None Include="..\..\src\libGLESv2\renderer\generatemip.inl">
       <Filter>src\libGLESv2\renderer</Filter>
-    </ClCompile>
+    </None>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.cpp">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClCompile>

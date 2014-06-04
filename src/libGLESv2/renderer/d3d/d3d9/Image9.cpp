@@ -64,8 +64,8 @@ void Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sour
     result = destSurface->LockRect(&destLocked, NULL, 0);
     ASSERT(SUCCEEDED(result));
 
-    const unsigned char *sourceData = reinterpret_cast<const unsigned char*>(sourceLocked.pBits);
-    unsigned char *destData = reinterpret_cast<unsigned char*>(destLocked.pBits);
+    const uint8_t *sourceData = reinterpret_cast<const uint8_t*>(sourceLocked.pBits);
+    uint8_t *destData = reinterpret_cast<uint8_t*>(destLocked.pBits);
 
     if (sourceData && destData)
     {
