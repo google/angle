@@ -16,6 +16,24 @@
       "revId": "87cdd2d8cb28ab2067025366eb5661829c9c4959",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_c6140c15",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-04T14:19:51Z",
+      "side": 1,
+      "message": "I didn\u0027t merge them because IsInternal takes different parameters from Valid (Valid takes a context). I like how Valid takes a context, and IsInternal is called from places where we don\u0027t have access to the Context (inside renderer guts). I was thinking how we manage access to Context stuff might change with Geoff\u0027s refactor so I left it as-is, but I\u0027m not adverse to just taking the clientVersion, provided we change the other ValidX functions to take a clientVersion as well. (Sorry for the long-winded answer).",
+      "parentUuid": "df4350e0_b7c5781b",
+      "revId": "87cdd2d8cb28ab2067025366eb5661829c9c4959",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
