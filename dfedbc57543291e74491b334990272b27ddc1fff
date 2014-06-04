@@ -350,6 +350,24 @@
     },
     {
       "key": {
+        "uuid": "df4350e0_5f568638",
+        "filename": "src/libGLESv2/caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-04T18:39:49Z",
+      "side": 1,
+      "message": "Well, that would suggest the operations belong in guts of Caps ! :) Just a suggestion. Maybe you\u0027d need to adjust the name or access of the functions to distinguish them from the cached result.",
+      "parentUuid": "1f1b2808_ac99b76e",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f939869_0b717db9",
         "filename": "src/libGLESv2/formatutils.cpp",
         "patchSetId": 7
