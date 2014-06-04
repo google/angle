@@ -296,6 +296,24 @@
     },
     {
       "key": {
+        "uuid": "df4350e0_1fd1dedc",
+        "filename": "src/libGLESv2/caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-04T18:03:50Z",
+      "side": 1,
+      "message": "I think the purpose of these functions may have been lost.  The purpose of these functions is to determine if the given texturing extension is supported given some caps about various texture formats.  They aren\u0027t meant to be used as getters for members of any class, just utility functions for the GenerateCaps functions.  Maybe a better name is needed... \"DetermineFloatTextureSupport\"?\n\nAlso, there is no logical place for these to be member functions.  They are meant to compute a value to be stored in the Extensions struct but use TextureCaps as input, the only class that has access to all of these is the Caps struct and it would be very confusing for there to be a caps.getFloatTextureSupport() and a caps.extensions.floatTexture member.",
+      "parentUuid": "df4350e0_5f076635",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f939869_0b717db9",
         "filename": "src/libGLESv2/formatutils.cpp",
         "patchSetId": 7
