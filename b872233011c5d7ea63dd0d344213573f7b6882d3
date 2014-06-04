@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df2c3030_15c3141c",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-04T15:46:57Z",
+      "side": 1,
+      "message": "Not sure if this is the best name for this function, other ideas? intializeImpl?",
+      "range": {
+        "startLine": 259,
+        "startChar": 19,
+        "endLine": 259,
+        "endChar": 31
+      },
+      "revId": "b872233011c5d7ea63dd0d344213573f7b6882d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
