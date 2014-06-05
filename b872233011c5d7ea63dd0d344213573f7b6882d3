@@ -22,6 +22,30 @@
       "revId": "b872233011c5d7ea63dd0d344213573f7b6882d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd51034_d930460e",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-05T00:17:22Z",
+      "side": 1,
+      "message": "initRenderer (kind of redundant)? initSpecific?",
+      "parentUuid": "df2c3030_15c3141c",
+      "range": {
+        "startLine": 259,
+        "startChar": 19,
+        "endLine": 259,
+        "endChar": 31
+      },
+      "revId": "b872233011c5d7ea63dd0d344213573f7b6882d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
