@@ -1140,8 +1140,6 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    gl::Renderbuffer *source = framebuffer->getReadColorbuffer();
-    GLenum colorbufferInternalFormat = source->getInternalFormat();
     gl::Texture *texture = NULL;
     GLenum textureInternalFormat = GL_NONE;
     bool textureCompressed = false;
