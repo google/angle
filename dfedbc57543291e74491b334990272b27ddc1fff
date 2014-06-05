@@ -368,6 +368,24 @@
     },
     {
       "key": {
+        "uuid": "7f1c24fb_0949b547",
+        "filename": "src/libGLESv2/caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-05T00:17:31Z",
+      "side": 1,
+      "message": "I definitely grok that they\u0027re not really getters-- they\u0027re acting more as inspectors. It just seems awkward to have a big collection of functions that are basically for \"Hey, have a look at this data blob and tell me if it says XYZ\" that are external to the data blob itself. To me it would feel more natural to have them either be members of caps that would possibly get kicked off by a central \"determineAndCacheSupport\" (or something) function, or members of the class that owns generateCaps, or... maybe members of an object whose job it is to process Capses, although that feels way too I-just-read-Design-Patterns-y.",
+      "parentUuid": "df4350e0_1fd1dedc",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f939869_0b717db9",
         "filename": "src/libGLESv2/formatutils.cpp",
         "patchSetId": 7
