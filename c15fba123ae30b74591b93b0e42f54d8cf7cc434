@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "1f1b2808_ea978abd",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1207,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-05T15:04:36Z",
+      "side": 1,
+      "message": "So, there does not exist a glCopyTexImage3D method in GLES3. :D That explains why we never validate the 3rd dimension for specification. (it\u0027s validated correctly for subImage calls already).",
+      "parentUuid": "1fbfa8df_d26c98da",
+      "range": {
+        "startLine": 1207,
+        "startChar": 16,
+        "endLine": 1207,
+        "endChar": 70
+      },
+      "revId": "c15fba123ae30b74591b93b0e42f54d8cf7cc434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fef0c01_6ab05b79",
         "filename": "src/libGLESv2/validationES3.cpp",
         "patchSetId": 4
@@ -227,6 +251,30 @@
       "side": 1,
       "message": "It may involve some confusion on the part of internalFormat being a GLint for TexImage and a GLenum for CopyTexImage. I  think it is something we should bring up, the next time we chat with the dEQP folks. I\u0027ll revert it in the interim.",
       "parentUuid": "3fef0c01_4ad47777",
+      "range": {
+        "startLine": 193,
+        "startChar": 12,
+        "endLine": 193,
+        "endChar": 54
+      },
+      "revId": "c15fba123ae30b74591b93b0e42f54d8cf7cc434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_0a899ea8",
+        "filename": "src/libGLESv2/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-05T15:04:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1fbfa8df_12e0d05c",
       "range": {
         "startLine": 193,
         "startChar": 12,
