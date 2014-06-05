@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "df2c3030_684ffe46",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-05T19:45:59Z",
+      "side": 1,
+      "message": "Is this enum still necessary? What was it\u0027s intended use case?",
+      "range": {
+        "startLine": 78,
+        "startChar": 8,
+        "endLine": 78,
+        "endChar": 48
+      },
+      "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df2c3030_e8422e21",
         "filename": "extensions/ANGLE_platform_angle.txt",
         "patchSetId": 1
