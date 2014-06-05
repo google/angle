@@ -63,6 +63,30 @@
       "revId": "18d1ef4155d9ce993ec6f5f5ba6d67ac55d85d91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_1179ce07",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2697,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-05T15:09:59Z",
+      "side": 1,
+      "message": "Oh, yes, I see now.  I was confused because gerrit is showing the diff at character 0 instead of after the if.",
+      "parentUuid": "1f1b2808_ca69660c",
+      "range": {
+        "startLine": 2697,
+        "startChar": 0,
+        "endLine": 2697,
+        "endChar": 1
+      },
+      "revId": "18d1ef4155d9ce993ec6f5f5ba6d67ac55d85d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
