@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f1b2808_c521592b",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-05T17:18:53Z",
+      "side": 1,
+      "message": "I\u0027m not sure if comparing pointers is entirely correct. I believe we have a few places where we duplicate symbols (i.e. they really refer to the same thing), but they\u0027re separate objects in the AST (thus they have distinct pointers). The thing that binds them together is they share the same ID.",
+      "range": {
+        "startLine": 28,
+        "startChar": 12,
+        "endLine": 28,
+        "endChar": 57
+      },
+      "revId": "35882c55542f7e8fae04928a900b7725983b7800",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
