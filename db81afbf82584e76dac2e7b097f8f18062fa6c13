@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df2c3030_e8422e21",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-05T19:44:51Z",
+      "side": 1,
+      "message": "Do we wait to add this enum? Should it still be called SwiftShader?",
+      "range": {
+        "startLine": 81,
+        "startChar": 8,
+        "endLine": 81,
+        "endChar": 49
+      },
+      "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_cccae150",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-05T19:44:51Z",
+      "side": 1,
+      "message": "I\u0027m not sure if we need a separate enum for the ANGLE default as opposed to the EGL default.",
+      "range": {
+        "startLine": 106,
+        "startChar": 8,
+        "endLine": 106,
+        "endChar": 45
+      },
+      "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
