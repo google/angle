@@ -39,6 +39,30 @@
       "revId": "18d1ef4155d9ce993ec6f5f5ba6d67ac55d85d91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_ca69660c",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2697,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-05T15:08:12Z",
+      "side": 1,
+      "message": "you mean what the diff is? I added a space: \"if(\" -\u003e \"if (\"\n\nOr was your question about the meaning of framebufferHandle?",
+      "parentUuid": "1f1b2808_6aba9a5a",
+      "range": {
+        "startLine": 2697,
+        "startChar": 0,
+        "endLine": 2697,
+        "endChar": 1
+      },
+      "revId": "18d1ef4155d9ce993ec6f5f5ba6d67ac55d85d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
