@@ -1,10 +1,10 @@
 Name
 
-    ANGLE_platform_angle_d3d
+    ANGLE_platform_angle_opengl
 
 Name Strings
 
-    EGL_ANGLE_platform_angle_d3d
+    EGL_ANGLE_platform_angle_opengl
 
 Contributors
 
@@ -37,7 +37,7 @@ Dependencies
 
 Overview
 
-    This extension enables selection of D3D display types.
+    This extension enables selection of OpenGL display types.
 
 New Types
 
@@ -51,9 +51,8 @@ New Tokens
 
     Accepted as values for the EGL_PLATFORM_ANGLE_TYPE_ANGLE attribute:
 
-        EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE                 0x3204
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE                0x3205
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_WARP_ANGLE           0x3206
+        EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE               0x3207
+        EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE             0x3208
 
 Additions to the EGL Specification
 
