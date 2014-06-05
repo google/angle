@@ -316,7 +316,18 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
     }
 
     gl::Framebuffer *framebuffer = context->getReadFramebuffer();
-    gl::Renderbuffer *source = framebuffer->getReadColorbuffer();
+
+    if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
+    {
+        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
+    }
+
+    if (context->getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::FramebufferAttachment *source = framebuffer->getReadColorbuffer();
     GLenum colorbufferInternalFormat = source->getInternalFormat();
 
     if (isSubImage)

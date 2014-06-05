@@ -169,16 +169,16 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
     gl::Extents framebufferSize;
     if (frameBuffer->getFirstColorbuffer() != NULL)
     {
-        gl::Renderbuffer *renderBuffer = frameBuffer->getFirstColorbuffer();
-        framebufferSize.width = renderBuffer->getWidth();
-        framebufferSize.height = renderBuffer->getHeight();
+        gl::FramebufferAttachment *attachment = frameBuffer->getFirstColorbuffer();
+        framebufferSize.width = attachment->getWidth();
+        framebufferSize.height = attachment->getHeight();
         framebufferSize.depth = 1;
     }
     else if (frameBuffer->getDepthOrStencilbuffer() != NULL)
     {
-        gl::Renderbuffer *renderBuffer = frameBuffer->getDepthOrStencilbuffer();
-        framebufferSize.width = renderBuffer->getWidth();
-        framebufferSize.height = renderBuffer->getHeight();
+        gl::FramebufferAttachment *attachment = frameBuffer->getDepthOrStencilbuffer();
+        framebufferSize.width = attachment->getWidth();
+        framebufferSize.height = attachment->getHeight();
         framebufferSize.depth = 1;
     }
     else
@@ -211,18 +211,18 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
     {
         if (clearParams.clearColor[colorAttachment] && frameBuffer->isEnabledColorAttachment(colorAttachment))
         {
-            gl::Renderbuffer *renderbuffer = frameBuffer->getColorbuffer(colorAttachment);
-            if (renderbuffer)
+            gl::FramebufferAttachment *attachment = frameBuffer->getColorbuffer(colorAttachment);
+            if (attachment)
             {
-                RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(renderbuffer->getRenderTarget());
+                RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(attachment->getRenderTarget());
                 if (!renderTarget)
                 {
                     ERR("Render target pointer unexpectedly null.");
                     return;
                 }
 
-                GLenum internalFormat = renderbuffer->getInternalFormat();
-                GLenum actualFormat = renderbuffer->getActualFormat();
+                GLenum internalFormat = attachment->getInternalFormat();
+                GLenum actualFormat = attachment->getActualFormat();
                 GLenum componentType = gl::GetComponentType(internalFormat, clientVersion);
                 if (clearParams.colorClearType == GL_FLOAT &&
                     !(componentType == GL_FLOAT || componentType == GL_UNSIGNED_NORMALIZED || componentType == GL_SIGNED_NORMALIZED))
@@ -287,17 +287,17 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
 
     if (clearParams.clearDepth || clearParams.clearStencil)
     {
-        gl::Renderbuffer *renderbuffer = frameBuffer->getDepthOrStencilbuffer();
-        if (renderbuffer)
+        gl::FramebufferAttachment *attachment = frameBuffer->getDepthOrStencilbuffer();
+        if (attachment)
         {
-            RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(renderbuffer->getDepthStencil());
+            RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(attachment->getDepthStencil());
             if (!renderTarget)
             {
                 ERR("Depth stencil render target pointer unexpectedly null.");
                 return;
             }
 
-            GLenum actualFormat = renderbuffer->getActualFormat();
+            GLenum actualFormat = attachment->getActualFormat();
 
             unsigned int stencilUnmasked = frameBuffer->hasStencil() ? (1 << gl::GetStencilBits(actualFormat, clientVersion)) - 1 : 0;
             bool needMaskedStencilClear = clearParams.clearStencil && (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;

@@ -22,341 +22,341 @@ namespace gl
 {
 unsigned int RenderbufferStorage::mCurrentSerial = 1;
 
-RenderbufferInterface::RenderbufferInterface()
+FramebufferAttachmentInterface::FramebufferAttachmentInterface()
 {
 }
 
-// The default case for classes inherited from RenderbufferInterface is not to
-// need to do anything upon the reference count to the parent Renderbuffer incrementing
+// The default case for classes inherited from FramebufferAttachmentInterface is not to
+// need to do anything upon the reference count to the parent FramebufferAttachment incrementing
 // or decrementing. 
-void RenderbufferInterface::addProxyRef(const Renderbuffer *proxy)
+void FramebufferAttachmentInterface::addProxyRef(const FramebufferAttachment *proxy)
 {
 }
 
-void RenderbufferInterface::releaseProxy(const Renderbuffer *proxy)
+void FramebufferAttachmentInterface::releaseProxy(const FramebufferAttachment *proxy)
 {
 }
 
-///// RenderbufferTexture2D Implementation ////////
+///// Texture2DAttachment Implementation ////////
 
-RenderbufferTexture2D::RenderbufferTexture2D(Texture2D *texture, GLint level) : mLevel(level)
+Texture2DAttachment::Texture2DAttachment(Texture2D *texture, GLint level) : mLevel(level)
 {
     mTexture2D.set(texture);
 }
 
-RenderbufferTexture2D::~RenderbufferTexture2D()
+Texture2DAttachment::~Texture2DAttachment()
 {
     mTexture2D.set(NULL);
 }
 
 // Textures need to maintain their own reference count for references via
 // Renderbuffers acting as proxies. Here, we notify the texture of a reference.
-void RenderbufferTexture2D::addProxyRef(const Renderbuffer *proxy)
+void Texture2DAttachment::addProxyRef(const FramebufferAttachment *proxy)
 {
     mTexture2D->addProxyRef(proxy);
 }
 
-void RenderbufferTexture2D::releaseProxy(const Renderbuffer *proxy)
+void Texture2DAttachment::releaseProxy(const FramebufferAttachment *proxy)
 {
     mTexture2D->releaseProxy(proxy);
 }
 
-rx::RenderTarget *RenderbufferTexture2D::getRenderTarget()
+rx::RenderTarget *Texture2DAttachment::getRenderTarget()
 {
     return mTexture2D->getRenderTarget(mLevel);
 }
 
-rx::RenderTarget *RenderbufferTexture2D::getDepthStencil()
+rx::RenderTarget *Texture2DAttachment::getDepthStencil()
 {
     return mTexture2D->getDepthSencil(mLevel);
 }
 
-rx::TextureStorage *RenderbufferTexture2D::getTextureStorage()
+rx::TextureStorage *Texture2DAttachment::getTextureStorage()
 {
     return mTexture2D->getNativeTexture()->getStorageInstance();
 }
 
-GLsizei RenderbufferTexture2D::getWidth() const
+GLsizei Texture2DAttachment::getWidth() const
 {
     return mTexture2D->getWidth(mLevel);
 }
 
-GLsizei RenderbufferTexture2D::getHeight() const
+GLsizei Texture2DAttachment::getHeight() const
 {
     return mTexture2D->getHeight(mLevel);
 }
 
-GLenum RenderbufferTexture2D::getInternalFormat() const
+GLenum Texture2DAttachment::getInternalFormat() const
 {
     return mTexture2D->getInternalFormat(mLevel);
 }
 
-GLenum RenderbufferTexture2D::getActualFormat() const
+GLenum Texture2DAttachment::getActualFormat() const
 {
     return mTexture2D->getActualFormat(mLevel);
 }
 
-GLsizei RenderbufferTexture2D::getSamples() const
+GLsizei Texture2DAttachment::getSamples() const
 {
     return 0;
 }
 
-unsigned int RenderbufferTexture2D::getSerial() const
+unsigned int Texture2DAttachment::getSerial() const
 {
     return mTexture2D->getRenderTargetSerial(mLevel);
 }
 
-bool RenderbufferTexture2D::isTexture() const
+bool Texture2DAttachment::isTexture() const
 {
     return true;
 }
 
-unsigned int RenderbufferTexture2D::getTextureSerial() const
+unsigned int Texture2DAttachment::getTextureSerial() const
 {
     return mTexture2D->getTextureSerial();
 }
 
-///// RenderbufferTextureCubeMap Implementation ////////
+///// TextureCubeMapAttachment Implementation ////////
 
-RenderbufferTextureCubeMap::RenderbufferTextureCubeMap(TextureCubeMap *texture, GLenum faceTarget, GLint level)
+TextureCubeMapAttachment::TextureCubeMapAttachment(TextureCubeMap *texture, GLenum faceTarget, GLint level)
     : mFaceTarget(faceTarget), mLevel(level)
 {
     mTextureCubeMap.set(texture);
 }
 
-RenderbufferTextureCubeMap::~RenderbufferTextureCubeMap()
+TextureCubeMapAttachment::~TextureCubeMapAttachment()
 {
     mTextureCubeMap.set(NULL);
 }
 
 // Textures need to maintain their own reference count for references via
 // Renderbuffers acting as proxies. Here, we notify the texture of a reference.
-void RenderbufferTextureCubeMap::addProxyRef(const Renderbuffer *proxy)
+void TextureCubeMapAttachment::addProxyRef(const FramebufferAttachment *proxy)
 {
     mTextureCubeMap->addProxyRef(proxy);
 }
 
-void RenderbufferTextureCubeMap::releaseProxy(const Renderbuffer *proxy)
+void TextureCubeMapAttachment::releaseProxy(const FramebufferAttachment *proxy)
 {
     mTextureCubeMap->releaseProxy(proxy);
 }
 
-rx::RenderTarget *RenderbufferTextureCubeMap::getRenderTarget()
+rx::RenderTarget *TextureCubeMapAttachment::getRenderTarget()
 {
     return mTextureCubeMap->getRenderTarget(mFaceTarget, mLevel);
 }
 
-rx::RenderTarget *RenderbufferTextureCubeMap::getDepthStencil()
+rx::RenderTarget *TextureCubeMapAttachment::getDepthStencil()
 {
     return mTextureCubeMap->getDepthStencil(mFaceTarget, mLevel);
 }
 
-rx::TextureStorage *RenderbufferTextureCubeMap::getTextureStorage()
+rx::TextureStorage *TextureCubeMapAttachment::getTextureStorage()
 {
     return mTextureCubeMap->getNativeTexture()->getStorageInstance();
 }
 
-GLsizei RenderbufferTextureCubeMap::getWidth() const
+GLsizei TextureCubeMapAttachment::getWidth() const
 {
     return mTextureCubeMap->getWidth(mFaceTarget, mLevel);
 }
 
-GLsizei RenderbufferTextureCubeMap::getHeight() const
+GLsizei TextureCubeMapAttachment::getHeight() const
 {
     return mTextureCubeMap->getHeight(mFaceTarget, mLevel);
 }
 
-GLenum RenderbufferTextureCubeMap::getInternalFormat() const
+GLenum TextureCubeMapAttachment::getInternalFormat() const
 {
     return mTextureCubeMap->getInternalFormat(mFaceTarget, mLevel);
 }
 
-GLenum RenderbufferTextureCubeMap::getActualFormat() const
+GLenum TextureCubeMapAttachment::getActualFormat() const
 {
     return mTextureCubeMap->getActualFormat(mFaceTarget, mLevel);
 }
 
-GLsizei RenderbufferTextureCubeMap::getSamples() const
+GLsizei TextureCubeMapAttachment::getSamples() const
 {
     return 0;
 }
 
-unsigned int RenderbufferTextureCubeMap::getSerial() const
+unsigned int TextureCubeMapAttachment::getSerial() const
 {
     return mTextureCubeMap->getRenderTargetSerial(mFaceTarget, mLevel);
 }
 
-bool RenderbufferTextureCubeMap::isTexture() const
+bool TextureCubeMapAttachment::isTexture() const
 {
     return true;
 }
 
-unsigned int RenderbufferTextureCubeMap::getTextureSerial() const
+unsigned int TextureCubeMapAttachment::getTextureSerial() const
 {
     return mTextureCubeMap->getTextureSerial();
 }
 
-///// RenderbufferTexture3DLayer Implementation ////////
+///// Texture3DAttachment Implementation ////////
 
-RenderbufferTexture3DLayer::RenderbufferTexture3DLayer(Texture3D *texture, GLint level, GLint layer)
+Texture3DAttachment::Texture3DAttachment(Texture3D *texture, GLint level, GLint layer)
     : mLevel(level), mLayer(layer)
 {
     mTexture3D.set(texture);
 }
 
-RenderbufferTexture3DLayer::~RenderbufferTexture3DLayer()
+Texture3DAttachment::~Texture3DAttachment()
 {
     mTexture3D.set(NULL);
 }
 
 // Textures need to maintain their own reference count for references via
 // Renderbuffers acting as proxies. Here, we notify the texture of a reference.
-void RenderbufferTexture3DLayer::addProxyRef(const Renderbuffer *proxy)
+void Texture3DAttachment::addProxyRef(const FramebufferAttachment *proxy)
 {
     mTexture3D->addProxyRef(proxy);
 }
 
-void RenderbufferTexture3DLayer::releaseProxy(const Renderbuffer *proxy)
+void Texture3DAttachment::releaseProxy(const FramebufferAttachment *proxy)
 {
     mTexture3D->releaseProxy(proxy);
 }
 
-rx::RenderTarget *RenderbufferTexture3DLayer::getRenderTarget()
+rx::RenderTarget *Texture3DAttachment::getRenderTarget()
 {
     return mTexture3D->getRenderTarget(mLevel, mLayer);
 }
 
-rx::RenderTarget *RenderbufferTexture3DLayer::getDepthStencil()
+rx::RenderTarget *Texture3DAttachment::getDepthStencil()
 {
     return mTexture3D->getDepthStencil(mLevel, mLayer);
 }
 
-rx::TextureStorage *RenderbufferTexture3DLayer::getTextureStorage()
+rx::TextureStorage *Texture3DAttachment::getTextureStorage()
 {
     return mTexture3D->getNativeTexture()->getStorageInstance();
 }
 
-GLsizei RenderbufferTexture3DLayer::getWidth() const
+GLsizei Texture3DAttachment::getWidth() const
 {
     return mTexture3D->getWidth(mLevel);
 }
 
-GLsizei RenderbufferTexture3DLayer::getHeight() const
+GLsizei Texture3DAttachment::getHeight() const
 {
     return mTexture3D->getHeight(mLevel);
 }
 
-GLenum RenderbufferTexture3DLayer::getInternalFormat() const
+GLenum Texture3DAttachment::getInternalFormat() const
 {
     return mTexture3D->getInternalFormat(mLevel);
 }
 
-GLenum RenderbufferTexture3DLayer::getActualFormat() const
+GLenum Texture3DAttachment::getActualFormat() const
 {
     return mTexture3D->getActualFormat(mLevel);
 }
 
-GLsizei RenderbufferTexture3DLayer::getSamples() const
+GLsizei Texture3DAttachment::getSamples() const
 {
     return 0;
 }
 
-unsigned int RenderbufferTexture3DLayer::getSerial() const
+unsigned int Texture3DAttachment::getSerial() const
 {
     return mTexture3D->getRenderTargetSerial(mLevel, mLayer);
 }
 
-bool RenderbufferTexture3DLayer::isTexture() const
+bool Texture3DAttachment::isTexture() const
 {
     return true;
 }
 
-unsigned int RenderbufferTexture3DLayer::getTextureSerial() const
+unsigned int Texture3DAttachment::getTextureSerial() const
 {
     return mTexture3D->getTextureSerial();
 }
 
-////// RenderbufferTexture2DArrayLayer Implementation //////
+////// Texture2DArrayAttachment Implementation //////
 
-RenderbufferTexture2DArrayLayer::RenderbufferTexture2DArrayLayer(Texture2DArray *texture, GLint level, GLint layer)
+Texture2DArrayAttachment::Texture2DArrayAttachment(Texture2DArray *texture, GLint level, GLint layer)
     : mLevel(level), mLayer(layer)
 {
     mTexture2DArray.set(texture);
 }
 
-RenderbufferTexture2DArrayLayer::~RenderbufferTexture2DArrayLayer()
+Texture2DArrayAttachment::~Texture2DArrayAttachment()
 {
     mTexture2DArray.set(NULL);
 }
 
-void RenderbufferTexture2DArrayLayer::addProxyRef(const Renderbuffer *proxy)
+void Texture2DArrayAttachment::addProxyRef(const FramebufferAttachment *proxy)
 {
     mTexture2DArray->addProxyRef(proxy);
 }
 
-void RenderbufferTexture2DArrayLayer::releaseProxy(const Renderbuffer *proxy)
+void Texture2DArrayAttachment::releaseProxy(const FramebufferAttachment *proxy)
 {
     mTexture2DArray->releaseProxy(proxy);
 }
 
-rx::RenderTarget *RenderbufferTexture2DArrayLayer::getRenderTarget()
+rx::RenderTarget *Texture2DArrayAttachment::getRenderTarget()
 {
     return mTexture2DArray->getRenderTarget(mLevel, mLayer);
 }
 
-rx::RenderTarget *RenderbufferTexture2DArrayLayer::getDepthStencil()
+rx::RenderTarget *Texture2DArrayAttachment::getDepthStencil()
 {
     return mTexture2DArray->getDepthStencil(mLevel, mLayer);
 }
 
-rx::TextureStorage *RenderbufferTexture2DArrayLayer::getTextureStorage()
+rx::TextureStorage *Texture2DArrayAttachment::getTextureStorage()
 {
     return mTexture2DArray->getNativeTexture()->getStorageInstance();
 }
 
-GLsizei RenderbufferTexture2DArrayLayer::getWidth() const
+GLsizei Texture2DArrayAttachment::getWidth() const
 {
     return mTexture2DArray->getWidth(mLevel);
 }
 
-GLsizei RenderbufferTexture2DArrayLayer::getHeight() const
+GLsizei Texture2DArrayAttachment::getHeight() const
 {
     return mTexture2DArray->getHeight(mLevel);
 }
 
-GLenum RenderbufferTexture2DArrayLayer::getInternalFormat() const
+GLenum Texture2DArrayAttachment::getInternalFormat() const
 {
     return mTexture2DArray->getInternalFormat(mLevel);
 }
 
-GLenum RenderbufferTexture2DArrayLayer::getActualFormat() const
+GLenum Texture2DArrayAttachment::getActualFormat() const
 {
     return mTexture2DArray->getActualFormat(mLevel);
 }
 
-GLsizei RenderbufferTexture2DArrayLayer::getSamples() const
+GLsizei Texture2DArrayAttachment::getSamples() const
 {
     return 0;
 }
 
-unsigned int RenderbufferTexture2DArrayLayer::getSerial() const
+unsigned int Texture2DArrayAttachment::getSerial() const
 {
     return mTexture2DArray->getRenderTargetSerial(mLevel, mLayer);
 }
 
-bool RenderbufferTexture2DArrayLayer::isTexture() const
+bool Texture2DArrayAttachment::isTexture() const
 {
     return true;
 }
 
-unsigned int RenderbufferTexture2DArrayLayer::getTextureSerial() const
+unsigned int Texture2DArrayAttachment::getTextureSerial() const
 {
     return mTexture2DArray->getTextureSerial();
 }
 
-////// Renderbuffer Implementation //////
+////// FramebufferAttachment Implementation //////
 
-Renderbuffer::Renderbuffer(rx::Renderer *renderer, GLuint id, RenderbufferInterface *instance) : RefCountObject(id)
+FramebufferAttachment::FramebufferAttachment(rx::Renderer *renderer, GLuint id, FramebufferAttachmentInterface *instance) : RefCountObject(id)
 {
     ASSERT(instance != NULL);
     mInstance = instance;
@@ -365,123 +365,123 @@ Renderbuffer::Renderbuffer(rx::Renderer *renderer, GLuint id, RenderbufferInterf
     mRenderer = renderer;
 }
 
-Renderbuffer::~Renderbuffer()
+FramebufferAttachment::~FramebufferAttachment()
 {
     delete mInstance;
 }
 
-// The RenderbufferInterface contained in this Renderbuffer may need to maintain
+// The FramebufferAttachmentInterface contained in this FramebufferAttachment may need to maintain
 // its own reference count, so we pass it on here.
-void Renderbuffer::addRef() const
+void FramebufferAttachment::addRef() const
 {
     mInstance->addProxyRef(this);
 
     RefCountObject::addRef();
 }
 
-void Renderbuffer::release() const
+void FramebufferAttachment::release() const
 {
     mInstance->releaseProxy(this);
 
     RefCountObject::release();
 }
 
-rx::RenderTarget *Renderbuffer::getRenderTarget()
+rx::RenderTarget *FramebufferAttachment::getRenderTarget()
 {
     return mInstance->getRenderTarget();
 }
 
-rx::RenderTarget *Renderbuffer::getDepthStencil()
+rx::RenderTarget *FramebufferAttachment::getDepthStencil()
 {
     return mInstance->getDepthStencil();
 }
 
-rx::TextureStorage *Renderbuffer::getTextureStorage()
+rx::TextureStorage *FramebufferAttachment::getTextureStorage()
 {
     return mInstance->getTextureStorage();
 }
 
-GLsizei Renderbuffer::getWidth() const
+GLsizei FramebufferAttachment::getWidth() const
 {
     return mInstance->getWidth();
 }
 
-GLsizei Renderbuffer::getHeight() const
+GLsizei FramebufferAttachment::getHeight() const
 {
     return mInstance->getHeight();
 }
 
-GLenum Renderbuffer::getInternalFormat() const
+GLenum FramebufferAttachment::getInternalFormat() const
 {
     return mInstance->getInternalFormat();
 }
 
-GLenum Renderbuffer::getActualFormat() const
+GLenum FramebufferAttachment::getActualFormat() const
 {
     return mInstance->getActualFormat();
 }
 
-GLuint Renderbuffer::getRedSize() const
+GLuint FramebufferAttachment::getRedSize() const
 {
     return gl::GetRedBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
-GLuint Renderbuffer::getGreenSize() const
+GLuint FramebufferAttachment::getGreenSize() const
 {
     return gl::GetGreenBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
-GLuint Renderbuffer::getBlueSize() const
+GLuint FramebufferAttachment::getBlueSize() const
 {
     return gl::GetBlueBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
-GLuint Renderbuffer::getAlphaSize() const
+GLuint FramebufferAttachment::getAlphaSize() const
 {
     return gl::GetAlphaBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
-GLuint Renderbuffer::getDepthSize() const
+GLuint FramebufferAttachment::getDepthSize() const
 {
     return gl::GetDepthBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
-GLuint Renderbuffer::getStencilSize() const
+GLuint FramebufferAttachment::getStencilSize() const
 {
     return gl::GetStencilBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
-GLenum Renderbuffer::getComponentType() const
+GLenum FramebufferAttachment::getComponentType() const
 {
     return gl::GetComponentType(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
-GLenum Renderbuffer::getColorEncoding() const
+GLenum FramebufferAttachment::getColorEncoding() const
 {
     return gl::GetColorEncoding(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
-GLsizei Renderbuffer::getSamples() const
+GLsizei FramebufferAttachment::getSamples() const
 {
     return mInstance->getSamples();
 }
 
-unsigned int Renderbuffer::getSerial() const
+unsigned int FramebufferAttachment::getSerial() const
 {
     return mInstance->getSerial();
 }
 
-bool Renderbuffer::isTexture() const
+bool FramebufferAttachment::isTexture() const
 {
     return mInstance->isTexture();
 }
 
-unsigned int Renderbuffer::getTextureSerial() const
+unsigned int FramebufferAttachment::getTextureSerial() const
 {
     return mInstance->getTextureSerial();
 }
 
-void Renderbuffer::setStorage(RenderbufferStorage *newStorage)
+void FramebufferAttachment::setStorage(RenderbufferStorage *newStorage)
 {
     ASSERT(newStorage != NULL);
 

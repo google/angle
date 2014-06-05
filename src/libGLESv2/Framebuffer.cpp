@@ -42,7 +42,7 @@ Framebuffer::~Framebuffer()
     mStencilbuffer.set(NULL, GL_NONE, 0, 0);
 }
 
-Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle, GLint level, GLint layer) const
+FramebufferAttachment *Framebuffer::lookupAttachment(GLenum type, GLuint handle, GLint level, GLint layer) const
 {
     gl::Context *context = gl::getContext();
 
@@ -59,7 +59,7 @@ Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle, GLint 
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_2D)
             {
-                return static_cast<Texture2D*>(texture)->getRenderbuffer(level);
+                return static_cast<Texture2D*>(texture)->getAttachment(level);
             }
             else
             {
@@ -77,7 +77,7 @@ Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle, GLint 
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_CUBE_MAP)
             {
-                return static_cast<TextureCubeMap*>(texture)->getRenderbuffer(type, level);
+                return static_cast<TextureCubeMap*>(texture)->getAttachment(type, level);
             }
             else
             {
@@ -90,7 +90,7 @@ Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle, GLint 
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_3D)
             {
-                return static_cast<Texture3D*>(texture)->getRenderbuffer(level, layer);
+                return static_cast<Texture3D*>(texture)->getAttachment(level, layer);
             }
             else
             {
@@ -103,7 +103,7 @@ Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle, GLint 
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_2D_ARRAY)
             {
-                return static_cast<Texture2DArray*>(texture)->getRenderbuffer(level, layer);
+                return static_cast<Texture2DArray*>(texture)->getAttachment(level, layer);
             }
             else
             {
@@ -120,10 +120,10 @@ Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle, GLint 
 void Framebuffer::setColorbuffer(unsigned int colorAttachment, GLenum type, GLuint colorbuffer, GLint level, GLint layer)
 {
     ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    Renderbuffer *renderBuffer = lookupRenderbuffer(type, colorbuffer, level, layer);
-    if (renderBuffer)
+    FramebufferAttachment *attachment = lookupAttachment(type, colorbuffer, level, layer);
+    if (attachment)
     {
-        mColorbuffers[colorAttachment].set(renderBuffer, type, level, layer);
+        mColorbuffers[colorAttachment].set(attachment, type, level, layer);
     }
     else
     {
@@ -133,10 +133,10 @@ void Framebuffer::setColorbuffer(unsigned int colorAttachment, GLenum type, GLui
 
 void Framebuffer::setDepthbuffer(GLenum type, GLuint depthbuffer, GLint level, GLint layer)
 {
-    Renderbuffer *renderBuffer = lookupRenderbuffer(type, depthbuffer, level, layer);
-    if (renderBuffer)
+    FramebufferAttachment *attachment = lookupAttachment(type, depthbuffer, level, layer);
+    if (attachment)
     {
-        mDepthbuffer.set(renderBuffer, type, level, layer);
+        mDepthbuffer.set(attachment, type, level, layer);
     }
     else
     {
@@ -146,10 +146,10 @@ void Framebuffer::setDepthbuffer(GLenum type, GLuint depthbuffer, GLint level, G
 
 void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer, GLint level, GLint layer)
 {
-    Renderbuffer *renderBuffer = lookupRenderbuffer(type, stencilbuffer, level, layer);
-    if (renderBuffer)
+    FramebufferAttachment *attachment = lookupAttachment(type, stencilbuffer, level, layer);
+    if (attachment)
     {
-        mStencilbuffer.set(renderBuffer, type, level, layer);
+        mStencilbuffer.set(attachment, type, level, layer);
     }
     else
     {
@@ -159,11 +159,11 @@ void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer, GLint leve
 
 void Framebuffer::setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer, GLint level, GLint layer)
 {
-    Renderbuffer *renderBuffer = lookupRenderbuffer(type, depthStencilBuffer, level, layer);
-    if (renderBuffer && renderBuffer->getDepthSize() > 0 && renderBuffer->getStencilSize() > 0)
+    FramebufferAttachment *attachment = lookupAttachment(type, depthStencilBuffer, level, layer);
+    if (attachment && attachment->getDepthSize() > 0 && attachment->getStencilSize() > 0)
     {
-        mDepthbuffer.set(renderBuffer, type, level, layer);
-        mStencilbuffer.set(renderBuffer, type, level, layer);
+        mDepthbuffer.set(attachment, type, level, layer);
+        mStencilbuffer.set(attachment, type, level, layer);
     }
     else
     {
@@ -219,7 +219,7 @@ unsigned int Framebuffer::getRenderTargetSerial(unsigned int colorAttachment) co
 {
     ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
 
-    Renderbuffer *colorbuffer = mColorbuffers[colorAttachment].get();
+    FramebufferAttachment *colorbuffer = mColorbuffers[colorAttachment].get();
 
     if (colorbuffer)
     {
@@ -231,7 +231,7 @@ unsigned int Framebuffer::getRenderTargetSerial(unsigned int colorAttachment) co
 
 unsigned int Framebuffer::getDepthbufferSerial() const
 {
-    Renderbuffer *depthbuffer = mDepthbuffer.get();
+    FramebufferAttachment *depthbuffer = mDepthbuffer.get();
 
     if (depthbuffer)
     {
@@ -243,7 +243,7 @@ unsigned int Framebuffer::getDepthbufferSerial() const
 
 unsigned int Framebuffer::getStencilbufferSerial() const
 {
-    Renderbuffer *stencilbuffer = mStencilbuffer.get();
+    FramebufferAttachment *stencilbuffer = mStencilbuffer.get();
 
     if (stencilbuffer)
     {
@@ -253,30 +253,30 @@ unsigned int Framebuffer::getStencilbufferSerial() const
     return 0;
 }
 
-Renderbuffer *Framebuffer::getColorbuffer(unsigned int colorAttachment) const
+FramebufferAttachment *Framebuffer::getColorbuffer(unsigned int colorAttachment) const
 {
     ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
     return mColorbuffers[colorAttachment].get();
 }
 
-Renderbuffer *Framebuffer::getDepthbuffer() const
+FramebufferAttachment *Framebuffer::getDepthbuffer() const
 {
     return mDepthbuffer.get();
 }
 
-Renderbuffer *Framebuffer::getStencilbuffer() const
+FramebufferAttachment *Framebuffer::getStencilbuffer() const
 {
     return mStencilbuffer.get();
 }
 
-Renderbuffer *Framebuffer::getDepthStencilBuffer() const
+FramebufferAttachment *Framebuffer::getDepthStencilBuffer() const
 {
     return (mDepthbuffer.id() == mStencilbuffer.id()) ? mDepthbuffer.get() : NULL;
 }
 
-Renderbuffer *Framebuffer::getDepthOrStencilbuffer() const
+FramebufferAttachment *Framebuffer::getDepthOrStencilbuffer() const
 {
-    Renderbuffer *depthstencilbuffer = mDepthbuffer.get();
+    FramebufferAttachment *depthstencilbuffer = mDepthbuffer.get();
     
     if (!depthstencilbuffer)
     {
@@ -286,7 +286,7 @@ Renderbuffer *Framebuffer::getDepthOrStencilbuffer() const
     return depthstencilbuffer;
 }
 
-Renderbuffer *Framebuffer::getReadColorbuffer() const
+FramebufferAttachment *Framebuffer::getReadColorbuffer() const
 {
     // Will require more logic if glReadBuffers is supported
     return mColorbuffers[0].get();
@@ -298,7 +298,7 @@ GLenum Framebuffer::getReadColorbufferType() const
     return mColorbuffers[0].type();
 }
 
-Renderbuffer *Framebuffer::getFirstColorbuffer() const
+FramebufferAttachment *Framebuffer::getFirstColorbuffer() const
 {
     for (unsigned int colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
@@ -427,7 +427,7 @@ bool Framebuffer::hasStencil() const
 {
     if (mStencilbuffer.type() != GL_NONE)
     {
-        const Renderbuffer *stencilbufferObject = getStencilbuffer();
+        const FramebufferAttachment *stencilbufferObject = getStencilbuffer();
 
         if (stencilbufferObject)
         {
@@ -464,7 +464,7 @@ GLenum Framebuffer::completeness() const
     {
         if (mColorbuffers[colorAttachment].type() != GL_NONE)
         {
-            const Renderbuffer *colorbuffer = getColorbuffer(colorAttachment);
+            const FramebufferAttachment *colorbuffer = getColorbuffer(colorAttachment);
 
             if (!colorbuffer)
             {
@@ -549,8 +549,8 @@ GLenum Framebuffer::completeness() const
         }
     }
 
-    const Renderbuffer *depthbuffer = NULL;
-    const Renderbuffer *stencilbuffer = NULL;
+    const FramebufferAttachment *depthbuffer = NULL;
+    const FramebufferAttachment *stencilbuffer = NULL;
 
     if (mDepthbuffer.type() != GL_NONE)
     {
@@ -690,9 +690,9 @@ GLenum Framebuffer::completeness() const
 DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, Colorbuffer *colorbuffer, DepthStencilbuffer *depthStencil)
     : Framebuffer(renderer)
 {
-    mColorbuffers[0].set(new Renderbuffer(mRenderer, 0, colorbuffer), GL_RENDERBUFFER, 0, 0);
+    mColorbuffers[0].set(new FramebufferAttachment(mRenderer, 0, colorbuffer), GL_RENDERBUFFER, 0, 0);
 
-    Renderbuffer *depthStencilRenderbuffer = new Renderbuffer(mRenderer, 0, depthStencil);
+    FramebufferAttachment *depthStencilRenderbuffer = new FramebufferAttachment(mRenderer, 0, depthStencil);
     mDepthbuffer.set(depthStencilRenderbuffer, (depthStencilRenderbuffer->getDepthSize() != 0) ? GL_RENDERBUFFER : GL_NONE, 0, 0);
     mStencilbuffer.set(depthStencilRenderbuffer, (depthStencilRenderbuffer->getStencilSize() != 0) ? GL_RENDERBUFFER : GL_NONE, 0, 0);
 

@@ -87,12 +87,12 @@ GLenum Texture::getTarget() const
     return mTarget;
 }
 
-void Texture::addProxyRef(const Renderbuffer *proxy)
+void Texture::addProxyRef(const FramebufferAttachment *proxy)
 {
     mRenderbufferProxies.addRef(proxy);
 }
 
-void Texture::releaseProxy(const Renderbuffer *proxy)
+void Texture::releaseProxy(const FramebufferAttachment *proxy)
 {
     mRenderbufferProxies.release(proxy);
 }
@@ -1027,16 +1027,16 @@ rx::TextureStorageInterface *Texture2D::getBaseLevelStorage()
     return mTexStorage;
 }
 
-Renderbuffer *Texture2D::getRenderbuffer(GLint level)
+FramebufferAttachment *Texture2D::getAttachment(GLint level)
 {
-    Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, 0);
-    if (!renderBuffer)
+    FramebufferAttachment *attachment = mRenderbufferProxies.get(level, 0);
+    if (!attachment)
     {
-        renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTexture2D(this, level));
-        mRenderbufferProxies.add(level, 0, renderBuffer);
+        attachment = new FramebufferAttachment(mRenderer, id(), new Texture2DAttachment(this, level));
+        mRenderbufferProxies.add(level, 0, attachment);
     }
 
-    return renderBuffer;
+    return attachment;
 }
 
 unsigned int Texture2D::getRenderTargetSerial(GLint level)
@@ -1662,19 +1662,19 @@ rx::TextureStorageInterface *TextureCubeMap::getBaseLevelStorage()
     return mTexStorage;
 }
 
-Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target, GLint level)
+FramebufferAttachment *TextureCubeMap::getAttachment(GLenum target, GLint level)
 {
     ASSERT(!IsCubemapTextureTarget(target));
     int faceIndex = targetToIndex(target);
 
-    Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, faceIndex);
-    if (!renderBuffer)
+    FramebufferAttachment *attachment = mRenderbufferProxies.get(level, faceIndex);
+    if (!attachment)
     {
-        renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTextureCubeMap(this, target, level));
-        mRenderbufferProxies.add(level, faceIndex, renderBuffer);
+        attachment = new FramebufferAttachment(mRenderer, id(), new TextureCubeMapAttachment(this, target, level));
+        mRenderbufferProxies.add(level, faceIndex, attachment);
     }
 
-    return renderBuffer;
+    return attachment;
 }
 
 unsigned int TextureCubeMap::getRenderTargetSerial(GLenum target, GLint level)
@@ -2042,16 +2042,16 @@ bool Texture3D::isLevelComplete(int level) const
     return true;
 }
 
-Renderbuffer *Texture3D::getRenderbuffer(GLint level, GLint layer)
+FramebufferAttachment *Texture3D::getAttachment(GLint level, GLint layer)
 {
-    Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, layer);
-    if (!renderBuffer)
+    FramebufferAttachment *attachment = mRenderbufferProxies.get(level, layer);
+    if (!attachment)
     {
-        renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTexture3DLayer(this, level, layer));
-        mRenderbufferProxies.add(level, 0, renderBuffer);
+        attachment = new FramebufferAttachment(mRenderer, id(), new Texture3DAttachment(this, level, layer));
+        mRenderbufferProxies.add(level, 0, attachment);
     }
 
-    return renderBuffer;
+    return attachment;
 }
 
 unsigned int Texture3D::getRenderTargetSerial(GLint level, GLint layer)
@@ -2593,16 +2593,16 @@ bool Texture2DArray::isLevelComplete(int level) const
     return true;
 }
 
-Renderbuffer *Texture2DArray::getRenderbuffer(GLint level, GLint layer)
+FramebufferAttachment *Texture2DArray::getAttachment(GLint level, GLint layer)
 {
-    Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, layer);
-    if (!renderBuffer)
+    FramebufferAttachment *attachment = mRenderbufferProxies.get(level, layer);
+    if (!attachment)
     {
-        renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTexture2DArrayLayer(this, level, layer));
-        mRenderbufferProxies.add(level, 0, renderBuffer);
+        attachment = new FramebufferAttachment(mRenderer, id(), new Texture2DArrayAttachment(this, level, layer));
+        mRenderbufferProxies.add(level, 0, attachment);
     }
 
-    return renderBuffer;
+    return attachment;
 }
 
 unsigned int Texture2DArray::getRenderTargetSerial(GLint level, GLint layer)

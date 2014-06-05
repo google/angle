@@ -21,7 +21,7 @@
 
 namespace gl
 {
-class Renderbuffer;
+class FramebufferAttachment;
 }
 
 namespace rx
@@ -229,7 +229,7 @@ class Renderer11 : public Renderer
     virtual bool fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
                                          GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
 
-    bool getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource);
+    bool getRenderTargetResource(gl::FramebufferAttachment *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource);
     void unapplyRenderTargets();
     void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);
     void packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams &params, void *pixelsOut);
@@ -255,7 +255,7 @@ class Renderer11 : public Renderer
                               bool colorBlit, bool depthBlit, bool stencilBlit);
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
 
-    static void invalidateRenderbufferSwizzles(gl::Renderbuffer *renderBuffer, int mipLevel);
+    static void invalidateFBOAttachmentSwizzles(gl::FramebufferAttachment *attachment, int mipLevel);
     static void invalidateFramebufferSwizzles(gl::Framebuffer *framebuffer);
 
     HMODULE mD3d11Module;

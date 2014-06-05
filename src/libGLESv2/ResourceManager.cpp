@@ -311,7 +311,7 @@ Program *ResourceManager::getProgram(unsigned int handle)
     }
 }
 
-Renderbuffer *ResourceManager::getRenderbuffer(unsigned int handle)
+FramebufferAttachment *ResourceManager::getRenderbuffer(unsigned int handle)
 {
     RenderbufferMap::iterator renderbuffer = mRenderbufferMap.find(handle);
 
@@ -353,7 +353,7 @@ FenceSync *ResourceManager::getFenceSync(unsigned int handle)
     }
 }
 
-void ResourceManager::setRenderbuffer(GLuint handle, Renderbuffer *buffer)
+void ResourceManager::setRenderbuffer(GLuint handle, FramebufferAttachment *buffer)
 {
     mRenderbufferMap[handle] = buffer;
 }
@@ -405,7 +405,7 @@ void ResourceManager::checkRenderbufferAllocation(GLuint renderbuffer)
 {
     if (renderbuffer != 0 && !getRenderbuffer(renderbuffer))
     {
-        Renderbuffer *renderbufferObject = new Renderbuffer(mRenderer, renderbuffer, new Colorbuffer(mRenderer, 0, 0, GL_RGBA4, 0));
+        FramebufferAttachment *renderbufferObject = new FramebufferAttachment(mRenderer, renderbuffer, new Colorbuffer(mRenderer, 0, 0, GL_RGBA4, 0));
         mRenderbufferMap[renderbuffer] = renderbufferObject;
         renderbufferObject->addRef();
     }

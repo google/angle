@@ -213,7 +213,7 @@ void Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GL
 
 void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source)
 {
-    gl::Renderbuffer *colorbuffer = source->getReadColorbuffer();
+    gl::FramebufferAttachment *colorbuffer = source->getReadColorbuffer();
 
     if (colorbuffer && colorbuffer->getActualFormat() == mActualFormat)
     {

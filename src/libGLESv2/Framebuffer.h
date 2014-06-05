@@ -21,7 +21,7 @@ class Renderer;
 
 namespace gl
 {
-class Renderbuffer;
+class FramebufferAttachment;
 class Colorbuffer;
 class Depthbuffer;
 class Stencilbuffer;
@@ -46,14 +46,14 @@ class Framebuffer
     unsigned int getDepthbufferSerial() const;
     unsigned int getStencilbufferSerial() const;
 
-    Renderbuffer *getColorbuffer(unsigned int colorAttachment) const;
-    Renderbuffer *getDepthbuffer() const;
-    Renderbuffer *getStencilbuffer() const;
-    Renderbuffer *getDepthStencilBuffer() const;
-    Renderbuffer *getDepthOrStencilbuffer() const;
-    Renderbuffer *getReadColorbuffer() const;
+    FramebufferAttachment *getColorbuffer(unsigned int colorAttachment) const;
+    FramebufferAttachment *getDepthbuffer() const;
+    FramebufferAttachment *getStencilbuffer() const;
+    FramebufferAttachment *getDepthStencilBuffer() const;
+    FramebufferAttachment *getDepthOrStencilbuffer() const;
+    FramebufferAttachment *getReadColorbuffer() const;
     GLenum getReadColorbufferType() const;
-    Renderbuffer *getFirstColorbuffer() const;
+    FramebufferAttachment *getFirstColorbuffer() const;
 
     GLenum getColorbufferType(unsigned int colorAttachment) const;
     GLenum getDepthbufferType() const;
@@ -87,19 +87,19 @@ class Framebuffer
     virtual GLenum completeness() const;
 
   protected:
-    FramebufferTextureBindingPointer<Renderbuffer> mColorbuffers[IMPLEMENTATION_MAX_DRAW_BUFFERS];
+    FramebufferTextureBindingPointer<FramebufferAttachment> mColorbuffers[IMPLEMENTATION_MAX_DRAW_BUFFERS];
     GLenum mDrawBufferStates[IMPLEMENTATION_MAX_DRAW_BUFFERS];
     GLenum mReadBufferState;
 
-    FramebufferTextureBindingPointer<Renderbuffer> mDepthbuffer;
-    FramebufferTextureBindingPointer<Renderbuffer> mStencilbuffer;
+    FramebufferTextureBindingPointer<FramebufferAttachment> mDepthbuffer;
+    FramebufferTextureBindingPointer<FramebufferAttachment> mStencilbuffer;
 
     rx::Renderer *mRenderer;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Framebuffer);
 
-    Renderbuffer *lookupRenderbuffer(GLenum type, GLuint handle, GLint level, GLint layer) const;
+    FramebufferAttachment *lookupAttachment(GLenum type, GLuint handle, GLint level, GLint layer) const;
 };
 
 class DefaultFramebuffer : public Framebuffer

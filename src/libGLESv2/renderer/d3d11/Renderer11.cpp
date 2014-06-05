@@ -979,7 +979,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
             // the draw buffer must be either "none", "back" for the default buffer or the same index as this color (in order)
             ASSERT(drawBufferState == GL_BACK || drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + colorAttachment));
 
-            gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer(colorAttachment);
+            gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(colorAttachment);
 
             if (!colorbuffer)
             {
@@ -1026,7 +1026,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
     }
 
     // Get the depth stencil render buffer and serials
-    gl::Renderbuffer *depthStencil = NULL;
+    gl::FramebufferAttachment *depthStencil = NULL;
     unsigned int depthbufferSerial = 0;
     unsigned int stencilbufferSerial = 0;
     if (framebuffer->getDepthbufferType() != GL_NONE)
@@ -2634,7 +2634,7 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterface2DArray *dest, Textur
 bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level)
 {
-    gl::Renderbuffer *colorbuffer = framebuffer->getReadColorbuffer();
+    gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     if (!colorbuffer)
     {
         ERR("Failed to retrieve the color buffer from the frame buffer.");
@@ -2695,7 +2695,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
 bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level)
 {
-    gl::Renderbuffer *colorbuffer = framebuffer->getReadColorbuffer();
+    gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     if (!colorbuffer)
     {
         ERR("Failed to retrieve the color buffer from the frame buffer.");
@@ -2756,7 +2756,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
 bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface3D *storage, GLint level)
 {
-    gl::Renderbuffer *colorbuffer = framebuffer->getReadColorbuffer();
+    gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     if (!colorbuffer)
     {
         ERR("Failed to retrieve the color buffer from the frame buffer.");
@@ -2817,7 +2817,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
 bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface2DArray *storage, GLint level)
 {
-    gl::Renderbuffer *colorbuffer = framebuffer->getReadColorbuffer();
+    gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     if (!colorbuffer)
     {
         ERR("Failed to retrieve the color buffer from the frame buffer.");
@@ -3169,7 +3169,7 @@ bool Renderer11::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, uns
     return mPixelTransfer->copyBufferToTexture(unpack, offset, destRenderTarget, destinationFormat, sourcePixelsType, destArea);
 }
 
-bool Renderer11::getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource)
+bool Renderer11::getRenderTargetResource(gl::FramebufferAttachment *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource)
 {
     ASSERT(colorbuffer != NULL);
 
@@ -3210,7 +3210,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
 {
     if (blitRenderTarget)
     {
-        gl::Renderbuffer *readBuffer = readTarget->getReadColorbuffer();
+        gl::FramebufferAttachment *readBuffer = readTarget->getReadColorbuffer();
 
         if (!readBuffer)
         {
@@ -3224,7 +3224,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
         {
             if (drawTarget->isEnabledColorAttachment(colorAttachment))
             {
-                gl::Renderbuffer *drawBuffer = drawTarget->getColorbuffer(colorAttachment);
+                gl::FramebufferAttachment *drawBuffer = drawTarget->getColorbuffer(colorAttachment);
 
                 if (!drawBuffer)
                 {
@@ -3245,8 +3245,8 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
 
     if (blitDepth || blitStencil)
     {
-        gl::Renderbuffer *readBuffer = readTarget->getDepthOrStencilbuffer();
-        gl::Renderbuffer *drawBuffer = drawTarget->getDepthOrStencilbuffer();
+        gl::FramebufferAttachment *readBuffer = readTarget->getDepthOrStencilbuffer();
+        gl::FramebufferAttachment *drawBuffer = drawTarget->getDepthOrStencilbuffer();
 
         if (!readBuffer)
         {
@@ -3281,7 +3281,7 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
     ID3D11Texture2D *colorBufferTexture = NULL;
     unsigned int subresourceIndex = 0;
 
-    gl::Renderbuffer *colorbuffer = framebuffer->getReadColorbuffer();
+    gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
 
     if (colorbuffer && getRenderTargetResource(colorbuffer, &subresourceIndex, &colorBufferTexture))
     {
@@ -3749,9 +3749,10 @@ ID3D11Texture2D *Renderer11::resolveMultisampledTexture(ID3D11Texture2D *source,
     }
 }
 
-void Renderer11::invalidateRenderbufferSwizzles(gl::Renderbuffer *renderBuffer, int mipLevel)
+void Renderer11::invalidateFBOAttachmentSwizzles(gl::FramebufferAttachment *attachment, int mipLevel)
 {
-    TextureStorage *texStorage = renderBuffer->getTextureStorage();
+    ASSERT(attachment->isTexture());
+    TextureStorage *texStorage = attachment->getTextureStorage();
     if (texStorage)
     {
         TextureStorage11 *texStorage11 = TextureStorage11::makeTextureStorage11(texStorage);
@@ -3769,23 +3770,23 @@ void Renderer11::invalidateFramebufferSwizzles(gl::Framebuffer *framebuffer)
 {
     for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
-        gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer(colorAttachment);
-        if (colorbuffer)
+        gl::FramebufferAttachment *attachment = framebuffer->getColorbuffer(colorAttachment);
+        if (attachment && attachment->isTexture())
         {
-            invalidateRenderbufferSwizzles(colorbuffer, framebuffer->getColorbufferMipLevel(colorAttachment));
+            invalidateFBOAttachmentSwizzles(attachment, framebuffer->getColorbufferMipLevel(colorAttachment));
         }
     }
 
-    gl::Renderbuffer *depthBuffer = framebuffer->getDepthbuffer();
-    if (depthBuffer)
+    gl::FramebufferAttachment *depthAttachment = framebuffer->getDepthbuffer();
+    if (depthAttachment && depthAttachment->isTexture())
     {
-        invalidateRenderbufferSwizzles(depthBuffer, framebuffer->getDepthbufferMipLevel());
+        invalidateFBOAttachmentSwizzles(depthAttachment, framebuffer->getDepthbufferMipLevel());
     }
 
-    gl::Renderbuffer *stencilBuffer = framebuffer->getStencilbuffer();
-    if (stencilBuffer)
+    gl::FramebufferAttachment *stencilAttachment = framebuffer->getStencilbuffer();
+    if (stencilAttachment && stencilAttachment->isTexture())
     {
-        invalidateRenderbufferSwizzles(stencilBuffer, framebuffer->getStencilbufferMipLevel());
+        invalidateFBOAttachmentSwizzles(stencilAttachment, framebuffer->getStencilbufferMipLevel());
     }
 }
 

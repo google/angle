@@ -213,7 +213,7 @@ bool Blit9::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum de
 {
     RenderTarget9 *renderTarget = NULL;
     IDirect3DSurface9 *source = NULL;
-    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer(0);
+    gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(0);
 
     if (colorbuffer)
     {
@@ -249,7 +249,7 @@ bool Blit9::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum de
 {
     RenderTarget9 *renderTarget = NULL;
     IDirect3DSurface9 *source = NULL;
-    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer(0);
+    gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(0);
 
     if (colorbuffer)
     {

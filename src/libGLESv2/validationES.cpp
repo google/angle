@@ -375,7 +375,7 @@ bool ValidateFramebufferRenderbufferParameters(gl::Context *context, GLenum targ
     return true;
 }
 
-static bool IsPartialBlit(gl::Context *context, gl::Renderbuffer *readBuffer, gl::Renderbuffer *writeBuffer,
+static bool IsPartialBlit(gl::Context *context, gl::FramebufferAttachment *readBuffer, gl::FramebufferAttachment *writeBuffer,
                           GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
                           GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1)
 {
@@ -472,8 +472,8 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
-        gl::Renderbuffer *readColorBuffer = readFramebuffer->getReadColorbuffer();
-        gl::Renderbuffer *drawColorBuffer = drawFramebuffer->getFirstColorbuffer();
+        gl::FramebufferAttachment *readColorBuffer = readFramebuffer->getReadColorbuffer();
+        gl::FramebufferAttachment *drawColorBuffer = drawFramebuffer->getFirstColorbuffer();
 
         if (readColorBuffer && drawColorBuffer)
         {
@@ -555,8 +555,8 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
 
     if (mask & GL_DEPTH_BUFFER_BIT)
     {
-        gl::Renderbuffer *readDepthBuffer = readFramebuffer->getDepthbuffer();
-        gl::Renderbuffer *drawDepthBuffer = drawFramebuffer->getDepthbuffer();
+        gl::FramebufferAttachment *readDepthBuffer = readFramebuffer->getDepthbuffer();
+        gl::FramebufferAttachment *drawDepthBuffer = drawFramebuffer->getDepthbuffer();
 
         if (readDepthBuffer && drawDepthBuffer)
         {
@@ -589,8 +589,8 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
 
     if (mask & GL_STENCIL_BUFFER_BIT)
     {
-        gl::Renderbuffer *readStencilBuffer = readFramebuffer->getStencilbuffer();
-        gl::Renderbuffer *drawStencilBuffer = drawFramebuffer->getStencilbuffer();
+        gl::FramebufferAttachment *readStencilBuffer = readFramebuffer->getStencilbuffer();
+        gl::FramebufferAttachment *drawStencilBuffer = drawFramebuffer->getStencilbuffer();
 
         if (readStencilBuffer && drawStencilBuffer)
         {
@@ -1078,8 +1078,8 @@ bool ValidateStateQuery(gl::Context *context, GLenum pname, GLenum *nativeType, 
                 return gl::error(GL_INVALID_OPERATION, false);
             }
 
-            Renderbuffer *renderbuffer = framebuffer->getReadColorbuffer();
-            if (!renderbuffer)
+            FramebufferAttachment *attachment = framebuffer->getReadColorbuffer();
+            if (!attachment)
             {
                 return gl::error(GL_INVALID_OPERATION, false);
             }

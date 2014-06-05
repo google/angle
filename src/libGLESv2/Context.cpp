@@ -1105,7 +1105,7 @@ Texture *Context::getTexture(GLuint handle)
     return mResourceManager->getTexture(handle);
 }
 
-Renderbuffer *Context::getRenderbuffer(GLuint handle)
+FramebufferAttachment *Context::getRenderbuffer(GLuint handle)
 {
     return mResourceManager->getRenderbuffer(handle);
 }
@@ -1440,7 +1440,7 @@ void Context::setRenderbufferStorage(GLsizei width, GLsizei height, GLenum inter
         return;
     }
 
-    Renderbuffer *renderbufferObject = mState.renderbuffer.get();
+    FramebufferAttachment *renderbufferObject = mState.renderbuffer.get();
     renderbufferObject->setStorage(renderbuffer);
 }
 
@@ -1884,7 +1884,7 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_ALPHA_BITS:
         {
             gl::Framebuffer *framebuffer = getDrawFramebuffer();
-            gl::Renderbuffer *colorbuffer = framebuffer->getFirstColorbuffer();
+            gl::FramebufferAttachment *colorbuffer = framebuffer->getFirstColorbuffer();
 
             if (colorbuffer)
             {
@@ -1905,7 +1905,7 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_DEPTH_BITS:
         {
             gl::Framebuffer *framebuffer = getDrawFramebuffer();
-            gl::Renderbuffer *depthbuffer = framebuffer->getDepthbuffer();
+            gl::FramebufferAttachment *depthbuffer = framebuffer->getDepthbuffer();
 
             if (depthbuffer)
             {
@@ -1920,7 +1920,7 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_STENCIL_BITS:
         {
             gl::Framebuffer *framebuffer = getDrawFramebuffer();
-            gl::Renderbuffer *stencilbuffer = framebuffer->getStencilbuffer();
+            gl::FramebufferAttachment *stencilbuffer = framebuffer->getStencilbuffer();
 
             if (stencilbuffer)
             {
@@ -3348,12 +3348,12 @@ void Context::getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, G
     Framebuffer *framebuffer = getReadFramebuffer();
     ASSERT(framebuffer && framebuffer->completeness() == GL_FRAMEBUFFER_COMPLETE);
 
-    Renderbuffer *renderbuffer = framebuffer->getReadColorbuffer();
-    ASSERT(renderbuffer);
+    FramebufferAttachment *attachment = framebuffer->getReadColorbuffer();
+    ASSERT(attachment);
 
-    *internalFormat = renderbuffer->getActualFormat();
-    *format = gl::GetFormat(renderbuffer->getActualFormat(), mClientVersion);
-    *type = gl::GetType(renderbuffer->getActualFormat(), mClientVersion);
+    *internalFormat = attachment->getActualFormat();
+    *format = gl::GetFormat(attachment->getActualFormat(), mClientVersion);
+    *type = gl::GetType(attachment->getActualFormat(), mClientVersion);
 }
 
 void Context::detachBuffer(GLuint buffer)
@@ -3393,7 +3393,7 @@ void Context::detachTexture(GLuint texture)
 
     // [OpenGL ES 2.0.24] section 4.4 page 112:
     // If a texture object is deleted while its image is attached to the currently bound framebuffer, then it is
-    // as if FramebufferTexture2D had been called, with a texture of 0, for each attachment point to which this
+    // as if Texture2DAttachment had been called, with a texture of 0, for each attachment point to which this
     // image was attached in the currently bound framebuffer.
 
     Framebuffer *readFramebuffer = getReadFramebuffer();
@@ -3883,17 +3883,17 @@ size_t Context::getBoundFramebufferTextureSerials(FramebufferTextureSerialArray 
     Framebuffer *drawFramebuffer = getDrawFramebuffer();
     for (unsigned int i = 0; i < IMPLEMENTATION_MAX_DRAW_BUFFERS; i++)
     {
-        Renderbuffer *renderBuffer = drawFramebuffer->getColorbuffer(i);
-        if (renderBuffer && renderBuffer->isTexture())
+        FramebufferAttachment *attachment = drawFramebuffer->getColorbuffer(i);
+        if (attachment && attachment->isTexture())
         {
-            (*outSerialArray)[serialCount++] = renderBuffer->getTextureSerial();
+            (*outSerialArray)[serialCount++] = attachment->getTextureSerial();
         }
     }
 
-    Renderbuffer *depthStencilBuffer = drawFramebuffer->getDepthOrStencilbuffer();
-    if (depthStencilBuffer && depthStencilBuffer->isTexture())
+    FramebufferAttachment *depthStencilAttachment = drawFramebuffer->getDepthOrStencilbuffer();
+    if (depthStencilAttachment && depthStencilAttachment->isTexture())
     {
-        (*outSerialArray)[serialCount++] = depthStencilBuffer->getTextureSerial();
+        (*outSerialArray)[serialCount++] = depthStencilAttachment->getTextureSerial();
     }
 
     std::sort(outSerialArray->begin(), outSerialArray->begin() + serialCount);
@@ -3958,43 +3958,43 @@ void Context::invalidateFrameBuffer(GLenum target, GLsizei numAttachments, const
 
             if (attachments[i] >= GL_COLOR_ATTACHMENT0 && attachments[i] <= GL_COLOR_ATTACHMENT15)
             {
-                gl::Renderbuffer *renderBuffer = frameBuffer->getColorbuffer(attachments[i] - GL_COLOR_ATTACHMENT0);
-                if (renderBuffer)
+                gl::FramebufferAttachment *attachment = frameBuffer->getColorbuffer(attachments[i] - GL_COLOR_ATTACHMENT0);
+                if (attachment)
                 {
-                    renderTarget = renderBuffer->getRenderTarget();
+                    renderTarget = attachment->getRenderTarget();
                 }
             }
             else if (attachments[i] == GL_COLOR)
             {
-                 gl::Renderbuffer *renderBuffer = frameBuffer->getColorbuffer(0);
-                 if (renderBuffer)
+                 gl::FramebufferAttachment *attachment = frameBuffer->getColorbuffer(0);
+                 if (attachment)
                  {
-                     renderTarget = renderBuffer->getRenderTarget();
+                     renderTarget = attachment->getRenderTarget();
                  }
             }
             else
             {
-                gl::Renderbuffer *renderBuffer = NULL;
+                gl::FramebufferAttachment *attachment = NULL;
                 switch (attachments[i])
                 {
                   case GL_DEPTH_ATTACHMENT:
                   case GL_DEPTH:
-                    renderBuffer = frameBuffer->getDepthbuffer();
+                    attachment = frameBuffer->getDepthbuffer();
                     break;
                   case GL_STENCIL_ATTACHMENT:
                   case GL_STENCIL:
-                    renderBuffer = frameBuffer->getStencilbuffer();
+                    attachment = frameBuffer->getStencilbuffer();
                     break;
                   case GL_DEPTH_STENCIL_ATTACHMENT:
-                    renderBuffer = frameBuffer->getDepthOrStencilbuffer();
+                    attachment = frameBuffer->getDepthOrStencilbuffer();
                     break;
                   default:
                     UNREACHABLE();
                 }
 
-                if (renderBuffer)
+                if (attachment)
                 {
-                    renderTarget = renderBuffer->getDepthStencil();
+                    renderTarget = attachment->getDepthStencil();
                 }
             }
 

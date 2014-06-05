@@ -93,18 +93,18 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::Framebuffer *framebu
     key.blendState = blendState;
     for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
     {
-        gl::Renderbuffer *renderBuffer = framebuffer->getColorbuffer(i);
-        if (renderBuffer)
+        gl::FramebufferAttachment *attachment = framebuffer->getColorbuffer(i);
+        if (attachment)
         {
             if (i > 0)
             {
                 mrt = true;
             }
 
-            key.rtChannels[i][0] = renderBuffer->getRedSize()   > 0;
-            key.rtChannels[i][1] = renderBuffer->getGreenSize() > 0;
-            key.rtChannels[i][2] = renderBuffer->getBlueSize()  > 0;
-            key.rtChannels[i][3] = renderBuffer->getAlphaSize() > 0;
+            key.rtChannels[i][0] = attachment->getRedSize()   > 0;
+            key.rtChannels[i][1] = attachment->getGreenSize() > 0;
+            key.rtChannels[i][2] = attachment->getBlueSize()  > 0;
+            key.rtChannels[i][3] = attachment->getAlphaSize() > 0;
         }
         else
         {

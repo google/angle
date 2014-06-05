@@ -14,7 +14,7 @@
 namespace gl
 {
 
-void RenderbufferProxySet::addRef(const Renderbuffer *proxy)
+void RenderbufferProxySet::addRef(const FramebufferAttachment *proxy)
 {
     RefCountMap::iterator i = mRefCountMap.find(proxy);
     if (i != mRefCountMap.end())
@@ -23,7 +23,7 @@ void RenderbufferProxySet::addRef(const Renderbuffer *proxy)
     }
 }
 
-void RenderbufferProxySet::release(const Renderbuffer *proxy)
+void RenderbufferProxySet::release(const FramebufferAttachment *proxy)
 {
     RefCountMap::iterator i = mRefCountMap.find(proxy);
     if (i != mRefCountMap.end())
@@ -35,7 +35,7 @@ void RenderbufferProxySet::release(const Renderbuffer *proxy)
 
         if (i->second == 0)
         {
-            // Clear the buffer map of references to this Renderbuffer
+            // Clear the buffer map of references to this FramebufferAttachment
             BufferMap::iterator j = mBufferMap.begin();
             while (j != mBufferMap.end())
             {
@@ -54,7 +54,7 @@ void RenderbufferProxySet::release(const Renderbuffer *proxy)
     }
 }
 
-void RenderbufferProxySet::add(unsigned int mipLevel, unsigned int layer, Renderbuffer *renderBuffer)
+void RenderbufferProxySet::add(unsigned int mipLevel, unsigned int layer, FramebufferAttachment *renderBuffer)
 {
     if (mRefCountMap.find(renderBuffer) == mRefCountMap.end())
     {
@@ -70,7 +70,7 @@ void RenderbufferProxySet::add(unsigned int mipLevel, unsigned int layer, Render
     }
 }
 
-Renderbuffer *RenderbufferProxySet::get(unsigned int mipLevel, unsigned int layer) const
+FramebufferAttachment *RenderbufferProxySet::get(unsigned int mipLevel, unsigned int layer) const
 {
     RenderbufferKey key;
     key.mipLevel = mipLevel;

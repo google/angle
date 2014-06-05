@@ -50,7 +50,7 @@ class TextureCubeMap;
 class Texture3D;
 class Texture2DArray;
 class Framebuffer;
-class Renderbuffer;
+class FramebufferAttachment;
 class RenderbufferStorage;
 class Colorbuffer;
 class Depthbuffer;
@@ -100,7 +100,7 @@ struct State
     BindingPointer<Buffer> arrayBuffer;
     GLuint readFramebuffer;
     GLuint drawFramebuffer;
-    BindingPointer<Renderbuffer> renderbuffer;
+    BindingPointer<FramebufferAttachment> renderbuffer;
     GLuint currentProgram;
 
     VertexAttribCurrentValueData vertexAttribCurrentValues[MAX_VERTEX_ATTRIBS]; // From glVertexAttrib
@@ -331,7 +331,7 @@ class Context
     Program *getProgram(GLuint handle) const;
     Texture *getTexture(GLuint handle);
     Framebuffer *getFramebuffer(GLuint handle) const;
-    Renderbuffer *getRenderbuffer(GLuint handle);
+    FramebufferAttachment *getRenderbuffer(GLuint handle);
     VertexArray *getVertexArray(GLuint handle) const;
     Sampler *getSampler(GLuint handle) const;
     Query *getQuery(GLuint handle, bool create, GLenum type);

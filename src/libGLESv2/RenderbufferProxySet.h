@@ -14,16 +14,16 @@
 
 namespace gl
 {
-class Renderbuffer;
+class FramebufferAttachment;
 
 class RenderbufferProxySet
 {
   public:
-    void addRef(const Renderbuffer *proxy);
-    void release(const Renderbuffer *proxy);
+    void addRef(const FramebufferAttachment *proxy);
+    void release(const FramebufferAttachment *proxy);
 
-    void add(unsigned int mipLevel, unsigned int layer, Renderbuffer *renderBuffer);
-    Renderbuffer *get(unsigned int mipLevel, unsigned int layer) const;
+    void add(unsigned int mipLevel, unsigned int layer, FramebufferAttachment *renderBuffer);
+    FramebufferAttachment *get(unsigned int mipLevel, unsigned int layer) const;
 
   private:
     struct RenderbufferKey
@@ -34,10 +34,10 @@ class RenderbufferProxySet
         bool operator<(const RenderbufferKey &other) const;
     };
 
-    typedef std::map<RenderbufferKey, Renderbuffer*> BufferMap;
+    typedef std::map<RenderbufferKey, FramebufferAttachment*> BufferMap;
     BufferMap mBufferMap;
 
-    typedef std::map<const Renderbuffer*, unsigned int> RefCountMap;
+    typedef std::map<const FramebufferAttachment*, unsigned int> RefCountMap;
     RefCountMap mRefCountMap;
 };
 

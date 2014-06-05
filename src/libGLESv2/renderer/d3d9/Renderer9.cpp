@@ -930,8 +930,8 @@ void Renderer9::setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState
             FIXME("Sample alpha to coverage is unimplemented.");
         }
 
-        gl::Renderbuffer *renderBuffer = framebuffer->getFirstColorbuffer();
-        GLenum internalFormat = renderBuffer ? renderBuffer->getInternalFormat() : GL_NONE;
+        gl::FramebufferAttachment *attachment = framebuffer->getFirstColorbuffer();
+        GLenum internalFormat = attachment ? attachment->getInternalFormat() : GL_NONE;
         GLuint clientVersion = getCurrentClientVersion();
 
         // Set the color mask
@@ -1225,7 +1225,7 @@ bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count)
 }
 
 
-gl::Renderbuffer *Renderer9::getNullColorbuffer(gl::Renderbuffer *depthbuffer)
+gl::FramebufferAttachment *Renderer9::getNullColorbuffer(gl::FramebufferAttachment *depthbuffer)
 {
     if (!depthbuffer)
     {
@@ -1248,7 +1248,7 @@ gl::Renderbuffer *Renderer9::getNullColorbuffer(gl::Renderbuffer *depthbuffer)
         }
     }
 
-    gl::Renderbuffer *nullbuffer = new gl::Renderbuffer(this, 0, new gl::Colorbuffer(this, width, height, GL_NONE, 0));
+    gl::FramebufferAttachment *nullbuffer = new gl::FramebufferAttachment(this, 0, new gl::Colorbuffer(this, width, height, GL_NONE, 0));
 
     // add nullbuffer to the cache
     NullColorbufferCacheEntry *oldest = &mNullColorbufferCache[0];
@@ -1273,7 +1273,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
     // if there is no color attachment we must synthesize a NULL colorattachment
     // to keep the D3D runtime happy.  This should only be possible if depth texturing.
-    gl::Renderbuffer *renderbufferObject = NULL;
+    gl::FramebufferAttachment *renderbufferObject = NULL;
     if (framebuffer->getColorbufferType(0) != GL_NONE)
     {
         renderbufferObject = framebuffer->getColorbuffer(0);
@@ -1314,7 +1314,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         renderTargetChanged = true;
     }
 
-    gl::Renderbuffer *depthStencil = NULL;
+    gl::FramebufferAttachment *depthStencil = NULL;
     unsigned int depthbufferSerial = 0;
     unsigned int stencilbufferSerial = 0;
     if (framebuffer->getDepthbufferType() != GL_NONE)
@@ -1902,9 +1902,9 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
     D3DCOLOR color = D3DCOLOR_ARGB(255, 0, 0, 0);
     if (clearColor)
     {
-        gl::Renderbuffer *renderbuffer = frameBuffer->getFirstColorbuffer();
-        GLenum internalFormat = renderbuffer->getInternalFormat();
-        GLenum actualFormat = renderbuffer->getActualFormat();
+        gl::FramebufferAttachment *attachment = frameBuffer->getFirstColorbuffer();
+        GLenum internalFormat = attachment->getInternalFormat();
+        GLenum actualFormat = attachment->getActualFormat();
 
         GLuint clientVersion = getCurrentClientVersion();
         GLuint internalRedBits = gl::GetRedBits(internalFormat, clientVersion);
@@ -2935,8 +2935,8 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
     if (blitRenderTarget)
     {
-        gl::Renderbuffer *readBuffer = readFramebuffer->getColorbuffer(0);
-        gl::Renderbuffer *drawBuffer = drawFramebuffer->getColorbuffer(0);
+        gl::FramebufferAttachment *readBuffer = readFramebuffer->getColorbuffer(0);
+        gl::FramebufferAttachment *drawBuffer = drawFramebuffer->getColorbuffer(0);
         RenderTarget9 *readRenderTarget = NULL;
         RenderTarget9 *drawRenderTarget = NULL;
         IDirect3DSurface9* readSurface = NULL;
@@ -3064,8 +3064,8 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
     if (blitDepth || blitStencil)
     {
-        gl::Renderbuffer *readBuffer = readFramebuffer->getDepthOrStencilbuffer();
-        gl::Renderbuffer *drawBuffer = drawFramebuffer->getDepthOrStencilbuffer();
+        gl::FramebufferAttachment *readBuffer = readFramebuffer->getDepthOrStencilbuffer();
+        gl::FramebufferAttachment *drawBuffer = drawFramebuffer->getDepthOrStencilbuffer();
         RenderTarget9 *readDepthStencil = NULL;
         RenderTarget9 *drawDepthStencil = NULL;
         IDirect3DSurface9* readSurface = NULL;
@@ -3117,7 +3117,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
 
     RenderTarget9 *renderTarget = NULL;
     IDirect3DSurface9 *surface = NULL;
-    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer(0);
+    gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(0);
 
     if (colorbuffer)
     {

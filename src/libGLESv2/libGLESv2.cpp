@@ -2692,11 +2692,11 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             GLuint attachmentHandle;
             GLuint attachmentLevel;
             GLuint attachmentLayer;
-            gl::Renderbuffer *renderbuffer;
+            gl::FramebufferAttachment *attachmentObject;
 
-            if(framebufferHandle == 0)
+            if (framebufferHandle == 0)
             {
-                if(context->getClientVersion() < 3)
+                if (context->getClientVersion() < 3)
                 {
                     return gl::error(GL_INVALID_OPERATION);
                 }
@@ -2708,21 +2708,21 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                     attachmentHandle = framebuffer->getColorbufferHandle(0);
                     attachmentLevel = framebuffer->getColorbufferMipLevel(0);
                     attachmentLayer = framebuffer->getColorbufferLayer(0);
-                    renderbuffer = framebuffer->getColorbuffer(0);
+                    attachmentObject = framebuffer->getColorbuffer(0);
                     break;
                   case GL_DEPTH:
                     attachmentType = framebuffer->getDepthbufferType();
                     attachmentHandle = framebuffer->getDepthbufferHandle();
                     attachmentLevel = framebuffer->getDepthbufferMipLevel();
                     attachmentLayer = framebuffer->getDepthbufferLayer();
-                    renderbuffer = framebuffer->getDepthbuffer();
+                    attachmentObject = framebuffer->getDepthbuffer();
                     break;
                   case GL_STENCIL:
                     attachmentType = framebuffer->getStencilbufferType();
                     attachmentHandle = framebuffer->getStencilbufferHandle();
                     attachmentLevel = framebuffer->getStencilbufferMipLevel();
                     attachmentLayer = framebuffer->getStencilbufferLayer();
-                    renderbuffer = framebuffer->getStencilbuffer();
+                    attachmentObject = framebuffer->getStencilbuffer();
                     break;
                   default:
                     return gl::error(GL_INVALID_OPERATION);
@@ -2737,7 +2737,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                     attachmentHandle = framebuffer->getColorbufferHandle(colorAttachment);
                     attachmentLevel = framebuffer->getColorbufferMipLevel(colorAttachment);
                     attachmentLayer = framebuffer->getColorbufferLayer(colorAttachment);
-                    renderbuffer = framebuffer->getColorbuffer(colorAttachment);
+                    attachmentObject = framebuffer->getColorbuffer(colorAttachment);
                 }
                 else
                 {
@@ -2748,14 +2748,14 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                         attachmentHandle = framebuffer->getDepthbufferHandle();
                         attachmentLevel = framebuffer->getDepthbufferMipLevel();
                         attachmentLayer = framebuffer->getDepthbufferLayer();
-                        renderbuffer = framebuffer->getDepthbuffer();
+                        attachmentObject = framebuffer->getDepthbuffer();
                         break;
                       case GL_STENCIL_ATTACHMENT:
                         attachmentType = framebuffer->getStencilbufferType();
                         attachmentHandle = framebuffer->getStencilbufferHandle();
                         attachmentLevel = framebuffer->getStencilbufferMipLevel();
                         attachmentLayer = framebuffer->getStencilbufferLayer();
-                        renderbuffer = framebuffer->getStencilbuffer();
+                        attachmentObject = framebuffer->getStencilbuffer();
                         break;
                       case GL_DEPTH_STENCIL_ATTACHMENT:
                         if (framebuffer->getDepthbufferHandle() != framebuffer->getStencilbufferHandle())
@@ -2766,7 +2766,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                         attachmentHandle = framebuffer->getDepthStencilbufferHandle();
                         attachmentLevel = framebuffer->getDepthStencilbufferMipLevel();
                         attachmentLayer = framebuffer->getDepthStencilbufferLayer();
-                        renderbuffer = framebuffer->getDepthStencilBuffer();
+                        attachmentObject = framebuffer->getDepthStencilBuffer();
                         break;
                       default:
                         return gl::error(GL_INVALID_OPERATION);
@@ -2831,7 +2831,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             {
                 ASSERT(attachmentObjectType == GL_RENDERBUFFER || attachmentObjectType == GL_TEXTURE ||
                        attachmentObjectType == GL_FRAMEBUFFER_DEFAULT);
-                ASSERT(renderbuffer != NULL);
+                ASSERT(attachmentObject != NULL);
 
                 switch (pname)
                 {
@@ -2864,27 +2864,27 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE:
-                    *params = renderbuffer->getRedSize();
+                    *params = attachmentObject->getRedSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE:
-                    *params = renderbuffer->getGreenSize();
+                    *params = attachmentObject->getGreenSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE:
-                    *params = renderbuffer->getBlueSize();
+                    *params = attachmentObject->getBlueSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE:
-                    *params = renderbuffer->getAlphaSize();
+                    *params = attachmentObject->getAlphaSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE:
-                    *params = renderbuffer->getDepthSize();
+                    *params = attachmentObject->getDepthSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE:
-                    *params = renderbuffer->getStencilSize();
+                    *params = attachmentObject->getStencilSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE:
@@ -2892,11 +2892,11 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                     {
                         gl::error(GL_INVALID_OPERATION);
                     }
-                    *params = renderbuffer->getComponentType();
+                    *params = attachmentObject->getComponentType();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING:
-                    *params = renderbuffer->getColorEncoding();
+                    *params = attachmentObject->getColorEncoding();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER:
@@ -3188,23 +3188,23 @@ void __stdcall glGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            gl::Renderbuffer *renderbuffer = context->getRenderbuffer(context->getRenderbufferHandle());
+            gl::FramebufferAttachment *attachment = context->getRenderbuffer(context->getRenderbufferHandle());
 
             switch (pname)
             {
-              case GL_RENDERBUFFER_WIDTH:           *params = renderbuffer->getWidth();          break;
-              case GL_RENDERBUFFER_HEIGHT:          *params = renderbuffer->getHeight();         break;
-              case GL_RENDERBUFFER_INTERNAL_FORMAT: *params = renderbuffer->getInternalFormat(); break;
-              case GL_RENDERBUFFER_RED_SIZE:        *params = renderbuffer->getRedSize();        break;
-              case GL_RENDERBUFFER_GREEN_SIZE:      *params = renderbuffer->getGreenSize();      break;
-              case GL_RENDERBUFFER_BLUE_SIZE:       *params = renderbuffer->getBlueSize();       break;
-              case GL_RENDERBUFFER_ALPHA_SIZE:      *params = renderbuffer->getAlphaSize();      break;
-              case GL_RENDERBUFFER_DEPTH_SIZE:      *params = renderbuffer->getDepthSize();      break;
-              case GL_RENDERBUFFER_STENCIL_SIZE:    *params = renderbuffer->getStencilSize();    break;
+              case GL_RENDERBUFFER_WIDTH:           *params = attachment->getWidth();          break;
+              case GL_RENDERBUFFER_HEIGHT:          *params = attachment->getHeight();         break;
+              case GL_RENDERBUFFER_INTERNAL_FORMAT: *params = attachment->getInternalFormat(); break;
+              case GL_RENDERBUFFER_RED_SIZE:        *params = attachment->getRedSize();        break;
+              case GL_RENDERBUFFER_GREEN_SIZE:      *params = attachment->getGreenSize();      break;
+              case GL_RENDERBUFFER_BLUE_SIZE:       *params = attachment->getBlueSize();       break;
+              case GL_RENDERBUFFER_ALPHA_SIZE:      *params = attachment->getAlphaSize();      break;
+              case GL_RENDERBUFFER_DEPTH_SIZE:      *params = attachment->getDepthSize();      break;
+              case GL_RENDERBUFFER_STENCIL_SIZE:    *params = attachment->getStencilSize();    break;
               case GL_RENDERBUFFER_SAMPLES_ANGLE:
                 if (context->getMaxSupportedSamples() != 0)
                 {
-                    *params = renderbuffer->getSamples();
+                    *params = attachment->getSamples();
                 }
                 else
                 {
@@ -4237,7 +4237,7 @@ GLboolean __stdcall glIsRenderbuffer(GLuint renderbuffer)
 
         if (context && renderbuffer)
         {
-            gl::Renderbuffer *renderbufferObject = context->getRenderbuffer(renderbuffer);
+            gl::FramebufferAttachment *renderbufferObject = context->getRenderbuffer(renderbuffer);
 
             if (renderbufferObject)
             {
