@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf293c21_d4b83cd9",
+        "filename": "src/common/platform.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-05T00:26:03Z",
+      "side": 1,
+      "message": "Also a description here plz.",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "450ad71dc1f9809c703855e02643de8d755f18bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f1c24fb_a9f8c99d",
+        "filename": "src/common/platform.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-05T00:26:03Z",
+      "side": 1,
+      "message": "Should ENABLE_PERF get some kind of suffix to make clear it\u0027s windows-only, so that people don\u0027t toggle it and then become surprised their compile depends on d3d9.h?",
+      "range": {
+        "startLine": 48,
+        "startChar": 45,
+        "endLine": 48,
+        "endChar": 62
+      },
+      "revId": "450ad71dc1f9809c703855e02643de8d755f18bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf293c21_340170d1",
+        "filename": "src/common/tls.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-05T00:26:03Z",
+      "side": 1,
+      "message": "Can you add a description of what\u0027s contained in the file to the boilerplate?",
+      "revId": "450ad71dc1f9809c703855e02643de8d755f18bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f1c24fb_09f455a7",
+        "filename": "src/common/tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-05T00:26:03Z",
+      "side": 1,
+      "message": "Description for this boilerplate too, please.",
+      "revId": "450ad71dc1f9809c703855e02643de8d755f18bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
