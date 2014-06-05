@@ -386,6 +386,24 @@
     },
     {
       "key": {
+        "uuid": "df2c3030_97b15fe7",
+        "filename": "src/libGLESv2/caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-05T14:36:38Z",
+      "side": 1,
+      "message": "Yea, I felt that an approach like that was becoming too complex for something simple like this.  The main reason why I didn\u0027t add one function that encapsulates all this logic such as determineAndCacheSupport is that there are a lot of support/extension booleans and these are only helpers for setting a couple of them.  I didn\u0027t want someone to have to look at the implementation of such a function to know which ones need to be set manually vs through a function.\n\nI wanted to keep these functions fairly far away from the Caps or Extensions objects to avoid any confusion about them being actual getters/setters for members.  Are we comfortable with renaming them?  Something like DetermineFloatTextureSupport()?",
+      "parentUuid": "7f1c24fb_0949b547",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f939869_0b717db9",
         "filename": "src/libGLESv2/formatutils.cpp",
         "patchSetId": 7
