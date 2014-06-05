@@ -113,6 +113,30 @@
     },
     {
       "key": {
+        "uuid": "df4350e0_fa567702",
+        "filename": "src/libGLESv2/Shader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-05T20:42:15Z",
+      "side": 1,
+      "message": "Let me ping you in person. Using CollectVariables for every back-end may be a decent approach for unifying the varible query API.",
+      "parentUuid": "df4350e0_da7a9b95",
+      "range": {
+        "startLine": 291,
+        "startChar": 42,
+        "endLine": 291,
+        "endChar": 54
+      },
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df4350e0_3a537f27",
         "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
         "patchSetId": 1
