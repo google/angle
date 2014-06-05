@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "df2c3030_a80756e6",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-05T20:25:50Z",
+      "side": 1,
+      "message": "Not really, they\u0027re already parsed and all the equivalent info is stored in the AST so it\u0027s a proportional increase in the amount of work/storage.\n\nThat said I\u0027m not exactly happy about any of this either. It just seems like something that\u0027s necessary to prevent things from breaking in other layers. Let me know if you have a different suggestion.",
+      "parentUuid": "1f1b2808_6c895512",
+      "range": {
+        "startLine": 330,
+        "startChar": 12,
+        "endLine": 330,
+        "endChar": 41
+      },
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df2c3030_88e37af0",
         "filename": "src/libGLESv2/Shader.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-06-05T19:56:18Z",
       "side": 1,
       "message": "this will run the collectvariables step for HLSL? do we wish to leave that on? it could affect my work in the new method of querying variables from the translator.",
+      "range": {
+        "startLine": 291,
+        "startChar": 42,
+        "endLine": 291,
+        "endChar": 54
+      },
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_da7a9b95",
+        "filename": "src/libGLESv2/Shader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-05T20:25:50Z",
+      "side": 1,
+      "message": "That\u0027s why I wanted your feedback on this. I could split it off into a different variable collector just for temporaries? Or maybe I shouldn\u0027t even try to collect them all but validate the size of each array on the spot?",
+      "parentUuid": "df2c3030_88e37af0",
       "range": {
         "startLine": 291,
         "startChar": 42,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "1f1b2808_0cb459bd",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2262,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-05T20:25:50Z",
+      "side": 1,
+      "message": "Actually if anything I think it should be a higher value (like 65536 or so). The final HLSL-\u003eASM compilation will determine whether the number of termporary registers is exceeded. At the HLSL level, an array can be larger than 4096 registers but still compile into ASM which requires fewer registers due to reuse or not using the entire range.\n\nThe current task is to just prevent the HLSL translation/compilation from crashing, and arrays up to 65536 still seem safe in that regard...",
+      "parentUuid": "df4350e0_3a537f27",
+      "range": {
+        "startLine": 2262,
+        "startChar": 11,
+        "endLine": 2262,
+        "endChar": 49
+      },
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df2c3030_a8e0b6e3",
         "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2014-06-05T19:56:18Z",
       "side": 1,
       "message": "ditty, maybe safer to return /2 or some far lower count.",
+      "range": {
+        "startLine": 2562,
+        "startChar": 11,
+        "endLine": 2562,
+        "endChar": 40
+      },
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_ccb661c5",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2562,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-05T20:25:50Z",
+      "side": 1,
+      "message": "The WebGL 1.0.2 tests use an array of 25 registers, and it compiles fine with D3D9 (which has 32 temporary registers). So dividing this by 2 would break things.",
+      "parentUuid": "df2c3030_a8e0b6e3",
       "range": {
         "startLine": 2562,
         "startChar": 11,
