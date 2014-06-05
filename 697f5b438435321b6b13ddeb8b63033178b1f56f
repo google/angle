@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f1b2808_6c895512",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-05T19:56:18Z",
+      "side": 1,
+      "message": "are you concerned at all with the performance of mapping a name for every temporary and global variable, and storing them in the temporaries array?",
+      "range": {
+        "startLine": 330,
+        "startChar": 12,
+        "endLine": 330,
+        "endChar": 41
+      },
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df2c3030_88e37af0",
+        "filename": "src/libGLESv2/Shader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-05T19:56:18Z",
+      "side": 1,
+      "message": "this will run the collectvariables step for HLSL? do we wish to leave that on? it could affect my work in the new method of querying variables from the translator.",
+      "range": {
+        "startLine": 291,
+        "startChar": 42,
+        "endLine": 291,
+        "endChar": 54
+      },
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_3a537f27",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2262,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-05T19:56:18Z",
+      "side": 1,
+      "message": "maybe it\u0027d be a good idea to use a slightly lower count than the absolute maximum? I could see it breaking down quite easily in many simple cases, though it\u0027s still a good starting point.",
+      "range": {
+        "startLine": 2262,
+        "startChar": 11,
+        "endLine": 2262,
+        "endChar": 49
+      },
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df2c3030_a8e0b6e3",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2562,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-05T19:56:18Z",
+      "side": 1,
+      "message": "ditty, maybe safer to return /2 or some far lower count.",
+      "range": {
+        "startLine": 2562,
+        "startChar": 11,
+        "endLine": 2562,
+        "endChar": 40
+      },
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
