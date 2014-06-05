@@ -375,9 +375,11 @@ static D3D11ES2FormatMap BuildD3D11ES2FormatMap()
     //                           | Internal format                   |                  | Texture format                | SRV format                       | RTV format                    | DSV format                   | Load function                           |
     map.insert(D3D11ES2FormatPair(GL_NONE,                            D3D11ES2FormatInfo(DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_UNKNOWN,               DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_UNKNOWN,           UnreachableLoadFunction                  )));
     map.insert(D3D11ES2FormatPair(GL_DEPTH_COMPONENT16,               D3D11ES2FormatInfo(DXGI_FORMAT_R16_TYPELESS,       DXGI_FORMAT_R16_UNORM,             DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D16_UNORM,         UnreachableLoadFunction                  )));
-    map.insert(D3D11ES2FormatPair(GL_DEPTH_COMPONENT32_OES,           D3D11ES2FormatInfo(DXGI_FORMAT_R32_TYPELESS,       DXGI_FORMAT_R32_FLOAT,             DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D32_FLOAT,         UnreachableLoadFunction                  )));
     map.insert(D3D11ES2FormatPair(GL_DEPTH24_STENCIL8_OES,            D3D11ES2FormatInfo(DXGI_FORMAT_R24G8_TYPELESS,     DXGI_FORMAT_R24_UNORM_X8_TYPELESS, DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D24_UNORM_S8_UINT, UnreachableLoadFunction                  )));
     map.insert(D3D11ES2FormatPair(GL_STENCIL_INDEX8,                  D3D11ES2FormatInfo(DXGI_FORMAT_R24G8_TYPELESS,     DXGI_FORMAT_X24_TYPELESS_G8_UINT,  DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D24_UNORM_S8_UINT, UnreachableLoadFunction                  )));
+
+    // Since D3D11 doesn't have a D32_UNORM format, use D24S8 which has comparable precision and matches the ES3 format.
+    map.insert(D3D11ES2FormatPair(GL_DEPTH_COMPONENT32_OES,           D3D11ES2FormatInfo(DXGI_FORMAT_R24G8_TYPELESS,     DXGI_FORMAT_R24_UNORM_X8_TYPELESS, DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D24_UNORM_S8_UINT, UnreachableLoadFunction                  )));
 
     map.insert(D3D11ES2FormatPair(GL_RGBA32F_EXT,                     D3D11ES2FormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT,    DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN,           loadRGBAFloatDataToRGBA                  )));
     map.insert(D3D11ES2FormatPair(GL_RGB32F_EXT,                      D3D11ES2FormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT,    DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN,           loadRGBFloatDataToRGBA                   )));
@@ -558,7 +560,7 @@ inline void AddDXGIToESEntry(DXGIToESFormatMap *map, DXGI_FORMAT key, GLenum val
     map->insert(std::make_pair(key, value));
 }
 
-static DXGIToESFormatMap BuildCommonDXGIToESFormatMap()
+static DXGIToESFormatMap BuildDXGIToESFormatMap()
 {
     DXGIToESFormatMap map;
 
@@ -621,30 +623,12 @@ static DXGIToESFormatMap BuildCommonDXGIToESFormatMap()
     AddDXGIToESEntry(&map, DXGI_FORMAT_R32G8X24_TYPELESS,        GL_DEPTH32F_STENCIL8);
     AddDXGIToESEntry(&map, DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS, GL_DEPTH32F_STENCIL8);
     AddDXGIToESEntry(&map, DXGI_FORMAT_D32_FLOAT_S8X24_UINT,     GL_DEPTH32F_STENCIL8);
+    AddDXGIToESEntry(&map, DXGI_FORMAT_R32_TYPELESS,             GL_DEPTH_COMPONENT32F);
+    AddDXGIToESEntry(&map, DXGI_FORMAT_D32_FLOAT,                GL_DEPTH_COMPONENT32F);
 
     AddDXGIToESEntry(&map, DXGI_FORMAT_BC1_UNORM,                GL_COMPRESSED_RGBA_S3TC_DXT1_EXT);
     AddDXGIToESEntry(&map, DXGI_FORMAT_BC2_UNORM,                GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE);
     AddDXGIToESEntry(&map, DXGI_FORMAT_BC3_UNORM,                GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE);
-
-    return map;
-}
-
-static DXGIToESFormatMap BuildDXGIToES2FormatMap()
-{
-    DXGIToESFormatMap map = BuildCommonDXGIToESFormatMap();
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32_TYPELESS, GL_DEPTH_COMPONENT32_OES);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_D32_FLOAT,    GL_DEPTH_COMPONENT32_OES);
-
-    return map;
-}
-
-static DXGIToESFormatMap BuildDXGIToES3FormatMap()
-{
-    DXGIToESFormatMap map = BuildCommonDXGIToESFormatMap();
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32_TYPELESS, GL_DEPTH_COMPONENT32F);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_D32_FLOAT,    GL_DEPTH_COMPONENT32F);
 
     return map;
 }
@@ -1634,27 +1618,17 @@ namespace d3d11_gl
 
 GLenum GetInternalFormat(DXGI_FORMAT format, GLuint clientVersion)
 {
-    if (clientVersion == 2)
+    static const DXGIToESFormatMap formatMap = BuildDXGIToESFormatMap();
+    auto formatIt = formatMap.find(format);
+    if (formatIt != formatMap.end())
     {
-        static DXGIToESFormatMap es2FormatMap = BuildDXGIToES2FormatMap();
-        auto formatIt = es2FormatMap.find(format);
-        if (formatIt != es2FormatMap.end())
-        {
-            return formatIt->second;
-        }
+        return formatIt->second;
     }
-    else if (clientVersion == 3)
+    else
     {
-        static DXGIToESFormatMap es3FormatMap = BuildDXGIToES3FormatMap();
-        auto formatIt = es3FormatMap.find(format);
-        if (formatIt != es3FormatMap.end())
-        {
-            return formatIt->second;
-        }
+        UNREACHABLE();
+        return GL_NONE;
     }
-
-    UNREACHABLE();
-    return GL_NONE;
 }
 
 }
