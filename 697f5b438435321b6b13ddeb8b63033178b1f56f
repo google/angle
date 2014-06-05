@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3f162cdd_aee8c88c",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-06-05T21:33:22Z",
+      "side": 1,
+      "message": "One more thought: a more conservative estimate for the number of temporary variables would be to push and pop the temporaries while entering and exiting scopes, and computing the largest storage requirement for the most deeply nested scope. Would that be feasible?",
+      "parentUuid": "7f33447f_4401be9c",
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1b2808_6c895512",
         "filename": "src/compiler/translator/VariableInfo.cpp",
         "patchSetId": 1
