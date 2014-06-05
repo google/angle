@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "df2c3030_97639f97",
+        "filename": "src/libGLESv2/FramebufferAttachment.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-05T15:02:19Z",
+      "side": 1,
+      "message": "This can be removed now.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 18
+      },
+      "revId": "92904c4a7644531782936c095adaa76e4cfa8f11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf293c21_74ca8852",
         "filename": "src/libGLESv2/Renderbuffer.h",
         "patchSetId": 2
