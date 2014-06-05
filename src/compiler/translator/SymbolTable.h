@@ -288,29 +288,10 @@ class TSymbolTableLevel
     }
     ~TSymbolTableLevel();
 
-    bool insert(const TString &name, TSymbol &symbol)
-    {
-        symbol.setUniqueId(++uniqueId);
+    bool insert(const TString &name, TSymbol &symbol);
+    bool insert(TSymbol &symbol);
 
-        // returning true means symbol was added to the table
-        tInsertResult result = level.insert(tLevelPair(name, &symbol));
-
-        return result.second;
-    }
-
-    bool insert(TSymbol &symbol)
-    {
-        return insert(symbol.getMangledName(), symbol);
-    }
-
-    TSymbol *find(const TString &name) const
-    {
-        tLevel::const_iterator it = level.find(name);
-        if (it == level.end())
-            return 0;
-        else
-            return (*it).second;
-    }
+    TSymbol *find(const TString &name) const;
 
     void relateToOperator(const char *name, TOperator op);
     void relateToExtension(const char *name, const TString &ext);
@@ -429,6 +410,11 @@ class TSymbolTable
     // for the specified TBasicType
     TPrecision getDefaultPrecision(TBasicType type);
 
+    static int nextUniqueId()
+    {
+        return ++uniqueIdCounter;
+    }
+
   private:
     ESymbolLevel currentLevel() const
     {
@@ -438,6 +424,8 @@ class TSymbolTable
     std::vector<TSymbolTableLevel *> table;
     typedef TMap<TBasicType, TPrecision> PrecisionStackLevel;
     std::vector< PrecisionStackLevel *> precisionStack;
+
+    static int uniqueIdCounter;
 };
 
 #endif // _SYMBOL_TABLE_INCLUDED_

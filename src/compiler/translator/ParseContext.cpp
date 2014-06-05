@@ -2567,6 +2567,8 @@ TPublicType TParseContext::addStructure(const TSourceLoc& structLine, const TSou
     TStructure* structure = new TStructure(structName, fieldList);
     TType* structureType = new TType(structure);
 
+    structure->setUniqueId(TSymbolTable::nextUniqueId());
+
     if (!structName->empty())
     {
         if (reservedErrorCheck(nameLine, *structName))

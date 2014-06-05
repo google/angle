@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <algorithm>
 
-int TSymbolTableLevel::uniqueId = 0;
+int TSymbolTable::uniqueIdCounter = 0;
 
 //
 // Functions have buried pointers to delete.
@@ -36,6 +36,30 @@ TSymbolTableLevel::~TSymbolTableLevel()
 {
     for (tLevel::iterator it = level.begin(); it != level.end(); ++it)
         delete (*it).second;
+}
+
+bool TSymbolTableLevel::insert(const TString &name, TSymbol &symbol)
+{
+    symbol.setUniqueId(TSymbolTable::nextUniqueId());
+
+    // returning true means symbol was added to the table
+    tInsertResult result = level.insert(tLevelPair(name, &symbol));
+
+    return result.second;
+}
+
+bool TSymbolTableLevel::insert(TSymbol &symbol)
+{
+    return insert(symbol.getMangledName(), symbol);
+}
+
+TSymbol *TSymbolTableLevel::find(const TString &name) const
+{
+    tLevel::const_iterator it = level.find(name);
+    if (it == level.end())
+        return 0;
+    else
+        return (*it).second;
 }
 
 //

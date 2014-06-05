@@ -15,6 +15,7 @@
 
 struct TPublicType;
 class TType;
+class TSymbol;
 
 class TField
 {
@@ -115,7 +116,8 @@ class TStructure : public TFieldListCollection
     POOL_ALLOCATOR_NEW_DELETE();
     TStructure(const TString *name, TFieldList *fields)
         : TFieldListCollection(name, fields),
-          mDeepestNesting(0)
+          mDeepestNesting(0),
+          mUniqueId(0)
     {
     }
 
@@ -129,6 +131,17 @@ class TStructure : public TFieldListCollection
 
     bool equals(const TStructure &other) const;
 
+    void setUniqueId(int uniqueId)
+    {
+        mUniqueId = uniqueId;
+    }
+
+    int uniqueId() const
+    {
+        ASSERT(mUniqueId != 0);
+        return mUniqueId;
+    }
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TStructure);
     virtual TString mangledNamePrefix() const
@@ -138,6 +151,7 @@ class TStructure : public TFieldListCollection
     int calculateDeepestNesting() const;
 
     mutable int mDeepestNesting;
+    int mUniqueId;
 };
 
 class TInterfaceBlock : public TFieldListCollection
