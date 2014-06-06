@@ -18,6 +18,7 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/Query.h"
 #include "libGLESv2/ProgramBinary.h"
+#include "libGLESv2/TransformFeedback.h"
 
 #include "common/mathutil.h"
 #include "common/utilities.h"
@@ -1286,6 +1287,141 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
 
     *textureFormatOut = textureInternalFormat;
     return true;
+}
+
+bool ValidateDrawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
+{
+    if (count < 0 || first < 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    // Check for mapped buffers
+    if (context->hasMappedBuffer(GL_ARRAY_BUFFER))
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
+    if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused() &&
+        curTransformFeedback->getDrawMode() != mode)
+    {
+        // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
+        // that does not match the current transform feedback object's draw mode (if transform feedback
+        // is active), (3.0.2, section 2.14, pg 86)
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    // No-op if zero count
+    return (count > 0);
+}
+
+bool ValidateDrawArraysInstanced(const gl::Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount)
+{
+    if (count < 0 || first < 0 || primcount < 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    // Check for mapped buffers
+    if (context->hasMappedBuffer(GL_ARRAY_BUFFER))
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
+    if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused() &&
+        curTransformFeedback->getDrawMode() != mode)
+    {
+        // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
+        // that does not match the current transform feedback object's draw mode (if transform feedback
+        // is active), (3.0.2, section 2.14, pg 86)
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    // No-op if zero count or zero primitive count
+    return (primcount > 0 && count > 0);
+}
+
+bool ValidateDrawElements(const gl::Context *context, GLenum mode, GLsizei count, GLenum type, const GLvoid* indices)
+{
+    if (count < 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    switch (type)
+    {
+      case GL_UNSIGNED_BYTE:
+      case GL_UNSIGNED_SHORT:
+        break;
+      case GL_UNSIGNED_INT:
+        if (!context->getCaps().extensions.elementIndexUint)
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
+    if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
+    {
+        // It is an invalid operation to call DrawElements, DrawRangeElements or DrawElementsInstanced
+        // while transform feedback is active, (3.0.2, section 2.14, pg 86)
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    // Check for mapped buffers
+    if (context->hasMappedBuffer(GL_ARRAY_BUFFER) || context->hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    // No-op if zero count
+    return (count > 0);
+}
+
+bool ValidateDrawElementsInstanced(const gl::Context *context, GLenum mode, GLsizei count, GLenum type,
+                                   const GLvoid *indices, GLsizei primcount)
+{
+    if (count < 0 || primcount < 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    switch (type)
+    {
+      case GL_UNSIGNED_BYTE:
+      case GL_UNSIGNED_SHORT:
+        break;
+      case GL_UNSIGNED_INT:
+        if (!context->getCaps().extensions.elementIndexUint)
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
+    if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
+    {
+        // It is an invalid operation to call DrawElements, DrawRangeElements or DrawElementsInstanced
+        // while transform feedback is active, (3.0.2, section 2.14, pg 86)
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    // Check for mapped buffers
+    if (context->hasMappedBuffer(GL_ARRAY_BUFFER) || context->hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    // No-op if zero count or zero primitive count
+    return (primcount > 0 && count > 0);
 }
 
 }

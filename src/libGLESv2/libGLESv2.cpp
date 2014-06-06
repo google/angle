@@ -1577,29 +1577,13 @@ void __stdcall glDrawArrays(GLenum mode, GLint first, GLsizei count)
 
     try
     {
-        if (count < 0 || first < 0)
-        {
-            return gl::error(GL_INVALID_VALUE);
-        }
-
         gl::Context *context = gl::getNonLostContext();
-
-        // Check for mapped buffers
-        if (context->hasMappedBuffer(GL_ARRAY_BUFFER))
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
 
         if (context)
         {
-            gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
-            if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused() &&
-                curTransformFeedback->getDrawMode() != mode)
+            if (!ValidateDrawArrays(context, mode, first, count))
             {
-                // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
-                // that does not match the current transform feedback object's draw mode (if transform feedback
-                // is active), (3.0.2, section 2.14, pg 86)
-                return gl::error(GL_INVALID_OPERATION);
+                return;
             }
 
             context->drawArrays(mode, first, count, 0);
@@ -1617,35 +1601,16 @@ void __stdcall glDrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei coun
 
     try
     {
-        if (count < 0 || first < 0 || primcount < 0)
-        {
-            return gl::error(GL_INVALID_VALUE);
-        }
+        gl::Context *context = gl::getNonLostContext();
 
-        if (primcount > 0)
+        if (context)
         {
-            gl::Context *context = gl::getNonLostContext();
-
-            // Check for mapped buffers
-            if (context->hasMappedBuffer(GL_ARRAY_BUFFER))
+            if (!ValidateDrawArraysInstanced(context, mode, first, count, primcount))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                return;
             }
 
-            if (context)
-            {
-                gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
-                if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused() &&
-                    curTransformFeedback->getDrawMode() != mode)
-                {
-                    // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
-                    // that does not match the current transform feedback object's draw mode (if transform feedback
-                    // is active), (3.0.2, section 2.14, pg 86)
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-
-                context->drawArrays(mode, first, count, primcount);
-            }
+            context->drawArrays(mode, first, count, primcount);
         }
     }
     catch (...)
@@ -1661,42 +1626,13 @@ void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
 
     try
     {
-        if (count < 0)
-        {
-            return gl::error(GL_INVALID_VALUE);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
-            switch (type)
+            if (!ValidateDrawElements(context, mode, count, type, indices))
             {
-              case GL_UNSIGNED_BYTE:
-              case GL_UNSIGNED_SHORT:
-                break;
-              case GL_UNSIGNED_INT:
-                if (!context->getCaps().extensions.elementIndexUint)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              default:
-                return gl::error(GL_INVALID_ENUM);
-            }
-
-            gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
-            if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
-            {
-                // It is an invalid operation to call DrawElements, DrawRangeElements or DrawElementsInstanced
-                // while transform feedback is active, (3.0.2, section 2.14, pg 86)
-                return gl::error(GL_INVALID_OPERATION);
-            }
-
-            // Check for mapped buffers
-            if (context->hasMappedBuffer(GL_ARRAY_BUFFER) || context->hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
-            {
-                return gl::error(GL_INVALID_OPERATION);
+                return;
             }
 
             context->drawElements(mode, count, type, indices, 0);
@@ -1715,48 +1651,16 @@ void __stdcall glDrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum t
 
     try
     {
-        if (count < 0 || primcount < 0)
-        {
-            return gl::error(GL_INVALID_VALUE);
-        }
+        gl::Context *context = gl::getNonLostContext();
 
-        if (primcount > 0)
+        if (context)
         {
-            gl::Context *context = gl::getNonLostContext();
-
-            if (context)
+            if (!ValidateDrawElementsInstanced(context, mode, count, type, indices, primcount))
             {
-                switch (type)
-                {
-                  case GL_UNSIGNED_BYTE:
-                  case GL_UNSIGNED_SHORT:
-                    break;
-                  case GL_UNSIGNED_INT:
-                    if (!context->getCaps().extensions.elementIndexUint)
-                    {
-                        return gl::error(GL_INVALID_ENUM);
-                    }
-                    break;
-                  default:
-                    return gl::error(GL_INVALID_ENUM);
-                }
-
-                gl::TransformFeedback *curTransformFeedback = context->getCurrentTransformFeedback();
-                if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
-                {
-                    // It is an invalid operation to call DrawElements, DrawRangeElements or DrawElementsInstanced
-                    // while transform feedback is active, (3.0.2, section 2.14, pg 86)
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-
-                // Check for mapped buffers
-                if (context->hasMappedBuffer(GL_ARRAY_BUFFER) || context->hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
-                {
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-
-                context->drawElements(mode, count, type, indices, primcount);
+                return;
             }
+
+            context->drawElements(mode, count, type, indices, primcount);
         }
     }
     catch (...)
