@@ -48,8 +48,6 @@ class TField
         return mLine;
     }
 
-    bool equals(const TField &other) const;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(TField);
     TType *mType;
@@ -99,8 +97,6 @@ class TFieldListCollection
     TString buildMangledName() const;
     size_t calculateObjectSize() const;
     virtual TString mangledNamePrefix() const = 0;
-
-    bool equals(const TFieldListCollection &other) const;
 
     const TString *mName;
     TFieldList *mFields;
@@ -192,8 +188,6 @@ class TInterfaceBlock : public TFieldListCollection
     {
         return mMatrixPacking;
     }
-
-    bool equals(const TInterfaceBlock &other) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TInterfaceBlock);
@@ -384,10 +378,6 @@ class TType
 
         return mangled;
     }
-
-    // This is different from operator== as we also compare
-    // precision here.
-    bool equals(const TType &other) const;
 
     bool sameElementType(const TType &right) const
     {

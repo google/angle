@@ -298,7 +298,6 @@ class TSymbolTableLevel
 
   protected:
     tLevel level;
-    static int uniqueId; // for unique identification in code generation
 };
 
 enum ESymbolLevel
