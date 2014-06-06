@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f1b2808_cffe5316",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 567,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-06T15:27:11Z",
+      "side": 1,
+      "message": "I find the overloaded \"CheckSupport\" somewhat nondescript.\n\nMy suggestion: \"SupportedInES\u003c#\u003e\" and \"SupportedInESOrExt\u003cExt\u003e\" or something more descriptive",
+      "range": {
+        "startLine": 567,
+        "startChar": 191,
+        "endLine": 567,
+        "endChar": 203
+      },
+      "revId": "5d0d502349905a01177cfb3e1ea19c6e8fe6ba66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_3a47ff84",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-06T15:27:11Z",
+      "side": 1,
+      "message": "I doubt we\u0027ll ever support ES \u003c 2. If so ANGLE will need lots of love -- and we will deal with a lot more pain than a few table entries. I\u0027d suggest \"AlwaysSupported\" for these cases .",
+      "range": {
+        "startLine": 627,
+        "startChar": 193,
+        "endLine": 627,
+        "endChar": 208
+      },
+      "revId": "5d0d502349905a01177cfb3e1ea19c6e8fe6ba66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
