@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1f1b2808_1d280110",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-06T21:28:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf505ca5_4889ec11",
+      "revId": "8099316b895163891eedc6dce190f875b6dcb255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf505ca5_28bee0c2",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-06-06T21:09:03Z",
       "side": 1,
       "message": "Unused variable",
+      "revId": "8099316b895163891eedc6dce190f875b6dcb255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_3d2dc51f",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-06T21:28:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf505ca5_28bee0c2",
       "revId": "8099316b895163891eedc6dce190f875b6dcb255",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "df4350e0_e0732627",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-06T21:28:35Z",
+      "side": 1,
+      "message": "Not intended. Fixed.",
+      "parentUuid": "7f33447f_13677aa5",
+      "revId": "8099316b895163891eedc6dce190f875b6dcb255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f162cdd_4a8eb5b1",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2014-06-06T21:09:03Z",
       "side": 1,
       "message": "nit: name should ne *Indices, not *Indexes.",
+      "revId": "8099316b895163891eedc6dce190f875b6dcb255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_9d3c1150",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-06T21:28:35Z",
+      "side": 1,
+      "message": "English is pretty strange and in this case both indexes and indices are plural of index. Indices is the more technical term, but in this case I prefer Indexes. Not a big deal and I can change it.\n\nhttp://english.stackexchange.com/questions/61080/indexes-or-indices",
+      "parentUuid": "3f162cdd_4a8eb5b1",
       "revId": "8099316b895163891eedc6dce190f875b6dcb255",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -104,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "df2c3030_09fbebe1",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-06T21:28:35Z",
+      "side": 1,
+      "message": "see note below",
+      "parentUuid": "7f33447f_93414aca",
+      "revId": "8099316b895163891eedc6dce190f875b6dcb255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f162cdd_2a5b4169",
         "filename": "src/compiler/translator/OutputHLSL.h",
         "patchSetId": 1
@@ -115,6 +205,24 @@
       "writtenOn": "2014-06-06T21:09:03Z",
       "side": 1,
       "message": "No need to expose this class here.  It can just be in an anonymous namespace in OutputHLSL.cpp.",
+      "revId": "8099316b895163891eedc6dce190f875b6dcb255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_7d5c9da7",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-06T21:28:35Z",
+      "side": 1,
+      "message": "This method uses other static methods (glVariableType)\n\nI plan to clean this up in subsequent reorganization patches, it would be good to handle the more similar types of code refactoring together in a related patch. Probably the next one in the series.",
+      "parentUuid": "3f162cdd_2a5b4169",
       "revId": "8099316b895163891eedc6dce190f875b6dcb255",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
