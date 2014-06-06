@@ -3483,12 +3483,6 @@ TString OutputHLSL::structureString(const TStructure &structure, bool useHLSLRow
     // Nameless structs do not finish with a semicolon and newline, to leave room for an instance variable
     string += (isNameless ? "} " : "};\n");
 
-    // Add remaining element index to the global map, for use with nested structs in standard layouts
-    if (useStd140Packing)
-    {
-        mStd140StructElementIndexes[structName] = elementIndex;
-    }
-
     return string;
 }
 
@@ -3542,6 +3536,10 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
     if (structure)
     {
         mStructNames.insert(name);
+
+        // Add element index
+        storeStd140ElementIndex(*structure, false);
+        storeStd140ElementIndex(*structure, true);
 
         const TString &structString = structureString(*structure, false, false);
 
@@ -3731,6 +3729,21 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
     }
 
     mConstructors.insert(constructor);
+}
+
+void OutputHLSL::storeStd140ElementIndex(const TStructure &structure, bool useHLSLRowMajorPacking)
+{
+    int elementIndex = 0;
+    const TFieldList &fields = structure.fields();
+
+    for (unsigned int i = 0; i < fields.size(); i++)
+    {
+        std140PrePaddingString(*fields[i]->type(), &elementIndex);
+    }
+
+    // Add remaining element index to the global map, for use with nested structs in standard layouts
+    const TString &structName = structureTypeName(structure, useHLSLRowMajorPacking, true);
+    mStd140StructElementIndexes[structName] = elementIndex;
 }
 
 const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const ConstantUnion *constUnion)

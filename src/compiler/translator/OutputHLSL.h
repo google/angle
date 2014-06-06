@@ -72,6 +72,7 @@ class OutputHLSL : public TIntermTraverser
     int vectorSize(const TType &type) const;
 
     void addConstructor(const TType &type, const TString &name, const TIntermSequence *parameters);
+    void storeStd140ElementIndex(const TStructure &structure, bool useHLSLRowMajorPacking);
     const ConstantUnion *writeConstantUnion(const TType &type, const ConstantUnion *constUnion);
 
     TString structNameString(const TStructure &structure);
