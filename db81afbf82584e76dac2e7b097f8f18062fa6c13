@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "1f908898_1266caf6",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-06T22:29:05Z",
+      "side": 1,
+      "message": "Should probably get Nicolas\u0027s input on this one. We should probably include a software rendering token of some sort-- currently the initialization for that has been moved outside of ANGLE since it doesn\u0027t have to speak D3D anymore, but it may move back once ANGLE\u0027s the interface to the GL backends as well.",
+      "parentUuid": "df2c3030_e8422e21",
+      "range": {
+        "startLine": 81,
+        "startChar": 8,
+        "endLine": 81,
+        "endChar": 49
+      },
+      "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1b2808_cccae150",
         "filename": "extensions/ANGLE_platform_angle.txt",
         "patchSetId": 1
@@ -64,6 +88,53 @@
         "startChar": 8,
         "endLine": 106,
         "endChar": 45
+      },
+      "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f868066_ba99d06e",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-06T22:29:05Z",
+      "side": 1,
+      "message": "Honestly, if the default display type is wanted, applications should probably be using eglGetDisplay rather than eglGetPlatformDisplayEXT.\n\nPart of the possible complication with reusing the EGL default is that the type is specified as EGLNativeDisplayType, which is what we\u0027re using as the native_display parameter\u0027s type (although we need to amend this language: we can\u0027t reassign the type of the native_display parameter, just require that it *point* to a value of that type). It should be perfectly valid to specify a native_display of EGL_DEFAULT_DISPLAY but still express preference as to the rendering backend using the attrib list.",
+      "parentUuid": "1f1b2808_cccae150",
+      "range": {
+        "startLine": 106,
+        "startChar": 8,
+        "endLine": 106,
+        "endChar": 45
+      },
+      "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f868066_1afc9c50",
+        "filename": "extensions/ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-06T22:29:05Z",
+      "side": 1,
+      "message": "There\u0027s a chance Khronos/the EGL group would prefer we not use an extension suffixed with OpenGL to add the ability to request an OpenGL ES backend (or, possibly, at all)-- we should check into it before landing.",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 55,
+        "endChar": 46
       },
       "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
