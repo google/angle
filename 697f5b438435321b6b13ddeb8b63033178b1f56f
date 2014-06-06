@@ -37,6 +37,42 @@
     },
     {
       "key": {
+        "uuid": "df2c3030_43f5455e",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-06T13:44:16Z",
+      "side": 1,
+      "message": "That\u0027s feasible, but potentially too conservative. It\u0027s also rather arbitrary because people can vary the level of scopes without changing semantics and this would lead to a shader compiling or not.",
+      "parentUuid": "3f162cdd_aee8c88c",
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_fafd178c",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-06T13:44:16Z",
+      "side": 1,
+      "message": "I don\u0027t consider the overall problem solvable, just manageable. It\u0027s closely related to out-of-memory situations so there will probably always be ways to break our compiler, or any compiler for that matter, by those who aim to. When you allocate a local array of 1 GB in C++ you don\u0027t expect it to run, and if the compiler crashes before you get to even try to run it that doesn\u0027t really aggravate it. For run-time compilers that\u0027s more annoying and the solution is to restrict it to more-or-less arbitrary limits (cf. the stack size limit).\nTo answer your question more directly, yes this particular patch suffices to catch the current issue on the ASAN bots, but nothing prevents people from creating really long shaders that could cause issues in our translator or in the HLSL compiler or in the driver. We can try to address this as well but, the solutions can range from draconian to barely effective.\nOne approach would be to compile things into an assembly-level intermediate form, like SwiftShader does, and then translate that into HLSL or GLSL again. With such an intermediate form we\u0027d at least have something more measurable (number of instructions, number of registers, etc.). But again it\u0027s dependent on the exact register allocation algorithm and instruction combining/eliminating optimizations.\nAnother question is, do we consider this robustness issue a responsibility of the OpenGL ES implementation, or the WebGL implementation? I think we might need a more general discussion on this (perhaps involving Khronos), and take notes from the Javascript compiler team...",
+      "parentUuid": "7f33447f_4401be9c",
+      "revId": "697f5b438435321b6b13ddeb8b63033178b1f56f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1b2808_6c895512",
         "filename": "src/compiler/translator/VariableInfo.cpp",
         "patchSetId": 1
