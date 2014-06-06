@@ -108,6 +108,11 @@ bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint le
                                    GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                    GLint border, GLenum format, GLenum type, const GLvoid *pixels)
 {
+    if (!ValidTexture2DDestinationTarget(context, target))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
     if (!ValidImageSize(context, target, level, width, height, 1))
     {
         return gl::error(GL_INVALID_VALUE, false);

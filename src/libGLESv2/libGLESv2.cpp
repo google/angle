@@ -844,14 +844,14 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
         {
             if (context->getClientVersion() < 3 &&
                 !ValidateES2TexImageParameters(context, target, level, internalformat, true, false,
-                                               0, 0, width, height, 0, GL_NONE, GL_NONE, data))
+                                               0, 0, width, height, border, GL_NONE, GL_NONE, data))
             {
                 return;
             }
 
             if (context->getClientVersion() >= 3 &&
                 !ValidateES3TexImageParameters(context, target, level, internalformat, true, false,
-                                               0, 0, 0, width, height, 1, 0, GL_NONE, GL_NONE, data))
+                                               0, 0, 0, width, height, 1, border, GL_NONE, GL_NONE, data))
             {
                 return;
             }
@@ -6118,7 +6118,7 @@ void __stdcall glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!ValidateES3CopyTexImageParameters(context, target, level, GL_NONE, false, xoffset, yoffset, zoffset,
+            if (!ValidateES3CopyTexImageParameters(context, target, level, GL_NONE, true, xoffset, yoffset, zoffset,
                                                    x, y, width, height, 0))
             {
                 return;
