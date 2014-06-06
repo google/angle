@@ -701,28 +701,44 @@ bool TParseContext::arraySizeErrorCheck(const TSourceLoc& line, TIntermTyped* ex
         return true;
     }
 
+    unsigned int unsignedSize = 0;
+
     if (constant->getBasicType() == EbtUInt)
     {
-        unsigned int uintSize = constant->getUConst(0);
-        if (uintSize > static_cast<unsigned int>(std::numeric_limits<int>::max()))
-        {
-            error(line, "array size too large", "");
-            size = 1;
-            return true;
-        }
-
-        size = static_cast<int>(uintSize);
+        unsignedSize = constant->getUConst(0);
+        size = static_cast<int>(unsignedSize);
     }
     else
     {
         size = constant->getIConst(0);
 
-        if (size <= 0)
+        if (size < 0)
         {
-            error(line, "array size must be a positive integer", "");
+            error(line, "array size must be non-negative", "");
             size = 1;
             return true;
         }
+
+        unsignedSize = static_cast<unsigned int>(size);
+    }
+
+    if (size == 0)
+    {
+        error(line, "array size must be greater than zero", "");
+        size = 1;
+        return true;
+    }
+
+    // The size of arrays is restricted here to prevent issues further down the
+    // compiler/translator/driver stack. Shader Model 5 generation hardware is limited to
+    // 4096 registers so this should be reasonable even for aggressively optimizable code.
+    const unsigned int sizeLimit = 65536;
+
+    if (unsignedSize > sizeLimit)
+    {
+        error(line, "array size too large", "");
+        size = 1;
+        return true;
     }
 
     return false;
