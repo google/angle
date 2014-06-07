@@ -127,10 +127,10 @@ bool VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &att
     return true;
 }
 
-bool VertexBufferInterface::reserveVertexSpace(const gl::VertexAttribute &attribute, GLsizei count, GLsizei instances)
+bool VertexBufferInterface::reserveVertexSpace(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances)
 {
     unsigned int requiredSpace;
-    if (!mVertexBuffer->getSpaceRequired(attribute, count, instances, &requiredSpace))
+    if (!mVertexBuffer->getSpaceRequired(attrib, count, instances, &requiredSpace))
     {
         return false;
     }
@@ -157,7 +157,7 @@ VertexBuffer* VertexBufferInterface::getVertexBuffer() const
 bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &attrib,
                                                   const gl::VertexAttribCurrentValueData &currentValue) const
 {
-    gl::Buffer *buffer = attrib.mBoundBuffer.get();
+    gl::Buffer *buffer = attrib.buffer.get();
     BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
 
     if (!storage || !storage->supportsDirectBinding())
@@ -171,7 +171,7 @@ bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &att
     size_t alignment = 4;
     bool requiresConversion = false;
 
-    if (attrib.mType != GL_FLOAT)
+    if (attrib.type != GL_FLOAT)
     {
         gl::VertexFormat vertexFormat(attrib, currentValue.Type);
 
@@ -182,8 +182,8 @@ bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &att
         requiresConversion = (mRenderer->getVertexConversionType(vertexFormat) & VERTEX_CONVERT_CPU) != 0;
     }
 
-    bool isAligned = (static_cast<size_t>(attrib.stride()) % alignment == 0) &&
-                     (static_cast<size_t>(attrib.mOffset) % alignment == 0);
+    bool isAligned = (static_cast<size_t>(ComputeVertexAttributeStride(attrib)) % alignment == 0) &&
+                     (static_cast<size_t>(attrib.offset) % alignment == 0);
 
     return !requiresConversion && isAligned;
 }
@@ -226,17 +226,17 @@ StaticVertexBufferInterface::~StaticVertexBufferInterface()
 {
 }
 
-bool StaticVertexBufferInterface::lookupAttribute(const gl::VertexAttribute &attribute, unsigned int *outStreamOffset)
+bool StaticVertexBufferInterface::lookupAttribute(const gl::VertexAttribute &attrib, unsigned int *outStreamOffset)
 {
     for (unsigned int element = 0; element < mCache.size(); element++)
     {
-        if (mCache[element].type == attribute.mType &&
-            mCache[element].size == attribute.mSize &&
-            mCache[element].stride == attribute.stride() &&
-            mCache[element].normalized == attribute.mNormalized &&
-            mCache[element].pureInteger == attribute.mPureInteger)
+        if (mCache[element].type == attrib.type &&
+            mCache[element].size == attrib.size &&
+            mCache[element].stride == ComputeVertexAttributeStride(attrib) &&
+            mCache[element].normalized == attrib.normalized &&
+            mCache[element].pureInteger == attrib.pureInteger)
         {
-            if (mCache[element].attributeOffset == attribute.mOffset % attribute.stride())
+            if (mCache[element].attributeOffset == attrib.offset % ComputeVertexAttributeStride(attrib))
             {
                 if (outStreamOffset)
                 {
@@ -275,8 +275,8 @@ bool StaticVertexBufferInterface::storeVertexAttributes(const gl::VertexAttribut
     unsigned int streamOffset;
     if (VertexBufferInterface::storeVertexAttributes(attrib, currentValue, start, count, instances, &streamOffset))
     {
-        int attributeOffset = attrib.mOffset % attrib.stride();
-        VertexElement element = { attrib.mType, attrib.mSize, attrib.stride(), attrib.mNormalized, attrib.mPureInteger, attributeOffset, streamOffset };
+        int attributeOffset = attrib.offset % ComputeVertexAttributeStride(attrib);
+        VertexElement element = { attrib.type, attrib.size, ComputeVertexAttributeStride(attrib), attrib.normalized, attrib.pureInteger, attributeOffset, streamOffset };
         mCache.push_back(element);
 
         if (outStreamOffset)

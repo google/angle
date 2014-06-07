@@ -27,7 +27,7 @@ namespace
 namespace rx
 {
 
-static int ElementsInBuffer(const gl::VertexAttribute &attribute, unsigned int size)
+static int ElementsInBuffer(const gl::VertexAttribute &attrib, unsigned int size)
 {
     // Size cannot be larger than a GLsizei
     if (size > static_cast<unsigned int>(std::numeric_limits<int>::max()))
@@ -35,19 +35,19 @@ static int ElementsInBuffer(const gl::VertexAttribute &attribute, unsigned int s
         size = static_cast<unsigned int>(std::numeric_limits<int>::max());
     }
 
-    GLsizei stride = attribute.stride();
-    return (size - attribute.mOffset % stride + (stride - attribute.typeSize())) / stride;
+    GLsizei stride = ComputeVertexAttributeStride(attrib);
+    return (size - attrib.offset % stride + (stride - ComputeVertexAttributeTypeSize(attrib))) / stride;
 }
 
-static int StreamingBufferElementCount(const gl::VertexAttribute &attribute, int vertexDrawCount, int instanceDrawCount)
+static int StreamingBufferElementCount(const gl::VertexAttribute &attrib, int vertexDrawCount, int instanceDrawCount)
 {
     // For instanced rendering, we draw "instanceDrawCount" sets of "vertexDrawCount" vertices.
     //
     // A vertex attribute with a positive divisor loads one instanced vertex for every set of
     // non-instanced vertices, and the instanced vertex index advances once every "mDivisor" instances.
-    if (instanceDrawCount > 0 && attribute.mDivisor > 0)
+    if (instanceDrawCount > 0 && attrib.divisor > 0)
     {
-        return instanceDrawCount / attribute.mDivisor;
+        return instanceDrawCount / attrib.divisor;
     }
 
     return vertexDrawCount;
@@ -100,9 +100,9 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
     // Invalidate static buffers that don't contain matching attributes
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        if (translated[i].active && attribs[i].mArrayEnabled)
+        if (translated[i].active && attribs[i].enabled)
         {
-            gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
+            gl::Buffer *buffer = attribs[i].buffer.get();
             StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
 
             if (staticBuffer && staticBuffer->getBufferSize() > 0 && !staticBuffer->lookupAttribute(attribs[i], NULL) &&
@@ -116,9 +116,9 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
     // Reserve the required space in the buffers
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        if (translated[i].active && attribs[i].mArrayEnabled)
+        if (translated[i].active && attribs[i].enabled)
         {
-            gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
+            gl::Buffer *buffer = attribs[i].buffer.get();
             StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
             VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
@@ -160,11 +160,11 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
     {
         if (translated[i].active)
         {
-            if (attribs[i].mArrayEnabled)
+            if (attribs[i].enabled)
             {
-                gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
+                gl::Buffer *buffer = attribs[i].buffer.get();
 
-                if (!buffer && attribs[i].mPointer == NULL)
+                if (!buffer && attribs[i].pointer == NULL)
                 {
                     // This is an application error that would normally result in a crash, but we catch it and return an error
                     ERR("An enabled vertex array has no buffer and no pointer.");
@@ -182,8 +182,8 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
 
                 if (directStorage)
                 {
-                    outputElementSize = attribs[i].stride();
-                    streamOffset = attribs[i].mOffset + outputElementSize * start;
+                    outputElementSize = ComputeVertexAttributeStride(attribs[i]);
+                    streamOffset = attribs[i].offset + outputElementSize * start;
                 }
                 else if (staticBuffer)
                 {
@@ -196,7 +196,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                     {
                         // Convert the entire buffer
                         int totalCount = ElementsInBuffer(attribs[i], storage->getSize());
-                        int startIndex = attribs[i].mOffset / attribs[i].stride();
+                        int startIndex = attribs[i].offset / ComputeVertexAttributeStride(attribs[i]);
 
                         if (!staticBuffer->storeVertexAttributes(attribs[i], currentValues[i], -startIndex, totalCount,
                                                                  0, &streamOffset))
@@ -205,8 +205,8 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                         }
                     }
 
-                    unsigned int firstElementOffset = (attribs[i].mOffset / attribs[i].stride()) * outputElementSize;
-                    unsigned int startOffset = (instances == 0 || attribs[i].mDivisor == 0) ? start * outputElementSize : 0;
+                    unsigned int firstElementOffset = (attribs[i].offset / ComputeVertexAttributeStride(attribs[i])) * outputElementSize;
+                    unsigned int startOffset = (instances == 0 || attribs[i].divisor == 0) ? start * outputElementSize : 0;
                     if (streamOffset + firstElementOffset + startOffset < streamOffset)
                     {
                         return GL_OUT_OF_MEMORY;
@@ -228,7 +228,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 translated[i].storage = directStorage ? storage : NULL;
                 translated[i].vertexBuffer = vertexBuffer->getVertexBuffer();
                 translated[i].serial = directStorage ? storage->getSerial() : vertexBuffer->getSerial();
-                translated[i].divisor = attribs[i].mDivisor;
+                translated[i].divisor = attribs[i].divisor;
 
                 translated[i].attribute = &attribs[i];
                 translated[i].currentValueType = currentValues[i].Type;
@@ -276,13 +276,13 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
 
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        if (translated[i].active && attribs[i].mArrayEnabled)
+        if (translated[i].active && attribs[i].enabled)
         {
-            gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
+            gl::Buffer *buffer = attribs[i].buffer.get();
 
             if (buffer)
             {
-                buffer->promoteStaticUsage(count * attribs[i].typeSize());
+                buffer->promoteStaticUsage(count * ComputeVertexAttributeTypeSize(attribs[i]));
             }
         }
     }

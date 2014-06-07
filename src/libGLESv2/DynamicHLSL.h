@@ -25,7 +25,7 @@ class FragmentShader;
 class VertexShader;
 struct VariableLocation;
 struct LinkedVarying;
-class VertexAttribute;
+struct VertexAttribute;
 struct VertexFormat;
 struct ShaderVariable;
 struct Varying;

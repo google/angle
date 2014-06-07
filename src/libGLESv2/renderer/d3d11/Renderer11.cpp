@@ -31,6 +31,7 @@
 #include "libGLESv2/renderer/d3d11/Blit11.h"
 #include "libGLESv2/renderer/d3d11/Clear11.h"
 #include "libGLESv2/renderer/d3d11/PixelTransfer11.h"
+#include "libGLESv2/renderer/d3d11/VertexArray11.h"
 #include "libEGL/Display.h"
 
 // Enable ANGLE_SKIP_DXGI_1_2_CHECK if there is not a possibility of using cross-process
@@ -2794,6 +2795,11 @@ IndexBuffer *Renderer11::createIndexBuffer()
 BufferStorage *Renderer11::createBufferStorage()
 {
     return new BufferStorage11(this);
+}
+
+VertexArrayImpl *Renderer11::createVertexArray()
+{
+    return new VertexArray11(this);
 }
 
 QueryImpl *Renderer11::createQuery(GLenum type)

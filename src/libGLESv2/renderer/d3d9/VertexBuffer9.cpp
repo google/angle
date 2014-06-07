@@ -70,10 +70,10 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, con
 {
     if (mVertexBuffer)
     {
-        gl::Buffer *buffer = attrib.mBoundBuffer.get();
+        gl::Buffer *buffer = attrib.buffer.get();
 
-        int inputStride = attrib.stride();
-        int elementSize = attrib.typeSize();
+        int inputStride = gl::ComputeVertexAttributeStride(attrib);
+        int elementSize = gl::ComputeVertexAttributeTypeSize(attrib);
 
         DWORD lockFlags = mDynamicUsage ? D3DLOCK_NOOVERWRITE : 0;
 
@@ -94,16 +94,16 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, con
         }
 
         const char *input = NULL;
-        if (attrib.mArrayEnabled)
+        if (attrib.enabled)
         {
             if (buffer)
             {
                 BufferStorage *storage = buffer->getStorage();
-                input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.mOffset);
+                input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.offset);
             }
             else
             {
-                input = static_cast<const char*>(attrib.mPointer);
+                input = static_cast<const char*>(attrib.pointer);
             }
         }
         else
@@ -111,7 +111,7 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, con
             input = reinterpret_cast<const char*>(currentValue.FloatValues);
         }
 
-        if (instances == 0 || attrib.mDivisor == 0)
+        if (instances == 0 || attrib.divisor == 0)
         {
             input += inputStride * start;
         }
@@ -205,23 +205,23 @@ bool VertexBuffer9::spaceRequired(const gl::VertexAttribute &attrib, std::size_t
     gl::VertexFormat vertexFormat(attrib, GL_FLOAT);
     unsigned int elementSize = d3d9::GetVertexElementSize(vertexFormat);
 
-    if (attrib.mArrayEnabled)
+    if (attrib.enabled)
     {
         unsigned int elementCount = 0;
-        if (instances == 0 || attrib.mDivisor == 0)
+        if (instances == 0 || attrib.divisor == 0)
         {
             elementCount = count;
         }
         else
         {
-            if (static_cast<unsigned int>(instances) < std::numeric_limits<unsigned int>::max() - (attrib.mDivisor - 1))
+            if (static_cast<unsigned int>(instances) < std::numeric_limits<unsigned int>::max() - (attrib.divisor - 1))
             {
                 // Round up
-                elementCount = (static_cast<unsigned int>(instances) + (attrib.mDivisor - 1)) / attrib.mDivisor;
+                elementCount = (static_cast<unsigned int>(instances) + (attrib.divisor - 1)) / attrib.divisor;
             }
             else
             {
-                elementCount = static_cast<unsigned int>(instances) / attrib.mDivisor;
+                elementCount = static_cast<unsigned int>(instances) / attrib.divisor;
             }
         }
 

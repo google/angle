@@ -786,7 +786,7 @@ void Context::setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, 
 
 const void *Context::getVertexAttribPointer(unsigned int attribNum) const
 {
-    return getCurrentVertexArray()->getVertexAttribute(attribNum).mPointer;
+    return getCurrentVertexArray()->getVertexAttribute(attribNum).pointer;
 }
 
 void Context::setPackAlignment(GLint alignment)
@@ -873,7 +873,7 @@ GLuint Context::createVertexArray()
     // Although the spec states VAO state is not initialized until the object is bound,
     // we create it immediately. The resulting behaviour is transparent to the application,
     // since it's not currently possible to access the state until the object is bound.
-    mVertexArrayMap[handle] = new VertexArray(mRenderer, handle);
+    mVertexArrayMap[handle] = new VertexArray(mRenderer->createVertexArray(), handle, MAX_VERTEX_ATTRIBS);
 
     return handle;
 }
@@ -1210,7 +1210,7 @@ void Context::bindVertexArray(GLuint vertexArray)
 {
     if (!getVertexArray(vertexArray))
     {
-        mVertexArrayMap[vertexArray] = new VertexArray(mRenderer, vertexArray);
+        mVertexArrayMap[vertexArray] = new VertexArray(mRenderer->createVertexArray(), vertexArray, MAX_VERTEX_ATTRIBS);
     }
 
     mState.vertexArray = vertexArray;
@@ -3728,8 +3728,8 @@ bool Context::hasMappedBuffer(GLenum target) const
         for (unsigned int attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; attribIndex++)
         {
             const gl::VertexAttribute &vertexAttrib = getVertexAttribState(attribIndex);
-            gl::Buffer *boundBuffer = vertexAttrib.mBoundBuffer.get();
-            if (vertexAttrib.mArrayEnabled && boundBuffer && boundBuffer->mapped())
+            gl::Buffer *boundBuffer = vertexAttrib.buffer.get();
+            if (vertexAttrib.enabled && boundBuffer && boundBuffer->mapped())
             {
                 return true;
             }

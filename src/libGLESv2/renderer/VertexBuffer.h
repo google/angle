@@ -14,7 +14,7 @@
 
 namespace gl
 {
-class VertexAttribute;
+struct VertexAttribute;
 struct VertexAttribCurrentValueData;
 }
 

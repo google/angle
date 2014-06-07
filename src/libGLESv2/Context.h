@@ -62,7 +62,7 @@ class FenceSync;
 class Query;
 class ResourceManager;
 class Buffer;
-class VertexAttribute;
+struct VertexAttribute;
 class VertexArray;
 class Sampler;
 class TransformFeedback;

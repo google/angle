@@ -30,6 +30,7 @@
 #include "libGLESv2/renderer/d3d9/BufferStorage9.h"
 #include "libGLESv2/renderer/d3d9/Query9.h"
 #include "libGLESv2/renderer/d3d9/Fence9.h"
+#include "libGLESv2/renderer/d3d9/VertexArray9.h"
 #include "libGLESv2/angletypes.h"
 
 #include "libEGL/Display.h"
@@ -609,6 +610,11 @@ IndexBuffer *Renderer9::createIndexBuffer()
 BufferStorage *Renderer9::createBufferStorage()
 {
     return new BufferStorage9();
+}
+
+VertexArrayImpl *Renderer9::createVertexArray()
+{
+    return new VertexArray9(this);
 }
 
 QueryImpl *Renderer9::createQuery(GLenum type)

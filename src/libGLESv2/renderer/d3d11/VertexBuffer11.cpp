@@ -71,8 +71,8 @@ bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, co
 {
     if (mBuffer)
     {
-        gl::Buffer *buffer = attrib.mBoundBuffer.get();
-        int inputStride = attrib.stride();
+        gl::Buffer *buffer = attrib.buffer.get();
+        int inputStride = ComputeVertexAttributeStride(attrib);
         ID3D11DeviceContext *dxContext = mRenderer->getDeviceContext();
 
         D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -86,16 +86,16 @@ bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, co
         char* output = reinterpret_cast<char*>(mappedResource.pData) + offset;
 
         const char *input = NULL;
-        if (attrib.mArrayEnabled)
+        if (attrib.enabled)
         {
             if (buffer)
             {
                 BufferStorage *storage = buffer->getStorage();
-                input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.mOffset);
+                input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.offset);
             }
             else
             {
-                input = static_cast<const char*>(attrib.mPointer);
+                input = static_cast<const char*>(attrib.pointer);
             }
         }
         else
@@ -103,7 +103,7 @@ bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, co
             input = reinterpret_cast<const char*>(currentValue.FloatValues);
         }
 
-        if (instances == 0 || attrib.mDivisor == 0)
+        if (instances == 0 || attrib.divisor == 0)
         {
             input += inputStride * start;
         }
@@ -128,22 +128,22 @@ bool VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei
                                       GLsizei instances, unsigned int *outSpaceRequired) const
 {
     unsigned int elementCount = 0;
-    if (attrib.mArrayEnabled)
+    if (attrib.enabled)
     {
-        if (instances == 0 || attrib.mDivisor == 0)
+        if (instances == 0 || attrib.divisor == 0)
         {
             elementCount = count;
         }
         else
         {
-            if (static_cast<unsigned int>(instances) < std::numeric_limits<unsigned int>::max() - (attrib.mDivisor - 1))
+            if (static_cast<unsigned int>(instances) < std::numeric_limits<unsigned int>::max() - (attrib.divisor - 1))
             {
                 // Round up
-                elementCount = rx::roundUp(static_cast<unsigned int>(instances), attrib.mDivisor);
+                elementCount = rx::roundUp(static_cast<unsigned int>(instances), attrib.divisor);
             }
             else
             {
-                elementCount = instances / attrib.mDivisor;
+                elementCount = instances / attrib.divisor;
             }
         }
 
