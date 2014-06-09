@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "1f1b2808_78a4ab2c",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-09T16:38:42Z",
+      "side": 1,
+      "message": "I would create a Renderer::getExtensions() method instead. That makes it easier to split Caps into Extensions and TextureCaps if we ever need to, and makes lines like these more concise.",
+      "range": {
+        "startLine": 346,
+        "startChar": 55,
+        "endLine": 346,
+        "endChar": 75
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1b2808_3875d3dc",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1377,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-09T16:38:42Z",
+      "side": 1,
+      "message": "I\u0027d prefer a single call here which just takes internalformat as a parameter. It\u0027s not like you\u0027ll ever pass in anything other than getCaps().textureCaps?\n\nSo just \"getTextureCaps(internalFormat)\".",
+      "range": {
+        "startLine": 1377,
+        "startChar": 36,
+        "endLine": 1377,
+        "endChar": 93
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df2c3030_8c070935",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3569,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-09T16:38:42Z",
+      "side": 1,
+      "message": "You could have an Extensions::getString(mClientVersion), thus turning this line into getExtensions().getString(mClientVersion). You can add all the logic of Context::initExtensionStrings() into it (including the call to MakeStaticString).",
+      "range": {
+        "startLine": 3569,
+        "startChar": 42,
+        "endLine": 3569,
+        "endChar": 99
+      },
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f939869_4b7b8599",
         "filename": "src/libGLESv2/Framebuffer.cpp",
         "patchSetId": 7
@@ -398,6 +467,24 @@
       "side": 1,
       "message": "Yea, I felt that an approach like that was becoming too complex for something simple like this.  The main reason why I didn\u0027t add one function that encapsulates all this logic such as determineAndCacheSupport is that there are a lot of support/extension booleans and these are only helpers for setting a couple of them.  I didn\u0027t want someone to have to look at the implementation of such a function to know which ones need to be set manually vs through a function.\n\nI wanted to keep these functions fairly far away from the Caps or Extensions objects to avoid any confusion about them being actual getters/setters for members.  Are we comfortable with renaming them?  Something like DetermineFloatTextureSupport()?",
       "parentUuid": "7f1c24fb_0949b547",
+      "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df2c3030_c933b32c",
+        "filename": "src/libGLESv2/caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-09T16:38:42Z",
+      "side": 1,
+      "message": "Anything that does a non-trivial amount of computation (i.e. a cost that you only want to incur a minimal number of times), should not be named a \"get\" method. Also, any getter should be a method of a class/struct, unless it \u0027gets\u0027 global data. So at the very least these should indeed be renamed.\n\nI don\u0027t think keeping these away from Caps achieves the goal of avoiding confusion about how to get/determine extension support. They are global and could be called from anywhere by those who don\u0027t know the implied mechanism here.\n\nI might be wrong but this seems like a constructor thing more than anything else. So why not pass a TextureFormatCapsMap to Extensions\u0027 constructor and have the functions below as private members of Extensions so there\u0027s no way they can be called by something that shouldn\u0027t call them?\n\nYou could split Extensions into a struct that is to be filled by a Renderer implementation, and a derived class which fills in the remaining extensions during its construction. Don\u0027t be afraid of copying some data; this is a one-time initialization.",
+      "parentUuid": "df2c3030_97b15fe7",
       "revId": "dfedbc57543291e74491b334990272b27ddc1fff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
