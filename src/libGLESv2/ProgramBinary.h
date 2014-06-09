@@ -25,6 +25,7 @@
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Constants.h"
 #include "libGLESv2/renderer/VertexDataManager.h"
+#include "libGLESv2/DynamicHLSL.h"
 
 namespace rx
 {
@@ -32,7 +33,6 @@ class ShaderExecutable;
 class Renderer;
 struct TranslatedAttribute;
 class UniformStorage;
-class DynamicHLSL;
 }
 
 namespace gl
@@ -42,6 +42,7 @@ class VertexShader;
 class InfoLog;
 class AttributeBindings;
 class Buffer;
+class Framebuffer;
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct VariableLocation
@@ -82,7 +83,8 @@ class ProgramBinary : public RefCountObject
     explicit ProgramBinary(rx::Renderer *renderer);
     ~ProgramBinary();
 
-    rx::ShaderExecutable *getPixelExecutable() const;
+    rx::ShaderExecutable *getPixelExecutableForFramebuffer(const Framebuffer *fbo);
+    rx::ShaderExecutable *getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputLayout);
     rx::ShaderExecutable *getVertexExecutableForInputLayout(const VertexFormat inputLayout[MAX_VERTEX_ATTRIBS]);
     rx::ShaderExecutable *getGeometryExecutable() const;
 
@@ -177,6 +179,8 @@ class ProgramBinary : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(ProgramBinary);
 
+    void reset();
+
     bool linkVaryings(InfoLog &infoLog, FragmentShader *fragmentShader, VertexShader *vertexShader);
     bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
 
@@ -217,8 +221,7 @@ class ProgramBinary : public RefCountObject
     class VertexExecutable
     {
       public:
-        VertexExecutable(rx::Renderer *const renderer,
-                         const VertexFormat inputLayout[MAX_VERTEX_ATTRIBS],
+        VertexExecutable(const VertexFormat inputLayout[MAX_VERTEX_ATTRIBS],
                          const GLenum signature[MAX_VERTEX_ATTRIBS],
                          rx::ShaderExecutable *shaderExecutable);
         ~VertexExecutable();
@@ -235,14 +238,35 @@ class ProgramBinary : public RefCountObject
         rx::ShaderExecutable *mShaderExecutable;
     };
 
+    class PixelExecutable
+    {
+      public:
+        PixelExecutable(const std::vector<GLenum> &outputSignature, rx::ShaderExecutable *shaderExecutable);
+        ~PixelExecutable();
+
+        bool matchesSignature(const std::vector<GLenum> &signature) const { return mOutputSignature == signature; }
+        const std::vector<GLenum> &outputSignature() const { return mOutputSignature; }
+        rx::ShaderExecutable *shaderExecutable() const { return mShaderExecutable; }
+
+      private:
+        std::vector<GLenum> mOutputSignature;
+        rx::ShaderExecutable *mShaderExecutable;
+    };
+
     rx::Renderer *const mRenderer;
     DynamicHLSL *mDynamicHLSL;
 
     std::string mVertexHLSL;
     rx::D3DWorkaroundType mVertexWorkarounds;
     std::vector<VertexExecutable *> mVertexExecutables;
+
+    std::string mPixelHLSL;
+    rx::D3DWorkaroundType mPixelWorkarounds;
+    bool mUsesFragDepth;
+    std::vector<PixelShaderOuputVariable> mPixelShaderKey;
+    std::vector<PixelExecutable *> mPixelExecutables;
+
     rx::ShaderExecutable *mGeometryExecutable;
-    rx::ShaderExecutable *mPixelExecutable;
 
     Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     Attribute mShaderAttributes[MAX_VERTEX_ATTRIBS];

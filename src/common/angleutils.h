@@ -54,6 +54,16 @@ void SafeDelete(T*& resource)
 }
 
 template <typename T>
+void SafeDeleteContainer(T& resource)
+{
+    for (T::iterator i = resource.begin(); i != resource.end(); i++)
+    {
+        SafeDelete(*i);
+    }
+    resource.clear();
+}
+
+template <typename T>
 void SafeDeleteArray(T*& resource)
 {
     delete[] resource;

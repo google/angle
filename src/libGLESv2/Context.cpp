@@ -2404,7 +2404,9 @@ void Context::applyShaders(ProgramBinary *programBinary, bool transformFeedbackA
     VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS];
     VertexFormat::GetInputLayout(inputLayout, programBinary, vertexAttributes, mState.vertexAttribCurrentValues);
 
-    mRenderer->applyShaders(programBinary, mState.rasterizer.rasterizerDiscard, transformFeedbackActive, inputLayout);
+    const Framebuffer *fbo = getDrawFramebuffer();
+
+    mRenderer->applyShaders(programBinary, inputLayout, fbo, mState.rasterizer.rasterizerDiscard, transformFeedbackActive);
 
     programBinary->applyUniforms();
 }

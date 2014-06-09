@@ -1601,13 +1601,14 @@ void Renderer9::drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indi
     }
 }
 
-void Renderer9::applyShaders(gl::ProgramBinary *programBinary, bool rasterizerDiscard, bool transformFeedbackActive, const gl::VertexFormat inputLayout[])
+void Renderer9::applyShaders(gl::ProgramBinary *programBinary, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
+                             bool rasterizerDiscard, bool transformFeedbackActive)
 {
     ASSERT(!transformFeedbackActive);
     ASSERT(!rasterizerDiscard);
 
     ShaderExecutable *vertexExe = programBinary->getVertexExecutableForInputLayout(inputLayout);
-    ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
+    ShaderExecutable *pixelExe = programBinary->getPixelExecutableForFramebuffer(framebuffer);
 
     IDirect3DVertexShader9 *vertexShader = (vertexExe ? ShaderExecutable9::makeShaderExecutable9(vertexExe)->getVertexShader() : NULL);
     IDirect3DPixelShader9 *pixelShader = (pixelExe ? ShaderExecutable9::makeShaderExecutable9(pixelExe)->getPixelShader() : NULL);
