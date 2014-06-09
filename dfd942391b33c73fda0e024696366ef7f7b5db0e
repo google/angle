@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ff9d800_5beac3c3",
+        "filename": "src/libGLESv2/renderer/d3d11/RenderTarget11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-09T21:31:39Z",
+      "side": 1,
+      "message": "stylistically I think this line might overextend the ternary operator. :) Can you break it up into prior flags? One option might be\n\n  if (dsvFormat \u0026\u0026 desc.SampleDesc.Count \u003e 1) { srvFormat \u003d NULL; }",
+      "range": {
+        "startLine": 310,
+        "startChar": 25,
+        "endLine": 313,
+        "endChar": 100
+      },
+      "revId": "dfd942391b33c73fda0e024696366ef7f7b5db0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
