@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "df2c3030_c94c13ae",
+        "filename": "src/common/platform.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-09T14:21:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf293c21_d4b83cd9",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "450ad71dc1f9809c703855e02643de8d755f18bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f1c24fb_a9f8c99d",
         "filename": "src/common/platform.h",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2014-06-05T00:26:03Z",
       "side": 1,
       "message": "Should ENABLE_PERF get some kind of suffix to make clear it\u0027s windows-only, so that people don\u0027t toggle it and then become surprised their compile depends on d3d9.h?",
+      "range": {
+        "startLine": 48,
+        "startChar": 45,
+        "endLine": 48,
+        "endChar": 62
+      },
+      "revId": "450ad71dc1f9809c703855e02643de8d755f18bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_f4076be5",
+        "filename": "src/common/platform.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-09T14:21:31Z",
+      "side": 1,
+      "message": "Since this is in the ANGLE_PLATFORM_WINDOWS section, d3d9.h won\u0027t be included on non-windows systems.",
+      "parentUuid": "7f1c24fb_a9f8c99d",
       "range": {
         "startLine": 48,
         "startChar": 45,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "1f1b2808_38eb9346",
+        "filename": "src/common/tls.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-09T14:21:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf293c21_340170d1",
+      "revId": "450ad71dc1f9809c703855e02643de8d755f18bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f1c24fb_09f455a7",
         "filename": "src/common/tls.h",
         "patchSetId": 4
@@ -76,6 +142,24 @@
       "writtenOn": "2014-06-05T00:26:03Z",
       "side": 1,
       "message": "Description for this boilerplate too, please.",
+      "revId": "450ad71dc1f9809c703855e02643de8d755f18bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df2c3030_a94f57a0",
+        "filename": "src/common/tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-09T14:21:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f1c24fb_09f455a7",
       "revId": "450ad71dc1f9809c703855e02643de8d755f18bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
