@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "fff2d415_81685c34",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-10T15:32:06Z",
+      "side": 1,
+      "message": "Ok. Let\u0027s remove the token for now; if we need it later we can update or add another extension.",
+      "parentUuid": "df2c3030_69593f68",
+      "range": {
+        "startLine": 81,
+        "startChar": 8,
+        "endLine": 81,
+        "endChar": 49
+      },
+      "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1b2808_cccae150",
         "filename": "extensions/ANGLE_platform_angle.txt",
         "patchSetId": 1
@@ -167,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "dfefd030_200fc4c1",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-10T15:32:06Z",
+      "side": 1,
+      "message": "Ah-- do you mean for users to use EGL_DEFAULT_DISPLAY both as the native_display parameter and the value of the  EGL_PLATFORM_TYPE_ANGLE attrib? I think it would be better not to double the meaning of that enum-- it refers explicitly to the display.\n\n(Incidentally, even if we don\u0027t specify a default EGL_PLATFORM_TYPE_ANGLE value enum, the above specification allows users to get a default display backed by a default renderer by passing an empty attrib_list. But it\u0027s still wise to create a default enum, I think.)",
+      "parentUuid": "1f1b2808_78d10b86",
+      "range": {
+        "startLine": 106,
+        "startChar": 8,
+        "endLine": 106,
+        "endChar": 45
+      },
+      "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f868066_1afc9c50",
         "filename": "extensions/ANGLE_platform_angle_opengl.txt",
         "patchSetId": 1
@@ -202,6 +250,30 @@
       "side": 1,
       "message": "This enum could be renamed to EGL_PLATFORM_ANGLE_TYPE_ES_ANGLE or EGL_PLATFORM_ANGLE_TYPE_NATIVE_ANGLE.  Think either of those would be better?",
       "parentUuid": "5f868066_1afc9c50",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 55,
+        "endChar": 46
+      },
+      "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fe9cc2b_66c0ca0d",
+        "filename": "extensions/ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-10T15:32:06Z",
+      "side": 1,
+      "message": "Eh, it\u0027s more the name of the extension that I wonder about.",
+      "parentUuid": "1f1b2808_98dadfa6",
       "range": {
         "startLine": 55,
         "startChar": 8,
