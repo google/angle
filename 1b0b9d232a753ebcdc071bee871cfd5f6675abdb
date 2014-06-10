@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "ffa0140a_f164822b",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T21:44:43Z",
+      "side": 1,
+      "message": "I merged it together, but it does require extra state for ProgramBinary.  mUsesFragDepth is part of the fragment shader which isn\u0027t always known when compiling. I originally split it so that mUsesFragDepth would not have to be serialized and stored in ProgramBinary.",
+      "parentUuid": "ffa0140a_ee9c9f16",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 69
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf15bcf5_b49fa052",
         "filename": "src/libGLESv2/DynamicHLSL.cpp",
         "patchSetId": 1
@@ -343,6 +367,30 @@
       "side": 1,
       "message": "Can you make this an ASSERT if it\u0027s not an expected use case? (ie, if it\u0027s an internal error, our convention is to use ASSERT to enforce our assumptions)",
       "parentUuid": "df18b02e_1533f42e",
+      "range": {
+        "startLine": 1058,
+        "startChar": 12,
+        "endLine": 1058,
+        "endChar": 66
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf15bcf5_77222a0c",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1058,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T21:44:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffa0140a_ce260341",
       "range": {
         "startLine": 1058,
         "startChar": 12,
@@ -766,6 +814,30 @@
       "side": 1,
       "message": "Can you file a bug for the missing save/load?\n\nThinking about it, here\u0027s what I\u0027d suggest: Rename your \"key\" vector to be mOuputVariables. Change the map to be a vector, and call it mOutputVariableIndex. This appproach would be consistent with how we handle Uniforms/Blocks.",
       "parentUuid": "ffa0140a_ee993f6e",
+      "range": {
+        "startLine": 298,
+        "startChar": 4,
+        "endLine": 298,
+        "endChar": 53
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf15bcf5_97c386cf",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T21:44:43Z",
+      "side": 1,
+      "message": "Created issue 671.",
+      "parentUuid": "ffa0140a_ae79f70c",
       "range": {
         "startLine": 298,
         "startChar": 4,
