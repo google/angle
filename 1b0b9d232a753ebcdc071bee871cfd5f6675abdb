@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "ffa0140a_ee9c9f16",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T18:34:55Z",
+      "side": 1,
+      "message": "Regarding your first point -- FragDepth doesn\u0027t require any extra state in ProgramBinary (it\u0027s already stored in mUsesFragDepth). Encapsulating the entire cluster of generated code is more minimal -- it requires one insertion point, and would stop the interm-HLSL from looking strange (struct { @@ thing @@ } optional fragdepth, later a third insertion ). It also simplifies and encapsulates the code generation in one function in DynamicHLSL. Moreover it is consistent with how we do the vertex insertion. I find this way preferable, don\u0027t you? \n\nRegarding your second point -- that\u0027s good with me, but consistency is more important. Could you also change the prior vertex shader code to match the style?",
+      "parentUuid": "ffa0140a_2eb4e7d4",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 69
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf15bcf5_b49fa052",
         "filename": "src/libGLESv2/DynamicHLSL.cpp",
         "patchSetId": 1
@@ -295,6 +319,30 @@
       "side": 1,
       "message": "I didn\u0027t want to discard the possibility of the vectors not being the same length so I added the check.",
       "parentUuid": "ffa0140a_8ec7db7a",
+      "range": {
+        "startLine": 1058,
+        "startChar": 12,
+        "endLine": 1058,
+        "endChar": 66
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffa0140a_ce260341",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1058,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T18:34:55Z",
+      "side": 1,
+      "message": "Can you make this an ASSERT if it\u0027s not an expected use case? (ie, if it\u0027s an internal error, our convention is to use ASSERT to enforce our assumptions)",
+      "parentUuid": "df18b02e_1533f42e",
       "range": {
         "startLine": 1058,
         "startChar": 12,
@@ -694,6 +742,30 @@
       "side": 1,
       "message": "I wanted to keep them separate because the pixel shader key is a detail of the HLSL while the output variables are more about the GLSL.  It does seem to be a bug that we don\u0027t safe/load the output variables though.",
       "parentUuid": "df18b02e_954544d5",
+      "range": {
+        "startLine": 298,
+        "startChar": 4,
+        "endLine": 298,
+        "endChar": 53
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffa0140a_ae79f70c",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T18:34:55Z",
+      "side": 1,
+      "message": "Can you file a bug for the missing save/load?\n\nThinking about it, here\u0027s what I\u0027d suggest: Rename your \"key\" vector to be mOuputVariables. Change the map to be a vector, and call it mOutputVariableIndex. This appproach would be consistent with how we handle Uniforms/Blocks.",
+      "parentUuid": "ffa0140a_ee993f6e",
       "range": {
         "startLine": 298,
         "startChar": 4,
