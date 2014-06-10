@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ffa0140a_2eb4e7d4",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "I had it this way originally but the gl_FragDepth isn\u0027t part of the dynamically generated code so that threw a wrench in the gears since I wanted the ammount of dynamically generated code to be minimal (no function or struct name declarations).\n\nI do like that the substitution logic is entirely contained in DynamicHLSL instead of ProgramBinary doing the substitution since it\u0027s a detail of the HLSL generation.  This lets us keep these string constants only in DynamicHLSL.cpp and reduces the  knowledge ProgramBinary needs of DynamicHLSL.",
+      "parentUuid": "bf15bcf5_54d44cee",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 69
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf15bcf5_b49fa052",
         "filename": "src/libGLESv2/DynamicHLSL.cpp",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2014-06-10T14:57:09Z",
       "side": 1,
       "message": "nit: can you call this something more akin to \"outputIndex\", \"outputLocation\", etc, technically it\u0027s an output slot, which could be pointing to a texture or buffer",
+      "range": {
+        "startLine": 681,
+        "startChar": 30,
+        "endLine": 681,
+        "endChar": 47
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffa0140a_0eb12be5",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df18b02e_f521182b",
       "range": {
         "startLine": 681,
         "startChar": 30,
@@ -117,6 +165,54 @@
     },
     {
       "key": {
+        "uuid": "ffa0140a_4eab3377",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df18b02e_d5269c40",
+      "range": {
+        "startLine": 1045,
+        "startChar": 67,
+        "endLine": 1045,
+        "endChar": 69
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffa0140a_6eaeef88",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df18b02e_750ce8ca",
+      "range": {
+        "startLine": 1045,
+        "startChar": 33,
+        "endLine": 1045,
+        "endChar": 38
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf15bcf5_14b134e5",
         "filename": "src/libGLESv2/DynamicHLSL.cpp",
         "patchSetId": 1
@@ -128,6 +224,30 @@
       "writtenOn": "2014-06-10T14:57:09Z",
       "side": 1,
       "message": "nit: reference type",
+      "range": {
+        "startLine": 1046,
+        "startChar": 75,
+        "endLine": 1046,
+        "endChar": 76
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffa0140a_ae8a970b",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1046,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf15bcf5_14b134e5",
       "range": {
         "startLine": 1046,
         "startChar": 75,
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "df18b02e_1533f42e",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1058,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "I didn\u0027t want to discard the possibility of the vectors not being the same length so I added the check.",
+      "parentUuid": "ffa0140a_8ec7db7a",
+      "range": {
+        "startLine": 1058,
+        "startChar": 12,
+        "endLine": 1058,
+        "endChar": 66
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df18b02e_d505fca9",
         "filename": "src/libGLESv2/DynamicHLSL.cpp",
         "patchSetId": 1
@@ -174,6 +318,30 @@
       "writtenOn": "2014-06-10T14:57:09Z",
       "side": 1,
       "message": "nit: whitespace",
+      "range": {
+        "startLine": 1061,
+        "startChar": 113,
+        "endLine": 1061,
+        "endChar": 114
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf15bcf5_1425b412",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1061,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df18b02e_d505fca9",
       "range": {
         "startLine": 1061,
         "startChar": 113,
@@ -232,6 +400,30 @@
     },
     {
       "key": {
+        "uuid": "ffa0140a_ee949f2d",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1240,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df18b02e_3555507e",
+      "range": {
+        "startLine": 1240,
+        "startChar": 14,
+        "endLine": 1240,
+        "endChar": 15
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf15bcf5_74aea888",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 1
@@ -243,6 +435,30 @@
       "writtenOn": "2014-06-10T14:57:09Z",
       "side": 1,
       "message": "This belongs in a utils header, maybe with the reset of the SafeX methods.",
+      "range": {
+        "startLine": 2780,
+        "startChar": 0,
+        "endLine": 2788,
+        "endChar": 1
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffa0140a_ce99e365",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2788,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf15bcf5_74aea888",
       "range": {
         "startLine": 2780,
         "startChar": 0,
@@ -278,6 +494,30 @@
     },
     {
       "key": {
+        "uuid": "df18b02e_354f10a3",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffa0140a_4e6333e6",
+      "range": {
+        "startLine": 243,
+        "startChar": 3,
+        "endLine": 243,
+        "endChar": 4
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf15bcf5_94a424ac",
         "filename": "src/libGLESv2/ProgramBinary.h",
         "patchSetId": 1
@@ -289,6 +529,30 @@
       "writtenOn": "2014-06-10T14:57:09Z",
       "side": 1,
       "message": "nit: use a reference type to avoid copy",
+      "range": {
+        "startLine": 244,
+        "startChar": 49,
+        "endLine": 244,
+        "endChar": 50
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df18b02e_d5697c03",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf15bcf5_94a424ac",
       "range": {
         "startLine": 244,
         "startChar": 49,
@@ -324,6 +588,30 @@
     },
     {
       "key": {
+        "uuid": "ffa0140a_0ecacb50",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffa0140a_aec2976a",
+      "range": {
+        "startLine": 247,
+        "startChar": 54,
+        "endLine": 247,
+        "endChar": 61
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df18b02e_f54ab8e2",
         "filename": "src/libGLESv2/ProgramBinary.h",
         "patchSetId": 1
@@ -347,6 +635,30 @@
     },
     {
       "key": {
+        "uuid": "bf15bcf5_f4f6383f",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df18b02e_f54ab8e2",
+      "range": {
+        "startLine": 249,
+        "startChar": 35,
+        "endLine": 249,
+        "endChar": 42
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df18b02e_954544d5",
         "filename": "src/libGLESv2/ProgramBinary.h",
         "patchSetId": 1
@@ -358,6 +670,30 @@
       "writtenOn": "2014-06-10T14:57:09Z",
       "side": 1,
       "message": "it seems to me we can combine mOuputVariables and mPixelShaderKey together into one data structure. also it seems to me mOuputVariables isn\u0027t saved and loaded with the ProgramBinary, is this a bug?",
+      "range": {
+        "startLine": 298,
+        "startChar": 4,
+        "endLine": 298,
+        "endChar": 53
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffa0140a_ee993f6e",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T17:26:34Z",
+      "side": 1,
+      "message": "I wanted to keep them separate because the pixel shader key is a detail of the HLSL while the output variables are more about the GLSL.  It does seem to be a bug that we don\u0027t safe/load the output variables though.",
+      "parentUuid": "df18b02e_954544d5",
       "range": {
         "startLine": 298,
         "startChar": 4,
