@@ -22,6 +22,30 @@
       "revId": "dfd942391b33c73fda0e024696366ef7f7b5db0e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fe9cc2b_46b4a6d5",
+        "filename": "src/libGLESv2/renderer/d3d11/RenderTarget11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-10T15:06:51Z",
+      "side": 1,
+      "message": "I agree-- I\u0027m usually reluctant to use many ternaries where they don\u0027t already exist. I went with tracking binding intention in three bools, because I wanted to keep the notion of \"does an SRV binding format exist for this texture type\" separate from \"do we actually want to bind as an SRV\", and because I could then reuse the bools for simpler checks below. LMK if that\u0027ll suit.",
+      "parentUuid": "9ff9d800_5beac3c3",
+      "range": {
+        "startLine": 310,
+        "startChar": 25,
+        "endLine": 313,
+        "endChar": 100
+      },
+      "revId": "dfd942391b33c73fda0e024696366ef7f7b5db0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
