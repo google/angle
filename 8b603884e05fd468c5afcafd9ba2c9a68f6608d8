@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fc0f8c0_c3a896b0",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2557,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T22:29:31Z",
+      "side": 1,
+      "message": "just a q, is there a 10_1 render target count?",
+      "range": {
+        "startLine": 2557,
+        "startChar": 8,
+        "endLine": 2557,
+        "endChar": 53
+      },
+      "revId": "8b603884e05fd468c5afcafd9ba2c9a68f6608d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
