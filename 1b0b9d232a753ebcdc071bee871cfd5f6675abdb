@@ -1,0 +1,372 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf15bcf5_54d44cee",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "we can combine these to one insertion point to keep the complexity minimal. similar to the vertex attributes, make the dynamic content be:\n\n  struct PS_OUTPUT { /* definition */ };\n  void copyPixelOutputs(PS_OUTPUT output) { /* copy */ }\n\nand the static content be\n\n  PS_OUTPUT output;\n  copyPixelOutputs(output);",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 69
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf15bcf5_b49fa052",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "as above, similar to the dynamic vertex stuff, you could move everything up to the end of PS_OUTPUT definition to a helper method.",
+      "range": {
+        "startLine": 669,
+        "startChar": 18,
+        "endLine": 669,
+        "endChar": 38
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df18b02e_f521182b",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "nit: can you call this something more akin to \"outputIndex\", \"outputLocation\", etc, technically it\u0027s an output slot, which could be pointing to a texture or buffer",
+      "range": {
+        "startLine": 681,
+        "startChar": 30,
+        "endLine": 681,
+        "endChar": 47
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df18b02e_d5269c40",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "nit: spacing",
+      "range": {
+        "startLine": 1045,
+        "startChar": 67,
+        "endLine": 1045,
+        "endChar": 69
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df18b02e_750ce8ca",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "FinalPixelShader isn\u0027t specific enough -- maybe another adjective. Like generatePixelShaderForOutputSignature",
+      "range": {
+        "startLine": 1045,
+        "startChar": 33,
+        "endLine": 1045,
+        "endChar": 38
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf15bcf5_14b134e5",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1046,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "nit: reference type",
+      "range": {
+        "startLine": 1046,
+        "startChar": 75,
+        "endLine": 1046,
+        "endChar": 76
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffa0140a_8ec7db7a",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1058,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "q: when might this condition be false?",
+      "range": {
+        "startLine": 1058,
+        "startChar": 12,
+        "endLine": 1058,
+        "endChar": 66
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df18b02e_d505fca9",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1061,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "range": {
+        "startLine": 1061,
+        "startChar": 113,
+        "endLine": 1061,
+        "endChar": 114
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df18b02e_d54fbcf0",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "nit: with the single insert point you should be able to use almsot the same code as the vertex stuff",
+      "range": {
+        "startLine": 232,
+        "startChar": 4,
+        "endLine": 232,
+        "endChar": 71
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df18b02e_3555507e",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1240,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "nit: make this unsigned or make the below signed char",
+      "range": {
+        "startLine": 1240,
+        "startChar": 14,
+        "endLine": 1240,
+        "endChar": 15
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf15bcf5_74aea888",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2788,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "This belongs in a utils header, maybe with the reset of the SafeX methods.",
+      "range": {
+        "startLine": 2780,
+        "startChar": 0,
+        "endLine": 2788,
+        "endChar": 1
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffa0140a_4e6333e6",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "nit: indent",
+      "range": {
+        "startLine": 243,
+        "startChar": 3,
+        "endLine": 243,
+        "endChar": 4
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf15bcf5_94a424ac",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "nit: use a reference type to avoid copy",
+      "range": {
+        "startLine": 244,
+        "startChar": 49,
+        "endLine": 244,
+        "endChar": 50
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffa0140a_aec2976a",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "nit: this is still a signature, I\u0027d call it as such",
+      "range": {
+        "startLine": 247,
+        "startChar": 54,
+        "endLine": 247,
+        "endChar": 61
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df18b02e_f54ab8e2",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "ditto for all usages",
+      "range": {
+        "startLine": 249,
+        "startChar": 35,
+        "endLine": 249,
+        "endChar": 42
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df18b02e_954544d5",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T14:57:09Z",
+      "side": 1,
+      "message": "it seems to me we can combine mOuputVariables and mPixelShaderKey together into one data structure. also it seems to me mOuputVariables isn\u0027t saved and loaded with the ProgramBinary, is this a bug?",
+      "range": {
+        "startLine": 298,
+        "startChar": 4,
+        "endLine": 298,
+        "endChar": 53
+      },
+      "revId": "1b0b9d232a753ebcdc071bee871cfd5f6675abdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
