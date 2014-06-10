@@ -22,6 +22,30 @@
       "revId": "8b603884e05fd468c5afcafd9ba2c9a68f6608d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fc0f8c0_e33dd2ad",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2557,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-10T22:45:36Z",
+      "side": 1,
+      "message": "Nope, it seems they only add a 10_1, 11_1, etc constants when they are different than the lower API versions.",
+      "parentUuid": "9fc0f8c0_c3a896b0",
+      "range": {
+        "startLine": 2557,
+        "startChar": 8,
+        "endLine": 2557,
+        "endChar": 53
+      },
+      "revId": "8b603884e05fd468c5afcafd9ba2c9a68f6608d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
