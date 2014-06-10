@@ -22,6 +22,30 @@
       "revId": "275962e151db000f431d02f54e430bed8b3fb0ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf15bcf5_d4b33cd6",
+        "filename": "src/commit_id.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-10T15:33:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5fe4c050_21d7ce7e",
+      "range": {
+        "startLine": 5,
+        "startChar": 21,
+        "endLine": 5,
+        "endChar": 23
+      },
+      "revId": "275962e151db000f431d02f54e430bed8b3fb0ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
