@@ -22,6 +22,30 @@
       "revId": "80ebce59e49266b13e8d2edfe5a8d4a1203f55c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc3fcc9_a79f6452",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2099,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-11T17:43:10Z",
+      "side": 0,
+      "message": "I think this undoes  https://chromium-review.googlesource.com/#/c/186971/. You should definitely check the WebGL CTS with the above change (D3D11 and 9), and make it a split patch if it\u0027s good.",
+      "parentUuid": "7f6424c8_1a421d51",
+      "range": {
+        "startLine": 2098,
+        "startChar": 12,
+        "endLine": 2099,
+        "endChar": 108
+      },
+      "revId": "80ebce59e49266b13e8d2edfe5a8d4a1203f55c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
