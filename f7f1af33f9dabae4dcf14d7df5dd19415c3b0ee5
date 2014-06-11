@@ -22,6 +22,30 @@
       "revId": "f7f1af33f9dabae4dcf14d7df5dd19415c3b0ee5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc3fcc9_c769c003",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2605,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-11T19:52:16Z",
+      "side": 1,
+      "message": "That\u0027s just the name of the function we generate that acts as a constructor. We can\u0027t name them anything that\u0027s an HLSL keyword.",
+      "parentUuid": "7f6424c8_bd5ccb26",
+      "range": {
+        "startLine": 2605,
+        "startChar": 75,
+        "endLine": 2605,
+        "endChar": 79
+      },
+      "revId": "f7f1af33f9dabae4dcf14d7df5dd19415c3b0ee5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
