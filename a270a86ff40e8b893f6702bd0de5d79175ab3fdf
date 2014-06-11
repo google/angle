@@ -46,6 +46,30 @@
       "revId": "a270a86ff40e8b893f6702bd0de5d79175ab3fdf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc3fcc9_87c348cf",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-11T19:03:44Z",
+      "side": 1,
+      "message": "I was incorrect, they must have the same type. Same question here, then.",
+      "parentUuid": "bfc3fcc9_871868db",
+      "range": {
+        "startLine": 230,
+        "startChar": 5,
+        "endLine": 230,
+        "endChar": 68
+      },
+      "revId": "a270a86ff40e8b893f6702bd0de5d79175ab3fdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
