@@ -70,6 +70,54 @@
       "revId": "a270a86ff40e8b893f6702bd0de5d79175ab3fdf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_ddf89f9f",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-11T19:49:37Z",
+      "side": 1,
+      "message": "Yes, an assignError is generated when this method returns 0. Likewise a binaryOpError is generated when addBinaryMath returns 0.",
+      "parentUuid": "bfc3fcc9_87c348cf",
+      "range": {
+        "startLine": 230,
+        "startChar": 5,
+        "endLine": 230,
+        "endChar": 68
+      },
+      "revId": "a270a86ff40e8b893f6702bd0de5d79175ab3fdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fc0f8c0_e60de09b",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-11T19:49:37Z",
+      "side": 1,
+      "message": "The promote() call below takes care of checking all other cases. It determines the result type of binary operations and thus needs the left and right operand type to make sense. It just doesn\u0027t do sufficient checking on structs so I\u0027m checking them here as a specialization.\n\nWe actually do need additional checks, but this one for structs and the ones performed by promote() are the only ones the conformance test suite demands right now. I\u0027ll fix other cases while tightening the conformance tests.",
+      "parentUuid": "dfc6f0d8_c840af6b",
+      "range": {
+        "startLine": 230,
+        "startChar": 5,
+        "endLine": 230,
+        "endChar": 68
+      },
+      "revId": "a270a86ff40e8b893f6702bd0de5d79175ab3fdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
