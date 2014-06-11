@@ -124,6 +124,7 @@ class Renderer9 : public Renderer
     virtual bool getPostSubBufferSupport() const;
     virtual int getMaxRecommendedElementsIndices() const;
     virtual int getMaxRecommendedElementsVertices() const;
+    virtual bool getSRGBTextureSupport() const;
 
     virtual int getMajorShaderModel() const;
     virtual float getMaxPointSize() const;

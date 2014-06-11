@@ -341,6 +341,20 @@ bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint le
                 return gl::error(GL_INVALID_OPERATION, false);
             }
             break;
+          case GL_SRGB_EXT:
+          case GL_SRGB_ALPHA_EXT:
+            if (!context->getCaps().extensions.sRGB)
+            {
+                return gl::error(GL_INVALID_ENUM, false);
+            }
+            switch (type)
+            {
+              case GL_UNSIGNED_BYTE:
+                break;
+              default:
+                return gl::error(GL_INVALID_OPERATION, false);
+            }
+            break;
           case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:  // error cases for compressed textures are handled below
           case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
           case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:

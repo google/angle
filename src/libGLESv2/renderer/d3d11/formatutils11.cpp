@@ -406,6 +406,10 @@ static D3D11ES2FormatMap BuildD3D11ES2FormatMap()
     map.insert(D3D11ES2FormatPair(GL_BGRA4_ANGLEX,                    D3D11ES2FormatInfo(DXGI_FORMAT_B8G8R8A8_UNORM,     DXGI_FORMAT_B8G8R8A8_UNORM,        DXGI_FORMAT_B8G8R8A8_UNORM,     DXGI_FORMAT_UNKNOWN,           loadRGBA4444DataToRGBA                   )));
     map.insert(D3D11ES2FormatPair(GL_BGR5_A1_ANGLEX,                  D3D11ES2FormatInfo(DXGI_FORMAT_B8G8R8A8_UNORM,     DXGI_FORMAT_B8G8R8A8_UNORM,        DXGI_FORMAT_B8G8R8A8_UNORM,     DXGI_FORMAT_UNKNOWN,           loadRGBA5551DataToRGBA                   )));
 
+    // From GL_EXT_sRGB
+    map.insert(D3D11ES2FormatPair(GL_SRGB8,                           D3D11ES2FormatInfo(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,           loadToNative3To4<GLubyte, 0xFF>          )));
+    map.insert(D3D11ES2FormatPair(GL_SRGB8_ALPHA8,                    D3D11ES2FormatInfo(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_FORMAT_UNKNOWN,           loadToNative<GLubyte, 4>                 )));
+
     // From GL_EXT_texture_rg
     map.insert(D3D11ES2FormatPair(GL_R8_EXT,                          D3D11ES2FormatInfo(DXGI_FORMAT_R8_UNORM,           DXGI_FORMAT_R8_UNORM,              DXGI_FORMAT_R8_UNORM,           DXGI_FORMAT_UNKNOWN,           loadToNative<GLubyte, 1>                 )));
     map.insert(D3D11ES2FormatPair(GL_R32F_EXT,                        D3D11ES2FormatInfo(DXGI_FORMAT_R32_FLOAT,          DXGI_FORMAT_R32_FLOAT,             DXGI_FORMAT_R32_FLOAT,          DXGI_FORMAT_UNKNOWN,           loadToNative<GLfloat, 1>                 )));

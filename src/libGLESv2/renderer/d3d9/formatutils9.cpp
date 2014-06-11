@@ -740,7 +740,6 @@ D3DFORMAT GetTextureFormat(GLenum internalFormat)
     }
     else
     {
-        UNREACHABLE();
         return D3DFMT_UNKNOWN;
     }
 }
@@ -754,7 +753,6 @@ D3DFORMAT GetRenderFormat(GLenum internalFormat)
     }
     else
     {
-        UNREACHABLE();
         return D3DFMT_UNKNOWN;
     }
 }

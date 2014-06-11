@@ -119,6 +119,11 @@ struct Extensions
     bool textureCompressionDXT3;
     bool textureCompressionDXT5;
 
+    // GL_EXT_sRGB
+    // Implies that TextureCaps for GL_SRGB8_ALPHA8 and GL_SRGB8 exist
+    // TODO: Don't advertise this extension in ES3
+    bool sRGB;
+
     // GL_ANGLE_depth_texture
     bool depthTextures;
 

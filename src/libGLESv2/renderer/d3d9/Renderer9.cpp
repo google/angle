@@ -2362,6 +2362,11 @@ int Renderer9::getMaxRecommendedElementsVertices() const
     return 0;
 }
 
+bool Renderer9::getSRGBTextureSupport() const
+{
+    return false;
+}
+
 int Renderer9::getMajorShaderModel() const
 {
     return D3DSHADER_VERSION_MAJOR(mDeviceCaps.PixelShaderVersion);

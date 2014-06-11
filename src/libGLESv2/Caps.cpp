@@ -125,6 +125,7 @@ std::vector<std::string> Extensions::getStrings(GLuint clientVersion) const
     InsertExtensionString("GL_EXT_texture_compression_dxt1",   2,    0,     textureCompressionDXT1,   clientVersion, &extensionStrings);
     InsertExtensionString("GL_ANGLE_texture_compression_dxt3", 2,    0,     textureCompressionDXT3,   clientVersion, &extensionStrings);
     InsertExtensionString("GL_ANGLE_texture_compression_dxt5", 2,    0,     textureCompressionDXT5,   clientVersion, &extensionStrings);
+    InsertExtensionString("GL_EXT_sRGB",                       2,    0,     sRGB,                     clientVersion, &extensionStrings); // FIXME: Don't advertise in ES3
     InsertExtensionString("GL_ANGLE_depth_texture",            2,    0,     depthTextures,            clientVersion, &extensionStrings);
     InsertExtensionString("GL_EXT_texture_storage",            2,    0,     textureStorage,           clientVersion, &extensionStrings);
     InsertExtensionString("GL_OES_texture_npot",               2,    0,     textureNPOT,              clientVersion, &extensionStrings);
@@ -282,6 +283,20 @@ static bool DetermineDXT5TextureSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, false, false);
 }
 
+// Check for GL_ANGLE_texture_compression_dxt5
+static bool DetermineSRGBTextureSupport(const TextureCapsMap &textureCaps)
+{
+    std::vector<GLenum> requiredFilterFormats;
+    requiredFilterFormats.push_back(GL_SRGB8);
+    requiredFilterFormats.push_back(GL_SRGB8_ALPHA8);
+
+    std::vector<GLenum> requiredRenderFormats;
+    requiredRenderFormats.push_back(GL_SRGB8_ALPHA8);
+
+    return GetFormatSupport(textureCaps, requiredFilterFormats, true, false, false) &&
+           GetFormatSupport(textureCaps, requiredRenderFormats, false, true, false);
+}
+
 // Check for GL_ANGLE_depth_texture
 static bool DetermineDepthTextureSupport(const TextureCapsMap &textureCaps)
 {
@@ -320,6 +335,7 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     textureCompressionDXT1 = DetermineDXT1TextureSupport(textureCaps);
     textureCompressionDXT3 = DetermineDXT3TextureSupport(textureCaps);
     textureCompressionDXT5 = DetermineDXT5TextureSupport(textureCaps);
+    sRGB = DetermineSRGBTextureSupport(textureCaps);
     depthTextures = DetermineDepthTextureSupport(textureCaps);
     colorBufferFloat = DetermineColorBufferFloatSupport(textureCaps);
 }

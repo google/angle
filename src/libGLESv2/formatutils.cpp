@@ -80,6 +80,9 @@ FormatMap BuildES2FormatMap()
     InsertFormatMapping(&map, GL_RGBA,                            GL_FLOAT,                          GL_RGBA32F_EXT,                     WriteColor<R32G32B32A32F, GLfloat>);
     InsertFormatMapping(&map, GL_RGBA,                            GL_HALF_FLOAT_OES,                 GL_RGBA16F_EXT,                     WriteColor<R16G16B16A16F, GLfloat>);
 
+    InsertFormatMapping(&map, GL_SRGB_EXT,                        GL_UNSIGNED_BYTE,                  GL_SRGB8,                           WriteColor<R8G8B8, GLfloat>        );
+    InsertFormatMapping(&map, GL_SRGB_ALPHA_EXT,                  GL_UNSIGNED_BYTE,                  GL_SRGB8_ALPHA8,                    WriteColor<R8G8B8A8, GLfloat>      );
+
     InsertFormatMapping(&map, GL_BGRA_EXT,                        GL_UNSIGNED_BYTE,                  GL_BGRA8_EXT,                       WriteColor<B8G8R8A8, GLfloat>     );
     InsertFormatMapping(&map, GL_BGRA_EXT,                        GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT, GL_BGRA4_ANGLEX,                    WriteColor<B4G4R4A4, GLfloat>     );
     InsertFormatMapping(&map, GL_BGRA_EXT,                        GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT, GL_BGR5_A1_ANGLEX,                  WriteColor<B5G5R5A1, GLfloat>     );
@@ -174,6 +177,9 @@ FormatMap BuildES3FormatMap()
     InsertFormatMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_BYTE,                  GL_BGRA8_EXT,              WriteColor<B8G8R8A8, GLfloat>     );
     InsertFormatMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT, GL_BGRA4_ANGLEX,           WriteColor<B4G4R4A4, GLfloat>     );
     InsertFormatMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT, GL_BGR5_A1_ANGLEX,         WriteColor<B5G5R5A1, GLfloat>     );
+
+    InsertFormatMapping(&map, GL_SRGB_EXT,           GL_UNSIGNED_BYTE,                  GL_SRGB8,                  WriteColor<R8G8B8, GLfloat>       );
+    InsertFormatMapping(&map, GL_SRGB_ALPHA_EXT,     GL_UNSIGNED_BYTE,                  GL_SRGB8_ALPHA8,           WriteColor<R8G8B8A8, GLfloat>     );
 
     InsertFormatMapping(&map, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,    GL_UNSIGNED_BYTE,     GL_COMPRESSED_RGB_S3TC_DXT1_EXT,    NULL                     );
     InsertFormatMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   GL_UNSIGNED_BYTE,     GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   NULL                     );
@@ -307,6 +313,8 @@ ES3FormatSet BuildES3FormatSet()
     set.insert(FormatInfo(GL_LUMINANCE_ALPHA,    GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE                 ));
     set.insert(FormatInfo(GL_LUMINANCE,          GL_LUMINANCE,       GL_UNSIGNED_BYTE                 ));
     set.insert(FormatInfo(GL_ALPHA,              GL_ALPHA,           GL_UNSIGNED_BYTE                 ));
+    set.insert(FormatInfo(GL_SRGB_ALPHA_EXT,     GL_SRGB_ALPHA_EXT,  GL_UNSIGNED_BYTE                 ));
+    set.insert(FormatInfo(GL_SRGB_EXT,           GL_SRGB_EXT,        GL_UNSIGNED_BYTE                 ));
 
     // Depth stencil formats
     set.insert(FormatInfo(GL_DEPTH_COMPONENT16,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT                ));
@@ -315,6 +323,10 @@ ES3FormatSet BuildES3FormatSet()
     set.insert(FormatInfo(GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_FLOAT                         ));
     set.insert(FormatInfo(GL_DEPTH24_STENCIL8,   GL_DEPTH_STENCIL,   GL_UNSIGNED_INT_24_8             ));
     set.insert(FormatInfo(GL_DEPTH32F_STENCIL8,  GL_DEPTH_STENCIL,   GL_FLOAT_32_UNSIGNED_INT_24_8_REV));
+
+    // From GL_EXT_sRGB
+    set.insert(FormatInfo(GL_SRGB8_ALPHA8_EXT,   GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE                  ));
+    set.insert(FormatInfo(GL_SRGB8,              GL_SRGB_EXT,       GL_UNSIGNED_BYTE                  ));
 
     // From GL_OES_texture_float
     set.insert(FormatInfo(GL_LUMINANCE_ALPHA,    GL_LUMINANCE_ALPHA, GL_FLOAT                         ));
@@ -712,6 +724,8 @@ static InternalFormatInfoMap BuildES3InternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_RGB_INTEGER,     InternalFormatInfo::UnsizedFormat(GL_RGB_INTEGER,     AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_RGBA_INTEGER,    InternalFormatInfo::UnsizedFormat(GL_RGBA_INTEGER,    AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_BGRA_EXT,        InternalFormatInfo::UnsizedFormat(GL_BGRA_EXT,        AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_SRGB_EXT,        InternalFormatInfo::UnsizedFormat(GL_RGB,             CheckSupport<&Extensions::sRGB>)));
+    map.insert(InternalFormatInfoPair(GL_SRGB_ALPHA_EXT,  InternalFormatInfo::UnsizedFormat(GL_RGBA,            CheckSupport<&Extensions::sRGB>)));
 
     // Compressed formats, From ES 3.0.1 spec, table 3.16
     //                               | Internal format                             |                                    |W |H | BS |CC| Format                                      | Type            | SRGB | Supported          |
@@ -761,6 +775,10 @@ static InternalFormatInfoMap BuildES2InternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_BGRA4_ANGLEX,         InternalFormatInfo::RGBAFormat( 4,  4,  4,  4, 0, GL_BGRA_EXT,      GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_NORMALIZED, false, CheckSupport<&Extensions::textureFormatBGRA8888>)));
     map.insert(InternalFormatInfoPair(GL_BGR5_A1_ANGLEX,       InternalFormatInfo::RGBAFormat( 5,  5,  5,  1, 0, GL_BGRA_EXT,      GL_UNSIGNED_SHORT_5_5_5_1, GL_UNSIGNED_NORMALIZED, false, CheckSupport<&Extensions::textureFormatBGRA8888>)));
 
+    // From GL_EXT_sRGB
+    map.insert(InternalFormatInfoPair(GL_SRGB8,                InternalFormatInfo::RGBAFormat( 8,  8,  8,  0, 0, GL_RGB,           GL_UNSIGNED_BYTE,           GL_UNSIGNED_NORMALIZED, true,  CheckSupport<&Extensions::sRGB>)));
+    map.insert(InternalFormatInfoPair(GL_SRGB8_ALPHA8,         InternalFormatInfo::RGBAFormat( 8,  8,  8,  8, 0, GL_RGBA,          GL_UNSIGNED_BYTE,           GL_UNSIGNED_NORMALIZED, true,  CheckSupport<&Extensions::sRGB>)));
+
     // Floating point formats have to query the renderer for support
     //                               | Internal format        |                              | R | G | B | A |S | Format          | Type                     | Comp    | SRGB | Supported                                                         |
     //                               |                        |                              |   |   |   |   |  |                 |                          | type    |      |                                                                   |
@@ -793,6 +811,8 @@ static InternalFormatInfoMap BuildES2InternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_BGRA_EXT,             InternalFormatInfo::UnsizedFormat(GL_BGRA_EXT,          CheckSupport<&Extensions::textureFormatBGRA8888>)));
     map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT,      InternalFormatInfo::UnsizedFormat(GL_DEPTH_COMPONENT,   AlwaysSupported                                 )));
     map.insert(InternalFormatInfoPair(GL_DEPTH_STENCIL_OES,    InternalFormatInfo::UnsizedFormat(GL_DEPTH_STENCIL_OES, CheckSupport<&Extensions::packedDepthStencil>   )));
+    map.insert(InternalFormatInfoPair(GL_SRGB_EXT,             InternalFormatInfo::UnsizedFormat(GL_RGB,               CheckSupport<&Extensions::sRGB>                 )));
+    map.insert(InternalFormatInfoPair(GL_SRGB_ALPHA_EXT,       InternalFormatInfo::UnsizedFormat(GL_RGBA,              CheckSupport<&Extensions::sRGB>                 )));
 
     // Luminance alpha formats from GL_EXT_texture_storage
     //                               | Internal format          |                              | L | A | Format             | Type            | Component type        | Supported                                                              |
