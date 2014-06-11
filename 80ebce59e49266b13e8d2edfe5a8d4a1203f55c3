@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f6424c8_1a421d51",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2099,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-11T15:56:49Z",
+      "side": 0,
+      "message": "I think this was a bug, our internal formats are always sized so validRenderable would always be true.",
+      "range": {
+        "startLine": 2098,
+        "startChar": 12,
+        "endLine": 2099,
+        "endChar": 108
+      },
+      "revId": "80ebce59e49266b13e8d2edfe5a8d4a1203f55c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

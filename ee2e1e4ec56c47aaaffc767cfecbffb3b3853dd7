@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfc3fcc9_2710946d",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2665,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-11T15:56:49Z",
+      "side": 1,
+      "message": "Flipped the error case to match the others.",
+      "range": {
+        "startLine": 2661,
+        "startChar": 16,
+        "endLine": 2665,
+        "endChar": 22
+      },
+      "revId": "ee2e1e4ec56c47aaaffc767cfecbffb3b3853dd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
