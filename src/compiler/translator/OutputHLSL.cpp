@@ -3590,7 +3590,12 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
                 }
             }
         }
-        else UNREACHABLE();
+        else
+        {
+            ASSERT(rows == 2 && cols == 2 && parameter.isVector() && parameter.getNominalSize() == 4);
+
+            constructor += "x0";
+        }
     }
     else
     {
