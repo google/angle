@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fc0f8c0_c69704be",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2114,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-11T19:59:17Z",
+      "side": 1,
+      "message": "can you add a note here indicating that we can\u0027t distinguish extension sRGB from core sRGB in es3, so we support mipmaps on both?",
+      "range": {
+        "startLine": 2114,
+        "startChar": 12,
+        "endLine": 2114,
+        "endChar": 19
+      },
+      "revId": "75d0b1a4bdec6952c711db0465d4b800a5c1590b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
