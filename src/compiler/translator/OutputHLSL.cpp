@@ -2148,61 +2148,13 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
 {
     switch (node->getOp())
     {
-      case EOpNegative:         outputTriplet(visit, "(-", "", ")");  break;
-      case EOpVectorLogicalNot: outputTriplet(visit, "(!", "", ")");  break;
-      case EOpLogicalNot:       outputTriplet(visit, "(!", "", ")");  break;
-      case EOpPostIncrement:    outputTriplet(visit, "(", "", "++)"); break;
-      case EOpPostDecrement:    outputTriplet(visit, "(", "", "--)"); break;
-      case EOpPreIncrement:     outputTriplet(visit, "(++", "", ")"); break;
-      case EOpPreDecrement:     outputTriplet(visit, "(--", "", ")"); break;
-      case EOpConvIntToBool:
-      case EOpConvUIntToBool:
-      case EOpConvFloatToBool:
-        switch (node->getOperand()->getType().getNominalSize())
-        {
-          case 1:    outputTriplet(visit, "bool(", "", ")");  break;
-          case 2:    outputTriplet(visit, "bool2(", "", ")"); break;
-          case 3:    outputTriplet(visit, "bool3(", "", ")"); break;
-          case 4:    outputTriplet(visit, "bool4(", "", ")"); break;
-          default: UNREACHABLE();
-        }
-        break;
-      case EOpConvBoolToFloat:
-      case EOpConvIntToFloat:
-      case EOpConvUIntToFloat:
-        switch (node->getOperand()->getType().getNominalSize())
-        {
-          case 1:    outputTriplet(visit, "float(", "", ")");  break;
-          case 2:    outputTriplet(visit, "float2(", "", ")"); break;
-          case 3:    outputTriplet(visit, "float3(", "", ")"); break;
-          case 4:    outputTriplet(visit, "float4(", "", ")"); break;
-          default: UNREACHABLE();
-        }
-        break;
-      case EOpConvFloatToInt:
-      case EOpConvBoolToInt:
-      case EOpConvUIntToInt:
-        switch (node->getOperand()->getType().getNominalSize())
-        {
-          case 1:    outputTriplet(visit, "int(", "", ")");  break;
-          case 2:    outputTriplet(visit, "int2(", "", ")"); break;
-          case 3:    outputTriplet(visit, "int3(", "", ")"); break;
-          case 4:    outputTriplet(visit, "int4(", "", ")"); break;
-          default: UNREACHABLE();
-        }
-        break;
-      case EOpConvFloatToUInt:
-      case EOpConvBoolToUInt:
-      case EOpConvIntToUInt:
-        switch (node->getOperand()->getType().getNominalSize())
-        {
-          case 1:    outputTriplet(visit, "uint(", "", ")");  break;
-          case 2:    outputTriplet(visit, "uint2(", "", ")");  break;
-          case 3:    outputTriplet(visit, "uint3(", "", ")");  break;
-          case 4:    outputTriplet(visit, "uint4(", "", ")");  break;
-          default: UNREACHABLE();
-        }
-        break;
+      case EOpNegative:         outputTriplet(visit, "(-", "", ")");         break;
+      case EOpVectorLogicalNot: outputTriplet(visit, "(!", "", ")");         break;
+      case EOpLogicalNot:       outputTriplet(visit, "(!", "", ")");         break;
+      case EOpPostIncrement:    outputTriplet(visit, "(", "", "++)");        break;
+      case EOpPostDecrement:    outputTriplet(visit, "(", "", "--)");        break;
+      case EOpPreIncrement:     outputTriplet(visit, "(++", "", ")");        break;
+      case EOpPreDecrement:     outputTriplet(visit, "(--", "", ")");        break;
       case EOpRadians:          outputTriplet(visit, "radians(", "", ")");   break;
       case EOpDegrees:          outputTriplet(visit, "degrees(", "", ")");   break;
       case EOpSin:              outputTriplet(visit, "sin(", "", ")");       break;

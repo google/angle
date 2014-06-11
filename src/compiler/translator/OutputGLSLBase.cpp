@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -401,67 +401,6 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
       case EOpPostDecrement: preString = "("; postString = "--)"; break;
       case EOpPreIncrement: preString = "(++"; break;
       case EOpPreDecrement: preString = "(--"; break;
-
-      case EOpConvIntToBool:
-      case EOpConvFloatToBool:
-        switch (node->getOperand()->getType().getNominalSize())
-        {
-          case 1:
-            preString =  "bool(";
-            break;
-          case 2:
-            preString = "bvec2(";
-            break;
-          case 3:
-            preString = "bvec3(";
-            break;
-          case 4:
-            preString = "bvec4(";
-            break;
-          default:
-            UNREACHABLE();
-        }
-        break;
-      case EOpConvBoolToFloat:
-      case EOpConvIntToFloat:
-        switch (node->getOperand()->getType().getNominalSize())
-        {
-          case 1:
-            preString = "float(";
-            break;
-          case 2:
-            preString = "vec2(";
-            break;
-          case 3:
-            preString = "vec3(";
-            break;
-          case 4:
-            preString = "vec4(";
-            break;
-          default:
-            UNREACHABLE();
-        }
-        break;
-      case EOpConvFloatToInt:
-      case EOpConvBoolToInt:
-        switch (node->getOperand()->getType().getNominalSize())
-        {
-          case 1:
-            preString = "int(";
-            break;
-          case 2:
-            preString = "ivec2(";
-            break;
-          case 3:
-            preString = "ivec3(";
-            break;
-          case 4:
-            preString = "ivec4(";
-            break;
-          default:
-            UNREACHABLE();
-        }
-        break;
 
       case EOpRadians:
         preString = "radians(";
