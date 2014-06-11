@@ -22,6 +22,30 @@
       "revId": "a270a86ff40e8b893f6702bd0de5d79175ab3fdf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc3fcc9_871868db",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-11T19:01:47Z",
+      "side": 1,
+      "message": "struct_of_type_a \u003d struct_of_type_b is not valid I\u0027d assume, but float_a \u003d int_b is quite ok (for example)\n\njust checking -- we will generate good error messages in these bad cases in other parts of the code?",
+      "parentUuid": "dfc6f0d8_c840af6b",
+      "range": {
+        "startLine": 230,
+        "startChar": 5,
+        "endLine": 230,
+        "endChar": 68
+      },
+      "revId": "a270a86ff40e8b893f6702bd0de5d79175ab3fdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
