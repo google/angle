@@ -2601,83 +2601,26 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             return false;
         }
         break;
-      case EOpParameters:       outputTriplet(visit, "(", ", ", ")\n{\n");             break;
-      case EOpConstructFloat:
-        addConstructor(node->getType(), "vec1", &node->getSequence());
-        outputTriplet(visit, "vec1(", "", ")");
-        break;
-      case EOpConstructVec2:
-        addConstructor(node->getType(), "vec2", &node->getSequence());
-        outputTriplet(visit, "vec2(", ", ", ")");
-        break;
-      case EOpConstructVec3:
-        addConstructor(node->getType(), "vec3", &node->getSequence());
-        outputTriplet(visit, "vec3(", ", ", ")");
-        break;
-      case EOpConstructVec4:
-        addConstructor(node->getType(), "vec4", &node->getSequence());
-        outputTriplet(visit, "vec4(", ", ", ")");
-        break;
-      case EOpConstructBool:
-        addConstructor(node->getType(), "bvec1", &node->getSequence());
-        outputTriplet(visit, "bvec1(", "", ")");
-        break;
-      case EOpConstructBVec2:
-        addConstructor(node->getType(), "bvec2", &node->getSequence());
-        outputTriplet(visit, "bvec2(", ", ", ")");
-        break;
-      case EOpConstructBVec3:
-        addConstructor(node->getType(), "bvec3", &node->getSequence());
-        outputTriplet(visit, "bvec3(", ", ", ")");
-        break;
-      case EOpConstructBVec4:
-        addConstructor(node->getType(), "bvec4", &node->getSequence());
-        outputTriplet(visit, "bvec4(", ", ", ")");
-        break;
-      case EOpConstructInt:
-        addConstructor(node->getType(), "ivec1", &node->getSequence());
-        outputTriplet(visit, "ivec1(", "", ")");
-        break;
-      case EOpConstructIVec2:
-        addConstructor(node->getType(), "ivec2", &node->getSequence());
-        outputTriplet(visit, "ivec2(", ", ", ")");
-        break;
-      case EOpConstructIVec3:
-        addConstructor(node->getType(), "ivec3", &node->getSequence());
-        outputTriplet(visit, "ivec3(", ", ", ")");
-        break;
-      case EOpConstructIVec4:
-        addConstructor(node->getType(), "ivec4", &node->getSequence());
-        outputTriplet(visit, "ivec4(", ", ", ")");
-        break;
-      case EOpConstructUInt:
-        addConstructor(node->getType(), "uvec1", &node->getSequence());
-        outputTriplet(visit, "uvec1(", "", ")");
-        break;
-      case EOpConstructUVec2:
-        addConstructor(node->getType(), "uvec2", &node->getSequence());
-        outputTriplet(visit, "uvec2(", ", ", ")");
-        break;
-      case EOpConstructUVec3:
-        addConstructor(node->getType(), "uvec3", &node->getSequence());
-        outputTriplet(visit, "uvec3(", ", ", ")");
-        break;
-      case EOpConstructUVec4:
-        addConstructor(node->getType(), "uvec4", &node->getSequence());
-        outputTriplet(visit, "uvec4(", ", ", ")");
-        break;
-      case EOpConstructMat2:
-        addConstructor(node->getType(), "mat2", &node->getSequence());
-        outputTriplet(visit, "mat2(", ", ", ")");
-        break;
-      case EOpConstructMat3:
-        addConstructor(node->getType(), "mat3", &node->getSequence());
-        outputTriplet(visit, "mat3(", ", ", ")");
-        break;
-      case EOpConstructMat4: 
-        addConstructor(node->getType(), "mat4", &node->getSequence());
-        outputTriplet(visit, "mat4(", ", ", ")");
-        break;
+      case EOpParameters:       outputTriplet(visit, "(", ", ", ")\n{\n");                                break;
+      case EOpConstructFloat:   outputConstructor(visit, node->getType(), "vec1", &node->getSequence());  break;
+      case EOpConstructVec2:    outputConstructor(visit, node->getType(), "vec2", &node->getSequence());  break;
+      case EOpConstructVec3:    outputConstructor(visit, node->getType(), "vec3", &node->getSequence());  break;
+      case EOpConstructVec4:    outputConstructor(visit, node->getType(), "vec4", &node->getSequence());  break;
+      case EOpConstructBool:    outputConstructor(visit, node->getType(), "bvec1", &node->getSequence()); break;
+      case EOpConstructBVec2:   outputConstructor(visit, node->getType(), "bvec2", &node->getSequence()); break;
+      case EOpConstructBVec3:   outputConstructor(visit, node->getType(), "bvec3", &node->getSequence()); break;
+      case EOpConstructBVec4:   outputConstructor(visit, node->getType(), "bvec4", &node->getSequence()); break;
+      case EOpConstructInt:     outputConstructor(visit, node->getType(), "ivec1", &node->getSequence()); break;
+      case EOpConstructIVec2:   outputConstructor(visit, node->getType(), "ivec2", &node->getSequence()); break;
+      case EOpConstructIVec3:   outputConstructor(visit, node->getType(), "ivec3", &node->getSequence()); break;
+      case EOpConstructIVec4:   outputConstructor(visit, node->getType(), "ivec4", &node->getSequence()); break;
+      case EOpConstructUInt:    outputConstructor(visit, node->getType(), "uvec1", &node->getSequence()); break;
+      case EOpConstructUVec2:   outputConstructor(visit, node->getType(), "uvec2", &node->getSequence()); break;
+      case EOpConstructUVec3:   outputConstructor(visit, node->getType(), "uvec3", &node->getSequence()); break;
+      case EOpConstructUVec4:   outputConstructor(visit, node->getType(), "uvec4", &node->getSequence()); break;
+      case EOpConstructMat2:    outputConstructor(visit, node->getType(), "mat2", &node->getSequence());  break;
+      case EOpConstructMat3:    outputConstructor(visit, node->getType(), "mat3", &node->getSequence());  break;
+      case EOpConstructMat4:    outputConstructor(visit, node->getType(), "mat4", &node->getSequence());  break;
       case EOpConstructStruct:
         {
             const TString &structName = structNameString(*node->getType().getStruct());
@@ -3512,6 +3455,26 @@ TString OutputHLSL::structureTypeName(const TStructure &structure, bool useHLSLR
     return prefix + structNameString(structure);
 }
 
+void OutputHLSL::outputConstructor(Visit visit, const TType &type, const TString &name, const TIntermSequence *parameters)
+{
+    TInfoSinkBase &out = mBody;
+
+    if (visit == PreVisit)
+    {
+        addConstructor(type, name, parameters);
+
+        out << name + "(";
+    }
+    else if (visit == InVisit)
+    {
+        out << ", ";
+    }
+    else if (visit == PostVisit)
+    {
+        out << ")";
+    }
+}
+
 void OutputHLSL::addConstructor(const TType &type, const TString &name, const TIntermSequence *parameters)
 {
     if (name == "")
@@ -3640,7 +3603,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
                 {
                     if (row < parameter.getRows() && col < parameter.getCols())
                     {
-                        constructor += TString("x0") + "[" + str(row) + "]" + "[" + str(col) + "]";
+                        constructor += TString("x0") + "[" + str(row) + "][" + str(col) + "]";
                     }
                     else
                     {
