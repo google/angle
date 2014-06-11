@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfc6f0d8_c840af6b",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-11T18:19:39Z",
+      "side": 1,
+      "message": "Sorry, I\u0027m not familiar enough with this code, I think, but-- why is this return only done in the struct case?",
+      "range": {
+        "startLine": 230,
+        "startChar": 5,
+        "endLine": 230,
+        "endChar": 68
+      },
+      "revId": "a270a86ff40e8b893f6702bd0de5d79175ab3fdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
