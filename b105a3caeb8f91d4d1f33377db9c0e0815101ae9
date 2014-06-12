@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "7f6424c8_2e1b1f8d",
+        "filename": "src/libGLESv2/Caps.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-12T16:45:44Z",
+      "side": 1,
+      "message": "You know, I think Chromium uses it\u0027s own custom libc++ with the features it needs. In the Chromium src it also defines a custom unordered_map. Looking on the net, it seems unordered_map support in GCC 4.1 is a bit experimental. I\u0027m fine with using unordered_map, it\u0027s not that hard to replace in the future if it becomes a problem.",
+      "parentUuid": "ffc9f4e9_fa1731d6",
+      "range": {
+        "startLine": 46,
+        "startChar": 17,
+        "endLine": 46,
+        "endChar": 30
+      },
+      "revId": "b105a3caeb8f91d4d1f33377db9c0e0815101ae9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfc6f0d8_b9578701",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 12
