@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfc6f0d8_b9578701",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 5014,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-12T15:44:02Z",
+      "side": 1,
+      "message": "These lines are long enough that we should probably break the single-line format for them.",
+      "revId": "b105a3caeb8f91d4d1f33377db9c0e0815101ae9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffc9f4e9_1a7ccd3c",
+        "filename": "src/libGLESv2/renderer/d3d9/renderer9_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-12T15:44:02Z",
+      "side": 1,
+      "message": "Should probably sweep through all the affected files and update the copyrights in them.",
+      "range": {
+        "startLine": 2,
+        "startChar": 22,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "b105a3caeb8f91d4d1f33377db9c0e0815101ae9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
