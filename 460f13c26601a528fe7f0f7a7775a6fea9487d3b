@@ -22,6 +22,30 @@
       "revId": "460f13c26601a528fe7f0f7a7775a6fea9487d3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_43810c72",
+        "filename": "src/libGLESv2/FramebufferAttachment.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-12T16:19:28Z",
+      "side": 1,
+      "message": "You\u0027re right, the virtual aspect was redundant, though the function is still useful.",
+      "parentUuid": "9fc0f8c0_8c524b20",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 70,
+        "endChar": 27
+      },
+      "revId": "460f13c26601a528fe7f0f7a7775a6fea9487d3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
