@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfc3fcc9_780a2941",
+        "filename": "src/commit.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T14:26:11Z",
+      "side": 1,
+      "message": "Let\u0027s add the copyright header here too",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 74
+      },
+      "revId": "44196481bfdae7cc37762c594a13c5b7b3d888b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fc0f8c0_8c2b6ba4",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T14:26:11Z",
+      "side": 1,
+      "message": "Would it make sense in the future to use this macro to simply not advertise the extension (via the caps)?",
+      "range": {
+        "startLine": 1022,
+        "startChar": 4,
+        "endLine": 1022,
+        "endChar": 17
+      },
+      "revId": "44196481bfdae7cc37762c594a13c5b7b3d888b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
