@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fc0f8c0_0c3f7bd3",
+        "filename": "tests/angle_tests/BufferDataTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T15:17:35Z",
+      "side": 1,
+      "message": "Make sure to delete this or use an array on the stack.  Typically the OS will still allocate at least one byte.",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 105,
+        "endChar": 33
+      },
+      "revId": "7959ee2240f2136337045edbd4337d6c5a7e890c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
