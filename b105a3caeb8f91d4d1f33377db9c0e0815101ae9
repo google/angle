@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "7f6424c8_6e2517c9",
+        "filename": "src/libGLESv2/Caps.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T16:48:10Z",
+      "side": 1,
+      "message": "I think I\u0027m content with that.  We use unordered_map in a few other gl-level places so I\u0027d rather re-evaluate the situation all at once when we need to support old GCC.",
+      "parentUuid": "7f6424c8_2e1b1f8d",
+      "range": {
+        "startLine": 46,
+        "startChar": 17,
+        "endLine": 46,
+        "endChar": 30
+      },
+      "revId": "b105a3caeb8f91d4d1f33377db9c0e0815101ae9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfc6f0d8_b9578701",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 12
@@ -101,6 +125,30 @@
       "writtenOn": "2014-06-12T16:08:48Z",
       "side": 1,
       "message": "if we\u0027re making mCaps private and always accessing mCaps through getCaps, we don\u0027t need a two initialize/doInitialize methods (which is a bit icky). Generate caps on the first call to getCaps(), using a flag to guard against multiple init.",
+      "range": {
+        "startLine": 262,
+        "startChar": 4,
+        "endLine": 262,
+        "endChar": 19
+      },
+      "revId": "b105a3caeb8f91d4d1f33377db9c0e0815101ae9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc3fcc9_b8430128",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T16:48:10Z",
+      "side": 1,
+      "message": "Yea, I hate those names too.  We\u0027re comfortable with more mutable members? I am for these cases.",
+      "parentUuid": "bfc3fcc9_d856bd02",
       "range": {
         "startLine": 262,
         "startChar": 4,
