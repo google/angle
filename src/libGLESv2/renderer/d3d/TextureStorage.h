@@ -13,6 +13,8 @@
 
 #include "common/debug.h"
 
+#include <GLES2/gl2.h>
+
 namespace rx
 {
 class Renderer;

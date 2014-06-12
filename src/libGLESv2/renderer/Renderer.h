@@ -16,6 +16,8 @@
 
 #include <cstdint>
 
+#include <EGL/egl.h>
+
 #if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
 // WARNING: D3DCOMPILE_OPTIMIZATION_LEVEL3 may lead to a DX9 shader compiler hang.
 // It should only be used selectively to work around specific bugs.

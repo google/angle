@@ -7,15 +7,13 @@
 // VertexDataManager.h: Defines the VertexDataManager, a class that
 // runs the Buffer translation process.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/VertexDataManager.h"
 #include "libGLESv2/renderer/d3d/BufferD3D.h"
-
+#include "libGLESv2/renderer/d3d/VertexBuffer.h"
+#include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/VertexAttribute.h"
-#include "libGLESv2/renderer/d3d/VertexBuffer.h"
-#include "libGLESv2/renderer/Renderer.h"
 
 namespace
 {

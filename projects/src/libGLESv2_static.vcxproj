@@ -229,7 +229,6 @@
     <ClInclude Include="..\..\src\libGLESv2\Fence.h"/>
     <ClInclude Include="..\..\src\libGLESv2\VertexArray.h"/>
     <ClInclude Include="..\..\src\libGLESv2\main.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\common_includes.h"/>
     <ClInclude Include="..\..\src\libGLESv2\ProgramBinary.h"/>
     <ClInclude Include="..\..\src\libGLESv2\angletypes.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Uniform.h"/>

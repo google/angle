@@ -6,11 +6,10 @@
 
 // libGLESv2.cpp: Implements the exported OpenGL ES 2.0 functions.
 
-#include "libGLESv2/common_includes.h"
 #include "common/version.h"
+#include "common/utilities.h"
 
 #include "libGLESv2/main.h"
-#include "common/utilities.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Fence.h"

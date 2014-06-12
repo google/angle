@@ -9,6 +9,8 @@
 #ifndef LIBGLESV2_VALIDATION_ES2_H
 #define LIBGLESV2_VALIDATION_ES2_H
 
+#include <GLES2/gl2.h>
+
 namespace gl
 {
 

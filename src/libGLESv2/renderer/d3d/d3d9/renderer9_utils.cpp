@@ -7,13 +7,11 @@
 // renderer9_utils.cpp: Conversion functions and other utility routines
 // specific to the D3D9 renderer.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
 #include "libGLESv2/formatutils.h"
-#include "common/mathutil.h"
-#include "libGLESv2/Context.h"
 
+#include "common/mathutil.h"
 #include "common/debug.h"
 
 #include "third_party/systeminfo/SystemInfo.h"

@@ -7,7 +7,6 @@
 // ResourceManager.cpp: Implements the gl::ResourceManager class, which tracks and 
 // retrieves objects which may be shared by multiple Contexts.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/ResourceManager.h"
 
 #include "libGLESv2/Buffer.h"

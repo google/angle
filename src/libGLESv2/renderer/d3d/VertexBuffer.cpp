@@ -7,11 +7,11 @@
 // VertexBuffer.cpp: Defines the abstract VertexBuffer class and VertexBufferInterface
 // class with derivations, classes that perform graphics API agnostic vertex buffer operations.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/VertexBuffer.h"
+#include "libGLESv2/renderer/d3d/BufferD3D.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/VertexAttribute.h"
-#include "libGLESv2/renderer/d3d/BufferD3D.h"
+
 #include "common/mathutil.h"
 
 namespace rx

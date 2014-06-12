@@ -13,6 +13,8 @@
 #include "libGLESv2/angletypes.h"
 #include "common/angleutils.h"
 
+#include <unordered_map>
+
 namespace gl
 {
 class Framebuffer;

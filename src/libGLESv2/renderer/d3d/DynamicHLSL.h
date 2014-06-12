@@ -12,6 +12,16 @@
 #include "common/angleutils.h"
 #include "libGLESv2/constants.h"
 
+#include "angle_gl.h"
+
+#include <vector>
+#include <map>
+
+namespace rx
+{
+class Renderer;
+}
+
 namespace sh
 {
 struct Attribute;

@@ -7,10 +7,8 @@
 // RenderTarget11.cpp: Implements a DX11-specific wrapper for ID3D11View pointers
 // retained by Renderbuffers.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
-
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
 #include "libGLESv2/main.h"

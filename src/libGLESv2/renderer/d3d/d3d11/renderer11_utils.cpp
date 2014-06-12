@@ -7,10 +7,12 @@
 // renderer11_utils.cpp: Conversion functions and other utility routines
 // specific to the D3D11 renderer.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
+
 #include "common/debug.h"
+
+#include <algorithm>
 
 namespace rx
 {

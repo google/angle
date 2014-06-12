@@ -6,7 +6,6 @@
 
 // Indexffer9.cpp: Defines the D3D9 IndexBuffer implementation.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d9/IndexBuffer9.h"
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
 

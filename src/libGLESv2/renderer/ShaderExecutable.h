@@ -13,6 +13,9 @@
 #include "common/angleutils.h"
 #include "common/debug.h"
 
+#include <vector>
+#include <cstdint>
+
 namespace rx
 {
 

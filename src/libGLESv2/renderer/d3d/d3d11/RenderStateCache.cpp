@@ -7,7 +7,6 @@
 // RenderStateCache.cpp: Defines rx::RenderStateCache, a cache of Direct3D render
 // state objects.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/RenderStateCache.h"
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
@@ -15,6 +14,7 @@
 #include "libGLESv2/FramebufferAttachment.h"
 
 #include "common/debug.h"
+
 #include "third_party/murmurhash/MurmurHash3.h"
 
 namespace rx

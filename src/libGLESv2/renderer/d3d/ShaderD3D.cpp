@@ -6,13 +6,12 @@
 
 // ShaderD3D.cpp: Defines the rx::ShaderD3D class which implements rx::ShaderImpl.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
+#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/Shader.h"
+#include "libGLESv2/main.h"
 
 #include "common/utilities.h"
-#include "libGLESv2/Shader.h"
-#include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/main.h"
 
 namespace rx
 {

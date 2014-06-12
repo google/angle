@@ -6,7 +6,6 @@
 
 // copyimage.cpp: Defines image copying functions
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/copyImage.h"
 
 namespace rx

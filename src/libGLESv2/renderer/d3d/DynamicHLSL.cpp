@@ -6,16 +6,15 @@
 // DynamicHLSL.cpp: Implementation for link and run-time HLSL generation
 //
 
-#include "libGLESv2/common_includes.h"
-
 #include "libGLESv2/renderer/d3d/DynamicHLSL.h"
-#include "libGLESv2/Shader.h"
-#include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
 #include "libGLESv2/renderer/Renderer.h"
-#include "common/utilities.h"
+#include "libGLESv2/Shader.h"
+#include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/formatutils.h"
+
+#include "common/utilities.h"
 #include "common/blocklayout.h"
 
 // For use with ArrayString, see angleutils.h

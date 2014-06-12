@@ -6,7 +6,6 @@
 
 // validationES3.cpp: Validation functions for OpenGL ES 3.0 entry point parameters
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/validationES3.h"
 #include "libGLESv2/validationES.h"
 #include "libGLESv2/Context.h"

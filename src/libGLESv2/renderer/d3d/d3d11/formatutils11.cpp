@@ -7,7 +7,6 @@
 // formatutils11.cpp: Queries for GL image formats and their translations to D3D11
 // formats.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
 #include "libGLESv2/renderer/generatemip.h"
 #include "libGLESv2/renderer/loadimage.h"

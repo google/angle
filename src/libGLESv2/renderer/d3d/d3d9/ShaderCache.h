@@ -12,6 +12,10 @@
 
 #include "common/debug.h"
 
+#include <cstddef>
+#include <unordered_map>
+#include <string>
+
 namespace rx
 {
 template <typename ShaderObject>

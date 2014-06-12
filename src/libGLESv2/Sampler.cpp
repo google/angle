@@ -7,7 +7,6 @@
 // Sampler.cpp : Implements the Sampler class, which represents a GLES 3
 // sampler object. Sampler objects store some state needed to sample textures.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Sampler.h"
 #include "libGLESv2/angletypes.h"
 

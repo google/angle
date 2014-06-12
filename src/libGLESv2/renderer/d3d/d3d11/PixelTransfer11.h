@@ -13,6 +13,10 @@
 
 #include "common/platform.h"
 
+#include <GLES2/gl2.h>
+
+#include <map>
+
 namespace gl
 {
 

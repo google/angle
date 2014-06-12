@@ -6,7 +6,6 @@
 
 // angletypes.h : Defines a variety of structures and enum types that are used throughout libGLESv2
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/angletypes.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/VertexAttribute.h"

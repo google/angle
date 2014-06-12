@@ -8,15 +8,17 @@
 // VertexShader and FragmentShader. Implements GL shader objects and related
 // functionality. [OpenGL ES 2.0.24] section 2.10 page 24 and section 3.8 page 84.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Shader.h"
-
-#include "GLSLANG/ShaderLang.h"
-#include "common/utilities.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/ShaderImpl.h"
 #include "libGLESv2/Constants.h"
 #include "libGLESv2/ResourceManager.h"
+
+#include "common/utilities.h"
+
+#include "GLSLANG/ShaderLang.h"
+
+#include <sstream>
 
 namespace gl
 {

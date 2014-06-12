@@ -8,7 +8,6 @@
 // in a separated file for GCC, which can enable SSE usage only per-file,
 // not for code blocks that use SSE2 explicitly.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/loadimage.h"
 
 namespace rx

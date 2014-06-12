@@ -6,8 +6,6 @@
 
 // Renderer.cpp: Implements EGL dependencies for creating and destroying Renderer instances.
 
-#include "libGLESv2/common_includes.h"
-#include <EGL/eglext.h>
 #include "libGLESv2/main.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/Renderer.h"
@@ -27,6 +25,8 @@
 // Enables use of the Direct3D 11 API for a default display, when available
 #define ANGLE_DEFAULT_D3D11 0
 #endif
+
+#include <EGL/eglext.h>
 
 namespace rx
 {

@@ -12,6 +12,9 @@
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
+
+#include "angle_gl.h"
+
 #include <map>
 
 namespace rx

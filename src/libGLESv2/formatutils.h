@@ -9,12 +9,13 @@
 #ifndef LIBGLESV2_FORMATUTILS_H_
 #define LIBGLESV2_FORMATUTILS_H_
 
-#include "angle_gl.h"
-
 #include "libGLESv2/Caps.h"
 #include "libGLESv2/angletypes.h"
 
+#include "angle_gl.h"
+
 #include <cstddef>
+#include <cstdint>
 
 typedef void (*MipGenerationFunction)(size_t sourceWidth, size_t sourceHeight, size_t sourceDepth,
                                       const uint8_t *sourceData, size_t sourceRowPitch, size_t sourceDepthPitch,

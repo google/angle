@@ -10,15 +10,6 @@
 #ifndef LIBGLESV2_CONTEXT_H_
 #define LIBGLESV2_CONTEXT_H_
 
-#include "angle_gl.h"
-#include <EGL/egl.h>
-
-#include <string>
-#include <set>
-#include <map>
-#include <unordered_map>
-#include <array>
-
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 #include "libGLESv2/Caps.h"
@@ -28,6 +19,14 @@
 #include "libGLESv2/Constants.h"
 #include "libGLESv2/VertexAttribute.h"
 #include "libGLESv2/State.h"
+
+#include "angle_gl.h"
+
+#include <string>
+#include <set>
+#include <map>
+#include <unordered_map>
+#include <array>
 
 namespace rx
 {

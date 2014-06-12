@@ -9,10 +9,10 @@
 #ifndef LIBGLESV2_QUERY_H_
 #define LIBGLESV2_QUERY_H_
 
-#include "angle_gl.h"
-
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
+
+#include "angle_gl.h"
 
 namespace rx
 {

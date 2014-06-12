@@ -13,6 +13,8 @@
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/renderer/d3d/TextureStorage.h"
 
+#include <map>
+
 namespace rx
 {
 class RenderTarget;

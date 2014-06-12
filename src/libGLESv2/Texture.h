@@ -11,16 +11,16 @@
 #ifndef LIBGLESV2_TEXTURE_H_
 #define LIBGLESV2_TEXTURE_H_
 
-#include <vector>
-
-#include "angle_gl.h"
-
 #include "common/debug.h"
 #include "common/RefCountObject.h"
 #include "libGLESv2/angletypes.h"
 #include "libGLESv2/constants.h"
 #include "libGLESv2/renderer/TextureImpl.h"
 #include "libGLESv2/Caps.h"
+
+#include "angle_gl.h"
+
+#include <vector>
 
 namespace egl
 {

@@ -8,7 +8,6 @@
 // renderer-specific classes which will define the interface to the underlying
 // surfaces or resources.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/Image.h"
 
 namespace rx

@@ -7,7 +7,6 @@
 // HandleAllocator.cpp: Implements the gl::HandleAllocator class, which is used
 // to allocate GL handles.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/HandleAllocator.h"
 
 #include "libGLESv2/main.h"

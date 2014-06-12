@@ -6,9 +6,7 @@
 
 // Renderer11.cpp: Implements a back-end specific class for the D3D11 renderer.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/main.h"
-#include "common/utilities.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/ProgramBinary.h"
@@ -36,7 +34,14 @@
 #include "libGLESv2/renderer/d3d/d3d11/PixelTransfer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/VertexArray11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Buffer11.h"
+
 #include "libEGL/Display.h"
+
+#include "common/utilities.h"
+
+#include <EGL/eglext.h>
+
+#include <sstream>
 
 // Enable ANGLE_SKIP_DXGI_1_2_CHECK if there is not a possibility of using cross-process
 // HWNDs or the Windows 7 Platform Update (KB2670838) is expected to be installed.

@@ -9,17 +9,16 @@
 //   Used to implement pixel transfers from unpack and to pack buffers.
 //
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/PixelTransfer11.h"
-#include "libGLESv2/formatutils.h"
-#include "libGLESv2/Texture.h"
-#include "libGLESv2/Buffer.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Buffer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/TextureStorage11.h"
 #include "libGLESv2/renderer/d3d/d3d11/RenderTarget11.h"
+#include "libGLESv2/formatutils.h"
+#include "libGLESv2/Texture.h"
+#include "libGLESv2/Buffer.h"
 #include "libGLESv2/Context.h"
 
 // Precompiled shaders

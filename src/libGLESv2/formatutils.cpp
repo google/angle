@@ -6,7 +6,6 @@
 
 // formatutils.cpp: Queries for GL image formats.
 
-#include "libGLESv2/common_includes.h"
 #include "common/mathutil.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Context.h"

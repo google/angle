@@ -6,7 +6,6 @@
 // Implementation of the state class for mananging GLES 3 Vertex Array Objects.
 //
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/VertexArray.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/renderer/VertexArrayImpl.h"

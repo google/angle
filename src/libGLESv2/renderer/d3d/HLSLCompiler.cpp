@@ -5,8 +5,6 @@
 //
 
 #include "libGLESv2/renderer/d3d/HLSLCompiler.h"
-
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/main.h"
 

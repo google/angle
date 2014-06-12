@@ -8,15 +8,14 @@
 // Colorbuffer, Depthbuffer and Stencilbuffer. Implements GL renderbuffer
 // objects and related functionality. [OpenGL ES 2.0.24] section 4.4.3 page 108.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Renderbuffer.h"
-#include "libGLESv2/renderer/RenderTarget.h"
-
 #include "libGLESv2/Texture.h"
-#include "libGLESv2/renderer/Renderer.h"
-#include "common/utilities.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/FramebufferAttachment.h"
+#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/RenderTarget.h"
+
+#include "common/utilities.h"
 
 namespace gl
 {

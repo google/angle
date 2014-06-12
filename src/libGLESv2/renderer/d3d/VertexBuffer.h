@@ -12,6 +12,11 @@
 
 #include "common/angleutils.h"
 
+#include <GLES2/gl2.h>
+
+#include <cstddef>
+#include <vector>
+
 namespace gl
 {
 struct VertexAttribute;

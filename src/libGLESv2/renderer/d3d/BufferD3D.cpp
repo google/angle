@@ -6,11 +6,10 @@
 
 // BufferD3D.cpp Defines common functionality between the Buffer9 and Buffer11 classes.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/BufferD3D.h"
-#include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/d3d/VertexBuffer.h"
 #include "libGLESv2/renderer/d3d/IndexBuffer.h"
+#include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/main.h"
 
 namespace rx

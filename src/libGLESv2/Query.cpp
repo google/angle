@@ -6,7 +6,6 @@
 
 // Query.cpp: Implements the gl::Query class
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Query.h"
 #include "libGLESv2/renderer/QueryImpl.h"
 

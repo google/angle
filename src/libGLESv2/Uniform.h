@@ -7,14 +7,15 @@
 #ifndef LIBGLESV2_UNIFORM_H_
 #define LIBGLESV2_UNIFORM_H_
 
-#include <string>
-#include <vector>
+#include "common/debug.h"
+#include "common/blocklayout.h"
+
+#include "libGLESv2/angletypes.h"
 
 #include "angle_gl.h"
 
-#include "common/debug.h"
-#include "angletypes.h"
-#include "common/blocklayout.h"
+#include <string>
+#include <vector>
 
 namespace gl
 {

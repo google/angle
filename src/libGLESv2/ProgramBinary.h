@@ -10,11 +10,6 @@
 #ifndef LIBGLESV2_PROGRAM_BINARY_H_
 #define LIBGLESV2_PROGRAM_BINARY_H_
 
-#include "angle_gl.h"
-
-#include <string>
-#include <vector>
-
 #include "common/RefCountObject.h"
 #include "angletypes.h"
 #include "common/mathutil.h"
@@ -24,10 +19,22 @@
 #include "libGLESv2/renderer/d3d/VertexDataManager.h"
 #include "libGLESv2/renderer/d3d/DynamicHLSL.h"
 
+#include "angle_gl.h"
+
+#include <string>
+#include <vector>
+
 namespace sh
 {
 class HLSLBlockEncoder;
 }
+
+#include <GLES3/gl3.h>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+
+#include <string>
+#include <vector>
 
 namespace rx
 {

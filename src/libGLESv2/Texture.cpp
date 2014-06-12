@@ -8,19 +8,19 @@
 // Texture2D and TextureCubeMap. Implements GL texture objects and related
 // functionality. [OpenGL ES 2.0.24] section 3.7 page 63.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Texture.h"
-
 #include "libGLESv2/main.h"
-#include "common/mathutil.h"
-#include "common/utilities.h"
 #include "libGLESv2/Context.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/renderer/Image.h"
-#include "libGLESv2/renderer/d3d/TextureStorage.h"
-#include "libEGL/Surface.h"
 #include "libGLESv2/renderer/RenderTarget.h"
+#include "libGLESv2/renderer/d3d/TextureStorage.h"
+
+#include "libEGL/Surface.h"
+
+#include "common/mathutil.h"
+#include "common/utilities.h"
 
 namespace gl
 {

@@ -13,6 +13,11 @@
 #include "libGLESv2/Constants.h"
 #include "common/angleutils.h"
 
+#include <GLES2/gl2.h>
+
+#include <cstddef>
+#include <unordered_map>
+
 namespace gl
 {
 class ProgramBinary;

@@ -6,7 +6,6 @@
 // Implementation of the state class for mananging GLES 3 Vertex Array Objects.
 //
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/VertexAttribute.h"
 
 namespace gl

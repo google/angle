@@ -6,10 +6,9 @@
 
 // Buffer9.cpp Defines the Buffer9 class.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d9/Buffer9.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
+#include "libGLESv2/main.h"
 
 namespace rx
 {

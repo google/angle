@@ -8,7 +8,6 @@
 // index data. Implements GL buffer objects and related functionality.
 // [OpenGL ES 2.0.24] section 2.9 page 21.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/renderer/BufferImpl.h"
 #include "libGLESv2/renderer/Renderer.h"

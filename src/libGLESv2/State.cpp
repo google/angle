@@ -6,7 +6,6 @@
 
 // State.cpp: Implements the State class, encapsulating raw GL state.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/State.h"
 
 #include "libGLESv2/Context.h"

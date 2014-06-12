@@ -180,9 +180,6 @@
     <ClInclude Include="..\..\src\libGLESv2\main.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\common_includes.h">
-      <Filter>src\libGLESv2</Filter>
-    </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\Float16ToFloat32.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>

@@ -6,7 +6,6 @@
 
 // queryconversions.cpp: Implementation of state query cast conversions
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Context.h"
 #include "common/utilities.h"
 

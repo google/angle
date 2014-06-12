@@ -7,9 +7,7 @@
 // ShaderExecutable11.cpp: Implements a D3D11-specific class to contain shader
 // executable implementation details.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/ShaderExecutable11.h"
-
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 
 namespace rx

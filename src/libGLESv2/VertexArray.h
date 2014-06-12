@@ -17,6 +17,8 @@
 #include "libGLESv2/constants.h"
 #include "libGLESv2/VertexAttribute.h"
 
+#include <vector>
+
 namespace rx
 {
 class Renderer;

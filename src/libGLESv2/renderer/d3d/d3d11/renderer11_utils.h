@@ -13,6 +13,8 @@
 #include "libGLESv2/angletypes.h"
 #include "libGLESv2/Caps.h"
 
+#include <vector>
+
 namespace rx
 {
 

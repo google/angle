@@ -6,14 +6,12 @@
 
 // VertexBuffer9.cpp: Defines the D3D9 VertexBuffer implementation.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d9/VertexBuffer9.h"
+#include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
+#include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
 #include "libGLESv2/renderer/vertexconversion.h"
 #include "libGLESv2/renderer/BufferImpl.h"
 #include "libGLESv2/VertexAttribute.h"
-#include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
-#include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
-
 #include "libGLESv2/Buffer.h"
 
 namespace rx

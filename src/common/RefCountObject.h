@@ -12,11 +12,11 @@
 #ifndef COMMON_REFCOUNTOBJECT_H_
 #define COMMON_REFCOUNTOBJECT_H_
 
-#include <cstddef>
+#include "common/debug.h"
 
 #include "angle_gl.h"
 
-#include "common/debug.h"
+#include <cstddef>
 
 class RefCountObject
 {

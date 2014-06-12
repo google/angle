@@ -7,11 +7,11 @@
 // Context.cpp: Implements the gl::Context class, managing all GL state and performing
 // rendering operations. It is the GLES2 specific implementation of EGLContext.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Context.h"
 
 #include "libGLESv2/main.h"
 #include "common/utilities.h"
+#include "common/platform.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Fence.h"
@@ -33,8 +33,7 @@
 
 #include "libEGL/Surface.h"
 
-#undef near
-#undef far
+#include <sstream>
 
 namespace gl
 {

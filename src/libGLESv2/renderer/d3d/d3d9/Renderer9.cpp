@@ -6,20 +6,6 @@
 
 // Renderer9.cpp: Implements a back-end specific class for the D3D9 renderer.
 
-#include "common/utilities.h"
-
-#include "libGLESv2/common_includes.h"
-#include "libGLESv2/main.h"
-#include "libGLESv2/Buffer.h"
-#include "libGLESv2/Texture.h"
-#include "libGLESv2/Framebuffer.h"
-#include "libGLESv2/FramebufferAttachment.h"
-#include "libGLESv2/Renderbuffer.h"
-#include "libGLESv2/ProgramBinary.h"
-#include "libGLESv2/renderer/d3d/IndexDataManager.h"
-#include "libGLESv2/renderer/d3d/ShaderD3D.h"
-#include "libGLESv2/renderer/d3d/TextureD3D.h"
-#include "libGLESv2/renderer/d3d/TransformFeedbackD3D.h"
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
 #include "libGLESv2/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
@@ -35,11 +21,26 @@
 #include "libGLESv2/renderer/d3d/d3d9/Query9.h"
 #include "libGLESv2/renderer/d3d/d3d9/Fence9.h"
 #include "libGLESv2/renderer/d3d/d3d9/VertexArray9.h"
+#include "libGLESv2/renderer/d3d/IndexDataManager.h"
+#include "libGLESv2/renderer/d3d/ShaderD3D.h"
+#include "libGLESv2/renderer/d3d/TextureD3D.h"
+#include "libGLESv2/renderer/d3d/TransformFeedbackD3D.h"
+#include "libGLESv2/main.h"
+#include "libGLESv2/Buffer.h"
+#include "libGLESv2/Texture.h"
+#include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/FramebufferAttachment.h"
+#include "libGLESv2/Renderbuffer.h"
+#include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/angletypes.h"
 
 #include "libEGL/Display.h"
 
+#include "common/utilities.h"
+
 #include "third_party/trace_event/trace_event.h"
+
+#include <sstream>
 
 // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
 #define REF_RAST 0

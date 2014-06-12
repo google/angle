@@ -11,6 +11,8 @@
 
 #include "common/angleutils.h"
 
+#include "angle_gl.h"
+
 namespace egl
 {
 class Surface;

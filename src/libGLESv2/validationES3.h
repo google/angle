@@ -9,6 +9,8 @@
 #ifndef LIBGLESV2_VALIDATION_ES3_H
 #define LIBGLESV2_VALIDATION_ES3_H
 
+#include <GLES3/gl3.h>
+
 namespace gl
 {
 

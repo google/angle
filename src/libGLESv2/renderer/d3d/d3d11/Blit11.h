@@ -12,6 +12,8 @@
 #include "common/angleutils.h"
 #include "libGLESv2/angletypes.h"
 
+#include <map>
+
 namespace rx
 {
 class Renderer11;

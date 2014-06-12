@@ -7,10 +7,7 @@
 // TextureStorage11.cpp: Implements the abstract rx::TextureStorage11 class and its concrete derived
 // classes TextureStorage11_2D and TextureStorage11_Cube, which act as the interface to the D3D11 texture.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/TextureStorage11.h"
-
-#include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libGLESv2/renderer/d3d/d3d11/SwapChain11.h"
@@ -18,9 +15,10 @@
 #include "libGLESv2/renderer/d3d/d3d11/Blit11.h"
 #include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Image11.h"
+#include "libGLESv2/renderer/d3d/TextureD3D.h"
+#include "libGLESv2/main.h"
 
 #include "common/utilities.h"
-#include "libGLESv2/main.h"
 
 namespace rx
 {

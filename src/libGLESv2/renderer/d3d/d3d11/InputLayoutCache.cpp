@@ -7,15 +7,14 @@
 // InputLayoutCache.cpp: Defines InputLayoutCache, a class that builds and caches
 // D3D11 input layouts.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/InputLayoutCache.h"
 #include "libGLESv2/renderer/d3d/d3d11/VertexBuffer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Buffer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/ShaderExecutable11.h"
+#include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
+#include "libGLESv2/renderer/d3d/VertexDataManager.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/VertexAttribute.h"
-#include "libGLESv2/renderer/d3d/VertexDataManager.h"
-#include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
 
 #include "third_party/murmurhash/MurmurHash3.h"
 

@@ -8,7 +8,6 @@
 // renderer-specific classes which will define the interface to the underlying
 // surfaces or resources.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/ImageD3D.h"
 
 namespace rx

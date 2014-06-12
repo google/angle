@@ -6,7 +6,6 @@
 
 // loadimage.cpp: Defines image loading functions.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/loadimage.h"
 
 namespace rx

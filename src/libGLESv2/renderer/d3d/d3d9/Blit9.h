@@ -11,6 +11,8 @@
 
 #include "common/angleutils.h"
 
+#include <GLES2/gl2.h>
+
 namespace gl
 {
 class Framebuffer;

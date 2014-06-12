@@ -7,7 +7,6 @@
 // ShaderExecutable9.cpp: Implements a D3D9-specific class to contain shader
 // executable implementation details.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d9/ShaderExecutable9.h"
 
 #include "common/debug.h"

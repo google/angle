@@ -12,6 +12,8 @@
 
 #include "libGLESv2/formatutils.h"
 
+#include <map>
+
 namespace rx
 {
 

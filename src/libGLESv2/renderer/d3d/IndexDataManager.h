@@ -13,6 +13,8 @@
 #include "common/angleutils.h"
 #include "common/mathutil.h"
 
+#include <GLES2/gl2.h>
+
 namespace
 {
     enum { INITIAL_INDEX_BUFFER_SIZE = 4096 * sizeof(GLuint) };

@@ -12,6 +12,8 @@
 #include "common/mathutil.h"
 #include "libGLESv2/angletypes.h"
 
+#include <cstdint>
+
 namespace rx
 {
 

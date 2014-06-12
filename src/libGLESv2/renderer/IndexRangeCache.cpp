@@ -7,10 +7,11 @@
 // IndexRangeCache.cpp: Defines the rx::IndexRangeCache class which stores information about
 // ranges of indices.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/IndexRangeCache.h"
 #include "libGLESv2/formatutils.h"
+
 #include "common/debug.h"
+
 #include <tuple>
 
 namespace rx

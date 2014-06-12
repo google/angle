@@ -7,10 +7,8 @@
 // RenderTarget9.cpp: Implements a D3D9-specific wrapper for IDirect3DSurface9
 // pointers retained by renderbuffers.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d9/RenderTarget9.h"
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
-
 #include "libGLESv2/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
 #include "libGLESv2/main.h"

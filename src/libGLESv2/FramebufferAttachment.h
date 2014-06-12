@@ -10,10 +10,10 @@
 #ifndef LIBGLESV2_FRAMEBUFFERATTACHMENT_H_
 #define LIBGLESV2_FRAMEBUFFERATTACHMENT_H_
 
-#include "angle_gl.h"
-
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
+
+#include "angle_gl.h"
 
 namespace rx
 {

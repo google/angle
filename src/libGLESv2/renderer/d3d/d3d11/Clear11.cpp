@@ -6,16 +6,15 @@
 
 // Clear11.cpp: Framebuffer clear utility class.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/Clear11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libGLESv2/renderer/d3d/d3d11/RenderTarget11.h"
-
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/FramebufferAttachment.h"
 
+// Precompiled shaders
 #include "libGLESv2/renderer/d3d/d3d11/shaders/compiled/clearfloat11vs.h"
 #include "libGLESv2/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps.h"
 

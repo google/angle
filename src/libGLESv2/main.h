@@ -11,6 +11,9 @@
 
 #include "common/debug.h"
 
+#include <GLES2/gl2.h>
+#include <EGL/egl.h>
+
 namespace egl
 {
 class Display;

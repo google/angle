@@ -6,10 +6,7 @@
 
 // Blit9.cpp: Surface copy utility class.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d9/Blit9.h"
-
-#include "libGLESv2/main.h"
 #include "libGLESv2/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
 #include "libGLESv2/renderer/d3d/d3d9/TextureStorage9.h"
@@ -17,9 +14,11 @@
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/FramebufferAttachment.h"
+#include "libGLESv2/main.h"
 
 namespace
 {
+// Precompiled shaders
 #include "libGLESv2/renderer/d3d/d3d9/shaders/compiled/standardvs.h"
 #include "libGLESv2/renderer/d3d/d3d9/shaders/compiled/flipyvs.h"
 #include "libGLESv2/renderer/d3d/d3d9/shaders/compiled/passthroughps.h"

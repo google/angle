@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 //
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Uniform.h"
 
 #include "common/utilities.h"

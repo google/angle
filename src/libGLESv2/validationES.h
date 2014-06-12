@@ -11,6 +11,9 @@
 
 #include "common/mathutil.h"
 
+#include <GLES2/gl2.h>
+#include <GLES3/gl3.h>
+
 namespace gl
 {
 

@@ -6,7 +6,6 @@
 
 // main.cpp: DLL entry point and management of thread-local data.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/Context.h"
 

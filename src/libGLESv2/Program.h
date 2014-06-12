@@ -10,13 +10,16 @@
 #ifndef LIBGLESV2_PROGRAM_H_
 #define LIBGLESV2_PROGRAM_H_
 
-#include <string>
-#include <set>
-
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 #include "libGLESv2/Constants.h"
 #include "libGLESv2/ProgramBinary.h"
+
+#include <GLES2/gl2.h>
+
+#include <vector>
+#include <string>
+#include <set>
 
 namespace rx
 {

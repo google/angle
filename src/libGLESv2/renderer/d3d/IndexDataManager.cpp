@@ -7,15 +7,13 @@
 // IndexDataManager.cpp: Defines the IndexDataManager, a class that
 // runs the Buffer translation process for index buffers.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/IndexDataManager.h"
 #include "libGLESv2/renderer/d3d/BufferD3D.h"
-
+#include "libGLESv2/renderer/d3d/IndexBuffer.h"
+#include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/formatutils.h"
-#include "libGLESv2/renderer/d3d/IndexBuffer.h"
-#include "libGLESv2/renderer/Renderer.h"
 
 namespace rx
 {

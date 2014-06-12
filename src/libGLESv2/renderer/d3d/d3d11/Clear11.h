@@ -11,6 +11,9 @@
 
 #include "libGLESv2/angletypes.h"
 
+#include <map>
+#include <vector>
+
 namespace gl
 {
 class Framebuffer;

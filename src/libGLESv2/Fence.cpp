@@ -17,11 +17,12 @@
 // We still opt to use QPC. In the present and moving forward, most newer systems will not suffer
 // from buggy implementations.
 
-#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Fence.h"
 #include "libGLESv2/renderer/FenceImpl.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/main.h"
+
+#include "angle_gl.h"
 
 namespace gl
 {
