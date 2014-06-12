@@ -1,0 +1,303 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfc3fcc9_2d3cf54d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "We should create a public issue for this and reference it here.  ANGLE bugs can be referenced by using BUG\u003dangle:XXX",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 24
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc3fcc9_0d0f79c1",
+        "filename": "src/libGLESv2/VertexArray.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "Whitespace",
+      "range": {
+        "startLine": 84,
+        "startChar": 1,
+        "endLine": 84,
+        "endChar": 2
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_23b418d5",
+        "filename": "src/libGLESv2/VertexArray.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "Lets change this from a pointer to the renderer to a pointer to the Impl.  The Context can create an impl when it creates the VertexArray.  I don\u0027t think there are any other dependencies on the Renderer.",
+      "range": {
+        "startLine": 33,
+        "startChar": 16,
+        "endLine": 33,
+        "endChar": 38
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_43caec51",
+        "filename": "src/libGLESv2/VertexArray.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "We\u0027re also going through a push to use size_t\u0027s where for all sizes/indicies, can these be updated too?",
+      "range": {
+        "startLine": 36,
+        "startChar": 46,
+        "endLine": 36,
+        "endChar": 58
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_c3a43cad",
+        "filename": "src/libGLESv2/VertexArray.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "Eventually this can be changed to something like... const VertexAttribute \u0026getVertexAttribute(size_t index) const; instead of returning pointers to an array but that will require more extensive changes to how we translate the vertex attributes.  Not in the scope of this necessarily.",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 84
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_63d7f0f4",
+        "filename": "src/libGLESv2/VertexArray.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "The maximum vertex attributes will soon become dynamic, we should store these in a std::vector with the size passed to the VertexArray constructor.",
+      "range": {
+        "startLine": 51,
+        "startChar": 38,
+        "endLine": 51,
+        "endChar": 56
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_e36b0072",
+        "filename": "src/libGLESv2/VertexAttribute.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "Indentation",
+      "range": {
+        "startLine": 39,
+        "startChar": 2,
+        "endLine": 39,
+        "endChar": 4
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_63ae1089",
+        "filename": "src/libGLESv2/VertexAttribute.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "Whitespace",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 2
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fc0f8c0_a96f3910",
+        "filename": "src/libGLESv2/VertexAttribute.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "Since there is already a cpp file, lets move this into it.",
+      "range": {
+        "startLine": 37,
+        "startChar": 19,
+        "endLine": 37,
+        "endChar": 142
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_c38fdc1a",
+        "filename": "src/libGLESv2/VertexAttribute.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "Lets make sure these names are obviously not getter functions since they do some calculation.  Maybe... ComputeVertexAttribute[Stride/Stride]? Also, can these return size_t\u0027s?",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 27
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fc0f8c0_e969310c",
+        "filename": "src/libGLESv2/VertexAttribute.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "Looks like I didn\u0027t follow the style guide when I wrote this, can these be camel cased? Actually, we should do that in a separate patch.",
+      "range": {
+        "startLine": 72,
+        "startChar": 4,
+        "endLine": 78,
+        "endChar": 16
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc3fcc9_ed4adde2",
+        "filename": "src/libGLESv2/renderer/d3d11/VertexArray11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "Might not need these includes.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 27
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_8386c4ff",
+        "filename": "src/libGLESv2/renderer/d3d11/VertexArray11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T01:29:26Z",
+      "side": 1,
+      "message": "This can be moved into the initializer list.",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 25
+      },
+      "revId": "6f908b15c249f8d2e13ec8a60e48f447820d2d28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
