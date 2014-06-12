@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bfc3fcc9_d8d19d34",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-12T16:21:05Z",
+      "side": 1,
+      "message": "I tend to use this style for initializers, let me know if it\u0027s a conflict with the style guide.",
+      "parentUuid": "bf505ca5_c873bc27",
+      "revId": "bf9b012bd4e1841f7d917c8cce2b697e2ad28c16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf505ca5_6865c857",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-06-06T21:35:38Z",
       "side": 1,
       "message": "this condition is unnecessary, as paddingCount is 0 if paddngOffset \u003d\u003d 0.",
+      "revId": "bf9b012bd4e1841f7d917c8cce2b697e2ad28c16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_0341d46c",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-12T16:21:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf505ca5_6865c857",
       "revId": "bf9b012bd4e1841f7d917c8cce2b697e2ad28c16",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
