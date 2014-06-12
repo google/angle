@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df4350e0_31edea70",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T14:45:05Z",
+      "side": 1,
+      "message": "I don\u0027t think this function needs to be a member function of Framebuffer anymore (can live only in the cpp file).  Also, it should be renamed to createAttachmentImpl.",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 117
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_511996dc",
+        "filename": "src/libGLESv2/Framebuffer.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T14:45:05Z",
+      "side": 1,
+      "message": "This can be removed if getAttachmentImpl is no longer a member function.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 32
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df2c3030_97dddfef",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T14:45:05Z",
+      "side": 1,
+      "message": "Can these be moved into the initializer?  The asserts can stay here.",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 21
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df4350e0_11130ebd",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T14:45:05Z",
+      "side": 1,
+      "message": "This is icky, a pure virtual method that we assert is never called. Is it possible to remove getTextureSerial and have the  texture attachment types return their texture serial through the getSerial method now?",
+      "range": {
+        "startLine": 555,
+        "startChar": 0,
+        "endLine": 556,
+        "endChar": 13
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfcdbca8_fed9ae8e",
+        "filename": "src/libGLESv2/FramebufferAttachment.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T14:45:05Z",
+      "side": 1,
+      "message": "Formatting",
+      "range": {
+        "startLine": 211,
+        "startChar": 4,
+        "endLine": 211,
+        "endChar": 8
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
