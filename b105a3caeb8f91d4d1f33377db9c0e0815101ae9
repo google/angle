@@ -185,6 +185,30 @@
     },
     {
       "key": {
+        "uuid": "7f6424c8_8e398bee",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T17:11:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9fc0f8c0_ac43c727",
+      "range": {
+        "startLine": 262,
+        "startChar": 4,
+        "endLine": 262,
+        "endChar": 19
+      },
+      "revId": "b105a3caeb8f91d4d1f33377db9c0e0815101ae9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffc9f4e9_1a7ccd3c",
         "filename": "src/libGLESv2/renderer/d3d9/renderer9_utils.h",
         "patchSetId": 12
@@ -196,6 +220,30 @@
       "writtenOn": "2014-06-12T15:44:02Z",
       "side": 1,
       "message": "Should probably sweep through all the affected files and update the copyrights in them.",
+      "range": {
+        "startLine": 2,
+        "startChar": 22,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "b105a3caeb8f91d4d1f33377db9c0e0815101ae9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc3fcc9_d8fd1d8d",
+        "filename": "src/libGLESv2/renderer/d3d9/renderer9_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-12T17:11:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffc9f4e9_1a7ccd3c",
       "range": {
         "startLine": 2,
         "startChar": 22,
