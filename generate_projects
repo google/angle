@@ -34,6 +34,7 @@ if __name__ == '__main__':
     gyp_cmd += ' -D angle_build_tests=' + ('1' if build_tests else '0')
     gyp_cmd += ' -D angle_build_samples=' + ('1' if build_samples else '0')
     gyp_cmd += ' -D release_symbols=' + ('true' if release_symbols else 'false')
+    gyp_cmd += ' -D angle_use_commit_id=0'
     gyp_cmd += ' ' + os.path.join(script_dir, 'all.gyp')
 
     print 'Generating projects to ' + generation_dir + ' from gyp files...'

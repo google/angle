@@ -1,9 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "commit_id", "..\src\commit_id.vcxproj", "{3B7F5656-177F-52EE-26B3-D6A75368D0A9}"
-	ProjectSection(ProjectDependencies) = postProject
-		{63FB0B97-D1D9-5158-8E85-7F5B1E403817} = {63FB0B97-D1D9-5158-8E85-7F5B1E403817}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "copy_compiler_dll", "..\src\copy_compiler_dll.vcxproj", "{22DC02D5-1598-943C-13E1-82185B469F81}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -39,7 +36,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libEGL", "..\src\libEGL.vcx
 	ProjectSection(ProjectDependencies) = postProject
 		{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81} = {7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}
 		{3B7F5656-177F-52EE-26B3-D6A75368D0A9} = {3B7F5656-177F-52EE-26B3-D6A75368D0A9}
-		{63FB0B97-D1D9-5158-8E85-7F5B1E403817} = {63FB0B97-D1D9-5158-8E85-7F5B1E403817}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libGLESv2", "..\src\libGLESv2.vcxproj", "{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}"

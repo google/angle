@@ -111,7 +111,7 @@
   <ItemGroup>
     <CustomBuild Include="..\..\src\copy_compiler_dll.bat">
       <FileType>Document</FileType>
-      <Command>call call $(OutDir)obj\global_intermediate\copy_compiler_dll.bat &quot;$(Platform)&quot; &quot;C:\Program Files (x86)\Windows Kits\8.0&quot; &quot;$(OutDir)&quot;</Command>
+      <Command>call call $(OutDir)obj\global_intermediate\angle\copy_compiler_dll.bat &quot;$(Platform)&quot; &quot;C:\Program Files (x86)\Windows Kits\8.0&quot; &quot;$(OutDir)&quot;</Command>
       <Message>Copying D3D Compiler DLL...</Message>
       <Outputs>$(OutDir)\D3DCompiler_46.dll</Outputs>
     </CustomBuild>

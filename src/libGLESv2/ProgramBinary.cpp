@@ -1018,6 +1018,9 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, FragmentShader *fragmentShade
 
 bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 {
+#ifdef ANGLE_DISABLE_PROGRAM_BINARY_LOAD
+    return false;
+#else
     BinaryInputStream stream(binary, length);
 
     int format = stream.readInt<int>();
@@ -1260,6 +1263,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     initializeUniformStorage();
 
     return true;
+#endif // #ifdef ANGLE_DISABLE_PROGRAM_BINARY_LOAD
 }
 
 bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
