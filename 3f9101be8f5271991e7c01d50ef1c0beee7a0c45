@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bfc3fcc9_38855148",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-12T16:18:38Z",
+      "side": 1,
+      "message": "Updated the name.\n\nI think it belongs in Framebuffer since it\u0027s a framebuffer operation. What\u0027s your reasoning?",
+      "parentUuid": "df4350e0_31edea70",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 117
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df4350e0_511996dc",
         "filename": "src/libGLESv2/Framebuffer.h",
         "patchSetId": 2
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "9fc0f8c0_8c5c0b27",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-12T16:18:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df2c3030_97dddfef",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 21
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df4350e0_11130ebd",
         "filename": "src/libGLESv2/FramebufferAttachment.cpp",
         "patchSetId": 2
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "bfc3fcc9_f87a9994",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-12T16:18:38Z",
+      "side": 1,
+      "message": "getSerial has a different meaning than getTextureSerial, for Textures. One is for the RenderTarget. (See the unchanged parts of this file)",
+      "parentUuid": "df4350e0_11130ebd",
+      "range": {
+        "startLine": 555,
+        "startChar": 0,
+        "endLine": 556,
+        "endChar": 13
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfcdbca8_fed9ae8e",
         "filename": "src/libGLESv2/FramebufferAttachment.h",
         "patchSetId": 2
@@ -105,6 +177,30 @@
       "writtenOn": "2014-06-12T14:45:05Z",
       "side": 1,
       "message": "Formatting",
+      "range": {
+        "startLine": 211,
+        "startChar": 4,
+        "endLine": 211,
+        "endChar": 8
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_036f140f",
+        "filename": "src/libGLESv2/FramebufferAttachment.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-12T16:18:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfcdbca8_fed9ae8e",
       "range": {
         "startLine": 211,
         "startChar": 4,
