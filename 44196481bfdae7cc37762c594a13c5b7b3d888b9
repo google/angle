@@ -45,6 +45,30 @@
       "revId": "44196481bfdae7cc37762c594a13c5b7b3d888b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_83d16489",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-12T14:29:32Z",
+      "side": 1,
+      "message": "No, because it is core spec in 3.0.",
+      "parentUuid": "9fc0f8c0_8c2b6ba4",
+      "range": {
+        "startLine": 1022,
+        "startChar": 4,
+        "endLine": 1022,
+        "endChar": 17
+      },
+      "revId": "44196481bfdae7cc37762c594a13c5b7b3d888b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
