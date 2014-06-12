@@ -97,6 +97,21 @@ TEST_F(BufferDataTest, null_data)
     }
 }
 
+TEST_F(BufferDataTest, zero_nonnull_data)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    char *zeroData = new char[0];
+    glBufferData(GL_ARRAY_BUFFER, 0, zeroData, GL_STATIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+
+    glBufferSubData(GL_ARRAY_BUFFER, 0, 0, zeroData);
+    EXPECT_GL_NO_ERROR();
+
+    delete [] zeroData;
+}
+
 TEST_F(BufferDataTest, huge_setdata_should_not_crash)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);

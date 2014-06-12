@@ -221,7 +221,7 @@ void BufferStorage11::setData(const void* data, size_t size, size_t offset)
     size_t requiredSize = size + offset;
     mSize = std::max(mSize, requiredSize);
 
-    if (data)
+    if (data && size > 0)
     {
         NativeBuffer11 *stagingBuffer = getStagingBuffer();
 
