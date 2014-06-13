@@ -21,7 +21,7 @@
 namespace sh
 {
 class UnfoldShortCircuit;
-class Std140PaddingHelper;
+class StructureHLSL;
 
 class OutputHLSL : public TIntermTraverser
 {
@@ -38,8 +38,6 @@ class OutputHLSL : public TIntermTraverser
     const std::vector<gl::Attribute> &getAttributes() const;
     const std::vector<gl::Varying> &getVaryings() const;
 
-    static TString defineNamelessStruct(const TStructure &structure);
-    TString defineQualifiedStruct(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);
     static TString initializer(const TType &type);
 
   protected:
@@ -64,8 +62,6 @@ class OutputHLSL : public TIntermTraverser
     int vectorSize(const TType &type) const;
 
     void outputConstructor(Visit visit, const TType &type, const TString &name, const TIntermSequence *parameters);
-    void addConstructor(const TType &type, const TString &name, const TIntermSequence *parameters);
-    void storeStd140ElementIndex(const TStructure &structure, bool useHLSLRowMajorPacking);
     const ConstantUnion *writeConstantUnion(const TType &type, const ConstantUnion *constUnion);
 
     TParseContext &mContext;
@@ -84,6 +80,8 @@ class OutputHLSL : public TIntermTraverser
     ReferencedSymbols mReferencedAttributes;
     ReferencedSymbols mReferencedVaryings;
     ReferencedSymbols mReferencedOutputVariables;
+
+    StructureHLSL *mStructureHLSL;
 
     struct TextureFunction
     {
@@ -143,15 +141,6 @@ class OutputHLSL : public TIntermTraverser
 
     int mNumRenderTargets;
 
-    typedef std::set<TString> Constructors;
-    Constructors mConstructors;
-
-    typedef std::set<TString> StructNames;
-    StructNames mStructNames;
-
-    typedef std::list<TString> StructDeclarations;
-    StructDeclarations mStructDeclarations;
-
     int mUniqueIndex;   // For creating unique names
 
     bool mContainsLoopDiscontinuity;
@@ -184,20 +173,18 @@ class OutputHLSL : public TIntermTraverser
     TString interfaceBlockStructString(const TInterfaceBlock &interfaceBlock);
     TString interfaceBlockString(const TInterfaceBlock &interfaceBlock, unsigned int registerIndex, unsigned int arrayIndex);
     TString structInitializerString(int indent, const TStructure &structure, const TString &rhsStructName);
-    static TString defineStruct(const TStructure &structure, bool useHLSLRowMajorPacking,
-                                bool useStd140Packing, Std140PaddingHelper *padHelper);
 
     std::vector<gl::Uniform> mActiveUniforms;
     std::vector<gl::InterfaceBlock> mActiveInterfaceBlocks;
     std::vector<gl::Attribute> mActiveOutputVariables;
     std::vector<gl::Attribute> mActiveAttributes;
     std::vector<gl::Varying> mActiveVaryings;
-    std::map<TString, int> mStd140StructElementIndexes;
     std::map<TIntermTyped*, TString> mFlaggedStructMappedNames;
     std::map<TIntermTyped*, TString> mFlaggedStructOriginalNames;
 
     void makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flaggedStructs);
 };
+
 }
 
 #endif   // COMPILER_OUTPUTHLSL_H_

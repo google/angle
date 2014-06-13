@@ -8,7 +8,7 @@
 //
 
 #include "compiler/translator/UtilsHLSL.h"
-#include "compiler/translator/OutputHLSL.h"
+#include "compiler/translator/StructureHLSL.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh
@@ -99,7 +99,7 @@ TString TypeString(const TType &type)
         }
         else   // Nameless structure, define in place
         {
-            return OutputHLSL::defineNamelessStruct(*structure);
+            return StructureHLSL::defineNameless(*structure);
         }
     }
     else if (type.isMatrix())
@@ -175,7 +175,7 @@ TString StructNameString(const TStructure &structure)
         return "";
     }
 
-    return "ss_" + str(structure.uniqueId()) + structure.name();
+    return "ss" + str(structure.uniqueId()) + "_" + structure.name();
 }
 
 TString QualifiedStructNameString(const TStructure &structure, bool useHLSLRowMajorPacking,
@@ -193,13 +193,12 @@ TString QualifiedStructNameString(const TStructure &structure, bool useHLSLRowMa
 
     if (useStd140Packing)
     {
-        prefix += "std";
+        prefix += "std_";
     }
 
     if (useHLSLRowMajorPacking)
     {
-        if (prefix != "") prefix += "_";
-        prefix += "rm";
+        prefix += "rm_";
     }
 
     return prefix + StructNameString(structure);

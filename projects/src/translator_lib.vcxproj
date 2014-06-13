@@ -159,6 +159,7 @@
     <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h"/>
     <ClInclude Include="..\..\src\compiler\translator\localintermediate.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ShHandle.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\StructureHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputGLSLBase.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ForLoopUnroll.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Pragma.h"/>
@@ -249,6 +250,7 @@
     <ClCompile Include="..\..\src\compiler\translator\LoopInfo.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\OutputHLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\DetectDiscontinuity.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\StructureHLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\UnfoldShortCircuit.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\compilerdebug.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\VariableInfo.cpp"/>

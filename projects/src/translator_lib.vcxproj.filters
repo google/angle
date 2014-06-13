@@ -261,6 +261,9 @@
     <ClInclude Include="..\..\src\compiler\translator\ShHandle.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\compiler\translator\StructureHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\OutputGLSLBase.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
@@ -388,6 +391,9 @@
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\DetectDiscontinuity.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\compiler\translator\StructureHLSL.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\compiler\translator\glslang_tab.h">
