@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fd0ec87_54cd6967",
+        "filename": "src/libGLESv2/VertexAttribute.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T23:50:08Z",
+      "side": 1,
+      "message": "ANGLE\u0027s switch case style is a weird one: \"switch statements: indent the case statements by 2 spaces. The body of the case statements should be intended another 2 spaces so that they are a full 4-space indent from the switch.\"\n\n(Single-line statements should just get indented the initial two spaces.)",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 75
+      },
+      "revId": "0b5a3df2ef4bc39b0bb88ac906918598d2f9a76a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfc6f0d8_22dfd772",
+        "filename": "src/libGLESv2/VertexAttribute.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T23:50:08Z",
+      "side": 1,
+      "message": "Indentation. Also, we apparently vary WILDLY on whether we stick struct constructors at the head or foot of the struct definition. I need to stick something in the coding standard about that (and should probably very briefly get a consensus opinion on which it should be during the next ANGLE meeting).",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 20
+      },
+      "revId": "0b5a3df2ef4bc39b0bb88ac906918598d2f9a76a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfc6f0d8_67560139",
+        "filename": "src/libGLESv2/VertexAttribute.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T23:50:08Z",
+      "side": 1,
+      "message": "Is this being made an external-to-class global inspector function to force VertexAttribute more towards a straight POD struct instead of the weird hybrid it had become? Or are the global inspector functions more of an overarching design decision (this is mostly a question for Geoff).",
+      "range": {
+        "startLine": 41,
+        "startChar": 2,
+        "endLine": 41,
+        "endChar": 37
+      },
+      "revId": "0b5a3df2ef4bc39b0bb88ac906918598d2f9a76a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f6e38af_28da2fa8",
+        "filename": "src/libGLESv2/renderer/d3d9/VertexArray9.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T23:50:08Z",
+      "side": 1,
+      "message": "we probably don\u0027t need to populate the .cpp file with the bodies of these-- since they\u0027re stubs, we can leave the definitions in the header. This would also give us a good place to add a comment to note that they\u0027re noop stubs, that the guts are handled in InputLayoutCache \u0026 VertexDeclarationCache, and that this class (and the D3D11 equivalent) are expected to take over that functionality at a later time.",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 64
+      },
+      "revId": "0b5a3df2ef4bc39b0bb88ac906918598d2f9a76a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
