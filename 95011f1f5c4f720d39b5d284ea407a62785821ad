@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7f6424c8_b47060b7",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2441,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-13T20:39:20Z",
+      "side": 1,
+      "message": "I removed this parameter entirely, applyShaders can look up the framebuffer itself.",
+      "parentUuid": "9f6e38af_02a9d4b1",
+      "range": {
+        "startLine": 2441,
+        "startChar": 87,
+        "endLine": 2441,
+        "endChar": 117
+      },
+      "revId": "95011f1f5c4f720d39b5d284ea407a62785821ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fd0ec87_436bf530",
         "filename": "src/libGLESv2/renderer/Renderer.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2014-06-13T17:01:47Z",
       "side": 1,
       "message": "Would also be good to move this argument farther forward in the list.",
+      "range": {
+        "startLine": 121,
+        "startChar": 68,
+        "endLine": 121,
+        "endChar": 102
+      },
+      "revId": "95011f1f5c4f720d39b5d284ea407a62785821ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_743c08dd",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-13T20:39:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3fd0ec87_436bf530",
       "range": {
         "startLine": 121,
         "startChar": 68,
