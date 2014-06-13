@@ -331,6 +331,30 @@
       "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f6e38af_adb811d8",
+        "filename": "extensions/ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T18:01:02Z",
+      "side": 1,
+      "message": "Go with this for now, we can rename it upon submission to the registry if necessary.\n\nOne other problem-- these tokens are defined by both this extension and EGL_ANGLE_platform_angle. They can\u0027t be introduced by both.",
+      "parentUuid": "7f6424c8_43d74c7d",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 55,
+        "endChar": 46
+      },
+      "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
