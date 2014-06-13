@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "9f6e38af_084d7381",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T19:52:37Z",
+      "side": 1,
+      "message": "Capitalization typo.",
+      "range": {
+        "startLine": 373,
+        "startChar": 9,
+        "endLine": 373,
+        "endChar": 10
+      },
+      "revId": "75d0b1a4bdec6952c711db0465d4b800a5c1590b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fc0f8c0_c69704be",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 2
@@ -13,6 +36,30 @@
       "writtenOn": "2014-06-11T19:59:17Z",
       "side": 1,
       "message": "can you add a note here indicating that we can\u0027t distinguish extension sRGB from core sRGB in es3, so we support mipmaps on both?",
+      "range": {
+        "startLine": 2114,
+        "startChar": 12,
+        "endLine": 2114,
+        "endChar": 19
+      },
+      "revId": "75d0b1a4bdec6952c711db0465d4b800a5c1590b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f6e38af_c8753ba6",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2114,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T19:52:37Z",
+      "side": 1,
+      "message": "I think probably it\u0027d be more accurate to say that core ES 3.0 supports GenerateMipmaps for sRGB textures, no matter how they were created.\n\nI don\u0027t think we should advertise EXT_sRGB on in ES 3.0. ES 3.0\u0027s support for sRGB is more complete-- I think I was mistaken in my prior assertion that ES 3.0 doesn\u0027t support specification of sRGB textures via TexImage2D due to sRGB not being specified as an external format. (The documentation http://www.khronos.org/opengles/sdk/docs/man3/html/glTexImage2D.xhtml suggests that an sRGB internal format by itself will cause the data to be interpreted as sRGB-encoded. I think. The spec, as far as my reading goes, describes what happens when sRGB textures are applied, and when the blend stage is completed for an sRGB framebuffer, but doesn\u0027t discuss conversion-or-not of incoming data for upload to an sRGB texture. This may be cause the authors assumed it was obvious that it isn\u0027t converted. Does anyone else see it covered somewhere in the spec/have a different reading?) I suspect supporting both sets of enums in glTexImage will make things muddy.",
+      "parentUuid": "9fc0f8c0_c69704be",
       "range": {
         "startLine": 2114,
         "startChar": 12,
