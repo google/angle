@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bfc3fcc9_7ed4d177",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-13T20:26:15Z",
+      "side": 1,
+      "message": "Geoff had just changed it in a previous patch (this patch has no diff on these lines), just checking in case you didn\u0027t realize I hadn\u0027t changed anything and were looking at a merge diff.",
+      "parentUuid": "3fd0ec87_19c96cef",
+      "range": {
+        "startLine": 3113,
+        "startChar": 16,
+        "endLine": 3113,
+        "endChar": 51
+      },
+      "revId": "6401052e1df2ca023f3d9647c92d4e63cf67bf74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfc6f0d8_076c6d89",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2014-06-13T20:17:35Z",
       "side": 1,
       "message": "The max anisotropy lines are getting way longer than their surrounding brethren. Can they get multilined?",
+      "revId": "6401052e1df2ca023f3d9647c92d4e63cf67bf74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc3fcc9_be8809a6",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4918,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-13T20:26:15Z",
+      "side": 1,
+      "message": "Another merge diff",
+      "parentUuid": "dfc6f0d8_076c6d89",
       "revId": "6401052e1df2ca023f3d9647c92d4e63cf67bf74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
