@@ -214,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "9fc0f8c0_524f4a46",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-13T20:50:36Z",
+      "side": 1,
+      "message": "I can take a look at it for sure, maybe in another patch if that\u0027s alright? Notice the function returns unsigned int, so I think 0 is appropriate (due to UNREACHABLE() and the 0 serial being reserved)",
+      "parentUuid": "9f6e38af_e8c2f739",
+      "range": {
+        "startLine": 555,
+        "startChar": 0,
+        "endLine": 556,
+        "endChar": 13
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfcdbca8_fed9ae8e",
         "filename": "src/libGLESv2/FramebufferAttachment.h",
         "patchSetId": 2
