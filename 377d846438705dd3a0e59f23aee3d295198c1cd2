@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfc6f0d8_27b08978",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T22:25:30Z",
+      "side": 1,
+      "message": "Ah-- I like the approach you\u0027ve taken here. Making the concept of the \"attachment\" ephemeral and only valid while attached to the framebuffer clears up some potential confusion. Can you add comments to explain the difference in lifetime between FramebufferAttachmentImpl/RenderbufferAttachment/Texture*Attachment and the Renderbuffers and Textures they refer to? And maybe remind the reader that the cleanup for the previous FramebufferAttachmentImpl and child attachment will be handled by .set() and the destructor for FramebufferAttachmentImpl-- it looks a little scary until you remember/learn the guts of BindingPointer. I think that will also help.\n\nWhat happens in the case that we call glFramebufferRenderbuffer or glFramebufferTexture2D with the same renderbuffer or texture that\u0027s already attached? Do we go through the process of destroying and recreating the attachment objects?",
+      "revId": "377d846438705dd3a0e59f23aee3d295198c1cd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fd0ec87_d41cb958",
+        "filename": "src/libGLESv2/Framebuffer.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T22:25:30Z",
+      "side": 1,
+      "message": "Can update the date for a few files in this CL, I think. (I know I\u0027m super-inconsistent about actually catching it or updating them myself; sorry for that.)",
+      "range": {
+        "startLine": 2,
+        "startChar": 22,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "377d846438705dd3a0e59f23aee3d295198c1cd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
