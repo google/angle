@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "dfc6f0d8_47e025ac",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T20:47:31Z",
+      "side": 1,
+      "message": "I don\u0027t really think there\u0027s a great reason to make it a locally defined global instead of a private member function, personally.",
+      "parentUuid": "bfc3fcc9_38855148",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 117
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df4350e0_511996dc",
         "filename": "src/libGLESv2/Framebuffer.h",
         "patchSetId": 2
@@ -153,6 +177,30 @@
       "writtenOn": "2014-06-12T16:18:38Z",
       "side": 1,
       "message": "getSerial has a different meaning than getTextureSerial, for Textures. One is for the RenderTarget. (See the unchanged parts of this file)",
+      "parentUuid": "df4350e0_11130ebd",
+      "range": {
+        "startLine": 555,
+        "startChar": 0,
+        "endLine": 556,
+        "endChar": 13
+      },
+      "revId": "3f9101be8f5271991e7c01d50ef1c0beee7a0c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f6e38af_e8c2f739",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T20:47:31Z",
+      "side": 1,
+      "message": "We do the same thing in quite a few places in Renderer9 for ES3-only functionality.\n\nThat said-- I don\u0027t disagree that it\u0027s a longstanding ickiness in the Renderbuffer implementation that we expect non-texture renderbuffers to implement this function. Maybe instead we could do something similar to what we do with the MakeObject11()/MakeObject9() functions, where in the places we need to retrieve texture serials, we cast the storage-agnostic FramebufferAttachment to a FramebufferTexture2DAttachment (or whatever the proper name is) before calling texture-specific functions on it?\n\n(We should at least return -1 from here as the prior function did, but it would be best to remove the need for the function entirely.)",
       "parentUuid": "df4350e0_11130ebd",
       "range": {
         "startLine": 555,
