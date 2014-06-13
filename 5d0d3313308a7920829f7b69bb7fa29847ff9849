@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fc0f8c0_d2421a21",
+        "filename": "src/libGLESv2/VertexArray.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-13T20:45:14Z",
+      "side": 1,
+      "message": "This should be lower case first letter, either getMaxAttribs() or maxAttribs() is fine.",
+      "range": {
+        "startLine": 47,
+        "startChar": 11,
+        "endLine": 47,
+        "endChar": 21
+      },
+      "revId": "5d0d3313308a7920829f7b69bb7fa29847ff9849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
