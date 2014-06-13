@@ -42,7 +42,7 @@ class OutputHLSL : public TIntermTraverser
     TString samplerString(const TType &type);
     TString interpolationString(TQualifier qualifier);
     TString structureString(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);
-    TString structureTypeName(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);
+    static TString structureTypeName(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);
     static TString qualifierString(TQualifier qualifier);
     static TString arrayString(const TType &type);
     static TString initializer(const TType &type);
@@ -76,7 +76,7 @@ class OutputHLSL : public TIntermTraverser
     void storeStd140ElementIndex(const TStructure &structure, bool useHLSLRowMajorPacking);
     const ConstantUnion *writeConstantUnion(const TType &type, const ConstantUnion *constUnion);
 
-    TString structNameString(const TStructure &structure);
+    static TString structNameString(const TStructure &structure);
 
     TParseContext &mContext;
     const ShShaderOutput mOutputType;
@@ -174,7 +174,6 @@ class OutputHLSL : public TIntermTraverser
     int mUniformRegister;
     int mInterfaceBlockRegister;
     int mSamplerRegister;
-    int mPaddingCounter;
 
     TString registerString(TIntermSymbol *operand);
     int samplerRegister(TIntermSymbol *sampler);
@@ -195,10 +194,10 @@ class OutputHLSL : public TIntermTraverser
     TString interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, TLayoutBlockStorage blockStorage);
     TString interfaceBlockStructString(const TInterfaceBlock &interfaceBlock);
     TString interfaceBlockString(const TInterfaceBlock &interfaceBlock, unsigned int registerIndex, unsigned int arrayIndex);
-    TString std140PrePaddingString(const TType &type, int *elementIndex);
-    TString std140PostPaddingString(const TType &type, bool useHLSLRowMajorPacking);
     TString structInitializerString(int indent, const TStructure &structure, const TString &rhsStructName);
     
+    class Std140PaddingHelper;
+
     static GLenum glVariableType(const TType &type);
     static GLenum glVariablePrecision(const TType &type);
     static bool isVaryingIn(TQualifier qualifier);

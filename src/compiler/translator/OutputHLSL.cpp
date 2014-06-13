@@ -25,6 +25,119 @@
 namespace sh
 {
 
+class OutputHLSL::Std140PaddingHelper
+{
+  public:
+    explicit Std140PaddingHelper(const std::map<TString, int> &structElementIndexes)
+        : mPaddingCounter(0),
+          mElementIndex(0),
+          mStructElementIndexes(structElementIndexes)
+    {}
+
+    int elementIndex() const { return mElementIndex; }
+
+    int prePadding(const TType &type)
+    {
+        if (type.getBasicType() == EbtStruct || type.isMatrix() || type.isArray())
+        {
+            // no padding needed, HLSL will align the field to a new register
+            mElementIndex = 0;
+            return 0;
+        }
+
+        const GLenum glType = glVariableType(type);
+        const int numComponents = gl::UniformComponentCount(glType);
+
+        if (numComponents >= 4)
+        {
+            // no padding needed, HLSL will align the field to a new register
+            mElementIndex = 0;
+            return 0;
+        }
+
+        if (mElementIndex + numComponents > 4)
+        {
+            // no padding needed, HLSL will align the field to a new register
+            mElementIndex = numComponents;
+            return 0;
+        }
+
+        const int alignment = numComponents == 3 ? 4 : numComponents;
+        const int paddingOffset = (mElementIndex % alignment);
+        const int paddingCount = (paddingOffset != 0 ? (alignment - paddingOffset) : 0);
+
+        mElementIndex += paddingCount;
+        mElementIndex += numComponents;
+        mElementIndex %= 4;
+
+        return paddingCount;
+    }
+
+    TString prePaddingString(const TType &type)
+    {
+        int paddingCount = prePadding(type);
+
+        TString padding;
+
+        for (int paddingIndex = 0; paddingIndex < paddingCount; paddingIndex++)
+        {
+            padding += "    float pad_" + str(mPaddingCounter++) + ";\n";
+        }
+
+        return padding;
+    }
+
+    TString postPaddingString(const TType &type, bool useHLSLRowMajorPacking)
+    {
+        if (!type.isMatrix() && !type.isArray() && type.getBasicType() != EbtStruct)
+        {
+            return "";
+        }
+
+        int numComponents = 0;
+
+        if (type.isMatrix())
+        {
+            // This method can also be called from structureString, which does not use layout qualifiers.
+            // Thus, use the method parameter for determining the matrix packing.
+            //
+            // Note HLSL row major packing corresponds to GL API column-major, and vice-versa, since we
+            // wish to always transpose GL matrices to play well with HLSL's matrix array indexing.
+            //
+            const bool isRowMajorMatrix = !useHLSLRowMajorPacking;
+            const GLenum glType = glVariableType(type);
+            numComponents = gl::MatrixComponentCount(glType, isRowMajorMatrix);
+        }
+        else if (type.getStruct())
+        {
+            const TString &structName = structureTypeName(*type.getStruct(), useHLSLRowMajorPacking, true);
+            numComponents = mStructElementIndexes.find(structName)->second;
+
+            if (numComponents == 0)
+            {
+                return "";
+            }
+        }
+        else
+        {
+            const GLenum glType = glVariableType(type);
+            numComponents = gl::UniformComponentCount(glType);
+        }
+
+        TString padding;
+        for (int paddingOffset = numComponents; paddingOffset < 4; paddingOffset++)
+        {
+            padding += "    float pad_" + str(mPaddingCounter++) + ";\n";
+        }
+        return padding;
+    }
+
+  private:
+    int mPaddingCounter;
+    int mElementIndex;
+    const std::map<TString, int> &mStructElementIndexes;
+};
+
 TString OutputHLSL::TextureFunction::name() const
 {
     TString name = "gl_texture";
@@ -163,7 +276,6 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
 
     mSamplerRegister = 0;
     mInterfaceBlockRegister = 2; // Reserve registers for the default uniform block and driver constants
-    mPaddingCounter = 0;
 }
 
 OutputHLSL::~OutputHLSL()
@@ -316,7 +428,7 @@ TString OutputHLSL::interfaceBlockFieldString(const TInterfaceBlock &interfaceBl
 {
     TString hlsl;
 
-    int elementIndex = 0;
+    Std140PaddingHelper padHelper(mStd140StructElementIndexes);
 
     for (unsigned int typeIndex = 0; typeIndex < interfaceBlock.fields().size(); typeIndex++)
     {
@@ -326,7 +438,7 @@ TString OutputHLSL::interfaceBlockFieldString(const TInterfaceBlock &interfaceBl
         if (blockStorage == EbsStd140)
         {
             // 2 and 3 component vector types in some cases need pre-padding
-            hlsl += std140PrePaddingString(fieldType, &elementIndex);
+            hlsl += padHelper.prePaddingString(fieldType);
         }
 
         hlsl += "    " + interfaceBlockFieldTypeString(field, blockStorage) +
@@ -336,7 +448,7 @@ TString OutputHLSL::interfaceBlockFieldString(const TInterfaceBlock &interfaceBl
         if (blockStorage == EbsStd140)
         {
             const bool useHLSLRowMajorPacking = (fieldType.getLayoutQualifier().matrixPacking == EmpColumnMajor);
-            hlsl += std140PostPaddingString(fieldType, useHLSLRowMajorPacking);
+            hlsl += padHelper.postPaddingString(fieldType, useHLSLRowMajorPacking);
         }
     }
 
@@ -375,99 +487,6 @@ TString OutputHLSL::interfaceBlockString(const TInterfaceBlock &interfaceBlock, 
     hlsl += "};\n\n";
 
     return hlsl;
-}
-
-TString OutputHLSL::std140PrePaddingString(const TType &type, int *elementIndex)
-{
-    if (type.getBasicType() == EbtStruct || type.isMatrix() || type.isArray())
-    {
-        // no padding needed, HLSL will align the field to a new register
-        *elementIndex = 0;
-        return "";
-    }
-
-    const GLenum glType = glVariableType(type);
-    const int numComponents = gl::UniformComponentCount(glType);
-
-    if (numComponents >= 4)
-    {
-        // no padding needed, HLSL will align the field to a new register
-        *elementIndex = 0;
-        return "";
-    }
-
-    if (*elementIndex + numComponents > 4)
-    {
-        // no padding needed, HLSL will align the field to a new register
-        *elementIndex = numComponents;
-        return "";
-    }
-
-    TString padding;
-
-    const int alignment = numComponents == 3 ? 4 : numComponents;
-    const int paddingOffset = (*elementIndex % alignment);
-
-    if (paddingOffset != 0)
-    {
-        // padding is neccessary
-        for (int paddingIndex = paddingOffset; paddingIndex < alignment; paddingIndex++)
-        {
-            padding += "    float pad_" + str(mPaddingCounter++) + ";\n";
-        }
-
-        *elementIndex += (alignment - paddingOffset);
-    }
-
-    *elementIndex += numComponents;
-    *elementIndex %= 4;
-
-    return padding;
-}
-
-TString OutputHLSL::std140PostPaddingString(const TType &type, bool useHLSLRowMajorPacking)
-{
-    if (!type.isMatrix() && !type.isArray() && type.getBasicType() != EbtStruct)
-    {
-        return "";
-    }
-
-    int numComponents = 0;
-
-    if (type.isMatrix())
-    {
-        // This method can also be called from structureString, which does not use layout qualifiers.
-        // Thus, use the method parameter for determining the matrix packing.
-        //
-        // Note HLSL row major packing corresponds to GL API column-major, and vice-versa, since we
-        // wish to always transpose GL matrices to play well with HLSL's matrix array indexing.
-        //
-        const bool isRowMajorMatrix = !useHLSLRowMajorPacking;
-        const GLenum glType = glVariableType(type);
-        numComponents = gl::MatrixComponentCount(glType, isRowMajorMatrix);
-    }
-    else if (type.getStruct())
-    {
-        const TString &structName = structureTypeName(*type.getStruct(), useHLSLRowMajorPacking, true);
-        numComponents = mStd140StructElementIndexes[structName];
-
-        if (numComponents == 0)
-        {
-            return "";
-        }
-    }
-    else
-    {
-        const GLenum glType = glVariableType(type);
-        numComponents = gl::UniformComponentCount(glType);
-    }
-
-    TString padding;
-    for (int paddingOffset = numComponents; paddingOffset < 4; paddingOffset++)
-    {
-        padding += "    float pad_" + str(mPaddingCounter++) + ";\n";
-    }
-    return padding;
 }
 
 // Use the same layout for packed and shared
@@ -3401,25 +3420,27 @@ TString OutputHLSL::structureString(const TStructure &structure, bool useHLSLRow
     string += declareString + "\n"
               "{\n";
 
-    int elementIndex = 0;
+    Std140PaddingHelper padHelper(mStd140StructElementIndexes);
 
     for (unsigned int i = 0; i < fields.size(); i++)
     {
         const TField &field = *fields[i];
         const TType &fieldType = *field.type();
         const TStructure *fieldStruct = fieldType.getStruct();
-        const TString &fieldTypeString = fieldStruct ? structureTypeName(*fieldStruct, useHLSLRowMajorPacking, useStd140Packing) : typeString(fieldType);
+        const TString &fieldTypeString = fieldStruct ?
+                                         structureTypeName(*fieldStruct, useHLSLRowMajorPacking, useStd140Packing) :
+                                         typeString(fieldType);
 
         if (useStd140Packing)
         {
-            string += std140PrePaddingString(*field.type(), &elementIndex);
+            string += padHelper.prePaddingString(fieldType);
         }
 
         string += "    " + fieldTypeString + " " + decorateField(field.name(), structure) + arrayString(fieldType) + ";\n";
 
         if (useStd140Packing)
         {
-            string += std140PostPaddingString(*field.type(), useHLSLRowMajorPacking);
+            string += padHelper.postPaddingString(fieldType, useHLSLRowMajorPacking);
         }
     }
 
@@ -3728,17 +3749,17 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
 
 void OutputHLSL::storeStd140ElementIndex(const TStructure &structure, bool useHLSLRowMajorPacking)
 {
-    int elementIndex = 0;
+    Std140PaddingHelper padHelper(mStd140StructElementIndexes);
     const TFieldList &fields = structure.fields();
 
     for (unsigned int i = 0; i < fields.size(); i++)
     {
-        std140PrePaddingString(*fields[i]->type(), &elementIndex);
+        padHelper.prePadding(*fields[i]->type());
     }
 
     // Add remaining element index to the global map, for use with nested structs in standard layouts
     const TString &structName = structureTypeName(structure, useHLSLRowMajorPacking, true);
-    mStd140StructElementIndexes[structName] = elementIndex;
+    mStd140StructElementIndexes[structName] = padHelper.elementIndex();
 }
 
 const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const ConstantUnion *constUnion)
