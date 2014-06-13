@@ -19,6 +19,7 @@
 #include "compiler/translator/RewriteElseBlocks.h"
 #include "compiler/translator/UtilsHLSL.h"
 #include "compiler/translator/util.h"
+#include "compiler/translator/UniformHLSL.h"
 #include "compiler/translator/StructureHLSL.h"
 
 #include <algorithm>
@@ -70,18 +71,6 @@ TString OutputHLSL::TextureFunction::name() const
     }
 
     return name + "(";
-}
-
-const char *RegisterPrefix(const TType &type)
-{
-    if (IsSampler(type.getBasicType()))
-    {
-        return "s";
-    }
-    else
-    {
-        return "c";
-    }
 }
 
 bool OutputHLSL::TextureFunction::operator<(const TextureFunction &rhs) const
@@ -149,31 +138,31 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     mExcessiveLoopIndex = NULL;
 
     mStructureHLSL = new StructureHLSL;
+    mUniformHLSL = new UniformHLSL(mStructureHLSL, mOutputType);
 
     if (mOutputType == SH_HLSL9_OUTPUT)
     {
         if (mContext.shaderType == SH_FRAGMENT_SHADER)
         {
-            mUniformRegister = 3;   // Reserve registers for dx_DepthRange, dx_ViewCoords and dx_DepthFront
+            // Reserve registers for dx_DepthRange, dx_ViewCoords and dx_DepthFront
+            mUniformHLSL->reserveUniformRegisters(3);
         }
         else
         {
-            mUniformRegister = 2;   // Reserve registers for dx_DepthRange and dx_ViewAdjust
+            // Reserve registers for dx_DepthRange and dx_ViewAdjust
+            mUniformHLSL->reserveUniformRegisters(2);
         }
     }
-    else
-    {
-        mUniformRegister = 0;
-    }
 
-    mSamplerRegister = 0;
-    mInterfaceBlockRegister = 2; // Reserve registers for the default uniform block and driver constants
+    // Reserve registers for the default uniform block and driver constants
+    mUniformHLSL->reserveInterfaceBlockRegisters(2);
 }
 
 OutputHLSL::~OutputHLSL()
 {
     SafeDelete(mUnfoldShortCircuit);
     SafeDelete(mStructureHLSL);
+    SafeDelete(mUniformHLSL);
 }
 
 void OutputHLSL::output()
@@ -225,12 +214,12 @@ TInfoSinkBase &OutputHLSL::getBodyStream()
 
 const std::vector<gl::Uniform> &OutputHLSL::getUniforms()
 {
-    return mActiveUniforms;
+    return mUniformHLSL->getUniforms();
 }
 
 const std::vector<gl::InterfaceBlock> &OutputHLSL::getInterfaceBlocks() const
 {
-    return mActiveInterfaceBlocks;
+    return mUniformHLSL->getInterfaceBlocks();
 }
 
 const std::vector<gl::Attribute> &OutputHLSL::getOutputVariables() const
@@ -254,170 +243,6 @@ int OutputHLSL::vectorSize(const TType &type) const
     int arraySize = type.isArray() ? type.getArraySize() : 1;
 
     return elementSize * arraySize;
-}
-
-TString OutputHLSL::interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, const TField &field)
-{
-    if (interfaceBlock.hasInstanceName())
-    {
-        return interfaceBlock.name() + "." + field.name();
-    }
-    else
-    {
-        return field.name();
-    }
-}
-
-TString OutputHLSL::interfaceBlockStructNameString(const TInterfaceBlock &interfaceBlock)
-{
-    return DecoratePrivate(interfaceBlock.name()) + "_type";
-}
-
-TString OutputHLSL::interfaceBlockInstanceString(const TInterfaceBlock& interfaceBlock, unsigned int arrayIndex)
-{
-    if (!interfaceBlock.hasInstanceName())
-    {
-        return "";
-    }
-    else if (interfaceBlock.isArray())
-    {
-        return DecoratePrivate(interfaceBlock.instanceName()) + "_" + str(arrayIndex);
-    }
-    else
-    {
-        return Decorate(interfaceBlock.instanceName());
-    }
-}
-
-TString OutputHLSL::interfaceBlockFieldTypeString(const TField &field, TLayoutBlockStorage blockStorage)
-{
-    const TType &fieldType = *field.type();
-    const TLayoutMatrixPacking matrixPacking = fieldType.getLayoutQualifier().matrixPacking;
-    ASSERT(matrixPacking != EmpUnspecified);
-
-    if (fieldType.isMatrix())
-    {
-        // Use HLSL row-major packing for GLSL column-major matrices
-        const TString &matrixPackString = (matrixPacking == EmpRowMajor ? "column_major" : "row_major");
-        return matrixPackString + " " + TypeString(fieldType);
-    }
-    else if (fieldType.getStruct())
-    {
-        // Use HLSL row-major packing for GLSL column-major matrices
-        return QualifiedStructNameString(*fieldType.getStruct(), matrixPacking == EmpColumnMajor,
-                                         blockStorage == EbsStd140);
-    }
-    else
-    {
-        return TypeString(fieldType);
-    }
-}
-
-TString OutputHLSL::interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, TLayoutBlockStorage blockStorage)
-{
-    TString hlsl;
-
-    Std140PaddingHelper padHelper = mStructureHLSL->getPaddingHelper();
-
-    for (unsigned int typeIndex = 0; typeIndex < interfaceBlock.fields().size(); typeIndex++)
-    {
-        const TField &field = *interfaceBlock.fields()[typeIndex];
-        const TType &fieldType = *field.type();
-
-        if (blockStorage == EbsStd140)
-        {
-            // 2 and 3 component vector types in some cases need pre-padding
-            hlsl += padHelper.prePaddingString(fieldType);
-        }
-
-        hlsl += "    " + interfaceBlockFieldTypeString(field, blockStorage) +
-                " " + Decorate(field.name()) + ArrayString(fieldType) + ";\n";
-
-        // must pad out after matrices and arrays, where HLSL usually allows itself room to pack stuff
-        if (blockStorage == EbsStd140)
-        {
-            const bool useHLSLRowMajorPacking = (fieldType.getLayoutQualifier().matrixPacking == EmpColumnMajor);
-            hlsl += padHelper.postPaddingString(fieldType, useHLSLRowMajorPacking);
-        }
-    }
-
-    return hlsl;
-}
-
-TString OutputHLSL::interfaceBlockStructString(const TInterfaceBlock &interfaceBlock)
-{
-    const TLayoutBlockStorage blockStorage = interfaceBlock.blockStorage();
-
-    return "struct " + interfaceBlockStructNameString(interfaceBlock) + "\n"
-           "{\n" +
-           interfaceBlockFieldString(interfaceBlock, blockStorage) +
-           "};\n\n";
-}
-
-TString OutputHLSL::interfaceBlockString(const TInterfaceBlock &interfaceBlock, unsigned int registerIndex, unsigned int arrayIndex)
-{
-    const TString &arrayIndexString =  (arrayIndex != GL_INVALID_INDEX ? Decorate(str(arrayIndex)) : "");
-    const TString &blockName = interfaceBlock.name() + arrayIndexString;
-    TString hlsl;
-
-    hlsl += "cbuffer " + blockName + " : register(b" + str(registerIndex) + ")\n"
-            "{\n";
-
-    if (interfaceBlock.hasInstanceName())
-    {
-        hlsl += "    " + interfaceBlockStructNameString(interfaceBlock) + " " + interfaceBlockInstanceString(interfaceBlock, arrayIndex) + ";\n";
-    }
-    else
-    {
-        const TLayoutBlockStorage blockStorage = interfaceBlock.blockStorage();
-        hlsl += interfaceBlockFieldString(interfaceBlock, blockStorage);
-    }
-
-    hlsl += "};\n\n";
-
-    return hlsl;
-}
-
-// Use the same layout for packed and shared
-void setBlockLayout(gl::InterfaceBlock *interfaceBlock, gl::BlockLayoutType newLayout)
-{
-    interfaceBlock->layout = newLayout;
-    interfaceBlock->blockInfo.clear();
-
-    switch (newLayout)
-    {
-      case gl::BLOCKLAYOUT_SHARED:
-      case gl::BLOCKLAYOUT_PACKED:
-        {
-            gl::HLSLBlockEncoder hlslEncoder(&interfaceBlock->blockInfo, gl::HLSLBlockEncoder::ENCODE_PACKED);
-            hlslEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
-            interfaceBlock->dataSize = hlslEncoder.getBlockSize();
-        }
-        break;
-
-      case gl::BLOCKLAYOUT_STANDARD:
-        {
-            gl::Std140BlockEncoder stdEncoder(&interfaceBlock->blockInfo);
-            stdEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
-            interfaceBlock->dataSize = stdEncoder.getBlockSize();
-        }
-        break;
-
-      default:
-        UNREACHABLE();
-        break;
-    }
-}
-
-gl::BlockLayoutType convertBlockLayoutType(TLayoutBlockStorage blockStorage)
-{
-    switch (blockStorage)
-    {
-      case EbsPacked: return gl::BLOCKLAYOUT_PACKED;
-      case EbsShared: return gl::BLOCKLAYOUT_SHARED;
-      case EbsStd140: return gl::BLOCKLAYOUT_STANDARD;
-      default: UNREACHABLE(); return gl::BLOCKLAYOUT_SHARED;
-    }
 }
 
 TString OutputHLSL::structInitializerString(int indent, const TStructure &structure, const TString &rhsStructName)
@@ -465,83 +290,9 @@ void OutputHLSL::header()
 {
     TInfoSinkBase &out = mHeader;
 
-    TString uniforms;
-    TString interfaceBlocks;
     TString varyings;
     TString attributes;
     TString flaggedStructs;
-
-    for (ReferencedSymbols::const_iterator uniformIt = mReferencedUniforms.begin(); uniformIt != mReferencedUniforms.end(); uniformIt++)
-    {
-        const TIntermSymbol &uniform = *uniformIt->second;
-        const TType &type = uniform.getType();
-        const TString &name = uniform.getSymbol();
-
-        int registerIndex = declareUniformAndAssignRegister(type, name);
-
-        if (mOutputType == SH_HLSL11_OUTPUT && IsSampler(type.getBasicType()))   // Also declare the texture
-        {
-            uniforms += "uniform " + SamplerString(type) + " sampler_" + DecorateUniform(name, type) + ArrayString(type) + 
-                        " : register(s" + str(registerIndex) + ");\n";
-
-            uniforms += "uniform " + TextureString(type) + " texture_" + DecorateUniform(name, type) + ArrayString(type) +
-                        " : register(t" + str(registerIndex) + ");\n";
-        }
-        else
-        {
-            const TStructure *structure = type.getStruct();
-            const TString &typeName = (structure ? QualifiedStructNameString(*structure, false, false) : TypeString(type));
-
-            const TString &registerString = TString("register(") + RegisterPrefix(type) + str(registerIndex) + ")";
-
-            uniforms += "uniform " + typeName + " " + DecorateUniform(name, type) + ArrayString(type) + " : " + registerString + ";\n";
-        }
-    }
-
-    for (ReferencedSymbols::const_iterator interfaceBlockIt = mReferencedInterfaceBlocks.begin(); interfaceBlockIt != mReferencedInterfaceBlocks.end(); interfaceBlockIt++)
-    {
-        const TType &nodeType = interfaceBlockIt->second->getType();
-        const TInterfaceBlock &interfaceBlock = *nodeType.getInterfaceBlock();
-        const TFieldList &fieldList = interfaceBlock.fields();
-
-        unsigned int arraySize = static_cast<unsigned int>(interfaceBlock.arraySize());
-        gl::InterfaceBlock activeBlock(interfaceBlock.name().c_str(), arraySize, mInterfaceBlockRegister);
-        for (unsigned int typeIndex = 0; typeIndex < fieldList.size(); typeIndex++)
-        {
-            const TField &field = *fieldList[typeIndex];
-            const TString &fullUniformName = interfaceBlockFieldString(interfaceBlock, field);
-            declareInterfaceBlockField(*field.type(), fullUniformName, activeBlock.fields);
-        }
-
-        mInterfaceBlockRegister += std::max(1u, arraySize);
-
-        gl::BlockLayoutType blockLayoutType = convertBlockLayoutType(interfaceBlock.blockStorage());
-        setBlockLayout(&activeBlock, blockLayoutType);
-
-        if (interfaceBlock.matrixPacking() == EmpRowMajor)
-        {
-            activeBlock.isRowMajorLayout = true;
-        }
-
-        mActiveInterfaceBlocks.push_back(activeBlock);
-
-        if (interfaceBlock.hasInstanceName())
-        {
-            interfaceBlocks += interfaceBlockStructString(interfaceBlock);
-        }
-
-        if (arraySize > 0)
-        {
-            for (unsigned int arrayIndex = 0; arrayIndex < arraySize; arrayIndex++)
-            {
-                interfaceBlocks += interfaceBlockString(interfaceBlock, activeBlock.registerIndex + arrayIndex, arrayIndex);
-            }
-        }
-        else
-        {
-            interfaceBlocks += interfaceBlockString(interfaceBlock, activeBlock.registerIndex, GL_INVALID_INDEX);
-        }
-    }
 
     for (std::map<TIntermTyped*, TString>::const_iterator flaggedStructIt = mFlaggedStructMappedNames.begin(); flaggedStructIt != mFlaggedStructMappedNames.end(); flaggedStructIt++)
     {
@@ -580,6 +331,9 @@ void OutputHLSL::header()
     }
 
     out << mStructureHLSL->structsHeader();
+
+    out << mUniformHLSL->uniformsHeader(mOutputType, mReferencedUniforms);
+    out << mUniformHLSL->interfaceBlocksHeader(mReferencedInterfaceBlocks);
 
     if (mUsesDiscardRewriting)
     {
@@ -715,22 +469,13 @@ void OutputHLSL::header()
             out << "static gl_DepthRangeParameters gl_DepthRange = {dx_DepthRange.x, dx_DepthRange.y, dx_DepthRange.z};\n"
                    "\n";
         }
-        
-        out <<  uniforms;
-        out << "\n";
 
-        if (!interfaceBlocks.empty())
+        if (!flaggedStructs.empty())
         {
-            out << interfaceBlocks;
+            out << "// Std140 Structures accessed by value\n";
             out << "\n";
-
-            if (!flaggedStructs.empty())
-            {
-                out << "// Std140 Structures accessed by value\n";
-                out << "\n";
-                out << flaggedStructs;
-                out << "\n";
-            }
+            out << flaggedStructs;
+            out << "\n";
         }
 
         if (usingMRTExtension && mNumRenderTargets > 1)
@@ -754,7 +499,7 @@ void OutputHLSL::header()
         out <<  attributes;
         out << "\n"
                "static float4 gl_Position = float4(0, 0, 0, 0);\n";
-        
+
         if (mUsesPointSize)
         {
             out << "static float gl_PointSize = float(1);\n";
@@ -804,21 +549,12 @@ void OutputHLSL::header()
                    "\n";
         }
 
-        out << uniforms;
-        out << "\n";
-        
-        if (!interfaceBlocks.empty())
+        if (!flaggedStructs.empty())
         {
-            out << interfaceBlocks;
+            out << "// Std140 Structures accessed by value\n";
             out << "\n";
-
-            if (!flaggedStructs.empty())
-            {
-                out << "// Std140 Structures accessed by value\n";
-                out << "\n";
-                out << flaggedStructs;
-                out << "\n";
-            }
+            out << flaggedStructs;
+            out << "\n";
         }
     }
 
@@ -1288,7 +1024,7 @@ void OutputHLSL::header()
                   case 3: out << "int4("; break;
                   default: UNREACHABLE();
                 }
-            
+
                 // Convert from normalized floating-point to integer
                 if (textureFunction->method != TextureFunction::FETCH)
                 {
@@ -1323,7 +1059,7 @@ void OutputHLSL::header()
             }
 
             TString proj = "";   // Only used for projected textures
-        
+
             if (textureFunction->proj)
             {
                 switch(textureFunction->coords)
@@ -1507,7 +1243,7 @@ void OutputHLSL::header()
                "}\n"
                "\n";
     }
-    
+
     if (mUsesMod3v)
     {
         out << "float3 mod(float3 x, float3 y)\n"
@@ -1811,7 +1547,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         {
             out << " = mul(";
             node->getLeft()->traverse(this);
-            out << ", transpose(";   
+            out << ", transpose(";
         }
         else
         {
@@ -1827,7 +1563,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         {
             out << " = mul(";
             node->getLeft()->traverse(this);
-            out << ", ";   
+            out << ", ";
         }
         else
         {
@@ -1844,10 +1580,8 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 {
                     TInterfaceBlock* interfaceBlock = leftType.getInterfaceBlock();
                     const int arrayIndex = node->getRight()->getAsConstantUnion()->getIConst(0);
-
                     mReferencedInterfaceBlocks[interfaceBlock->instanceName()] = node->getLeft()->getAsSymbolNode();
-                    out << interfaceBlockInstanceString(*interfaceBlock, arrayIndex);
-
+                    out << mUniformHLSL->interfaceBlockInstanceString(*interfaceBlock, arrayIndex);
                     return false;
                 }
             }
@@ -2282,14 +2016,14 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             out << ")\n"
                 "{\n";
-            
+
             if (sequence.size() > 1)
             {
                 mInsideFunction = true;
                 sequence[1]->traverse(this);
                 mInsideFunction = false;
             }
-            
+
             out << "}\n";
 
             if (mContainsLoopDiscontinuity && !mOutputLod0Function)
@@ -2542,7 +2276,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             case 4: mUsesFaceforward4 = true; break;
             default: UNREACHABLE();
             }
-            
+
             outputTriplet(visit, "faceforward(", ", ", ")");
         }
         break;
@@ -2572,7 +2306,7 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
         node->getCondition()->traverse(this);
 
         out << ")\n";
-        
+
         outputLineDirective(node->getLine().first_line);
         out << "{\n";
 
@@ -2655,7 +2389,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
     else
     {
         out << "{for(";
-        
+
         if (node->getInit())
         {
             node->getInit()->traverse(this);
@@ -2676,7 +2410,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
         }
 
         out << ")\n";
-        
+
         outputLineDirective(node->getLine().first_line);
         out << "{\n";
     }
@@ -2851,7 +2585,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
     if (index != NULL && node->getCondition())
     {
         TIntermBinary *test = node->getCondition()->getAsBinaryNode();
-        
+
         if (test && test->getLeft()->getAsSymbolNode()->getId() == index->getId())
         {
             TIntermConstantUnion *constant = test->getRight()->getAsConstantUnion();
@@ -2872,7 +2606,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
     {
         TIntermBinary *binaryTerminal = node->getExpression()->getAsBinaryNode();
         TIntermUnary *unaryTerminal = node->getExpression()->getAsUnaryNode();
-        
+
         if (binaryTerminal)
         {
             TOperator op = binaryTerminal->getOp();
@@ -2952,7 +2686,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 {
                     mExcessiveLoopIndex = NULL;   // Stops setting the Break flag
                 }
-                
+
                 // for(int index = initial; index < clampedLimit; index += increment)
 
                 out << "for(";
@@ -2970,7 +2704,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 out << " += ";
                 out << increment;
                 out << ")\n";
-                
+
                 outputLineDirective(node->getLine().first_line);
                 out << "{\n";
 
@@ -2992,7 +2726,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 initial += MAX_LOOP_ITERATIONS * increment;
                 iterations -= MAX_LOOP_ITERATIONS;
             }
-            
+
             out << "}";
 
             mExcessiveLoopIndex = restoreIndex;
@@ -3034,7 +2768,7 @@ void OutputHLSL::outputLineDirective(int line)
         {
             mBody << " \"" << mContext.sourcePath << "\"";
         }
-        
+
         mBody << "\n";
     }
 }
@@ -3057,7 +2791,7 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     if (mOutputType == SH_HLSL11_OUTPUT && IsSampler(type.getBasicType()))
     {
         return QualifierString(qualifier) + " " + TextureString(type) + " texture_" + name + ArrayString(type) + ", " +
-               QualifierString(qualifier) + " " + SamplerString(type) + " sampler_" + name + ArrayString(type);        
+               QualifierString(qualifier) + " " + SamplerString(type) + " sampler_" + name + ArrayString(type);
     }
 
     return QualifierString(qualifier) + " " + TypeString(type) + " " + name + ArrayString(type);
@@ -3109,13 +2843,12 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
     if (structure)
     {
         out << StructNameString(*structure) + "_ctor(";
-        
+
         const TFieldList& fields = structure->fields();
 
         for (size_t i = 0; i < fields.size(); i++)
         {
             const TType *fieldType = fields[i]->type();
-
             constUnion = writeConstantUnion(*fieldType, constUnion);
 
             if (i != fields.size() - 1)
@@ -3130,7 +2863,7 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
     {
         size_t size = type.getObjectSize();
         bool writeType = size > 1;
-        
+
         if (writeType)
         {
             out << TypeString(type) << "(";
@@ -3162,74 +2895,6 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
     return constUnion;
 }
 
-void OutputHLSL::declareInterfaceBlockField(const TType &type, const TString &name, std::vector<gl::InterfaceBlockField>& output)
-{
-    const TStructure *structure = type.getStruct();
-
-    if (!structure)
-    {
-        const bool isRowMajorMatrix = (type.isMatrix() && type.getLayoutQualifier().matrixPacking == EmpRowMajor);
-        gl::InterfaceBlockField field(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
-                                      (unsigned int)type.getArraySize(), isRowMajorMatrix);
-        output.push_back(field);
-   }
-    else
-    {
-        gl::InterfaceBlockField structField(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), false);
-
-        const TFieldList &fields = structure->fields();
-
-        for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
-        {
-            TField *field = fields[fieldIndex];
-            TType *fieldType = field->type();
-
-            // make sure to copy matrix packing information
-            fieldType->setLayoutQualifier(type.getLayoutQualifier());
-
-            declareInterfaceBlockField(*fieldType, field->name(), structField.fields);
-        }
-
-        output.push_back(structField);
-    }
-}
-
-gl::Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<gl::Uniform>& output)
-{
-    const TStructure *structure = type.getStruct();
-
-    if (!structure)
-    {
-        gl::Uniform uniform(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
-                            (unsigned int)type.getArraySize(), (unsigned int)registerIndex, 0);
-        output.push_back(uniform);
-
-        return uniform;
-   }
-    else
-    {
-        gl::Uniform structUniform(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(),
-                                  (unsigned int)registerIndex, GL_INVALID_INDEX);
-
-        const TFieldList &fields = structure->fields();
-
-        for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
-        {
-            TField *field = fields[fieldIndex];
-            TType *fieldType = field->type();
-
-            declareUniformToList(*fieldType, field->name(), GL_INVALID_INDEX, structUniform.fields);
-        }
-
-        // assign register offset information -- this will override the information in any sub-structures.
-        HLSLVariableGetRegisterInfo(registerIndex, &structUniform, mOutputType);
-
-        output.push_back(structUniform);
-
-        return structUniform;
-    }
-}
-
 void OutputHLSL::declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<gl::Varying>& fieldsOut)
 {
     const TStructure *structure = type.getStruct();
@@ -3255,24 +2920,6 @@ void OutputHLSL::declareVaryingToList(const TType &type, TQualifier baseTypeQual
 
         fieldsOut.push_back(structVarying);
     }
-}
-
-int OutputHLSL::declareUniformAndAssignRegister(const TType &type, const TString &name)
-{
-    int registerIndex = (IsSampler(type.getBasicType()) ? mSamplerRegister : mUniformRegister);
-
-    const gl::Uniform &uniform = declareUniformToList(type, name, registerIndex, mActiveUniforms);
-
-    if (IsSampler(type.getBasicType()))
-    {
-        mSamplerRegister += gl::HLSLVariableRegisterCount(uniform, mOutputType);
-    }
-    else
-    {
-        mUniformRegister += gl::HLSLVariableRegisterCount(uniform, mOutputType);
-    }
-
-    return registerIndex;
 }
 
 }

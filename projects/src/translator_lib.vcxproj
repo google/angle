@@ -180,6 +180,7 @@
     <ClInclude Include="..\..\src\compiler\translator\InitializeParseContext.h"/>
     <ClInclude Include="..\..\src\compiler\translator\VariableInfo.h"/>
     <ClInclude Include="..\..\src\compiler\translator\LoopInfo.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\UniformHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang_tab.h"/>
     <ClInclude Include="..\..\src\compiler\translator\RewriteElseBlocks.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ExtensionBehavior.h"/>
@@ -252,6 +253,7 @@
     <ClCompile Include="..\..\src\compiler\translator\DetectDiscontinuity.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\StructureHLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\UnfoldShortCircuit.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\UniformHLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\compilerdebug.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\VariableInfo.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\Compiler.cpp"/>

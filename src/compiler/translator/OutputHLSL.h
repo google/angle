@@ -22,6 +22,9 @@ namespace sh
 {
 class UnfoldShortCircuit;
 class StructureHLSL;
+class UniformHLSL;
+
+typedef std::map<TString, TIntermSymbol*> ReferencedSymbols;
 
 class OutputHLSL : public TIntermTraverser
 {
@@ -74,7 +77,6 @@ class OutputHLSL : public TIntermTraverser
     TInfoSinkBase mBody;
     TInfoSinkBase mFooter;
 
-    typedef std::map<TString, TIntermSymbol*> ReferencedSymbols;
     ReferencedSymbols mReferencedUniforms;
     ReferencedSymbols mReferencedInterfaceBlocks;
     ReferencedSymbols mReferencedAttributes;
@@ -82,6 +84,7 @@ class OutputHLSL : public TIntermTraverser
     ReferencedSymbols mReferencedOutputVariables;
 
     StructureHLSL *mStructureHLSL;
+    UniformHLSL *mUniformHLSL;
 
     struct TextureFunction
     {
@@ -150,32 +153,10 @@ class OutputHLSL : public TIntermTraverser
 
     TIntermSymbol *mExcessiveLoopIndex;
 
-    int mUniformRegister;
-    int mInterfaceBlockRegister;
-    int mSamplerRegister;
-
-    TString registerString(TIntermSymbol *operand);
-    int samplerRegister(TIntermSymbol *sampler);
-    int uniformRegister(TIntermSymbol *uniform);
-    void declareInterfaceBlockField(const TType &type, const TString &name, std::vector<gl::InterfaceBlockField>& output);
-    gl::Uniform declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<gl::Uniform>& output);
-    void declareUniform(const TType &type, const TString &name, int index);
     void declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<gl::Varying>& fieldsOut);
 
-    // Returns the uniform's register index
-    int declareUniformAndAssignRegister(const TType &type, const TString &name);
-
-    TString interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, const TField &field);
-    TString interfaceBlockStructNameString(const TInterfaceBlock &interfaceBlockType);
-    TString interfaceBlockInstanceString(const TInterfaceBlock& interfaceBlock, unsigned int arrayIndex);
-    TString interfaceBlockFieldTypeString(const TField &field, TLayoutBlockStorage blockStorage);
-    TString interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, TLayoutBlockStorage blockStorage);
-    TString interfaceBlockStructString(const TInterfaceBlock &interfaceBlock);
-    TString interfaceBlockString(const TInterfaceBlock &interfaceBlock, unsigned int registerIndex, unsigned int arrayIndex);
     TString structInitializerString(int indent, const TStructure &structure, const TString &rhsStructName);
 
-    std::vector<gl::Uniform> mActiveUniforms;
-    std::vector<gl::InterfaceBlock> mActiveInterfaceBlocks;
     std::vector<gl::Attribute> mActiveOutputVariables;
     std::vector<gl::Attribute> mActiveAttributes;
     std::vector<gl::Varying> mActiveVaryings;

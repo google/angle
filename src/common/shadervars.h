@@ -58,9 +58,11 @@ struct ShaderVariable
 // Uniform registers (and element indices) are assigned when outputting shader code
 struct Uniform : public ShaderVariable
 {
+    std::vector<Uniform> fields;
+
+    // HLSL-specific members
     unsigned int registerIndex;
     unsigned int elementIndex; // Offset within a register, for struct members
-    std::vector<Uniform> fields;
 
     Uniform(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn,
             unsigned int registerIndexIn, unsigned int elementIndexIn)
@@ -146,6 +148,7 @@ struct InterfaceBlock
     std::vector<InterfaceBlockField> fields;
     std::vector<BlockMemberInfo> blockInfo;
 
+    // HLSL-specific members
     unsigned int registerIndex;
 
     InterfaceBlock(const char *name, unsigned int arraySize, unsigned int registerIndex)
