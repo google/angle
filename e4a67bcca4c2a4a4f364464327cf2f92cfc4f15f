@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f49844c_0141d46c",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-13T17:43:33Z",
+      "side": 1,
+      "message": "This violates Google coding style (which ANGLE style falls back to): http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml?showone\u003dConstructor_Initializer_Lists#Constructor_Initializer_Lists",
+      "revId": "e4a67bcca4c2a4a4f364464327cf2f92cfc4f15f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
