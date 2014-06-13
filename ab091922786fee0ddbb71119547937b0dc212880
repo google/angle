@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfc6f0d8_441b038c",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2096,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T17:56:56Z",
+      "side": 1,
+      "message": "Missing \"which\" or \"that\".",
+      "range": {
+        "startLine": 2096,
+        "startChar": 33,
+        "endLine": 2096,
+        "endChar": 34
+      },
+      "revId": "ab091922786fee0ddbb71119547937b0dc212880",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f6e38af_426bcc30",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2101,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-13T17:56:56Z",
+      "side": 1,
+      "message": "Could also add a note that we don\u0027t anticipate more unsized formats to be added in future spec versions -- those already present are for backwards compatibility reasons.\n\nAlso-- where do ES2 formats introduced via OES_texture_float stand on this point? The extension doesn\u0027t mention the color renderability of the added formats, but all can be created with unsized internalformat. We mark the floating point formats as renderable conditionally depending on underlying D3D support, but I\u0027m not sure whether it\u0027s possible for the format to be supported, but not rendering to it.\n\n...it also looks like we currently have the floating point texture formats as renderable in the ES3 table, citing the extension as the origin for color-renderability, but presumably allowing textures to be created using the sized internal formats and then rendered to. I\u0027m not sure that\u0027s kosher.",
+      "range": {
+        "startLine": 2099,
+        "startChar": 65,
+        "endLine": 2101,
+        "endChar": 44
+      },
+      "revId": "ab091922786fee0ddbb71119547937b0dc212880",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
