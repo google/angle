@@ -355,6 +355,30 @@
       "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc3fcc9_ded18534",
+        "filename": "extensions/ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-13T18:20:28Z",
+      "side": 1,
+      "message": "Whoops, yea, I based the language off of http://www.khronos.org/registry/gles/extensions/OES/OES_framebuffer_object.txt and it\u0027s children http://www.khronos.org/registry/gles/extensions/OES/OES_depth24.txt , etc but it looks like only the children define the enums and the parent just references them.",
+      "parentUuid": "9f6e38af_adb811d8",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 55,
+        "endChar": 46
+      },
+      "revId": "db81afbf82584e76dac2e7b097f8f18062fa6c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
