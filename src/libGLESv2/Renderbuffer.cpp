@@ -22,6 +22,88 @@ namespace gl
 {
 unsigned int RenderbufferStorage::mCurrentSerial = 1;
 
+Renderbuffer::Renderbuffer(rx::Renderer *renderer, GLuint id, RenderbufferStorage *newStorage)
+  : RefCountObject(id),
+    mRenderer(renderer),
+    mStorage(newStorage)
+{
+    ASSERT(mStorage);
+}
+
+void Renderbuffer::setStorage(RenderbufferStorage *newStorage)
+{
+    ASSERT(newStorage);
+
+    SafeDelete(mStorage);
+    mStorage = newStorage;
+}
+
+RenderbufferStorage *Renderbuffer::getStorage()
+{
+    ASSERT(mStorage);
+    return mStorage;
+}
+
+GLsizei Renderbuffer::getWidth() const
+{
+    ASSERT(mStorage);
+    return mStorage->getWidth();
+}
+
+GLsizei Renderbuffer::getHeight() const
+{
+    ASSERT(mStorage);
+    return mStorage->getHeight();
+}
+
+GLenum Renderbuffer::getInternalFormat() const
+{
+    ASSERT(mStorage);
+    return mStorage->getInternalFormat();
+}
+
+GLenum Renderbuffer::getActualFormat() const
+{
+    ASSERT(mStorage);
+    return mStorage->getActualFormat();
+}
+
+GLsizei Renderbuffer::getSamples() const
+{
+    ASSERT(mStorage);
+    return mStorage->getSamples();
+}
+
+GLuint Renderbuffer::getRedSize() const
+{
+    return gl::GetRedBits(getActualFormat(), mRenderer->getCurrentClientVersion());
+}
+
+GLuint Renderbuffer::getGreenSize() const
+{
+    return gl::GetGreenBits(getActualFormat(), mRenderer->getCurrentClientVersion());
+}
+
+GLuint Renderbuffer::getBlueSize() const
+{
+    return gl::GetBlueBits(getActualFormat(), mRenderer->getCurrentClientVersion());
+}
+
+GLuint Renderbuffer::getAlphaSize() const
+{
+    return gl::GetAlphaBits(getActualFormat(), mRenderer->getCurrentClientVersion());
+}
+
+GLuint Renderbuffer::getDepthSize() const
+{
+    return gl::GetDepthBits(getActualFormat(), mRenderer->getCurrentClientVersion());
+}
+
+GLuint Renderbuffer::getStencilSize() const
+{
+    return gl::GetStencilBits(getActualFormat(), mRenderer->getCurrentClientVersion());
+}
+
 RenderbufferStorage::RenderbufferStorage() : mSerial(issueSerials(1))
 {
     mWidth = 0;

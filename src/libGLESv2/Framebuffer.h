@@ -22,6 +22,7 @@ class Renderer;
 namespace gl
 {
 class FramebufferAttachment;
+class FramebufferAttachmentImpl;
 class Colorbuffer;
 class Depthbuffer;
 class Stencilbuffer;
@@ -99,7 +100,7 @@ class Framebuffer
   private:
     DISALLOW_COPY_AND_ASSIGN(Framebuffer);
 
-    FramebufferAttachment *lookupAttachment(GLenum type, GLuint handle, GLint level, GLint layer) const;
+    FramebufferAttachmentImpl *createAttachmentImpl(GLenum type, GLuint handle, GLint level, GLint layer) const;
 };
 
 class DefaultFramebuffer : public Framebuffer

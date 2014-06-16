@@ -3092,25 +3092,25 @@ void __stdcall glGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            gl::FramebufferAttachment *attachment = context->getRenderbuffer(context->getRenderbufferHandle());
+            gl::Renderbuffer *renderbuffer = context->getRenderbuffer(context->getRenderbufferHandle());
 
             switch (pname)
             {
-              case GL_RENDERBUFFER_WIDTH:           *params = attachment->getWidth();          break;
-              case GL_RENDERBUFFER_HEIGHT:          *params = attachment->getHeight();         break;
-              case GL_RENDERBUFFER_INTERNAL_FORMAT: *params = attachment->getInternalFormat(); break;
-              case GL_RENDERBUFFER_RED_SIZE:        *params = attachment->getRedSize();        break;
-              case GL_RENDERBUFFER_GREEN_SIZE:      *params = attachment->getGreenSize();      break;
-              case GL_RENDERBUFFER_BLUE_SIZE:       *params = attachment->getBlueSize();       break;
-              case GL_RENDERBUFFER_ALPHA_SIZE:      *params = attachment->getAlphaSize();      break;
-              case GL_RENDERBUFFER_DEPTH_SIZE:      *params = attachment->getDepthSize();      break;
-              case GL_RENDERBUFFER_STENCIL_SIZE:    *params = attachment->getStencilSize();    break;
+              case GL_RENDERBUFFER_WIDTH:           *params = renderbuffer->getWidth();          break;
+              case GL_RENDERBUFFER_HEIGHT:          *params = renderbuffer->getHeight();         break;
+              case GL_RENDERBUFFER_INTERNAL_FORMAT: *params = renderbuffer->getInternalFormat(); break;
+              case GL_RENDERBUFFER_RED_SIZE:        *params = renderbuffer->getRedSize();        break;
+              case GL_RENDERBUFFER_GREEN_SIZE:      *params = renderbuffer->getGreenSize();      break;
+              case GL_RENDERBUFFER_BLUE_SIZE:       *params = renderbuffer->getBlueSize();       break;
+              case GL_RENDERBUFFER_ALPHA_SIZE:      *params = renderbuffer->getAlphaSize();      break;
+              case GL_RENDERBUFFER_DEPTH_SIZE:      *params = renderbuffer->getDepthSize();      break;
+              case GL_RENDERBUFFER_STENCIL_SIZE:    *params = renderbuffer->getStencilSize();    break;
               case GL_RENDERBUFFER_SAMPLES_ANGLE:
                 if (!context->getCaps().extensions.framebufferMultisample)
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
-                *params = attachment->getSamples();
+                *params = renderbuffer->getSamples();
                 break;
               default:
                 return gl::error(GL_INVALID_ENUM);
@@ -4138,7 +4138,7 @@ GLboolean __stdcall glIsRenderbuffer(GLuint renderbuffer)
 
         if (context && renderbuffer)
         {
-            gl::FramebufferAttachment *renderbufferObject = context->getRenderbuffer(renderbuffer);
+            gl::Renderbuffer *renderbufferObject = context->getRenderbuffer(renderbuffer);
 
             if (renderbufferObject)
             {

@@ -42,8 +42,13 @@ Framebuffer::~Framebuffer()
     mStencilbuffer.set(NULL, GL_NONE, 0, 0);
 }
 
-FramebufferAttachment *Framebuffer::lookupAttachment(GLenum type, GLuint handle, GLint level, GLint layer) const
+FramebufferAttachmentImpl *Framebuffer::createAttachmentImpl(GLenum type, GLuint handle, GLint level, GLint layer) const
 {
+    if (handle == 0)
+    {
+        return NULL;
+    }
+
     gl::Context *context = gl::getContext();
 
     switch (type)
@@ -52,14 +57,15 @@ FramebufferAttachment *Framebuffer::lookupAttachment(GLenum type, GLuint handle,
         return NULL;
 
       case GL_RENDERBUFFER:
-        return context->getRenderbuffer(handle);
+        return new RenderbufferAttachment(context->getRenderbuffer(handle));
 
       case GL_TEXTURE_2D:
         {
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_2D)
             {
-                return static_cast<Texture2D*>(texture)->getAttachment(level);
+                Texture2D *tex2D = static_cast<Texture2D*>(texture);
+                return new Texture2DAttachment(tex2D, level);
             }
             else
             {
@@ -77,7 +83,8 @@ FramebufferAttachment *Framebuffer::lookupAttachment(GLenum type, GLuint handle,
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_CUBE_MAP)
             {
-                return static_cast<TextureCubeMap*>(texture)->getAttachment(type, level);
+                TextureCubeMap *texCube = static_cast<TextureCubeMap*>(texture);
+                return new TextureCubeMapAttachment(texCube, type, level);
             }
             else
             {
@@ -90,7 +97,8 @@ FramebufferAttachment *Framebuffer::lookupAttachment(GLenum type, GLuint handle,
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_3D)
             {
-                return static_cast<Texture3D*>(texture)->getAttachment(level, layer);
+                Texture3D *tex3D = static_cast<Texture3D*>(texture);
+                return new Texture3DAttachment(tex3D, level, layer);
             }
             else
             {
@@ -103,7 +111,8 @@ FramebufferAttachment *Framebuffer::lookupAttachment(GLenum type, GLuint handle,
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_2D_ARRAY)
             {
-                return static_cast<Texture2DArray*>(texture)->getAttachment(level, layer);
+                Texture2DArray *tex2DArray = static_cast<Texture2DArray*>(texture);
+                return new Texture2DArrayAttachment(tex2DArray, level, layer);
             }
             else
             {
@@ -120,10 +129,11 @@ FramebufferAttachment *Framebuffer::lookupAttachment(GLenum type, GLuint handle,
 void Framebuffer::setColorbuffer(unsigned int colorAttachment, GLenum type, GLuint colorbuffer, GLint level, GLint layer)
 {
     ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    FramebufferAttachment *attachment = lookupAttachment(type, colorbuffer, level, layer);
-    if (attachment)
+    FramebufferAttachmentImpl *attachmentImpl = createAttachmentImpl(type, colorbuffer, level, layer);
+    if (attachmentImpl)
     {
-        mColorbuffers[colorAttachment].set(attachment, type, level, layer);
+        FramebufferAttachment *newAttachment = new FramebufferAttachment(mRenderer, colorbuffer, attachmentImpl);
+        mColorbuffers[colorAttachment].set(newAttachment, type, level, layer);
     }
     else
     {
@@ -133,10 +143,11 @@ void Framebuffer::setColorbuffer(unsigned int colorAttachment, GLenum type, GLui
 
 void Framebuffer::setDepthbuffer(GLenum type, GLuint depthbuffer, GLint level, GLint layer)
 {
-    FramebufferAttachment *attachment = lookupAttachment(type, depthbuffer, level, layer);
-    if (attachment)
+    FramebufferAttachmentImpl *attachmentImpl = createAttachmentImpl(type, depthbuffer, level, layer);
+    if (attachmentImpl)
     {
-        mDepthbuffer.set(attachment, type, level, layer);
+        FramebufferAttachment *newAttachment = new FramebufferAttachment(mRenderer, depthbuffer, attachmentImpl);
+        mDepthbuffer.set(newAttachment, type, level, layer);
     }
     else
     {
@@ -146,10 +157,11 @@ void Framebuffer::setDepthbuffer(GLenum type, GLuint depthbuffer, GLint level, G
 
 void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer, GLint level, GLint layer)
 {
-    FramebufferAttachment *attachment = lookupAttachment(type, stencilbuffer, level, layer);
-    if (attachment)
+    FramebufferAttachmentImpl *attachmentImpl = createAttachmentImpl(type, stencilbuffer, level, layer);
+    if (attachmentImpl)
     {
-        mStencilbuffer.set(attachment, type, level, layer);
+        FramebufferAttachment *newAttachment = new FramebufferAttachment(mRenderer, stencilbuffer, attachmentImpl);
+        mStencilbuffer.set(newAttachment, type, level, layer);
     }
     else
     {
@@ -159,16 +171,18 @@ void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer, GLint leve
 
 void Framebuffer::setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer, GLint level, GLint layer)
 {
-    FramebufferAttachment *attachment = lookupAttachment(type, depthStencilBuffer, level, layer);
-    if (attachment && attachment->getDepthSize() > 0 && attachment->getStencilSize() > 0)
+    mDepthbuffer.set(NULL, GL_NONE, 0, 0);
+    mStencilbuffer.set(NULL, GL_NONE, 0, 0);
+
+    FramebufferAttachmentImpl *attachmentImpl = createAttachmentImpl(type, depthStencilBuffer, level, layer);
+    if (attachmentImpl)
     {
-        mDepthbuffer.set(attachment, type, level, layer);
-        mStencilbuffer.set(attachment, type, level, layer);
-    }
-    else
-    {
-        mDepthbuffer.set(NULL, GL_NONE, 0, 0);
-        mStencilbuffer.set(NULL, GL_NONE, 0, 0);
+        FramebufferAttachment *newAttachment = new FramebufferAttachment(mRenderer, depthStencilBuffer, attachmentImpl);
+        if (newAttachment->getDepthSize() > 0 && newAttachment->getStencilSize() > 0)
+        {
+            mDepthbuffer.set(newAttachment, type, level, layer);
+            mStencilbuffer.set(newAttachment, type, level, layer);
+        }
     }
 }
 
@@ -683,7 +697,9 @@ GLenum Framebuffer::completeness() const
 
     // if we have both a depth and stencil buffer, they must refer to the same object
     // since we only support packed_depth_stencil and not separate depth and stencil
-    if (depthbuffer && stencilbuffer && (depthbuffer != stencilbuffer))
+    if (depthbuffer && stencilbuffer &&
+        !(depthbuffer->id() == stencilbuffer->id() &&
+          depthbuffer->isTexture() == stencilbuffer->isTexture()))
     {
         return GL_FRAMEBUFFER_UNSUPPORTED;
     }
@@ -700,11 +716,14 @@ GLenum Framebuffer::completeness() const
 DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, Colorbuffer *colorbuffer, DepthStencilbuffer *depthStencil)
     : Framebuffer(renderer)
 {
-    mColorbuffers[0].set(new FramebufferAttachment(mRenderer, 0, colorbuffer), GL_RENDERBUFFER, 0, 0);
+    Renderbuffer *colorRenderbuffer = new Renderbuffer(mRenderer, 0, colorbuffer);
+    FramebufferAttachment *colorAttachment = new FramebufferAttachment(mRenderer, 0, new RenderbufferAttachment(colorRenderbuffer));
+    mColorbuffers[0].set(colorAttachment, GL_RENDERBUFFER, 0, 0);
 
-    FramebufferAttachment *depthStencilRenderbuffer = new FramebufferAttachment(mRenderer, 0, depthStencil);
-    mDepthbuffer.set(depthStencilRenderbuffer, (depthStencilRenderbuffer->getDepthSize() != 0) ? GL_RENDERBUFFER : GL_NONE, 0, 0);
-    mStencilbuffer.set(depthStencilRenderbuffer, (depthStencilRenderbuffer->getStencilSize() != 0) ? GL_RENDERBUFFER : GL_NONE, 0, 0);
+    Renderbuffer *depthStencilRenderbuffer = new Renderbuffer(mRenderer, 0, depthStencil);
+    FramebufferAttachment *depthStencilAttachment = new FramebufferAttachment(mRenderer, 0, new RenderbufferAttachment(depthStencilRenderbuffer));
+    mDepthbuffer.set(depthStencilAttachment, (depthStencilRenderbuffer->getDepthSize() != 0) ? GL_RENDERBUFFER : GL_NONE, 0, 0);
+    mStencilbuffer.set(depthStencilAttachment, (depthStencilRenderbuffer->getStencilSize() != 0) ? GL_RENDERBUFFER : GL_NONE, 0, 0);
 
     mDrawBufferStates[0] = GL_BACK;
     mReadBufferState = GL_BACK;
