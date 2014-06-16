@@ -76,6 +76,8 @@ class FramebufferAttachment : public RefCountObject
 
     GLuint id() const;
     GLenum type() const;
+    GLint mipLevel() const;
+    GLint layer() const;
     unsigned int getTextureSerial() const;
 
     void setImplementation(FramebufferAttachmentImpl *newImpl);
@@ -110,6 +112,8 @@ class FramebufferAttachmentImpl
 
     virtual GLuint id() const = 0;
     virtual GLenum type() const = 0;
+    virtual GLint mipLevel() const = 0;
+    virtual GLint layer() const = 0;
     virtual unsigned int getTextureSerial() const = 0;
 
   private:
@@ -140,6 +144,8 @@ class Texture2DAttachment : public FramebufferAttachmentImpl
 
     virtual GLuint id() const;
     virtual GLenum type() const;
+    virtual GLint mipLevel() const;
+    virtual GLint layer() const;
     virtual unsigned int getTextureSerial() const;
 
   private:
@@ -173,6 +179,8 @@ class TextureCubeMapAttachment : public FramebufferAttachmentImpl
 
     virtual GLuint id() const;
     virtual GLenum type() const;
+    virtual GLint mipLevel() const;
+    virtual GLint layer() const;
     virtual unsigned int getTextureSerial() const;
 
   private:
@@ -207,6 +215,8 @@ class Texture3DAttachment : public FramebufferAttachmentImpl
 
     virtual GLuint id() const;
     virtual GLenum type() const;
+    virtual GLint mipLevel() const;
+    virtual GLint layer() const;
     virtual unsigned int getTextureSerial() const;
 
   private:
@@ -241,6 +251,8 @@ class Texture2DArrayAttachment : public FramebufferAttachmentImpl
 
     virtual GLuint id() const;
     virtual GLenum type() const;
+    virtual GLint mipLevel() const;
+    virtual GLint layer() const;
     virtual unsigned int getTextureSerial() const;
 
   private:
@@ -272,6 +284,8 @@ class RenderbufferAttachment : public FramebufferAttachmentImpl
 
     virtual GLuint id() const;
     virtual GLenum type() const;
+    virtual GLint mipLevel() const;
+    virtual GLint layer() const;
     virtual unsigned int getTextureSerial() const;
 
   private:
