@@ -1,9 +1,9 @@
 #include "ANGLETest.h"
 
-class GLSLStructTest : public ANGLETest
+class GLSLTest : public ANGLETest
 {
 protected:
-    GLSLStructTest()
+    GLSLTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -17,7 +17,7 @@ protected:
     {
         ANGLETest::SetUp();
 
-        mVertexShaderSource = SHADER_SOURCE
+        mSimpleVSSource = SHADER_SOURCE
         (
             attribute vec4 inputAttribute;
             void main()
@@ -27,10 +27,10 @@ protected:
         );
     }
 
-    std::string mVertexShaderSource;
+    std::string mSimpleVSSource;
 };
 
-TEST_F(GLSLStructTest, nameless_scoped_structs)
+TEST_F(GLSLTest, nameless_scoped_structs)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -48,10 +48,10 @@ TEST_F(GLSLStructTest, nameless_scoped_structs)
         }
     );
 
-    GLuint program = compileProgram(mVertexShaderSource, fragmentShaderSource);
+    GLuint program = compileProgram(mSimpleVSSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
 }
-TEST_F(GLSLStructTest, scoped_structs_order_bug)
+TEST_F(GLSLTest, scoped_structs_order_bug)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -79,11 +79,11 @@ TEST_F(GLSLStructTest, scoped_structs_order_bug)
         }
     );
 
-    GLuint program = compileProgram(mVertexShaderSource, fragmentShaderSource);
+    GLuint program = compileProgram(mSimpleVSSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLStructTest, scoped_structs_bug)
+TEST_F(GLSLTest, scoped_structs_bug)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -111,6 +111,35 @@ TEST_F(GLSLStructTest, scoped_structs_bug)
         }
     );
 
-    GLuint program = compileProgram(mVertexShaderSource, fragmentShaderSource);
+    GLuint program = compileProgram(mSimpleVSSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+TEST_F(GLSLTest, dx_position_bug)
+{
+    const std::string &vertexShaderSource = SHADER_SOURCE
+    (
+        attribute vec4 inputAttribute;
+        varying float dx_Position;
+        void main()
+        {
+            gl_Position = vec4(inputAttribute);
+            dx_Position = 0.0;
+        }
+    );
+
+    const std::string &fragmentShaderSource = SHADER_SOURCE
+    (
+        precision mediump float;
+
+        varying float dx_Position;
+
+        void main()
+        {
+            gl_FragColor = vec4(dx_Position, 0, 0, 1);
+        }
+    );
+
+    GLuint program = compileProgram(vertexShaderSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
 }

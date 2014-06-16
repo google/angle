@@ -549,7 +549,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
 
     if (shaderModel < 4)
     {
-        vertexHLSL += "    float4 _dx_Position : " + dxPositionSemantic + ";\n";
+        vertexHLSL += "    float4 dx_Position : " + dxPositionSemantic + ";\n";
         vertexHLSL += "    float4 gl_Position : " + glPositionSemantic + Str(glPositionSemanticIndex) + ";\n";
         linkedVaryings->push_back(LinkedVarying("gl_Position", GL_FLOAT_VEC4, 1, glPositionSemantic, glPositionSemanticIndex, 1));
 
@@ -571,7 +571,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
 
     if (shaderModel >= 4)
     {
-        vertexHLSL += "    float4 _dx_Position : " + dxPositionSemantic + ";\n";
+        vertexHLSL += "    float4 dx_Position : " + dxPositionSemantic + ";\n";
         vertexHLSL += "    float4 gl_Position : " + glPositionSemantic + Str(glPositionSemanticIndex) + ";\n";
         linkedVaryings->push_back(LinkedVarying("gl_Position", GL_FLOAT_VEC4, 1, glPositionSemantic, glPositionSemanticIndex, 1));
     }
@@ -589,10 +589,10 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
                       "\n"
                       "    VS_OUTPUT output;\n"
                       "    output.gl_Position = gl_Position;\n"
-                      "    output._dx_Position.x = gl_Position.x;\n"
-                      "    output._dx_Position.y = -gl_Position.y;\n"
-                      "    output._dx_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
-                      "    output._dx_Position.w = gl_Position.w;\n";
+                      "    output.dx_Position.x = gl_Position.x;\n"
+                      "    output.dx_Position.y = -gl_Position.y;\n"
+                      "    output.dx_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
+                      "    output.dx_Position.w = gl_Position.w;\n";
     }
     else
     {
@@ -601,10 +601,10 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
                       "\n"
                       "    VS_OUTPUT output;\n"
                       "    output.gl_Position = gl_Position;\n"
-                      "    output._dx_Position.x = gl_Position.x * dx_ViewAdjust.z + dx_ViewAdjust.x * gl_Position.w;\n"
-                      "    output._dx_Position.y = -(gl_Position.y * dx_ViewAdjust.w + dx_ViewAdjust.y * gl_Position.w);\n"
-                      "    output._dx_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
-                      "    output._dx_Position.w = gl_Position.w;\n";
+                      "    output.dx_Position.x = gl_Position.x * dx_ViewAdjust.z + dx_ViewAdjust.x * gl_Position.w;\n"
+                      "    output.dx_Position.y = -(gl_Position.y * dx_ViewAdjust.w + dx_ViewAdjust.y * gl_Position.w);\n"
+                      "    output.dx_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
+                      "    output.dx_Position.w = gl_Position.w;\n";
     }
 
     if (vertexShader->mUsesPointSize && shaderModel >= 3)

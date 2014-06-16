@@ -1944,7 +1944,7 @@ unsigned int Renderer11::getReservedFragmentUniformBuffers() const
 
 unsigned int Renderer11::getReservedVaryings() const
 {
-    // We potentially reserve varyings for gl_Position, _dx_Position, gl_FragCoord and gl_PointSize
+    // We potentially reserve varyings for gl_Position, dx_Position, gl_FragCoord and gl_PointSize
     return 4;
 }
 
