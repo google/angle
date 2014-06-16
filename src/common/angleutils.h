@@ -56,7 +56,7 @@ void SafeDelete(T*& resource)
 template <typename T>
 void SafeDeleteContainer(T& resource)
 {
-    for (T::iterator i = resource.begin(); i != resource.end(); i++)
+    for (typename T::iterator i = resource.begin(); i != resource.end(); i++)
     {
         SafeDelete(*i);
     }
