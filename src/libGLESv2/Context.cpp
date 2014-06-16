@@ -1849,10 +1849,10 @@ void Context::getIntegerv(GLenum pname, GLint *params)
             {
                 switch (pname)
                 {
-                  case GL_RED_BITS:   *params = colorbuffer->getRedSize();      break;
-                  case GL_GREEN_BITS: *params = colorbuffer->getGreenSize();    break;
-                  case GL_BLUE_BITS:  *params = colorbuffer->getBlueSize();     break;
-                  case GL_ALPHA_BITS: *params = colorbuffer->getAlphaSize();    break;
+                  case GL_RED_BITS:   *params = colorbuffer->getRedSize(mClientVersion);      break;
+                  case GL_GREEN_BITS: *params = colorbuffer->getGreenSize(mClientVersion);    break;
+                  case GL_BLUE_BITS:  *params = colorbuffer->getBlueSize(mClientVersion);     break;
+                  case GL_ALPHA_BITS: *params = colorbuffer->getAlphaSize(mClientVersion);    break;
                 }
             }
             else
@@ -1868,7 +1868,7 @@ void Context::getIntegerv(GLenum pname, GLint *params)
 
             if (depthbuffer)
             {
-                *params = depthbuffer->getDepthSize();
+                *params = depthbuffer->getDepthSize(mClientVersion);
             }
             else
             {
@@ -1883,7 +1883,7 @@ void Context::getIntegerv(GLenum pname, GLint *params)
 
             if (stencilbuffer)
             {
-                *params = stencilbuffer->getStencilSize();
+                *params = stencilbuffer->getStencilSize(mClientVersion);
             }
             else
             {

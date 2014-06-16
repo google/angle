@@ -1122,7 +1122,7 @@ gl::FramebufferAttachment *Renderer9::getNullColorbuffer(gl::FramebufferAttachme
     }
 
     gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(this, 0, new gl::Colorbuffer(this, width, height, GL_NONE, 0));
-    gl::FramebufferAttachment *nullbuffer = new gl::FramebufferAttachment(this, 0, new gl::RenderbufferAttachment(nullRenderbuffer));
+    gl::FramebufferAttachment *nullbuffer = new gl::FramebufferAttachment(0, new gl::RenderbufferAttachment(nullRenderbuffer));
 
     // add nullbuffer to the cache
     NullColorbufferCacheEntry *oldest = &mNullColorbufferCache[0];
@@ -1241,8 +1241,8 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
             mDevice->SetDepthStencilSurface(depthStencilSurface);
             SafeRelease(depthStencilSurface);
 
-            depthSize = depthStencil->getDepthSize();
-            stencilSize = depthStencil->getStencilSize();
+            depthSize = depthStencil->getDepthSize(getCurrentClientVersion());
+            stencilSize = depthStencil->getStencilSize(getCurrentClientVersion());
         }
         else
         {

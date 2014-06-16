@@ -291,7 +291,7 @@ EGLint Renderer11::initialize()
 // to reset the scene status and ensure the default states are reset.
 void Renderer11::initializeDevice()
 {
-    mStateCache.initialize(mDevice);
+    mStateCache.initialize(this);
     mInputLayoutCache.initialize(mDevice, mDeviceContext);
 
     ASSERT(!mVertexDataManager && !mIndexDataManager);

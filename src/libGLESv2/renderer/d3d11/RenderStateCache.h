@@ -20,6 +20,7 @@ class Framebuffer;
 
 namespace rx
 {
+class Renderer11;
 
 class RenderStateCache
 {
@@ -27,7 +28,7 @@ class RenderStateCache
     RenderStateCache();
     virtual ~RenderStateCache();
 
-    void initialize(ID3D11Device *device);
+    void initialize(Renderer11 *renderer);
     void clear();
 
     ID3D11BlendState *getBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState);
@@ -100,7 +101,7 @@ class RenderStateCache
                                SamplerStateEqualityFunction> SamplerStateMap;
     SamplerStateMap mSamplerStateCache;
 
-    ID3D11Device *mDevice;
+    Renderer11 *mRenderer;
 };
 
 }

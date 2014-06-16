@@ -132,7 +132,7 @@ void Framebuffer::setColorbuffer(unsigned int colorAttachment, GLenum type, GLui
     FramebufferAttachmentImpl *attachmentImpl = createAttachmentImpl(type, colorbuffer, level, layer);
     if (attachmentImpl)
     {
-        FramebufferAttachment *newAttachment = new FramebufferAttachment(mRenderer, colorbuffer, attachmentImpl);
+        FramebufferAttachment *newAttachment = new FramebufferAttachment(colorbuffer, attachmentImpl);
         mColorbuffers[colorAttachment].set(newAttachment, type, level, layer);
     }
     else
@@ -146,7 +146,7 @@ void Framebuffer::setDepthbuffer(GLenum type, GLuint depthbuffer, GLint level, G
     FramebufferAttachmentImpl *attachmentImpl = createAttachmentImpl(type, depthbuffer, level, layer);
     if (attachmentImpl)
     {
-        FramebufferAttachment *newAttachment = new FramebufferAttachment(mRenderer, depthbuffer, attachmentImpl);
+        FramebufferAttachment *newAttachment = new FramebufferAttachment(depthbuffer, attachmentImpl);
         mDepthbuffer.set(newAttachment, type, level, layer);
     }
     else
@@ -160,7 +160,7 @@ void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer, GLint leve
     FramebufferAttachmentImpl *attachmentImpl = createAttachmentImpl(type, stencilbuffer, level, layer);
     if (attachmentImpl)
     {
-        FramebufferAttachment *newAttachment = new FramebufferAttachment(mRenderer, stencilbuffer, attachmentImpl);
+        FramebufferAttachment *newAttachment = new FramebufferAttachment(stencilbuffer, attachmentImpl);
         mStencilbuffer.set(newAttachment, type, level, layer);
     }
     else
@@ -177,8 +177,9 @@ void Framebuffer::setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer, 
     FramebufferAttachmentImpl *attachmentImpl = createAttachmentImpl(type, depthStencilBuffer, level, layer);
     if (attachmentImpl)
     {
-        FramebufferAttachment *newAttachment = new FramebufferAttachment(mRenderer, depthStencilBuffer, attachmentImpl);
-        if (newAttachment->getDepthSize() > 0 && newAttachment->getStencilSize() > 0)
+        FramebufferAttachment *newAttachment = new FramebufferAttachment(depthStencilBuffer, attachmentImpl);
+        int clientVersion = mRenderer->getCurrentClientVersion();
+        if (newAttachment->getDepthSize(clientVersion) > 0 && newAttachment->getStencilSize(clientVersion) > 0)
         {
             mDepthbuffer.set(newAttachment, type, level, layer);
             mStencilbuffer.set(newAttachment, type, level, layer);
@@ -445,7 +446,8 @@ bool Framebuffer::hasStencil() const
 
         if (stencilbufferObject)
         {
-            return stencilbufferObject->getStencilSize() > 0;
+            int clientVersion = mRenderer->getCurrentClientVersion();
+            return stencilbufferObject->getStencilSize(clientVersion) > 0;
         }
     }
 
@@ -717,11 +719,11 @@ DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, Colorbuffer *colo
     : Framebuffer(renderer)
 {
     Renderbuffer *colorRenderbuffer = new Renderbuffer(mRenderer, 0, colorbuffer);
-    FramebufferAttachment *colorAttachment = new FramebufferAttachment(mRenderer, 0, new RenderbufferAttachment(colorRenderbuffer));
+    FramebufferAttachment *colorAttachment = new FramebufferAttachment(0, new RenderbufferAttachment(colorRenderbuffer));
     mColorbuffers[0].set(colorAttachment, GL_RENDERBUFFER, 0, 0);
 
     Renderbuffer *depthStencilRenderbuffer = new Renderbuffer(mRenderer, 0, depthStencil);
-    FramebufferAttachment *depthStencilAttachment = new FramebufferAttachment(mRenderer, 0, new RenderbufferAttachment(depthStencilRenderbuffer));
+    FramebufferAttachment *depthStencilAttachment = new FramebufferAttachment(0, new RenderbufferAttachment(depthStencilRenderbuffer));
     mDepthbuffer.set(depthStencilAttachment, (depthStencilRenderbuffer->getDepthSize() != 0) ? GL_RENDERBUFFER : GL_NONE, 0, 0);
     mStencilbuffer.set(depthStencilAttachment, (depthStencilRenderbuffer->getStencilSize() != 0) ? GL_RENDERBUFFER : GL_NONE, 0, 0);
 
