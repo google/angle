@@ -11,10 +11,10 @@
 
 #include "common/platform.h"
 
-#if ANGLE_PLATFORM_WINDOWS
+#ifdef ANGLE_PLATFORM_WINDOWS
     typedef DWORD TLSIndex;
 #   define TLS_INVALID_INDEX (TLS_OUT_OF_INDEXES)
-#elif ANGLE_PLATFORM_POSIX
+#elif defined(ANGLE_PLATFORM_POSIX)
 #   include <pthread.h>
 #   include <semaphore.h>
 #   include <errno.h>

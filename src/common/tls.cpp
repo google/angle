@@ -14,9 +14,9 @@ TLSIndex CreateTLSIndex()
 {
     TLSIndex index;
 
-#if ANGLE_PLATFORM_WINDOWS
+#ifdef ANGLE_PLATFORM_WINDOWS
     index = TlsAlloc();
-#elif ANGLE_PLATFORM_POSIX
+#elif defined(ANGLE_PLATFORM_POSIX)
     // Create global pool key
     if ((pthread_key_create(&index, NULL)) != 0)
     {
@@ -36,9 +36,9 @@ bool DestroyTLSIndex(TLSIndex index)
         return false;
     }
 
-#if ANGLE_PLATFORM_WINDOWS
+#ifdef ANGLE_PLATFORM_WINDOWS
     return (TlsFree(index) == TRUE);
-#elif ANGLE_PLATFORM_POSIX
+#elif defined(ANGLE_PLATFORM_POSIX)
     return (pthread_key_delete(index) == 0);
 #endif
 }
@@ -51,9 +51,9 @@ bool SetTLSValue(TLSIndex index, void *value)
         return false;
     }
 
-#if ANGLE_PLATFORM_WINDOWS
+#ifdef ANGLE_PLATFORM_WINDOWS
     return (TlsSetValue(index, value) == TRUE);
-#elif ANGLE_PLATFORM_POSIX
+#elif defined(ANGLE_PLATFORM_POSIX)
     return (pthread_setspecific(index, value) == 0);
 #endif
 }
@@ -66,9 +66,9 @@ void *GetTLSValue(TLSIndex index)
         return NULL;
     }
 
-#if ANGLE_PLATFORM_WINDOWS
+#ifdef ANGLE_PLATFORM_WINDOWS
     return TlsGetValue(index);
-#elif ANGLE_PLATFORM_POSIX
+#elif defined(ANGLE_PLATFORM_POSIX)
     return pthread_getspecific(index);
 #endif
 }

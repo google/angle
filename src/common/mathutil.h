@@ -109,7 +109,7 @@ inline unsigned int unorm(float x)
 
 inline bool supportsSSE2()
 {
-#if ANGLE_PLATFORM_WINDOWS
+#ifdef ANGLE_PLATFORM_WINDOWS
     static bool checked = false;
     static bool supports = false;
 

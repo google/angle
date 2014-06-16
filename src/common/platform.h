@@ -33,7 +33,7 @@
 #   error Unsupported platform.
 #endif
 
-#if ANGLE_PLATFORM_WINDOWS
+#ifdef ANGLE_PLATFORM_WINDOWS
 #   ifndef STRICT
 #       define STRICT 1
 #   endif

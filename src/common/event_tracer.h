@@ -8,7 +8,7 @@
 #include "common/platform.h"
 
 #if !defined(TRACE_ENTRY)
-#   if ANGLE_PLATFORM_WINDOWS
+#   ifdef ANGLE_PLATFORM_WINDOWS
 #       define TRACE_ENTRY __stdcall
 #   else
 #       define TRACE_ENTRY
