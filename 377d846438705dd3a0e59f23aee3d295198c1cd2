@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "9f6e38af_720a5141",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-16T18:14:50Z",
+      "side": 1,
+      "message": "Ah, ok. \n\nFor the extra allocation-- I\u0027m mostly thinking about alloc thrash and rendundant state performance stuff. Will it still be there when the attachment impl goes away? We could at least have a TODO comment to remind us to optimize that once we\u0027re done moving stuff around.",
+      "parentUuid": "9fc0f8c0_9d76f357",
+      "revId": "377d846438705dd3a0e59f23aee3d295198c1cd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fd0ec87_d41cb958",
         "filename": "src/libGLESv2/Framebuffer.h",
         "patchSetId": 9
@@ -72,6 +90,30 @@
       "side": 1,
       "message": "I\u0027d like to hold off on this, apparently it\u0027s recommended you do *not* update the dates in Chromium. (in my view, the history is all logged in git anyway)",
       "parentUuid": "3fd0ec87_d41cb958",
+      "range": {
+        "startLine": 2,
+        "startChar": 22,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "377d846438705dd3a0e59f23aee3d295198c1cd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f6e38af_df46ce86",
+        "filename": "src/libGLESv2/Framebuffer.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-16T18:14:50Z",
+      "side": 1,
+      "message": "Hm. Ok; I didn\u0027t realize there was a countervailing recommendation in Chromium. I\u0027m cool with picking up whatever their rec is; was just carrying the update requests over from TG.",
+      "parentUuid": "7f6424c8_413101dd",
       "range": {
         "startLine": 2,
         "startChar": 22,
