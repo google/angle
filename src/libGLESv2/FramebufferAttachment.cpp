@@ -105,9 +105,14 @@ unsigned int Texture2DAttachment::getSerial() const
     return mTexture2D->getRenderTargetSerial(mLevel);
 }
 
-bool Texture2DAttachment::isTexture() const
+GLuint Texture2DAttachment::id() const
 {
-    return true;
+    return mTexture2D->id();
+}
+
+GLenum Texture2DAttachment::type() const
+{
+    return GL_TEXTURE_2D;
 }
 
 unsigned int Texture2DAttachment::getTextureSerial() const
@@ -185,9 +190,14 @@ unsigned int TextureCubeMapAttachment::getSerial() const
     return mTextureCubeMap->getRenderTargetSerial(mFaceTarget, mLevel);
 }
 
-bool TextureCubeMapAttachment::isTexture() const
+GLuint TextureCubeMapAttachment::id() const
 {
-    return true;
+    return mTextureCubeMap->id();
+}
+
+GLenum TextureCubeMapAttachment::type() const
+{
+    return mFaceTarget;
 }
 
 unsigned int TextureCubeMapAttachment::getTextureSerial() const
@@ -265,9 +275,14 @@ unsigned int Texture3DAttachment::getSerial() const
     return mTexture3D->getRenderTargetSerial(mLevel, mLayer);
 }
 
-bool Texture3DAttachment::isTexture() const
+GLuint Texture3DAttachment::id() const
 {
-    return true;
+    return mTexture3D->id();
+}
+
+GLenum Texture3DAttachment::type() const
+{
+    return GL_TEXTURE_3D;
 }
 
 unsigned int Texture3DAttachment::getTextureSerial() const
@@ -343,9 +358,14 @@ unsigned int Texture2DArrayAttachment::getSerial() const
     return mTexture2DArray->getRenderTargetSerial(mLevel, mLayer);
 }
 
-bool Texture2DArrayAttachment::isTexture() const
+GLuint Texture2DArrayAttachment::id() const
 {
-    return true;
+    return mTexture2DArray->id();
+}
+
+GLenum Texture2DArrayAttachment::type() const
+{
+    return GL_TEXTURE_2D_ARRAY;
 }
 
 unsigned int Texture2DArrayAttachment::getTextureSerial() const
@@ -500,6 +520,11 @@ GLenum FramebufferAttachment::getColorEncoding(int clientVersion) const
     return gl::GetColorEncoding(getActualFormat(), clientVersion);
 }
 
+bool FramebufferAttachment::isTexture() const
+{
+    return (type() != GL_RENDERBUFFER);
+}
+
 GLsizei FramebufferAttachment::getSamples() const
 {
     return mImpl->getSamples();
@@ -510,9 +535,14 @@ unsigned int FramebufferAttachment::getSerial() const
     return mImpl->getSerial();
 }
 
-bool FramebufferAttachment::isTexture() const
+GLuint FramebufferAttachment::id() const
 {
-    return mImpl->isTexture();
+    return mImpl->id();
+}
+
+GLuint FramebufferAttachment::type() const
+{
+    return mImpl->type();
 }
 
 unsigned int FramebufferAttachment::getTextureSerial() const
@@ -585,9 +615,14 @@ unsigned int RenderbufferAttachment::getSerial() const
     return mRenderbuffer->getStorage()->getSerial();
 }
 
-bool RenderbufferAttachment::isTexture() const
+GLuint RenderbufferAttachment::id() const
 {
-    return false;
+    return mRenderbuffer->id();
+}
+
+GLenum RenderbufferAttachment::type() const
+{
+    return GL_RENDERBUFFER;
 }
 
 unsigned int RenderbufferAttachment::getTextureSerial() const
