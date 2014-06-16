@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "1f3168d1_47368e6d",
+        "filename": "src/libGLESv2/VertexAttribute.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-16T20:32:45Z",
+      "side": 1,
+      "message": "I had preferred this function being external to the VertexAttribute struct in an attempt to keep it as POD as possible.  I\u0027m not opposed to keeping it as a member function if the general consensus is that it\u0027s cleaner.  My main concern with this particular struct was that we had mStride and stride() members.\n\nMy philosophy going into the design of the GL objects was that they should only have the minimal methods and members to match the GL spec and anything needed beyond that could be helpers.  If possible, I want to keep the layers separated and this is a good example of methods that were used only by other layers.  querySingleParameter was used only by libGLESv2.cpp, which I would consider the API/validation layer, above the GL objects.  There isn\u0027t much need for the VertexAttribute struct to know about the various enums accepted by glGetVertexAttrib and it could be moved to a new header, maybe statequeries.h which lives in the API/validation layer.  The stride() and typeSize() methods are another example but they\u0027re only used by our renderer layer (in the VertexBuffer and VertexDataManager classes) so they could be moved down a layer since only our D3D renderers will need them.\n\nI realize that these philosophies may be pretty naive when it comes to actual implementation and we\u0027ll have to make compromises but I wanted to explain why I\u0027m leaning in these directions.",
+      "parentUuid": "dfc6f0d8_67560139",
+      "range": {
+        "startLine": 41,
+        "startChar": 2,
+        "endLine": 41,
+        "endChar": 37
+      },
+      "revId": "0b5a3df2ef4bc39b0bb88ac906918598d2f9a76a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f6e38af_28da2fa8",
         "filename": "src/libGLESv2/renderer/d3d9/VertexArray9.h",
         "patchSetId": 5
