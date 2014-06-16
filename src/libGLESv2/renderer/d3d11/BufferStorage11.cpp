@@ -646,9 +646,12 @@ bool BufferStorage11::NativeBuffer11::resize(size_t size, bool preserveData)
 
     if (mNativeBuffer && preserveData)
     {
+        // We don't call resize if the buffer is big enough already.
+        ASSERT(mBufferSize <= size);
+
         D3D11_BOX srcBox;
         srcBox.left = 0;
-        srcBox.right = size;
+        srcBox.right = mBufferSize;
         srcBox.top = 0;
         srcBox.bottom = 1;
         srcBox.front = 0;
