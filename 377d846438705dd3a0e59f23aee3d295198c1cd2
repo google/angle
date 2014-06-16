@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "3f538cfe_73019ad0",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-16T18:56:16Z",
+      "side": 1,
+      "message": "I\u0027m hesitant to add a TODO, (agree with Nicolas\u0027 prior comments on TODOs) and I think we\u0027d be best to reject a no-op at the API validation level.. like we reject no-op draw calls.",
+      "parentUuid": "9f6e38af_720a5141",
+      "revId": "377d846438705dd3a0e59f23aee3d295198c1cd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fd0ec87_d41cb958",
         "filename": "src/libGLESv2/Framebuffer.h",
         "patchSetId": 9
@@ -114,6 +132,30 @@
       "side": 1,
       "message": "Hm. Ok; I didn\u0027t realize there was a countervailing recommendation in Chromium. I\u0027m cool with picking up whatever their rec is; was just carrying the update requests over from TG.",
       "parentUuid": "7f6424c8_413101dd",
+      "range": {
+        "startLine": 2,
+        "startChar": 22,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "377d846438705dd3a0e59f23aee3d295198c1cd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fc0f8c0_fdc8c7ec",
+        "filename": "src/libGLESv2/Framebuffer.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-16T18:56:16Z",
+      "side": 1,
+      "message": "Yeah, we (Montrealers) just learned this today.",
+      "parentUuid": "9f6e38af_df46ce86",
       "range": {
         "startLine": 2,
         "startChar": 22,
