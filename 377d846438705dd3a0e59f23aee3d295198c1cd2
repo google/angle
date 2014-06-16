@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9fc0f8c0_9d76f357",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-16T15:09:45Z",
+      "side": 1,
+      "message": "Regarding you second question, the attachment impl class is deleted later on. So there should be a very clear deletion/allocation pattern, with no ref counting.\n\nI\u0027ll add some comments explaining how attachments/RBs relate to the GL spec.\n\nRE extra allocation, we could optimize that out. Only a few bytes though, and once per call. It won\u0027t affect the underlying pixel content or anything.",
+      "parentUuid": "dfc6f0d8_27b08978",
+      "revId": "377d846438705dd3a0e59f23aee3d295198c1cd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fd0ec87_d41cb958",
         "filename": "src/libGLESv2/Framebuffer.h",
         "patchSetId": 9
@@ -30,6 +48,30 @@
       "writtenOn": "2014-06-13T22:25:30Z",
       "side": 1,
       "message": "Can update the date for a few files in this CL, I think. (I know I\u0027m super-inconsistent about actually catching it or updating them myself; sorry for that.)",
+      "range": {
+        "startLine": 2,
+        "startChar": 22,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "377d846438705dd3a0e59f23aee3d295198c1cd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6424c8_413101dd",
+        "filename": "src/libGLESv2/Framebuffer.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-16T15:09:45Z",
+      "side": 1,
+      "message": "I\u0027d like to hold off on this, apparently it\u0027s recommended you do *not* update the dates in Chromium. (in my view, the history is all logged in git anyway)",
+      "parentUuid": "3fd0ec87_d41cb958",
       "range": {
         "startLine": 2,
         "startChar": 22,
