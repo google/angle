@@ -185,7 +185,7 @@ class TFunction : public TSymbol
           defined(false)
     {
     }
-    TFunction(const TString *name, TType &retType, TOperator tOp = EOpNull)
+    TFunction(const TString *name, const TType &retType, TOperator tOp = EOpNull)
         : TSymbol(name),
           returnType(retType),
           mangledName(TFunction::mangleName(*name)),
@@ -288,8 +288,7 @@ class TSymbolTableLevel
     }
     ~TSymbolTableLevel();
 
-    bool insert(const TString &name, TSymbol &symbol);
-    bool insert(TSymbol &symbol);
+    bool insert(TSymbol *symbol);
 
     TSymbol *find(const TString &name) const;
 
@@ -351,12 +350,12 @@ class TSymbolTable
         precisionStack.pop_back();
     }
 
-    bool declare(TSymbol &symbol)
+    bool declare(TSymbol *symbol)
     {
         return insert(currentLevel(), symbol);
     }
 
-    bool insert(ESymbolLevel level, TSymbol &symbol)
+    bool insert(ESymbolLevel level, TSymbol *symbol)
     {
         return table[level]->insert(symbol);
     }
@@ -366,7 +365,7 @@ class TSymbolTable
         TVariable *constant = new TVariable(
             NewPoolTString(name), TType(EbtInt, EbpUndefined, EvqConst, 1));
         constant->getConstPointer()->setIConst(value);
-        return insert(level, *constant);
+        return insert(level, constant);
     }
 
     void insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name,

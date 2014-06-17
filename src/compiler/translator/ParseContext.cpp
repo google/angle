@@ -804,7 +804,7 @@ bool TParseContext::arrayErrorCheck(const TSourceLoc& line, const TString& ident
         if (type.arraySize)
             variable->getType().setArraySize(type.arraySize);
 
-        if (! symbolTable.declare(*variable)) {
+        if (! symbolTable.declare(variable)) {
             delete variable;
             error(line, "INTERNAL ERROR inserting new symbol", identifier.c_str());
             return true;
@@ -884,7 +884,7 @@ bool TParseContext::nonInitErrorCheck(const TSourceLoc& line, const TString& ide
 
     variable = new TVariable(&identifier, TType(type));
 
-    if (! symbolTable.declare(*variable)) {
+    if (! symbolTable.declare(variable)) {
         error(line, "redefinition", variable->getName().c_str());
         delete variable;
         variable = 0;
@@ -1066,7 +1066,7 @@ bool TParseContext::executeInitializer(const TSourceLoc& line, const TString& id
         // add variable to symbol table
         //
         variable = new TVariable(&identifier, type);
-        if (! symbolTable.declare(*variable)) {
+        if (! symbolTable.declare(variable)) {
             error(line, "redefinition", variable->getName().c_str());
             return true;
             // don't delete variable, it's used by error recovery, and the pool 
@@ -1774,7 +1774,7 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
     }
 
     TSymbol* blockNameSymbol = new TInterfaceBlockName(&blockName);
-    if (!symbolTable.declare(*blockNameSymbol)) {
+    if (!symbolTable.declare(blockNameSymbol)) {
         error(nameLine, "redefinition", blockName.c_str(), "interface block name");
         recover();
     }
@@ -1854,7 +1854,7 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
             TVariable* fieldVariable = new TVariable(&field->name(), *fieldType);
             fieldVariable->setQualifier(typeQualifier.qualifier);
 
-            if (!symbolTable.declare(*fieldVariable)) {
+            if (!symbolTable.declare(fieldVariable)) {
                 error(field->line(), "redefinition", field->name().c_str(), "interface block member name");
                 recover();
             }
@@ -1866,7 +1866,7 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
         TVariable* instanceTypeDef = new TVariable(instanceName, interfaceBlockType, false);
         instanceTypeDef->setQualifier(typeQualifier.qualifier);
 
-        if (!symbolTable.declare(*instanceTypeDef)) {
+        if (!symbolTable.declare(instanceTypeDef)) {
             error(instanceLine, "redefinition", instanceName->c_str(), "interface block instance name");
             recover();
         }
@@ -2455,7 +2455,7 @@ TPublicType TParseContext::addStructure(const TSourceLoc& structLine, const TSou
             recover();
         }
         TVariable* userTypeDef = new TVariable(structName, *structureType, true);
-        if (!symbolTable.declare(*userTypeDef)) {
+        if (!symbolTable.declare(userTypeDef)) {
             error(nameLine, "redefinition", structName->c_str(), "struct");
             recover();
         }

@@ -2575,7 +2575,7 @@ yyreduce:
         {
             TType type(EbtFloat, EbpUndefined);
             TVariable *fakeVariable = new TVariable((yyvsp[(1) - (1)].lex).string, type);
-            context->symbolTable.declare(*fakeVariable);
+            context->symbolTable.declare(fakeVariable);
             variable = fakeVariable;
         }
 
@@ -3436,7 +3436,8 @@ yyreduce:
         else
         {
             // Insert the unmangled name to detect potential future redefinition as a variable.
-            context->symbolTable.getOuterLevel()->insert((yyvsp[(1) - (2)].interm.function)->getName(), *(yyvsp[(1) - (2)].interm.function));
+            TFunction *function = new TFunction(NewPoolTString((yyvsp[(1) - (2)].interm.function)->getName().c_str()), (yyvsp[(1) - (2)].interm.function)->getReturnType());
+            context->symbolTable.getOuterLevel()->insert(function);
         }
 
         //
@@ -3448,7 +3449,7 @@ yyreduce:
 
         // We're at the inner scope level of the function's arguments and body statement.
         // Add the function prototype to the surrounding scope instead.
-        context->symbolTable.getOuterLevel()->insert(*(yyval.interm).function);
+        context->symbolTable.getOuterLevel()->insert((yyval.interm).function);
     }
     break;
 
@@ -4967,7 +4968,7 @@ yyreduce:
                 //
                 // Insert the parameters with name in the symbol table.
                 //
-                if (! context->symbolTable.declare(*variable)) {
+                if (! context->symbolTable.declare(variable)) {
                     context->error((yylsp[(1) - (1)]), "redefinition", variable->getName().c_str());
                     context->recover();
                     delete variable;
