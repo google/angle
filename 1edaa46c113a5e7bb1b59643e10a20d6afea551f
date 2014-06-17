@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "643ad9c6_d16b042e",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-17T19:00:13Z",
+      "side": 0,
+      "message": "eg",
+      "range": {
+        "startLine": 299,
+        "startChar": 47,
+        "endLine": 299,
+        "endChar": 51
+      },
+      "revId": "1edaa46c113a5e7bb1b59643e10a20d6afea551f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

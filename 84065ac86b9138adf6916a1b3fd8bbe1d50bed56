@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "643ad9c6_f16e0840",
+        "filename": "src/libGLESv2/renderer/d3d11/RenderStateCache.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-17T19:00:13Z",
+      "side": 1,
+      "message": "can we leave this as mRenderer? It fits with how we store pointers in most other objects, as well as being more future-proof.",
+      "range": {
+        "startLine": 41,
+        "startChar": 39,
+        "endLine": 41,
+        "endChar": 52
+      },
+      "revId": "84065ac86b9138adf6916a1b3fd8bbe1d50bed56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "643ad9c6_f1ff2811",
+        "filename": "src/libGLESv2/renderer/d3d9/formatutils9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-17T19:00:13Z",
+      "side": 1,
+      "message": "should this be a part of the previous patch?",
+      "range": {
+        "startLine": 79,
+        "startChar": 30,
+        "endLine": 79,
+        "endChar": 54
+      },
+      "revId": "84065ac86b9138adf6916a1b3fd8bbe1d50bed56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
