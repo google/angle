@@ -110,7 +110,7 @@ class StaticVertexBufferInterface : public VertexBufferInterface
     ~StaticVertexBufferInterface();
 
     bool storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
-                              GLint start, GLsizei count, GLsizei instances, unsigned int *outStreamOffset);
+                               GLint start, GLsizei count, GLsizei instances, unsigned int *outStreamOffset);
 
     bool lookupAttribute(const gl::VertexAttribute &attribute, unsigned int* outStreamFffset);
 
@@ -121,11 +121,11 @@ class StaticVertexBufferInterface : public VertexBufferInterface
     struct VertexElement
     {
         GLenum type;
-        GLint size;
-        GLsizei stride;
+        GLuint size;
+        GLuint stride;
         bool normalized;
         bool pureInteger;
-        int attributeOffset;
+        size_t attributeOffset;
 
         unsigned int streamOffset;
     };

@@ -236,7 +236,8 @@ bool StaticVertexBufferInterface::lookupAttribute(const gl::VertexAttribute &att
             mCache[element].normalized == attrib.normalized &&
             mCache[element].pureInteger == attrib.pureInteger)
         {
-            if (mCache[element].attributeOffset == attrib.offset % ComputeVertexAttributeStride(attrib))
+            size_t offset = (static_cast<size_t>(attrib.offset) % ComputeVertexAttributeStride(attrib));
+            if (mCache[element].attributeOffset == offset)
             {
                 if (outStreamOffset)
                 {
@@ -275,7 +276,7 @@ bool StaticVertexBufferInterface::storeVertexAttributes(const gl::VertexAttribut
     unsigned int streamOffset;
     if (VertexBufferInterface::storeVertexAttributes(attrib, currentValue, start, count, instances, &streamOffset))
     {
-        int attributeOffset = attrib.offset % ComputeVertexAttributeStride(attrib);
+        size_t attributeOffset = static_cast<size_t>(attrib.offset) % ComputeVertexAttributeStride(attrib);
         VertexElement element = { attrib.type, attrib.size, ComputeVertexAttributeStride(attrib), attrib.normalized, attrib.pureInteger, attributeOffset, streamOffset };
         mCache.push_back(element);
 
