@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04291d85_91333e7c",
+        "filename": "extensions/EXT_sRGB.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-17T22:43:08Z",
+      "side": 1,
+      "message": "I don\u0027t think we need to add EXT_sRGB to our extensions folder-- in general that\u0027s just for extensions we\u0027ve authored, helped author, or began implementation of while still in draft. (We have a couple other erroneously added extension specs already in the directory.)",
+      "revId": "6fafa5a1e6326ab47c995f2ec12aa14d368ed10d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4932916_3dfb0f29",
+        "filename": "src/libGLESv2/Caps.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-17T22:43:08Z",
+      "side": 1,
+      "message": "Can this get a FIXME comment about not advertising it on ES3, please?",
+      "revId": "6fafa5a1e6326ab47c995f2ec12aa14d368ed10d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
