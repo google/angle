@@ -130,7 +130,7 @@ public:
         returnType(TType(EbtVoid, EbpUndefined)),
         op(o),
         defined(false) { }
-    TFunction(const TString *name, TType& retType, TOperator tOp = EOpNull) : 
+    TFunction(const TString *name, const TType& retType, TOperator tOp = EOpNull) : 
         TSymbol(name), 
         returnType(retType),
         mangledName(TFunction::mangleName(*name)),
@@ -197,21 +197,16 @@ public:
     TSymbolTableLevel() { }
     ~TSymbolTableLevel();
 
-    bool insert(const TString &name, TSymbol &symbol)
+    bool insert(TSymbol *symbol)
     {
-        symbol.setUniqueId(++uniqueId);
+        symbol->setUniqueId(++uniqueId);
 
         //
         // returning true means symbol was added to the table
         //
-        tInsertResult result = level.insert(tLevelPair(name, &symbol));
+        tInsertResult result = level.insert(tLevelPair(symbol->getMangledName(), symbol));
 
         return result.second;
-    }
-
-    bool insert(TSymbol &symbol)
-    {
-        return insert(symbol.getMangledName(), symbol);
     }
 
     TSymbol* find(const TString& name) const
@@ -276,12 +271,12 @@ public:
         precisionStack.pop_back();
     }
 
-    bool declare(TSymbol &symbol)
+    bool declare(TSymbol *symbol)
     {
         return insert(currentLevel(), symbol);
     }
 
-    bool insert(ESymbolLevel level, TSymbol &symbol)
+    bool insert(ESymbolLevel level, TSymbol *symbol)
     {
         return table[level]->insert(symbol);
     }
@@ -290,7 +285,7 @@ public:
     {
         TVariable *constant = new TVariable(NewPoolTString(name), TType(EbtInt, EbpUndefined, EvqConst, 1));
         constant->getConstPointer()->setIConst(value);
-        return insert(level, *constant);
+        return insert(level, constant);
     }
 
     void insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name, TType *ptype1, TType *ptype2 = 0, TType *ptype3 = 0, TType *ptype4 = 0, TType *ptype5 = 0)
@@ -357,7 +352,7 @@ public:
             function->addParameter(param5);
         }
 
-        insert(level, *function);
+        insert(level, function);
     }
 
     TSymbol *find(const TString &name, int shaderVersion, bool *builtIn = NULL, bool *sameScope = NULL);
