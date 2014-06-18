@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6471f9c6_fcfcc51e",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-18T20:43:12Z",
+      "side": 1,
+      "message": "These local functions should be in the anonymous namespace",
+      "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4466b513_be3641d3",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-18T20:43:12Z",
+      "side": 1,
+      "message": "nit: four indents instead of two",
+      "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4cbf13b_ae95975d",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-18T20:43:12Z",
+      "side": 1,
+      "message": "This should be a static function, as I don\u0027t see any members are accessed.",
+      "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04c59d23_113f2ea6",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-18T20:43:12Z",
+      "side": 1,
+      "message": "nit: you should put private members after private functions.",
+      "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4cbf13b_ce2fc37b",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-18T20:43:12Z",
+      "side": 1,
+      "message": "All these six *String functions should not be members of this class, as they don\u0027t touch the members at all.  They should simply be local helper functions in .cpp \u0027s anonymous namespace.",
+      "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
