@@ -69,8 +69,15 @@ class DynamicHLSL
 
     rx::Renderer *const mRenderer;
 
-    std::string generateVaryingHLSL(VertexShader *shader, const std::string &varyingSemantic,
-                                    std::vector<LinkedVarying> *linkedVaryings) const;
+    struct SemanticInfo;
+
+    std::string getVaryingSemantic(bool pointSize) const;
+    SemanticInfo getSemanticInfo(int startRegisters, bool fragCoord, bool pointCoord, bool pointSize,
+                                        bool pixelShader) const;
+    std::string generateVaryingLinkHLSL(const SemanticInfo &info, const std::string &varyingHLSL) const;
+    std::string generateVaryingHLSL(VertexShader *shader) const;
+    void storeUserLinkedVaryings(const VertexShader *vertexShader, std::vector<LinkedVarying> *linkedVaryings) const;
+    void storeBuiltinLinkedVaryings(const SemanticInfo &info, std::vector<LinkedVarying> *linkedVaryings) const;
     void defineOutputVariables(FragmentShader *fragmentShader, std::map<int, VariableLocation> *programOutputVars) const;
     std::string generatePointSpriteHLSL(int registers, FragmentShader *fragmentShader, VertexShader *vertexShader) const;
 

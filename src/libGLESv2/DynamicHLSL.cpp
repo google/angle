@@ -282,9 +282,9 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog, VaryingPacking packing, Fragment
     return registers;
 }
 
-std::string DynamicHLSL::generateVaryingHLSL(VertexShader *shader, const std::string &varyingSemantic,
-                                             std::vector<LinkedVarying> *linkedVaryings) const
+std::string DynamicHLSL::generateVaryingHLSL(VertexShader *shader) const
 {
+    std::string varyingSemantic = getVaryingSemantic(shader->mUsesPointSize);
     std::string varyingHLSL;
 
     for (unsigned int varyingIndex = 0; varyingIndex < shader->mVaryings.size(); varyingIndex++)
@@ -326,13 +326,6 @@ std::string DynamicHLSL::generateVaryingHLSL(VertexShader *shader, const std::st
                     }
                     varyingHLSL += typeString + " v" + n + " : " + varyingSemantic + n + ";\n";
                 }
-            }
-
-            if (linkedVaryings)
-            {
-                linkedVaryings->push_back(LinkedVarying(varying.name, varying.type, varying.elementCount(),
-                                                        varyingSemantic, varying.registerIndex,
-                                                        variableRows * varying.elementCount()));
             }
         }
     }
@@ -462,6 +455,180 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(const std::string
     return pixelHLSL;
 }
 
+std::string DynamicHLSL::getVaryingSemantic(bool pointSize) const
+{
+    // SM3 reserves the TEXCOORD semantic for point sprite texcoords (gl_PointCoord)
+    // In D3D11 we manually compute gl_PointCoord in the GS.
+    int shaderModel = mRenderer->getMajorShaderModel();
+    return ((pointSize && shaderModel < 4) ? "COLOR" : "TEXCOORD");
+}
+
+struct DynamicHLSL::SemanticInfo
+{
+    struct BuiltinInfo
+    {
+        BuiltinInfo()
+            : enabled(false),
+              index(0),
+              systemValue(false)
+        {}
+
+        bool enabled;
+        std::string semantic;
+        unsigned int index;
+        bool systemValue;
+
+        std::string str() const
+        {
+            return (systemValue ? semantic : (semantic + Str(index)));
+        }
+
+        void enableSystem(const std::string &systemValueSemantic)
+        {
+            enabled = true;
+            semantic = systemValueSemantic;
+            systemValue = true;
+        }
+
+        void enable(const std::string &semanticVal, unsigned int indexVal)
+        {
+            enabled = true;
+            semantic = semanticVal;
+            index = indexVal;
+        }
+    };
+
+    BuiltinInfo dxPosition;
+    BuiltinInfo glPosition;
+    BuiltinInfo glFragCoord;
+    BuiltinInfo glPointCoord;
+    BuiltinInfo glPointSize;
+};
+
+DynamicHLSL::SemanticInfo DynamicHLSL::getSemanticInfo(int startRegisters, bool fragCoord, bool pointCoord,
+                                                       bool pointSize, bool pixelShader) const
+{
+    SemanticInfo info;
+    bool hlsl4 = (mRenderer->getMajorShaderModel() >= 4);
+    const std::string &varyingSemantic = getVaryingSemantic(pointSize);
+
+    int reservedRegisterIndex = startRegisters;
+
+    if (hlsl4)
+    {
+        info.dxPosition.enableSystem("SV_Position");
+    }
+    else if (pixelShader)
+    {
+        info.dxPosition.enableSystem("VPOS");
+    }
+    else
+    {
+        info.dxPosition.enableSystem("POSITION");
+    }
+
+    info.glPosition.enable(varyingSemantic, reservedRegisterIndex++);
+
+    if (fragCoord)
+    {
+        info.glFragCoord.enable(varyingSemantic, reservedRegisterIndex++);
+    }
+
+    if (pointCoord)
+    {
+        // SM3 reserves the TEXCOORD semantic for point sprite texcoords (gl_PointCoord)
+        // In D3D11 we manually compute gl_PointCoord in the GS.
+        if (hlsl4)
+        {
+            info.glPointCoord.enable(varyingSemantic, reservedRegisterIndex++);
+        }
+        else
+        {
+            info.glPointCoord.enable("TEXCOORD", 0);
+        }
+    }
+
+    // Special case: do not include PSIZE semantic in HLSL 3 pixel shaders
+    if (pointSize && (!pixelShader || hlsl4))
+    {
+        info.glPointSize.enableSystem("PSIZE");
+    }
+
+    return info;
+}
+
+std::string DynamicHLSL::generateVaryingLinkHLSL(const SemanticInfo &info, const std::string &varyingHLSL) const
+{
+    std::string linkHLSL = "{\n";
+
+    ASSERT(info.dxPosition.enabled && info.glPosition.enabled);
+
+    linkHLSL += "    float4 dx_Position : " + info.dxPosition.str() + ";\n";
+    linkHLSL += "    float4 gl_Position : " + info.glPosition.str() + ";\n";
+
+    if (info.glFragCoord.enabled)
+    {
+        linkHLSL += "    float4 gl_FragCoord : " + info.glFragCoord.str() + ";\n";
+    }
+
+    if (info.glPointCoord.enabled)
+    {
+        linkHLSL += "    float2 gl_PointCoord : " + info.glPointCoord.str() + ";\n";
+    }
+
+    linkHLSL += varyingHLSL;
+
+    if (info.glPointSize.enabled)
+    {
+        linkHLSL += "    float gl_PointSize : " + info.glPointSize.str() + ";\n";
+    }
+
+    linkHLSL += "};\n";
+
+    return linkHLSL;
+}
+
+void DynamicHLSL::storeBuiltinLinkedVaryings(const SemanticInfo &info,
+                                             std::vector<LinkedVarying> *linkedVaryings) const
+{
+    ASSERT(info.glPosition.enabled);
+
+    linkedVaryings->push_back(LinkedVarying("gl_Position", GL_FLOAT_VEC4, 1, info.glPosition.semantic,
+                                            info.glPosition.index, 1));
+
+    if (info.glFragCoord.enabled)
+    {
+        linkedVaryings->push_back(LinkedVarying("gl_FragCoord", GL_FLOAT_VEC4, 1, info.glFragCoord.semantic,
+                                                info.glFragCoord.index, 1));
+    }
+
+    if (info.glPointSize.enabled)
+    {
+        linkedVaryings->push_back(LinkedVarying("gl_PointSize", GL_FLOAT, 1, "PSIZE", 0, 1));
+    }
+}
+
+void DynamicHLSL::storeUserLinkedVaryings(const VertexShader *vertexShader,
+                                          std::vector<LinkedVarying> *linkedVaryings) const
+{
+    const std::string &varyingSemantic = getVaryingSemantic(vertexShader->mUsesPointSize);
+    const std::vector<PackedVarying> &varyings = vertexShader->mVaryings;
+
+    for (unsigned int varyingIndex = 0; varyingIndex < varyings.size(); varyingIndex++)
+    {
+        const PackedVarying &varying = varyings[varyingIndex];
+        if (varying.registerAssigned())
+        {
+            GLenum transposedType = TransposeMatrixType(varying.type);
+            int variableRows = (varying.isStruct() ? 1 : VariableRowCount(transposedType));
+
+            linkedVaryings->push_back(LinkedVarying(varying.name, varying.type, varying.elementCount(),
+                                                    varyingSemantic, varying.registerIndex,
+                                                    variableRows * varying.elementCount()));
+        }
+    }
+}
+
 bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const VaryingPacking packing,
                                          std::string& pixelHLSL, std::string& vertexHLSL,
                                          FragmentShader *fragmentShader, VertexShader *vertexShader,
@@ -479,6 +646,10 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
     bool usesMRT = fragmentShader->mUsesMultipleRenderTargets;
     bool usesFragColor = fragmentShader->mUsesFragColor;
     bool usesFragData = fragmentShader->mUsesFragData;
+    bool usesFragCoord = fragmentShader->mUsesFragCoord;
+    bool usesPointCoord = fragmentShader->mUsesPointCoord;
+    bool usesPointSize = vertexShader->mUsesPointSize;
+
     if (usesFragColor && usesFragData)
     {
         infoLog.append("Cannot use both gl_FragColor and gl_FragData in the same fragment shader.");
@@ -489,12 +660,12 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
     const int shaderModel = mRenderer->getMajorShaderModel();
     const int maxVaryingVectors = mRenderer->getMaxVaryingVectors();
 
-    const int registersNeeded = registers + (fragmentShader->mUsesFragCoord ? 1 : 0) + (fragmentShader->mUsesPointCoord ? 1 : 0);
+    const int registersNeeded = registers + (usesFragCoord ? 1 : 0) + (usesPointCoord ? 1 : 0);
 
     // Two cases when writing to gl_FragColor and using ESSL 1.0:
     // - with a 3.0 context, the output color is copied to channel 0
     // - with a 2.0 context, the output color is broadcast to all channels
-    const bool broadcast = (fragmentShader->mUsesFragColor && mRenderer->getCurrentClientVersion() < 3);
+    const bool broadcast = (usesFragColor && mRenderer->getCurrentClientVersion() < 3);
     const unsigned int numRenderTargets = (broadcast || usesMRT ? mRenderer->getMaxRenderTargets() : 1);
 
     int shaderVersion = vertexShader->getShaderVersion();
@@ -502,85 +673,19 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
     if (registersNeeded > maxVaryingVectors)
     {
         infoLog.append("No varying registers left to support gl_FragCoord/gl_PointCoord");
-
         return false;
     }
 
-    std::string varyingSemantic = (vertexShader->mUsesPointSize && shaderModel == 3) ? "COLOR" : "TEXCOORD";
-    std::string targetSemantic = (shaderModel >= 4) ? "SV_Target" : "COLOR";
-    std::string dxPositionSemantic = (shaderModel >= 4) ? "SV_Position" : "POSITION";
+    const std::string &varyingHLSL = generateVaryingHLSL(vertexShader);
+    const SemanticInfo &vertexSemantics = getSemanticInfo(registers, usesFragCoord,
+                                                          false, usesPointSize, false);
 
-    std::string varyingHLSL = generateVaryingHLSL(vertexShader, varyingSemantic, linkedVaryings);
-
-    // special varyings that use reserved registers
-    int reservedRegisterIndex = registers;
-
-    unsigned int glPositionSemanticIndex = reservedRegisterIndex++;
-    std::string glPositionSemantic = varyingSemantic;
-
-    std::string fragCoordSemantic;
-    unsigned int fragCoordSemanticIndex = 0;
-    if (fragmentShader->mUsesFragCoord)
-    {
-        fragCoordSemanticIndex = reservedRegisterIndex++;
-        fragCoordSemantic = varyingSemantic;
-    }
-
-    std::string pointCoordSemantic;
-    unsigned int pointCoordSemanticIndex = 0;
-    if (fragmentShader->mUsesPointCoord)
-    {
-        // Shader model 3 uses a special TEXCOORD semantic for point sprite texcoords.
-        // In DX11 we compute this in the GS.
-        if (shaderModel == 3)
-        {
-            pointCoordSemanticIndex = 0;
-            pointCoordSemantic = "TEXCOORD0";
-        }
-        else if (shaderModel >= 4)
-        {
-            pointCoordSemanticIndex = reservedRegisterIndex++;
-            pointCoordSemantic = varyingSemantic;
-        }
-    }
+    storeUserLinkedVaryings(vertexShader, linkedVaryings);
+    storeBuiltinLinkedVaryings(vertexSemantics, linkedVaryings);
 
     // Add stub string to be replaced when shader is dynamically defined by its layout
-    vertexHLSL += "\n" + VERTEX_ATTRIBUTE_STUB_STRING + "\n";
-
-    vertexHLSL += "struct VS_OUTPUT\n"
-                  "{\n";
-
-    if (shaderModel < 4)
-    {
-        vertexHLSL += "    float4 dx_Position : " + dxPositionSemantic + ";\n";
-        vertexHLSL += "    float4 gl_Position : " + glPositionSemantic + Str(glPositionSemanticIndex) + ";\n";
-        linkedVaryings->push_back(LinkedVarying("gl_Position", GL_FLOAT_VEC4, 1, glPositionSemantic, glPositionSemanticIndex, 1));
-
-    }
-
-    vertexHLSL += varyingHLSL;
-
-    if (fragmentShader->mUsesFragCoord)
-    {
-        vertexHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + Str(fragCoordSemanticIndex) + ";\n";
-        linkedVaryings->push_back(LinkedVarying("gl_FragCoord", GL_FLOAT_VEC4, 1, fragCoordSemantic, fragCoordSemanticIndex, 1));
-    }
-
-    if (vertexShader->mUsesPointSize && shaderModel >= 3)
-    {
-        vertexHLSL += "    float gl_PointSize : PSIZE;\n";
-        linkedVaryings->push_back(LinkedVarying("gl_PointSize", GL_FLOAT, 1, "PSIZE", 0, 1));
-    }
-
-    if (shaderModel >= 4)
-    {
-        vertexHLSL += "    float4 dx_Position : " + dxPositionSemantic + ";\n";
-        vertexHLSL += "    float4 gl_Position : " + glPositionSemantic + Str(glPositionSemanticIndex) + ";\n";
-        linkedVaryings->push_back(LinkedVarying("gl_Position", GL_FLOAT_VEC4, 1, glPositionSemantic, glPositionSemanticIndex, 1));
-    }
-
-    vertexHLSL += "};\n"
-                  "\n"
+    vertexHLSL += "\n" + VERTEX_ATTRIBUTE_STUB_STRING + "\n"
+                  "struct VS_OUTPUT\n" + generateVaryingLinkHLSL(vertexSemantics, varyingHLSL) + "\n"
                   "VS_OUTPUT main(VS_INPUT input)\n"
                   "{\n"
                   "    initAttributes(input);\n";
@@ -610,12 +715,12 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
                       "    output.dx_Position.w = gl_Position.w;\n";
     }
 
-    if (vertexShader->mUsesPointSize && shaderModel >= 3)
+    if (usesPointSize && shaderModel >= 3)
     {
         vertexHLSL += "    output.gl_PointSize = gl_PointSize;\n";
     }
 
-    if (fragmentShader->mUsesFragCoord)
+    if (usesFragCoord)
     {
         vertexHLSL += "    output.gl_FragCoord = gl_Position;\n";
     }
@@ -686,41 +791,10 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
                   "    return output;\n"
                   "}\n";
 
-    pixelHLSL += "struct PS_INPUT\n"
-                 "{\n";
+    const SemanticInfo &pixelSemantics = getSemanticInfo(registers, usesFragCoord, usesPointCoord,
+                                                         usesPointSize, true);
 
-    pixelHLSL += varyingHLSL;
-
-    if (fragmentShader->mUsesFragCoord)
-    {
-        pixelHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + Str(fragCoordSemanticIndex) + ";\n";
-    }
-
-    if (fragmentShader->mUsesPointCoord && shaderModel >= 3)
-    {
-        pixelHLSL += "    float2 gl_PointCoord : " + pointCoordSemantic + Str(pointCoordSemanticIndex) + ";\n";
-    }
-
-    // Must consume the PSIZE element if the geometry shader is not active
-    // We won't know if we use a GS until we draw
-    if (vertexShader->mUsesPointSize && shaderModel >= 4)
-    {
-        pixelHLSL += "    float gl_PointSize : PSIZE;\n";
-    }
-
-    if (fragmentShader->mUsesFragCoord)
-    {
-        if (shaderModel >= 4)
-        {
-            pixelHLSL += "    float4 dx_VPos : SV_Position;\n";
-        }
-        else if (shaderModel >= 3)
-        {
-            pixelHLSL += "    float2 dx_VPos : VPOS;\n";
-        }
-    }
-
-    pixelHLSL += "};\n";
+    pixelHLSL += "struct PS_INPUT\n" + generateVaryingLinkHLSL(pixelSemantics, varyingHLSL) + "\n";
 
     if (shaderVersion < 300)
     {
@@ -782,19 +856,19 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
                      "{\n";
     }
 
-    if (fragmentShader->mUsesFragCoord)
+    if (usesFragCoord)
     {
         pixelHLSL += "    float rhw = 1.0 / input.gl_FragCoord.w;\n";
 
         if (shaderModel >= 4)
         {
-            pixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x;\n"
-                         "    gl_FragCoord.y = input.dx_VPos.y;\n";
+            pixelHLSL += "    gl_FragCoord.x = input.dx_Position.x;\n"
+                         "    gl_FragCoord.y = input.dx_Position.y;\n";
         }
         else if (shaderModel >= 3)
         {
-            pixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x + 0.5;\n"
-                         "    gl_FragCoord.y = input.dx_VPos.y + 0.5;\n";
+            pixelHLSL += "    gl_FragCoord.x = input.dx_Position.x + 0.5;\n"
+                         "    gl_FragCoord.y = input.dx_Position.y + 0.5;\n";
         }
         else
         {
@@ -807,7 +881,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
                      "    gl_FragCoord.w = rhw;\n";
     }
 
-    if (fragmentShader->mUsesPointCoord && shaderModel >= 3)
+    if (usesPointCoord && shaderModel >= 3)
     {
         pixelHLSL += "    gl_PointCoord.x = input.gl_PointCoord.x;\n";
         pixelHLSL += "    gl_PointCoord.y = 1.0 - input.gl_PointCoord.y;\n";
@@ -920,60 +994,20 @@ std::string DynamicHLSL::generatePointSpriteHLSL(int registers, FragmentShader *
 
     std::string geomHLSL;
 
-    std::string varyingSemantic = "TEXCOORD";
+    const SemanticInfo &inSemantics = getSemanticInfo(registers, fragmentShader->mUsesFragCoord,
+                                                      false, true, false);
+    const SemanticInfo &outSemantics = getSemanticInfo(registers, fragmentShader->mUsesFragCoord,
+                                                       fragmentShader->mUsesPointCoord, true, false);
 
-    std::string fragCoordSemantic;
-    std::string pointCoordSemantic;
-
-    int reservedRegisterIndex = registers;
-
-    if (fragmentShader->mUsesFragCoord)
-    {
-        fragCoordSemantic = varyingSemantic + Str(reservedRegisterIndex++);
-    }
-
-    if (fragmentShader->mUsesPointCoord)
-    {
-        pointCoordSemantic = varyingSemantic + Str(reservedRegisterIndex++);
-    }
+    std::string varyingHLSL = generateVaryingHLSL(vertexShader);
+    std::string inLinkHLSL = generateVaryingLinkHLSL(inSemantics, varyingHLSL);
+    std::string outLinkHLSL = generateVaryingLinkHLSL(outSemantics, varyingHLSL);
 
     geomHLSL += "uniform float4 dx_ViewCoords : register(c1);\n"
                 "\n"
-                "struct GS_INPUT\n"
-                "{\n";
-
-    std::string varyingHLSL = generateVaryingHLSL(vertexShader, varyingSemantic, NULL);
-
-    geomHLSL += varyingHLSL;
-
-    if (fragmentShader->mUsesFragCoord)
-    {
-        geomHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + ";\n";
-    }
-
-    geomHLSL += "    float gl_PointSize : PSIZE;\n"
-                "    float4 gl_Position : SV_Position;\n"
-                "};\n"
+                "struct GS_INPUT\n" + inLinkHLSL + "\n" +
+                "struct GS_OUTPUT\n" + outLinkHLSL + "\n" +
                 "\n"
-                "struct GS_OUTPUT\n"
-                "{\n";
-
-    geomHLSL += varyingHLSL;
-
-    if (fragmentShader->mUsesFragCoord)
-    {
-        geomHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + ";\n";
-    }
-
-    if (fragmentShader->mUsesPointCoord)
-    {
-        geomHLSL += "    float2 gl_PointCoord : " + pointCoordSemantic + ";\n";
-    }
-
-    geomHLSL +=   "    float gl_PointSize : PSIZE;\n"
-                  "    float4 gl_Position : SV_Position;\n"
-                  "};\n"
-                  "\n"
                   "static float2 pointSpriteCorners[] = \n"
                   "{\n"
                   "    float2( 0.5f, -0.5f),\n"
@@ -997,6 +1031,7 @@ std::string DynamicHLSL::generatePointSpriteHLSL(int registers, FragmentShader *
                   "void main(point GS_INPUT input[1], inout TriangleStream<GS_OUTPUT> outStream)\n"
                   "{\n"
                   "    GS_OUTPUT output = (GS_OUTPUT)0;\n"
+                  "    output.gl_Position = input[0].gl_Position;\n";
                   "    output.gl_PointSize = input[0].gl_PointSize;\n";
 
     for (int r = 0; r < registers; r++)
@@ -1011,13 +1046,13 @@ std::string DynamicHLSL::generatePointSpriteHLSL(int registers, FragmentShader *
 
     geomHLSL += "    \n"
                 "    float gl_PointSize = clamp(input[0].gl_PointSize, minPointSize, maxPointSize);\n"
-                "    float4 gl_Position = input[0].gl_Position;\n"
-                "    float2 viewportScale = float2(1.0f / dx_ViewCoords.x, 1.0f / dx_ViewCoords.y) * gl_Position.w;\n";
+                "    float4 dx_Position = input[0].dx_Position;\n"
+                "    float2 viewportScale = float2(1.0f / dx_ViewCoords.x, 1.0f / dx_ViewCoords.y) * dx_Position.w;\n";
 
     for (int corner = 0; corner < 4; corner++)
     {
         geomHLSL += "    \n"
-                    "    output.gl_Position = gl_Position + float4(pointSpriteCorners[" + Str(corner) + "] * viewportScale * gl_PointSize, 0.0f, 0.0f);\n";
+                    "    output.dx_Position = dx_Position + float4(pointSpriteCorners[" + Str(corner) + "] * viewportScale * gl_PointSize, 0.0f, 0.0f);\n";
 
         if (fragmentShader->mUsesPointCoord)
         {
