@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4466b513_fbddabed",
+        "filename": "extensions/EXT_sRGB.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-18T13:49:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04291d85_91333e7c",
+      "revId": "6fafa5a1e6326ab47c995f2ec12aa14d368ed10d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4932916_3dfb0f29",
         "filename": "src/libGLESv2/Caps.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-06-17T22:43:08Z",
       "side": 1,
       "message": "Can this get a FIXME comment about not advertising it on ES3, please?",
+      "revId": "6fafa5a1e6326ab47c995f2ec12aa14d368ed10d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4466b513_9bda6ff3",
+        "filename": "src/libGLESv2/Caps.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-18T13:49:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4932916_3dfb0f29",
       "revId": "6fafa5a1e6326ab47c995f2ec12aa14d368ed10d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
