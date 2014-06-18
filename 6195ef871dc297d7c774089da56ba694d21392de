@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6471f9c6_1c23b934",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1037,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-18T17:49:34Z",
+      "side": 0,
+      "message": "this should have been included in a previous patch",
+      "range": {
+        "startLine": 1037,
+        "startChar": 34,
+        "endLine": 1037,
+        "endChar": 72
+      },
+      "revId": "6195ef871dc297d7c774089da56ba694d21392de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
