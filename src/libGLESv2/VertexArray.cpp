@@ -19,10 +19,13 @@ VertexArray::VertexArray(rx::VertexArrayImpl *impl, GLuint id, size_t maxAttribs
       mVertexArray(impl),
       mVertexAttributes(maxAttribs)
 {
+    ASSERT(impl != NULL);
 }
 
 VertexArray::~VertexArray()
 {
+    SafeDelete(mVertexArray);
+
     for (size_t i = 0; i < getMaxAttribs(); i++)
     {
         mVertexAttributes[i].buffer.set(NULL);

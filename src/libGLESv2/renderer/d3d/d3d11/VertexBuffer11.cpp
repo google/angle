@@ -8,7 +8,7 @@
 // VertexBuffer11.cpp: Defines the D3D11 VertexBuffer implementation.
 
 #include "libGLESv2/renderer/d3d/d3d11/VertexBuffer11.h"
-#include "libGLESv2/renderer/BufferStorage.h"
+#include "libGLESv2/renderer/d3d/d3d11/Buffer11.h"
 
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
@@ -90,7 +90,7 @@ bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, co
         {
             if (buffer)
             {
-                BufferStorage *storage = buffer->getStorage();
+                Buffer11 *storage = Buffer11::makeBuffer11(buffer->getImplementation());
                 input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.offset);
             }
             else

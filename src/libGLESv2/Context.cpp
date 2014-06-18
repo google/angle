@@ -3729,7 +3729,7 @@ bool Context::hasMappedBuffer(GLenum target) const
         {
             const gl::VertexAttribute &vertexAttrib = getVertexAttribState(attribIndex);
             gl::Buffer *boundBuffer = vertexAttrib.buffer.get();
-            if (vertexAttrib.enabled && boundBuffer && boundBuffer->mapped())
+            if (vertexAttrib.enabled && boundBuffer && boundBuffer->isMapped())
             {
                 return true;
             }
@@ -3738,7 +3738,7 @@ bool Context::hasMappedBuffer(GLenum target) const
     else if (target == GL_ELEMENT_ARRAY_BUFFER)
     {
         Buffer *elementBuffer = getElementArrayBuffer();
-        return (elementBuffer && elementBuffer->mapped());
+        return (elementBuffer && elementBuffer->isMapped());
     }
     else if (target == GL_TRANSFORM_FEEDBACK_BUFFER)
     {

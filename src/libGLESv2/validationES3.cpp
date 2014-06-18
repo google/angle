@@ -277,7 +277,7 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
         size_t offset = reinterpret_cast<size_t>(pixels);
 
         if (!rx::IsUnsignedAdditionSafe(offset, copyBytes) ||
-            ((offset + copyBytes) > static_cast<size_t>(pixelUnpackBuffer->size())))
+            ((offset + copyBytes) > static_cast<size_t>(pixelUnpackBuffer->getSize())))
         {
             // Overflow past the end of the buffer
             return gl::error(GL_INVALID_OPERATION, false);
@@ -293,7 +293,7 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
         }
 
         // ...the buffer object's data store is currently mapped.
-        if (pixelUnpackBuffer->mapped())
+        if (pixelUnpackBuffer->isMapped())
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }

@@ -984,7 +984,7 @@ bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuff
 
         ASSERT(uniformBlock && uniformBuffer);
 
-        if (uniformBuffer->size() < uniformBlock->dataSize)
+        if (uniformBuffer->getSize() < uniformBlock->dataSize)
         {
             // undefined behaviour
             return false;

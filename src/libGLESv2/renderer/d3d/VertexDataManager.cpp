@@ -9,7 +9,7 @@
 // runs the Buffer translation process.
 
 #include "libGLESv2/renderer/d3d/VertexDataManager.h"
-#include "libGLESv2/renderer/BufferStorage.h"
+#include "libGLESv2/renderer/d3d/BufferD3D.h"
 
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/ProgramBinary.h"
@@ -103,12 +103,17 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
         if (translated[i].active && attribs[i].enabled)
         {
             gl::Buffer *buffer = attribs[i].buffer.get();
-            StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
 
-            if (staticBuffer && staticBuffer->getBufferSize() > 0 && !staticBuffer->lookupAttribute(attribs[i], NULL) &&
-                !staticBuffer->directStoragePossible(attribs[i], currentValues[i]))
+            if (buffer)
             {
-                buffer->invalidateStaticData();
+                BufferD3D *bufferImpl = BufferD3D::makeBufferD3D(buffer->getImplementation());
+                StaticVertexBufferInterface *staticBuffer = bufferImpl->getStaticVertexBuffer();
+
+                if (staticBuffer && staticBuffer->getBufferSize() > 0 && !staticBuffer->lookupAttribute(attribs[i], NULL) &&
+                    !staticBuffer->directStoragePossible(attribs[i], currentValues[i]))
+                {
+                    bufferImpl->invalidateStaticData();
+                }
             }
         }
     }
@@ -119,36 +124,40 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
         if (translated[i].active && attribs[i].enabled)
         {
             gl::Buffer *buffer = attribs[i].buffer.get();
-            StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
-            VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
-
-            if (!vertexBuffer->directStoragePossible(attribs[i], currentValues[i]))
+            if (buffer)
             {
-                if (staticBuffer)
+                BufferD3D *bufferImpl = BufferD3D::makeBufferD3D(buffer->getImplementation());
+                StaticVertexBufferInterface *staticBuffer = bufferImpl->getStaticVertexBuffer();
+                VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
+
+                if (!vertexBuffer->directStoragePossible(attribs[i], currentValues[i]))
                 {
-                    if (staticBuffer->getBufferSize() == 0)
+                    if (staticBuffer)
                     {
-                        int totalCount = ElementsInBuffer(attribs[i], buffer->size());
-                        if (!staticBuffer->reserveVertexSpace(attribs[i], totalCount, 0))
+                        if (staticBuffer->getBufferSize() == 0)
+                        {
+                            int totalCount = ElementsInBuffer(attribs[i], bufferImpl->getSize());
+                            if (!staticBuffer->reserveVertexSpace(attribs[i], totalCount, 0))
+                            {
+                                return GL_OUT_OF_MEMORY;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        int totalCount = StreamingBufferElementCount(attribs[i], count, instances);
+
+                        // [OpenGL ES 3.0.2] section 2.9.4 page 40:
+                        // We can return INVALID_OPERATION if our vertex attribute does not have enough backing data.
+                        if (bufferImpl && ElementsInBuffer(attribs[i], bufferImpl->getSize()) < totalCount)
+                        {
+                            return GL_INVALID_OPERATION;
+                        }
+
+                        if (!mStreamingBuffer->reserveVertexSpace(attribs[i], totalCount, instances))
                         {
                             return GL_OUT_OF_MEMORY;
                         }
-                    }
-                }
-                else
-                {
-                    int totalCount = StreamingBufferElementCount(attribs[i], count, instances);
-
-                    // [OpenGL ES 3.0.2] section 2.9.4 page 40:
-                    // We can return INVALID_OPERATION if our vertex attribute does not have enough backing data.
-                    if (buffer && ElementsInBuffer(attribs[i], buffer->size()) < totalCount)
-                    {
-                        return GL_INVALID_OPERATION;
-                    }
-
-                    if (!mStreamingBuffer->reserveVertexSpace(attribs[i], totalCount, instances))
-                    {
-                        return GL_OUT_OF_MEMORY;
                     }
                 }
             }
@@ -171,10 +180,9 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                     return GL_INVALID_OPERATION;
                 }
 
-                StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
+                BufferD3D *storage = buffer ? BufferD3D::makeBufferD3D(buffer->getImplementation()) : NULL;
+                StaticVertexBufferInterface *staticBuffer = storage ? storage->getStaticVertexBuffer() : NULL;
                 VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
-
-                BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
                 bool directStorage = vertexBuffer->directStoragePossible(attribs[i], currentValues[i]);
 
                 unsigned int streamOffset = 0;
@@ -282,7 +290,8 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
 
             if (buffer)
             {
-                buffer->promoteStaticUsage(count * ComputeVertexAttributeTypeSize(attribs[i]));
+                BufferD3D *bufferImpl = BufferD3D::makeBufferD3D(buffer->getImplementation());
+                bufferImpl->promoteStaticUsage(count * ComputeVertexAttributeTypeSize(attribs[i]));
             }
         }
     }

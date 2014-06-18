@@ -23,7 +23,7 @@ struct VertexAttribCurrentValueData;
 
 namespace rx
 {
-class BufferStorage;
+class BufferD3D;
 class StreamingVertexBufferInterface;
 class VertexBuffer;
 class Renderer;
@@ -38,7 +38,7 @@ struct TranslatedAttribute
     unsigned int stride;   // 0 means not to advance the read pointer at all
 
     VertexBuffer *vertexBuffer;
-    BufferStorage *storage;
+    BufferD3D *storage;
     unsigned int serial;
     unsigned int divisor;
 };

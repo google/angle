@@ -9,7 +9,7 @@
 // runs the Buffer translation process for index buffers.
 
 #include "libGLESv2/renderer/d3d/IndexDataManager.h"
-#include "libGLESv2/renderer/BufferStorage.h"
+#include "libGLESv2/renderer/d3d/BufferD3D.h"
 
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/main.h"
@@ -118,7 +118,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     unsigned int offset = 0;
     bool alignedOffset = false;
 
-    BufferStorage *storage = NULL;
+    BufferD3D *storage = NULL;
 
     if (buffer != NULL)
     {
@@ -128,7 +128,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
         }
         offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
 
-        storage = buffer->getStorage();
+        storage = BufferD3D::makeBufferD3D(buffer->getImplementation());
 
         switch (type)
         {
@@ -157,7 +157,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
 
     StreamingIndexBufferInterface *streamingBuffer = (type == GL_UNSIGNED_INT) ? mStreamingBufferInt : mStreamingBufferShort;
 
-    StaticIndexBufferInterface *staticBuffer = buffer ? buffer->getStaticIndexBuffer() : NULL;
+    StaticIndexBufferInterface *staticBuffer = storage ? storage->getStaticIndexBuffer() : NULL;
     IndexBufferInterface *indexBuffer = streamingBuffer;
     bool directStorage = alignedOffset && storage && storage->supportsDirectBinding() &&
                          destinationIndexType == type;
@@ -168,11 +168,11 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
         indexBuffer = streamingBuffer;
         streamOffset = offset;
 
-        if (!buffer->getIndexRangeCache()->findRange(type, offset, count, &translated->minIndex,
+        if (!storage->getIndexRangeCache()->findRange(type, offset, count, &translated->minIndex,
                                                      &translated->maxIndex, NULL))
         {
             computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
-            buffer->getIndexRangeCache()->addRange(type, offset, count, translated->minIndex,
+            storage->getIndexRangeCache()->addRange(type, offset, count, translated->minIndex,
                                                    translated->maxIndex, offset);
         }
     }
@@ -202,7 +202,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
             }
             else
             {
-                buffer->invalidateStaticData();
+                storage->invalidateStaticData();
                 staticBuffer = NULL;
             }
         }
@@ -258,9 +258,9 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     translated->startIndex = streamOffset / gl::GetTypeBytes(destinationIndexType);
     translated->startOffset = streamOffset;
 
-    if (buffer)
+    if (storage)
     {
-        buffer->promoteStaticUsage(count * gl::GetTypeBytes(type));
+        storage->promoteStaticUsage(count * gl::GetTypeBytes(type));
     }
 
     return GL_NO_ERROR;

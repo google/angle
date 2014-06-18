@@ -47,6 +47,7 @@ class VertexBuffer;
 class IndexBuffer;
 class QueryImpl;
 class FenceImpl;
+class BufferImpl;
 class VertexArrayImpl;
 class BufferStorage;
 struct TranslatedIndexData;
@@ -231,9 +232,9 @@ class Renderer
     virtual TextureStorage *createTextureStorage2DArray(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels) = 0;
 
     // Buffer creation
+    virtual BufferImpl *createBuffer() = 0;
     virtual VertexBuffer *createVertexBuffer() = 0;
     virtual IndexBuffer *createIndexBuffer() = 0;
-    virtual BufferStorage *createBufferStorage() = 0;
 
     // Vertex Array creation
     virtual VertexArrayImpl *createVertexArray() = 0;

@@ -27,7 +27,7 @@ namespace rx
 class StaticIndexBufferInterface;
 class StreamingIndexBufferInterface;
 class IndexBuffer;
-class BufferStorage;
+class BufferD3D;
 class Renderer;
 
 struct TranslatedIndexData
@@ -38,7 +38,7 @@ struct TranslatedIndexData
     unsigned int startOffset;   // In bytes
 
     IndexBuffer *indexBuffer;
-    BufferStorage *storage;
+    BufferD3D *storage;
     unsigned int serial;
 };
 

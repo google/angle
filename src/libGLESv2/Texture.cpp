@@ -21,7 +21,7 @@
 #include "libGLESv2/renderer/TextureStorage.h"
 #include "libEGL/Surface.h"
 #include "libGLESv2/Buffer.h"
-#include "libGLESv2/renderer/BufferStorage.h"
+#include "libGLESv2/renderer/BufferImpl.h"
 #include "libGLESv2/renderer/RenderTarget.h"
 
 namespace gl
@@ -309,7 +309,9 @@ void Texture::setImage(const PixelUnpackState &unpack, GLenum type, const void *
         // Do a CPU readback here, if we have an unpack buffer bound and the fast GPU path is not supported
         Buffer *pixelBuffer = unpack.pixelBuffer.get();
         ptrdiff_t offset = reinterpret_cast<ptrdiff_t>(pixels);
-        const void *bufferData = pixelBuffer->getStorage()->getData();
+        // TODO: setImage/subImage is the only place outside of renderer that asks for a buffers raw data.
+        // This functionality should be moved into renderer and the getData method of BufferImpl removed.
+        const void *bufferData = pixelBuffer->getImplementation()->getData();
         pixelData = static_cast<const unsigned char *>(bufferData) + offset;
     }
 
@@ -361,7 +363,9 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei widt
     {
         Buffer *pixelBuffer = unpack.pixelBuffer.get();
         unsigned int offset = reinterpret_cast<unsigned int>(pixels);
-        const void *bufferData = pixelBuffer->getStorage()->getData();
+        // TODO: setImage/subImage is the only place outside of renderer that asks for a buffers raw data.
+        // This functionality should be moved into renderer and the getData method of BufferImpl removed.
+        const void *bufferData = pixelBuffer->getImplementation()->getData();
         pixelData = static_cast<const unsigned char *>(bufferData) + offset;
     }
 

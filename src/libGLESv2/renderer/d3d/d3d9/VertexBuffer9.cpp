@@ -9,7 +9,7 @@
 
 #include "libGLESv2/renderer/d3d/d3d9/VertexBuffer9.h"
 #include "libGLESv2/renderer/vertexconversion.h"
-#include "libGLESv2/renderer/BufferStorage.h"
+#include "libGLESv2/renderer/BufferImpl.h"
 #include "libGLESv2/VertexAttribute.h"
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
 #include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
@@ -98,7 +98,7 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, con
         {
             if (buffer)
             {
-                BufferStorage *storage = buffer->getStorage();
+                BufferImpl *storage = buffer->getImplementation();
                 input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.offset);
             }
             else

@@ -11,7 +11,7 @@
 #include "libGLESv2/renderer/d3d/VertexBuffer.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/VertexAttribute.h"
-#include "libGLESv2/renderer/BufferStorage.h"
+#include "libGLESv2/renderer/d3d/BufferD3D.h"
 #include "common/mathutil.h"
 
 namespace rx
@@ -158,7 +158,7 @@ bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &att
                                                   const gl::VertexAttribCurrentValueData &currentValue) const
 {
     gl::Buffer *buffer = attrib.buffer.get();
-    BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
+    BufferD3D *storage = buffer ? BufferD3D::makeBufferD3D(buffer->getImplementation()) : NULL;
 
     if (!storage || !storage->supportsDirectBinding())
     {

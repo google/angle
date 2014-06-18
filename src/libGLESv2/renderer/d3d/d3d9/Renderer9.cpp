@@ -28,7 +28,7 @@
 #include "libGLESv2/renderer/d3d/d3d9/RenderTarget9.h"
 #include "libGLESv2/renderer/d3d/d3d9/VertexBuffer9.h"
 #include "libGLESv2/renderer/d3d/d3d9/IndexBuffer9.h"
-#include "libGLESv2/renderer/d3d/d3d9/BufferStorage9.h"
+#include "libGLESv2/renderer/d3d/d3d9/Buffer9.h"
 #include "libGLESv2/renderer/d3d/d3d9/Query9.h"
 #include "libGLESv2/renderer/d3d/d3d9/Fence9.h"
 #include "libGLESv2/renderer/d3d/d3d9/VertexArray9.h"
@@ -608,9 +608,9 @@ IndexBuffer *Renderer9::createIndexBuffer()
     return new IndexBuffer9(this);
 }
 
-BufferStorage *Renderer9::createBufferStorage()
+BufferImpl *Renderer9::createBuffer()
 {
-    return new BufferStorage9();
+    return new Buffer9(this);
 }
 
 VertexArrayImpl *Renderer9::createVertexArray()
@@ -1394,7 +1394,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
     if (type != GL_NONE && elementArrayBuffer)
     {
         gl::Buffer *indexBuffer = elementArrayBuffer;
-        BufferStorage *storage = indexBuffer->getStorage();
+        BufferImpl *storage = indexBuffer->getImplementation();
         intptr_t offset = reinterpret_cast<intptr_t>(indices);
         indices = static_cast<const GLubyte*>(storage->getData()) + offset;
     }
@@ -1592,7 +1592,7 @@ void Renderer9::drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indi
 
     if (elementArrayBuffer)
     {
-        BufferStorage *storage = elementArrayBuffer->getStorage();
+        BufferImpl *storage = elementArrayBuffer->getImplementation();
         intptr_t offset = reinterpret_cast<intptr_t>(indices);
         indices = static_cast<const GLubyte*>(storage->getData()) + offset;
     }

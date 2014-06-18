@@ -186,9 +186,9 @@ class Renderer11 : public Renderer
     virtual TextureStorage *createTextureStorage2DArray(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels);
 
     // Buffer creation
+    virtual BufferImpl *createBuffer();
     virtual VertexBuffer *createVertexBuffer();
     virtual IndexBuffer *createIndexBuffer();
-    virtual BufferStorage *createBufferStorage();
 
     // Vertex Array creation
     virtual VertexArrayImpl *createVertexArray();
