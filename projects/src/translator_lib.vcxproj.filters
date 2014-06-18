@@ -159,6 +159,9 @@
     <ClInclude Include="..\..\src\compiler\translator\PoolAlloc.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\compiler\translator\OutputHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\BuiltInFunctionEmulator.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
@@ -339,6 +342,9 @@
     <None Include="..\..\src\compiler\translator\glslang.l">
       <Filter>src\compiler\translator</Filter>
     </None>
+    <ClInclude Include="..\..\src\compiler\translator\UtilsHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\intermOut.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
@@ -354,9 +360,9 @@
     <ClCompile Include="..\..\src\compiler\translator\UnfoldShortCircuitAST.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\compiler\translator\OutputHLSL.h">
+    <ClCompile Include="..\..\src\compiler\translator\UtilsHLSL.cpp">
       <Filter>src\compiler\translator</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorGLSL.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>

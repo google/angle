@@ -137,6 +137,7 @@
     <ClInclude Include="..\..\src\compiler\translator\FlagStd140Structs.h"/>
     <ClInclude Include="..\..\src\compiler\translator\length_limits.h"/>
     <ClInclude Include="..\..\src\compiler\translator\PoolAlloc.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\OutputHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\BuiltInFunctionEmulator.h"/>
     <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h"/>
     <ClInclude Include="..\..\src\compiler\translator\UnfoldShortCircuit.h"/>
@@ -174,7 +175,7 @@
     <ClInclude Include="..\..\src\compiler\translator\VariablePacker.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang.h"/>
     <ClInclude Include="..\..\src\compiler\translator\SearchSymbol.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\OutputHLSL.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\UtilsHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeParseContext.h"/>
     <ClInclude Include="..\..\src\compiler\translator\VariableInfo.h"/>
     <ClInclude Include="..\..\src\compiler\translator\LoopInfo.h"/>
@@ -241,6 +242,7 @@
     <ClCompile Include="..\..\src\compiler\translator\ForLoopUnroll.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\SearchSymbol.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\UnfoldShortCircuitAST.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\UtilsHLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorGLSL.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\SymbolTable.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\FlagStd140Structs.cpp"/>

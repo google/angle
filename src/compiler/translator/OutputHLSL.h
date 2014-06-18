@@ -21,6 +21,7 @@
 namespace sh
 {
 class UnfoldShortCircuit;
+class Std140PaddingHelper;
 
 class OutputHLSL : public TIntermTraverser
 {
@@ -37,18 +38,9 @@ class OutputHLSL : public TIntermTraverser
     const std::vector<gl::Attribute> &getAttributes() const;
     const std::vector<gl::Varying> &getVaryings() const;
 
-    TString typeString(const TType &type);
-    TString textureString(const TType &type);
-    TString samplerString(const TType &type);
-    TString interpolationString(TQualifier qualifier);
-    TString structureString(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);
-    static TString structureTypeName(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);
-    static TString qualifierString(TQualifier qualifier);
-    static TString arrayString(const TType &type);
+    static TString defineNamelessStruct(const TStructure &structure);
+    TString defineQualifiedStruct(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);
     static TString initializer(const TType &type);
-    static TString decorate(const TString &string);                      // Prepends an underscore to avoid naming clashes
-    static TString decorateUniform(const TString &string, const TType &type);
-    static TString decorateField(const TString &string, const TStructure &structure);
 
   protected:
     void header();
@@ -75,8 +67,6 @@ class OutputHLSL : public TIntermTraverser
     void addConstructor(const TType &type, const TString &name, const TIntermSequence *parameters);
     void storeStd140ElementIndex(const TStructure &structure, bool useHLSLRowMajorPacking);
     const ConstantUnion *writeConstantUnion(const TType &type, const ConstantUnion *constUnion);
-
-    static TString structNameString(const TStructure &structure);
 
     TParseContext &mContext;
     const ShShaderOutput mOutputType;
@@ -187,7 +177,6 @@ class OutputHLSL : public TIntermTraverser
     int declareUniformAndAssignRegister(const TType &type, const TString &name);
 
     TString interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, const TField &field);
-    TString decoratePrivate(const TString &privateText);
     TString interfaceBlockStructNameString(const TInterfaceBlock &interfaceBlockType);
     TString interfaceBlockInstanceString(const TInterfaceBlock& interfaceBlock, unsigned int arrayIndex);
     TString interfaceBlockFieldTypeString(const TField &field, TLayoutBlockStorage blockStorage);
@@ -195,14 +184,8 @@ class OutputHLSL : public TIntermTraverser
     TString interfaceBlockStructString(const TInterfaceBlock &interfaceBlock);
     TString interfaceBlockString(const TInterfaceBlock &interfaceBlock, unsigned int registerIndex, unsigned int arrayIndex);
     TString structInitializerString(int indent, const TStructure &structure, const TString &rhsStructName);
-    
-    class Std140PaddingHelper;
-
-    static GLenum glVariableType(const TType &type);
-    static GLenum glVariablePrecision(const TType &type);
-    static bool isVaryingIn(TQualifier qualifier);
-    static bool isVaryingOut(TQualifier qualifier);
-    static bool isVarying(TQualifier qualifier);
+    static TString defineStruct(const TStructure &structure, bool useHLSLRowMajorPacking,
+                                bool useStd140Packing, Std140PaddingHelper *padHelper);
 
     std::vector<gl::Uniform> mActiveUniforms;
     std::vector<gl::InterfaceBlock> mActiveInterfaceBlocks;

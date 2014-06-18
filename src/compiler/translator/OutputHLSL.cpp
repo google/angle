@@ -17,6 +17,8 @@
 #include "compiler/translator/FlagStd140Structs.h"
 #include "compiler/translator/NodeSearch.h"
 #include "compiler/translator/RewriteElseBlocks.h"
+#include "compiler/translator/UtilsHLSL.h"
+#include "compiler/translator/util.h"
 
 #include <algorithm>
 #include <cfloat>
@@ -25,7 +27,7 @@
 namespace sh
 {
 
-class OutputHLSL::Std140PaddingHelper
+class Std140PaddingHelper
 {
   public:
     explicit Std140PaddingHelper(const std::map<TString, int> &structElementIndexes)
@@ -45,7 +47,7 @@ class OutputHLSL::Std140PaddingHelper
             return 0;
         }
 
-        const GLenum glType = glVariableType(type);
+        const GLenum glType = GLVariableType(type);
         const int numComponents = gl::UniformComponentCount(glType);
 
         if (numComponents >= 4)
@@ -105,12 +107,12 @@ class OutputHLSL::Std140PaddingHelper
             // wish to always transpose GL matrices to play well with HLSL's matrix array indexing.
             //
             const bool isRowMajorMatrix = !useHLSLRowMajorPacking;
-            const GLenum glType = glVariableType(type);
+            const GLenum glType = GLVariableType(type);
             numComponents = gl::MatrixComponentCount(glType, isRowMajorMatrix);
         }
         else if (type.getStruct())
         {
-            const TString &structName = structureTypeName(*type.getStruct(), useHLSLRowMajorPacking, true);
+            const TString &structName = QualifiedStructNameString(*type.getStruct(), useHLSLRowMajorPacking, true);
             numComponents = mStructElementIndexes.find(structName)->second;
 
             if (numComponents == 0)
@@ -120,7 +122,7 @@ class OutputHLSL::Std140PaddingHelper
         }
         else
         {
-            const GLenum glType = glVariableType(type);
+            const GLenum glType = GLVariableType(type);
             numComponents = gl::UniformComponentCount(glType);
         }
 
@@ -375,14 +377,9 @@ TString OutputHLSL::interfaceBlockFieldString(const TInterfaceBlock &interfaceBl
     }
 }
 
-TString OutputHLSL::decoratePrivate(const TString &privateText)
-{
-    return "dx_" + privateText;
-}
-
 TString OutputHLSL::interfaceBlockStructNameString(const TInterfaceBlock &interfaceBlock)
 {
-    return decoratePrivate(interfaceBlock.name()) + "_type";
+    return DecoratePrivate(interfaceBlock.name()) + "_type";
 }
 
 TString OutputHLSL::interfaceBlockInstanceString(const TInterfaceBlock& interfaceBlock, unsigned int arrayIndex)
@@ -393,11 +390,11 @@ TString OutputHLSL::interfaceBlockInstanceString(const TInterfaceBlock& interfac
     }
     else if (interfaceBlock.isArray())
     {
-        return decoratePrivate(interfaceBlock.instanceName()) + "_" + str(arrayIndex);
+        return DecoratePrivate(interfaceBlock.instanceName()) + "_" + str(arrayIndex);
     }
     else
     {
-        return decorate(interfaceBlock.instanceName());
+        return Decorate(interfaceBlock.instanceName());
     }
 }
 
@@ -411,16 +408,17 @@ TString OutputHLSL::interfaceBlockFieldTypeString(const TField &field, TLayoutBl
     {
         // Use HLSL row-major packing for GLSL column-major matrices
         const TString &matrixPackString = (matrixPacking == EmpRowMajor ? "column_major" : "row_major");
-        return matrixPackString + " " + typeString(fieldType);
+        return matrixPackString + " " + TypeString(fieldType);
     }
     else if (fieldType.getStruct())
     {
         // Use HLSL row-major packing for GLSL column-major matrices
-        return structureTypeName(*fieldType.getStruct(), matrixPacking == EmpColumnMajor, blockStorage == EbsStd140);
+        return QualifiedStructNameString(*fieldType.getStruct(), matrixPacking == EmpColumnMajor,
+                                         blockStorage == EbsStd140);
     }
     else
     {
-        return typeString(fieldType);
+        return TypeString(fieldType);
     }
 }
 
@@ -442,7 +440,7 @@ TString OutputHLSL::interfaceBlockFieldString(const TInterfaceBlock &interfaceBl
         }
 
         hlsl += "    " + interfaceBlockFieldTypeString(field, blockStorage) +
-                " " + decorate(field.name()) + arrayString(fieldType) + ";\n";
+                " " + Decorate(field.name()) + ArrayString(fieldType) + ";\n";
 
         // must pad out after matrices and arrays, where HLSL usually allows itself room to pack stuff
         if (blockStorage == EbsStd140)
@@ -467,7 +465,7 @@ TString OutputHLSL::interfaceBlockStructString(const TInterfaceBlock &interfaceB
 
 TString OutputHLSL::interfaceBlockString(const TInterfaceBlock &interfaceBlock, unsigned int registerIndex, unsigned int arrayIndex)
 {
-    const TString &arrayIndexString =  (arrayIndex != GL_INVALID_INDEX ? decorate(str(arrayIndex)) : "");
+    const TString &arrayIndexString =  (arrayIndex != GL_INVALID_INDEX ? Decorate(str(arrayIndex)) : "");
     const TString &blockName = interfaceBlock.name() + arrayIndexString;
     TString hlsl;
 
@@ -554,7 +552,7 @@ TString OutputHLSL::structInitializerString(int indent, const TStructure &struct
     for (unsigned int fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
     {
         const TField &field = *fields[fieldIndex];
-        const TString &fieldName = rhsStructName + "." + decorate(field.name());
+        const TString &fieldName = rhsStructName + "." + Decorate(field.name());
         const TType &fieldType = *field.type();
 
         if (fieldType.getStruct())
@@ -592,20 +590,20 @@ void OutputHLSL::header()
 
         if (mOutputType == SH_HLSL11_OUTPUT && IsSampler(type.getBasicType()))   // Also declare the texture
         {
-            uniforms += "uniform " + samplerString(type) + " sampler_" + decorateUniform(name, type) + arrayString(type) + 
+            uniforms += "uniform " + SamplerString(type) + " sampler_" + DecorateUniform(name, type) + ArrayString(type) + 
                         " : register(s" + str(registerIndex) + ");\n";
 
-            uniforms += "uniform " + textureString(type) + " texture_" + decorateUniform(name, type) + arrayString(type) +
+            uniforms += "uniform " + TextureString(type) + " texture_" + DecorateUniform(name, type) + ArrayString(type) +
                         " : register(t" + str(registerIndex) + ");\n";
         }
         else
         {
             const TStructure *structure = type.getStruct();
-            const TString &typeName = (structure ? structureTypeName(*structure, false, false) : typeString(type));
+            const TString &typeName = (structure ? QualifiedStructNameString(*structure, false, false) : TypeString(type));
 
             const TString &registerString = TString("register(") + RegisterPrefix(type) + str(registerIndex) + ")";
 
-            uniforms += "uniform " + typeName + " " + decorateUniform(name, type) + arrayString(type) + " : " + registerString + ";\n";
+            uniforms += "uniform " + typeName + " " + DecorateUniform(name, type) + ArrayString(type) + " : " + registerString + ";\n";
         }
     }
 
@@ -661,7 +659,7 @@ void OutputHLSL::header()
         const TStructure &structure = *structNode->getType().getStruct();
         const TString &originalName = mFlaggedStructOriginalNames[structNode];
 
-        flaggedStructs += "static " + decorate(structure.name()) + " " + mappedName + " =\n";
+        flaggedStructs += "static " + Decorate(structure.name()) + " " + mappedName + " =\n";
         flaggedStructs += structInitializerString(0, structure, originalName);
         flaggedStructs += "\n";
     }
@@ -672,8 +670,8 @@ void OutputHLSL::header()
         const TString &name = varying->second->getSymbol();
 
         // Program linking depends on this exact format
-        varyings += "static " + interpolationString(type.getQualifier()) + " " + typeString(type) + " " +
-                    decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+        varyings += "static " + InterpolationString(type.getQualifier()) + " " + TypeString(type) + " " +
+                    Decorate(name) + ArrayString(type) + " = " + initializer(type) + ";\n";
 
         declareVaryingToList(type, type.getQualifier(), name, mActiveVaryings);
     }
@@ -683,9 +681,9 @@ void OutputHLSL::header()
         const TType &type = attribute->second->getType();
         const TString &name = attribute->second->getSymbol();
 
-        attributes += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+        attributes += "static " + TypeString(type) + " " + Decorate(name) + ArrayString(type) + " = " + initializer(type) + ";\n";
 
-        gl::Attribute attributeVar(glVariableType(type), glVariablePrecision(type), name.c_str(),
+        gl::Attribute attributeVar(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
                                (unsigned int)type.getArraySize(), type.getLayoutQualifier().location);
         mActiveAttributes.push_back(attributeVar);
     }
@@ -727,10 +725,10 @@ void OutputHLSL::header()
                 const TType &variableType = outputVariableIt->second->getType();
                 const TLayoutQualifier &layoutQualifier = variableType.getLayoutQualifier();
 
-                out << "static " + typeString(variableType) + " out_" + variableName + arrayString(variableType) +
+                out << "static " + TypeString(variableType) + " out_" + variableName + ArrayString(variableType) +
                        " = " + initializer(variableType) + ";\n";
 
-                gl::Attribute outputVar(glVariableType(variableType), glVariablePrecision(variableType), variableName.c_str(),
+                gl::Attribute outputVar(GLVariableType(variableType), GLVariablePrecision(variableType), variableName.c_str(),
                                     (unsigned int)variableType.getArraySize(), layoutQualifier.location);
                 mActiveOutputVariables.push_back(outputVar);
             }
@@ -1806,17 +1804,17 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
                 mReferencedUniforms[name] = node;
             }
 
-            out << decorateUniform(name, nodeType);
+            out << DecorateUniform(name, nodeType);
         }
         else if (qualifier == EvqAttribute || qualifier == EvqVertexIn)
         {
             mReferencedAttributes[name] = node;
-            out << decorate(name);
+            out << Decorate(name);
         }
-        else if (isVarying(qualifier))
+        else if (IsVarying(qualifier))
         {
             mReferencedVaryings[name] = node;
-            out << decorate(name);
+            out << Decorate(name);
         }
         else if (qualifier == EvqFragmentOut)
         {
@@ -1864,7 +1862,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         }
         else
         {
-            out << decorate(name);
+            out << Decorate(name);
         }
     }
 }
@@ -1987,7 +1985,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             const TStructure* structure = node->getLeft()->getType().getStruct();
             const TIntermConstantUnion* index = node->getRight()->getAsConstantUnion();
             const TField* field = structure->fields()[index->getIConst(0)];
-            out << "." + decorateField(field->name(), *structure);
+            out << "." + DecorateField(field->name(), *structure);
 
             return false;
         }
@@ -1998,7 +1996,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             const TInterfaceBlock* interfaceBlock = node->getLeft()->getType().getInterfaceBlock();
             const TIntermConstantUnion* index = node->getRight()->getAsConstantUnion();
             const TField* field = interfaceBlock->fields()[index->getIConst(0)];
-            out << "." + decorate(field->name());
+            out << "." + Decorate(field->name());
 
             return false;
         }
@@ -2075,9 +2073,9 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 const TField *field = fields[i];
 
                 node->getLeft()->traverse(this);
-                out << "." + decorateField(field->name(), structure) + " == ";
+                out << "." + DecorateField(field->name(), structure) + " == ";
                 node->getRight()->traverse(this);
-                out << "." + decorateField(field->name(), structure);
+                out << "." + DecorateField(field->name(), structure);
 
                 if (i < fields.size() - 1)
                 {
@@ -2255,7 +2253,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 if (variable->getType().getStruct())
                 {
-                    addConstructor(variable->getType(), structNameString(*variable->getType().getStruct()), NULL);
+                    addConstructor(variable->getType(), StructNameString(*variable->getType().getStruct()), NULL);
                 }
 
                 if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
@@ -2265,7 +2263,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         out << "static ";
                     }
 
-                    out << typeString(variable->getType()) + " ";
+                    out << TypeString(variable->getType()) + " ";
 
                     for (TIntermSequence::iterator sit = sequence.begin(); sit != sequence.end(); sit++)
                     {
@@ -2274,7 +2272,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         if (symbol)
                         {
                             symbol->traverse(this);
-                            out << arrayString(symbol->getType());
+                            out << ArrayString(symbol->getType());
                             out << " = " + initializer(symbol->getType());
                         }
                         else
@@ -2294,7 +2292,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 }
                 else UNREACHABLE();
             }
-            else if (variable && isVaryingOut(variable->getQualifier()))
+            else if (variable && IsVaryingOut(variable->getQualifier()))
             {
                 for (TIntermSequence::iterator sit = sequence.begin(); sit != sequence.end(); sit++)
                 {
@@ -2322,7 +2320,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpPrototype:
         if (visit == PreVisit)
         {
-            out << typeString(node->getType()) << " " << decorate(node->getName()) << (mOutputLod0Function ? "Lod0(" : "(");
+            out << TypeString(node->getType()) << " " << Decorate(node->getName()) << (mOutputLod0Function ? "Lod0(" : "(");
 
             TIntermSequence &arguments = node->getSequence();
 
@@ -2360,7 +2358,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             TString name = TFunction::unmangleName(node->getName());
 
-            out << typeString(node->getType()) << " ";
+            out << TypeString(node->getType()) << " ";
 
             if (name == "main")
             {
@@ -2368,7 +2366,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             else
             {
-                out << decorate(name) << (mOutputLod0Function ? "Lod0(" : "(");
+                out << Decorate(name) << (mOutputLod0Function ? "Lod0(" : "(");
             }
 
             TIntermSequence &sequence = node->getSequence();
@@ -2382,7 +2380,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 {
                     if (symbol->getType().getStruct())
                     {
-                        addConstructor(symbol->getType(), structNameString(*symbol->getType().getStruct()), NULL);
+                        addConstructor(symbol->getType(), StructNameString(*symbol->getType().getStruct()), NULL);
                     }
 
                     out << argumentString(symbol);
@@ -2428,7 +2426,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             if (node->isUserDefined())
             {
-                out << decorate(name) << (lod0 ? "Lod0(" : "(");
+                out << Decorate(name) << (lod0 ? "Lod0(" : "(");
             }
             else
             {
@@ -2594,7 +2592,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpConstructMat4:    outputConstructor(visit, node->getType(), "mat4", &node->getSequence());  break;
       case EOpConstructStruct:
         {
-            const TString &structName = structNameString(*node->getType().getStruct());
+            const TString &structName = StructNameString(*node->getType().getStruct());
             addConstructor(node->getType(), structName, &node->getSequence());
             outputTriplet(visit, structName + "_ctor(", ", ", ")");
         }
@@ -3166,181 +3164,16 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     }
     else
     {
-        name = decorate(name);
+        name = Decorate(name);
     }
 
     if (mOutputType == SH_HLSL11_OUTPUT && IsSampler(type.getBasicType()))
     {
-        return qualifierString(qualifier) + " " + textureString(type) + " texture_" + name + arrayString(type) + ", " +
-               qualifierString(qualifier) + " " + samplerString(type) + " sampler_" + name + arrayString(type);        
+        return QualifierString(qualifier) + " " + TextureString(type) + " texture_" + name + ArrayString(type) + ", " +
+               QualifierString(qualifier) + " " + SamplerString(type) + " sampler_" + name + ArrayString(type);        
     }
 
-    return qualifierString(qualifier) + " " + typeString(type) + " " + name + arrayString(type);
-}
-
-TString OutputHLSL::interpolationString(TQualifier qualifier)
-{
-    switch(qualifier)
-    {
-      case EvqVaryingIn:           return "";
-      case EvqFragmentIn:          return "";
-      case EvqInvariantVaryingIn:  return "";
-      case EvqSmoothIn:            return "linear";
-      case EvqFlatIn:              return "nointerpolation";
-      case EvqCentroidIn:          return "centroid";
-      case EvqVaryingOut:          return "";
-      case EvqVertexOut:           return "";
-      case EvqInvariantVaryingOut: return "";
-      case EvqSmoothOut:           return "linear";
-      case EvqFlatOut:             return "nointerpolation";
-      case EvqCentroidOut:         return "centroid";
-      default: UNREACHABLE();
-    }
-
-    return "";
-}
-
-TString OutputHLSL::qualifierString(TQualifier qualifier)
-{
-    switch(qualifier)
-    {
-      case EvqIn:            return "in";
-      case EvqOut:           return "inout"; // 'out' results in an HLSL error if not all fields are written, for GLSL it's undefined
-      case EvqInOut:         return "inout";
-      case EvqConstReadOnly: return "const";
-      default: UNREACHABLE();
-    }
-
-    return "";
-}
-
-TString OutputHLSL::typeString(const TType &type)
-{
-    const TStructure* structure = type.getStruct();
-    if (structure)
-    {
-        const TString& typeName = structure->name();
-        if (typeName != "")
-        {
-            return structNameString(*type.getStruct());
-        }
-        else   // Nameless structure, define in place
-        {
-            return structureString(*structure, false, false);
-        }
-    }
-    else if (type.isMatrix())
-    {
-        int cols = type.getCols();
-        int rows = type.getRows();
-        return "float" + str(cols) + "x" + str(rows);
-    }
-    else
-    {
-        switch (type.getBasicType())
-        {
-          case EbtFloat:
-            switch (type.getNominalSize())
-            {
-              case 1: return "float";
-              case 2: return "float2";
-              case 3: return "float3";
-              case 4: return "float4";
-            }
-          case EbtInt:
-            switch (type.getNominalSize())
-            {
-              case 1: return "int";
-              case 2: return "int2";
-              case 3: return "int3";
-              case 4: return "int4";
-            }
-          case EbtUInt:
-            switch (type.getNominalSize())
-            {
-              case 1: return "uint";
-              case 2: return "uint2";
-              case 3: return "uint3";
-              case 4: return "uint4";
-            }
-          case EbtBool:
-            switch (type.getNominalSize())
-            {
-              case 1: return "bool";
-              case 2: return "bool2";
-              case 3: return "bool3";
-              case 4: return "bool4";
-            }
-          case EbtVoid:
-            return "void";
-          case EbtSampler2D:
-          case EbtISampler2D:
-          case EbtUSampler2D:
-          case EbtSampler2DArray:
-          case EbtISampler2DArray:
-          case EbtUSampler2DArray:
-            return "sampler2D";
-          case EbtSamplerCube:
-          case EbtISamplerCube:
-          case EbtUSamplerCube:
-            return "samplerCUBE";
-          case EbtSamplerExternalOES:
-            return "sampler2D";
-          default:
-            break;
-        }
-    }
-
-    UNREACHABLE();
-    return "<unknown type>";
-}
-
-TString OutputHLSL::textureString(const TType &type)
-{
-    switch (type.getBasicType())
-    {
-      case EbtSampler2D:            return "Texture2D";
-      case EbtSamplerCube:          return "TextureCube";
-      case EbtSamplerExternalOES:   return "Texture2D";
-      case EbtSampler2DArray:       return "Texture2DArray";
-      case EbtSampler3D:            return "Texture3D";
-      case EbtISampler2D:           return "Texture2D<int4>";
-      case EbtISampler3D:           return "Texture3D<int4>";
-      case EbtISamplerCube:         return "Texture2DArray<int4>";
-      case EbtISampler2DArray:      return "Texture2DArray<int4>";
-      case EbtUSampler2D:           return "Texture2D<uint4>";
-      case EbtUSampler3D:           return "Texture3D<uint4>";
-      case EbtUSamplerCube:         return "Texture2DArray<uint4>";
-      case EbtUSampler2DArray:      return "Texture2DArray<uint4>";
-      case EbtSampler2DShadow:      return "Texture2D";
-      case EbtSamplerCubeShadow:    return "TextureCube";
-      case EbtSampler2DArrayShadow: return "Texture2DArray";
-      default: UNREACHABLE();
-    }
-    
-    return "<unknown texture type>";
-}
-
-TString OutputHLSL::samplerString(const TType &type)
-{
-    if (IsShadowSampler(type.getBasicType()))
-    {
-        return "SamplerComparisonState";
-    }
-    else
-    {
-        return "SamplerState";
-    }
-}
-
-TString OutputHLSL::arrayString(const TType &type)
-{
-    if (!type.isArray())
-    {
-        return "";
-    }
-
-    return "[" + str(type.getArraySize()) + "]";
+    return QualifierString(qualifier) + " " + TypeString(type) + " " + name + ArrayString(type);
 }
 
 TString OutputHLSL::initializer(const TType &type)
@@ -3361,18 +3194,36 @@ TString OutputHLSL::initializer(const TType &type)
     return "{" + string + "}";
 }
 
-TString OutputHLSL::structureString(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing)
+TString OutputHLSL::defineNamelessStruct(const TStructure &structure)
+{
+    return defineStruct(structure, false, false, NULL);
+}
+
+TString OutputHLSL::defineQualifiedStruct(const TStructure &structure, bool useHLSLRowMajorPacking,
+                                          bool useStd140Packing)
+{
+    if (useStd140Packing)
+    {
+        Std140PaddingHelper padHelper(mStd140StructElementIndexes);
+        return defineStruct(structure, useHLSLRowMajorPacking, true, &padHelper);
+    }
+    else
+    {
+        return defineStruct(structure, useHLSLRowMajorPacking, false, NULL);
+    }
+}
+
+TString OutputHLSL::defineStruct(const TStructure &structure, bool useHLSLRowMajorPacking,
+                                 bool useStd140Packing, Std140PaddingHelper *padHelper)
 {
     const TFieldList &fields = structure.fields();
     const bool isNameless = (structure.name() == "");
-    const TString &structName = structureTypeName(structure, useHLSLRowMajorPacking, useStd140Packing);
+    const TString &structName = QualifiedStructNameString(structure, useHLSLRowMajorPacking, useStd140Packing);
     const TString declareString = (isNameless ? "struct" : "struct " + structName);
 
     TString string;
     string += declareString + "\n"
               "{\n";
-
-    Std140PaddingHelper padHelper(mStd140StructElementIndexes);
 
     for (unsigned int i = 0; i < fields.size(); i++)
     {
@@ -3380,19 +3231,20 @@ TString OutputHLSL::structureString(const TStructure &structure, bool useHLSLRow
         const TType &fieldType = *field.type();
         const TStructure *fieldStruct = fieldType.getStruct();
         const TString &fieldTypeString = fieldStruct ?
-                                         structureTypeName(*fieldStruct, useHLSLRowMajorPacking, useStd140Packing) :
-                                         typeString(fieldType);
+                                         QualifiedStructNameString(*fieldStruct, useHLSLRowMajorPacking,
+                                                                   useStd140Packing) :
+                                         TypeString(fieldType);
 
-        if (useStd140Packing)
+        if (padHelper)
         {
-            string += padHelper.prePaddingString(fieldType);
+            string += padHelper->prePaddingString(fieldType);
         }
 
-        string += "    " + fieldTypeString + " " + decorateField(field.name(), structure) + arrayString(fieldType) + ";\n";
+        string += "    " + fieldTypeString + " " + DecorateField(field.name(), structure) + ArrayString(fieldType) + ";\n";
 
-        if (useStd140Packing)
+        if (padHelper)
         {
-            string += padHelper.postPaddingString(fieldType, useHLSLRowMajorPacking);
+            string += padHelper->postPaddingString(fieldType, useHLSLRowMajorPacking);
         }
     }
 
@@ -3400,32 +3252,6 @@ TString OutputHLSL::structureString(const TStructure &structure, bool useHLSLRow
     string += (isNameless ? "} " : "};\n");
 
     return string;
-}
-
-TString OutputHLSL::structureTypeName(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing)
-{
-    if (structure.name() == "")
-    {
-        return "";
-    }
-
-    TString prefix = "";
-
-    // Structs packed with row-major matrices in HLSL are prefixed with "rm"
-    // GLSL column-major maps to HLSL row-major, and the converse is true
-
-    if (useStd140Packing)
-    {
-        prefix += "std";
-    }
-
-    if (useHLSLRowMajorPacking)
-    {
-        if (prefix != "") prefix += "_";
-        prefix += "rm";
-    }
-
-    return prefix + structNameString(structure);
 }
 
 void OutputHLSL::outputConstructor(Visit visit, const TType &type, const TString &name, const TIntermSequence *parameters)
@@ -3477,18 +3303,18 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
         storeStd140ElementIndex(*structure, false);
         storeStd140ElementIndex(*structure, true);
 
-        const TString &structString = structureString(*structure, false, false);
+        const TString &structString = defineQualifiedStruct(*structure, false, false);
 
         if (std::find(mStructDeclarations.begin(), mStructDeclarations.end(), structString) == mStructDeclarations.end())
         {
             // Add row-major packed struct for interface blocks
             TString rowMajorString = "#pragma pack_matrix(row_major)\n" +
-                                     structureString(*structure, true, false) +
+                                     defineQualifiedStruct(*structure, true, false) +
                                      "#pragma pack_matrix(column_major)\n";
 
-            TString std140String = structureString(*structure, false, true);
+            TString std140String = defineQualifiedStruct(*structure, false, true);
             TString std140RowMajorString = "#pragma pack_matrix(row_major)\n" +
-                                           structureString(*structure, true, true) +
+                                           defineQualifiedStruct(*structure, true, true) +
                                            "#pragma pack_matrix(column_major)\n";
 
             mStructDeclarations.push_back(structString);
@@ -3520,14 +3346,14 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
     }
     else   // Built-in type
     {
-        constructor += typeString(ctorType) + " " + name + "(";
+        constructor += TypeString(ctorType) + " " + name + "(";
     }
 
     for (unsigned int parameter = 0; parameter < ctorParameters.size(); parameter++)
     {
         const TType &type = ctorParameters[parameter];
 
-        constructor += typeString(type) + " x" + str(parameter) + arrayString(type);
+        constructor += TypeString(type) + " x" + str(parameter) + ArrayString(type);
 
         if (parameter < ctorParameters.size() - 1)
         {
@@ -3544,7 +3370,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
     }
     else
     {
-        constructor += "    return " + typeString(ctorType) + "(";
+        constructor += "    return " + TypeString(ctorType) + "(";
     }
 
     if (ctorType.isMatrix() && ctorParameters.size() == 1)
@@ -3715,7 +3541,7 @@ void OutputHLSL::storeStd140ElementIndex(const TStructure &structure, bool useHL
     }
 
     // Add remaining element index to the global map, for use with nested structs in standard layouts
-    const TString &structName = structureTypeName(structure, useHLSLRowMajorPacking, true);
+    const TString &structName = QualifiedStructNameString(structure, useHLSLRowMajorPacking, true);
     mStd140StructElementIndexes[structName] = padHelper.elementIndex();
 }
 
@@ -3726,7 +3552,7 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
     const TStructure* structure = type.getStruct();
     if (structure)
     {
-        out << structNameString(*structure) + "_ctor(";
+        out << StructNameString(*structure) + "_ctor(";
         
         const TFieldList& fields = structure->fields();
 
@@ -3751,7 +3577,7 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
         
         if (writeType)
         {
-            out << typeString(type) << "(";
+            out << TypeString(type) << "(";
         }
 
         for (size_t i = 0; i < size; i++, constUnion++)
@@ -3780,46 +3606,6 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
     return constUnion;
 }
 
-TString OutputHLSL::structNameString(const TStructure &structure)
-{
-    if (structure.name().empty())
-    {
-        return "";
-    }
-
-    return "ss_" + str(structure.uniqueId()) + structure.name();
-}
-
-TString OutputHLSL::decorate(const TString &string)
-{
-    if (string.compare(0, 3, "gl_") != 0)
-    {
-        return "_" + string;
-    }
-    
-    return string;
-}
-
-TString OutputHLSL::decorateUniform(const TString &string, const TType &type)
-{
-    if (type.getBasicType() == EbtSamplerExternalOES)
-    {
-        return "ex_" + string;
-    }
-    
-    return decorate(string);
-}
-
-TString OutputHLSL::decorateField(const TString &string, const TStructure &structure)
-{
-    if (structure.name().compare(0, 3, "gl_") != 0)
-    {
-        return decorate(string);
-    }
-
-    return string;
-}
-
 void OutputHLSL::declareInterfaceBlockField(const TType &type, const TString &name, std::vector<gl::InterfaceBlockField>& output)
 {
     const TStructure *structure = type.getStruct();
@@ -3827,7 +3613,7 @@ void OutputHLSL::declareInterfaceBlockField(const TType &type, const TString &na
     if (!structure)
     {
         const bool isRowMajorMatrix = (type.isMatrix() && type.getLayoutQualifier().matrixPacking == EmpRowMajor);
-        gl::InterfaceBlockField field(glVariableType(type), glVariablePrecision(type), name.c_str(),
+        gl::InterfaceBlockField field(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
                                       (unsigned int)type.getArraySize(), isRowMajorMatrix);
         output.push_back(field);
    }
@@ -3858,7 +3644,7 @@ gl::Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &n
 
     if (!structure)
     {
-        gl::Uniform uniform(glVariableType(type), glVariablePrecision(type), name.c_str(),
+        gl::Uniform uniform(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
                             (unsigned int)type.getArraySize(), (unsigned int)registerIndex, 0);
         output.push_back(uniform);
 
@@ -3888,39 +3674,14 @@ gl::Uniform OutputHLSL::declareUniformToList(const TType &type, const TString &n
     }
 }
 
-gl::InterpolationType getInterpolationType(TQualifier qualifier)
-{
-    switch (qualifier)
-    {
-      case EvqFlatIn:
-      case EvqFlatOut:
-        return gl::INTERPOLATION_FLAT;
-
-      case EvqSmoothIn:
-      case EvqSmoothOut:
-      case EvqVertexOut:
-      case EvqFragmentIn:
-      case EvqVaryingIn:
-      case EvqVaryingOut:
-        return gl::INTERPOLATION_SMOOTH;
-
-      case EvqCentroidIn:
-      case EvqCentroidOut:
-        return gl::INTERPOLATION_CENTROID;
-
-      default: UNREACHABLE();
-        return gl::INTERPOLATION_SMOOTH;
-    }
-}
-
 void OutputHLSL::declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<gl::Varying>& fieldsOut)
 {
     const TStructure *structure = type.getStruct();
 
-    gl::InterpolationType interpolation = getInterpolationType(baseTypeQualifier);
+    gl::InterpolationType interpolation = GetInterpolationType(baseTypeQualifier);
     if (!structure)
     {
-        gl::Varying varying(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), interpolation);
+        gl::Varying varying(GLVariableType(type), GLVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), interpolation);
         fieldsOut.push_back(varying);
     }
     else
@@ -3956,210 +3717,6 @@ int OutputHLSL::declareUniformAndAssignRegister(const TType &type, const TString
     }
 
     return registerIndex;
-}
-
-GLenum OutputHLSL::glVariableType(const TType &type)
-{
-    if (type.getBasicType() == EbtFloat)
-    {
-        if (type.isScalar())
-        {
-            return GL_FLOAT;
-        }
-        else if (type.isVector())
-        {
-            switch(type.getNominalSize())
-            {
-              case 2: return GL_FLOAT_VEC2;
-              case 3: return GL_FLOAT_VEC3;
-              case 4: return GL_FLOAT_VEC4;
-              default: UNREACHABLE();
-            }
-        }
-        else if (type.isMatrix())
-        {
-            switch (type.getCols())
-            {
-              case 2:
-                switch(type.getRows())
-                {
-                  case 2: return GL_FLOAT_MAT2;
-                  case 3: return GL_FLOAT_MAT2x3;
-                  case 4: return GL_FLOAT_MAT2x4;
-                  default: UNREACHABLE();
-                }
-
-              case 3:
-                switch(type.getRows())
-                {
-                  case 2: return GL_FLOAT_MAT3x2;
-                  case 3: return GL_FLOAT_MAT3;
-                  case 4: return GL_FLOAT_MAT3x4;
-                  default: UNREACHABLE();
-                }
-
-              case 4:
-                switch(type.getRows())
-                {
-                  case 2: return GL_FLOAT_MAT4x2;
-                  case 3: return GL_FLOAT_MAT4x3;
-                  case 4: return GL_FLOAT_MAT4;
-                  default: UNREACHABLE();
-                }
-
-              default: UNREACHABLE();
-            }
-        }
-        else UNREACHABLE();
-    }
-    else if (type.getBasicType() == EbtInt)
-    {
-        if (type.isScalar())
-        {
-            return GL_INT;
-        }
-        else if (type.isVector())
-        {
-            switch(type.getNominalSize())
-            {
-              case 2: return GL_INT_VEC2;
-              case 3: return GL_INT_VEC3;
-              case 4: return GL_INT_VEC4;
-              default: UNREACHABLE();
-            }
-        }
-        else UNREACHABLE();
-    }
-    else if (type.getBasicType() == EbtUInt)
-    {
-        if (type.isScalar())
-        {
-            return GL_UNSIGNED_INT;
-        }
-        else if (type.isVector())
-        {
-            switch(type.getNominalSize())
-            {
-              case 2: return GL_UNSIGNED_INT_VEC2;
-              case 3: return GL_UNSIGNED_INT_VEC3;
-              case 4: return GL_UNSIGNED_INT_VEC4;
-              default: UNREACHABLE();
-            }
-        }
-        else UNREACHABLE();
-    }
-    else if (type.getBasicType() == EbtBool)
-    {
-        if (type.isScalar())
-        {
-            return GL_BOOL;
-        }
-        else if (type.isVector())
-        {
-            switch(type.getNominalSize())
-            {
-              case 2: return GL_BOOL_VEC2;
-              case 3: return GL_BOOL_VEC3;
-              case 4: return GL_BOOL_VEC4;
-              default: UNREACHABLE();
-            }
-        }
-        else UNREACHABLE();
-    }
-
-    switch(type.getBasicType())
-    {
-      case EbtSampler2D:            return GL_SAMPLER_2D;
-      case EbtSampler3D:            return GL_SAMPLER_3D;
-      case EbtSamplerCube:          return GL_SAMPLER_CUBE;
-      case EbtSampler2DArray:       return GL_SAMPLER_2D_ARRAY;
-      case EbtISampler2D:           return GL_INT_SAMPLER_2D;
-      case EbtISampler3D:           return GL_INT_SAMPLER_3D;
-      case EbtISamplerCube:         return GL_INT_SAMPLER_CUBE;
-      case EbtISampler2DArray:      return GL_INT_SAMPLER_2D_ARRAY;
-      case EbtUSampler2D:           return GL_UNSIGNED_INT_SAMPLER_2D;
-      case EbtUSampler3D:           return GL_UNSIGNED_INT_SAMPLER_3D;
-      case EbtUSamplerCube:         return GL_UNSIGNED_INT_SAMPLER_CUBE;
-      case EbtUSampler2DArray:      return GL_UNSIGNED_INT_SAMPLER_2D_ARRAY;
-      case EbtSampler2DShadow:      return GL_SAMPLER_2D_SHADOW;
-      case EbtSamplerCubeShadow:    return GL_SAMPLER_CUBE_SHADOW;
-      case EbtSampler2DArrayShadow: return GL_SAMPLER_2D_ARRAY_SHADOW;
-      default: UNREACHABLE();
-    }
-
-    return GL_NONE;
-}
-
-GLenum OutputHLSL::glVariablePrecision(const TType &type)
-{
-    if (type.getBasicType() == EbtFloat)
-    {
-        switch (type.getPrecision())
-        {
-          case EbpHigh:   return GL_HIGH_FLOAT;
-          case EbpMedium: return GL_MEDIUM_FLOAT;
-          case EbpLow:    return GL_LOW_FLOAT;
-          case EbpUndefined:
-            // Should be defined as the default precision by the parser
-          default: UNREACHABLE();
-        }
-    }
-    else if (type.getBasicType() == EbtInt || type.getBasicType() == EbtUInt)
-    {
-        switch (type.getPrecision())
-        {
-          case EbpHigh:   return GL_HIGH_INT;
-          case EbpMedium: return GL_MEDIUM_INT;
-          case EbpLow:    return GL_LOW_INT;
-          case EbpUndefined:
-            // Should be defined as the default precision by the parser
-          default: UNREACHABLE();
-        }
-    }
-
-    // Other types (boolean, sampler) don't have a precision
-    return GL_NONE;
-}
-
-bool OutputHLSL::isVaryingOut(TQualifier qualifier)
-{
-    switch(qualifier)
-    {
-      case EvqVaryingOut:
-      case EvqInvariantVaryingOut:
-      case EvqSmoothOut:
-      case EvqFlatOut:
-      case EvqCentroidOut:
-      case EvqVertexOut:
-        return true;
-
-      default: break;
-    }
-
-    return false;
-}
-
-bool OutputHLSL::isVaryingIn(TQualifier qualifier)
-{
-    switch(qualifier)
-    {
-      case EvqVaryingIn:
-      case EvqInvariantVaryingIn:
-      case EvqSmoothIn:
-      case EvqFlatIn:
-      case EvqCentroidIn:
-      case EvqFragmentIn:
-        return true;
-
-      default: break;
-    }
-
-    return false;
-}
-
-bool OutputHLSL::isVarying(TQualifier qualifier)
-{
-    return isVaryingIn(qualifier) || isVaryingOut(qualifier);
 }
 
 }
