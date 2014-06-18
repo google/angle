@@ -22,6 +22,53 @@
       "revId": "5647f8e987aa47a89d3421b199a4276d3b52f8eb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6471f9c6_7fb0a715",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-18T18:38:44Z",
+      "side": 1,
+      "message": "Perhaps the wording is confusing, however I think the comment is correct. \"we use a special semantic for point sprite texcoords\" -- that\u0027s gl_PointCoord, which in SM3 is a special TEXCOORD. I was trying to use the same comment verbatim as below.",
+      "parentUuid": "6471f9c6_3f7f8f85",
+      "range": {
+        "startLine": 457,
+        "startChar": 0,
+        "endLine": 458,
+        "endChar": 60
+      },
+      "revId": "5647f8e987aa47a89d3421b199a4276d3b52f8eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6471f9c6_1fa5ebd6",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-18T18:38:44Z",
+      "side": 1,
+      "message": "eg.",
+      "range": {
+        "startLine": 536,
+        "startChar": 11,
+        "endLine": 536,
+        "endChar": 18
+      },
+      "revId": "5647f8e987aa47a89d3421b199a4276d3b52f8eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
