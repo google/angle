@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6471f9c6_3f7f8f85",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-06-18T18:33:15Z",
+      "side": 1,
+      "message": "It\u0027s the other way around. When gl_PointSize is written we assume the shader will be used to render points and we want to use the COLOR semantic because the TEXCOORD semantic automatically overrides the varyings to interpolate from 0 to 1 across the point sprite.",
+      "range": {
+        "startLine": 457,
+        "startChar": 0,
+        "endLine": 458,
+        "endChar": 60
+      },
+      "revId": "5647f8e987aa47a89d3421b199a4276d3b52f8eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
