@@ -2632,6 +2632,8 @@ ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length
                 for (size_t i = 0; i < transformFeedbackVaryings.size(); i++)
                 {
                     const gl::LinkedVarying &varying = transformFeedbackVaryings[i];
+                    GLenum transposedType = gl::TransposeMatrixType(varying.type);
+
                     for (size_t j = 0; j < varying.semanticIndexCount; j++)
                     {
                         D3D11_SO_DECLARATION_ENTRY entry = { 0 };
@@ -2639,7 +2641,7 @@ ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length
                         entry.SemanticName = varying.semanticName.c_str();
                         entry.SemanticIndex = varying.semanticIndex + j;
                         entry.StartComponent = 0;
-                        entry.ComponentCount = gl::VariableRowCount(type);
+                        entry.ComponentCount = gl::VariableColumnCount(transposedType);
                         entry.OutputSlot = (separatedOutputBuffers ? i : 0);
                         soDeclaration.push_back(entry);
                     }
