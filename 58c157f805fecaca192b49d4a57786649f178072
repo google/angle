@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4466b513_1b009f99",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-18T13:55:26Z",
+      "side": 1,
+      "message": "does mMappedStorage need to be nulled here?",
+      "range": {
+        "startLine": 301,
+        "startChar": 4,
+        "endLine": 301,
+        "endChar": 26
+      },
+      "revId": "58c157f805fecaca192b49d4a57786649f178072",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6471f9c6_dc19c192",
+        "filename": "src/libGLESv2/renderer/d3d11/BufferStorage11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-18T13:55:26Z",
+      "side": 1,
+      "message": "Can we merge this with the if statement below? if (latestStorage \u0026\u0026 usage checks) ?",
+      "range": {
+        "startLine": 506,
+        "startChar": 4,
+        "endLine": 509,
+        "endChar": 5
+      },
+      "revId": "58c157f805fecaca192b49d4a57786649f178072",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
