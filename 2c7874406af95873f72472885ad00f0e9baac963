@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6471f9c6_7c2bd5a3",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2635,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-18T13:50:40Z",
+      "side": 1,
+      "message": "Either rename this to transposedColumnCount (with non-GLenum type) or do the VariableColumnCount function call when assigning below.",
+      "range": {
+        "startLine": 2635,
+        "startChar": 20,
+        "endLine": 2635,
+        "endChar": 41
+      },
+      "revId": "2c7874406af95873f72472885ad00f0e9baac963",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
