@@ -504,8 +504,9 @@ size_t GetMaximumSimultaneousRenderTargets(D3D_FEATURE_LEVEL featureLevel)
       case D3D_FEATURE_LEVEL_11_1:
       case D3D_FEATURE_LEVEL_11_0: return D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT;
 
+      // FIXME(geofflang): Work around NVIDIA driver bug by repacking buffers
       case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0: return D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT;
+      case D3D_FEATURE_LEVEL_10_0: return 1; /* D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT; */
 
       case D3D_FEATURE_LEVEL_9_3:  return D3D_FL9_3_SIMULTANEOUS_RENDER_TARGET_COUNT;
       case D3D_FEATURE_LEVEL_9_2:

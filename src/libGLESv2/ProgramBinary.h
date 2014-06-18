@@ -244,7 +244,9 @@ class ProgramBinary : public RefCountObject
         PixelExecutable(const std::vector<GLenum> &outputSignature, rx::ShaderExecutable *shaderExecutable);
         ~PixelExecutable();
 
-        bool matchesSignature(const std::vector<GLenum> &signature) const { return mOutputSignature == signature; }
+        // FIXME(geofflang): Work around NVIDIA driver bug by repacking buffers
+        bool matchesSignature(const std::vector<GLenum> &signature) const { return true; /* mOutputSignature == signature; */ }
+
         const std::vector<GLenum> &outputSignature() const { return mOutputSignature; }
         rx::ShaderExecutable *shaderExecutable() const { return mShaderExecutable; }
 
