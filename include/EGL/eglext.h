@@ -438,6 +438,26 @@ EGLAPI EGLBoolean EGLAPIENTRY eglQuerySurfacePointerANGLE (EGLDisplay dpy, EGLSu
 #define EGL_ANGLE_surface_d3d_texture_2d_share_handle 1
 #endif /* EGL_ANGLE_surface_d3d_texture_2d_share_handle */
 
+#ifndef EGL_ANGLE_platform_angle
+#define EGL_ANGLE_platform_angle 1
+#define EGL_PLATFORM_ANGLE_ANGLE          0x3201
+#define EGL_PLATFORM_ANGLE_TYPE_ANGLE     0x3202
+#define EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE 0x3203
+#endif /* EGL_ANGLE_platform_angle */
+
+#ifndef EGL_ANGLE_platform_angle_d3d
+#define EGL_ANGLE_platform_angle_d3d 1
+#define EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE 0x3204
+#define EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE 0x3205
+#define EGL_PLATFORM_ANGLE_TYPE_D3D11_WARP_ANGLE 0x3206
+#endif /* EGL_ANGLE_platform_angle_d3d */
+
+#ifndef EGL_ANGLE_platform_angle_opengl
+#define EGL_ANGLE_platform_angle_opengl 1
+#define EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE 0x3207
+#define EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE 0x3208
+#endif /* EGL_ANGLE_platform_angle_opengl */
+
 #ifndef EGL_ARM_pixmap_multisample_discard
 #define EGL_ARM_pixmap_multisample_discard 1
 #define EGL_DISCARD_SAMPLES_ARM           0x3286

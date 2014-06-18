@@ -33,7 +33,7 @@ class Blit9;
 class Renderer9 : public Renderer
 {
   public:
-    Renderer9(egl::Display *display, HDC hDc);
+    Renderer9(egl::Display *display, EGLNativeDisplayType hDc, EGLint requestedDisplay);
     virtual ~Renderer9();
 
     static Renderer9 *makeRenderer9(Renderer *renderer);

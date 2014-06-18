@@ -68,7 +68,10 @@ enum
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM4 = 16
 };
 
-Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(hDc)
+Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, EGLint requestedDisplay)
+    : Renderer(display),
+      mDc(hDc),
+      mRequestedDisplay(requestedDisplay)
 {
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
@@ -152,11 +155,17 @@ EGLint Renderer11::initialize()
         D3D_FEATURE_LEVEL_10_0,
     };
 
+    D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
+    if (mRequestedDisplay == EGL_PLATFORM_ANGLE_TYPE_D3D11_WARP_ANGLE)
+    {
+        driverType = D3D_DRIVER_TYPE_WARP;
+    }
+
     HRESULT result = S_OK;
 
 #ifdef _DEBUG
     result = D3D11CreateDevice(NULL,
-                               D3D_DRIVER_TYPE_HARDWARE,
+                               driverType,
                                NULL,
                                D3D11_CREATE_DEVICE_DEBUG,
                                featureLevels,
@@ -175,7 +184,7 @@ EGLint Renderer11::initialize()
 #endif
     {
         result = D3D11CreateDevice(NULL,
-                                   D3D_DRIVER_TYPE_HARDWARE,
+                                   driverType,
                                    NULL,
                                    0,
                                    featureLevels,

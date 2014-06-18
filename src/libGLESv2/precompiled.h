@@ -8,6 +8,7 @@
 
 #include "angle_gl.h"
 #include <EGL/egl.h>
+#include <EGL/eglext.h>
 
 #include <assert.h>
 #include <cstddef>
