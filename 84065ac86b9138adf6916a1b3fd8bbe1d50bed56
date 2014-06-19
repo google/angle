@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4932916_4c4f47f2",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:54:48Z",
+      "side": 0,
+      "message": "changing these checks, combined with changing our max supported viewport size from 16k to 32k, makes me a little bit cautious -- I recall back in Ottawa at TG we had to debug a WebGL test that used a very large viewport size, and this is why the code went in. Can you make sure you run the related WebGL tests (or possibly all tests) and make sure there\u0027s no errors/warnings dealing with textures or viewport size?",
+      "range": {
+        "startLine": 737,
+        "startChar": 4,
+        "endLine": 738,
+        "endChar": 15
+      },
+      "revId": "84065ac86b9138adf6916a1b3fd8bbe1d50bed56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a49db127_64ab40ad",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2075,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:54:48Z",
+      "side": 0,
+      "message": "re",
+      "range": {
+        "startLine": 2075,
+        "startChar": 15,
+        "endLine": 2075,
+        "endChar": 51
+      },
+      "revId": "84065ac86b9138adf6916a1b3fd8bbe1d50bed56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4cbf13b_ba54ed30",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 9837,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:54:48Z",
+      "side": 1,
+      "message": "very nit: should be unsigned int! (since setDrawBufferState\u0027s first argument is not a GL argument, but an internal one)",
+      "range": {
+        "startLine": 9837,
+        "startChar": 17,
+        "endLine": 9837,
+        "endChar": 23
+      },
+      "revId": "0e0dc44e5fe7c97788530989a4742848786fe8e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4932916_cc33577b",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:54:48Z",
+      "side": 1,
+      "message": "is this the only place you use one of the new helper functions? In any case, it\u0027s duplicate information from what\u0027s already available in caps, and I don\u0027t think you need it",
+      "range": {
+        "startLine": 730,
+        "startChar": 46,
+        "endLine": 730,
+        "endChar": 69
+      },
+      "revId": "0e0dc44e5fe7c97788530989a4742848786fe8e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6471f9c6_8eb0e716",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:54:48Z",
+      "side": 1,
+      "message": "nit: use Range! (better to use math library style types rather than things such as template\u003cfloat, float, float, float\u003e vec4)",
+      "range": {
+        "startLine": 730,
+        "startChar": 10,
+        "endLine": 730,
+        "endChar": 29
+      },
+      "revId": "0e0dc44e5fe7c97788530989a4742848786fe8e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4932916_8c2eaf1a",
+        "filename": "src/libGLESv2/renderer/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:54:48Z",
+      "side": 1,
+      "message": "this will double our effective max viewport size",
+      "range": {
+        "startLine": 644,
+        "startChar": 42,
+        "endLine": 644,
+        "endChar": 67
+      },
+      "revId": "0e0dc44e5fe7c97788530989a4742848786fe8e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04ae7d65_0694da2b",
+        "filename": "src/libGLESv2/renderer/d3d11/renderer11_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:54:48Z",
+      "side": 1,
+      "message": "I don\u0027t think you need to expose any of these functions, if they, inside this cpp file, fill out the caps",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 63
+      },
+      "revId": "0e0dc44e5fe7c97788530989a4742848786fe8e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
