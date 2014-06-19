@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a4cbf13b_3a70fdea",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:21:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6471f9c6_fcfcc51e",
+      "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4466b513_be3641d3",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-06-18T20:43:12Z",
       "side": 1,
       "message": "nit: four indents instead of two",
+      "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4cbf13b_1a6bc103",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:21:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4466b513_be3641d3",
       "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "84ba6d9a_907ebcbb",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:21:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4cbf13b_ae95975d",
+      "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04c59d23_113f2ea6",
         "filename": "src/compiler/translator/UniformHLSL.h",
         "patchSetId": 3
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "a4cbf13b_da845987",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:21:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04c59d23_113f2ea6",
+      "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4cbf13b_ce2fc37b",
         "filename": "src/compiler/translator/UniformHLSL.h",
         "patchSetId": 3
@@ -81,6 +153,24 @@
       "writtenOn": "2014-06-18T20:43:12Z",
       "side": 1,
       "message": "All these six *String functions should not be members of this class, as they don\u0027t touch the members at all.  They should simply be local helper functions in .cpp \u0027s anonymous namespace.",
+      "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4cbf13b_fa811574",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T14:21:24Z",
+      "side": 1,
+      "message": "One method uses mStructureHLSL to get a padding helper, which wraps some non-static data. Two others call the aforementioned, and the others I made into static helpers.",
+      "parentUuid": "a4cbf13b_ce2fc37b",
       "revId": "bb525003fb3cc662c5a9075149994b6b73b10e8e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
