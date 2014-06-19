@@ -31,86 +31,44 @@ FramebufferAttachment::~FramebufferAttachment()
 {
 }
 
-GLuint FramebufferAttachment::getRedSize(int clientVersion) const
+GLuint FramebufferAttachment::getRedSize() const
 {
-    if (gl::GetRedBits(getInternalFormat(), clientVersion) > 0)
-    {
-        return gl::GetRedBits(getActualFormat(), clientVersion);
-    }
-    else
-    {
-        return 0;
-    }
+    return (gl::GetRedBits(getInternalFormat()) > 0) ? gl::GetRedBits(getActualFormat()) : 0;
 }
 
-GLuint FramebufferAttachment::getGreenSize(int clientVersion) const
+GLuint FramebufferAttachment::getGreenSize() const
 {
-    if (gl::GetGreenBits(getInternalFormat(), clientVersion) > 0)
-    {
-        return gl::GetGreenBits(getActualFormat(), clientVersion);
-    }
-    else
-    {
-        return 0;
-    }
+    return (gl::GetGreenBits(getInternalFormat()) > 0) ? gl::GetGreenBits(getActualFormat()) : 0;
 }
 
-GLuint FramebufferAttachment::getBlueSize(int clientVersion) const
+GLuint FramebufferAttachment::getBlueSize() const
 {
-    if (gl::GetBlueBits(getInternalFormat(), clientVersion) > 0)
-    {
-        return gl::GetBlueBits(getActualFormat(), clientVersion);
-    }
-    else
-    {
-        return 0;
-    }
+    return (gl::GetBlueBits(getInternalFormat()) > 0) ? gl::GetBlueBits(getActualFormat()) : 0;
 }
 
-GLuint FramebufferAttachment::getAlphaSize(int clientVersion) const
+GLuint FramebufferAttachment::getAlphaSize() const
 {
-    if (gl::GetAlphaBits(getInternalFormat(), clientVersion) > 0)
-    {
-        return gl::GetAlphaBits(getActualFormat(), clientVersion);
-    }
-    else
-    {
-        return 0;
-    }
+    return (gl::GetAlphaBits(getInternalFormat()) > 0) ? gl::GetAlphaBits(getActualFormat()) : 0;
 }
 
-GLuint FramebufferAttachment::getDepthSize(int clientVersion) const
+GLuint FramebufferAttachment::getDepthSize() const
 {
-    if (gl::GetDepthBits(getInternalFormat(), clientVersion) > 0)
-    {
-        return gl::GetDepthBits(getActualFormat(), clientVersion);
-    }
-    else
-    {
-        return 0;
-    }
+    return (gl::GetDepthBits(getInternalFormat()) > 0) ? gl::GetDepthBits(getActualFormat()) : 0;
 }
 
-GLuint FramebufferAttachment::getStencilSize(int clientVersion) const
+GLuint FramebufferAttachment::getStencilSize() const
 {
-    if (gl::GetStencilBits(getInternalFormat(), clientVersion) > 0)
-    {
-        return gl::GetStencilBits(getActualFormat(), clientVersion);
-    }
-    else
-    {
-        return 0;
-    }
+    return (gl::GetStencilBits(getInternalFormat()) > 0) ? gl::GetStencilBits(getActualFormat()) : 0;
 }
 
-GLenum FramebufferAttachment::getComponentType(int clientVersion) const
+GLenum FramebufferAttachment::getComponentType() const
 {
-    return gl::GetComponentType(getActualFormat(), clientVersion);
+    return gl::GetComponentType(getActualFormat());
 }
 
-GLenum FramebufferAttachment::getColorEncoding(int clientVersion) const
+GLenum FramebufferAttachment::getColorEncoding() const
 {
-    return gl::GetColorEncoding(getActualFormat(), clientVersion);
+    return gl::GetColorEncoding(getActualFormat());
 }
 
 bool FramebufferAttachment::isTexture() const

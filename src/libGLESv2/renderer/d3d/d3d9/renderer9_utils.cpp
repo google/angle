@@ -251,7 +251,7 @@ void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DT
 namespace d3d9_gl
 {
 
-static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, GLuint clientVersion, IDirect3D9 *d3d9, D3DDEVTYPE deviceType,
+static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, IDirect3D9 *d3d9, D3DDEVTYPE deviceType,
                                                  UINT adapter, D3DFORMAT adapterFormat)
 {
     gl::TextureCaps textureCaps;
@@ -281,13 +281,13 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, GLuint c
                                  SUCCEEDED(d3d9->CheckDeviceFormat(adapter, deviceType, adapterFormat,
                                                                    D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, renderFormat));
 
-    textureCaps.depthRendering = gl::GetDepthBits(internalFormat, clientVersion) > 0 &&
+    textureCaps.depthRendering = gl::GetDepthBits(internalFormat) > 0 &&
                                  (SUCCEEDED(d3d9->CheckDeviceFormat(adapter, deviceType, adapterFormat,
                                                                     D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_TEXTURE, textureFormat)) ||
                                   SUCCEEDED(d3d9->CheckDeviceFormat(adapter, deviceType, adapterFormat,
                                                                     D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_TEXTURE, renderFormat)));
 
-    textureCaps.stencilRendering = gl::GetStencilBits(internalFormat, clientVersion) > 0 &&
+    textureCaps.stencilRendering = gl::GetStencilBits(internalFormat) > 0 &&
                                    (SUCCEEDED(d3d9->CheckDeviceFormat(adapter, deviceType, adapterFormat,
                                                                       D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_TEXTURE, textureFormat)) ||
                                     SUCCEEDED(d3d9->CheckDeviceFormat(adapter, deviceType, adapterFormat,
@@ -322,12 +322,11 @@ gl::Caps GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE dev
     D3DDISPLAYMODE currentDisplayMode;
     d3d9->GetAdapterDisplayMode(adapter, &currentDisplayMode);
 
-    const GLuint maxClientVersion = 2;
-    const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats(maxClientVersion);
+    const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (gl::FormatSet::const_iterator internalFormat = allFormats.begin(); internalFormat != allFormats.end(); ++internalFormat)
     {
-        caps.textureCaps.insert(*internalFormat, GenerateTextureFormatCaps(*internalFormat, maxClientVersion, d3d9,
-                                                                           deviceType, adapter, currentDisplayMode.Format));
+        caps.textureCaps.insert(*internalFormat, GenerateTextureFormatCaps(*internalFormat, d3d9, deviceType, adapter,
+                                                                           currentDisplayMode.Format));
     }
 
     caps.extensions.setTextureExtensionSupport(caps.textureCaps);

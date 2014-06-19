@@ -220,15 +220,15 @@ D3D11_QUERY ConvertQueryType(GLenum queryType)
 namespace d3d11_gl
 {
 
-static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, GLuint clientVersion, ID3D11Device *device)
+static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, ID3D11Device *device)
 {
     gl::TextureCaps textureCaps;
 
-    DXGI_FORMAT textureFormat = gl_d3d11::GetTexFormat(internalFormat, clientVersion);
-    DXGI_FORMAT srvFormat = gl_d3d11::GetSRVFormat(internalFormat, clientVersion);
-    DXGI_FORMAT rtvFormat = gl_d3d11::GetRTVFormat(internalFormat, clientVersion);
-    DXGI_FORMAT dsvFormat = gl_d3d11::GetDSVFormat(internalFormat, clientVersion);
-    DXGI_FORMAT renderFormat = gl_d3d11::GetRenderableFormat(internalFormat, clientVersion);
+    DXGI_FORMAT textureFormat = gl_d3d11::GetTexFormat(internalFormat);
+    DXGI_FORMAT srvFormat = gl_d3d11::GetSRVFormat(internalFormat);
+    DXGI_FORMAT rtvFormat = gl_d3d11::GetRTVFormat(internalFormat);
+    DXGI_FORMAT dsvFormat = gl_d3d11::GetDSVFormat(internalFormat);
+    DXGI_FORMAT renderFormat = gl_d3d11::GetRenderableFormat(internalFormat);
 
     UINT formatSupport;
     if (SUCCEEDED(device->CheckFormatSupport(textureFormat, &formatSupport)))
@@ -265,9 +265,9 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, GLuint c
 
     if (SUCCEEDED(device->CheckFormatSupport(dsvFormat, &formatSupport)))
     {
-        textureCaps.depthRendering = gl::GetDepthBits(internalFormat, clientVersion) > 0 &&
+        textureCaps.depthRendering = gl::GetDepthBits(internalFormat) > 0 &&
                                      (formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0;
-        textureCaps.stencilRendering = gl::GetStencilBits(internalFormat, clientVersion) > 0 &&
+        textureCaps.stencilRendering = gl::GetStencilBits(internalFormat) > 0 &&
                                        (formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0;
     }
 
@@ -278,11 +278,10 @@ gl::Caps GenerateCaps(ID3D11Device *device)
 {
     gl::Caps caps;
 
-    const GLuint maxClientVersion = 3;
-    const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats(maxClientVersion);
+    const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (gl::FormatSet::const_iterator internalFormat = allFormats.begin(); internalFormat != allFormats.end(); ++internalFormat)
     {
-        caps.textureCaps.insert(*internalFormat, GenerateTextureFormatCaps(*internalFormat, maxClientVersion, device));
+        caps.textureCaps.insert(*internalFormat, GenerateTextureFormatCaps(*internalFormat, device));
     }
 
     D3D_FEATURE_LEVEL featureLevel = device->GetFeatureLevel();
@@ -324,12 +323,12 @@ gl::Caps GenerateCaps(ID3D11Device *device)
 namespace d3d11
 {
 
-void GenerateInitialTextureData(GLint internalFormat, GLuint clientVersion, GLuint width, GLuint height, GLuint depth,
+void GenerateInitialTextureData(GLint internalFormat, GLuint width, GLuint height, GLuint depth,
                                 GLuint mipLevels, std::vector<D3D11_SUBRESOURCE_DATA> *outSubresourceData,
                                 std::vector< std::vector<BYTE> > *outData)
 {
     InitializeTextureDataFunction initializeFunc = gl_d3d11::GetTextureDataInitializationFunction(internalFormat);
-    DXGI_FORMAT dxgiFormat = gl_d3d11::GetTexFormat(internalFormat, clientVersion);
+    DXGI_FORMAT dxgiFormat = gl_d3d11::GetTexFormat(internalFormat);
 
     outSubresourceData->resize(mipLevels);
     outData->resize(mipLevels);

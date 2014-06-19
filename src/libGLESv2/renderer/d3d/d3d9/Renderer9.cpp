@@ -812,7 +812,6 @@ void Renderer9::setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState
 
         gl::FramebufferAttachment *attachment = framebuffer->getFirstColorbuffer();
         GLenum internalFormat = attachment ? attachment->getInternalFormat() : GL_NONE;
-        GLuint clientVersion = getCurrentClientVersion();
 
         // Set the color mask
         bool zeroColorMaskAllowed = getAdapterVendor() != VENDOR_ID_AMD;
@@ -822,10 +821,10 @@ void Renderer9::setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState
         // drawing is done.
         // http://code.google.com/p/angleproject/issues/detail?id=169
 
-        DWORD colorMask = gl_d3d9::ConvertColorMask(gl::GetRedBits(internalFormat, clientVersion) > 0 && blendState.colorMaskRed,
-                                                    gl::GetGreenBits(internalFormat, clientVersion) > 0 && blendState.colorMaskGreen,
-                                                    gl::GetBlueBits(internalFormat, clientVersion) > 0 && blendState.colorMaskBlue,
-                                                    gl::GetAlphaBits(internalFormat, clientVersion) > 0 && blendState.colorMaskAlpha);
+        DWORD colorMask = gl_d3d9::ConvertColorMask(gl::GetRedBits(internalFormat)   > 0 && blendState.colorMaskRed,
+                                                    gl::GetGreenBits(internalFormat) > 0 && blendState.colorMaskGreen,
+                                                    gl::GetBlueBits(internalFormat)  > 0 && blendState.colorMaskBlue,
+                                                    gl::GetAlphaBits(internalFormat) > 0 && blendState.colorMaskAlpha);
         if (colorMask == 0 && !zeroColorMaskAllowed)
         {
             // Enable green channel, but set blending so nothing will be drawn.
@@ -1126,7 +1125,7 @@ gl::FramebufferAttachment *Renderer9::getNullColorbuffer(gl::FramebufferAttachme
         }
     }
 
-    gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(this, 0, new gl::Colorbuffer(this, width, height, GL_NONE, 0));
+    gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(0, new gl::Colorbuffer(this, width, height, GL_NONE, 0));
     gl::RenderbufferAttachment *nullbuffer = new gl::RenderbufferAttachment(nullRenderbuffer);
 
     // add nullbuffer to the cache
@@ -1246,8 +1245,8 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
             mDevice->SetDepthStencilSurface(depthStencilSurface);
             SafeRelease(depthStencilSurface);
 
-            depthSize = depthStencil->getDepthSize(getCurrentClientVersion());
-            stencilSize = depthStencil->getStencilSize(getCurrentClientVersion());
+            depthSize = depthStencil->getDepthSize();
+            stencilSize = depthStencil->getStencilSize();
         }
         else
         {
@@ -1770,8 +1769,7 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
     unsigned int stencilUnmasked = 0x0;
     if (clearParams.clearStencil && frameBuffer->hasStencil())
     {
-        unsigned int stencilSize = gl::GetStencilBits(frameBuffer->getStencilbuffer()->getActualFormat(),
-                                                      getCurrentClientVersion());
+        unsigned int stencilSize = gl::GetStencilBits(frameBuffer->getStencilbuffer()->getActualFormat());
         stencilUnmasked = (0x1 << stencilSize) - 1;
     }
 
@@ -1786,16 +1784,15 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
         GLenum internalFormat = attachment->getInternalFormat();
         GLenum actualFormat = attachment->getActualFormat();
 
-        GLuint clientVersion = getCurrentClientVersion();
-        GLuint internalRedBits = gl::GetRedBits(internalFormat, clientVersion);
-        GLuint internalGreenBits = gl::GetGreenBits(internalFormat, clientVersion);
-        GLuint internalBlueBits = gl::GetBlueBits(internalFormat, clientVersion);
-        GLuint internalAlphaBits = gl::GetAlphaBits(internalFormat, clientVersion);
+        GLuint internalRedBits = gl::GetRedBits(internalFormat);
+        GLuint internalGreenBits = gl::GetGreenBits(internalFormat);
+        GLuint internalBlueBits = gl::GetBlueBits(internalFormat);
+        GLuint internalAlphaBits = gl::GetAlphaBits(internalFormat);
 
-        GLuint actualRedBits = gl::GetRedBits(actualFormat, clientVersion);
-        GLuint actualGreenBits = gl::GetGreenBits(actualFormat, clientVersion);
-        GLuint actualBlueBits = gl::GetBlueBits(actualFormat, clientVersion);
-        GLuint actualAlphaBits = gl::GetAlphaBits(actualFormat, clientVersion);
+        GLuint actualRedBits = gl::GetRedBits(actualFormat);
+        GLuint actualGreenBits = gl::GetGreenBits(actualFormat);
+        GLuint actualBlueBits = gl::GetBlueBits(actualFormat);
+        GLuint actualAlphaBits = gl::GetAlphaBits(actualFormat);
 
         color = D3DCOLOR_ARGB(gl::unorm<8>((internalAlphaBits == 0 && actualAlphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
                               gl::unorm<8>((internalRedBits   == 0 && actualRedBits   > 0) ? 0.0f : clearParams.colorFClearValue.red),
@@ -2944,13 +2941,11 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         inputPitch = lock.Pitch;
     }
 
-    GLuint clientVersion = getCurrentClientVersion();
-
     GLenum sourceInternalFormat = d3d9_gl::GetInternalFormat(desc.Format);
-    GLenum sourceFormat = gl::GetFormat(sourceInternalFormat, clientVersion);
-    GLenum sourceType = gl::GetType(sourceInternalFormat, clientVersion);
+    GLenum sourceFormat = gl::GetFormat(sourceInternalFormat);
+    GLenum sourceType = gl::GetType(sourceInternalFormat);
 
-    GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat, clientVersion);
+    GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat);
 
     if (sourceFormat == format && sourceType == type)
     {
@@ -2963,11 +2958,11 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     }
     else
     {
-        GLenum destInternalFormat = gl::GetSizedInternalFormat(format, type, clientVersion);
-        GLuint destPixelSize = gl::GetPixelBytes(destInternalFormat, clientVersion);
-        GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat, clientVersion);
+        GLenum destInternalFormat = gl::GetSizedInternalFormat(format, type);
+        GLuint destPixelSize = gl::GetPixelBytes(destInternalFormat);
+        GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat);
 
-        ColorCopyFunction fastCopyFunc = d3d9::GetFastCopyFunction(desc.Format, format, type, getCurrentClientVersion());
+        ColorCopyFunction fastCopyFunc = d3d9::GetFastCopyFunction(desc.Format, format, type);
         if (fastCopyFunc)
         {
             // Fast copy is possible through some special function
@@ -2985,7 +2980,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         else
         {
             ColorReadFunction readFunc = d3d9::GetColorReadFunction(desc.Format);
-            ColorWriteFunction writeFunc = gl::GetColorWriteFunction(format, type, clientVersion);
+            ColorWriteFunction writeFunc = gl::GetColorWriteFunction(format, type);
 
             gl::ColorF temp;
 

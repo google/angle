@@ -28,7 +28,7 @@ class RenderStateCache
     RenderStateCache();
     virtual ~RenderStateCache();
 
-    void initialize(Renderer11 *renderer);
+    void initialize(ID3D11Device *device);
     void clear();
 
     ID3D11BlendState *getBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState);
@@ -101,7 +101,7 @@ class RenderStateCache
                                SamplerStateEqualityFunction> SamplerStateMap;
     SamplerStateMap mSamplerStateCache;
 
-    Renderer11 *mRenderer;
+    ID3D11Device *mDevice;
 };
 
 }

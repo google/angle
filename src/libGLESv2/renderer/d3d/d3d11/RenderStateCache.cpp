@@ -38,7 +38,7 @@ const unsigned int RenderStateCache::kMaxRasterizerStates = 4096;
 const unsigned int RenderStateCache::kMaxDepthStencilStates = 4096;
 const unsigned int RenderStateCache::kMaxSamplerStates = 4096;
 
-RenderStateCache::RenderStateCache() : mRenderer(NULL), mCounter(0),
+RenderStateCache::RenderStateCache() : mDevice(NULL), mCounter(0),
                                        mBlendStateCache(kMaxBlendStates, hashBlendState, compareBlendStates),
                                        mRasterizerStateCache(kMaxRasterizerStates, hashRasterizerState, compareRasterizerStates),
                                        mDepthStencilStateCache(kMaxDepthStencilStates, hashDepthStencilState, compareDepthStencilStates),
@@ -51,10 +51,10 @@ RenderStateCache::~RenderStateCache()
     clear();
 }
 
-void RenderStateCache::initialize(Renderer11 *renderer)
+void RenderStateCache::initialize(ID3D11Device *device)
 {
     clear();
-    mRenderer = renderer;
+    mDevice = device;
 }
 
 void RenderStateCache::clear()
@@ -81,15 +81,13 @@ bool RenderStateCache::compareBlendStates(const BlendStateKey &a, const BlendSta
 
 ID3D11BlendState *RenderStateCache::getBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState)
 {
-    if (!mRenderer)
+    if (!mDevice)
     {
         ERR("RenderStateCache is not initialized.");
         return NULL;
     }
 
     bool mrt = false;
-
-    int clientVersion = mRenderer->getCurrentClientVersion();
 
     BlendStateKey key = { 0 };
     key.blendState = blendState;
@@ -103,10 +101,10 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::Framebuffer *framebu
                 mrt = true;
             }
 
-            key.rtChannels[i][0] = attachment->getRedSize(clientVersion)   > 0;
-            key.rtChannels[i][1] = attachment->getGreenSize(clientVersion) > 0;
-            key.rtChannels[i][2] = attachment->getBlueSize(clientVersion)  > 0;
-            key.rtChannels[i][3] = attachment->getAlphaSize(clientVersion) > 0;
+            key.rtChannels[i][0] = attachment->getRedSize()   > 0;
+            key.rtChannels[i][1] = attachment->getGreenSize() > 0;
+            key.rtChannels[i][2] = attachment->getBlueSize()  > 0;
+            key.rtChannels[i][3] = attachment->getAlphaSize() > 0;
         }
         else
         {
@@ -171,8 +169,7 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::Framebuffer *framebu
         }
 
         ID3D11BlendState *dx11BlendState = NULL;
-        ID3D11Device *device = mRenderer->getDevice();
-        HRESULT result = device->CreateBlendState(&blendDesc, &dx11BlendState);
+        HRESULT result = mDevice->CreateBlendState(&blendDesc, &dx11BlendState);
         if (FAILED(result) || !dx11BlendState)
         {
             ERR("Unable to create a ID3D11BlendState, HRESULT: 0x%X.", result);
@@ -201,7 +198,7 @@ bool RenderStateCache::compareRasterizerStates(const RasterizerStateKey &a, cons
 
 ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::RasterizerState &rasterState, bool scissorEnabled)
 {
-    if (!mRenderer)
+    if (!mDevice)
     {
         ERR("RenderStateCache is not initialized.");
         return NULL;
@@ -267,8 +264,7 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
         }
 
         ID3D11RasterizerState *dx11RasterizerState = NULL;
-        ID3D11Device *device = mRenderer->getDevice();
-        HRESULT result = device->CreateRasterizerState(&rasterDesc, &dx11RasterizerState);
+        HRESULT result = mDevice->CreateRasterizerState(&rasterDesc, &dx11RasterizerState);
         if (FAILED(result) || !dx11RasterizerState)
         {
             ERR("Unable to create a ID3D11RasterizerState, HRESULT: 0x%X.", result);
@@ -297,7 +293,7 @@ bool RenderStateCache::compareDepthStencilStates(const gl::DepthStencilState &a,
 
 ID3D11DepthStencilState *RenderStateCache::getDepthStencilState(const gl::DepthStencilState &dsState)
 {
-    if (!mRenderer)
+    if (!mDevice)
     {
         ERR("RenderStateCache is not initialized.");
         return NULL;
@@ -346,8 +342,7 @@ ID3D11DepthStencilState *RenderStateCache::getDepthStencilState(const gl::DepthS
         dsDesc.BackFace.StencilFunc = gl_d3d11::ConvertComparison(dsState.stencilBackFunc);
 
         ID3D11DepthStencilState *dx11DepthStencilState = NULL;
-        ID3D11Device *device = mRenderer->getDevice();
-        HRESULT result = device->CreateDepthStencilState(&dsDesc, &dx11DepthStencilState);
+        HRESULT result = mDevice->CreateDepthStencilState(&dsDesc, &dx11DepthStencilState);
         if (FAILED(result) || !dx11DepthStencilState)
         {
             ERR("Unable to create a ID3D11DepthStencilState, HRESULT: 0x%X.", result);
@@ -376,7 +371,7 @@ bool RenderStateCache::compareSamplerStates(const gl::SamplerState &a, const gl:
 
 ID3D11SamplerState *RenderStateCache::getSamplerState(const gl::SamplerState &samplerState)
 {
-    if (!mRenderer)
+    if (!mDevice)
     {
         ERR("RenderStateCache is not initialized.");
         return NULL;
@@ -425,8 +420,7 @@ ID3D11SamplerState *RenderStateCache::getSamplerState(const gl::SamplerState &sa
         samplerDesc.MaxLOD = samplerState.maxLod;
 
         ID3D11SamplerState *dx11SamplerState = NULL;
-        ID3D11Device *device = mRenderer->getDevice();
-        HRESULT result = device->CreateSamplerState(&samplerDesc, &dx11SamplerState);
+        HRESULT result = mDevice->CreateSamplerState(&samplerDesc, &dx11SamplerState);
         if (FAILED(result) || !dx11SamplerState)
         {
             ERR("Unable to create a ID3D11DepthStencilState, HRESULT: 0x%X.", result);

@@ -23,7 +23,7 @@ namespace d3d11
 typedef std::set<DXGI_FORMAT> DXGIFormatSet;
 
 MipGenerationFunction GetMipGenerationFunction(DXGI_FORMAT format);
-LoadImageFunction GetImageLoadFunction(GLenum internalFormat, GLenum type, GLuint clientVersion);
+LoadImageFunction GetImageLoadFunction(GLenum internalFormat, GLenum type);
 
 GLuint GetFormatPixelBytes(DXGI_FORMAT format);
 GLuint GetBlockWidth(DXGI_FORMAT format);
@@ -47,15 +47,15 @@ ColorCopyFunction GetFastCopyFunction(DXGI_FORMAT sourceFormat, GLenum destForma
 namespace gl_d3d11
 {
 
-DXGI_FORMAT GetTexFormat(GLenum internalFormat, GLuint clientVersion);
-DXGI_FORMAT GetSRVFormat(GLenum internalFormat, GLuint clientVersion);
-DXGI_FORMAT GetRTVFormat(GLenum internalFormat, GLuint clientVersion);
-DXGI_FORMAT GetDSVFormat(GLenum internalFormat, GLuint clientVersion);
-DXGI_FORMAT GetRenderableFormat(GLenum internalFormat, GLuint clientVersion);
+DXGI_FORMAT GetTexFormat(GLenum internalFormat);
+DXGI_FORMAT GetSRVFormat(GLenum internalFormat);
+DXGI_FORMAT GetRTVFormat(GLenum internalFormat);
+DXGI_FORMAT GetDSVFormat(GLenum internalFormat);
+DXGI_FORMAT GetRenderableFormat(GLenum internalFormat);
 
-DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat, bool renderableFormat, GLuint clientVersion);
-DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat, bool renderableFormat, GLuint clientVersion);
-DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat, bool renderableFormat, GLuint clientVersion);
+DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat);
+DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat);
+DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat);
 
 bool RequiresTextureDataInitialization(GLint internalFormat);
 InitializeTextureDataFunction GetTextureDataInitializationFunction(GLint internalFormat);
@@ -70,7 +70,7 @@ DXGI_FORMAT GetNativeVertexFormat(const gl::VertexFormat &vertexFormat);
 namespace d3d11_gl
 {
 
-GLenum GetInternalFormat(DXGI_FORMAT format, GLuint clientVersion);
+GLenum GetInternalFormat(DXGI_FORMAT format);
 
 }
 

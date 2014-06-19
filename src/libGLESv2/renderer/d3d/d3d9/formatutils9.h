@@ -35,7 +35,7 @@ void MakeValidSize(bool isImage, D3DFORMAT format, GLsizei *requestWidth, GLsize
 const D3DFormatSet &GetAllUsedD3DFormats();
 
 ColorReadFunction GetColorReadFunction(D3DFORMAT format);
-ColorCopyFunction GetFastCopyFunction(D3DFORMAT sourceFormat, GLenum destFormat, GLenum destType, GLuint clientVersion);
+ColorCopyFunction GetFastCopyFunction(D3DFORMAT sourceFormat, GLenum destFormat, GLenum destType);
 
 VertexCopyFunction GetVertexCopyFunction(const gl::VertexFormat &vertexFormat);
 size_t GetVertexElementSize(const gl::VertexFormat &vertexFormat);
@@ -68,7 +68,7 @@ namespace d3d9_gl
 
 GLenum GetInternalFormat(D3DFORMAT format);
 GLsizei GetSamplesCount(D3DMULTISAMPLE_TYPE type);
-bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format, GLuint clientVersion);
+bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format);
 
 }
 

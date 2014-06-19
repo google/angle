@@ -157,8 +157,7 @@ void Framebuffer::setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer, 
     SafeDelete(mStencilbuffer);
 
     // ensure this is a legitimate depth+stencil format
-    int clientVersion = mRenderer->getCurrentClientVersion();
-    if (attachment && attachment->getDepthSize(clientVersion) > 0 && attachment->getStencilSize(clientVersion) > 0)
+    if (attachment && attachment->getDepthSize() > 0 && attachment->getStencilSize() > 0)
     {
         mDepthbuffer = attachment;
         mStencilbuffer = attachment;
@@ -383,13 +382,7 @@ bool Framebuffer::hasEnabledColorAttachment() const
 
 bool Framebuffer::hasStencil() const
 {
-    if (mStencilbuffer)
-    {
-        int clientVersion = mRenderer->getCurrentClientVersion();
-        return (mStencilbuffer->getStencilSize(clientVersion) > 0);
-    }
-
-    return false;
+    return (mStencilbuffer && mStencilbuffer->getStencilSize() > 0);
 }
 
 bool Framebuffer::usingExtendedDrawBuffers() const
@@ -434,8 +427,8 @@ GLenum Framebuffer::completeness() const
                     return GL_FRAMEBUFFER_UNSUPPORTED;
                 }
 
-                if (gl::GetDepthBits(internalformat, clientVersion) > 0 ||
-                    gl::GetStencilBits(internalformat, clientVersion) > 0)
+                if (gl::GetDepthBits(internalformat) > 0 ||
+                    gl::GetStencilBits(internalformat) > 0)
                 {
                     return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
                 }
@@ -467,7 +460,7 @@ GLenum Framebuffer::completeness() const
                 // in GLES 3.0, there is no such restriction
                 if (clientVersion < 3)
                 {
-                    if (gl::GetPixelBytes(colorbuffer->getInternalFormat(), clientVersion) != colorbufferSize)
+                    if (gl::GetPixelBytes(colorbuffer->getInternalFormat()) != colorbufferSize)
                     {
                         return GL_FRAMEBUFFER_UNSUPPORTED;
                     }
@@ -488,7 +481,7 @@ GLenum Framebuffer::completeness() const
                 width = colorbuffer->getWidth();
                 height = colorbuffer->getHeight();
                 samples = colorbuffer->getSamples();
-                colorbufferSize = gl::GetPixelBytes(colorbuffer->getInternalFormat(), clientVersion);
+                colorbufferSize = gl::GetPixelBytes(colorbuffer->getInternalFormat());
                 missingAttachment = false;
             }
         }
@@ -518,7 +511,7 @@ GLenum Framebuffer::completeness() const
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
 
-            if (gl::GetDepthBits(internalformat, clientVersion) == 0)
+            if (gl::GetDepthBits(internalformat) == 0)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -573,7 +566,7 @@ GLenum Framebuffer::completeness() const
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
 
-            if (gl::GetStencilBits(internalformat, clientVersion) == 0)
+            if (gl::GetStencilBits(internalformat) == 0)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -622,10 +615,10 @@ GLenum Framebuffer::completeness() const
 DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, Colorbuffer *colorbuffer, DepthStencilbuffer *depthStencil)
     : Framebuffer(renderer)
 {
-    Renderbuffer *colorRenderbuffer = new Renderbuffer(mRenderer, 0, colorbuffer);
+    Renderbuffer *colorRenderbuffer = new Renderbuffer(0, colorbuffer);
     mColorbuffers[0] = new RenderbufferAttachment(colorRenderbuffer);
 
-    Renderbuffer *depthStencilRenderbuffer = new Renderbuffer(mRenderer, 0, depthStencil);
+    Renderbuffer *depthStencilRenderbuffer = new Renderbuffer(0, depthStencil);
     FramebufferAttachment *depthStencilAttachment = new RenderbufferAttachment(depthStencilRenderbuffer);
     mDepthbuffer = (depthStencilRenderbuffer->getDepthSize() != 0 ? depthStencilAttachment : NULL);
     mStencilbuffer = (depthStencilRenderbuffer->getStencilSize() != 0 ? depthStencilAttachment : NULL);

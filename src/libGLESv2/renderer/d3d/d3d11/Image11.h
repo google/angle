@@ -34,7 +34,7 @@ class Image11 : public Image
 
     static Image11 *makeImage11(Image *img);
 
-    static void generateMipmap(GLuint clientVersion, Image11 *dest, Image11 *src);
+    static void generateMipmap(Image11 *dest, Image11 *src);
 
     virtual bool isDirty() const;
 

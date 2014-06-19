@@ -28,7 +28,7 @@ class TextureStorage11 : public TextureStorage
 
     static TextureStorage11 *makeTextureStorage11(TextureStorage *storage);
 
-    static DWORD GetTextureBindFlags(GLenum internalFormat, GLuint clientVersion, bool renderTarget);
+    static DWORD GetTextureBindFlags(GLenum internalFormat, bool renderTarget);
 
     UINT getBindFlags() const;
 

@@ -377,10 +377,10 @@ bool Blit11::swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTarget
 
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
     source->GetDesc(&sourceSRVDesc);
-    GLenum sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceSRVDesc.Format, mRenderer->getCurrentClientVersion());
+    GLenum sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceSRVDesc.Format);
 
     GLenum shaderType = GL_NONE;
-    switch (gl::GetComponentType(sourceInternalFormat, mRenderer->getCurrentClientVersion()))
+    switch (gl::GetComponentType(sourceInternalFormat))
     {
       case GL_UNSIGNED_NORMALIZED:
       case GL_SIGNED_NORMALIZED:
@@ -516,11 +516,11 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     // be GL_XXXX_INTEGER but it does not tell us if it is signed or unsigned.
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
     source->GetDesc(&sourceSRVDesc);
-    GLenum sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceSRVDesc.Format, mRenderer->getCurrentClientVersion());
+    GLenum sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceSRVDesc.Format);
 
     BlitParameters parameters = { 0 };
     parameters.mDestinationFormat = destFormat;
-    parameters.mSignedInteger = gl::GetComponentType(sourceInternalFormat, mRenderer->getCurrentClientVersion()) == GL_INT;
+    parameters.mSignedInteger = gl::GetComponentType(sourceInternalFormat) == GL_INT;
     parameters.m3DBlit = sourceArea.depth > 1;
 
     BlitShaderMap::const_iterator i = mBlitShaderMap.find(parameters);

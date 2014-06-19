@@ -858,7 +858,7 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
                 return;
             }
 
-            if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(internalformat, GL_UNSIGNED_BYTE, context->getClientVersion(), width, height))
+            if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(internalformat, GL_UNSIGNED_BYTE, width, height))
             {
                 return gl::error(GL_INVALID_VALUE);
             }
@@ -923,7 +923,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
                 return;
             }
 
-            if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(format, GL_UNSIGNED_BYTE, context->getClientVersion(), width, height))
+            if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(format, GL_UNSIGNED_BYTE, width, height))
             {
                 return gl::error(GL_INVALID_VALUE);
             }
@@ -2012,14 +2012,13 @@ void __stdcall glGenerateMipmap(GLenum target)
                           internalFormat == GL_ALPHA8_EXT;
 
             if (formatCaps.depthRendering || !formatCaps.filtering || (!formatCaps.colorRendering && !isLUMA) ||
-                gl::IsFormatCompressed(internalFormat, context->getClientVersion()))
+                gl::IsFormatCompressed(internalFormat))
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
 
             // GL_EXT_sRGB does not support mipmap generation on sRGB textures
-            if (context->getClientVersion() == 2 &&
-                gl::GetColorEncoding(internalFormat, context->getClientVersion()) == GL_SRGB)
+            if (context->getClientVersion() == 2 && gl::GetColorEncoding(internalFormat) == GL_SRGB)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
@@ -2790,27 +2789,27 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE:
-                    *params = attachmentObject->getRedSize(clientVersion);
+                    *params = attachmentObject->getRedSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE:
-                    *params = attachmentObject->getGreenSize(clientVersion);
+                    *params = attachmentObject->getGreenSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE:
-                    *params = attachmentObject->getBlueSize(clientVersion);
+                    *params = attachmentObject->getBlueSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE:
-                    *params = attachmentObject->getAlphaSize(clientVersion);
+                    *params = attachmentObject->getAlphaSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE:
-                    *params = attachmentObject->getDepthSize(clientVersion);
+                    *params = attachmentObject->getDepthSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE:
-                    *params = attachmentObject->getStencilSize(clientVersion);
+                    *params = attachmentObject->getStencilSize();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE:
@@ -2818,11 +2817,11 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                     {
                         gl::error(GL_INVALID_OPERATION);
                     }
-                    *params = attachmentObject->getComponentType(clientVersion);
+                    *params = attachmentObject->getComponentType();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING:
-                    *params = attachmentObject->getColorEncoding(clientVersion);
+                    *params = attachmentObject->getColorEncoding();
                     break;
 
                   case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER:
@@ -6095,7 +6094,7 @@ void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum interna
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(internalformat, GL_UNSIGNED_BYTE, context->getClientVersion(), width, height))
+            if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(internalformat, GL_UNSIGNED_BYTE, width, height))
             {
                 return gl::error(GL_INVALID_VALUE);
             }
@@ -6152,7 +6151,7 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(format, GL_UNSIGNED_BYTE, context->getClientVersion(), width, height))
+            if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(format, GL_UNSIGNED_BYTE, width, height))
             {
                 return gl::error(GL_INVALID_VALUE);
             }

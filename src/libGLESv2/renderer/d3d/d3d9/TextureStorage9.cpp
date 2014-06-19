@@ -38,14 +38,12 @@ TextureStorage9 *TextureStorage9::makeTextureStorage9(TextureStorage *storage)
     return static_cast<TextureStorage9*>(storage);
 }
 
-DWORD TextureStorage9::GetTextureUsage(GLenum internalformat, Renderer9 *renderer, bool renderTarget)
+DWORD TextureStorage9::GetTextureUsage(GLenum internalformat, bool renderTarget)
 {
-    GLuint clientVersion = renderer->getCurrentClientVersion();
-
     DWORD d3dusage = 0;
 
-    if (gl::GetDepthBits(internalformat, clientVersion) > 0 ||
-        gl::GetStencilBits(internalformat, clientVersion) > 0)
+    if (gl::GetDepthBits(internalformat) > 0 ||
+        gl::GetStencilBits(internalformat) > 0)
     {
         d3dusage |= D3DUSAGE_DEPTHSTENCIL;
     }
@@ -99,7 +97,7 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain
 }
 
 TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels)
-    : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), renderTarget))
+    : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget))
 {
     mTexture = NULL;
     mRenderTarget = NULL;
@@ -195,7 +193,7 @@ void TextureStorage9_2D::initializeRenderTarget()
 }
 
 TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, GLenum internalformat, bool renderTarget, int size, int levels)
-    : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), renderTarget))
+    : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget))
 {
     mTexture = NULL;
     for (int i = 0; i < 6; ++i)

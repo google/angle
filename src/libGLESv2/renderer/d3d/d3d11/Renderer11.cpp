@@ -292,7 +292,7 @@ EGLint Renderer11::initialize()
 // to reset the scene status and ensure the default states are reset.
 void Renderer11::initializeDevice()
 {
-    mStateCache.initialize(this);
+    mStateCache.initialize(mDevice);
     mInputLayoutCache.initialize(mDevice, mDeviceContext);
 
     ASSERT(!mVertexDataManager && !mIndexDataManager);
@@ -342,13 +342,9 @@ int Renderer11::generateConfigs(ConfigDesc **configDescList)
 
                 if (depthStencilFormatOK)
                 {
-                    // FIXME: parse types from context version
-                    ASSERT(d3d11_gl::GetInternalFormat(renderTargetFormat, 2) == d3d11_gl::GetInternalFormat(renderTargetFormat, 3));
-                    ASSERT(d3d11_gl::GetInternalFormat(depthStencilFormat, 2) == d3d11_gl::GetInternalFormat(depthStencilFormat, 3));
-
                     ConfigDesc newConfig;
-                    newConfig.renderTargetFormat = d3d11_gl::GetInternalFormat(renderTargetFormat, getCurrentClientVersion());
-                    newConfig.depthStencilFormat = d3d11_gl::GetInternalFormat(depthStencilFormat, getCurrentClientVersion());
+                    newConfig.renderTargetFormat = d3d11_gl::GetInternalFormat(renderTargetFormat);
+                    newConfig.depthStencilFormat = d3d11_gl::GetInternalFormat(depthStencilFormat);
                     newConfig.multiSample = 0;     // FIXME: enumerate multi-sampling
                     newConfig.fastConfig = true;   // Assume all DX11 format conversions to be fast
                     newConfig.es3Capable = true;
@@ -2147,7 +2143,7 @@ int Renderer11::getMaxSupportedSamples() const
 
 GLsizei Renderer11::getMaxSupportedFormatSamples(GLenum internalFormat) const
 {
-    DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat, getCurrentClientVersion());
+    DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat);
     MultisampleSupportMap::const_iterator iter = mMultisampleSupportMap.find(format);
     return (iter != mMultisampleSupportMap.end()) ? iter->second.maxSupportedSamples : 0;
 }
@@ -2157,10 +2153,10 @@ GLsizei Renderer11::getNumSampleCounts(GLenum internalFormat) const
     unsigned int numCounts = 0;
 
     // D3D11 supports multisampling for signed and unsigned format, but ES 3.0 does not
-    GLenum componentType = gl::GetComponentType(internalFormat, getCurrentClientVersion());
+    GLenum componentType = gl::GetComponentType(internalFormat);
     if (componentType != GL_INT && componentType != GL_UNSIGNED_INT)
     {
-        DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat, getCurrentClientVersion());
+        DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat);
         MultisampleSupportMap::const_iterator iter = mMultisampleSupportMap.find(format);
 
         if (iter != mMultisampleSupportMap.end())
@@ -2182,13 +2178,13 @@ GLsizei Renderer11::getNumSampleCounts(GLenum internalFormat) const
 void Renderer11::getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const
 {
     // D3D11 supports multisampling for signed and unsigned format, but ES 3.0 does not
-    GLenum componentType = gl::GetComponentType(internalFormat, getCurrentClientVersion());
+    GLenum componentType = gl::GetComponentType(internalFormat);
     if (componentType == GL_INT || componentType == GL_UNSIGNED_INT)
     {
         return;
     }
 
-    DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat, getCurrentClientVersion());
+    DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat);
     MultisampleSupportMap::const_iterator iter = mMultisampleSupportMap.find(format);
 
     if (iter != mMultisampleSupportMap.end())
@@ -2806,10 +2802,8 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
 {
     ASSERT(getCaps().extensions.pixelBufferObject);
 
-    GLuint clientVersion = getCurrentClientVersion();
-
     // sRGB formats do not work with D3D11 buffer SRVs
-    if (gl::GetColorEncoding(internalFormat, clientVersion) == GL_SRGB)
+    if (gl::GetColorEncoding(internalFormat) == GL_SRGB)
     {
         return false;
     }
@@ -2821,7 +2815,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     }
 
     // We skip all 3-channel formats since sometimes format support is missing
-    if (gl::GetComponentCount(internalFormat, clientVersion) == 3)
+    if (gl::GetComponentCount(internalFormat) == 3)
     {
         return false;
     }
@@ -2988,7 +2982,7 @@ void Renderer11::generateMipmap(Image *dest, Image *src)
 {
     Image11 *dest11 = Image11::makeImage11(dest);
     Image11 *src11 = Image11::makeImage11(src);
-    Image11::generateMipmap(getCurrentClientVersion(), dest11, src11);
+    Image11::generateMipmap(dest11, src11);
 }
 
 TextureStorage *Renderer11::createTextureStorage2D(SwapChain *swapChain)
@@ -3141,13 +3135,11 @@ void Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams
         inputPitch = static_cast<int>(mapping.RowPitch);
     }
 
-    GLuint clientVersion = getCurrentClientVersion();
+    GLenum sourceInternalFormat = d3d11_gl::GetInternalFormat(textureDesc.Format);
+    GLenum sourceFormat = gl::GetFormat(sourceInternalFormat);
+    GLenum sourceType = gl::GetType(sourceInternalFormat);
 
-    GLenum sourceInternalFormat = d3d11_gl::GetInternalFormat(textureDesc.Format, clientVersion);
-    GLenum sourceFormat = gl::GetFormat(sourceInternalFormat, clientVersion);
-    GLenum sourceType = gl::GetType(sourceInternalFormat, clientVersion);
-
-    GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat, clientVersion);
+    GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat);
 
     if (sourceFormat == params.format && sourceType == params.type)
     {
@@ -3159,8 +3151,8 @@ void Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams
     }
     else
     {
-        GLenum destInternalFormat = gl::GetSizedInternalFormat(params.format, params.type, clientVersion);
-        GLuint destPixelSize = gl::GetPixelBytes(destInternalFormat, clientVersion);
+        GLenum destInternalFormat = gl::GetSizedInternalFormat(params.format, params.type);
+        GLuint destPixelSize = gl::GetPixelBytes(destInternalFormat);
 
         ColorCopyFunction fastCopyFunc = d3d11::GetFastCopyFunction(textureDesc.Format, params.format, params.type);
         if (fastCopyFunc)
@@ -3180,7 +3172,7 @@ void Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams
         else
         {
             ColorReadFunction readFunc = d3d11::GetColorReadFunction(textureDesc.Format);
-            ColorWriteFunction writeFunc = gl::GetColorWriteFunction(params.format, params.type, clientVersion);
+            ColorWriteFunction writeFunc = gl::GetColorWriteFunction(params.format, params.type);
 
             unsigned char temp[16]; // Maximum size of any Color<T> type used.
             META_ASSERT(sizeof(temp) >= sizeof(gl::ColorF)  &&
@@ -3296,8 +3288,8 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
                        drawRect.x < 0 || drawRect.x + drawRect.width > drawSize.width ||
                        drawRect.y < 0 || drawRect.y + drawRect.height > drawSize.height;
 
-    bool hasDepth = gl::GetDepthBits(drawRenderTarget11->getActualFormat(), getCurrentClientVersion()) > 0;
-    bool hasStencil = gl::GetStencilBits(drawRenderTarget11->getActualFormat(), getCurrentClientVersion()) > 0;
+    bool hasDepth = gl::GetDepthBits(drawRenderTarget11->getActualFormat()) > 0;
+    bool hasStencil = gl::GetStencilBits(drawRenderTarget11->getActualFormat()) > 0;
     bool partialDSBlit = (hasDepth && depthBlit) != (hasStencil && stencilBlit);
 
     if (readRenderTarget11->getActualFormat() == drawRenderTarget->getActualFormat() &&
@@ -3372,7 +3364,7 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
         }
         else
         {
-            GLenum format = gl::GetFormat(drawRenderTarget->getInternalFormat(), getCurrentClientVersion());
+            GLenum format = gl::GetFormat(drawRenderTarget->getInternalFormat());
             result = mBlit->copyTexture(readSRV, readArea, readSize, drawRTV, drawArea, drawSize,
                                         scissor, format, filter);
         }
@@ -3485,8 +3477,7 @@ bool Renderer11::getLUID(LUID *adapterLuid) const
 
 GLenum Renderer11::getNativeTextureFormat(GLenum internalFormat) const
 {
-    int clientVersion = getCurrentClientVersion();
-    return d3d11_gl::GetInternalFormat(gl_d3d11::GetTexFormat(internalFormat, clientVersion), clientVersion);
+    return d3d11_gl::GetInternalFormat(gl_d3d11::GetTexFormat(internalFormat));
 }
 
 rx::VertexConversionType Renderer11::getVertexConversionType(const gl::VertexFormat &vertexFormat) const

@@ -421,7 +421,7 @@ ColorReadFunction GetColorReadFunction(D3DFORMAT format)
     }
 }
 
-ColorCopyFunction GetFastCopyFunction(D3DFORMAT sourceFormat, GLenum destFormat, GLenum destType, GLuint clientVersion)
+ColorCopyFunction GetFastCopyFunction(D3DFORMAT sourceFormat, GLenum destFormat, GLenum destType)
 {
     static const D3D9FastCopyMap fastCopyMap = BuildFastCopyMap();
     D3D9FastCopyMap::const_iterator iter = fastCopyMap.find(D3D9FastCopyFormat(sourceFormat, destFormat, destType));
@@ -808,10 +808,10 @@ GLsizei GetSamplesCount(D3DMULTISAMPLE_TYPE type)
     return (type != D3DMULTISAMPLE_NONMASKABLE) ? type : 0;
 }
 
-bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format, GLuint clientVersion)
+bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format)
 {
     GLenum internalFormat = d3d9_gl::GetInternalFormat(d3dformat);
-    GLenum convertedFormat = gl::GetFormat(internalFormat, clientVersion);
+    GLenum convertedFormat = gl::GetFormat(internalFormat);
     return convertedFormat == format;
 }
 

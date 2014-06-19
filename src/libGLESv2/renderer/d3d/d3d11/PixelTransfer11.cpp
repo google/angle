@@ -122,7 +122,7 @@ void PixelTransfer11::setBufferToTextureCopyParams(const gl::Box &destArea, cons
     float texelCenterX = 0.5f / static_cast<float>(destSize.width - 1);
     float texelCenterY = 0.5f / static_cast<float>(destSize.height - 1);
 
-    unsigned int bytesPerPixel = gl::GetPixelBytes(internalFormat, 3);
+    unsigned int bytesPerPixel = gl::GetPixelBytes(internalFormat);
     unsigned int alignmentBytes = static_cast<unsigned int>(unpack.alignment);
     unsigned int alignmentPixels = (alignmentBytes <= bytesPerPixel ? 1 : alignmentBytes / bytesPerPixel);
 
@@ -148,7 +148,6 @@ bool PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpack, un
         return false;
     }
 
-    int clientVersion = mRenderer->getCurrentClientVersion();
     const gl::Buffer &sourceBuffer = *unpack.pixelBuffer.get();
 
     ASSERT(mRenderer->supportsFastCopyBufferToTexture(destinationFormat));
@@ -158,10 +157,10 @@ bool PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpack, un
 
     // The SRV must be in the proper read format, which may be different from the destination format
     // EG: for half float data, we can load full precision floats with implicit conversion
-    GLenum unsizedFormat = gl::GetFormat(destinationFormat, clientVersion);
-    GLenum sourceFormat = gl::GetSizedInternalFormat(unsizedFormat, sourcePixelsType, clientVersion);
+    GLenum unsizedFormat = gl::GetFormat(destinationFormat);
+    GLenum sourceFormat = gl::GetSizedInternalFormat(unsizedFormat, sourcePixelsType);
 
-    DXGI_FORMAT srvFormat = gl_d3d11::GetSRVFormat(sourceFormat, clientVersion);
+    DXGI_FORMAT srvFormat = gl_d3d11::GetSRVFormat(sourceFormat);
     ASSERT(srvFormat != DXGI_FORMAT_UNKNOWN);
     BufferStorage11 *bufferStorage11 = BufferStorage11::makeBufferStorage11(sourceBuffer.getStorage());
     ID3D11ShaderResourceView *bufferSRV = bufferStorage11->getSRV(srvFormat);
@@ -237,8 +236,7 @@ void PixelTransfer11::buildShaderMap()
 
 ID3D11PixelShader *PixelTransfer11::findBufferToTexturePS(GLenum internalFormat) const
 {
-    int clientVersion = mRenderer->getCurrentClientVersion();
-    GLenum componentType = gl::GetComponentType(internalFormat, clientVersion);
+    GLenum componentType = gl::GetComponentType(internalFormat);
 
     if (componentType == GL_SIGNED_NORMALIZED || componentType == GL_UNSIGNED_NORMALIZED)
     {

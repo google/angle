@@ -39,7 +39,7 @@ static bool validateSubImageParams2D(bool compressed, GLsizei width, GLsizei hei
 
     if (format != GL_NONE)
     {
-        GLenum internalformat = gl::GetSizedInternalFormat(format, type, 2);
+        GLenum internalformat = gl::GetSizedInternalFormat(format, type);
         if (internalformat != texture->getInternalFormat(level))
         {
             return gl::error(GL_INVALID_OPERATION, false);
@@ -80,7 +80,7 @@ static bool validateSubImageParamsCube(bool compressed, GLsizei width, GLsizei h
 
     if (format != GL_NONE)
     {
-        GLenum internalformat = gl::GetSizedInternalFormat(format, type, 2);
+        GLenum internalformat = gl::GetSizedInternalFormat(format, type);
         if (internalformat != texture->getInternalFormat(target, level))
         {
             return gl::error(GL_INVALID_OPERATION, false);
@@ -473,7 +473,7 @@ bool ValidateES2CopyTexImageParameters(gl::Context* context, GLenum target, GLin
 
     gl::Framebuffer *framebuffer = context->getReadFramebuffer();
     GLenum colorbufferFormat = framebuffer->getReadColorbuffer()->getInternalFormat();
-    GLenum textureFormat = gl::GetFormat(textureInternalFormat, context->getClientVersion());
+    GLenum textureFormat = gl::GetFormat(textureInternalFormat);
 
     // [OpenGL ES 2.0.24] table 3.9
     if (isSubImage)
@@ -704,8 +704,8 @@ bool ValidateES2TexStorageParameters(gl::Context *context, GLenum target, GLsize
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    GLenum format = gl::GetFormat(internalformat, context->getClientVersion());
-    GLenum type = gl::GetType(internalformat, context->getClientVersion());
+    GLenum format = gl::GetFormat(internalformat);
+    GLenum type = gl::GetType(internalformat);
 
     if (format == GL_NONE || type == GL_NONE)
     {

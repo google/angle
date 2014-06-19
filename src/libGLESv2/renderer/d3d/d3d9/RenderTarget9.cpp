@@ -56,16 +56,14 @@ RenderTarget9::RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, 
 
     HRESULT result = D3DERR_INVALIDCALL;
 
-    GLuint clientVersion = mRenderer->getCurrentClientVersion();
-
     if (width > 0 && height > 0)
     {
         IDirect3DDevice9 *device = mRenderer->getDevice();
 
         bool requiresInitialization = false;
 
-        if (gl::GetDepthBits(internalFormat, clientVersion) > 0 ||
-            gl::GetStencilBits(internalFormat, clientVersion) > 0)
+        if (gl::GetDepthBits(internalFormat) > 0 ||
+            gl::GetStencilBits(internalFormat) > 0)
         {
             result = device->CreateDepthStencilSurface(width, height, renderFormat,
                                                        gl_d3d9::GetMultisampleType(supportedSamples),

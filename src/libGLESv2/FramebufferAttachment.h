@@ -43,14 +43,14 @@ class FramebufferAttachment
     virtual ~FramebufferAttachment();
 
     // Helper methods
-    GLuint getRedSize(int clientVersion) const;
-    GLuint getGreenSize(int clientVersion) const;
-    GLuint getBlueSize(int clientVersion) const;
-    GLuint getAlphaSize(int clientVersion) const;
-    GLuint getDepthSize(int clientVersion) const;
-    GLuint getStencilSize(int clientVersion) const;
-    GLenum getComponentType(int clientVersion) const;
-    GLenum getColorEncoding(int clientVersion) const;
+    GLuint getRedSize() const;
+    GLuint getGreenSize() const;
+    GLuint getBlueSize() const;
+    GLuint getAlphaSize() const;
+    GLuint getDepthSize() const;
+    GLuint getStencilSize() const;
+    GLenum getComponentType() const;
+    GLenum getColorEncoding() const;
     bool isTexture() const;
 
     bool isTextureWithId(GLuint textureId) const { return isTexture() && id() == textureId; }

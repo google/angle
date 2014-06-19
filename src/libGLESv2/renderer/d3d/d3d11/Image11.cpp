@@ -40,7 +40,7 @@ Image11 *Image11::makeImage11(Image *img)
     return static_cast<rx::Image11*>(img);
 }
 
-void Image11::generateMipmap(GLuint clientVersion, Image11 *dest, Image11 *src)
+void Image11::generateMipmap(Image11 *dest, Image11 *src)
 {
     ASSERT(src->getDXGIFormat() == dest->getDXGIFormat());
     ASSERT(src->getWidth() == 1 || src->getWidth() / 2 == dest->getWidth());
@@ -118,7 +118,6 @@ bool Image11::redefine(Renderer *renderer, GLenum target, GLenum internalformat,
         forceRelease)
     {
         mRenderer = Renderer11::makeRenderer11(renderer);
-        GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
         mWidth = width;
         mHeight = height;
@@ -127,9 +126,9 @@ bool Image11::redefine(Renderer *renderer, GLenum target, GLenum internalformat,
         mTarget = target;
 
         // compute the d3d format that will be used
-        mDXGIFormat = gl_d3d11::GetTexFormat(internalformat, clientVersion);
-        mActualFormat = d3d11_gl::GetInternalFormat(mDXGIFormat, clientVersion);
-        mRenderable = gl_d3d11::GetRTVFormat(internalformat, clientVersion) != DXGI_FORMAT_UNKNOWN;
+        mDXGIFormat = gl_d3d11::GetTexFormat(internalformat);
+        mActualFormat = d3d11_gl::GetInternalFormat(mDXGIFormat);
+        mRenderable = gl_d3d11::GetRTVFormat(internalformat) != DXGI_FORMAT_UNKNOWN;
 
         SafeRelease(mStagingTexture);
         mDirty = gl_d3d11::RequiresTextureDataInitialization(mInternalFormat);
@@ -154,12 +153,11 @@ DXGI_FORMAT Image11::getDXGIFormat() const
 void Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                        GLint unpackAlignment, GLenum type, const void *input)
 {
-    GLuint clientVersion = mRenderer->getCurrentClientVersion();
-    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, type, clientVersion, width, unpackAlignment);
-    GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, type, clientVersion, width, height, unpackAlignment);
+    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, type, width, unpackAlignment);
+    GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, type, width, height, unpackAlignment);
     GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat);
 
-    LoadImageFunction loadFunction = d3d11::GetImageLoadFunction(mInternalFormat, type, clientVersion);
+    LoadImageFunction loadFunction = d3d11::GetImageLoadFunction(mInternalFormat, type);
     ASSERT(loadFunction != NULL);
 
     D3D11_MAPPED_SUBRESOURCE mappedImage;
@@ -179,9 +177,8 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei widt
 void Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                  const void *input)
 {
-    GLuint clientVersion = mRenderer->getCurrentClientVersion();
-    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion, width, 1);
-    GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion, width, height, 1);
+    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, GL_UNSIGNED_BYTE, width, 1);
+    GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, GL_UNSIGNED_BYTE, width, height, 1);
 
     GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat);
     GLuint outputBlockWidth = d3d11::GetBlockWidth(mDXGIFormat);
@@ -190,7 +187,7 @@ void Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GL
     ASSERT(xoffset % outputBlockWidth == 0);
     ASSERT(yoffset % outputBlockHeight == 0);
 
-    LoadImageFunction loadFunction = d3d11::GetImageLoadFunction(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion);
+    LoadImageFunction loadFunction = d3d11::GetImageLoadFunction(mInternalFormat, GL_UNSIGNED_BYTE);
     ASSERT(loadFunction != NULL);
 
     D3D11_MAPPED_SUBRESOURCE mappedImage;
@@ -287,12 +284,11 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y
         }
 
         // determine the offset coordinate into the destination buffer
-        GLuint clientVersion = mRenderer->getCurrentClientVersion();
-        GLsizei rowOffset = gl::GetPixelBytes(mActualFormat, clientVersion) * xoffset;
+        GLsizei rowOffset = gl::GetPixelBytes(mActualFormat) * xoffset;
         void *dataOffset = static_cast<unsigned char*>(mappedImage.pData) + mappedImage.RowPitch * yoffset + rowOffset + zoffset * mappedImage.DepthPitch;
 
-        GLenum format = gl::GetFormat(mInternalFormat, clientVersion);
-        GLenum type = gl::GetType(mInternalFormat, clientVersion);
+        GLenum format = gl::GetFormat(mInternalFormat);
+        GLenum type = gl::GetType(mInternalFormat);
 
         mRenderer->readPixels(source, x, y, width, height, format, type, mappedImage.RowPitch, gl::PixelPackState(), dataOffset);
 
@@ -354,8 +350,8 @@ void Image11::createStagingTexture()
             {
                 std::vector<D3D11_SUBRESOURCE_DATA> initialData;
                 std::vector< std::vector<BYTE> > textureData;
-                d3d11::GenerateInitialTextureData(mInternalFormat, mRenderer->getCurrentClientVersion(), width, height,
-                                                  mDepth, lodOffset + 1, &initialData, &textureData);
+                d3d11::GenerateInitialTextureData(mInternalFormat, width, height, mDepth,
+                                                  lodOffset + 1, &initialData, &textureData);
 
                 result = device->CreateTexture3D(&desc, initialData.data(), &newTexture);
             }
@@ -395,8 +391,8 @@ void Image11::createStagingTexture()
             {
                 std::vector<D3D11_SUBRESOURCE_DATA> initialData;
                 std::vector< std::vector<BYTE> > textureData;
-                d3d11::GenerateInitialTextureData(mInternalFormat, mRenderer->getCurrentClientVersion(), width, height,
-                                                  1, lodOffset + 1, &initialData, &textureData);
+                d3d11::GenerateInitialTextureData(mInternalFormat, width, height, 1,
+                                                  lodOffset + 1, &initialData, &textureData);
 
                 result = device->CreateTexture2D(&desc, initialData.data(), &newTexture);
             }

@@ -296,7 +296,7 @@ bool Blit9::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destF
     dest->GetDesc(&destDesc);
 
     if (sourceDesc.Format == destDesc.Format && destDesc.Usage & D3DUSAGE_RENDERTARGET &&
-        d3d9_gl::IsFormatChannelEquivalent(destDesc.Format, destFormat, mRenderer->getCurrentClientVersion()))   // Can use StretchRect
+        d3d9_gl::IsFormatChannelEquivalent(destDesc.Format, destFormat))   // Can use StretchRect
     {
         RECT destRect = {xoffset, yoffset, xoffset + (sourceRect.right - sourceRect.left), yoffset + (sourceRect.bottom - sourceRect.top)};
         HRESULT result = device->StretchRect(source, &sourceRect, dest, &destRect, D3DTEXF_POINT);

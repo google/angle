@@ -47,7 +47,7 @@ gl::Caps GenerateCaps(ID3D11Device *device);
 namespace d3d11
 {
 
-void GenerateInitialTextureData(GLint internalFormat, GLuint clientVersion, GLuint width, GLuint height, GLuint depth,
+void GenerateInitialTextureData(GLint internalFormat, GLuint width, GLuint height, GLuint depth,
                                 GLuint mipLevels, std::vector<D3D11_SUBRESOURCE_DATA> *outSubresourceData,
                                 std::vector< std::vector<BYTE> > *outData);
 

@@ -192,14 +192,13 @@ bool ValidImageSize(const gl::Context *context, GLenum target, GLint level,
 
 bool ValidCompressedImageSize(const gl::Context *context, GLenum internalFormat, GLsizei width, GLsizei height)
 {
-    GLuint clientVersion = context->getClientVersion();
-    if (!IsFormatCompressed(internalFormat, clientVersion))
+    if (!IsFormatCompressed(internalFormat))
     {
         return false;
     }
 
-    GLint blockWidth = GetCompressedBlockWidth(internalFormat, clientVersion);
-    GLint blockHeight = GetCompressedBlockHeight(internalFormat, clientVersion);
+    GLint blockWidth = GetCompressedBlockWidth(internalFormat);
+    GLint blockHeight = GetCompressedBlockHeight(internalFormat);
     if (width  < 0 || (width  > blockWidth  && width  % blockWidth  != 0) ||
         height < 0 || (height > blockHeight && height % blockHeight != 0))
     {
@@ -275,12 +274,12 @@ bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum ta
     // sized but it does state that the format must be in the ES2.0 spec table 4.5 which contains
     // only sized internal formats. The ES3 spec (section 4.4.2) does, however, state that the
     // internal format must be sized and not an integer format if samples is greater than zero.
-    if (!gl::IsSizedInternalFormat(internalformat, context->getClientVersion()))
+    if (!gl::IsSizedInternalFormat(internalformat))
     {
         return gl::error(GL_INVALID_ENUM, false);
     }
 
-    GLenum componentType = gl::GetComponentType(internalformat, context->getClientVersion());
+    GLenum componentType = gl::GetComponentType(internalformat);
     if ((componentType == GL_UNSIGNED_INT || componentType == GL_INT) && samples > 0)
     {
         return gl::error(GL_INVALID_OPERATION, false);
@@ -472,8 +471,6 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
 
     bool sameBounds = srcX0 == dstX0 && srcY0 == dstY0 && srcX1 == dstX1 && srcY1 == dstY1;
 
-    GLuint clientVersion = context->getClientVersion();
-
     if (mask & GL_COLOR_BUFFER_BIT)
     {
         gl::FramebufferAttachment *readColorBuffer = readFramebuffer->getReadColorbuffer();
@@ -482,14 +479,14 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
         if (readColorBuffer && drawColorBuffer)
         {
             GLenum readInternalFormat = readColorBuffer->getActualFormat();
-            GLenum readComponentType = gl::GetComponentType(readInternalFormat, clientVersion);
+            GLenum readComponentType = gl::GetComponentType(readInternalFormat);
 
             for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; i++)
             {
                 if (drawFramebuffer->isEnabledColorAttachment(i))
                 {
                     GLenum drawInternalFormat = drawFramebuffer->getColorbuffer(i)->getActualFormat();
-                    GLenum drawComponentType = gl::GetComponentType(drawInternalFormat, clientVersion);
+                    GLenum drawComponentType = gl::GetComponentType(drawInternalFormat);
 
                     // The GL ES 3.0.2 spec (pg 193) states that:
                     // 1) If the read buffer is fixed point format, the draw buffer must be as well
@@ -852,7 +849,7 @@ bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsize
     }
 
     GLenum currentInternalFormat, currentFormat, currentType;
-    int clientVersion = context->getClientVersion();
+    GLuint clientVersion = context->getClientVersion();
 
     context->getCurrentReadFormatType(&currentInternalFormat, &currentFormat, &currentType);
 
@@ -864,10 +861,10 @@ bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsize
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    GLenum sizedInternalFormat = IsSizedInternalFormat(format, clientVersion) ? format :
-                                 GetSizedInternalFormat(format, type, clientVersion);
+    GLenum sizedInternalFormat = IsSizedInternalFormat(format) ? format
+                                                               : GetSizedInternalFormat(format, type);
 
-    GLsizei outputPitch = GetRowPitch(sizedInternalFormat, type, clientVersion, width, context->getPackAlignment());
+    GLsizei outputPitch = GetRowPitch(sizedInternalFormat, type, width, context->getPackAlignment());
     // sized query sanity check
     if (bufSize)
     {
@@ -1249,9 +1246,8 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
 
     if (textureCompressed)
     {
-        int clientVersion = context->getClientVersion();
-        GLint blockWidth = GetCompressedBlockWidth(textureInternalFormat, clientVersion);
-        GLint blockHeight = GetCompressedBlockHeight(textureInternalFormat, clientVersion);
+        GLint blockWidth = GetCompressedBlockWidth(textureInternalFormat);
+        GLint blockHeight = GetCompressedBlockHeight(textureInternalFormat);
 
         if (((width % blockWidth) != 0 && width != textureLevelWidth) ||
             ((height % blockHeight) != 0 && height != textureLevelHeight))
