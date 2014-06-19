@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c4a70589_b320a2ba",
+        "filename": "src/libGLESv2/renderer/d3d11/RenderStateCache.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-19T20:31:51Z",
+      "side": 1,
+      "message": "That\u0027s fine, but please let\u0027s not get into the habit of reverting other people\u0027s changes because of preference override. :)",
+      "parentUuid": "6471f9c6_c5523ded",
+      "range": {
+        "startLine": 41,
+        "startChar": 39,
+        "endLine": 41,
+        "endChar": 52
+      },
+      "revId": "84065ac86b9138adf6916a1b3fd8bbe1d50bed56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "643ad9c6_f1ff2811",
         "filename": "src/libGLESv2/renderer/d3d9/formatutils9.cpp",
         "patchSetId": 8
