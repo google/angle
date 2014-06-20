@@ -449,7 +449,9 @@ std::string StructureHLSL::structsHeader() const
         out << mStructDeclarations[structIndex];
     }
 
-    for (Constructors::iterator constructor = mConstructors.begin(); constructor != mConstructors.end(); constructor++)
+    for (Constructors::const_iterator constructor = mConstructors.begin();
+         constructor != mConstructors.end();
+         constructor++)
     {
         out << *constructor;
     }
