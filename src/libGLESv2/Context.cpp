@@ -575,6 +575,21 @@ void Context::setStencilBackOperations(GLenum stencilBackFail, GLenum stencilBac
     mState.depthStencil.stencilBackPassDepthPass = stencilBackPassDepthPass;
 }
 
+const gl::DepthStencilState &Context::getDepthStencilState() const
+{
+    return mState.depthStencil;
+}
+
+GLint Context::getStencilRef() const
+{
+    return mState.stencilRef;
+}
+
+GLint Context::getStencilBackRef() const
+{
+    return mState.stencilBackRef;
+}
+
 void Context::setPolygonOffsetFill(bool enabled)
 {
      mState.rasterizer.polygonOffsetFill = enabled;

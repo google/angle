@@ -654,14 +654,9 @@ void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilS
         memcmp(&depthStencilState, &mCurDepthStencilState, sizeof(gl::DepthStencilState)) != 0 ||
         stencilRef != mCurStencilRef || stencilBackRef != mCurStencilBackRef)
     {
-        if (depthStencilState.stencilWritemask != depthStencilState.stencilBackWritemask ||
-            stencilRef != stencilBackRef ||
-            depthStencilState.stencilMask != depthStencilState.stencilBackMask)
-        {
-            ERR("Separate front/back stencil writemasks, reference values, or stencil mask values are "
-                "invalid under WebGL.");
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        ASSERT(depthStencilState.stencilWritemask == depthStencilState.stencilBackWritemask);
+        ASSERT(stencilRef == stencilBackRef);
+        ASSERT(depthStencilState.stencilMask == depthStencilState.stencilBackMask);
 
         ID3D11DepthStencilState *dxDepthStencilState = mStateCache.getDepthStencilState(depthStencilState);
         if (!dxDepthStencilState)

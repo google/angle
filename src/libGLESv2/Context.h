@@ -182,6 +182,9 @@ class Context
     void setStencilBackWritemask(GLuint stencilBackWritemask);
     void setStencilOperations(GLenum stencilFail, GLenum stencilPassDepthFail, GLenum stencilPassDepthPass);
     void setStencilBackOperations(GLenum stencilBackFail, GLenum stencilBackPassDepthFail, GLenum stencilBackPassDepthPass);
+    const gl::DepthStencilState &getDepthStencilState() const;
+    GLint getStencilRef() const;
+    GLint getStencilBackRef() const;
 
     void setPolygonOffsetFill(bool enabled);
     bool isPolygonOffsetFillEnabled() const;

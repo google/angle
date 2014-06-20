@@ -1302,6 +1302,18 @@ static bool ValidateDrawBase(const gl::Context *context, GLsizei count)
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
+    const gl::DepthStencilState &depthStencilState = context->getDepthStencilState();
+    if (depthStencilState.stencilWritemask != depthStencilState.stencilBackWritemask ||
+        context->getStencilRef() != context->getStencilBackRef() ||
+        depthStencilState.stencilMask != depthStencilState.stencilBackMask)
+    {
+        // Note: these separate values are not supported in WebGL, due to D3D's limitations.
+        // See Section 6.10 of the WebGL 1.0 spec
+        ERR("This ANGLE implementation does not support separate front/back stencil "
+            "writemasks, reference values, or stencil mask values.");
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
     // No-op if zero count
     return (count > 0);
 }
