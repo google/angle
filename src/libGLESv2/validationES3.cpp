@@ -757,4 +757,20 @@ bool ValidateInvalidateFramebufferParameters(gl::Context *context, GLenum target
     return true;
 }
 
+bool ValidateClearBuffer(const gl::Context *context)
+{
+    if (context->getClientVersion() < 3)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    const gl::Framebuffer *fbo = context->getDrawFramebuffer();
+    if (!fbo || fbo->completeness() != GL_FRAMEBUFFER_COMPLETE)
+    {
+        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
+    }
+
+    return true;
+}
+
 }

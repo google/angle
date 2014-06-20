@@ -365,6 +365,7 @@ class Context
     GLuint getTargetFramebufferHandle(GLenum target) const;
     Framebuffer *getReadFramebuffer();
     Framebuffer *getDrawFramebuffer();
+    const Framebuffer *getDrawFramebuffer() const;
     VertexArray *getCurrentVertexArray() const;
     TransformFeedback *getCurrentTransformFeedback() const;
 

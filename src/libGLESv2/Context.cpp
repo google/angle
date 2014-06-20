@@ -1133,6 +1133,11 @@ Framebuffer *Context::getDrawFramebuffer()
     return mBoundDrawFramebuffer;
 }
 
+const Framebuffer *Context::getDrawFramebuffer() const
+{
+    return mBoundDrawFramebuffer;
+}
+
 VertexArray *Context::getCurrentVertexArray() const
 {
     VertexArray *vao = getVertexArray(mState.vertexArray);
@@ -2352,11 +2357,7 @@ bool Context::getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned
 bool Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
 {
     Framebuffer *framebufferObject = getDrawFramebuffer();
-
-    if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
-    {
-        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
-    }
+    ASSERT(framebufferObject && framebufferObject->completeness() == GL_FRAMEBUFFER_COMPLETE);
 
     mRenderer->applyRenderTarget(framebufferObject);
 
@@ -2638,7 +2639,6 @@ void Context::clear(GLbitfield mask)
             }
         }
     }
-
 
     if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
     {
