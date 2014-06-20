@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "642bb9c3_f507c334",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-20T20:00:40Z",
+      "side": 1,
+      "message": "wrong order",
+      "revId": "af2c1e4720898ba05d026e39512fbc5036733dec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "642bb9c3_d519df92",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-20T20:00:40Z",
+      "side": 1,
+      "message": "wrong order",
+      "revId": "af2c1e4720898ba05d026e39512fbc5036733dec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "642bb9c3_b516eb60",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-20T20:00:40Z",
+      "side": 1,
+      "message": "wrong order",
+      "revId": "af2c1e4720898ba05d026e39512fbc5036733dec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "642bb9c3_328df1b3",
+        "filename": "src/compiler/translator/VariablePacker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-20T20:00:40Z",
+      "side": 1,
+      "message": "You don\u0027t need this include here, as it\u0027s in the .h file already",
+      "revId": "af2c1e4720898ba05d026e39512fbc5036733dec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
