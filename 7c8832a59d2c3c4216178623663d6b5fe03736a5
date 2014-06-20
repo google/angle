@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "442075de_b7843286",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-20T19:52:14Z",
+      "side": 1,
+      "message": "nit: remove whitespaces",
+      "revId": "7c8832a59d2c3c4216178623663d6b5fe03736a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "242541ef_61d15a33",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1151,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-20T19:52:14Z",
+      "side": 1,
+      "message": "nit: remove whitespaces",
+      "revId": "7c8832a59d2c3c4216178623663d6b5fe03736a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
