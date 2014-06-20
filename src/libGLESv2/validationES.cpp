@@ -1290,8 +1290,22 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
     return true;
 }
 
-static bool ValidateDrawBase(const gl::Context *context, GLsizei count)
+static bool ValidateDrawBase(const gl::Context *context, GLenum mode, GLsizei count)
 {
+    switch (mode)
+    {
+      case GL_POINTS:
+      case GL_LINES:
+      case GL_LINE_LOOP:
+      case GL_LINE_STRIP:
+      case GL_TRIANGLES:
+      case GL_TRIANGLE_STRIP:
+      case GL_TRIANGLE_FAN:
+        break;
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
     if (count < 0)
     {
         return gl::error(GL_INVALID_VALUE, false);
@@ -1347,7 +1361,7 @@ bool ValidateDrawArrays(const gl::Context *context, GLenum mode, GLint first, GL
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (!ValidateDrawBase(context, count))
+    if (!ValidateDrawBase(context, mode, count))
     {
         return false;
     }
@@ -1408,7 +1422,7 @@ bool ValidateDrawElements(const gl::Context *context, GLenum mode, GLsizei count
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (!ValidateDrawBase(context, count))
+    if (!ValidateDrawBase(context, mode, count))
     {
         return false;
     }

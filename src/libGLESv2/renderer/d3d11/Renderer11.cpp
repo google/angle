@@ -793,7 +793,8 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
           // emulate fans via rewriting index buffer
       case GL_TRIANGLE_FAN:   primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;  minCount = 3; break;
       default:
-        return gl::error(GL_INVALID_ENUM, false);
+        UNREACHABLE();
+        return false;
     }
 
     if (primitiveTopology != mCurrentPrimitiveTopology)

@@ -1094,7 +1094,8 @@ bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count)
         mPrimitiveCount = count - 2;
         break;
       default:
-        return gl::error(GL_INVALID_ENUM, false);
+        UNREACHABLE();
+        return false;
     }
 
     return mPrimitiveCount > 0;
