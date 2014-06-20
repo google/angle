@@ -19,6 +19,7 @@
 #include "libGLESv2/Query.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/TransformFeedback.h"
+#include "libGLESv2/VertexArray.h"
 
 #include "common/mathutil.h"
 #include "common/utilities.h"
@@ -1314,6 +1315,17 @@ static bool ValidateDrawBase(const gl::Context *context, GLsizei count)
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
+    if (!context->getCurrentProgram())
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+    if (!programBinary->validateSamplers(NULL))
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
     // No-op if zero count
     return (count > 0);
 }
@@ -1386,6 +1398,12 @@ bool ValidateDrawElements(const gl::Context *context, GLenum mode, GLsizei count
 
     // Check for mapped buffers
     if (context->hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::VertexArray *vao = context->getCurrentVertexArray();
+    if (!indices && !vao->getElementArrayBuffer())
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
