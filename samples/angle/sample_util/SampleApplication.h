@@ -28,7 +28,7 @@ class SampleApplication
 {
   public:
     SampleApplication(const std::string& name, size_t width, size_t height,
-                      EGLint glesMajorVersion = 2, RendererType requestedRenderer = RENDERER_D3D11);
+                      EGLint glesMajorVersion = 2, EGLint requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
     virtual ~SampleApplication();
 
     virtual bool initialize();
@@ -41,6 +41,7 @@ class SampleApplication
 
     Window *getWindow() const;
     EGLConfig getConfig() const;
+    EGLDisplay getDisplay() const;
     EGLSurface getSurface() const;
     EGLContext getContext() const;
 
@@ -54,11 +55,12 @@ class SampleApplication
     void destroyGL();
 
     EGLConfig mConfig;
+    EGLDisplay mDisplay;
     EGLSurface mSurface;
     EGLContext mContext;
 
     GLuint mClientVersion;
-    RendererType mRequestedRenderer;
+    EGLint mRequestedRenderer;
     size_t mWidth;
     size_t mHeight;
     std::string mName;

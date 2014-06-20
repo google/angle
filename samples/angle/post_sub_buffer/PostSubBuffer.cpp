@@ -143,7 +143,7 @@ class PostSubBufferSample : public SampleApplication
         // Instead of letting the application call eglSwapBuffers, call eglPostSubBufferNV here instead
         size_t windowWidth = getWindow()->getWidth();
         size_t windowHeight = getWindow()->getHeight();
-        EGLDisplay display = getWindow()->getDisplay();
+        EGLDisplay display = getDisplay();
         EGLSurface surface = getSurface();
         mPostSubBufferNV(display, surface, 60, 60, windowWidth - 120, windowHeight - 120);
     }

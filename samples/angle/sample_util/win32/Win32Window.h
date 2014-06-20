@@ -17,10 +17,9 @@ class Win32Window : public Window
     Win32Window();
     ~Win32Window();
 
-    bool initialize(const std::string &name, size_t width, size_t height, RendererType requestedRenderer);
+    bool initialize(const std::string &name, size_t width, size_t height);
     void destroy();
 
-    EGLDisplay getDisplay() const;
     EGLNativeWindowType getNativeWindow() const;
     EGLNativeDisplayType getNativeDisplay() const;
 
@@ -34,7 +33,6 @@ class Win32Window : public Window
   private:
     std::string mClassName;
 
-    EGLDisplay mDisplay;
     EGLNativeWindowType mNativeWindow;
     EGLNativeDisplayType mNativeDisplay;
 };

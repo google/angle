@@ -363,7 +363,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 Win32Window::Win32Window()
     : mClassName(),
-      mDisplay(0),
       mNativeWindow(0),
       mNativeDisplay(0)
 {
@@ -374,7 +373,7 @@ Win32Window::~Win32Window()
     destroy();
 }
 
-bool Win32Window::initialize(const std::string &name, size_t width, size_t height, RendererType requestedRenderer)
+bool Win32Window::initialize(const std::string &name, size_t width, size_t height)
 {
     destroy();
 
@@ -418,44 +417,11 @@ bool Win32Window::initialize(const std::string &name, size_t width, size_t heigh
         return false;
     }
 
-    EGLNativeDisplayType requestedDisplay = mNativeDisplay;
-    if (requestedRenderer == RENDERER_D3D11)
-    {
-        requestedDisplay = EGL_D3D11_ONLY_DISPLAY_ANGLE;
-    }
-
-    mDisplay = eglGetDisplay(requestedDisplay);
-    if (mDisplay == EGL_NO_DISPLAY)
-    {
-        mDisplay = eglGetDisplay((EGLNativeDisplayType)EGL_DEFAULT_DISPLAY);
-    }
-
-    EGLint majorVersion, minorVersion;
-    if (!eglInitialize(mDisplay, &majorVersion, &minorVersion))
-    {
-        destroy();
-        return false;
-    }
-
-    eglBindAPI(EGL_OPENGL_ES_API);
-    if (eglGetError() != EGL_SUCCESS)
-    {
-        destroy();
-        return false;
-    }
-
     return true;
 }
 
 void Win32Window::destroy()
 {
-    if (mDisplay != EGL_NO_DISPLAY)
-    {
-        eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-        eglTerminate(mDisplay);
-        mDisplay = EGL_NO_DISPLAY;
-    }
-
     if (mNativeDisplay)
     {
         ReleaseDC(mNativeWindow, mNativeDisplay);
@@ -469,11 +435,6 @@ void Win32Window::destroy()
     }
 
     UnregisterClassA(mClassName.c_str(), NULL);
-}
-
-EGLDisplay Win32Window::getDisplay() const
-{
-    return mDisplay;
 }
 
 EGLNativeWindowType Win32Window::getNativeWindow() const

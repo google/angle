@@ -82,6 +82,8 @@ class ANGLETest : public testing::Test
     bool createEGLContext();
     bool destroyEGLContext();
 
+    EGLint mTestPlatform;
+
     int mClientVersion;
     int mWidth;
     int mHeight;

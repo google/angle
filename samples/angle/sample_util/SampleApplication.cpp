@@ -14,9 +14,10 @@
 #endif
 
 SampleApplication::SampleApplication(const std::string& name, size_t width, size_t height,
-                                     EGLint glesMajorVersion, RendererType requestedRenderer)
+                                     EGLint glesMajorVersion, EGLint requestedRenderer)
     : mSurface(EGL_NO_SURFACE),
       mContext(EGL_NO_CONTEXT),
+      mDisplay(EGL_NO_DISPLAY),
       mClientVersion(glesMajorVersion),
       mRequestedRenderer(requestedRenderer),
       mWidth(width),
@@ -53,7 +54,7 @@ void SampleApplication::draw()
 
 void SampleApplication::swap()
 {
-    eglSwapBuffers(mWindow->getDisplay(), mSurface);
+    eglSwapBuffers(mDisplay, mSurface);
 }
 
 Window *SampleApplication::getWindow() const
@@ -64,6 +65,11 @@ Window *SampleApplication::getWindow() const
 EGLConfig SampleApplication::getConfig() const
 {
     return mConfig;
+}
+
+EGLDisplay SampleApplication::getDisplay() const
+{
+    return mDisplay;
 }
 
 EGLSurface SampleApplication::getSurface() const
@@ -78,7 +84,7 @@ EGLContext SampleApplication::getContext() const
 
 int SampleApplication::run()
 {
-    if (!mWindow->initialize(mName, mWidth, mHeight, mRequestedRenderer))
+    if (!mWindow->initialize(mName, mWidth, mHeight))
     {
         return -1;
     }
@@ -150,6 +156,39 @@ bool SampleApplication::popEvent(Event *event)
 
 bool SampleApplication::initializeGL()
 {
+    PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
+    if (!eglGetPlatformDisplayEXT)
+    {
+        return false;
+    }
+
+    const EGLint displayAttributes[] =
+    {
+        EGL_PLATFORM_ANGLE_TYPE_ANGLE, mRequestedRenderer,
+        EGL_NONE,
+    };
+
+    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, mWindow->getNativeDisplay(), displayAttributes);
+    if (mDisplay == EGL_NO_DISPLAY)
+    {
+        destroyGL();
+        return false;
+    }
+
+    EGLint majorVersion, minorVersion;
+    if (!eglInitialize(mDisplay, &majorVersion, &minorVersion))
+    {
+        destroyGL();
+        return false;
+    }
+
+    eglBindAPI(EGL_OPENGL_ES_API);
+    if (eglGetError() != EGL_SUCCESS)
+    {
+        destroyGL();
+        return false;
+    }
+
     const EGLint configAttributes[] =
     {
         EGL_RED_SIZE,       8,
@@ -163,7 +202,7 @@ bool SampleApplication::initializeGL()
     };
 
     EGLint configCount;
-    if (!eglChooseConfig(mWindow->getDisplay(), configAttributes, &mConfig, 1, &configCount) || (configCount != 1))
+    if (!eglChooseConfig(mDisplay, configAttributes, &mConfig, 1, &configCount) || (configCount != 1))
     {
         destroyGL();
         return false;
@@ -175,11 +214,11 @@ bool SampleApplication::initializeGL()
         EGL_NONE, EGL_NONE,
     };
 
-    mSurface = eglCreateWindowSurface(mWindow->getDisplay(), mConfig, mWindow->getNativeWindow(), surfaceAttributes);
+    mSurface = eglCreateWindowSurface(mDisplay, mConfig, mWindow->getNativeWindow(), surfaceAttributes);
     if (mSurface == EGL_NO_SURFACE)
     {
         eglGetError(); // Clear error and try again
-        mSurface = eglCreateWindowSurface(mWindow->getDisplay(), mConfig, NULL, NULL);
+        mSurface = eglCreateWindowSurface(mDisplay, mConfig, NULL, NULL);
     }
 
     if (eglGetError() != EGL_SUCCESS)
@@ -193,14 +232,14 @@ bool SampleApplication::initializeGL()
         EGL_CONTEXT_CLIENT_VERSION, mClientVersion,
         EGL_NONE
     };
-    mContext = eglCreateContext(mWindow->getDisplay(), mConfig, NULL, contextAttibutes);
+    mContext = eglCreateContext(mDisplay, mConfig, NULL, contextAttibutes);
     if (eglGetError() != EGL_SUCCESS)
     {
         destroyGL();
         return false;
     }
 
-    eglMakeCurrent(mWindow->getDisplay(), mSurface, mSurface, mContext);
+    eglMakeCurrent(mDisplay, mSurface, mSurface, mContext);
     if (eglGetError() != EGL_SUCCESS)
     {
         destroyGL();
@@ -208,16 +247,20 @@ bool SampleApplication::initializeGL()
     }
 
     // Turn off vsync
-    eglSwapInterval(mWindow->getDisplay(), 0);
+    eglSwapInterval(mDisplay, 0);
 
     return true;
 }
 
 void SampleApplication::destroyGL()
 {
-    eglDestroySurface(mWindow->getDisplay(), mSurface);
+    eglDestroySurface(mDisplay, mSurface);
     mSurface = 0;
 
-    eglDestroyContext(mWindow->getDisplay(), mContext);
+    eglDestroyContext(mDisplay, mContext);
     mContext = 0;
+
+    eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    eglTerminate(mDisplay);
+    mDisplay = EGL_NO_DISPLAY;
 }

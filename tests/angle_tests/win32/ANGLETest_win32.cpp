@@ -53,34 +53,11 @@ bool ANGLETest::InitTestWindow()
         return false;
     }
 
-    mDisplay = eglGetDisplay(mNativeDisplay);
-    if(mDisplay == EGL_NO_DISPLAY)
-    {
-         mDisplay = eglGetDisplay((EGLNativeDisplayType)EGL_DEFAULT_DISPLAY);
-    }
-
-    EGLint majorVersion, minorVersion;
-    if (!eglInitialize(mDisplay, &majorVersion, &minorVersion))
-    {
-        DestroyTestWindow();
-        return false;
-    }
-
-    eglBindAPI(EGL_OPENGL_ES_API);
-    if (eglGetError() != EGL_SUCCESS)
-    {
-        DestroyTestWindow();
-        return false;
-    }
-
     return true;
 }
 
 bool ANGLETest::DestroyTestWindow()
 {
-    eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-    eglTerminate(mDisplay);
-
     if (mNativeDisplay)
     {
         ReleaseDC(mNativeWindow, mNativeDisplay);
