@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "242541ef_8130ce0d",
+        "filename": "src/libGLESv2/renderer/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-20T19:36:56Z",
+      "side": 1,
+      "message": "suggestion: rename TypedBuffer11 to BufferStorage11, in my mind storage is a pretty good term for wrapping a d3d object (or pointer in the case of pack buffers)",
+      "range": {
+        "startLine": 71,
+        "startChar": 30,
+        "endLine": 71,
+        "endChar": 43
+      },
+      "revId": "4a5193e5880fd25d8bc760c1bb00706790519eee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "442075de_5714d6a3",
+        "filename": "src/libGLESv2/renderer/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-20T19:36:56Z",
+      "side": 1,
+      "message": "nit: don\u0027t need the rx here, I think",
+      "range": {
+        "startLine": 158,
+        "startChar": 19,
+        "endLine": 158,
+        "endChar": 23
+      },
+      "revId": "4a5193e5880fd25d8bc760c1bb00706790519eee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
