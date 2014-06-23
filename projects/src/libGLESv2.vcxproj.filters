@@ -114,6 +114,9 @@
     <ClCompile Include="..\..\src\libGLESv2\Fence.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\libGLESv2\VertexAttribute.cpp">
+      <Filter>src\libGLESv2</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\Texture.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -339,6 +342,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\vertexconversion.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\VertexArrayImpl.h">
+      <Filter>src\libGLESv2\renderer</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\VertexDataManager.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
@@ -430,6 +436,9 @@
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\ShaderExecutable11.h">
+      <Filter>src\libGLESv2\renderer\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\VertexArray11.h">
       <Filter>src\libGLESv2\renderer\d3d11</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\Fence11.h">
@@ -691,6 +700,9 @@
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Renderer9.h">
+      <Filter>src\libGLESv2\renderer\d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\VertexArray9.h">
       <Filter>src\libGLESv2\renderer\d3d9</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d9\Query9.cpp">

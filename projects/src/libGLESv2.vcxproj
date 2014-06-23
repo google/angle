@@ -174,6 +174,7 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\generatemip.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\RenderTarget.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\vertexconversion.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\VertexArrayImpl.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\VertexDataManager.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\VertexBuffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\PixelTransfer11.h"/>
@@ -190,6 +191,7 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\renderer11_utils.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\TextureStorage11.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\ShaderExecutable11.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\VertexArray11.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\Fence11.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\Query11.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d11\formatutils11.h"/>
@@ -256,6 +258,7 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\SwapChain9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\formatutils9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Renderer9.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\VertexArray9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\renderer9_utils.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Blit9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d9\Query9.h"/>
@@ -301,6 +304,7 @@
     <ClCompile Include="..\..\src\libGLESv2\queryconversions.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\RenderbufferProxySet.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Fence.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\VertexAttribute.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\validationES.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Renderbuffer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Program.cpp"/>
