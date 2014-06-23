@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4db2937_4e0a91ae",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-23T21:11:45Z",
+      "side": 1,
+      "message": "These can be removed since they should be covered by the */d3d/* now.",
+      "range": {
+        "startLine": 41,
+        "startChar": 47,
+        "endLine": 41,
+        "endChar": 65
+      },
+      "revId": "ac7b46acf2a3f330bc9a4768526e0ae461d9e962",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4c40963_2fc2b56d",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-23T21:11:45Z",
+      "side": 1,
+      "message": "This needs an update too.",
+      "range": {
+        "startLine": 56,
+        "startChar": 84,
+        "endLine": 56,
+        "endChar": 89
+      },
+      "revId": "ac7b46acf2a3f330bc9a4768526e0ae461d9e962",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
