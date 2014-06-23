@@ -166,14 +166,16 @@ bool ValidMipLevel(const Context *context, GLenum target, GLint level)
     return level < maxLevel;
 }
 
-bool ValidImageSize(const gl::Context *context, GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth)
+bool ValidImageSize(const gl::Context *context, GLenum target, GLint level,
+                    GLsizei width, GLsizei height, GLsizei depth)
 {
     if (level < 0 || width < 0 || height < 0 || depth < 0)
     {
         return false;
     }
 
-    if (!context->supportsNonPower2Texture() && (level != 0 || !gl::isPow2(width) || !gl::isPow2(height) || !gl::isPow2(depth)))
+    if (!context->supportsNonPower2Texture() &&
+        (level != 0 && (!gl::isPow2(width) || !gl::isPow2(height) || !gl::isPow2(depth))))
     {
         return false;
     }
