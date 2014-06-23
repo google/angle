@@ -38,7 +38,6 @@ int MatrixComponentCount(GLenum type, bool isRowMajorMatrix);
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize);
 
 bool IsCubemapTextureTarget(GLenum target);
-bool IsInternalTextureTarget(GLenum target, GLuint clientVersion);
 
 bool IsTriangleMode(GLenum drawMode);
 

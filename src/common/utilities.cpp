@@ -392,24 +392,6 @@ bool IsCubemapTextureTarget(GLenum target)
     return (target >= GL_TEXTURE_CUBE_MAP_POSITIVE_X && target <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
 }
 
-bool IsInternalTextureTarget(GLenum target, GLuint clientVersion)
-{
-    if (clientVersion == 2)
-    {
-        return target == GL_TEXTURE_2D || IsCubemapTextureTarget(target);
-    }
-    else if (clientVersion == 3)
-    {
-        return target == GL_TEXTURE_2D || IsCubemapTextureTarget(target) ||
-               target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY;
-    }
-    else
-    {
-        UNREACHABLE();
-        return false;
-    }
-}
-
 bool IsTriangleMode(GLenum drawMode)
 {
     switch (drawMode)

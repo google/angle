@@ -2709,7 +2709,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             {
                 attachmentObjectType = attachmentType;
             }
-            else if (gl::IsInternalTextureTarget(attachmentType, context->getClientVersion()))
+            else if (gl::ValidTexture2DDestinationTarget(context, attachmentType))
             {
                 attachmentObjectType = GL_TEXTURE;
             }
