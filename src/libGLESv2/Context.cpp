@@ -22,7 +22,7 @@
 #include "libGLESv2/Query.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/ResourceManager.h"
-#include "libGLESv2/renderer/IndexDataManager.h"
+#include "libGLESv2/renderer/d3d/IndexDataManager.h"
 #include "libGLESv2/renderer/RenderTarget.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/VertexArray.h"

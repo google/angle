@@ -24,7 +24,7 @@
 #include "libGLESv2/Uniform.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Constants.h"
-#include "libGLESv2/renderer/VertexDataManager.h"
+#include "libGLESv2/renderer/d3d/VertexDataManager.h"
 #include "libGLESv2/DynamicHLSL.h"
 
 namespace rx
