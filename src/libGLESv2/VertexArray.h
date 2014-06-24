@@ -27,11 +27,13 @@ namespace gl
 {
 class Buffer;
 
-class VertexArray : public RefCountObject
+class VertexArray
 {
   public:
     VertexArray(rx::VertexArrayImpl *impl, GLuint id, size_t maxAttribs);
     ~VertexArray();
+
+    GLuint id() const;
 
     const VertexAttribute& getVertexAttribute(size_t attributeIndex) const;
     void detachBuffer(GLuint bufferName);
@@ -47,6 +49,8 @@ class VertexArray : public RefCountObject
     size_t getMaxAttribs() const { return mVertexAttributes.size(); }
 
   private:
+    GLuint mId;
+
     rx::VertexArrayImpl *mVertexArray;
     std::vector<VertexAttribute> mVertexAttributes;
     BindingPointer<Buffer> mElementArrayBuffer;

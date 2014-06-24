@@ -22,8 +22,9 @@
 namespace gl
 {
 
-Framebuffer::Framebuffer(rx::Renderer *renderer)
+Framebuffer::Framebuffer(rx::Renderer *renderer, GLuint id)
     : mRenderer(renderer),
+      mId(id),
       mReadBufferState(GL_COLOR_ATTACHMENT0_EXT),
       mDepthbuffer(NULL),
       mStencilbuffer(NULL)
@@ -563,7 +564,7 @@ GLenum Framebuffer::completeness() const
 }
 
 DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, Colorbuffer *colorbuffer, DepthStencilbuffer *depthStencil)
-    : Framebuffer(renderer)
+    : Framebuffer(renderer, 0)
 {
     Renderbuffer *colorRenderbuffer = new Renderbuffer(0, colorbuffer);
     mColorbuffers[0] = new RenderbufferAttachment(colorRenderbuffer);

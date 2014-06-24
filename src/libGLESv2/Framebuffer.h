@@ -30,9 +30,11 @@ class DepthStencilbuffer;
 class Framebuffer
 {
   public:
-    explicit Framebuffer(rx::Renderer *renderer);
+    Framebuffer(rx::Renderer *renderer, GLuint id);
 
     virtual ~Framebuffer();
+
+    GLuint id() const { return mId; }
 
     void setColorbuffer(unsigned int colorAttachment, GLenum type, GLuint colorbuffer, GLint level, GLint layer);
     void setDepthbuffer(GLenum type, GLuint depthbuffer, GLint level, GLint layer);
@@ -67,6 +69,8 @@ class Framebuffer
 
   protected:
     rx::Renderer *mRenderer;
+
+    GLuint mId;
 
     FramebufferAttachment *mColorbuffers[IMPLEMENTATION_MAX_DRAW_BUFFERS];
     GLenum mDrawBufferStates[IMPLEMENTATION_MAX_DRAW_BUFFERS];

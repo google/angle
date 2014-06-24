@@ -15,7 +15,7 @@ namespace gl
 {
 
 VertexArray::VertexArray(rx::VertexArrayImpl *impl, GLuint id, size_t maxAttribs)
-    : RefCountObject(id),
+    : mId(id),
       mVertexArray(impl),
       mVertexAttributes(maxAttribs)
 {
@@ -31,6 +31,11 @@ VertexArray::~VertexArray()
         mVertexAttributes[i].buffer.set(NULL);
     }
     mElementArrayBuffer.set(NULL);
+}
+
+GLuint VertexArray::id() const
+{
+    return mId;
 }
 
 void VertexArray::detachBuffer(GLuint bufferName)
