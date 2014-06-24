@@ -254,7 +254,7 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
     }
 
     // Check for pixel unpack buffer related API errors
-    gl::Buffer *pixelUnpackBuffer = context->getPixelUnpackBuffer();
+    gl::Buffer *pixelUnpackBuffer = context->getState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
     if (pixelUnpackBuffer != NULL)
     {
         // ...the data would be unpacked from the buffer object such that the memory reads required
@@ -316,14 +316,14 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
         return false;
     }
 
-    gl::Framebuffer *framebuffer = context->getReadFramebuffer();
+    gl::Framebuffer *framebuffer = context->getState().getReadFramebuffer();
 
     if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
         return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
     }
 
-    if (context->getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
+    if (context->getState().getReadFramebuffer()->id() != 0 && framebuffer->getSamples() != 0)
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
@@ -334,7 +334,7 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
     if (isSubImage)
     {
         if (!gl::IsValidCopyTexImageCombination(textureInternalFormat, colorbufferInternalFormat,
-                                                context->getReadFramebufferHandle(),
+                                                context->getState().getReadFramebuffer()->id(),
                                                 context->getClientVersion()))
         {
             return gl::error(GL_INVALID_OPERATION, false);
@@ -343,7 +343,7 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
     else
     {
         if (!gl::IsValidCopyTexImageCombination(internalformat, colorbufferInternalFormat,
-                                                context->getReadFramebufferHandle(),
+                                                context->getState().getReadFramebuffer()->id(),
                                                 context->getClientVersion()))
         {
             return gl::error(GL_INVALID_OPERATION, false);
@@ -611,10 +611,10 @@ bool ValidateInvalidateFramebufferParameters(gl::Context *context, GLenum target
     {
       case GL_DRAW_FRAMEBUFFER:
       case GL_FRAMEBUFFER:
-        defaultFramebuffer = context->getDrawFramebufferHandle() == 0;
+        defaultFramebuffer = context->getState().getDrawFramebuffer()->id() == 0;
         break;
       case GL_READ_FRAMEBUFFER:
-        defaultFramebuffer = context->getReadFramebufferHandle() == 0;
+        defaultFramebuffer = context->getState().getReadFramebuffer()->id() == 0;
         break;
       default:
         return gl::error(GL_INVALID_ENUM, false);
@@ -670,7 +670,7 @@ bool ValidateClearBuffer(const gl::Context *context)
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    const gl::Framebuffer *fbo = context->getDrawFramebuffer();
+    const gl::Framebuffer *fbo = context->getState().getDrawFramebuffer();
     if (!fbo || fbo->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
         return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);

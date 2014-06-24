@@ -165,9 +165,9 @@
     <ClCompile Include="..\..\src\libGLESv2\libGLESv2.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\libGLESv2\Buffer.h">
+    <ClCompile Include="..\..\src\libGLESv2\State.cpp">
       <Filter>src\libGLESv2</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\ProgramBinary.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
@@ -243,6 +243,12 @@
     <ClCompile Include="..\..\src\libGLESv2\Caps.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\libGLESv2\Buffer.h">
+      <Filter>src\libGLESv2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\State.h">
+      <Filter>src\libGLESv2</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\Framebuffer.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>

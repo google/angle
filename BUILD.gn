@@ -335,6 +335,8 @@ if (is_win) {
       "src/libGLESv2/Sampler.h",
       "src/libGLESv2/Shader.cpp",
       "src/libGLESv2/Shader.h",
+      "src/libGLESv2/State.cpp",
+      "src/libGLESv2/State.h",
       "src/libGLESv2/Texture.cpp",
       "src/libGLESv2/Texture.h",
       "src/libGLESv2/TransformFeedback.cpp",

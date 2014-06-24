@@ -16,6 +16,7 @@
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 #include "libGLESv2/Constants.h"
+#include "libGLESv2/ProgramBinary.h"
 
 namespace rx
 {
@@ -27,7 +28,6 @@ namespace gl
 class ResourceManager;
 class FragmentShader;
 class VertexShader;
-class ProgramBinary;
 class Shader;
 
 extern const char * const g_fakepath;

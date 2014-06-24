@@ -141,7 +141,6 @@
     <ClInclude Include="..\..\src\libGLESv2\ProgramBinary.h"/>
     <ClInclude Include="..\..\src\libGLESv2\constants.h"/>
     <ClInclude Include="..\..\src\libGLESv2\FramebufferAttachment.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Buffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Renderbuffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\queryconversions.h"/>
     <ClInclude Include="..\..\src\libGLESv2\validationES3.h"/>
@@ -156,6 +155,8 @@
     <ClInclude Include="..\..\src\libGLESv2\main.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Framebuffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\formatutils.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\Buffer.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\State.h"/>
     <ClInclude Include="..\..\src\libGLESv2\validationES.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\Renderer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderExecutable.h"/>
@@ -318,6 +319,7 @@
     <ClCompile Include="..\..\src\libGLESv2\Query.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\TransformFeedback.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\libGLESv2.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\State.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\ProgramBinary.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\VertexAttribute.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Context.cpp"/>
