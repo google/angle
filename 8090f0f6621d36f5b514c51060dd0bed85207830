@@ -255,6 +255,23 @@
     },
     {
       "key": {
+        "uuid": "a46cd148_8cb4abd8",
+        "filename": "src/libGLESv2/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-25T18:25:33Z",
+      "side": 1,
+      "message": "We could use SafeDelete() here to handle delete-and-null.",
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44ba35ef_1bf11f74",
         "filename": "src/libGLESv2/renderer/d3d/BufferD3D.h",
         "patchSetId": 3
@@ -272,6 +289,24 @@
         "endLine": 36,
         "endChar": 40
       },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "649c9984_87594a14",
+        "filename": "src/libGLESv2/renderer/d3d/BufferD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-25T18:25:33Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "44ba35ef_1bf11f74",
       "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
