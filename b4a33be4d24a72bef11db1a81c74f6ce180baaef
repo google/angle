@@ -25,6 +25,53 @@
     },
     {
       "key": {
+        "uuid": "24bf01e0_ddd15bdf",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T17:03:32Z",
+      "side": 1,
+      "message": "References are cleaner, they imply a value can not be NULL, and do not require syntax like (*pointerType)[operator]. That being said I cleaned up this bit.",
+      "parentUuid": "44ba35ef_7b7edb37",
+      "range": {
+        "startLine": 495,
+        "startChar": 20,
+        "endLine": 495,
+        "endChar": 101
+      },
+      "revId": "b4a33be4d24a72bef11db1a81c74f6ce180baaef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44ba35ef_1e3a2de0",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 497,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T17:03:32Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 497,
+        "startChar": 50,
+        "endLine": 497,
+        "endChar": 70
+      },
+      "revId": "b4a33be4d24a72bef11db1a81c74f6ce180baaef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44ba35ef_dba5e7a8",
         "filename": "src/libGLESv2/Framebuffer.h",
         "patchSetId": 12
@@ -48,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "44ba35ef_fed3f96d",
+        "filename": "src/libGLESv2/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T17:03:32Z",
+      "side": 1,
+      "message": "Done, was an artifact of a previous design.",
+      "parentUuid": "44ba35ef_dba5e7a8",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 48
+      },
+      "revId": "b4a33be4d24a72bef11db1a81c74f6ce180baaef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24bf01e0_7ab25585",
         "filename": "src/libGLESv2/Framebuffer.h",
         "patchSetId": 12
@@ -59,6 +130,30 @@
       "writtenOn": "2014-06-25T16:11:01Z",
       "side": 1,
       "message": "These functions are really only doing plumbing for getters on the FramebufferAttachment class, can we remove them?  It looks like they\u0027re mostly used in queries which could be simplified a lot by grabbing the FramebufferAttachment object and doing the query on it instead (the null check is done in the queries anyways).",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 45
+      },
+      "revId": "b4a33be4d24a72bef11db1a81c74f6ce180baaef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44ba35ef_5e0e6554",
+        "filename": "src/libGLESv2/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T17:03:32Z",
+      "side": 1,
+      "message": "We could. It would mean losing some convenience and having to NULL check, see the ref. In any case, it would be better to refactor in a subsequent patch.",
+      "parentUuid": "24bf01e0_7ab25585",
       "range": {
         "startLine": 55,
         "startChar": 4,
