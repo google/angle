@@ -1,0 +1,303 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64c57978_df1953de",
+        "filename": "src/libGLESv2/Buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "since you have access to mSize, can add an assert here about offset + length \u003c\u003d size",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 10
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24bf01e0_5a82f179",
+        "filename": "src/libGLESv2/Buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "we should make a note somewhere, probably a new issue, that we should delete markTransformFeedbackUsage from gl::Buffer, as it only supports D3D11 and isn\u0027t related to GL. We can figure out the details later, though most likely the draw call logic in Context will be a part of the D3D-Renderer.",
+      "range": {
+        "startLine": 84,
+        "startChar": 13,
+        "endLine": 84,
+        "endChar": 39
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64c57978_dfc273cc",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "remove this line",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 47
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44ba35ef_dba84769",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "by \"renderer\", you don\u0027t mean Renderer11.cpp, but rather the whole package of renderer implementation, right?",
+      "range": {
+        "startLine": 324,
+        "startChar": 51,
+        "endLine": 324,
+        "endChar": 59
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24bf01e0_5a343115",
+        "filename": "src/libGLESv2/VertexArray.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "nit: ASSERT(implementation !\u003d NULL)",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 1
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64c57978_9fccfbfd",
+        "filename": "src/libGLESv2/VertexArray.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "nit: use SafeDelete()",
+      "range": {
+        "startLine": 26,
+        "startChar": 11,
+        "endLine": 26,
+        "endChar": 23
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64c57978_3f904ff4",
+        "filename": "src/libGLESv2/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "nit: replace tabs with spaces (see other lines in this file)",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 3
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24bf01e0_ddd83b8b",
+        "filename": "src/libGLESv2/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "nit: space after if before (",
+      "range": {
+        "startLine": 107,
+        "startChar": 14,
+        "endLine": 107,
+        "endChar": 15
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64c57978_ffe6577c",
+        "filename": "src/libGLESv2/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "nit: brace on new line",
+      "range": {
+        "startLine": 107,
+        "startChar": 22,
+        "endLine": 107,
+        "endChar": 23
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44ba35ef_3bc2a318",
+        "filename": "src/libGLESv2/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "nit: angle uses \"Type *var\" pointer style",
+      "range": {
+        "startLine": 108,
+        "startChar": 25,
+        "endLine": 108,
+        "endChar": 26
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24bf01e0_bddd8779",
+        "filename": "src/libGLESv2/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "nits here",
+      "range": {
+        "startLine": 126,
+        "startChar": 12,
+        "endLine": 126,
+        "endChar": 24
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24bf01e0_3d53b7f3",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "nit: tab to spaces",
+      "range": {
+        "startLine": 247,
+        "startChar": 0,
+        "endLine": 247,
+        "endChar": 1
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44ba35ef_9bcc0ffe",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T16:38:59Z",
+      "side": 1,
+      "message": "nit: again with the offset and length we can add a new ASSERT",
+      "range": {
+        "startLine": 799,
+        "startChar": 57,
+        "endLine": 799,
+        "endChar": 63
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
