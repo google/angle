@@ -17,6 +17,12 @@ namespace rx
 class Renderer;
 }
 
+namespace sh
+{
+struct Attribute;
+struct ShaderVariable;
+}
+
 namespace gl
 {
 
@@ -27,9 +33,6 @@ struct VariableLocation;
 struct LinkedVarying;
 struct VertexAttribute;
 struct VertexFormat;
-struct ShaderVariable;
-struct Varying;
-struct Attribute;
 struct PackedVarying;
 
 typedef const PackedVarying *VaryingPacking[IMPLEMENTATION_MAX_VARYING_VECTORS][4];
@@ -49,7 +52,8 @@ class DynamicHLSL
 
     int packVaryings(InfoLog &infoLog, VaryingPacking packing, FragmentShader *fragmentShader,
                      VertexShader *vertexShader, const std::vector<std::string>& transformFeedbackVaryings);
-    std::string generateVertexShaderForInputLayout(const std::string &sourceShader, const VertexFormat inputLayout[], const Attribute shaderAttributes[]) const;
+    std::string generateVertexShaderForInputLayout(const std::string &sourceShader, const VertexFormat inputLayout[],
+                                                   const sh::Attribute shaderAttributes[]) const;
     std::string generatePixelShaderForOutputSignature(const std::string &sourceShader, const std::vector<PixelShaderOuputVariable> &outputVariables,
                                                       bool usesFragDepth, const std::vector<GLenum> &outputLayout) const;
     bool generateShaderLinkHLSL(InfoLog &infoLog, int registers, const VaryingPacking packing,
@@ -84,7 +88,7 @@ class DynamicHLSL
     // Prepend an underscore
     static std::string decorateVariable(const std::string &name);
 
-    std::string generateAttributeConversionHLSL(const VertexFormat &vertexFormat, const ShaderVariable &shaderAttrib) const;
+    std::string generateAttributeConversionHLSL(const VertexFormat &vertexFormat, const sh::ShaderVariable &shaderAttrib) const;
 };
 
 // Utility method shared between ProgramBinary and DynamicHLSL

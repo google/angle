@@ -16,9 +16,8 @@
 #include <GLSLANG/ShaderLang.h>
 #include <cstddef>
 
-namespace gl
+namespace sh
 {
-
 struct ShaderVariable;
 struct InterfaceBlockField;
 struct BlockMemberInfo;

@@ -35,11 +35,11 @@ class OutputHLSL : public TIntermTraverser
     void output();
 
     TInfoSinkBase &getBodyStream();
-    const std::vector<gl::Uniform> &getUniforms();
-    const std::vector<gl::InterfaceBlock> &getInterfaceBlocks() const;
-    const std::vector<gl::Attribute> &getOutputVariables() const;
-    const std::vector<gl::Attribute> &getAttributes() const;
-    const std::vector<gl::Varying> &getVaryings() const;
+    const std::vector<sh::Uniform> &getUniforms();
+    const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const;
+    const std::vector<sh::Attribute> &getOutputVariables() const;
+    const std::vector<sh::Attribute> &getAttributes() const;
+    const std::vector<sh::Varying> &getVaryings() const;
 
     static TString initializer(const TType &type);
 
@@ -153,13 +153,13 @@ class OutputHLSL : public TIntermTraverser
 
     TIntermSymbol *mExcessiveLoopIndex;
 
-    void declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<gl::Varying>& fieldsOut);
+    void declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<sh::Varying>& fieldsOut);
 
     TString structInitializerString(int indent, const TStructure &structure, const TString &rhsStructName);
 
-    std::vector<gl::Attribute> mActiveOutputVariables;
-    std::vector<gl::Attribute> mActiveAttributes;
-    std::vector<gl::Varying> mActiveVaryings;
+    std::vector<sh::Attribute> mActiveOutputVariables;
+    std::vector<sh::Attribute> mActiveAttributes;
+    std::vector<sh::Varying> mActiveVaryings;
     std::map<TIntermTyped*, TString> mFlaggedStructMappedNames;
     std::map<TIntermTyped*, TString> mFlaggedStructOriginalNames;
 

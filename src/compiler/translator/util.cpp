@@ -252,13 +252,13 @@ bool IsVarying(TQualifier qualifier)
     return IsVaryingIn(qualifier) || IsVaryingOut(qualifier);
 }
 
-gl::InterpolationType GetInterpolationType(TQualifier qualifier)
+InterpolationType GetInterpolationType(TQualifier qualifier)
 {
     switch (qualifier)
     {
       case EvqFlatIn:
       case EvqFlatOut:
-        return gl::INTERPOLATION_FLAT;
+        return INTERPOLATION_FLAT;
 
       case EvqSmoothIn:
       case EvqSmoothOut:
@@ -266,14 +266,14 @@ gl::InterpolationType GetInterpolationType(TQualifier qualifier)
       case EvqFragmentIn:
       case EvqVaryingIn:
       case EvqVaryingOut:
-        return gl::INTERPOLATION_SMOOTH;
+        return INTERPOLATION_SMOOTH;
 
       case EvqCentroidIn:
       case EvqCentroidOut:
-        return gl::INTERPOLATION_CENTROID;
+        return INTERPOLATION_CENTROID;
 
       default: UNREACHABLE();
-        return gl::INTERPOLATION_SMOOTH;
+        return INTERPOLATION_SMOOTH;
     }
 }
 

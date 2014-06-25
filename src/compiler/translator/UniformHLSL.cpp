@@ -19,25 +19,25 @@ namespace sh
 {
 
 // Use the same layout for packed and shared
-static void SetBlockLayout(gl::InterfaceBlock *interfaceBlock, gl::BlockLayoutType newLayout)
+static void SetBlockLayout(InterfaceBlock *interfaceBlock, BlockLayoutType newLayout)
 {
     interfaceBlock->layout = newLayout;
     interfaceBlock->blockInfo.clear();
 
     switch (newLayout)
     {
-      case gl::BLOCKLAYOUT_SHARED:
-      case gl::BLOCKLAYOUT_PACKED:
+      case BLOCKLAYOUT_SHARED:
+      case BLOCKLAYOUT_PACKED:
         {
-            gl::HLSLBlockEncoder hlslEncoder(&interfaceBlock->blockInfo, gl::HLSLBlockEncoder::ENCODE_PACKED);
+            HLSLBlockEncoder hlslEncoder(&interfaceBlock->blockInfo, HLSLBlockEncoder::ENCODE_PACKED);
             hlslEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
             interfaceBlock->dataSize = hlslEncoder.getBlockSize();
         }
         break;
 
-      case gl::BLOCKLAYOUT_STANDARD:
+      case BLOCKLAYOUT_STANDARD:
         {
-            gl::Std140BlockEncoder stdEncoder(&interfaceBlock->blockInfo);
+            Std140BlockEncoder stdEncoder(&interfaceBlock->blockInfo);
             stdEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
             interfaceBlock->dataSize = stdEncoder.getBlockSize();
         }
@@ -49,14 +49,14 @@ static void SetBlockLayout(gl::InterfaceBlock *interfaceBlock, gl::BlockLayoutTy
     }
 }
 
-static gl::BlockLayoutType ConvertBlockLayoutType(TLayoutBlockStorage blockStorage)
+static BlockLayoutType ConvertBlockLayoutType(TLayoutBlockStorage blockStorage)
 {
     switch (blockStorage)
     {
-      case EbsPacked: return gl::BLOCKLAYOUT_PACKED;
-      case EbsShared: return gl::BLOCKLAYOUT_SHARED;
-      case EbsStd140: return gl::BLOCKLAYOUT_STANDARD;
-      default: UNREACHABLE(); return gl::BLOCKLAYOUT_SHARED;
+      case EbsPacked: return BLOCKLAYOUT_PACKED;
+      case EbsShared: return BLOCKLAYOUT_SHARED;
+      case EbsStd140: return BLOCKLAYOUT_STANDARD;
+      default: UNREACHABLE(); return BLOCKLAYOUT_SHARED;
     }
 }
 
@@ -136,27 +136,27 @@ int UniformHLSL::declareUniformAndAssignRegister(const TType &type, const TStrin
 {
     int registerIndex = (IsSampler(type.getBasicType()) ? mSamplerRegister : mUniformRegister);
 
-    const gl::Uniform &uniform = declareUniformToList(type, name, registerIndex, &mActiveUniforms);
+    const Uniform &uniform = declareUniformToList(type, name, registerIndex, &mActiveUniforms);
 
     if (IsSampler(type.getBasicType()))
     {
-        mSamplerRegister += gl::HLSLVariableRegisterCount(uniform, mOutputType);
+        mSamplerRegister += HLSLVariableRegisterCount(uniform, mOutputType);
     }
     else
     {
-        mUniformRegister += gl::HLSLVariableRegisterCount(uniform, mOutputType);
+        mUniformRegister += HLSLVariableRegisterCount(uniform, mOutputType);
     }
 
     return registerIndex;
 }
 
-gl::Uniform UniformHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<gl::Uniform> *output)
+Uniform UniformHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform> *output)
 {
     const TStructure *structure = type.getStruct();
 
     if (!structure)
     {
-        gl::Uniform uniform(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
+        Uniform uniform(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
                             (unsigned int)type.getArraySize(), (unsigned int)registerIndex, 0);
         output->push_back(uniform);
 
@@ -164,7 +164,7 @@ gl::Uniform UniformHLSL::declareUniformToList(const TType &type, const TString &
    }
     else
     {
-        gl::Uniform structUniform(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(),
+        Uniform structUniform(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(),
                                   (unsigned int)registerIndex, GL_INVALID_INDEX);
 
         const TFieldList &fields = structure->fields();
@@ -233,7 +233,7 @@ TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedIn
         const TFieldList &fieldList = interfaceBlock.fields();
 
         unsigned int arraySize = static_cast<unsigned int>(interfaceBlock.arraySize());
-        gl::InterfaceBlock activeBlock(interfaceBlock.name().c_str(), arraySize, mInterfaceBlockRegister);
+        InterfaceBlock activeBlock(interfaceBlock.name().c_str(), arraySize, mInterfaceBlockRegister);
         for (unsigned int typeIndex = 0; typeIndex < fieldList.size(); typeIndex++)
         {
             const TField &field = *fieldList[typeIndex];
@@ -243,7 +243,7 @@ TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedIn
 
         mInterfaceBlockRegister += std::max(1u, arraySize);
 
-        gl::BlockLayoutType blockLayoutType = ConvertBlockLayoutType(interfaceBlock.blockStorage());
+        BlockLayoutType blockLayoutType = ConvertBlockLayoutType(interfaceBlock.blockStorage());
         SetBlockLayout(&activeBlock, blockLayoutType);
 
         if (interfaceBlock.matrixPacking() == EmpRowMajor)
@@ -356,20 +356,20 @@ TString UniformHLSL::interfaceBlockStructString(const TInterfaceBlock &interface
            "};\n\n";
 }
 
-void UniformHLSL::declareInterfaceBlockField(const TType &type, const TString &name, std::vector<gl::InterfaceBlockField>& output)
+void UniformHLSL::declareInterfaceBlockField(const TType &type, const TString &name, std::vector<InterfaceBlockField>& output)
 {
     const TStructure *structure = type.getStruct();
 
     if (!structure)
     {
         const bool isRowMajorMatrix = (type.isMatrix() && type.getLayoutQualifier().matrixPacking == EmpRowMajor);
-        gl::InterfaceBlockField field(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
+        InterfaceBlockField field(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
             (unsigned int)type.getArraySize(), isRowMajorMatrix);
         output.push_back(field);
     }
     else
     {
-        gl::InterfaceBlockField structField(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), false);
+        InterfaceBlockField structField(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), false);
 
         const TFieldList &fields = structure->fields();
 

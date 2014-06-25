@@ -33,7 +33,7 @@ int Std140PaddingHelper::prePadding(const TType &type)
     }
 
     const GLenum glType = GLVariableType(type);
-    const int numComponents = gl::UniformComponentCount(glType);
+    const int numComponents = gl::VariableComponentCount(glType);
 
     if (numComponents >= 4)
     {
@@ -110,7 +110,7 @@ TString Std140PaddingHelper::postPaddingString(const TType &type, bool useHLSLRo
     else
     {
         const GLenum glType = GLVariableType(type);
-        numComponents = gl::UniformComponentCount(glType);
+        numComponents = gl::VariableComponentCount(glType);
     }
 
     TString padding;

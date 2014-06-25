@@ -30,7 +30,7 @@ GLenum GLVariablePrecision(const TType &type);
 bool IsVaryingIn(TQualifier qualifier);
 bool IsVaryingOut(TQualifier qualifier);
 bool IsVarying(TQualifier qualifier);
-gl::InterpolationType GetInterpolationType(TQualifier qualifier);
+InterpolationType GetInterpolationType(TQualifier qualifier);
 TString ArrayString(const TType &type);
 
 }

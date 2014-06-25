@@ -23,7 +23,7 @@ namespace gl
 // Helper struct representing a single shader uniform
 struct LinkedUniform
 {
-    LinkedUniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize, const int blockIndex, const BlockMemberInfo &blockInfo);
+    LinkedUniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize, const int blockIndex, const sh::BlockMemberInfo &blockInfo);
 
     ~LinkedUniform();
 
@@ -40,7 +40,7 @@ struct LinkedUniform
     const std::string name;
     const unsigned int arraySize;
     const int blockIndex;
-    const BlockMemberInfo blockInfo;
+    const sh::BlockMemberInfo blockInfo;
 
     unsigned char *data;
     bool dirty;

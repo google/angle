@@ -212,27 +212,27 @@ TInfoSinkBase &OutputHLSL::getBodyStream()
     return mBody;
 }
 
-const std::vector<gl::Uniform> &OutputHLSL::getUniforms()
+const std::vector<sh::Uniform> &OutputHLSL::getUniforms()
 {
     return mUniformHLSL->getUniforms();
 }
 
-const std::vector<gl::InterfaceBlock> &OutputHLSL::getInterfaceBlocks() const
+const std::vector<sh::InterfaceBlock> &OutputHLSL::getInterfaceBlocks() const
 {
     return mUniformHLSL->getInterfaceBlocks();
 }
 
-const std::vector<gl::Attribute> &OutputHLSL::getOutputVariables() const
+const std::vector<sh::Attribute> &OutputHLSL::getOutputVariables() const
 {
     return mActiveOutputVariables;
 }
 
-const std::vector<gl::Attribute> &OutputHLSL::getAttributes() const
+const std::vector<sh::Attribute> &OutputHLSL::getAttributes() const
 {
     return mActiveAttributes;
 }
 
-const std::vector<gl::Varying> &OutputHLSL::getVaryings() const
+const std::vector<sh::Varying> &OutputHLSL::getVaryings() const
 {
     return mActiveVaryings;
 }
@@ -325,7 +325,7 @@ void OutputHLSL::header()
 
         attributes += "static " + TypeString(type) + " " + Decorate(name) + ArrayString(type) + " = " + initializer(type) + ";\n";
 
-        gl::Attribute attributeVar(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
+        sh::Attribute attributeVar(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
                                (unsigned int)type.getArraySize(), type.getLayoutQualifier().location);
         mActiveAttributes.push_back(attributeVar);
     }
@@ -365,7 +365,7 @@ void OutputHLSL::header()
                 out << "static " + TypeString(variableType) + " out_" + variableName + ArrayString(variableType) +
                        " = " + initializer(variableType) + ";\n";
 
-                gl::Attribute outputVar(GLVariableType(variableType), GLVariablePrecision(variableType), variableName.c_str(),
+                sh::Attribute outputVar(GLVariableType(variableType), GLVariablePrecision(variableType), variableName.c_str(),
                                     (unsigned int)variableType.getArraySize(), layoutQualifier.location);
                 mActiveOutputVariables.push_back(outputVar);
             }
@@ -2895,19 +2895,19 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
     return constUnion;
 }
 
-void OutputHLSL::declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<gl::Varying>& fieldsOut)
+void OutputHLSL::declareVaryingToList(const TType &type, TQualifier baseTypeQualifier, const TString &name, std::vector<Varying> &fieldsOut)
 {
     const TStructure *structure = type.getStruct();
 
-    gl::InterpolationType interpolation = GetInterpolationType(baseTypeQualifier);
+    InterpolationType interpolation = GetInterpolationType(baseTypeQualifier);
     if (!structure)
     {
-        gl::Varying varying(GLVariableType(type), GLVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), interpolation);
+        sh::Varying varying(GLVariableType(type), GLVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), interpolation);
         fieldsOut.push_back(varying);
     }
     else
     {
-        gl::Varying structVarying(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), interpolation);
+        sh::Varying structVarying(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), interpolation);
         const TFieldList &fields = structure->fields();
 
         structVarying.structName = structure->name().c_str();
