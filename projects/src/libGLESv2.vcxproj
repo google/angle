@@ -283,6 +283,7 @@
     <ClInclude Include="..\..\src\common\version.h"/>
     <ClInclude Include="..\..\src\third_party\systeminfo\SystemInfo.h"/>
     <ClInclude Include="..\..\src\third_party\murmurhash\MurmurHash3.h"/>
+    <ClInclude Include="..\..\include\angle_gl.h"/>
     <ClInclude Include="..\..\include\KHR\khrplatform.h"/>
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h"/>
     <ClInclude Include="..\..\include\GLES2\gl2ext.h"/>
@@ -341,11 +342,11 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\VertexBuffer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Renderer11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\InputLayoutCache.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\ShaderExecutable11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\PixelTransfer11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\VertexBuffer11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Fence11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Query11.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\ShaderExecutable11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\RenderTarget11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Blit11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\IndexBuffer11.cpp"/>

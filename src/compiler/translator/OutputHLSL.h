@@ -11,9 +11,7 @@
 #include <set>
 #include <map>
 
-#include <GLES3/gl3.h>
-#include <GLES2/gl2.h>
-
+#include "angle_gl.h"
 #include "compiler/translator/intermediate.h"
 #include "compiler/translator/ParseContext.h"
 #include "common/shadervars.h"

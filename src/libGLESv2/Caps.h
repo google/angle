@@ -7,8 +7,7 @@
 // found in the LICENSE file.
 //
 
-#include <GLES2/gl2.h>
-#include <GLES3/gl3.h>
+#include "angle_gl.h"
 
 #include <set>
 #include <unordered_map>

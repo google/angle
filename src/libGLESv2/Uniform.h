@@ -10,8 +10,7 @@
 #include <string>
 #include <vector>
 
-#include <GLES3/gl3.h>
-#include <GLES2/gl2.h>
+#include "angle_gl.h"
 
 #include "common/debug.h"
 #include "angletypes.h"

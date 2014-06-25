@@ -459,6 +459,9 @@
     <ClCompile Include="..\..\src\compiler\translator\depgraph\DependencyGraphBuilder.cpp">
       <Filter>src\compiler\translator\depgraph</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\include\angle_gl.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\KHR\khrplatform.h">
       <Filter>include\KHR</Filter>
     </ClInclude>

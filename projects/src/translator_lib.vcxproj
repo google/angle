@@ -189,6 +189,7 @@
     <ClInclude Include="..\..\src\compiler\translator\depgraph\DependencyGraph.h"/>
     <ClInclude Include="..\..\src\compiler\translator\depgraph\DependencyGraphOutput.h"/>
     <ClInclude Include="..\..\src\compiler\translator\depgraph\DependencyGraphBuilder.h"/>
+    <ClInclude Include="..\..\include\angle_gl.h"/>
     <ClInclude Include="..\..\include\KHR\khrplatform.h"/>
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h"/>
     <ClInclude Include="..\..\include\GLES2\gl2platform.h"/>

@@ -8,8 +8,7 @@
 #include "common/debug.h"
 #include "common/angleutils.h"
 
-#include <GLES2/gl2ext.h>
-#include <GLES3/gl3ext.h>
+#include "angle_gl.h"
 
 #include <algorithm>
 #include <sstream>

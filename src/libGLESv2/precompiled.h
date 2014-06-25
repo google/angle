@@ -6,12 +6,7 @@
 
 // precompiled.h: Precompiled header file for libGLESv2.
 
-#include <GLES3/gl3.h>
-#include <GLES3/gl3ext.h>
-#include <GLES2/gl2.h>
-
-#include <GLES2/gl2ext.h>
-
+#include "angle_gl.h"
 #include <EGL/egl.h>
 
 #include <assert.h>

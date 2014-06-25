@@ -9,11 +9,7 @@
 #ifndef LIBGLESV2_UTILITIES_H
 #define LIBGLESV2_UTILITIES_H
 
-#include <GLES3/gl3.h>
-#include <GLES3/gl3ext.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-
+#include "angle_gl.h"
 #include <string>
 #include <math.h>
 

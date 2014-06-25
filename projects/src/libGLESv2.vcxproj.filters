@@ -366,9 +366,6 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\InputLayoutCache.cpp">
       <Filter>src\libGLESv2\renderer\d3d\d3d11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\ShaderExecutable11.cpp">
-      <Filter>src\libGLESv2\renderer\d3d\d3d11</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\PixelTransfer11.cpp">
       <Filter>src\libGLESv2\renderer\d3d\d3d11</Filter>
     </ClCompile>
@@ -394,6 +391,9 @@
       <Filter>src\libGLESv2\renderer\d3d\d3d11</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Query11.cpp">
+      <Filter>src\libGLESv2\renderer\d3d\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\ShaderExecutable11.cpp">
       <Filter>src\libGLESv2\renderer\d3d\d3d11</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\RenderTarget11.cpp">
@@ -831,6 +831,9 @@
     <ClCompile Include="..\..\src\third_party\murmurhash\MurmurHash3.cpp">
       <Filter>src\third_party\murmurhash</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\include\angle_gl.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\KHR\khrplatform.h">
       <Filter>include\KHR</Filter>
     </ClInclude>

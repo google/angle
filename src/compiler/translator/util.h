@@ -8,8 +8,7 @@
 #define COMPILER_UTIL_H
 
 #include "compiler/translator/Types.h"
-#include <GLES3/gl3.h>
-#include <GLES2/gl2.h>
+#include "angle_gl.h"
 #include "common/shadervars.h"
 
 // atof_clamp is like atof but

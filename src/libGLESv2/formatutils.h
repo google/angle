@@ -9,9 +9,7 @@
 #ifndef LIBGLESV2_FORMATUTILS_H_
 #define LIBGLESV2_FORMATUTILS_H_
 
-#include <GLES3/gl3.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
+#include "angle_gl.h"
 
 #include "libGLESv2/Caps.h"
 #include "libGLESv2/angletypes.h"

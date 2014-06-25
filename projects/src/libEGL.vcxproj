@@ -131,6 +131,7 @@
     <ClInclude Include="..\..\src\common\angleutils.h"/>
     <ClInclude Include="..\..\src\common\shadervars.h"/>
     <ClInclude Include="..\..\src\common\blocklayout.h"/>
+    <ClInclude Include="..\..\include\angle_gl.h"/>
     <ClInclude Include="..\..\include\KHR\khrplatform.h"/>
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h"/>
     <ClInclude Include="..\..\include\GLES2\gl2.h"/>
