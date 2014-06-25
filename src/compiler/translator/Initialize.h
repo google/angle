@@ -11,9 +11,9 @@
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/SymbolTable.h"
 
-void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltInResources &resources, TSymbolTable &table);
+void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInResources &resources, TSymbolTable &table);
 
-void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,
+void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
                       const ShBuiltInResources& resources,
                       TSymbolTable& symbolTable);
 

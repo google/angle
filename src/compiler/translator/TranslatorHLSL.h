@@ -12,7 +12,7 @@
 
 class TranslatorHLSL : public TCompiler {
 public:
-    TranslatorHLSL(ShShaderType type, ShShaderSpec spec, ShShaderOutput output);
+    TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
 
     virtual TranslatorHLSL *getAsTranslatorHLSL() { return this; }
     const std::vector<sh::Uniform> &getUniforms() { return mActiveUniforms; }

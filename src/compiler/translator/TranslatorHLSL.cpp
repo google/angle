@@ -9,7 +9,7 @@
 #include "compiler/translator/InitializeParseContext.h"
 #include "compiler/translator/OutputHLSL.h"
 
-TranslatorHLSL::TranslatorHLSL(ShShaderType type, ShShaderSpec spec, ShShaderOutput output)
+TranslatorHLSL::TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
   : TCompiler(type, spec, output)
 {
 }
