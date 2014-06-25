@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "8497cd5d_e877c754",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-25T21:27:56Z",
+      "side": 1,
+      "message": "Much +1.",
+      "parentUuid": "6471f9c6_8eb0e716",
+      "revId": "0e0dc44e5fe7c97788530989a4742848786fe8e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4932916_8c2eaf1a",
         "filename": "src/libGLESv2/renderer/d3d11/renderer11_utils.cpp",
         "patchSetId": 7
