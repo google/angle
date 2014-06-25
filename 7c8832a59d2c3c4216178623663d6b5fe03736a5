@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e4c40963_75aac8a6",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T20:05:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "442075de_b7843286",
+      "revId": "7c8832a59d2c3c4216178623663d6b5fe03736a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "242541ef_61d15a33",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-06-20T19:52:14Z",
       "side": 1,
       "message": "nit: remove whitespaces",
+      "revId": "7c8832a59d2c3c4216178623663d6b5fe03736a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4c40963_b59b8090",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-25T20:05:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "242541ef_61d15a33",
       "revId": "7c8832a59d2c3c4216178623663d6b5fe03736a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
