@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04d91d6f_ee445f32",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-06-25T23:04:30Z",
+      "side": 1,
+      "message": "Ah, I see why this was a virtual function before. I don\u0027t think we should keep pointers to the renderer both in the abstract base and in the concrete child class-- either we should use MakeRenderer11 on the parent\u0027s protected mRenderer on the occasions we need to access Renderer11 functions from the child (in which case I think the getRenderer() function in the parent can be entirely removed), or go back to using a virtual function.",
+      "revId": "4ac0f09c3c82032c92bd16ee17f5f9bf110de7a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
