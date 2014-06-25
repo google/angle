@@ -158,12 +158,11 @@
     <ClInclude Include="..\..\src\compiler\translator\ValidateOutputs.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h"/>
     <ClInclude Include="..\..\src\compiler\translator\localintermediate.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\ShHandle.h"/>
     <ClInclude Include="..\..\src\compiler\translator\StructureHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputGLSLBase.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ForLoopUnroll.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Pragma.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\intermediate.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\Compiler.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputESSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\RenameFunction.h"/>
@@ -177,6 +176,7 @@
     <ClInclude Include="..\..\src\compiler\translator\glslang.h"/>
     <ClInclude Include="..\..\src\compiler\translator\SearchSymbol.h"/>
     <ClInclude Include="..\..\src\compiler\translator\UtilsHLSL.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\intermediate.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeParseContext.h"/>
     <ClInclude Include="..\..\src\compiler\translator\VariableInfo.h"/>
     <ClInclude Include="..\..\src\compiler\translator\LoopInfo.h"/>

@@ -7,7 +7,7 @@
 #ifndef COMPILER_TRANSLATORHLSL_H_
 #define COMPILER_TRANSLATORHLSL_H_
 
-#include "compiler/translator/ShHandle.h"
+#include "compiler/translator/Compiler.h"
 #include "common/shadervars.h"
 
 class TranslatorHLSL : public TCompiler {

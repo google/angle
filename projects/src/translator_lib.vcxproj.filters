@@ -258,9 +258,6 @@
     <ClInclude Include="..\..\src\compiler\translator\localintermediate.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\compiler\translator\ShHandle.h">
-      <Filter>src\compiler\translator</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\StructureHLSL.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
@@ -273,7 +270,7 @@
     <ClInclude Include="..\..\src\compiler\translator\Pragma.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\compiler\translator\intermediate.h">
+    <ClInclude Include="..\..\src\compiler\translator\Compiler.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\VariablePacker.cpp">
@@ -372,6 +369,9 @@
     <ClCompile Include="..\..\src\compiler\translator\SymbolTable.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\compiler\translator\intermediate.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\InitializeParseContext.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>

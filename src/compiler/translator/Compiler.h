@@ -115,7 +115,7 @@ protected:
     bool enforceTimingRestrictions(TIntermNode* root, bool outputGraph);
     // Returns true if the shader does not use samplers.
     bool enforceVertexShaderTimingRestrictions(TIntermNode* root);
-    // Returns true if the shader does not use sampler dependent values to affect control 
+    // Returns true if the shader does not use sampler dependent values to affect control
     // flow or in operations whose time can depend on the input values.
     bool enforceFragmentShaderTimingRestrictions(const TDependencyGraph& graph);
     // Return true if the maximum expression complexity is below the limit.
@@ -169,7 +169,7 @@ private:
 // and the machine dependent code.
 //
 // The machine dependent code should derive from the classes
-// above. Then Construct*() and Delete*() will create and 
+// above. Then Construct*() and Delete*() will create and
 // destroy the machine dependent objects, which contain the
 // above machine independent information.
 //
