@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "64c57978_e22a3c9f",
+        "filename": "src/libGLESv2/Buffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T16:53:38Z",
+      "side": 1,
+      "message": "This needs to eventually be removed from the Buffer class since only D3D11 cares about this but I don\u0027t think that\u0027s easy at this point since Renderer11 isn\u0027t aware of the transform feedback buffers yet.  We\u0027ll hold off on this until after the state refactor.",
+      "range": {
+        "startLine": 49,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 38
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64c57978_dfc273cc",
         "filename": "src/libGLESv2/Texture.cpp",
         "patchSetId": 3
@@ -140,6 +163,29 @@
     },
     {
       "key": {
+        "uuid": "44ba35ef_5b6c3746",
+        "filename": "src/libGLESv2/VertexArray.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T16:53:38Z",
+      "side": 1,
+      "message": "Good catch, we should put this in another patch though.",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 24
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64c57978_3f904ff4",
         "filename": "src/libGLESv2/renderer/d3d/BufferD3D.cpp",
         "patchSetId": 3
@@ -156,6 +202,75 @@
         "startChar": 0,
         "endLine": 23,
         "endChar": 3
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64c57978_7f37e71b",
+        "filename": "src/libGLESv2/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T16:53:38Z",
+      "side": 1,
+      "message": "Tabs",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 3
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24bf01e0_1d3a33e0",
+        "filename": "src/libGLESv2/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T16:53:38Z",
+      "side": 1,
+      "message": "Tabs and style",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 2
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44ba35ef_1bf11f74",
+        "filename": "src/libGLESv2/renderer/d3d/BufferD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T16:53:38Z",
+      "side": 1,
+      "message": "Since this function is only used internally to create the static buffers, lets just make the constructor of BufferD3D take a Renderer pointer.",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 40
       },
       "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -278,6 +393,29 @@
     },
     {
       "key": {
+        "uuid": "64c57978_826700a5",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T16:53:38Z",
+      "side": 1,
+      "message": "Can keep this as a void pointer now since we don\u0027t need to do any arithmetic on it.",
+      "range": {
+        "startLine": 619,
+        "startChar": 8,
+        "endLine": 619,
+        "endChar": 118
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44ba35ef_9bcc0ffe",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 3
@@ -294,6 +432,29 @@
         "startChar": 57,
         "endLine": 799,
         "endChar": 63
+      },
+      "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64c57978_e2d11cdf",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T16:53:38Z",
+      "side": 1,
+      "message": "Since mMemoryBuffer is just a unsigned char* we can replace this with just mMemoryBuffer + offset",
+      "range": {
+        "startLine": 809,
+        "startChar": 11,
+        "endLine": 809,
+        "endChar": 61
       },
       "revId": "8090f0f6621d36f5b514c51060dd0bed85207830",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
