@@ -14,7 +14,7 @@
 
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Framebuffer.h"
-#include "libGLESv2/Renderbuffer.h"
+#include "libGLESv2/FramebufferAttachment.h"
 
 #include "libGLESv2/renderer/d3d/d3d11/shaders/compiled/clearfloat11vs.h"
 #include "libGLESv2/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps.h"

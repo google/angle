@@ -66,6 +66,9 @@
     <None Include="..\..\src\angle.gyp">
       <Filter>src</Filter>
     </None>
+    <ClCompile Include="..\..\src\libGLESv2\formatutils.cpp">
+      <Filter>src\libGLESv2</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\Shader.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -105,16 +108,7 @@
     <ClInclude Include="..\..\src\libGLESv2\Query.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\libGLESv2\formatutils.cpp">
-      <Filter>src\libGLESv2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\libGLESv2\RenderbufferProxySet.cpp">
-      <Filter>src\libGLESv2</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\Fence.cpp">
-      <Filter>src\libGLESv2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\libGLESv2\ProgramBinary.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\VertexAttribute.cpp">
@@ -129,6 +123,9 @@
     <ClCompile Include="..\..\src\libGLESv2\Renderbuffer.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\libGLESv2\VertexArray.h">
+      <Filter>src\libGLESv2</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\Uniform.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -156,9 +153,6 @@
     <ClCompile Include="..\..\src\libGLESv2\FramebufferAttachment.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\libGLESv2\RenderbufferProxySet.h">
-      <Filter>src\libGLESv2</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\FramebufferAttachment.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -174,6 +168,9 @@
     <ClInclude Include="..\..\src\libGLESv2\Buffer.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\ProgramBinary.cpp">
+      <Filter>src\libGLESv2</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\Renderbuffer.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -237,9 +234,6 @@
     <ClCompile Include="..\..\src\libGLESv2\Sampler.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\libGLESv2\VertexArray.h">
-      <Filter>src\libGLESv2</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\Framebuffer.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -666,6 +660,12 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\ShaderExecutable9.h">
       <Filter>src\libGLESv2\renderer\d3d\d3d9</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Fence9.cpp">
+      <Filter>src\libGLESv2\renderer\d3d\d3d9</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\IndexBuffer9.h">
+      <Filter>src\libGLESv2\renderer\d3d\d3d9</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\VertexArray9.h">
       <Filter>src\libGLESv2\renderer\d3d\d3d9</Filter>
     </ClInclude>
@@ -673,12 +673,6 @@
       <Filter>src\libGLESv2\renderer\d3d\d3d9</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\VertexBuffer9.cpp">
-      <Filter>src\libGLESv2\renderer\d3d\d3d9</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Fence9.h">
-      <Filter>src\libGLESv2\renderer\d3d\d3d9</Filter>
-    </ClInclude>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Fence9.cpp">
       <Filter>src\libGLESv2\renderer\d3d\d3d9</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Image9.cpp">
@@ -720,7 +714,7 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\formatutils9.cpp">
       <Filter>src\libGLESv2\renderer\d3d\d3d9</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\IndexBuffer9.h">
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Fence9.h">
       <Filter>src\libGLESv2\renderer\d3d\d3d9</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\ShaderExecutable9.cpp">

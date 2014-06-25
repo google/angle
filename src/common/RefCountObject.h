@@ -63,33 +63,6 @@ class BindingPointer : public RefCountObjectBindingPointer
 };
 
 template <class ObjectType>
-class FramebufferTextureBindingPointer : public RefCountObjectBindingPointer
-{
-public:
-    FramebufferTextureBindingPointer() : mType(GL_NONE), mMipLevel(0), mLayer(0) { }
-
-    void set(ObjectType *newObject, GLenum type, GLint mipLevel, GLint layer)
-    {
-        RefCountObjectBindingPointer::set(newObject);
-        mType = type;
-        mMipLevel = mipLevel;
-        mLayer = layer;
-    }
-
-    ObjectType *get() const { return static_cast<ObjectType*>(RefCountObjectBindingPointer::get()); }
-    ObjectType *operator->() const { return get(); }
-
-    GLenum type() const { return mType; }
-    GLint mipLevel() const { return mMipLevel; }
-    GLint layer() const { return mLayer; }
-
-private:
-    GLenum mType;
-    GLint mMipLevel;
-    GLint mLayer;
-};
-
-template <class ObjectType>
 class OffsetBindingPointer : public RefCountObjectBindingPointer
 {
   public:

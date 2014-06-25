@@ -12,7 +12,7 @@
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/Framebuffer.h"
-#include "libGLESv2/Renderbuffer.h"
+#include "libGLESv2/FramebufferAttachment.h"
 
 #include "common/debug.h"
 #include "third_party/murmurhash/MurmurHash3.h"
@@ -95,7 +95,7 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::Framebuffer *framebu
     key.blendState = blendState;
     for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
     {
-        gl::FramebufferAttachment *attachment = framebuffer->getColorbuffer(i);
+        const gl::FramebufferAttachment *attachment = framebuffer->getColorbuffer(i);
         if (attachment)
         {
             if (i > 0)

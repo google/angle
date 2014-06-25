@@ -29,38 +29,21 @@ class Texture2D;
 class TextureCubeMap;
 class Texture3D;
 class Texture2DArray;
-class FramebufferAttachmentImpl;
 class Renderbuffer;
 
 // FramebufferAttachment implements a GL framebuffer attachment.
 // Attachments are "light" containers, which store pointers to ref-counted GL objects.
 // We support GL texture (2D/3D/Cube/2D array) and renderbuffer object attachments.
-// Note: Renderbuffers are specialized storage for depth and stencil buffes. Our old
-// naming scheme used the term "Renderbuffer" for both GL renderbuffers and for
+// Note: Our old naming scheme used the term "Renderbuffer" for both GL renderbuffers and for
 // framebuffer attachments, which confused their usage.
 
-class FramebufferAttachment : public RefCountObject
+class FramebufferAttachment
 {
   public:
-    FramebufferAttachment(GLuint id, FramebufferAttachmentImpl *storage);
-
+    FramebufferAttachment();
     virtual ~FramebufferAttachment();
 
-    // These functions from RefCountObject are overloaded here because
-    // Textures need to maintain their own count of references to them via
-    // Renderbuffers/RenderbufferTextures. These functions invoke those
-    // reference counting functions on the FramebufferAttachmentImpl.
-    void addRef() const;
-    void release() const;
-
-    rx::RenderTarget *getRenderTarget();
-    rx::RenderTarget *getDepthStencil();
-    rx::TextureStorage *getTextureStorage();
-
-    GLsizei getWidth() const;
-    GLsizei getHeight() const;
-    GLenum getInternalFormat() const;
-    GLenum getActualFormat() const;
+    // Helper methods
     GLuint getRedSize(int clientVersion) const;
     GLuint getGreenSize(int clientVersion) const;
     GLuint getBlueSize(int clientVersion) const;
@@ -69,35 +52,12 @@ class FramebufferAttachment : public RefCountObject
     GLuint getStencilSize(int clientVersion) const;
     GLenum getComponentType(int clientVersion) const;
     GLenum getColorEncoding(int clientVersion) const;
-    GLsizei getSamples() const;
     bool isTexture() const;
 
-    unsigned int getSerial() const;
+    bool isTextureWithId(GLuint textureId) const { return isTexture() && id() == textureId; }
+    bool isRenderbufferWithId(GLuint renderbufferId) const { return !isTexture() && id() == renderbufferId; }
 
-    GLuint id() const;
-    GLenum type() const;
-    GLint mipLevel() const;
-    GLint layer() const;
-    unsigned int getTextureSerial() const;
-
-    void setImplementation(FramebufferAttachmentImpl *newImpl);
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(FramebufferAttachment);
-
-    FramebufferAttachmentImpl *mImpl;
-};
-
-class FramebufferAttachmentImpl
-{
-  public:
-    FramebufferAttachmentImpl();
-
-    virtual ~FramebufferAttachmentImpl() {};
-
-    virtual void addProxyRef(const FramebufferAttachment *proxy);
-    virtual void releaseProxy(const FramebufferAttachment *proxy);
-
+    // Child class interface
     virtual rx::RenderTarget *getRenderTarget() = 0;
     virtual rx::RenderTarget *getDepthStencil() = 0;
     virtual rx::TextureStorage *getTextureStorage() = 0;
@@ -117,18 +77,15 @@ class FramebufferAttachmentImpl
     virtual unsigned int getTextureSerial() const = 0;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(FramebufferAttachmentImpl);
+    DISALLOW_COPY_AND_ASSIGN(FramebufferAttachment);
 };
 
-class Texture2DAttachment : public FramebufferAttachmentImpl
+class Texture2DAttachment : public FramebufferAttachment
 {
   public:
     Texture2DAttachment(Texture2D *texture, GLint level);
 
     virtual ~Texture2DAttachment();
-
-    void addProxyRef(const FramebufferAttachment *proxy);
-    void releaseProxy(const FramebufferAttachment *proxy);
 
     rx::RenderTarget *getRenderTarget();
     rx::RenderTarget *getDepthStencil();
@@ -151,19 +108,16 @@ class Texture2DAttachment : public FramebufferAttachmentImpl
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2DAttachment);
 
-    BindingPointer <Texture2D> mTexture2D;
+    BindingPointer<Texture2D> mTexture2D;
     const GLint mLevel;
 };
 
-class TextureCubeMapAttachment : public FramebufferAttachmentImpl
+class TextureCubeMapAttachment : public FramebufferAttachment
 {
   public:
     TextureCubeMapAttachment(TextureCubeMap *texture, GLenum faceTarget, GLint level);
 
     virtual ~TextureCubeMapAttachment();
-
-    void addProxyRef(const FramebufferAttachment *proxy);
-    void releaseProxy(const FramebufferAttachment *proxy);
 
     rx::RenderTarget *getRenderTarget();
     rx::RenderTarget *getDepthStencil();
@@ -186,20 +140,17 @@ class TextureCubeMapAttachment : public FramebufferAttachmentImpl
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMapAttachment);
 
-    BindingPointer <TextureCubeMap> mTextureCubeMap;
+    BindingPointer<TextureCubeMap> mTextureCubeMap;
     const GLint mLevel;
     const GLenum mFaceTarget;
 };
 
-class Texture3DAttachment : public FramebufferAttachmentImpl
+class Texture3DAttachment : public FramebufferAttachment
 {
   public:
     Texture3DAttachment(Texture3D *texture, GLint level, GLint layer);
 
     virtual ~Texture3DAttachment();
-
-    void addProxyRef(const FramebufferAttachment *proxy);
-    void releaseProxy(const FramebufferAttachment *proxy);
 
     rx::RenderTarget *getRenderTarget();
     rx::RenderTarget *getDepthStencil();
@@ -227,15 +178,12 @@ class Texture3DAttachment : public FramebufferAttachmentImpl
     const GLint mLayer;
 };
 
-class Texture2DArrayAttachment : public FramebufferAttachmentImpl
+class Texture2DArrayAttachment : public FramebufferAttachment
 {
   public:
     Texture2DArrayAttachment(Texture2DArray *texture, GLint level, GLint layer);
 
     virtual ~Texture2DArrayAttachment();
-
-    void addProxyRef(const FramebufferAttachment *proxy);
-    void releaseProxy(const FramebufferAttachment *proxy);
 
     rx::RenderTarget *getRenderTarget();
     rx::RenderTarget *getDepthStencil();
@@ -263,7 +211,7 @@ class Texture2DArrayAttachment : public FramebufferAttachmentImpl
     const GLint mLayer;
 };
 
-class RenderbufferAttachment : public FramebufferAttachmentImpl
+class RenderbufferAttachment : public FramebufferAttachment
 {
   public:
     RenderbufferAttachment(Renderbuffer *renderbuffer);

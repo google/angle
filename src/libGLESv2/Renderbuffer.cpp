@@ -17,6 +17,7 @@
 #include "libGLESv2/renderer/TextureStorage.h"
 #include "common/utilities.h"
 #include "libGLESv2/formatutils.h"
+#include "libGLESv2/FramebufferAttachment.h"
 
 namespace gl
 {

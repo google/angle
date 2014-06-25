@@ -87,16 +87,6 @@ GLenum Texture::getTarget() const
     return mTarget;
 }
 
-void Texture::addProxyRef(const FramebufferAttachment *proxy)
-{
-    mRenderbufferProxies.addRef(proxy);
-}
-
-void Texture::releaseProxy(const FramebufferAttachment *proxy)
-{
-    mRenderbufferProxies.release(proxy);
-}
-
 void Texture::setMinFilter(GLenum filter)
 {
     mSamplerState.minFilter = filter;
@@ -1027,18 +1017,6 @@ rx::TextureStorageInterface *Texture2D::getBaseLevelStorage()
     return mTexStorage;
 }
 
-FramebufferAttachment *Texture2D::getAttachment(GLint level)
-{
-    FramebufferAttachment *attachment = mRenderbufferProxies.get(level, 0);
-    if (!attachment)
-    {
-        attachment = new FramebufferAttachment(id(), new Texture2DAttachment(this, level));
-        mRenderbufferProxies.add(level, 0, attachment);
-    }
-
-    return attachment;
-}
-
 unsigned int Texture2D::getRenderTargetSerial(GLint level)
 {
     return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(level) : 0);
@@ -1662,21 +1640,6 @@ rx::TextureStorageInterface *TextureCubeMap::getBaseLevelStorage()
     return mTexStorage;
 }
 
-FramebufferAttachment *TextureCubeMap::getAttachment(GLenum target, GLint level)
-{
-    ASSERT(!IsCubemapTextureTarget(target));
-    int faceIndex = targetToIndex(target);
-
-    FramebufferAttachment *attachment = mRenderbufferProxies.get(level, faceIndex);
-    if (!attachment)
-    {
-        attachment = new FramebufferAttachment(id(), new TextureCubeMapAttachment(this, target, level));
-        mRenderbufferProxies.add(level, faceIndex, attachment);
-    }
-
-    return attachment;
-}
-
 unsigned int TextureCubeMap::getRenderTargetSerial(GLenum target, GLint level)
 {
     return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(target, level) : 0);
@@ -2040,18 +2003,6 @@ bool Texture3D::isLevelComplete(int level) const
     }
 
     return true;
-}
-
-FramebufferAttachment *Texture3D::getAttachment(GLint level, GLint layer)
-{
-    FramebufferAttachment *attachment = mRenderbufferProxies.get(level, layer);
-    if (!attachment)
-    {
-        attachment = new FramebufferAttachment(id(), new Texture3DAttachment(this, level, layer));
-        mRenderbufferProxies.add(level, 0, attachment);
-    }
-
-    return attachment;
 }
 
 unsigned int Texture3D::getRenderTargetSerial(GLint level, GLint layer)
@@ -2591,18 +2542,6 @@ bool Texture2DArray::isLevelComplete(int level) const
     }
 
     return true;
-}
-
-FramebufferAttachment *Texture2DArray::getAttachment(GLint level, GLint layer)
-{
-    FramebufferAttachment *attachment = mRenderbufferProxies.get(level, layer);
-    if (!attachment)
-    {
-        attachment = new FramebufferAttachment(id(), new Texture2DArrayAttachment(this, level, layer));
-        mRenderbufferProxies.add(level, 0, attachment);
-    }
-
-    return attachment;
 }
 
 unsigned int Texture2DArray::getRenderTargetSerial(GLint level, GLint layer)

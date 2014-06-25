@@ -17,7 +17,6 @@
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
-#include "libGLESv2/FramebufferAttachment.h"
 
 namespace rx
 {
@@ -30,6 +29,7 @@ class TextureStorage;
 namespace gl
 {
 class RenderbufferStorage;
+class FramebufferAttachment;
 
 // A GL renderbuffer object is usually used as a depth or stencil buffer attachment
 // for a framebuffer object. The renderbuffer itself is a distinct GL object, see
