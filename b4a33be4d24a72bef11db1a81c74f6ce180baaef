@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44ba35ef_7b7edb37",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T16:11:01Z",
+      "side": 1,
+      "message": "Any reason for the reference instead of a const pointer?",
+      "range": {
+        "startLine": 495,
+        "startChar": 20,
+        "endLine": 495,
+        "endChar": 101
+      },
+      "revId": "b4a33be4d24a72bef11db1a81c74f6ce180baaef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44ba35ef_dba5e7a8",
+        "filename": "src/libGLESv2/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T16:11:01Z",
+      "side": 1,
+      "message": "I think these can remain const, any reason not to keep them that way?",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 48
+      },
+      "revId": "b4a33be4d24a72bef11db1a81c74f6ce180baaef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24bf01e0_7ab25585",
+        "filename": "src/libGLESv2/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T16:11:01Z",
+      "side": 1,
+      "message": "These functions are really only doing plumbing for getters on the FramebufferAttachment class, can we remove them?  It looks like they\u0027re mostly used in queries which could be simplified a lot by grabbing the FramebufferAttachment object and doing the query on it instead (the null check is done in the queries anyways).",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 45
+      },
+      "revId": "b4a33be4d24a72bef11db1a81c74f6ce180baaef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
