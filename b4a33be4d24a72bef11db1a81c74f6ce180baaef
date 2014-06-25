@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "64c57978_4d8eb96b",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T17:30:58Z",
+      "side": 1,
+      "message": "Agreed on them being cleaner but I\u0027m weary of taking an object that is already stored as a pointer and turning it into a reference and we arn\u0027t using any operators here anyways.",
+      "parentUuid": "24bf01e0_ddd15bdf",
+      "range": {
+        "startLine": 495,
+        "startChar": 20,
+        "endLine": 495,
+        "endChar": 101
+      },
+      "revId": "b4a33be4d24a72bef11db1a81c74f6ce180baaef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44ba35ef_1e3a2de0",
         "filename": "src/libGLESv2/Framebuffer.cpp",
         "patchSetId": 12
@@ -154,6 +178,30 @@
       "side": 1,
       "message": "We could. It would mean losing some convenience and having to NULL check, see the ref. In any case, it would be better to refactor in a subsequent patch.",
       "parentUuid": "24bf01e0_7ab25585",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 45
+      },
+      "revId": "b4a33be4d24a72bef11db1a81c74f6ce180baaef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24bf01e0_a0fb20df",
+        "filename": "src/libGLESv2/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-25T17:30:58Z",
+      "side": 1,
+      "message": "Agreed on subsequent patch if at all.  I think it would be worth it though, these 16 functions basically only do a null check and if you look at the places they are used, there is usually a check of the attachment type anyways.",
+      "parentUuid": "44ba35ef_5e0e6554",
       "range": {
         "startLine": 55,
         "startChar": 4,
