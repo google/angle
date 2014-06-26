@@ -43,6 +43,24 @@
     },
     {
       "key": {
+        "uuid": "44ba35ef_accb1b2d",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-26T17:00:25Z",
+      "side": 0,
+      "message": "I also verified no failures.  I think it\u0027s fixed now that we properly handle arbitrary viewport sizes.",
+      "parentUuid": "04d91d6f_ced8838b",
+      "revId": "84065ac86b9138adf6916a1b3fd8bbe1d50bed56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04d91d6f_2ef2670a",
         "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
         "patchSetId": 7
@@ -54,6 +72,24 @@
       "writtenOn": "2014-06-25T21:27:56Z",
       "side": 0,
       "message": "I do want to make sure, if the maximum viewport dimension is being increased for D3D11, that it\u0027s absolutely safe to do so, and that our reasons for needing this assurance are no longer applicable.\n\nFrom the Trac log, Nicolas recommended:\n\n\"The spec for glViewport says that \"width and height are clamped to implementation-dependent maximums when specified. The maximum width and height may be found by issuing an appropriate Get command\". We currently return mMaxRenderbufferDimension (\u003d mMaxTextureDimension) for this, which is probably the only safe value for D3D9. I suggest to create another virtual method for Renderer to make this independent of texture dimension, and for D3D11 return something like D3D11_VIEWPORT_BOUNDS_MAX - D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION (since both TopLeftX  and TopLeftX + Width have to be \u003c D3D11_VIEWPORT_BOUNDS_MAX but it\u0027s useless to have a viewport totally outside the render target).\"\n\nDoes the viewport scaling introduced later make this moot?",
+      "revId": "84065ac86b9138adf6916a1b3fd8bbe1d50bed56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4d5e933_cd476983",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2069,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-26T17:00:25Z",
+      "side": 0,
+      "message": "I think this is no longer an issue rendering wise.  We seem to properly handle any sized viewport.",
+      "parentUuid": "04d91d6f_2ef2670a",
       "revId": "84065ac86b9138adf6916a1b3fd8bbe1d50bed56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false

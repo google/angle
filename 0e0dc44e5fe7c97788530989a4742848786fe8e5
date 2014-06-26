@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "44ba35ef_ecd113df",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 9837,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-26T17:00:25Z",
+      "side": 1,
+      "message": "Done, using a size_t.",
+      "parentUuid": "a4cbf13b_ba54ed30",
+      "range": {
+        "startLine": 9837,
+        "startChar": 17,
+        "endLine": 9837,
+        "endChar": 23
+      },
+      "revId": "0e0dc44e5fe7c97788530989a4742848786fe8e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4932916_cc33577b",
         "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
         "patchSetId": 7
@@ -89,6 +113,54 @@
     },
     {
       "key": {
+        "uuid": "24bf01e0_2634c862",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-26T17:00:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6471f9c6_8eb0e716",
+      "range": {
+        "startLine": 730,
+        "startChar": 10,
+        "endLine": 730,
+        "endChar": 29
+      },
+      "revId": "0e0dc44e5fe7c97788530989a4742848786fe8e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44ba35ef_ccc64f27",
+        "filename": "src/libGLESv2/renderer/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-26T17:00:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4932916_cc33577b",
+      "range": {
+        "startLine": 730,
+        "startChar": 46,
+        "endLine": 730,
+        "endChar": 69
+      },
+      "revId": "0e0dc44e5fe7c97788530989a4742848786fe8e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4932916_8c2eaf1a",
         "filename": "src/libGLESv2/renderer/d3d11/renderer11_utils.cpp",
         "patchSetId": 7
@@ -123,6 +195,30 @@
       "writtenOn": "2014-06-19T14:54:48Z",
       "side": 1,
       "message": "I don\u0027t think you need to expose any of these functions, if they, inside this cpp file, fill out the caps",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 63
+      },
+      "revId": "0e0dc44e5fe7c97788530989a4742848786fe8e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4d5e933_ed422575",
+        "filename": "src/libGLESv2/renderer/d3d11/renderer11_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-26T17:00:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04ae7d65_0694da2b",
       "range": {
         "startLine": 176,
         "startChar": 0,
