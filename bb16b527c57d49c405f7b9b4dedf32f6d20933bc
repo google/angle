@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44ba35ef_8c6f373c",
+        "filename": "src/libGLESv2/angletypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-26T17:46:12Z",
+      "side": 1,
+      "message": "can we put this in a namespace? seems a bit of a concern to define a byte type in a global namespace in something that gets included in several other headers.",
+      "range": {
+        "startLine": 17,
+        "startChar": 16,
+        "endLine": 17,
+        "endChar": 20
+      },
+      "revId": "bb16b527c57d49c405f7b9b4dedf32f6d20933bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
