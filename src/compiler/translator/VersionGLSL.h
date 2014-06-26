@@ -26,7 +26,7 @@
 // TODO: ES3 equivalent versions of GLSL
 class TVersionGLSL : public TIntermTraverser {
 public:
-    TVersionGLSL(sh::GLenum type);
+    TVersionGLSL(ShShaderType type);
 
     // Returns 120 if the following is used the shader:
     // - "invariant",

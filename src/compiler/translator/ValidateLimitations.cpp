@@ -8,7 +8,6 @@
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/InitializeParseContext.h"
 #include "compiler/translator/ParseContext.h"
-#include "angle_gl.h"
 
 namespace
 {
@@ -49,7 +48,7 @@ class ValidateConstIndexExpr : public TIntermTraverser
 
 }  // namespace anonymous
 
-ValidateLimitations::ValidateLimitations(sh::GLenum shaderType,
+ValidateLimitations::ValidateLimitations(ShShaderType shaderType,
                                          TInfoSinkBase &sink)
     : mShaderType(shaderType),
       mSink(sink),
@@ -458,7 +457,7 @@ bool ValidateLimitations::validateIndexing(TIntermBinary *node)
     // The index expession must be a constant-index-expression unless
     // the operand is a uniform in a vertex shader.
     TIntermTyped *operand = node->getLeft();
-    bool skip = (mShaderType == GL_VERTEX_SHADER) &&
+    bool skip = (mShaderType == SH_VERTEX_SHADER) &&
                 (operand->getQualifier() == EvqUniform);
     if (!skip && !isConstIndexExpr(index))
     {

@@ -8,7 +8,6 @@
 #include <vector>
 #include "GLSLANG/ShaderLang.h"
 #include "gtest/gtest.h"
-#include "angle_gl.h"
 
 #define SHADER(Src) #Src
 
@@ -180,7 +179,7 @@ TEST_F(ExpressionLimitTest, ExpressionComplexity)
     ShShaderSpec spec = SH_WEBGL_SPEC;
     ShShaderOutput output = SH_ESSL_OUTPUT;
     ShHandle vertexCompiler = ShConstructCompiler(
-        GL_FRAGMENT_SHADER, spec, output, &resources);
+        SH_FRAGMENT_SHADER, spec, output, &resources);
     int compileOptions = SH_LIMIT_EXPRESSION_COMPLEXITY;
 
     // Test expression under the limit passes.
@@ -208,7 +207,7 @@ TEST_F(ExpressionLimitTest, UnusedExpressionComplexity)
     ShShaderSpec spec = SH_WEBGL_SPEC;
     ShShaderOutput output = SH_ESSL_OUTPUT;
     ShHandle vertexCompiler = ShConstructCompiler(
-        GL_FRAGMENT_SHADER, spec, output, &resources);
+        SH_FRAGMENT_SHADER, spec, output, &resources);
     int compileOptions = SH_LIMIT_EXPRESSION_COMPLEXITY;
 
     // Test expression under the limit passes.
@@ -236,7 +235,7 @@ TEST_F(ExpressionLimitTest, CallStackDepth)
     ShShaderSpec spec = SH_WEBGL_SPEC;
     ShShaderOutput output = SH_ESSL_OUTPUT;
     ShHandle vertexCompiler = ShConstructCompiler(
-        GL_FRAGMENT_SHADER, spec, output, &resources);
+        SH_FRAGMENT_SHADER, spec, output, &resources);
     int compileOptions = SH_LIMIT_CALL_STACK_DEPTH;
 
     // Test call stack under the limit passes.
@@ -264,7 +263,7 @@ TEST_F(ExpressionLimitTest, UnusedCallStackDepth)
     ShShaderSpec spec = SH_WEBGL_SPEC;
     ShShaderOutput output = SH_ESSL_OUTPUT;
     ShHandle vertexCompiler = ShConstructCompiler(
-        GL_FRAGMENT_SHADER, spec, output, &resources);
+        SH_FRAGMENT_SHADER, spec, output, &resources);
     int compileOptions = SH_LIMIT_CALL_STACK_DEPTH;
 
     // Test call stack under the limit passes.
@@ -292,7 +291,7 @@ TEST_F(ExpressionLimitTest, Recursion)
     ShShaderSpec spec = SH_WEBGL_SPEC;
     ShShaderOutput output = SH_ESSL_OUTPUT;
     ShHandle vertexCompiler = ShConstructCompiler(
-        GL_FRAGMENT_SHADER, spec, output, &resources);
+        SH_FRAGMENT_SHADER, spec, output, &resources);
     int compileOptions = 0;
 
     static const char* shaderWithRecursion0 = SHADER(

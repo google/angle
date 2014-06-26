@@ -18,6 +18,9 @@
 namespace sh
 {
 
+// GLenum alias
+typedef unsigned int GLenum;
+
 // Varying interpolation qualifier, see section 4.3.9 of the ESSL 3.00.4 spec
 enum InterpolationType
 {

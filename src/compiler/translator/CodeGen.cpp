@@ -14,7 +14,7 @@
 // a subclass of TCompiler.
 //
 TCompiler* ConstructCompiler(
-    sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
+    ShShaderType type, ShShaderSpec spec, ShShaderOutput output)
 {
     switch (output) {
     case SH_ESSL_OUTPUT:

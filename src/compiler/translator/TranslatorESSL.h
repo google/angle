@@ -11,7 +11,7 @@
 
 class TranslatorESSL : public TCompiler {
 public:
-    TranslatorESSL(sh::GLenum type, ShShaderSpec spec);
+    TranslatorESSL(ShShaderType type, ShShaderSpec spec);
 
 protected:
     virtual void translate(TIntermNode* root);

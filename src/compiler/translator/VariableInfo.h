@@ -12,12 +12,12 @@
 // Provides information about a variable.
 // It is currently being used to store info about active attribs and uniforms.
 struct TVariableInfo {
-    TVariableInfo(sh::GLenum type, int size);
+    TVariableInfo(ShDataType type, int size);
     TVariableInfo();
 
     TPersistString name;
     TPersistString mappedName;
-    sh::GLenum type;
+    ShDataType type;
     int size;
     bool isArray;
     TPrecision precision;

@@ -54,7 +54,7 @@ protected:
 //
 class TCompiler : public TShHandleBase {
 public:
-    TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
+    TCompiler(ShShaderType type, ShShaderSpec spec, ShShaderOutput output);
     virtual ~TCompiler();
     virtual TCompiler* getAsCompiler() { return this; }
 
@@ -78,7 +78,7 @@ public:
     std::string getBuiltInResourcesString() const { return builtInResourcesString; }
 
 protected:
-    sh::GLenum getShaderType() const { return shaderType; }
+    ShShaderType getShaderType() const { return shaderType; }
     // Initialize symbol-table with built-in symbols.
     bool InitBuiltInSymbolTable(const ShBuiltInResources& resources);
     // Compute the string representation of the built-in resources
@@ -130,7 +130,7 @@ protected:
     const BuiltInFunctionEmulator& getBuiltInFunctionEmulator() const;
 
 private:
-    sh::GLenum shaderType;
+    ShShaderType shaderType;
     ShShaderSpec shaderSpec;
     ShShaderOutput outputType;
 
@@ -174,7 +174,7 @@ private:
 // above machine independent information.
 //
 TCompiler* ConstructCompiler(
-    sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
+    ShShaderType type, ShShaderSpec spec, ShShaderOutput output);
 void DeleteCompiler(TCompiler*);
 
 #endif // _SHHANDLE_INCLUDED_

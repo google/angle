@@ -142,7 +142,7 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
 
     if (mOutputType == SH_HLSL9_OUTPUT)
     {
-        if (mContext.shaderType == GL_FRAGMENT_SHADER)
+        if (mContext.shaderType == SH_FRAGMENT_SHADER)
         {
             // Reserve registers for dx_DepthRange, dx_ViewCoords and dx_DepthFront
             mUniformHLSL->reserveUniformRegisters(3);
@@ -167,13 +167,13 @@ OutputHLSL::~OutputHLSL()
 
 void OutputHLSL::output()
 {
-    mContainsLoopDiscontinuity = mContext.shaderType == GL_FRAGMENT_SHADER && containsLoopDiscontinuity(mContext.treeRoot);
+    mContainsLoopDiscontinuity = mContext.shaderType == SH_FRAGMENT_SHADER && containsLoopDiscontinuity(mContext.treeRoot);
     const std::vector<TIntermTyped*> &flaggedStructs = FlagStd140ValueStructs(mContext.treeRoot);
     makeFlaggedStructMaps(flaggedStructs);
 
     // Work around D3D9 bug that would manifest in vertex shaders with selection blocks which
     // use a vertex attribute as a condition, and some related computation in the else block.
-    if (mOutputType == SH_HLSL9_OUTPUT && mContext.shaderType == GL_VERTEX_SHADER)
+    if (mOutputType == SH_HLSL9_OUTPUT && mContext.shaderType == SH_VERTEX_SHADER)
     {
         RewriteElseBlocks(mContext.treeRoot);
     }
@@ -345,7 +345,7 @@ void OutputHLSL::header()
         out << "#define ANGLE_USES_NESTED_BREAK" << "\n";
     }
 
-    if (mContext.shaderType == GL_FRAGMENT_SHADER)
+    if (mContext.shaderType == SH_FRAGMENT_SHADER)
     {
         TExtensionBehavior::const_iterator iter = mContext.extensionBehavior().find("GL_EXT_draw_buffers");
         const bool usingMRTExtension = (iter != mContext.extensionBehavior().end() && (iter->second == EBhEnable || iter->second == EBhRequire));
@@ -2147,7 +2147,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                     bool bias = (arguments.size() > mandatoryArgumentCount);   // Bias argument is optional
 
-                    if (lod0 || mContext.shaderType == GL_VERTEX_SHADER)
+                    if (lod0 || mContext.shaderType == SH_VERTEX_SHADER)
                     {
                         if (bias)
                         {
