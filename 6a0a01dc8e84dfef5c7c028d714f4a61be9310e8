@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24bf01e0_3121a0be",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 9856,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-26T18:06:48Z",
+      "side": 1,
+      "message": "I\u0027d suggest unsigned int -- ideally we would like to re-enable warning 4267 in 64-bit in the future and might as well get in the habit of not making more work for ourselves.",
+      "range": {
+        "startLine": 9856,
+        "startChar": 17,
+        "endLine": 9856,
+        "endChar": 23
+      },
+      "revId": "6a0a01dc8e84dfef5c7c028d714f4a61be9310e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
