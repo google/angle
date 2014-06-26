@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4f851d3_b7f6b0f7",
+        "filename": "src/compiler/translator/VariablePacker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-26T22:20:30Z",
+      "side": 1,
+      "message": "This is incorrect.  For example, gl::VariableColumnCount(GL_FLOAT_MAT2x4) returns 2, but original GetNumComponentsPerRow(GL_FLOAT_MAT2x4) returns 4 instead.",
+      "revId": "42dd737a4a6de4e5e45dd3ee6777cd80802d978c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
