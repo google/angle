@@ -9896,8 +9896,10 @@ void __stdcall glGetBufferPointervOES(GLenum target, GLenum pname, void** params
             {
                 *params = NULL;
             }
-
-            *params = buffer->getMapPointer();
+            else
+            {
+                *params = buffer->getMapPointer();
+            }
         }
     }
     catch (...)
