@@ -160,7 +160,10 @@ void Framebuffer::setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer, 
     if (attachment && attachment->getDepthSize() > 0 && attachment->getStencilSize() > 0)
     {
         mDepthbuffer = attachment;
-        mStencilbuffer = attachment;
+
+        // Make a new attachment object to ensure we do not double-delete
+        // See angle issue 686
+        mStencilbuffer = createAttachment(type, depthStencilBuffer, level, layer);
     }
 }
 
@@ -618,10 +621,12 @@ DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, Colorbuffer *colo
     Renderbuffer *colorRenderbuffer = new Renderbuffer(0, colorbuffer);
     mColorbuffers[0] = new RenderbufferAttachment(colorRenderbuffer);
 
-    Renderbuffer *depthStencilRenderbuffer = new Renderbuffer(0, depthStencil);
-    FramebufferAttachment *depthStencilAttachment = new RenderbufferAttachment(depthStencilRenderbuffer);
-    mDepthbuffer = (depthStencilRenderbuffer->getDepthSize() != 0 ? depthStencilAttachment : NULL);
-    mStencilbuffer = (depthStencilRenderbuffer->getStencilSize() != 0 ? depthStencilAttachment : NULL);
+    Renderbuffer *depthStencilBuffer = new Renderbuffer(0, depthStencil);
+
+    // Make a new attachment objects to ensure we do not double-delete
+    // See angle issue 686
+    mDepthbuffer = (depthStencilBuffer->getDepthSize() != 0 ? new RenderbufferAttachment(depthStencilBuffer) : NULL);
+    mStencilbuffer = (depthStencilBuffer->getStencilSize() != 0 ? new RenderbufferAttachment(depthStencilBuffer) : NULL);
 
     mDrawBufferStates[0] = GL_BACK;
     mReadBufferState = GL_BACK;
