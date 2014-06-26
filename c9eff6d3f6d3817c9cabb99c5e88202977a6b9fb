@@ -16,6 +16,24 @@
       "revId": "c9eff6d3f6d3817c9cabb99c5e88202977a6b9fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44ba35ef_acc67b4c",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-06-26T14:47:39Z",
+      "side": 1,
+      "message": "It was only unusable in ES3, the ES2 tables used HALF_FLOAT_OES.",
+      "parentUuid": "a46cd148_b7c8d057",
+      "revId": "c9eff6d3f6d3817c9cabb99c5e88202977a6b9fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
