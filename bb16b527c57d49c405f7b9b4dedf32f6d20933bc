@@ -22,6 +22,30 @@
       "revId": "bb16b527c57d49c405f7b9b4dedf32f6d20933bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4fb85cc_24bcd252",
+        "filename": "src/libGLESv2/angletypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-06-26T19:10:37Z",
+      "side": 1,
+      "message": "For that matter, is there anything particularly offensive about just using uint8_t instead?",
+      "parentUuid": "44ba35ef_8c6f373c",
+      "range": {
+        "startLine": 17,
+        "startChar": 16,
+        "endLine": 17,
+        "endChar": 20
+      },
+      "revId": "bb16b527c57d49c405f7b9b4dedf32f6d20933bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
