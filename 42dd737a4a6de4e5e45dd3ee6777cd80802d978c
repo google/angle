@@ -16,6 +16,24 @@
       "revId": "42dd737a4a6de4e5e45dd3ee6777cd80802d978c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84334d7e_280a6f87",
+        "filename": "src/compiler/translator/VariablePacker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-06-27T21:38:52Z",
+      "side": 1,
+      "message": "Good catch, fixed.",
+      "parentUuid": "a4f851d3_b7f6b0f7",
+      "revId": "42dd737a4a6de4e5e45dd3ee6777cd80802d978c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
