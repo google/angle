@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "448b1570_c44dde81",
+        "filename": "src/compiler/translator/VariablePacker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-27T21:52:19Z",
+      "side": 0,
+      "message": "Sorry I forgot to mention this in the review: this function is also necessary, as it\u0027s not the same as gl::VariableRowCount()",
+      "revId": "2d9f44657330dad2a52bf04839dda6b3073725d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
