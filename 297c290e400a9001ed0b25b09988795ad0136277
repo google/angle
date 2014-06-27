@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64865967_46f1f072",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-27T23:31:30Z",
+      "side": 1,
+      "message": "This is not allowed in google codestyle.  You don\u0027t need it here anyway.  If you have to do it, you need to use static_cast.",
+      "revId": "297c290e400a9001ed0b25b09988795ad0136277",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "448b1570_bf0463ae",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-27T23:31:30Z",
+      "side": 1,
+      "message": "Same here, not allowed.",
+      "revId": "297c290e400a9001ed0b25b09988795ad0136277",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
