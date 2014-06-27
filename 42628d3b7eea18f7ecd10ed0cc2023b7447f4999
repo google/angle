@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4f851d3_d6748512",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-27T21:59:24Z",
+      "side": 1,
+      "message": "order is wrong.  see http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml?showone\u003dDeclaration_Order#Declaration_Order",
+      "revId": "42628d3b7eea18f7ecd10ed0cc2023b7447f4999",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
