@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "448b1570_4496ce69",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-27T22:08:44Z",
+      "side": 1,
+      "message": "nit: wrong order",
+      "revId": "2d9f44657330dad2a52bf04839dda6b3073725d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4f851d3_96dbadaa",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-27T22:08:44Z",
+      "side": 1,
+      "message": "nit: order is wrong",
+      "revId": "2d9f44657330dad2a52bf04839dda6b3073725d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64865967_ebed4de0",
+        "filename": "src/compiler/translator/glslang_tab.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-27T22:08:44Z",
+      "side": 1,
+      "message": "nit: here too once you fix the .y file",
+      "revId": "2d9f44657330dad2a52bf04839dda6b3073725d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4f851d3_f67541de",
+        "filename": "tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-27T22:08:44Z",
+      "side": 1,
+      "message": "nit: wrong order",
+      "revId": "2d9f44657330dad2a52bf04839dda6b3073725d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "448b1570_a4f77aac",
+        "filename": "tests/compiler_tests/VariablePacker_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-06-27T22:08:44Z",
+      "side": 1,
+      "message": "nit: wrong order",
+      "revId": "2d9f44657330dad2a52bf04839dda6b3073725d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
