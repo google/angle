@@ -1515,25 +1515,19 @@ Texture *Context::getTargetTexture(GLenum target) const
 
 GLuint Context::getTargetFramebufferHandle(GLenum target) const
 {
-    if (!ValidFramebufferTarget(target))
+    switch (target)
     {
-        return GL_INVALID_INDEX;
-    }
-
-    if (target == GL_READ_FRAMEBUFFER_ANGLE)
-    {
-        return mState.readFramebuffer->id();
-    }
-    else
-    {
-        return mState.drawFramebuffer->id();
+      case GL_READ_FRAMEBUFFER_ANGLE: return mState.readFramebuffer->id();
+      case GL_DRAW_FRAMEBUFFER_ANGLE:
+      case GL_FRAMEBUFFER:            return mState.drawFramebuffer->id();
+      default:                        UNREACHABLE(); return 0;
     }
 }
 
 Framebuffer *Context::getTargetFramebuffer(GLenum target) const
 {
     GLuint framebufferHandle = getTargetFramebufferHandle(target);
-    return (framebufferHandle == GL_INVALID_INDEX ? NULL : getFramebuffer(framebufferHandle));
+    return getFramebuffer(framebufferHandle);
 }
 
 Texture2D *Context::getTexture2D() const

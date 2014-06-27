@@ -360,6 +360,11 @@ bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum ta
 bool ValidateFramebufferRenderbufferParameters(gl::Context *context, GLenum target, GLenum attachment,
                                                GLenum renderbuffertarget, GLuint renderbuffer)
 {
+    if (!ValidFramebufferTarget(target))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
     gl::Framebuffer *framebuffer = context->getTargetFramebuffer(target);
     GLuint framebufferHandle = context->getTargetFramebufferHandle(target);
 

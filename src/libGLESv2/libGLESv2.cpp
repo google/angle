@@ -2603,7 +2603,6 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             }
 
             GLuint framebufferHandle = context->getTargetFramebufferHandle(target);
-            ASSERT(framebufferHandle != GL_INVALID_INDEX);
             gl::Framebuffer *framebuffer = context->getFramebuffer(framebufferHandle);
 
             if (framebufferHandle == 0)
