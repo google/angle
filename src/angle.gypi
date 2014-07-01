@@ -110,7 +110,7 @@
                             'message': 'Copying D3D Compiler DLL...',
                             'msvs_cygwin_shell': 0,
                             'inputs': [ 'copy_compiler_dll.bat' ],
-                            'outputs': [ '<(PRODUCT_DIR)/D3DCompiler_46.dll' ],
+                            'outputs': [ '<(PRODUCT_DIR)/d3dcompiler_46.dll' ],
                             'action':
                             [
                                 "<(angle_gen_path)/copy_compiler_dll.bat",
