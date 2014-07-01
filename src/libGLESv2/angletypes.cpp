@@ -14,6 +14,25 @@
 namespace gl
 {
 
+SamplerState::SamplerState()
+    : minFilter(GL_NEAREST_MIPMAP_LINEAR),
+      magFilter(GL_LINEAR),
+      wrapS(GL_REPEAT),
+      wrapT(GL_REPEAT),
+      wrapR(GL_REPEAT),
+      maxAnisotropy(1.0f),
+      baseLevel(0),
+      maxLevel(1000),
+      minLod(-1000.0f),
+      maxLod(1000.0f),
+      compareMode(GL_NONE),
+      compareFunc(GL_LEQUAL),
+      swizzleRed(GL_RED),
+      swizzleGreen(GL_GREEN),
+      swizzleBlue(GL_BLUE),
+      swizzleAlpha(GL_ALPHA)
+{}
+
 bool SamplerState::swizzleRequired() const
 {
     return swizzleRed != GL_RED || swizzleGreen != GL_GREEN ||

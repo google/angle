@@ -53,22 +53,6 @@ Texture::Texture(rx::Renderer *renderer, GLuint id, GLenum target) : RefCountObj
 {
     mRenderer = renderer;
 
-    mSamplerState.minFilter = GL_NEAREST_MIPMAP_LINEAR;
-    mSamplerState.magFilter = GL_LINEAR;
-    mSamplerState.wrapS = GL_REPEAT;
-    mSamplerState.wrapT = GL_REPEAT;
-    mSamplerState.wrapR = GL_REPEAT;
-    mSamplerState.maxAnisotropy = 1.0f;
-    mSamplerState.baseLevel = 0;
-    mSamplerState.maxLevel = 1000;
-    mSamplerState.minLod = -1000.0f;
-    mSamplerState.maxLod = 1000.0f;
-    mSamplerState.compareMode = GL_NONE;
-    mSamplerState.compareFunc = GL_LEQUAL;
-    mSamplerState.swizzleRed = GL_RED;
-    mSamplerState.swizzleGreen = GL_GREEN;
-    mSamplerState.swizzleBlue = GL_BLUE;
-    mSamplerState.swizzleAlpha = GL_ALPHA;
     mUsage = GL_NONE;
 
     mDirtyImages = true;
@@ -87,170 +71,12 @@ GLenum Texture::getTarget() const
     return mTarget;
 }
 
-void Texture::setMinFilter(GLenum filter)
-{
-    mSamplerState.minFilter = filter;
-}
-
-void Texture::setMagFilter(GLenum filter)
-{
-    mSamplerState.magFilter = filter;
-}
-
-void Texture::setWrapS(GLenum wrap)
-{
-    mSamplerState.wrapS = wrap;
-}
-
-void Texture::setWrapT(GLenum wrap)
-{
-    mSamplerState.wrapT = wrap;
-}
-
-void Texture::setWrapR(GLenum wrap)
-{
-    mSamplerState.wrapR = wrap;
-}
-
-void Texture::setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy)
-{
-    mSamplerState.maxAnisotropy = std::min(textureMaxAnisotropy, contextMaxAnisotropy);
-}
-
-void Texture::setCompareMode(GLenum mode)
-{
-    mSamplerState.compareMode = mode;
-}
-
-void Texture::setCompareFunc(GLenum func)
-{
-    mSamplerState.compareFunc = func;
-}
-
-void Texture::setSwizzleRed(GLenum swizzle)
-{
-    mSamplerState.swizzleRed = swizzle;
-}
-
-void Texture::setSwizzleGreen(GLenum swizzle)
-{
-    mSamplerState.swizzleGreen = swizzle;
-}
-
-void Texture::setSwizzleBlue(GLenum swizzle)
-{
-    mSamplerState.swizzleBlue = swizzle;
-}
-
-void Texture::setSwizzleAlpha(GLenum swizzle)
-{
-    mSamplerState.swizzleAlpha = swizzle;
-}
-
-void Texture::setBaseLevel(GLint baseLevel)
-{
-    mSamplerState.baseLevel = baseLevel;
-}
-
-void Texture::setMaxLevel(GLint maxLevel)
-{
-    mSamplerState.maxLevel = maxLevel;
-}
-
-void Texture::setMinLod(GLfloat minLod)
-{
-    mSamplerState.minLod = minLod;
-}
-
-void Texture::setMaxLod(GLfloat maxLod)
-{
-    mSamplerState.maxLod = maxLod;
-}
-
 void Texture::setUsage(GLenum usage)
 {
     mUsage = usage;
 }
 
-GLenum Texture::getMinFilter() const
-{
-    return mSamplerState.minFilter;
-}
-
-GLenum Texture::getMagFilter() const
-{
-    return mSamplerState.magFilter;
-}
-
-GLenum Texture::getWrapS() const
-{
-    return mSamplerState.wrapS;
-}
-
-GLenum Texture::getWrapT() const
-{
-    return mSamplerState.wrapT;
-}
-
-GLenum Texture::getWrapR() const
-{
-    return mSamplerState.wrapR;
-}
-
-float Texture::getMaxAnisotropy() const
-{
-    return mSamplerState.maxAnisotropy;
-}
-
-GLenum Texture::getSwizzleRed() const
-{
-    return mSamplerState.swizzleRed;
-}
-
-GLenum Texture::getSwizzleGreen() const
-{
-    return mSamplerState.swizzleGreen;
-}
-
-GLenum Texture::getSwizzleBlue() const
-{
-    return mSamplerState.swizzleBlue;
-}
-
-GLenum Texture::getSwizzleAlpha() const
-{
-    return mSamplerState.swizzleAlpha;
-}
-
-GLint Texture::getBaseLevel() const
-{
-    return mSamplerState.baseLevel;
-}
-
-GLint Texture::getMaxLevel() const
-{
-    return mSamplerState.maxLevel;
-}
-
-GLfloat Texture::getMinLod() const
-{
-    return mSamplerState.minLod;
-}
-
-GLfloat Texture::getMaxLod() const
-{
-    return mSamplerState.maxLod;
-}
-
-bool Texture::isSwizzled() const
-{
-    return mSamplerState.swizzleRed   != GL_RED   ||
-           mSamplerState.swizzleGreen != GL_GREEN ||
-           mSamplerState.swizzleBlue  != GL_BLUE  ||
-           mSamplerState.swizzleAlpha != GL_ALPHA;
-}
-
-void Texture::getSamplerState(SamplerState *sampler)
+void Texture::getSamplerStateWithNativeOffset(SamplerState *sampler)
 {
     *sampler = mSamplerState;
 

@@ -2439,7 +2439,7 @@ size_t Context::getCurrentTexturesAndSamplerStates(ProgramBinary *programBinary,
         if (textureUnit != -1)
         {
             outTextures[i] = getSamplerTexture(textureUnit, outTextureTypes[i]);
-            outTextures[i]->getSamplerState(&outSamplers[i]);
+            outTextures[i]->getSamplerStateWithNativeOffset(&outSamplers[i]);
             if (mState.samplers[textureUnit] != 0)
             {
                 Sampler *samplerObject = getSampler(mState.samplers[textureUnit]);
@@ -2459,7 +2459,7 @@ void Context::generateSwizzles(Texture *textures[], size_t count)
 {
     for (size_t i = 0; i < count; i++)
     {
-        if (textures[i] && textures[i]->isSwizzled())
+        if (textures[i] && textures[i]->getSamplerState().swizzleRequired())
         {
             mRenderer->generateSwizzle(textures[i]);
         }

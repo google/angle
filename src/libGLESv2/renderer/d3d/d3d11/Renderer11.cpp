@@ -417,8 +417,10 @@ void Renderer11::generateSwizzle(gl::Texture *texture)
         {
             TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage->getStorageInstance());
 
-            storage11->generateSwizzles(texture->getSwizzleRed(), texture->getSwizzleGreen(), texture->getSwizzleBlue(),
-                                        texture->getSwizzleAlpha());
+            storage11->generateSwizzles(texture->getSamplerState().swizzleRed,
+                                        texture->getSamplerState().swizzleGreen,
+                                        texture->getSamplerState().swizzleBlue,
+                                        texture->getSamplerState().swizzleAlpha);
         }
     }
 }
@@ -490,7 +492,7 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
         {
             TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage->getStorageInstance());
             gl::SamplerState samplerState;
-            texture->getSamplerState(&samplerState);
+            texture->getSamplerStateWithNativeOffset(&samplerState);
             textureSRV = storage11->getSRV(samplerState);
         }
 

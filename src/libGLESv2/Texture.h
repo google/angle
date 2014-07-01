@@ -65,40 +65,11 @@ class Texture : public RefCountObject
 
     GLenum getTarget() const;
 
-    void setMinFilter(GLenum filter);
-    void setMagFilter(GLenum filter);
-    void setWrapS(GLenum wrap);
-    void setWrapT(GLenum wrap);
-    void setWrapR(GLenum wrap);
-    void setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy);
-    void setCompareMode(GLenum mode);
-    void setCompareFunc(GLenum func);
-    void setSwizzleRed(GLenum swizzle);
-    void setSwizzleGreen(GLenum swizzle);
-    void setSwizzleBlue(GLenum swizzle);
-    void setSwizzleAlpha(GLenum swizzle);
-    void setBaseLevel(GLint baseLevel);
-    void setMaxLevel(GLint maxLevel);
-    void setMinLod(GLfloat minLod);
-    void setMaxLod(GLfloat maxLod);
-    void setUsage(GLenum usage);
+    const SamplerState &getSamplerState() const { return mSamplerState; }
+    SamplerState &getSamplerState() { return mSamplerState; }
+    void getSamplerStateWithNativeOffset(SamplerState *sampler);
 
-    GLenum getMinFilter() const;
-    GLenum getMagFilter() const;
-    GLenum getWrapS() const;
-    GLenum getWrapT() const;
-    GLenum getWrapR() const;
-    float getMaxAnisotropy() const;
-    GLenum getSwizzleRed() const;
-    GLenum getSwizzleGreen() const;
-    GLenum getSwizzleBlue() const;
-    GLenum getSwizzleAlpha() const;
-    GLint getBaseLevel() const;
-    GLint getMaxLevel() const;
-    GLfloat getMinLod() const;
-    GLfloat getMaxLod() const;
-    bool isSwizzled() const;
-    void getSamplerState(SamplerState *sampler);
+    void setUsage(GLenum usage);
     GLenum getUsage() const;
 
     GLint getBaseLevelWidth() const;
