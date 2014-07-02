@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04cafddd_2c0b57f6",
+        "filename": "tests/compiler_tests/VariablePacker_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-02T21:06:20Z",
+      "side": 1,
+      "message": "Aren\u0027t this against the ANGLE code style?  \"{\" should be in a new line, here and below.",
+      "revId": "197669db4bc1207f4eedfdd6064a707a490c37d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24d54179_6dec31de",
+        "filename": "tests/compiler_tests/VariablePacker_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-02T21:06:20Z",
+      "side": 1,
+      "message": "nit: remove empty line.",
+      "revId": "197669db4bc1207f4eedfdd6064a707a490c37d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
