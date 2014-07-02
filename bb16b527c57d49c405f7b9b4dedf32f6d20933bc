@@ -46,6 +46,30 @@
       "revId": "bb16b527c57d49c405f7b9b4dedf32f6d20933bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64b2d95d_573aa4e0",
+        "filename": "src/libGLESv2/angletypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-02T15:18:49Z",
+      "side": 1,
+      "message": "I like the byte typedef only because it makes it very obvious that we\u0027re dealing with raw data but since we have no root namespace for the typedef I changed to uint8_t instead.",
+      "parentUuid": "c4fb85cc_24bcd252",
+      "range": {
+        "startLine": 17,
+        "startChar": 16,
+        "endLine": 17,
+        "endChar": 20
+      },
+      "revId": "bb16b527c57d49c405f7b9b4dedf32f6d20933bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
