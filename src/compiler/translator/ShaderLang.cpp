@@ -62,7 +62,7 @@ static const sh::ShaderVariable *GetVariable(const TCompiler *compiler, ShShader
     switch (varType)
     {
       case SH_ACTIVE_ATTRIBUTES:
-        return ReturnVariable(compiler->getAttribs(), index);
+        return ReturnVariable(compiler->getAttributes(), index);
       case SH_ACTIVE_UNIFORMS:
         return ReturnVariable(compiler->getUniforms(), index);
       case SH_VARYINGS:
@@ -257,7 +257,7 @@ void ShGetInfo(const ShHandle handle, ShShaderInfo pname, size_t* params)
         *params = 1 + GetGlobalMaxTokenSize(compiler->getShaderSpec());
         break;
     case SH_ACTIVE_ATTRIBUTES:
-        *params = compiler->getAttribs().size();
+        *params = compiler->getAttributes().size();
         break;
     case SH_ACTIVE_ATTRIBUTE_MAX_LENGTH:
         *params = 1 + GetGlobalMaxTokenSize(compiler->getShaderSpec());

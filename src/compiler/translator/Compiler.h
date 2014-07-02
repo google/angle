@@ -67,9 +67,12 @@ class TCompiler : public TShHandleBase
     // Get results of the last compilation.
     int getShaderVersion() const { return shaderVersion; }
     TInfoSink& getInfoSink() { return infoSink; }
-    const std::vector<sh::Attribute> &getAttribs() const { return attribs; }
+
+    const std::vector<sh::Attribute> &getAttributes() const { return attributes; }
+    const std::vector<sh::Attribute> &getOutputVariables() const { return outputVariables; }
     const std::vector<sh::Uniform> &getUniforms() const { return uniforms; }
     const std::vector<sh::Varying> &getVaryings() const { return varyings; }
+    const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const { return interfaceBlocks; }
 
     ShHashFunction64 getHashFunction() const { return hashFunction; }
     NameMap& getNameMap() { return nameMap; }
@@ -130,6 +133,12 @@ class TCompiler : public TShHandleBase
     ShArrayIndexClampingStrategy getArrayIndexClampingStrategy() const;
     const BuiltInFunctionEmulator& getBuiltInFunctionEmulator() const;
 
+    std::vector<sh::Attribute> attributes;
+    std::vector<sh::Attribute> outputVariables;
+    std::vector<sh::Uniform> uniforms;
+    std::vector<sh::Varying> varyings;
+    std::vector<sh::InterfaceBlock> interfaceBlocks;
+
   private:
     sh::GLenum shaderType;
     ShShaderSpec shaderSpec;
@@ -156,9 +165,6 @@ class TCompiler : public TShHandleBase
     // Results of compilation.
     int shaderVersion;
     TInfoSink infoSink;  // Output sink.
-    std::vector<sh::Attribute> attribs;  // Active attributes in the compiled shader.
-    std::vector<sh::Uniform> uniforms;  // Active uniforms in the compiled shader.
-    std::vector<sh::Varying> varyings;  // Varyings in the compiled shader.
 
     // name hashing.
     ShHashFunction64 hashFunction;

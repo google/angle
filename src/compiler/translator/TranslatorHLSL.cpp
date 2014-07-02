@@ -10,7 +10,7 @@
 #include "compiler/translator/OutputHLSL.h"
 
 TranslatorHLSL::TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
-  : TCompiler(type, spec, output)
+    : TCompiler(type, spec, output)
 {
 }
 
@@ -21,9 +21,9 @@ void TranslatorHLSL::translate(TIntermNode *root)
 
     outputHLSL.output();
 
-    mActiveUniforms         = outputHLSL.getUniforms();
-    mActiveInterfaceBlocks  = outputHLSL.getInterfaceBlocks();
-    mActiveOutputVariables  = outputHLSL.getOutputVariables();
-    mActiveAttributes       = outputHLSL.getAttributes();
-    mActiveVaryings         = outputHLSL.getVaryings();
+    attributes      = outputHLSL.getAttributes();
+    outputVariables = outputHLSL.getOutputVariables();
+    uniforms        = outputHLSL.getUniforms();
+    varyings        = outputHLSL.getVaryings();
+    interfaceBlocks = outputHLSL.getInterfaceBlocks();
 }

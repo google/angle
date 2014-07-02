@@ -357,9 +357,11 @@ void TCompiler::clearResults()
     infoSink.obj.erase();
     infoSink.debug.erase();
 
-    attribs.clear();
+    attributes.clear();
+    outputVariables.clear();
     uniforms.clear();
     varyings.clear();
+    interfaceBlocks.clear();
 
     builtInFunctionEmulator.Cleanup();
 
@@ -483,7 +485,7 @@ bool TCompiler::enforceVertexShaderTimingRestrictions(TIntermNode* root)
 
 void TCompiler::collectVariables(TIntermNode* root)
 {
-    CollectVariables collect(&attribs, &uniforms, &varyings, hashFunction);
+    CollectVariables collect(&attributes, &uniforms, &varyings, hashFunction);
     root->traverse(&collect);
 }
 
