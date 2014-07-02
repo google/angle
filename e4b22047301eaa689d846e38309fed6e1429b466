@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84ad0dff_7824f9ce",
+        "filename": "src/libGLESv2/Context.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-02T18:50:58Z",
+      "side": 1,
+      "message": "nit: I think we should make some kind of comment here describing how these caps differ from the renderer\u0027s (certain features are filtered because of client version or work-arounds). I\u0027d even possibly consider calling it something other than just \"caps\" for max clarity.",
+      "range": {
+        "startLine": 471,
+        "startChar": 13,
+        "endLine": 471,
+        "endChar": 18
+      },
+      "revId": "e4b22047301eaa689d846e38309fed6e1429b466",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
