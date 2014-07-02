@@ -30,6 +30,7 @@ GLenum TransposeMatrixType(GLenum type);
 int VariableRegisterCount(GLenum type);
 int MatrixRegisterCount(GLenum type, bool isRowMajorMatrix);
 int MatrixComponentCount(GLenum type, bool isRowMajorMatrix);
+int VariableSortOrder(GLenum type);
 
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize);
 

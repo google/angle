@@ -402,49 +402,6 @@ rx::D3DWorkaroundType Shader::getD3DWorkarounds() const
     return rx::ANGLE_D3D_WORKAROUND_NONE;
 }
 
-// [OpenGL ES SL 3.00.4] Section 11 p. 120
-// Vertex Outs/Fragment Ins packing priorities
-static const GLenum varyingPriorityList[] =
-{
-    // 1. Arrays of mat4 and mat4
-    GL_FLOAT_MAT4,
-
-    // Non-square matrices of type matCxR consume the same space as a square
-    // matrix of type matN where N is the greater of C and R
-    GL_FLOAT_MAT3x4,
-    GL_FLOAT_MAT4x3,
-    GL_FLOAT_MAT2x4,
-    GL_FLOAT_MAT4x2,
-
-    // 2. Arrays of mat2 and mat2 (since they occupy full rows)
-    GL_FLOAT_MAT2,
-
-    // 3. Arrays of vec4 and vec4
-    GL_FLOAT_VEC4,
-    GL_INT_VEC4,
-    GL_UNSIGNED_INT_VEC4,
-
-    // 4. Arrays of mat3 and mat3
-    GL_FLOAT_MAT3,
-    GL_FLOAT_MAT2x3,
-    GL_FLOAT_MAT3x2,
-
-    // 5. Arrays of vec3 and vec3
-    GL_FLOAT_VEC3,
-    GL_INT_VEC3,
-    GL_UNSIGNED_INT_VEC3,
-
-    // 6. Arrays of vec2 and vec2
-    GL_FLOAT_VEC2,
-    GL_INT_VEC2,
-    GL_UNSIGNED_INT_VEC2,
-
-    // 7. Arrays of float and float
-    GL_FLOAT,
-    GL_INT,
-    GL_UNSIGNED_INT,
-};
-
 // true if varying x has a higher priority in packing than y
 bool Shader::compareVarying(const PackedVarying &x, const PackedVarying &y)
 {
@@ -459,19 +416,12 @@ bool Shader::compareVarying(const PackedVarying &x, const PackedVarying &y)
         return false;
     }
 
-    unsigned int xPriority = GL_INVALID_INDEX;
-    unsigned int yPriority = GL_INVALID_INDEX;
-
-    for (unsigned int priorityIndex = 0; priorityIndex < ArraySize(varyingPriorityList); priorityIndex++)
+    if (y.type == GL_STRUCT_ANGLEX)
     {
-        if (varyingPriorityList[priorityIndex] == x.type) xPriority = priorityIndex;
-        if (varyingPriorityList[priorityIndex] == y.type) yPriority = priorityIndex;
-        if (xPriority != GL_INVALID_INDEX && yPriority != GL_INVALID_INDEX) break;
+        return true;
     }
 
-    ASSERT(xPriority != GL_INVALID_INDEX && yPriority != GL_INVALID_INDEX);
-
-    return xPriority <= yPriority;
+    return gl::VariableSortOrder(x.type) <= gl::VariableSortOrder(y.type);
 }
 
 int Shader::getShaderVersion() const

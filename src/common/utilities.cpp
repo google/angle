@@ -360,6 +360,83 @@ bool IsTriangleMode(GLenum drawMode)
     return false;
 }
 
+// [OpenGL ES SL 3.00.4] Section 11 p. 120
+// Vertex Outs/Fragment Ins packing priorities
+int VariableSortOrder(GLenum type)
+{
+    switch (type)
+    {
+      // 1. Arrays of mat4 and mat4
+      // Non-square matrices of type matCxR consume the same space as a square
+      // matrix of type matN where N is the greater of C and R
+      case GL_FLOAT_MAT4:
+      case GL_FLOAT_MAT2x4:
+      case GL_FLOAT_MAT3x4:
+      case GL_FLOAT_MAT4x2:
+      case GL_FLOAT_MAT4x3:
+        return 0;
+
+      // 2. Arrays of mat2 and mat2 (since they occupy full rows)
+      case GL_FLOAT_MAT2:
+        return 1;
+
+      // 3. Arrays of vec4 and vec4
+      case GL_FLOAT_VEC4:
+      case GL_INT_VEC4:
+      case GL_BOOL_VEC4:
+      case GL_UNSIGNED_INT_VEC4:
+        return 2;
+
+      // 4. Arrays of mat3 and mat3
+      case GL_FLOAT_MAT3:
+      case GL_FLOAT_MAT2x3:
+      case GL_FLOAT_MAT3x2:
+        return 3;
+
+      // 5. Arrays of vec3 and vec3
+      case GL_FLOAT_VEC3:
+      case GL_INT_VEC3:
+      case GL_BOOL_VEC3:
+      case GL_UNSIGNED_INT_VEC3:
+        return 4;
+
+      // 6. Arrays of vec2 and vec2
+      case GL_FLOAT_VEC2:
+      case GL_INT_VEC2:
+      case GL_BOOL_VEC2:
+      case GL_UNSIGNED_INT_VEC2:
+        return 5;
+
+      // 7. Single component types
+      case GL_FLOAT:
+      case GL_INT:
+      case GL_BOOL:
+      case GL_UNSIGNED_INT:
+      case GL_SAMPLER_2D:
+      case GL_SAMPLER_CUBE:
+      case GL_SAMPLER_EXTERNAL_OES:
+      case GL_SAMPLER_2D_RECT_ARB:
+      case GL_SAMPLER_2D_ARRAY:
+      case GL_SAMPLER_3D:
+      case GL_INT_SAMPLER_2D:
+      case GL_INT_SAMPLER_3D:
+      case GL_INT_SAMPLER_CUBE:
+      case GL_INT_SAMPLER_2D_ARRAY:
+      case GL_UNSIGNED_INT_SAMPLER_2D:
+      case GL_UNSIGNED_INT_SAMPLER_3D:
+      case GL_UNSIGNED_INT_SAMPLER_CUBE:
+      case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+      case GL_SAMPLER_2D_SHADOW:
+      case GL_SAMPLER_2D_ARRAY_SHADOW:
+      case GL_SAMPLER_CUBE_SHADOW:
+        return 6;
+
+      default:
+        UNREACHABLE();
+        return 0;
+    }
+}
+
 }
 
 std::string getTempPath()
