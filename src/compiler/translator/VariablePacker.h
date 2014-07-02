@@ -24,7 +24,7 @@ class VariablePacker {
     // Gets how many rows a data type takes.
     static int GetNumRows(sh::GLenum type);
 
- private:
+  private:
     static const int kNumColumns = 4;
     static const unsigned kColumnMask = (1 << kNumColumns) - 1;
 

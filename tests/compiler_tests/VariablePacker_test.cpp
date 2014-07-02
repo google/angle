@@ -5,7 +5,40 @@
 //
 #include "gtest/gtest.h"
 #include "angle_gl.h"
+#include "common/utilities.h"
+#include "common/angleutils.h"
 #include "compiler/translator/VariablePacker.h"
+
+static sh::GLenum types[] = {
+  GL_FLOAT_MAT4,            // 0
+  GL_FLOAT_MAT2,            // 1
+  GL_FLOAT_VEC4,            // 2
+  GL_INT_VEC4,              // 3
+  GL_BOOL_VEC4,             // 4
+  GL_FLOAT_MAT3,            // 5
+  GL_FLOAT_VEC3,            // 6
+  GL_INT_VEC3,              // 7
+  GL_BOOL_VEC3,             // 8
+  GL_FLOAT_VEC2,            // 9
+  GL_INT_VEC2,              // 10
+  GL_BOOL_VEC2,             // 11
+  GL_FLOAT,                 // 12
+  GL_INT,                   // 13
+  GL_BOOL,                  // 14
+  GL_SAMPLER_2D,            // 15
+  GL_SAMPLER_CUBE,          // 16
+  GL_SAMPLER_EXTERNAL_OES,  // 17
+  GL_SAMPLER_2D_RECT_ARB,   // 18
+};
+
+static sh::GLenum nonSqMatTypes[] = {
+  GL_FLOAT_MAT2x3,
+  GL_FLOAT_MAT2x4,
+  GL_FLOAT_MAT3x2,
+  GL_FLOAT_MAT3x4,
+  GL_FLOAT_MAT4x2,
+  GL_FLOAT_MAT4x3
+};
 
 TEST(VariablePacking, Pack) {
   VariablePacker packer;
@@ -14,29 +47,7 @@ TEST(VariablePacking, Pack) {
   // test no vars.
   EXPECT_TRUE(packer.CheckVariablesWithinPackingLimits(kMaxRows, vars));
 
-  sh::GLenum types[] = {
-    GL_FLOAT_MAT4,            // 0
-    GL_FLOAT_MAT2,            // 1
-    GL_FLOAT_VEC4,            // 2
-    GL_INT_VEC4,              // 3
-    GL_BOOL_VEC4,             // 4
-    GL_FLOAT_MAT3,            // 5
-    GL_FLOAT_VEC3,            // 6
-    GL_INT_VEC3,              // 7
-    GL_BOOL_VEC3,             // 8
-    GL_FLOAT_VEC2,            // 9
-    GL_INT_VEC2,              // 10
-    GL_BOOL_VEC2,             // 11
-    GL_FLOAT,                 // 12
-    GL_INT,                   // 13
-    GL_BOOL,                  // 14
-    GL_SAMPLER_2D,            // 15
-    GL_SAMPLER_CUBE,          // 16
-    GL_SAMPLER_EXTERNAL_OES,  // 17
-    GL_SAMPLER_2D_RECT_ARB,   // 18
-  };
-
-  for (size_t tt = 0; tt < sizeof(types) / sizeof(types[0]); ++tt) {
+  for (size_t tt = 0; tt < ArraySize(types); ++tt) {
     sh::GLenum type = types[tt];
     int num_rows = VariablePacker::GetNumRows(type);
     int num_components_per_row = VariablePacker::GetNumComponentsPerRow(type);
@@ -84,3 +95,55 @@ TEST(VariablePacking, Pack) {
   EXPECT_TRUE(packer.CheckVariablesWithinPackingLimits(kMaxRows, vars));
 }
 
+TEST(VariablePacking, PackSizes) {
+  for (size_t tt = 0; tt < ArraySize(types); ++tt) {
+    GLenum type = types[tt];
+
+    int expectedComponents = gl::VariableComponentCount(type);
+    int expectedRows = gl::VariableRowCount(type);
+
+    if (type == GL_FLOAT_MAT2) {
+      expectedComponents = 4;
+    } else if (gl::IsMatrixType(type)) {
+      int squareSize = std::max(gl::VariableRowCount(type),
+          gl::VariableColumnCount(type));
+      expectedComponents = squareSize;
+      expectedRows = squareSize;
+    }
+
+    EXPECT_EQ(expectedComponents,
+      VariablePacker::GetNumComponentsPerRow(type));
+    EXPECT_EQ(expectedRows, VariablePacker::GetNumRows(type));
+  }
+}
+
+// Check special assumptions about packing non-square mats
+TEST(VariablePacking, NonSquareMats) {
+
+  for (size_t mt = 0; mt < ArraySize(nonSqMatTypes); ++mt) {
+    
+    GLenum type = nonSqMatTypes[mt];
+
+    int rows = gl::VariableRowCount(type);
+    int cols = gl::VariableColumnCount(type);
+    int squareSize = std::max(rows, cols);
+
+    TVariableInfoList vars;
+    vars.push_back(TVariableInfo(type, 1));
+
+    // Fill columns
+    for (int row = 0; row < squareSize; row++) {
+      for (int col = squareSize; col < 4; ++col) {
+        vars.push_back(TVariableInfo(GL_FLOAT, 1));
+      }
+    }
+
+    VariablePacker packer;
+
+    EXPECT_TRUE(packer.CheckVariablesWithinPackingLimits(squareSize, vars));
+
+    // and one scalar and packing should fail
+    vars.push_back(TVariableInfo(GL_FLOAT, 1));
+    EXPECT_FALSE(packer.CheckVariablesWithinPackingLimits(squareSize, vars));
+  }
+}

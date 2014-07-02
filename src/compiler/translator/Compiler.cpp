@@ -23,6 +23,7 @@
 #include "compiler/translator/timing/RestrictVertexShaderTiming.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 #include "angle_gl.h"
+#include "common/utilities.h"
 
 bool IsWebGLBasedSpec(ShShaderSpec spec)
 {
@@ -510,35 +511,8 @@ void TCompiler::initializeVaryingsWithoutStaticUse(TIntermNode* root)
         const TVariableInfo& varying = varyings[ii];
         if (varying.staticUse)
             continue;
-        unsigned char primarySize = 1, secondarySize = 1;
-        switch (varying.type)
-        {
-          case GL_FLOAT:
-            break;
-          case GL_FLOAT_VEC2:
-            primarySize = 2;
-            break;
-          case GL_FLOAT_VEC3:
-            primarySize = 3;
-            break;
-          case GL_FLOAT_VEC4:
-            primarySize = 4;
-            break;
-          case GL_FLOAT_MAT2:
-            primarySize = 2;
-            secondarySize = 2;
-            break;
-          case GL_FLOAT_MAT3:
-            primarySize = 3;
-            secondarySize = 3;
-            break;
-          case GL_FLOAT_MAT4:
-            primarySize = 4;
-            secondarySize = 4;
-            break;
-          default:
-            ASSERT(false);
-        }
+        unsigned char primarySize = static_cast<unsigned char>(gl::VariableColumnCount(varying.type));
+        unsigned char secondarySize = static_cast<unsigned char>(gl::VariableRowCount(varying.type));
         TType type(EbtFloat, EbpUndefined, EvqVaryingOut, primarySize, secondarySize, varying.isArray);
         TString name = varying.name.c_str();
         if (varying.isArray)

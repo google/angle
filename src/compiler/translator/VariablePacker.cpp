@@ -5,10 +5,13 @@
 //
 #include "compiler/translator/VariablePacker.h"
 #include "angle_gl.h"
+#include "common/utilities.h"
 
 #include <algorithm>
 
-namespace {
+namespace
+{
+
 int GetSortOrder(sh::GLenum type)
 {
     switch (type) {
@@ -49,81 +52,62 @@ int GetSortOrder(sh::GLenum type)
             return 7;
     }
 }
+
 }    // namespace
 
 int VariablePacker::GetNumComponentsPerRow(sh::GLenum type)
 {
-    switch (type) {
-        case GL_FLOAT_MAT4:
-        case GL_FLOAT_MAT2:
-        case GL_FLOAT_MAT2x4:
-        case GL_FLOAT_MAT3x4:
-        case GL_FLOAT_MAT4x2:
-        case GL_FLOAT_MAT4x3:
-        case GL_FLOAT_VEC4:
-        case GL_INT_VEC4:
-        case GL_BOOL_VEC4:
-            return 4;
-        case GL_FLOAT_MAT3:
-        case GL_FLOAT_MAT2x3:
-        case GL_FLOAT_MAT3x2:
-        case GL_FLOAT_VEC3:
-        case GL_INT_VEC3:
-        case GL_BOOL_VEC3:
-            return 3;
-        case GL_FLOAT_VEC2:
-        case GL_INT_VEC2:
-        case GL_BOOL_VEC2:
-            return 2;
-        case GL_FLOAT:
-        case GL_INT:
-        case GL_BOOL:
-        case GL_SAMPLER_2D:
-        case GL_SAMPLER_CUBE:
-        case GL_SAMPLER_EXTERNAL_OES:
-        case GL_SAMPLER_2D_RECT_ARB:
-            return 1;
-        default:
-            ASSERT(false);
-            return 5;
+    switch (type)
+    {
+      case GL_FLOAT_MAT4:
+      case GL_FLOAT_MAT2:
+      case GL_FLOAT_MAT2x4:
+      case GL_FLOAT_MAT3x4:
+      case GL_FLOAT_MAT4x2:
+      case GL_FLOAT_MAT4x3:
+      case GL_FLOAT_VEC4:
+      case GL_INT_VEC4:
+      case GL_BOOL_VEC4:
+      case GL_UNSIGNED_INT_VEC4:
+        return 4;
+      case GL_FLOAT_MAT3:
+      case GL_FLOAT_MAT2x3:
+      case GL_FLOAT_MAT3x2:
+      case GL_FLOAT_VEC3:
+      case GL_INT_VEC3:
+      case GL_BOOL_VEC3:
+      case GL_UNSIGNED_INT_VEC3:
+        return 3;
+      case GL_FLOAT_VEC2:
+      case GL_INT_VEC2:
+      case GL_BOOL_VEC2:
+      case GL_UNSIGNED_INT_VEC2:
+        return 2;
+      default:
+        ASSERT(gl::VariableComponentCount(type) == 1);
+        return 1;
     }
 }
 
 int VariablePacker::GetNumRows(sh::GLenum type)
 {
-    switch (type) {
-        case GL_FLOAT_MAT4:
-        case GL_FLOAT_MAT2x4:
-        case GL_FLOAT_MAT3x4:
-        case GL_FLOAT_MAT4x3:
-        case GL_FLOAT_MAT4x2:
-            return 4;
-        case GL_FLOAT_MAT3:
-        case GL_FLOAT_MAT2x3:
-        case GL_FLOAT_MAT3x2:
-            return 3;
-        case GL_FLOAT_MAT2:
-            return 2;
-        case GL_FLOAT_VEC4:
-        case GL_INT_VEC4:
-        case GL_BOOL_VEC4:
-        case GL_FLOAT_VEC3:
-        case GL_INT_VEC3:
-        case GL_BOOL_VEC3:
-        case GL_FLOAT_VEC2:
-        case GL_INT_VEC2:
-        case GL_BOOL_VEC2:
-        case GL_FLOAT:
-        case GL_INT:
-        case GL_BOOL:
-        case GL_SAMPLER_2D:
-        case GL_SAMPLER_CUBE:
-        case GL_SAMPLER_EXTERNAL_OES:
-        case GL_SAMPLER_2D_RECT_ARB:
-            return 1;
-        default:
-            ASSERT(false);
-            return 100000;
+    switch (type)
+    {
+      case GL_FLOAT_MAT4:
+      case GL_FLOAT_MAT2x4:
+      case GL_FLOAT_MAT3x4:
+      case GL_FLOAT_MAT4x3:
+      case GL_FLOAT_MAT4x2:
+        return 4;
+      case GL_FLOAT_MAT3:
+      case GL_FLOAT_MAT2x3:
+      case GL_FLOAT_MAT3x2:
+        return 3;
+      case GL_FLOAT_MAT2:
+        return 2;
+      default:
+        ASSERT(gl::VariableRowCount(type) == 1);
+        return 1;
     }
 }
 
