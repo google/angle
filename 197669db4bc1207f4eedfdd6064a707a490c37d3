@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c4c385c9_44d82efb",
+        "filename": "tests/compiler_tests/VariablePacker_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-02T21:13:31Z",
+      "side": 1,
+      "message": "This code is included verbatim in Chromium tests, so I was being extra-cautious about triggering possible automatic validation warnings. The existing code style in this file is Chromium. So I\u0027m fine with whatever as long as it won\u0027t cause issues with Chromium code.",
+      "parentUuid": "04cafddd_2c0b57f6",
+      "revId": "197669db4bc1207f4eedfdd6064a707a490c37d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24d54179_6dec31de",
         "filename": "tests/compiler_tests/VariablePacker_test.cpp",
         "patchSetId": 3
