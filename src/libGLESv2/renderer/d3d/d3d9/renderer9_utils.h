@@ -36,7 +36,8 @@ void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DT
 namespace d3d9_gl
 {
 
-gl::Caps GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceType, UINT adapter);
+void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceType, UINT adapter, gl::Caps *caps,
+                  gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions);
 
 }
 

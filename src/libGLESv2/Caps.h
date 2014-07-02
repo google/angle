@@ -208,11 +208,6 @@ struct Caps
     GLfloat minAliasedLineWidth;
     GLfloat maxAliasedLineWidth;
 
-    // Texture format support
-    TextureCapsMap textureCaps;
-
-    // Extension support
-    Extensions extensions;
 };
 
 }

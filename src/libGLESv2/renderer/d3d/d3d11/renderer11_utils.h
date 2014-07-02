@@ -40,7 +40,7 @@ D3D11_QUERY ConvertQueryType(GLenum queryType);
 namespace d3d11_gl
 {
 
-gl::Caps GenerateCaps(ID3D11Device *device);
+void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions);
 
 }
 

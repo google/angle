@@ -667,7 +667,7 @@ void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::Sampl
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, samplerState.baseLevel);
-        if (getCaps().extensions.textureFilterAnisotropic)
+        if (getRendererExtensions().textureFilterAnisotropic)
         {
             mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, (DWORD)samplerState.maxAnisotropy);
         }
@@ -1384,7 +1384,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
 
     unsigned int startIndex = 0;
 
-    if (getCaps().extensions.elementIndexUint)
+    if (getRendererExtensions().elementIndexUint)
     {
         if (!mLineLoopIB)
         {
@@ -3223,9 +3223,9 @@ GLenum Renderer9::getVertexComponentType(const gl::VertexFormat &vertexFormat) c
     return d3d9::GetDeclTypeComponentType(declType);
 }
 
-gl::Caps Renderer9::generateCaps() const
+void Renderer9::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const
 {
-    return d3d9_gl::GenerateCaps(mD3d9, mDevice, mDeviceType, mAdapter);
+    d3d9_gl::GenerateCaps(mD3d9, mDevice, mDeviceType, mAdapter, outCaps, outTextureCaps, outExtensions);
 }
 
 }

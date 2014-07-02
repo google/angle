@@ -402,6 +402,8 @@ class Context
     virtual int getClientVersion() const;
 
     const Caps &getCaps() const;
+    const TextureCapsMap &getTextureCaps() const;
+    const Extensions &getExtensions() const;
 
     int getMajorShaderModel() const;
     unsigned int getMaximumCombinedTextureImageUnits() const;
@@ -412,10 +414,10 @@ class Context
     void getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const;
     unsigned int getMaxTransformFeedbackBufferBindings() const;
     GLintptr getUniformBufferOffsetAlignment() const;
-    const char *getRendererString() const;
+    const std::string &getRendererString() const;
 
-    const char *getExtensionString() const;
-    const char *getExtensionString(size_t idx) const;
+    const std::string &getExtensionString() const;
+    const std::string &getExtensionString(size_t idx) const;
     size_t getExtensionStringCount() const;
 
     void getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type);
@@ -466,6 +468,11 @@ class Context
 
     size_t getBoundFramebufferTextureSerials(FramebufferTextureSerialArray *outSerialArray);
 
+    // Caps to use for validation
+    Caps mCaps;
+    TextureCapsMap mTextureCaps;
+    Extensions mExtensions;
+
     rx::Renderer *const mRenderer;
 
     int mClientVersion;
@@ -498,9 +505,9 @@ class Context
     TransformFeedbackMap mTransformFeedbackMap;
     HandleAllocator mTransformFeedbackAllocator;
 
-    const char *mRendererString;
-    const char *mExtensionString;
-    std::vector<const char *> mExtensionStrings;
+    std::string mRendererString;
+    std::string mExtensionString;
+    std::vector<std::string> mExtensionStrings;
 
     BindingPointer<Texture> mIncompleteTextures[TEXTURE_TYPE_COUNT];
 

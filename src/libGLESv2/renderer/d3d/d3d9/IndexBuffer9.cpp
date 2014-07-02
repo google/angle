@@ -41,7 +41,7 @@ bool IndexBuffer9::initialize(unsigned int bufferSize, GLenum indexType, bool dy
         }
         else if (indexType == GL_UNSIGNED_INT)
         {
-            if (mRenderer->getCaps().extensions.elementIndexUint)
+            if (mRenderer->getRendererExtensions().elementIndexUint)
             {
                 format = D3DFMT_INDEX32;
             }

@@ -214,7 +214,7 @@ class Renderer11 : public Renderer
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
 
-    virtual gl::Caps generateCaps() const;
+    virtual void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const;
 
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
     void drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);

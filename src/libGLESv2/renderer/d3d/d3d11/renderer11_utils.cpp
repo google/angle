@@ -501,79 +501,76 @@ static size_t GetMaximumViewportSize(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
-gl::Caps GenerateCaps(ID3D11Device *device)
+void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions)
 {
-    gl::Caps caps;
-
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (gl::FormatSet::const_iterator internalFormat = allFormats.begin(); internalFormat != allFormats.end(); ++internalFormat)
     {
-        caps.textureCaps.insert(*internalFormat, GenerateTextureFormatCaps(*internalFormat, device));
+        gl::TextureCaps textureCaps = GenerateTextureFormatCaps(*internalFormat, device);
+        textureCapsMap->insert(*internalFormat, textureCaps);
     }
 
     D3D_FEATURE_LEVEL featureLevel = device->GetFeatureLevel();
 
     // GL core feature limits
-    caps.maxElementIndex = static_cast<GLint64>(std::numeric_limits<unsigned int>::max());
-    caps.max3DTextureSize = GetMaximum3DTextureSize(featureLevel);
-    caps.max2DTextureSize = GetMaximum2DTextureSize(featureLevel);
-    caps.maxCubeMapTextureSize = GetMaximumCubeMapTextureSize(featureLevel);
-    caps.maxArrayTextureLayers = GetMaximum2DTextureArraySize(featureLevel);
+    caps->maxElementIndex = static_cast<GLint64>(std::numeric_limits<unsigned int>::max());
+    caps->max3DTextureSize = GetMaximum3DTextureSize(featureLevel);
+    caps->max2DTextureSize = GetMaximum2DTextureSize(featureLevel);
+    caps->maxCubeMapTextureSize = GetMaximumCubeMapTextureSize(featureLevel);
+    caps->maxArrayTextureLayers = GetMaximum2DTextureArraySize(featureLevel);
 
     // Unimplemented, set to minimum required
-    caps.maxLODBias = 2.0f;
+    caps->maxLODBias = 2.0f;
 
     // No specific limits on render target size, maximum 2D texture size is equivalent
-    caps.maxRenderbufferSize = caps.max2DTextureSize;
+    caps->maxRenderbufferSize = caps->max2DTextureSize;
 
     // Maximum draw buffers and color attachments are the same, max color attachments could eventually be
     // increased to 16
-    caps.maxDrawBuffers = GetMaximumSimultaneousRenderTargets(featureLevel);
-    caps.maxColorAttachments = GetMaximumSimultaneousRenderTargets(featureLevel);
+    caps->maxDrawBuffers = GetMaximumSimultaneousRenderTargets(featureLevel);
+    caps->maxColorAttachments = GetMaximumSimultaneousRenderTargets(featureLevel);
 
     // D3D11 has the same limit for viewport width and height
-    caps.maxViewportWidth = GetMaximumViewportSize(featureLevel);
-    caps.maxViewportHeight = caps.maxViewportWidth;
+    caps->maxViewportWidth = GetMaximumViewportSize(featureLevel);
+    caps->maxViewportHeight = caps->maxViewportWidth;
 
     // Choose a reasonable maximum, enforced in the shader.
-    caps.minAliasedPointSize = 1.0f;
-    caps.maxAliasedPointSize = 1024.0f;
+    caps->minAliasedPointSize = 1.0f;
+    caps->maxAliasedPointSize = 1024.0f;
 
     // Wide lines not supported
-    caps.minAliasedLineWidth = 1.0f;
-    caps.maxAliasedLineWidth = 1.0f;
+    caps->minAliasedLineWidth = 1.0f;
+    caps->maxAliasedLineWidth = 1.0f;
 
     // GL extension support
-    caps.extensions.setTextureExtensionSupport(caps.textureCaps);
-    caps.extensions.elementIndexUint = true;
-    caps.extensions.packedDepthStencil = true;
-    caps.extensions.getProgramBinary = true;
-    caps.extensions.rgb8rgba8 = true;
-    caps.extensions.readFormatBGRA = true;
-    caps.extensions.pixelBufferObject = true;
-    caps.extensions.mapBuffer = true;
-    caps.extensions.mapBufferRange = true;
-    caps.extensions.textureNPOT = GetNPOTTextureSupport(featureLevel);
-    caps.extensions.drawBuffers = GetMaximumSimultaneousRenderTargets(featureLevel) > 1;
-    caps.extensions.textureStorage = true;
-    caps.extensions.textureFilterAnisotropic = true;
-    caps.extensions.maxTextureAnisotropy = GetMaximumAnisotropy(featureLevel);
-    caps.extensions.occlusionQueryBoolean = GetOcclusionQuerySupport(featureLevel);
-    caps.extensions.fence = GetEventQuerySupport(featureLevel);
-    caps.extensions.timerQuery = false; // Unimplemented
-    caps.extensions.robustness = true;
-    caps.extensions.blendMinMax = true;
-    caps.extensions.framebufferBlit = true;
-    caps.extensions.framebufferMultisample = true;
-    caps.extensions.instancedArrays = GetInstancingSupport(featureLevel);
-    caps.extensions.packReverseRowOrder = true;
-    caps.extensions.standardDerivatives = GetDerivativeInstructionSupport(featureLevel);
-    caps.extensions.shaderTextureLOD = true;
-    caps.extensions.fragDepth = true;
-    caps.extensions.textureUsage = true; // This could be false since it has no effect in D3D11
-    caps.extensions.translatedShaderSource = true;
-
-    return caps;
+    extensions->setTextureExtensionSupport(*textureCapsMap);
+    extensions->elementIndexUint = true;
+    extensions->packedDepthStencil = true;
+    extensions->getProgramBinary = true;
+    extensions->rgb8rgba8 = true;
+    extensions->readFormatBGRA = true;
+    extensions->pixelBufferObject = true;
+    extensions->mapBuffer = true;
+    extensions->mapBufferRange = true;
+    extensions->textureNPOT = GetNPOTTextureSupport(featureLevel);
+    extensions->drawBuffers = GetMaximumSimultaneousRenderTargets(featureLevel) > 1;
+    extensions->textureStorage = true;
+    extensions->textureFilterAnisotropic = true;
+    extensions->maxTextureAnisotropy = GetMaximumAnisotropy(featureLevel);
+    extensions->occlusionQueryBoolean = GetOcclusionQuerySupport(featureLevel);
+    extensions->fence = GetEventQuerySupport(featureLevel);
+    extensions->timerQuery = false; // Unimplemented
+    extensions->robustness = true;
+    extensions->blendMinMax = true;
+    extensions->framebufferBlit = true;
+    extensions->framebufferMultisample = true;
+    extensions->instancedArrays = GetInstancingSupport(featureLevel);
+    extensions->packReverseRowOrder = true;
+    extensions->standardDerivatives = GetDerivativeInstructionSupport(featureLevel);
+    extensions->shaderTextureLOD = true;
+    extensions->fragDepth = true;
+    extensions->textureUsage = true; // This could be false since it has no effect in D3D11
+    extensions->translatedShaderSource = true;
 }
 
 }

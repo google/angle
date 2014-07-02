@@ -193,14 +193,14 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
     {
         // Note: dEQP 2013.4 expects an INVALID_VALUE error for TexImage3D with an invalid
         // internal format. (dEQP-GLES3.functional.negative_api.texture.teximage3d)
-        if (!gl::IsValidInternalFormat(actualInternalFormat, context->getCaps().extensions, context->getClientVersion()) ||
-            !gl::IsValidFormat(format, context->getCaps().extensions, context->getClientVersion()) ||
-            !gl::IsValidType(type, context->getCaps().extensions, context->getClientVersion()))
+        if (!gl::IsValidInternalFormat(actualInternalFormat, context->getExtensions(), context->getClientVersion()) ||
+            !gl::IsValidFormat(format, context->getExtensions(), context->getClientVersion()) ||
+            !gl::IsValidType(type, context->getExtensions(), context->getClientVersion()))
         {
             return gl::error(GL_INVALID_ENUM, false);
         }
 
-        if (!gl::IsValidFormatCombination(actualInternalFormat, format, type, context->getCaps().extensions, context->getClientVersion()))
+        if (!gl::IsValidFormatCombination(actualInternalFormat, format, type, context->getExtensions(), context->getClientVersion()))
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }
@@ -440,7 +440,7 @@ bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsize
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (!gl::IsValidInternalFormat(internalformat, context->getCaps().extensions, context->getClientVersion()))
+    if (!gl::IsValidInternalFormat(internalformat, context->getExtensions(), context->getClientVersion()))
     {
         return gl::error(GL_INVALID_ENUM, false);
     }
@@ -584,7 +584,7 @@ bool ValidES3ReadFormatType(gl::Context *context, GLenum internalFormat, GLenum 
         break;
       case GL_RG_EXT:
       case GL_RED_EXT:
-        if (!context->getCaps().extensions.textureRG)
+        if (!context->getExtensions().textureRG)
         {
             return false;
         }

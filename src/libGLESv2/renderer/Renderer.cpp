@@ -43,15 +43,37 @@ Renderer::~Renderer()
     gl::Shader::releaseCompiler();
 }
 
-const gl::Caps &Renderer::getCaps() const
+const gl::Caps &Renderer::getRendererCaps() const
 {
     if (!mCapsInitialized)
     {
-        mCaps = generateCaps();
+        generateCaps(&mCaps, &mTextureCaps, &mExtensions);
         mCapsInitialized = true;
     }
 
     return mCaps;
+}
+
+const gl::TextureCapsMap &Renderer::getRendererTextureCaps() const
+{
+    if (!mCapsInitialized)
+    {
+        generateCaps(&mCaps, &mTextureCaps, &mExtensions);
+        mCapsInitialized = true;
+    }
+
+    return mTextureCaps;
+}
+
+const gl::Extensions &Renderer::getRendererExtensions() const
+{
+    if (!mCapsInitialized)
+    {
+        generateCaps(&mCaps, &mTextureCaps, &mExtensions);
+        mCapsInitialized = true;
+    }
+
+    return mExtensions;
 }
 
 }

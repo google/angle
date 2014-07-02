@@ -82,7 +82,7 @@ bool Display::initialize()
 
     EGLint minSwapInterval = mRenderer->getMinSwapInterval();
     EGLint maxSwapInterval = mRenderer->getMaxSwapInterval();
-    EGLint maxTextureSize = mRenderer->getCaps().max2DTextureSize;
+    EGLint maxTextureSize = mRenderer->getRendererCaps().max2DTextureSize;
 
     rx::ConfigDesc *descList;
     int numConfigs = mRenderer->generateConfigs(&descList);
@@ -344,7 +344,7 @@ EGLSurface Display::createOffscreenSurface(EGLConfig config, HANDLE shareHandle,
         return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
     }
 
-    if (textureFormat != EGL_NO_TEXTURE && !mRenderer->getCaps().extensions.textureNPOT && (!gl::isPow2(width) || !gl::isPow2(height)))
+    if (textureFormat != EGL_NO_TEXTURE && !mRenderer->getRendererExtensions().textureNPOT && (!gl::isPow2(width) || !gl::isPow2(height)))
     {
         return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
     }

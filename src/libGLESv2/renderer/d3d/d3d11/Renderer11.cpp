@@ -724,7 +724,7 @@ bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
         actualZFar = 1.0f;
     }
 
-    const gl::Caps& caps = getCaps();
+    const gl::Caps& caps = getRendererCaps();
 
     // Clamp width and height first to the gl maximum, then clamp further if we extend past the D3D maximum bounds
     D3D11_VIEWPORT dxViewport;
@@ -910,7 +910,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         depthbufferSerial != mAppliedDepthbufferSerial ||
         stencilbufferSerial != mAppliedStencilbufferSerial)
     {
-        mDeviceContext->OMSetRenderTargets(getCaps().maxDrawBuffers, framebufferRTVs, framebufferDSV);
+        mDeviceContext->OMSetRenderTargets(getRendererCaps().maxDrawBuffers, framebufferRTVs, framebufferDSV);
 
         mRenderTargetDesc.width = renderTargetWidth;
         mRenderTargetDesc.height = renderTargetHeight;
@@ -1966,7 +1966,7 @@ bool Renderer11::getShareHandleSupport() const
     // We only currently support share handles with BGRA surfaces, because
     // chrome needs BGRA. Once chrome fixes this, we should always support them.
     // PIX doesn't seem to support using share handles, so disable them.
-    return getCaps().extensions.textureFormatBGRA8888 && !gl::perfActive();
+    return getRendererExtensions().textureFormatBGRA8888 && !gl::perfActive();
 }
 
 bool Renderer11::getPostSubBufferSupport() const
@@ -2443,7 +2443,7 @@ void Renderer11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView
 
     rtvArray[0] = renderTargetView;
 
-    mDeviceContext->OMSetRenderTargets(getCaps().maxDrawBuffers, rtvArray, NULL);
+    mDeviceContext->OMSetRenderTargets(getRendererCaps().maxDrawBuffers, rtvArray, NULL);
 
     // Do not preserve the serial for this one-time-use render target
     for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)
@@ -2689,7 +2689,7 @@ FenceImpl *Renderer11::createFence()
 
 bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
 {
-    ASSERT(getCaps().extensions.pixelBufferObject);
+    ASSERT(getRendererExtensions().pixelBufferObject);
 
     // sRGB formats do not work with D3D11 buffer SRVs
     if (gl::GetColorEncoding(internalFormat) == GL_SRGB)
@@ -2698,7 +2698,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     }
 
     // We cannot support direct copies to non-color-renderable formats
-    if (!getCaps().textureCaps.get(internalFormat).colorRendering)
+    if (!getRendererTextureCaps().get(internalFormat).colorRendering)
     {
         return false;
     }
@@ -3406,9 +3406,9 @@ Renderer11::MultisampleSupportInfo Renderer11::getMultisampleSupportInfo(DXGI_FO
     return supportInfo;
 }
 
-gl::Caps Renderer11::generateCaps() const
+void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const
 {
-    return d3d11_gl::GenerateCaps(mDevice);
+    d3d11_gl::GenerateCaps(mDevice, outCaps, outTextureCaps, outExtensions);
 }
 
 }

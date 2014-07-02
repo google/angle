@@ -308,15 +308,14 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, IDirect3
     return textureCaps;
 }
 
-gl::Caps GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceType, UINT adapter)
+void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceType, UINT adapter, gl::Caps *caps,
+                  gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions)
 {
-    gl::Caps caps;
-
     D3DCAPS9 deviceCaps;
     if (FAILED(d3d9->GetDeviceCaps(adapter, deviceType, &deviceCaps)))
     {
         // Can't continue with out device caps
-        return caps;
+        return;
     }
 
     D3DDISPLAYMODE currentDisplayMode;
@@ -325,104 +324,103 @@ gl::Caps GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE dev
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (gl::FormatSet::const_iterator internalFormat = allFormats.begin(); internalFormat != allFormats.end(); ++internalFormat)
     {
-        caps.textureCaps.insert(*internalFormat, GenerateTextureFormatCaps(*internalFormat, d3d9, deviceType, adapter,
-                                                                           currentDisplayMode.Format));
+        gl::TextureCaps textureCaps = GenerateTextureFormatCaps(*internalFormat, d3d9, deviceType, adapter,
+                                                                currentDisplayMode.Format);
+        textureCapsMap->insert(*internalFormat, textureCaps);
     }
 
     // GL core feature limits
-    caps.maxElementIndex = static_cast<GLint64>(std::numeric_limits<unsigned int>::max());
+    caps->maxElementIndex = static_cast<GLint64>(std::numeric_limits<unsigned int>::max());
 
     // 3D textures are unimplemented in D3D9
-    caps.max3DTextureSize = 1;
+    caps->max3DTextureSize = 1;
 
     // Only one limit in GL, use the minimum dimension
-    caps.max2DTextureSize = std::min(deviceCaps.MaxTextureWidth, deviceCaps.MaxTextureHeight);
+    caps->max2DTextureSize = std::min(deviceCaps.MaxTextureWidth, deviceCaps.MaxTextureHeight);
 
     // D3D treats cube maps as a special case of 2D textures
-    caps.maxCubeMapTextureSize = caps.max2DTextureSize;
+    caps->maxCubeMapTextureSize = caps->max2DTextureSize;
 
     // Array textures are not available in D3D9
-    caps.maxArrayTextureLayers = 1;
+    caps->maxArrayTextureLayers = 1;
 
     // ES3-only feature
-    caps.maxLODBias = 0.0f;
+    caps->maxLODBias = 0.0f;
 
     // No specific limits on render target size, maximum 2D texture size is equivalent
-    caps.maxRenderbufferSize = caps.max2DTextureSize;
+    caps->maxRenderbufferSize = caps->max2DTextureSize;
 
     // Draw buffers are not supported in D3D9
-    caps.maxDrawBuffers = 1;
-    caps.maxColorAttachments = 1;
+    caps->maxDrawBuffers = 1;
+    caps->maxColorAttachments = 1;
 
     // No specific limits on viewport size, maximum 2D texture size is equivalent
-    caps.maxViewportWidth = caps.max2DTextureSize;
-    caps.maxViewportHeight = caps.maxViewportWidth;
+    caps->maxViewportWidth = caps->max2DTextureSize;
+    caps->maxViewportHeight = caps->maxViewportWidth;
 
     // Point size is clamped to 1.0f when the shader model is less than 3
-    caps.minAliasedPointSize = 1.0f;
-    caps.maxAliasedPointSize = ((D3DSHADER_VERSION_MAJOR(deviceCaps.PixelShaderVersion) >= 3) ? deviceCaps.MaxPointSize : 1.0f);
+    caps->minAliasedPointSize = 1.0f;
+    caps->maxAliasedPointSize = ((D3DSHADER_VERSION_MAJOR(deviceCaps.PixelShaderVersion) >= 3) ? deviceCaps.MaxPointSize : 1.0f);
 
     // Wide lines not supported
-    caps.minAliasedLineWidth = 1.0f;
-    caps.maxAliasedLineWidth = 1.0f;
+    caps->minAliasedLineWidth = 1.0f;
+    caps->maxAliasedLineWidth = 1.0f;
 
     // GL extension support
-    caps.extensions.setTextureExtensionSupport(caps.textureCaps);
-    caps.extensions.elementIndexUint = deviceCaps.MaxVertexIndex >= (1 << 16);
-    caps.extensions.packedDepthStencil = true;
-    caps.extensions.getProgramBinary = true;
-    caps.extensions.rgb8rgba8 = true;
-    caps.extensions.readFormatBGRA = true;
-    caps.extensions.pixelBufferObject = false;
-    caps.extensions.mapBuffer = false;
-    caps.extensions.mapBufferRange = false;
+    extensions->setTextureExtensionSupport(*textureCapsMap);
+    extensions->elementIndexUint = deviceCaps.MaxVertexIndex >= (1 << 16);
+    extensions->packedDepthStencil = true;
+    extensions->getProgramBinary = true;
+    extensions->rgb8rgba8 = true;
+    extensions->readFormatBGRA = true;
+    extensions->pixelBufferObject = false;
+    extensions->mapBuffer = false;
+    extensions->mapBufferRange = false;
 
     // ATI cards on XP have problems with non-power-of-two textures.
     D3DADAPTER_IDENTIFIER9 adapterId = { 0 };
     if (SUCCEEDED(d3d9->GetAdapterIdentifier(adapter, 0, &adapterId)))
     {
-        caps.extensions.textureNPOT = !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_POW2) &&
+        extensions->textureNPOT = !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_POW2) &&
                                       !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_CUBEMAP_POW2) &&
                                       !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) &&
                                       !(isWindowsVistaOrGreater() && adapterId.VendorId == VENDOR_ID_AMD);
     }
     else
     {
-        caps.extensions.textureNPOT = false;
+        extensions->textureNPOT = false;
     }
 
-    caps.extensions.drawBuffers = false;
-    caps.extensions.textureStorage = true;
+    extensions->drawBuffers = false;
+    extensions->textureStorage = true;
 
     // Must support a minimum of 2:1 anisotropy for max anisotropy to be considered supported, per the spec
-    caps.extensions.textureFilterAnisotropic = (deviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY) != 0 && deviceCaps.MaxAnisotropy >= 2;
-    caps.extensions.maxTextureAnisotropy = static_cast<GLfloat>(deviceCaps.MaxAnisotropy);
+    extensions->textureFilterAnisotropic = (deviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY) != 0 && deviceCaps.MaxAnisotropy >= 2;
+    extensions->maxTextureAnisotropy = static_cast<GLfloat>(deviceCaps.MaxAnisotropy);
 
     // Check occlusion query support by trying to create one
     IDirect3DQuery9 *occlusionQuery = NULL;
-    caps.extensions.occlusionQueryBoolean = SUCCEEDED(device->CreateQuery(D3DQUERYTYPE_OCCLUSION, &occlusionQuery)) && occlusionQuery;
+    extensions->occlusionQueryBoolean = SUCCEEDED(device->CreateQuery(D3DQUERYTYPE_OCCLUSION, &occlusionQuery)) && occlusionQuery;
     SafeRelease(occlusionQuery);
 
     // Check event query support by trying to create one
     IDirect3DQuery9 *eventQuery = NULL;
-    caps.extensions.fence = SUCCEEDED(device->CreateQuery(D3DQUERYTYPE_EVENT, &eventQuery)) && eventQuery;
+    extensions->fence = SUCCEEDED(device->CreateQuery(D3DQUERYTYPE_EVENT, &eventQuery)) && eventQuery;
     SafeRelease(eventQuery);
 
-    caps.extensions.timerQuery = false; // Unimplemented
-    caps.extensions.robustness = true;
-    caps.extensions.blendMinMax = true;
-    caps.extensions.framebufferBlit = true;
-    caps.extensions.framebufferMultisample = true;
-    caps.extensions.instancedArrays = deviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
-    caps.extensions.packReverseRowOrder = true;
-    caps.extensions.standardDerivatives = (deviceCaps.PS20Caps.Caps & D3DPS20CAPS_GRADIENTINSTRUCTIONS) != 0;
-    caps.extensions.shaderTextureLOD = true;
-    caps.extensions.fragDepth = true;
-    caps.extensions.textureUsage = true;
-    caps.extensions.translatedShaderSource = true;
-    caps.extensions.colorBufferFloat = false;
-
-    return caps;
+    extensions->timerQuery = false; // Unimplemented
+    extensions->robustness = true;
+    extensions->blendMinMax = true;
+    extensions->framebufferBlit = true;
+    extensions->framebufferMultisample = true;
+    extensions->instancedArrays = deviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
+    extensions->packReverseRowOrder = true;
+    extensions->standardDerivatives = (deviceCaps.PS20Caps.Caps & D3DPS20CAPS_GRADIENTINSTRUCTIONS) != 0;
+    extensions->shaderTextureLOD = true;
+    extensions->fragDepth = true;
+    extensions->textureUsage = true;
+    extensions->translatedShaderSource = true;
+    extensions->colorBufferFloat = false;
 }
 
 }
