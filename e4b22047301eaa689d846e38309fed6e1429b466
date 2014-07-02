@@ -22,6 +22,24 @@
       "revId": "e4b22047301eaa689d846e38309fed6e1429b466",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c471c58d_b4c220cb",
+        "filename": "src/libGLESv2/Context.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-02T23:52:26Z",
+      "side": 1,
+      "message": "I very much agree with this, and explicitly want the variable to get  a different name than the renderer version.",
+      "parentUuid": "84ad0dff_7824f9ce",
+      "revId": "e4b22047301eaa689d846e38309fed6e1429b466",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
