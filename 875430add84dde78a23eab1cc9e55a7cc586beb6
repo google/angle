@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a412110c_39b26784",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-02T18:40:28Z",
+      "side": 1,
+      "message": "should be uint8_t i think?",
+      "range": {
+        "startLine": 70,
+        "startChar": 10,
+        "endLine": 70,
+        "endChar": 14
+      },
+      "revId": "875430add84dde78a23eab1cc9e55a7cc586beb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
