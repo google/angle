@@ -483,7 +483,7 @@ bool TCompiler::enforceVertexShaderTimingRestrictions(TIntermNode* root)
 
 void TCompiler::collectVariables(TIntermNode* root)
 {
-    CollectVariables collect(attribs, uniforms, varyings, hashFunction);
+    CollectVariables collect(&attribs, &uniforms, &varyings, hashFunction);
     root->traverse(&collect);
 }
 
@@ -508,16 +508,16 @@ void TCompiler::initializeVaryingsWithoutStaticUse(TIntermNode* root)
     InitializeVariables::InitVariableInfoList variables;
     for (size_t ii = 0; ii < varyings.size(); ++ii)
     {
-        const TVariableInfo& varying = varyings[ii];
+        const sh::Varying& varying = varyings[ii];
         if (varying.staticUse)
             continue;
         unsigned char primarySize = static_cast<unsigned char>(gl::VariableColumnCount(varying.type));
         unsigned char secondarySize = static_cast<unsigned char>(gl::VariableRowCount(varying.type));
-        TType type(EbtFloat, EbpUndefined, EvqVaryingOut, primarySize, secondarySize, varying.isArray);
+        TType type(EbtFloat, EbpUndefined, EvqVaryingOut, primarySize, secondarySize, varying.isArray());
         TString name = varying.name.c_str();
-        if (varying.isArray)
+        if (varying.isArray())
         {
-            type.setArraySize(varying.size);
+            type.setArraySize(varying.arraySize);
             name = name.substr(0, name.find_first_of('['));
         }
 

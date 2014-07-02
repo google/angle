@@ -16,6 +16,7 @@
 #include "compiler/translator/length_limits.h"
 #include "compiler/translator/TranslatorHLSL.h"
 #include "compiler/translator/VariablePacker.h"
+#include "angle_gl.h"
 
 static bool isInitialized = false;
 
@@ -43,6 +44,52 @@ static bool checkMappedNameMaxLength(const ShHandle handle, size_t expectedValue
     size_t mappedNameMaxLength = 0;
     ShGetInfo(handle, SH_MAPPED_NAME_MAX_LENGTH, &mappedNameMaxLength);
     return (expectedValue == mappedNameMaxLength);
+}
+
+template <typename VarT>
+static const sh::ShaderVariable *ReturnVariable(const std::vector<VarT> &infoList, int index)
+{
+    if (index < 0 || static_cast<size_t>(index) >= infoList.size())
+    {
+        return NULL;
+    }
+
+    return &infoList[index];
+}
+
+static const sh::ShaderVariable *GetVariable(const TCompiler *compiler, ShShaderInfo varType, int index)
+{
+    switch (varType)
+    {
+      case SH_ACTIVE_ATTRIBUTES:
+        return ReturnVariable(compiler->getAttribs(), index);
+      case SH_ACTIVE_UNIFORMS:
+        return ReturnVariable(compiler->getUniforms(), index);
+      case SH_VARYINGS:
+        return ReturnVariable(compiler->getVaryings(), index);
+      default:
+        UNREACHABLE();
+        return NULL;
+    }
+}
+
+static ShPrecisionType ConvertPrecision(sh::GLenum precision)
+{
+    switch (precision)
+    {
+      case GL_HIGH_FLOAT:
+      case GL_HIGH_INT:
+        return SH_PRECISION_HIGHP;
+      case GL_MEDIUM_FLOAT:
+      case GL_MEDIUM_INT:
+        return SH_PRECISION_HIGHP;
+      case GL_LOW_FLOAT:
+      case GL_LOW_INT:
+        return SH_PRECISION_HIGHP;
+      default:
+        UNREACHABLE();
+        return SH_PRECISION_UNDEFINED;
+    }
 }
 
 //
@@ -310,47 +357,32 @@ void ShGetVariableInfo(const ShHandle handle,
     if (compiler == 0)
         return;
 
-    const TVariableInfoList& varList =
-        varType == SH_ACTIVE_ATTRIBUTES ? compiler->getAttribs() :
-            (varType == SH_ACTIVE_UNIFORMS ? compiler->getUniforms() :
-                compiler->getVaryings());
-    if (index < 0 || index >= static_cast<int>(varList.size()))
+    const sh::ShaderVariable *varInfo = GetVariable(compiler, varType, index);
+    if (!varInfo)
+    {
         return;
-
-    const TVariableInfo& varInfo = varList[index];
-    if (length) *length = varInfo.name.size();
-    *size = varInfo.size;
-    *type = varInfo.type;
-    switch (varInfo.precision) {
-    case EbpLow:
-        *precision = SH_PRECISION_LOWP;
-        break;
-    case EbpMedium:
-        *precision = SH_PRECISION_MEDIUMP;
-        break;
-    case EbpHigh:
-        *precision = SH_PRECISION_HIGHP;
-        break;
-    default:
-        // Some types does not support precision, for example, boolean.
-        *precision = SH_PRECISION_UNDEFINED;
-        break;
     }
-    *staticUse = varInfo.staticUse ? 1 : 0;
+
+    if (length) *length = varInfo->name.size();
+    *size = varInfo->elementCount();
+    *type = varInfo->type;
+    *precision = ConvertPrecision(varInfo->precision);
+    *staticUse = varInfo->staticUse ? 1 : 0;
 
     // This size must match that queried by
     // SH_ACTIVE_UNIFORM_MAX_LENGTH, SH_ACTIVE_ATTRIBUTE_MAX_LENGTH, SH_VARYING_MAX_LENGTH
     // in ShGetInfo, below.
     size_t variableLength = 1 + GetGlobalMaxTokenSize(compiler->getShaderSpec());
     ASSERT(checkVariableMaxLengths(handle, variableLength));
-    strncpy(name, varInfo.name.c_str(), variableLength);
+    strncpy(name, varInfo->name.c_str(), variableLength);
     name[variableLength - 1] = 0;
-    if (mappedName) {
+    if (mappedName)
+    {
         // This size must match that queried by
         // SH_MAPPED_NAME_MAX_LENGTH in ShGetInfo, below.
         size_t maxMappedNameLength = 1 + GetGlobalMaxTokenSize(compiler->getShaderSpec());
         ASSERT(checkMappedNameMaxLength(handle, maxMappedNameLength));
-        strncpy(mappedName, varInfo.mappedName.c_str(), maxMappedNameLength);
+        strncpy(mappedName, varInfo->mappedName.c_str(), maxMappedNameLength);
         mappedName[maxMappedNameLength - 1] = 0;
     }
 }
@@ -434,10 +466,10 @@ int ShCheckVariablesWithinPackingLimits(
     if (varInfoArraySize == 0)
         return 1;
     ASSERT(varInfoArray);
-    TVariableInfoList variables;
+    std::vector<sh::ShaderVariable> variables;
     for (size_t ii = 0; ii < varInfoArraySize; ++ii)
     {
-        TVariableInfo var(varInfoArray[ii].type, varInfoArray[ii].size);
+        sh::ShaderVariable var(varInfoArray[ii].type, (sh::GLenum)0, "", varInfoArray[ii].size);
         variables.push_back(var);
     }
     VariablePacker packer;

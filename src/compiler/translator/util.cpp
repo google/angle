@@ -170,15 +170,15 @@ GLenum GLVariablePrecision(const TType &type)
     {
         switch (type.getPrecision())
         {
-            case EbpHigh:
+          case EbpHigh:
             return GL_HIGH_FLOAT;
-            case EbpMedium:
+          case EbpMedium:
             return GL_MEDIUM_FLOAT;
-            case EbpLow:
+          case EbpLow:
             return GL_LOW_FLOAT;
-            case EbpUndefined:
-            // Should be defined as the default precision by the parser
-            default:
+          case EbpUndefined:
+          // Should be defined as the default precision by the parser
+          default:
             UNREACHABLE();
         }
     }

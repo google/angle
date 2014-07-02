@@ -17,21 +17,25 @@ TString arrayBrackets(int index)
     return stream.str();
 }
 
-void getBuiltInVariableInfo(const TType& type,
-                            const TString& name,
-                            const TString& mappedName,
-                            TVariableInfoList& infoList);
-void getUserDefinedVariableInfo(const TType& type,
-                                const TString& name,
-                                const TString& mappedName,
-                                TVariableInfoList& infoList,
+template <typename VarT>
+void getBuiltInVariableInfo(const TType &type,
+                            const TString &name,
+                            const TString &mappedName,
+                            std::vector<VarT> &infoList);
+
+template <typename VarT>
+void getUserDefinedVariableInfo(const TType &type,
+                                const TString &name,
+                                const TString &mappedName,
+                                std::vector<VarT> &infoList,
                                 ShHashFunction64 hashFunction);
 
 // Returns info for an attribute, uniform, or varying.
-void getVariableInfo(const TType& type,
-                     const TString& name,
-                     const TString& mappedName,
-                     TVariableInfoList& infoList,
+template <typename VarT>
+void getVariableInfo(const TType &type,
+                     const TString &name,
+                     const TString &mappedName,
+                     std::vector<VarT> &infoList,
                      ShHashFunction64 hashFunction)
 {
     if (type.getBasicType() == EbtStruct || type.isInterfaceBlock()) {
@@ -49,34 +53,34 @@ void getVariableInfo(const TType& type,
     }
 }
 
-void getBuiltInVariableInfo(const TType& type,
-                            const TString& name,
-                            const TString& mappedName,
-                            TVariableInfoList& infoList)
+template <class VarT>
+void getBuiltInVariableInfo(const TType &type,
+                            const TString &name,
+                            const TString &mappedName,
+                            std::vector<VarT> &infoList)
 {
     ASSERT(type.getBasicType() != EbtStruct);
 
-    TVariableInfo varInfo;
+    VarT varInfo;
     if (type.isArray()) {
         varInfo.name = (name + "[0]").c_str();
         varInfo.mappedName = (mappedName + "[0]").c_str();
-        varInfo.size = type.getArraySize();
-        varInfo.isArray = true;
+        varInfo.arraySize = type.getArraySize();
     } else {
         varInfo.name = name.c_str();
         varInfo.mappedName = mappedName.c_str();
-        varInfo.size = 1;
-        varInfo.isArray = false;
+        varInfo.arraySize = 0;
     }
-    varInfo.precision = type.getPrecision();
+    varInfo.precision = sh::GLVariablePrecision(type);
     varInfo.type = sh::GLVariableType(type);
     infoList.push_back(varInfo);
 }
 
-void getUserDefinedVariableInfo(const TType& type,
-                                const TString& name,
-                                const TString& mappedName,
-                                TVariableInfoList& infoList,
+template <class VarT>
+void getUserDefinedVariableInfo(const TType &type,
+                                const TString &name,
+                                const TString &mappedName,
+                                std::vector<VarT> &infoList,
                                 ShHashFunction64 hashFunction)
 {
     ASSERT(type.getBasicType() == EbtStruct || type.isInterfaceBlock());
@@ -95,45 +99,28 @@ void getUserDefinedVariableInfo(const TType& type,
     }
 }
 
-TVariableInfo* findVariable(const TType& type,
-                            const TString& name,
-                            TVariableInfoList& infoList)
+template <class VarT>
+VarT* findVariable(const TType &type,
+                   const TString &name,
+                   std::vector<VarT> *infoList)
 {
     // TODO(zmo): optimize this function.
     TString myName = name;
     if (type.isArray())
         myName += "[0]";
-    for (size_t ii = 0; ii < infoList.size(); ++ii)
+    for (size_t ii = 0; ii < infoList->size(); ++ii)
     {
-        if (infoList[ii].name.c_str() == myName)
-            return &(infoList[ii]);
+        if ((*infoList)[ii].name.c_str() == myName)
+            return &((*infoList)[ii]);
     }
     return NULL;
 }
 
 }  // namespace anonymous
 
-TVariableInfo::TVariableInfo()
-    : type(GL_NONE),
-      size(0),
-      isArray(false),
-      precision(EbpUndefined),
-      staticUse(false)
-{
-}
-
-TVariableInfo::TVariableInfo(sh::GLenum type, int size)
-    : type(type),
-      size(size),
-      isArray(false),
-      precision(EbpUndefined),
-      staticUse(false)
-{
-}
-
-CollectVariables::CollectVariables(TVariableInfoList& attribs,
-                                   TVariableInfoList& uniforms,
-                                   TVariableInfoList& varyings,
+CollectVariables::CollectVariables(std::vector<sh::Attribute> *attribs,
+                                   std::vector<sh::Uniform> *uniforms,
+                                   std::vector<sh::Varying> *varyings,
                                    ShHashFunction64 hashFunction)
     : mAttribs(attribs),
       mUniforms(uniforms),
@@ -153,62 +140,92 @@ CollectVariables::CollectVariables(TVariableInfoList& attribs,
 void CollectVariables::visitSymbol(TIntermSymbol* symbol)
 {
     ASSERT(symbol != NULL);
-    TVariableInfo* var = NULL;
+    sh::ShaderVariable *var = NULL;
     switch (symbol->getQualifier())
     {
-    case EvqVaryingOut:
-    case EvqInvariantVaryingOut:
-    case EvqVaryingIn:
-    case EvqInvariantVaryingIn:
+      case EvqVaryingOut:
+      case EvqInvariantVaryingOut:
+      case EvqVaryingIn:
+      case EvqInvariantVaryingIn:
         var = findVariable(symbol->getType(), symbol->getSymbol(), mVaryings);
         break;
-    case EvqUniform:
+      case EvqUniform:
         var = findVariable(symbol->getType(), symbol->getSymbol(), mUniforms);
         break;
-    case EvqFragCoord:
-        if (!mFragCoordAdded) {
-            TVariableInfo info;
+      case EvqFragCoord:
+        if (!mFragCoordAdded)
+        {
+            sh::Varying info;
             info.name = "gl_FragCoord";
             info.mappedName = "gl_FragCoord";
             info.type = GL_FLOAT_VEC4;
-            info.size = 1;
-            info.precision = EbpMedium;  // Use mediump as it doesn't really matter.
+            info.arraySize = 0;
+            info.precision = GL_MEDIUM_FLOAT;  // Use mediump as it doesn't really matter.
             info.staticUse = true;
-	    mVaryings.push_back(info);
+            mVaryings->push_back(info);
             mFragCoordAdded = true;
         }
         return;
-    case EvqFrontFacing:
-        if (!mFrontFacingAdded) {
-            TVariableInfo info;
+      case EvqFrontFacing:
+        if (!mFrontFacingAdded)
+        {
+            sh::Varying info;
             info.name = "gl_FrontFacing";
             info.mappedName = "gl_FrontFacing";
             info.type = GL_BOOL;
-            info.size = 1;
-            info.precision = EbpUndefined;
+            info.arraySize = 0;
+            info.precision = GL_NONE;
             info.staticUse = true;
-	    mVaryings.push_back(info);
+            mVaryings->push_back(info);
             mFrontFacingAdded = true;
         }
         return;
-    case EvqPointCoord:
-        if (!mPointCoordAdded) {
-            TVariableInfo info;
+      case EvqPointCoord:
+        if (!mPointCoordAdded)
+        {
+            sh::Varying info;
             info.name = "gl_PointCoord";
             info.mappedName = "gl_PointCoord";
             info.type = GL_FLOAT_VEC2;
-            info.size = 1;
-            info.precision = EbpMedium;  // Use mediump as it doesn't really matter.
+            info.arraySize = 0;
+            info.precision = GL_MEDIUM_FLOAT;  // Use mediump as it doesn't really matter.
             info.staticUse = true;
-	    mVaryings.push_back(info);
+            mVaryings->push_back(info);
             mPointCoordAdded = true;
         }
         return;
-    default:
+      default:
         break;
     }
     if (var)
+    {
         var->staticUse = true;
+    }
+}
+
+template <typename VarT>
+void CollectVariables::visitInfoList(const TIntermSequence& sequence, std::vector<VarT> *infoList) const
+{
+    for (size_t seqIndex = 0; seqIndex < sequence.size(); seqIndex++)
+    {
+        const TIntermSymbol* variable = sequence[seqIndex]->getAsSymbolNode();
+        // The only case in which the sequence will not contain a
+        // TIntermSymbol node is initialization. It will contain a
+        // TInterBinary node in that case. Since attributes, uniforms,
+        // and varyings cannot be initialized in a shader, we must have
+        // only TIntermSymbol nodes in the sequence.
+        ASSERT(variable != NULL);
+        TString processedSymbol;
+        if (mHashFunction == NULL)
+            processedSymbol = variable->getSymbol();
+        else
+            processedSymbol = TIntermTraverser::hash(variable->getSymbol(), mHashFunction);
+        getVariableInfo(variable->getType(),
+            variable->getSymbol(),
+            processedSymbol,
+            *infoList,
+            mHashFunction);
+    }
 }
 
 bool CollectVariables::visitAggregate(Visit, TIntermAggregate* node)
@@ -224,42 +241,22 @@ bool CollectVariables::visitAggregate(Visit, TIntermAggregate* node)
             qualifier == EvqVaryingIn || qualifier == EvqVaryingOut ||
             qualifier == EvqInvariantVaryingIn || qualifier == EvqInvariantVaryingOut)
         {
-            TVariableInfoList *infoList = NULL;
-
             switch (qualifier)
             {
               case EvqAttribute:
               case EvqVertexIn:
-                infoList = &mAttribs;
+                visitInfoList(sequence, mAttribs);
                 break;
               case EvqUniform:
-                infoList = &mUniforms;
+                visitInfoList(sequence, mUniforms);
                 break;
               default:
-                infoList = &mVaryings;
+                visitInfoList(sequence, mVaryings);
                 break;
             }
 
-            for (TIntermSequence::const_iterator i = sequence.begin();
-                 i != sequence.end(); ++i)
+            if (!sequence.empty())
             {
-                const TIntermSymbol* variable = (*i)->getAsSymbolNode();
-                // The only case in which the sequence will not contain a
-                // TIntermSymbol node is initialization. It will contain a
-                // TInterBinary node in that case. Since attributes, uniforms,
-                // and varyings cannot be initialized in a shader, we must have
-                // only TIntermSymbol nodes in the sequence.
-                ASSERT(variable != NULL);
-                TString processedSymbol;
-                if (mHashFunction == NULL)
-                    processedSymbol = variable->getSymbol();
-                else
-                    processedSymbol = TIntermTraverser::hash(variable->getSymbol(), mHashFunction);
-                getVariableInfo(variable->getType(),
-                                variable->getSymbol(),
-                                processedSymbol,
-                                *infoList,
-                                mHashFunction);
                 visitChildren = false;
             }
         }

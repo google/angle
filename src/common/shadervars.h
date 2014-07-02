@@ -41,7 +41,8 @@ struct ShaderVariable
         : type(typeIn),
           precision(precisionIn),
           name(nameIn),
-          arraySize(arraySizeIn)
+          arraySize(arraySizeIn),
+          staticUse(false)
     {}
 
     bool isArray() const { return arraySize > 0; }
@@ -50,12 +51,20 @@ struct ShaderVariable
     GLenum type;
     GLenum precision;
     std::string name;
+    std::string mappedName;
     unsigned int arraySize;
+    bool staticUse;
 };
 
 // Uniform registers (and element indices) are assigned when outputting shader code
 struct Uniform : public ShaderVariable
 {
+    Uniform()
+        : ShaderVariable(0, 0, "", 0),
+          registerIndex(-1),
+          elementIndex(-1)
+    {}
+
     Uniform(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn,
             unsigned int registerIndexIn, unsigned int elementIndexIn)
         : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
@@ -75,7 +84,7 @@ struct Uniform : public ShaderVariable
 struct Attribute : public ShaderVariable
 {
     Attribute()
-        : ShaderVariable((GLenum)0, (GLenum)0, "", 0),
+        : ShaderVariable(0, 0, "", 0),
           location(-1)
     {}
 
@@ -102,6 +111,11 @@ struct InterfaceBlockField : public ShaderVariable
 
 struct Varying : public ShaderVariable
 {
+    Varying()
+        : ShaderVariable(0, 0, "", 0),
+          interpolation(INTERPOLATION_SMOOTH)
+    {}
+
     Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, InterpolationType interpolationIn)
         : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
           interpolation(interpolationIn)
