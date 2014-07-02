@@ -29,6 +29,29 @@ static sh::GLenum types[] = {
   GL_SAMPLER_CUBE,          // 16
   GL_SAMPLER_EXTERNAL_OES,  // 17
   GL_SAMPLER_2D_RECT_ARB,   // 18
+  GL_UNSIGNED_INT,          // 19
+  GL_UNSIGNED_INT_VEC2,     // 20
+  GL_UNSIGNED_INT_VEC3,     // 21
+  GL_UNSIGNED_INT_VEC4,     // 22
+  GL_FLOAT_MAT2x3,          // 23
+  GL_FLOAT_MAT2x4,          // 24
+  GL_FLOAT_MAT3x2,          // 25
+  GL_FLOAT_MAT3x4,          // 26
+  GL_FLOAT_MAT4x2,          // 27
+  GL_FLOAT_MAT4x3,          // 28
+  GL_SAMPLER_3D,            // 29
+  GL_SAMPLER_2D_ARRAY,      // 30
+  GL_SAMPLER_2D_SHADOW,     // 31
+  GL_SAMPLER_CUBE_SHADOW,   // 32
+  GL_SAMPLER_2D_ARRAY_SHADOW, // 33
+  GL_INT_SAMPLER_2D,        // 34
+  GL_INT_SAMPLER_CUBE,      // 35
+  GL_INT_SAMPLER_3D,        // 36
+  GL_INT_SAMPLER_2D_ARRAY,  // 37
+  GL_UNSIGNED_INT_SAMPLER_2D, // 38
+  GL_UNSIGNED_INT_SAMPLER_CUBE, // 39
+  GL_UNSIGNED_INT_SAMPLER_3D, // 40
+  GL_UNSIGNED_INT_SAMPLER_2D_ARRAY, // 41
 };
 
 static sh::GLenum nonSqMatTypes[] = {
