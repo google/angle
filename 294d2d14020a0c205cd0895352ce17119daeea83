@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e474097d_1513d4ec",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1468,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-02T23:18:39Z",
+      "side": 1,
+      "message": "Could use ValidFramebufferTarget here?",
+      "revId": "294d2d14020a0c205cd0895352ce17119daeea83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c471c58d_740a48af",
+        "filename": "src/libGLESv2/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-02T23:18:39Z",
+      "side": 1,
+      "message": "Was this just a placemarker comment for when you were comparing the functions?",
+      "revId": "294d2d14020a0c205cd0895352ce17119daeea83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
