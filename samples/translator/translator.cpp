@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+#include "angle_gl.h"
 
 //
 // Return codes from main.
@@ -24,7 +25,7 @@ enum TFailCode {
 };
 
 static void usage();
-static ShShaderType FindShaderType(const char* fileName);
+static sh::GLenum FindShaderType(const char* fileName);
 static bool CompileFile(char* fileName, ShHandle compiler, int compileOptions);
 static void LogMsg(const char* msg, const char* name, const int num, const char* logName);
 static void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType);
@@ -137,16 +138,16 @@ int main(int argc, char* argv[])
         } else {
             ShHandle compiler = 0;
             switch (FindShaderType(argv[0])) {
-            case SH_VERTEX_SHADER:
+            case GL_VERTEX_SHADER:
                 if (vertexCompiler == 0)
                     vertexCompiler = ShConstructCompiler(
-                        SH_VERTEX_SHADER, spec, output, &resources);
+                        GL_VERTEX_SHADER, spec, output, &resources);
                 compiler = vertexCompiler;
                 break;
-            case SH_FRAGMENT_SHADER:
+            case GL_FRAGMENT_SHADER:
                 if (fragmentCompiler == 0)
                     fragmentCompiler = ShConstructCompiler(
-                        SH_FRAGMENT_SHADER, spec, output, &resources);
+                        GL_FRAGMENT_SHADER, spec, output, &resources);
                 compiler = fragmentCompiler;
                 break;
             default: break;
@@ -242,7 +243,7 @@ void usage()
 //   .frag*    = fragment shader
 //   .vert*    = vertex shader
 //
-ShShaderType FindShaderType(const char* fileName)
+sh::GLenum FindShaderType(const char* fileName)
 {
     assert(fileName);
 
@@ -253,11 +254,11 @@ ShShaderType FindShaderType(const char* fileName)
 
     ext = strrchr(fileName, '.');
     if (ext) {
-        if (strncmp(ext, ".frag", 4) == 0) return SH_FRAGMENT_SHADER;
-        if (strncmp(ext, ".vert", 4) == 0) return SH_VERTEX_SHADER;
+        if (strncmp(ext, ".frag", 4) == 0) return GL_FRAGMENT_SHADER;
+        if (strncmp(ext, ".vert", 4) == 0) return GL_VERTEX_SHADER;
     }
 
-    return SH_FRAGMENT_SHADER;
+    return GL_FRAGMENT_SHADER;
 }
 
 //
@@ -297,7 +298,7 @@ void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType)
 
     size_t activeVars = 0;
     int size = 0;
-    ShDataType type = SH_NONE;
+    sh::GLenum type = GL_NONE;
     ShPrecisionType precision = SH_PRECISION_UNDEFINED;
     int staticUse = 0;
     const char* typeName = NULL;
@@ -313,34 +314,34 @@ void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType)
             default: assert(0);
         }
         switch (type) {
-            case SH_FLOAT: typeName = "GL_FLOAT"; break;
-            case SH_FLOAT_VEC2: typeName = "GL_FLOAT_VEC2"; break;
-            case SH_FLOAT_VEC3: typeName = "GL_FLOAT_VEC3"; break;
-            case SH_FLOAT_VEC4: typeName = "GL_FLOAT_VEC4"; break;
-            case SH_INT: typeName = "GL_INT"; break;
-            case SH_INT_VEC2: typeName = "GL_INT_VEC2"; break;
-            case SH_INT_VEC3: typeName = "GL_INT_VEC3"; break;
-            case SH_INT_VEC4: typeName = "GL_INT_VEC4"; break;
-            case SH_UNSIGNED_INT: typeName = "GL_UNSIGNED_INT"; break;
-            case SH_UNSIGNED_INT_VEC2: typeName = "GL_UNSIGNED_INT_VEC2"; break;
-            case SH_UNSIGNED_INT_VEC3: typeName = "GL_UNSIGNED_INT_VEC3"; break;
-            case SH_UNSIGNED_INT_VEC4: typeName = "GL_UNSIGNED_INT_VEC4"; break;
-            case SH_BOOL: typeName = "GL_BOOL"; break;
-            case SH_BOOL_VEC2: typeName = "GL_BOOL_VEC2"; break;
-            case SH_BOOL_VEC3: typeName = "GL_BOOL_VEC3"; break;
-            case SH_BOOL_VEC4: typeName = "GL_BOOL_VEC4"; break;
-            case SH_FLOAT_MAT2: typeName = "GL_FLOAT_MAT2"; break;
-            case SH_FLOAT_MAT3: typeName = "GL_FLOAT_MAT3"; break;
-            case SH_FLOAT_MAT4: typeName = "GL_FLOAT_MAT4"; break;
-            case SH_FLOAT_MAT2x3: typeName = "GL_FLOAT_MAT2x3"; break;
-            case SH_FLOAT_MAT3x2: typeName = "GL_FLOAT_MAT3x2"; break;
-            case SH_FLOAT_MAT4x2: typeName = "GL_FLOAT_MAT4x2"; break;
-            case SH_FLOAT_MAT2x4: typeName = "GL_FLOAT_MAT2x4"; break;
-            case SH_FLOAT_MAT3x4: typeName = "GL_FLOAT_MAT3x4"; break;
-            case SH_FLOAT_MAT4x3: typeName = "GL_FLOAT_MAT4x3"; break;
-            case SH_SAMPLER_2D: typeName = "GL_SAMPLER_2D"; break;
-            case SH_SAMPLER_CUBE: typeName = "GL_SAMPLER_CUBE"; break;
-            case SH_SAMPLER_EXTERNAL_OES: typeName = "GL_SAMPLER_EXTERNAL_OES"; break;
+            case GL_FLOAT: typeName = "GL_FLOAT"; break;
+            case GL_FLOAT_VEC2: typeName = "GL_FLOAT_VEC2"; break;
+            case GL_FLOAT_VEC3: typeName = "GL_FLOAT_VEC3"; break;
+            case GL_FLOAT_VEC4: typeName = "GL_FLOAT_VEC4"; break;
+            case GL_INT: typeName = "GL_INT"; break;
+            case GL_INT_VEC2: typeName = "GL_INT_VEC2"; break;
+            case GL_INT_VEC3: typeName = "GL_INT_VEC3"; break;
+            case GL_INT_VEC4: typeName = "GL_INT_VEC4"; break;
+            case GL_UNSIGNED_INT: typeName = "GL_UNSIGNED_INT"; break;
+            case GL_UNSIGNED_INT_VEC2: typeName = "GL_UNSIGNED_INT_VEC2"; break;
+            case GL_UNSIGNED_INT_VEC3: typeName = "GL_UNSIGNED_INT_VEC3"; break;
+            case GL_UNSIGNED_INT_VEC4: typeName = "GL_UNSIGNED_INT_VEC4"; break;
+            case GL_BOOL: typeName = "GL_BOOL"; break;
+            case GL_BOOL_VEC2: typeName = "GL_BOOL_VEC2"; break;
+            case GL_BOOL_VEC3: typeName = "GL_BOOL_VEC3"; break;
+            case GL_BOOL_VEC4: typeName = "GL_BOOL_VEC4"; break;
+            case GL_FLOAT_MAT2: typeName = "GL_FLOAT_MAT2"; break;
+            case GL_FLOAT_MAT3: typeName = "GL_FLOAT_MAT3"; break;
+            case GL_FLOAT_MAT4: typeName = "GL_FLOAT_MAT4"; break;
+            case GL_FLOAT_MAT2x3: typeName = "GL_FLOAT_MAT2x3"; break;
+            case GL_FLOAT_MAT3x2: typeName = "GL_FLOAT_MAT3x2"; break;
+            case GL_FLOAT_MAT4x2: typeName = "GL_FLOAT_MAT4x2"; break;
+            case GL_FLOAT_MAT2x4: typeName = "GL_FLOAT_MAT2x4"; break;
+            case GL_FLOAT_MAT3x4: typeName = "GL_FLOAT_MAT3x4"; break;
+            case GL_FLOAT_MAT4x3: typeName = "GL_FLOAT_MAT4x3"; break;
+            case GL_SAMPLER_2D: typeName = "GL_SAMPLER_2D"; break;
+            case GL_SAMPLER_CUBE: typeName = "GL_SAMPLER_CUBE"; break;
+            case GL_SAMPLER_EXTERNAL_OES: typeName = "GL_SAMPLER_EXTERNAL_OES"; break;
             default: assert(0);
         }
         printf("%lu: name:%s type:%s size:%d\n", i, name, typeName, size);

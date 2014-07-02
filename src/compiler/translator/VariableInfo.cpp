@@ -5,6 +5,7 @@
 //
 
 #include "compiler/translator/VariableInfo.h"
+#include "angle_gl.h"
 
 namespace {
 
@@ -16,7 +17,7 @@ TString arrayBrackets(int index)
 }
 
 // Returns the data type for an attribute, uniform, or varying.
-ShDataType getVariableDataType(const TType& type)
+sh::GLenum getVariableDataType(const TType& type)
 {
     switch (type.getBasicType()) {
       case EbtFloat:
@@ -26,97 +27,97 @@ ShDataType getVariableDataType(const TType& type)
                 case 2:
                   switch (type.getRows())
                   {
-                    case 2: return SH_FLOAT_MAT2;
-                    case 3: return SH_FLOAT_MAT2x3;
-                    case 4: return SH_FLOAT_MAT2x4;
+                    case 2: return GL_FLOAT_MAT2;
+                    case 3: return GL_FLOAT_MAT2x3;
+                    case 4: return GL_FLOAT_MAT2x4;
                     default: UNREACHABLE();
                   }
                 case 3:
                   switch (type.getRows())
                   {
-                    case 2: return SH_FLOAT_MAT3x2;
-                    case 3: return SH_FLOAT_MAT3;
-                    case 4: return SH_FLOAT_MAT3x4;
+                    case 2: return GL_FLOAT_MAT3x2;
+                    case 3: return GL_FLOAT_MAT3;
+                    case 4: return GL_FLOAT_MAT3x4;
                     default: UNREACHABLE();
                   }
                 case 4:
                   switch (type.getRows())
                   {
-                    case 2: return SH_FLOAT_MAT4x2;
-                    case 3: return SH_FLOAT_MAT4x3;
-                    case 4: return SH_FLOAT_MAT4;
+                    case 2: return GL_FLOAT_MAT4x2;
+                    case 3: return GL_FLOAT_MAT4x3;
+                    case 4: return GL_FLOAT_MAT4;
                     default: UNREACHABLE();
                   }
               }
           } else if (type.isVector()) {
               switch (type.getNominalSize()) {
-                case 2: return SH_FLOAT_VEC2;
-                case 3: return SH_FLOAT_VEC3;
-                case 4: return SH_FLOAT_VEC4;
+                case 2: return GL_FLOAT_VEC2;
+                case 3: return GL_FLOAT_VEC3;
+                case 4: return GL_FLOAT_VEC4;
                 default: UNREACHABLE();
               }
           } else {
-              return SH_FLOAT;
+              return GL_FLOAT;
           }
       case EbtInt:
           if (type.isMatrix()) {
               UNREACHABLE();
           } else if (type.isVector()) {
               switch (type.getNominalSize()) {
-                case 2: return SH_INT_VEC2;
-                case 3: return SH_INT_VEC3;
-                case 4: return SH_INT_VEC4;
+                case 2: return GL_INT_VEC2;
+                case 3: return GL_INT_VEC3;
+                case 4: return GL_INT_VEC4;
                 default: UNREACHABLE();
               }
           } else {
-              return SH_INT;
+              return GL_INT;
           }
       case EbtUInt:
           if (type.isMatrix()) {
               UNREACHABLE();
           } else if (type.isVector()) {
               switch (type.getNominalSize()) {
-                case 2: return SH_UNSIGNED_INT_VEC2;
-                case 3: return SH_UNSIGNED_INT_VEC3;
-                case 4: return SH_UNSIGNED_INT_VEC4;
+                case 2: return GL_UNSIGNED_INT_VEC2;
+                case 3: return GL_UNSIGNED_INT_VEC3;
+                case 4: return GL_UNSIGNED_INT_VEC4;
                 default: UNREACHABLE();
               }
           } else {
-              return SH_UNSIGNED_INT;
+              return GL_UNSIGNED_INT;
           }
       case EbtBool:
           if (type.isMatrix()) {
               UNREACHABLE();
           } else if (type.isVector()) {
               switch (type.getNominalSize()) {
-                case 2: return SH_BOOL_VEC2;
-                case 3: return SH_BOOL_VEC3;
-                case 4: return SH_BOOL_VEC4;
+                case 2: return GL_BOOL_VEC2;
+                case 3: return GL_BOOL_VEC3;
+                case 4: return GL_BOOL_VEC4;
                 default: UNREACHABLE();
               }
           } else {
-              return SH_BOOL;
+              return GL_BOOL;
           }
-      case EbtSampler2D: return SH_SAMPLER_2D;
-      case EbtSampler3D: return SH_SAMPLER_3D;
-      case EbtSamplerCube: return SH_SAMPLER_CUBE;
-      case EbtSamplerExternalOES: return SH_SAMPLER_EXTERNAL_OES;
-      case EbtSampler2DRect: return SH_SAMPLER_2D_RECT_ARB;
-      case EbtSampler2DArray: return SH_SAMPLER_2D_ARRAY;
-      case EbtISampler2D: return SH_INT_SAMPLER_2D;
-      case EbtISampler3D: return SH_INT_SAMPLER_3D;
-      case EbtISamplerCube: return SH_INT_SAMPLER_CUBE;
-      case EbtISampler2DArray: return SH_INT_SAMPLER_2D_ARRAY;
-      case EbtUSampler2D: return SH_UNSIGNED_INT_SAMPLER_2D;
-      case EbtUSampler3D: return SH_UNSIGNED_INT_SAMPLER_3D;
-      case EbtUSamplerCube: return SH_UNSIGNED_INT_SAMPLER_CUBE;
-      case EbtUSampler2DArray: return SH_UNSIGNED_INT_SAMPLER_2D_ARRAY;
-      case EbtSampler2DShadow: return SH_SAMPLER_2D_SHADOW;
-      case EbtSamplerCubeShadow: return SH_SAMPLER_CUBE_SHADOW;
-      case EbtSampler2DArrayShadow: return SH_SAMPLER_2D_ARRAY_SHADOW;
+      case EbtSampler2D: return GL_SAMPLER_2D;
+      case EbtSampler3D: return GL_SAMPLER_3D;
+      case EbtSamplerCube: return GL_SAMPLER_CUBE;
+      case EbtSamplerExternalOES: return GL_SAMPLER_EXTERNAL_OES;
+      case EbtSampler2DRect: return GL_SAMPLER_2D_RECT_ARB;
+      case EbtSampler2DArray: return GL_SAMPLER_2D_ARRAY;
+      case EbtISampler2D: return GL_INT_SAMPLER_2D;
+      case EbtISampler3D: return GL_INT_SAMPLER_3D;
+      case EbtISamplerCube: return GL_INT_SAMPLER_CUBE;
+      case EbtISampler2DArray: return GL_INT_SAMPLER_2D_ARRAY;
+      case EbtUSampler2D: return GL_UNSIGNED_INT_SAMPLER_2D;
+      case EbtUSampler3D: return GL_UNSIGNED_INT_SAMPLER_3D;
+      case EbtUSamplerCube: return GL_UNSIGNED_INT_SAMPLER_CUBE;
+      case EbtUSampler2DArray: return GL_UNSIGNED_INT_SAMPLER_2D_ARRAY;
+      case EbtSampler2DShadow: return GL_SAMPLER_2D_SHADOW;
+      case EbtSamplerCubeShadow: return GL_SAMPLER_CUBE_SHADOW;
+      case EbtSampler2DArrayShadow: return GL_SAMPLER_2D_ARRAY_SHADOW;
       default: UNREACHABLE();
     }
-    return SH_NONE;
+    return GL_NONE;
 }
 
 void getBuiltInVariableInfo(const TType& type,
@@ -216,7 +217,7 @@ TVariableInfo* findVariable(const TType& type,
 }  // namespace anonymous
 
 TVariableInfo::TVariableInfo()
-    : type(SH_NONE),
+    : type(GL_NONE),
       size(0),
       isArray(false),
       precision(EbpUndefined),
@@ -224,7 +225,7 @@ TVariableInfo::TVariableInfo()
 {
 }
 
-TVariableInfo::TVariableInfo(ShDataType type, int size)
+TVariableInfo::TVariableInfo(sh::GLenum type, int size)
     : type(type),
       size(size),
       isArray(false),
@@ -272,7 +273,7 @@ void CollectVariables::visitSymbol(TIntermSymbol* symbol)
             TVariableInfo info;
             info.name = "gl_FragCoord";
             info.mappedName = "gl_FragCoord";
-            info.type = SH_FLOAT_VEC4;
+            info.type = GL_FLOAT_VEC4;
             info.size = 1;
             info.precision = EbpMedium;  // Use mediump as it doesn't really matter.
             info.staticUse = true;
@@ -285,7 +286,7 @@ void CollectVariables::visitSymbol(TIntermSymbol* symbol)
             TVariableInfo info;
             info.name = "gl_FrontFacing";
             info.mappedName = "gl_FrontFacing";
-            info.type = SH_BOOL;
+            info.type = GL_BOOL;
             info.size = 1;
             info.precision = EbpUndefined;
             info.staticUse = true;
@@ -298,7 +299,7 @@ void CollectVariables::visitSymbol(TIntermSymbol* symbol)
             TVariableInfo info;
             info.name = "gl_PointCoord";
             info.mappedName = "gl_PointCoord";
-            info.type = SH_FLOAT_VEC2;
+            info.type = GL_FLOAT_VEC2;
             info.size = 1;
             info.precision = EbpMedium;  // Use mediump as it doesn't really matter.
             info.staticUse = true;

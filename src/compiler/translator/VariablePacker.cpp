@@ -4,44 +4,45 @@
 // found in the LICENSE file.
 //
 #include "compiler/translator/VariablePacker.h"
+#include "angle_gl.h"
 
 #include <algorithm>
 
 namespace {
-int GetSortOrder(ShDataType type)
+int GetSortOrder(sh::GLenum type)
 {
     switch (type) {
-        case SH_FLOAT_MAT4:
-        case SH_FLOAT_MAT2x4:
-        case SH_FLOAT_MAT3x4:
-        case SH_FLOAT_MAT4x2:
-        case SH_FLOAT_MAT4x3:
+        case GL_FLOAT_MAT4:
+        case GL_FLOAT_MAT2x4:
+        case GL_FLOAT_MAT3x4:
+        case GL_FLOAT_MAT4x2:
+        case GL_FLOAT_MAT4x3:
             return 0;
-        case SH_FLOAT_MAT2:
+        case GL_FLOAT_MAT2:
             return 1;
-        case SH_FLOAT_VEC4:
-        case SH_INT_VEC4:
-        case SH_BOOL_VEC4:
+        case GL_FLOAT_VEC4:
+        case GL_INT_VEC4:
+        case GL_BOOL_VEC4:
             return 2;
-        case SH_FLOAT_MAT3:
-        case SH_FLOAT_MAT2x3:
-        case SH_FLOAT_MAT3x2:
+        case GL_FLOAT_MAT3:
+        case GL_FLOAT_MAT2x3:
+        case GL_FLOAT_MAT3x2:
             return 3;
-        case SH_FLOAT_VEC3:
-        case SH_INT_VEC3:
-        case SH_BOOL_VEC3:
+        case GL_FLOAT_VEC3:
+        case GL_INT_VEC3:
+        case GL_BOOL_VEC3:
             return 4;
-        case SH_FLOAT_VEC2:
-        case SH_INT_VEC2:
-        case SH_BOOL_VEC2:
+        case GL_FLOAT_VEC2:
+        case GL_INT_VEC2:
+        case GL_BOOL_VEC2:
             return 5;
-        case SH_FLOAT:
-        case SH_INT:
-        case SH_BOOL:
-        case SH_SAMPLER_2D:
-        case SH_SAMPLER_CUBE:
-        case SH_SAMPLER_EXTERNAL_OES:
-        case SH_SAMPLER_2D_RECT_ARB:
+        case GL_FLOAT:
+        case GL_INT:
+        case GL_BOOL:
+        case GL_SAMPLER_2D:
+        case GL_SAMPLER_CUBE:
+        case GL_SAMPLER_EXTERNAL_OES:
+        case GL_SAMPLER_2D_RECT_ARB:
             return 6;
         default:
             ASSERT(false);
@@ -50,37 +51,37 @@ int GetSortOrder(ShDataType type)
 }
 }    // namespace
 
-int VariablePacker::GetNumComponentsPerRow(ShDataType type)
+int VariablePacker::GetNumComponentsPerRow(sh::GLenum type)
 {
     switch (type) {
-        case SH_FLOAT_MAT4:
-        case SH_FLOAT_MAT2:
-        case SH_FLOAT_MAT2x4:
-        case SH_FLOAT_MAT3x4:
-        case SH_FLOAT_MAT4x2:
-        case SH_FLOAT_MAT4x3:
-        case SH_FLOAT_VEC4:
-        case SH_INT_VEC4:
-        case SH_BOOL_VEC4:
+        case GL_FLOAT_MAT4:
+        case GL_FLOAT_MAT2:
+        case GL_FLOAT_MAT2x4:
+        case GL_FLOAT_MAT3x4:
+        case GL_FLOAT_MAT4x2:
+        case GL_FLOAT_MAT4x3:
+        case GL_FLOAT_VEC4:
+        case GL_INT_VEC4:
+        case GL_BOOL_VEC4:
             return 4;
-        case SH_FLOAT_MAT3:
-        case SH_FLOAT_MAT2x3:
-        case SH_FLOAT_MAT3x2:
-        case SH_FLOAT_VEC3:
-        case SH_INT_VEC3:
-        case SH_BOOL_VEC3:
+        case GL_FLOAT_MAT3:
+        case GL_FLOAT_MAT2x3:
+        case GL_FLOAT_MAT3x2:
+        case GL_FLOAT_VEC3:
+        case GL_INT_VEC3:
+        case GL_BOOL_VEC3:
             return 3;
-        case SH_FLOAT_VEC2:
-        case SH_INT_VEC2:
-        case SH_BOOL_VEC2:
+        case GL_FLOAT_VEC2:
+        case GL_INT_VEC2:
+        case GL_BOOL_VEC2:
             return 2;
-        case SH_FLOAT:
-        case SH_INT:
-        case SH_BOOL:
-        case SH_SAMPLER_2D:
-        case SH_SAMPLER_CUBE:
-        case SH_SAMPLER_EXTERNAL_OES:
-        case SH_SAMPLER_2D_RECT_ARB:
+        case GL_FLOAT:
+        case GL_INT:
+        case GL_BOOL:
+        case GL_SAMPLER_2D:
+        case GL_SAMPLER_CUBE:
+        case GL_SAMPLER_EXTERNAL_OES:
+        case GL_SAMPLER_2D_RECT_ARB:
             return 1;
         default:
             ASSERT(false);
@@ -88,37 +89,37 @@ int VariablePacker::GetNumComponentsPerRow(ShDataType type)
     }
 }
 
-int VariablePacker::GetNumRows(ShDataType type)
+int VariablePacker::GetNumRows(sh::GLenum type)
 {
     switch (type) {
-        case SH_FLOAT_MAT4:
-        case SH_FLOAT_MAT2x4:
-        case SH_FLOAT_MAT3x4:
-        case SH_FLOAT_MAT4x3:
-        case SH_FLOAT_MAT4x2:
+        case GL_FLOAT_MAT4:
+        case GL_FLOAT_MAT2x4:
+        case GL_FLOAT_MAT3x4:
+        case GL_FLOAT_MAT4x3:
+        case GL_FLOAT_MAT4x2:
             return 4;
-        case SH_FLOAT_MAT3:
-        case SH_FLOAT_MAT2x3:
-        case SH_FLOAT_MAT3x2:
+        case GL_FLOAT_MAT3:
+        case GL_FLOAT_MAT2x3:
+        case GL_FLOAT_MAT3x2:
             return 3;
-        case SH_FLOAT_MAT2:
+        case GL_FLOAT_MAT2:
             return 2;
-        case SH_FLOAT_VEC4:
-        case SH_INT_VEC4:
-        case SH_BOOL_VEC4:
-        case SH_FLOAT_VEC3:
-        case SH_INT_VEC3:
-        case SH_BOOL_VEC3:
-        case SH_FLOAT_VEC2:
-        case SH_INT_VEC2:
-        case SH_BOOL_VEC2:
-        case SH_FLOAT:
-        case SH_INT:
-        case SH_BOOL:
-        case SH_SAMPLER_2D:
-        case SH_SAMPLER_CUBE:
-        case SH_SAMPLER_EXTERNAL_OES:
-        case SH_SAMPLER_2D_RECT_ARB:
+        case GL_FLOAT_VEC4:
+        case GL_INT_VEC4:
+        case GL_BOOL_VEC4:
+        case GL_FLOAT_VEC3:
+        case GL_INT_VEC3:
+        case GL_BOOL_VEC3:
+        case GL_FLOAT_VEC2:
+        case GL_INT_VEC2:
+        case GL_BOOL_VEC2:
+        case GL_FLOAT:
+        case GL_INT:
+        case GL_BOOL:
+        case GL_SAMPLER_2D:
+        case GL_SAMPLER_CUBE:
+        case GL_SAMPLER_EXTERNAL_OES:
+        case GL_SAMPLER_2D_RECT_ARB:
             return 1;
         default:
             ASSERT(false);

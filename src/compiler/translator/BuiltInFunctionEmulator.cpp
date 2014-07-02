@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
+#include "angle_gl.h"
 #include "compiler/translator/BuiltInFunctionEmulator.h"
-
 #include "compiler/translator/SymbolTable.h"
 
 namespace {
@@ -265,9 +265,9 @@ private:
 
 }  // anonymous namepsace
 
-BuiltInFunctionEmulator::BuiltInFunctionEmulator(ShShaderType shaderType)
+BuiltInFunctionEmulator::BuiltInFunctionEmulator(sh::GLenum shaderType)
 {
-    if (shaderType == SH_FRAGMENT_SHADER) {
+    if (shaderType == GL_FRAGMENT_SHADER) {
         mFunctionMask = kFunctionEmulationFragmentMask;
         mFunctionSource = kFunctionEmulationFragmentSource;
     } else {

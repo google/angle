@@ -17,7 +17,7 @@
 //
 class BuiltInFunctionEmulator {
 public:
-    BuiltInFunctionEmulator(ShShaderType shaderType);
+    BuiltInFunctionEmulator(sh::GLenum shaderType);
     // Records that a function is called by the shader and might needs to be
     // emulated.  If the function's group is not in mFunctionGroupFilter, this
     // becomes an no-op.

@@ -115,7 +115,7 @@ void ShInitBuiltInResources(ShBuiltInResources* resources)
 //
 // Driver calls these to create and destroy compiler objects.
 //
-ShHandle ShConstructCompiler(ShShaderType type, ShShaderSpec spec,
+ShHandle ShConstructCompiler(sh::GLenum type, ShShaderSpec spec,
                              ShShaderOutput output,
                              const ShBuiltInResources* resources)
 {
@@ -293,7 +293,7 @@ void ShGetVariableInfo(const ShHandle handle,
                        int index,
                        size_t* length,
                        int* size,
-                       ShDataType* type,
+                       sh::GLenum* type,
                        ShPrecisionType* precision,
                        int* staticUse,
                        char* name,

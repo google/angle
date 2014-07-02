@@ -19,10 +19,10 @@ class VariablePacker {
         const TVariableInfoList& in_variables);
 
     // Gets how many components in a row a data type takes.
-    static int GetNumComponentsPerRow(ShDataType type);
+    static int GetNumComponentsPerRow(sh::GLenum type);
 
     // Gets how many rows a data type takes.
-    static int GetNumRows(ShDataType type);
+    static int GetNumRows(sh::GLenum type);
 
  private:
     static const int kNumColumns = 4;
