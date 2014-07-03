@@ -87,7 +87,6 @@ static ShPrecisionType ConvertPrecision(sh::GLenum precision)
       case GL_LOW_INT:
         return SH_PRECISION_LOWP;
       default:
-        UNREACHABLE();
         return SH_PRECISION_UNDEFINED;
     }
 }
