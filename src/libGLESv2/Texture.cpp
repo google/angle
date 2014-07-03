@@ -1049,7 +1049,7 @@ bool Texture2DArray::isSamplerComplete(const SamplerState &samplerState) const
     }
 
     // TODO(geofflang): use context's texture caps
-    if (!mRenderer->getRendererTextureCaps().get(getBaseLevelInternalFormat()).filtering)
+    if (!mRenderer->getRendererTextureCaps().get(getBaseLevelInternalFormat()).filterable)
     {
         if (samplerState.magFilter != GL_NEAREST ||
             (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))

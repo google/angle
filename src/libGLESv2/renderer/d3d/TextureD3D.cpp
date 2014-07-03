@@ -449,7 +449,7 @@ bool TextureD3D_2D::isSamplerComplete(const gl::SamplerState &samplerState) cons
         return false;
     }
 
-    if (!mRenderer->getRendererTextureCaps().get(getInternalFormat(0)).filtering)
+    if (!mRenderer->getRendererTextureCaps().get(getInternalFormat(0)).filterable)
     {
         if (samplerState.magFilter != GL_NEAREST ||
             (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
@@ -1027,7 +1027,7 @@ bool TextureD3D_Cube::isSamplerComplete(const gl::SamplerState &samplerState) co
     bool mipmapping = IsMipmapFiltered(samplerState);
 
     // TODO(geofflang): use context's texture caps
-    if (!mRenderer->getRendererTextureCaps().get(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0)).filtering)
+    if (!mRenderer->getRendererTextureCaps().get(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0)).filterable)
     {
         if (samplerState.magFilter != GL_NEAREST ||
             (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
@@ -1649,7 +1649,7 @@ bool TextureD3D_3D::isSamplerComplete(const gl::SamplerState &samplerState) cons
     }
 
     // TODO(geofflang): use context's texture caps
-    if (!mRenderer->getRendererTextureCaps().get(getInternalFormat(0)).filtering)
+    if (!mRenderer->getRendererTextureCaps().get(getInternalFormat(0)).filterable)
     {
         if (samplerState.magFilter != GL_NEAREST ||
             (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))

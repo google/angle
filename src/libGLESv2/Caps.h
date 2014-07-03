@@ -21,14 +21,14 @@ struct TextureCaps
 {
     TextureCaps();
 
-    bool texture2D;
-    bool textureCubeMap;
-    bool texture3D;
-    bool texture2DArray;
-    bool filtering;
-    bool colorRendering;
-    bool depthRendering;
-    bool stencilRendering;
+    // Supports for basic texturing: glTexImage, glTexSubImage, etc
+    bool texturable;
+
+    // Support for linear or anisotropic filtering
+    bool filterable;
+
+    // Support for being used as a framebuffer attachment or renderbuffer format
+    bool renderable;
 
     std::set<GLuint> sampleCounts;
 };

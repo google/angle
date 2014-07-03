@@ -2708,7 +2708,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     }
 
     // We cannot support direct copies to non-color-renderable formats
-    if (!getRendererTextureCaps().get(internalFormat).colorRendering)
+    if (gl_d3d11::GetRTVFormat(internalFormat) != DXGI_FORMAT_UNKNOWN)
     {
         return false;
     }

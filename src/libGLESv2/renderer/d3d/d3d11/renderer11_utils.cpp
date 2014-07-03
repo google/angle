@@ -233,14 +233,20 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, ID3D11De
     UINT formatSupport;
     if (SUCCEEDED(device->CheckFormatSupport(textureFormat, &formatSupport)))
     {
-        textureCaps.texture2D = (formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) != 0;
-        textureCaps.textureCubeMap = (formatSupport & D3D11_FORMAT_SUPPORT_TEXTURECUBE) != 0;
-        textureCaps.texture3D = (formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE3D) != 0;
-        textureCaps.texture2DArray = (formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) != 0;
+        if (gl::GetDepthBits(internalFormat) > 0 || gl::GetStencilBits(internalFormat) > 0)
+        {
+            textureCaps.texturable = ((formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) != 0);
+        }
+        else
+        {
+            textureCaps.texturable = ((formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) != 0) &&
+                                     ((formatSupport & D3D11_FORMAT_SUPPORT_TEXTURECUBE) != 0) &&
+                                     ((formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE3D) != 0);
+        }
     }
 
     if (SUCCEEDED(device->CheckFormatSupport(renderFormat, &formatSupport)) &&
-        (formatSupport & D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET))
+        ((formatSupport & D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET) != 0))
     {
         for (size_t sampleCount = 1; sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; sampleCount++)
         {
@@ -253,23 +259,12 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, ID3D11De
         }
     }
 
-    if (SUCCEEDED(device->CheckFormatSupport(srvFormat, &formatSupport)))
-    {
-        textureCaps.filtering = (formatSupport & D3D11_FORMAT_SUPPORT_SHADER_SAMPLE) != 0;
-    }
-
-    if (SUCCEEDED(device->CheckFormatSupport(rtvFormat, &formatSupport)))
-    {
-        textureCaps.colorRendering = (formatSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET) != 0;
-    }
-
-    if (SUCCEEDED(device->CheckFormatSupport(dsvFormat, &formatSupport)))
-    {
-        textureCaps.depthRendering = gl::GetDepthBits(internalFormat) > 0 &&
-                                     (formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0;
-        textureCaps.stencilRendering = gl::GetStencilBits(internalFormat) > 0 &&
-                                       (formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0;
-    }
+    textureCaps.filterable = SUCCEEDED(device->CheckFormatSupport(srvFormat, &formatSupport)) &&
+                             ((formatSupport & D3D11_FORMAT_SUPPORT_SHADER_SAMPLE)) != 0;
+    textureCaps.renderable = (SUCCEEDED(device->CheckFormatSupport(rtvFormat, &formatSupport)) &&
+                              ((formatSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET)) != 0) ||
+                             (SUCCEEDED(device->CheckFormatSupport(dsvFormat, &formatSupport)) &&
+                              ((formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0));
 
     return textureCaps;
 }
