@@ -82,10 +82,10 @@ static ShPrecisionType ConvertPrecision(sh::GLenum precision)
         return SH_PRECISION_HIGHP;
       case GL_MEDIUM_FLOAT:
       case GL_MEDIUM_INT:
-        return SH_PRECISION_HIGHP;
+        return SH_PRECISION_MEDIUMP;
       case GL_LOW_FLOAT:
       case GL_LOW_INT:
-        return SH_PRECISION_HIGHP;
+        return SH_PRECISION_LOWP;
       default:
         UNREACHABLE();
         return SH_PRECISION_UNDEFINED;
