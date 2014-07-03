@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4c051c0_26541882",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-07-03T14:45:47Z",
+      "side": 1,
+      "message": "Still uses C casts.\n\nI\u0027m actually fine with that, but as Mo noted it\u0027s not needed here. That said, I\u0027d rather see it use GL_NONE since with 0 it\u0027s not clear what it actually maps to (not an issue here, but in other cases 0 could have a meaning other than \u0027uninitialized\u0027).",
+      "range": {
+        "startLine": 63,
+        "startChar": 25,
+        "endLine": 63,
+        "endChar": 45
+      },
+      "revId": "721e4478c4cf8160fb47a622c514f6cca85cdd4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4485d588_8637aecf",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-07-03T14:45:47Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 87,
+        "startChar": 25,
+        "endLine": 87,
+        "endChar": 29
+      },
+      "revId": "721e4478c4cf8160fb47a622c514f6cca85cdd4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
