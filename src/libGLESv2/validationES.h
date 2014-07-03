@@ -26,6 +26,7 @@ bool ValidCompressedImageSize(const gl::Context *context, GLenum internalFormat,
 bool ValidQueryType(const gl::Context *context, GLenum queryType);
 bool ValidProgram(const gl::Context *context, GLuint id);
 
+bool ValidateAttachmentTarget(const gl::Context *context, GLenum attachment);
 bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum target, GLsizei samples,
                                            GLenum internalformat, GLsizei width, GLsizei height,
                                            bool angleExtension);

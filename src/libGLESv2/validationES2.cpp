@@ -849,24 +849,9 @@ bool ValidateES2FramebufferTextureParameters(const gl::Context *context, GLenum 
         return gl::error(GL_INVALID_ENUM, false);
     }
 
-    if (attachment >= GL_COLOR_ATTACHMENT0 && attachment <= GL_COLOR_ATTACHMENT15)
+    if (!ValidateAttachmentTarget(context, attachment))
     {
-        const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0);
-        if (colorAttachment >= context->getMaximumRenderTargets())
-        {
-            return gl::error(GL_INVALID_VALUE, false);
-        }
-    }
-    else
-    {
-        switch (attachment)
-        {
-          case GL_DEPTH_ATTACHMENT:
-          case GL_STENCIL_ATTACHMENT:
-            break;
-          default:
-            return gl::error(GL_INVALID_ENUM, false);
-        }
+        return false;
     }
 
     if (texture != 0)

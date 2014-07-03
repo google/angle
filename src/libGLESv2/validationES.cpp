@@ -246,6 +246,40 @@ bool ValidProgram(const Context *context, GLuint id)
     }
 }
 
+bool ValidateAttachmentTarget(const gl::Context *context, GLenum attachment)
+{
+    if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
+    {
+        const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
+
+        if (colorAttachment >= context->getMaximumRenderTargets())
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+    }
+    else
+    {
+        switch (attachment)
+        {
+          case GL_DEPTH_ATTACHMENT:
+          case GL_STENCIL_ATTACHMENT:
+            break;
+
+          case GL_DEPTH_STENCIL_ATTACHMENT:
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_ENUM, false);
+            }
+            break;
+
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+    }
+
+    return true;
+}
+
 bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum target, GLsizei samples,
                                            GLenum internalformat, GLsizei width, GLsizei height,
                                            bool angleExtension)
@@ -334,32 +368,9 @@ bool ValidateFramebufferRenderbufferParameters(gl::Context *context, GLenum targ
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
+    if (!ValidateAttachmentTarget(context, attachment))
     {
-        const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
-
-        if (colorAttachment >= context->getMaximumRenderTargets())
-        {
-            return gl::error(GL_INVALID_VALUE, false);
-        }
-    }
-    else
-    {
-        switch (attachment)
-        {
-          case GL_DEPTH_ATTACHMENT:
-            break;
-          case GL_STENCIL_ATTACHMENT:
-            break;
-          case GL_DEPTH_STENCIL_ATTACHMENT:
-            if (context->getClientVersion() < 3)
-            {
-                return gl::error(GL_INVALID_ENUM, false);
-            }
-            break;
-          default:
-            return gl::error(GL_INVALID_ENUM, false);
-        }
+        return false;
     }
 
     // [OpenGL ES 2.0.25] Section 4.4.3 page 112
