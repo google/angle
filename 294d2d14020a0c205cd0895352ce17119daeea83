@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a4c051c0_465b14b0",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1468,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-03T14:54:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e474097d_1513d4ec",
+      "revId": "294d2d14020a0c205cd0895352ce17119daeea83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c471c58d_740a48af",
         "filename": "src/libGLESv2/validationES2.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-02T23:18:39Z",
       "side": 1,
       "message": "Was this just a placemarker comment for when you were comparing the functions?",
+      "revId": "294d2d14020a0c205cd0895352ce17119daeea83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4485d588_e63ebaa7",
+        "filename": "src/libGLESv2/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-03T14:54:05Z",
+      "side": 1,
+      "message": "This whole function needed to go -- thanks for pointing me here.",
+      "parentUuid": "c471c58d_740a48af",
       "revId": "294d2d14020a0c205cd0895352ce17119daeea83",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
