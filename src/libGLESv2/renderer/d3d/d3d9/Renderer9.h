@@ -131,12 +131,6 @@ class Renderer9 : public Renderer
     virtual int getMinSwapInterval() const;
     virtual int getMaxSwapInterval() const;
 
-    virtual GLsizei getMaxSupportedSamples() const;
-    virtual GLsizei getMaxSupportedFormatSamples(GLenum internalFormat) const;
-    virtual GLsizei getNumSampleCounts(GLenum internalFormat) const;
-    virtual void getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const;
-    int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
-
     // Pixel operations
     virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source);
     virtual bool copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source);
@@ -268,17 +262,6 @@ class Renderer9 : public Renderer
     int mMaxSwapInterval;
 
     bool mVertexTextureSupport;
-
-    struct MultisampleSupportInfo
-    {
-        bool supportedSamples[D3DMULTISAMPLE_16_SAMPLES + 1];
-        unsigned int maxSupportedSamples;
-    };
-    typedef std::map<D3DFORMAT, MultisampleSupportInfo> MultisampleSupportMap;
-    MultisampleSupportMap mMultiSampleSupport;
-    unsigned int mMaxSupportedSamples;
-
-    MultisampleSupportInfo getMultiSampleSupport(D3DFORMAT format);
 
     // current render target states
     unsigned int mAppliedRenderTargetSerial;

@@ -117,8 +117,6 @@ Renderer9::Renderer9(egl::Display *display, EGLNativeDisplayType hDc, EGLint req
 
     mDeviceLost = false;
 
-    mMaxSupportedSamples = 0;
-
     mMaskedClearSavedState = NULL;
 
     mVertexDataManager = NULL;
@@ -295,17 +293,6 @@ EGLint Renderer9::initialize()
     {
         mMinSwapInterval = std::min(mMinSwapInterval, 4);
         mMaxSwapInterval = std::max(mMaxSwapInterval, 4);
-    }
-
-    mMaxSupportedSamples = 0;
-
-    const d3d9::D3DFormatSet &d3d9Formats = d3d9::GetAllUsedD3DFormats();
-    for (d3d9::D3DFormatSet::const_iterator i = d3d9Formats.begin(); i != d3d9Formats.end(); ++i)
-    {
-        TRACE_EVENT0("gpu", "getMultiSampleSupport");
-        MultisampleSupportInfo support = getMultiSampleSupport(*i);
-        mMultiSampleSupport[*i] = support;
-        mMaxSupportedSamples = std::max(mMaxSupportedSamples, support.maxSupportedSamples);
     }
 
     static const TCHAR windowName[] = TEXT("AngleHiddenWindow");
@@ -2218,32 +2205,6 @@ GUID Renderer9::getAdapterIdentifier() const
     return mAdapterIdentifier.DeviceIdentifier;
 }
 
-Renderer9::MultisampleSupportInfo Renderer9::getMultiSampleSupport(D3DFORMAT format)
-{
-    MultisampleSupportInfo support = { 0 };
-
-    for (unsigned int multiSampleIndex = 0; multiSampleIndex < ArraySize(support.supportedSamples); multiSampleIndex++)
-    {
-        HRESULT result = mD3d9->CheckDeviceMultiSampleType(mAdapter, mDeviceType, format, TRUE,
-                                                           (D3DMULTISAMPLE_TYPE)multiSampleIndex, NULL);
-
-        if (SUCCEEDED(result))
-        {
-             support.supportedSamples[multiSampleIndex] = true;
-             if (multiSampleIndex != D3DMULTISAMPLE_NONMASKABLE)
-             {
-                 support.maxSupportedSamples = std::max(support.maxSupportedSamples, multiSampleIndex);
-             }
-        }
-        else
-        {
-            support.supportedSamples[multiSampleIndex] = false;
-        }
-    }
-
-    return support;
-}
-
 unsigned int Renderer9::getMaxVertexTextureImageUnits() const
 {
     META_ASSERT(MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 <= gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
@@ -2370,84 +2331,6 @@ int Renderer9::getMinSwapInterval() const
 int Renderer9::getMaxSwapInterval() const
 {
     return mMaxSwapInterval;
-}
-
-int Renderer9::getMaxSupportedSamples() const
-{
-    return mMaxSupportedSamples;
-}
-
-GLsizei Renderer9::getMaxSupportedFormatSamples(GLenum internalFormat) const
-{
-    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat);
-    MultisampleSupportMap::const_iterator itr = mMultiSampleSupport.find(format);
-    return (itr != mMultiSampleSupport.end()) ? mMaxSupportedSamples : 0;
-}
-
-GLsizei Renderer9::getNumSampleCounts(GLenum internalFormat) const
-{
-    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat);
-    MultisampleSupportMap::const_iterator iter = mMultiSampleSupport.find(format);
-
-    unsigned int numCounts = 0;
-    if (iter != mMultiSampleSupport.end())
-    {
-        const MultisampleSupportInfo& info = iter->second;
-        for (int i = 0; i < D3DMULTISAMPLE_16_SAMPLES; i++)
-        {
-            if (i != D3DMULTISAMPLE_NONMASKABLE && info.supportedSamples[i])
-            {
-                numCounts++;
-            }
-        }
-    }
-
-    return numCounts;
-}
-
-void Renderer9::getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const
-{
-    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat);
-    MultisampleSupportMap::const_iterator iter = mMultiSampleSupport.find(format);
-
-    if (iter != mMultiSampleSupport.end())
-    {
-        const MultisampleSupportInfo& info = iter->second;
-        int bufPos = 0;
-        for (int i = D3DMULTISAMPLE_16_SAMPLES; i >= 0 && bufPos < bufSize; i--)
-        {
-            if (i != D3DMULTISAMPLE_NONMASKABLE && info.supportedSamples[i])
-            {
-                params[bufPos++] = i;
-            }
-        }
-    }
-}
-
-int Renderer9::getNearestSupportedSamples(D3DFORMAT format, int requested) const
-{
-    if (requested == 0)
-    {
-        return requested;
-    }
-
-    MultisampleSupportMap::const_iterator itr = mMultiSampleSupport.find(format);
-    if (itr == mMultiSampleSupport.end())
-    {
-        if (format == D3DFMT_UNKNOWN)
-            return 0;
-        return -1;
-    }
-
-    for (unsigned int i = requested; i < ArraySize(itr->second.supportedSamples); ++i)
-    {
-        if (itr->second.supportedSamples[i] && i != D3DMULTISAMPLE_NONMASKABLE)
-        {
-            return i;
-        }
-    }
-
-    return -1;
 }
 
 bool Renderer9::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source)

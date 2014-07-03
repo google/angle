@@ -283,13 +283,8 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
     DXGI_FORMAT rtvFormat = gl_d3d11::GetRTVFormat(internalFormat);
     DXGI_FORMAT dsvFormat = gl_d3d11::GetDSVFormat(internalFormat);
 
-    DXGI_FORMAT multisampleFormat = (dsvFormat != DXGI_FORMAT_UNKNOWN ? dsvFormat : rtvFormat);
-    int supportedSamples = mRenderer->getNearestSupportedSamples(multisampleFormat, samples);
-    if (supportedSamples < 0)
-    {
-        gl::error(GL_OUT_OF_MEMORY);
-        return;
-    }
+    const gl::TextureCaps &textureCaps = mRenderer->getRendererTextureCaps().get(internalFormat);
+    GLuint supportedSamples = textureCaps.getNearestSamples(samples);
 
     if (width > 0 && height > 0)
     {

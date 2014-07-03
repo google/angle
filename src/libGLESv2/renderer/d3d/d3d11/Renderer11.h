@@ -129,12 +129,6 @@ class Renderer11 : public Renderer
     virtual int getMinSwapInterval() const;
     virtual int getMaxSwapInterval() const;
 
-    virtual GLsizei getMaxSupportedSamples() const;
-    virtual GLsizei getMaxSupportedFormatSamples(GLenum internalFormat) const;
-    virtual GLsizei getNumSampleCounts(GLenum internalFormat) const;
-    virtual void getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const;
-    int getNearestSupportedSamples(DXGI_FORMAT format, unsigned int requested) const;
-
     // Pixel operations
     virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source);
     virtual bool copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source);
@@ -251,19 +245,6 @@ class Renderer11 : public Renderer
     void release();
 
     RenderStateCache mStateCache;
-
-    // Multisample format support
-    struct MultisampleSupportInfo
-    {
-        unsigned int qualityLevels[D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT];
-        unsigned int maxSupportedSamples;
-    };
-    MultisampleSupportInfo getMultisampleSupportInfo(DXGI_FORMAT format);
-
-    typedef std::unordered_map<DXGI_FORMAT, MultisampleSupportInfo> MultisampleSupportMap;
-    MultisampleSupportMap mMultisampleSupportMap;
-
-    unsigned int mMaxSupportedSamples;
 
     // current render target states
     unsigned int mAppliedRenderTargetSerials[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];

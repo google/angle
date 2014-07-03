@@ -7904,10 +7904,12 @@ void __stdcall glGetInternalformativ(GLenum target, GLenum internalformat, GLenu
         {
           case GL_NUM_SAMPLE_COUNTS:
             if (bufSize != 0)
-                *params = context->getNumSampleCounts(internalformat);
+            {
+                *params = formatCaps.sampleCounts.size();
+            }
             break;
           case GL_SAMPLES:
-            context->getSampleCounts(internalformat, bufSize, params);
+            std::copy_n(formatCaps.sampleCounts.rbegin(), std::min<size_t>(bufSize, formatCaps.sampleCounts.size()), params);
             break;
           default:
             return gl::error(GL_INVALID_ENUM);

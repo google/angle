@@ -335,14 +335,21 @@ bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum ta
     // internal format.
     if (angleExtension)
     {
-        if (samples > context->getMaxSupportedSamples())
+        ASSERT(context->getExtensions().framebufferMultisample);
+        if (static_cast<GLuint>(samples) > context->getExtensions().maxSamples)
         {
             return gl::error(GL_INVALID_VALUE, false);
+        }
+
+        // Check if this specific format supports enough samples
+        if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
+        {
+            return gl::error(GL_OUT_OF_MEMORY, false);
         }
     }
     else
     {
-        if (samples > context->getMaxSupportedFormatSamples(internalformat))
+        if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
         {
             return gl::error(GL_INVALID_VALUE, false);
         }

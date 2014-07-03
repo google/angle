@@ -215,10 +215,6 @@ class Context
     int getMajorShaderModel() const;
     unsigned int getMaximumCombinedTextureImageUnits() const;
     unsigned int getMaximumCombinedUniformBufferBindings() const;
-    GLsizei getMaxSupportedSamples() const;
-    GLsizei getMaxSupportedFormatSamples(GLenum internalFormat) const;
-    GLsizei getNumSampleCounts(GLenum internalFormat) const;
-    void getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const;
     unsigned int getMaxTransformFeedbackBufferBindings() const;
     GLintptr getUniformBufferOffsetAlignment() const;
     const std::string &getRendererString() const;

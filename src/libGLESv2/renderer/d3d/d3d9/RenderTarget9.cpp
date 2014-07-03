@@ -45,14 +45,9 @@ RenderTarget9::RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, 
     mRenderTarget = NULL;
 
     D3DFORMAT renderFormat = gl_d3d9::GetRenderFormat(internalFormat);
-    int supportedSamples = mRenderer->getNearestSupportedSamples(renderFormat, samples);
 
-    if (supportedSamples == -1)
-    {
-        gl::error(GL_OUT_OF_MEMORY);
-
-        return;
-    }
+    const gl::TextureCaps &textureCaps = mRenderer->getRendererTextureCaps().get(internalFormat);
+    GLuint supportedSamples = textureCaps.getNearestSamples(samples);
 
     HRESULT result = D3DERR_INVALIDCALL;
 

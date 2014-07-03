@@ -498,11 +498,14 @@ static size_t GetMaximumViewportSize(D3D_FEATURE_LEVEL featureLevel)
 
 void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions)
 {
+    GLuint maxSamples = 0;
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (gl::FormatSet::const_iterator internalFormat = allFormats.begin(); internalFormat != allFormats.end(); ++internalFormat)
     {
         gl::TextureCaps textureCaps = GenerateTextureFormatCaps(*internalFormat, device);
         textureCapsMap->insert(*internalFormat, textureCaps);
+
+        maxSamples = std::max(maxSamples, textureCaps.getMaxSamples());
     }
 
     D3D_FEATURE_LEVEL featureLevel = device->GetFeatureLevel();
@@ -559,6 +562,7 @@ void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *text
     extensions->blendMinMax = true;
     extensions->framebufferBlit = true;
     extensions->framebufferMultisample = true;
+    extensions->maxSamples = maxSamples;
     extensions->instancedArrays = GetInstancingSupport(featureLevel);
     extensions->packReverseRowOrder = true;
     extensions->standardDerivatives = GetDerivativeInstructionSupport(featureLevel);

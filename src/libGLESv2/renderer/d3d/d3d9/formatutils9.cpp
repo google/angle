@@ -757,7 +757,7 @@ D3DFORMAT GetRenderFormat(GLenum internalFormat)
     }
 }
 
-D3DMULTISAMPLE_TYPE GetMultisampleType(GLsizei samples)
+D3DMULTISAMPLE_TYPE GetMultisampleType(GLuint samples)
 {
     return (samples > 1) ? static_cast<D3DMULTISAMPLE_TYPE>(samples) : D3DMULTISAMPLE_NONE;
 }

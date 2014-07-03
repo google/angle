@@ -182,11 +182,6 @@ class Renderer
     virtual int getMinSwapInterval() const = 0;
     virtual int getMaxSwapInterval() const = 0;
 
-    virtual GLsizei getMaxSupportedSamples() const = 0;
-    virtual GLsizei getMaxSupportedFormatSamples(GLenum internalFormat) const = 0;
-    virtual GLsizei getNumSampleCounts(GLenum internalFormat) const = 0;
-    virtual void getSampleCounts(GLenum internalFormat, GLsizei bufSize, GLint *params) const = 0;
-
     // Pixel operations
     virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source) = 0;
     virtual bool copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source) = 0;

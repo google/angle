@@ -302,12 +302,15 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
     D3DDISPLAYMODE currentDisplayMode;
     d3d9->GetAdapterDisplayMode(adapter, &currentDisplayMode);
 
+    GLuint maxSamples = 0;
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (gl::FormatSet::const_iterator internalFormat = allFormats.begin(); internalFormat != allFormats.end(); ++internalFormat)
     {
         gl::TextureCaps textureCaps = GenerateTextureFormatCaps(*internalFormat, d3d9, deviceType, adapter,
                                                                 currentDisplayMode.Format);
         textureCapsMap->insert(*internalFormat, textureCaps);
+
+        maxSamples = std::max(maxSamples, textureCaps.getMaxSamples());
     }
 
     // GL core feature limits
@@ -394,6 +397,7 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
     extensions->blendMinMax = true;
     extensions->framebufferBlit = true;
     extensions->framebufferMultisample = true;
+    extensions->maxSamples = maxSamples;
     extensions->instancedArrays = deviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
     extensions->packReverseRowOrder = true;
     extensions->standardDerivatives = (deviceCaps.PS20Caps.Caps & D3DPS20CAPS_GRADIENTINSTRUCTIONS) != 0;
