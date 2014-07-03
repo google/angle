@@ -453,162 +453,6 @@ bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsize
     return true;
 }
 
-bool ValidateES3FramebufferTextureParameters(const gl::Context *context, GLenum target, GLenum attachment,
-                                             GLenum textarget, GLuint texture, GLint level, GLint layer,
-                                             bool layerCall)
-{
-    if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER && target != GL_READ_FRAMEBUFFER)
-    {
-        return gl::error(GL_INVALID_ENUM, false);
-    }
-
-    if (!ValidateAttachmentTarget(context, attachment))
-    {
-        return false;
-    }
-
-    const gl::Caps &caps = context->getCaps();
-    if (texture != 0)
-    {
-        gl::Texture *tex = context->getTexture(texture);
-
-        if (tex == NULL)
-        {
-            return gl::error(GL_INVALID_OPERATION, false);
-        }
-
-        if (level < 0)
-        {
-            return gl::error(GL_INVALID_VALUE, false);
-        }
-
-        if (layer < 0)
-        {
-            return gl::error(GL_INVALID_VALUE, false);
-        }
-
-        if (!layerCall)
-        {
-            switch (textarget)
-            {
-              case GL_TEXTURE_2D:
-                {
-                    if (level > gl::log2(caps.max2DTextureSize))
-                    {
-                        return gl::error(GL_INVALID_VALUE, false);
-                    }
-                    if (tex->getTarget() != GL_TEXTURE_2D)
-                    {
-                        return gl::error(GL_INVALID_OPERATION, false);
-                    }
-                    gl::Texture2D *tex2d = static_cast<gl::Texture2D *>(tex);
-                    if (tex2d->isCompressed(level))
-                    {
-                        return gl::error(GL_INVALID_OPERATION, false);
-                    }
-                    break;
-                }
-
-              case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-              case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-              case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-              case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-                {
-                    if (level > gl::log2(caps.maxCubeMapTextureSize))
-                    {
-                        return gl::error(GL_INVALID_VALUE, false);
-                    }
-                    if (tex->getTarget() != GL_TEXTURE_CUBE_MAP)
-                    {
-                        return gl::error(GL_INVALID_OPERATION, false);
-                    }
-                    gl::TextureCubeMap *texcube = static_cast<gl::TextureCubeMap *>(tex);
-                    if (texcube->isCompressed(textarget, level))
-                    {
-                        return gl::error(GL_INVALID_OPERATION, false);
-                    }
-                    break;
-                }
-
-              default:
-                return gl::error(GL_INVALID_ENUM, false);
-            }
-        }
-        else
-        {
-            switch (tex->getTarget())
-            {
-              case GL_TEXTURE_2D_ARRAY:
-                {
-                    if (level > gl::log2(caps.max2DTextureSize))
-                    {
-                        return gl::error(GL_INVALID_VALUE, false);
-                    }
-
-                    if (static_cast<GLuint>(layer) >= caps.maxArrayTextureLayers)
-                    {
-                        return gl::error(GL_INVALID_VALUE, false);
-                    }
-
-                    gl::Texture2DArray *texArray = static_cast<gl::Texture2DArray *>(tex);
-                    if (texArray->isCompressed(level))
-                    {
-                        return gl::error(GL_INVALID_OPERATION, false);
-                    }
-
-                    break;
-                }
-
-              case GL_TEXTURE_3D:
-                {
-                    if (level > gl::log2(caps.max3DTextureSize))
-                    {
-                        return gl::error(GL_INVALID_VALUE, false);
-                    }
-
-                    if (static_cast<GLuint>(layer) >= caps.max3DTextureSize)
-                    {
-                        return gl::error(GL_INVALID_VALUE, false);
-                    }
-
-                    gl::Texture3D *tex3d = static_cast<gl::Texture3D *>(tex);
-                    if (tex3d->isCompressed(level))
-                    {
-                        return gl::error(GL_INVALID_OPERATION, false);
-                    }
-
-                    break;
-                }
-
-              default:
-                return gl::error(GL_INVALID_OPERATION, false);
-            }
-        }
-    }
-
-    const gl::Framebuffer *framebuffer = NULL;
-    GLuint framebufferHandle = 0;
-    if (target == GL_READ_FRAMEBUFFER)
-    {
-        framebuffer = context->getReadFramebuffer();
-        framebufferHandle = context->getReadFramebufferHandle();
-    }
-    else
-    {
-        framebuffer = context->getDrawFramebuffer();
-        framebufferHandle = context->getDrawFramebufferHandle();
-    }
-
-    if (framebufferHandle == 0 || !framebuffer)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    return true;
-}
-
 bool ValidateFramebufferTextureLayer(const gl::Context *context, GLenum target, GLenum attachment,
                                      GLuint texture, GLint level, GLint layer)
 {
@@ -617,7 +461,70 @@ bool ValidateFramebufferTextureLayer(const gl::Context *context, GLenum target, 
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    return ValidateES3FramebufferTextureParameters(context, target, attachment, GL_NONE, texture, level, layer, true);
+    if (layer < 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))
+    {
+        return false;
+    }
+
+    const gl::Caps &caps = context->getCaps();
+    if (texture != 0)
+    {
+        gl::Texture *tex = context->getTexture(texture);
+        ASSERT(tex);
+
+        switch (tex->getTarget())
+        {
+          case GL_TEXTURE_2D_ARRAY:
+            {
+                if (level > gl::log2(caps.max2DTextureSize))
+                {
+                    return gl::error(GL_INVALID_VALUE, false);
+                }
+
+                if (static_cast<GLuint>(layer) >= caps.maxArrayTextureLayers)
+                {
+                    return gl::error(GL_INVALID_VALUE, false);
+                }
+
+                gl::Texture2DArray *texArray = static_cast<gl::Texture2DArray *>(tex);
+                if (texArray->isCompressed(level))
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+            }
+            break;
+
+          case GL_TEXTURE_3D:
+            {
+                if (level > gl::log2(caps.max3DTextureSize))
+                {
+                    return gl::error(GL_INVALID_VALUE, false);
+                }
+
+                if (static_cast<GLuint>(layer) >= caps.max3DTextureSize)
+                {
+                    return gl::error(GL_INVALID_VALUE, false);
+                }
+
+                gl::Texture3D *tex3d = static_cast<gl::Texture3D *>(tex);
+                if (tex3d->isCompressed(level))
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+            }
+            break;
+
+          default:
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+    }
+
+    return true;
 }
 
 bool ValidES3ReadFormatType(gl::Context *context, GLenum internalFormat, GLenum format, GLenum type)

@@ -1446,19 +1446,110 @@ bool ValidateDrawElementsInstanced(const gl::Context *context, GLenum mode, GLsi
     return (primcount > 0);
 }
 
-bool ValidateFramebufferTexture2D(const gl::Context *context, GLenum target, GLenum attachment,
-                                  GLenum textarget, GLuint texture, GLint level)
+bool ValidateFramebufferTextureBase(const gl::Context *context, GLenum target, GLenum attachment,
+                                    GLuint texture, GLint level)
 {
-    if (context->getClientVersion() < 3 &&
-        !ValidateES2FramebufferTextureParameters(context, target, attachment, textarget, texture, level))
+    if (!ValidFramebufferTarget(target))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (!ValidateAttachmentTarget(context, attachment))
     {
         return false;
     }
 
-    if (context->getClientVersion() >= 3 &&
-        !ValidateES3FramebufferTextureParameters(context, target, attachment, textarget, texture, level, 0, false))
+    if (texture != 0)
+    {
+        gl::Texture *tex = context->getTexture(texture);
+
+        if (tex == NULL)
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+
+        if (level < 0)
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+    }
+
+    const gl::Framebuffer *framebuffer = context->getTargetFramebuffer(target);
+    GLuint framebufferHandle = context->getTargetFramebufferHandle(target);
+
+    if (framebufferHandle == 0 || !framebuffer)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return true;
+}
+
+bool ValidateFramebufferTexture2D(const gl::Context *context, GLenum target, GLenum attachment,
+                                  GLenum textarget, GLuint texture, GLint level)
+{
+    // Attachments are required to be bound to level 0 in ES2
+    if (context->getClientVersion() < 3 && level != 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))
     {
         return false;
+    }
+
+    if (texture != 0)
+    {
+        gl::Texture *tex = context->getTexture(texture);
+        ASSERT(tex);
+
+        switch (textarget)
+        {
+          case GL_TEXTURE_2D:
+            {
+                if (level > gl::log2(context->getMaximum2DTextureDimension()))
+                {
+                    return gl::error(GL_INVALID_VALUE, false);
+                }
+                if (tex->getTarget() != GL_TEXTURE_2D)
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+                gl::Texture2D *tex2d = static_cast<gl::Texture2D *>(tex);
+                if (tex2d->isCompressed(level))
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+            }
+            break;
+
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+            {
+                if (level > gl::log2(context->getMaximumCubeTextureDimension()))
+                {
+                    return gl::error(GL_INVALID_VALUE, false);
+                }
+                if (tex->getTarget() != GL_TEXTURE_CUBE_MAP)
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+                gl::TextureCubeMap *texcube = static_cast<gl::TextureCubeMap *>(tex);
+                if (texcube->isCompressed(textarget, level))
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+            }
+            break;
+
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
     }
 
     return true;
