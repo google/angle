@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4c385c9_4a967769",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-03T20:24:46Z",
+      "side": 1,
+      "message": "nit: Chromium style recommends keeping the first line of the commit message short (\u003c65 chars I think it was). You could use a wording like, \"Add ANGLE_NO_EXCEPTIONS macro\" then use the second paragraph to explain.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 81
+      },
+      "revId": "d096ec491315249ea7b35dae39f3c00c4bf11d50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
