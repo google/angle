@@ -155,9 +155,10 @@ struct InterfaceBlock
     InterfaceBlock(const char *name, unsigned int arraySize, unsigned int registerIndex)
         : name(name),
           arraySize(arraySize),
+          dataSize(0),
           layout(BLOCKLAYOUT_SHARED),
-          registerIndex(registerIndex),
-          isRowMajorLayout(false)
+          isRowMajorLayout(false),
+          registerIndex(registerIndex)
     {}
 
     std::string name;
