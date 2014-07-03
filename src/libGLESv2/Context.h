@@ -278,6 +278,8 @@ class Context
 
     size_t getBoundFramebufferTextureSerials(FramebufferTextureSerialArray *outSerialArray);
 
+    void initCaps(GLuint clientVersion);
+
     // Caps to use for validation
     Caps mCaps;
     TextureCapsMap mTextureCaps;

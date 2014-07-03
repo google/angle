@@ -45,6 +45,9 @@ bool IsValidType(GLenum type, const Extensions &extensions, GLuint clientVersion
 bool IsValidFormatCombination(GLenum internalFormat, GLenum format, GLenum type, const Extensions &extensions, GLuint clientVersion);
 bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBufferInternalFormat, GLuint readBufferHandle, GLuint clientVersion);
 
+bool IsRenderingSupported(GLenum internalFormat, const Extensions &extensions, GLuint clientVersion);
+bool IsFilteringSupported(GLenum internalFormat, const Extensions &extensions, GLuint clientVersion);
+
 bool IsSizedInternalFormat(GLenum internalFormat);
 GLenum GetSizedInternalFormat(GLenum format, GLenum type);
 

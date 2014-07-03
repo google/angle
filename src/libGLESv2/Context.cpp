@@ -44,9 +44,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
 {
     ASSERT(robustAccess == false);   // Unimplemented
 
-    mCaps = mRenderer->getRendererCaps();
-    mTextureCaps = mRenderer->getRendererTextureCaps();
-    mExtensions = mRenderer->getRendererExtensions();
+    initCaps(clientVersion);
 
     mClientVersion = clientVersion;
 
@@ -2329,7 +2327,7 @@ const std::string &Context::getRendererString() const
 
 void Context::initExtensionStrings()
 {
-    mExtensionStrings = mExtensions.getStrings(mClientVersion);
+    mExtensionStrings = mExtensions.getStrings();
 
     std::ostringstream combinedStringStream;
     std::copy(mExtensionStrings.begin(), mExtensionStrings.end(), std::ostream_iterator<std::string>(combinedStringStream, " "));
@@ -2506,6 +2504,40 @@ bool Context::hasMappedBuffer(GLenum target) const
     }
     else UNREACHABLE();
     return false;
+}
+
+void Context::initCaps(GLuint clientVersion)
+{
+    mCaps = mRenderer->getRendererCaps();
+
+    mExtensions = mRenderer->getRendererExtensions();
+
+    if (clientVersion < 3)
+    {
+        // Disable ES3+ extensions
+        mExtensions.colorBufferFloat = false;
+    }
+
+    if (clientVersion > 2)
+    {
+        // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
+        //mExtensions.sRGB = false;
+    }
+
+    const TextureCapsMap &rendererFormats = mRenderer->getRendererTextureCaps();
+    for (TextureCapsMap::const_iterator i = rendererFormats.begin(); i != rendererFormats.end(); i++)
+    {
+        GLenum format = i->first;
+        TextureCaps formatCaps = i->second;
+
+        if (formatCaps.texturable && IsValidInternalFormat(format, mExtensions, clientVersion))
+        {
+            // Update the format caps based on the client version and extensions
+            formatCaps.renderable = IsRenderingSupported(format, mExtensions, clientVersion);
+            formatCaps.filterable = IsFilteringSupported(format, mExtensions, clientVersion);
+            mTextureCaps.insert(format, formatCaps);
+        }
+    }
 }
 
 }

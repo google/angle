@@ -36,10 +36,17 @@ struct TextureCaps
 class TextureCapsMap
 {
   public:
+    typedef std::unordered_map<GLenum, TextureCaps>::const_iterator const_iterator;
+
     void insert(GLenum internalFormat, const TextureCaps &caps);
     void remove(GLenum internalFormat);
 
     const TextureCaps &get(GLenum internalFormat) const;
+
+    const_iterator begin() const;
+    const_iterator end() const;
+
+    size_t size() const;
 
   private:
     typedef std::unordered_map<GLenum, TextureCaps> InternalFormatToCapsMap;
@@ -51,7 +58,7 @@ struct Extensions
     Extensions();
 
     // Generate a vector of supported extension strings
-    std::vector<std::string> getStrings(GLuint clientVersion) const;
+    std::vector<std::string> getStrings() const;
 
     // Set all texture related extension support based on the supported textures.
     // Determines support for:

@@ -45,6 +45,21 @@ const TextureCaps &TextureCapsMap::get(GLenum internalFormat) const
     return (iter != mCapsMap.end()) ? iter->second : defaultUnsupportedTexture;
 }
 
+TextureCapsMap::const_iterator TextureCapsMap::begin() const
+{
+    return mCapsMap.begin();
+}
+
+TextureCapsMap::const_iterator TextureCapsMap::end() const
+{
+    return mCapsMap.end();
+}
+
+size_t TextureCapsMap::size() const
+{
+    return mCapsMap.size();
+}
+
 Extensions::Extensions()
     : elementIndexUint(false),
       packedDepthStencil(false),
@@ -87,59 +102,57 @@ Extensions::Extensions()
 {
 }
 
-static void InsertExtensionString(const std::string &extension, GLuint minClientVersion, GLuint maxClientVersion, bool supported,
-                                  GLuint curClientVersion, std::vector<std::string> *extensionVector)
+static void InsertExtensionString(const std::string &extension, bool supported, std::vector<std::string> *extensionVector)
 {
-    if (supported && minClientVersion >= curClientVersion && (maxClientVersion == 0 || curClientVersion <= maxClientVersion))
+    if (supported)
     {
         extensionVector->push_back(extension);
     }
 }
 
-std::vector<std::string> Extensions::getStrings(GLuint clientVersion) const
+std::vector<std::string> Extensions::getStrings() const
 {
     std::vector<std::string> extensionStrings;
 
-    //                   | Extension name                     | Min | Max  | Supported flag          | Current      | Output vector   |
-    //                   |                                    | ver | ver  |                         | version      |                 |
-    InsertExtensionString("GL_OES_element_index_uint",         2,    0,     elementIndexUint,         clientVersion, &extensionStrings);
-    InsertExtensionString("GL_OES_packed_depth_stencil",       2,    0,     packedDepthStencil,       clientVersion, &extensionStrings);
-    InsertExtensionString("GL_OES_get_program_binary",         2,    0,     getProgramBinary,         clientVersion, &extensionStrings);
-    InsertExtensionString("GL_OES_rgb8_rgba8",                 2,    0,     rgb8rgba8,                clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_texture_format_BGRA8888",    2,    0,     textureFormatBGRA8888,    clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_read_format_bgra",           2,    0,     readFormatBGRA,           clientVersion, &extensionStrings);
-    InsertExtensionString("GL_NV_pixel_buffer_object",         2,    0,     pixelBufferObject,        clientVersion, &extensionStrings);
-    InsertExtensionString("GL_OES_mapbuffer",                  2,    0,     mapBuffer,                clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_map_buffer_range",           2,    0,     mapBufferRange,           clientVersion, &extensionStrings);
-    InsertExtensionString("GL_OES_texture_half_float",         2,    0,     textureHalfFloat,         clientVersion, &extensionStrings);
-    InsertExtensionString("GL_OES_texture_half_float_linear",  2,    0,     textureHalfFloatLinear,   clientVersion, &extensionStrings);
-    InsertExtensionString("GL_OES_texture_float",              2,    0,     textureFloat,             clientVersion, &extensionStrings);
-    InsertExtensionString("GL_OES_texture_float_linear",       2,    0,     textureFloatLinear,       clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_texture_rg",                 2,    0,     textureRG,                clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_texture_compression_dxt1",   2,    0,     textureCompressionDXT1,   clientVersion, &extensionStrings);
-    InsertExtensionString("GL_ANGLE_texture_compression_dxt3", 2,    0,     textureCompressionDXT3,   clientVersion, &extensionStrings);
-    InsertExtensionString("GL_ANGLE_texture_compression_dxt5", 2,    0,     textureCompressionDXT5,   clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_sRGB",                       2,    0,     sRGB,                     clientVersion, &extensionStrings); // FIXME: Don't advertise in ES3
-    InsertExtensionString("GL_ANGLE_depth_texture",            2,    0,     depthTextures,            clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_texture_storage",            2,    0,     textureStorage,           clientVersion, &extensionStrings);
-    InsertExtensionString("GL_OES_texture_npot",               2,    0,     textureNPOT,              clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_draw_buffers",               2,    0,     drawBuffers,              clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_texture_filter_anisotropic", 2,    0,     textureFilterAnisotropic, clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_occlusion_query_boolean",    2,    0,     occlusionQueryBoolean,    clientVersion, &extensionStrings);
-    InsertExtensionString("GL_NV_fence",                       2,    0,     fence,                    clientVersion, &extensionStrings);
-    InsertExtensionString("GL_ANGLE_timer_query",              2,    0,     timerQuery,               clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_robustness",                 2,    0,     robustness,               clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_blend_minmax",               2,    0,     blendMinMax,              clientVersion, &extensionStrings);
-    InsertExtensionString("GL_ANGLE_framebuffer_blit",         2,    0,     framebufferBlit,          clientVersion, &extensionStrings);
-    InsertExtensionString("GL_ANGLE_framebuffer_multisample",  2,    0,     framebufferMultisample,   clientVersion, &extensionStrings);
-    InsertExtensionString("GL_ANGLE_instanced_arrays",         2,    0,     instancedArrays,          clientVersion, &extensionStrings);
-    InsertExtensionString("GL_ANGLE_pack_reverse_row_order",   2,    0,     packReverseRowOrder,      clientVersion, &extensionStrings);
-    InsertExtensionString("GL_OES_standard_derivatives",       2,    0,     standardDerivatives,      clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_shader_texture_lod",         2,    0,     shaderTextureLOD,         clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_frag_depth",                 2,    0,     fragDepth,                clientVersion, &extensionStrings);
-    InsertExtensionString("GL_ANGLE_texture_usage",            2,    0,     textureUsage,             clientVersion, &extensionStrings);
-    InsertExtensionString("GL_ANGLE_translated_shader_source", 2,    0,     translatedShaderSource,   clientVersion, &extensionStrings);
-    InsertExtensionString("GL_EXT_color_buffer_float",         3,    0,     colorBufferFloat,         clientVersion, &extensionStrings);
+    //                   | Extension name                     | Supported flag          | Output vector   |
+    InsertExtensionString("GL_OES_element_index_uint",         elementIndexUint,         &extensionStrings);
+    InsertExtensionString("GL_OES_packed_depth_stencil",       packedDepthStencil,       &extensionStrings);
+    InsertExtensionString("GL_OES_get_program_binary",         getProgramBinary,         &extensionStrings);
+    InsertExtensionString("GL_OES_rgb8_rgba8",                 rgb8rgba8,                &extensionStrings);
+    InsertExtensionString("GL_EXT_texture_format_BGRA8888",    textureFormatBGRA8888,    &extensionStrings);
+    InsertExtensionString("GL_EXT_read_format_bgra",           readFormatBGRA,           &extensionStrings);
+    InsertExtensionString("GL_NV_pixel_buffer_object",         pixelBufferObject,        &extensionStrings);
+    InsertExtensionString("GL_OES_mapbuffer",                  mapBuffer,                &extensionStrings);
+    InsertExtensionString("GL_EXT_map_buffer_range",           mapBufferRange,           &extensionStrings);
+    InsertExtensionString("GL_OES_texture_half_float",         textureHalfFloat,         &extensionStrings);
+    InsertExtensionString("GL_OES_texture_half_float_linear",  textureHalfFloatLinear,   &extensionStrings);
+    InsertExtensionString("GL_OES_texture_float",              textureFloat,             &extensionStrings);
+    InsertExtensionString("GL_OES_texture_float_linear",       textureFloatLinear,       &extensionStrings);
+    InsertExtensionString("GL_EXT_texture_rg",                 textureRG,                &extensionStrings);
+    InsertExtensionString("GL_EXT_texture_compression_dxt1",   textureCompressionDXT1,   &extensionStrings);
+    InsertExtensionString("GL_ANGLE_texture_compression_dxt3", textureCompressionDXT3,   &extensionStrings);
+    InsertExtensionString("GL_ANGLE_texture_compression_dxt5", textureCompressionDXT5,   &extensionStrings);
+    InsertExtensionString("GL_EXT_sRGB",                       sRGB,                     &extensionStrings);
+    InsertExtensionString("GL_ANGLE_depth_texture",            depthTextures,            &extensionStrings);
+    InsertExtensionString("GL_EXT_texture_storage",            textureStorage,           &extensionStrings);
+    InsertExtensionString("GL_OES_texture_npot",               textureNPOT,              &extensionStrings);
+    InsertExtensionString("GL_EXT_draw_buffers",               drawBuffers,              &extensionStrings);
+    InsertExtensionString("GL_EXT_texture_filter_anisotropic", textureFilterAnisotropic, &extensionStrings);
+    InsertExtensionString("GL_EXT_occlusion_query_boolean",    occlusionQueryBoolean,    &extensionStrings);
+    InsertExtensionString("GL_NV_fence",                       fence,                    &extensionStrings);
+    InsertExtensionString("GL_ANGLE_timer_query",              timerQuery,               &extensionStrings);
+    InsertExtensionString("GL_EXT_robustness",                 robustness,               &extensionStrings);
+    InsertExtensionString("GL_EXT_blend_minmax",               blendMinMax,              &extensionStrings);
+    InsertExtensionString("GL_ANGLE_framebuffer_blit",         framebufferBlit,          &extensionStrings);
+    InsertExtensionString("GL_ANGLE_framebuffer_multisample",  framebufferMultisample,   &extensionStrings);
+    InsertExtensionString("GL_ANGLE_instanced_arrays",         instancedArrays,          &extensionStrings);
+    InsertExtensionString("GL_ANGLE_pack_reverse_row_order",   packReverseRowOrder,      &extensionStrings);
+    InsertExtensionString("GL_OES_standard_derivatives",       standardDerivatives,      &extensionStrings);
+    InsertExtensionString("GL_EXT_shader_texture_lod",         shaderTextureLOD,         &extensionStrings);
+    InsertExtensionString("GL_EXT_frag_depth",                 fragDepth,                &extensionStrings);
+    InsertExtensionString("GL_ANGLE_texture_usage",            textureUsage,             &extensionStrings);
+    InsertExtensionString("GL_ANGLE_translated_shader_source", translatedShaderSource,   &extensionStrings);
+    InsertExtensionString("GL_EXT_color_buffer_float",         colorBufferFloat,         &extensionStrings);
 
     return extensionStrings;
 }
