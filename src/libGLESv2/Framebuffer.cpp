@@ -271,88 +271,27 @@ FramebufferAttachment *Framebuffer::getFirstColorbuffer() const
     return NULL;
 }
 
-GLenum Framebuffer::getColorbufferType(unsigned int colorAttachment) const
+FramebufferAttachment *Framebuffer::getAttachment(GLenum attachment) const
 {
-    ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    return (mColorbuffers[colorAttachment] ? mColorbuffers[colorAttachment]->type() : GL_NONE);
-}
-
-GLenum Framebuffer::getDepthbufferType() const
-{
-    return (mDepthbuffer ? mDepthbuffer->type() : GL_NONE);
-}
-
-GLenum Framebuffer::getStencilbufferType() const
-{
-    return (mStencilbuffer ? mStencilbuffer->type() : GL_NONE);
-}
-
-GLenum Framebuffer::getDepthStencilbufferType() const
-{
-    return (hasValidDepthStencil() ? mDepthbuffer->type() : GL_NONE);
-}
-
-GLuint Framebuffer::getColorbufferHandle(unsigned int colorAttachment) const
-{
-    ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    return (mColorbuffers[colorAttachment] ? mColorbuffers[colorAttachment]->id() : 0);
-}
-
-GLuint Framebuffer::getDepthbufferHandle() const
-{
-    return (mDepthbuffer ? mDepthbuffer->id() : 0);
-}
-
-GLuint Framebuffer::getStencilbufferHandle() const
-{
-    return (mStencilbuffer ? mStencilbuffer->id() : 0);
-}
-
-GLuint Framebuffer::getDepthStencilbufferHandle() const
-{
-    return (hasValidDepthStencil() ? mDepthbuffer->id() : 0);
-}
-
-GLint Framebuffer::getColorbufferMipLevel(unsigned int colorAttachment) const
-{
-    ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    return (mColorbuffers[colorAttachment] ? mColorbuffers[colorAttachment]->mipLevel() : 0);
-}
-
-GLint Framebuffer::getDepthbufferMipLevel() const
-{
-    return (mDepthbuffer ? mDepthbuffer->mipLevel() : 0);
-}
-
-GLint Framebuffer::getStencilbufferMipLevel() const
-{
-    return (mStencilbuffer ? mStencilbuffer->mipLevel() : 0);
-}
-
-GLint Framebuffer::getDepthStencilbufferMipLevel() const
-{
-    return (hasValidDepthStencil() ? mDepthbuffer->mipLevel() : 0);
-}
-
-GLint Framebuffer::getColorbufferLayer(unsigned int colorAttachment) const
-{
-    ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    return (mColorbuffers[colorAttachment] ? mColorbuffers[colorAttachment]->layer() : 0);
-}
-
-GLint Framebuffer::getDepthbufferLayer() const
-{
-    return (mDepthbuffer ? mDepthbuffer->layer() : 0);
-}
-
-GLint Framebuffer::getStencilbufferLayer() const
-{
-    return (mStencilbuffer ? mStencilbuffer->layer() : 0);
-}
-
-GLint Framebuffer::getDepthStencilbufferLayer() const
-{
-    return (hasValidDepthStencil() ? mDepthbuffer->layer() : 0);
+    if (attachment >= GL_COLOR_ATTACHMENT0 && attachment <= GL_COLOR_ATTACHMENT15)
+    {
+        return getColorbuffer(attachment - GL_COLOR_ATTACHMENT0);
+    }
+    else
+    {
+        switch (attachment)
+        {
+          case GL_DEPTH_ATTACHMENT:
+            return getDepthbuffer();
+          case GL_STENCIL_ATTACHMENT:
+            return getStencilbuffer();
+          case GL_DEPTH_STENCIL_ATTACHMENT:
+            return getDepthStencilBuffer();
+          default:
+            UNREACHABLE();
+            return NULL;
+        }
+    }
 }
 
 GLenum Framebuffer::getDrawBufferState(unsigned int colorAttachment) const
@@ -472,8 +411,11 @@ GLenum Framebuffer::completeness() const
                 // D3D11 does not allow for overlapping RenderTargetViews, so ensure uniqueness
                 for (unsigned int previousColorAttachment = 0; previousColorAttachment < colorAttachment; previousColorAttachment++)
                 {
-                    if (colorbuffer->id() == getColorbufferHandle(previousColorAttachment) &&
-                        colorbuffer->type() == getColorbufferType(previousColorAttachment))
+                    const FramebufferAttachment *previousAttachment = mColorbuffers[previousColorAttachment];
+
+                    if (previousAttachment &&
+                        (colorbuffer->id() == previousAttachment->id() &&
+                         colorbuffer->type() == previousAttachment->type()))
                     {
                         return GL_FRAMEBUFFER_UNSUPPORTED;
                     }
@@ -664,6 +606,24 @@ GLenum DefaultFramebuffer::completeness() const
     // The default framebuffer *must* always be complete, though it may not be
     // subject to the same rules as application FBOs. ie, it could have 0x0 size.
     return GL_FRAMEBUFFER_COMPLETE;
+}
+
+FramebufferAttachment *DefaultFramebuffer::getAttachment(GLenum attachment) const
+{
+    switch (attachment)
+    {
+      case GL_BACK:
+        return getColorbuffer(0);
+      case GL_DEPTH:
+        return getDepthbuffer();
+      case GL_STENCIL:
+        return getStencilbuffer();
+      case GL_DEPTH_STENCIL:
+        return getDepthStencilBuffer();
+      default:
+        UNREACHABLE();
+        return NULL;
+    }
 }
 
 }

@@ -816,19 +816,12 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
     for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
         const GLenum drawBufferState = framebuffer->getDrawBufferState(colorAttachment);
+        gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(colorAttachment);
 
-        if (framebuffer->getColorbufferType(colorAttachment) != GL_NONE && drawBufferState != GL_NONE)
+        if (colorbuffer && drawBufferState != GL_NONE)
         {
             // the draw buffer must be either "none", "back" for the default buffer or the same index as this color (in order)
             ASSERT(drawBufferState == GL_BACK || drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + colorAttachment));
-
-            gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(colorAttachment);
-
-            if (!colorbuffer)
-            {
-                ERR("render target pointer unexpectedly null.");
-                return false;
-            }
 
             // check for zero-sized default framebuffer, which is a special case.
             // in this case we do not wish to modify any state and just silently return false.
@@ -869,31 +862,16 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
     }
 
     // Get the depth stencil render buffer and serials
-    gl::FramebufferAttachment *depthStencil = NULL;
+    gl::FramebufferAttachment *depthStencil = framebuffer->getDepthbuffer();
     unsigned int depthbufferSerial = 0;
     unsigned int stencilbufferSerial = 0;
-    if (framebuffer->getDepthbufferType() != GL_NONE)
+    if (depthStencil)
     {
-        depthStencil = framebuffer->getDepthbuffer();
-        if (!depthStencil)
-        {
-            ERR("Depth stencil pointer unexpectedly null.");
-            SafeRelease(framebufferRTVs);
-            return false;
-        }
-
         depthbufferSerial = depthStencil->getSerial();
     }
-    else if (framebuffer->getStencilbufferType() != GL_NONE)
+    else if (framebuffer->getStencilbuffer())
     {
         depthStencil = framebuffer->getStencilbuffer();
-        if (!depthStencil)
-        {
-            ERR("Depth stencil pointer unexpectedly null.");
-            SafeRelease(framebufferRTVs);
-            return false;
-        }
-
         stencilbufferSerial = depthStencil->getSerial();
     }
 
@@ -3349,20 +3327,20 @@ void Renderer11::invalidateFramebufferSwizzles(gl::Framebuffer *framebuffer)
         gl::FramebufferAttachment *attachment = framebuffer->getColorbuffer(colorAttachment);
         if (attachment && attachment->isTexture())
         {
-            invalidateFBOAttachmentSwizzles(attachment, framebuffer->getColorbufferMipLevel(colorAttachment));
+            invalidateFBOAttachmentSwizzles(attachment, attachment->mipLevel());
         }
     }
 
     gl::FramebufferAttachment *depthAttachment = framebuffer->getDepthbuffer();
     if (depthAttachment && depthAttachment->isTexture())
     {
-        invalidateFBOAttachmentSwizzles(depthAttachment, framebuffer->getDepthbufferMipLevel());
+        invalidateFBOAttachmentSwizzles(depthAttachment, depthAttachment->mipLevel());
     }
 
     gl::FramebufferAttachment *stencilAttachment = framebuffer->getStencilbuffer();
     if (stencilAttachment && stencilAttachment->isTexture())
     {
-        invalidateFBOAttachmentSwizzles(stencilAttachment, framebuffer->getStencilbufferMipLevel());
+        invalidateFBOAttachmentSwizzles(stencilAttachment, stencilAttachment->mipLevel());
     }
 }
 

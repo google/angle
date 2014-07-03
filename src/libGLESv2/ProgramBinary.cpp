@@ -199,7 +199,7 @@ rx::ShaderExecutable *ProgramBinary::getPixelExecutableForFramebuffer(const Fram
     std::vector<GLenum> outputs(IMPLEMENTATION_MAX_DRAW_BUFFERS);
     for (size_t outputIndex = 0; outputIndex < IMPLEMENTATION_MAX_DRAW_BUFFERS; outputIndex++)
     {
-        if (fbo->getColorbufferType(outputIndex) != GL_NONE)
+        if (fbo->getColorbuffer(outputIndex) != NULL)
         {
             // Always output floats for now
             outputs[outputIndex] = GL_FLOAT;

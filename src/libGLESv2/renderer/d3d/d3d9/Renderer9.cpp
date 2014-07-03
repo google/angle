@@ -1151,29 +1151,25 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
     // if there is no color attachment we must synthesize a NULL colorattachment
     // to keep the D3D runtime happy.  This should only be possible if depth texturing.
-    gl::FramebufferAttachment *renderbufferObject = NULL;
-    if (framebuffer->getColorbufferType(0) != GL_NONE)
+    gl::FramebufferAttachment *attachment = framebuffer->getColorbuffer(0);
+    if (!attachment)
     {
-        renderbufferObject = framebuffer->getColorbuffer(0);
+        attachment = getNullColorbuffer(framebuffer->getDepthbuffer());
     }
-    else
-    {
-        renderbufferObject = getNullColorbuffer(framebuffer->getDepthbuffer());
-    }
-    if (!renderbufferObject)
+    if (!attachment)
     {
         ERR("unable to locate renderbuffer for FBO.");
         return false;
     }
 
     bool renderTargetChanged = false;
-    unsigned int renderTargetSerial = renderbufferObject->getSerial();
+    unsigned int renderTargetSerial = attachment->getSerial();
     if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
         // Apply the render target on the device
         IDirect3DSurface9 *renderTargetSurface = NULL;
 
-        RenderTarget *renderTarget = renderbufferObject->getRenderTarget();
+        RenderTarget *renderTarget = attachment->getRenderTarget();
         if (renderTarget)
         {
             renderTargetSurface = RenderTarget9::makeRenderTarget9(renderTarget)->getSurface();
@@ -1192,29 +1188,16 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         renderTargetChanged = true;
     }
 
-    gl::FramebufferAttachment *depthStencil = NULL;
+    gl::FramebufferAttachment *depthStencil = framebuffer->getDepthbuffer();
     unsigned int depthbufferSerial = 0;
     unsigned int stencilbufferSerial = 0;
-    if (framebuffer->getDepthbufferType() != GL_NONE)
+    if (depthStencil)
     {
-        depthStencil = framebuffer->getDepthbuffer();
-        if (!depthStencil)
-        {
-            ERR("Depth stencil pointer unexpectedly null.");
-            return false;
-        }
-
         depthbufferSerial = depthStencil->getSerial();
     }
-    else if (framebuffer->getStencilbufferType() != GL_NONE)
+    else if (framebuffer->getStencilbuffer())
     {
         depthStencil = framebuffer->getStencilbuffer();
-        if (!depthStencil)
-        {
-            ERR("Depth stencil pointer unexpectedly null.");
-            return false;
-        }
-
         stencilbufferSerial = depthStencil->getSerial();
     }
 
@@ -1276,9 +1259,9 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         mForceSetViewport = true;
         mForceSetBlendState = true;
 
-        mRenderTargetDesc.width = renderbufferObject->getWidth();
-        mRenderTargetDesc.height = renderbufferObject->getHeight();
-        mRenderTargetDesc.format = renderbufferObject->getActualFormat();
+        mRenderTargetDesc.width = attachment->getWidth();
+        mRenderTargetDesc.height = attachment->getHeight();
+        mRenderTargetDesc.format = attachment->getActualFormat();
         mRenderTargetDescInitialized = true;
     }
 

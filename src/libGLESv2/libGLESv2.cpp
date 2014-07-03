@@ -2606,12 +2606,6 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             ASSERT(framebufferHandle != GL_INVALID_INDEX);
             gl::Framebuffer *framebuffer = context->getFramebuffer(framebufferHandle);
 
-            GLenum attachmentType;
-            GLuint attachmentHandle;
-            GLuint attachmentLevel;
-            GLuint attachmentLayer;
-            const gl::FramebufferAttachment *attachmentObject;
-
             if (framebufferHandle == 0)
             {
                 if (clientVersion < 3)
@@ -2622,25 +2616,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                 switch (attachment)
                 {
                   case GL_BACK:
-                    attachmentType = framebuffer->getColorbufferType(0);
-                    attachmentHandle = framebuffer->getColorbufferHandle(0);
-                    attachmentLevel = framebuffer->getColorbufferMipLevel(0);
-                    attachmentLayer = framebuffer->getColorbufferLayer(0);
-                    attachmentObject = framebuffer->getColorbuffer(0);
-                    break;
                   case GL_DEPTH:
-                    attachmentType = framebuffer->getDepthbufferType();
-                    attachmentHandle = framebuffer->getDepthbufferHandle();
-                    attachmentLevel = framebuffer->getDepthbufferMipLevel();
-                    attachmentLayer = framebuffer->getDepthbufferLayer();
-                    attachmentObject = framebuffer->getDepthbuffer();
-                    break;
                   case GL_STENCIL:
-                    attachmentType = framebuffer->getStencilbufferType();
-                    attachmentHandle = framebuffer->getStencilbufferHandle();
-                    attachmentLevel = framebuffer->getStencilbufferMipLevel();
-                    attachmentLayer = framebuffer->getStencilbufferLayer();
-                    attachmentObject = framebuffer->getStencilbuffer();
                     break;
                   default:
                     return gl::error(GL_INVALID_OPERATION);
@@ -2650,46 +2627,40 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             {
                 if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
                 {
-                    const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
-                    attachmentType = framebuffer->getColorbufferType(colorAttachment);
-                    attachmentHandle = framebuffer->getColorbufferHandle(colorAttachment);
-                    attachmentLevel = framebuffer->getColorbufferMipLevel(colorAttachment);
-                    attachmentLayer = framebuffer->getColorbufferLayer(colorAttachment);
-                    attachmentObject = framebuffer->getColorbuffer(colorAttachment);
+                    // Valid attachment query
                 }
                 else
                 {
                     switch (attachment)
                     {
                       case GL_DEPTH_ATTACHMENT:
-                        attachmentType = framebuffer->getDepthbufferType();
-                        attachmentHandle = framebuffer->getDepthbufferHandle();
-                        attachmentLevel = framebuffer->getDepthbufferMipLevel();
-                        attachmentLayer = framebuffer->getDepthbufferLayer();
-                        attachmentObject = framebuffer->getDepthbuffer();
-                        break;
                       case GL_STENCIL_ATTACHMENT:
-                        attachmentType = framebuffer->getStencilbufferType();
-                        attachmentHandle = framebuffer->getStencilbufferHandle();
-                        attachmentLevel = framebuffer->getStencilbufferMipLevel();
-                        attachmentLayer = framebuffer->getStencilbufferLayer();
-                        attachmentObject = framebuffer->getStencilbuffer();
                         break;
                       case GL_DEPTH_STENCIL_ATTACHMENT:
-                        if (framebuffer->getDepthbufferHandle() != framebuffer->getStencilbufferHandle())
+                        if (framebuffer->hasValidDepthStencil())
                         {
                             return gl::error(GL_INVALID_OPERATION);
                         }
-                        attachmentType = framebuffer->getDepthStencilbufferType();
-                        attachmentHandle = framebuffer->getDepthStencilbufferHandle();
-                        attachmentLevel = framebuffer->getDepthStencilbufferMipLevel();
-                        attachmentLayer = framebuffer->getDepthStencilbufferLayer();
-                        attachmentObject = framebuffer->getDepthStencilBuffer();
                         break;
                       default:
                         return gl::error(GL_INVALID_OPERATION);
                     }
                 }
+            }
+
+            GLenum attachmentType = GL_NONE;
+            GLuint attachmentHandle = 0;
+            GLuint attachmentLevel = 0;
+            GLuint attachmentLayer = 0;
+
+            const gl::FramebufferAttachment *attachmentObject = framebuffer->getAttachment(attachment);
+
+            if (attachmentObject)
+            {
+                attachmentType = attachmentObject->type();
+                attachmentHandle = attachmentObject->id();
+                attachmentLevel = attachmentObject->mipLevel();
+                attachmentLayer = attachmentObject->layer();
             }
 
             GLenum attachmentObjectType;   // Type category

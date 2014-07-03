@@ -542,13 +542,15 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
                 {
                     if (drawFramebuffer->isEnabledColorAttachment(colorAttachment))
                     {
-                        if (drawFramebuffer->getColorbufferType(colorAttachment) != GL_TEXTURE_2D &&
-                            drawFramebuffer->getColorbufferType(colorAttachment) != GL_RENDERBUFFER)
+                        FramebufferAttachment *attachment = drawFramebuffer->getColorbuffer(colorAttachment);
+                        ASSERT(attachment);
+
+                        if (attachment->type() != GL_TEXTURE_2D && attachment->type() != GL_RENDERBUFFER)
                         {
                             return gl::error(GL_INVALID_OPERATION, false);
                         }
 
-                        if (drawFramebuffer->getColorbuffer(colorAttachment)->getActualFormat() != readColorBuffer->getActualFormat())
+                        if (attachment->getActualFormat() != readColorBuffer->getActualFormat())
                         {
                             return gl::error(GL_INVALID_OPERATION, false);
                         }
