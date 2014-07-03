@@ -1433,4 +1433,22 @@ bool ValidateDrawElementsInstanced(const gl::Context *context, GLenum mode, GLsi
     return (primcount > 0);
 }
 
+bool ValidateFramebufferTexture2D(const gl::Context *context, GLenum target, GLenum attachment,
+                                  GLenum textarget, GLuint texture, GLint level)
+{
+    if (context->getClientVersion() < 3 &&
+        !ValidateES2FramebufferTextureParameters(context, target, attachment, textarget, texture, level))
+    {
+        return false;
+    }
+
+    if (context->getClientVersion() >= 3 &&
+        !ValidateES3FramebufferTextureParameters(context, target, attachment, textarget, texture, level, 0, false))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 }

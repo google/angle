@@ -1077,7 +1077,7 @@ Program *Context::getProgram(GLuint handle) const
     return mResourceManager->getProgram(handle);
 }
 
-Texture *Context::getTexture(GLuint handle)
+Texture *Context::getTexture(GLuint handle) const
 {
     return mResourceManager->getTexture(handle);
 }
@@ -1124,7 +1124,7 @@ TransformFeedback *Context::getTransformFeedback(GLuint handle) const
     }
 }
 
-Framebuffer *Context::getReadFramebuffer()
+Framebuffer *Context::getReadFramebuffer() const
 {
     return getFramebuffer(mState.readFramebuffer);
 }

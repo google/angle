@@ -449,7 +449,7 @@ bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsize
     return true;
 }
 
-bool ValidateES3FramebufferTextureParameters(gl::Context *context, GLenum target, GLenum attachment,
+bool ValidateES3FramebufferTextureParameters(const gl::Context *context, GLenum target, GLenum attachment,
                                              GLenum textarget, GLuint texture, GLint level, GLint layer,
                                              bool layerCall)
 {
@@ -599,7 +599,7 @@ bool ValidateES3FramebufferTextureParameters(gl::Context *context, GLenum target
         }
     }
 
-    gl::Framebuffer *framebuffer = NULL;
+    const gl::Framebuffer *framebuffer = NULL;
     GLuint framebufferHandle = 0;
     if (target == GL_READ_FRAMEBUFFER)
     {
@@ -618,6 +618,17 @@ bool ValidateES3FramebufferTextureParameters(gl::Context *context, GLenum target
     }
 
     return true;
+}
+
+bool ValidateFramebufferTextureLayer(const gl::Context *context, GLenum target, GLenum attachment,
+                                     GLuint texture, GLint level, GLint layer)
+{
+    if (context->getClientVersion() < 3)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return ValidateES3FramebufferTextureParameters(context, target, attachment, GL_NONE, texture, level, layer, true);
 }
 
 bool ValidES3ReadFormatType(gl::Context *context, GLenum internalFormat, GLenum format, GLenum type)

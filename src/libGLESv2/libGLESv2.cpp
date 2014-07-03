@@ -1877,14 +1877,7 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
         gl::Context *context = gl::getNonLostContext();
         if (context)
         {
-            if (context->getClientVersion() < 3 &&
-                !ValidateES2FramebufferTextureParameters(context, target, attachment, textarget, texture, level))
-            {
-                return;
-            }
-
-            if (context->getClientVersion() >= 3 &&
-                !ValidateES3FramebufferTextureParameters(context, target, attachment, textarget, texture, level, 0, false))
+            if (!ValidateFramebufferTexture2D(context, target, attachment, textarget, texture, level))
             {
                 return;
             }
@@ -6736,12 +6729,8 @@ void __stdcall glFramebufferTextureLayer(GLenum target, GLenum attachment, GLuin
 
         if (context)
         {
-            if (context->getClientVersion() < 3)
-            {
-                return gl::error(GL_INVALID_OPERATION);
-            }
-
-            if (!ValidateES3FramebufferTextureParameters(context, target, attachment, GL_NONE, texture, level, layer, true))
+            if (!ValidateFramebufferTextureLayer(context, target, attachment, texture,
+                                                 level, layer))
             {
                 return;
             }
@@ -6761,9 +6750,9 @@ void __stdcall glFramebufferTextureLayer(GLenum target, GLenum attachment, GLuin
             {
                 switch (attachment)
                 {
-                case GL_DEPTH_ATTACHMENT:         framebuffer->setDepthbuffer(textarget, texture, level, layer);        break;
-                case GL_STENCIL_ATTACHMENT:       framebuffer->setStencilbuffer(textarget, texture, level, layer);      break;
-                case GL_DEPTH_STENCIL_ATTACHMENT: framebuffer->setDepthStencilBuffer(textarget, texture, level, layer); break;
+                  case GL_DEPTH_ATTACHMENT:         framebuffer->setDepthbuffer(textarget, texture, level, layer);        break;
+                  case GL_STENCIL_ATTACHMENT:       framebuffer->setStencilbuffer(textarget, texture, level, layer);      break;
+                  case GL_DEPTH_STENCIL_ATTACHMENT: framebuffer->setDepthStencilBuffer(textarget, texture, level, layer); break;
                 }
             }
         }

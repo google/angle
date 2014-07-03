@@ -839,7 +839,7 @@ bool ValidateES2TexStorageParameters(gl::Context *context, GLenum target, GLsize
     return true;
 }
 
-bool ValidateES2FramebufferTextureParameters(gl::Context *context, GLenum target, GLenum attachment,
+bool ValidateES2FramebufferTextureParameters(const gl::Context *context, GLenum target, GLenum attachment,
                                              GLenum textarget, GLuint texture, GLint level)
 {
     META_ASSERT(GL_DRAW_FRAMEBUFFER == GL_DRAW_FRAMEBUFFER_ANGLE && GL_READ_FRAMEBUFFER == GL_READ_FRAMEBUFFER_ANGLE);
@@ -923,7 +923,7 @@ bool ValidateES2FramebufferTextureParameters(gl::Context *context, GLenum target
         }
     }
 
-    gl::Framebuffer *framebuffer = NULL;
+    const gl::Framebuffer *framebuffer = NULL;
     GLuint framebufferHandle = 0;
     if (target == GL_READ_FRAMEBUFFER)
     {

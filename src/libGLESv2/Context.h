@@ -330,7 +330,7 @@ class Context
     FenceSync *getFenceSync(GLsync handle) const;
     Shader *getShader(GLuint handle) const;
     Program *getProgram(GLuint handle) const;
-    Texture *getTexture(GLuint handle);
+    Texture *getTexture(GLuint handle) const;
     Framebuffer *getFramebuffer(GLuint handle) const;
     Renderbuffer *getRenderbuffer(GLuint handle);
     VertexArray *getVertexArray(GLuint handle) const;
@@ -359,7 +359,7 @@ class Context
 
     Framebuffer *getTargetFramebuffer(GLenum target) const;
     GLuint getTargetFramebufferHandle(GLenum target) const;
-    Framebuffer *getReadFramebuffer();
+    Framebuffer *getReadFramebuffer() const;
     Framebuffer *getDrawFramebuffer();
     const Framebuffer *getDrawFramebuffer() const;
     VertexArray *getCurrentVertexArray() const;

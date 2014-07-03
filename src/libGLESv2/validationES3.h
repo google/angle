@@ -25,9 +25,11 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
 bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsizei levels, GLenum internalformat,
                                      GLsizei width, GLsizei height, GLsizei depth);
 
-bool ValidateES3FramebufferTextureParameters(gl::Context *context, GLenum target, GLenum attachment,
+bool ValidateES3FramebufferTextureParameters(const gl::Context *context, GLenum target, GLenum attachment,
                                              GLenum textarget, GLuint texture, GLint level, GLint layer,
                                              bool layerCall);
+bool ValidateFramebufferTextureLayer(const gl::Context *context, GLenum target, GLenum attachment,
+                                     GLuint texture, GLint level, GLint layer);
 
 bool ValidES3ReadFormatType(gl::Context *context, GLenum internalFormat, GLenum format, GLenum type);
 
