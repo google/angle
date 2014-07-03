@@ -99,11 +99,11 @@ EGLDisplay __stdcall eglGetDisplay(EGLNativeDisplayType display_id)
 {
     EVENT("(EGLNativeDisplayType display_id = 0x%0.8p)", display_id);
 
-    try
+    ANGLE_TRY
     {
         return egl::Display::getDisplay(display_id);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_DISPLAY);
     }
@@ -114,7 +114,7 @@ EGLBoolean __stdcall eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor)
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLint *major = 0x%0.8p, EGLint *minor = 0x%0.8p)",
           dpy, major, minor);
 
-    try
+    ANGLE_TRY
     {
         if (dpy == EGL_NO_DISPLAY)
         {
@@ -133,7 +133,7 @@ EGLBoolean __stdcall eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor)
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -143,7 +143,7 @@ EGLBoolean __stdcall eglTerminate(EGLDisplay dpy)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p)", dpy);
 
-    try
+    ANGLE_TRY
     {
         if (dpy == EGL_NO_DISPLAY)
         {
@@ -156,7 +156,7 @@ EGLBoolean __stdcall eglTerminate(EGLDisplay dpy)
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -166,7 +166,7 @@ const char *__stdcall eglQueryString(EGLDisplay dpy, EGLint name)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLint name = %d)", dpy, name);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         if (!(display == EGL_NO_DISPLAY && name == EGL_EXTENSIONS) && !validateDisplay(display))
@@ -188,7 +188,7 @@ const char *__stdcall eglQueryString(EGLDisplay dpy, EGLint name)
             return egl::error(EGL_BAD_PARAMETER, (const char*)NULL);
         }
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, (const char*)NULL);
     }
@@ -200,7 +200,7 @@ EGLBoolean __stdcall eglGetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint co
           "EGLint config_size = %d, EGLint *num_config = 0x%0.8p)",
           dpy, configs, config_size, num_config);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
@@ -223,7 +223,7 @@ EGLBoolean __stdcall eglGetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint co
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -235,7 +235,7 @@ EGLBoolean __stdcall eglChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, 
           "EGLConfig *configs = 0x%0.8p, EGLint config_size = %d, EGLint *num_config = 0x%0.8p)",
           dpy, attrib_list, configs, config_size, num_config);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
@@ -260,7 +260,7 @@ EGLBoolean __stdcall eglChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, 
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -271,7 +271,7 @@ EGLBoolean __stdcall eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, EGLint attribute = %d, EGLint *value = 0x%0.8p)",
           dpy, config, attribute, value);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
@@ -287,7 +287,7 @@ EGLBoolean __stdcall eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -298,7 +298,7 @@ EGLSurface __stdcall eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, EG
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, EGLNativeWindowType win = 0x%0.8p, "
           "const EGLint *attrib_list = 0x%0.8p)", dpy, config, win, attrib_list);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
@@ -316,7 +316,7 @@ EGLSurface __stdcall eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, EG
 
         return display->createWindowSurface(window, config, attrib_list);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
@@ -327,7 +327,7 @@ EGLSurface __stdcall eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, c
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, const EGLint *attrib_list = 0x%0.8p)",
           dpy, config, attrib_list);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
@@ -338,7 +338,7 @@ EGLSurface __stdcall eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, c
 
         return display->createOffscreenSurface(config, NULL, attrib_list);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
@@ -349,7 +349,7 @@ EGLSurface __stdcall eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config, EG
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, EGLNativePixmapType pixmap = 0x%0.8p, "
           "const EGLint *attrib_list = 0x%0.8p)", dpy, config, pixmap, attrib_list);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
@@ -362,7 +362,7 @@ EGLSurface __stdcall eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config, EG
 
         return egl::success(EGL_NO_SURFACE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
@@ -372,7 +372,7 @@ EGLBoolean __stdcall eglDestroySurface(EGLDisplay dpy, EGLSurface surface)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p)", dpy, surface);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         egl::Surface *eglSurface = static_cast<egl::Surface*>(surface);
@@ -391,7 +391,7 @@ EGLBoolean __stdcall eglDestroySurface(EGLDisplay dpy, EGLSurface surface)
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -402,7 +402,7 @@ EGLBoolean __stdcall eglQuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint 
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint attribute = %d, EGLint *value = 0x%0.8p)",
           dpy, surface, attribute, value);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         egl::Surface *eglSurface = (egl::Surface*)surface;
@@ -479,7 +479,7 @@ EGLBoolean __stdcall eglQuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint 
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -490,7 +490,7 @@ EGLBoolean __stdcall eglQuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surf
     TRACE("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint attribute = %d, void **value = 0x%0.8p)",
           dpy, surface, attribute, value);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         egl::Surface *eglSurface = (egl::Surface*)surface;
@@ -519,7 +519,7 @@ EGLBoolean __stdcall eglQuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surf
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -529,7 +529,7 @@ EGLBoolean __stdcall eglBindAPI(EGLenum api)
 {
     EVENT("(EGLenum api = 0x%X)", api);
 
-    try
+    ANGLE_TRY
     {
         switch (api)
         {
@@ -546,7 +546,7 @@ EGLBoolean __stdcall eglBindAPI(EGLenum api)
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -556,13 +556,13 @@ EGLenum __stdcall eglQueryAPI(void)
 {
     EVENT("()");
 
-    try
+    ANGLE_TRY
     {
         EGLenum API = egl::getCurrentAPI();
 
         return egl::success(API);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -572,13 +572,13 @@ EGLBoolean __stdcall eglWaitClient(void)
 {
     EVENT("()");
 
-    try
+    ANGLE_TRY
     {
         UNIMPLEMENTED();   // FIXME
 
         return egl::success(0);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -588,13 +588,13 @@ EGLBoolean __stdcall eglReleaseThread(void)
 {
     EVENT("()");
 
-    try
+    ANGLE_TRY
     {
         eglMakeCurrent(EGL_NO_DISPLAY, EGL_NO_CONTEXT, EGL_NO_SURFACE, EGL_NO_SURFACE);
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -606,7 +606,7 @@ EGLSurface __stdcall eglCreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum bu
           "EGLConfig config = 0x%0.8p, const EGLint *attrib_list = 0x%0.8p)",
           dpy, buftype, buffer, config, attrib_list);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
@@ -622,7 +622,7 @@ EGLSurface __stdcall eglCreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum bu
 
         return display->createOffscreenSurface(config, (HANDLE)buffer, attrib_list);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
@@ -633,7 +633,7 @@ EGLBoolean __stdcall eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface, EGLint
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint attribute = %d, EGLint value = %d)",
           dpy, surface, attribute, value);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         egl::Surface *eglSurface = static_cast<egl::Surface*>(surface);
@@ -647,7 +647,7 @@ EGLBoolean __stdcall eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface, EGLint
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -657,7 +657,7 @@ EGLBoolean __stdcall eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint 
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint buffer = %d)", dpy, surface, buffer);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         egl::Surface *eglSurface = static_cast<egl::Surface*>(surface);
@@ -694,7 +694,7 @@ EGLBoolean __stdcall eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint 
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -704,7 +704,7 @@ EGLBoolean __stdcall eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLi
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint buffer = %d)", dpy, surface, buffer);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         egl::Surface *eglSurface = static_cast<egl::Surface*>(surface);
@@ -738,7 +738,7 @@ EGLBoolean __stdcall eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLi
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -748,7 +748,7 @@ EGLBoolean __stdcall eglSwapInterval(EGLDisplay dpy, EGLint interval)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLint interval = %d)", dpy, interval);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
@@ -768,7 +768,7 @@ EGLBoolean __stdcall eglSwapInterval(EGLDisplay dpy, EGLint interval)
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -779,7 +779,7 @@ EGLContext __stdcall eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLConte
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, EGLContext share_context = 0x%0.8p, "
           "const EGLint *attrib_list = 0x%0.8p)", dpy, config, share_context, attrib_list);
 
-    try
+    ANGLE_TRY
     {
         // Get the requested client version (default is 1) and check it is 2 or 3.
         EGLint client_version = 1;
@@ -851,7 +851,7 @@ EGLContext __stdcall eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLConte
 
         return display->createContext(config, client_version, static_cast<gl::Context*>(share_context), reset_notification, robust_access);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_CONTEXT);
     }
@@ -861,7 +861,7 @@ EGLBoolean __stdcall eglDestroyContext(EGLDisplay dpy, EGLContext ctx)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLContext ctx = 0x%0.8p)", dpy, ctx);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         gl::Context *context = static_cast<gl::Context*>(ctx);
@@ -880,7 +880,7 @@ EGLBoolean __stdcall eglDestroyContext(EGLDisplay dpy, EGLContext ctx)
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -891,7 +891,7 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface draw = 0x%0.8p, EGLSurface read = 0x%0.8p, EGLContext ctx = 0x%0.8p)",
           dpy, draw, read, ctx);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         gl::Context *context = static_cast<gl::Context*>(ctx);
@@ -934,7 +934,7 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
 
         return egl::success(EGL_TRUE);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -944,13 +944,13 @@ EGLContext __stdcall eglGetCurrentContext(void)
 {
     EVENT("()");
 
-    try
+    ANGLE_TRY
     {
         EGLContext context = glGetCurrentContext();
 
         return egl::success(context);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_CONTEXT);
     }
@@ -960,7 +960,7 @@ EGLSurface __stdcall eglGetCurrentSurface(EGLint readdraw)
 {
     EVENT("(EGLint readdraw = %d)", readdraw);
 
-    try
+    ANGLE_TRY
     {
         if (readdraw == EGL_READ)
         {
@@ -977,7 +977,7 @@ EGLSurface __stdcall eglGetCurrentSurface(EGLint readdraw)
             return egl::error(EGL_BAD_PARAMETER, EGL_NO_SURFACE);
         }
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
@@ -987,13 +987,13 @@ EGLDisplay __stdcall eglGetCurrentDisplay(void)
 {
     EVENT("()");
 
-    try
+    ANGLE_TRY
     {
         EGLDisplay dpy = egl::getCurrentDisplay();
 
         return egl::success(dpy);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_NO_DISPLAY);
     }
@@ -1004,7 +1004,7 @@ EGLBoolean __stdcall eglQueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attr
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLContext ctx = 0x%0.8p, EGLint attribute = %d, EGLint *value = 0x%0.8p)",
           dpy, ctx, attribute, value);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         gl::Context *context = static_cast<gl::Context*>(ctx);
@@ -1018,7 +1018,7 @@ EGLBoolean __stdcall eglQueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attr
 
         return egl::success(0);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1028,13 +1028,13 @@ EGLBoolean __stdcall eglWaitGL(void)
 {
     EVENT("()");
 
-    try
+    ANGLE_TRY
     {
         UNIMPLEMENTED();   // FIXME
 
         return egl::success(0);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1044,13 +1044,13 @@ EGLBoolean __stdcall eglWaitNative(EGLint engine)
 {
     EVENT("(EGLint engine = %d)", engine);
 
-    try
+    ANGLE_TRY
     {
         UNIMPLEMENTED();   // FIXME
 
         return egl::success(0);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1060,7 +1060,7 @@ EGLBoolean __stdcall eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p)", dpy, surface);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         egl::Surface *eglSurface = (egl::Surface*)surface;
@@ -1085,7 +1085,7 @@ EGLBoolean __stdcall eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
             return egl::success(EGL_TRUE);
         }
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1097,7 +1097,7 @@ EGLBoolean __stdcall eglCopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativ
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLNativePixmapType target = 0x%0.8p)", dpy, surface, target);
 
-    try
+    ANGLE_TRY
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         egl::Surface *eglSurface = static_cast<egl::Surface*>(surface);
@@ -1116,7 +1116,7 @@ EGLBoolean __stdcall eglCopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativ
 
         return egl::success(0);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1126,7 +1126,7 @@ EGLBoolean __stdcall eglPostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLi
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint x = %d, EGLint y = %d, EGLint width = %d, EGLint height = %d)", dpy, surface, x, y, width, height);
 
-    try
+    ANGLE_TRY
     {
         if (x < 0 || y < 0 || width < 0 || height < 0)
         {
@@ -1156,7 +1156,7 @@ EGLBoolean __stdcall eglPostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLi
             return egl::success(EGL_TRUE);
         }
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, EGL_FALSE);
     }
@@ -1168,7 +1168,7 @@ __eglMustCastToProperFunctionPointerType __stdcall eglGetProcAddress(const char 
 {
     EVENT("(const char *procname = \"%s\")", procname);
 
-    try
+    ANGLE_TRY
     {
         struct Extension
         {
@@ -1193,7 +1193,7 @@ __eglMustCastToProperFunctionPointerType __stdcall eglGetProcAddress(const char 
 
         return glGetProcAddress(procname);
     }
-    catch (...)
+    ANGLE_CATCH_ALL
     {
         return egl::error(EGL_BAD_ALLOC, (__eglMustCastToProperFunctionPointerType)NULL);
     }
