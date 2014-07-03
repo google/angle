@@ -212,7 +212,6 @@ class Context
     const TextureCapsMap &getTextureCaps() const;
     const Extensions &getExtensions() const;
 
-    int getMajorShaderModel() const;
     unsigned int getMaximumCombinedTextureImageUnits() const;
     unsigned int getMaximumCombinedUniformBufferBindings() const;
     unsigned int getMaxTransformFeedbackBufferBindings() const;
@@ -332,7 +331,6 @@ class Context
     GLenum mResetStrategy;
     bool mRobustAccess;
 
-    int mMajorShaderModel;
     bool mSupportsVertexTexture;
     int mNumCompressedTextureFormats;
 

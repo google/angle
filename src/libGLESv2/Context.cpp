@@ -178,7 +178,6 @@ void Context::makeCurrent(egl::Surface *surface)
 {
     if (!mHasBeenCurrent)
     {
-        mMajorShaderModel = mRenderer->getMajorShaderModel();
         mSupportsVertexTexture = mRenderer->getVertexTextureSupport();
 
         mNumCompressedTextureFormats = 0;
@@ -1983,11 +1982,6 @@ const TextureCapsMap &Context::getTextureCaps() const
 const Extensions &Context::getExtensions() const
 {
     return mExtensions;
-}
-
-int Context::getMajorShaderModel() const
-{
-    return mMajorShaderModel;
 }
 
 unsigned int Context::getMaximumCombinedTextureImageUnits() const
