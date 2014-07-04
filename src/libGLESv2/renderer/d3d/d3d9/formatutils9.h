@@ -20,55 +20,50 @@ class Renderer9;
 namespace d3d9
 {
 
-typedef std::set<D3DFORMAT> D3DFormatSet;
+typedef std::map<std::pair<GLenum, GLenum>, ColorCopyFunction> FastCopyFunctionMap;
 
-MipGenerationFunction GetMipGenerationFunction(D3DFORMAT format);
-LoadImageFunction GetImageLoadFunction(GLenum internalFormat);
-
-GLuint GetFormatPixelBytes(D3DFORMAT format);
-GLuint GetBlockWidth(D3DFORMAT format);
-GLuint GetBlockHeight(D3DFORMAT format);
-GLuint GetBlockSize(D3DFORMAT format, GLuint width, GLuint height);
-
-void MakeValidSize(bool isImage, D3DFORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
-
-const D3DFormatSet &GetAllUsedD3DFormats();
-
-ColorReadFunction GetColorReadFunction(D3DFORMAT format);
-ColorCopyFunction GetFastCopyFunction(D3DFORMAT sourceFormat, GLenum destFormat, GLenum destType);
-
-VertexCopyFunction GetVertexCopyFunction(const gl::VertexFormat &vertexFormat);
-size_t GetVertexElementSize(const gl::VertexFormat &vertexFormat);
-VertexConversionType GetVertexConversionType(const gl::VertexFormat &vertexFormat);
-D3DDECLTYPE GetNativeVertexFormat(const gl::VertexFormat &vertexFormat);
-
-GLenum GetDeclTypeComponentType(D3DDECLTYPE declType);
-int GetDeclTypeComponentCount(D3DDECLTYPE declType);
-bool IsDeclTypeNormalized(D3DDECLTYPE declType);
-
-void InitializeVertexTranslations(const rx::Renderer9 *renderer);
-
-}
-
-namespace gl_d3d9
+struct D3DFormat
 {
+    D3DFormat();
 
-D3DFORMAT GetTextureFormat(GLenum internalForma);
-D3DFORMAT GetRenderFormat(GLenum internalFormat);
+    GLuint pixelBytes;
+    GLuint blockWidth;
+    GLuint blockHeight;
 
-D3DMULTISAMPLE_TYPE GetMultisampleType(GLuint samples);
+    GLenum internalFormat;
 
-bool RequiresTextureDataInitialization(GLint internalFormat);
-InitializeTextureDataFunction GetTextureDataInitializationFunction(GLint internalFormat);
+    MipGenerationFunction mipGenerationFunction;
+    ColorReadFunction colorReadFunction;
 
-}
+    FastCopyFunctionMap fastCopyFunctions;
+    ColorCopyFunction getFastCopyFunction(GLenum format, GLenum type) const;
+};
+const D3DFormat &GetD3DFormatInfo(D3DFORMAT format);
 
-namespace d3d9_gl
+struct VertexFormat
 {
+    VertexFormat();
 
-GLenum GetInternalFormat(D3DFORMAT format);
-GLsizei GetSamplesCount(D3DMULTISAMPLE_TYPE type);
-bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format);
+    VertexConversionType conversionType;
+    size_t outputElementSize;
+    VertexCopyFunction copyFunction;
+    D3DDECLTYPE nativeFormat;
+    GLenum componentType;
+};
+const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, const gl::VertexFormat &vertexFormat);
+
+struct TextureFormat
+{
+    TextureFormat();
+
+    D3DFORMAT texFormat;
+    D3DFORMAT renderFormat;
+
+    InitializeTextureDataFunction dataInitializerFunction;
+
+    LoadImageFunction loadFunction;
+};
+const TextureFormat &GetTextureFormatInfo(GLenum internalFormat);
 
 }
 

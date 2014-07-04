@@ -101,9 +101,10 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
         pShareHandle = &mShareHandle;
     }
 
+    const d3d9::TextureFormat &backBufferd3dFormatInfo = d3d9::GetTextureFormatInfo(mBackBufferFormat);
     result = device->CreateTexture(backbufferWidth, backbufferHeight, 1, D3DUSAGE_RENDERTARGET,
-                                   gl_d3d9::GetTextureFormat(mBackBufferFormat),
-                                   D3DPOOL_DEFAULT, &mOffscreenTexture, pShareHandle);
+                                   backBufferd3dFormatInfo.texFormat, D3DPOOL_DEFAULT, &mOffscreenTexture,
+                                   pShareHandle);
     if (FAILED(result))
     {
         ERR("Could not create offscreen texture: %08lX", result);
@@ -150,12 +151,14 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
         SafeRelease(oldRenderTarget);
     }
 
+    const d3d9::TextureFormat &depthBufferd3dFormatInfo = d3d9::GetTextureFormatInfo(mDepthBufferFormat);
+
     if (mWindow)
     {
         D3DPRESENT_PARAMETERS presentParameters = {0};
-        presentParameters.AutoDepthStencilFormat = gl_d3d9::GetRenderFormat(mDepthBufferFormat);
+        presentParameters.AutoDepthStencilFormat = depthBufferd3dFormatInfo.renderFormat;
         presentParameters.BackBufferCount = 1;
-        presentParameters.BackBufferFormat = gl_d3d9::GetRenderFormat(mBackBufferFormat);
+        presentParameters.BackBufferFormat = backBufferd3dFormatInfo.renderFormat;
         presentParameters.EnableAutoDepthStencil = FALSE;
         presentParameters.Flags = 0;
         presentParameters.hDeviceWindow = mWindow;
@@ -207,7 +210,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
     if (mDepthBufferFormat != GL_NONE)
     {
         result = device->CreateDepthStencilSurface(backbufferWidth, backbufferHeight,
-                                                   gl_d3d9::GetRenderFormat(mDepthBufferFormat),
+                                                   depthBufferd3dFormatInfo.renderFormat,
                                                    D3DMULTISAMPLE_NONE, 0, FALSE, &mDepthStencil, NULL);
 
         if (FAILED(result))

@@ -18,7 +18,7 @@ class Renderer9;
 class VertexBuffer9 : public VertexBuffer
 {
   public:
-    explicit VertexBuffer9(rx::Renderer9 *const renderer);
+    explicit VertexBuffer9(rx::Renderer9 *renderer);
     virtual ~VertexBuffer9();
 
     virtual bool initialize(unsigned int size, bool dynamicUsage);
@@ -39,14 +39,14 @@ class VertexBuffer9 : public VertexBuffer
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexBuffer9);
 
-    rx::Renderer9 *const mRenderer;
+    rx::Renderer9 *mRenderer;
 
     IDirect3DVertexBuffer9 *mVertexBuffer;
     unsigned int mBufferSize;
     bool mDynamicUsage;
 
-    static bool spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances,
-                              unsigned int *outSpaceRequired);
+    bool spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances,
+                       unsigned int *outSpaceRequired) const;
 };
 
 }

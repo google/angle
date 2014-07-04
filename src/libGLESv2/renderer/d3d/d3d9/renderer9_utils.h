@@ -31,10 +31,16 @@ DWORD ConvertColorMask(bool red, bool green, bool blue, bool alpha);
 D3DTEXTUREFILTERTYPE ConvertMagFilter(GLenum magFilter, float maxAnisotropy);
 void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DTEXTUREFILTERTYPE *d3dMipFilter, float maxAnisotropy);
 
+D3DMULTISAMPLE_TYPE GetMultisampleType(GLuint samples);
+
 }
 
 namespace d3d9_gl
 {
+
+GLsizei GetSamplesCount(D3DMULTISAMPLE_TYPE type);
+
+bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format);
 
 void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceType, UINT adapter, gl::Caps *caps,
                   gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions);
@@ -43,6 +49,10 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
 
 namespace d3d9
 {
+
+GLuint ComputeBlockSize(D3DFORMAT format, GLuint width, GLuint height);
+
+void MakeValidSize(bool isImage, D3DFORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
 
 inline bool isDeviceLostError(HRESULT errorCode)
 {

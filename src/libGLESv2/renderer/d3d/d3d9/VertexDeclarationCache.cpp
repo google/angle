@@ -74,6 +74,9 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
         }
     }
 
+    D3DCAPS9 caps;
+    device->GetDeviceCaps(&caps);
+
     D3DVERTEXELEMENT9 elements[gl::MAX_VERTEX_ATTRIBS + 1];
     D3DVERTEXELEMENT9 *element = &elements[0];
 
@@ -133,10 +136,11 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
             }
 
             gl::VertexFormat vertexFormat(*attributes[i].attribute, GL_FLOAT);
+            const d3d9::VertexFormat &d3d9VertexInfo = d3d9::GetVertexFormatInfo(caps.DeclTypes, vertexFormat);
 
             element->Stream = stream;
             element->Offset = 0;
-            element->Type = d3d9::GetNativeVertexFormat(vertexFormat);
+            element->Type = d3d9VertexInfo.nativeFormat;
             element->Method = D3DDECLMETHOD_DEFAULT;
             element->Usage = D3DDECLUSAGE_TEXCOORD;
             element->UsageIndex = programBinary->getSemanticIndex(i);
