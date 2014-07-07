@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e43969b5_b075b6df",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-07T15:22:44Z",
+      "side": 1,
+      "message": "Had to comment this out because the context now does a support check on every format.",
+      "range": {
+        "startLine": 427,
+        "startChar": 4,
+        "endLine": 427,
+        "endChar": 22
+      },
+      "revId": "4d90135da2259074831058c9862aa9bca156974c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4c385c9_f86c598b",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-07T15:22:44Z",
+      "side": 1,
+      "message": "The rendering and filtering support functions are meant to be in addition to the texture support function... i.e. filteringSupport \u003d mTextureSupportFunction \u0026\u0026 mFilterSupportFunction;\nThis seems to work the best because if the texture format isn\u0027t supported then nothing should be and there are only a few rare cases where filtering or rendering support is a separate extension from the texture support.",
+      "range": {
+        "startLine": 503,
+        "startChar": 0,
+        "endLine": 504,
+        "endChar": 48
+      },
+      "revId": "4d90135da2259074831058c9862aa9bca156974c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
