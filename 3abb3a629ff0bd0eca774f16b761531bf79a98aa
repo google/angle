@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84326dd1_eda04150",
+        "filename": "src/compiler/translator/util.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-07T20:02:07Z",
+      "side": 1,
+      "message": "There are bunch of duplicated code here and below.  You can move them out of the branches.",
+      "revId": "3abb3a629ff0bd0eca774f16b761531bf79a98aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
