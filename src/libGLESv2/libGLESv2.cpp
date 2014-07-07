@@ -3720,8 +3720,18 @@ void __stdcall glShaderBinary(GLsizei n, const GLuint* shaders, GLenum binaryfor
           "const GLvoid* binary = 0x%0.8p, GLsizei length = %d)",
           n, shaders, binaryformat, binary, length);
 
-    // No binary shader formats are supported.
-    return gl::error(GL_INVALID_ENUM);
+    gl::Context* context = gl::getNonLostContext();
+    if (context)
+    {
+        const std::vector<GLenum> &shaderBinaryFormats = context->getCaps().shaderBinaryFormats;
+        if (std::find(shaderBinaryFormats.begin(), shaderBinaryFormats.end(), binaryformat) == shaderBinaryFormats.end())
+        {
+            return gl::error(GL_INVALID_ENUM);
+        }
+
+        // No binary shader formats are supported.
+        UNIMPLEMENTED();
+    }
 }
 
 void __stdcall glShaderSource(GLuint shader, GLsizei count, const GLchar* const* string, const GLint* length)
@@ -7982,12 +7992,10 @@ void __stdcall glGetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *l
             return gl::error(GL_INVALID_OPERATION);
         }
 
-        if (!programBinary->save(binary, bufSize, length))
+        if (!programBinary->save(binaryFormat, binary, bufSize, length))
         {
             return gl::error(GL_INVALID_OPERATION);
         }
-
-        *binaryFormat = GL_PROGRAM_BINARY_ANGLE;
     }
 }
 
@@ -8001,19 +8009,19 @@ void __stdcall glProgramBinaryOES(GLuint program, GLenum binaryFormat,
 
     if (context)
     {
-        if (binaryFormat != GL_PROGRAM_BINARY_ANGLE)
+        const std::vector<GLenum> &programBinaryFormats = context->getCaps().programBinaryFormats;
+        if (std::find(programBinaryFormats.begin(), programBinaryFormats.end(), binaryFormat) == programBinaryFormats.end())
         {
             return gl::error(GL_INVALID_ENUM);
         }
 
         gl::Program *programObject = context->getProgram(program);
-
         if (!programObject)
         {
             return gl::error(GL_INVALID_OPERATION);
         }
 
-        context->setProgramBinary(program, binary, length);
+        context->setProgramBinary(program, binaryFormat, binary, length);
     }
 }
 

@@ -1965,24 +1965,6 @@ bool Renderer11::getPostSubBufferSupport() const
     return false;
 }
 
-int Renderer11::getMaxRecommendedElementsIndices() const
-{
-    META_ASSERT(D3D11_REQ_DRAWINDEXED_INDEX_COUNT_2_TO_EXP == 32);
-    META_ASSERT(D3D10_REQ_DRAWINDEXED_INDEX_COUNT_2_TO_EXP == 32);
-
-    // D3D11 allows up to 2^32 elements, but we report max signed int for convenience.
-    return std::numeric_limits<GLint>::max();
-}
-
-int Renderer11::getMaxRecommendedElementsVertices() const
-{
-    META_ASSERT(D3D11_REQ_DRAW_VERTEX_COUNT_2_TO_EXP == 32);
-    META_ASSERT(D3D10_REQ_DRAW_VERTEX_COUNT_2_TO_EXP == 32);
-
-    // D3D11 allows up to 2^32 elements, but we report max signed int for convenience.
-    return std::numeric_limits<GLint>::max();
-}
-
 int Renderer11::getMajorShaderModel() const
 {
     switch (mFeatureLevel)

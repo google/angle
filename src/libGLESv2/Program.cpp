@@ -303,14 +303,14 @@ ProgramBinary* Program::getProgramBinary() const
     return mProgramBinary.get();
 }
 
-bool Program::setProgramBinary(const void *binary, GLsizei length)
+bool Program::setProgramBinary(GLenum binaryFormat, const void *binary, GLsizei length)
 {
     unlink(false);
 
     mInfoLog.reset();
 
     mProgramBinary.set(new ProgramBinary(mRenderer));
-    mLinked = mProgramBinary->load(mInfoLog, binary, length);
+    mLinked = mProgramBinary->load(mInfoLog, binaryFormat, binary, length);
     if (!mLinked)
     {
         mProgramBinary.set(NULL);

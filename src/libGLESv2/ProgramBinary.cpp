@@ -1099,11 +1099,13 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, FragmentShader *fragmentShade
     return true;
 }
 
-bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
+bool ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *binary, GLsizei length)
 {
 #ifdef ANGLE_DISABLE_PROGRAM_BINARY_LOAD
     return false;
 #else
+    ASSERT(binaryFormat == GL_PROGRAM_BINARY_ANGLE);
+
     reset();
 
     BinaryInputStream stream(binary, length);
@@ -1376,8 +1378,13 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 #endif // #ifdef ANGLE_DISABLE_PROGRAM_BINARY_LOAD
 }
 
-bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
+bool ProgramBinary::save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GLsizei *length)
 {
+    if (binaryFormat)
+    {
+        *binaryFormat = GL_PROGRAM_BINARY_ANGLE;
+    }
+
     BinaryOutputStream stream;
 
     stream.writeInt(GL_PROGRAM_BINARY_ANGLE);
@@ -1583,7 +1590,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
 GLint ProgramBinary::getLength()
 {
     GLint length;
-    if (save(NULL, INT_MAX, &length))
+    if (save(NULL, NULL, INT_MAX, &length))
     {
         return length;
     }

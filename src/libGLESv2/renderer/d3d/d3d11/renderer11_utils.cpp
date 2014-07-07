@@ -493,6 +493,50 @@ static size_t GetMaximumViewportSize(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+static size_t GetMaximumDrawIndexedIndexCount(D3D_FEATURE_LEVEL featureLevel)
+{
+    // D3D11 allows up to 2^32 elements, but we report max signed int for convenience since that's what's
+    // returned from glGetInteger
+    META_ASSERT(D3D11_REQ_DRAWINDEXED_INDEX_COUNT_2_TO_EXP == 32);
+    META_ASSERT(D3D10_REQ_DRAWINDEXED_INDEX_COUNT_2_TO_EXP == 32);
+
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return std::numeric_limits<GLint>::max();
+
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:  return D3D_FL9_2_IA_PRIMITIVE_MAX_COUNT;
+      case D3D_FEATURE_LEVEL_9_1:  return D3D_FL9_1_IA_PRIMITIVE_MAX_COUNT;
+
+      default: UNREACHABLE();      return 0;
+    }
+}
+
+static size_t GetMaximumDrawVertexCount(D3D_FEATURE_LEVEL featureLevel)
+{
+    // D3D11 allows up to 2^32 elements, but we report max signed int for convenience since that's what's
+    // returned from glGetInteger
+    META_ASSERT(D3D11_REQ_DRAW_VERTEX_COUNT_2_TO_EXP == 32);
+    META_ASSERT(D3D10_REQ_DRAW_VERTEX_COUNT_2_TO_EXP == 32);
+
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return std::numeric_limits<GLint>::max();
+
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:  return D3D_FL9_2_IA_PRIMITIVE_MAX_COUNT;
+      case D3D_FEATURE_LEVEL_9_1:  return D3D_FL9_1_IA_PRIMITIVE_MAX_COUNT;
+
+      default: UNREACHABLE();      return 0;
+    }
+}
+
 void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions)
 {
     GLuint maxSamples = 0;
@@ -503,6 +547,11 @@ void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *text
         textureCapsMap->insert(*internalFormat, textureCaps);
 
         maxSamples = std::max(maxSamples, textureCaps.getMaxSamples());
+
+        if (gl::GetInternalFormatInfo(*internalFormat).compressed)
+        {
+            caps->compressedTextureFormats.push_back(*internalFormat);
+        }
     }
 
     D3D_FEATURE_LEVEL featureLevel = device->GetFeatureLevel();
@@ -536,6 +585,16 @@ void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *text
     // Wide lines not supported
     caps->minAliasedLineWidth = 1.0f;
     caps->maxAliasedLineWidth = 1.0f;
+
+    // Primitive count limits
+    caps->maxElementsIndices = GetMaximumDrawIndexedIndexCount(featureLevel);
+    caps->maxElementsVertices = GetMaximumDrawVertexCount(featureLevel);
+
+    // Program and shader binary formats (no supported shader binary formats)
+    caps->programBinaryFormats.push_back(GL_PROGRAM_BINARY_ANGLE);
+
+    // We do not wait for server fence objects internally, so report a max timeout of zero.
+    caps->maxServerWaitTimeout = 0;
 
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);

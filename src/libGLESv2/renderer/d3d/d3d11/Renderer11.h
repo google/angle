@@ -121,8 +121,6 @@ class Renderer11 : public Renderer
     virtual unsigned int getMaxUniformBufferSize() const;
     virtual bool getShareHandleSupport() const;
     virtual bool getPostSubBufferSupport() const;
-    virtual int getMaxRecommendedElementsIndices() const;
-    virtual int getMaxRecommendedElementsVertices() const;
 
     virtual int getMajorShaderModel() const;
     virtual int getMinSwapInterval() const;

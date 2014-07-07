@@ -328,6 +328,11 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
         textureCapsMap->insert(*internalFormat, textureCaps);
 
         maxSamples = std::max(maxSamples, textureCaps.getMaxSamples());
+
+        if (gl::GetInternalFormatInfo(*internalFormat).compressed)
+        {
+            caps->compressedTextureFormats.push_back(*internalFormat);
+        }
     }
 
     // GL core feature limits
@@ -366,6 +371,16 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
     // Wide lines not supported
     caps->minAliasedLineWidth = 1.0f;
     caps->maxAliasedLineWidth = 1.0f;
+
+    // Primitive count limits (unused in ES2)
+    caps->maxElementsIndices = 0;
+    caps->maxElementsVertices = 0;
+
+    // Program and shader binary formats (no supported shader binary formats)
+    caps->programBinaryFormats.push_back(GL_PROGRAM_BINARY_ANGLE);
+
+    // WaitSync is ES3-only, set to zero
+    caps->maxServerWaitTimeout = 0;
 
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);

@@ -77,7 +77,7 @@ class Program
 
     bool link();
     bool isLinked();
-    bool setProgramBinary(const void *binary, GLsizei length);
+    bool setProgramBinary(GLenum binaryFormat, const void *binary, GLsizei length);
     ProgramBinary *getProgramBinary() const;
 
     int getInfoLogLength() const;

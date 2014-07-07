@@ -133,8 +133,8 @@ class ProgramBinary : public RefCountObject
     void applyUniforms();
     bool applyUniformBuffers(const std::vector<Buffer*> boundBuffers);
 
-    bool load(InfoLog &infoLog, const void *binary, GLsizei length);
-    bool save(void* binary, GLsizei bufSize, GLsizei *length);
+    bool load(InfoLog &infoLog, GLenum binaryFormat, const void *binary, GLsizei length);
+    bool save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GLsizei *length);
     GLint getLength();
 
     bool link(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader,

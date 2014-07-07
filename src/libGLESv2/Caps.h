@@ -226,6 +226,13 @@ struct Caps
     GLfloat minAliasedLineWidth;
     GLfloat maxAliasedLineWidth;
 
+    // Table 6.29, implementation dependent values (cont.)
+    GLuint maxElementsIndices;
+    GLuint maxElementsVertices;
+    std::vector<GLenum> compressedTextureFormats;
+    std::vector<GLenum> programBinaryFormats;
+    std::vector<GLenum> shaderBinaryFormats;
+    GLuint64 maxServerWaitTimeout;
 };
 
 }
