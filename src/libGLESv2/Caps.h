@@ -77,6 +77,7 @@ struct Extensions
     // GL_OES_texture_float, GL_OES_texture_float_linear
     // GL_EXT_texture_rg
     // GL_EXT_texture_compression_dxt1, GL_ANGLE_texture_compression_dxt3, GL_ANGLE_texture_compression_dxt5
+    // GL_EXT_sRGB
     // GL_ANGLE_depth_texture
     // GL_EXT_color_buffer_float
     void setTextureExtensionSupport(const TextureCapsMap &textureCaps);
