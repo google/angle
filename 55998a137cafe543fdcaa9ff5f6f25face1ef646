@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4c385c9_0ae59f43",
+        "filename": "src/libGLESv2/Texture.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-07T17:24:32Z",
+      "side": 1,
+      "message": "shannon: by allowing this, feel free to use this style in the state refactor :P",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 61
+      },
+      "revId": "55998a137cafe543fdcaa9ff5f6f25face1ef646",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
