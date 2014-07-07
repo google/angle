@@ -102,6 +102,8 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
 
     releaseOffscreenTexture();
 
+    const d3d11::TextureFormat &backbufferFormatInfo = d3d11::GetTextureFormatInfo(mBackBufferFormat);
+
     // If the app passed in a share handle, open the resource
     // See EGL_ANGLE_d3d_share_handle_client_buffer
     if (mAppCreatedShareHandle)
@@ -130,11 +132,11 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
         D3D11_TEXTURE2D_DESC offscreenTextureDesc = {0};
         mOffscreenTexture->GetDesc(&offscreenTextureDesc);
 
-        if (offscreenTextureDesc.Width != (UINT)backbufferWidth
-            || offscreenTextureDesc.Height != (UINT)backbufferHeight
-            || offscreenTextureDesc.Format != gl_d3d11::GetTexFormat(mBackBufferFormat)
-            || offscreenTextureDesc.MipLevels != 1
-            || offscreenTextureDesc.ArraySize != 1)
+        if (offscreenTextureDesc.Width != (UINT)backbufferWidth ||
+            offscreenTextureDesc.Height != (UINT)backbufferHeight ||
+            offscreenTextureDesc.Format != backbufferFormatInfo.texFormat ||
+            offscreenTextureDesc.MipLevels != 1 ||
+            offscreenTextureDesc.ArraySize != 1)
         {
             ERR("Invalid texture parameters in the shared offscreen texture pbuffer");
             release();
@@ -148,7 +150,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
         D3D11_TEXTURE2D_DESC offscreenTextureDesc = {0};
         offscreenTextureDesc.Width = backbufferWidth;
         offscreenTextureDesc.Height = backbufferHeight;
-        offscreenTextureDesc.Format = gl_d3d11::GetTexFormat(mBackBufferFormat);
+        offscreenTextureDesc.Format = backbufferFormatInfo.texFormat;
         offscreenTextureDesc.MipLevels = 1;
         offscreenTextureDesc.ArraySize = 1;
         offscreenTextureDesc.SampleDesc.Count = 1;
@@ -204,7 +206,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
 
 
     D3D11_RENDER_TARGET_VIEW_DESC offscreenRTVDesc;
-    offscreenRTVDesc.Format = gl_d3d11::GetRTVFormat(mBackBufferFormat);
+    offscreenRTVDesc.Format = backbufferFormatInfo.rtvFormat;
     offscreenRTVDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
     offscreenRTVDesc.Texture2D.MipSlice = 0;
 
@@ -213,7 +215,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
     d3d11::SetDebugName(mOffscreenRTView, "Offscreen back buffer render target");
 
     D3D11_SHADER_RESOURCE_VIEW_DESC offscreenSRVDesc;
-    offscreenSRVDesc.Format = gl_d3d11::GetSRVFormat(mBackBufferFormat);
+    offscreenSRVDesc.Format = backbufferFormatInfo.srvFormat;
     offscreenSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     offscreenSRVDesc.Texture2D.MostDetailedMip = 0;
     offscreenSRVDesc.Texture2D.MipLevels = -1;
@@ -222,12 +224,14 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mOffscreenSRView, "Offscreen back buffer shader resource");
 
+    const d3d11::TextureFormat &depthBufferFormatInfo = d3d11::GetTextureFormatInfo(mDepthBufferFormat);
+
     if (mDepthBufferFormat != GL_NONE)
     {
         D3D11_TEXTURE2D_DESC depthStencilTextureDesc;
         depthStencilTextureDesc.Width = backbufferWidth;
         depthStencilTextureDesc.Height = backbufferHeight;
-        depthStencilTextureDesc.Format = gl_d3d11::GetTexFormat(mDepthBufferFormat);
+        depthStencilTextureDesc.Format = depthBufferFormatInfo.texFormat;
         depthStencilTextureDesc.MipLevels = 1;
         depthStencilTextureDesc.ArraySize = 1;
         depthStencilTextureDesc.SampleDesc.Count = 1;
@@ -255,7 +259,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
         d3d11::SetDebugName(mDepthStencilTexture, "Offscreen depth stencil texture");
 
         D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilDesc;
-        depthStencilDesc.Format = gl_d3d11::GetDSVFormat(mDepthBufferFormat);
+        depthStencilDesc.Format = depthBufferFormatInfo.dsvFormat;
         depthStencilDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
         depthStencilDesc.Flags = 0;
         depthStencilDesc.Texture2D.MipSlice = 0;
@@ -265,7 +269,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
         d3d11::SetDebugName(mDepthStencilDSView, "Offscreen depth stencil view");
 
         D3D11_SHADER_RESOURCE_VIEW_DESC depthStencilSRVDesc;
-        depthStencilSRVDesc.Format = gl_d3d11::GetSRVFormat(mDepthBufferFormat);
+        depthStencilSRVDesc.Format = depthBufferFormatInfo.srvFormat;
         depthStencilSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
         depthStencilSRVDesc.Texture2D.MostDetailedMip = 0;
         depthStencilSRVDesc.Texture2D.MipLevels = -1;
@@ -325,8 +329,8 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
     SafeRelease(mBackBufferRTView);
 
     // Resize swap chain
-    DXGI_FORMAT backbufferDXGIFormat = gl_d3d11::GetTexFormat(mBackBufferFormat);
-    HRESULT result = mSwapChain->ResizeBuffers(1, backbufferWidth, backbufferHeight, backbufferDXGIFormat, 0);
+    const d3d11::TextureFormat &backbufferFormatInfo = d3d11::GetTextureFormatInfo(mBackBufferFormat);
+    HRESULT result = mSwapChain->ResizeBuffers(1, backbufferWidth, backbufferHeight, backbufferFormatInfo.texFormat, 0);
 
     if (FAILED(result))
     {
@@ -391,6 +395,8 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
 
     if (mWindow)
     {
+        const d3d11::TextureFormat &backbufferFormatInfo = d3d11::GetTextureFormatInfo(mBackBufferFormat);
+
         IDXGIFactory *factory = mRenderer->getDxgiFactory();
 
         DXGI_SWAP_CHAIN_DESC swapChainDesc = {0};
@@ -398,7 +404,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         swapChainDesc.BufferDesc.Height = backbufferHeight;
         swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
         swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-        swapChainDesc.BufferDesc.Format = gl_d3d11::GetTexFormat(mBackBufferFormat);
+        swapChainDesc.BufferDesc.Format = backbufferFormatInfo.texFormat;
         swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
         swapChainDesc.SampleDesc.Count = 1;

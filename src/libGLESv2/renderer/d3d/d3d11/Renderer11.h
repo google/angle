@@ -207,7 +207,6 @@ class Renderer11 : public Renderer
     void packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams &params, void *pixelsOut);
 
     virtual bool getLUID(LUID *adapterLuid) const;
-    virtual GLenum getNativeTextureFormat(GLenum internalFormat) const;
     virtual rx::VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const;
     virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const;
 

@@ -224,14 +224,10 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, ID3D11De
 {
     gl::TextureCaps textureCaps;
 
-    DXGI_FORMAT textureFormat = gl_d3d11::GetTexFormat(internalFormat);
-    DXGI_FORMAT srvFormat = gl_d3d11::GetSRVFormat(internalFormat);
-    DXGI_FORMAT rtvFormat = gl_d3d11::GetRTVFormat(internalFormat);
-    DXGI_FORMAT dsvFormat = gl_d3d11::GetDSVFormat(internalFormat);
-    DXGI_FORMAT renderFormat = gl_d3d11::GetRenderableFormat(internalFormat);
+    const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(internalFormat);
 
     UINT formatSupport;
-    if (SUCCEEDED(device->CheckFormatSupport(textureFormat, &formatSupport)))
+    if (SUCCEEDED(device->CheckFormatSupport(formatInfo.texFormat, &formatSupport)))
     {
         const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
         if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0)
@@ -246,13 +242,13 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, ID3D11De
         }
     }
 
-    if (SUCCEEDED(device->CheckFormatSupport(renderFormat, &formatSupport)) &&
+    if (SUCCEEDED(device->CheckFormatSupport(formatInfo.renderFormat, &formatSupport)) &&
         ((formatSupport & D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET) != 0))
     {
         for (size_t sampleCount = 1; sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; sampleCount++)
         {
             UINT qualityCount = 0;
-            if (SUCCEEDED(device->CheckMultisampleQualityLevels(renderFormat, sampleCount, &qualityCount)) &&
+            if (SUCCEEDED(device->CheckMultisampleQualityLevels(formatInfo.renderFormat, sampleCount, &qualityCount)) &&
                 qualityCount > 0)
             {
                 textureCaps.sampleCounts.insert(sampleCount);
@@ -260,11 +256,11 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, ID3D11De
         }
     }
 
-    textureCaps.filterable = SUCCEEDED(device->CheckFormatSupport(srvFormat, &formatSupport)) &&
+    textureCaps.filterable = SUCCEEDED(device->CheckFormatSupport(formatInfo.srvFormat, &formatSupport)) &&
                              ((formatSupport & D3D11_FORMAT_SUPPORT_SHADER_SAMPLE)) != 0;
-    textureCaps.renderable = (SUCCEEDED(device->CheckFormatSupport(rtvFormat, &formatSupport)) &&
+    textureCaps.renderable = (SUCCEEDED(device->CheckFormatSupport(formatInfo.rtvFormat, &formatSupport)) &&
                               ((formatSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET)) != 0) ||
-                             (SUCCEEDED(device->CheckFormatSupport(dsvFormat, &formatSupport)) &&
+                             (SUCCEEDED(device->CheckFormatSupport(formatInfo.dsvFormat, &formatSupport)) &&
                               ((formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0));
 
     return textureCaps;
@@ -578,12 +574,33 @@ void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *text
 namespace d3d11
 {
 
+void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset)
+{
+    const DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(format);
+
+    int upsampleCount = 0;
+    // Don't expand the size of full textures that are at least (blockWidth x blockHeight) already.
+    if (isImage || *requestWidth  < static_cast<GLsizei>(dxgiFormatInfo.blockWidth) ||
+                   *requestHeight < static_cast<GLsizei>(dxgiFormatInfo.blockHeight))
+    {
+        while (*requestWidth % dxgiFormatInfo.blockWidth != 0 || *requestHeight % dxgiFormatInfo.blockHeight != 0)
+        {
+            *requestWidth <<= 1;
+            *requestHeight <<= 1;
+            upsampleCount++;
+        }
+    }
+    *levelOffset = upsampleCount;
+}
+
 void GenerateInitialTextureData(GLint internalFormat, GLuint width, GLuint height, GLuint depth,
                                 GLuint mipLevels, std::vector<D3D11_SUBRESOURCE_DATA> *outSubresourceData,
                                 std::vector< std::vector<BYTE> > *outData)
 {
-    InitializeTextureDataFunction initializeFunc = gl_d3d11::GetTextureDataInitializationFunction(internalFormat);
-    DXGI_FORMAT dxgiFormat = gl_d3d11::GetTexFormat(internalFormat);
+    const d3d11::TextureFormat &d3dFormatInfo = d3d11::GetTextureFormatInfo(internalFormat);
+    ASSERT(d3dFormatInfo.dataInitializerFunction != NULL);
+
+    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(d3dFormatInfo.texFormat);
 
     outSubresourceData->resize(mipLevels);
     outData->resize(mipLevels);
@@ -594,11 +611,11 @@ void GenerateInitialTextureData(GLint internalFormat, GLuint width, GLuint heigh
         unsigned int mipHeight = std::max(height >> i, 1U);
         unsigned int mipDepth = std::max(depth >> i, 1U);
 
-        unsigned int rowWidth = d3d11::GetFormatPixelBytes(dxgiFormat) * mipWidth;
+        unsigned int rowWidth = dxgiFormatInfo.pixelBytes * mipWidth;
         unsigned int imageSize = rowWidth * height;
 
         outData->at(i).resize(rowWidth * mipHeight * mipDepth);
-        initializeFunc(mipWidth, mipHeight, mipDepth, outData->at(i).data(), rowWidth, imageSize);
+        d3dFormatInfo.dataInitializerFunction(mipWidth, mipHeight, mipDepth, outData->at(i).data(), rowWidth, imageSize);
 
         outSubresourceData->at(i).pSysMem = outData->at(i).data();
         outSubresourceData->at(i).SysMemPitch = rowWidth;

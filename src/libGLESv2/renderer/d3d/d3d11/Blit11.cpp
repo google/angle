@@ -377,7 +377,9 @@ bool Blit11::swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTarget
 
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
     source->GetDesc(&sourceSRVDesc);
-    const gl::InternalFormat &sourceFormatInfo = gl::GetInternalFormatInfo(d3d11_gl::GetInternalFormat(sourceSRVDesc.Format));
+
+    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(sourceSRVDesc.Format);
+    const gl::InternalFormat &sourceFormatInfo = gl::GetInternalFormatInfo(dxgiFormatInfo.internalFormat);
 
     GLenum shaderType = GL_NONE;
     switch (sourceFormatInfo.componentType)
@@ -516,11 +518,13 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     // be GL_XXXX_INTEGER but it does not tell us if it is signed or unsigned.
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
     source->GetDesc(&sourceSRVDesc);
-    GLenum sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceSRVDesc.Format);
+
+    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(sourceSRVDesc.Format);
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(dxgiFormatInfo.internalFormat);
 
     BlitParameters parameters = { 0 };
     parameters.mDestinationFormat = destFormat;
-    parameters.mSignedInteger = gl::GetInternalFormatInfo(sourceInternalFormat).componentType == GL_INT;
+    parameters.mSignedInteger = (internalFormatInfo.componentType == GL_INT);
     parameters.m3DBlit = sourceArea.depth > 1;
 
     BlitShaderMap::const_iterator i = mBlitShaderMap.find(parameters);
@@ -766,18 +770,19 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
     DXGI_FORMAT format = GetTextureFormat(source);
     ASSERT(format == GetTextureFormat(dest));
 
-    unsigned int pixelSize = d3d11::GetFormatPixelBytes(format);
+    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(format);
+    unsigned int pixelSize = dxgiFormatInfo.pixelBytes;
     unsigned int copyOffset = 0;
     unsigned int copySize = pixelSize;
     if (stencilOnly)
     {
-        copyOffset = d3d11::GetStencilOffset(format) / 8;
-        copySize = d3d11::GetStencilBits(format) / 8;
+        copyOffset = dxgiFormatInfo.depthBits / 8;
+        copySize = dxgiFormatInfo.stencilBits / 8;
 
         // It would be expensive to have non-byte sized stencil sizes since it would
         // require reading from the destination, currently there aren't any though.
-        ASSERT(d3d11::GetStencilBits(format)   % 8 == 0 &&
-               d3d11::GetStencilOffset(format) % 8 == 0);
+        ASSERT(dxgiFormatInfo.stencilBits % 8 == 0 &&
+               dxgiFormatInfo.depthBits   % 8 == 0);
     }
 
     D3D11_MAPPED_SUBRESOURCE sourceMapping, destMapping;

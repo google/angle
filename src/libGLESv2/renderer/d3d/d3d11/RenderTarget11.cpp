@@ -219,8 +219,9 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, 
         mDepth = depth;
         mSamples = samples;
 
-        mInternalFormat = d3d11_gl::GetInternalFormat(desc.Format);
-        mActualFormat = d3d11_gl::GetInternalFormat(desc.Format);
+        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(desc.Format);
+        mInternalFormat = dxgiFormatInfo.internalFormat;
+        mActualFormat = dxgiFormatInfo.internalFormat;
     }
 }
 
@@ -265,8 +266,9 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, 
         mDepth = depth;
         mSamples = samples;
 
-        mInternalFormat = d3d11_gl::GetInternalFormat(desc.Format);
-        mActualFormat = d3d11_gl::GetInternalFormat(desc.Format);
+        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(desc.Format);
+        mInternalFormat = dxgiFormatInfo.internalFormat;
+        mActualFormat = dxgiFormatInfo.internalFormat;
     }
 }
 
@@ -278,10 +280,8 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
     mDepthStencil = NULL;
     mShaderResource = NULL;
 
-    DXGI_FORMAT texFormat = gl_d3d11::GetTexFormat(internalFormat);
-    DXGI_FORMAT srvFormat = gl_d3d11::GetSRVFormat(internalFormat);
-    DXGI_FORMAT rtvFormat = gl_d3d11::GetRTVFormat(internalFormat);
-    DXGI_FORMAT dsvFormat = gl_d3d11::GetDSVFormat(internalFormat);
+    const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(internalFormat);
+    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(formatInfo.texFormat);
 
     const gl::TextureCaps &textureCaps = mRenderer->getRendererTextureCaps().get(internalFormat);
     GLuint supportedSamples = textureCaps.getNearestSamples(samples);
@@ -294,7 +294,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         desc.Height = height;
         desc.MipLevels = 1;
         desc.ArraySize = 1;
-        desc.Format = texFormat;
+        desc.Format = formatInfo.texFormat;
         desc.SampleDesc.Count = (supportedSamples == 0) ? 1 : supportedSamples;
         desc.SampleDesc.Quality = 0;
         desc.Usage = D3D11_USAGE_DEFAULT;
@@ -305,14 +305,14 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         // we'll flag it to allow binding that way. Shader resource views are a little
         // more complicated.
         bool bindRTV = false, bindDSV = false, bindSRV = false;
-        bindRTV = (rtvFormat != DXGI_FORMAT_UNKNOWN);
-        bindDSV = (dsvFormat != DXGI_FORMAT_UNKNOWN);
-        if (srvFormat != DXGI_FORMAT_UNKNOWN)
+        bindRTV = (formatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN);
+        bindDSV = (formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN);
+        if (formatInfo.srvFormat != DXGI_FORMAT_UNKNOWN)
         {
             // Multisample targets flagged for binding as depth stencil cannot also be
             // flagged for binding as SRV, so make certain not to add the SRV flag for
             // these targets.
-            bindSRV = !(dsvFormat != DXGI_FORMAT_UNKNOWN && desc.SampleDesc.Count > 1);
+            bindSRV = !(formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN && desc.SampleDesc.Count > 1);
         }
 
         desc.BindFlags = (bindRTV ? D3D11_BIND_RENDER_TARGET   : 0) |
@@ -334,7 +334,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         if (bindSRV)
         {
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-            srvDesc.Format = srvFormat;
+            srvDesc.Format = formatInfo.srvFormat;
             srvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS;
             srvDesc.Texture2D.MostDetailedMip = 0;
             srvDesc.Texture2D.MipLevels = 1;
@@ -352,7 +352,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         if (bindDSV)
         {
             D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-            dsvDesc.Format = dsvFormat;
+            dsvDesc.Format = formatInfo.dsvFormat;
             dsvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_DSV_DIMENSION_TEXTURE2D : D3D11_DSV_DIMENSION_TEXTURE2DMS;
             dsvDesc.Texture2D.MipSlice = 0;
             dsvDesc.Flags = 0;
@@ -371,7 +371,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         if (bindRTV)
         {
             D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
-            rtvDesc.Format = rtvFormat;
+            rtvDesc.Format = formatInfo.rtvFormat;
             rtvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_RTV_DIMENSION_TEXTURE2D : D3D11_RTV_DIMENSION_TEXTURE2DMS;
             rtvDesc.Texture2D.MipSlice = 0;
             result = device->CreateRenderTargetView(mTexture, &rtvDesc, &mRenderTarget);
@@ -386,7 +386,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
             }
             ASSERT(SUCCEEDED(result));
 
-            if (gl_d3d11::RequiresTextureDataInitialization(internalFormat))
+            if (formatInfo.dataInitializerFunction != NULL)
             {
                 ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
@@ -396,12 +396,13 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         }
     }
 
+
     mWidth = width;
     mHeight = height;
     mDepth = 1;
     mInternalFormat = internalFormat;
     mSamples = supportedSamples;
-    mActualFormat = d3d11_gl::GetInternalFormat(texFormat);
+    mActualFormat = dxgiFormatInfo.internalFormat;
     mSubresourceIndex = D3D11CalcSubresource(0, 0, 1);
 }
 

@@ -109,7 +109,7 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
             D3D11_INPUT_CLASSIFICATION inputClass = attributes[i].divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
 
             gl::VertexFormat vertexFormat(*attributes[i].attribute, attributes[i].currentValueType);
-            DXGI_FORMAT dxgiFormat = gl_d3d11::GetNativeVertexFormat(vertexFormat);
+            const d3d11::VertexFormat &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormat);
 
             // Record the type of the associated vertex shader vector in our key
             // This will prevent mismatched vertex shaders from using the same input layout
@@ -118,7 +118,7 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
 
             ilKey.elements[ilKey.elementCount].desc.SemanticName = semanticName;
             ilKey.elements[ilKey.elementCount].desc.SemanticIndex = sortedSemanticIndices[i];
-            ilKey.elements[ilKey.elementCount].desc.Format = dxgiFormat;
+            ilKey.elements[ilKey.elementCount].desc.Format = vertexFormatInfo.nativeFormat;
             ilKey.elements[ilKey.elementCount].desc.InputSlot = i;
             ilKey.elements[ilKey.elementCount].desc.AlignedByteOffset = 0;
             ilKey.elements[ilKey.elementCount].desc.InputSlotClass = inputClass;
