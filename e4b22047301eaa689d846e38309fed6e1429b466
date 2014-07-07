@@ -40,6 +40,24 @@
       "revId": "e4b22047301eaa689d846e38309fed6e1429b466",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4c385c9_7888690e",
+        "filename": "src/libGLESv2/Context.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-07T15:12:56Z",
+      "side": 1,
+      "message": "Done, renamed the renderer ones.  There are some places where the renderer ones need to be updated still, they\u0027re used for validation in the framebuffer and texture completeness checks. Leaving them as is for now is the same behaviour we\u0027ve always had though.",
+      "parentUuid": "c471c58d_b4c220cb",
+      "revId": "e4b22047301eaa689d846e38309fed6e1429b466",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
