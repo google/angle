@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84326dd1_6d55312b",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-07T20:17:03Z",
+      "side": 1,
+      "message": "nit: here also, * should go with the variable",
+      "revId": "b028dfc4cc59c8ae31f1123f7c53c0f5a078e630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "643739c4_cff611f9",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-07T20:17:03Z",
+      "side": 1,
+      "message": "nit: since you are here, \u0026 should go with sequence.",
+      "revId": "b028dfc4cc59c8ae31f1123f7c53c0f5a078e630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84326dd1_cd6a9dfe",
+        "filename": "src/compiler/translator/VariableInfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-07T20:17:03Z",
+      "side": 1,
+      "message": "nit: TIntermSymbol *varibale, * goes with the variable",
+      "revId": "b028dfc4cc59c8ae31f1123f7c53c0f5a078e630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
