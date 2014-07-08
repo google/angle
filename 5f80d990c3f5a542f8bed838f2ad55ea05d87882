@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e43969b5_a289e419",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-08T21:45:45Z",
+      "side": 1,
+      "message": "nit: can remove extra space",
+      "revId": "5f80d990c3f5a542f8bed838f2ad55ea05d87882",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
