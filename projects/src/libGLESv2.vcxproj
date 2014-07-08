@@ -129,6 +129,7 @@
     <ClInclude Include="..\..\src\libGLESv2\Shader.h"/>
     <ClInclude Include="..\..\src\libGLESv2\BinaryStream.h"/>
     <ClInclude Include="..\..\src\libGLESv2\resource.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\Sampler.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Caps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\precompiled.h"/>
     <ClInclude Include="..\..\src\libGLESv2\TransformFeedback.h"/>
@@ -145,7 +146,6 @@
     <ClInclude Include="..\..\src\libGLESv2\queryconversions.h"/>
     <ClInclude Include="..\..\src\libGLESv2\validationES3.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Program.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Sampler.h"/>
     <ClInclude Include="..\..\src\libGLESv2\HandleAllocator.h"/>
     <ClInclude Include="..\..\src\libGLESv2\ResourceManager.h"/>
     <ClInclude Include="..\..\src\libGLESv2\DynamicHLSL.h"/>
@@ -158,7 +158,6 @@
     <ClInclude Include="..\..\src\libGLESv2\formatutils.h"/>
     <ClInclude Include="..\..\src\libGLESv2\validationES.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\Renderer.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\TextureStorage.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderExecutable.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\loadimage.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\copyimage.h"/>
@@ -176,6 +175,8 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\VertexArrayImpl.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\IndexBuffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\ImageD3D.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\TextureStorage.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\IndexDataManager.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\VertexBuffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\BufferD3D.h"/>
@@ -331,7 +332,6 @@
     <ClCompile Include="..\..\src\libGLESv2\Texture.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\ResourceManager.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\copyimage.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\TextureStorage.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\loadimage.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\loadimageSSE2.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\Image.cpp"/>
@@ -342,6 +342,8 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\IndexBuffer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\VertexDataManager.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\IndexDataManager.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\ImageD3D.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\TextureStorage.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\VertexBuffer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Renderer11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\InputLayoutCache.cpp"/>

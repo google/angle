@@ -71,7 +71,6 @@ class RenderbufferStorage
 
     virtual rx::RenderTarget *getRenderTarget();
     virtual rx::RenderTarget *getDepthStencil();
-    virtual rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;

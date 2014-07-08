@@ -11,7 +11,7 @@
 #ifndef LIBGLESV2_RENDERER_TEXTURESTORAGE9_H_
 #define LIBGLESV2_RENDERER_TEXTURESTORAGE9_H_
 
-#include "libGLESv2/renderer/TextureStorage.h"
+#include "libGLESv2/renderer/d3d/TextureStorage.h"
 #include "common/debug.h"
 
 namespace rx

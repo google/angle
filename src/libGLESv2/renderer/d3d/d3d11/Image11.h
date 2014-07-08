@@ -10,7 +10,7 @@
 #ifndef LIBGLESV2_RENDERER_IMAGE11_H_
 #define LIBGLESV2_RENDERER_IMAGE11_H_
 
-#include "libGLESv2/renderer/Image.h"
+#include "libGLESv2/renderer/d3d/ImageD3D.h"
 
 #include "common/debug.h"
 
@@ -26,7 +26,7 @@ class Renderer11;
 class TextureStorageInterface2D;
 class TextureStorageInterfaceCube;
 
-class Image11 : public Image
+class Image11 : public ImageD3D
 {
   public:
     Image11();

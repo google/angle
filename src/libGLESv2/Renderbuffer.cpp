@@ -14,7 +14,6 @@
 
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/renderer/TextureStorage.h"
 #include "common/utilities.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/FramebufferAttachment.h"
@@ -123,11 +122,6 @@ rx::RenderTarget *RenderbufferStorage::getRenderTarget()
 }
 
 rx::RenderTarget *RenderbufferStorage::getDepthStencil()
-{
-    return NULL;
-}
-
-rx::TextureStorage *RenderbufferStorage::getTextureStorage()
 {
     return NULL;
 }

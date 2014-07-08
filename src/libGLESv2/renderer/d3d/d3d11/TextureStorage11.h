@@ -11,7 +11,7 @@
 #define LIBGLESV2_RENDERER_TEXTURESTORAGE11_H_
 
 #include "libGLESv2/Texture.h"
-#include "libGLESv2/renderer/TextureStorage.h"
+#include "libGLESv2/renderer/d3d/TextureStorage.h"
 
 namespace rx
 {

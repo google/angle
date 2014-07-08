@@ -9,7 +9,7 @@
 // classes TextureStorageInterface2D and TextureStorageInterfaceCube, which act as the interface to the
 // GPU-side texture.
 
-#include "libGLESv2/renderer/TextureStorage.h"
+#include "libGLESv2/renderer/d3d/TextureStorage.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/Texture.h"
