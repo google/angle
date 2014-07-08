@@ -22,6 +22,30 @@
       "revId": "7ad688d87978f547da896be1498b009fbdc47267",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4c051c0_5d8bdb59",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-08T14:59:34Z",
+      "side": 1,
+      "message": "True. I change this to UINT_MAX and added a static assert, PTAL.",
+      "parentUuid": "a4c051c0_9749b449",
+      "range": {
+        "startLine": 121,
+        "startChar": 13,
+        "endLine": 121,
+        "endChar": 52
+      },
+      "revId": "7ad688d87978f547da896be1498b009fbdc47267",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
