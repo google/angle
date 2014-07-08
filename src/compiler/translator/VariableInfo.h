@@ -18,8 +18,8 @@ public:
                      std::vector<sh::Varying> *varyings,
                      ShHashFunction64 hashFunction);
 
-    virtual void visitSymbol(TIntermSymbol*);
-    virtual bool visitAggregate(Visit, TIntermAggregate*);
+    virtual void visitSymbol(TIntermSymbol *symbol);
+    virtual bool visitAggregate(Visit, TIntermAggregate *node);
 
 private:
     std::vector<sh::Attribute> *mAttribs;
@@ -33,7 +33,10 @@ private:
     ShHashFunction64 mHashFunction;
 
     template <typename VarT>
-    void visitInfoList(const TIntermSequence& sequence, std::vector<VarT> *infoList) const;
+    void visitVariable(const TIntermSymbol *variable, std::vector<VarT> *infoList) const;
+
+    template <typename VarT>
+    void visitInfoList(const TIntermSequence &sequence, std::vector<VarT> *infoList) const;
 };
 
 #endif  // COMPILER_VARIABLE_INFO_H_

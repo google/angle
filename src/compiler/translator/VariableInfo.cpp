@@ -4,9 +4,9 @@
 // found in the LICENSE file.
 //
 
+#include "angle_gl.h"
 #include "compiler/translator/VariableInfo.h"
 #include "compiler/translator/util.h"
-#include "angle_gl.h"
 
 namespace {
 
@@ -62,11 +62,14 @@ void getBuiltInVariableInfo(const TType &type,
     ASSERT(type.getBasicType() != EbtStruct);
 
     VarT varInfo;
-    if (type.isArray()) {
+    if (type.isArray())
+    {
         varInfo.name = (name + "[0]").c_str();
         varInfo.mappedName = (mappedName + "[0]").c_str();
         varInfo.arraySize = type.getArraySize();
-    } else {
+    }
+    else
+    {
         varInfo.name = name.c_str();
         varInfo.mappedName = mappedName.c_str();
         varInfo.arraySize = 0;
@@ -88,7 +91,8 @@ void getUserDefinedVariableInfo(const TType &type,
     const TFieldList& fields = type.isInterfaceBlock() ?
         type.getInterfaceBlock()->fields() :
         type.getStruct()->fields();
-    for (size_t i = 0; i < fields.size(); ++i) {
+    for (size_t i = 0; i < fields.size(); ++i)
+    {
         const TType& fieldType = *(fields[i]->type());
         const TString& fieldName = fields[i]->name();
         getVariableInfo(fieldType,
@@ -137,65 +141,67 @@ CollectVariables::CollectVariables(std::vector<sh::Attribute> *attribs,
 // Also, gl_FragCoord, gl_PointCoord, and gl_FrontFacing count
 // toward varying counting if they are statically used in a fragment
 // shader.
-void CollectVariables::visitSymbol(TIntermSymbol* symbol)
+void CollectVariables::visitSymbol(TIntermSymbol *symbol)
 {
     ASSERT(symbol != NULL);
     sh::ShaderVariable *var = NULL;
-    switch (symbol->getQualifier())
+
+    if (sh::IsVarying(symbol->getQualifier()))
     {
-      case EvqVaryingOut:
-      case EvqInvariantVaryingOut:
-      case EvqVaryingIn:
-      case EvqInvariantVaryingIn:
         var = findVariable(symbol->getType(), symbol->getSymbol(), mVaryings);
-        break;
-      case EvqUniform:
-        var = findVariable(symbol->getType(), symbol->getSymbol(), mUniforms);
-        break;
-      case EvqFragCoord:
-        if (!mFragCoordAdded)
+    }
+    else
+    {
+        switch (symbol->getQualifier())
         {
-            sh::Varying info;
-            info.name = "gl_FragCoord";
-            info.mappedName = "gl_FragCoord";
-            info.type = GL_FLOAT_VEC4;
-            info.arraySize = 0;
-            info.precision = GL_MEDIUM_FLOAT;  // Use mediump as it doesn't really matter.
-            info.staticUse = true;
-            mVaryings->push_back(info);
-            mFragCoordAdded = true;
+          case EvqUniform:
+            var = findVariable(symbol->getType(), symbol->getSymbol(), mUniforms);
+            break;
+          case EvqFragCoord:
+            if (!mFragCoordAdded)
+            {
+                sh::Varying info;
+                info.name = "gl_FragCoord";
+                info.mappedName = "gl_FragCoord";
+                info.type = GL_FLOAT_VEC4;
+                info.arraySize = 0;
+                info.precision = GL_MEDIUM_FLOAT;  // Use mediump as it doesn't really matter.
+                info.staticUse = true;
+                mVaryings->push_back(info);
+                mFragCoordAdded = true;
+            }
+            return;
+          case EvqFrontFacing:
+            if (!mFrontFacingAdded)
+            {
+                sh::Varying info;
+                info.name = "gl_FrontFacing";
+                info.mappedName = "gl_FrontFacing";
+                info.type = GL_BOOL;
+                info.arraySize = 0;
+                info.precision = GL_NONE;
+                info.staticUse = true;
+                mVaryings->push_back(info);
+                mFrontFacingAdded = true;
+            }
+            return;
+          case EvqPointCoord:
+            if (!mPointCoordAdded)
+            {
+                sh::Varying info;
+                info.name = "gl_PointCoord";
+                info.mappedName = "gl_PointCoord";
+                info.type = GL_FLOAT_VEC2;
+                info.arraySize = 0;
+                info.precision = GL_MEDIUM_FLOAT;  // Use mediump as it doesn't really matter.
+                info.staticUse = true;
+                mVaryings->push_back(info);
+                mPointCoordAdded = true;
+            }
+            return;
+          default:
+            break;
         }
-        return;
-      case EvqFrontFacing:
-        if (!mFrontFacingAdded)
-        {
-            sh::Varying info;
-            info.name = "gl_FrontFacing";
-            info.mappedName = "gl_FrontFacing";
-            info.type = GL_BOOL;
-            info.arraySize = 0;
-            info.precision = GL_NONE;
-            info.staticUse = true;
-            mVaryings->push_back(info);
-            mFrontFacingAdded = true;
-        }
-        return;
-      case EvqPointCoord:
-        if (!mPointCoordAdded)
-        {
-            sh::Varying info;
-            info.name = "gl_PointCoord";
-            info.mappedName = "gl_PointCoord";
-            info.type = GL_FLOAT_VEC2;
-            info.arraySize = 0;
-            info.precision = GL_MEDIUM_FLOAT;  // Use mediump as it doesn't really matter.
-            info.staticUse = true;
-            mVaryings->push_back(info);
-            mPointCoordAdded = true;
-        }
-        return;
-      default:
-        break;
     }
     if (var)
     {
@@ -204,65 +210,73 @@ void CollectVariables::visitSymbol(TIntermSymbol* symbol)
 }
 
 template <typename VarT>
-void CollectVariables::visitInfoList(const TIntermSequence& sequence, std::vector<VarT> *infoList) const
+void CollectVariables::visitVariable(const TIntermSymbol *variable,
+                                     std::vector<VarT> *infoList) const
+{
+    TString processedSymbol;
+    if (mHashFunction == NULL)
+        processedSymbol = variable->getSymbol();
+    else
+        processedSymbol = TIntermTraverser::hash(variable->getSymbol(), mHashFunction);
+    getVariableInfo(variable->getType(),
+        variable->getSymbol(),
+        processedSymbol,
+        *infoList,
+        mHashFunction);
+}
+
+template <typename VarT>
+void CollectVariables::visitInfoList(const TIntermSequence &sequence,
+                                     std::vector<VarT> *infoList) const
 {
     for (size_t seqIndex = 0; seqIndex < sequence.size(); seqIndex++)
     {
-        const TIntermSymbol* variable = sequence[seqIndex]->getAsSymbolNode();
+        const TIntermSymbol *variable = sequence[seqIndex]->getAsSymbolNode();
         // The only case in which the sequence will not contain a
         // TIntermSymbol node is initialization. It will contain a
         // TInterBinary node in that case. Since attributes, uniforms,
         // and varyings cannot be initialized in a shader, we must have
         // only TIntermSymbol nodes in the sequence.
         ASSERT(variable != NULL);
-        TString processedSymbol;
-        if (mHashFunction == NULL)
-            processedSymbol = variable->getSymbol();
-        else
-            processedSymbol = TIntermTraverser::hash(variable->getSymbol(), mHashFunction);
-        getVariableInfo(variable->getType(),
-            variable->getSymbol(),
-            processedSymbol,
-            *infoList,
-            mHashFunction);
+        visitVariable(variable, infoList);
     }
 }
 
-bool CollectVariables::visitAggregate(Visit, TIntermAggregate* node)
+bool CollectVariables::visitAggregate(Visit, TIntermAggregate *node)
 {
     bool visitChildren = true;
 
     switch (node->getOp())
     {
-    case EOpDeclaration: {
-        const TIntermSequence& sequence = node->getSequence();
-        TQualifier qualifier = sequence.front()->getAsTyped()->getQualifier();
-        if (qualifier == EvqAttribute || qualifier == EvqVertexIn || qualifier == EvqUniform ||
-            qualifier == EvqVaryingIn || qualifier == EvqVaryingOut ||
-            qualifier == EvqInvariantVaryingIn || qualifier == EvqInvariantVaryingOut)
+      case EOpDeclaration:
         {
-            switch (qualifier)
+            const TIntermSequence &sequence = node->getSequence();
+            TQualifier qualifier = sequence.front()->getAsTyped()->getQualifier();
+            if (qualifier == EvqAttribute || qualifier == EvqVertexIn || qualifier == EvqUniform ||
+                sh::IsVarying(qualifier))
             {
-              case EvqAttribute:
-              case EvqVertexIn:
-                visitInfoList(sequence, mAttribs);
-                break;
-              case EvqUniform:
-                visitInfoList(sequence, mUniforms);
-                break;
-              default:
-                visitInfoList(sequence, mVaryings);
-                break;
-            }
+                switch (qualifier)
+                {
+                  case EvqAttribute:
+                  case EvqVertexIn:
+                    visitInfoList(sequence, mAttribs);
+                    break;
+                  case EvqUniform:
+                    visitInfoList(sequence, mUniforms);
+                    break;
+                  default:
+                    visitInfoList(sequence, mVaryings);
+                    break;
+                }
 
-            if (!sequence.empty())
-            {
-                visitChildren = false;
+                if (!sequence.empty())
+                {
+                    visitChildren = false;
+                }
             }
+            break;
         }
-        break;
-    }
-    default: break;
+      default: break;
     }
 
     return visitChildren;
