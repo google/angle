@@ -10,6 +10,7 @@
 
 #include "compiler/preprocessor/numeric_lex.h"
 #include "common/shadervars.h"
+#include "common/utilities.h"
 
 bool atof_clamp(const char *str, float *value)
 {
@@ -276,6 +277,68 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
 
       default: UNREACHABLE();
         return INTERPOLATION_SMOOTH;
+    }
+}
+
+template <typename VarT>
+void GetVariableTraverser<VarT>::traverse(const TType &type, const TString &name)
+{
+    const TStructure *structure = type.getStruct();
+
+    VarT variable;
+    variable.name = name.c_str();
+    variable.arraySize = static_cast<unsigned int>(type.getArraySize());
+
+    if (!structure)
+    {
+        variable.type = GLVariableType(type);
+        variable.precision = GLVariablePrecision(type);
+    }
+    else
+    {
+        variable.type = GL_STRUCT_ANGLEX;
+
+        mOutputStack.push(&variable.fields);
+
+        const TFieldList &fields = structure->fields();
+
+        for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
+        {
+            TField *field = fields[fieldIndex];
+            traverse(*field->type(), field->name());
+        }
+
+        mOutputStack.pop();
+    }
+
+    visitVariable(&variable);
+
+    ASSERT(!mOutputStack.empty());
+    mOutputStack.top()->push_back(variable);
+}
+
+template <typename VarT>
+GetVariableTraverser<VarT>::GetVariableTraverser(std::vector<VarT> *output)
+{
+    ASSERT(output);
+    mOutputStack.push(output);
+}
+
+template class GetVariableTraverser<Uniform>;
+template class GetVariableTraverser<Varying>;
+template class GetVariableTraverser<InterfaceBlockField>;
+
+GetInterfaceBlockFieldTraverser::GetInterfaceBlockFieldTraverser(std::vector<InterfaceBlockField> *output, bool isRowMajorMatrix)
+    : GetVariableTraverser(output),
+      mIsRowMajorMatrix(isRowMajorMatrix)
+{
+}
+
+void GetInterfaceBlockFieldTraverser::visitVariable(InterfaceBlockField *newField)
+{
+    if (gl::IsMatrixType(newField->type))
+    {
+        newField->isRowMajorMatrix = mIsRowMajorMatrix;
     }
 }
 

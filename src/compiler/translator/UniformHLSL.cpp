@@ -136,54 +136,57 @@ int UniformHLSL::declareUniformAndAssignRegister(const TType &type, const TStrin
 {
     int registerIndex = (IsSampler(type.getBasicType()) ? mSamplerRegister : mUniformRegister);
 
-    const Uniform &uniform = declareUniformToList(type, name, registerIndex, &mActiveUniforms);
+    declareUniformToList(type, name, registerIndex, &mActiveUniforms);
+
+    unsigned int registerCount = HLSLVariableRegisterCount(mActiveUniforms.back(), mOutputType);
 
     if (IsSampler(type.getBasicType()))
     {
-        mSamplerRegister += HLSLVariableRegisterCount(uniform, mOutputType);
+        mSamplerRegister += registerCount;
     }
     else
     {
-        mUniformRegister += HLSLVariableRegisterCount(uniform, mOutputType);
+        mUniformRegister += registerCount;
     }
 
     return registerIndex;
 }
 
-Uniform UniformHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform> *output)
+class DeclareUniformsTraverser : public GetVariableTraverser<Uniform>
 {
-    const TStructure *structure = type.getStruct();
+  public:
+    DeclareUniformsTraverser(std::vector<Uniform> *output,
+                             unsigned int registerIndex,
+                             ShShaderOutput outputType)
+        : GetVariableTraverser(output),
+          mRegisterIndex(registerIndex),
+          mOutputType(outputType)
+    {}
 
-    if (!structure)
+  private:
+    virtual void visitVariable(Uniform *uniform)
     {
-        Uniform uniform(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
-                            (unsigned int)type.getArraySize(), (unsigned int)registerIndex, 0);
-        output->push_back(uniform);
-
-        return uniform;
-   }
-    else
-    {
-        Uniform structUniform(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(),
-                                  (unsigned int)registerIndex, GL_INVALID_INDEX);
-
-        const TFieldList &fields = structure->fields();
-
-        for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
+        if (!uniform->isStruct())
         {
-            TField *field = fields[fieldIndex];
-            TType *fieldType = field->type();
-
-            declareUniformToList(*fieldType, field->name(), GL_INVALID_INDEX, &structUniform.fields);
+            uniform->registerIndex = mRegisterIndex;
+            uniform->elementIndex = 0;
         }
-
-        // assign register offset information -- this will override the information in any sub-structures.
-        HLSLVariableGetRegisterInfo(registerIndex, &structUniform, mOutputType);
-
-        output->push_back(structUniform);
-
-        return structUniform;
+        else
+        {
+            // Assign register offset information.
+            // This will override the offsets in any nested structures.
+            HLSLVariableGetRegisterInfo(mRegisterIndex, uniform, mOutputType);
+        }
     }
+
+    unsigned int mRegisterIndex;
+    ShShaderOutput mOutputType;
+};
+
+void UniformHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform> *output)
+{
+    DeclareUniformsTraverser traverser(output, registerIndex, mOutputType);
+    traverser.traverse(type, name);
 }
 
 TString UniformHLSL::uniformsHeader(ShShaderOutput outputType, const ReferencedSymbols &referencedUniforms)
@@ -237,8 +240,11 @@ TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedIn
         for (unsigned int typeIndex = 0; typeIndex < fieldList.size(); typeIndex++)
         {
             const TField &field = *fieldList[typeIndex];
-            const TString &fullUniformName = InterfaceBlockFieldName(interfaceBlock, field);
-            declareInterfaceBlockField(*field.type(), fullUniformName, activeBlock.fields);
+            const TString &fullFieldName = InterfaceBlockFieldName(interfaceBlock, field);
+
+            bool isRowMajor = (field.type()->getLayoutQualifier().matrixPacking == EmpRowMajor);
+            GetInterfaceBlockFieldTraverser traverser(&activeBlock.fields, isRowMajor);
+            traverser.traverse(*field.type(), fullFieldName);
         }
 
         mInterfaceBlockRegister += std::max(1u, arraySize);
@@ -354,38 +360,6 @@ TString UniformHLSL::interfaceBlockStructString(const TInterfaceBlock &interface
            "{\n" +
            interfaceBlockMembersString(interfaceBlock, blockStorage) +
            "};\n\n";
-}
-
-void UniformHLSL::declareInterfaceBlockField(const TType &type, const TString &name, std::vector<InterfaceBlockField>& output)
-{
-    const TStructure *structure = type.getStruct();
-
-    if (!structure)
-    {
-        const bool isRowMajorMatrix = (type.isMatrix() && type.getLayoutQualifier().matrixPacking == EmpRowMajor);
-        InterfaceBlockField field(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
-            (unsigned int)type.getArraySize(), isRowMajorMatrix);
-        output.push_back(field);
-    }
-    else
-    {
-        InterfaceBlockField structField(GL_STRUCT_ANGLEX, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), false);
-
-        const TFieldList &fields = structure->fields();
-
-        for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
-        {
-            TField *field = fields[fieldIndex];
-            TType *fieldType = field->type();
-
-            // make sure to copy matrix packing information
-            fieldType->setLayoutQualifier(type.getLayoutQualifier());
-
-            declareInterfaceBlockField(*fieldType, field->name(), structField.fields);
-        }
-
-        output.push_back(structField);
-    }
 }
 
 }

@@ -98,6 +98,11 @@ struct Attribute : public ShaderVariable
 
 struct InterfaceBlockField : public ShaderVariable
 {
+    InterfaceBlockField()
+        : ShaderVariable(0, 0, "", 0),
+          isRowMajorMatrix(false)
+    {}
+
     InterfaceBlockField(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, bool isRowMajorMatrix)
         : ShaderVariable(typeIn, precisionIn, nameIn, arraySizeIn),
           isRowMajorMatrix(isRowMajorMatrix)

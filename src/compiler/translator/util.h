@@ -7,6 +7,8 @@
 #ifndef COMPILER_UTIL_H
 #define COMPILER_UTIL_H
 
+#include <stack>
+
 #include "compiler/translator/Types.h"
 #include "angle_gl.h"
 #include "common/shadervars.h"
@@ -31,6 +33,33 @@ bool IsVaryingOut(TQualifier qualifier);
 bool IsVarying(TQualifier qualifier);
 InterpolationType GetInterpolationType(TQualifier qualifier);
 TString ArrayString(const TType &type);
+
+template <typename VarT>
+class GetVariableTraverser
+{
+  public:
+    void traverse(const TType &type, const TString &name);
+
+  protected:
+    GetVariableTraverser(std::vector<VarT> *output);
+
+    // Must be overloaded
+    virtual void visitVariable(VarT *newVar) = 0;
+
+  private:
+    std::stack<std::vector<VarT> *> mOutputStack;
+};
+
+struct GetInterfaceBlockFieldTraverser : public GetVariableTraverser<InterfaceBlockField>
+{
+  public:
+    GetInterfaceBlockFieldTraverser(std::vector<InterfaceBlockField> *output, bool isRowMajorMatrix);
+
+  private:
+    virtual void visitVariable(InterfaceBlockField *newField);
+
+    bool mIsRowMajorMatrix;
+};
 
 }
 

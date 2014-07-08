@@ -40,8 +40,7 @@ class UniformHLSL
 
     // Returns the uniform's register index
     int declareUniformAndAssignRegister(const TType &type, const TString &name);
-    void declareInterfaceBlockField(const TType &type, const TString &name, std::vector<InterfaceBlockField>& output);
-    Uniform declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform> *output);
+    void declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform> *output);
 
     unsigned int mUniformRegister;
     unsigned int mInterfaceBlockRegister;
