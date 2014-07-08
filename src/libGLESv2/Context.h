@@ -306,6 +306,7 @@ class Context
     void useProgram(GLuint program);
     void linkProgram(GLuint program);
     void setProgramBinary(GLuint program, const void *binary, GLint length);
+    GLuint getCurrentProgram() const;
     void bindTransformFeedback(GLuint transformFeedback);
 
     void beginQuery(GLenum target, GLuint query);
@@ -341,7 +342,7 @@ class Context
     Buffer *getTargetBuffer(GLenum target) const;
     Buffer *getArrayBuffer();
     Buffer *getElementArrayBuffer() const;
-    ProgramBinary *getCurrentProgramBinary();
+    ProgramBinary *getCurrentProgramBinary() const;
 
     Texture *getTargetTexture(GLenum target) const;
     Texture2D *getTexture2D() const;

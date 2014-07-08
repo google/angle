@@ -162,6 +162,7 @@ class ProgramBinary : public RefCountObject
     void validate(InfoLog &infoLog);
     bool validateSamplers(InfoLog *infoLog);
     bool isValidated() const;
+    void updateSamplerMapping();
 
     unsigned int getSerial() const;
     int getShaderVersion() const;
@@ -290,6 +291,7 @@ class ProgramBinary : public RefCountObject
     GLuint mUsedPixelSamplerRange;
     bool mUsesPointSize;
     int mShaderVersion;
+    bool mDirtySamplerMapping;
 
     std::vector<LinkedUniform*> mUniforms;
     std::vector<UniformBlock*> mUniformBlocks;
