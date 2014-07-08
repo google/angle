@@ -91,9 +91,6 @@ class DynamicHLSL
     std::string generateAttributeConversionHLSL(const VertexFormat &vertexFormat, const sh::ShaderVariable &shaderAttrib) const;
 };
 
-// Utility method shared between ProgramBinary and DynamicHLSL
-std::string ArrayString(unsigned int i);
-
 }
 
 #endif // LIBGLESV2_DYNAMIC_HLSL_H_
