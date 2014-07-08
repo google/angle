@@ -12,6 +12,7 @@
 #include "common/platform.h"
 
 #include <stddef.h>
+#include <limits.h>
 #include <string>
 #include <set>
 #include <sstream>
