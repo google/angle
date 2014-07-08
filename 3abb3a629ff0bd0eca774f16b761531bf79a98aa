@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a4c051c0_3d841f4c",
+        "filename": "src/compiler/translator/util.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-08T14:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84326dd1_eda04150",
+      "revId": "3abb3a629ff0bd0eca774f16b761531bf79a98aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4c385c9_132dd682",
         "filename": "src/compiler/translator/util.h",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2014-07-07T20:26:05Z",
       "side": 1,
       "message": "Duplicate between both branches.",
+      "range": {
+        "startLine": 88,
+        "startChar": 8,
+        "endLine": 95,
+        "endChar": 24
+      },
+      "revId": "3abb3a629ff0bd0eca774f16b761531bf79a98aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4c051c0_dd7eab86",
+        "filename": "src/compiler/translator/util.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-08T14:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4c385c9_132dd682",
       "range": {
         "startLine": 88,
         "startChar": 8,
