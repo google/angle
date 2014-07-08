@@ -124,40 +124,37 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
         if (translated[i].active && attribs[i].enabled)
         {
             gl::Buffer *buffer = attribs[i].buffer.get();
-            if (buffer)
+            BufferD3D *bufferImpl = buffer ? BufferD3D::makeBufferD3D(buffer->getImplementation()) : NULL;
+            StaticVertexBufferInterface *staticBuffer = bufferImpl ? bufferImpl->getStaticVertexBuffer() : NULL;
+            VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
+
+            if (!vertexBuffer->directStoragePossible(attribs[i], currentValues[i]))
             {
-                BufferD3D *bufferImpl = BufferD3D::makeBufferD3D(buffer->getImplementation());
-                StaticVertexBufferInterface *staticBuffer = bufferImpl->getStaticVertexBuffer();
-                VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
-
-                if (!vertexBuffer->directStoragePossible(attribs[i], currentValues[i]))
+                if (staticBuffer)
                 {
-                    if (staticBuffer)
+                    if (staticBuffer->getBufferSize() == 0)
                     {
-                        if (staticBuffer->getBufferSize() == 0)
-                        {
-                            int totalCount = ElementsInBuffer(attribs[i], bufferImpl->getSize());
-                            if (!staticBuffer->reserveVertexSpace(attribs[i], totalCount, 0))
-                            {
-                                return GL_OUT_OF_MEMORY;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        int totalCount = StreamingBufferElementCount(attribs[i], count, instances);
-
-                        // [OpenGL ES 3.0.2] section 2.9.4 page 40:
-                        // We can return INVALID_OPERATION if our vertex attribute does not have enough backing data.
-                        if (bufferImpl && ElementsInBuffer(attribs[i], bufferImpl->getSize()) < totalCount)
-                        {
-                            return GL_INVALID_OPERATION;
-                        }
-
-                        if (!mStreamingBuffer->reserveVertexSpace(attribs[i], totalCount, instances))
+                        int totalCount = ElementsInBuffer(attribs[i], bufferImpl->getSize());
+                        if (!staticBuffer->reserveVertexSpace(attribs[i], totalCount, 0))
                         {
                             return GL_OUT_OF_MEMORY;
                         }
+                    }
+                }
+                else
+                {
+                    int totalCount = StreamingBufferElementCount(attribs[i], count, instances);
+
+                    // [OpenGL ES 3.0.2] section 2.9.4 page 40:
+                    // We can return INVALID_OPERATION if our vertex attribute does not have enough backing data.
+                    if (bufferImpl && ElementsInBuffer(attribs[i], bufferImpl->getSize()) < totalCount)
+                    {
+                        return GL_INVALID_OPERATION;
+                    }
+
+                    if (!mStreamingBuffer->reserveVertexSpace(attribs[i], totalCount, instances))
+                    {
+                        return GL_OUT_OF_MEMORY;
                     }
                 }
             }
