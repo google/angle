@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99e73894_828f7aaf",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1536,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-09T15:04:55Z",
+      "side": 1,
+      "message": "Can this be turned into a switch with an unreachable for the default?  I feel like that would be more readable not cover up that GL_FRAMEBUFFER \u003d\u003d GL_DRAW_FRAMEBUFFER with an else statement.",
+      "range": {
+        "startLine": 1529,
+        "startChar": 4,
+        "endLine": 1536,
+        "endChar": 5
+      },
+      "revId": "ff1b2c1adf224e991105ced983dccf920c783ce4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
