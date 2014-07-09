@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "390f2c26_37dd987f",
+        "filename": "src/libEGL/libEGL.def",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-09T16:10:24Z",
+      "side": 1,
+      "message": "Yep, fixed that in the next patch.",
+      "parentUuid": "c471c58d_74bfa897",
+      "revId": "60b8998e633bc9bba57736eca2444a9ca1499947",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e474097d_55f46c64",
         "filename": "src/libGLESv2/renderer/Renderer.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-02T22:52:37Z",
       "side": 1,
       "message": "I think there\u0027s a potentially bad interaction here between EGL_ANGLE_platform_angle and EGL_ANGLE_direct3d_display. If eglGetPlatformDisplayEXT is called with (*native_display \u003d\u003d EGL_D3D11_ONLY_DISPLAY_ANGLE), but  EGL_PLATFORM_ANGLE_TYPE_ANGLE set to EGL_PLATOFRM_ANGLE_TYPE_D3D9_ANGLE, for example, the attrib is overridden by the sentinel value in native_display. I don\u0027t think we should allow that-- we don\u0027t intend to ever move EGL_ANGLE_direct3d_display to published status, and we don\u0027t mention the language interaction in EGL_ANGLE_platform_angle. I think we should recognize the sentinels from EGL_ANGLE_direct3d_display only if no requested display type was passed in the attrib list. (And perhaps we should not recognize them when passed via the extension entry point at all. We should remove support for EGL_ANGLE_direct3d_display once we get Chrome to move onto the more proper extension.)\n\nTangentially, I realized in the course of checking the extension text that we incorrectly state that \u003cnative_display\u003e is of type EGLNativeDisplayType, when actually it points to a value of that type.",
+      "revId": "60b8998e633bc9bba57736eca2444a9ca1499947",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "390f2c26_77d31075",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-09T16:10:24Z",
+      "side": 1,
+      "message": "I wrote it this way so that EGL_ANGLE_direct3d_display takes precedence over EGL_ANGLE_platform_angle to preserve the prior behaviour until chromium can be updated (I\u0027ll start working on that as soon as this patch lands).  I could split it up so they both can\u0027t be used simultaneously for now if that\u0027s preferable though.\n\nI think the the extension spec for \u003cnative_display\u003e type is correct, native_display is a void* and EGLNativeDisplayType is a pointer type (HDC), we static_cast between the two without dereferencing anything.",
+      "parentUuid": "e474097d_55f46c64",
       "revId": "60b8998e633bc9bba57736eca2444a9ca1499947",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
