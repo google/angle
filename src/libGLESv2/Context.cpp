@@ -1693,7 +1693,8 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
     const InternalFormat &sizedFormatInfo = GetInternalFormatInfo(sizedInternalFormat);
     GLuint outputPitch = sizedFormatInfo.computeRowPitch(type, width, mState.getPackAlignment());
 
-    mRenderer->readPixels(framebuffer, x, y, width, height, format, type, outputPitch, mState.getPackState(), pixels);
+    mRenderer->readPixels(framebuffer, x, y, width, height, format, type, outputPitch, mState.getPackState(),
+                          reinterpret_cast<uint8_t*>(pixels));
 }
 
 void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances)

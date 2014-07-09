@@ -123,7 +123,7 @@ static D3D11FastCopyMap BuildFastCopyMap()
 {
     D3D11FastCopyMap map;
 
-    map.insert(std::make_pair(DXGI_FORMAT_B8G8R8A8_UNORM, D3D11FastCopyFormat(GL_RGBA, GL_UNSIGNED_BYTE, CopyBGRAUByteToRGBAUByte)));
+    map.insert(std::make_pair(DXGI_FORMAT_B8G8R8A8_UNORM, D3D11FastCopyFormat(GL_RGBA, GL_UNSIGNED_BYTE, CopyBGRA8ToRGBA8)));
 
     return map;
 }

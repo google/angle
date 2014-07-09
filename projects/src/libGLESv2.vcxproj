@@ -207,6 +207,7 @@
     <None Include="..\..\src\libGLESv2\libGLESv2.def"/>
     <None Include="..\..\src\libGLESv2\renderer\loadimage.inl"/>
     <None Include="..\..\src\libGLESv2\renderer\copyvertex.inl"/>
+    <None Include="..\..\src\libGLESv2\renderer\copyimage.inl"/>
     <None Include="..\..\src\libGLESv2\renderer\generatemip.inl"/>
   </ItemGroup>
   <ItemGroup>

@@ -2579,7 +2579,7 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 }
 
 void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
-                           GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, void* pixels)
+                           GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels)
 {
     ASSERT(pack.pixelBuffer.get() == NULL);
 
@@ -2622,7 +2622,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     {
         // Use the pixels ptr as a shared handle to write directly into client's memory
         result = mDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format,
-                                                      D3DPOOL_SYSTEMMEM, &systemSurface, &pixels);
+                                                      D3DPOOL_SYSTEMMEM, &systemSurface, reinterpret_cast<void**>(&pixels));
         if (FAILED(result))
         {
             // Try again without the shared handle
@@ -2687,16 +2687,16 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         return;   // No sensible error to generate
     }
 
-    unsigned char *source;
+    uint8_t *source;
     int inputPitch;
     if (pack.reverseRowOrder)
     {
-        source = ((unsigned char*)lock.pBits) + lock.Pitch * (rect.bottom - rect.top - 1);
+        source = reinterpret_cast<uint8_t*>(lock.pBits) + lock.Pitch * (rect.bottom - rect.top - 1);
         inputPitch = -lock.Pitch;
     }
     else
     {
-        source = (unsigned char*)lock.pBits;
+        source = reinterpret_cast<uint8_t*>(lock.pBits);
         inputPitch = lock.Pitch;
     }
 
@@ -2705,10 +2705,9 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     if (sourceFormatInfo.format == format && sourceFormatInfo.type == type)
     {
         // Direct copy possible
-        unsigned char *dest = static_cast<unsigned char*>(pixels);
         for (int y = 0; y < rect.bottom - rect.top; y++)
         {
-            memcpy(dest + y * outputPitch, source + y * inputPitch, (rect.right - rect.left) * sourceFormatInfo.pixelBytes);
+            memcpy(pixels + y * outputPitch, source + y * inputPitch, (rect.right - rect.left) * sourceFormatInfo.pixelBytes);
         }
     }
     else
@@ -2726,8 +2725,8 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
             {
                 for (int x = 0; x < rect.right - rect.left; x++)
                 {
-                    void *dest = static_cast<unsigned char*>(pixels) + y * outputPitch + x * destFormatInfo.pixelBytes;
-                    void *src = static_cast<unsigned char*>(source) + y * inputPitch + x * sourceFormatInfo.pixelBytes;
+                    uint8_t *dest = pixels + y * outputPitch + x * destFormatInfo.pixelBytes;
+                    const uint8_t *src = source + y * inputPitch + x * sourceFormatInfo.pixelBytes;
 
                     fastCopyFunc(src, dest);
                 }
@@ -2735,18 +2734,18 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         }
         else
         {
-            gl::ColorF temp;
+            uint8_t temp[sizeof(gl::ColorF)];
             for (int y = 0; y < rect.bottom - rect.top; y++)
             {
                 for (int x = 0; x < rect.right - rect.left; x++)
                 {
-                    void *dest = reinterpret_cast<unsigned char*>(pixels) + y * outputPitch + x * destFormatInfo.pixelBytes;
-                    void *src = source + y * inputPitch + x * sourceFormatInfo.pixelBytes;
+                    uint8_t *dest = pixels + y * outputPitch + x * destFormatInfo.pixelBytes;
+                    const uint8_t *src = source + y * inputPitch + x * sourceFormatInfo.pixelBytes;
 
                     // readFunc and writeFunc will be using the same type of color, CopyTexImage
                     // will not allow the copy otherwise.
-                    sourceD3DFormatInfo.colorReadFunction(src, &temp);
-                    destFormatTypeInfo.colorWriteFunction(&temp, dest);
+                    sourceD3DFormatInfo.colorReadFunction(src, temp);
+                    destFormatTypeInfo.colorWriteFunction(temp, dest);
                 }
             }
         }

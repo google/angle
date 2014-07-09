@@ -27,9 +27,9 @@ typedef void (*LoadImageFunction)(size_t width, size_t height, size_t depth,
 typedef void (*InitializeTextureDataFunction)(size_t width, size_t height, size_t depth,
                                               uint8_t *output, size_t outputRowPitch, size_t outputDepthPitch);
 
-typedef void (*ColorReadFunction)(const void *source, void *dest);
-typedef void (*ColorWriteFunction)(const void *source, void *dest);
-typedef void (*ColorCopyFunction)(const void *source, void *dest);
+typedef void (*ColorReadFunction)(const uint8_t *source, uint8_t *dest);
+typedef void (*ColorWriteFunction)(const uint8_t *source, uint8_t *dest);
+typedef void (*ColorCopyFunction)(const uint8_t *source, uint8_t *dest);
 
 typedef void (*VertexCopyFunction)(const uint8_t *input, size_t stride, size_t count, uint8_t *output);
 

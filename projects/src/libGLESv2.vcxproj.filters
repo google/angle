@@ -318,6 +318,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\QueryImpl.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
+    <None Include="..\..\src\libGLESv2\renderer\copyimage.inl">
+      <Filter>src\libGLESv2\renderer</Filter>
+    </None>
     <ClInclude Include="..\..\src\libGLESv2\renderer\IndexRangeCache.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
