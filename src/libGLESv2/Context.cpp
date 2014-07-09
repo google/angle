@@ -68,7 +68,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    mTexture2DZero.set(new Texture2D(mRenderer, 0));
+    mTexture2DZero.set(new Texture2D(mRenderer->createTexture2D(), 0));
     mTextureCubeMapZero.set(new TextureCubeMap(mRenderer, 0));
     mTexture3DZero.set(new Texture3D(mRenderer, 0));
     mTexture2DArrayZero.set(new Texture2DArray(mRenderer, 0));
@@ -2151,7 +2151,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
 
           case TEXTURE_2D:
             {
-                Texture2D *incomplete2d = new Texture2D(mRenderer, Texture::INCOMPLETE_TEXTURE_ID);
+                Texture2D *incomplete2d = new Texture2D(mRenderer->createTexture2D(), Texture::INCOMPLETE_TEXTURE_ID);
                 incomplete2d->setImage(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
                 t = incomplete2d;
             }

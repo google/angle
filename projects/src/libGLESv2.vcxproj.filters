@@ -264,6 +264,9 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\copyimage.cpp">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\TextureImpl.h">
+      <Filter>src\libGLESv2\renderer</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\Renderer.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
@@ -351,12 +354,15 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\IndexBuffer.cpp">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\TextureD3D.cpp">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\VertexDataManager.cpp">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\IndexDataManager.cpp">
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\TextureD3D.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
-    </ClCompile>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\TextureStorage.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>
@@ -375,6 +381,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\BufferD3D.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\IndexDataManager.cpp">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\VertexBuffer.cpp">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClCompile>

@@ -13,6 +13,7 @@
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
@@ -2898,6 +2899,11 @@ TextureStorage *Renderer11::createTextureStorage3D(GLenum internalformat, bool r
 TextureStorage *Renderer11::createTextureStorage2DArray(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels)
 {
     return new TextureStorage11_2DArray(this, internalformat, renderTarget, width, height, depth, levels);
+}
+
+Texture2DImpl *Renderer11::createTexture2D()
+{
+    return new TextureD3D_2D(this);
 }
 
 void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,

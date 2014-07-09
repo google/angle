@@ -18,6 +18,7 @@
 #include "common/debug.h"
 #include "common/RefCountObject.h"
 #include "libGLESv2/angletypes.h"
+#include "libGLESv2/constants.h"
 
 namespace egl
 {
@@ -27,6 +28,7 @@ class Surface;
 namespace rx
 {
 class Renderer;
+class Texture2DImpl;
 class TextureStorageInterface;
 class TextureStorageInterface2D;
 class TextureStorageInterfaceCube;
@@ -41,25 +43,12 @@ namespace gl
 class Framebuffer;
 class FramebufferAttachment;
 
-enum
-{
-    // These are the maximums the implementation can support
-    // The actual GL caps are limited by the device caps
-    // and should be queried from the Context
-    IMPLEMENTATION_MAX_2D_TEXTURE_SIZE = 16384,
-    IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE = 16384,
-    IMPLEMENTATION_MAX_3D_TEXTURE_SIZE = 2048,
-    IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS = 2048,
-
-    IMPLEMENTATION_MAX_TEXTURE_LEVELS = 15   // 1+log2 of MAX_TEXTURE_SIZE
-};
-
 bool IsMipmapFiltered(const SamplerState &samplerState);
 
 class Texture : public RefCountObject
 {
   public:
-    Texture(rx::Renderer *renderer, GLuint id, GLenum target);
+    Texture(GLuint id, GLenum target);
 
     virtual ~Texture();
 
@@ -69,7 +58,7 @@ class Texture : public RefCountObject
     SamplerState &getSamplerState() { return mSamplerState; }
     void getSamplerStateWithNativeOffset(SamplerState *sampler);
 
-    void setUsage(GLenum usage);
+    virtual void setUsage(GLenum usage);
     GLenum getUsage() const;
 
     GLint getBaseLevelWidth() const;
@@ -79,20 +68,47 @@ class Texture : public RefCountObject
 
     virtual bool isSamplerComplete(const SamplerState &samplerState) const = 0;
 
-    rx::TextureStorageInterface *getNativeTexture();
+    virtual rx::TextureStorageInterface *getNativeTexture() = 0;
 
     virtual void generateMipmaps() = 0;
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source) = 0;
 
-    bool hasDirtyParameters() const;
-    bool hasDirtyImages() const;
-    void resetDirty();
+    virtual bool hasDirtyImages() const = 0;
+    virtual void resetDirty() = 0;
     unsigned int getTextureSerial();
 
     bool isImmutable() const;
     int immutableLevelCount();
 
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
+
+  protected:
+    int mipLevels() const;
+
+    SamplerState mSamplerState;
+    GLenum mUsage;
+
+    bool mImmutable;
+
+    GLenum mTarget;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(Texture);
+
+    virtual const rx::Image *getBaseLevelImage() const = 0;
+};
+
+// TODO: This class is only here to make incremental Texture refactoring easier
+class TextureWithRenderer : public Texture
+{
+  public:
+    TextureWithRenderer(rx::Renderer *renderer, GLuint id, GLenum target);
+    virtual ~TextureWithRenderer();
+
+    virtual rx::TextureStorageInterface *getNativeTexture();
+
+    virtual bool hasDirtyImages() const;
+    virtual void resetDirty();
 
   protected:
     void setImage(const PixelUnpackState &unpack, GLenum type, const void *pixels, rx::Image *image);
@@ -106,36 +122,31 @@ class Texture : public RefCountObject
                           GLenum sizedInternalFormat, GLenum type, rx::RenderTarget *destRenderTarget);
 
     GLint creationLevels(GLsizei width, GLsizei height, GLsizei depth) const;
-    int mipLevels() const;
 
     virtual void initializeStorage(bool renderTarget) = 0;
     virtual void updateStorage() = 0;
     virtual bool ensureRenderTarget() = 0;
 
     rx::Renderer *mRenderer;
-
-    SamplerState mSamplerState;
-    GLenum mUsage;
-
     bool mDirtyImages;
 
-    bool mImmutable;
-
-    GLenum mTarget;
-
   private:
-    DISALLOW_COPY_AND_ASSIGN(Texture);
+    DISALLOW_COPY_AND_ASSIGN(TextureWithRenderer);
 
     virtual rx::TextureStorageInterface *getBaseLevelStorage() = 0;
-    virtual const rx::Image *getBaseLevelImage() const = 0;
 };
 
 class Texture2D : public Texture
 {
   public:
-    Texture2D(rx::Renderer *renderer, GLuint id);
+    Texture2D(rx::Texture2DImpl *impl, GLuint id);
 
     ~Texture2D();
+
+    virtual rx::TextureStorageInterface *getNativeTexture();
+    virtual void setUsage(GLenum usage);
+    virtual bool hasDirtyImages() const;
+    virtual void resetDirty();
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -168,30 +179,15 @@ class Texture2D : public Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
 
-    virtual void initializeStorage(bool renderTarget);
-    rx::TextureStorageInterface2D *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(rx::TextureStorageInterface2D *newCompleteTexStorage);
-
-    virtual void updateStorage();
-    virtual bool ensureRenderTarget();
-    virtual rx::TextureStorageInterface *getBaseLevelStorage();
     virtual const rx::Image *getBaseLevelImage() const;
 
-    bool isMipmapComplete() const;
-    bool isValidLevel(int level) const;
-    bool isLevelComplete(int level) const;
-    void updateStorageLevel(int level);
-
     void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height);
-    void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
-    rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-
-    rx::TextureStorageInterface2D *mTexStorage;
+    rx::Texture2DImpl *mTexture;
     egl::Surface *mSurface;
 };
 
-class TextureCubeMap : public Texture
+class TextureCubeMap : public TextureWithRenderer
 {
   public:
     TextureCubeMap(rx::Renderer *renderer, GLuint id);
@@ -260,7 +256,7 @@ class TextureCubeMap : public Texture
     rx::TextureStorageInterfaceCube *mTexStorage;
 };
 
-class Texture3D : public Texture
+class Texture3D : public TextureWithRenderer
 {
   public:
     Texture3D(rx::Renderer *renderer, GLuint id);
@@ -320,7 +316,7 @@ class Texture3D : public Texture
     rx::TextureStorageInterface3D *mTexStorage;
 };
 
-class Texture2DArray : public Texture
+class Texture2DArray : public TextureWithRenderer
 {
   public:
     Texture2DArray(rx::Renderer *renderer, GLuint id);

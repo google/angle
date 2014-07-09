@@ -377,7 +377,7 @@ void ResourceManager::checkTextureAllocation(GLuint texture, TextureType type)
 
         if (type == TEXTURE_2D)
         {
-            textureObject = new Texture2D(mRenderer, texture);
+            textureObject = new Texture2D(mRenderer->createTexture2D(), texture);
         }
         else if (type == TEXTURE_CUBE)
         {

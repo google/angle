@@ -179,6 +179,9 @@ class Renderer9 : public Renderer
     virtual TextureStorage *createTextureStorage3D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels);
     virtual TextureStorage *createTextureStorage2DArray(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels);
 
+    // Texture creation
+    virtual Texture2DImpl *createTexture2D();
+
     // Buffer creation
     virtual BufferImpl *createBuffer();
     virtual VertexBuffer *createVertexBuffer();
