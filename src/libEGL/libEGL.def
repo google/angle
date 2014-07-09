@@ -37,3 +37,5 @@ EXPORTS
 
     ; Extensions
     eglGetPlatformDisplayEXT         @35
+    eglQuerySurfacePointerANGLE      @36
+    eglPostSubBufferNV               @37
