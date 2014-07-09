@@ -415,11 +415,7 @@ void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::Samp
 {
     if (type == gl::SAMPLER_PIXEL)
     {
-        if (index < 0 || index >= gl::MAX_TEXTURE_IMAGE_UNITS)
-        {
-            ERR("Pixel shader sampler index %i is not valid.", index);
-            return;
-        }
+        ASSERT(static_cast<unsigned int>(index) < getRendererCaps().maxTextureImageUnits);
 
         if (mForceSetPixelSamplerStates[index] || memcmp(&samplerState, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
@@ -440,11 +436,7 @@ void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::Samp
     }
     else if (type == gl::SAMPLER_VERTEX)
     {
-        if (index < 0 || index >= (int)getMaxVertexTextureImageUnits())
-        {
-            ERR("Vertex shader sampler index %i is not valid.", index);
-            return;
-        }
+        ASSERT(static_cast<unsigned int>(index) < getRendererCaps().maxVertexTextureImageUnits);
 
         if (mForceSetVertexSamplerStates[index] || memcmp(&samplerState, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
@@ -494,11 +486,7 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
 
     if (type == gl::SAMPLER_PIXEL)
     {
-        if (index < 0 || index >= gl::MAX_TEXTURE_IMAGE_UNITS)
-        {
-            ERR("Pixel shader sampler index %i is not valid.", index);
-            return;
-        }
+        ASSERT(static_cast<unsigned int>(index) < getRendererCaps().maxTextureImageUnits);
 
         if (forceSetTexture || mCurPixelSRVs[index] != textureSRV)
         {
@@ -509,11 +497,7 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
     }
     else if (type == gl::SAMPLER_VERTEX)
     {
-        if (index < 0 || index >= (int)getMaxVertexTextureImageUnits())
-        {
-            ERR("Vertex shader sampler index %i is not valid.", index);
-            return;
-        }
+        ASSERT(static_cast<unsigned int>(index) < getRendererCaps().maxVertexTextureImageUnits);
 
         if (forceSetTexture || mCurVertexSRVs[index] != textureSRV)
         {
@@ -1781,23 +1765,9 @@ GUID Renderer11::getAdapterIdentifier() const
     return adapterId;
 }
 
-unsigned int Renderer11::getMaxVertexTextureImageUnits() const
-{
-    META_ASSERT(MAX_TEXTURE_IMAGE_UNITS_VTF_SM4 <= gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-        return MAX_TEXTURE_IMAGE_UNITS_VTF_SM4;
-      default: UNREACHABLE();
-        return 0;
-    }
-}
-
 unsigned int Renderer11::getMaxCombinedTextureImageUnits() const
 {
-    return gl::MAX_TEXTURE_IMAGE_UNITS + getMaxVertexTextureImageUnits();
+    return getRendererCaps().maxTextureImageUnits + getRendererCaps().maxVertexTextureImageUnits;
 }
 
 unsigned int Renderer11::getReservedVertexUniformVectors() const
@@ -1808,20 +1778,6 @@ unsigned int Renderer11::getReservedVertexUniformVectors() const
 unsigned int Renderer11::getReservedFragmentUniformVectors() const
 {
     return 0;   // Driver uniforms are stored in a separate constant buffer
-}
-
-unsigned int Renderer11::getMaxVertexUniformVectors() const
-{
-    META_ASSERT(MAX_VERTEX_UNIFORM_VECTORS_D3D11 <= D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
-    ASSERT(mFeatureLevel >= D3D_FEATURE_LEVEL_10_0);
-    return MAX_VERTEX_UNIFORM_VECTORS_D3D11;
-}
-
-unsigned int Renderer11::getMaxFragmentUniformVectors() const
-{
-    META_ASSERT(MAX_FRAGMENT_UNIFORM_VECTORS_D3D11 <= D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
-    ASSERT(mFeatureLevel >= D3D_FEATURE_LEVEL_10_0);
-    return MAX_FRAGMENT_UNIFORM_VECTORS_D3D11;
 }
 
 unsigned int Renderer11::getMaxVaryingVectors() const
@@ -1837,40 +1793,6 @@ unsigned int Renderer11::getMaxVaryingVectors() const
         return D3D10_1_VS_OUTPUT_REGISTER_COUNT - getReservedVaryings();
       case D3D_FEATURE_LEVEL_10_0:
         return D3D10_VS_OUTPUT_REGISTER_COUNT - getReservedVaryings();
-      default: UNREACHABLE();
-        return 0;
-    }
-}
-
-unsigned int Renderer11::getMaxVertexShaderUniformBuffers() const
-{
-    META_ASSERT(gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS >= D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT &&
-                gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS >= D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
-
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-        return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - getReservedVertexUniformBuffers();
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-        return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - getReservedVertexUniformBuffers();
-      default: UNREACHABLE();
-        return 0;
-    }
-}
-
-unsigned int Renderer11::getMaxFragmentShaderUniformBuffers() const
-{
-    META_ASSERT(gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS >= D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT &&
-                gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS >= D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
-
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-        return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - getReservedFragmentUniformBuffers();
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-        return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - getReservedFragmentUniformBuffers();
       default: UNREACHABLE();
         return 0;
     }

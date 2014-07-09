@@ -384,7 +384,22 @@ Caps::Caps()
       // Table 6.29
       maxElementsIndices(0),
       maxElementsVertices(0),
-      maxServerWaitTimeout(0)
+      maxServerWaitTimeout(0),
+      // Table 6.31
+      maxVertexAttributes(0),
+      maxVertexUniformComponents(0),
+      maxVertexUniformVectors(0),
+      maxVertexUniformBlocks(0),
+      maxVertexOutputComponents(0),
+      maxVertexTextureImageUnits(0),
+      // Table 6.32
+      maxFragmentUniformComponents(0),
+      maxFragmentUniformVectors(0),
+      maxFragmentUniformBlocks(0),
+      maxFragmentInputComponents(0),
+      maxTextureImageUnits(0),
+      minProgramTexelOffset(0),
+      maxProgramTexelOffset(0)
 {
 }
 

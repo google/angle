@@ -2180,15 +2180,9 @@ GUID Renderer9::getAdapterIdentifier() const
     return mAdapterIdentifier.DeviceIdentifier;
 }
 
-unsigned int Renderer9::getMaxVertexTextureImageUnits() const
-{
-    META_ASSERT(MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 <= gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
-    return mVertexTextureSupport ? MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 : 0;
-}
-
 unsigned int Renderer9::getMaxCombinedTextureImageUnits() const
 {
-    return gl::MAX_TEXTURE_IMAGE_UNITS + getMaxVertexTextureImageUnits();
+    return getRendererCaps().maxTextureImageUnits + getRendererCaps().maxVertexTextureImageUnits;
 }
 
 unsigned int Renderer9::getReservedVertexUniformVectors() const
@@ -2201,31 +2195,9 @@ unsigned int Renderer9::getReservedFragmentUniformVectors() const
     return 3;   // dx_ViewCoords, dx_DepthFront and dx_DepthRange.
 }
 
-unsigned int Renderer9::getMaxVertexUniformVectors() const
-{
-    return MAX_VERTEX_CONSTANT_VECTORS_D3D9 - getReservedVertexUniformVectors();
-}
-
-unsigned int Renderer9::getMaxFragmentUniformVectors() const
-{
-    const int maxPixelConstantVectors = (getMajorShaderModel() >= 3) ? MAX_PIXEL_CONSTANT_VECTORS_SM3 : MAX_PIXEL_CONSTANT_VECTORS_SM2;
-
-    return maxPixelConstantVectors - getReservedFragmentUniformVectors();
-}
-
 unsigned int Renderer9::getMaxVaryingVectors() const
 {
     return (getMajorShaderModel() >= 3) ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
-}
-
-unsigned int Renderer9::getMaxVertexShaderUniformBuffers() const
-{
-    return 0;
-}
-
-unsigned int Renderer9::getMaxFragmentShaderUniformBuffers() const
-{
-    return 0;
 }
 
 unsigned int Renderer9::getReservedVertexUniformBuffers() const

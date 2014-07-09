@@ -103,15 +103,10 @@ class Renderer11 : public Renderer
     virtual std::string getRendererDescription() const;
     virtual GUID getAdapterIdentifier() const;
 
-    virtual unsigned int getMaxVertexTextureImageUnits() const;
     virtual unsigned int getMaxCombinedTextureImageUnits() const;
     virtual unsigned int getReservedVertexUniformVectors() const;
     virtual unsigned int getReservedFragmentUniformVectors() const;
-    virtual unsigned int getMaxVertexUniformVectors() const;
-    virtual unsigned int getMaxFragmentUniformVectors() const;
     virtual unsigned int getMaxVaryingVectors() const;
-    virtual unsigned int getMaxVertexShaderUniformBuffers() const;
-    virtual unsigned int getMaxFragmentShaderUniformBuffers() const;
     virtual unsigned int getReservedVertexUniformBuffers() const;
     virtual unsigned int getReservedFragmentUniformBuffers() const;
     unsigned int getReservedVaryings() const;

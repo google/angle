@@ -153,16 +153,10 @@ class Renderer
     virtual std::string getRendererDescription() const = 0;
     virtual GUID getAdapterIdentifier() const = 0;
 
-    bool getVertexTextureSupport() const { return getMaxVertexTextureImageUnits() > 0; }
-    virtual unsigned int getMaxVertexTextureImageUnits() const = 0;
     virtual unsigned int getMaxCombinedTextureImageUnits() const = 0;
     virtual unsigned int getReservedVertexUniformVectors() const = 0;
     virtual unsigned int getReservedFragmentUniformVectors() const = 0;
-    virtual unsigned int getMaxVertexUniformVectors() const = 0;
-    virtual unsigned int getMaxFragmentUniformVectors() const = 0;
     virtual unsigned int getMaxVaryingVectors() const = 0;
-    virtual unsigned int getMaxVertexShaderUniformBuffers() const = 0;
-    virtual unsigned int getMaxFragmentShaderUniformBuffers() const = 0;
     virtual unsigned int getReservedVertexUniformBuffers() const = 0;
     virtual unsigned int getReservedFragmentUniformBuffers() const = 0;
     virtual unsigned int getMaxTransformFeedbackBuffers() const = 0;

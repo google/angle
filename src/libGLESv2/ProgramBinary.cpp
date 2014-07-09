@@ -1046,7 +1046,7 @@ bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuff
         {
             unsigned int registerIndex = uniformBlock->vsRegisterIndex - reservedBuffersInVS;
             ASSERT(vertexUniformBuffers[registerIndex] == NULL);
-            ASSERT(registerIndex < mRenderer->getMaxVertexShaderUniformBuffers());
+            ASSERT(registerIndex < mRenderer->getRendererCaps().maxVertexUniformBlocks);
             vertexUniformBuffers[registerIndex] = uniformBuffer;
         }
 
@@ -1054,7 +1054,7 @@ bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuff
         {
             unsigned int registerIndex = uniformBlock->psRegisterIndex - reservedBuffersInFS;
             ASSERT(fragmentUniformBuffers[registerIndex] == NULL);
-            ASSERT(registerIndex < mRenderer->getMaxFragmentShaderUniformBuffers());
+            ASSERT(registerIndex < mRenderer->getRendererCaps().maxFragmentUniformBlocks);
             fragmentUniformBuffers[registerIndex] = uniformBuffer;
         }
     }
@@ -2039,22 +2039,22 @@ bool ProgramBinary::indexSamplerUniform(const LinkedUniform &uniform, InfoLog &i
     ASSERT(IsSampler(uniform.type));
     ASSERT(uniform.vsRegisterIndex != GL_INVALID_INDEX || uniform.psRegisterIndex != GL_INVALID_INDEX);
 
+    const gl::Caps &caps = mRenderer->getRendererCaps();
     if (uniform.vsRegisterIndex != GL_INVALID_INDEX)
     {
         if (!assignSamplers(uniform.vsRegisterIndex, uniform.type, uniform.arraySize, mSamplersVS,
-                            &mUsedVertexSamplerRange, mRenderer->getMaxVertexTextureImageUnits()))
+                            &mUsedVertexSamplerRange, caps.maxVertexTextureImageUnits))
         {
             infoLog.append("Vertex shader sampler count exceeds the maximum vertex texture units (%d).",
-                            mRenderer->getMaxVertexTextureImageUnits());
+                           caps.maxVertexTextureImageUnits);
             return false;
         }
 
-        unsigned int maxVertexVectors = mRenderer->getReservedVertexUniformVectors() +
-                                        mRenderer->getMaxVertexUniformVectors();
+        unsigned int maxVertexVectors = mRenderer->getReservedVertexUniformVectors() + caps.maxVertexUniformVectors;
         if (uniform.vsRegisterIndex + uniform.registerCount > maxVertexVectors)
         {
             infoLog.append("Vertex shader active uniforms exceed GL_MAX_VERTEX_UNIFORM_VECTORS (%u)",
-                           mRenderer->getMaxVertexUniformVectors());
+                           caps.maxVertexUniformVectors);
             return false;
         }
     }
@@ -2062,19 +2062,18 @@ bool ProgramBinary::indexSamplerUniform(const LinkedUniform &uniform, InfoLog &i
     if (uniform.psRegisterIndex != GL_INVALID_INDEX)
     {
         if (!assignSamplers(uniform.psRegisterIndex, uniform.type, uniform.arraySize, mSamplersPS,
-                            &mUsedPixelSamplerRange, MAX_TEXTURE_IMAGE_UNITS))
+                            &mUsedPixelSamplerRange, caps.maxTextureImageUnits))
         {
             infoLog.append("Pixel shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS (%d).",
-                           MAX_TEXTURE_IMAGE_UNITS);
+                           caps.maxTextureImageUnits);
             return false;
         }
 
-        unsigned int maxFragmentVectors = mRenderer->getReservedFragmentUniformVectors() +
-                                          mRenderer->getMaxFragmentUniformVectors();
+        unsigned int maxFragmentVectors = mRenderer->getReservedFragmentUniformVectors() + caps.maxFragmentUniformVectors;
         if (uniform.psRegisterIndex + uniform.registerCount > maxFragmentVectors)
         {
             infoLog.append("Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (%u)",
-                           mRenderer->getMaxFragmentUniformVectors());
+                           caps.maxFragmentUniformVectors);
             return false;
         }
     }
@@ -2389,25 +2388,22 @@ bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, const Shader &shader, c
 
 bool ProgramBinary::assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex)
 {
+    const gl::Caps &caps = mRenderer->getRendererCaps();
     if (shader == GL_VERTEX_SHADER)
     {
         uniformBlock->vsRegisterIndex = registerIndex;
-        unsigned int maximumBlocks = mRenderer->getMaxVertexShaderUniformBuffers();
-
-        if (registerIndex - mRenderer->getReservedVertexUniformBuffers() >= maximumBlocks)
+        if (registerIndex - mRenderer->getReservedVertexUniformBuffers() >= caps.maxVertexUniformBlocks)
         {
-            infoLog.append("Vertex shader uniform block count exceed GL_MAX_VERTEX_UNIFORM_BLOCKS (%u)", maximumBlocks);
+            infoLog.append("Vertex shader uniform block count exceed GL_MAX_VERTEX_UNIFORM_BLOCKS (%u)", caps.maxVertexUniformBlocks);
             return false;
         }
     }
     else if (shader == GL_FRAGMENT_SHADER)
     {
         uniformBlock->psRegisterIndex = registerIndex;
-        unsigned int maximumBlocks = mRenderer->getMaxFragmentShaderUniformBuffers();
-
-        if (registerIndex - mRenderer->getReservedFragmentUniformBuffers() >= maximumBlocks)
+        if (registerIndex - mRenderer->getReservedFragmentUniformBuffers() >= caps.maxFragmentUniformBlocks)
         {
-            infoLog.append("Fragment shader uniform block count exceed GL_MAX_FRAGMENT_UNIFORM_BLOCKS (%u)", maximumBlocks);
+            infoLog.append("Fragment shader uniform block count exceed GL_MAX_FRAGMENT_UNIFORM_BLOCKS (%u)", caps.maxFragmentUniformBlocks);
             return false;
         }
     }

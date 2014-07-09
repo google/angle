@@ -208,13 +208,13 @@ void Shader::initializeCompiler()
             const gl::Caps &caps = mRenderer->getRendererCaps();
             const gl::Extensions &extensions = mRenderer->getRendererExtensions();
 
-            resources.MaxVertexAttribs = MAX_VERTEX_ATTRIBS;
-            resources.MaxVertexUniformVectors = mRenderer->getMaxVertexUniformVectors();
+            resources.MaxVertexAttribs = caps.maxVertexAttributes;
+            resources.MaxVertexUniformVectors = caps.maxVertexUniformVectors;
             resources.MaxVaryingVectors = mRenderer->getMaxVaryingVectors();
-            resources.MaxVertexTextureImageUnits = mRenderer->getMaxVertexTextureImageUnits();
+            resources.MaxVertexTextureImageUnits = caps.maxVertexTextureImageUnits;
             resources.MaxCombinedTextureImageUnits = mRenderer->getMaxCombinedTextureImageUnits();
-            resources.MaxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
-            resources.MaxFragmentUniformVectors = mRenderer->getMaxFragmentUniformVectors();
+            resources.MaxTextureImageUnits = caps.maxTextureImageUnits;
+            resources.MaxFragmentUniformVectors = caps.maxFragmentUniformVectors;
             resources.MaxDrawBuffers = caps.maxDrawBuffers;
             resources.OES_standard_derivatives = extensions.standardDerivatives;
             resources.EXT_draw_buffers = extensions.drawBuffers;
@@ -223,10 +223,10 @@ void Shader::initializeCompiler()
             resources.FragmentPrecisionHigh = 1;   // Shader Model 2+ always supports FP24 (s16e7) which corresponds to highp
             resources.EXT_frag_depth = 1; // Shader Model 2+ always supports explicit depth output
             // GLSL ES 3.0 constants
-            resources.MaxVertexOutputVectors = mRenderer->getMaxVaryingVectors();
-            resources.MaxFragmentInputVectors = mRenderer->getMaxVaryingVectors();
-            resources.MinProgramTexelOffset = -8;   // D3D10_COMMONSHADER_TEXEL_OFFSET_MAX_NEGATIVE
-            resources.MaxProgramTexelOffset = 7;    // D3D10_COMMONSHADER_TEXEL_OFFSET_MAX_POSITIVE
+            resources.MaxVertexOutputVectors = caps.maxVertexOutputComponents / 4;
+            resources.MaxFragmentInputVectors = caps.maxFragmentInputComponents / 4;
+            resources.MinProgramTexelOffset = caps.minProgramTexelOffset;
+            resources.MaxProgramTexelOffset = caps.maxProgramTexelOffset;
 
             mFragmentCompiler = ShConstructCompiler(GL_FRAGMENT_SHADER, SH_GLES2_SPEC, hlslVersion, &resources);
             mVertexCompiler = ShConstructCompiler(GL_VERTEX_SHADER, SH_GLES2_SPEC, hlslVersion, &resources);

@@ -170,8 +170,6 @@ void Context::makeCurrent(egl::Surface *surface)
 {
     if (!mHasBeenCurrent)
     {
-        mSupportsVertexTexture = mRenderer->getVertexTextureSupport();
-
         initRendererString();
         initExtensionStrings();
 
@@ -899,16 +897,16 @@ void Context::getIntegerv(GLenum pname, GLint *params)
 
     switch (pname)
     {
-      case GL_MAX_VERTEX_ATTRIBS:                       *params = gl::MAX_VERTEX_ATTRIBS;                               break;
-      case GL_MAX_VERTEX_UNIFORM_VECTORS:               *params = mRenderer->getMaxVertexUniformVectors();              break;
-      case GL_MAX_VERTEX_UNIFORM_COMPONENTS:            *params = mRenderer->getMaxVertexUniformVectors() * 4;          break;
+      case GL_MAX_VERTEX_ATTRIBS:                       *params = mCaps.maxVertexAttributes;                            break;
+      case GL_MAX_VERTEX_UNIFORM_VECTORS:               *params = mCaps.maxVertexUniformVectors;                        break;
+      case GL_MAX_VERTEX_UNIFORM_COMPONENTS:            *params = mCaps.maxVertexUniformComponents;                     break;
       case GL_MAX_VARYING_VECTORS:                      *params = mRenderer->getMaxVaryingVectors();                    break;
       case GL_MAX_VARYING_COMPONENTS:                   *params = mRenderer->getMaxVaryingVectors() * 4;                break;
       case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:         *params = mRenderer->getMaxCombinedTextureImageUnits();         break;
-      case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:           *params = mRenderer->getMaxVertexTextureImageUnits();           break;
-      case GL_MAX_TEXTURE_IMAGE_UNITS:                  *params = gl::MAX_TEXTURE_IMAGE_UNITS;                          break;
-      case GL_MAX_FRAGMENT_UNIFORM_VECTORS:             *params = mRenderer->getMaxFragmentUniformVectors();            break;
-      case GL_MAX_FRAGMENT_UNIFORM_COMPONENTS:          *params = mRenderer->getMaxFragmentUniformVectors() * 4;        break;
+      case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:           *params = mCaps.maxVertexTextureImageUnits;                     break;
+      case GL_MAX_TEXTURE_IMAGE_UNITS:                  *params = mCaps.maxTextureImageUnits;                           break;
+      case GL_MAX_FRAGMENT_UNIFORM_VECTORS:             *params = mCaps.maxFragmentUniformVectors;                      break;
+      case GL_MAX_FRAGMENT_UNIFORM_COMPONENTS:          *params = mCaps.maxFragmentInputComponents;                     break;
       case GL_MAX_RENDERBUFFER_SIZE:                    *params = mCaps.maxRenderbufferSize;                            break;
       case GL_MAX_COLOR_ATTACHMENTS_EXT:                *params = mCaps.maxColorAttachments;                            break;
       case GL_MAX_DRAW_BUFFERS_EXT:                     *params = mCaps.maxDrawBuffers;                                 break;
@@ -920,8 +918,8 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_ARRAY_TEXTURE_LAYERS:                 *params = mCaps.maxArrayTextureLayers;                          break;
       case GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT:          *params = getUniformBufferOffsetAlignment();                    break;
       case GL_MAX_UNIFORM_BUFFER_BINDINGS:              *params = getMaximumCombinedUniformBufferBindings();            break;
-      case GL_MAX_VERTEX_UNIFORM_BLOCKS:                *params = mRenderer->getMaxVertexShaderUniformBuffers();        break;
-      case GL_MAX_FRAGMENT_UNIFORM_BLOCKS:              *params = mRenderer->getMaxFragmentShaderUniformBuffers();      break;
+      case GL_MAX_VERTEX_UNIFORM_BLOCKS:                *params = mCaps.maxVertexUniformBlocks;                         break;
+      case GL_MAX_FRAGMENT_UNIFORM_BLOCKS:              *params = mCaps.maxFragmentUniformBlocks;                       break;
       case GL_MAX_COMBINED_UNIFORM_BLOCKS:              *params = getMaximumCombinedUniformBufferBindings();            break;
       case GL_MAJOR_VERSION:                            *params = mClientVersion;                                       break;
       case GL_MINOR_VERSION:                            *params = 0;                                                    break;
@@ -990,15 +988,15 @@ void Context::getInteger64v(GLenum pname, GLint64 *params)
         break;
       case GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS:
         {
-            GLint64 uniformBufferComponents = static_cast<GLint64>(mRenderer->getMaxVertexShaderUniformBuffers()) * static_cast<GLint64>(mRenderer->getMaxUniformBufferSize() / 4);
-            GLint64 defaultBufferComponents = static_cast<GLint64>(mRenderer->getMaxVertexUniformVectors() * 4);
+            GLint64 uniformBufferComponents = static_cast<GLint64>(mCaps.maxVertexUniformBlocks) * static_cast<GLint64>(mRenderer->getMaxUniformBufferSize() / 4);
+            GLint64 defaultBufferComponents = static_cast<GLint64>(mCaps.maxVertexUniformComponents);
             *params = uniformBufferComponents + defaultBufferComponents;
         }
         break;
       case GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS:
         {
-            GLint64 uniformBufferComponents = static_cast<GLint64>(mRenderer->getMaxFragmentShaderUniformBuffers()) * static_cast<GLint64>(mRenderer->getMaxUniformBufferSize() / 4);
-            GLint64 defaultBufferComponents = static_cast<GLint64>(mRenderer->getMaxVertexUniformVectors() * 4);
+            GLint64 uniformBufferComponents = static_cast<GLint64>(mCaps.maxFragmentUniformBlocks) * static_cast<GLint64>(mRenderer->getMaxUniformBufferSize() / 4);
+            GLint64 defaultBufferComponents = static_cast<GLint64>(mCaps.maxFragmentUniformComponents);
             *params = uniformBufferComponents + defaultBufferComponents;
         }
         break;
@@ -1459,8 +1457,8 @@ void Context::applyTextures(SamplerType shaderType, Texture *textures[], Texture
                             size_t framebufferSerialCount)
 {
     // Range of Direct3D samplers of given sampler type
-    size_t samplerCount = (shaderType == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS
-                                                        : mRenderer->getMaxVertexTextureImageUnits();
+    size_t samplerCount = (shaderType == SAMPLER_PIXEL) ? mCaps.maxTextureImageUnits
+                                                        : mCaps.maxVertexTextureImageUnits;
 
     for (size_t samplerIndex = 0; samplerIndex < textureCount; samplerIndex++)
     {
@@ -1921,8 +1919,7 @@ unsigned int Context::getMaximumCombinedTextureImageUnits() const
 
 unsigned int Context::getMaximumCombinedUniformBufferBindings() const
 {
-    return mRenderer->getMaxVertexShaderUniformBuffers() +
-           mRenderer->getMaxFragmentShaderUniformBuffers();
+    return mCaps.maxVertexUniformBlocks + mCaps.maxFragmentUniformBlocks;
 }
 
 unsigned int Context::getMaxTransformFeedbackBufferBindings() const
@@ -2399,6 +2396,15 @@ void Context::initCaps(GLuint clientVersion)
         // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
         //mExtensions.sRGB = false;
     }
+
+    // Apply implementation limits
+    mCaps.maxVertexAttributes = std::min<GLuint>(mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);
+    mCaps.maxVertexTextureImageUnits = std::min<GLuint>(mCaps.maxVertexTextureImageUnits, IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+    mCaps.maxVertexUniformBlocks = std::min<GLuint>(mCaps.maxVertexUniformBlocks, IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS);
+    mCaps.maxVertexOutputComponents = std::min<GLuint>(mCaps.maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+
+    mCaps.maxFragmentInputComponents = std::min<GLuint>(mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+    mCaps.maxTextureImageUnits = std::min<GLuint>(mCaps.maxTextureImageUnits, MAX_TEXTURE_IMAGE_UNITS);
 
     GLuint maxSamples = 0;
     mCaps.compressedTextureFormats.clear();

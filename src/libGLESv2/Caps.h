@@ -233,6 +233,23 @@ struct Caps
     std::vector<GLenum> programBinaryFormats;
     std::vector<GLenum> shaderBinaryFormats;
     GLuint64 maxServerWaitTimeout;
+
+    // Table 6.31, implementation dependent vertex shader limits
+    GLuint maxVertexAttributes;
+    GLuint maxVertexUniformComponents;
+    GLuint maxVertexUniformVectors;
+    GLuint maxVertexUniformBlocks;
+    GLuint maxVertexOutputComponents;
+    GLuint maxVertexTextureImageUnits;
+
+    // Table 6.32, implementation dependent fragment shader limits
+    GLuint maxFragmentUniformComponents;
+    GLuint maxFragmentUniformVectors;
+    GLuint maxFragmentUniformBlocks;
+    GLuint maxFragmentInputComponents;
+    GLuint maxTextureImageUnits;
+    GLint minProgramTexelOffset;
+    GLint maxProgramTexelOffset;
 };
 
 }
