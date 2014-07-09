@@ -77,7 +77,7 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, con
 
         DWORD lockFlags = mDynamicUsage ? D3DLOCK_NOOVERWRITE : 0;
 
-        void *mapPtr = NULL;
+        uint8_t *mapPtr = NULL;
 
         unsigned int mapSize;
         if (!spaceRequired(attrib, count, instances, &mapSize))
@@ -85,7 +85,7 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, con
             return false;
         }
 
-        HRESULT result = mVertexBuffer->Lock(offset, mapSize, &mapPtr, lockFlags);
+        HRESULT result = mVertexBuffer->Lock(offset, mapSize, reinterpret_cast<void**>(&mapPtr), lockFlags);
 
         if (FAILED(result))
         {
@@ -93,22 +93,22 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, con
             return false;
         }
 
-        const char *input = NULL;
+        const uint8_t *input = NULL;
         if (attrib.enabled)
         {
             if (buffer)
             {
                 BufferImpl *storage = buffer->getImplementation();
-                input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.offset);
+                input = static_cast<const uint8_t*>(storage->getData()) + static_cast<int>(attrib.offset);
             }
             else
             {
-                input = static_cast<const char*>(attrib.pointer);
+                input = static_cast<const uint8_t*>(attrib.pointer);
             }
         }
         else
         {
-            input = reinterpret_cast<const char*>(currentValue.FloatValues);
+            input = reinterpret_cast<const uint8_t*>(currentValue.FloatValues);
         }
 
         if (instances == 0 || attrib.divisor == 0)

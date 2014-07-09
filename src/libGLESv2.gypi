@@ -118,6 +118,7 @@
             'libGLESv2/renderer/copyimage.cpp',
             'libGLESv2/renderer/copyimage.h',
             'libGLESv2/renderer/copyvertex.h',
+            'libGLESv2/renderer/copyvertex.inl',
             'libGLESv2/renderer/generatemip.h',
             'libGLESv2/renderer/generatemip.inl',
             'libGLESv2/renderer/imageformats.h',

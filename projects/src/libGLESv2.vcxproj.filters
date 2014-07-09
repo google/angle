@@ -303,6 +303,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\VertexArrayImpl.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
+    <None Include="..\..\src\libGLESv2\renderer\copyvertex.inl">
+      <Filter>src\libGLESv2\renderer</Filter>
+    </None>
     <ClInclude Include="..\..\src\libGLESv2\renderer\SwapChain.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
