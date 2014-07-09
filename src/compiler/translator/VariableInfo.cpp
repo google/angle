@@ -8,119 +8,94 @@
 #include "compiler/translator/VariableInfo.h"
 #include "compiler/translator/util.h"
 
-namespace {
-
-TString arrayBrackets(int index)
-{
-    TStringStream stream;
-    stream << "[" << index << "]";
-    return stream.str();
-}
-
 template <typename VarT>
-void getBuiltInVariableInfo(const TType &type,
-                            const TString &name,
-                            const TString &mappedName,
-                            std::vector<VarT> &infoList);
-
-template <typename VarT>
-void getUserDefinedVariableInfo(const TType &type,
-                                const TString &name,
-                                const TString &mappedName,
-                                std::vector<VarT> &infoList,
-                                ShHashFunction64 hashFunction);
+static void ExpandUserDefinedVariable(const VarT &variable,
+                                      const std::string &name,
+                                      const std::string &mappedName,
+                                      bool markStaticUse,
+                                      std::vector<VarT> *expanded);
 
 // Returns info for an attribute, uniform, or varying.
 template <typename VarT>
-void getVariableInfo(const TType &type,
-                     const TString &name,
-                     const TString &mappedName,
-                     std::vector<VarT> &infoList,
-                     ShHashFunction64 hashFunction)
+static void ExpandVariable(const VarT &variable,
+                           const std::string &name,
+                           const std::string &mappedName,
+                           bool markStaticUse,
+                           std::vector<VarT> *expanded)
 {
-    if (type.getBasicType() == EbtStruct || type.isInterfaceBlock()) {
-        if (type.isArray()) {
-            for (int i = 0; i < type.getArraySize(); ++i) {
-                TString lname = name + arrayBrackets(i);
-                TString lmappedName = mappedName + arrayBrackets(i);
-                getUserDefinedVariableInfo(type, lname, lmappedName, infoList, hashFunction);
-            }
-        } else {
-            getUserDefinedVariableInfo(type, name, mappedName, infoList, hashFunction);
-        }
-    } else {
-        getBuiltInVariableInfo(type, name, mappedName, infoList);
-    }
-}
-
-template <class VarT>
-void getBuiltInVariableInfo(const TType &type,
-                            const TString &name,
-                            const TString &mappedName,
-                            std::vector<VarT> &infoList)
-{
-    ASSERT(type.getBasicType() != EbtStruct);
-
-    VarT varInfo;
-    if (type.isArray())
+    if (variable.isStruct())
     {
-        varInfo.name = (name + "[0]").c_str();
-        varInfo.mappedName = (mappedName + "[0]").c_str();
-        varInfo.arraySize = type.getArraySize();
+        if (variable.isArray())
+        {
+            for (size_t elementIndex = 0; elementIndex < variable.elementCount(); elementIndex++)
+            {
+                std::string lname = name + ArrayString(elementIndex);
+                std::string lmappedName = mappedName + ArrayString(elementIndex);
+                ExpandUserDefinedVariable(variable, lname, lmappedName, markStaticUse, expanded);
+            }
+        }
+        else
+        {
+            ExpandUserDefinedVariable(variable, name, mappedName, markStaticUse, expanded);
+        }
     }
     else
     {
-        varInfo.name = name.c_str();
-        varInfo.mappedName = mappedName.c_str();
-        varInfo.arraySize = 0;
+        VarT expandedVar = variable;
+
+        expandedVar.name = name;
+        expandedVar.mappedName = mappedName;
+
+        // Mark all expanded fields as used if the parent is used
+        if (markStaticUse)
+        {
+            expandedVar.staticUse = true;
+        }
+
+        if (expandedVar.isArray())
+        {
+            expandedVar.name += "[0]";
+            expandedVar.mappedName += "[0]";
+        }
+
+        expanded->push_back(expandedVar);
     }
-    varInfo.precision = sh::GLVariablePrecision(type);
-    varInfo.type = sh::GLVariableType(type);
-    infoList.push_back(varInfo);
 }
 
 template <class VarT>
-void getUserDefinedVariableInfo(const TType &type,
-                                const TString &name,
-                                const TString &mappedName,
-                                std::vector<VarT> &infoList,
-                                ShHashFunction64 hashFunction)
+static void ExpandUserDefinedVariable(const VarT &variable,
+                                      const std::string &name,
+                                      const std::string &mappedName,
+                                      bool markStaticUse,
+                                      std::vector<VarT> *expanded)
 {
-    ASSERT(type.getBasicType() == EbtStruct || type.isInterfaceBlock());
+    ASSERT(variable.isStruct());
 
-    const TFieldList& fields = type.isInterfaceBlock() ?
-        type.getInterfaceBlock()->fields() :
-        type.getStruct()->fields();
-    for (size_t i = 0; i < fields.size(); ++i)
+    const std::vector<VarT> &fields = variable.fields;
+
+    for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
     {
-        const TType& fieldType = *(fields[i]->type());
-        const TString& fieldName = fields[i]->name();
-        getVariableInfo(fieldType,
-                        name + "." + fieldName,
-                        mappedName + "." + TIntermTraverser::hash(fieldName, hashFunction),
-                        infoList,
-                        hashFunction);
+        const VarT &field = fields[fieldIndex];
+        ExpandVariable(field,
+                       name + "." + field.name,
+                       mappedName + "." + field.mappedName,
+                       markStaticUse,
+                       expanded);
     }
 }
 
 template <class VarT>
-VarT* findVariable(const TType &type,
-                   const TString &name,
-                   std::vector<VarT> *infoList)
+static VarT* findVariable(const TString &name,
+                          std::vector<VarT> *infoList)
 {
     // TODO(zmo): optimize this function.
-    TString myName = name;
-    if (type.isArray())
-        myName += "[0]";
     for (size_t ii = 0; ii < infoList->size(); ++ii)
     {
-        if ((*infoList)[ii].name.c_str() == myName)
+        if ((*infoList)[ii].name.c_str() == name)
             return &((*infoList)[ii]);
     }
     return NULL;
 }
-
-}  // namespace anonymous
 
 CollectVariables::CollectVariables(std::vector<sh::Attribute> *attribs,
                                    std::vector<sh::Uniform> *uniforms,
@@ -148,14 +123,14 @@ void CollectVariables::visitSymbol(TIntermSymbol *symbol)
 
     if (sh::IsVarying(symbol->getQualifier()))
     {
-        var = findVariable(symbol->getType(), symbol->getSymbol(), mVaryings);
+        var = findVariable(symbol->getSymbol(), mVaryings);
     }
     else
     {
         switch (symbol->getQualifier())
         {
           case EvqUniform:
-            var = findVariable(symbol->getType(), symbol->getSymbol(), mUniforms);
+            var = findVariable(symbol->getSymbol(), mUniforms);
             break;
           case EvqFragCoord:
             if (!mFragCoordAdded)
@@ -210,19 +185,51 @@ void CollectVariables::visitSymbol(TIntermSymbol *symbol)
 }
 
 template <typename VarT>
+class NameHashingTraverser : public sh::GetVariableTraverser<VarT>
+{
+  public:
+    NameHashingTraverser(std::vector<VarT> *output, ShHashFunction64 hashFunction)
+        : sh::GetVariableTraverser<VarT>(output),
+          mHashFunction(hashFunction)
+    {}
+
+  private:
+    void visitVariable(VarT *variable)
+    {
+        TString stringName = TString(variable->name.c_str());
+        variable->mappedName = TIntermTraverser::hash(stringName, mHashFunction).c_str();
+    }
+
+    ShHashFunction64 mHashFunction;
+};
+
+// Attributes, which cannot have struct fields, are a special case
+template <>
+void CollectVariables::visitVariable(const TIntermSymbol *variable,
+                                     std::vector<sh::Attribute> *infoList) const
+{
+    ASSERT(variable);
+    const TType &type = variable->getType();
+    ASSERT(!type.getStruct());
+
+    sh::Attribute attribute;
+
+    attribute.type = sh::GLVariableType(type);
+    attribute.precision = sh::GLVariablePrecision(type);
+    attribute.name = variable->getSymbol().c_str();
+    attribute.arraySize = static_cast<unsigned int>(type.getArraySize());
+    attribute.mappedName = TIntermTraverser::hash(variable->getSymbol(), mHashFunction).c_str();
+    attribute.location = variable->getType().getLayoutQualifier().location;
+
+    infoList->push_back(attribute);
+}
+
+template <typename VarT>
 void CollectVariables::visitVariable(const TIntermSymbol *variable,
                                      std::vector<VarT> *infoList) const
 {
-    TString processedSymbol;
-    if (mHashFunction == NULL)
-        processedSymbol = variable->getSymbol();
-    else
-        processedSymbol = TIntermTraverser::hash(variable->getSymbol(), mHashFunction);
-    getVariableInfo(variable->getType(),
-        variable->getSymbol(),
-        processedSymbol,
-        *infoList,
-        mHashFunction);
+    NameHashingTraverser<VarT> traverser(infoList, mHashFunction);
+    traverser.traverse(variable->getType(), variable->getSymbol());
 }
 
 template <typename VarT>
@@ -281,3 +288,16 @@ bool CollectVariables::visitAggregate(Visit, TIntermAggregate *node)
 
     return visitChildren;
 }
+
+template <typename VarT>
+void ExpandVariables(const std::vector<VarT> &compact, std::vector<VarT> *expanded)
+{
+    for (size_t variableIndex = 0; variableIndex < compact.size(); variableIndex++)
+    {
+        const VarT &variable = compact[variableIndex];
+        ExpandVariable(variable, variable.name, variable.mappedName, variable.staticUse, expanded);
+    }
+}
+
+template void ExpandVariables(const std::vector<sh::Uniform> &, std::vector<sh::Uniform> *);
+template void ExpandVariables(const std::vector<sh::Varying> &, std::vector<sh::Varying> *);

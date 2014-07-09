@@ -11,8 +11,9 @@
 #include "common/shadervars.h"
 
 // Traverses intermediate tree to collect all attributes, uniforms, varyings.
-class CollectVariables : public TIntermTraverser {
-public:
+class CollectVariables : public TIntermTraverser
+{
+  public:
     CollectVariables(std::vector<sh::Attribute> *attribs,
                      std::vector<sh::Uniform> *uniforms,
                      std::vector<sh::Varying> *varyings,
@@ -21,7 +22,7 @@ public:
     virtual void visitSymbol(TIntermSymbol *symbol);
     virtual bool visitAggregate(Visit, TIntermAggregate *node);
 
-private:
+  private:
     std::vector<sh::Attribute> *mAttribs;
     std::vector<sh::Uniform> *mUniforms;
     std::vector<sh::Varying> *mVaryings;
@@ -38,5 +39,10 @@ private:
     template <typename VarT>
     void visitInfoList(const TIntermSequence &sequence, std::vector<VarT> *infoList) const;
 };
+
+// Expand struct variables to flattened lists of split variables
+// Implemented for sh::Varying and sh::Uniform.
+template <typename VarT>
+void ExpandVariables(const std::vector<VarT> &compact, std::vector<VarT> *expanded);
 
 #endif  // COMPILER_VARIABLE_INFO_H_

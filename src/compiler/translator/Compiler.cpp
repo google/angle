@@ -360,7 +360,9 @@ void TCompiler::clearResults()
     attributes.clear();
     outputVariables.clear();
     uniforms.clear();
+    expandedUniforms.clear();
     varyings.clear();
+    expandedVaryings.clear();
     interfaceBlocks.clear();
 
     builtInFunctionEmulator.Cleanup();
@@ -487,12 +489,17 @@ void TCompiler::collectVariables(TIntermNode* root)
 {
     CollectVariables collect(&attributes, &uniforms, &varyings, hashFunction);
     root->traverse(&collect);
+
+    // For backwards compatiblity with ShGetVariableInfo, expand struct
+    // uniforms and varyings into separate variables for each field.
+    ExpandVariables(uniforms, &expandedUniforms);
+    ExpandVariables(varyings, &expandedVaryings);
 }
 
 bool TCompiler::enforcePackingRestrictions()
 {
     VariablePacker packer;
-    return packer.CheckVariablesWithinPackingLimits(maxUniformVectors, uniforms);
+    return packer.CheckVariablesWithinPackingLimits(maxUniformVectors, expandedUniforms);
 }
 
 void TCompiler::initializeGLPosition(TIntermNode* root)
