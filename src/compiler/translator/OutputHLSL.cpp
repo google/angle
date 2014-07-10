@@ -237,6 +237,11 @@ const std::vector<sh::Varying> &OutputHLSL::getVaryings() const
     return mActiveVaryings;
 }
 
+const std::map<std::string, unsigned int> &OutputHLSL::getInterfaceBlockRegisterMap() const
+{
+    return mUniformHLSL->getInterfaceBlockRegisterMap();
+}
+
 int OutputHLSL::vectorSize(const TType &type) const
 {
     int elementSize = type.isMatrix() ? type.getCols() : 1;

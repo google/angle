@@ -474,3 +474,28 @@ int ShCheckVariablesWithinPackingLimits(
     VariablePacker packer;
     return packer.CheckVariablesWithinPackingLimits(maxVectors, variables) ? 1 : 0;
 }
+
+bool ShGetInterfaceBlockRegister(const ShHandle handle,
+                                 const char *interfaceBlockName,
+                                 unsigned int *indexOut)
+{
+    if (!handle || !interfaceBlockName || !indexOut)
+    {
+        return false;
+    }
+
+    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
+    TranslatorHLSL* translator = base->getAsTranslatorHLSL();
+    if (!translator)
+    {
+        return false;
+    }
+
+    if (!translator->hasInterfaceBlock(interfaceBlockName))
+    {
+        return false;
+    }
+
+    *indexOut = translator->getInterfaceBlockRegister(interfaceBlockName);
+    return true;
+}

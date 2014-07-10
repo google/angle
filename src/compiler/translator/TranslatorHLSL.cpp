@@ -26,4 +26,17 @@ void TranslatorHLSL::translate(TIntermNode *root)
     uniforms        = outputHLSL.getUniforms();
     varyings        = outputHLSL.getVaryings();
     interfaceBlocks = outputHLSL.getInterfaceBlocks();
+
+    mInterfaceBlockRegisterMap = outputHLSL.getInterfaceBlockRegisterMap();
+}
+
+bool TranslatorHLSL::hasInterfaceBlock(const std::string &interfaceBlockName) const
+{
+    return (mInterfaceBlockRegisterMap.count(interfaceBlockName) > 0);
+}
+
+unsigned int TranslatorHLSL::getInterfaceBlockRegister(const std::string &interfaceBlockName) const
+{
+    ASSERT(hasInterfaceBlock(interfaceBlockName));
+    return mInterfaceBlockRegisterMap.find(interfaceBlockName)->second;
 }

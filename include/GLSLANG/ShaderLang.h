@@ -43,7 +43,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 126
+#define ANGLE_SH_VERSION 127
 
 typedef enum {
   SH_GLES2_SPEC = 0x8B40,
@@ -479,6 +479,17 @@ COMPILER_EXPORT int ShCheckVariablesWithinPackingLimits(
     int maxVectors,
     ShVariableInfo* varInfoArray,
     size_t varInfoArraySize);
+
+// Gives the compiler-assigned register for an interface block.
+// The method writes the value to the output variable "indexOut".
+// Returns true if it found a valid interface block, false otherwise.
+// Parameters:
+// handle: Specifies the compiler
+// interfaceBlockName: Specifies the interface block
+// indexOut: output variable that stores the assigned register
+COMPILER_EXPORT bool ShGetInterfaceBlockRegister(const ShHandle handle,
+                                                 const char *interfaceBlockName,
+                                                 unsigned int *indexOut);
 
 #ifdef __cplusplus
 }

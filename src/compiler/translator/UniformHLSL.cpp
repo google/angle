@@ -236,6 +236,7 @@ TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedIn
             traverser.traverse(*field.type(), fullFieldName);
         }
 
+        mInterfaceBlockRegisterMap[activeBlock.name] = mInterfaceBlockRegister;
         mInterfaceBlockRegister += std::max(1u, arraySize);
 
         BlockLayoutType blockLayoutType = GetBlockLayoutType(interfaceBlock.blockStorage());

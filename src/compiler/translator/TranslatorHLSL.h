@@ -16,8 +16,13 @@ class TranslatorHLSL : public TCompiler
     TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
     virtual TranslatorHLSL *getAsTranslatorHLSL() { return this; }
 
+    bool hasInterfaceBlock(const std::string &interfaceBlockName) const;
+    unsigned int getInterfaceBlockRegister(const std::string &interfaceBlockName) const;
+
   protected:
     virtual void translate(TIntermNode* root);
+
+    std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
 };
 
 #endif  // COMPILER_TRANSLATORHLSL_H_
