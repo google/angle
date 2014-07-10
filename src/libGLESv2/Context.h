@@ -210,7 +210,6 @@ class Context
     const TextureCapsMap &getTextureCaps() const;
     const Extensions &getExtensions() const;
 
-    unsigned int getMaxTransformFeedbackBufferBindings() const;
     const std::string &getRendererString() const;
 
     const std::string &getExtensionString() const;

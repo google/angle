@@ -1795,45 +1795,6 @@ unsigned int Renderer11::getReservedFragmentUniformBuffers() const
     return 2;
 }
 
-unsigned int Renderer11::getMaxTransformFeedbackBuffers() const
-{
-    META_ASSERT(gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS >= D3D11_SO_BUFFER_SLOT_COUNT &&
-                gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS >= D3D10_SO_BUFFER_SLOT_COUNT);
-
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-        return D3D11_SO_BUFFER_SLOT_COUNT;
-      case D3D_FEATURE_LEVEL_10_1:
-        return D3D10_1_SO_BUFFER_SLOT_COUNT;
-      case D3D_FEATURE_LEVEL_10_0:
-        return D3D10_SO_BUFFER_SLOT_COUNT;
-      default: UNREACHABLE();
-        return 0;
-    }
-}
-
-unsigned int Renderer11::getMaxTransformFeedbackSeparateComponents() const
-{
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-        return getMaxTransformFeedbackInterleavedComponents() / getMaxTransformFeedbackBuffers();
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-        // D3D 10 and 10.1 only allow one output per output slot if an output slot other than zero
-        // is used.
-        return 4;
-      default: UNREACHABLE();
-        return 0;
-    }
-}
-
-unsigned int Renderer11::getMaxTransformFeedbackInterleavedComponents() const
-{
-    return (getRendererCaps().maxVaryingVectors * 4);
-}
-
 bool Renderer11::getShareHandleSupport() const
 {
     // We only currently support share handles with BGRA surfaces, because

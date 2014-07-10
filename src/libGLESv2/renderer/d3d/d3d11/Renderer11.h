@@ -107,9 +107,6 @@ class Renderer11 : public Renderer
     virtual unsigned int getReservedFragmentUniformVectors() const;
     virtual unsigned int getReservedVertexUniformBuffers() const;
     virtual unsigned int getReservedFragmentUniformBuffers() const;
-    virtual unsigned int getMaxTransformFeedbackBuffers() const;
-    virtual unsigned int getMaxTransformFeedbackSeparateComponents() const;
-    virtual unsigned int getMaxTransformFeedbackInterleavedComponents() const;
     virtual bool getShareHandleSupport() const;
     virtual bool getPostSubBufferSupport() const;
 

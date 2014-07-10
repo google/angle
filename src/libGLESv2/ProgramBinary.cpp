@@ -2228,8 +2228,9 @@ bool ProgramBinary::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, cons
                                                           std::vector<LinkedVarying> *outTransformFeedbackLinkedVaryings) const
 {
     size_t totalComponents = 0;
-    const size_t maxSeparateComponents = mRenderer->getMaxTransformFeedbackSeparateComponents();
-    const size_t maxInterleavedComponents = mRenderer->getMaxTransformFeedbackInterleavedComponents();
+
+    // TODO (geofflang): Use context's caps.
+    const gl::Caps &caps = mRenderer->getRendererCaps();
 
     // Gather the linked varyings that are used for transform feedback, they should all exist.
     outTransformFeedbackLinkedVaryings->clear();
@@ -2251,10 +2252,10 @@ bool ProgramBinary::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, cons
 
                 size_t componentCount = linkedVaryings[j].semanticIndexCount * 4;
                 if (transformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
-                    componentCount > maxSeparateComponents)
+                    componentCount > caps.maxTransformFeedbackSeparateComponents)
                 {
                     infoLog.append("Transform feedback varying's %s components (%u) exceed the maximum separate components (%u).",
-                                   linkedVaryings[j].name.c_str(), componentCount, maxSeparateComponents);
+                                   linkedVaryings[j].name.c_str(), componentCount, caps.maxTransformFeedbackSeparateComponents);
                     return false;
                 }
 
@@ -2270,10 +2271,10 @@ bool ProgramBinary::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, cons
         ASSERT(found);
     }
 
-    if (transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS && totalComponents > maxInterleavedComponents)
+    if (transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS && totalComponents > caps.maxTransformFeedbackInterleavedComponents)
     {
         infoLog.append("Transform feedback varying total components (%u) exceed the maximum interleaved components (%u).",
-                       totalComponents, maxInterleavedComponents);
+                       totalComponents, caps.maxTransformFeedbackInterleavedComponents);
         return false;
     }
 

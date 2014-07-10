@@ -436,6 +436,11 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
     caps->maxVaryingVectors = caps->maxVertexOutputComponents / 4;
     caps->maxCombinedTextureImageUnits = caps->maxVertexTextureImageUnits + caps->maxFragmentInputComponents;
 
+    // Transform feedback limits
+    caps->maxTransformFeedbackInterleavedComponents = 0;
+    caps->maxTransformFeedbackSeparateAttributes = 0;
+    caps->maxTransformFeedbackSeparateComponents = 0;
+
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->elementIndexUint = deviceCaps.MaxVertexIndex >= (1 << 16);

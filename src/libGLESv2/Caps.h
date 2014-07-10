@@ -261,6 +261,11 @@ struct Caps
     GLuint maxVaryingComponents;
     GLuint maxVaryingVectors;
     GLuint maxCombinedTextureImageUnits;
+
+    // Table 6.34, implementation dependent transform feedback limits
+    GLuint maxTransformFeedbackInterleavedComponents;
+    GLuint maxTransformFeedbackSeparateAttributes;
+    GLuint maxTransformFeedbackSeparateComponents;
 };
 
 }

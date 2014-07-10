@@ -924,9 +924,9 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MINOR_VERSION:                            *params = 0;                                                    break;
       case GL_MAX_ELEMENTS_INDICES:                     *params = mCaps.maxElementsIndices;                             break;
       case GL_MAX_ELEMENTS_VERTICES:                    *params = mCaps.maxElementsVertices;                            break;
-      case GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS: *params = mRenderer->getMaxTransformFeedbackInterleavedComponents(); break;
-      case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS:       *params = mRenderer->getMaxTransformFeedbackBuffers();               break;
-      case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS:    *params = mRenderer->getMaxTransformFeedbackSeparateComponents();    break;
+      case GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS: *params = mCaps.maxTransformFeedbackInterleavedComponents; break;
+      case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS:       *params = mCaps.maxTransformFeedbackSeparateAttributes;    break;
+      case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS:    *params = mCaps.maxTransformFeedbackSeparateComponents;    break;
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:           *params = mCaps.compressedTextureFormats.size();                break;
       case GL_MAX_SAMPLES_ANGLE:                        *params = mExtensions.maxSamples;                               break;
       case GL_IMPLEMENTATION_COLOR_READ_TYPE:
@@ -1905,11 +1905,6 @@ const TextureCapsMap &Context::getTextureCaps() const
 const Extensions &Context::getExtensions() const
 {
     return mExtensions;
-}
-
-unsigned int Context::getMaxTransformFeedbackBufferBindings() const
-{
-    return mRenderer->getMaxTransformFeedbackBuffers();
 }
 
 void Context::getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type)

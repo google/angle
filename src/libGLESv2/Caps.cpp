@@ -409,7 +409,11 @@ Caps::Caps()
       maxCombinedFragmentUniformComponents(0),
       maxVaryingComponents(0),
       maxVaryingVectors(0),
-      maxCombinedTextureImageUnits(0)
+      maxCombinedTextureImageUnits(0),
+
+      maxTransformFeedbackInterleavedComponents(0),
+      maxTransformFeedbackSeparateAttributes(0),
+      maxTransformFeedbackSeparateComponents(0)
 {
 }
 

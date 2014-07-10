@@ -2209,21 +2209,6 @@ unsigned int Renderer9::getReservedFragmentUniformBuffers() const
     return 0;
 }
 
-unsigned int Renderer9::getMaxTransformFeedbackBuffers() const
-{
-    return 0;
-}
-
-unsigned int Renderer9::getMaxTransformFeedbackSeparateComponents() const
-{
-    return 0;
-}
-
-unsigned int Renderer9::getMaxTransformFeedbackInterleavedComponents() const
-{
-    return 0;
-}
-
 bool Renderer9::getShareHandleSupport() const
 {
     // PIX doesn't seem to support using share handles, so disable them.

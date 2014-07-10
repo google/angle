@@ -163,9 +163,6 @@ class Renderer
     virtual unsigned int getReservedFragmentUniformVectors() const = 0;
     virtual unsigned int getReservedVertexUniformBuffers() const = 0;
     virtual unsigned int getReservedFragmentUniformBuffers() const = 0;
-    virtual unsigned int getMaxTransformFeedbackBuffers() const = 0;
-    virtual unsigned int getMaxTransformFeedbackSeparateComponents() const = 0;
-    virtual unsigned int getMaxTransformFeedbackInterleavedComponents() const = 0;
     virtual bool getShareHandleSupport() const = 0;
     virtual bool getPostSubBufferSupport() const = 0;
 

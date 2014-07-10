@@ -795,6 +795,63 @@ static size_t GetMaximumConstantBufferSize(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+static size_t GetMaximumStreamOutputBuffers(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_SO_BUFFER_SLOT_COUNT;
+
+      case D3D_FEATURE_LEVEL_10_1: return D3D10_1_SO_BUFFER_SLOT_COUNT;
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_SO_BUFFER_SLOT_COUNT;
+
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return 0;
+
+      default: UNREACHABLE();      return 0;
+    }
+}
+
+static size_t GetMaximumStreamOutputInterleavedComponenets(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return GetMaximumVertexOutputVectors(featureLevel) * 4;
+
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return 0;
+
+      default: UNREACHABLE();      return 0;
+    }
+}
+
+static size_t GetMaximumStreamOutputSeparateCompeonents(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0: return GetMaximumStreamOutputInterleavedComponenets(featureLevel) /
+                                          GetMaximumStreamOutputBuffers(featureLevel);
+
+
+      // D3D 10 and 10.1 only allow one output per output slot if an output slot other than zero is used.
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return 4;
+
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return 0;
+
+      default: UNREACHABLE();      return 0;
+    }
+}
+
 void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions)
 {
     GLuint maxSamples = 0;
@@ -886,6 +943,11 @@ void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *text
     caps->maxVaryingComponents = GetMaximumVertexOutputVectors(featureLevel) * 4;
     caps->maxVaryingVectors = GetMaximumVertexOutputVectors(featureLevel);
     caps->maxCombinedTextureImageUnits = caps->maxVertexTextureImageUnits + caps->maxFragmentInputComponents;
+
+    // Transform feedback limits
+    caps->maxTransformFeedbackInterleavedComponents = GetMaximumStreamOutputInterleavedComponenets(featureLevel);
+    caps->maxTransformFeedbackSeparateAttributes = GetMaximumStreamOutputBuffers(featureLevel);
+    caps->maxTransformFeedbackSeparateComponents = GetMaximumStreamOutputSeparateCompeonents(featureLevel);
 
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
