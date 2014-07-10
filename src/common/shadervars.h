@@ -37,6 +37,13 @@ enum BlockLayoutType
 // Base class for all variables defined in shaders, including Varyings, Uniforms, etc
 struct ShaderVariable
 {
+    ShaderVariable()
+        : type(0),
+          precision(0),
+          arraySize(0),
+          staticUse(false)
+    {}
+
     ShaderVariable(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn)
         : type(typeIn),
           precision(precisionIn),
@@ -60,8 +67,7 @@ struct ShaderVariable
 struct Uniform : public ShaderVariable
 {
     Uniform()
-        : ShaderVariable(0, 0, "", 0),
-          registerIndex(-1),
+        : registerIndex(-1),
           elementIndex(-1)
     {}
 
@@ -84,8 +90,7 @@ struct Uniform : public ShaderVariable
 struct Attribute : public ShaderVariable
 {
     Attribute()
-        : ShaderVariable(0, 0, "", 0),
-          location(-1)
+        : location(-1)
     {}
 
     Attribute(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, int locationIn)
@@ -99,8 +104,7 @@ struct Attribute : public ShaderVariable
 struct InterfaceBlockField : public ShaderVariable
 {
     InterfaceBlockField()
-        : ShaderVariable(0, 0, "", 0),
-          isRowMajorMatrix(false)
+        : isRowMajorMatrix(false)
     {}
 
     InterfaceBlockField(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, bool isRowMajorMatrix)
@@ -117,8 +121,7 @@ struct InterfaceBlockField : public ShaderVariable
 struct Varying : public ShaderVariable
 {
     Varying()
-        : ShaderVariable(0, 0, "", 0),
-          interpolation(INTERPOLATION_SMOOTH)
+        : interpolation(INTERPOLATION_SMOOTH)
     {}
 
     Varying(GLenum typeIn, GLenum precisionIn, const char *nameIn, unsigned int arraySizeIn, InterpolationType interpolationIn)
