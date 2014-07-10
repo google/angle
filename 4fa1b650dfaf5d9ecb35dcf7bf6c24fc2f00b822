@@ -46,6 +46,24 @@
       "revId": "4fa1b650dfaf5d9ecb35dcf7bf6c24fc2f00b822",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "396bacde_77f69071",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-10T21:12:54Z",
+      "side": 1,
+      "message": "At least staticUse could be false.",
+      "parentUuid": "f94e7481_a55a7e61",
+      "revId": "4fa1b650dfaf5d9ecb35dcf7bf6c24fc2f00b822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
