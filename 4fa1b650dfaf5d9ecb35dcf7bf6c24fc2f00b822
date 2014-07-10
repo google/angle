@@ -22,6 +22,30 @@
       "revId": "4fa1b650dfaf5d9ecb35dcf7bf6c24fc2f00b822",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f94e7481_a55a7e61",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-10T18:22:27Z",
+      "side": 1,
+      "message": "This file doesn\u0027t have access to the GL headers, as I said in a previous patch. It conflicts with Chromium.",
+      "parentUuid": "395d6c32_aa992fa0",
+      "range": {
+        "startLine": 41,
+        "startChar": 10,
+        "endLine": 44,
+        "endChar": 22
+      },
+      "revId": "4fa1b650dfaf5d9ecb35dcf7bf6c24fc2f00b822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
