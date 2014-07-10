@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19526823_898f9dd8",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-10T20:42:58Z",
+      "side": 1,
+      "message": "The function name sounds like it\u0027s checking for any existing attachment-- could it be renamed so that it\u0027s more clear that it\u0027s checking whether it has an attachment that matches the parameters?",
+      "revId": "8d8f8b9ca583e091fb3465884b5f3162d4d4a900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
