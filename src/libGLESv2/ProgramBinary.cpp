@@ -409,7 +409,8 @@ GLint ProgramBinary::getSamplerMapping(SamplerType type, unsigned int samplerInd
       default: UNREACHABLE();
     }
 
-    if (logicalTextureUnit >= 0 && logicalTextureUnit < (GLint)mRenderer->getMaxCombinedTextureImageUnits())
+    // TODO (geofflang):  Use context's caps
+    if (logicalTextureUnit >= 0 && logicalTextureUnit < (GLint)mRenderer->getRendererCaps().maxCombinedTextureImageUnits)
     {
         return logicalTextureUnit;
     }
@@ -2694,7 +2695,8 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog)
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
     updateSamplerMapping();
 
-    const unsigned int maxCombinedTextureImageUnits = mRenderer->getMaxCombinedTextureImageUnits();
+    // TODO (geofflang):  Use context's caps
+    const unsigned int maxCombinedTextureImageUnits = mRenderer->getRendererCaps().maxCombinedTextureImageUnits;
     TextureType textureUnitType[IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
 
     for (unsigned int i = 0; i < IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS; ++i)

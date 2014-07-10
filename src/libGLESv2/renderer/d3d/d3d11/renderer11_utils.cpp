@@ -611,6 +611,8 @@ static size_t GetReservedVertexOutputVectors()
 
 static size_t GetMaximumVertexOutputVectors(D3D_FEATURE_LEVEL featureLevel)
 {
+    META_ASSERT(gl::IMPLEMENTATION_MAX_VARYING_VECTORS == D3D11_VS_OUTPUT_REGISTER_COUNT);
+
     switch (featureLevel)
     {
       case D3D_FEATURE_LEVEL_11_1:
@@ -769,6 +771,30 @@ static int GetMaximumTexelOffset(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+static size_t GetMaximumConstantBufferSize(D3D_FEATURE_LEVEL featureLevel)
+{
+    // Returns a size_t despite the limit being a GLuint64 because size_t is the maximum size of
+    // any buffer that could be allocated.
+
+    const size_t bytesPerComponent = 4 * sizeof(float);
+
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * bytesPerComponent;
+
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * bytesPerComponent;
+
+      // Limits from http://msdn.microsoft.com/en-us/library/windows/desktop/ff476501.aspx remarks section
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return 4096 * bytesPerComponent;
+
+      default: UNREACHABLE();      return 0;
+    }
+}
+
 void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions)
 {
     GLuint maxSamples = 0;
@@ -844,6 +870,22 @@ void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *text
     caps->maxTextureImageUnits = GetMaximumPixelTextureUnits(featureLevel);
     caps->minProgramTexelOffset = GetMinimumTexelOffset(featureLevel);
     caps->maxProgramTexelOffset = GetMaximumTexelOffset(featureLevel);
+
+    // Aggregate shader limits
+    caps->maxUniformBufferBindings = caps->maxVertexUniformBlocks + caps->maxFragmentUniformBlocks;
+    caps->maxUniformBlockSize = GetMaximumConstantBufferSize(featureLevel);
+
+    // Setting a large alignment forces uniform buffers to bind with zero offset
+    caps->uniformBufferOffsetAlignment = static_cast<GLuint>(std::numeric_limits<GLint>::max());
+
+    caps->maxCombinedUniformBlocks = caps->maxVertexUniformBlocks + caps->maxFragmentUniformBlocks;
+    caps->maxCombinedVertexUniformComponents = (static_cast<GLint64>(caps->maxVertexUniformBlocks) * static_cast<GLint64>(caps->maxUniformBlockSize / 4)) +
+                                               static_cast<GLint64>(caps->maxVertexUniformComponents);
+    caps->maxCombinedFragmentUniformComponents = (static_cast<GLint64>(caps->maxFragmentUniformBlocks) * static_cast<GLint64>(caps->maxUniformBlockSize / 4)) +
+                                                 static_cast<GLint64>(caps->maxFragmentUniformComponents);
+    caps->maxVaryingComponents = GetMaximumVertexOutputVectors(featureLevel) * 4;
+    caps->maxVaryingVectors = GetMaximumVertexOutputVectors(featureLevel);
+    caps->maxCombinedTextureImageUnits = caps->maxVertexTextureImageUnits + caps->maxFragmentInputComponents;
 
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);

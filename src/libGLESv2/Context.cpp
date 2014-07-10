@@ -899,9 +899,9 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_VERTEX_ATTRIBS:                       *params = mCaps.maxVertexAttributes;                            break;
       case GL_MAX_VERTEX_UNIFORM_VECTORS:               *params = mCaps.maxVertexUniformVectors;                        break;
       case GL_MAX_VERTEX_UNIFORM_COMPONENTS:            *params = mCaps.maxVertexUniformComponents;                     break;
-      case GL_MAX_VARYING_VECTORS:                      *params = mRenderer->getMaxVaryingVectors();                    break;
-      case GL_MAX_VARYING_COMPONENTS:                   *params = mRenderer->getMaxVaryingVectors() * 4;                break;
-      case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:         *params = mRenderer->getMaxCombinedTextureImageUnits();         break;
+      case GL_MAX_VARYING_VECTORS:                      *params = mCaps.maxVaryingVectors;                              break;
+      case GL_MAX_VARYING_COMPONENTS:                   *params = mCaps.maxVertexOutputComponents;                      break;
+      case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:         *params = mCaps.maxCombinedTextureImageUnits;                   break;
       case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:           *params = mCaps.maxVertexTextureImageUnits;                     break;
       case GL_MAX_TEXTURE_IMAGE_UNITS:                  *params = mCaps.maxTextureImageUnits;                           break;
       case GL_MAX_FRAGMENT_UNIFORM_VECTORS:             *params = mCaps.maxFragmentUniformVectors;                      break;
@@ -915,11 +915,11 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_CUBE_MAP_TEXTURE_SIZE:                *params = mCaps.maxCubeMapTextureSize;                          break;
       case GL_MAX_3D_TEXTURE_SIZE:                      *params = mCaps.max3DTextureSize;                               break;
       case GL_MAX_ARRAY_TEXTURE_LAYERS:                 *params = mCaps.maxArrayTextureLayers;                          break;
-      case GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT:          *params = getUniformBufferOffsetAlignment();                    break;
-      case GL_MAX_UNIFORM_BUFFER_BINDINGS:              *params = getMaximumCombinedUniformBufferBindings();            break;
+      case GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT:          *params = mCaps.uniformBufferOffsetAlignment;                   break;
+      case GL_MAX_UNIFORM_BUFFER_BINDINGS:              *params = mCaps.maxUniformBufferBindings;                       break;
       case GL_MAX_VERTEX_UNIFORM_BLOCKS:                *params = mCaps.maxVertexUniformBlocks;                         break;
       case GL_MAX_FRAGMENT_UNIFORM_BLOCKS:              *params = mCaps.maxFragmentUniformBlocks;                       break;
-      case GL_MAX_COMBINED_UNIFORM_BLOCKS:              *params = getMaximumCombinedUniformBufferBindings();            break;
+      case GL_MAX_COMBINED_UNIFORM_BLOCKS:              *params = mCaps.maxCombinedTextureImageUnits;                   break;
       case GL_MAJOR_VERSION:                            *params = mClientVersion;                                       break;
       case GL_MINOR_VERSION:                            *params = 0;                                                    break;
       case GL_MAX_ELEMENTS_INDICES:                     *params = mCaps.maxElementsIndices;                             break;
@@ -983,21 +983,13 @@ void Context::getInteger64v(GLenum pname, GLint64 *params)
         *params = mCaps.maxElementIndex;
         break;
       case GL_MAX_UNIFORM_BLOCK_SIZE:
-        *params = static_cast<GLint64>(mRenderer->getMaxUniformBufferSize());
+        *params = mCaps.maxUniformBlockSize;
         break;
       case GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS:
-        {
-            GLint64 uniformBufferComponents = static_cast<GLint64>(mCaps.maxVertexUniformBlocks) * static_cast<GLint64>(mRenderer->getMaxUniformBufferSize() / 4);
-            GLint64 defaultBufferComponents = static_cast<GLint64>(mCaps.maxVertexUniformComponents);
-            *params = uniformBufferComponents + defaultBufferComponents;
-        }
+        *params = mCaps.maxCombinedVertexUniformComponents;
         break;
       case GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS:
-        {
-            GLint64 uniformBufferComponents = static_cast<GLint64>(mCaps.maxFragmentUniformBlocks) * static_cast<GLint64>(mRenderer->getMaxUniformBufferSize() / 4);
-            GLint64 defaultBufferComponents = static_cast<GLint64>(mCaps.maxFragmentUniformComponents);
-            *params = uniformBufferComponents + defaultBufferComponents;
-        }
+        *params = mCaps.maxCombinedFragmentUniformComponents;
         break;
       case GL_MAX_SERVER_WAIT_TIMEOUT:
         *params = mCaps.maxServerWaitTimeout;
@@ -1915,25 +1907,9 @@ const Extensions &Context::getExtensions() const
     return mExtensions;
 }
 
-unsigned int Context::getMaximumCombinedTextureImageUnits() const
-{
-    return mRenderer->getMaxCombinedTextureImageUnits();
-}
-
-unsigned int Context::getMaximumCombinedUniformBufferBindings() const
-{
-    return mCaps.maxVertexUniformBlocks + mCaps.maxFragmentUniformBlocks;
-}
-
 unsigned int Context::getMaxTransformFeedbackBufferBindings() const
 {
     return mRenderer->getMaxTransformFeedbackBuffers();
-}
-
-GLintptr Context::getUniformBufferOffsetAlignment() const
-{
-    // setting a large alignment forces uniform buffers to bind with zero offset
-    return static_cast<GLintptr>(std::numeric_limits<GLint>::max());
 }
 
 void Context::getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type)
@@ -2413,6 +2389,8 @@ void Context::initCaps(GLuint clientVersion)
 
     mCaps.maxFragmentInputComponents = std::min<GLuint>(mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
     mCaps.maxTextureImageUnits = std::min<GLuint>(mCaps.maxTextureImageUnits, MAX_TEXTURE_IMAGE_UNITS);
+
+    mCaps.maxCombinedTextureImageUnits = std::min<GLuint>(mCaps.maxCombinedTextureImageUnits, IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
 
     GLuint maxSamples = 0;
     mCaps.compressedTextureFormats.clear();

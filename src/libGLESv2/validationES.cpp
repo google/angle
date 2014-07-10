@@ -1085,7 +1085,7 @@ bool ValidateStateQuery(gl::Context *context, GLenum pname, GLenum *nativeType, 
       case GL_TEXTURE_BINDING_CUBE_MAP:
       case GL_TEXTURE_BINDING_3D:
       case GL_TEXTURE_BINDING_2D_ARRAY:
-        if (context->getState().getActiveSampler() >= context->getMaximumCombinedTextureImageUnits())
+        if (context->getState().getActiveSampler() >= context->getCaps().maxCombinedTextureImageUnits)
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }

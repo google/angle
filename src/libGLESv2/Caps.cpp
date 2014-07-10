@@ -399,7 +399,17 @@ Caps::Caps()
       maxFragmentInputComponents(0),
       maxTextureImageUnits(0),
       minProgramTexelOffset(0),
-      maxProgramTexelOffset(0)
+      maxProgramTexelOffset(0),
+
+      maxUniformBufferBindings(0),
+      maxUniformBlockSize(0),
+      uniformBufferOffsetAlignment(0),
+      maxCombinedUniformBlocks(0),
+      maxCombinedVertexUniformComponents(0),
+      maxCombinedFragmentUniformComponents(0),
+      maxVaryingComponents(0),
+      maxVaryingVectors(0),
+      maxCombinedTextureImageUnits(0)
 {
 }
 

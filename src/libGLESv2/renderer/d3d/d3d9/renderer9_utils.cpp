@@ -423,6 +423,19 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
     caps->minProgramTexelOffset = 0;
     caps->maxProgramTexelOffset = 0;
 
+    // Aggregate shader limits (unused in ES2)
+    caps->maxUniformBufferBindings = 0;
+    caps->maxUniformBlockSize = 0;
+    caps->uniformBufferOffsetAlignment = 0;
+    caps->maxCombinedUniformBlocks = 0;
+    caps->maxCombinedVertexUniformComponents = 0;
+    caps->maxCombinedFragmentUniformComponents = 0;
+    caps->maxVaryingComponents = 0;
+
+    // Aggregate shader limits
+    caps->maxVaryingVectors = caps->maxVertexOutputComponents / 4;
+    caps->maxCombinedTextureImageUnits = caps->maxVertexTextureImageUnits + caps->maxFragmentInputComponents;
+
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->elementIndexUint = deviceCaps.MaxVertexIndex >= (1 << 16);

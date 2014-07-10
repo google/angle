@@ -787,7 +787,7 @@ void Buffer11::NativeBuffer11::fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Ren
         // Constant buffers must be of a limited size, and aligned to 16 byte boundaries
         // For our purposes we ignore any buffer data past the maximum constant buffer size
         bufferDesc->ByteWidth = roundUp(bufferDesc->ByteWidth, 16u);
-        bufferDesc->ByteWidth = std::min(bufferDesc->ByteWidth, renderer->getMaxUniformBufferSize());
+        bufferDesc->ByteWidth = std::min<UINT>(bufferDesc->ByteWidth, renderer->getRendererCaps().maxUniformBlockSize);
         break;
 
       case BUFFER_USAGE_VERTEX_DYNAMIC:

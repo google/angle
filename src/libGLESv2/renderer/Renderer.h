@@ -159,16 +159,13 @@ class Renderer
     virtual std::string getRendererDescription() const = 0;
     virtual GUID getAdapterIdentifier() const = 0;
 
-    virtual unsigned int getMaxCombinedTextureImageUnits() const = 0;
     virtual unsigned int getReservedVertexUniformVectors() const = 0;
     virtual unsigned int getReservedFragmentUniformVectors() const = 0;
-    virtual unsigned int getMaxVaryingVectors() const = 0;
     virtual unsigned int getReservedVertexUniformBuffers() const = 0;
     virtual unsigned int getReservedFragmentUniformBuffers() const = 0;
     virtual unsigned int getMaxTransformFeedbackBuffers() const = 0;
     virtual unsigned int getMaxTransformFeedbackSeparateComponents() const = 0;
     virtual unsigned int getMaxTransformFeedbackInterleavedComponents() const = 0;
-    virtual unsigned int getMaxUniformBufferSize() const = 0;
     virtual bool getShareHandleSupport() const = 0;
     virtual bool getPostSubBufferSupport() const = 0;
 

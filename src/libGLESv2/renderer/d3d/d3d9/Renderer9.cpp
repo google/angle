@@ -2189,11 +2189,6 @@ GUID Renderer9::getAdapterIdentifier() const
     return mAdapterIdentifier.DeviceIdentifier;
 }
 
-unsigned int Renderer9::getMaxCombinedTextureImageUnits() const
-{
-    return getRendererCaps().maxTextureImageUnits + getRendererCaps().maxVertexTextureImageUnits;
-}
-
 unsigned int Renderer9::getReservedVertexUniformVectors() const
 {
     return 2;   // dx_ViewAdjust and dx_DepthRange.
@@ -2202,11 +2197,6 @@ unsigned int Renderer9::getReservedVertexUniformVectors() const
 unsigned int Renderer9::getReservedFragmentUniformVectors() const
 {
     return 3;   // dx_ViewCoords, dx_DepthFront and dx_DepthRange.
-}
-
-unsigned int Renderer9::getMaxVaryingVectors() const
-{
-    return (getMajorShaderModel() >= 3) ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
 }
 
 unsigned int Renderer9::getReservedVertexUniformBuffers() const
@@ -2230,11 +2220,6 @@ unsigned int Renderer9::getMaxTransformFeedbackSeparateComponents() const
 }
 
 unsigned int Renderer9::getMaxTransformFeedbackInterleavedComponents() const
-{
-    return 0;
-}
-
-unsigned int Renderer9::getMaxUniformBufferSize() const
 {
     return 0;
 }

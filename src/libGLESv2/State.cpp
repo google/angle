@@ -1314,19 +1314,19 @@ void State::getIntegerv(GLenum pname, GLint *params)
         }
         break;
       case GL_TEXTURE_BINDING_2D:
-        ASSERT(mActiveSampler < mContext->getMaximumCombinedTextureImageUnits());
+        ASSERT(mActiveSampler < mContext->getCaps().maxCombinedTextureImageUnits);
         *params = mSamplerTexture[TEXTURE_2D][mActiveSampler].id();
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
-        ASSERT(mActiveSampler < mContext->getMaximumCombinedTextureImageUnits());
+        ASSERT(mActiveSampler < mContext->getCaps().maxCombinedTextureImageUnits);
         *params = mSamplerTexture[TEXTURE_CUBE][mActiveSampler].id();
         break;
       case GL_TEXTURE_BINDING_3D:
-        ASSERT(mActiveSampler < mContext->getMaximumCombinedTextureImageUnits());
+        ASSERT(mActiveSampler <mContext->getCaps().maxCombinedTextureImageUnits);
         *params = mSamplerTexture[TEXTURE_3D][mActiveSampler].id();
         break;
       case GL_TEXTURE_BINDING_2D_ARRAY:
-        ASSERT(mActiveSampler < mContext->getMaximumCombinedTextureImageUnits());
+        ASSERT(mActiveSampler < mContext->getCaps().maxCombinedTextureImageUnits);
         *params = mSamplerTexture[TEXTURE_2D_ARRAY][mActiveSampler].id();
         break;
       case GL_UNIFORM_BUFFER_BINDING:

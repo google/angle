@@ -72,9 +72,9 @@ void ShaderD3D::initializeCompiler()
 
             resources.MaxVertexAttribs = caps.maxVertexAttributes;
             resources.MaxVertexUniformVectors = caps.maxVertexUniformVectors;
-            resources.MaxVaryingVectors = mRenderer->getMaxVaryingVectors();
+            resources.MaxVaryingVectors = caps.maxVaryingVectors;
             resources.MaxVertexTextureImageUnits = caps.maxVertexTextureImageUnits;
-            resources.MaxCombinedTextureImageUnits = mRenderer->getMaxCombinedTextureImageUnits();
+            resources.MaxCombinedTextureImageUnits = caps.maxCombinedTextureImageUnits;
             resources.MaxTextureImageUnits = caps.maxTextureImageUnits;
             resources.MaxFragmentUniformVectors = caps.maxFragmentUniformVectors;
             resources.MaxDrawBuffers = caps.maxDrawBuffers;

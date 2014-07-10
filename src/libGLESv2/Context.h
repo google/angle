@@ -210,10 +210,7 @@ class Context
     const TextureCapsMap &getTextureCaps() const;
     const Extensions &getExtensions() const;
 
-    unsigned int getMaximumCombinedTextureImageUnits() const;
-    unsigned int getMaximumCombinedUniformBufferBindings() const;
     unsigned int getMaxTransformFeedbackBufferBindings() const;
-    GLintptr getUniformBufferOffsetAlignment() const;
     const std::string &getRendererString() const;
 
     const std::string &getExtensionString() const;

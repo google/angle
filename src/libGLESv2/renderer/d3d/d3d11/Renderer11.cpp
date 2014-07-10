@@ -1773,11 +1773,6 @@ GUID Renderer11::getAdapterIdentifier() const
     return adapterId;
 }
 
-unsigned int Renderer11::getMaxCombinedTextureImageUnits() const
-{
-    return getRendererCaps().maxTextureImageUnits + getRendererCaps().maxVertexTextureImageUnits;
-}
-
 unsigned int Renderer11::getReservedVertexUniformVectors() const
 {
     return 0;   // Driver uniforms are stored in a separate constant buffer
@@ -1786,24 +1781,6 @@ unsigned int Renderer11::getReservedVertexUniformVectors() const
 unsigned int Renderer11::getReservedFragmentUniformVectors() const
 {
     return 0;   // Driver uniforms are stored in a separate constant buffer
-}
-
-unsigned int Renderer11::getMaxVaryingVectors() const
-{
-    META_ASSERT(gl::IMPLEMENTATION_MAX_VARYING_VECTORS == D3D11_VS_OUTPUT_REGISTER_COUNT);
-    META_ASSERT(D3D11_VS_OUTPUT_REGISTER_COUNT <= D3D11_PS_INPUT_REGISTER_COUNT);
-    META_ASSERT(D3D10_VS_OUTPUT_REGISTER_COUNT <= D3D10_PS_INPUT_REGISTER_COUNT);
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-        return D3D11_VS_OUTPUT_REGISTER_COUNT - getReservedVaryings();
-      case D3D_FEATURE_LEVEL_10_1:
-        return D3D10_1_VS_OUTPUT_REGISTER_COUNT - getReservedVaryings();
-      case D3D_FEATURE_LEVEL_10_0:
-        return D3D10_VS_OUTPUT_REGISTER_COUNT - getReservedVaryings();
-      default: UNREACHABLE();
-        return 0;
-    }
 }
 
 unsigned int Renderer11::getReservedVertexUniformBuffers() const
@@ -1817,13 +1794,6 @@ unsigned int Renderer11::getReservedFragmentUniformBuffers() const
     // we reserve one buffer for the application uniforms, and one for driver uniforms
     return 2;
 }
-
-unsigned int Renderer11::getReservedVaryings() const
-{
-    // We potentially reserve varyings for gl_Position, dx_Position, gl_FragCoord and gl_PointSize
-    return 4;
-}
-
 
 unsigned int Renderer11::getMaxTransformFeedbackBuffers() const
 {
@@ -1861,24 +1831,7 @@ unsigned int Renderer11::getMaxTransformFeedbackSeparateComponents() const
 
 unsigned int Renderer11::getMaxTransformFeedbackInterleavedComponents() const
 {
-    return (getMaxVaryingVectors() * 4);
-}
-
-unsigned int Renderer11::getMaxUniformBufferSize() const
-{
-    // Each component is a 4-element vector of 4-byte units (floats)
-    const unsigned int bytesPerComponent = 4 * sizeof(float);
-
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-        return D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * bytesPerComponent;
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0:
-        return D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * bytesPerComponent;
-      default: UNREACHABLE();
-        return 0;
-    }
+    return (getRendererCaps().maxVaryingVectors * 4);
 }
 
 bool Renderer11::getShareHandleSupport() const
