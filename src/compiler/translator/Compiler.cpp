@@ -487,7 +487,12 @@ bool TCompiler::enforceVertexShaderTimingRestrictions(TIntermNode* root)
 
 void TCompiler::collectVariables(TIntermNode* root)
 {
-    CollectVariables collect(&attributes, &uniforms, &varyings, hashFunction);
+    CollectVariables collect(&attributes,
+                             &outputVariables,
+                             &uniforms,
+                             &varyings,
+                             &interfaceBlocks,
+                             hashFunction);
     root->traverse(&collect);
 
     // For backwards compatiblity with ShGetVariableInfo, expand struct

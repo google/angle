@@ -157,20 +157,32 @@ typedef std::vector<BlockMemberInfo> BlockMemberInfoArray;
 
 struct InterfaceBlock
 {
+    InterfaceBlock()
+        : arraySize(0),
+          dataSize(0),
+          layout(BLOCKLAYOUT_PACKED),
+          isRowMajorLayout(false),
+          staticUse(false),
+          registerIndex(-1)
+    {}
+
     InterfaceBlock(const char *name, unsigned int arraySize, unsigned int registerIndex)
         : name(name),
           arraySize(arraySize),
           dataSize(0),
           layout(BLOCKLAYOUT_SHARED),
           isRowMajorLayout(false),
+          staticUse(false),
           registerIndex(registerIndex)
     {}
 
     std::string name;
+    std::string mappedName;
     unsigned int arraySize;
     size_t dataSize;
     BlockLayoutType layout;
     bool isRowMajorLayout;
+    bool staticUse;
     std::vector<InterfaceBlockField> fields;
     std::vector<BlockMemberInfo> blockInfo;
 

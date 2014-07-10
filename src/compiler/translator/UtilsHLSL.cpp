@@ -79,7 +79,7 @@ TString DecoratePrivate(const TString &privateText)
 
 TString Decorate(const TString &string)
 {
-    if (string.compare(0, 3, "gl_"))
+    if (string.compare(0, 3, "gl_") != 0)
     {
         return "_" + string;
     }

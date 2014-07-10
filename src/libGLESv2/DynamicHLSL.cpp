@@ -1066,7 +1066,7 @@ std::string DynamicHLSL::generatePointSpriteHLSL(int registers, FragmentShader *
 // This method needs to match OutputHLSL::decorate
 std::string DynamicHLSL::decorateVariable(const std::string &name)
 {
-    if (name.compare(0, 3, "gl_"))
+    if (name.compare(0, 3, "gl_") != 0)
     {
         return "_" + name;
     }

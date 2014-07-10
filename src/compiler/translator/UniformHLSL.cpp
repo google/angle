@@ -49,17 +49,6 @@ static void SetBlockLayout(InterfaceBlock *interfaceBlock, BlockLayoutType newLa
     }
 }
 
-static BlockLayoutType ConvertBlockLayoutType(TLayoutBlockStorage blockStorage)
-{
-    switch (blockStorage)
-    {
-      case EbsPacked: return BLOCKLAYOUT_PACKED;
-      case EbsShared: return BLOCKLAYOUT_SHARED;
-      case EbsStd140: return BLOCKLAYOUT_STANDARD;
-      default: UNREACHABLE(); return BLOCKLAYOUT_SHARED;
-    }
-}
-
 static const char *UniformRegisterPrefix(const TType &type)
 {
     if (IsSampler(type.getBasicType()))
@@ -249,7 +238,7 @@ TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedIn
 
         mInterfaceBlockRegister += std::max(1u, arraySize);
 
-        BlockLayoutType blockLayoutType = ConvertBlockLayoutType(interfaceBlock.blockStorage());
+        BlockLayoutType blockLayoutType = GetBlockLayoutType(interfaceBlock.blockStorage());
         SetBlockLayout(&activeBlock, blockLayoutType);
 
         if (interfaceBlock.matrixPacking() == EmpRowMajor)
