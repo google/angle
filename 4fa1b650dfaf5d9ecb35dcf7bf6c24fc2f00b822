@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "395d6c32_aa992fa0",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-07-10T15:28:46Z",
+      "side": 1,
+      "message": "I\u0027d prefer to initialize type to GL_NONE, precision to GL_NONE, and staticUse to false to be more explicit.",
+      "range": {
+        "startLine": 41,
+        "startChar": 10,
+        "endLine": 44,
+        "endChar": 22
+      },
+      "revId": "4fa1b650dfaf5d9ecb35dcf7bf6c24fc2f00b822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
