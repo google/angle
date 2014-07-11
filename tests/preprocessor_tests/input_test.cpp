@@ -12,11 +12,6 @@ class InitTest : public PreprocessorTest
 {
 };
 
-TEST_F(InitTest, NegativeCount)
-{
-    EXPECT_FALSE(mPreprocessor.init(-1, NULL, NULL));
-}
-
 TEST_F(InitTest, ZeroCount)
 {
     EXPECT_TRUE(mPreprocessor.init(0, NULL, NULL));
