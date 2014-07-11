@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d979b0b6_1d42d754",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-11T20:38:05Z",
+      "side": 1,
+      "message": "nit: is this for the extension? kinda strange name. maybe usingPlatformExtension\" or something?",
+      "range": {
+        "startLine": 71,
+        "startChar": 36,
+        "endLine": 71,
+        "endChar": 54
+      },
+      "revId": "17e36e823d6c444652e4daf78751762ef99df0ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
