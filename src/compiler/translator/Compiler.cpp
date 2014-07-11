@@ -13,6 +13,7 @@
 #include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/RenameFunction.h"
+#include "compiler/translator/ScalarizeVecAndMatConstructorArgs.h"
 #include "compiler/translator/UnfoldShortCircuitAST.h"
 #include "compiler/translator/ValidateLimitations.h"
 #include "compiler/translator/ValidateOutputs.h"
@@ -252,6 +253,12 @@ bool TCompiler::compile(const char* const shaderStrings[],
             if (success && shaderType == GL_VERTEX_SHADER &&
                 (compileOptions & SH_INIT_VARYINGS_WITHOUT_STATIC_USE))
                 initializeVaryingsWithoutStaticUse(root);
+        }
+
+        if (success && (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS))
+        {
+            ScalarizeVecAndMatConstructorArgs scalarizer;
+            root->traverse(&scalarizer);
         }
 
         if (success && (compileOptions & SH_INTERMEDIATE_TREE))

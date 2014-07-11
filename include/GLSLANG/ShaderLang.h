@@ -185,6 +185,10 @@ typedef enum {
   // It is intended as a workaround for drivers which incorrectly optimize
   // out such varyings and cause a link failure.
   SH_INIT_VARYINGS_WITHOUT_STATIC_USE = 0x20000,
+
+  // This flag scalarizes vec/ivec/bvec/mat constructor args.
+  // It is intended as a workaround for Linux/Mac driver bugs.
+  SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS = 0x40000,
 } ShCompileOptions;
 
 // Defines alternate strategies for implementing array index clamping.
