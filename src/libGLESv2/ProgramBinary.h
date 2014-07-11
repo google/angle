@@ -146,6 +146,7 @@ class ProgramBinary : public RefCountObject
     GLint getActiveUniformi(GLuint index, GLenum pname) const;
     bool isValidUniformLocation(GLint location) const;
     LinkedUniform *getUniformByLocation(GLint location) const;
+    LinkedUniform *getUniformByName(const std::string &name) const;
 
     void getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const;
     void getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const;
@@ -177,6 +178,15 @@ class ProgramBinary : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(ProgramBinary);
 
+    struct Sampler
+    {
+        Sampler();
+
+        bool active;
+        GLint logicalTextureUnit;
+        TextureType textureType;
+    };
+
     void reset();
 
     bool linkVaryings(InfoLog &infoLog, FragmentShader *fragmentShader, VertexShader *vertexShader);
@@ -192,7 +202,11 @@ class ProgramBinary : public RefCountObject
     bool linkValidateVariables(InfoLog &infoLog, const std::string &varyingName, const sh::Varying &vertexVarying, const sh::Varying &fragmentVarying);
     bool linkValidateVariables(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
     bool linkUniforms(InfoLog &infoLog, const std::vector<sh::Uniform> &vertexUniforms, const std::vector<sh::Uniform> &fragmentUniforms);
-    bool defineUniform(GLenum shader, const sh::Uniform &constant, InfoLog &infoLog);
+    void defineUniform(GLenum shader, const sh::Uniform &constant);
+    bool indexSamplerUniform(const LinkedUniform &uniform, InfoLog &infoLog);
+    bool indexUniforms(InfoLog &infoLog);
+    static bool assignSamplers(unsigned int startSamplerIndex, GLenum samplerType, unsigned int samplerCount,
+                               Sampler *outArray, GLuint *usedRange, unsigned int limit);
     bool areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::InterfaceBlock &vertexInterfaceBlock, const sh::InterfaceBlock &fragmentInterfaceBlock);
     bool linkUniformBlocks(InfoLog &infoLog, const VertexShader &vertexShader, const FragmentShader &fragmentShader);
     bool gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std::vector<LinkedVarying> &linkedVaryings,
@@ -213,8 +227,6 @@ class ProgramBinary : public RefCountObject
 
     template <typename T>
     bool getUniformv(GLint location, GLsizei *bufSize, T *params, GLenum uniformType);
-
-    static TextureType getTextureType(GLenum samplerType, InfoLog &infoLog);
 
     class VertexExecutable
     {
@@ -275,15 +287,6 @@ class ProgramBinary : public RefCountObject
 
     GLenum mTransformFeedbackBufferMode;
     std::vector<LinkedVarying> mTransformFeedbackLinkedVaryings;
-
-    struct Sampler
-    {
-        Sampler();
-
-        bool active;
-        GLint logicalTextureUnit;
-        TextureType textureType;
-    };
 
     Sampler mSamplersPS[MAX_TEXTURE_IMAGE_UNITS];
     Sampler mSamplersVS[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
