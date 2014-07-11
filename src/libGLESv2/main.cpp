@@ -145,33 +145,26 @@ egl::Display *getDisplay()
 void error(GLenum errorCode)
 {
     gl::Context *context = glGetCurrentContext();
+    context->recordError(Error(errorCode));
 
-    if (context)
+    switch (errorCode)
     {
-        switch (errorCode)
-        {
-          case GL_INVALID_ENUM:
-            context->recordInvalidEnum();
-            TRACE("\t! Error generated: invalid enum\n");
-            break;
-          case GL_INVALID_VALUE:
-            context->recordInvalidValue();
-            TRACE("\t! Error generated: invalid value\n");
-            break;
-          case GL_INVALID_OPERATION:
-            context->recordInvalidOperation();
-            TRACE("\t! Error generated: invalid operation\n");
-            break;
-          case GL_OUT_OF_MEMORY:
-            context->recordOutOfMemory();
-            TRACE("\t! Error generated: out of memory\n");
-            break;
-          case GL_INVALID_FRAMEBUFFER_OPERATION:
-            context->recordInvalidFramebufferOperation();
-            TRACE("\t! Error generated: invalid framebuffer operation\n");
-            break;
-          default: UNREACHABLE();
-        }
+      case GL_INVALID_ENUM:
+        TRACE("\t! Error generated: invalid enum\n");
+        break;
+      case GL_INVALID_VALUE:
+        TRACE("\t! Error generated: invalid value\n");
+        break;
+      case GL_INVALID_OPERATION:
+        TRACE("\t! Error generated: invalid operation\n");
+        break;
+      case GL_OUT_OF_MEMORY:
+        TRACE("\t! Error generated: out of memory\n");
+        break;
+      case GL_INVALID_FRAMEBUFFER_OPERATION:
+        TRACE("\t! Error generated: invalid framebuffer operation\n");
+        break;
+      default: UNREACHABLE();
     }
 }
 

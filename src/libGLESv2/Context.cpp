@@ -104,12 +104,6 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mTransformFeedbackZero.set(new TransformFeedback(0));
     bindTransformFeedback(0);
 
-    mInvalidEnum = false;
-    mInvalidValue = false;
-    mInvalidOperation = false;
-    mOutOfMemory = false;
-    mInvalidFramebufferOperation = false;
-
     mHasBeenCurrent = false;
     mContextLost = false;
     mResetStatus = GL_NO_ERROR;
@@ -1871,71 +1865,28 @@ void Context::sync(bool block)
     mRenderer->sync(block);
 }
 
-void Context::recordInvalidEnum()
+void Context::recordError(const Error &error)
 {
-    mInvalidEnum = true;
-}
-
-void Context::recordInvalidValue()
-{
-    mInvalidValue = true;
-}
-
-void Context::recordInvalidOperation()
-{
-    mInvalidOperation = true;
-}
-
-void Context::recordOutOfMemory()
-{
-    mOutOfMemory = true;
-}
-
-void Context::recordInvalidFramebufferOperation()
-{
-    mInvalidFramebufferOperation = true;
+    if (error.isError())
+    {
+        mErrors.insert(error.getCode());
+    }
 }
 
 // Get one of the recorded errors and clear its flag, if any.
 // [OpenGL ES 2.0.24] section 2.5 page 13.
 GLenum Context::getError()
 {
-    if (mInvalidEnum)
+    if (mErrors.empty())
     {
-        mInvalidEnum = false;
-
-        return GL_INVALID_ENUM;
+        return GL_NO_ERROR;
     }
-
-    if (mInvalidValue)
+    else
     {
-        mInvalidValue = false;
-
-        return GL_INVALID_VALUE;
+        GLenum error = *mErrors.begin();
+        mErrors.erase(mErrors.begin());
+        return error;
     }
-
-    if (mInvalidOperation)
-    {
-        mInvalidOperation = false;
-
-        return GL_INVALID_OPERATION;
-    }
-
-    if (mOutOfMemory)
-    {
-        mOutOfMemory = false;
-
-        return GL_OUT_OF_MEMORY;
-    }
-
-    if (mInvalidFramebufferOperation)
-    {
-        mInvalidFramebufferOperation = false;
-
-        return GL_INVALID_FRAMEBUFFER_OPERATION;
-    }
-
-    return GL_NO_ERROR;
 }
 
 GLenum Context::getResetStatus()

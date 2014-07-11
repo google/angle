@@ -114,6 +114,9 @@
     <ClInclude Include="..\..\src\common\angleutils.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\common\angleutils.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\include\angle_gl.h">
       <Filter>include</Filter>
     </ClInclude>

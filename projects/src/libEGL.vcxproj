@@ -247,6 +247,7 @@
     <ClCompile Include="..\..\src\common\debug.cpp"/>
     <ClCompile Include="..\..\src\common\event_tracer.cpp"/>
     <ClCompile Include="..\..\src\common\utilities.cpp"/>
+    <ClCompile Include="..\..\src\common\angleutils.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\libEGL\libEGL.rc"/>
