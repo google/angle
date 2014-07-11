@@ -22,6 +22,7 @@ struct InterfaceBlockField;
 struct BlockMemberInfo;
 struct Uniform;
 struct Varying;
+struct InterfaceBlock;
 
 class BlockLayoutEncoder
 {
@@ -94,6 +95,9 @@ class HLSLBlockEncoder : public BlockLayoutEncoder
 
     HLSLBlockEncoderStrategy mEncoderStrategy;
 };
+
+// This method returns the data size of an interface block in HLSL, according to its layout.
+size_t HLSLInterfaceBlockDataSize(const sh::InterfaceBlock &interfaceBlock);
 
 // This method assigns values to the variable's "registerIndex" and "elementIndex" fields.
 // "elementIndex" is only used for structures.

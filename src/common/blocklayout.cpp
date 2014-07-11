@@ -245,6 +245,33 @@ void HLSLBlockEncoder::skipRegisters(unsigned int numRegisters)
     mCurrentOffset += (numRegisters * ComponentsPerRegister);
 }
 
+size_t HLSLInterfaceBlockDataSize(const sh::InterfaceBlock &interfaceBlock)
+{
+    switch (interfaceBlock.layout)
+    {
+      case BLOCKLAYOUT_SHARED:
+      case BLOCKLAYOUT_PACKED:
+        {
+            HLSLBlockEncoder hlslEncoder(NULL, HLSLBlockEncoder::ENCODE_PACKED);
+            hlslEncoder.encodeInterfaceBlockFields(interfaceBlock.fields);
+            return hlslEncoder.getBlockSize();
+        }
+        break;
+
+      case BLOCKLAYOUT_STANDARD:
+        {
+            Std140BlockEncoder stdEncoder(NULL);
+            stdEncoder.encodeInterfaceBlockFields(interfaceBlock.fields);
+            return stdEncoder.getBlockSize();
+        }
+        break;
+
+      default:
+        UNREACHABLE();
+        return 0;
+    }
+}
+
 void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, Uniform *variable, HLSLBlockEncoder *encoder,
                                  const std::vector<BlockMemberInfo> &blockInfo, ShShaderOutput outputType)
 {

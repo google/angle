@@ -162,7 +162,6 @@ struct InterfaceBlock
 {
     InterfaceBlock()
         : arraySize(0),
-          dataSize(0),
           layout(BLOCKLAYOUT_PACKED),
           isRowMajorLayout(false),
           staticUse(false)
@@ -171,7 +170,6 @@ struct InterfaceBlock
     InterfaceBlock(const char *name, unsigned int arraySize)
         : name(name),
           arraySize(arraySize),
-          dataSize(0),
           layout(BLOCKLAYOUT_SHARED),
           isRowMajorLayout(false),
           staticUse(false)
@@ -180,7 +178,6 @@ struct InterfaceBlock
     std::string name;
     std::string mappedName;
     unsigned int arraySize;
-    size_t dataSize;
     BlockLayoutType layout;
     bool isRowMajorLayout;
     bool staticUse;

@@ -31,7 +31,6 @@ static void SetBlockLayout(InterfaceBlock *interfaceBlock, BlockLayoutType newLa
         {
             HLSLBlockEncoder hlslEncoder(&interfaceBlock->blockInfo, HLSLBlockEncoder::ENCODE_PACKED);
             hlslEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
-            interfaceBlock->dataSize = hlslEncoder.getBlockSize();
         }
         break;
 
@@ -39,7 +38,6 @@ static void SetBlockLayout(InterfaceBlock *interfaceBlock, BlockLayoutType newLa
         {
             Std140BlockEncoder stdEncoder(&interfaceBlock->blockInfo);
             stdEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
-            interfaceBlock->dataSize = stdEncoder.getBlockSize();
         }
         break;
 
