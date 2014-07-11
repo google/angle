@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b976bcc3_3900079a",
+        "filename": "src/compiler/translator/RewriteConstructor.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-11T20:33:34Z",
+      "side": 1,
+      "message": "suggestion: would it be possible to define a hidden temporary variable to store the result of \"node\", then use that to evaluate the base?\nImagine if \"node\" was something mutable like \"matrixArray[indexCounter++]\" -- wouldn\u0027t that change things?",
+      "range": {
+        "startLine": 117,
+        "startChar": 44,
+        "endLine": 117,
+        "endChar": 57
+      },
+      "revId": "65d74a6185a0f42c79364103e32b8a90df849062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99d1f8e4_86819aaa",
+        "filename": "src/compiler/translator/intermediate.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-11T20:33:34Z",
+      "side": 1,
+      "message": "nit: can you fix the formatting to be consistent with the chromium style (no non-const references)",
+      "range": {
+        "startLine": 585,
+        "startChar": 4,
+        "endLine": 585,
+        "endChar": 20
+      },
+      "revId": "65d74a6185a0f42c79364103e32b8a90df849062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
