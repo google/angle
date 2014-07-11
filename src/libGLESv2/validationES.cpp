@@ -1506,11 +1506,13 @@ bool ValidateFramebufferTexture2D(const gl::Context *context, GLenum target, GLe
         gl::Texture *tex = context->getTexture(texture);
         ASSERT(tex);
 
+        const gl::Caps &caps = context->getCaps();
+
         switch (textarget)
         {
           case GL_TEXTURE_2D:
             {
-                if (level > gl::log2(context->getMaximum2DTextureDimension()))
+                if (level > gl::log2(caps.max2DTextureSize))
                 {
                     return gl::error(GL_INVALID_VALUE, false);
                 }
@@ -1533,7 +1535,7 @@ bool ValidateFramebufferTexture2D(const gl::Context *context, GLenum target, GLe
           case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
             {
-                if (level > gl::log2(context->getMaximumCubeTextureDimension()))
+                if (level > gl::log2(caps.maxCubeMapTextureSize))
                 {
                     return gl::error(GL_INVALID_VALUE, false);
                 }
