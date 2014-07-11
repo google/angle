@@ -202,7 +202,8 @@ class ProgramBinary : public RefCountObject
     bool linkValidateVariables(InfoLog &infoLog, const std::string &varyingName, const sh::Varying &vertexVarying, const sh::Varying &fragmentVarying);
     bool linkValidateVariables(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
     bool linkUniforms(InfoLog &infoLog, const std::vector<sh::Uniform> &vertexUniforms, const std::vector<sh::Uniform> &fragmentUniforms);
-    void defineUniform(GLenum shader, const sh::Uniform &constant);
+    void defineUniformBase(GLenum shader, const sh::Uniform &uniform);
+    void defineUniform(GLenum shader, const sh::Uniform &uniform, const std::string &fullName, unsigned int baseRegisterIndex);
     bool indexSamplerUniform(const LinkedUniform &uniform, InfoLog &infoLog);
     bool indexUniforms(InfoLog &infoLog);
     static bool assignSamplers(unsigned int startSamplerIndex, GLenum samplerType, unsigned int samplerCount,

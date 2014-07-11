@@ -1929,12 +1929,12 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const std::vector<sh::Uniform
 
     for (unsigned int uniformIndex = 0; uniformIndex < vertexUniforms.size(); uniformIndex++)
     {
-        defineUniform(GL_VERTEX_SHADER, vertexUniforms[uniformIndex]);
+        defineUniformBase(GL_VERTEX_SHADER, vertexUniforms[uniformIndex]);
     }
 
     for (unsigned int uniformIndex = 0; uniformIndex < fragmentUniforms.size(); uniformIndex++)
     {
-        defineUniform(GL_FRAGMENT_SHADER, fragmentUniforms[uniformIndex]);
+        defineUniformBase(GL_FRAGMENT_SHADER, fragmentUniforms[uniformIndex]);
     }
 
     if (!indexUniforms(infoLog))
@@ -1947,69 +1947,64 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const std::vector<sh::Uniform
     return true;
 }
 
-void ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant)
+void ProgramBinary::defineUniformBase(GLenum shader, const sh::Uniform &uniform)
 {
-    if (constant.isStruct())
+    defineUniform(shader, uniform, uniform.name, uniform.registerIndex);
+}
+
+void ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &uniform,
+                                  const std::string &fullName, unsigned int baseRegisterIndex)
+{
+    if (uniform.isStruct())
     {
-        if (constant.arraySize > 0)
+        if (uniform.arraySize > 0)
         {
             ShShaderOutput outputType = Shader::getCompilerOutputType(shader);
-            const unsigned int elementRegisterCount = HLSLVariableRegisterCount(constant, outputType) / constant.arraySize;
+            const unsigned int elementRegisterCount = HLSLVariableRegisterCount(uniform, outputType) / uniform.arraySize;
 
-            for (unsigned int elementIndex = 0; elementIndex < constant.arraySize; elementIndex++)
+            for (unsigned int elementIndex = 0; elementIndex < uniform.arraySize; elementIndex++)
             {
                 const unsigned int elementRegisterOffset = elementRegisterCount * elementIndex;
 
-                for (size_t fieldIndex = 0; fieldIndex < constant.fields.size(); fieldIndex++)
+                for (size_t fieldIndex = 0; fieldIndex < uniform.fields.size(); fieldIndex++)
                 {
-                    const sh::Uniform &field = constant.fields[fieldIndex];
-                    const std::string &uniformName = constant.name + ArrayString(elementIndex) + "." + field.name;
+                    const sh::Uniform &field = uniform.fields[fieldIndex];
+                    const std::string &fieldFullName = fullName + ArrayString(elementIndex) + "." + field.name;
                     const unsigned int fieldRegisterIndex = field.registerIndex + elementRegisterOffset;
-                    sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize,
-                                             fieldRegisterIndex, field.elementIndex);
-
-                    fieldUniform.fields = field.fields;
-
-                    defineUniform(shader, fieldUniform);
+                    defineUniform(shader, field, fieldFullName, fieldRegisterIndex);
                 }
             }
         }
         else
         {
-            for (size_t fieldIndex = 0; fieldIndex < constant.fields.size(); fieldIndex++)
+            for (size_t fieldIndex = 0; fieldIndex < uniform.fields.size(); fieldIndex++)
             {
-                const sh::Uniform &field = constant.fields[fieldIndex];
-                const std::string &uniformName = constant.name + "." + field.name;
-
-                sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize,
-                                         field.registerIndex, field.elementIndex);
-
-                fieldUniform.fields = field.fields;
-
-                defineUniform(shader, fieldUniform);
+                const sh::Uniform &field = uniform.fields[fieldIndex];
+                const std::string &fieldFullName = fullName + "." + field.name;
+                defineUniform(shader, field, fieldFullName, field.registerIndex);
             }
         }
     }
     else // Not a struct
     {
-        LinkedUniform *linkedUniform = getUniformByName(constant.name);
+        LinkedUniform *linkedUniform = getUniformByName(fullName);
 
         if (!linkedUniform)
         {
-            linkedUniform = new LinkedUniform(constant.type, constant.precision, constant.name, constant.arraySize,
+            linkedUniform = new LinkedUniform(uniform.type, uniform.precision, fullName, uniform.arraySize,
                                               -1, sh::BlockMemberInfo::getDefaultBlockInfo());
             ASSERT(linkedUniform);
-            linkedUniform->registerElement = constant.elementIndex;
+            linkedUniform->registerElement = uniform.elementIndex;
             mUniforms.push_back(linkedUniform);
         }
 
         if (shader == GL_FRAGMENT_SHADER)
         {
-            linkedUniform->psRegisterIndex = constant.registerIndex;
+            linkedUniform->psRegisterIndex = baseRegisterIndex;
         }
         else if (shader == GL_VERTEX_SHADER)
         {
-            linkedUniform->vsRegisterIndex = constant.registerIndex;
+            linkedUniform->vsRegisterIndex = baseRegisterIndex;
         }
         else UNREACHABLE();
     }
