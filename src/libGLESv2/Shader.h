@@ -57,7 +57,7 @@ class Shader
 
     virtual ~Shader();
 
-    virtual GLenum getType() = 0;
+    virtual GLenum getType() const = 0;
     GLuint getHandle() const;
 
     void deleteSource();
@@ -87,6 +87,7 @@ class Shader
 
     static void releaseCompiler();
     static ShShaderOutput getCompilerOutputType(GLenum shader);
+    unsigned int getInterfaceBlockRegister(const std::string &blockName) const;
 
     bool usesDepthRange() const { return mUsesDepthRange; }
     bool usesPointSize() const { return mUsesPointSize; }
@@ -135,6 +136,7 @@ class Shader
     std::string mInfoLog;
     std::vector<sh::Uniform> mActiveUniforms;
     std::vector<sh::InterfaceBlock> mActiveInterfaceBlocks;
+    std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
 
     ResourceManager *mResourceManager;
 };
@@ -148,7 +150,7 @@ class VertexShader : public Shader
 
     ~VertexShader();
 
-    virtual GLenum getType();
+    virtual GLenum getType() const;
     virtual void compile();
     virtual void uncompile();
     int getSemanticIndex(const std::string &attributeName);
@@ -170,7 +172,7 @@ class FragmentShader : public Shader
 
     ~FragmentShader();
 
-    virtual GLenum getType();
+    virtual GLenum getType() const;
     virtual void compile();
     virtual void uncompile();
     const std::vector<sh::Attribute> &getOutputVariables() const;

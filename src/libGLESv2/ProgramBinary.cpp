@@ -1631,7 +1631,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         mUniforms.push_back(new LinkedUniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.diff", 0, -1, sh::BlockMemberInfo::getDefaultBlockInfo()));
     }
 
-    if (!linkUniformBlocks(infoLog, vertexShader->getInterfaceBlocks(), fragmentShader->getInterfaceBlocks()))
+    if (!linkUniformBlocks(infoLog, *vertexShader, *fragmentShader))
     {
         success = false;
     }
@@ -2151,9 +2151,12 @@ bool ProgramBinary::areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::Inter
     return true;
 }
 
-bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks,
-                                      const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks)
+bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const VertexShader &vertexShader,
+                                      const FragmentShader &fragmentShader)
 {
+    const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks = vertexShader.getInterfaceBlocks();
+    const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks = fragmentShader.getInterfaceBlocks();
+
     // Check that interface blocks defined in the vertex and fragment shaders are identical
     typedef std::map<std::string, const sh::InterfaceBlock*> UniformBlockMap;
     UniformBlockMap linkedUniformBlocks;
@@ -2180,7 +2183,7 @@ bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const std::vector<sh::In
 
     for (unsigned int blockIndex = 0; blockIndex < vertexInterfaceBlocks.size(); blockIndex++)
     {
-        if (!defineUniformBlock(infoLog, GL_VERTEX_SHADER, vertexInterfaceBlocks[blockIndex]))
+        if (!defineUniformBlock(infoLog, vertexShader, vertexInterfaceBlocks[blockIndex]))
         {
             return false;
         }
@@ -2188,7 +2191,7 @@ bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const std::vector<sh::In
 
     for (unsigned int blockIndex = 0; blockIndex < fragmentInterfaceBlocks.size(); blockIndex++)
     {
-        if (!defineUniformBlock(infoLog, GL_FRAGMENT_SHADER, fragmentInterfaceBlocks[blockIndex]))
+        if (!defineUniformBlock(infoLog, fragmentShader, fragmentInterfaceBlocks[blockIndex]))
         {
             return false;
         }
@@ -2290,7 +2293,7 @@ void ProgramBinary::defineUniformBlockMembers(const std::vector<sh::InterfaceBlo
     }
 }
 
-bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, GLenum shader, const sh::InterfaceBlock &interfaceBlock)
+bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, const Shader &shader, const sh::InterfaceBlock &interfaceBlock)
 {
     // create uniform block entries if they do not exist
     if (getUniformBlockIndex(interfaceBlock.name) == GL_INVALID_INDEX)
@@ -2326,12 +2329,15 @@ bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, GLenum shader, const sh
     ASSERT(blockIndex != GL_INVALID_INDEX);
     ASSERT(blockIndex + elementCount <= mUniformBlocks.size());
 
+    unsigned int interfaceBlockRegister = shader.getInterfaceBlockRegister(interfaceBlock.name);
+
     for (unsigned int uniformBlockElement = 0; uniformBlockElement < elementCount; uniformBlockElement++)
     {
         UniformBlock *uniformBlock = mUniformBlocks[blockIndex + uniformBlockElement];
         ASSERT(uniformBlock->name == interfaceBlock.name);
 
-        if (!assignUniformBlockRegister(infoLog, uniformBlock, shader, interfaceBlock.registerIndex + uniformBlockElement))
+        if (!assignUniformBlockRegister(infoLog, uniformBlock, shader.getType(),
+                                        interfaceBlockRegister + uniformBlockElement))
         {
             return false;
         }
