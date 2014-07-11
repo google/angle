@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "396bacde_2051b099",
+        "filename": "tests/preprocessor_tests/input_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000805
+      },
+      "writtenOn": "2014-07-11T00:28:22Z",
+      "side": 0,
+      "message": "This test doesn\u0027t actually test what it looks like.  It doesn\u0027t reject the -1 for being negative, because the param is a size_t, which is unsigned.  Rather, init() simply fails because it\u0027s given NULL with any length other than zero.  As such, the \"NullString\" test below actually tests the exact same thing.\n\ninit() could be changed to take (and reject) signed length values, but I don\u0027t know how much value that would add, and it seems beyond the scope of this change.",
+      "revId": "93455ebee5caa2f1648f6aa7f80fc230f7e14bfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
