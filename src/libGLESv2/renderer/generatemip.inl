@@ -252,9 +252,9 @@ inline void GenerateMip(size_t sourceWidth, size_t sourceHeight, size_t sourceDe
                         const uint8_t *sourceData, size_t sourceRowPitch, size_t sourceDepthPitch,
                         uint8_t *destData, size_t destRowPitch, size_t destDepthPitch)
 {
-    size_t mipWidth = std::max(1U, sourceWidth >> 1);
-    size_t mipHeight = std::max(1U, sourceHeight >> 1);
-    size_t mipDepth = std::max(1U, sourceDepth >> 1);
+    size_t mipWidth = std::max<size_t>(1, sourceWidth >> 1);
+    size_t mipHeight = std::max<size_t>(1, sourceHeight >> 1);
+    size_t mipDepth = std::max<size_t>(1, sourceDepth >> 1);
 
     priv::MipGenerationFunction generationFunction = priv::GetMipGenerationFunction<T>(sourceWidth, sourceHeight, sourceDepth);
     ASSERT(generationFunction != NULL);
