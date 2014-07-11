@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d979b0b6_5774ae4f",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-11T15:24:02Z",
+      "side": 1,
+      "message": "suggestion: use IsD3D11DisplayType(nativeDisplay, requestedDisplayType) for readability",
+      "range": {
+        "startLine": 75,
+        "startChar": 7,
+        "endLine": 79,
+        "endChar": 97
+      },
+      "revId": "23b060cefbd80c86b59c01ee0e45fa28657f9092",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b976bcc3_b6bf46e6",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-11T15:24:02Z",
+      "side": 1,
+      "message": "suggestion: use IsD3D9DisplayType(nativeDisplay, requestedDisplayType) for readiablity",
+      "range": {
+        "startLine": 86,
+        "startChar": 7,
+        "endLine": 88,
+        "endChar": 74
+      },
+      "revId": "23b060cefbd80c86b59c01ee0e45fa28657f9092",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
