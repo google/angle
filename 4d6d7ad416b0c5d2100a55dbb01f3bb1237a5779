@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "19434882_8151fc9b",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1531,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T21:56:45Z",
+      "side": 1,
+      "message": "Probably later since it can return NULL. Although I thought there was a patch to clean that up.",
+      "parentUuid": "19434882_a1e198a2",
+      "range": {
+        "startLine": 1510,
+        "startChar": 0,
+        "endLine": 1531,
+        "endChar": 1
+      },
+      "revId": "4d6d7ad416b0c5d2100a55dbb01f3bb1237a5779",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19434882_211d8800",
         "filename": "src/libGLESv2/VertexArray.h",
         "patchSetId": 6
