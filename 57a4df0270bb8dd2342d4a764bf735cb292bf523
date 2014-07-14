@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f93f54e6_c00dc05c",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1920,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T19:35:40Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 1920,
+        "startChar": 9,
+        "endLine": 1920,
+        "endChar": 22
+      },
+      "revId": "57a4df0270bb8dd2342d4a764bf735cb292bf523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "393e4ceb_bf509744",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 7
@@ -18,6 +41,53 @@
         "startChar": 20,
         "endLine": 1953,
         "endChar": 56
+      },
+      "revId": "57a4df0270bb8dd2342d4a764bf735cb292bf523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "393e4ceb_5f434b77",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1953,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T19:35:40Z",
+      "side": 1,
+      "message": "See \"indexUniforms\"\n\ndefineUniforms as I have it here cannot fail: type validation is already in validateUniforms.",
+      "parentUuid": "393e4ceb_bf509744",
+      "range": {
+        "startLine": 1953,
+        "startChar": 20,
+        "endLine": 1953,
+        "endChar": 56
+      },
+      "revId": "57a4df0270bb8dd2342d4a764bf735cb292bf523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f93f54e6_a00a3440",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2046,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T19:35:40Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 2046,
+        "startChar": 20,
+        "endLine": 2046,
+        "endChar": 33
       },
       "revId": "57a4df0270bb8dd2342d4a764bf735cb292bf523",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
