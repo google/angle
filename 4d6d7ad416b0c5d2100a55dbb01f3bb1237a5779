@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19434882_a1e198a2",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1531,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-14T21:52:22Z",
+      "side": 1,
+      "message": "Can we merge these functions into a getTargetFramebuffer? The ID can be grabbed after that if needed.  This may be covered by the later patches.",
+      "range": {
+        "startLine": 1510,
+        "startChar": 0,
+        "endLine": 1531,
+        "endChar": 1
+      },
+      "revId": "4d6d7ad416b0c5d2100a55dbb01f3bb1237a5779",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19434882_211d8800",
+        "filename": "src/libGLESv2/VertexArray.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-14T21:52:22Z",
+      "side": 1,
+      "message": "Should be a const method.",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 16
+      },
+      "revId": "4d6d7ad416b0c5d2100a55dbb01f3bb1237a5779",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
