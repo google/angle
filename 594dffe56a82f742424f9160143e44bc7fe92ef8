@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19434882_41f1b476",
+        "filename": "src/libGLESv2/Caps.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T21:51:07Z",
+      "side": 1,
+      "message": "can you just add a comment to these with some short description? for some reason I find \"bool texture\", \"bool rendering\" ambiguous\n\nalternately: texturable, filterable, renderable, if that makes sense",
+      "range": {
+        "startLine": 24,
+        "startChar": 9,
+        "endLine": 24,
+        "endChar": 16
+      },
+      "revId": "594dffe56a82f742424f9160143e44bc7fe92ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "393e4ceb_c2d30497",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2007,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T21:51:07Z",
+      "side": 1,
+      "message": "nit: \u003e0",
+      "range": {
+        "startLine": 2007,
+        "startChar": 60,
+        "endLine": 2007,
+        "endChar": 74
+      },
+      "revId": "594dffe56a82f742424f9160143e44bc7fe92ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
