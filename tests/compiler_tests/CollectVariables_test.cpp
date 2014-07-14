@@ -12,6 +12,9 @@
 #include "GLSLANG/ShaderLang.h"
 #include "compiler/translator/TranslatorGLSL.h"
 
+#define EXPECT_GLENUM_EQ(expected, actual) \
+    EXPECT_EQ(static_cast<GLenum>(expected), static_cast<GLenum>(actual))
+
 class CollectVariablesTest : public testing::Test
 {
   public:
@@ -69,11 +72,11 @@ TEST_F(CollectFragmentVariablesTest, SimpleOutputVar)
 
     const sh::Attribute &outputVariable = outputVariables[0];
 
-    EXPECT_EQ(0, outputVariable.arraySize);
+    EXPECT_EQ(0u, outputVariable.arraySize);
     EXPECT_EQ(-1, outputVariable.location);
-    EXPECT_EQ(GL_MEDIUM_FLOAT, outputVariable.precision);
-    EXPECT_EQ(true, outputVariable.staticUse);
-    EXPECT_EQ(GL_FLOAT_VEC4, outputVariable.type);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable.precision);
+    EXPECT_TRUE(outputVariable.staticUse);
+    EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable.type);
     EXPECT_EQ("out_fragColor", outputVariable.name);
 }
 
@@ -95,11 +98,11 @@ TEST_F(CollectFragmentVariablesTest, LocationOutputVar)
 
     const sh::Attribute &outputVariable = outputVariables[0];
 
-    EXPECT_EQ(0, outputVariable.arraySize);
+    EXPECT_EQ(0u, outputVariable.arraySize);
     EXPECT_EQ(5, outputVariable.location);
-    EXPECT_EQ(GL_MEDIUM_FLOAT, outputVariable.precision);
-    EXPECT_EQ(true, outputVariable.staticUse);
-    EXPECT_EQ(GL_FLOAT_VEC4, outputVariable.type);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable.precision);
+    EXPECT_TRUE(outputVariable.staticUse);
+    EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable.type);
     EXPECT_EQ("out_fragColor", outputVariable.name);
 }
 
@@ -120,11 +123,11 @@ TEST_F(CollectVertexVariablesTest, LocationAttribute)
 
     const sh::Attribute &attribute = attributes[0];
 
-    EXPECT_EQ(0, attribute.arraySize);
+    EXPECT_EQ(0u, attribute.arraySize);
     EXPECT_EQ(5, attribute.location);
-    EXPECT_EQ(GL_HIGH_FLOAT, attribute.precision);
-    EXPECT_EQ(true, attribute.staticUse);
-    EXPECT_EQ(GL_FLOAT_VEC4, attribute.type);
+    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, attribute.precision);
+    EXPECT_TRUE(attribute.staticUse);
+    EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, attribute.type);
     EXPECT_EQ("in_Position", attribute.name);
 }
 
@@ -147,20 +150,20 @@ TEST_F(CollectVertexVariablesTest, SimpleInterfaceBlock)
 
     const sh::InterfaceBlock &interfaceBlock = interfaceBlocks[0];
 
-    EXPECT_EQ(0, interfaceBlock.arraySize);
-    EXPECT_EQ(false, interfaceBlock.isRowMajorLayout);
+    EXPECT_EQ(0u, interfaceBlock.arraySize);
+    EXPECT_FALSE(interfaceBlock.isRowMajorLayout);
     EXPECT_EQ(sh::BLOCKLAYOUT_SHARED, interfaceBlock.layout);
     EXPECT_EQ("b", interfaceBlock.name);
-    EXPECT_EQ(true, interfaceBlock.staticUse);
+    EXPECT_TRUE(interfaceBlock.staticUse);
 
-    ASSERT_EQ(1, interfaceBlock.fields.size());
+    ASSERT_EQ(1u, interfaceBlock.fields.size());
 
     const sh::InterfaceBlockField &field = interfaceBlock.fields[0];
 
-    EXPECT_EQ(GL_HIGH_FLOAT, field.precision);
-    EXPECT_EQ(true, field.staticUse);
-    EXPECT_EQ(GL_FLOAT, field.type);
+    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, field.precision);
+    EXPECT_TRUE(field.staticUse);
+    EXPECT_GLENUM_EQ(GL_FLOAT, field.type);
     EXPECT_EQ("f", field.name);
-    EXPECT_EQ(false, field.isRowMajorMatrix);
-    EXPECT_EQ(0, field.fields.size());
+    EXPECT_FALSE(field.isRowMajorMatrix);
+    EXPECT_TRUE(field.fields.empty());
 }
