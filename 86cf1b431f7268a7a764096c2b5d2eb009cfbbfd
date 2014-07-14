@@ -25,6 +25,52 @@
     },
     {
       "key": {
+        "uuid": "f93f54e6_c09f8084",
+        "filename": "src/libGLESv2/renderer/Image.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T20:02:12Z",
+      "side": 1,
+      "message": "can we determine this from the texture format tables? again sorry if you\u0027re cleaning this up later.",
+      "range": {
+        "startLine": 59,
+        "startChar": 9,
+        "endLine": 59,
+        "endChar": 20
+      },
+      "revId": "86cf1b431f7268a7a764096c2b5d2eb009cfbbfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f93f54e6_009a0893",
+        "filename": "src/libGLESv2/renderer/Image.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T20:02:12Z",
+      "side": 1,
+      "message": "this also does not seem like a true \"GL\" necessity, rather an implementation detail -- possibly.",
+      "range": {
+        "startLine": 62,
+        "startChar": 9,
+        "endLine": 62,
+        "endChar": 15
+      },
+      "revId": "86cf1b431f7268a7a764096c2b5d2eb009cfbbfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19434882_fe5a2162",
         "filename": "src/libGLESv2/renderer/d3d/ImageD3D.cpp",
         "patchSetId": 6
