@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f93f54e6_c014a062",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1953,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T19:39:11Z",
+      "side": 1,
+      "message": "sorry, type validation is in linkUniforms with the linkValidateVariables calls",
+      "parentUuid": "393e4ceb_5f434b77",
+      "range": {
+        "startLine": 1953,
+        "startChar": 20,
+        "endLine": 1953,
+        "endChar": 56
+      },
+      "revId": "57a4df0270bb8dd2342d4a764bf735cb292bf523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f93f54e6_a00a3440",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 7
