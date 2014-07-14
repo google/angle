@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b976bcc3_e7b98acd",
+        "filename": "src/libGLESv2/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T14:17:18Z",
+      "side": 1,
+      "message": "is this necessary?",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 36
+      },
+      "revId": "8e4a82c921d22a1b66b239a063153b46e9c239fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9aaf451_8e61bf89",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T14:17:18Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 520,
+        "startChar": 4,
+        "endLine": 520,
+        "endChar": 8
+      },
+      "revId": "8e4a82c921d22a1b66b239a063153b46e9c239fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9aaf451_ae5efbcc",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T14:17:18Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 539,
+        "startChar": 4,
+        "endLine": 539,
+        "endChar": 8
+      },
+      "revId": "8e4a82c921d22a1b66b239a063153b46e9c239fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b976bcc3_87abf675",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T14:17:18Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 1001,
+        "startChar": 4,
+        "endLine": 1001,
+        "endChar": 8
+      },
+      "revId": "8e4a82c921d22a1b66b239a063153b46e9c239fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b976bcc3_67a6dab0",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T14:17:18Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 1107,
+        "startChar": 4,
+        "endLine": 1107,
+        "endChar": 8
+      },
+      "revId": "8e4a82c921d22a1b66b239a063153b46e9c239fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b976bcc3_c7d9ee2e",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T14:17:18Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 1140,
+        "startChar": 4,
+        "endLine": 1140,
+        "endChar": 8
+      },
+      "revId": "8e4a82c921d22a1b66b239a063153b46e9c239fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b976bcc3_a7dcf21f",
+        "filename": "src/libGLESv2/State.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T14:17:18Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 4
+      },
+      "revId": "8e4a82c921d22a1b66b239a063153b46e9c239fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
