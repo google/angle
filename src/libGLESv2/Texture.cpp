@@ -484,37 +484,42 @@ rx::RenderTarget *Texture2D::getDepthSencil(GLint level)
     return mTexture->getDepthSencil(level);
 }
 
-TextureCubeMap::TextureCubeMap(rx::Renderer *renderer, GLuint id)
-    : TextureWithRenderer(renderer, id, GL_TEXTURE_CUBE_MAP)
+TextureCubeMap::TextureCubeMap(rx::TextureCubeImpl *impl, GLuint id)
+    : Texture(id, GL_TEXTURE_CUBE_MAP),
+      mTexture(impl)
 {
-    mTexStorage = NULL;
-    for (int i = 0; i < 6; i++)
-    {
-        for (int j = 0; j < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++j)
-        {
-            mImageArray[i][j] = renderer->createImage();
-        }
-    }
 }
 
 TextureCubeMap::~TextureCubeMap()
 {
-    for (int i = 0; i < 6; i++)
-    {
-        for (int j = 0; j < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++j)
-        {
-            delete mImageArray[i][j];
-        }
-    }
+    SafeDelete(mTexture);
+}
 
-    delete mTexStorage;
-    mTexStorage = NULL;
+rx::TextureStorageInterface *TextureCubeMap::getNativeTexture()
+{
+    return mTexture->getNativeTexture();
+}
+
+void TextureCubeMap::setUsage(GLenum usage)
+{
+    mUsage = usage;
+    mTexture->setUsage(usage);
+}
+
+bool TextureCubeMap::hasDirtyImages() const
+{
+    return mTexture->hasDirtyImages();
+}
+
+void TextureCubeMap::resetDirty()
+{
+    mTexture->resetDirty();
 }
 
 GLsizei TextureCubeMap::getWidth(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[targetToIndex(target)][level]->getWidth();
+        return mTexture->getImage(target, level)->getWidth();
     else
         return 0;
 }
@@ -522,7 +527,7 @@ GLsizei TextureCubeMap::getWidth(GLenum target, GLint level) const
 GLsizei TextureCubeMap::getHeight(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[targetToIndex(target)][level]->getHeight();
+        return mTexture->getImage(target, level)->getHeight();
     else
         return 0;
 }
@@ -530,7 +535,7 @@ GLsizei TextureCubeMap::getHeight(GLenum target, GLint level) const
 GLenum TextureCubeMap::getInternalFormat(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[targetToIndex(target)][level]->getInternalFormat();
+        return mTexture->getImage(target, level)->getInternalFormat();
     else
         return GL_NONE;
 }
@@ -538,215 +543,66 @@ GLenum TextureCubeMap::getInternalFormat(GLenum target, GLint level) const
 GLenum TextureCubeMap::getActualFormat(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[targetToIndex(target)][level]->getActualFormat();
+        return mTexture->getImage(target, level)->getActualFormat();
     else
         return GL_NONE;
 }
 
 void TextureCubeMap::setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(0, level, width, height, internalFormat, format, type, unpack, pixels);
+    mTexture->setImage(0, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
 void TextureCubeMap::setImageNegX(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(1, level, width, height, internalFormat, format, type, unpack, pixels);
+    mTexture->setImage(1, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
 void TextureCubeMap::setImagePosY(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(2, level, width, height, internalFormat, format, type, unpack, pixels);
+    mTexture->setImage(2, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
 void TextureCubeMap::setImageNegY(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(3, level, width, height, internalFormat, format, type, unpack, pixels);
+    mTexture->setImage(3, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
 void TextureCubeMap::setImagePosZ(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(4, level, width, height, internalFormat, format, type, unpack, pixels);
+    mTexture->setImage(4, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
 void TextureCubeMap::setImageNegZ(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    setImage(5, level, width, height, internalFormat, format, type, unpack, pixels);
+    mTexture->setImage(5, level, width, height, internalFormat, format, type, unpack, pixels);
 }
 
 void TextureCubeMap::setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
-    // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    int faceIndex = targetToIndex(target);
-    redefineImage(faceIndex, level, format, width, height);
-
-    TextureWithRenderer::setCompressedImage(imageSize, pixels, mImageArray[faceIndex][level]);
-}
-
-void TextureCubeMap::commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
-{
-    if (isValidFaceLevel(faceIndex, level))
-    {
-        rx::ImageD3D *image = rx::ImageD3D::makeImageD3D(mImageArray[faceIndex][level]);
-        if (image->copyToStorage(mTexStorage, faceIndex, level, xoffset, yoffset, width, height))
-            image->markClean();
-    }
+    mTexture->setCompressedImage(target, level, format, width, height, imageSize, pixels);
 }
 
 void TextureCubeMap::subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    int faceIndex = targetToIndex(target);
-    if (TextureWithRenderer::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels, mImageArray[faceIndex][level]))
-    {
-        commitRect(faceIndex, level, xoffset, yoffset, width, height);
-    }
+    mTexture->subImage(target, level, xoffset, yoffset, width, height, format, type, unpack, pixels);
 }
 
 void TextureCubeMap::subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels)
 {
-    int faceIndex = targetToIndex(target);
-    if (TextureWithRenderer::subImageCompressed(xoffset, yoffset, 0, width, height, 1, format, imageSize, pixels, mImageArray[faceIndex][level]))
-    {
-        commitRect(faceIndex, level, xoffset, yoffset, width, height);
-    }
+    mTexture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, pixels);
 }
 
 // Tests for cube map sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 86.
 bool TextureCubeMap::isSamplerComplete(const SamplerState &samplerState) const
 {
-    int size = getBaseLevelWidth();
-
-    bool mipmapping = IsMipmapFiltered(samplerState);
-
-    // TODO(geofflang): use context's texture caps
-    if (!mRenderer->getRendererTextureCaps().get(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0)).filtering)
-    {
-        if (samplerState.magFilter != GL_NEAREST ||
-            (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
-        {
-            return false;
-        }
-    }
-
-    // TODO(geofflang): use context's extensions
-    if (!isPow2(size) && !mRenderer->getRendererExtensions().textureNPOT)
-    {
-        if (samplerState.wrapS != GL_CLAMP_TO_EDGE || samplerState.wrapT != GL_CLAMP_TO_EDGE || mipmapping)
-        {
-            return false;
-        }
-    }
-
-    if (!mipmapping)
-    {
-        if (!isCubeComplete())
-        {
-            return false;
-        }
-    }
-    else
-    {
-        if (!isMipmapCubeComplete())   // Also tests for isCubeComplete()
-        {
-            return false;
-        }
-    }
-
-    return true;
+    return mTexture->isSamplerComplete(samplerState);
 }
 
 // Tests for cube texture completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool TextureCubeMap::isCubeComplete() const
 {
-    int    baseWidth  = getBaseLevelWidth();
-    int    baseHeight = getBaseLevelHeight();
-    GLenum baseFormat = getBaseLevelInternalFormat();
-
-    if (baseWidth <= 0 || baseWidth != baseHeight)
-    {
-        return false;
-    }
-
-    for (int faceIndex = 1; faceIndex < 6; faceIndex++)
-    {
-        const rx::Image &faceBaseImage = *mImageArray[faceIndex][0];
-
-        if (faceBaseImage.getWidth()          != baseWidth  ||
-            faceBaseImage.getHeight()         != baseHeight ||
-            faceBaseImage.getInternalFormat() != baseFormat )
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool TextureCubeMap::isMipmapCubeComplete() const
-{
-    if (isImmutable())
-    {
-        return true;
-    }
-
-    if (!isCubeComplete())
-    {
-        return false;
-    }
-
-    int levelCount = mipLevels();
-
-    for (int face = 0; face < 6; face++)
-    {
-        for (int level = 1; level < levelCount; level++)
-        {
-            if (!isFaceLevelComplete(face, level))
-            {
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
-bool TextureCubeMap::isFaceLevelComplete(int faceIndex, int level) const
-{
-    ASSERT(level >= 0 && faceIndex < 6 && level < (int)ArraySize(mImageArray[faceIndex]) && mImageArray[faceIndex][level] != NULL);
-
-    if (isImmutable())
-    {
-        return true;
-    }
-
-    int baseSize = getBaseLevelWidth();
-
-    if (baseSize <= 0)
-    {
-        return false;
-    }
-
-    // "isCubeComplete" checks for base level completeness and we must call that
-    // to determine if any face at level 0 is complete. We omit that check here
-    // to avoid re-checking cube-completeness for every face at level 0.
-    if (level == 0)
-    {
-        return true;
-    }
-
-    // Check that non-zero levels are consistent with the base level.
-    const rx::Image *faceLevelImage = mImageArray[faceIndex][level];
-
-    if (faceLevelImage->getInternalFormat() != getBaseLevelInternalFormat())
-    {
-        return false;
-    }
-
-    if (faceLevelImage->getWidth() != std::max(1, baseSize >> level))
-    {
-        return false;
-    }
-
-    return true;
+    return mTexture->isCubeComplete();
 }
 
 bool TextureCubeMap::isCompressed(GLenum target, GLint level) const
@@ -759,355 +615,48 @@ bool TextureCubeMap::isDepth(GLenum target, GLint level) const
     return GetDepthBits(getInternalFormat(target, level)) > 0;
 }
 
-void TextureCubeMap::initializeStorage(bool renderTarget)
-{
-    // Only initialize the first time this texture is used as a render target or shader resource
-    if (mTexStorage)
-    {
-        return;
-    }
-
-    // do not attempt to create storage for nonexistant data
-    if (!isFaceLevelComplete(0, 0))
-    {
-        return;
-    }
-
-    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mUsage));
-
-    setCompleteTexStorage(createCompleteStorage(createRenderTarget));
-    ASSERT(mTexStorage);
-
-    // flush image data to the storage
-    updateStorage();
-}
-
-rx::TextureStorageInterfaceCube *TextureCubeMap::createCompleteStorage(bool renderTarget) const
-{
-    GLsizei size = getBaseLevelWidth();
-
-    ASSERT(size > 0);
-
-    // use existing storage level count, when previously specified by TexStorage*D
-    GLint levels = (mTexStorage ? mTexStorage->getLevelCount() : creationLevels(size, size, 1));
-
-    return new rx::TextureStorageInterfaceCube(mRenderer, getBaseLevelInternalFormat(), renderTarget, size, levels);
-}
-
-void TextureCubeMap::setCompleteTexStorage(rx::TextureStorageInterfaceCube *newCompleteTexStorage)
-{
-    SafeDelete(mTexStorage);
-    mTexStorage = newCompleteTexStorage;
-
-    if (mTexStorage && mTexStorage->isManaged())
-    {
-        for (int faceIndex = 0; faceIndex < 6; faceIndex++)
-        {
-            for (int level = 0; level < mTexStorage->getLevelCount(); level++)
-            {
-                rx::ImageD3D::makeImageD3D(mImageArray[faceIndex][level])->setManagedSurface(mTexStorage, faceIndex, level);
-            }
-        }
-    }
-
-    mDirtyImages = true;
-}
-
-void TextureCubeMap::updateStorage()
-{
-    ASSERT(mTexStorage != NULL);
-    GLint storageLevels = mTexStorage->getLevelCount();
-    for (int face = 0; face < 6; face++)
-    {
-        for (int level = 0; level < storageLevels; level++)
-        {
-            if (mImageArray[face][level]->isDirty() && isFaceLevelComplete(face, level))
-            {
-                updateStorageFaceLevel(face, level);
-            }
-        }
-    }
-}
-
-void TextureCubeMap::updateStorageFaceLevel(int faceIndex, int level)
-{
-    ASSERT(level >= 0 && faceIndex < 6 && level < (int)ArraySize(mImageArray[faceIndex]) && mImageArray[faceIndex][level] != NULL);
-    rx::Image *image = mImageArray[faceIndex][level];
-
-    if (image->isDirty())
-    {
-        commitRect(faceIndex, level, 0, 0, image->getWidth(), image->getHeight());
-    }
-}
-
-bool TextureCubeMap::ensureRenderTarget()
-{
-    initializeStorage(true);
-
-    if (getBaseLevelWidth() > 0)
-    {
-        ASSERT(mTexStorage);
-        if (!mTexStorage->isRenderTarget())
-        {
-            rx::TextureStorageInterfaceCube *newRenderTargetStorage = createCompleteStorage(true);
-
-            if (!mRenderer->copyToRenderTarget(newRenderTargetStorage, mTexStorage))
-            {
-                delete newRenderTargetStorage;
-                return gl::error(GL_OUT_OF_MEMORY, false);
-            }
-
-            setCompleteTexStorage(newRenderTargetStorage);
-        }
-    }
-
-    return (mTexStorage && mTexStorage->isRenderTarget());
-}
-
-void TextureCubeMap::setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
-{
-    GLenum sizedInternalFormat = IsSizedInternalFormat(internalFormat) ? internalFormat
-                                                                       : GetSizedInternalFormat(format, type);
-
-    redefineImage(faceIndex, level, sizedInternalFormat, width, height);
-
-    TextureWithRenderer::setImage(unpack, type, pixels, mImageArray[faceIndex][level]);
-}
-
-int TextureCubeMap::targetToIndex(GLenum target)
-{
-    META_ASSERT(GL_TEXTURE_CUBE_MAP_NEGATIVE_X - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 1);
-    META_ASSERT(GL_TEXTURE_CUBE_MAP_POSITIVE_Y - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 2);
-    META_ASSERT(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 3);
-    META_ASSERT(GL_TEXTURE_CUBE_MAP_POSITIVE_Z - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 4);
-    META_ASSERT(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 5);
-
-    return target - GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-}
-
-void TextureCubeMap::redefineImage(int faceIndex, GLint level, GLenum internalformat, GLsizei width, GLsizei height)
-{
-    // If there currently is a corresponding storage texture image, it has these parameters
-    const int storageWidth = std::max(1, getBaseLevelWidth() >> level);
-    const int storageHeight = std::max(1, getBaseLevelHeight() >> level);
-    const GLenum storageFormat = getBaseLevelInternalFormat();
-
-    mImageArray[faceIndex][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, internalformat, width, height, 1, false);
-
-    if (mTexStorage)
-    {
-        const int storageLevels = mTexStorage->getLevelCount();
-
-        if ((level >= storageLevels && storageLevels != 0) ||
-            width != storageWidth ||
-            height != storageHeight ||
-            internalformat != storageFormat)   // Discard mismatched storage
-        {
-            for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
-            {
-                for (int faceIndex = 0; faceIndex < 6; faceIndex++)
-                {
-                    mImageArray[faceIndex][level]->markDirty();
-                }
-            }
-
-            delete mTexStorage;
-            mTexStorage = NULL;
-
-            mDirtyImages = true;
-        }
-    }
-}
-
 void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    int faceIndex = targetToIndex(target);
-    GLenum sizedInternalFormat = IsSizedInternalFormat(format) ? format
-                                                               : GetSizedInternalFormat(format, GL_UNSIGNED_BYTE);
-    redefineImage(faceIndex, level, sizedInternalFormat, width, height);
-
-    if (!mImageArray[faceIndex][level]->isRenderableFormat())
-    {
-        mImageArray[faceIndex][level]->copy(0, 0, 0, x, y, width, height, source);
-        mDirtyImages = true;
-    }
-    else
-    {
-        ensureRenderTarget();
-        mImageArray[faceIndex][level]->markClean();
-
-        ASSERT(width == height);
-
-        if (width > 0 && isValidFaceLevel(faceIndex, level))
-        {
-            gl::Rectangle sourceRect;
-            sourceRect.x = x;
-            sourceRect.width = width;
-            sourceRect.y = y;
-            sourceRect.height = height;
-
-            mRenderer->copyImage(source, sourceRect, format, 0, 0, mTexStorage, target, level);
-        }
-    }
+    mTexture->copyImage(target, level, format, x, y, width, height, source);
 }
 
 void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    int faceIndex = targetToIndex(target);
-
-    // We can only make our texture storage to a render target if the level we're copying *to* is complete
-    // and the base level is cube-complete. The base level must be cube complete (common case) because we cannot
-    // rely on the "getBaseLevel*" methods reliably otherwise.
-    bool canCreateRenderTarget = isFaceLevelComplete(faceIndex, level) && isCubeComplete();
-
-    if (!mImageArray[faceIndex][level]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
-    {
-        mImageArray[faceIndex][level]->copy(0, 0, 0, x, y, width, height, source);
-        mDirtyImages = true;
-    }
-    else
-    {
-        ensureRenderTarget();
-        
-        if (isValidFaceLevel(faceIndex, level))
-        {
-            updateStorageFaceLevel(faceIndex, level);
-
-            gl::Rectangle sourceRect;
-            sourceRect.x = x;
-            sourceRect.width = width;
-            sourceRect.y = y;
-            sourceRect.height = height;
-
-            mRenderer->copyImage(source, sourceRect, gl::GetFormat(getBaseLevelInternalFormat()),
-                                 xoffset, yoffset, mTexStorage, target, level);
-        }
-    }
+    mTexture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, source);
 }
 
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
 {
-    for (int level = 0; level < levels; level++)
-    {
-        GLsizei mipSize = std::max(1, size >> level);
-        for (int faceIndex = 0; faceIndex < 6; faceIndex++)
-        {
-            mImageArray[faceIndex][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, internalformat, mipSize, mipSize, 1, true);
-        }
-    }
-
-    for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
-    {
-        for (int faceIndex = 0; faceIndex < 6; faceIndex++)
-        {
-            mImageArray[faceIndex][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, GL_NONE, 0, 0, 0, true);
-        }
-    }
-
     mImmutable = true;
 
-    setCompleteTexStorage(new rx::TextureStorageInterfaceCube(mRenderer, internalformat, IsRenderTargetUsage(mUsage), size, levels));
+    mTexture->storage(levels, internalformat, size);
 }
 
 void TextureCubeMap::generateMipmaps()
 {
-    // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
-    int levelCount = mipLevels();
-    for (int faceIndex = 0; faceIndex < 6; faceIndex++)
-    {
-        for (int level = 1; level < levelCount; level++)
-        {
-            int faceLevelSize = (std::max(mImageArray[faceIndex][0]->getWidth() >> level, 1));
-            redefineImage(faceIndex, level, mImageArray[faceIndex][0]->getInternalFormat(), faceLevelSize, faceLevelSize);
-        }
-    }
-
-    if (mTexStorage && mTexStorage->isRenderTarget())
-    {
-        for (int faceIndex = 0; faceIndex < 6; faceIndex++)
-        {
-            for (int level = 1; level < levelCount; level++)
-            {
-                mTexStorage->generateMipmap(faceIndex, level);
-
-                mImageArray[faceIndex][level]->markClean();
-            }
-        }
-    }
-    else
-    {
-        for (int faceIndex = 0; faceIndex < 6; faceIndex++)
-        {
-            for (int level = 1; level < levelCount; level++)
-            {
-                mRenderer->generateMipmap(mImageArray[faceIndex][level], mImageArray[faceIndex][level - 1]);
-            }
-        }
-    }
+    mTexture->generateMipmaps();
 }
 
 const rx::Image *TextureCubeMap::getBaseLevelImage() const
 {
     // Note: if we are not cube-complete, there is no single base level image that can describe all
     // cube faces, so this method is only well-defined for a cube-complete base level.
-    return mImageArray[0][0];
-}
-
-rx::TextureStorageInterface *TextureCubeMap::getBaseLevelStorage()
-{
-    return mTexStorage;
+    return mTexture->getImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
 }
 
 unsigned int TextureCubeMap::getRenderTargetSerial(GLenum target, GLint level)
 {
-    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(target, level) : 0);
+    return mTexture->getRenderTargetSerial(target, level);
 }
 
 rx::RenderTarget *TextureCubeMap::getRenderTarget(GLenum target, GLint level)
 {
-    ASSERT(IsCubemapTextureTarget(target));
-
-    // ensure the underlying texture is created
-    if (!ensureRenderTarget())
-    {
-        return NULL;
-    }
-
-    updateStorageFaceLevel(targetToIndex(target), level);
-
-    // ensure this is NOT a depth texture
-    if (isDepth(target, level))
-    {
-        return NULL;
-    }
-
-    return mTexStorage->getRenderTarget(target, level);
+    return mTexture->getRenderTarget(target, level);
 }
 
 rx::RenderTarget *TextureCubeMap::getDepthStencil(GLenum target, GLint level)
 {
-    ASSERT(IsCubemapTextureTarget(target));
-
-    // ensure the underlying texture is created
-    if (!ensureRenderTarget())
-    {
-        return NULL;
-    }
-
-    updateStorageFaceLevel(targetToIndex(target), level);
-
-    // ensure this is a depth texture
-    if (!isDepth(target, level))
-    {
-        return NULL;
-    }
-
-    return mTexStorage->getRenderTarget(target, level);
-}
-
-bool TextureCubeMap::isValidFaceLevel(int faceIndex, int level) const
-{
-    return (mTexStorage ? (level >= 0 && level < mTexStorage->getLevelCount()) : 0);
+    return mTexture->getDepthStencil(target, level);
 }
 
 Texture3D::Texture3D(rx::Renderer *renderer, GLuint id)

@@ -10,6 +10,7 @@
 // D3D9 texture.
 
 #include "libGLESv2/main.h"
+#include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
 #include "libGLESv2/renderer/d3d/d3d9/TextureStorage9.h"
 #include "libGLESv2/renderer/d3d/d3d9/SwapChain9.h"
@@ -264,7 +265,7 @@ IDirect3DSurface9 *TextureStorage9_Cube::getCubeMapSurface(GLenum faceTarget, in
 
 RenderTarget *TextureStorage9_Cube::getRenderTargetFace(GLenum faceTarget, int level)
 {
-    return mRenderTarget[gl::TextureCubeMap::targetToIndex(faceTarget)];
+    return mRenderTarget[TextureD3D_Cube::targetToIndex(faceTarget)];
 }
 
 void TextureStorage9_Cube::generateMipmap(int faceIndex, int level)

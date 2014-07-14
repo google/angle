@@ -10,6 +10,7 @@
 
 #include "libGLESv2/renderer/d3d/d3d11/TextureStorage11.h"
 
+#include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libGLESv2/renderer/d3d/d3d11/SwapChain11.h"
@@ -770,7 +771,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
 {
     if (level >= 0 && level < getLevelCount())
     {
-        int faceIndex = gl::TextureCubeMap::targetToIndex(faceTarget);
+        int faceIndex = TextureD3D_Cube::targetToIndex(faceTarget);
         if (!mRenderTarget[faceIndex][level])
         {
             ID3D11Device *device = mRenderer->getDevice();

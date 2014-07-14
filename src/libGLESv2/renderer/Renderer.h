@@ -59,6 +59,7 @@ class TextureStorage;
 class UniformStorage;
 
 class Texture2DImpl;
+class TextureCubeImpl;
 
 struct ConfigDesc
 {
@@ -229,6 +230,7 @@ class Renderer
 
     // Texture creation
     virtual Texture2DImpl *createTexture2D() = 0;
+    virtual TextureCubeImpl *createTextureCube() = 0;
 
     // Buffer creation
     virtual BufferImpl *createBuffer() = 0;

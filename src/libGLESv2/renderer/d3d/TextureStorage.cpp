@@ -10,6 +10,7 @@
 // GPU-side texture.
 
 #include "libGLESv2/renderer/d3d/TextureStorage.h"
+#include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/Texture.h"
@@ -116,7 +117,7 @@ void TextureStorageInterfaceCube::generateMipmap(int faceIndex, int level)
 
 unsigned int TextureStorageInterfaceCube::getRenderTargetSerial(GLenum target, GLint level) const
 {
-    return mFirstRenderTargetSerial + (level * 6) + gl::TextureCubeMap::targetToIndex(target);
+    return mFirstRenderTargetSerial + (level * 6) + TextureD3D_Cube::targetToIndex(target);
 }
 
 TextureStorageInterface3D::TextureStorageInterface3D(Renderer *renderer, GLenum internalformat, bool renderTarget,

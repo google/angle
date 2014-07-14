@@ -69,7 +69,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     // objects all of whose names are 0.
 
     mTexture2DZero.set(new Texture2D(mRenderer->createTexture2D(), 0));
-    mTextureCubeMapZero.set(new TextureCubeMap(mRenderer, 0));
+    mTextureCubeMapZero.set(new TextureCubeMap(mRenderer->createTextureCube(), 0));
     mTexture3DZero.set(new Texture3D(mRenderer, 0));
     mTexture2DArrayZero.set(new Texture2DArray(mRenderer, 0));
 
@@ -2159,7 +2159,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
 
           case TEXTURE_CUBE:
             {
-              TextureCubeMap *incompleteCube = new TextureCubeMap(mRenderer, Texture::INCOMPLETE_TEXTURE_ID);
+              TextureCubeMap *incompleteCube = new TextureCubeMap(mRenderer->createTextureCube(), Texture::INCOMPLETE_TEXTURE_ID);
 
               incompleteCube->setImagePosX(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
               incompleteCube->setImageNegX(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);

@@ -26,6 +26,7 @@ class ImageD3D;
 class Renderer;
 class TextureStorageInterface;
 class TextureStorageInterface2D;
+class TextureStorageInterfaceCube;
 
 class TextureD3D
 {
@@ -133,6 +134,70 @@ class TextureD3D_2D : public Texture2DImpl, public TextureD3D
 
     TextureStorageInterface2D *mTexStorage;
     ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+};
+
+class TextureD3D_Cube : public TextureCubeImpl, public TextureD3D
+{
+  public:
+    TextureD3D_Cube(rx::Renderer *renderer);
+    virtual ~TextureD3D_Cube();
+
+    static TextureD3D_Cube *makeTextureD3D_Cube(TextureCubeImpl *texture);
+
+    virtual TextureStorageInterface *getNativeTexture();
+
+    virtual Image *getImage(GLenum target, int level) const;
+
+    virtual void setUsage(GLenum usage);
+    virtual bool hasDirtyImages() const { return mDirtyImages; }
+    virtual void resetDirty();
+
+    GLenum getInternalFormat(GLenum target, GLint level) const;
+    bool isDepth(GLenum target, GLint level) const;
+
+    virtual void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
+    virtual void subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
+    virtual void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual void storage(GLsizei levels, GLenum internalformat, GLsizei size);
+
+    virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
+    virtual bool isCubeComplete() const;
+
+    virtual void generateMipmaps();
+
+    virtual unsigned int getRenderTargetSerial(GLenum target, GLint level);
+
+    virtual RenderTarget *getRenderTarget(GLenum target, GLint level);
+    virtual RenderTarget *getDepthStencil(GLenum target, GLint level);
+
+    static int targetToIndex(GLenum target);
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureD3D_Cube);
+
+    void initializeStorage(bool renderTarget);
+    TextureStorageInterfaceCube *createCompleteStorage(bool renderTarget) const;
+    void setCompleteTexStorage(TextureStorageInterfaceCube *newCompleteTexStorage);
+
+    void updateStorage();
+    bool ensureRenderTarget();
+    virtual TextureStorageInterface *getBaseLevelStorage();
+    virtual const ImageD3D *getBaseLevelImage() const;
+
+    bool isMipmapCubeComplete() const;
+    bool isValidFaceLevel(int faceIndex, int level) const;
+    bool isFaceLevelComplete(int faceIndex, int level) const;
+    void updateStorageFaceLevel(int faceIndex, int level);
+
+    void redefineImage(int faceIndex, GLint level, GLenum internalformat, GLsizei width, GLsizei height);
+    void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+
+    ImageD3D *mImageArray[6][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+
+    TextureStorageInterfaceCube *mTexStorage;
 };
 
 }

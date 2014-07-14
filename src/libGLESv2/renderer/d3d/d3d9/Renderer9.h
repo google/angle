@@ -181,6 +181,7 @@ class Renderer9 : public Renderer
 
     // Texture creation
     virtual Texture2DImpl *createTexture2D();
+    virtual TextureCubeImpl *createTextureCube();
 
     // Buffer creation
     virtual BufferImpl *createBuffer();

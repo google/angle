@@ -29,9 +29,8 @@ namespace rx
 {
 class Renderer;
 class Texture2DImpl;
+class TextureCubeImpl;
 class TextureStorageInterface;
-class TextureStorageInterface2D;
-class TextureStorageInterfaceCube;
 class TextureStorageInterface3D;
 class TextureStorageInterface2DArray;
 class RenderTarget;
@@ -187,12 +186,17 @@ class Texture2D : public Texture
     egl::Surface *mSurface;
 };
 
-class TextureCubeMap : public TextureWithRenderer
+class TextureCubeMap : public Texture
 {
   public:
-    TextureCubeMap(rx::Renderer *renderer, GLuint id);
+    TextureCubeMap(rx::TextureCubeImpl *impl, GLuint id);
 
     ~TextureCubeMap();
+
+    virtual rx::TextureStorageInterface *getNativeTexture();
+    virtual void setUsage(GLenum usage);
+    virtual bool hasDirtyImages() const;
+    virtual void resetDirty();
 
     GLsizei getWidth(GLenum target, GLint level) const;
     GLsizei getHeight(GLenum target, GLint level) const;
@@ -223,8 +227,6 @@ class TextureCubeMap : public TextureWithRenderer
 
     unsigned int getRenderTargetSerial(GLenum target, GLint level);
 
-    static int targetToIndex(GLenum target);
-
   protected:
     friend class TextureCubeMapAttachment;
     rx::RenderTarget *getRenderTarget(GLenum target, GLint level);
@@ -233,27 +235,9 @@ class TextureCubeMap : public TextureWithRenderer
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
 
-    virtual void initializeStorage(bool renderTarget);
-    rx::TextureStorageInterfaceCube *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(rx::TextureStorageInterfaceCube *newCompleteTexStorage);
-
-    virtual void updateStorage();
-    virtual bool ensureRenderTarget();
-    virtual rx::TextureStorageInterface *getBaseLevelStorage();
     virtual const rx::Image *getBaseLevelImage() const;
 
-    bool isMipmapCubeComplete() const;
-    bool isValidFaceLevel(int faceIndex, int level) const;
-    bool isFaceLevelComplete(int faceIndex, int level) const;
-    void updateStorageFaceLevel(int faceIndex, int level);
-
-    void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels);
-    void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    void redefineImage(int faceIndex, GLint level, GLenum internalformat, GLsizei width, GLsizei height);
-
-    rx::Image *mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-
-    rx::TextureStorageInterfaceCube *mTexStorage;
+    rx::TextureCubeImpl *mTexture;
 };
 
 class Texture3D : public TextureWithRenderer

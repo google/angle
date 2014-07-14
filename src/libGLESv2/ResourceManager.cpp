@@ -381,7 +381,7 @@ void ResourceManager::checkTextureAllocation(GLuint texture, TextureType type)
         }
         else if (type == TEXTURE_CUBE)
         {
-            textureObject = new TextureCubeMap(mRenderer, texture);
+            textureObject = new TextureCubeMap(mRenderer->createTextureCube(), texture);
         }
         else if (type == TEXTURE_3D)
         {
