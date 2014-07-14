@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f93f54e6_006cc8cf",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T19:55:43Z",
+      "side": 1,
+      "message": "delete this comment",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 83
+      },
+      "revId": "60f0743ba35b72631bae352bdd76c07f536c53e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
