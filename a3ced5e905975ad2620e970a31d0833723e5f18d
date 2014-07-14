@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f93f54e6_e0ca7cd7",
+        "filename": "src/libGLESv2/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-14T21:26:39Z",
+      "side": 1,
+      "message": "I think if texture \u003d\u003d 0, textarget will remain GL_NONE and cause an UNREACHABLE in Framebuffer::getAttachment (the first line of Framebuffer::hasMissingAttachment).",
+      "range": {
+        "startLine": 534,
+        "startChar": 11,
+        "endLine": 534,
+        "endChar": 94
+      },
+      "revId": "a3ced5e905975ad2620e970a31d0833723e5f18d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
