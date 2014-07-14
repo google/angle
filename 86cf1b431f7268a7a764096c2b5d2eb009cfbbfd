@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19434882_1e49cd99",
+        "filename": "src/libGLESv2/renderer/Image.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T20:00:21Z",
+      "side": 1,
+      "message": "would \"actualFormat\" make more sense as a D3D-ism than a GL-ism? Moreover, using a term like \"native\" rather than \"actual\" seems more descriptive. Or is this forthcoming in later patches?",
+      "range": {
+        "startLine": 36,
+        "startChar": 11,
+        "endLine": 36,
+        "endChar": 26
+      },
+      "revId": "86cf1b431f7268a7a764096c2b5d2eb009cfbbfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19434882_fe5a2162",
+        "filename": "src/libGLESv2/renderer/d3d/ImageD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T20:00:21Z",
+      "side": 1,
+      "message": "tiny nit: trailing whitespace",
+      "range": {
+        "startLine": 8,
+        "startChar": 74,
+        "endLine": 8,
+        "endChar": 75
+      },
+      "revId": "86cf1b431f7268a7a764096c2b5d2eb009cfbbfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f93f54e6_20caa486",
+        "filename": "src/libGLESv2/renderer/d3d/ImageD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-14T20:00:21Z",
+      "side": 1,
+      "message": "tiny nit: trailing whitespace",
+      "range": {
+        "startLine": 7,
+        "startChar": 71,
+        "endLine": 7,
+        "endChar": 72
+      },
+      "revId": "86cf1b431f7268a7a764096c2b5d2eb009cfbbfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
