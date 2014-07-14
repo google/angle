@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "d965302b_7d9f2b10",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-07-14T21:05:26Z",
+      "side": 1,
+      "message": "Have you double-checked that the WebGL conformance tests verify this specific behavior:\n\n\"In these cases, there must be enough components provided in the arguments to provide an initializer for every component in the constructed value. It is an error to provide extra arguments beyond this last used argument.\"\n\n(Section 5.4.2 \"Vector and Matrix Constructors\" in the GLSL ES 1.0.17 spec)\n\nIt is important to verify that if only some of the components of the last argument to the constructor are used, that when the arguments are deconstructed, we don\u0027t accidentally provide too many arguments and cause the compile to fail.",
+      "revId": "65d74a6185a0f42c79364103e32b8a90df849062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "196c2814_4a18a310",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-07-14T21:05:26Z",
+      "side": 1,
+      "message": "I\u0027d suggest a more descriptive name. SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS?",
+      "revId": "65d74a6185a0f42c79364103e32b8a90df849062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b976bcc3_3900079a",
         "filename": "src/compiler/translator/RewriteConstructor.cpp",
         "patchSetId": 2
