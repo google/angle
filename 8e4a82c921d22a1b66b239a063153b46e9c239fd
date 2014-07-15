@@ -94,6 +94,24 @@
     },
     {
       "key": {
+        "uuid": "592060de_48a55f9e",
+        "filename": "src/libGLESv2/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-15T00:27:15Z",
+      "side": 1,
+      "message": "Yes-- the BindingPointer to a ProgramBinary in this file requires that ProgramBinary be fully specified prior to declaration. It had been getting declared by this point previous to the State refactor through other includes, I believe.",
+      "parentUuid": "b976bcc3_e7b98acd",
+      "revId": "8e4a82c921d22a1b66b239a063153b46e9c239fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9aaf451_8e61bf89",
         "filename": "src/libGLESv2/State.cpp",
         "patchSetId": 5
