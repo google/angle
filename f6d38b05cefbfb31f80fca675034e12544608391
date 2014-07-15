@@ -46,6 +46,24 @@
       "revId": "f6d38b05cefbfb31f80fca675034e12544608391",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "592060de_ebac0d13",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-15T15:22:41Z",
+      "side": 0,
+      "message": "Should have reverted to delete from release when I removed the refcounting from VertexArray. Fixed.",
+      "parentUuid": "f93f54e6_a36ebec8",
+      "revId": "f6d38b05cefbfb31f80fca675034e12544608391",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
