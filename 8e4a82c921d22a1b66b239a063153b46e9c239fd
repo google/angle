@@ -112,6 +112,24 @@
     },
     {
       "key": {
+        "uuid": "39dacc33_3fbe6751",
+        "filename": "src/libGLESv2/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-15T14:13:44Z",
+      "side": 1,
+      "message": "Probably because of extra includes in State.h, causing a different include order.",
+      "parentUuid": "592060de_48a55f9e",
+      "revId": "8e4a82c921d22a1b66b239a063153b46e9c239fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9aaf451_8e61bf89",
         "filename": "src/libGLESv2/State.cpp",
         "patchSetId": 5
