@@ -22,6 +22,24 @@
       "revId": "568c2b2cae9b3e7e00255e46523fc264bb47bea9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79d0c40f_8acf2a95",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-15T20:03:07Z",
+      "side": 1,
+      "message": "Look at the RemoveTree code, if we use the original node, it will crash when we destruct the tree.",
+      "parentUuid": "19dfc824_bee199a2",
+      "revId": "568c2b2cae9b3e7e00255e46523fc264bb47bea9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
