@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "99cbb865_37bf6abf",
+        "filename": "src/libGLESv2/renderer/TextureImpl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-07-15T20:15:19Z",
+      "side": 1,
+      "message": "Once Framebuffers have been refactored I think the need for this function dissapears, and the functionality can be kept at the D3D level. That\u0027s a whole different CL, though.",
+      "parentUuid": "191a68b4_ec61bf88",
+      "revId": "74ff8af8777988b850c0ae80f90f36ad45d8a840",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "191a68b4_ccbfa3e5",
         "filename": "src/libGLESv2/renderer/TextureImpl.h",
         "patchSetId": 5
