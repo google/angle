@@ -93,6 +93,24 @@
       "revId": "568c2b2cae9b3e7e00255e46523fc264bb47bea9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19c8a874_99acff24",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-15T22:00:35Z",
+      "side": 1,
+      "message": "This case is handled, as we create a temporary variable and initialize it to whatever the node is, can be a temp value, or function call, or expression.  Doesn\u0027t matter.\n\nHowever, jmadill raised an interesting case, where mat4(index++, vec4(index++)\n\nSo to handle that case, and to not over-complicate things, I decided to just create a temp variable for each arg, in the situation where scalarization is necessary.",
+      "parentUuid": "d9e8d0cd_1136f6d1",
+      "revId": "568c2b2cae9b3e7e00255e46523fc264bb47bea9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
