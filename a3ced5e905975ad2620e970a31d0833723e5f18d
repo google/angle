@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "39256cef_ad14e960",
+        "filename": "src/libGLESv2/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-15T17:33:42Z",
+      "side": 1,
+      "message": "Now that I see getTarget() here I kind of wish it\u0027d been called getTexTarget() to make it clearer it\u0027s not, say, a rendertarget. I might just think that because this CL is about FBOs.",
+      "revId": "a3ced5e905975ad2620e970a31d0833723e5f18d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f93f54e6_e0ca7cd7",
         "filename": "src/libGLESv2/validationES3.cpp",
         "patchSetId": 4
@@ -19,6 +36,24 @@
         "endLine": 534,
         "endChar": 94
       },
+      "revId": "a3ced5e905975ad2620e970a31d0833723e5f18d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "191a68b4_a9a2191c",
+        "filename": "src/libGLESv2/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-15T17:33:42Z",
+      "side": 1,
+      "message": "Yup, I think so too.",
+      "parentUuid": "f93f54e6_e0ca7cd7",
       "revId": "a3ced5e905975ad2620e970a31d0833723e5f18d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
