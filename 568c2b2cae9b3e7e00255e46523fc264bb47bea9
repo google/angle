@@ -40,6 +40,23 @@
       "revId": "568c2b2cae9b3e7e00255e46523fc264bb47bea9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9e8d0cd_1136f6d1",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-07-15T20:26:38Z",
+      "side": 1,
+      "message": "Does the temporary variable generation handle situations like this:\n\nvec3 row1 \u003d ...;\nvec3 row2 \u003d ...;\nvec3 row3 \u003d ...;\nfloat foo \u003d mat4(mat3(row1, row2, row3))[1][1];\n\nSpecifically, the situation where the matrix or vector that needs to be scalarized is a temporary value, allocated in the middle of a deeper expression?",
+      "revId": "568c2b2cae9b3e7e00255e46523fc264bb47bea9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
