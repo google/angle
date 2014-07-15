@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "99cbb865_62ddb67e",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-15T01:13:29Z",
+      "side": 1,
+      "message": "Yes, it\u0027s tested, so far all drivers work fine in that aspect, so we have coverage.",
+      "parentUuid": "d965302b_7d9f2b10",
+      "revId": "65d74a6185a0f42c79364103e32b8a90df849062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "196c2814_4a18a310",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-14T21:05:26Z",
       "side": 1,
       "message": "I\u0027d suggest a more descriptive name. SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS?",
+      "revId": "65d74a6185a0f42c79364103e32b8a90df849062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9e8d0cd_bcb601da",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-15T01:13:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "196c2814_4a18a310",
       "revId": "65d74a6185a0f42c79364103e32b8a90df849062",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -59,6 +95,24 @@
     },
     {
       "key": {
+        "uuid": "79d0c40f_a4b8ac01",
+        "filename": "src/compiler/translator/RewriteConstructor.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-15T01:13:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b976bcc3_3900079a",
+      "revId": "65d74a6185a0f42c79364103e32b8a90df849062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99d1f8e4_86819aaa",
         "filename": "src/compiler/translator/intermediate.h",
         "patchSetId": 2
@@ -76,6 +130,24 @@
         "endLine": 585,
         "endChar": 20
       },
+      "revId": "65d74a6185a0f42c79364103e32b8a90df849062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99cbb865_c5e3ec37",
+        "filename": "src/compiler/translator/intermediate.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-15T01:13:29Z",
+      "side": 1,
+      "message": "There are a lot of style violation in this file.  I\u0027ll clean them up in a separate CL.",
+      "parentUuid": "99d1f8e4_86819aaa",
       "revId": "65d74a6185a0f42c79364103e32b8a90df849062",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
