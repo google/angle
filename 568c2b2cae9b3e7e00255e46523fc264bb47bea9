@@ -43,6 +43,24 @@
     },
     {
       "key": {
+        "uuid": "39dacc33_05fb168b",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-15T20:55:55Z",
+      "side": 1,
+      "message": "Seems like it should not -- if original is only traversed once. And if original is not traversed once, mutable expressions like \"index++\" will be travesred multiple times as well? Apologies if I\u0027m missing something.",
+      "parentUuid": "79d0c40f_8acf2a95",
+      "revId": "568c2b2cae9b3e7e00255e46523fc264bb47bea9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9e8d0cd_1136f6d1",
         "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
         "patchSetId": 5
