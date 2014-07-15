@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39dacc33_2221f0bd",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1354,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-15T16:04:52Z",
+      "side": 1,
+      "message": "this seems fine. in other cases we might need shared objects, so apparently we\u0027ll need the resource manager as well as the state and caps and extensions -- pretty much the whole context.",
+      "range": {
+        "startLine": 1354,
+        "startChar": 4,
+        "endLine": 1354,
+        "endChar": 55
+      },
+      "revId": "9e09f37eb7799f29eed3dc971c2a01aab0814a9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
