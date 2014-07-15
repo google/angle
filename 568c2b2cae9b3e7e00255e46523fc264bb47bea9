@@ -61,6 +61,24 @@
     },
     {
       "key": {
+        "uuid": "592060de_11f0ae41",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-07-15T20:56:06Z",
+      "side": 1,
+      "message": "Ideally we\u0027d have a pool associated with the AST for all the nodes so we can freely reuse the weak pointers. I think that used to be the case but with a global pool and the nodes of the tree were deleted by traversing it to save memory after a compile? I wasn\u0027t very involved in that change. Alternatively during the destruction of the tree we could collect a set of unique pointers, although that seems a bit backwards.\n\nAnyway, there\u0027s no need to address that right now, but there have been a couple of situations already where nodes had to be cloned. We should really fix this properly one day.\n\nThat said, I\u0027m not sure if you really need the clone here, since we\u0027re removing the original constructor arguments and replacing them with scalars. The sequence.clear() leaves them in the global pool but unreferenced by the tree, and thus they\u0027re available here to add them to the tree again without the need to clone.",
+      "parentUuid": "79d0c40f_8acf2a95",
+      "revId": "568c2b2cae9b3e7e00255e46523fc264bb47bea9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9e8d0cd_1136f6d1",
         "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
         "patchSetId": 5
