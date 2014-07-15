@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "191a68b4_8c000bd2",
+        "filename": "src/libGLESv2/Texture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-15T19:54:51Z",
+      "side": 1,
+      "message": "incredibly nitty nit: extra space not really needed",
+      "revId": "74ff8af8777988b850c0ae80f90f36ad45d8a840",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39256cef_6dc95160",
+        "filename": "src/libGLESv2/Texture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-15T19:54:51Z",
+      "side": 1,
+      "message": "nit: Typo, but it\u0027s in a todo, so I don\u0027t know that it matters...",
+      "revId": "74ff8af8777988b850c0ae80f90f36ad45d8a840",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "191a68b4_ec61bf88",
+        "filename": "src/libGLESv2/renderer/TextureImpl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-15T19:54:51Z",
+      "side": 1,
+      "message": "Could this function eventually move to the root D3D Texture implementation class? For the most part, we retrieve Storage from within the Renderers themselves-- inside those, we\u0027ll know that we\u0027re backed by D3D, so we could downcast to the D3D implementation and retrieve storage at that point. The only places outside the D3D Renderer classes that I think we\u0027re grabbing the storage are places where we need to do things like calculate the level offset, which should get pushed down into the D3D layer anyway.",
+      "revId": "74ff8af8777988b850c0ae80f90f36ad45d8a840",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "191a68b4_ccbfa3e5",
+        "filename": "src/libGLESv2/renderer/TextureImpl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-07-15T19:54:51Z",
+      "side": 1,
+      "message": "We appear to be delightfully inconsistent in the codebase about whether we bother specifying DISALLOW_COPY_AND_ASSIGN on abstract base classes. I don\u0027t think it necessarily needs to be done here, but we should probably get a quick consensus on what the rule is, and open a ticket to make it consistent throughout the codebase.",
+      "revId": "74ff8af8777988b850c0ae80f90f36ad45d8a840",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
