@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19dfc824_bee199a2",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-15T14:10:29Z",
+      "side": 1,
+      "message": "do you need to clone original? why not just use original? that would allow you to remove the new clone() methods as well.",
+      "range": {
+        "startLine": 239,
+        "startChar": 19,
+        "endLine": 239,
+        "endChar": 36
+      },
+      "revId": "568c2b2cae9b3e7e00255e46523fc264bb47bea9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
