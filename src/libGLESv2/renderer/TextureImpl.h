@@ -99,6 +99,37 @@ class TextureCubeImpl
     virtual RenderTarget *getDepthStencil(GLenum target, GLint level) = 0;
 };
 
+class Texture3DImpl
+{
+  public:
+    virtual ~Texture3DImpl() {}
+
+    virtual TextureStorageInterface *getNativeTexture() = 0;
+
+    virtual Image *getImage(int level) const = 0;
+
+    virtual void setUsage(GLenum usage) = 0;
+    virtual bool hasDirtyImages() const = 0;
+    virtual void resetDirty() = 0;
+
+    virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const = 0;
+    virtual bool isMipmapComplete() const = 0;
+
+    virtual void setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels) = 0;
+    virtual void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels) = 0;
+    virtual void subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels) = 0;
+    virtual void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels) = 0;
+    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source) = 0;
+    virtual void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth) = 0;
+    virtual void generateMipmaps() = 0;
+
+    virtual unsigned int getRenderTargetSerial(GLint level, GLint layer) = 0;
+
+    virtual RenderTarget *getRenderTarget(GLint level) = 0;
+    virtual RenderTarget *getRenderTarget(GLint level, GLint layer) = 0;
+    virtual RenderTarget *getDepthStencil(GLint level, GLint layer) = 0;
+};
+
 }
 
 #endif // LIBGLESV2_RENDERER_TEXTUREIMPL_H_

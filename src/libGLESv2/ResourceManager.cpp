@@ -385,7 +385,7 @@ void ResourceManager::checkTextureAllocation(GLuint texture, TextureType type)
         }
         else if (type == TEXTURE_3D)
         {
-            textureObject = new Texture3D(mRenderer, texture);
+            textureObject = new Texture3D(mRenderer->createTexture3D(), texture);
         }
         else if (type == TEXTURE_2D_ARRAY)
         {

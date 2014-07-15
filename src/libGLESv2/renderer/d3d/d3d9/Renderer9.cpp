@@ -3204,6 +3204,11 @@ TextureCubeImpl *Renderer9::createTextureCube()
     return new TextureD3D_Cube(this);
 }
 
+Texture3DImpl *Renderer9::createTexture3D()
+{
+    return new TextureD3D_3D(this);
+}
+
 bool Renderer9::getLUID(LUID *adapterLuid) const
 {
     adapterLuid->HighPart = 0;

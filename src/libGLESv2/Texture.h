@@ -30,6 +30,7 @@ namespace rx
 class Renderer;
 class Texture2DImpl;
 class TextureCubeImpl;
+class Texture3DImpl;
 class TextureStorageInterface;
 class TextureStorageInterface3D;
 class TextureStorageInterface2DArray;
@@ -240,12 +241,17 @@ class TextureCubeMap : public Texture
     rx::TextureCubeImpl *mTexture;
 };
 
-class Texture3D : public TextureWithRenderer
+class Texture3D : public Texture
 {
   public:
-    Texture3D(rx::Renderer *renderer, GLuint id);
+    Texture3D(rx::Texture3DImpl *impl, GLuint id);
 
     ~Texture3D();
+
+    virtual rx::TextureStorageInterface *getNativeTexture();
+    virtual void setUsage(GLenum usage);
+    virtual bool hasDirtyImages() const;
+    virtual void resetDirty();
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -278,26 +284,9 @@ class Texture3D : public TextureWithRenderer
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture3D);
 
-    virtual void initializeStorage(bool renderTarget);
-    rx::TextureStorageInterface3D *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(rx::TextureStorageInterface3D *newCompleteTexStorage);
-
-    virtual void updateStorage();
-    virtual bool ensureRenderTarget();
-
-    virtual rx::TextureStorageInterface *getBaseLevelStorage();
     virtual const rx::Image *getBaseLevelImage() const;
 
-    void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
-    void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);
-
-    bool isValidLevel(int level) const;
-    bool isLevelComplete(int level) const;
-    void updateStorageLevel(int level);
-
-    rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-
-    rx::TextureStorageInterface3D *mTexStorage;
+    rx::Texture3DImpl *mTexture;
 };
 
 class Texture2DArray : public TextureWithRenderer

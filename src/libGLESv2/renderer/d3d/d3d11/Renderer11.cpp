@@ -2911,6 +2911,11 @@ TextureCubeImpl *Renderer11::createTextureCube()
     return new TextureD3D_Cube(this);
 }
 
+Texture3DImpl *Renderer11::createTexture3D()
+{
+    return new TextureD3D_3D(this);
+}
+
 void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
                                  GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, void *pixels)
 {

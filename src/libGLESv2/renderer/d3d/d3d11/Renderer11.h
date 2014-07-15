@@ -180,6 +180,7 @@ class Renderer11 : public Renderer
     // Texture creation
     virtual Texture2DImpl *createTexture2D();
     virtual TextureCubeImpl *createTextureCube();
+    virtual Texture3DImpl *createTexture3D();
 
     // Buffer creation
     virtual BufferImpl *createBuffer();
