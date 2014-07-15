@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9dbd436_e0353cef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-15T14:21:23Z",
+      "side": 1,
+      "message": "nit: BUG\u003d tag in description",
+      "revId": "8cc4e747fbb5c6cc488efb73cdb4e6846f133173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9dbd436_0033080a",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-15T14:21:23Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 151,
+        "startChar": 75,
+        "endLine": 151,
+        "endChar": 76
+      },
+      "revId": "8cc4e747fbb5c6cc488efb73cdb4e6846f133173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19dfc824_feeb217e",
+        "filename": "src/libGLESv2/Texture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-15T14:21:23Z",
+      "side": 1,
+      "message": "it might be useful at some point to have a \n\n  virtual uvec3 getLevelDimensions(uint) \n\nrather than non-virtual getWidth getHeight getDepth.",
+      "range": {
+        "startLine": 152,
+        "startChar": 12,
+        "endLine": 152,
+        "endChar": 20
+      },
+      "revId": "8cc4e747fbb5c6cc488efb73cdb4e6846f133173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
