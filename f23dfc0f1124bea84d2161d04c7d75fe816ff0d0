@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7987e429_2cee5bd7",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1951,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-16T18:42:52Z",
+      "side": 1,
+      "message": "How come? Is it against the style guide? It is guaranteed to avoid a copy.",
+      "parentUuid": "19c8a874_33f13f78",
+      "revId": "f23dfc0f1124bea84d2161d04c7d75fe816ff0d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19c8a874_73fbb757",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 7
