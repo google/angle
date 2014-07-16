@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "7987e429_8c8027eb",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-16T19:11:33Z",
+      "side": 1,
+      "message": "this should be getDepthStencil I think",
+      "range": {
+        "startLine": 659,
+        "startChar": 21,
+        "endLine": 659,
+        "endChar": 36
+      },
+      "revId": "002dccbc6cd498de79e8ead98576659ecfefd04d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "597ce0f0_e8bd139f",
         "filename": "src/libGLESv2/Texture.h",
         "patchSetId": 1
@@ -18,6 +41,52 @@
         "startChar": 4,
         "endLine": 240,
         "endChar": 34
+      },
+      "revId": "002dccbc6cd498de79e8ead98576659ecfefd04d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9982d817_8d8825d4",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-16T19:11:33Z",
+      "side": 1,
+      "message": "nit: SafeDelete (might as well)",
+      "range": {
+        "startLine": 842,
+        "startChar": 12,
+        "endLine": 842,
+        "endChar": 18
+      },
+      "revId": "002dccbc6cd498de79e8ead98576659ecfefd04d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7987e429_ac7deb39",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 982,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-16T19:11:33Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "range": {
+        "startLine": 982,
+        "startChar": 0,
+        "endLine": 982,
+        "endChar": 8
       },
       "revId": "002dccbc6cd498de79e8ead98576659ecfefd04d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
