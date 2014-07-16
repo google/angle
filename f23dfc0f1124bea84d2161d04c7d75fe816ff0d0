@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "19c8a874_f6089592",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1951,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-16T19:31:47Z",
+      "side": 1,
+      "message": "OK, it turns out the temporary\u0027s lifespan is extended to its local reference. So the use case here is correct.",
+      "parentUuid": "9982d817_2d9ad920",
+      "revId": "f23dfc0f1124bea84d2161d04c7d75fe816ff0d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19c8a874_73fbb757",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 7
