@@ -58,6 +58,12 @@ TextureD3D::~TextureD3D()
 {
 }
 
+TextureD3D *TextureD3D::makeTextureD3D(TextureImpl *texture)
+{
+    ASSERT(HAS_DYNAMIC_TYPE(TextureD3D*, texture));
+    return static_cast<TextureD3D*>(texture);
+}
+
 GLint TextureD3D::getBaseLevelWidth() const
 {
     const Image *baseImage = getBaseLevelImage();
@@ -253,11 +259,6 @@ Image *TextureD3D_2D::getImage(int level) const
 void TextureD3D_2D::setUsage(GLenum usage)
 {
     mUsage = usage;
-}
-
-void TextureD3D_2D::resetDirty()
-{
-    mDirtyImages = false;
 }
 
 GLsizei TextureD3D_2D::getWidth(GLint level) const
@@ -875,11 +876,6 @@ void TextureD3D_Cube::setUsage(GLenum usage)
     mUsage = usage;
 }
 
-void TextureD3D_Cube::resetDirty()
-{
-    mDirtyImages = false;
-}
-
 GLenum TextureD3D_Cube::getInternalFormat(GLenum target, GLint level) const
 {
     if (level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
@@ -1472,11 +1468,6 @@ void TextureD3D_3D::setUsage(GLenum usage)
     mUsage = usage;
 }
 
-void TextureD3D_3D::resetDirty()
-{
-    mDirtyImages = false;
-}
-
 GLsizei TextureD3D_3D::getWidth(GLint level) const
 {
     if (level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
@@ -2030,11 +2021,6 @@ GLsizei TextureD3D_2DArray::getLayerCount(int level) const
 void TextureD3D_2DArray::setUsage(GLenum usage)
 {
     mUsage = usage;
-}
-
-void TextureD3D_2DArray::resetDirty()
-{
-    mDirtyImages = false;
 }
 
 GLsizei TextureD3D_2DArray::getWidth(GLint level) const

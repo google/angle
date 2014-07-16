@@ -702,8 +702,11 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
         // in the texture class and we're unexpectedly missing the d3d texture
         ASSERT(d3dTexture != NULL);
 
+        TextureD3D* textureImpl = TextureD3D::makeTextureD3D(texture->getImplementation());
+
         serial = texture->getTextureSerial();
-        forceSetTexture = texture->hasDirtyImages();
+        forceSetTexture = textureImpl->hasDirtyImages();
+        textureImpl->resetDirty();
     }
 
     if (forceSetTexture || appliedSerials[index] != serial)

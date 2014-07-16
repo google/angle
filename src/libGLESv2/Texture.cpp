@@ -20,7 +20,6 @@
 #include "libGLESv2/renderer/d3d/TextureStorage.h"
 #include "libEGL/Surface.h"
 #include "libGLESv2/renderer/RenderTarget.h"
-#include "libGLESv2/renderer/TextureImpl.h"
 
 namespace gl
 {
@@ -89,6 +88,22 @@ GLenum Texture::getBaseLevelInternalFormat() const
     return (baseImage ? baseImage->getInternalFormat() : GL_NONE);
 }
 
+// Tests for texture sampling completeness
+bool Texture::isSamplerComplete(const SamplerState &samplerState) const
+{
+    return getImplementation()->isSamplerComplete(samplerState);
+}
+
+rx::TextureStorageInterface *Texture::getNativeTexture()
+{
+    return getImplementation()->getNativeTexture();
+}
+
+void Texture::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
+{
+    getImplementation()->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, source);
+}
+
 unsigned int Texture::getTextureSerial()
 {
     rx::TextureStorageInterface *texture = getNativeTexture();
@@ -128,25 +143,10 @@ Texture2D::~Texture2D()
     }
 }
 
-rx::TextureStorageInterface *Texture2D::getNativeTexture()
-{
-    return mTexture->getNativeTexture();
-}
-
 void Texture2D::setUsage(GLenum usage)
 {
     mUsage = usage;
     mTexture->setUsage(usage);
-}
-
-bool Texture2D::hasDirtyImages() const
-{
-    return mTexture->hasDirtyImages();
-}
-
-void Texture2D::resetDirty()
-{
-    mTexture->resetDirty();
 }
 
 GLsizei Texture2D::getWidth(GLint level) const
@@ -245,22 +245,11 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
     mTexture->copyImage(level, format, x, y, width, height, source);
 }
 
-void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
-{
-    mTexture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, source);
-}
-
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
     mImmutable = true;
 
     mTexture->storage(levels, internalformat, width, height);
-}
-
-// Tests for 2D texture sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 85.
-bool Texture2D::isSamplerComplete(const SamplerState &samplerState) const
-{
-    return mTexture->isSamplerComplete(samplerState);
 }
 
 bool Texture2D::isCompressed(GLint level) const
@@ -318,25 +307,10 @@ TextureCubeMap::~TextureCubeMap()
     SafeDelete(mTexture);
 }
 
-rx::TextureStorageInterface *TextureCubeMap::getNativeTexture()
-{
-    return mTexture->getNativeTexture();
-}
-
 void TextureCubeMap::setUsage(GLenum usage)
 {
     mUsage = usage;
     mTexture->setUsage(usage);
-}
-
-bool TextureCubeMap::hasDirtyImages() const
-{
-    return mTexture->hasDirtyImages();
-}
-
-void TextureCubeMap::resetDirty()
-{
-    mTexture->resetDirty();
 }
 
 GLsizei TextureCubeMap::getWidth(GLenum target, GLint level) const
@@ -416,12 +390,6 @@ void TextureCubeMap::subImageCompressed(GLenum target, GLint level, GLint xoffse
     mTexture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, pixels);
 }
 
-// Tests for cube map sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 86.
-bool TextureCubeMap::isSamplerComplete(const SamplerState &samplerState) const
-{
-    return mTexture->isSamplerComplete(samplerState);
-}
-
 // Tests for cube texture completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool TextureCubeMap::isCubeComplete() const
 {
@@ -441,11 +409,6 @@ bool TextureCubeMap::isDepth(GLenum target, GLint level) const
 void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
     mTexture->copyImage(target, level, format, x, y, width, height, source);
-}
-
-void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
-{
-    mTexture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, source);
 }
 
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
@@ -493,25 +456,10 @@ Texture3D::~Texture3D()
     SafeDelete(mTexture);
 }
 
-rx::TextureStorageInterface *Texture3D::getNativeTexture()
-{
-    return mTexture->getNativeTexture();
-}
-
 void Texture3D::setUsage(GLenum usage)
 {
     mUsage = usage;
     mTexture->setUsage(usage);
-}
-
-bool Texture3D::hasDirtyImages() const
-{
-    return mTexture->hasDirtyImages();
-}
-
-void Texture3D::resetDirty()
-{
-    mTexture->resetDirty();
 }
 
 GLsizei Texture3D::getWidth(GLint level) const
@@ -586,30 +534,11 @@ const rx::Image *Texture3D::getBaseLevelImage() const
     return mTexture->getImage(0);
 }
 
-void Texture3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
-{
-    mTexture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, source);
-}
-
-bool Texture3D::isSamplerComplete(const SamplerState &samplerState) const
-{
-    return mTexture->isSamplerComplete(samplerState);
-}
-
-bool Texture3D::isMipmapComplete() const
-{
-    return mTexture->isMipmapComplete();
-}
-
 unsigned int Texture3D::getRenderTargetSerial(GLint level, GLint layer)
 {
     return mTexture->getRenderTargetSerial(level, layer);
 }
 
-rx::RenderTarget *Texture3D::getRenderTarget(GLint level)
-{
-    return mTexture->getRenderTarget(level);
-}
 
 rx::RenderTarget *Texture3D::getRenderTarget(GLint level, GLint layer)
 {
@@ -632,25 +561,10 @@ Texture2DArray::~Texture2DArray()
     SafeDelete(mTexture);
 }
 
-rx::TextureStorageInterface *Texture2DArray::getNativeTexture()
-{
-    return mTexture->getNativeTexture();
-}
-
 void Texture2DArray::setUsage(GLenum usage)
 {
     mUsage = usage;
     mTexture->setUsage(usage);
-}
-
-bool Texture2DArray::hasDirtyImages() const
-{
-    return mTexture->hasDirtyImages();
-}
-
-void Texture2DArray::resetDirty()
-{
-    mTexture->resetDirty();
 }
 
 GLsizei Texture2DArray::getWidth(GLint level) const
@@ -723,21 +637,6 @@ void Texture2DArray::generateMipmaps()
 const rx::Image *Texture2DArray::getBaseLevelImage() const
 {
     return (mTexture->getLayerCount(0) > 0 ? mTexture->getImage(0, 0) : NULL);
-}
-
-void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
-{
-    mTexture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, source);
-}
-
-bool Texture2DArray::isSamplerComplete(const SamplerState &samplerState) const
-{
-    return mTexture->isSamplerComplete(samplerState);
-}
-
-bool Texture2DArray::isMipmapComplete() const
-{
-    return mTexture->isMipmapComplete();
 }
 
 unsigned int Texture2DArray::getRenderTargetSerial(GLint level, GLint layer)

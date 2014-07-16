@@ -510,7 +510,9 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
         // missing the shader resource view
         ASSERT(textureSRV != NULL);
 
-        forceSetTexture = texture->hasDirtyImages();
+        TextureD3D* textureImpl = TextureD3D::makeTextureD3D(texture->getImplementation());
+        forceSetTexture = textureImpl->hasDirtyImages();
+        textureImpl->resetDirty();
     }
 
     if (type == gl::SAMPLER_PIXEL)

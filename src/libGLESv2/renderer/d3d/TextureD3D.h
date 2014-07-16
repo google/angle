@@ -32,18 +32,22 @@ class TextureStorageInterface2DArray;
 
 bool IsMipmapFiltered(const gl::SamplerState &samplerState);
 
-class TextureD3D
+class TextureD3D : public TextureImpl
 {
   public:
     TextureD3D(Renderer *renderer);
     virtual ~TextureD3D();
+
+    static TextureD3D *makeTextureD3D(TextureImpl *texture);
 
     GLint getBaseLevelWidth() const;
     GLint getBaseLevelHeight() const;
     GLint getBaseLevelDepth() const;
     GLenum getBaseLevelInternalFormat() const;
 
+    bool hasDirtyImages() const { return mDirtyImages; }
     bool isImmutable() const { return mImmutable; }
+    void resetDirty() { mDirtyImages = false; }
 
   protected:
     void setImage(const gl::PixelUnpackState &unpack, GLenum type, const void *pixels, Image *image);
@@ -87,8 +91,6 @@ class TextureD3D_2D : public Texture2DImpl, public TextureD3D
     virtual Image *getImage(int level) const;
 
     virtual void setUsage(GLenum usage);
-    virtual bool hasDirtyImages() const { return mDirtyImages; }
-    virtual void resetDirty();
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -153,8 +155,6 @@ class TextureD3D_Cube : public TextureCubeImpl, public TextureD3D
     virtual Image *getImage(GLenum target, int level) const;
 
     virtual void setUsage(GLenum usage);
-    virtual bool hasDirtyImages() const { return mDirtyImages; }
-    virtual void resetDirty();
 
     GLenum getInternalFormat(GLenum target, GLint level) const;
     bool isDepth(GLenum target, GLint level) const;
@@ -217,8 +217,6 @@ class TextureD3D_3D : public Texture3DImpl, public TextureD3D
     virtual Image *getImage(int level) const;
 
     virtual void setUsage(GLenum usage);
-    virtual bool hasDirtyImages() const { return mDirtyImages; }
-    virtual void resetDirty();
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -234,7 +232,6 @@ class TextureD3D_3D : public Texture3DImpl, public TextureD3D
     virtual void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
     virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
-    virtual bool isMipmapComplete() const;
 
     virtual void generateMipmaps();
 
@@ -256,6 +253,7 @@ class TextureD3D_3D : public Texture3DImpl, public TextureD3D
     virtual TextureStorageInterface *getBaseLevelStorage();
     virtual const ImageD3D *getBaseLevelImage() const;
 
+    bool isMipmapComplete() const;
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
     void updateStorageLevel(int level);
@@ -282,8 +280,6 @@ class TextureD3D_2DArray : public Texture2DArrayImpl, public TextureD3D
     virtual GLsizei getLayerCount(int level) const;
 
     virtual void setUsage(GLenum usage);
-    virtual bool hasDirtyImages() const { return mDirtyImages; }
-    virtual void resetDirty();
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -299,7 +295,6 @@ class TextureD3D_2DArray : public Texture2DArrayImpl, public TextureD3D
     virtual void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
     virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
-    virtual bool isMipmapComplete() const;
 
     virtual void generateMipmaps();
 
@@ -320,6 +315,7 @@ class TextureD3D_2DArray : public Texture2DArrayImpl, public TextureD3D
     virtual TextureStorageInterface *getBaseLevelStorage();
     virtual const ImageD3D *getBaseLevelImage() const;
 
+    bool isMipmapComplete() const;
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
     void updateStorageLevel(int level);
