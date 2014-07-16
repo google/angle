@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "19c8a874_7642c555",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1951,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-16T18:59:22Z",
+      "side": 1,
+      "message": "Here you are referencing a temporary string, which can be out of scope as soon as the assigning is done.  Then your reference is referencing a dead object?\n\nMy understanding of c++ reference could be totally wrong though, so I am all ears.",
+      "parentUuid": "7987e429_2cee5bd7",
+      "revId": "f23dfc0f1124bea84d2161d04c7d75fe816ff0d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19c8a874_73fbb757",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 7
