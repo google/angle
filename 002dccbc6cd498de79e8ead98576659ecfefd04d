@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "597ce0f0_e8bd139f",
+        "filename": "src/libGLESv2/Texture.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-16T14:42:26Z",
+      "side": 1,
+      "message": "hey Brandon, it seems as though we\u0027re deleting all the images from the base texture class and moving them to the implementation.\n\nFor validation we\u0027d like to have zero call-through to the implementation (I think), and we need texture images to do validation. Can you address this in your patches?\n\nSorry if I\u0027m mistaken.",
+      "range": {
+        "startLine": 240,
+        "startChar": 4,
+        "endLine": 240,
+        "endChar": 34
+      },
+      "revId": "002dccbc6cd498de79e8ead98576659ecfefd04d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
