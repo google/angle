@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9982d817_aa64ef99",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-16T14:37:58Z",
+      "side": 1,
+      "message": "nit: brackets and ASSERT(isMatrix())",
+      "range": {
+        "startLine": 236,
+        "startChar": 4,
+        "endLine": 236,
+        "endChar": 8
+      },
+      "revId": "8449d29952c434d18bd2832bd63300f26cee3c95",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
