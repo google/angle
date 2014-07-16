@@ -116,6 +116,23 @@
       "revId": "57a4df0270bb8dd2342d4a764bf735cb292bf523",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19c8a874_259578f0",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2531,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-16T01:25:17Z",
+      "side": 1,
+      "message": "Maybe I am wrong, but should this function and getUniformByLocation be defined as const?  They return a pointer that can be used to modify the object.",
+      "revId": "57a4df0270bb8dd2342d4a764bf735cb292bf523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
