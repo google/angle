@@ -133,6 +133,24 @@
       "revId": "57a4df0270bb8dd2342d4a764bf735cb292bf523",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9982d817_2aab9f77",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2531,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-16T14:07:12Z",
+      "side": 1,
+      "message": "Returning a non-const pointer is valid C++, and we do this in other places in ANGLE. I kind of share your reservation, but C++ doesn\u0027t do const very well. (FYI, Google \"C++ pure keyword\" and you\u0027ll see a cool future alternative)",
+      "parentUuid": "19c8a874_259578f0",
+      "revId": "57a4df0270bb8dd2342d4a764bf735cb292bf523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
