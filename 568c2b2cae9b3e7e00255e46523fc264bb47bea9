@@ -129,6 +129,24 @@
       "revId": "568c2b2cae9b3e7e00255e46523fc264bb47bea9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19c8a874_6525b097",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-16T01:09:30Z",
+      "side": 1,
+      "message": "Never mind, the case mat2(i++, vec4(i++)) still needs to be handled. So patch set 6 is necessary.",
+      "parentUuid": "f9c4b462_9eace124",
+      "revId": "568c2b2cae9b3e7e00255e46523fc264bb47bea9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
