@@ -69,7 +69,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mTexture2DZero.set(new Texture2D(mRenderer->createTexture2D(), 0));
     mTextureCubeMapZero.set(new TextureCubeMap(mRenderer->createTextureCube(), 0));
     mTexture3DZero.set(new Texture3D(mRenderer->createTexture3D(), 0));
-    mTexture2DArrayZero.set(new Texture2DArray(mRenderer, 0));
+    mTexture2DArrayZero.set(new Texture2DArray(mRenderer->createTexture2DArray(), 0));
 
     bindVertexArray(0);
     bindArrayBuffer(0);
@@ -2176,7 +2176,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
 
           case TEXTURE_2D_ARRAY:
             {
-                Texture2DArray *incomplete2darray = new Texture2DArray(mRenderer, Texture::INCOMPLETE_TEXTURE_ID);
+                Texture2DArray *incomplete2darray = new Texture2DArray(mRenderer->createTexture2DArray(), Texture::INCOMPLETE_TEXTURE_ID);
                 incomplete2darray->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
 
                 t = incomplete2darray;

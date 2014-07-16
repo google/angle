@@ -3211,6 +3211,11 @@ Texture3DImpl *Renderer9::createTexture3D()
     return new TextureD3D_3D(this);
 }
 
+Texture2DArrayImpl *Renderer9::createTexture2DArray()
+{
+    return new TextureD3D_2DArray(this);
+}
+
 bool Renderer9::getLUID(LUID *adapterLuid) const
 {
     adapterLuid->HighPart = 0;

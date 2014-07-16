@@ -195,7 +195,7 @@ UINT TextureStorage11::getSubresourceIndex(int mipLevel, int layerTarget) const
 ID3D11ShaderResourceView *TextureStorage11::getSRV(const gl::SamplerState &samplerState)
 {
     bool swizzleRequired = samplerState.swizzleRequired();
-    bool mipmapping = gl::IsMipmapFiltered(samplerState);
+    bool mipmapping = IsMipmapFiltered(samplerState);
     unsigned int mipLevels = mipmapping ? (samplerState.maxLevel - samplerState.baseLevel) : 1;
 
     // Make sure there's 'mipLevels' mipmap levels below the base level (offset by the top level,  which corresponds to GL level 0)

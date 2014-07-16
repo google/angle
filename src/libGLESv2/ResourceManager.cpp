@@ -389,7 +389,7 @@ void ResourceManager::checkTextureAllocation(GLuint texture, TextureType type)
         }
         else if (type == TEXTURE_2D_ARRAY)
         {
-            textureObject = new Texture2DArray(mRenderer, texture);
+            textureObject = new Texture2DArray(mRenderer->createTexture2DArray(), texture);
         }
         else
         {

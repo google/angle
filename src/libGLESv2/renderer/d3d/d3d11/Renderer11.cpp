@@ -2925,6 +2925,11 @@ Texture3DImpl *Renderer11::createTexture3D()
     return new TextureD3D_3D(this);
 }
 
+Texture2DArrayImpl *Renderer11::createTexture2DArray()
+{
+    return new TextureD3D_2DArray(this);
+}
+
 void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
                                  GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, void *pixels)
 {

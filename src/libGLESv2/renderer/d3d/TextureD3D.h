@@ -28,6 +28,9 @@ class TextureStorageInterface;
 class TextureStorageInterface2D;
 class TextureStorageInterfaceCube;
 class TextureStorageInterface3D;
+class TextureStorageInterface2DArray;
+
+bool IsMipmapFiltered(const gl::SamplerState &samplerState);
 
 class TextureD3D
 {
@@ -263,6 +266,76 @@ class TextureD3D_3D : public Texture3DImpl, public TextureD3D
     ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     TextureStorageInterface3D *mTexStorage;
+};
+
+class TextureD3D_2DArray : public Texture2DArrayImpl, public TextureD3D
+{
+  public:
+    TextureD3D_2DArray(Renderer *renderer);
+    virtual ~TextureD3D_2DArray();
+
+    static TextureD3D_2DArray *makeTextureD3D_2DArray(Texture2DArrayImpl *texture);
+
+    virtual TextureStorageInterface *getNativeTexture();
+
+    virtual Image *getImage(int level, int layer) const;
+    virtual GLsizei getLayerCount(int level) const;
+
+    virtual void setUsage(GLenum usage);
+    virtual bool hasDirtyImages() const { return mDirtyImages; }
+    virtual void resetDirty();
+
+    GLsizei getWidth(GLint level) const;
+    GLsizei getHeight(GLint level) const;
+    GLsizei getLayers(GLint level) const;
+    GLenum getInternalFormat(GLint level) const;
+    bool isDepth(GLint level) const;
+
+    virtual void setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
+    virtual void subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
+    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+
+    virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
+    virtual bool isMipmapComplete() const;
+
+    virtual void generateMipmaps();
+
+    virtual unsigned int getRenderTargetSerial(GLint level, GLint layer);
+
+    virtual RenderTarget *getRenderTarget(GLint level, GLint layer);
+    virtual RenderTarget *getDepthStencil(GLint level, GLint layer);
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureD3D_2DArray);
+
+    virtual void initializeStorage(bool renderTarget);
+    TextureStorageInterface2DArray *createCompleteStorage(bool renderTarget) const;
+    void setCompleteTexStorage(TextureStorageInterface2DArray *newCompleteTexStorage);
+
+    void updateStorage();
+    bool ensureRenderTarget();
+    virtual TextureStorageInterface *getBaseLevelStorage();
+    virtual const ImageD3D *getBaseLevelImage() const;
+
+    bool isValidLevel(int level) const;
+    bool isLevelComplete(int level) const;
+    void updateStorageLevel(int level);
+
+    void deleteImages();
+    void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+    void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint layerTarget, GLsizei width, GLsizei height);
+
+    // Storing images as an array of single depth textures since D3D11 treats each array level of a
+    // Texture2D object as a separate subresource.  Each layer would have to be looped over
+    // to update all the texture layers since they cannot all be updated at once and it makes the most
+    // sense for the Image class to not have to worry about layer subresource as well as mip subresources.
+    GLsizei mLayerCounts[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    ImageD3D **mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+
+    TextureStorageInterface2DArray *mTexStorage;
 };
 
 }

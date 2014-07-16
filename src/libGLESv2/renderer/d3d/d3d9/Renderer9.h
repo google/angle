@@ -183,6 +183,7 @@ class Renderer9 : public Renderer
     virtual Texture2DImpl *createTexture2D();
     virtual TextureCubeImpl *createTextureCube();
     virtual Texture3DImpl *createTexture3D();
+    virtual Texture2DArrayImpl *createTexture2DArray();
 
     // Buffer creation
     virtual BufferImpl *createBuffer();

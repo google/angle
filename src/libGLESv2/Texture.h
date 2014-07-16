@@ -27,13 +27,11 @@ class Surface;
 
 namespace rx
 {
-class Renderer;
 class Texture2DImpl;
 class TextureCubeImpl;
 class Texture3DImpl;
+class Texture2DArrayImpl;
 class TextureStorageInterface;
-class TextureStorageInterface3D;
-class TextureStorageInterface2DArray;
 class RenderTarget;
 class Image;
 }
@@ -42,8 +40,6 @@ namespace gl
 {
 class Framebuffer;
 class FramebufferAttachment;
-
-bool IsMipmapFiltered(const SamplerState &samplerState);
 
 class Texture : public RefCountObject
 {
@@ -96,44 +92,6 @@ class Texture : public RefCountObject
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
     virtual const rx::Image *getBaseLevelImage() const = 0;
-};
-
-// TODO: This class is only here to make incremental Texture refactoring easier
-class TextureWithRenderer : public Texture
-{
-  public:
-    TextureWithRenderer(rx::Renderer *renderer, GLuint id, GLenum target);
-    virtual ~TextureWithRenderer();
-
-    virtual rx::TextureStorageInterface *getNativeTexture();
-
-    virtual bool hasDirtyImages() const;
-    virtual void resetDirty();
-
-  protected:
-    void setImage(const PixelUnpackState &unpack, GLenum type, const void *pixels, rx::Image *image);
-    bool subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                  GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels, rx::Image *image);
-    void setCompressedImage(GLsizei imageSize, const void *pixels, rx::Image *image);
-    bool subImageCompressed(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                            GLenum format, GLsizei imageSize, const void *pixels, rx::Image *image);
-    bool isFastUnpackable(const PixelUnpackState &unpack, GLenum sizedInternalFormat);
-    bool fastUnpackPixels(const PixelUnpackState &unpack, const void *pixels, const Box &destArea,
-                          GLenum sizedInternalFormat, GLenum type, rx::RenderTarget *destRenderTarget);
-
-    GLint creationLevels(GLsizei width, GLsizei height, GLsizei depth) const;
-
-    virtual void initializeStorage(bool renderTarget) = 0;
-    virtual void updateStorage() = 0;
-    virtual bool ensureRenderTarget() = 0;
-
-    rx::Renderer *mRenderer;
-    bool mDirtyImages;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TextureWithRenderer);
-
-    virtual rx::TextureStorageInterface *getBaseLevelStorage() = 0;
 };
 
 class Texture2D : public Texture
@@ -289,12 +247,17 @@ class Texture3D : public Texture
     rx::Texture3DImpl *mTexture;
 };
 
-class Texture2DArray : public TextureWithRenderer
+class Texture2DArray : public Texture
 {
   public:
-    Texture2DArray(rx::Renderer *renderer, GLuint id);
+    Texture2DArray(rx::Texture2DArrayImpl *impl, GLuint id);
 
     ~Texture2DArray();
+
+    virtual rx::TextureStorageInterface *getNativeTexture();
+    virtual void setUsage(GLenum usage);
+    virtual bool hasDirtyImages() const;
+    virtual void resetDirty();
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -326,32 +289,9 @@ class Texture2DArray : public TextureWithRenderer
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2DArray);
 
-    virtual void initializeStorage(bool renderTarget);
-    rx::TextureStorageInterface2DArray *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(rx::TextureStorageInterface2DArray *newCompleteTexStorage);
-
-    virtual void updateStorage();
-    virtual bool ensureRenderTarget();
-
-    virtual rx::TextureStorageInterface *getBaseLevelStorage();
     virtual const rx::Image *getBaseLevelImage() const;
 
-    void deleteImages();
-    void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
-    void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint layerTarget, GLsizei width, GLsizei height);
-
-    bool isValidLevel(int level) const;
-    bool isLevelComplete(int level) const;
-    void updateStorageLevel(int level);
-
-    // Storing images as an array of single depth textures since D3D11 treats each array level of a
-    // Texture2D object as a separate subresource.  Each layer would have to be looped over
-    // to update all the texture layers since they cannot all be updated at once and it makes the most
-    // sense for the Image class to not have to worry about layer subresource as well as mip subresources.
-    GLsizei mLayerCounts[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-    rx::Image **mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-
-    rx::TextureStorageInterface2DArray *mTexStorage;
+    rx::Texture2DArrayImpl *mTexture;
 };
 
 }
