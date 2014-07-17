@@ -51,6 +51,24 @@
       "revId": "d9dd6c5d3fb3353c13d62036554db3472728a5bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "593dc04b_c0ff1e41",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T14:50:18Z",
+      "side": 1,
+      "message": "Mo, the other alternative would be to use const char * and a custom array type to replace std::vector, use disallow copy and assign, and use clone(). Do you see one approach being better?",
+      "parentUuid": "7938c45c_613c16dd",
+      "revId": "d9dd6c5d3fb3353c13d62036554db3472728a5bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
