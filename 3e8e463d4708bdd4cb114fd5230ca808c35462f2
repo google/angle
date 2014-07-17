@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3942ccdc_9f097303",
+        "filename": "src/libGLESv2/Texture.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T14:16:54Z",
+      "side": 1,
+      "message": "I notice mImmutable and mUsage are duplicated between texture and implementation classes. Why not store a ref from the implementation to the Texture? Is that illegal by the design pattern? Seems like it would avoid duplicate state caching.",
+      "range": {
+        "startLine": 89,
+        "startChar": 9,
+        "endLine": 89,
+        "endChar": 19
+      },
+      "revId": "3e8e463d4708bdd4cb114fd5230ca808c35462f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
