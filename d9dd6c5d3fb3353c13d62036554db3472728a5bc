@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "b9f87cd3_a3f31a06",
+        "filename": "src/common/shadervars.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2014-07-17T07:31:57Z",
+      "side": 1,
+      "message": "I\u0027ve not really understood the point of returning *this from an assignment operator. It\u0027s the convention, but if nobody is going to use the return value, why bother?",
+      "revId": "d9dd6c5d3fb3353c13d62036554db3472728a5bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1902688d_4ce253a7",
         "filename": "src/common/shadervars.h",
         "patchSetId": 1
@@ -13,6 +30,24 @@
       "writtenOn": "2014-07-17T01:28:48Z",
       "side": 1,
       "message": "Google coding style strongly discourage copy and assign.\n\nInstead, you can make explicit functions of clone() and copy() to do the same thing.  Just not sure if it can reduce the binary size the same way.\n\nWhat you do here should be the last thing to consider, when all other alternatives are unavailable.",
+      "revId": "d9dd6c5d3fb3353c13d62036554db3472728a5bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7938c45c_613c16dd",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2014-07-17T07:31:57Z",
+      "side": 1,
+      "message": "They discourage them unless the class is used in stl containers. This is used in stl containers so there is no choice of naming the operations.",
+      "parentUuid": "1902688d_4ce253a7",
       "revId": "d9dd6c5d3fb3353c13d62036554db3472728a5bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
