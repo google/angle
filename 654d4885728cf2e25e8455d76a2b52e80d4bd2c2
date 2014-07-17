@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d97e1025_15ad560c",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-17T21:49:26Z",
+      "side": 1,
+      "message": "I very much disagree with this interface.  This means whoever uses this has to redefine the data structures in their own, and what if you add a field and the client doesn\u0027t update it?  Then total disasters.\n\nI think the related variable class should be exposed here together with this function, and instead of void**, it should be the actual data type.",
+      "revId": "654d4885728cf2e25e8455d76a2b52e80d4bd2c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
