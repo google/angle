@@ -286,21 +286,21 @@ bool TParseContext::lValueErrorCheck(const TSourceLoc& line, const char* op, TIn
 
                 TIntermTyped* rightNode = binaryNode->getRight();
                 TIntermAggregate *aggrNode = rightNode->getAsAggregate();
-                
-                for (TIntermSequence::iterator p = aggrNode->getSequence().begin(); 
-                                               p != aggrNode->getSequence().end(); p++) {
+
+                for (TIntermSequence::iterator p = aggrNode->getSequence()->begin();
+                                               p != aggrNode->getSequence()->end(); p++) {
                     int value = (*p)->getAsTyped()->getAsConstantUnion()->getIConst(0);
-                    offset[value]++;     
+                    offset[value]++;
                     if (offset[value] > 1) {
                         error(line, " l-value of swizzle cannot have duplicate components", op);
 
                         return true;
                     }
                 }
-            } 
+            }
 
             return errorReturn;
-        default: 
+        default:
             break;
         }
         error(line, " l-value required", op);
@@ -1142,8 +1142,8 @@ bool TParseContext::areAllChildConst(TIntermAggregate* aggrNode)
 
     // check if all the child nodes are constants so that they can be inserted into 
     // the parent node
-    TIntermSequence &sequence = aggrNode->getSequence() ;
-    for (TIntermSequence::iterator p = sequence.begin(); p != sequence.end(); ++p) {
+    TIntermSequence *sequence = aggrNode->getSequence() ;
+    for (TIntermSequence::iterator p = sequence->begin(); p != sequence->end(); ++p) {
         if (!(*p)->getAsTyped()->getAsConstantUnion())
             return false;
     }
@@ -1538,17 +1538,17 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments, const TType 
     if (!aggregateArguments)
     {
         aggregateArguments = new TIntermAggregate;
-        aggregateArguments->getSequence().push_back(arguments);
+        aggregateArguments->getSequence()->push_back(arguments);
     }
 
     if (op == EOpConstructStruct)
     {
         const TFieldList &fields = type->getStruct()->fields();
-        TIntermSequence &args = aggregateArguments->getSequence();
+        TIntermSequence *args = aggregateArguments->getSequence();
 
         for (size_t i = 0; i < fields.size(); i++)
         {
-            if (args[i]->getAsTyped()->getType() != *fields[i]->type())
+            if ((*args)[i]->getAsTyped()->getType() != *fields[i]->type())
             {
                 error(line, "Structure constructor arguments do not match structure fields", "Error");
                 recover();
@@ -1576,7 +1576,7 @@ TIntermTyped* TParseContext::foldConstConstructor(TIntermAggregate* aggrNode, co
     if (canBeFolded) {
         bool returnVal = false;
         ConstantUnion* unionArray = new ConstantUnion[type.getObjectSize()];
-        if (aggrNode->getSequence().size() == 1)  {
+        if (aggrNode->getSequence()->size() == 1)  {
             returnVal = intermediate.parseConstTree(aggrNode->getLine(), aggrNode, unionArray, aggrNode->getOp(), type, true);
         }
         else {

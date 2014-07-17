@@ -79,8 +79,8 @@ bool ScalarizeVecAndMatConstructorArgs::visitAggregate(Visit visit, TIntermAggre
           case EOpSequence:
             mSequenceStack.push_back(TIntermSequence());
             {
-                for (TIntermSequence::const_iterator iter = node->getSequence().begin();
-                     iter != node->getSequence().end(); ++iter)
+                for (TIntermSequence::const_iterator iter = node->getSequence()->begin();
+                     iter != node->getSequence()->end(); ++iter)
                 {
                     TIntermNode *child = *iter;
                     ASSERT(child != NULL);
@@ -88,10 +88,10 @@ bool ScalarizeVecAndMatConstructorArgs::visitAggregate(Visit visit, TIntermAggre
                     mSequenceStack.back().push_back(child);
                 }
             }
-            if (mSequenceStack.back().size() > node->getSequence().size())
+            if (mSequenceStack.back().size() > node->getSequence()->size())
             {
-                node->getSequence().clear();
-                node->getSequence() = mSequenceStack.back();
+                node->getSequence()->clear();
+                *(node->getSequence()) = mSequenceStack.back();
             }
             mSequenceStack.pop_back();
             return false;
@@ -104,13 +104,13 @@ bool ScalarizeVecAndMatConstructorArgs::visitAggregate(Visit visit, TIntermAggre
           case EOpConstructIVec2:
           case EOpConstructIVec3:
           case EOpConstructIVec4:
-            if (ContainsMatrixNode(node->getSequence()))
+            if (ContainsMatrixNode(*(node->getSequence())))
                 scalarizeArgs(node, false, true);
             break;
           case EOpConstructMat2:
           case EOpConstructMat3:
           case EOpConstructMat4:
-            if (ContainsVectorNode(node->getSequence()))
+            if (ContainsVectorNode(*(node->getSequence())))
                 scalarizeArgs(node, true, false);
             break;
           default:
@@ -152,9 +152,9 @@ void ScalarizeVecAndMatConstructorArgs::scalarizeArgs(
       default:
         break;
     }
-    TIntermSequence &sequence = aggregate->getSequence();
-    TIntermSequence original(sequence);
-    sequence.clear();
+    TIntermSequence *sequence = aggregate->getSequence();
+    TIntermSequence original(*sequence);
+    sequence->clear();
     for (size_t ii = 0; ii < original.size(); ++ii)
     {
         ASSERT(size > 0);
@@ -165,7 +165,7 @@ void ScalarizeVecAndMatConstructorArgs::scalarizeArgs(
         {
             TIntermSymbol *symbolNode =
                 new TIntermSymbol(-1, varName, node->getType());
-            sequence.push_back(symbolNode);
+            sequence->push_back(symbolNode);
             size--;
         }
         else if (node->isVector())
@@ -180,14 +180,14 @@ void ScalarizeVecAndMatConstructorArgs::scalarizeArgs(
                         new TIntermSymbol(-1, varName, node->getType());
                     TIntermBinary *newNode = ConstructVectorIndexBinaryNode(
                         symbolNode, index);
-                    sequence.push_back(newNode);
+                    sequence->push_back(newNode);
                 }
             }
             else
             {
                 TIntermSymbol *symbolNode =
                     new TIntermSymbol(-1, varName, node->getType());
-                sequence.push_back(symbolNode);
+                sequence->push_back(symbolNode);
                 size -= node->getNominalSize();
             }
         }
@@ -205,7 +205,7 @@ void ScalarizeVecAndMatConstructorArgs::scalarizeArgs(
                         new TIntermSymbol(-1, varName, node->getType());
                     TIntermBinary *newNode = ConstructMatrixIndexBinaryNode(
                         symbolNode, colIndex, rowIndex);
-                    sequence.push_back(newNode);
+                    sequence->push_back(newNode);
                     rowIndex++;
                     if (rowIndex >= node->getRows())
                     {
@@ -219,7 +219,7 @@ void ScalarizeVecAndMatConstructorArgs::scalarizeArgs(
             {
                 TIntermSymbol *symbolNode =
                     new TIntermSymbol(-1, varName, node->getType());
-                sequence.push_back(symbolNode);
+                sequence->push_back(symbolNode);
                 size -= node->getCols() * node->getRows();
             }
         }
@@ -256,7 +256,7 @@ TString ScalarizeVecAndMatConstructorArgs::createTempVariable(TIntermTyped *orig
     init->setType(type);
 
     TIntermAggregate *decl = new TIntermAggregate(EOpDeclaration);
-    decl->getSequence().push_back(init);
+    decl->getSequence()->push_back(init);
 
     ASSERT(mSequenceStack.size() > 0);
     TIntermSequence &sequence = mSequenceStack.back();

@@ -47,6 +47,92 @@ class ValidateConstIndexExpr : public TIntermTraverser
     TLoopStack& mLoopStack;
 };
 
+const char *GetOperatorString(TOperator op)
+{
+    switch (op)
+    {
+      case EOpInitialize: return "=";
+      case EOpAssign: return "=";
+      case EOpAddAssign: return "+=";
+      case EOpSubAssign: return "-=";
+      case EOpDivAssign: return "/=";
+
+      // Fall-through.
+      case EOpMulAssign:
+      case EOpVectorTimesMatrixAssign:
+      case EOpVectorTimesScalarAssign:
+      case EOpMatrixTimesScalarAssign:
+      case EOpMatrixTimesMatrixAssign: return "*=";
+
+      // Fall-through.
+      case EOpIndexDirect:
+      case EOpIndexIndirect: return "[]";
+
+      case EOpIndexDirectStruct:
+      case EOpIndexDirectInterfaceBlock: return ".";
+      case EOpVectorSwizzle: return ".";
+      case EOpAdd: return "+";
+      case EOpSub: return "-";
+      case EOpMul: return "*";
+      case EOpDiv: return "/";
+      case EOpMod: UNIMPLEMENTED(); break;
+      case EOpEqual: return "==";
+      case EOpNotEqual: return "!=";
+      case EOpLessThan: return "<";
+      case EOpGreaterThan: return ">";
+      case EOpLessThanEqual: return "<=";
+      case EOpGreaterThanEqual: return ">=";
+
+      // Fall-through.
+      case EOpVectorTimesScalar:
+      case EOpVectorTimesMatrix:
+      case EOpMatrixTimesVector:
+      case EOpMatrixTimesScalar:
+      case EOpMatrixTimesMatrix: return "*";
+
+      case EOpLogicalOr: return "||";
+      case EOpLogicalXor: return "^^";
+      case EOpLogicalAnd: return "&&";
+      case EOpNegative: return "-";
+      case EOpVectorLogicalNot: return "not";
+      case EOpLogicalNot: return "!";
+      case EOpPostIncrement: return "++";
+      case EOpPostDecrement: return "--";
+      case EOpPreIncrement: return "++";
+      case EOpPreDecrement: return "--";
+
+      case EOpRadians: return "radians";
+      case EOpDegrees: return "degrees";
+      case EOpSin: return "sin";
+      case EOpCos: return "cos";
+      case EOpTan: return "tan";
+      case EOpAsin: return "asin";
+      case EOpAcos: return "acos";
+      case EOpAtan: return "atan";
+      case EOpExp: return "exp";
+      case EOpLog: return "log";
+      case EOpExp2: return "exp2";
+      case EOpLog2: return "log2";
+      case EOpSqrt: return "sqrt";
+      case EOpInverseSqrt: return "inversesqrt";
+      case EOpAbs: return "abs";
+      case EOpSign: return "sign";
+      case EOpFloor: return "floor";
+      case EOpCeil: return "ceil";
+      case EOpFract: return "fract";
+      case EOpLength: return "length";
+      case EOpNormalize: return "normalize";
+      case EOpDFdx: return "dFdx";
+      case EOpDFdy: return "dFdy";
+      case EOpFwidth: return "fwidth";
+      case EOpAny: return "any";
+      case EOpAll: return "all";
+
+      default: break;
+    }
+    return "";
+}
+
 }  // namespace anonymous
 
 ValidateLimitations::ValidateLimitations(sh::GLenum shaderType,
@@ -186,13 +272,13 @@ int ValidateLimitations::validateForLoopInit(TIntermLoop *node)
         return -1;
     }
     // To keep things simple do not allow declaration list.
-    TIntermSequence &declSeq = decl->getSequence();
-    if (declSeq.size() != 1)
+    TIntermSequence *declSeq = decl->getSequence();
+    if (declSeq->size() != 1)
     {
         error(decl->getLine(), "Invalid init declaration", "for");
         return -1;
     }
-    TIntermBinary *declInit = declSeq[0]->getAsBinaryNode();
+    TIntermBinary *declInit = (*declSeq)[0]->getAsBinaryNode();
     if ((declInit == NULL) || (declInit->getOp() != EOpInitialize))
     {
         error(decl->getLine(), "Invalid init declaration", "for");
@@ -268,7 +354,7 @@ bool ValidateLimitations::validateForLoopCond(TIntermLoop *node,
       default:
         error(binOp->getLine(),
               "Invalid relational operator",
-              getOperatorString(binOp->getOp()));
+              GetOperatorString(binOp->getOp()));
         break;
     }
     // Loop index must be compared with a constant.
@@ -345,7 +431,7 @@ bool ValidateLimitations::validateForLoopExpr(TIntermLoop *node,
         ASSERT((unOp == NULL) && (binOp != NULL));
         break;
       default:
-        error(expr->getLine(), "Invalid operator", getOperatorString(op));
+        error(expr->getLine(), "Invalid operator", GetOperatorString(op));
         return false;
     }
 
@@ -375,10 +461,10 @@ bool ValidateLimitations::validateFunctionCall(TIntermAggregate *node)
     // List of param indices for which loop indices are used as argument.
     typedef std::vector<size_t> ParamIndex;
     ParamIndex pIndex;
-    TIntermSequence& params = node->getSequence();
-    for (TIntermSequence::size_type i = 0; i < params.size(); ++i)
+    TIntermSequence *params = node->getSequence();
+    for (TIntermSequence::size_type i = 0; i < params->size(); ++i)
     {
-        TIntermSymbol *symbol = params[i]->getAsSymbolNode();
+        TIntermSymbol *symbol = (*params)[i]->getAsSymbolNode();
         if (symbol && isLoopIndex(symbol))
             pIndex.push_back(i);
     }
@@ -399,9 +485,9 @@ bool ValidateLimitations::validateFunctionCall(TIntermAggregate *node)
         TQualifier qual = param.type->getQualifier();
         if ((qual == EvqOut) || (qual == EvqInOut))
         {
-            error(params[*i]->getLine(),
+            error((*params)[*i]->getLine(),
                   "Loop index cannot be used as argument to a function out or inout parameter",
-                  params[*i]->getAsSymbolNode()->getSymbol().c_str());
+                  (*params)[*i]->getAsSymbolNode()->getSymbol().c_str());
             valid = false;
         }
     }

@@ -1637,9 +1637,9 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 
             if (swizzle)
             {
-                TIntermSequence &sequence = swizzle->getSequence();
+                TIntermSequence *sequence = swizzle->getSequence();
 
-                for (TIntermSequence::iterator sit = sequence.begin(); sit != sequence.end(); sit++)
+                for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); sit++)
                 {
                     TIntermConstantUnion *element = (*sit)->getAsConstantUnion();
 
@@ -1853,7 +1853,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 out << "{\n";
             }
 
-            for (TIntermSequence::iterator sit = node->getSequence().begin(); sit != node->getSequence().end(); sit++)
+            for (TIntermSequence::iterator sit = node->getSequence()->begin(); sit != node->getSequence()->end(); sit++)
             {
                 outputLineDirective((*sit)->getLine().first_line);
 
@@ -1873,8 +1873,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpDeclaration:
         if (visit == PreVisit)
         {
-            TIntermSequence &sequence = node->getSequence();
-            TIntermTyped *variable = sequence[0]->getAsTyped();
+            TIntermSequence *sequence = node->getSequence();
+            TIntermTyped *variable = (*sequence)[0]->getAsTyped();
 
             if (variable && (variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal))
             {
@@ -1894,7 +1894,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                     out << TypeString(variable->getType()) + " ";
 
-                    for (TIntermSequence::iterator sit = sequence.begin(); sit != sequence.end(); sit++)
+                    for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); sit++)
                     {
                         TIntermSymbol *symbol = (*sit)->getAsSymbolNode();
 
@@ -1909,7 +1909,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                             (*sit)->traverse(this);
                         }
 
-                        if (*sit != sequence.back())
+                        if (*sit != sequence->back())
                         {
                             out << ", ";
                         }
@@ -1923,7 +1923,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             else if (variable && IsVaryingOut(variable->getQualifier()))
             {
-                for (TIntermSequence::iterator sit = sequence.begin(); sit != sequence.end(); sit++)
+                for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); sit++)
                 {
                     TIntermSymbol *symbol = (*sit)->getAsSymbolNode();
 
@@ -1951,17 +1951,17 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             out << TypeString(node->getType()) << " " << Decorate(node->getName()) << (mOutputLod0Function ? "Lod0(" : "(");
 
-            TIntermSequence &arguments = node->getSequence();
+            TIntermSequence *arguments = node->getSequence();
 
-            for (unsigned int i = 0; i < arguments.size(); i++)
+            for (unsigned int i = 0; i < arguments->size(); i++)
             {
-                TIntermSymbol *symbol = arguments[i]->getAsSymbolNode();
+                TIntermSymbol *symbol = (*arguments)[i]->getAsSymbolNode();
 
                 if (symbol)
                 {
                     out << argumentString(symbol);
 
-                    if (i < arguments.size() - 1)
+                    if (i < arguments->size() - 1)
                     {
                         out << ", ";
                     }
@@ -1998,12 +1998,12 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 out << Decorate(name) << (mOutputLod0Function ? "Lod0(" : "(");
             }
 
-            TIntermSequence &sequence = node->getSequence();
-            TIntermSequence &arguments = sequence[0]->getAsAggregate()->getSequence();
+            TIntermSequence *sequence = node->getSequence();
+            TIntermSequence *arguments = (*sequence)[0]->getAsAggregate()->getSequence();
 
-            for (unsigned int i = 0; i < arguments.size(); i++)
+            for (unsigned int i = 0; i < arguments->size(); i++)
             {
-                TIntermSymbol *symbol = arguments[i]->getAsSymbolNode();
+                TIntermSymbol *symbol = (*arguments)[i]->getAsSymbolNode();
 
                 if (symbol)
                 {
@@ -2016,7 +2016,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                     out << argumentString(symbol);
 
-                    if (i < arguments.size() - 1)
+                    if (i < arguments->size() - 1)
                     {
                         out << ", ";
                     }
@@ -2027,10 +2027,10 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             out << ")\n"
                 "{\n";
 
-            if (sequence.size() > 1)
+            if (sequence->size() > 1)
             {
                 mInsideFunction = true;
-                sequence[1]->traverse(this);
+                (*sequence)[1]->traverse(this);
                 mInsideFunction = false;
             }
 
@@ -2053,7 +2053,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             TString name = TFunction::unmangleName(node->getName());
             bool lod0 = mInsideDiscontinuousLoop || mOutputLod0Function;
-            TIntermSequence &arguments = node->getSequence();
+            TIntermSequence *arguments = node->getSequence();
 
             if (node->isUserDefined())
             {
@@ -2061,11 +2061,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             else
             {
-                TBasicType samplerType = arguments[0]->getAsTyped()->getType().getBasicType();
+                TBasicType samplerType = (*arguments)[0]->getAsTyped()->getType().getBasicType();
 
                 TextureFunction textureFunction;
                 textureFunction.sampler = samplerType;
-                textureFunction.coords = arguments[1]->getAsTyped()->getNominalSize();
+                textureFunction.coords = (*arguments)[1]->getAsTyped()->getNominalSize();
                 textureFunction.method = TextureFunction::IMPLICIT;
                 textureFunction.proj = false;
                 textureFunction.offset = false;
@@ -2155,7 +2155,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         mandatoryArgumentCount++;
                     }
 
-                    bool bias = (arguments.size() > mandatoryArgumentCount);   // Bias argument is optional
+                    bool bias = (arguments->size() > mandatoryArgumentCount);   // Bias argument is optional
 
                     if (lod0 || mContext.shaderType == GL_VERTEX_SHADER)
                     {
@@ -2179,7 +2179,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 out << textureFunction.name();
             }
 
-            for (TIntermSequence::iterator arg = arguments.begin(); arg != arguments.end(); arg++)
+            for (TIntermSequence::iterator arg = arguments->begin(); arg != arguments->end(); arg++)
             {
                 if (mOutputType == SH_HLSL11_OUTPUT && IsSampler((*arg)->getAsTyped()->getBasicType()))
                 {
@@ -2190,7 +2190,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                 (*arg)->traverse(this);
 
-                if (arg < arguments.end() - 1)
+                if (arg < arguments->end() - 1)
                 {
                     out << ", ";
                 }
@@ -2202,29 +2202,29 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         }
         break;
       case EOpParameters:       outputTriplet(visit, "(", ", ", ")\n{\n");                                break;
-      case EOpConstructFloat:   outputConstructor(visit, node->getType(), "vec1", &node->getSequence());  break;
-      case EOpConstructVec2:    outputConstructor(visit, node->getType(), "vec2", &node->getSequence());  break;
-      case EOpConstructVec3:    outputConstructor(visit, node->getType(), "vec3", &node->getSequence());  break;
-      case EOpConstructVec4:    outputConstructor(visit, node->getType(), "vec4", &node->getSequence());  break;
-      case EOpConstructBool:    outputConstructor(visit, node->getType(), "bvec1", &node->getSequence()); break;
-      case EOpConstructBVec2:   outputConstructor(visit, node->getType(), "bvec2", &node->getSequence()); break;
-      case EOpConstructBVec3:   outputConstructor(visit, node->getType(), "bvec3", &node->getSequence()); break;
-      case EOpConstructBVec4:   outputConstructor(visit, node->getType(), "bvec4", &node->getSequence()); break;
-      case EOpConstructInt:     outputConstructor(visit, node->getType(), "ivec1", &node->getSequence()); break;
-      case EOpConstructIVec2:   outputConstructor(visit, node->getType(), "ivec2", &node->getSequence()); break;
-      case EOpConstructIVec3:   outputConstructor(visit, node->getType(), "ivec3", &node->getSequence()); break;
-      case EOpConstructIVec4:   outputConstructor(visit, node->getType(), "ivec4", &node->getSequence()); break;
-      case EOpConstructUInt:    outputConstructor(visit, node->getType(), "uvec1", &node->getSequence()); break;
-      case EOpConstructUVec2:   outputConstructor(visit, node->getType(), "uvec2", &node->getSequence()); break;
-      case EOpConstructUVec3:   outputConstructor(visit, node->getType(), "uvec3", &node->getSequence()); break;
-      case EOpConstructUVec4:   outputConstructor(visit, node->getType(), "uvec4", &node->getSequence()); break;
-      case EOpConstructMat2:    outputConstructor(visit, node->getType(), "mat2", &node->getSequence());  break;
-      case EOpConstructMat3:    outputConstructor(visit, node->getType(), "mat3", &node->getSequence());  break;
-      case EOpConstructMat4:    outputConstructor(visit, node->getType(), "mat4", &node->getSequence());  break;
+      case EOpConstructFloat:   outputConstructor(visit, node->getType(), "vec1", node->getSequence());  break;
+      case EOpConstructVec2:    outputConstructor(visit, node->getType(), "vec2", node->getSequence());  break;
+      case EOpConstructVec3:    outputConstructor(visit, node->getType(), "vec3", node->getSequence());  break;
+      case EOpConstructVec4:    outputConstructor(visit, node->getType(), "vec4", node->getSequence());  break;
+      case EOpConstructBool:    outputConstructor(visit, node->getType(), "bvec1", node->getSequence()); break;
+      case EOpConstructBVec2:   outputConstructor(visit, node->getType(), "bvec2", node->getSequence()); break;
+      case EOpConstructBVec3:   outputConstructor(visit, node->getType(), "bvec3", node->getSequence()); break;
+      case EOpConstructBVec4:   outputConstructor(visit, node->getType(), "bvec4", node->getSequence()); break;
+      case EOpConstructInt:     outputConstructor(visit, node->getType(), "ivec1", node->getSequence()); break;
+      case EOpConstructIVec2:   outputConstructor(visit, node->getType(), "ivec2", node->getSequence()); break;
+      case EOpConstructIVec3:   outputConstructor(visit, node->getType(), "ivec3", node->getSequence()); break;
+      case EOpConstructIVec4:   outputConstructor(visit, node->getType(), "ivec4", node->getSequence()); break;
+      case EOpConstructUInt:    outputConstructor(visit, node->getType(), "uvec1", node->getSequence()); break;
+      case EOpConstructUVec2:   outputConstructor(visit, node->getType(), "uvec2", node->getSequence()); break;
+      case EOpConstructUVec3:   outputConstructor(visit, node->getType(), "uvec3", node->getSequence()); break;
+      case EOpConstructUVec4:   outputConstructor(visit, node->getType(), "uvec4", node->getSequence()); break;
+      case EOpConstructMat2:    outputConstructor(visit, node->getType(), "mat2", node->getSequence());  break;
+      case EOpConstructMat3:    outputConstructor(visit, node->getType(), "mat3", node->getSequence());  break;
+      case EOpConstructMat4:    outputConstructor(visit, node->getType(), "mat4", node->getSequence());  break;
       case EOpConstructStruct:
         {
             const TString &structName = StructNameString(*node->getType().getStruct());
-            mStructureHLSL->addConstructor(node->getType(), structName, &node->getSequence());
+            mStructureHLSL->addConstructor(node->getType(), structName, node->getSequence());
             outputTriplet(visit, structName + "_ctor(", ", ", ")");
         }
         break;
@@ -2237,8 +2237,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpMod:
         {
             // We need to look at the number of components in both arguments
-            const int modValue = node->getSequence()[0]->getAsTyped()->getNominalSize() * 10
-                               + node->getSequence()[1]->getAsTyped()->getNominalSize();
+            const int modValue = (*node->getSequence())[0]->getAsTyped()->getNominalSize() * 10 +
+                (*node->getSequence())[1]->getAsTyped()->getNominalSize();
             switch (modValue)
             {
               case 11: mUsesMod1 = true; break;
@@ -2256,8 +2256,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         break;
       case EOpPow:              outputTriplet(visit, "pow(", ", ", ")");               break;
       case EOpAtan:
-        ASSERT(node->getSequence().size() == 2);   // atan(x) is a unary operator
-        switch (node->getSequence()[0]->getAsTyped()->getNominalSize())
+        ASSERT(node->getSequence()->size() == 2);   // atan(x) is a unary operator
+        switch ((*node->getSequence())[0]->getAsTyped()->getNominalSize())
         {
           case 1: mUsesAtan2_1 = true; break;
           case 2: mUsesAtan2_2 = true; break;
@@ -2278,7 +2278,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpCross:         outputTriplet(visit, "cross(", ", ", ")");         break;
       case EOpFaceForward:
         {
-            switch (node->getSequence()[0]->getAsTyped()->getNominalSize())   // Number of components in the first argument
+            switch ((*node->getSequence())[0]->getAsTyped()->getNominalSize())   // Number of components in the first argument
             {
             case 1: mUsesFaceforward1 = true; break;
             case 2: mUsesFaceforward2 = true; break;
@@ -2529,7 +2529,7 @@ bool OutputHLSL::isSingleStatement(TIntermNode *node)
         }
         else
         {
-            for (TIntermSequence::iterator sit = aggregate->getSequence().begin(); sit != aggregate->getSequence().end(); sit++)
+            for (TIntermSequence::iterator sit = aggregate->getSequence()->begin(); sit != aggregate->getSequence()->end(); sit++)
             {
                 if (!isSingleStatement(*sit))
                 {
@@ -2566,8 +2566,8 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 
         if (init)
         {
-            TIntermSequence &sequence = init->getSequence();
-            TIntermTyped *variable = sequence[0]->getAsTyped();
+            TIntermSequence *sequence = init->getSequence();
+            TIntermTyped *variable = (*sequence)[0]->getAsTyped();
 
             if (variable && variable->getQualifier() == EvqTemporary)
             {

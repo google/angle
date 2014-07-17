@@ -243,7 +243,7 @@ public:
                 default:
                     return true;
             };
-            const TIntermSequence& sequence = node->getSequence();
+            const TIntermSequence& sequence = *(node->getSequence());
             // Right now we only handle built-in functions with two parameters.
             if (sequence.size() != 2)
                 return true;

@@ -49,9 +49,9 @@ bool ElseBlockRewriter::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpSequence:
         if (visit == PostVisit)
         {
-            for (size_t statementIndex = 0; statementIndex != node->getSequence().size(); statementIndex++)
+            for (size_t statementIndex = 0; statementIndex != node->getSequence()->size(); statementIndex++)
             {
-                TIntermNode *statement = node->getSequence()[statementIndex];
+                TIntermNode *statement = (*node->getSequence())[statementIndex];
                 TIntermSelection *selection = statement->getAsSelectionNode();
                 if (selection && selection->getFalseBlock() != NULL)
                 {
@@ -63,7 +63,7 @@ bool ElseBlockRewriter::visitAggregate(Visit visit, TIntermAggregate *node)
                         delete elseIfBranch;
                     }
 
-                    node->getSequence()[statementIndex] = rewriteSelection(selection);
+                    (*node->getSequence())[statementIndex] = rewriteSelection(selection);
                     delete selection;
                 }
             }
@@ -114,11 +114,11 @@ TIntermNode *ElseBlockRewriter::rewriteSelection(TIntermSelection *selection)
                                                        selection->getTrueBlock(), falseBlock);
 
     TIntermAggregate *declaration = new TIntermAggregate(EOpDeclaration);
-    declaration->getSequence().push_back(storeCondition);
+    declaration->getSequence()->push_back(storeCondition);
 
     TIntermAggregate *block = new TIntermAggregate(EOpSequence);
-    block->getSequence().push_back(declaration);
-    block->getSequence().push_back(newIfElse);
+    block->getSequence()->push_back(declaration);
+    block->getSequence()->push_back(newIfElse);
 
     return block;
 }

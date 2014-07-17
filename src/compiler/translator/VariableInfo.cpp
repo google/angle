@@ -319,8 +319,8 @@ bool CollectVariables::visitAggregate(Visit, TIntermAggregate *node)
     {
       case EOpDeclaration:
         {
-            const TIntermSequence &sequence = node->getSequence();
-            const TIntermTyped &typedNode = *sequence.front()->getAsTyped();
+            const TIntermSequence &sequence = *(node->getSequence());
+            const TIntermTyped &typedNode = *(sequence.front()->getAsTyped());
             TQualifier qualifier = typedNode.getQualifier();
 
             if (typedNode.getBasicType() == EbtInterfaceBlock)

@@ -297,8 +297,8 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
         {
             out << ".";
             TIntermAggregate *rightChild = node->getRight()->getAsAggregate();
-            TIntermSequence &sequence = rightChild->getSequence();
-            for (TIntermSequence::iterator sit = sequence.begin(); sit != sequence.end(); ++sit)
+            TIntermSequence *sequence = rightChild->getSequence();
+            for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); ++sit)
             {
                 TIntermConstantUnion *element = (*sit)->getAsConstantUnion();
                 ASSERT(element->getBasicType() == EbtInt);
@@ -544,14 +544,14 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
     {
       case EOpSequence:
         // Scope the sequences except when at the global scope.
-        if (depth > 0)
+        if (mDepth > 0)
         {
             out << "{\n";
         }
 
         incrementDepth(node);
-        for (TIntermSequence::const_iterator iter = node->getSequence().begin();
-             iter != node->getSequence().end(); ++iter)
+        for (TIntermSequence::const_iterator iter = node->getSequence()->begin();
+             iter != node->getSequence()->end(); ++iter)
         {
             TIntermNode *node = *iter;
             ASSERT(node != NULL);
@@ -563,7 +563,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         decrementDepth();
 
         // Scope the sequences except when at the global scope.
-        if (depth > 0)
+        if (mDepth > 0)
         {
             out << "}\n";
         }
@@ -576,7 +576,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         out << " " << hashName(node->getName());
 
         out << "(";
-        writeFunctionParameters(node->getSequence());
+        writeFunctionParameters(*(node->getSequence()));
         out << ")";
 
         visitChildren = false;
@@ -591,7 +591,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         // Function definition node contains one or two children nodes
         // representing function parameters and function body. The latter
         // is not present in case of empty function bodies.
-        const TIntermSequence &sequence = node->getSequence();
+        const TIntermSequence &sequence = *(node->getSequence());
         ASSERT((sequence.size() == 1) || (sequence.size() == 2));
         TIntermSequence::const_iterator seqIter = sequence.begin();
 
@@ -624,7 +624,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         // Function parameters.
         ASSERT(visit == PreVisit);
         out << "(";
-        writeFunctionParameters(node->getSequence());
+        writeFunctionParameters(*(node->getSequence()));
         out << ")";
         visitChildren = false;
         break;
@@ -632,7 +632,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         // Variable declaration.
         if (visit == PreVisit)
         {
-            const TIntermSequence &sequence = node->getSequence();
+            const TIntermSequence &sequence = *(node->getSequence());
             const TIntermTyped *variable = sequence.front()->getAsTyped();
             writeVariableType(variable->getType());
             out << " ";
@@ -814,10 +814,10 @@ bool TOutputGLSLBase::visitLoop(Visit visit, TIntermLoop *node)
         else
         {
             // Need to put a one-iteration loop here to handle break.
-            TIntermSequence &declSeq =
+            TIntermSequence *declSeq =
                 node->getInit()->getAsAggregate()->getSequence();
             TIntermSymbol *indexSymbol =
-                declSeq[0]->getAsBinaryNode()->getLeft()->getAsSymbolNode();
+                (*declSeq)[0]->getAsBinaryNode()->getLeft()->getAsSymbolNode();
             TString name = hashVariableName(indexSymbol->getSymbol());
             out << "for (int " << name << " = 0; "
                 << name << " < 1; "
