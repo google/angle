@@ -66,7 +66,7 @@ protected:
     GLint mTextureUniformLocation;
 };
 
-TEST_F(CompressedTextureTest, compressed_tex_image)
+TEST_F(CompressedTextureTest, CompressedTexImage)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
@@ -106,7 +106,7 @@ TEST_F(CompressedTextureTest, compressed_tex_image)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(CompressedTextureTest, compressed_tex_storage)
+TEST_F(CompressedTextureTest, CompressedTexStorage)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {

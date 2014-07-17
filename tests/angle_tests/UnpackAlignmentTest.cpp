@@ -133,7 +133,7 @@ protected:
     GLuint mProgram;
 };
 
-TEST_F(UnpackAlignmentTest, default_alignment)
+TEST_F(UnpackAlignmentTest, DefaultAlignment)
 {
     GLint defaultAlignment;
     glGetIntegerv(GL_UNPACK_ALIGNMENT, &defaultAlignment);
@@ -141,165 +141,165 @@ TEST_F(UnpackAlignmentTest, default_alignment)
 }
 
 
-TEST_F(UnpackAlignmentTest, alignment_1_rgba_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment1RGBAUByte)
 {
     testAlignment(1, 7 * 4, GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_1_rgb_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment1RGBUByte)
 {
     testAlignment(1, 7 * 3, GL_RGB, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_1_rgba_ushort4444)
+TEST_F(UnpackAlignmentTest, Alignment1RGBAUShort4444)
 {
     testAlignment(1, 7 * 2, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_1_rgba_ushort5551)
+TEST_F(UnpackAlignmentTest, Alignment1RGBAUShort5551)
 {
     testAlignment(1, 7 * 2, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_1_rgb_ushort565)
+TEST_F(UnpackAlignmentTest, Alignment1RGBAUShort565)
 {
     testAlignment(1, 7 * 2, GL_RGB, GL_UNSIGNED_SHORT_5_6_5);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_1_la_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment1LAUByte)
 {
     testAlignment(1, 7 * 2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_1_l_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment1LUByte)
 {
     testAlignment(1, 7, GL_LUMINANCE, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_1_a_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment1AUByte)
 {
     testAlignment(1, 7, GL_ALPHA, GL_UNSIGNED_BYTE);
 }
 
 
-TEST_F(UnpackAlignmentTest, alignment_2_rgba_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment2RGBAUByte)
 {
     testAlignment(2, 7 * 4, GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_2_rgb_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment2RGBUByte)
 {
     testAlignment(2, 7 * 3 + 1, GL_RGB, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_2_rgba_ushort4444)
+TEST_F(UnpackAlignmentTest, Alignment2RGBAUShort4444)
 {
     testAlignment(2, 7 * 2, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_2_rgba_ushort5551)
+TEST_F(UnpackAlignmentTest, Alignment2RGBAUShort5551)
 {
     testAlignment(2, 7 * 2, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_2_rgb_ushort565)
+TEST_F(UnpackAlignmentTest, Alignment2RGBAUShort565)
 {
     testAlignment(2, 7 * 2, GL_RGB, GL_UNSIGNED_SHORT_5_6_5);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_2_la_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment2LAUByte)
 {
     testAlignment(2, 7 * 2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_2_l_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment2LAByte)
 {
     testAlignment(2, 7 + 1, GL_LUMINANCE, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_2_a_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment2AUByte)
 {
     testAlignment(2, 7 + 1, GL_ALPHA, GL_UNSIGNED_BYTE);
 }
 
 
-TEST_F(UnpackAlignmentTest, alignment_4_rgba_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment4RGBAUByte)
 {
     testAlignment(4, 7 * 4, GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_4_rgb_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment4RGBUByte)
 {
     testAlignment(4, 7 * 3 + 3, GL_RGB, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_4_rgba_ushort4444)
+TEST_F(UnpackAlignmentTest, Alignment4RGBAUShort4444)
 {
     testAlignment(4, 7 * 2 + 2, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_4_rgba_ushort5551)
+TEST_F(UnpackAlignmentTest, Alignment4RGBAUShort5551)
 {
     testAlignment(4, 7 * 2 + 2, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_4_rgb_ushort565)
+TEST_F(UnpackAlignmentTest, Alignment4RGBAUShort565)
 {
     testAlignment(4, 7 * 2 + 2, GL_RGB, GL_UNSIGNED_SHORT_5_6_5);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_4_la_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment4LAUByte)
 {
     testAlignment(4, 7 * 2 + 2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_4_l_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment4LUByte)
 {
     testAlignment(4, 7 + 1, GL_LUMINANCE, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_4_a_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment4AUByte)
 {
     testAlignment(4, 7 + 1, GL_ALPHA, GL_UNSIGNED_BYTE);
 }
 
 
-TEST_F(UnpackAlignmentTest, alignment_8_rgba_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment8RGBAUByte)
 {
     testAlignment(8, 7 * 4 + 4, GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_8_rgb_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment8RGBUByte)
 {
     testAlignment(8, 7 * 3 + 3, GL_RGB, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_8_rgba_ushort4444)
+TEST_F(UnpackAlignmentTest, Alignment8RGBAUShort4444)
 {
     testAlignment(8, 7 * 2 + 2, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_8_rgba_ushort5551)
+TEST_F(UnpackAlignmentTest, Alignment8RGBAUShort5551)
 {
     testAlignment(8, 7 * 2 + 2, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_8_rgb_ushort565)
+TEST_F(UnpackAlignmentTest, Alignment8RGBAUShort565)
 {
     testAlignment(8, 7 * 2 + 2, GL_RGB, GL_UNSIGNED_SHORT_5_6_5);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_8_la_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment8LAUByte)
 {
     testAlignment(8, 7 * 2 + 2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_8_l_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment8LUByte)
 {
     testAlignment(8, 7 + 1, GL_LUMINANCE, GL_UNSIGNED_BYTE);
 }
 
-TEST_F(UnpackAlignmentTest, alignment_8_a_ubyte)
+TEST_F(UnpackAlignmentTest, Alignment8AUByte)
 {
     testAlignment(8, 7 + 1, GL_ALPHA, GL_UNSIGNED_BYTE);
 }

@@ -73,7 +73,7 @@ protected:
     GLuint mPositionVBO;
 };
 
-TEST_F(PBOExtensionTest, pbo_with_other_target)
+TEST_F(PBOExtensionTest, PBOWithOtherTarget)
 {
     if (extensionEnabled("NV_pixel_buffer_object"))
     {
@@ -101,7 +101,7 @@ TEST_F(PBOExtensionTest, pbo_with_other_target)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(PBOExtensionTest, pbo_with_existing_data)
+TEST_F(PBOExtensionTest, PBOWithExistingData)
 {
     if (extensionEnabled("NV_pixel_buffer_object"))
     {

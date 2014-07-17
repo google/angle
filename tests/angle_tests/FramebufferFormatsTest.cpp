@@ -71,27 +71,27 @@ protected:
     }
 };
 
-TEST_F(FramebufferFormatsTest, rgba4)
+TEST_F(FramebufferFormatsTest, RGBA4)
 {
     testTextureFormat(GL_RGBA4, 4, 4, 4, 4);
 }
 
-TEST_F(FramebufferFormatsTest, rgb565)
+TEST_F(FramebufferFormatsTest, RGB565)
 {
     testTextureFormat(GL_RGB565, 5, 6, 5, 0);
 }
 
-TEST_F(FramebufferFormatsTest, rgb8)
+TEST_F(FramebufferFormatsTest, RGB8)
 {
     testTextureFormat(GL_RGB8_OES, 8, 8, 8, 0);
 }
 
-TEST_F(FramebufferFormatsTest, bgra8)
+TEST_F(FramebufferFormatsTest, BGRA8)
 {
     testTextureFormat(GL_BGRA8_EXT, 8, 8, 8, 8);
 }
 
-TEST_F(FramebufferFormatsTest, rgba8)
+TEST_F(FramebufferFormatsTest, RGBA8)
 {
     testTextureFormat(GL_RGBA8_OES, 8, 8, 8, 8);
 }

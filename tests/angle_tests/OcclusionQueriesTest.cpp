@@ -55,7 +55,7 @@ protected:
     GLuint mProgram;
 };
 
-TEST_F(OcclusionQueriesTest, is_occuluded)
+TEST_F(OcclusionQueriesTest, IsOccluded)
 {
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -95,7 +95,7 @@ TEST_F(OcclusionQueriesTest, is_occuluded)
     EXPECT_EQ(result, GL_FALSE);
 }
 
-TEST_F(OcclusionQueriesTest, is_not_occuluded)
+TEST_F(OcclusionQueriesTest, IsNotOccluded)
 {
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -122,7 +122,7 @@ TEST_F(OcclusionQueriesTest, is_not_occuluded)
     EXPECT_EQ(result, GL_TRUE);
 }
 
-TEST_F(OcclusionQueriesTest, errors)
+TEST_F(OcclusionQueriesTest, Errors)
 {
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

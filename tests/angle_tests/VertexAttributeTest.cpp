@@ -118,7 +118,7 @@ protected:
     GLint mExpectedAttrib;
 };
 
-TEST_F(VertexAttributeTest, unsigned_byte_unormalized)
+TEST_F(VertexAttributeTest, UnsignedByteUnnormalized)
 {
     GLubyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255 };
     GLfloat expectedData[mVertexCount];
@@ -131,7 +131,7 @@ TEST_F(VertexAttributeTest, unsigned_byte_unormalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, unsigned_byte_normalized)
+TEST_F(VertexAttributeTest, UnsignedByteNormalized)
 {
     GLubyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255 };
     GLfloat expectedData[mVertexCount];
@@ -144,7 +144,7 @@ TEST_F(VertexAttributeTest, unsigned_byte_normalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, byte_unnormalized)
+TEST_F(VertexAttributeTest, ByteUnnormalized)
 {
     GLbyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126 };
     GLfloat expectedData[mVertexCount];
@@ -157,7 +157,7 @@ TEST_F(VertexAttributeTest, byte_unnormalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, byte_normalized)
+TEST_F(VertexAttributeTest, ByteNormalized)
 {
     GLbyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126 };
     GLfloat expectedData[mVertexCount];
@@ -170,7 +170,7 @@ TEST_F(VertexAttributeTest, byte_normalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, unsigned_short_unormalized)
+TEST_F(VertexAttributeTest, UnsignedShortUnnormalized)
 {
     GLushort inputData[mVertexCount] = { 0, 1, 2, 3, 254, 255, 256, 32766, 32767, 32768, 65533, 65534, 65535 };
     GLfloat expectedData[mVertexCount];
@@ -183,7 +183,7 @@ TEST_F(VertexAttributeTest, unsigned_short_unormalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, unsigned_short_normalized)
+TEST_F(VertexAttributeTest, UnsignedShortNormalized)
 {
     GLushort inputData[mVertexCount] = { 0, 1, 2, 3, 254, 255, 256, 32766, 32767, 32768, 65533, 65534, 65535 };
     GLfloat expectedData[mVertexCount];
@@ -196,7 +196,7 @@ TEST_F(VertexAttributeTest, unsigned_short_normalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, short_unnormalized)
+TEST_F(VertexAttributeTest, ShortUnnormalized)
 {
     GLshort inputData[mVertexCount] = {  0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766 };
     GLfloat expectedData[mVertexCount];
@@ -209,7 +209,7 @@ TEST_F(VertexAttributeTest, short_unnormalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, short_normalized)
+TEST_F(VertexAttributeTest, ShortNormalized)
 {
     GLshort inputData[mVertexCount] = {  0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766 };
     GLfloat expectedData[mVertexCount];

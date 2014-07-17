@@ -24,7 +24,7 @@ protected:
     }
 };
 
-TEST_F(SRGBTextureTest, srgb_validation)
+TEST_F(SRGBTextureTest, SRGBValidation)
 {
     bool supported = extensionEnabled("GL_EXT_sRGB") || getClientVersion() == 3;
 
@@ -52,7 +52,7 @@ TEST_F(SRGBTextureTest, srgb_validation)
     glDeleteTextures(1, &tex);
 }
 
-TEST_F(SRGBTextureTest, srgba_validation)
+TEST_F(SRGBTextureTest, SRGBAValidation)
 {
     bool supported = extensionEnabled("GL_EXT_sRGB") || getClientVersion() == 3;
 
@@ -87,7 +87,7 @@ TEST_F(SRGBTextureTest, srgba_validation)
     glDeleteTextures(1, &tex);
 }
 
-TEST_F(SRGBTextureTest, srgba_renderbuffer)
+TEST_F(SRGBTextureTest, SRGBARenderbuffer)
 {
     bool supported = extensionEnabled("GL_EXT_sRGB") || getClientVersion() == 3;
 

@@ -126,19 +126,19 @@ protected:
     GLint mColorLocation;
 };
 
-TEST_F(LineLoopTest, line_loop_ubyte_indices)
+TEST_F(LineLoopTest, LineLoopUByteIndices)
 {
     static const GLubyte indices[] = { 0, 7, 6, 9, 8, 0 };
     runTest(GL_UNSIGNED_BYTE, 0, indices + 1);
 }
 
-TEST_F(LineLoopTest, line_loop_ushort_indices)
+TEST_F(LineLoopTest, LineLoopUShortIndices)
 {
     static const GLushort indices[] = { 0, 7, 6, 9, 8, 0 };
     runTest(GL_UNSIGNED_SHORT, 0, indices + 1);
 }
 
-TEST_F(LineLoopTest, line_loop_uint_indices)
+TEST_F(LineLoopTest, LineLoopUIntIndices)
 {
     if (!extensionEnabled("GL_OES_element_index_uint"))
     {
@@ -149,7 +149,7 @@ TEST_F(LineLoopTest, line_loop_uint_indices)
     runTest(GL_UNSIGNED_INT, 0, indices + 1);
 }
 
-TEST_F(LineLoopTest, line_loop_ubyte_index_buffer)
+TEST_F(LineLoopTest, LineLoopUByteIndexBuffer)
 {
     static const GLubyte indices[] = { 0, 7, 6, 9, 8, 0 };
 
@@ -163,7 +163,7 @@ TEST_F(LineLoopTest, line_loop_ubyte_index_buffer)
     glDeleteBuffers(1, &buf);
 }
 
-TEST_F(LineLoopTest, line_loop_ushort_index_buffer)
+TEST_F(LineLoopTest, LineLoopUShortIndexBuffer)
 {
     static const GLushort indices[] = { 0, 7, 6, 9, 8, 0 };
 
@@ -177,7 +177,7 @@ TEST_F(LineLoopTest, line_loop_ushort_index_buffer)
     glDeleteBuffers(1, &buf);
 }
 
-TEST_F(LineLoopTest, line_loop_uint_index_buffer)
+TEST_F(LineLoopTest, LineLoopUIntIndexBuffer)
 {
     if (!extensionEnabled("GL_OES_element_index_uint"))
     {

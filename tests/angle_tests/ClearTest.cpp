@@ -56,7 +56,7 @@ protected:
     GLuint mProgram;
 };
 
-TEST_F(ClearTest, clear_issue)
+TEST_F(ClearTest, ClearIssue)
 {
     EXPECT_GL_NO_ERROR();
 

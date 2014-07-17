@@ -125,51 +125,51 @@ protected:
 
 typedef IndexedPointsTest<GLubyte, GL_UNSIGNED_BYTE> IndexedPointsTestUByte;
 
-TEST_F(IndexedPointsTestUByte, unsigned_byte_offset_0)
+TEST_F(IndexedPointsTestUByte, UnsignedByteOffset0)
 {
     runTest(0);
 }
 
-TEST_F(IndexedPointsTestUByte, unsigned_byte_offset_1)
+TEST_F(IndexedPointsTestUByte, UnsignedByteOffset1)
 {
     runTest(1);
 }
 
-TEST_F(IndexedPointsTestUByte, unsigned_byte_offset_2)
+TEST_F(IndexedPointsTestUByte, UnsignedByteOffset2)
 {
     runTest(2);
 }
 
-TEST_F(IndexedPointsTestUByte, unsigned_byte_offset_3)
+TEST_F(IndexedPointsTestUByte, UnsignedByteOffset3)
 {
     runTest(3);
 }
 
 typedef IndexedPointsTest<GLushort, GL_UNSIGNED_SHORT> IndexedPointsTestUShort;
 
-TEST_F(IndexedPointsTestUShort, unsigned_short_offset_0)
+TEST_F(IndexedPointsTestUShort, UnsignedShortOffset0)
 {
     runTest(0);
 }
 
-TEST_F(IndexedPointsTestUShort, unsigned_short_offset_1)
+TEST_F(IndexedPointsTestUShort, UnsignedShortOffset1)
 {
     runTest(1);
 }
 
-TEST_F(IndexedPointsTestUShort, unsigned_short_offset_2)
+TEST_F(IndexedPointsTestUShort, UnsignedShortOffset2)
 {
     runTest(2);
 }
 
-TEST_F(IndexedPointsTestUShort, unsigned_short_offset_3)
+TEST_F(IndexedPointsTestUShort, UnsignedShortOffset3)
 {
     runTest(3);
 }
 
 typedef IndexedPointsTest<GLuint, GL_UNSIGNED_INT> IndexedPointsTestUInt;
 
-TEST_F(IndexedPointsTestUInt, unsigned_int_offset_0)
+TEST_F(IndexedPointsTestUInt, UnsignedIntOffset0)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_OES_element_index_uint"))
     {
@@ -179,7 +179,7 @@ TEST_F(IndexedPointsTestUInt, unsigned_int_offset_0)
     runTest(0);
 }
 
-TEST_F(IndexedPointsTestUInt, unsigned_int_offset_1)
+TEST_F(IndexedPointsTestUInt, UnsignedIntOffset1)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_OES_element_index_uint"))
     {
@@ -189,7 +189,7 @@ TEST_F(IndexedPointsTestUInt, unsigned_int_offset_1)
     runTest(1);
 }
 
-TEST_F(IndexedPointsTestUInt, unsigned_int_offset_2)
+TEST_F(IndexedPointsTestUInt, UnsignedIntOffset2)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_OES_element_index_uint"))
     {
@@ -199,7 +199,7 @@ TEST_F(IndexedPointsTestUInt, unsigned_int_offset_2)
     runTest(2);
 }
 
-TEST_F(IndexedPointsTestUInt, unsigned_int_offset_3)
+TEST_F(IndexedPointsTestUInt, UnsignedIntOffset3)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_OES_element_index_uint"))
     {

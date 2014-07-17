@@ -62,7 +62,7 @@ protected:
 
 // This tests the assumption that float attribs of different size
 // should not internally cause a vertex shader recompile (for conversion).
-TEST_F(ProgramBinaryTest, float_dynamic_shader_size)
+TEST_F(ProgramBinaryTest, FloatDynamicShaderSize)
 {
     glUseProgram(mProgram);
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);

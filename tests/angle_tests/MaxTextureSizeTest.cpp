@@ -86,7 +86,7 @@ protected:
     GLint mMaxRenderbufferSize;
 };
 
-TEST_F(MaxTextureSizeTest, specification_tex_image)
+TEST_F(MaxTextureSizeTest, SpecificationTexImage)
 {
     GLuint tex;
     glGenTextures(1, &tex);
@@ -141,7 +141,7 @@ TEST_F(MaxTextureSizeTest, specification_tex_image)
     }
 }
 
-TEST_F(MaxTextureSizeTest, specification_tex_storage)
+TEST_F(MaxTextureSizeTest, SpecificationTexStorage)
 {
     if (getClientVersion() < 3 && (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")))
     {
@@ -211,7 +211,7 @@ TEST_F(MaxTextureSizeTest, specification_tex_storage)
     }
 }
 
-TEST_F(MaxTextureSizeTest, render_to_texture)
+TEST_F(MaxTextureSizeTest, RenderToTexture)
 {
     GLuint fbo = 0;
     GLuint textureId = 0;

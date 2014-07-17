@@ -84,7 +84,7 @@ protected:
     GLuint mPositionVBO;
 };
 
-TEST_F(ReadPixelsTest, out_of_bounds)
+TEST_F(ReadPixelsTest, OutOfBounds)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -117,7 +117,7 @@ TEST_F(ReadPixelsTest, out_of_bounds)
     }
 }
 
-TEST_F(ReadPixelsTest, pbo_with_other_target)
+TEST_F(ReadPixelsTest, PBOWithOtherTarget)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -142,7 +142,7 @@ TEST_F(ReadPixelsTest, pbo_with_other_target)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(ReadPixelsTest, pbo_with_existing_data)
+TEST_F(ReadPixelsTest, PBOWithExistingData)
 {
     // Clear backbuffer to red
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
@@ -180,7 +180,7 @@ TEST_F(ReadPixelsTest, pbo_with_existing_data)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(ReadPixelsTest, pbo_and_sub_data)
+TEST_F(ReadPixelsTest, PBOAndSubData)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -208,7 +208,7 @@ TEST_F(ReadPixelsTest, pbo_and_sub_data)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(ReadPixelsTest, pbo_and_sub_data_offset)
+TEST_F(ReadPixelsTest, PBOAndSubDataOffset)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -241,7 +241,7 @@ TEST_F(ReadPixelsTest, pbo_and_sub_data_offset)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(ReadPixelsTest, draw_with_pbo)
+TEST_F(ReadPixelsTest, DrawWithPBO)
 {
     unsigned char data[4] = { 1, 2, 3, 4 };
 

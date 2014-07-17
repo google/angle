@@ -76,7 +76,7 @@ protected:
     GLint mTextureUniformLocation;
 };
 
-TEST_F(IncompleteTextureTest, incomplete_texture_2d)
+TEST_F(IncompleteTextureTest, IncompleteTexture2D)
 {
     GLuint tex;
     glGenTextures(1, &tex);
@@ -110,7 +110,7 @@ TEST_F(IncompleteTextureTest, incomplete_texture_2d)
     glDeleteTextures(1, &tex);
 }
 
-TEST_F(IncompleteTextureTest, update_texture)
+TEST_F(IncompleteTextureTest, UpdateTexture)
 {
     GLuint tex;
     glGenTextures(1, &tex);

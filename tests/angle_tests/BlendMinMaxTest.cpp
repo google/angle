@@ -136,19 +136,19 @@ protected:
     GLuint mColorRenderbuffer;
 };
 
-TEST_F(BlendMinMaxTest, rgba8)
+TEST_F(BlendMinMaxTest, RGBA8)
 {
     SetUpFramebuffer(GL_RGBA8);
     runTest();
 }
 
-TEST_F(BlendMinMaxTest, rgba32f)
+TEST_F(BlendMinMaxTest, RGBA32f)
 {
     SetUpFramebuffer(GL_RGBA32F);
     runTest();
 }
 
-TEST_F(BlendMinMaxTest, rgba16f)
+TEST_F(BlendMinMaxTest, RGBA16F)
 {
     SetUpFramebuffer(GL_RGBA16F);
     runTest();

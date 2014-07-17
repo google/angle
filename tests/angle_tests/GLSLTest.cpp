@@ -30,7 +30,7 @@ protected:
     std::string mSimpleVSSource;
 };
 
-TEST_F(GLSLTest, nameless_scoped_structs)
+TEST_F(GLSLTest, NamelessScopedStructs)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -51,7 +51,7 @@ TEST_F(GLSLTest, nameless_scoped_structs)
     GLuint program = compileProgram(mSimpleVSSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
 }
-TEST_F(GLSLTest, scoped_structs_order_bug)
+TEST_F(GLSLTest, ScopedStructsOrderBug)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -83,7 +83,7 @@ TEST_F(GLSLTest, scoped_structs_order_bug)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, scoped_structs_bug)
+TEST_F(GLSLTest, ScopedStructsBug)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -115,7 +115,7 @@ TEST_F(GLSLTest, scoped_structs_bug)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, dx_position_bug)
+TEST_F(GLSLTest, DxPositionBug)
 {
     const std::string &vertexShaderSource = SHADER_SOURCE
     (

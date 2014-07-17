@@ -96,7 +96,7 @@ protected:
     GLint mTexture2DUniformLocation;
 };
 
-TEST_F(TextureTest, negative_api_subimage)
+TEST_F(TextureTest, NegativeAPISubImage)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     EXPECT_GL_ERROR(GL_NO_ERROR);
@@ -106,7 +106,7 @@ TEST_F(TextureTest, negative_api_subimage)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
-TEST_F(TextureTest, zero_sized_uploads)
+TEST_F(TextureTest, ZeroSizedUploads)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     EXPECT_GL_ERROR(GL_NO_ERROR);
@@ -129,7 +129,7 @@ TEST_F(TextureTest, zero_sized_uploads)
 }
 
 // Test drawing with two texture types, to trigger an ANGLE bug in validation
-TEST_F(TextureTest, cube_map_bug)
+TEST_F(TextureTest, CubeMapBug)
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
