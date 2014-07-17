@@ -35,7 +35,6 @@
             'common/mathutil.cpp',
             'common/mathutil.h',
             'common/platform.h',
-            'common/shadervars.cpp',
             'common/tls.cpp',
             'common/tls.h',
             'common/utilities.cpp',

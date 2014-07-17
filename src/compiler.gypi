@@ -33,7 +33,6 @@
             'common/mathutil.cpp',
             'common/mathutil.h',
             'common/platform.h',
-            'common/shadervars.cpp',
             'common/tls.cpp',
             'common/tls.h',
             'common/utilities.cpp',
@@ -212,6 +211,12 @@
                 '.',
                 '../include',
             ],
+            'defines':
+            [
+                # define the static translator to indicate exported
+                # classes are (in fact) locally defined
+                'ANGLE_TRANSLATOR_STATIC',
+            ],
             'sources':
             [
                 '<@(angle_translator_lib_sources)',
@@ -241,7 +246,8 @@
             ],
             'sources':
             [
-                'compiler/translator/ShaderLang.cpp'
+                'compiler/translator/ShaderLang.cpp',
+                'compiler/translator/ShaderVars.cpp'
             ],
         },
 
@@ -268,7 +274,8 @@
             },
             'sources':
             [
-                'compiler/translator/ShaderLang.cpp'
+                'compiler/translator/ShaderLang.cpp',
+                'compiler/translator/ShaderVars.cpp'
             ],
         },
     ],

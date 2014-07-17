@@ -39,7 +39,7 @@ enum BlockLayoutType
 // Note: we must override the copy constructor and assignment operator so we can
 // work around excessive GCC binary bloating:
 // See https://code.google.com/p/angleproject/issues/detail?id=697
-struct ShaderVariable
+struct COMPILER_EXPORT ShaderVariable
 {
     ShaderVariable();
     ShaderVariable(GLenum typeIn, unsigned int arraySizeIn);
@@ -58,7 +58,7 @@ struct ShaderVariable
     bool staticUse;
 };
 
-struct Uniform : public ShaderVariable
+struct COMPILER_EXPORT Uniform : public ShaderVariable
 {
     Uniform();
     ~Uniform();
@@ -70,7 +70,7 @@ struct Uniform : public ShaderVariable
     std::vector<Uniform> fields;
 };
 
-struct Attribute : public ShaderVariable
+struct COMPILER_EXPORT Attribute : public ShaderVariable
 {
     Attribute();
     ~Attribute();
@@ -80,7 +80,7 @@ struct Attribute : public ShaderVariable
     int location;
 };
 
-struct InterfaceBlockField : public ShaderVariable
+struct COMPILER_EXPORT InterfaceBlockField : public ShaderVariable
 {
     InterfaceBlockField();
     ~InterfaceBlockField();
@@ -93,7 +93,7 @@ struct InterfaceBlockField : public ShaderVariable
     std::vector<InterfaceBlockField> fields;
 };
 
-struct Varying : public ShaderVariable
+struct COMPILER_EXPORT Varying : public ShaderVariable
 {
     Varying();
     ~Varying();
@@ -107,7 +107,7 @@ struct Varying : public ShaderVariable
     std::string structName;
 };
 
-struct InterfaceBlock
+struct COMPILER_EXPORT InterfaceBlock
 {
     InterfaceBlock();
     ~InterfaceBlock();

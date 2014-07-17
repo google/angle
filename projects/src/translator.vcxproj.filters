@@ -13,5 +13,8 @@
     <ClCompile Include="..\..\src\compiler\translator\ShaderLang.cpp">
       <Filter>compiler\translator</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\compiler\translator\ShaderVars.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

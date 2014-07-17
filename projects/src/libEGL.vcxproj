@@ -55,7 +55,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
@@ -132,7 +132,7 @@
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
@@ -221,7 +221,6 @@
     <ClInclude Include="..\..\src\common\utilities.h"/>
     <ClInclude Include="..\..\src\common\tls.h"/>
     <ClInclude Include="..\..\src\common\angleutils.h"/>
-    <ClInclude Include="..\..\src\common\blocklayout.h"/>
     <ClInclude Include="..\..\include\angle_gl.h"/>
     <ClInclude Include="..\..\include\KHR\khrplatform.h"/>
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h"/>
@@ -242,14 +241,12 @@
     <ClCompile Include="..\..\src\libEGL\main.cpp"/>
     <ClCompile Include="..\..\src\libEGL\Display.cpp"/>
     <ClCompile Include="..\..\src\libEGL\libEGL.cpp"/>
-    <ClCompile Include="..\..\src\common\RefCountObject.cpp"/>
     <ClCompile Include="..\..\src\common\mathutil.cpp"/>
+    <ClCompile Include="..\..\src\common\RefCountObject.cpp"/>
     <ClCompile Include="..\..\src\common\tls.cpp"/>
     <ClCompile Include="..\..\src\common\debug.cpp"/>
     <ClCompile Include="..\..\src\common\event_tracer.cpp"/>
     <ClCompile Include="..\..\src\common\utilities.cpp"/>
-    <ClCompile Include="..\..\src\common\shadervars.cpp"/>
-    <ClCompile Include="..\..\src\common\blocklayout.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\libEGL\libEGL.rc"/>

@@ -69,15 +69,15 @@
     <None Include="..\..\src\libEGL\libEGL.def">
       <Filter>src\libEGL</Filter>
     </None>
-    <ClInclude Include="..\..\src\common\RefCountObject.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
-    <ClCompile Include="..\..\src\common\RefCountObject.cpp">
-      <Filter>src\common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\common\mathutil.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\common\RefCountObject.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\src\common\RefCountObject.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\common\tls.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
@@ -111,18 +111,9 @@
     <ClCompile Include="..\..\src\common\utilities.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\common\shadervars.cpp">
-      <Filter>src\common</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\src\common\angleutils.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\blocklayout.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
-    <ClCompile Include="..\..\src\common\blocklayout.cpp">
-      <Filter>src\common</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\include\angle_gl.h">
       <Filter>include</Filter>
     </ClInclude>

@@ -85,6 +85,7 @@ static_library("preprocessor") {
   ]
 }
 
+#TODO(jmadill): define static for this config only
 static_library("translator_lib") {
   sources = rebase_path(compiler_gypi.angle_translator_lib_sources, ".", "src")
 
@@ -108,6 +109,7 @@ config("translator_static_config") {
 static_library("translator_static") {
   sources = [
     "src/compiler/translator/ShaderLang.cpp",
+    "src/compiler/translator/ShaderVars.cpp",
   ]
 
   configs -= [ "//build/config/compiler:chromium_code" ]
