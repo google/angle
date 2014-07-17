@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "593dc04b_233934c3",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T18:38:16Z",
+      "side": 1,
+      "message": "todo",
+      "range": {
+        "startLine": 88,
+        "startChar": 1,
+        "endLine": 88,
+        "endChar": 5
+      },
+      "revId": "e7fe4fa9d48bf326226d1b359324aee0751ac616",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
