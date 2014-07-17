@@ -54,9 +54,6 @@
     <ClInclude Include="..\..\src\third_party\compiler\ArrayBoundsClamper.h">
       <Filter>src\third_party\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\shadervars.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\common\RefCountObject.h">
       <Filter>src\common</Filter>
     </ClInclude>
@@ -475,6 +472,9 @@
       <Filter>include\KHR</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h">
+      <Filter>include\GLSLANG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GLSLANG\ShaderVars.h">
       <Filter>include\GLSLANG</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\GLES2\gl2platform.h">

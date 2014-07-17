@@ -7,8 +7,9 @@
 #ifndef COMPILER_VARIABLE_INFO_H_
 #define COMPILER_VARIABLE_INFO_H_
 
+#include <GLSLANG/ShaderVars.h>
+
 #include "compiler/translator/intermediate.h"
-#include "common/shadervars.h"
 
 // Traverses intermediate tree to collect all attributes, uniforms, varyings.
 class CollectVariables : public TIntermTraverser

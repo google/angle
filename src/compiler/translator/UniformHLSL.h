@@ -10,7 +10,6 @@
 #ifndef TRANSLATOR_UNIFORMHLSL_H_
 #define TRANSLATOR_UNIFORMHLSL_H_
 
-#include "common/shadervars.h"
 #include "compiler/translator/Types.h"
 
 namespace sh

@@ -9,7 +9,6 @@
 #include <limits>
 
 #include "compiler/preprocessor/numeric_lex.h"
-#include "common/shadervars.h"
 #include "common/utilities.h"
 
 bool atof_clamp(const char *str, float *value)

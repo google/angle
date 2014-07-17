@@ -10,10 +10,11 @@
 #ifndef COMMON_BLOCKLAYOUT_H_
 #define COMMON_BLOCKLAYOUT_H_
 
+#include <cstddef>
 #include <vector>
+
 #include "angle_gl.h"
 #include <GLSLANG/ShaderLang.h>
-#include <cstddef>
 
 namespace sh
 {

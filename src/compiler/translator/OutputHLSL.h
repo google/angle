@@ -12,9 +12,9 @@
 #include <map>
 
 #include "angle_gl.h"
+
 #include "compiler/translator/intermediate.h"
 #include "compiler/translator/ParseContext.h"
-#include "common/shadervars.h"
 
 namespace sh
 {

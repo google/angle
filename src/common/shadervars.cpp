@@ -7,7 +7,7 @@
 //  Methods for GL variable types (varyings, uniforms, etc)
 //
 
-#include "common/shadervars.h"
+#include <GLSLANG/ShaderVars.h>
 
 namespace sh
 {

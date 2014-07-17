@@ -12,15 +12,16 @@
 #ifndef LIBGLESV2_SHADER_H_
 #define LIBGLESV2_SHADER_H_
 
-#include "angle_gl.h"
+
 #include <string>
 #include <list>
 #include <vector>
 
-#include "common/shadervars.h"
+#include "angle_gl.h"
+#include <GLSLANG/ShaderVars.h>
+
 #include "common/angleutils.h"
 #include "libGLESv2/angletypes.h"
-#include "GLSLANG/ShaderLang.h"
 
 namespace rx
 {

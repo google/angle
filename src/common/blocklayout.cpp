@@ -7,8 +7,9 @@
 //   Implementation for block layout classes and methods.
 //
 
+#include <GLSLANG/ShaderVars.h>
+
 #include "common/blocklayout.h"
-#include "common/shadervars.h"
 #include "common/mathutil.h"
 #include "common/utilities.h"
 

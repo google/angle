@@ -9,9 +9,10 @@
 
 #include <stack>
 
-#include "compiler/translator/Types.h"
 #include "angle_gl.h"
-#include "common/shadervars.h"
+#include <GLSLANG/ShaderVars.h>
+
+#include "compiler/translator/Types.h"
 
 // atof_clamp is like atof but
 //   1. it forces C locale, i.e. forcing '.' as decimal point.

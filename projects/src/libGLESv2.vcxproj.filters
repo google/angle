@@ -186,6 +186,9 @@
     <ClInclude Include="..\..\src\libGLESv2\Program.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\Caps.cpp">
+      <Filter>src\libGLESv2</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\HandleAllocator.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -243,9 +246,6 @@
     <ClInclude Include="..\..\src\libGLESv2\formatutils.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\libGLESv2\Caps.cpp">
-      <Filter>src\libGLESv2</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\Buffer.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -792,9 +792,6 @@
     <ClInclude Include="..\..\src\common\debug.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\shadervars.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\common\utilities.h">
       <Filter>src\common</Filter>
     </ClInclude>
@@ -847,6 +844,9 @@
       <Filter>include\KHR</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h">
+      <Filter>include\GLSLANG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GLSLANG\ShaderVars.h">
       <Filter>include\GLSLANG</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\GLES2\gl2ext.h">

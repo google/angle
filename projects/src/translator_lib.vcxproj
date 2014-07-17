@@ -119,7 +119,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\third_party\compiler\ArrayBoundsClamper.h"/>
-    <ClInclude Include="..\..\src\common\shadervars.h"/>
     <ClInclude Include="..\..\src\common\RefCountObject.h"/>
     <ClInclude Include="..\..\src\common\tls.h"/>
     <ClInclude Include="..\..\src\common\mathutil.h"/>
@@ -195,6 +194,7 @@
     <ClInclude Include="..\..\include\angle_gl.h"/>
     <ClInclude Include="..\..\include\KHR\khrplatform.h"/>
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h"/>
+    <ClInclude Include="..\..\include\GLSLANG\ShaderVars.h"/>
     <ClInclude Include="..\..\include\GLES2\gl2platform.h"/>
     <ClInclude Include="..\..\include\GLES2\gl2ext.h"/>
     <ClInclude Include="..\..\include\GLES2\gl2.h"/>

@@ -3,17 +3,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// shadervars.h:
+// ShaderVars.h:
 //  Types to represent GL variables (varyings, uniforms, etc)
 //
 
-#ifndef COMMON_SHADERVARIABLE_H_
-#define COMMON_SHADERVARIABLE_H_
+#ifndef _COMPILER_INTERFACE_VARIABLES_
+#define _COMPILER_INTERFACE_VARIABLES_
 
 #include <string>
 #include <vector>
 #include <algorithm>
-#include "GLSLANG/ShaderLang.h"
+
+#include "ShaderLang.h"
 
 namespace sh
 {
@@ -124,4 +125,4 @@ struct InterfaceBlock
 
 }
 
-#endif // COMMON_SHADERVARIABLE_H_
+#endif // _COMPILER_INTERFACE_VARIABLES_
