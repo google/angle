@@ -16,6 +16,24 @@
       "revId": "654d4885728cf2e25e8455d76a2b52e80d4bd2c2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d97e1025_9566262b",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-17T21:51:10Z",
+      "side": 1,
+      "message": "OK, after I made this comment, I saw the other CL that exposes these data type.  Then I think we should just include that file here and use the real data type.",
+      "parentUuid": "d97e1025_15ad560c",
+      "revId": "654d4885728cf2e25e8455d76a2b52e80d4bd2c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
