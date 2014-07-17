@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "593dc04b_e6d27a70",
+        "filename": "src/common/shadervars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T20:41:01Z",
+      "side": 1,
+      "message": "Mo, they\u0027re called in the std::vector templates, because std::vector needs the copy constructor and assignment operator. Will add a comment though.",
+      "parentUuid": "1975083e_946dcc82",
+      "revId": "8897d2c41c887f9705fb1298af53ed564d597b7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7938c45c_c442d073",
         "filename": "src/common/shadervars.cpp",
         "patchSetId": 2
