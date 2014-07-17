@@ -1,0 +1,504 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1947c8ed_7eb7d1d7",
+        "filename": "src/compiler/translator/ForLoopUnroll.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "spacing",
+      "range": {
+        "startLine": 46,
+        "startChar": 23,
+        "endLine": 46,
+        "endChar": 24
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3942ccdc_3f3627d2",
+        "filename": "src/compiler/translator/ForLoopUnroll.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "spacing",
+      "range": {
+        "startLine": 47,
+        "startChar": 21,
+        "endLine": 47,
+        "endChar": 22
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1947c8ed_1eb48dd0",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "nit: space",
+      "range": {
+        "startLine": 1128,
+        "startChar": 0,
+        "endLine": 1128,
+        "endChar": 4
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1947c8ed_de8ce52c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "nit: can you also clean up the trailing spaces",
+      "range": {
+        "startLine": 289,
+        "startChar": 0,
+        "endLine": 289,
+        "endChar": 16
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1947c8ed_fe91a143",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "here, etc",
+      "range": {
+        "startLine": 290,
+        "startChar": 84,
+        "endLine": 290,
+        "endChar": 85
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "593dc04b_a06d3a82",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "suggestion: make a local pointer to node-\u003egetSequence()",
+      "range": {
+        "startLine": 82,
+        "startChar": 60,
+        "endLine": 82,
+        "endChar": 78
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "593dc04b_c072be61",
+        "filename": "src/compiler/translator/ValidateLimitations.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "new line",
+      "range": {
+        "startLine": 52,
+        "startChar": 16,
+        "endLine": 52,
+        "endChar": 17
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3942ccdc_ff467f38",
+        "filename": "src/compiler/translator/ValidateLimitations.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 60,
+        "startChar": 24,
+        "endLine": 60,
+        "endChar": 25
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3942ccdc_9f3bb3b7",
+        "filename": "src/compiler/translator/ValidateLimitations.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "spacing",
+      "range": {
+        "startLine": 463,
+        "startChar": 19,
+        "endLine": 463,
+        "endChar": 20
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1947c8ed_be9b1962",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "spacing",
+      "range": {
+        "startLine": 78,
+        "startChar": 29,
+        "endLine": 78,
+        "endChar": 30
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3942ccdc_bf40f71b",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "spacing",
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "593dc04b_6068926f",
+        "filename": "src/compiler/translator/VersionGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "spacing",
+      "range": {
+        "startLine": 109,
+        "startChar": 29,
+        "endLine": 109,
+        "endChar": 30
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1947c8ed_5e81b5ec",
+        "filename": "src/compiler/translator/depgraph/DependencyGraphBuilder.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "spacing",
+      "range": {
+        "startLine": 43,
+        "startChar": 19,
+        "endLine": 43,
+        "endChar": 20
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3942ccdc_5f568be9",
+        "filename": "src/compiler/translator/depgraph/DependencyGraphBuilder.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "spacing",
+      "range": {
+        "startLine": 71,
+        "startChar": 18,
+        "endLine": 71,
+        "endChar": 19
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1947c8ed_7e7ef135",
+        "filename": "src/compiler/translator/intermOut.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "nit: fix trailing spaces, or take these comments out",
+      "range": {
+        "startLine": 256,
+        "startChar": 70,
+        "endLine": 256,
+        "endChar": 85
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "593dc04b_80659696",
+        "filename": "src/compiler/translator/intermediate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 11,
+        "startChar": 71,
+        "endLine": 11,
+        "endChar": 72
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "593dc04b_20628a8d",
+        "filename": "src/compiler/translator/intermediate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 35,
+        "startChar": 20,
+        "endLine": 35,
+        "endChar": 24
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "593dc04b_405f8eca",
+        "filename": "src/compiler/translator/intermediate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 277,
+        "startChar": 0,
+        "endLine": 277,
+        "endChar": 4
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1947c8ed_1e8b2d0f",
+        "filename": "src/compiler/translator/intermediate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "space",
+      "range": {
+        "startLine": 435,
+        "startChar": 0,
+        "endLine": 435,
+        "endChar": 4
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3942ccdc_1f5003e9",
+        "filename": "src/compiler/translator/intermediate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "space",
+      "range": {
+        "startLine": 677,
+        "startChar": 58,
+        "endLine": 677,
+        "endChar": 59
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3942ccdc_3f4dc74f",
+        "filename": "src/compiler/translator/localintermediate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "space",
+      "range": {
+        "startLine": 24,
+        "startChar": 9,
+        "endLine": 24,
+        "endChar": 13
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3942ccdc_dfe85bcd",
+        "filename": "src/compiler/translator/parseConst.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-17T13:42:51Z",
+      "side": 1,
+      "message": "spaces in this file",
+      "range": {
+        "startLine": 105,
+        "startChar": 21,
+        "endLine": 105,
+        "endChar": 23
+      },
+      "revId": "fe9b040233fc03b02f9ae90578f8a53f6764832e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
