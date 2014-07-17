@@ -32,7 +32,7 @@ class ImageD3D : public Image
     ImageD3D();
     virtual ~ImageD3D() {};
 
-    static ImageD3D *ImageD3D::makeImageD3D(Image *img);
+    static ImageD3D *makeImageD3D(Image *img);
 
     virtual bool isDirty() const = 0;
 
