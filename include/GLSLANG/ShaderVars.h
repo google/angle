@@ -14,7 +14,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "ShaderLang.h"
+// Assume ShaderLang.h is included before ShaderVars.h, for sh::GLenum
 
 namespace sh
 {

@@ -10,7 +10,7 @@
 #include <stack>
 
 #include "angle_gl.h"
-#include <GLSLANG/ShaderVars.h>
+#include <GLSLANG/ShaderLang.h>
 
 #include "compiler/translator/Types.h"
 

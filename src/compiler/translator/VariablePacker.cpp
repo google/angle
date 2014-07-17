@@ -3,11 +3,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-#include "compiler/translator/VariablePacker.h"
-#include "angle_gl.h"
-#include "common/utilities.h"
 
 #include <algorithm>
+
+#include "angle_gl.h"
+
+#include "compiler/translator/VariablePacker.h"
+#include "common/utilities.h"
 
 int VariablePacker::GetNumComponentsPerRow(sh::GLenum type)
 {

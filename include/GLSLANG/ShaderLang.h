@@ -23,8 +23,9 @@
 #define COMPILER_EXPORT
 #endif
 
-#include "KHR/khrplatform.h"
 #include <stddef.h>
+
+#include "KHR/khrplatform.h"
 
 //
 // This is the platform independent interface between an OGL driver
@@ -37,13 +38,16 @@ namespace sh
 typedef unsigned int GLenum;
 }
 
+// Must be included after GLenum proxy typedef
+#include "ShaderVars.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 128
+#define ANGLE_SH_VERSION 129
 
 typedef enum {
   SH_GLES2_SPEC = 0x8B40,
@@ -100,14 +104,9 @@ typedef enum {
   SH_NAME_MAX_LENGTH                = 0x6001,
   SH_HASHED_NAME_MAX_LENGTH         = 0x6002,
   SH_HASHED_NAMES_COUNT             = 0x6003,
-  SH_ACTIVE_UNIFORMS_ARRAY          = 0x6004,
-  SH_SHADER_VERSION                 = 0x6005,
-  SH_ACTIVE_INTERFACE_BLOCKS_ARRAY  = 0x6006,
-  SH_ACTIVE_OUTPUT_VARIABLES_ARRAY  = 0x6007,
-  SH_ACTIVE_ATTRIBUTES_ARRAY        = 0x6008,
-  SH_ACTIVE_VARYINGS_ARRAY          = 0x6009,
-  SH_RESOURCES_STRING_LENGTH        = 0x600A,
-  SH_OUTPUT_TYPE                    = 0x600B
+  SH_SHADER_VERSION                 = 0x6004,
+  SH_RESOURCES_STRING_LENGTH        = 0x6005,
+  SH_OUTPUT_TYPE                    = 0x6006
 } ShShaderInfo;
 
 // Compile options.
@@ -453,17 +452,17 @@ COMPILER_EXPORT void ShGetNameHashingEntry(const ShHandle handle,
                                            char* name,
                                            char* hashedName);
 
-// Returns a parameter from a compiled shader.
+// Shader variable inspection.
+// Returns a pointer to a list of variables of the designated type.
+// (See ShaderVars.h for type definitions, included above)
+// Returns NULL on failure.
 // Parameters:
 // handle: Specifies the compiler
-// pname: Specifies the parameter to query.
-// The following parameters are defined:
-// SH_ACTIVE_UNIFORMS_ARRAY: an STL vector of active uniforms. Valid only for
-//                           HLSL output.
-// params: Requested parameter
-COMPILER_EXPORT void ShGetInfoPointer(const ShHandle handle,
-                                      ShShaderInfo pname,
-                                      void** params);
+COMPILER_EXPORT const std::vector<sh::Uniform> *ShGetUniforms(const ShHandle handle);
+COMPILER_EXPORT const std::vector<sh::Varying> *ShGetVaryings(const ShHandle handle);
+COMPILER_EXPORT const std::vector<sh::Attribute> *ShGetAttributes(const ShHandle handle);
+COMPILER_EXPORT const std::vector<sh::Attribute> *ShGetOutputVariables(const ShHandle handle);
+COMPILER_EXPORT const std::vector<sh::InterfaceBlock> *ShGetInterfaceBlocks(const ShHandle handle);
 
 typedef struct
 {

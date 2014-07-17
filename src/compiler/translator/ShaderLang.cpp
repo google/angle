@@ -18,14 +18,26 @@
 #include "compiler/translator/VariablePacker.h"
 #include "angle_gl.h"
 
-static bool isInitialized = false;
+namespace
+{
+
+enum ShaderVariableType
+{
+    SHADERVAR_UNIFORM,
+    SHADERVAR_VARYING,
+    SHADERVAR_ATTRIBUTE,
+    SHADERVAR_OUTPUTVARIABLE,
+    SHADERVAR_INTERFACEBLOCK
+};
+    
+bool isInitialized = false;
 
 //
 // This is the platform independent interface between an OGL driver
 // and the shading language compiler.
 //
 
-static bool checkVariableMaxLengths(const ShHandle handle,
+static bool CheckVariableMaxLengths(const ShHandle handle,
                                     size_t expectedValue)
 {
     size_t activeUniformLimit = 0;
@@ -39,7 +51,7 @@ static bool checkVariableMaxLengths(const ShHandle handle,
             expectedValue == varyingLimit);
 }
 
-static bool checkMappedNameMaxLength(const ShHandle handle, size_t expectedValue)
+bool CheckMappedNameMaxLength(const ShHandle handle, size_t expectedValue)
 {
     size_t mappedNameMaxLength = 0;
     ShGetInfo(handle, SH_MAPPED_NAME_MAX_LENGTH, &mappedNameMaxLength);
@@ -47,7 +59,7 @@ static bool checkMappedNameMaxLength(const ShHandle handle, size_t expectedValue
 }
 
 template <typename VarT>
-static const sh::ShaderVariable *ReturnVariable(const std::vector<VarT> &infoList, int index)
+const sh::ShaderVariable *ReturnVariable(const std::vector<VarT> &infoList, int index)
 {
     if (index < 0 || static_cast<size_t>(index) >= infoList.size())
     {
@@ -57,7 +69,7 @@ static const sh::ShaderVariable *ReturnVariable(const std::vector<VarT> &infoLis
     return &infoList[index];
 }
 
-static const sh::ShaderVariable *GetVariable(const TCompiler *compiler, ShShaderInfo varType, int index)
+const sh::ShaderVariable *GetVariable(const TCompiler *compiler, ShShaderInfo varType, int index)
 {
     switch (varType)
     {
@@ -73,7 +85,7 @@ static const sh::ShaderVariable *GetVariable(const TCompiler *compiler, ShShader
     }
 }
 
-static ShPrecisionType ConvertPrecision(sh::GLenum precision)
+ShPrecisionType ConvertPrecision(sh::GLenum precision)
 {
     switch (precision)
     {
@@ -89,6 +101,55 @@ static ShPrecisionType ConvertPrecision(sh::GLenum precision)
       default:
         return SH_PRECISION_UNDEFINED;
     }
+}
+
+template <typename VarT>
+const std::vector<VarT> *GetVariableList(const TCompiler *compiler, ShaderVariableType variableType);
+
+template <>
+const std::vector<sh::Uniform> *GetVariableList(const TCompiler *compiler, ShaderVariableType)
+{
+    return &compiler->getUniforms();
+}
+
+template <>
+const std::vector<sh::Varying> *GetVariableList(const TCompiler *compiler, ShaderVariableType)
+{
+    return &compiler->getVaryings();
+}
+
+template <>
+const std::vector<sh::Attribute> *GetVariableList(const TCompiler *compiler, ShaderVariableType variableType)
+{
+    return (variableType == SHADERVAR_ATTRIBUTE ?
+        &compiler->getAttributes() :
+        &compiler->getOutputVariables());
+}
+
+template <>
+const std::vector<sh::InterfaceBlock> *GetVariableList(const TCompiler *compiler, ShaderVariableType)
+{
+    return &compiler->getInterfaceBlocks();
+}
+
+template <typename VarT>
+const std::vector<VarT> *GetShaderVariables(const ShHandle handle, ShaderVariableType variableType)
+{
+    if (!handle)
+    {
+        return NULL;
+    }
+
+    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
+    TCompiler* compiler = base->getAsCompiler();
+    if (!compiler)
+    {
+        return NULL;
+    }
+
+    return GetVariableList<VarT>(compiler, variableType);
+}
+
 }
 
 //
@@ -372,7 +433,7 @@ void ShGetVariableInfo(const ShHandle handle,
     // SH_ACTIVE_UNIFORM_MAX_LENGTH, SH_ACTIVE_ATTRIBUTE_MAX_LENGTH, SH_VARYING_MAX_LENGTH
     // in ShGetInfo, below.
     size_t variableLength = 1 + GetGlobalMaxTokenSize(compiler->getShaderSpec());
-    ASSERT(checkVariableMaxLengths(handle, variableLength));
+    ASSERT(CheckVariableMaxLengths(handle, variableLength));
     strncpy(name, varInfo->name.c_str(), variableLength);
     name[variableLength - 1] = 0;
     if (mappedName)
@@ -380,7 +441,7 @@ void ShGetVariableInfo(const ShHandle handle,
         // This size must match that queried by
         // SH_MAPPED_NAME_MAX_LENGTH in ShGetInfo, below.
         size_t maxMappedNameLength = 1 + GetGlobalMaxTokenSize(compiler->getShaderSpec());
-        ASSERT(checkMappedNameMaxLength(handle, maxMappedNameLength));
+        ASSERT(CheckMappedNameMaxLength(handle, maxMappedNameLength));
         strncpy(mappedName, varInfo->mappedName.c_str(), maxMappedNameLength);
         mappedName[maxMappedNameLength - 1] = 0;
     }
@@ -429,34 +490,29 @@ void ShGetNameHashingEntry(const ShHandle handle,
     hashedName[len - 1] = '\0';
 }
 
-void ShGetInfoPointer(const ShHandle handle, ShShaderInfo pname, void** params)
+const std::vector<sh::Uniform> *ShGetUniforms(const ShHandle handle)
 {
-    if (!handle || !params)
-        return;
+    return GetShaderVariables<sh::Uniform>(handle, SHADERVAR_UNIFORM);
+}
 
-    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
-    TranslatorHLSL* translator = base->getAsTranslatorHLSL();
-    if (!translator) return;
+const std::vector<sh::Varying> *ShGetVaryings(const ShHandle handle)
+{
+    return GetShaderVariables<sh::Varying>(handle, SHADERVAR_VARYING);
+}
 
-    switch(pname)
-    {
-    case SH_ACTIVE_UNIFORMS_ARRAY:
-        *params = (void*)&translator->getUniforms();
-        break;
-    case SH_ACTIVE_INTERFACE_BLOCKS_ARRAY:
-        *params = (void*)&translator->getInterfaceBlocks();
-        break;
-    case SH_ACTIVE_OUTPUT_VARIABLES_ARRAY:
-        *params = (void*)&translator->getOutputVariables();
-        break;
-    case SH_ACTIVE_ATTRIBUTES_ARRAY:
-        *params = (void*)&translator->getAttributes();
-        break;
-    case SH_ACTIVE_VARYINGS_ARRAY:
-        *params = (void*)&translator->getVaryings();
-        break;
-    default: UNREACHABLE();
-    }
+const std::vector<sh::Attribute> *ShGetAttributes(const ShHandle handle)
+{
+    return GetShaderVariables<sh::Attribute>(handle, SHADERVAR_ATTRIBUTE);
+}
+
+const std::vector<sh::Attribute> *ShGetOutputVariables(const ShHandle handle)
+{
+    return GetShaderVariables<sh::Attribute>(handle, SHADERVAR_OUTPUTVARIABLE);
+}
+
+const std::vector<sh::InterfaceBlock> *ShGetInterfaceBlocks(const ShHandle handle)
+{
+    return GetShaderVariables<sh::InterfaceBlock>(handle, SHADERVAR_INTERFACEBLOCK);
 }
 
 int ShCheckVariablesWithinPackingLimits(

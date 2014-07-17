@@ -18,7 +18,7 @@
 #include <vector>
 
 #include "angle_gl.h"
-#include <GLSLANG/ShaderVars.h>
+#include <GLSLANG/ShaderLang.h>
 
 #include "common/angleutils.h"
 #include "libGLESv2/angletypes.h"
