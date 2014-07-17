@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1975083e_946dcc82",
+        "filename": "src/common/shadervars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-17T20:38:07Z",
+      "side": 1,
+      "message": "If it is simply for reducing binary size, can we add a comment in .h file and ASSERT false here to make sure we don\u0027t actually use them?",
+      "revId": "8897d2c41c887f9705fb1298af53ed564d597b7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7938c45c_c442d073",
         "filename": "src/common/shadervars.cpp",
         "patchSetId": 2
