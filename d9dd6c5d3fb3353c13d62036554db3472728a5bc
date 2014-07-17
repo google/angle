@@ -69,6 +69,24 @@
       "revId": "d9dd6c5d3fb3353c13d62036554db3472728a5bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9f87cd3_a6f208b9",
+        "filename": "src/common/shadervars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2014-07-17T15:00:52Z",
+      "side": 1,
+      "message": "I think that if this (plus destructors) have a good effect, then it\u0027s not necessary to do more until there is more indications that there is gains to be had. Hand written strings and arrays add the complexities of memory management.\n\nBut you know how the code is used better than I. Maybe this code being highly optimal is important for angle as a toolkit.",
+      "parentUuid": "593dc04b_c0ff1e41",
+      "revId": "d9dd6c5d3fb3353c13d62036554db3472728a5bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
