@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7938c45c_c442d073",
+        "filename": "src/common/shadervars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1114374
+      },
+      "writtenOn": "2014-07-17T19:12:01Z",
+      "side": 1,
+      "message": "I checked, adding the \"return *this\" cost about 4-8 bytes per assignment operator so nothing to worry about.",
+      "revId": "8897d2c41c887f9705fb1298af53ed564d597b7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
