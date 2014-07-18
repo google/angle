@@ -16,6 +16,24 @@
       "revId": "2c00951ae861ba59d81b8c6a1e31fe40b12e916e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79e44451_879a2a92",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-18T18:35:31Z",
+      "side": 1,
+      "message": "Helper functions wont help here because the order of the checks is important.  Most of this logic will be cleaned up once chromium is using ANGLE_platform_angle and we can remove support for ANGLE_direct3d_display.",
+      "parentUuid": "1947c8ed_444d624e",
+      "revId": "2c00951ae861ba59d81b8c6a1e31fe40b12e916e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
