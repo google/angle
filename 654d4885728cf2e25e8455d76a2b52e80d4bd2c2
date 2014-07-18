@@ -34,6 +34,24 @@
       "revId": "654d4885728cf2e25e8455d76a2b52e80d4bd2c2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99df387f_88087b4a",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-18T13:50:06Z",
+      "side": 1,
+      "message": "I\u0027m OK with that. It\u0027s still possible to change the data type and get a disaster, and it will require 5 entry points instead of one, but it would be a bit nicer.\n\nUnfortunately copying the data instead of returning a pointer is not feasible due to how std::vector works with allocation and de-allocation, I think.",
+      "parentUuid": "d97e1025_9566262b",
+      "revId": "654d4885728cf2e25e8455d76a2b52e80d4bd2c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
