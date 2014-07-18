@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "790d24e9_e77b2100",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2014-07-18T23:40:09Z",
+      "side": 1,
+      "message": "clearColor is an array, so this conditional will always be true. clang says:\n\n..\\..\\third_party\\angle\\src\\libGLESv2\\renderer\\d3d\\d3d11\\Clear11.cpp(459,55) :  warning(clang): address of array \u0027clearParams.clearColor\u0027 will always evaluate to \u0027true\u0027 [-Wpointer-bool-conversion]\n            blendKey.maskChannels[i][0] \u003d clearParams.clearColor ? (clearParams.colorMaskRed   \u0026\u0026 gl::GetRedBits(internalFormat)   \u003e 0) : false;\n                                        ~ ~~~~~~~~~~~~^~~~~~~~~~\n..\\..\\third_party\\angle\\src\\libGLESv2\\renderer\\d3d\\d3d11\\Clear11.cpp(460,55) :  warning(clang): address of array \u0027clearParams.clearColor\u0027 will always evaluate to \u0027true\u0027 [-Wpointer-bool-conversion]\n            blendKey.maskChannels[i][1] \u003d clearParams.clearColor ? (clearParams.colorMaskGreen \u0026\u0026 gl::GetGreenBits(internalFormat) \u003e 0) : false;\n                                        ~ ~~~~~~~~~~~~^~~~~~~~~~\n..\\..\\third_party\\angle\\src\\libGLESv2\\renderer\\d3d\\d3d11\\Clear11.cpp(461,55) :  warning(clang): address of array \u0027clearParams.clearColor\u0027 will always evaluate to \u0027true\u0027 [-Wpointer-bool-conversion]\n            blendKey.maskChannels[i][2] \u003d clearParams.clearColor ? (clearParams.colorMaskBlue  \u0026\u0026 gl::GetBlueBits(internalFormat)  \u003e 0) : false;\n                                        ~ ~~~~~~~~~~~~^~~~~~~~~~\n..\\..\\third_party\\angle\\src\\libGLESv2\\renderer\\d3d\\d3d11\\Clear11.cpp(462,55) :  warning(clang): address of array \u0027clearParams.clearColor\u0027 will always evaluate to \u0027true\u0027 [-Wpointer-bool-conversion]\n            blendKey.maskChannels[i][3] \u003d clearParams.clearColor ? (clearParams.colorMaskAlpha \u0026\u0026 gl::GetAlphaBits(internalFormat) \u003e 0) : false;\n                                        ~ ~~~~~~~~~~~~^~~~~~~~~~",
+      "revId": "e4a492be45f39dffaea53c3523064844ee56e41b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
