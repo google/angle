@@ -52,6 +52,24 @@
       "revId": "2c00951ae861ba59d81b8c6a1e31fe40b12e916e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99df387f_cb5d5d2a",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-18T18:43:23Z",
+      "side": 1,
+      "message": "To clarify: i was proposing something like\n\n IsD3D11NativeDisplay(EGLNativeDisplayType) { return \u003d\u003d D3D11_ELSE_D3D9 || D3D11_ONLY)\n\n IsD3D11RequestDisplay(...)\n\netc",
+      "parentUuid": "99df387f_2b3969ec",
+      "revId": "2c00951ae861ba59d81b8c6a1e31fe40b12e916e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
