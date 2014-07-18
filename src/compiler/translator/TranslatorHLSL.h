@@ -19,10 +19,14 @@ class TranslatorHLSL : public TCompiler
     bool hasInterfaceBlock(const std::string &interfaceBlockName) const;
     unsigned int getInterfaceBlockRegister(const std::string &interfaceBlockName) const;
 
+    bool hasUniform(const std::string &uniformName) const;
+    unsigned int getUniformRegister(const std::string &uniformName) const;
+
   protected:
     virtual void translate(TIntermNode* root);
 
     std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
+    std::map<std::string, unsigned int> mUniformRegisterMap;
 };
 
 #endif  // COMPILER_TRANSLATORHLSL_H_

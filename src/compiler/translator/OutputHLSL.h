@@ -40,6 +40,7 @@ class OutputHLSL : public TIntermTraverser
     const std::vector<sh::Varying> &getVaryings() const;
 
     const std::map<std::string, unsigned int> &getInterfaceBlockRegisterMap() const;
+    const std::map<std::string, unsigned int> &getUniformRegisterMap() const;
 
     static TString initializer(const TType &type);
 

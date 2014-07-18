@@ -119,13 +119,15 @@ void UniformHLSL::reserveInterfaceBlockRegisters(unsigned int registerCount)
     mInterfaceBlockRegister = registerCount;
 }
 
-int UniformHLSL::declareUniformAndAssignRegister(const TType &type, const TString &name)
+unsigned int UniformHLSL::declareUniformAndAssignRegister(const TType &type, const TString &name)
 {
-    int registerIndex = (IsSampler(type.getBasicType()) ? mSamplerRegister : mUniformRegister);
+    unsigned int registerIndex = (IsSampler(type.getBasicType()) ? mSamplerRegister : mUniformRegister);
 
     declareUniformToList(type, name, registerIndex, &mActiveUniforms);
 
-    unsigned int registerCount = HLSLVariableRegisterCount(mActiveUniforms.back(), mOutputType);
+    const sh::Uniform &activeUniform = mActiveUniforms.back();
+    unsigned int registerCount = HLSLVariableRegisterCount(activeUniform, mOutputType);
+    mUniformRegisterMap[activeUniform.name] = registerIndex;
 
     if (IsSampler(type.getBasicType()))
     {
@@ -187,7 +189,7 @@ TString UniformHLSL::uniformsHeader(ShShaderOutput outputType, const ReferencedS
         const TType &type = uniform.getType();
         const TString &name = uniform.getSymbol();
 
-        int registerIndex = declareUniformAndAssignRegister(type, name);
+        unsigned int registerIndex = declareUniformAndAssignRegister(type, name);
 
         if (outputType == SH_HLSL11_OUTPUT && IsSampler(type.getBasicType()))   // Also declare the texture
         {

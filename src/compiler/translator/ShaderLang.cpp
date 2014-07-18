@@ -499,3 +499,28 @@ bool ShGetInterfaceBlockRegister(const ShHandle handle,
     *indexOut = translator->getInterfaceBlockRegister(interfaceBlockName);
     return true;
 }
+
+bool ShGetUniformRegister(const ShHandle handle,
+                          const char *uniformName,
+                          unsigned int *indexOut)
+{
+    if (!handle || !uniformName || !indexOut)
+    {
+        return false;
+    }
+
+    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
+    TranslatorHLSL* translator = base->getAsTranslatorHLSL();
+    if (!translator)
+    {
+        return false;
+    }
+
+    if (!translator->hasUniform(uniformName))
+    {
+        return false;
+    }
+
+    *indexOut = translator->getUniformRegister(uniformName);
+    return true;
+}

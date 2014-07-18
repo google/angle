@@ -242,6 +242,11 @@ const std::map<std::string, unsigned int> &OutputHLSL::getInterfaceBlockRegister
     return mUniformHLSL->getInterfaceBlockRegisterMap();
 }
 
+const std::map<std::string, unsigned int> &OutputHLSL::getUniformRegisterMap() const
+{
+    return mUniformHLSL->getUniformRegisterMap();
+}
+
 int OutputHLSL::vectorSize(const TType &type) const
 {
     int elementSize = type.isMatrix() ? type.getCols() : 1;
