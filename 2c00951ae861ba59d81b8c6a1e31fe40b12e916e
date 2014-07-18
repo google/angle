@@ -70,6 +70,24 @@
       "revId": "2c00951ae861ba59d81b8c6a1e31fe40b12e916e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99df387f_0b58e535",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-18T18:44:24Z",
+      "side": 1,
+      "message": "I mean, some enums such as D3D11_ELSE_D3D9 require that two renderers are added in a certain order.  The default renderer also changes the order that they\u0027re added depending on other defines.  Adding helper functions could change the if-statements from two or\u0027d checks to a single function check but there still has to be some logic to check these other conditions. After we remove ANGLE_direct3d_display, these if-statements will be checking fewer things too.",
+      "parentUuid": "99df387f_2b3969ec",
+      "revId": "2c00951ae861ba59d81b8c6a1e31fe40b12e916e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
