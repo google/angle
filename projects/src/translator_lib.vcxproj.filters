@@ -276,6 +276,9 @@
     <ClCompile Include="..\..\src\compiler\translator\VariablePacker.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\compiler\translator\ScalarizeVecAndMatConstructorArgs.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorHLSL.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
@@ -369,6 +372,9 @@
     <ClCompile Include="..\..\src\compiler\translator\SymbolTable.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\compiler\translator\ScalarizeVecAndMatConstructorArgs.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\intermediate.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>

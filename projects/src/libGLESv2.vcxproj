@@ -46,7 +46,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;NOMINMAX;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;ANGLE_ENABLE_PERF;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;ANGLE_ENABLE_PERF;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -70,7 +70,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;ANGLE_ENABLE_PERF;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;ANGLE_ENABLE_PERF;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,7 +83,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;NOMINMAX;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -107,7 +107,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT(&quot;d3dcompiler_46.dll&quot;), TEXT(&quot;d3dcompiler_43.dll&quot;) };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -115,15 +115,6 @@
     <None Include="..\..\src\libGLESv2\libGLESv2.def"/>
     <None Include="..\..\src\libGLESv2\renderer\loadimage.inl"/>
     <None Include="..\..\src\libGLESv2\renderer\generatemip.inl"/>
-    <None Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\Swizzle11.hlsl"/>
-    <None Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\generate_shaders.bat"/>
-    <None Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\Passthrough3D11.hlsl"/>
-    <None Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\Passthrough2D11.hlsl"/>
-    <None Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\Clear11.hlsl"/>
-    <None Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\BufferToTexture11.hlsl"/>
-    <None Include="..\..\src\libGLESv2\renderer\d3d\d3d9\shaders\Blit.vs"/>
-    <None Include="..\..\src\libGLESv2\renderer\d3d\d3d9\shaders\generate_shaders.bat"/>
-    <None Include="..\..\src\libGLESv2\renderer\d3d\d3d9\shaders\Blit.ps"/>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\libGLESv2\Shader.h"/>
@@ -136,7 +127,6 @@
     <ClInclude Include="..\..\src\libGLESv2\Context.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Query.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Texture.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\VertexArray.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Uniform.h"/>
     <ClInclude Include="..\..\src\libGLESv2\ProgramBinary.h"/>
     <ClInclude Include="..\..\src\libGLESv2\constants.h"/>
@@ -153,6 +143,7 @@
     <ClInclude Include="..\..\src\libGLESv2\Fence.h"/>
     <ClInclude Include="..\..\src\libGLESv2\angletypes.h"/>
     <ClInclude Include="..\..\src\libGLESv2\main.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\VertexArray.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Framebuffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\formatutils.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Buffer.h"/>
@@ -211,7 +202,6 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughlumalpha2d11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrg2dui11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgb3d11ps.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\clearsint11vs.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgb2di11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\swizzleui3dps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\clearsint11ps.h"/>
@@ -221,6 +211,7 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughlumalpha3d11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgba3di11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgb2d11ps.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\clearsint11vs.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthrough2d11vs.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\buffertotexture11_ps_4f.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\buffertotexture11_gs.h"/>
@@ -232,10 +223,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\swizzlei2dps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrg2d11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgba2dui11ps.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughr2di11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgb3dui11ps.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughr2di11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgba3d11ps.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughr3di11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughlum3d11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\clearuint11vs.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughr3d11ps.h"/>
@@ -254,29 +244,29 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\swizzleui2darrayps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgba3dui11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\buffertotexture11_ps_4ui.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughr3di11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthrough3d11gs.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\renderer9_utils.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\TextureStorage9.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\ShaderExecutable9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\IndexBuffer9.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\VertexArray9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\ShaderCache.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Fence9.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\VertexArray9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Renderer9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Blit9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\VertexDeclarationCache.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Image9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\VertexBuffer9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\formatutils9.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Fence9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Query9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\RenderTarget9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\SwapChain9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Buffer9.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\shaders\compiled\standardvs.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\shaders\compiled\luminanceps.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\shaders\compiled\flipyvs.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\shaders\compiled\componentmaskps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\shaders\compiled\passthroughps.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d9\shaders\compiled\flipyvs.h"/>
     <ClInclude Include="..\..\src\common\tls.h"/>
     <ClInclude Include="..\..\src\common\mathutil.h"/>
     <ClInclude Include="..\..\src\common\blocklayout.h"/>
@@ -304,16 +294,17 @@
     <ClInclude Include="..\..\include\EGL\eglplatform.h"/>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\libGLESv2\formatutils.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\validationES2.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\precompiled.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\DynamicHLSL.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\HandleAllocator.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\queryconversions.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\formatutils.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Fence.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\validationES.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Renderbuffer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Program.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\ResourceManager.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\angletypes.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Float16ToFloat32.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\validationES3.cpp"/>
@@ -334,7 +325,6 @@
     <ClCompile Include="..\..\src\libGLESv2\Caps.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Framebuffer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Texture.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\ResourceManager.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\copyimage.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\loadimage.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\loadimageSSE2.cpp"/>
@@ -344,34 +334,34 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\BufferD3D.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\IndexBuffer.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\VertexBuffer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\TextureD3D.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\VertexDataManager.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\ImageD3D.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\TextureStorage.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\IndexDataManager.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\VertexBuffer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Renderer11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\InputLayoutCache.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\PixelTransfer11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\VertexBuffer11.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Fence11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Query11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\ShaderExecutable11.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\RenderTarget11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Blit11.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\RenderStateCache.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\IndexBuffer11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\formatutils11.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\SwapChain11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\renderer11_utils.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Image11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\TextureStorage11.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\RenderStateCache.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Buffer11.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\RenderTarget11.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Fence11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\Clear11.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\SwapChain11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\VertexDeclarationCache.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Query9.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Fence9.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\VertexBuffer9.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Fence9.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\Image9.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\renderer9_utils.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d9\TextureStorage9.cpp"/>
