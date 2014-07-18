@@ -87,6 +87,7 @@ class Shader
 
     static void releaseCompiler();
     static ShShaderOutput getCompilerOutputType(GLenum shader);
+    unsigned int getUniformRegister(const std::string &uniformName) const;
     unsigned int getInterfaceBlockRegister(const std::string &blockName) const;
 
     bool usesDepthRange() const { return mUsesDepthRange; }
@@ -136,6 +137,7 @@ class Shader
     std::string mInfoLog;
     std::vector<sh::Uniform> mActiveUniforms;
     std::vector<sh::InterfaceBlock> mActiveInterfaceBlocks;
+    std::map<std::string, unsigned int> mUniformRegisterMap;
     std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
 
     ResourceManager *mResourceManager;

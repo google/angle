@@ -33,6 +33,8 @@ class BlockLayoutEncoder
     void encodeInterfaceBlockField(const InterfaceBlockField &field);
     void encodeType(GLenum type, unsigned int arraySize, bool isRowMajorMatrix);
     size_t getBlockSize() const { return mCurrentOffset * BytesPerComponent; }
+    size_t getCurrentRegister() const { return mCurrentOffset / ComponentsPerRegister; }
+    size_t getCurrentElement() const { return mCurrentOffset % ComponentsPerRegister; }
 
     static const size_t BytesPerComponent = 4u;
     static const unsigned int ComponentsPerRegister = 4u;
@@ -82,12 +84,15 @@ class HLSLBlockEncoder : public BlockLayoutEncoder
 
     HLSLBlockEncoder(std::vector<BlockMemberInfo> *blockInfoOut,
                      HLSLBlockEncoderStrategy strategy);
+    HLSLBlockEncoder(ShShaderOutput outputType);
 
     virtual void enterAggregateType();
     virtual void exitAggregateType();
     void skipRegisters(unsigned int numRegisters);
 
     bool isPacked() const { return mEncoderStrategy == ENCODE_PACKED; }
+
+    static HLSLBlockEncoderStrategy GetStrategyFor(ShShaderOutput outputType);
 
   protected:
     virtual void getBlockLayoutInfo(GLenum type, unsigned int arraySize, bool isRowMajorMatrix, int *arrayStrideOut, int *matrixStrideOut);

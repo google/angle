@@ -24,6 +24,11 @@
 #include "libGLESv2/renderer/d3d/VertexDataManager.h"
 #include "libGLESv2/DynamicHLSL.h"
 
+namespace sh
+{
+class HLSLBlockEncoder;
+}
+
 namespace rx
 {
 class ShaderExecutable;
@@ -201,9 +206,9 @@ class ProgramBinary : public RefCountObject
     bool linkValidateVariables(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform);
     bool linkValidateVariables(InfoLog &infoLog, const std::string &varyingName, const sh::Varying &vertexVarying, const sh::Varying &fragmentVarying);
     bool linkValidateVariables(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
-    bool linkUniforms(InfoLog &infoLog, const std::vector<sh::Uniform> &vertexUniforms, const std::vector<sh::Uniform> &fragmentUniforms);
-    void defineUniformBase(GLenum shader, const sh::Uniform &uniform);
-    void defineUniform(GLenum shader, const sh::Uniform &uniform, const std::string &fullName, unsigned int baseRegisterIndex);
+    bool linkUniforms(InfoLog &infoLog, const VertexShader &vertexShader, const FragmentShader &fragmentShader);
+    void defineUniformBase(GLenum shader, const sh::Uniform &uniform, unsigned int uniformRegister);
+    void defineUniform(GLenum shader, const sh::Uniform &uniform, const std::string &fullName, sh::HLSLBlockEncoder *encoder);
     bool indexSamplerUniform(const LinkedUniform &uniform, InfoLog &infoLog);
     bool indexUniforms(InfoLog &infoLog);
     static bool assignSamplers(unsigned int startSamplerIndex, GLenum samplerType, unsigned int samplerCount,

@@ -161,6 +161,12 @@ HLSLBlockEncoder::HLSLBlockEncoder(std::vector<BlockMemberInfo> *blockInfoOut, H
 {
 }
 
+HLSLBlockEncoder::HLSLBlockEncoder(ShShaderOutput outputType)
+    : BlockLayoutEncoder(NULL),
+      mEncoderStrategy(GetStrategyFor(outputType))
+{
+}
+
 void HLSLBlockEncoder::enterAggregateType()
 {
     nextRegister();
@@ -243,6 +249,16 @@ void HLSLBlockEncoder::advanceOffset(GLenum type, unsigned int arraySize, bool i
 void HLSLBlockEncoder::skipRegisters(unsigned int numRegisters)
 {
     mCurrentOffset += (numRegisters * ComponentsPerRegister);
+}
+
+HLSLBlockEncoder::HLSLBlockEncoderStrategy HLSLBlockEncoder::GetStrategyFor(ShShaderOutput outputType)
+{
+    switch (outputType)
+    {
+      case SH_HLSL9_OUTPUT: return ENCODE_LOOSE;
+      case SH_HLSL11_OUTPUT: return ENCODE_PACKED;
+      default: UNREACHABLE(); return ENCODE_PACKED;
+    }
 }
 
 size_t HLSLInterfaceBlockDataSize(const sh::InterfaceBlock &interfaceBlock)
@@ -353,10 +369,7 @@ unsigned int HLSLVariableRegisterCount(const Varying &variable)
 
 unsigned int HLSLVariableRegisterCount(const Uniform &variable, ShShaderOutput outputType)
 {
-    HLSLBlockEncoder encoder(NULL,
-                             outputType == SH_HLSL9_OUTPUT ? HLSLBlockEncoder::ENCODE_LOOSE
-                                                           : HLSLBlockEncoder::ENCODE_PACKED);
-
+    HLSLBlockEncoder encoder(outputType);
     HLSLVariableRegisterCount(variable, &encoder);
 
     const size_t registerBytes = (encoder.BytesPerComponent * encoder.ComponentsPerRegister);

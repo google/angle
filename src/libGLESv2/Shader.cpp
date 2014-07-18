@@ -115,6 +115,12 @@ void Shader::getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer)
     getSourceImpl(mHlsl, bufSize, length, buffer);
 }
 
+unsigned int Shader::getUniformRegister(const std::string &uniformName) const
+{
+    ASSERT(mUniformRegisterMap.count(uniformName) > 0);
+    return mUniformRegisterMap.find(uniformName)->second;
+}
+
 unsigned int Shader::getInterfaceBlockRegister(const std::string &blockName) const
 {
     ASSERT(mInterfaceBlockRegisterMap.count(blockName) > 0);
@@ -372,6 +378,18 @@ void Shader::compileToHLSL(void *compiler)
         void *activeUniforms;
         ShGetInfoPointer(compiler, SH_ACTIVE_UNIFORMS_ARRAY, &activeUniforms);
         mActiveUniforms = *(std::vector<sh::Uniform>*)activeUniforms;
+
+        for (size_t uniformIndex = 0; uniformIndex < mActiveUniforms.size(); uniformIndex++)
+        {
+            const sh::Uniform &uniform = mActiveUniforms[uniformIndex];
+
+            unsigned int index = -1;
+            bool result = ShGetUniformRegister(compiler, uniform.name.c_str(), &index);
+            UNUSED_ASSERTION_VARIABLE(result);
+            ASSERT(result);
+
+            mUniformRegisterMap[uniform.name] = index;
+        }
 
         void *activeInterfaceBlocks;
         ShGetInfoPointer(compiler, SH_ACTIVE_INTERFACE_BLOCKS_ARRAY, &activeInterfaceBlocks);
