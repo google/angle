@@ -34,6 +34,24 @@
       "revId": "2c00951ae861ba59d81b8c6a1e31fe40b12e916e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99df387f_2b3969ec",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-18T18:38:44Z",
+      "side": 1,
+      "message": "Why would order matter for stateless functions?",
+      "parentUuid": "79e44451_879a2a92",
+      "revId": "2c00951ae861ba59d81b8c6a1e31fe40b12e916e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
