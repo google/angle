@@ -123,12 +123,13 @@ unsigned int UniformHLSL::declareUniformAndAssignRegister(const TType &type, con
 {
     unsigned int registerIndex = (IsSampler(type.getBasicType()) ? mSamplerRegister : mUniformRegister);
 
-    declareUniformToList(type, name, registerIndex, &mActiveUniforms);
+    GetVariableTraverser<Uniform> traverser(&mActiveUniforms);
+    traverser.traverse(type, name);
 
     const sh::Uniform &activeUniform = mActiveUniforms.back();
-    unsigned int registerCount = HLSLVariableRegisterCount(activeUniform, mOutputType);
     mUniformRegisterMap[activeUniform.name] = registerIndex;
 
+    unsigned int registerCount = HLSLVariableRegisterCount(activeUniform, mOutputType);
     if (IsSampler(type.getBasicType()))
     {
         mSamplerRegister += registerCount;
@@ -139,43 +140,6 @@ unsigned int UniformHLSL::declareUniformAndAssignRegister(const TType &type, con
     }
 
     return registerIndex;
-}
-
-class DeclareUniformsTraverser : public GetVariableTraverser<Uniform>
-{
-  public:
-    DeclareUniformsTraverser(std::vector<Uniform> *output,
-                             unsigned int registerIndex,
-                             ShShaderOutput outputType)
-        : GetVariableTraverser(output),
-          mRegisterIndex(registerIndex),
-          mOutputType(outputType)
-    {}
-
-  private:
-    virtual void visitVariable(Uniform *uniform)
-    {
-        if (!uniform->isStruct())
-        {
-            uniform->registerIndex = mRegisterIndex;
-            uniform->elementIndex = 0;
-        }
-        else
-        {
-            // Assign register offset information.
-            // This will override the offsets in any nested structures.
-            HLSLVariableGetRegisterInfo(mRegisterIndex, uniform, mOutputType);
-        }
-    }
-
-    unsigned int mRegisterIndex;
-    ShShaderOutput mOutputType;
-};
-
-void UniformHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, std::vector<Uniform> *output)
-{
-    DeclareUniformsTraverser traverser(output, registerIndex, mOutputType);
-    traverser.traverse(type, name);
 }
 
 TString UniformHLSL::uniformsHeader(ShShaderOutput outputType, const ReferencedSymbols &referencedUniforms)

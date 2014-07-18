@@ -39,13 +39,12 @@ template <typename VarT>
 class GetVariableTraverser
 {
   public:
+    GetVariableTraverser(std::vector<VarT> *output);
     void traverse(const TType &type, const TString &name);
 
   protected:
-    GetVariableTraverser(std::vector<VarT> *output);
-
-    // Must be overloaded
-    virtual void visitVariable(VarT *newVar) = 0;
+    // May be overloaded
+    virtual void visitVariable(VarT *newVar) {}
 
   private:
     std::stack<std::vector<VarT> *> mOutputStack;

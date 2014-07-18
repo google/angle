@@ -104,10 +104,6 @@ class HLSLBlockEncoder : public BlockLayoutEncoder
 // This method returns the data size of an interface block in HLSL, according to its layout.
 size_t HLSLInterfaceBlockDataSize(const sh::InterfaceBlock &interfaceBlock);
 
-// This method assigns values to the variable's "registerIndex" and "elementIndex" fields.
-// "elementIndex" is only used for structures.
-void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, Uniform *variable, ShShaderOutput outputType);
-
 // This method returns the number of used registers for a ShaderVariable. It is dependent on the HLSLBlockEncoder
 // class to count the number of used registers in a struct (which are individually packed according to the same rules).
 unsigned int HLSLVariableRegisterCount(const Varying &variable);

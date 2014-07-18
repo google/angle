@@ -288,52 +288,6 @@ size_t HLSLInterfaceBlockDataSize(const sh::InterfaceBlock &interfaceBlock)
     }
 }
 
-void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, Uniform *variable, HLSLBlockEncoder *encoder,
-                                 const std::vector<BlockMemberInfo> &blockInfo, ShShaderOutput outputType)
-{
-    // because this method computes offsets (element indexes) instead of any total sizes,
-    // we can ignore the array size of the variable
-
-    if (variable->isStruct())
-    {
-        encoder->enterAggregateType();
-
-        variable->registerIndex = baseRegisterIndex;
-
-        for (size_t fieldIndex = 0; fieldIndex < variable->fields.size(); fieldIndex++)
-        {
-            HLSLVariableGetRegisterInfo(baseRegisterIndex, &variable->fields[fieldIndex], encoder, blockInfo, outputType);
-        }
-
-        // Since the above loop only encodes one element of an array, ensure we don't lose track of the
-        // current register offset
-        if (variable->isArray())
-        {
-            unsigned int structRegisterCount = (HLSLVariableRegisterCount(*variable, outputType) / variable->arraySize);
-            encoder->skipRegisters(structRegisterCount * (variable->arraySize - 1));
-        }
-
-        encoder->exitAggregateType();
-    }
-    else
-    {
-        encoder->encodeType(variable->type, variable->arraySize, false);
-
-        const size_t registerBytes = (encoder->BytesPerComponent * encoder->ComponentsPerRegister);
-        variable->registerIndex = baseRegisterIndex + (blockInfo.back().offset / registerBytes);
-        variable->elementIndex = (blockInfo.back().offset % registerBytes) / sizeof(float);
-    }
-}
-
-void HLSLVariableGetRegisterInfo(unsigned int baseRegisterIndex, Uniform *variable, ShShaderOutput outputType)
-{
-    std::vector<BlockMemberInfo> blockInfo;
-    HLSLBlockEncoder encoder(&blockInfo,
-                             outputType == SH_HLSL9_OUTPUT ? HLSLBlockEncoder::ENCODE_LOOSE
-                                                           : HLSLBlockEncoder::ENCODE_PACKED);
-    HLSLVariableGetRegisterInfo(baseRegisterIndex, variable, &encoder, blockInfo, outputType);
-}
-
 template <class ShaderVarType>
 void HLSLVariableRegisterCount(const ShaderVarType &variable, HLSLBlockEncoder *encoder)
 {
