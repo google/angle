@@ -16,6 +16,24 @@
       "revId": "8448bb3258783326b696b5705d6b1646ec6aa11c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ee4c35_08810b40",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-18T18:11:11Z",
+      "side": 1,
+      "message": "I wanted to avoid changing the ShaderLang.h file until I add the new APIs... see next patch, I do just as you suggest and include ShaderVars.h there.",
+      "parentUuid": "d97e1025_fd1188bc",
+      "revId": "8448bb3258783326b696b5705d6b1646ec6aa11c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
