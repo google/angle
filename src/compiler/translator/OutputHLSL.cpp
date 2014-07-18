@@ -29,6 +29,18 @@
 namespace sh
 {
 
+static sh::Attribute MakeAttributeFromType(const TType &type, const TString &name)
+{
+    sh::Attribute attributeVar;
+    attributeVar.type = GLVariableType(type);
+    attributeVar.precision = GLVariablePrecision(type);
+    attributeVar.name = name.c_str();
+    attributeVar.arraySize = static_cast<unsigned int>(type.getArraySize());
+    attributeVar.location = type.getLayoutQualifier().location;
+
+    return attributeVar;
+}
+
 TString OutputHLSL::TextureFunction::name() const
 {
     TString name = "gl_texture";
@@ -335,8 +347,7 @@ void OutputHLSL::header()
 
         attributes += "static " + TypeString(type) + " " + Decorate(name) + ArrayString(type) + " = " + initializer(type) + ";\n";
 
-        sh::Attribute attributeVar(GLVariableType(type), GLVariablePrecision(type), name.c_str(),
-                               (unsigned int)type.getArraySize(), type.getLayoutQualifier().location);
+        sh::Attribute attributeVar = MakeAttributeFromType(type, name);
         mActiveAttributes.push_back(attributeVar);
     }
 
@@ -370,13 +381,11 @@ void OutputHLSL::header()
             {
                 const TString &variableName = outputVariableIt->first;
                 const TType &variableType = outputVariableIt->second->getType();
-                const TLayoutQualifier &layoutQualifier = variableType.getLayoutQualifier();
 
                 out << "static " + TypeString(variableType) + " out_" + variableName + ArrayString(variableType) +
                        " = " + initializer(variableType) + ";\n";
 
-                sh::Attribute outputVar(GLVariableType(variableType), GLVariablePrecision(variableType), variableName.c_str(),
-                                    (unsigned int)variableType.getArraySize(), layoutQualifier.location);
+                sh::Attribute outputVar = MakeAttributeFromType(variableType, variableName);
                 mActiveOutputVariables.push_back(outputVar);
             }
         }

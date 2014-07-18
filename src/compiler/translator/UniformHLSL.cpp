@@ -162,7 +162,10 @@ TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedIn
         unsigned int arraySize = static_cast<unsigned int>(interfaceBlock.arraySize());
         unsigned int activeRegister = mInterfaceBlockRegister;
 
-        InterfaceBlock activeBlock(interfaceBlock.name().c_str(), arraySize);
+        InterfaceBlock activeBlock;
+        activeBlock.name = interfaceBlock.name().c_str();
+        activeBlock.arraySize = arraySize;
+
         for (unsigned int typeIndex = 0; typeIndex < fieldList.size(); typeIndex++)
         {
             const TField &field = *fieldList[typeIndex];

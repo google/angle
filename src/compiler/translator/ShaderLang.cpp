@@ -468,7 +468,7 @@ int ShCheckVariablesWithinPackingLimits(
     std::vector<sh::ShaderVariable> variables;
     for (size_t ii = 0; ii < varInfoArraySize; ++ii)
     {
-        sh::ShaderVariable var(varInfoArray[ii].type, (sh::GLenum)0, "", varInfoArray[ii].size);
+        sh::ShaderVariable var(varInfoArray[ii].type, varInfoArray[ii].size);
         variables.push_back(var);
     }
     VariablePacker packer;
