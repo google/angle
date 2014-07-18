@@ -88,6 +88,24 @@
       "revId": "2c00951ae861ba59d81b8c6a1e31fe40b12e916e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79e44451_27535ef9",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-18T18:49:41Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s not necessary by any means, just a minor cleanup. Still LGTM.",
+      "parentUuid": "99df387f_0b58e535",
+      "revId": "2c00951ae861ba59d81b8c6a1e31fe40b12e916e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
