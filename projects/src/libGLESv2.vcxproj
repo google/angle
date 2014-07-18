@@ -380,6 +380,7 @@
     <ClCompile Include="..\..\src\common\event_tracer.cpp"/>
     <ClCompile Include="..\..\src\common\RefCountObject.cpp"/>
     <ClCompile Include="..\..\src\common\tls.cpp"/>
+    <ClCompile Include="..\..\src\common\shadervars.cpp"/>
     <ClCompile Include="..\..\src\common\utilities.cpp"/>
     <ClCompile Include="..\..\src\common\mathutil.cpp"/>
     <ClCompile Include="..\..\src\common\debug.cpp"/>

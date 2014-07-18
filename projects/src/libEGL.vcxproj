@@ -158,6 +158,7 @@
     <ClCompile Include="..\..\src\common\debug.cpp"/>
     <ClCompile Include="..\..\src\common\event_tracer.cpp"/>
     <ClCompile Include="..\..\src\common\utilities.cpp"/>
+    <ClCompile Include="..\..\src\common\shadervars.cpp"/>
     <ClCompile Include="..\..\src\common\blocklayout.cpp"/>
   </ItemGroup>
   <ItemGroup>
