@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d97e1025_fd1188bc",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-18T18:05:40Z",
+      "side": 1,
+      "message": "I don\u0027t see why you need ShaderLang.h here except for the GLenum and InterpolationType.  It should be the opposite way (ShaderLang.h includes this file instead)",
+      "revId": "8448bb3258783326b696b5705d6b1646ec6aa11c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
