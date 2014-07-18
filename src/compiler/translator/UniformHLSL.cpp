@@ -18,35 +18,6 @@
 namespace sh
 {
 
-// Use the same layout for packed and shared
-static void SetBlockLayout(InterfaceBlock *interfaceBlock, BlockLayoutType newLayout)
-{
-    interfaceBlock->layout = newLayout;
-    interfaceBlock->blockInfo.clear();
-
-    switch (newLayout)
-    {
-      case BLOCKLAYOUT_SHARED:
-      case BLOCKLAYOUT_PACKED:
-        {
-            HLSLBlockEncoder hlslEncoder(&interfaceBlock->blockInfo, HLSLBlockEncoder::ENCODE_PACKED);
-            hlslEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
-        }
-        break;
-
-      case BLOCKLAYOUT_STANDARD:
-        {
-            Std140BlockEncoder stdEncoder(&interfaceBlock->blockInfo);
-            stdEncoder.encodeInterfaceBlockFields(interfaceBlock->fields);
-        }
-        break;
-
-      default:
-        UNREACHABLE();
-        break;
-    }
-}
-
 static const char *UniformRegisterPrefix(const TType &type)
 {
     if (IsSampler(type.getBasicType()))
@@ -205,8 +176,7 @@ TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedIn
         mInterfaceBlockRegisterMap[activeBlock.name] = activeRegister;
         mInterfaceBlockRegister += std::max(1u, arraySize);
 
-        BlockLayoutType blockLayoutType = GetBlockLayoutType(interfaceBlock.blockStorage());
-        SetBlockLayout(&activeBlock, blockLayoutType);
+        activeBlock.layout = GetBlockLayoutType(interfaceBlock.blockStorage());
 
         if (interfaceBlock.matrixPacking() == EmpRowMajor)
         {

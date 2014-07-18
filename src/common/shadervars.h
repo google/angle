@@ -126,28 +126,6 @@ struct Varying : public ShaderVariable
     std::string structName;
 };
 
-struct BlockMemberInfo
-{
-    BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
-        : offset(offset),
-          arrayStride(arrayStride),
-          matrixStride(matrixStride),
-          isRowMajorMatrix(isRowMajorMatrix)
-    {}
-
-    static BlockMemberInfo getDefaultBlockInfo()
-    {
-        return BlockMemberInfo(-1, -1, -1, false);
-    }
-
-    int offset;
-    int arrayStride;
-    int matrixStride;
-    bool isRowMajorMatrix;
-};
-
-typedef std::vector<BlockMemberInfo> BlockMemberInfoArray;
-
 struct InterfaceBlock
 {
     InterfaceBlock()
@@ -172,7 +150,6 @@ struct InterfaceBlock
     bool isRowMajorLayout;
     bool staticUse;
     std::vector<InterfaceBlockField> fields;
-    std::vector<BlockMemberInfo> blockInfo;
 };
 
 }
