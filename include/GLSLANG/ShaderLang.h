@@ -188,6 +188,11 @@ typedef enum {
   // This flag scalarizes vec/ivec/bvec/mat constructor args.
   // It is intended as a workaround for Linux/Mac driver bugs.
   SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS = 0x40000,
+
+  // This flag overwrites a struct name with a unique prefix.
+  // It is intended as a workaround for drivers that do not handle
+  // struct scopes correctly, including all Mac drivers and Linux AMD.
+  SH_REGENERATE_STRUCT_NAMES = 0x80000,
 } ShCompileOptions;
 
 // Defines alternate strategies for implementing array index clamping.

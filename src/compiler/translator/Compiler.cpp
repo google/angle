@@ -12,6 +12,7 @@
 #include "compiler/translator/InitializeParseContext.h"
 #include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/ParseContext.h"
+#include "compiler/translator/RegenerateStructNames.h"
 #include "compiler/translator/RenameFunction.h"
 #include "compiler/translator/ScalarizeVecAndMatConstructorArgs.h"
 #include "compiler/translator/UnfoldShortCircuitAST.h"
@@ -259,6 +260,12 @@ bool TCompiler::compile(const char* const shaderStrings[],
         {
             ScalarizeVecAndMatConstructorArgs scalarizer;
             root->traverse(&scalarizer);
+        }
+
+        if (success && (compileOptions & SH_REGENERATE_STRUCT_NAMES))
+        {
+            RegenerateStructNames gen(symbolTable, shaderVersion);
+            root->traverse(&gen);
         }
 
         if (success && (compileOptions & SH_INTERMEDIATE_TREE))

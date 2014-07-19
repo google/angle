@@ -140,6 +140,17 @@ class TStructure : public TFieldListCollection
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TStructure);
+
+    // TODO(zmo): Find a way to get rid of the const_cast in function
+    // setName().  At the moment keep this function private so only
+    // friend class RegenerateStructNames may call it.
+    friend class RegenerateStructNames;
+    void setName(const TString &name)
+    {
+        TString *mutableName = const_cast<TString *>(mName);
+        *mutableName = name;
+    }
+
     virtual TString mangledNamePrefix() const
     {
         return "struct-";
