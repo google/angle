@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "590220bc_219d148c",
+        "filename": "tests/angle_tests/ClearTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-21T17:27:37Z",
+      "side": 1,
+      "message": "should delete mFBO",
+      "revId": "db3216f7efcf941263e03fc80d43f9e01b5e856c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
