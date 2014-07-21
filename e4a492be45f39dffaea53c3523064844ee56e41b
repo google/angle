@@ -34,6 +34,24 @@
       "revId": "e4a492be45f39dffaea53c3523064844ee56e41b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ee4c35_8bda3021",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2014-07-21T20:04:31Z",
+      "side": 1,
+      "message": "I don\u0027t have bug editing permissions for angle, so I can\u0027t cc people on bugs I file. Will they still be looked at? If so, I\u0027ll file a few (5-ish) issues similar to this report.",
+      "parentUuid": "590220bc_7e6a0927",
+      "revId": "e4a492be45f39dffaea53c3523064844ee56e41b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
