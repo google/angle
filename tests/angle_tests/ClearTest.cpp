@@ -12,6 +12,7 @@ protected:
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
+        setClientVersion(3);
     }
 
     virtual void SetUp()
@@ -44,22 +45,26 @@ protected:
         {
             FAIL() << "shader compilation failed.";
         }
+
+        glGenFramebuffers(1, &mFBO);
+
+        ASSERT_GL_NO_ERROR();
     }
 
     virtual void TearDown()
     {
         glDeleteProgram(mProgram);
+        glDeleteFramebuffers(1, &mFBO);
 
         ANGLETest::TearDown();
     }
 
     GLuint mProgram;
+    GLuint mFBO;
 };
 
 TEST_F(ClearTest, ClearIssue)
 {
-    EXPECT_GL_NO_ERROR();
-
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
@@ -69,9 +74,7 @@ TEST_F(ClearTest, ClearIssue)
 
     EXPECT_GL_NO_ERROR();
 
-    GLuint fbo;
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 
     GLuint rbo;
     glGenRenderbuffers(1, &rbo);
@@ -96,4 +99,42 @@ TEST_F(ClearTest, ClearIssue)
     drawQuad(mProgram, "position", 0.5f);
 
     EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+}
+
+// Requires ES3
+// This tests a bug where in a masked clear when calling "ClearBuffer", we would
+// mistakenly clear every channel (including the masked-out ones)
+TEST_F(ClearTest, MaskedClearBufferBug)
+{
+    unsigned char pixelData[] = { 255, 255, 255, 255 };
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+
+    GLuint textures[2];
+    glGenTextures(2, &textures[0]);
+
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
+
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, textures[1], 0);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(0, 0, 255, 255, 255, 255);
+
+    float clearValue[] = { 0, 0.5f, 0.5f, 1.0f };
+    GLenum drawBuffers[] = { GL_NONE, GL_COLOR_ATTACHMENT1 };
+    glDrawBuffers(2, drawBuffers);
+    glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+    glClearBufferfv(GL_COLOR, 1, clearValue);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(0, 0, 255, 255, 255, 255);
+
+    // TODO: glReadBuffer support
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, 0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
+    EXPECT_PIXEL_EQ(0, 0, 0, 127, 255, 255);
 }

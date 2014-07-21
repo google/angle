@@ -41,7 +41,13 @@ class Clear11
     typedef std::map<ClearBlendInfo, ID3D11BlendState*, ClearBlendInfoComparisonFunction> ClearBlendStateMap;
     ClearBlendStateMap mClearBlendStates;
 
-    ID3D11BlendState *getBlendState(const gl::ClearParameters &clearParams, const std::vector<RenderTarget11*>& rts);
+    struct MaskedRenderTarget
+    {
+        bool colorMask[4];
+        RenderTarget11 *renderTarget;
+    };
+
+    ID3D11BlendState *getBlendState(const std::vector<MaskedRenderTarget> &rts);
 
     struct ClearShader
     {
