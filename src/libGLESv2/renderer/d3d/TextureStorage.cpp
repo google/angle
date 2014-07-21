@@ -117,7 +117,7 @@ void TextureStorageInterfaceCube::generateMipmap(int faceIndex, int level)
 
 unsigned int TextureStorageInterfaceCube::getRenderTargetSerial(GLenum target, GLint level) const
 {
-    return mFirstRenderTargetSerial + (level * 6) + TextureD3D_Cube::targetToIndex(target);
+    return mFirstRenderTargetSerial + (level * 6) + gl::TextureCubeMap::targetToLayerIndex(target);
 }
 
 TextureStorageInterface3D::TextureStorageInterface3D(Renderer *renderer, GLenum internalformat, bool renderTarget,

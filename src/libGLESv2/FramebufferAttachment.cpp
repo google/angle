@@ -95,7 +95,7 @@ rx::RenderTarget *Texture2DAttachment::getRenderTarget()
 
 rx::RenderTarget *Texture2DAttachment::getDepthStencil()
 {
-    return mTexture2D->getDepthSencil(mLevel);
+    return mTexture2D->getDepthStencil(mLevel);
 }
 
 rx::TextureStorage *Texture2DAttachment::getTextureStorage()

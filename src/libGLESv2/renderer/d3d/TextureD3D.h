@@ -88,7 +88,8 @@ class TextureD3D_2D : public Texture2DImpl, public TextureD3D
 
     virtual TextureStorageInterface *getNativeTexture();
 
-    virtual Image *getImage(int level) const;
+    virtual Image *getImage(int level, int layer) const;
+    virtual GLsizei getLayerCount(int level) const;
 
     virtual void setUsage(GLenum usage);
 
@@ -98,13 +99,13 @@ class TextureD3D_2D : public Texture2DImpl, public TextureD3D
     GLenum getActualFormat(GLint level) const;
     bool isDepth(GLint level) const;
 
-    virtual void setImage(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
-    virtual void subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
-    virtual void copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual void setImage(GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
+    virtual void subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
+    virtual void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
+    virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
     virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
     virtual void bindTexImage(egl::Surface *surface);
@@ -112,10 +113,10 @@ class TextureD3D_2D : public Texture2DImpl, public TextureD3D
 
     virtual void generateMipmaps();
 
-    virtual unsigned int getRenderTargetSerial(GLint level);
+    virtual unsigned int getRenderTargetSerial(GLint level, GLint layer);
 
-    virtual RenderTarget *getRenderTarget(GLint level);
-    virtual RenderTarget *getDepthSencil(GLint level);
+    virtual RenderTarget *getRenderTarget(GLint level, GLint layer);
+    virtual RenderTarget *getDepthStencil(GLint level, GLint layer);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2D);
@@ -135,7 +136,7 @@ class TextureD3D_2D : public Texture2DImpl, public TextureD3D
 
     void updateStorageLevel(int level);
 
-    virtual void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height);
+    void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     TextureStorageInterface2D *mTexStorage;
@@ -152,32 +153,31 @@ class TextureD3D_Cube : public TextureCubeImpl, public TextureD3D
 
     virtual TextureStorageInterface *getNativeTexture();
 
-    virtual Image *getImage(GLenum target, int level) const;
+    virtual Image *getImage(int level, int layer) const;
+    virtual GLsizei getLayerCount(int level) const;
 
     virtual void setUsage(GLenum usage);
 
-    GLenum getInternalFormat(GLenum target, GLint level) const;
-    bool isDepth(GLenum target, GLint level) const;
+    GLenum getInternalFormat(GLint level, GLint layer) const;
+    bool isDepth(GLint level, GLint layer) const;
 
-    virtual void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual void setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
-    virtual void subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual void subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
+    virtual void setImage(GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
+    virtual void subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
     virtual void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual void storage(GLsizei levels, GLenum internalformat, GLsizei size);
+    virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
     virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
     virtual bool isCubeComplete() const;
 
     virtual void generateMipmaps();
 
-    virtual unsigned int getRenderTargetSerial(GLenum target, GLint level);
+    virtual unsigned int getRenderTargetSerial(GLint level, GLint layer);
 
-    virtual RenderTarget *getRenderTarget(GLenum target, GLint level);
-    virtual RenderTarget *getDepthStencil(GLenum target, GLint level);
-
-    static int targetToIndex(GLenum target);
+    virtual RenderTarget *getRenderTarget(GLint level, GLint layer);
+    virtual RenderTarget *getDepthStencil(GLint level, GLint layer);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_Cube);
@@ -214,7 +214,8 @@ class TextureD3D_3D : public Texture3DImpl, public TextureD3D
 
     virtual TextureStorageInterface *getNativeTexture();
 
-    virtual Image *getImage(int level) const;
+    virtual Image *getImage(int level, int layer) const;
+    virtual GLsizei getLayerCount(int level) const;
 
     virtual void setUsage(GLenum usage);
 
@@ -224,12 +225,13 @@ class TextureD3D_3D : public Texture3DImpl, public TextureD3D
     GLenum getInternalFormat(GLint level) const;
     bool isDepth(GLint level) const;
 
-    virtual void setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
-    virtual void subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
+    virtual void setImage(GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
+    virtual void subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
+    virtual void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+    virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
     virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
 
@@ -287,12 +289,13 @@ class TextureD3D_2DArray : public Texture2DArrayImpl, public TextureD3D
     GLenum getInternalFormat(GLint level) const;
     bool isDepth(GLint level) const;
 
-    virtual void setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
-    virtual void subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
+    virtual void setImage(GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
+    virtual void subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
+    virtual void subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
+    virtual void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+    virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
     virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
 
