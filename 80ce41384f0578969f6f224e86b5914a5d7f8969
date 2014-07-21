@@ -22,6 +22,23 @@
       "revId": "80ce41384f0578969f6f224e86b5914a5d7f8969",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d91530f5_ba8ca92b",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-07-21T18:00:04Z",
+      "side": 1,
+      "message": "This mutation of the TStructure\u0027s name does not look good to me. There must be a reason mName is const; perhaps it\u0027s because these objects are stored in hash tables, and mutating the name would prevent them from being looked up again later. Please find a different solution that doesn\u0027t involve breaking the invariants of this class.",
+      "revId": "80ce41384f0578969f6f224e86b5914a5d7f8969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
