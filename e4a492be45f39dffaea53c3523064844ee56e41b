@@ -16,6 +16,24 @@
       "revId": "e4a492be45f39dffaea53c3523064844ee56e41b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "590220bc_7e6a0927",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-21T15:25:30Z",
+      "side": 1,
+      "message": "Thanks for the report! See https://code.google.com/p/angleproject/issues/detail?id\u003d702. In the future it\u0027s easier to respond to bug reports on the google code issue tracker than in closed reviews, so please open them there. (But still thanks)",
+      "parentUuid": "790d24e9_e77b2100",
+      "revId": "e4a492be45f39dffaea53c3523064844ee56e41b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
