@@ -18,6 +18,8 @@ namespace rx
 class BufferImpl
 {
   public:
+    virtual ~BufferImpl() { }
+
     virtual void setData(const void* data, size_t size, GLenum usage) = 0;
     virtual void *getData() = 0;
     virtual void setSubData(const void* data, size_t size, size_t offset) = 0;

@@ -19,6 +19,8 @@ namespace rx
 class VertexArrayImpl
 {
   public:
+    virtual ~VertexArrayImpl() { }
+
     virtual void setElementArrayBuffer(const gl::Buffer *buffer) = 0;
     virtual void setAttribute(size_t idx, const gl::VertexAttribute &attr) = 0;
     virtual void setAttributeDivisor(size_t idx, GLuint divisor) = 0;
