@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "590220bc_12adbc70",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-22T14:33:11Z",
+      "side": 1,
+      "message": "can you use ANGLE_TRY here?",
+      "range": {
+        "startLine": 117,
+        "startChar": 4,
+        "endLine": 117,
+        "endChar": 7
+      },
+      "revId": "081424248ed29de90ce90fbbfe3811ef20f6bf5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79e44451_ca4b92e9",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-22T14:33:11Z",
+      "side": 1,
+      "message": "same deal",
+      "range": {
+        "startLine": 181,
+        "startChar": 4,
+        "endLine": 181,
+        "endChar": 9
+      },
+      "revId": "081424248ed29de90ce90fbbfe3811ef20f6bf5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
