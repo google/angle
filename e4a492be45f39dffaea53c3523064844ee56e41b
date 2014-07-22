@@ -52,6 +52,24 @@
       "revId": "e4a492be45f39dffaea53c3523064844ee56e41b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79e44451_caed52db",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-22T02:15:05Z",
+      "side": 1,
+      "message": "We check the tracker for activity. Don\u0027t worry, we\u0027ll see the reports. :)",
+      "parentUuid": "39ee4c35_8bda3021",
+      "revId": "e4a492be45f39dffaea53c3523064844ee56e41b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
