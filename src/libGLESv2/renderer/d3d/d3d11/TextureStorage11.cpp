@@ -356,7 +356,7 @@ void TextureStorage11::generateMipmapLayer(RenderTarget11 *source, RenderTarget1
             Blit11 *blitter = mRenderer->getBlitter();
 
             blitter->copyTexture(sourceSRV, sourceArea, sourceSize, destRTV, destArea, destSize, NULL,
-                                 gl::GetFormat(source->getInternalFormat()), GL_LINEAR);
+                                 gl::GetInternalFormatInfo(source->getInternalFormat()).format, GL_LINEAR);
         }
     }
 }

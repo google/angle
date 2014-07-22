@@ -122,7 +122,7 @@ void PixelTransfer11::setBufferToTextureCopyParams(const gl::Box &destArea, cons
     float texelCenterX = 0.5f / static_cast<float>(destSize.width - 1);
     float texelCenterY = 0.5f / static_cast<float>(destSize.height - 1);
 
-    unsigned int bytesPerPixel = gl::GetPixelBytes(internalFormat);
+    unsigned int bytesPerPixel = gl::GetInternalFormatInfo(internalFormat).pixelBytes;
     unsigned int alignmentBytes = static_cast<unsigned int>(unpack.alignment);
     unsigned int alignmentPixels = (alignmentBytes <= bytesPerPixel ? 1 : alignmentBytes / bytesPerPixel);
 
@@ -157,8 +157,8 @@ bool PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpack, un
 
     // The SRV must be in the proper read format, which may be different from the destination format
     // EG: for half float data, we can load full precision floats with implicit conversion
-    GLenum unsizedFormat = gl::GetFormat(destinationFormat);
-    GLenum sourceFormat = gl::GetSizedInternalFormat(unsizedFormat, sourcePixelsType);
+    GLenum unsizedFormat = gl::GetInternalFormatInfo(destinationFormat).format;
+    GLenum sourceFormat = gl::GetFormatTypeInfo(unsizedFormat, sourcePixelsType).internalFormat;
 
     DXGI_FORMAT srvFormat = gl_d3d11::GetSRVFormat(sourceFormat);
     ASSERT(srvFormat != DXGI_FORMAT_UNKNOWN);
@@ -236,8 +236,7 @@ void PixelTransfer11::buildShaderMap()
 
 ID3D11PixelShader *PixelTransfer11::findBufferToTexturePS(GLenum internalFormat) const
 {
-    GLenum componentType = gl::GetComponentType(internalFormat);
-
+    GLenum componentType = gl::GetInternalFormatInfo(internalFormat).componentType;
     if (componentType == GL_SIGNED_NORMALIZED || componentType == GL_UNSIGNED_NORMALIZED)
     {
         componentType = GL_FLOAT;

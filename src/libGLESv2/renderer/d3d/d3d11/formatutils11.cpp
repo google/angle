@@ -780,34 +780,33 @@ static const SwizzleInfoMap &GetSwizzleInfoMap()
     return map;
 }
 
-static const SwizzleFormatInfo GetSwizzleFormatInfo(GLenum internalFormat)
+static const SwizzleFormatInfo &GetSwizzleFormatInfo(GLenum internalFormat)
 {
     // Get the maximum sized component
     unsigned int maxBits = 1;
 
-    if (gl::IsFormatCompressed(internalFormat))
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
+
+    if (formatInfo.compressed)
     {
-        unsigned int compressedBitsPerBlock = gl::GetPixelBytes(internalFormat) * 8;
-        unsigned int blockSize = gl::GetCompressedBlockWidth(internalFormat) *
-                                 gl::GetCompressedBlockHeight(internalFormat);
+        unsigned int compressedBitsPerBlock = formatInfo.pixelBytes * 8;
+        unsigned int blockSize = formatInfo.compressedBlockWidth * formatInfo.compressedBlockHeight;
         maxBits = std::max(compressedBitsPerBlock / blockSize, maxBits);
     }
     else
     {
-        maxBits = std::max(maxBits, gl::GetAlphaBits(    internalFormat));
-        maxBits = std::max(maxBits, gl::GetRedBits(      internalFormat));
-        maxBits = std::max(maxBits, gl::GetGreenBits(    internalFormat));
-        maxBits = std::max(maxBits, gl::GetBlueBits(     internalFormat));
-        maxBits = std::max(maxBits, gl::GetLuminanceBits(internalFormat));
-        maxBits = std::max(maxBits, gl::GetDepthBits(    internalFormat));
+        maxBits = std::max(maxBits, formatInfo.alphaBits);
+        maxBits = std::max(maxBits, formatInfo.redBits);
+        maxBits = std::max(maxBits, formatInfo.greenBits);
+        maxBits = std::max(maxBits, formatInfo.blueBits);
+        maxBits = std::max(maxBits, formatInfo.luminanceBits);
+        maxBits = std::max(maxBits, formatInfo.depthBits);
     }
 
     maxBits = roundUp(maxBits, 8U);
 
-    GLenum componentType = gl::GetComponentType(internalFormat);
-
     const SwizzleInfoMap &map = GetSwizzleInfoMap();
-    SwizzleInfoMap::const_iterator iter = map.find(SwizzleSizeType(maxBits, componentType));
+    SwizzleInfoMap::const_iterator iter = map.find(SwizzleSizeType(maxBits, formatInfo.componentType));
 
     if (iter != map.end())
     {
@@ -1105,7 +1104,7 @@ DXGI_FORMAT GetRenderableFormat(GLenum internalFormat)
 
 DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat)
 {
-    if (GetRTVFormat(internalFormat) == DXGI_FORMAT_UNKNOWN || gl::GetComponentCount(internalFormat) != 4)
+    if (GetRTVFormat(internalFormat) == DXGI_FORMAT_UNKNOWN || gl::GetInternalFormatInfo(internalFormat).componentCount != 4)
     {
         const SwizzleFormatInfo &swizzleInfo = GetSwizzleFormatInfo(internalFormat);
         return swizzleInfo.mTexFormat;
@@ -1118,7 +1117,7 @@ DXGI_FORMAT GetSwizzleTexFormat(GLint internalFormat)
 
 DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat)
 {
-    if (GetRTVFormat(internalFormat) == DXGI_FORMAT_UNKNOWN || gl::GetComponentCount(internalFormat) != 4)
+    if (GetRTVFormat(internalFormat) == DXGI_FORMAT_UNKNOWN || gl::GetInternalFormatInfo(internalFormat).componentCount != 4)
     {
         const SwizzleFormatInfo &swizzleInfo = GetSwizzleFormatInfo(internalFormat);
         return swizzleInfo.mSRVFormat;
@@ -1131,7 +1130,7 @@ DXGI_FORMAT GetSwizzleSRVFormat(GLint internalFormat)
 
 DXGI_FORMAT GetSwizzleRTVFormat(GLint internalFormat)
 {
-    if (GetRTVFormat(internalFormat) == DXGI_FORMAT_UNKNOWN || gl::GetComponentCount(internalFormat) != 4)
+    if (GetRTVFormat(internalFormat) == DXGI_FORMAT_UNKNOWN || gl::GetInternalFormatInfo(internalFormat).componentCount != 4)
     {
         const SwizzleFormatInfo &swizzleInfo = GetSwizzleFormatInfo(internalFormat);
         return swizzleInfo.mRTVFormat;

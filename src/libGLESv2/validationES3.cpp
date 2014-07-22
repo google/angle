@@ -22,6 +22,253 @@
 namespace gl
 {
 
+// ES3 has a specific set of permutations of internal formats, formats and types which are acceptable.
+struct ES3FormatCombination
+{
+    GLenum internalFormat;
+    GLenum format;
+    GLenum type;
+};
+
+bool operator<(const ES3FormatCombination& a, const ES3FormatCombination& b)
+{
+    return memcmp(&a, &b, sizeof(ES3FormatCombination)) < 0;
+}
+
+typedef std::set<ES3FormatCombination> ES3FormatCombinationSet;
+
+static inline void InsertES3FormatCombo(ES3FormatCombinationSet *set, GLenum internalFormat, GLenum format, GLenum type)
+{
+    ES3FormatCombination info;
+    info.internalFormat = internalFormat;
+    info.format = format;
+    info.type = type;
+    set->insert(info);
+}
+
+ES3FormatCombinationSet BuildES3FormatSet()
+{
+    ES3FormatCombinationSet set;
+
+    // Format combinations from ES 3.0.1 spec, table 3.2
+
+    //                        | Internal format      | Format            | Type                            |
+    //                        |                      |                   |                                 |
+    InsertES3FormatCombo(&set, GL_RGBA8,              GL_RGBA,            GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RGB5_A1,            GL_RGBA,            GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RGBA4,              GL_RGBA,            GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_SRGB8_ALPHA8,       GL_RGBA,            GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RGBA8_SNORM,        GL_RGBA,            GL_BYTE                          );
+    InsertES3FormatCombo(&set, GL_RGBA4,              GL_RGBA,            GL_UNSIGNED_SHORT_4_4_4_4        );
+    InsertES3FormatCombo(&set, GL_RGB10_A2,           GL_RGBA,            GL_UNSIGNED_INT_2_10_10_10_REV   );
+    InsertES3FormatCombo(&set, GL_RGB5_A1,            GL_RGBA,            GL_UNSIGNED_INT_2_10_10_10_REV   );
+    InsertES3FormatCombo(&set, GL_RGB5_A1,            GL_RGBA,            GL_UNSIGNED_SHORT_5_5_5_1        );
+    InsertES3FormatCombo(&set, GL_RGBA16F,            GL_RGBA,            GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_RGBA16F,            GL_RGBA,            GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_RGBA32F,            GL_RGBA,            GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_RGBA16F,            GL_RGBA,            GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_RGBA8UI,            GL_RGBA_INTEGER,    GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RGBA8I,             GL_RGBA_INTEGER,    GL_BYTE                          );
+    InsertES3FormatCombo(&set, GL_RGBA16UI,           GL_RGBA_INTEGER,    GL_UNSIGNED_SHORT                );
+    InsertES3FormatCombo(&set, GL_RGBA16I,            GL_RGBA_INTEGER,    GL_SHORT                         );
+    InsertES3FormatCombo(&set, GL_RGBA32UI,           GL_RGBA_INTEGER,    GL_UNSIGNED_INT                  );
+    InsertES3FormatCombo(&set, GL_RGBA32I,            GL_RGBA_INTEGER,    GL_INT                           );
+    InsertES3FormatCombo(&set, GL_RGB10_A2UI,         GL_RGBA_INTEGER,    GL_UNSIGNED_INT_2_10_10_10_REV   );
+    InsertES3FormatCombo(&set, GL_RGB8,               GL_RGB,             GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RGB565,             GL_RGB,             GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_SRGB8,              GL_RGB,             GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RGB8_SNORM,         GL_RGB,             GL_BYTE                          );
+    InsertES3FormatCombo(&set, GL_RGB565,             GL_RGB,             GL_UNSIGNED_SHORT_5_6_5          );
+    InsertES3FormatCombo(&set, GL_R11F_G11F_B10F,     GL_RGB,             GL_UNSIGNED_INT_10F_11F_11F_REV  );
+    InsertES3FormatCombo(&set, GL_RGB9_E5,            GL_RGB,             GL_UNSIGNED_INT_5_9_9_9_REV      );
+    InsertES3FormatCombo(&set, GL_RGB16F,             GL_RGB,             GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_RGB16F,             GL_RGB,             GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_R11F_G11F_B10F,     GL_RGB,             GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_R11F_G11F_B10F,     GL_RGB,             GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_RGB9_E5,            GL_RGB,             GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_RGB9_E5,            GL_RGB,             GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_RGB32F,             GL_RGB,             GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_RGB16F,             GL_RGB,             GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_R11F_G11F_B10F,     GL_RGB,             GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_RGB9_E5,            GL_RGB,             GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_RGB8UI,             GL_RGB_INTEGER,     GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RGB8I,              GL_RGB_INTEGER,     GL_BYTE                          );
+    InsertES3FormatCombo(&set, GL_RGB16UI,            GL_RGB_INTEGER,     GL_UNSIGNED_SHORT                );
+    InsertES3FormatCombo(&set, GL_RGB16I,             GL_RGB_INTEGER,     GL_SHORT                         );
+    InsertES3FormatCombo(&set, GL_RGB32UI,            GL_RGB_INTEGER,     GL_UNSIGNED_INT                  );
+    InsertES3FormatCombo(&set, GL_RGB32I,             GL_RGB_INTEGER,     GL_INT                           );
+    InsertES3FormatCombo(&set, GL_RG8,                GL_RG,              GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RG8_SNORM,          GL_RG,              GL_BYTE                          );
+    InsertES3FormatCombo(&set, GL_RG16F,              GL_RG,              GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_RG16F,              GL_RG,              GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_RG32F,              GL_RG,              GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_RG16F,              GL_RG,              GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_RG8UI,              GL_RG_INTEGER,      GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RG8I,               GL_RG_INTEGER,      GL_BYTE                          );
+    InsertES3FormatCombo(&set, GL_RG16UI,             GL_RG_INTEGER,      GL_UNSIGNED_SHORT                );
+    InsertES3FormatCombo(&set, GL_RG16I,              GL_RG_INTEGER,      GL_SHORT                         );
+    InsertES3FormatCombo(&set, GL_RG32UI,             GL_RG_INTEGER,      GL_UNSIGNED_INT                  );
+    InsertES3FormatCombo(&set, GL_RG32I,              GL_RG_INTEGER,      GL_INT                           );
+    InsertES3FormatCombo(&set, GL_R8,                 GL_RED,             GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_R8_SNORM,           GL_RED,             GL_BYTE                          );
+    InsertES3FormatCombo(&set, GL_R16F,               GL_RED,             GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_R16F,               GL_RED,             GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_R32F,               GL_RED,             GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_R16F,               GL_RED,             GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_R8UI,               GL_RED_INTEGER,     GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_R8I,                GL_RED_INTEGER,     GL_BYTE                          );
+    InsertES3FormatCombo(&set, GL_R16UI,              GL_RED_INTEGER,     GL_UNSIGNED_SHORT                );
+    InsertES3FormatCombo(&set, GL_R16I,               GL_RED_INTEGER,     GL_SHORT                         );
+    InsertES3FormatCombo(&set, GL_R32UI,              GL_RED_INTEGER,     GL_UNSIGNED_INT                  );
+    InsertES3FormatCombo(&set, GL_R32I,               GL_RED_INTEGER,     GL_INT                           );
+
+    // Unsized formats
+    InsertES3FormatCombo(&set, GL_RGBA,               GL_RGBA,            GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RGBA,               GL_RGBA,            GL_UNSIGNED_SHORT_4_4_4_4        );
+    InsertES3FormatCombo(&set, GL_RGBA,               GL_RGBA,            GL_UNSIGNED_SHORT_5_5_5_1        );
+    InsertES3FormatCombo(&set, GL_RGB,                GL_RGB,             GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_RGB,                GL_RGB,             GL_UNSIGNED_SHORT_5_6_5          );
+    InsertES3FormatCombo(&set, GL_LUMINANCE_ALPHA,    GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_LUMINANCE,          GL_LUMINANCE,       GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_ALPHA,              GL_ALPHA,           GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_SRGB_ALPHA_EXT,     GL_SRGB_ALPHA_EXT,  GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_SRGB_EXT,           GL_SRGB_EXT,        GL_UNSIGNED_BYTE                 );
+
+    // Depth stencil formats
+    InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT16,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT                );
+    InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT24,  GL_DEPTH_COMPONENT, GL_UNSIGNED_INT                  );
+    InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT16,  GL_DEPTH_COMPONENT, GL_UNSIGNED_INT                  );
+    InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_DEPTH24_STENCIL8,   GL_DEPTH_STENCIL,   GL_UNSIGNED_INT_24_8             );
+    InsertES3FormatCombo(&set, GL_DEPTH32F_STENCIL8,  GL_DEPTH_STENCIL,   GL_FLOAT_32_UNSIGNED_INT_24_8_REV);
+
+    // From GL_EXT_sRGB
+    InsertES3FormatCombo(&set, GL_SRGB8_ALPHA8_EXT,   GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE                  );
+    InsertES3FormatCombo(&set, GL_SRGB8,              GL_SRGB_EXT,       GL_UNSIGNED_BYTE                  );
+
+    // From GL_OES_texture_float
+    InsertES3FormatCombo(&set, GL_LUMINANCE_ALPHA,    GL_LUMINANCE_ALPHA, GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_LUMINANCE,          GL_LUMINANCE,       GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_ALPHA,              GL_ALPHA,           GL_FLOAT                         );
+
+    // From GL_OES_texture_half_float
+    InsertES3FormatCombo(&set, GL_LUMINANCE_ALPHA,    GL_LUMINANCE_ALPHA, GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_LUMINANCE_ALPHA,    GL_LUMINANCE_ALPHA, GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_LUMINANCE,          GL_LUMINANCE,       GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_LUMINANCE,          GL_LUMINANCE,       GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_ALPHA,              GL_ALPHA,           GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_ALPHA,              GL_ALPHA,           GL_HALF_FLOAT_OES                );
+
+    // From GL_EXT_texture_format_BGRA8888
+    InsertES3FormatCombo(&set, GL_BGRA_EXT,           GL_BGRA_EXT,        GL_UNSIGNED_BYTE                 );
+
+    // From GL_EXT_texture_storage
+    //                    | Internal format          | Format            | Type                            |
+    //                    |                          |                   |                                 |
+    InsertES3FormatCombo(&set, GL_ALPHA8_EXT,             GL_ALPHA,           GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_LUMINANCE8_EXT,         GL_LUMINANCE,       GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_LUMINANCE8_ALPHA8_EXT,  GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_ALPHA32F_EXT,           GL_ALPHA,           GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_LUMINANCE32F_EXT,       GL_LUMINANCE,       GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_LUMINANCE_ALPHA32F_EXT, GL_LUMINANCE_ALPHA, GL_FLOAT                         );
+    InsertES3FormatCombo(&set, GL_ALPHA16F_EXT,           GL_ALPHA,           GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_ALPHA16F_EXT,           GL_ALPHA,           GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_LUMINANCE16F_EXT,       GL_LUMINANCE,       GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_LUMINANCE16F_EXT,       GL_LUMINANCE,       GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_LUMINANCE_ALPHA16F_EXT, GL_LUMINANCE_ALPHA, GL_HALF_FLOAT                    );
+    InsertES3FormatCombo(&set, GL_LUMINANCE_ALPHA16F_EXT, GL_LUMINANCE_ALPHA, GL_HALF_FLOAT_OES                );
+
+    // From GL_EXT_texture_storage and GL_EXT_texture_format_BGRA8888
+    InsertES3FormatCombo(&set, GL_BGRA8_EXT,              GL_BGRA_EXT,        GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_BGRA4_ANGLEX,           GL_BGRA_EXT,        GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT);
+    InsertES3FormatCombo(&set, GL_BGRA4_ANGLEX,           GL_BGRA_EXT,        GL_UNSIGNED_BYTE                 );
+    InsertES3FormatCombo(&set, GL_BGR5_A1_ANGLEX,         GL_BGRA_EXT,        GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT);
+    InsertES3FormatCombo(&set, GL_BGR5_A1_ANGLEX,         GL_BGRA_EXT,        GL_UNSIGNED_BYTE                 );
+
+    // From GL_ANGLE_depth_texture
+    InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT32_OES,  GL_DEPTH_COMPONENT, GL_UNSIGNED_INT_24_8_OES         );
+
+    // Compressed formats
+    // From ES 3.0.1 spec, table 3.16
+    //                    | Internal format                             | Format                                      | Type           |
+    //                    |                                             |                                             |                |
+    InsertES3FormatCombo(&set, GL_COMPRESSED_R11_EAC,                        GL_COMPRESSED_R11_EAC,                        GL_UNSIGNED_BYTE);
+    InsertES3FormatCombo(&set, GL_COMPRESSED_R11_EAC,                        GL_COMPRESSED_R11_EAC,                        GL_UNSIGNED_BYTE);
+    InsertES3FormatCombo(&set, GL_COMPRESSED_SIGNED_R11_EAC,                 GL_COMPRESSED_SIGNED_R11_EAC,                 GL_UNSIGNED_BYTE);
+    InsertES3FormatCombo(&set, GL_COMPRESSED_RG11_EAC,                       GL_COMPRESSED_RG11_EAC,                       GL_UNSIGNED_BYTE);
+    InsertES3FormatCombo(&set, GL_COMPRESSED_SIGNED_RG11_EAC,                GL_COMPRESSED_SIGNED_RG11_EAC,                GL_UNSIGNED_BYTE);
+    InsertES3FormatCombo(&set, GL_COMPRESSED_RGB8_ETC2,                      GL_COMPRESSED_RGB8_ETC2,                      GL_UNSIGNED_BYTE);
+    InsertES3FormatCombo(&set, GL_COMPRESSED_SRGB8_ETC2,                     GL_COMPRESSED_SRGB8_ETC2,                     GL_UNSIGNED_BYTE);
+    InsertES3FormatCombo(&set, GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,  GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,  GL_UNSIGNED_BYTE);
+    InsertES3FormatCombo(&set, GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, GL_UNSIGNED_BYTE);
+    InsertES3FormatCombo(&set, GL_COMPRESSED_RGBA8_ETC2_EAC,                 GL_COMPRESSED_RGBA8_ETC2_EAC,                 GL_UNSIGNED_BYTE);
+    InsertES3FormatCombo(&set, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          GL_UNSIGNED_BYTE);
+
+
+    // From GL_EXT_texture_compression_dxt1
+    InsertES3FormatCombo(&set, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,              GL_COMPRESSED_RGB_S3TC_DXT1_EXT,              GL_UNSIGNED_BYTE);
+    InsertES3FormatCombo(&set, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,             GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,             GL_UNSIGNED_BYTE);
+
+    // From GL_ANGLE_texture_compression_dxt3
+    InsertES3FormatCombo(&set, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE,           GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE,           GL_UNSIGNED_BYTE);
+
+    // From GL_ANGLE_texture_compression_dxt5
+    InsertES3FormatCombo(&set, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE,           GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE,           GL_UNSIGNED_BYTE);
+
+    return set;
+}
+
+static bool ValidateTexImageFormatCombination(gl::Context *context, GLenum internalFormat, GLenum format, GLenum type)
+{
+    // Note: dEQP 2013.4 expects an INVALID_VALUE error for TexImage3D with an invalid
+    // internal format. (dEQP-GLES3.functional.negative_api.texture.teximage3d)
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format);
+    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    // The type and format are valid if any supported internal format has that type and format
+    bool formatSupported = false;
+    bool typeSupported = false;
+
+    static const ES3FormatCombinationSet es3FormatSet = BuildES3FormatSet();
+    for (ES3FormatCombinationSet::const_iterator i = es3FormatSet.begin(); i != es3FormatSet.end(); i++)
+    {
+        if (i->format == format || i->type == type)
+        {
+            const gl::InternalFormat &info = gl::GetInternalFormatInfo(i->internalFormat);
+            bool supported = info.textureSupport(context->getClientVersion(), context->getExtensions());
+            if (supported && formatInfo.type == type)
+            {
+                typeSupported = true;
+            }
+            if (supported && formatInfo.format == format)
+            {
+                formatSupported = true;
+            }
+        }
+    }
+
+    if (!typeSupported || !formatSupported)
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    // Check if this is a valid format combination to load texture data
+    ES3FormatCombination searchFormat;
+    searchFormat.internalFormat = internalFormat;
+    searchFormat.format = format;
+    searchFormat.type = type;
+
+    if (es3FormatSet.find(searchFormat) == es3FormatSet.end())
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return true;
+}
+
 bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint level, GLenum internalformat, bool isCompressed, bool isSubImage,
                                    GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                    GLint border, GLenum format, GLenum type, const GLvoid *pixels)
@@ -172,6 +419,7 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
 
     // Validate texture formats
     GLenum actualInternalFormat = isSubImage ? textureInternalFormat : internalformat;
+    const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(actualInternalFormat);
     if (isCompressed)
     {
         if (!ValidCompressedImageSize(context, actualInternalFormat, width, height))
@@ -179,7 +427,7 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
             return gl::error(GL_INVALID_OPERATION, false);
         }
 
-        if (!gl::IsFormatCompressed(actualInternalFormat))
+        if (!actualFormatInfo.compressed)
         {
             return gl::error(GL_INVALID_ENUM, false);
         }
@@ -191,18 +439,9 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
     }
     else
     {
-        // Note: dEQP 2013.4 expects an INVALID_VALUE error for TexImage3D with an invalid
-        // internal format. (dEQP-GLES3.functional.negative_api.texture.teximage3d)
-        if (!gl::IsValidInternalFormat(actualInternalFormat, context->getExtensions(), context->getClientVersion()) ||
-            !gl::IsValidFormat(format, context->getExtensions(), context->getClientVersion()) ||
-            !gl::IsValidType(type, context->getExtensions(), context->getClientVersion()))
+        if (!ValidateTexImageFormatCombination(context, internalformat, format, type))
         {
-            return gl::error(GL_INVALID_ENUM, false);
-        }
-
-        if (!gl::IsValidFormatCombination(actualInternalFormat, format, type, context->getExtensions(), context->getClientVersion()))
-        {
-            return gl::error(GL_INVALID_OPERATION, false);
+            return false;
         }
 
         if (target == GL_TEXTURE_3D && (format == GL_DEPTH_COMPONENT || format == GL_DEPTH_STENCIL))
@@ -262,10 +501,9 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
         size_t widthSize = static_cast<size_t>(width);
         size_t heightSize = static_cast<size_t>(height);
         size_t depthSize = static_cast<size_t>(depth);
-        GLenum sizedFormat = gl::IsSizedInternalFormat(actualInternalFormat) ? actualInternalFormat
-                                                                             : gl::GetSizedInternalFormat(actualInternalFormat, type);
+        GLenum sizedFormat = GetSizedInternalFormat(actualInternalFormat, type);
 
-        size_t pixelBytes = static_cast<size_t>(gl::GetPixelBytes(sizedFormat));
+        size_t pixelBytes = static_cast<size_t>(gl::GetInternalFormatInfo(sizedFormat).pixelBytes);
 
         if (!rx::IsUnsignedMultiplicationSafe(widthSize, heightSize) ||
             !rx::IsUnsignedMultiplicationSafe(widthSize * heightSize, depthSize) ||
@@ -287,7 +525,7 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
 
         // ...data is not evenly divisible into the number of bytes needed to store in memory a datum
         // indicated by type.
-        size_t dataBytesPerPixel = static_cast<size_t>(gl::GetTypeBytes(type));
+        size_t dataBytesPerPixel = static_cast<size_t>(gl::GetTypeInfo(type).bytes);
 
         if ((offset % dataBytesPerPixel) != 0)
         {
@@ -302,6 +540,290 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
     }
 
     return true;
+}
+
+struct EffectiveInternalFormatInfo
+{
+    GLenum mEffectiveFormat;
+    GLenum mDestFormat;
+    GLuint mMinRedBits;
+    GLuint mMaxRedBits;
+    GLuint mMinGreenBits;
+    GLuint mMaxGreenBits;
+    GLuint mMinBlueBits;
+    GLuint mMaxBlueBits;
+    GLuint mMinAlphaBits;
+    GLuint mMaxAlphaBits;
+
+    EffectiveInternalFormatInfo(GLenum effectiveFormat, GLenum destFormat, GLuint minRedBits, GLuint maxRedBits,
+                                GLuint minGreenBits, GLuint maxGreenBits, GLuint minBlueBits, GLuint maxBlueBits,
+                                GLuint minAlphaBits, GLuint maxAlphaBits)
+        : mEffectiveFormat(effectiveFormat), mDestFormat(destFormat), mMinRedBits(minRedBits),
+          mMaxRedBits(maxRedBits), mMinGreenBits(minGreenBits), mMaxGreenBits(maxGreenBits),
+          mMinBlueBits(minBlueBits), mMaxBlueBits(maxBlueBits), mMinAlphaBits(minAlphaBits),
+          mMaxAlphaBits(maxAlphaBits) {};
+};
+
+typedef std::vector<EffectiveInternalFormatInfo> EffectiveInternalFormatList;
+
+static EffectiveInternalFormatList BuildSizedEffectiveInternalFormatList()
+{
+    EffectiveInternalFormatList list;
+
+    // OpenGL ES 3.0.3 Specification, Table 3.17, pg 141: Effective internal format coresponding to destination internal format and
+    //                                                    linear source buffer component sizes.
+    //                                                                            | Source channel min/max sizes |
+    //                                         Effective Internal Format |  N/A   |  R   |  G   |  B   |  A      |
+    list.push_back(EffectiveInternalFormatInfo(GL_ALPHA8_EXT,              GL_NONE, 0,  0, 0,  0, 0,  0, 1, 8));
+    list.push_back(EffectiveInternalFormatInfo(GL_R8,                      GL_NONE, 1,  8, 0,  0, 0,  0, 0, 0));
+    list.push_back(EffectiveInternalFormatInfo(GL_RG8,                     GL_NONE, 1,  8, 1,  8, 0,  0, 0, 0));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB565,                  GL_NONE, 1,  5, 1,  6, 1,  5, 0, 0));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB8,                    GL_NONE, 6,  8, 7,  8, 6,  8, 0, 0));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGBA4,                   GL_NONE, 1,  4, 1,  4, 1,  4, 1, 4));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB5_A1,                 GL_NONE, 5,  5, 5,  5, 5,  5, 1, 1));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGBA8,                   GL_NONE, 5,  8, 5,  8, 5,  8, 2, 8));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB10_A2,                GL_NONE, 9, 10, 9, 10, 9, 10, 2, 2));
+
+    return list;
+}
+
+static EffectiveInternalFormatList BuildUnsizedEffectiveInternalFormatList()
+{
+    EffectiveInternalFormatList list;
+
+    // OpenGL ES 3.0.3 Specification, Table 3.17, pg 141: Effective internal format coresponding to destination internal format and
+    //                                                    linear source buffer component sizes.
+    //                                                                                        |          Source channel min/max sizes            |
+    //                                         Effective Internal Format |    Dest Format     |     R     |      G     |      B     |      A     |
+    list.push_back(EffectiveInternalFormatInfo(GL_ALPHA8_EXT,              GL_ALPHA,           0, UINT_MAX, 0, UINT_MAX, 0, UINT_MAX, 1,        8));
+    list.push_back(EffectiveInternalFormatInfo(GL_LUMINANCE8_EXT,          GL_LUMINANCE,       1,        8, 0, UINT_MAX, 0, UINT_MAX, 0, UINT_MAX));
+    list.push_back(EffectiveInternalFormatInfo(GL_LUMINANCE8_ALPHA8_EXT,   GL_LUMINANCE_ALPHA, 1,        8, 0, UINT_MAX, 0, UINT_MAX, 1,        8));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB565,                  GL_RGB,             1,        5, 1,        6, 1,        5, 0, UINT_MAX));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB8,                    GL_RGB,             6,        8, 7,        8, 6,        8, 0, UINT_MAX));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGBA4,                   GL_RGBA,            1,        4, 1,        4, 1,        4, 1,        4));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGB5_A1,                 GL_RGBA,            5,        5, 5,        5, 5,        5, 1,        1));
+    list.push_back(EffectiveInternalFormatInfo(GL_RGBA8,                   GL_RGBA,            5,        8, 5,        8, 5,        8, 5,        8));
+
+    return list;
+}
+
+static bool GetEffectiveInternalFormat(const InternalFormat &srcFormat, const InternalFormat &destFormat,
+                                       GLenum *outEffectiveFormat)
+{
+    const EffectiveInternalFormatList *list = NULL;
+    GLenum targetFormat = GL_NONE;
+
+    if (destFormat.pixelBytes > 0)
+    {
+        static const EffectiveInternalFormatList sizedList = BuildSizedEffectiveInternalFormatList();
+        list = &sizedList;
+    }
+    else
+    {
+        static const EffectiveInternalFormatList unsizedList = BuildUnsizedEffectiveInternalFormatList();
+        list = &unsizedList;
+        targetFormat = destFormat.format;
+    }
+
+    for (size_t curFormat = 0; curFormat < list->size(); ++curFormat)
+    {
+        const EffectiveInternalFormatInfo& formatInfo = list->at(curFormat);
+        if ((formatInfo.mDestFormat == targetFormat) &&
+            (formatInfo.mMinRedBits   <= srcFormat.redBits   && formatInfo.mMaxRedBits   >= srcFormat.redBits)   &&
+            (formatInfo.mMinGreenBits <= srcFormat.greenBits && formatInfo.mMaxGreenBits >= srcFormat.greenBits) &&
+            (formatInfo.mMinBlueBits  <= srcFormat.blueBits  && formatInfo.mMaxBlueBits  >= srcFormat.blueBits)  &&
+            (formatInfo.mMinAlphaBits <= srcFormat.alphaBits && formatInfo.mMaxAlphaBits >= srcFormat.alphaBits))
+        {
+            *outEffectiveFormat = formatInfo.mEffectiveFormat;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+struct CopyConversion
+{
+    GLenum mTextureFormat;
+    GLenum mFramebufferFormat;
+
+    CopyConversion(GLenum textureFormat, GLenum framebufferFormat)
+        : mTextureFormat(textureFormat), mFramebufferFormat(framebufferFormat) { }
+
+    bool operator<(const CopyConversion& other) const
+    {
+        return memcmp(this, &other, sizeof(CopyConversion)) < 0;
+    }
+};
+
+typedef std::set<CopyConversion> CopyConversionSet;
+
+static CopyConversionSet BuildValidES3CopyTexImageCombinations()
+{
+    CopyConversionSet set;
+
+    // From ES 3.0.1 spec, table 3.15
+    set.insert(CopyConversion(GL_ALPHA, GL_RGBA));
+    set.insert(CopyConversion(GL_LUMINANCE, GL_RED));
+    set.insert(CopyConversion(GL_LUMINANCE, GL_RG));
+    set.insert(CopyConversion(GL_LUMINANCE, GL_RGB));
+    set.insert(CopyConversion(GL_LUMINANCE, GL_RGBA));
+    set.insert(CopyConversion(GL_LUMINANCE_ALPHA, GL_RGBA));
+    set.insert(CopyConversion(GL_RED, GL_RED));
+    set.insert(CopyConversion(GL_RED, GL_RG));
+    set.insert(CopyConversion(GL_RED, GL_RGB));
+    set.insert(CopyConversion(GL_RED, GL_RGBA));
+    set.insert(CopyConversion(GL_RG, GL_RG));
+    set.insert(CopyConversion(GL_RG, GL_RGB));
+    set.insert(CopyConversion(GL_RG, GL_RGBA));
+    set.insert(CopyConversion(GL_RGB, GL_RGB));
+    set.insert(CopyConversion(GL_RGB, GL_RGBA));
+    set.insert(CopyConversion(GL_RGBA, GL_RGBA));
+
+    // Necessary for ANGLE back-buffers
+    set.insert(CopyConversion(GL_ALPHA, GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_LUMINANCE, GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_LUMINANCE_ALPHA, GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_RED, GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_RG, GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_RGB, GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_RGBA, GL_BGRA_EXT));
+
+    set.insert(CopyConversion(GL_RED_INTEGER, GL_RED_INTEGER));
+    set.insert(CopyConversion(GL_RED_INTEGER, GL_RG_INTEGER));
+    set.insert(CopyConversion(GL_RED_INTEGER, GL_RGB_INTEGER));
+    set.insert(CopyConversion(GL_RED_INTEGER, GL_RGBA_INTEGER));
+    set.insert(CopyConversion(GL_RG_INTEGER, GL_RG_INTEGER));
+    set.insert(CopyConversion(GL_RG_INTEGER, GL_RGB_INTEGER));
+    set.insert(CopyConversion(GL_RG_INTEGER, GL_RGBA_INTEGER));
+    set.insert(CopyConversion(GL_RGB_INTEGER, GL_RGB_INTEGER));
+    set.insert(CopyConversion(GL_RGB_INTEGER, GL_RGBA_INTEGER));
+    set.insert(CopyConversion(GL_RGBA_INTEGER, GL_RGBA_INTEGER));
+
+    return set;
+}
+
+static bool IsValidES3CopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBufferInternalFormat, GLuint readBufferHandle)
+{
+    const InternalFormat &textureInternalFormatInfo = GetInternalFormatInfo(textureInternalFormat);
+    const InternalFormat &framebufferInternalFormatInfo = GetInternalFormatInfo(frameBufferInternalFormat);
+
+    static const CopyConversionSet conversionSet = BuildValidES3CopyTexImageCombinations();
+    if (conversionSet.find(CopyConversion(textureInternalFormatInfo.format, framebufferInternalFormatInfo.format)) != conversionSet.end())
+    {
+        // Section 3.8.5 of the GLES 3.0.3 spec states that source and destination formats
+        // must both be signed, unsigned, or fixed point and both source and destinations
+        // must be either both SRGB or both not SRGB. EXT_color_buffer_float adds allowed
+        // conversion between fixed and floating point.
+
+        if ((textureInternalFormatInfo.colorEncoding == GL_SRGB) != (framebufferInternalFormatInfo.colorEncoding == GL_SRGB))
+        {
+            return false;
+        }
+
+        if (((textureInternalFormatInfo.componentType == GL_INT)          != (framebufferInternalFormatInfo.componentType == GL_INT         )) ||
+            ((textureInternalFormatInfo.componentType == GL_UNSIGNED_INT) != (framebufferInternalFormatInfo.componentType == GL_UNSIGNED_INT)))
+        {
+            return false;
+        }
+
+        if ((textureInternalFormatInfo.componentType == GL_UNSIGNED_NORMALIZED ||
+             textureInternalFormatInfo.componentType == GL_SIGNED_NORMALIZED ||
+             textureInternalFormatInfo.componentType == GL_FLOAT) &&
+            !(framebufferInternalFormatInfo.componentType == GL_UNSIGNED_NORMALIZED ||
+              framebufferInternalFormatInfo.componentType == GL_SIGNED_NORMALIZED ||
+              framebufferInternalFormatInfo.componentType == GL_FLOAT))
+        {
+            return false;
+        }
+
+        // GLES specification 3.0.3, sec 3.8.5, pg 139-140:
+        // The effective internal format of the source buffer is determined with the following rules applied in order:
+        //    * If the source buffer is a texture or renderbuffer that was created with a sized internal format then the
+        //      effective internal format is the source buffer's sized internal format.
+        //    * If the source buffer is a texture that was created with an unsized base internal format, then the
+        //      effective internal format is the source image array's effective internal format, as specified by table
+        //      3.12, which is determined from the <format> and <type> that were used when the source image array was
+        //      specified by TexImage*.
+        //    * Otherwise the effective internal format is determined by the row in table 3.17 or 3.18 where
+        //      Destination Internal Format matches internalformat and where the [source channel sizes] are consistent
+        //      with the values of the source buffer's [channel sizes]. Table 3.17 is used if the
+        //      FRAMEBUFFER_ATTACHMENT_ENCODING is LINEAR and table 3.18 is used if the FRAMEBUFFER_ATTACHMENT_ENCODING
+        //      is SRGB.
+        const InternalFormat *sourceEffectiveFormat = NULL;
+        if (readBufferHandle != 0)
+        {
+            // Not the default framebuffer, therefore the read buffer must be a user-created texture or renderbuffer
+            if (framebufferInternalFormatInfo.pixelBytes > 0)
+            {
+                sourceEffectiveFormat = &framebufferInternalFormatInfo;
+            }
+            else
+            {
+                // Renderbuffers cannot be created with an unsized internal format, so this must be an unsized-format
+                // texture. We can use the same table we use when creating textures to get its effective sized format.
+                const FormatType &typeInfo = GetFormatTypeInfo(framebufferInternalFormatInfo.format, framebufferInternalFormatInfo.type);
+                sourceEffectiveFormat = &GetInternalFormatInfo(typeInfo.internalFormat);
+            }
+        }
+        else
+        {
+            // The effective internal format must be derived from the source framebuffer's channel sizes.
+            // This is done in GetEffectiveInternalFormat for linear buffers (table 3.17)
+            if (framebufferInternalFormatInfo.colorEncoding == GL_LINEAR)
+            {
+                GLenum effectiveFormat;
+                if (GetEffectiveInternalFormat(framebufferInternalFormatInfo, textureInternalFormatInfo, &effectiveFormat))
+                {
+                    sourceEffectiveFormat = &GetInternalFormatInfo(effectiveFormat);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (framebufferInternalFormatInfo.colorEncoding == GL_SRGB)
+            {
+                // SRGB buffers can only be copied to sized format destinations according to table 3.18
+                if ((textureInternalFormatInfo.pixelBytes > 0) &&
+                    (framebufferInternalFormatInfo.redBits   >= 1 && framebufferInternalFormatInfo.redBits   <= 8) &&
+                    (framebufferInternalFormatInfo.greenBits >= 1 && framebufferInternalFormatInfo.greenBits <= 8) &&
+                    (framebufferInternalFormatInfo.blueBits  >= 1 && framebufferInternalFormatInfo.blueBits  <= 8) &&
+                    (framebufferInternalFormatInfo.alphaBits >= 1 && framebufferInternalFormatInfo.alphaBits <= 8))
+                {
+                    sourceEffectiveFormat = &GetInternalFormatInfo(GL_SRGB8_ALPHA8);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                UNREACHABLE();
+                return false;
+            }
+        }
+
+        if (textureInternalFormatInfo.pixelBytes > 0)
+        {
+            // Section 3.8.5 of the GLES 3.0.3 spec, pg 139, requires that, if the destination format is sized,
+            // component sizes of the source and destination formats must exactly match
+            if (textureInternalFormatInfo.redBits   != sourceEffectiveFormat->redBits   ||
+                textureInternalFormatInfo.greenBits != sourceEffectiveFormat->greenBits ||
+                textureInternalFormatInfo.blueBits  != sourceEffectiveFormat->blueBits  ||
+                textureInternalFormatInfo.alphaBits != sourceEffectiveFormat->alphaBits)
+            {
+                return false;
+            }
+        }
+
+
+        return true; // A conversion function exists, and no rule in the specification has precluded conversion
+                     // between these formats.
+    }
+
+    return false;
 }
 
 bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLint level, GLenum internalformat,
@@ -333,18 +855,16 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
 
     if (isSubImage)
     {
-        if (!gl::IsValidCopyTexImageCombination(textureInternalFormat, colorbufferInternalFormat,
-                                                context->getState().getReadFramebuffer()->id(),
-                                                context->getClientVersion()))
+        if (!IsValidES3CopyTexImageCombination(textureInternalFormat, colorbufferInternalFormat,
+                                               context->getState().getReadFramebuffer()->id()))
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }
     }
     else
     {
-        if (!gl::IsValidCopyTexImageCombination(internalformat, colorbufferInternalFormat,
-                                                context->getState().getReadFramebuffer()->id(),
-                                                context->getClientVersion()))
+        if (!gl::IsValidES3CopyTexImageCombination(internalformat, colorbufferInternalFormat,
+                                                context->getState().getReadFramebuffer()->id()))
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }
@@ -440,12 +960,13 @@ bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsize
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (!gl::IsValidInternalFormat(internalformat, context->getExtensions(), context->getClientVersion()))
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
+    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
         return gl::error(GL_INVALID_ENUM, false);
     }
 
-    if (!gl::IsSizedInternalFormat(internalformat))
+    if (formatInfo.pixelBytes == 0)
     {
         return gl::error(GL_INVALID_ENUM, false);
     }
@@ -529,6 +1050,8 @@ bool ValidateFramebufferTextureLayer(const gl::Context *context, GLenum target, 
 
 bool ValidES3ReadFormatType(gl::Context *context, GLenum internalFormat, GLenum format, GLenum type)
 {
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
+
     switch (format)
     {
       case GL_RGBA:
@@ -543,7 +1066,7 @@ bool ValidES3ReadFormatType(gl::Context *context, GLenum internalFormat, GLenum 
             }
             break;
           case GL_FLOAT:
-            if (gl::GetComponentType(internalFormat) != GL_FLOAT)
+            if (internalFormatInfo.componentType != GL_FLOAT)
             {
                 return false;
             }
@@ -556,13 +1079,13 @@ bool ValidES3ReadFormatType(gl::Context *context, GLenum internalFormat, GLenum 
         switch (type)
         {
           case GL_INT:
-            if (gl::GetComponentType(internalFormat) != GL_INT)
+            if (internalFormatInfo.componentType != GL_INT)
             {
                 return false;
             }
             break;
           case GL_UNSIGNED_INT:
-            if (gl::GetComponentType(internalFormat) != GL_UNSIGNED_INT)
+            if (internalFormatInfo.componentType != GL_UNSIGNED_INT)
             {
                 return false;
             }

@@ -377,10 +377,10 @@ bool Blit11::swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTarget
 
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
     source->GetDesc(&sourceSRVDesc);
-    GLenum sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceSRVDesc.Format);
+    const gl::InternalFormat &sourceFormatInfo = gl::GetInternalFormatInfo(d3d11_gl::GetInternalFormat(sourceSRVDesc.Format));
 
     GLenum shaderType = GL_NONE;
-    switch (gl::GetComponentType(sourceInternalFormat))
+    switch (sourceFormatInfo.componentType)
     {
       case GL_UNSIGNED_NORMALIZED:
       case GL_SIGNED_NORMALIZED:
@@ -520,7 +520,7 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
 
     BlitParameters parameters = { 0 };
     parameters.mDestinationFormat = destFormat;
-    parameters.mSignedInteger = gl::GetComponentType(sourceInternalFormat) == GL_INT;
+    parameters.mSignedInteger = gl::GetInternalFormatInfo(sourceInternalFormat).componentType == GL_INT;
     parameters.m3DBlit = sourceArea.depth > 1;
 
     BlitShaderMap::const_iterator i = mBlitShaderMap.find(parameters);

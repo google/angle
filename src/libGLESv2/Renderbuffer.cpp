@@ -75,32 +75,32 @@ GLsizei Renderbuffer::getSamples() const
 
 GLuint Renderbuffer::getRedSize() const
 {
-    return gl::GetRedBits(getActualFormat());
+    return GetInternalFormatInfo(getActualFormat()).redBits;
 }
 
 GLuint Renderbuffer::getGreenSize() const
 {
-    return gl::GetGreenBits(getActualFormat());
+    return GetInternalFormatInfo(getActualFormat()).greenBits;
 }
 
 GLuint Renderbuffer::getBlueSize() const
 {
-    return gl::GetBlueBits(getActualFormat());
+    return GetInternalFormatInfo(getActualFormat()).blueBits;
 }
 
 GLuint Renderbuffer::getAlphaSize() const
 {
-    return gl::GetAlphaBits(getActualFormat());
+    return GetInternalFormatInfo(getActualFormat()).alphaBits;
 }
 
 GLuint Renderbuffer::getDepthSize() const
 {
-    return gl::GetDepthBits(getActualFormat());
+    return GetInternalFormatInfo(getActualFormat()).depthBits;
 }
 
 GLuint Renderbuffer::getStencilSize() const
 {
-    return gl::GetStencilBits(getActualFormat());
+    return GetInternalFormatInfo(getActualFormat()).stencilBits;
 }
 
 RenderbufferStorage::RenderbufferStorage() : mSerial(issueSerials(1))

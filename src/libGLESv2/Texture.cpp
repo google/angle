@@ -190,8 +190,8 @@ void Texture2D::redefineImage(GLint level, GLenum internalformat, GLsizei width,
 
 void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    GLenum sizedInternalFormat = IsSizedInternalFormat(internalFormat) ? internalFormat
-                                                                       : GetSizedInternalFormat(format, type);
+    GLenum sizedInternalFormat = GetSizedInternalFormat(internalFormat, type);
+
     redefineImage(level, sizedInternalFormat, width, height);
 
     mTexture->setImage(level, width, height, internalFormat, format, type, unpack, pixels);
@@ -238,8 +238,8 @@ void Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GL
 
 void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    GLenum sizedInternalFormat = IsSizedInternalFormat(format) ? format
-                                                               : GetSizedInternalFormat(format, GL_UNSIGNED_BYTE);
+    GLenum sizedInternalFormat = GetSizedInternalFormat(format, GL_UNSIGNED_BYTE);
+
     redefineImage(level, sizedInternalFormat, width, height);
 
     mTexture->copyImage(level, format, x, y, width, height, source);
@@ -254,12 +254,12 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 
 bool Texture2D::isCompressed(GLint level) const
 {
-    return IsFormatCompressed(getInternalFormat(level));
+    return GetInternalFormatInfo(getInternalFormat(level)).compressed;
 }
 
 bool Texture2D::isDepth(GLint level) const
 {
-    return GetDepthBits(getInternalFormat(level)) > 0;
+    return GetInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
 void Texture2D::generateMipmaps()
@@ -398,12 +398,12 @@ bool TextureCubeMap::isCubeComplete() const
 
 bool TextureCubeMap::isCompressed(GLenum target, GLint level) const
 {
-    return IsFormatCompressed(getInternalFormat(target, level));
+    return GetInternalFormatInfo(getInternalFormat(target, level)).compressed;
 }
 
 bool TextureCubeMap::isDepth(GLenum target, GLint level) const
 {
-    return GetDepthBits(getInternalFormat(target, level)) > 0;
+    return GetInternalFormatInfo(getInternalFormat(target, level)).depthBits > 0;
 }
 
 void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
@@ -489,12 +489,12 @@ GLenum Texture3D::getActualFormat(GLint level) const
 
 bool Texture3D::isCompressed(GLint level) const
 {
-    return IsFormatCompressed(getInternalFormat(level));
+    return GetInternalFormatInfo(getInternalFormat(level)).compressed;
 }
 
 bool Texture3D::isDepth(GLint level) const
 {
-    return GetDepthBits(getInternalFormat(level)) > 0;
+    return GetInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
 void Texture3D::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
@@ -594,12 +594,12 @@ GLenum Texture2DArray::getActualFormat(GLint level) const
 
 bool Texture2DArray::isCompressed(GLint level) const
 {
-    return IsFormatCompressed(getInternalFormat(level));
+    return GetInternalFormatInfo(getInternalFormat(level)).compressed;
 }
 
 bool Texture2DArray::isDepth(GLint level) const
 {
-    return GetDepthBits(getInternalFormat(level)) > 0;
+    return GetInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
 void Texture2DArray::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)

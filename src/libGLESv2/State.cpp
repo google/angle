@@ -253,7 +253,7 @@ ClearParameters State::getClearParameters(GLbitfield mask) const
                 return nullClearParam;
             }
 
-            if (GetStencilBits(depthStencil->getActualFormat()) > 0)
+            if (GetInternalFormatInfo(depthStencil->getActualFormat()).stencilBits > 0)
             {
                 clearParams.clearStencil = true;
             }

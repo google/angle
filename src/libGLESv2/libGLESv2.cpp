@@ -716,7 +716,8 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
             return;
         }
 
-        if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(internalformat, GL_UNSIGNED_BYTE, width, height))
+        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
+        if (imageSize < 0 || static_cast<GLuint>(imageSize) != formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
         {
             return gl::error(GL_INVALID_VALUE);
         }
@@ -774,7 +775,8 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             return;
         }
 
-        if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(format, GL_UNSIGNED_BYTE, width, height))
+        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format);
+        if (imageSize < 0 || static_cast<GLuint>(imageSize) != formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
         {
             return gl::error(GL_INVALID_VALUE);
         }
@@ -1602,6 +1604,7 @@ void __stdcall glGenerateMipmap(GLenum target)
 
         GLenum internalFormat = texture->getBaseLevelInternalFormat();
         const gl::TextureCaps &formatCaps = context->getTextureCaps().get(internalFormat);
+        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
 
         // GenerateMipmap should not generate an INVALID_OPERATION for textures created with
         // unsized formats or that are color renderable and filterable.  Since we do not track if
@@ -1615,14 +1618,14 @@ void __stdcall glGenerateMipmap(GLenum target)
                       internalFormat == GL_LUMINANCE8_ALPHA8_EXT ||
                       internalFormat == GL_ALPHA8_EXT;
 
-        if (gl::GetDepthBits(internalFormat) > 0 || gl::GetStencilBits(internalFormat) > 0 || !formatCaps.filterable ||
-            (!formatCaps.renderable && !isLUMA) || gl::IsFormatCompressed(internalFormat))
+        if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0 || !formatCaps.filterable ||
+            (!formatCaps.renderable && !isLUMA) || formatInfo.compressed)
         {
             return gl::error(GL_INVALID_OPERATION);
         }
 
         // GL_EXT_sRGB does not support mipmap generation on sRGB textures
-        if (context->getClientVersion() == 2 && gl::GetColorEncoding(internalFormat) == GL_SRGB)
+        if (context->getClientVersion() == 2 && formatInfo.colorEncoding == GL_SRGB)
         {
             return gl::error(GL_INVALID_OPERATION);
         }
@@ -4974,7 +4977,8 @@ void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum interna
             return gl::error(GL_INVALID_OPERATION);
         }
 
-        if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(internalformat, GL_UNSIGNED_BYTE, width, height))
+        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
+        if (imageSize < 0 || static_cast<GLuint>(imageSize) != formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
         {
             return gl::error(GL_INVALID_VALUE);
         }
@@ -5024,7 +5028,8 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
             return gl::error(GL_INVALID_OPERATION);
         }
 
-        if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(format, GL_UNSIGNED_BYTE, width, height))
+        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format);
+        if (imageSize < 0 || static_cast<GLuint>(imageSize) != formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
         {
             return gl::error(GL_INVALID_VALUE);
         }

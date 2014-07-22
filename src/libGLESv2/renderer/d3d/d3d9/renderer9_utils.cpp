@@ -257,7 +257,8 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, IDirect3
     gl::TextureCaps textureCaps;
 
     D3DFORMAT renderFormat = gl_d3d9::GetRenderFormat(internalFormat);
-    if (gl::GetDepthBits(internalFormat) > 0 || gl::GetStencilBits(internalFormat) > 0)
+    gl::InternalFormat formatInfo = gl::GetInternalFormatInfo(internalFormat);
+    if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0)
     {
         textureCaps.texturable = SUCCEEDED(d3d9->CheckDeviceFormat(adapter, deviceType, adapterFormat, 0, D3DRTYPE_TEXTURE, renderFormat));
         textureCaps.filterable = SUCCEEDED(d3d9->CheckDeviceFormat(adapter, deviceType, adapterFormat, D3DUSAGE_QUERY_FILTER, D3DRTYPE_TEXTURE, renderFormat));

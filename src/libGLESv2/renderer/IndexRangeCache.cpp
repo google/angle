@@ -31,7 +31,7 @@ void IndexRangeCache::invalidateRange(unsigned int offset, unsigned int size)
     while (i != mIndexRangeCache.end())
     {
         unsigned int rangeStart = i->second.streamOffset;
-        unsigned int rangeEnd = i->second.streamOffset + (gl::GetTypeBytes(i->first.type) * i->first.count);
+        unsigned int rangeEnd = i->second.streamOffset + (gl::GetTypeInfo(i->first.type).bytes * i->first.count);
 
         if (invalidateEnd < rangeStart || invalidateStart > rangeEnd)
         {

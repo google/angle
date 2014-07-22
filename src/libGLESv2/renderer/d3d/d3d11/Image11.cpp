@@ -153,8 +153,9 @@ DXGI_FORMAT Image11::getDXGIFormat() const
 void Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                        GLint unpackAlignment, GLenum type, const void *input)
 {
-    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, type, width, unpackAlignment);
-    GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, type, width, height, unpackAlignment);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
+    GLsizei inputRowPitch = formatInfo.computeRowPitch(type, width, unpackAlignment);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(type, width, height, unpackAlignment);
     GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat);
 
     LoadImageFunction loadFunction = d3d11::GetImageLoadFunction(mInternalFormat, type);
@@ -179,8 +180,9 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei widt
 void Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                  const void *input)
 {
-    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, GL_UNSIGNED_BYTE, width, 1);
-    GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, GL_UNSIGNED_BYTE, width, height, 1);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
+    GLsizei inputRowPitch = formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, width, 1);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, width, height, 1);
 
     GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat);
     GLuint outputBlockWidth = d3d11::GetBlockWidth(mDXGIFormat);
@@ -287,13 +289,12 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y
         }
 
         // determine the offset coordinate into the destination buffer
-        GLsizei rowOffset = gl::GetPixelBytes(mActualFormat) * xoffset;
+        GLsizei rowOffset = gl::GetInternalFormatInfo(mActualFormat).pixelBytes * xoffset;
         void *dataOffset = static_cast<unsigned char*>(mappedImage.pData) + mappedImage.RowPitch * yoffset + rowOffset + zoffset * mappedImage.DepthPitch;
 
-        GLenum format = gl::GetFormat(mInternalFormat);
-        GLenum type = gl::GetType(mInternalFormat);
+        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
 
-        mRenderer->readPixels(source, x, y, width, height, format, type, mappedImage.RowPitch, gl::PixelPackState(), dataOffset);
+        mRenderer->readPixels(source, x, y, width, height, formatInfo.format, formatInfo.type, mappedImage.RowPitch, gl::PixelPackState(), dataOffset);
 
         unmap();
     }

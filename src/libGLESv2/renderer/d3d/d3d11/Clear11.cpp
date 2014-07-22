@@ -219,34 +219,29 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
                     return;
                 }
 
-                GLenum internalFormat = attachment->getInternalFormat();
-                GLenum actualFormat = attachment->getActualFormat();
-                GLenum componentType = gl::GetComponentType(internalFormat);
+                const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(attachment->getInternalFormat());
+
                 if (clearParams.colorClearType == GL_FLOAT &&
-                    !(componentType == GL_FLOAT || componentType == GL_UNSIGNED_NORMALIZED || componentType == GL_SIGNED_NORMALIZED))
+                    !(formatInfo.componentType == GL_FLOAT || formatInfo.componentType == GL_UNSIGNED_NORMALIZED || formatInfo.componentType == GL_SIGNED_NORMALIZED))
                 {
                     ERR("It is undefined behaviour to clear a render buffer which is not normalized fixed point or floating-"
-                        "point to floating point values (color attachment %u has internal format 0x%X).", colorAttachment, internalFormat);
+                        "point to floating point values (color attachment %u has internal format 0x%X).", colorAttachment,
+                        attachment->getInternalFormat());
                 }
 
-                GLuint internalRedBits = gl::GetRedBits(internalFormat);
-                GLuint internalGreenBits = gl::GetGreenBits(internalFormat);
-                GLuint internalBlueBits = gl::GetBlueBits(internalFormat);
-                GLuint internalAlphaBits = gl::GetAlphaBits(internalFormat);
-
-                if ((internalRedBits   == 0 || !clearParams.colorMaskRed) &&
-                    (internalGreenBits == 0 || !clearParams.colorMaskGreen) &&
-                    (internalBlueBits  == 0 || !clearParams.colorMaskBlue) &&
-                    (internalAlphaBits == 0 || !clearParams.colorMaskAlpha))
+                if ((formatInfo.redBits == 0 || !clearParams.colorMaskRed) &&
+                    (formatInfo.greenBits == 0 || !clearParams.colorMaskGreen) &&
+                    (formatInfo.blueBits == 0 || !clearParams.colorMaskBlue) &&
+                    (formatInfo.alphaBits == 0 || !clearParams.colorMaskAlpha))
                 {
                     // Every channel either does not exist in the render target or is masked out
                     continue;
                 }
                 else if (needScissoredClear || clearParams.colorClearType != GL_FLOAT ||
-                         (internalRedBits   > 0 && !clearParams.colorMaskRed)   ||
-                         (internalGreenBits > 0 && !clearParams.colorMaskGreen) ||
-                         (internalBlueBits  > 0 && !clearParams.colorMaskBlue)  ||
-                         (internalAlphaBits > 0 && !clearParams.colorMaskAlpha))
+                         (formatInfo.redBits   > 0 && !clearParams.colorMaskRed)   ||
+                         (formatInfo.greenBits > 0 && !clearParams.colorMaskGreen) ||
+                         (formatInfo.blueBits  > 0 && !clearParams.colorMaskBlue) ||
+                         (formatInfo.alphaBits > 0 && !clearParams.colorMaskAlpha))
                 {
                     // A scissored or masked clear is required
                     MaskedRenderTarget maskAndRt;
@@ -269,19 +264,16 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
                         return;
                     }
 
+                    const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(attachment->getActualFormat());
+
                     // Check if the actual format has a channel that the internal format does not and set them to the
                     // default values
-                    GLuint actualRedBits   = gl::GetRedBits(actualFormat);
-                    GLuint actualGreenBits = gl::GetGreenBits(actualFormat);
-                    GLuint actualBlueBits  = gl::GetBlueBits(actualFormat);
-                    GLuint actualAlphaBits = gl::GetAlphaBits(actualFormat);
-
                     const float clearValues[4] =
                     {
-                        ((internalRedBits   == 0 && actualRedBits   > 0) ? 0.0f : clearParams.colorFClearValue.red),
-                        ((internalGreenBits == 0 && actualGreenBits > 0) ? 0.0f : clearParams.colorFClearValue.green),
-                        ((internalBlueBits  == 0 && actualBlueBits  > 0) ? 0.0f : clearParams.colorFClearValue.blue),
-                        ((internalAlphaBits == 0 && actualAlphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
+                        ((formatInfo.redBits == 0 && actualFormatInfo.redBits   > 0) ? 0.0f : clearParams.colorFClearValue.red),
+                        ((formatInfo.greenBits == 0 && actualFormatInfo.greenBits > 0) ? 0.0f : clearParams.colorFClearValue.green),
+                        ((formatInfo.blueBits == 0 && actualFormatInfo.blueBits  > 0) ? 0.0f : clearParams.colorFClearValue.blue),
+                        ((formatInfo.alphaBits == 0 && actualFormatInfo.alphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
                     };
 
                     deviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
@@ -302,9 +294,9 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
                 return;
             }
 
-            GLenum actualFormat = attachment->getActualFormat();
+            const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(attachment->getActualFormat());
 
-            unsigned int stencilUnmasked = frameBuffer->hasStencil() ? (1 << gl::GetStencilBits(actualFormat)) - 1 : 0;
+            unsigned int stencilUnmasked = frameBuffer->hasStencil() ? (1 << actualFormatInfo.stencilBits) - 1 : 0;
             bool needMaskedStencilClear = clearParams.clearStencil && (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
 
             if (needScissoredClear || needMaskedStencilClear)
@@ -463,12 +455,12 @@ ID3D11BlendState *Clear11::getBlendState(const std::vector<MaskedRenderTarget>& 
         if (i < rts.size())
         {
             RenderTarget11 *rt = rts[i].renderTarget;
-            GLint internalFormat = rt->getInternalFormat();
+            const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(rt->getInternalFormat());
 
-            blendKey.maskChannels[i][0] = (rts[i].colorMask[0] && gl::GetRedBits(internalFormat)   > 0);
-            blendKey.maskChannels[i][1] = (rts[i].colorMask[1] && gl::GetGreenBits(internalFormat) > 0);
-            blendKey.maskChannels[i][2] = (rts[i].colorMask[2] && gl::GetBlueBits(internalFormat)  > 0);
-            blendKey.maskChannels[i][3] = (rts[i].colorMask[3] && gl::GetAlphaBits(internalFormat) > 0);
+            blendKey.maskChannels[i][0] = (rts[i].colorMask[0] && formatInfo.redBits   > 0);
+            blendKey.maskChannels[i][1] = (rts[i].colorMask[1] && formatInfo.greenBits > 0);
+            blendKey.maskChannels[i][2] = (rts[i].colorMask[2] && formatInfo.blueBits  > 0);
+            blendKey.maskChannels[i][3] = (rts[i].colorMask[3] && formatInfo.alphaBits > 0);
         }
         else
         {

@@ -814,10 +814,11 @@ void Renderer9::setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState
         // drawing is done.
         // http://code.google.com/p/angleproject/issues/detail?id=169
 
-        DWORD colorMask = gl_d3d9::ConvertColorMask(gl::GetRedBits(internalFormat)   > 0 && blendState.colorMaskRed,
-                                                    gl::GetGreenBits(internalFormat) > 0 && blendState.colorMaskGreen,
-                                                    gl::GetBlueBits(internalFormat)  > 0 && blendState.colorMaskBlue,
-                                                    gl::GetAlphaBits(internalFormat) > 0 && blendState.colorMaskAlpha);
+        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
+        DWORD colorMask = gl_d3d9::ConvertColorMask(formatInfo.redBits   > 0 && blendState.colorMaskRed,
+                                                    formatInfo.greenBits > 0 && blendState.colorMaskGreen,
+                                                    formatInfo.blueBits  > 0 && blendState.colorMaskBlue,
+                                                    formatInfo.alphaBits > 0 && blendState.colorMaskAlpha);
         if (colorMask == 0 && !zeroColorMaskAllowed)
         {
             // Enable green channel, but set blending so nothing will be drawn.
@@ -1745,7 +1746,7 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
     unsigned int stencilUnmasked = 0x0;
     if (clearParams.clearStencil && frameBuffer->hasStencil())
     {
-        unsigned int stencilSize = gl::GetStencilBits(frameBuffer->getStencilbuffer()->getActualFormat());
+        unsigned int stencilSize = gl::GetInternalFormatInfo((frameBuffer->getStencilbuffer()->getActualFormat())).stencilBits;
         stencilUnmasked = (0x1 << stencilSize) - 1;
     }
 
@@ -1756,29 +1757,19 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
     D3DCOLOR color = D3DCOLOR_ARGB(255, 0, 0, 0);
     if (clearColor)
     {
-        gl::FramebufferAttachment *attachment = frameBuffer->getFirstColorbuffer();
-        GLenum internalFormat = attachment->getInternalFormat();
-        GLenum actualFormat = attachment->getActualFormat();
+        const gl::FramebufferAttachment *attachment = frameBuffer->getFirstColorbuffer();
+        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(attachment->getInternalFormat());
+        const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(attachment->getActualFormat());
 
-        GLuint internalRedBits = gl::GetRedBits(internalFormat);
-        GLuint internalGreenBits = gl::GetGreenBits(internalFormat);
-        GLuint internalBlueBits = gl::GetBlueBits(internalFormat);
-        GLuint internalAlphaBits = gl::GetAlphaBits(internalFormat);
+        color = D3DCOLOR_ARGB(gl::unorm<8>((formatInfo.alphaBits == 0 && actualFormatInfo.alphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
+                              gl::unorm<8>((formatInfo.redBits   == 0 && actualFormatInfo.redBits   > 0) ? 0.0f : clearParams.colorFClearValue.red),
+                              gl::unorm<8>((formatInfo.greenBits == 0 && actualFormatInfo.greenBits > 0) ? 0.0f : clearParams.colorFClearValue.green),
+                              gl::unorm<8>((formatInfo.blueBits  == 0 && actualFormatInfo.blueBits  > 0) ? 0.0f : clearParams.colorFClearValue.blue));
 
-        GLuint actualRedBits = gl::GetRedBits(actualFormat);
-        GLuint actualGreenBits = gl::GetGreenBits(actualFormat);
-        GLuint actualBlueBits = gl::GetBlueBits(actualFormat);
-        GLuint actualAlphaBits = gl::GetAlphaBits(actualFormat);
-
-        color = D3DCOLOR_ARGB(gl::unorm<8>((internalAlphaBits == 0 && actualAlphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
-                              gl::unorm<8>((internalRedBits   == 0 && actualRedBits   > 0) ? 0.0f : clearParams.colorFClearValue.red),
-                              gl::unorm<8>((internalGreenBits == 0 && actualGreenBits > 0) ? 0.0f : clearParams.colorFClearValue.green),
-                              gl::unorm<8>((internalBlueBits  == 0 && actualBlueBits  > 0) ? 0.0f : clearParams.colorFClearValue.blue));
-
-        if ((internalRedBits   > 0 && !clearParams.colorMaskRed) ||
-            (internalGreenBits > 0 && !clearParams.colorMaskGreen) ||
-            (internalBlueBits  > 0 && !clearParams.colorMaskBlue) ||
-            (internalAlphaBits > 0 && !clearParams.colorMaskAlpha))
+        if ((formatInfo.redBits   > 0 && !clearParams.colorMaskRed) ||
+            (formatInfo.greenBits > 0 && !clearParams.colorMaskGreen) ||
+            (formatInfo.blueBits  > 0 && !clearParams.colorMaskBlue) ||
+            (formatInfo.alphaBits > 0 && !clearParams.colorMaskAlpha))
         {
             needMaskedColorClear = true;
         }
@@ -2772,27 +2763,20 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         inputPitch = lock.Pitch;
     }
 
-    GLenum sourceInternalFormat = d3d9_gl::GetInternalFormat(desc.Format);
-    GLenum sourceFormat = gl::GetFormat(sourceInternalFormat);
-    GLenum sourceType = gl::GetType(sourceInternalFormat);
-
-    GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat);
-
-    if (sourceFormat == format && sourceType == type)
+    const gl::InternalFormat &sourceFormatInfo = gl::GetInternalFormatInfo(d3d9_gl::GetInternalFormat(desc.Format));
+    if (sourceFormatInfo.format == format && sourceFormatInfo.type == type)
     {
         // Direct copy possible
         unsigned char *dest = static_cast<unsigned char*>(pixels);
         for (int y = 0; y < rect.bottom - rect.top; y++)
         {
-            memcpy(dest + y * outputPitch, source + y * inputPitch, (rect.right - rect.left) * sourcePixelSize);
+            memcpy(dest + y * outputPitch, source + y * inputPitch, (rect.right - rect.left) * sourceFormatInfo.pixelBytes);
         }
     }
     else
     {
-        GLenum destInternalFormat = gl::GetSizedInternalFormat(format, type);
-        GLuint destPixelSize = gl::GetPixelBytes(destInternalFormat);
-        GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat);
-
+        const gl::FormatType &destFormatTypeInfo = gl::GetFormatTypeInfo(format, type);
+        const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(destFormatTypeInfo.internalFormat);
         ColorCopyFunction fastCopyFunc = d3d9::GetFastCopyFunction(desc.Format, format, type);
         if (fastCopyFunc)
         {
@@ -2801,8 +2785,8 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
             {
                 for (int x = 0; x < rect.right - rect.left; x++)
                 {
-                    void *dest = static_cast<unsigned char*>(pixels) + y * outputPitch + x * destPixelSize;
-                    void *src = static_cast<unsigned char*>(source) + y * inputPitch + x * sourcePixelSize;
+                    void *dest = static_cast<unsigned char*>(pixels) + y * outputPitch + x * destFormatInfo.pixelBytes;
+                    void *src = static_cast<unsigned char*>(source) + y * inputPitch + x * sourceFormatInfo.pixelBytes;
 
                     fastCopyFunc(src, dest);
                 }
@@ -2811,21 +2795,19 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         else
         {
             ColorReadFunction readFunc = d3d9::GetColorReadFunction(desc.Format);
-            ColorWriteFunction writeFunc = gl::GetColorWriteFunction(format, type);
 
             gl::ColorF temp;
-
             for (int y = 0; y < rect.bottom - rect.top; y++)
             {
                 for (int x = 0; x < rect.right - rect.left; x++)
                 {
-                    void *dest = reinterpret_cast<unsigned char*>(pixels) + y * outputPitch + x * destPixelSize;
-                    void *src = source + y * inputPitch + x * sourcePixelSize;
+                    void *dest = reinterpret_cast<unsigned char*>(pixels) + y * outputPitch + x * destFormatInfo.pixelBytes;
+                    void *src = source + y * inputPitch + x * sourceFormatInfo.pixelBytes;
 
                     // readFunc and writeFunc will be using the same type of color, CopyTexImage
                     // will not allow the copy otherwise.
                     readFunc(src, &temp);
-                    writeFunc(&temp, dest);
+                    destFormatTypeInfo.colorWriteFunction(&temp, dest);
                 }
             }
         }

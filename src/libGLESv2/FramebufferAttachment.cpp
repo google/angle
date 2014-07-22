@@ -33,42 +33,42 @@ FramebufferAttachment::~FramebufferAttachment()
 
 GLuint FramebufferAttachment::getRedSize() const
 {
-    return (gl::GetRedBits(getInternalFormat()) > 0) ? gl::GetRedBits(getActualFormat()) : 0;
+    return (GetInternalFormatInfo(getInternalFormat()).redBits > 0) ? GetInternalFormatInfo(getActualFormat()).redBits : 0;
 }
 
 GLuint FramebufferAttachment::getGreenSize() const
 {
-    return (gl::GetGreenBits(getInternalFormat()) > 0) ? gl::GetGreenBits(getActualFormat()) : 0;
+    return (GetInternalFormatInfo(getInternalFormat()).greenBits > 0) ? GetInternalFormatInfo(getActualFormat()).greenBits : 0;
 }
 
 GLuint FramebufferAttachment::getBlueSize() const
 {
-    return (gl::GetBlueBits(getInternalFormat()) > 0) ? gl::GetBlueBits(getActualFormat()) : 0;
+    return (GetInternalFormatInfo(getInternalFormat()).blueBits > 0) ? GetInternalFormatInfo(getActualFormat()).blueBits : 0;
 }
 
 GLuint FramebufferAttachment::getAlphaSize() const
 {
-    return (gl::GetAlphaBits(getInternalFormat()) > 0) ? gl::GetAlphaBits(getActualFormat()) : 0;
+    return (GetInternalFormatInfo(getInternalFormat()).alphaBits > 0) ? GetInternalFormatInfo(getActualFormat()).alphaBits : 0;
 }
 
 GLuint FramebufferAttachment::getDepthSize() const
 {
-    return (gl::GetDepthBits(getInternalFormat()) > 0) ? gl::GetDepthBits(getActualFormat()) : 0;
+    return (GetInternalFormatInfo(getInternalFormat()).depthBits > 0) ? GetInternalFormatInfo(getActualFormat()).depthBits : 0;
 }
 
 GLuint FramebufferAttachment::getStencilSize() const
 {
-    return (gl::GetStencilBits(getInternalFormat()) > 0) ? gl::GetStencilBits(getActualFormat()) : 0;
+    return (GetInternalFormatInfo(getInternalFormat()).stencilBits > 0) ? GetInternalFormatInfo(getActualFormat()).stencilBits : 0;
 }
 
 GLenum FramebufferAttachment::getComponentType() const
 {
-    return gl::GetComponentType(getActualFormat());
+    return GetInternalFormatInfo(getActualFormat()).componentType;
 }
 
 GLenum FramebufferAttachment::getColorEncoding() const
 {
-    return gl::GetColorEncoding(getActualFormat());
+    return GetInternalFormatInfo(getActualFormat()).colorEncoding;
 }
 
 bool FramebufferAttachment::isTexture() const

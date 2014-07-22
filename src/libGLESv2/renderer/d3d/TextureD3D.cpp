@@ -295,13 +295,13 @@ GLenum TextureD3D_2D::getActualFormat(GLint level) const
 
 bool TextureD3D_2D::isDepth(GLint level) const
 {
-    return gl::GetDepthBits(getInternalFormat(level)) > 0;
+    return gl::GetInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
 void TextureD3D_2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels)
 {
-    GLenum sizedInternalFormat = gl::IsSizedInternalFormat(internalFormat) ? internalFormat
-                                                                       : gl::GetSizedInternalFormat(format, type);
+    GLenum sizedInternalFormat = gl::GetSizedInternalFormat(internalFormat, type);
+
     bool fastUnpacked = false;
 
     // Attempt a fast gpu copy of the pixel data to the surface
@@ -414,7 +414,7 @@ void TextureD3D_2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLin
             sourceRect.height = height;
 
             mRenderer->copyImage(source, sourceRect,
-                                 gl::GetFormat(getBaseLevelInternalFormat()),
+                                 gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
                                  xoffset, yoffset, mTexStorage, level);
         }
     }
@@ -492,7 +492,8 @@ bool TextureD3D_2D::isSamplerComplete(const gl::SamplerState &samplerState) cons
     // depth and stencil format (see table 3.13), the value of TEXTURE_COMPARE_-
     // MODE is NONE, and either the magnification filter is not NEAREST or the mini-
     // fication filter is neither NEAREST nor NEAREST_MIPMAP_NEAREST.
-    if (gl::GetDepthBits(getInternalFormat(0)) > 0 && mRenderer->getCurrentClientVersion() > 2)
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(getInternalFormat(0));
+    if (formatInfo.depthBits > 0 && mRenderer->getCurrentClientVersion() > 2)
     {
         if (samplerState.compareMode == GL_NONE)
         {
@@ -886,13 +887,12 @@ GLenum TextureD3D_Cube::getInternalFormat(GLenum target, GLint level) const
 
 bool TextureD3D_Cube::isDepth(GLenum target, GLint level) const
 {
-    return gl::GetDepthBits(getInternalFormat(target, level)) > 0;
+    return gl::GetInternalFormatInfo(getInternalFormat(target, level)).depthBits > 0;
 }
 
 void TextureD3D_Cube::setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels)
 {
-    GLenum sizedInternalFormat = gl::IsSizedInternalFormat(internalFormat) ? internalFormat
-                                                                       : gl::GetSizedInternalFormat(format, type);
+    GLenum sizedInternalFormat = gl::GetSizedInternalFormat(internalFormat, type);
 
     redefineImage(faceIndex, level, sizedInternalFormat, width, height);
 
@@ -929,8 +929,8 @@ void TextureD3D_Cube::subImageCompressed(GLenum target, GLint level, GLint xoffs
 void TextureD3D_Cube::copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source)
 {
     int faceIndex = targetToIndex(target);
-    GLenum sizedInternalFormat = gl::IsSizedInternalFormat(format) ? format
-                                                               : gl::GetSizedInternalFormat(format, GL_UNSIGNED_BYTE);
+    GLenum sizedInternalFormat = gl::GetSizedInternalFormat(format, GL_UNSIGNED_BYTE);
+
     redefineImage(faceIndex, level, sizedInternalFormat, width, height);
 
     if (!mImageArray[faceIndex][level]->isRenderableFormat())
@@ -986,7 +986,7 @@ void TextureD3D_Cube::copySubImage(GLenum target, GLint level, GLint xoffset, GL
             sourceRect.y = y;
             sourceRect.height = height;
 
-            mRenderer->copyImage(source, sourceRect, gl::GetFormat(getBaseLevelInternalFormat()),
+            mRenderer->copyImage(source, sourceRect, gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
                                  xoffset, yoffset, mTexStorage, target, level);
         }
     }
@@ -1502,13 +1502,13 @@ GLenum TextureD3D_3D::getInternalFormat(GLint level) const
 
 bool TextureD3D_3D::isDepth(GLint level) const
 {
-    return gl::GetDepthBits(getInternalFormat(level)) > 0;
+    return gl::GetInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
 void TextureD3D_3D::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels)
 {
-    GLenum sizedInternalFormat = gl::IsSizedInternalFormat(internalFormat) ? internalFormat
-                                                                       : gl::GetSizedInternalFormat(format, type);
+    GLenum sizedInternalFormat = gl::GetSizedInternalFormat(internalFormat, type);
+
     redefineImage(level, sizedInternalFormat, width, height, depth);
 
     bool fastUnpacked = false;
@@ -1602,7 +1602,7 @@ void TextureD3D_3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLin
             sourceRect.height = height;
 
             mRenderer->copyImage(source, sourceRect,
-                                 gl::GetFormat(getBaseLevelInternalFormat()),
+                                 gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
                                  xoffset, yoffset, zoffset, mTexStorage, level);
         }
     }
@@ -2045,16 +2045,17 @@ GLenum TextureD3D_2DArray::getInternalFormat(GLint level) const
 
 bool TextureD3D_2DArray::isDepth(GLint level) const
 {
-    return gl::GetDepthBits(getInternalFormat(level)) > 0;
+    return gl::GetInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
 void TextureD3D_2DArray::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels)
 {
-    GLenum sizedInternalFormat = gl::IsSizedInternalFormat(internalFormat) ? internalFormat
-                                                                       : gl::GetSizedInternalFormat(format, type);
+    GLenum sizedInternalFormat = gl::GetSizedInternalFormat(internalFormat, type);
+
     redefineImage(level, sizedInternalFormat, width, height, depth);
 
-    GLsizei inputDepthPitch = gl::GetDepthPitch(sizedInternalFormat, type, width, height, unpack.alignment);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(sizedInternalFormat);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(type, width, height, unpack.alignment);
 
     for (int i = 0; i < depth; i++)
     {
@@ -2068,7 +2069,8 @@ void TextureD3D_2DArray::setCompressedImage(GLint level, GLenum format, GLsizei 
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
     redefineImage(level, format, width, height, depth);
 
-    GLsizei inputDepthPitch = gl::GetDepthPitch(format, GL_UNSIGNED_BYTE, width, height, 1);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, width, height, 1);
 
     for (int i = 0; i < depth; i++)
     {
@@ -2079,8 +2081,8 @@ void TextureD3D_2DArray::setCompressedImage(GLint level, GLenum format, GLsizei 
 
 void TextureD3D_2DArray::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels)
 {
-    GLenum internalformat = getInternalFormat(level);
-    GLsizei inputDepthPitch = gl::GetDepthPitch(internalformat, type, width, height, unpack.alignment);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(getInternalFormat(level));
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(type, width, height, unpack.alignment);
 
     for (int i = 0; i < depth; i++)
     {
@@ -2096,7 +2098,8 @@ void TextureD3D_2DArray::subImage(GLint level, GLint xoffset, GLint yoffset, GLi
 
 void TextureD3D_2DArray::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels)
 {
-    GLsizei inputDepthPitch = gl::GetDepthPitch(format, GL_UNSIGNED_BYTE, width, height, 1);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, width, height, 1);
 
     for (int i = 0; i < depth; i++)
     {
@@ -2135,7 +2138,7 @@ void TextureD3D_2DArray::copySubImage(GLenum target, GLint level, GLint xoffset,
             sourceRect.y = y;
             sourceRect.height = height;
 
-            mRenderer->copyImage(source, sourceRect, gl::GetFormat(getInternalFormat(0)),
+            mRenderer->copyImage(source, sourceRect, gl::GetInternalFormatInfo(getInternalFormat(0)).format,
                                  xoffset, yoffset, zoffset, mTexStorage, level);
         }
     }

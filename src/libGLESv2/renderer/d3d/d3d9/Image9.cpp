@@ -387,7 +387,8 @@ void Image9::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width
     // 3D textures are not supported by the D3D9 backend.
     ASSERT(zoffset == 0 && depth == 1);
 
-    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, type, width, unpackAlignment);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
+    GLsizei inputRowPitch = formatInfo.computeRowPitch(type, width, unpackAlignment);
 
     LoadImageFunction loadFunction = d3d9::GetImageLoadFunction(mInternalFormat);
     ASSERT(loadFunction != NULL);
@@ -418,8 +419,9 @@ void Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLs
     // 3D textures are not supported by the D3D9 backend.
     ASSERT(zoffset == 0 && depth == 1);
 
-    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, GL_UNSIGNED_BYTE, width, 1);
-    GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, GL_UNSIGNED_BYTE, width, height, 1);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
+    GLsizei inputRowPitch = formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, width, 1);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, width, height, 1);
 
     ASSERT(xoffset % d3d9::GetBlockWidth(mD3DFormat) == 0);
     ASSERT(yoffset % d3d9::GetBlockHeight(mD3DFormat) == 0);

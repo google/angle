@@ -57,8 +57,8 @@ RenderTarget9::RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, 
 
         bool requiresInitialization = false;
 
-        if (gl::GetDepthBits(internalFormat) > 0 ||
-            gl::GetStencilBits(internalFormat) > 0)
+        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
+        if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0)
         {
             result = device->CreateDepthStencilSurface(width, height, renderFormat,
                                                        gl_d3d9::GetMultisampleType(supportedSamples),
