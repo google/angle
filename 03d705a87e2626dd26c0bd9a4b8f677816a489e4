@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79e44451_e08e77b2",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-22T20:31:00Z",
+      "side": 1,
+      "message": "Had to disable this since Context now calls the queries on all the texture formats.",
+      "range": {
+        "startLine": 427,
+        "startChar": 4,
+        "endLine": 427,
+        "endChar": 22
+      },
+      "revId": "03d705a87e2626dd26c0bd9a4b8f677816a489e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
