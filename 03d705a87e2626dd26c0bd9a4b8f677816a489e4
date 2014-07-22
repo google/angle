@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "59b7804c_c4f09e76",
+        "filename": "src/libGLESv2/Caps.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-07-22T21:08:01Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this still be \"Output vector\" instead of \"Current version?\"",
+      "range": {
+        "startLine": 117,
+        "startChar": 90,
+        "endLine": 117,
+        "endChar": 97
+      },
+      "revId": "03d705a87e2626dd26c0bd9a4b8f677816a489e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79e44451_e08e77b2",
         "filename": "src/libGLESv2/formatutils.cpp",
         "patchSetId": 6
