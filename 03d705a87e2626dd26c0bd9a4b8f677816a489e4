@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "59d06088_cecd576d",
+        "filename": "src/libGLESv2/Caps.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-23T13:36:47Z",
+      "side": 1,
+      "message": "Yep, fixed.",
+      "parentUuid": "59b7804c_c4f09e76",
+      "range": {
+        "startLine": 117,
+        "startChar": 90,
+        "endLine": 117,
+        "endChar": 97
+      },
+      "revId": "03d705a87e2626dd26c0bd9a4b8f677816a489e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79e44451_e08e77b2",
         "filename": "src/libGLESv2/formatutils.cpp",
         "patchSetId": 6
