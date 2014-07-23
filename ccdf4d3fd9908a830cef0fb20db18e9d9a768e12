@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d971b08d_f46bb8f2",
+        "filename": "src/libGLESv2/renderer/d3d/MemoryBuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-23T21:05:38Z",
+      "side": 1,
+      "message": "comment needs a fix.",
+      "range": {
+        "startLine": 49,
+        "startChar": 63,
+        "endLine": 49,
+        "endChar": 64
+      },
+      "revId": "ccdf4d3fd9908a830cef0fb20db18e9d9a768e12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f974b47c_78eebd21",
+        "filename": "src/libGLESv2/renderer/d3d/MemoryBuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-23T21:05:38Z",
+      "side": 1,
+      "message": "q: is it the intention to only fill the previously allocated gaps, or all newly allocated data as well?",
+      "range": {
+        "startLine": 52,
+        "startChar": 26,
+        "endLine": 52,
+        "endChar": 35
+      },
+      "revId": "ccdf4d3fd9908a830cef0fb20db18e9d9a768e12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
