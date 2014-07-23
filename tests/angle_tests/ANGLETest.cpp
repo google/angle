@@ -1,7 +1,7 @@
 #include "ANGLETest.h"
 
 ANGLETest::ANGLETest()
-    : mTestPlatform(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
+    : mTestPlatform(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE),
       mClientVersion(2),
       mWidth(1280),
       mHeight(720),
@@ -349,10 +349,25 @@ bool ANGLETest::createEGLContext()
 
 bool ANGLETest::destroyEGLContext()
 {
-    eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-    eglDestroySurface(mDisplay, mSurface);
-    eglDestroyContext(mDisplay, mContext);
-    eglTerminate(mDisplay);
+    if (mDisplay != EGL_NO_DISPLAY)
+    {
+        eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+
+        if (mSurface != EGL_NO_SURFACE)
+        {
+            eglDestroySurface(mDisplay, mSurface);
+            mSurface = EGL_NO_SURFACE;
+        }
+
+        if (mContext != EGL_NO_CONTEXT)
+        {
+            eglDestroyContext(mDisplay, mContext);
+            mContext = EGL_NO_CONTEXT;
+        }
+
+        eglTerminate(mDisplay);
+        mDisplay = EGL_NO_DISPLAY;
+    }
 
     return true;
 }
