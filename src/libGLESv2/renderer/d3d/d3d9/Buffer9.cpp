@@ -42,7 +42,10 @@ void Buffer9::setData(const void* data, size_t size, GLenum usage)
 {
     if (size > mMemory.size())
     {
-        mMemory.resize(size);
+        if (!mMemory.resize(size))
+        {
+            return gl::error(GL_OUT_OF_MEMORY);
+        }
     }
 
     mSize = size;
@@ -70,7 +73,10 @@ void Buffer9::setSubData(const void* data, size_t size, size_t offset)
 {
     if (offset + size > mMemory.size())
     {
-        mMemory.resize(offset + size);
+        if (!mMemory.resize(offset + size))
+        {
+            return gl::error(GL_OUT_OF_MEMORY);
+        }
     }
 
     mSize = std::max(mSize, offset + size);

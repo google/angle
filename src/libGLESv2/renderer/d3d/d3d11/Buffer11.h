@@ -10,6 +10,7 @@
 #define LIBGLESV2_RENDERER_BUFFER11_H_
 
 #include "libGLESv2/renderer/d3d/BufferD3D.h"
+#include "libGLESv2/renderer/d3d/MemoryBuffer.h"
 #include "libGLESv2/angletypes.h"
 
 namespace rx
@@ -88,7 +89,7 @@ class Buffer11 : public BufferD3D
     typedef std::pair<ID3D11Buffer *, ID3D11ShaderResourceView *> BufferSRVPair;
     std::map<DXGI_FORMAT, BufferSRVPair> mBufferResourceViews;
 
-    std::vector<unsigned char> mResolvedData;
+    MemoryBuffer mResolvedData;
     DataRevision mResolvedDataRevision;
     unsigned int mReadUsageCount;
 

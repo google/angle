@@ -148,7 +148,7 @@ class Buffer11::PackStorage11 : public Buffer11::BufferStorage11
     ID3D11Texture2D *mStagingTexture;
     DXGI_FORMAT mTextureFormat;
     gl::Extents mTextureSize;
-    std::vector<unsigned char> mMemoryBuffer;
+    MemoryBuffer mMemoryBuffer;
     PackPixelsParams *mQueuedPackCommand;
     PackPixelsParams mPackParams;
     bool mDataModified;
@@ -215,7 +215,10 @@ void *Buffer11::getData()
     {
         if (stagingBuffer->getSize() > mResolvedData.size())
         {
-            mResolvedData.resize(stagingBuffer->getSize());
+            if (!mResolvedData.resize(stagingBuffer->getSize()))
+            {
+                return gl::error(GL_OUT_OF_MEMORY, (void*)NULL);
+            }
         }
 
         ID3D11DeviceContext *context = mRenderer->getDeviceContext();
@@ -789,7 +792,10 @@ bool Buffer11::PackStorage11::resize(size_t size, bool preserveData)
 {
     if (size != mBufferSize)
     {
-        mMemoryBuffer.resize(size, 0);
+        if (!mMemoryBuffer.resize(size))
+        {
+            return false;
+        }
         mBufferSize = size;
     }
 
@@ -807,7 +813,7 @@ void *Buffer11::PackStorage11::map(size_t offset, size_t length, GLbitfield acce
     flushQueuedPackCommand();
     mDataModified = (mDataModified || (access & GL_MAP_WRITE_BIT) != 0);
 
-    return &mMemoryBuffer[0] + offset;
+    return mMemoryBuffer.data() + offset;
 }
 
 void Buffer11::PackStorage11::unmap()
@@ -880,11 +886,11 @@ void Buffer11::PackStorage11::packPixels(ID3D11Texture2D *srcTexure, UINT srcSub
 
 void Buffer11::PackStorage11::flushQueuedPackCommand()
 {
-    ASSERT(!mMemoryBuffer.empty());
+    ASSERT(mMemoryBuffer.size() > 0);
 
     if (mQueuedPackCommand)
     {
-        mRenderer->packPixels(mStagingTexture, *mQueuedPackCommand, &mMemoryBuffer[0]);
+        mRenderer->packPixels(mStagingTexture, *mQueuedPackCommand, mMemoryBuffer.data());
         SafeDelete(mQueuedPackCommand);
     }
 }
