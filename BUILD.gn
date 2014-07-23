@@ -23,6 +23,14 @@ compiler_gypi = exec_script(
     "scope",
     [ "src/compiler.gypi" ])
 
+# This config is exported to dependent targets (and also applied to internal
+# ones).
+config("external_config") {
+  include_dirs = [
+    "include",
+  ]
+}
+
 # This config is applied to internal Angle targets (not pushed to dependents).
 config("internal_config") {
   include_dirs = [
@@ -47,6 +55,7 @@ component("translator") {
   deps = [
     ":translator_lib",
   ]
+  forward_dependent_configs_from = [ ":translator_lib" ]
 }
 
 # Holds the shared includes so we only need to list them once.
@@ -84,6 +93,7 @@ static_library("translator_lib") {
     ":internal_config",
     "//build/config/compiler:no_chromium_code",
   ]
+  direct_dependent_configs = [ ":external_config" ]
 
   deps = [
     ":includes",
@@ -110,6 +120,7 @@ static_library("translator_static") {
   deps = [
     ":translator_lib",
   ]
+  forward_dependent_configs_from = [ ":translator_lib" ]
 }
 
 config("commit_id_config") {
