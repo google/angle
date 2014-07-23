@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9461042_b24bf8e9",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2014-07-23T21:17:23Z",
+      "side": 0,
+      "message": "You want to keep this, right? This tells the ms headers to not use try/catch blocks.",
+      "revId": "07ed94e0236f184f011ae5607c0345ab06d0e6eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9461042_f2558085",
+        "filename": "projects/samples/dds_to_header.vcxproj",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2014-07-23T21:17:23Z",
+      "side": 0,
+      "message": "likewise",
+      "revId": "07ed94e0236f184f011ae5607c0345ab06d0e6eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "193d089f_f4a3b051",
+        "filename": "projects/samples/dds_to_header.vcxproj",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2014-07-23T21:17:23Z",
+      "side": 0,
+      "message": "and here and probably in several other places",
+      "revId": "07ed94e0236f184f011ae5607c0345ab06d0e6eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
