@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "f974b47c_987639af",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1106279
+      },
+      "writtenOn": "2014-07-23T21:20:12Z",
+      "side": 0,
+      "message": "I don\u0027t think you should remove this, this macro hides the usage of the |throw| keyword in the MSVC headers.",
+      "revId": "07ed94e0236f184f011ae5607c0345ab06d0e6eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9461042_f2558085",
         "filename": "projects/samples/dds_to_header.vcxproj",
         "patchSetId": 6

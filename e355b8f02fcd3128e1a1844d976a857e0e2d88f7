@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f974b47c_f8856d4b",
+        "filename": "projects/samples/dds_to_header.vcxproj",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1106279
+      },
+      "writtenOn": "2014-07-23T21:20:12Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "e355b8f02fcd3128e1a1844d976a857e0e2d88f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d971b08d_f7f81ae4",
+        "filename": "projects/samples/essl_to_glsl.vcxproj",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1106279
+      },
+      "writtenOn": "2014-07-23T21:20:12Z",
+      "side": 1,
+      "message": "And here, and I assume elsewhere too.",
+      "revId": "e355b8f02fcd3128e1a1844d976a857e0e2d88f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d971b08d_5708ee48",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1106279
+      },
+      "writtenOn": "2014-07-23T21:20:12Z",
+      "side": 1,
+      "message": "(I didn\u0027t look at these hunks much closely.  I\u0027m assuming that this is the same kind of mechanical conversion that I did before.)",
+      "revId": "e355b8f02fcd3128e1a1844d976a857e0e2d88f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
