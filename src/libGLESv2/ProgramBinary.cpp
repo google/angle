@@ -1497,7 +1497,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         size_t vertexShaderSize = vertexExecutable->shaderExecutable()->getLength();
         stream.writeInt(vertexShaderSize);
 
-        unsigned char *vertexBlob = static_cast<unsigned char *>(vertexExecutable->shaderExecutable()->getFunction());
+        const uint8_t *vertexBlob = vertexExecutable->shaderExecutable()->getFunction();
         stream.writeBytes(vertexBlob, vertexShaderSize);
     }
 
@@ -1530,7 +1530,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         size_t pixelShaderSize = pixelExecutable->shaderExecutable()->getLength();
         stream.writeInt(pixelShaderSize);
 
-        unsigned char *pixelBlob = static_cast<unsigned char *>(pixelExecutable->shaderExecutable()->getFunction());
+        const uint8_t *pixelBlob = pixelExecutable->shaderExecutable()->getFunction();
         stream.writeBytes(pixelBlob, pixelShaderSize);
     }
 
@@ -1539,7 +1539,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
 
     if (mGeometryExecutable != NULL && geometryShaderSize > 0)
     {
-        unsigned char *geometryBlob = static_cast<unsigned char *>(mGeometryExecutable->getFunction());
+        const uint8_t *geometryBlob = mGeometryExecutable->getFunction();
         stream.writeBytes(geometryBlob, geometryShaderSize);
     }
 

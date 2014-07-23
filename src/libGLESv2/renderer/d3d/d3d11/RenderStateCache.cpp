@@ -23,7 +23,7 @@ namespace rx
 template <typename mapType>
 static void ClearStateMap(mapType &map)
 {
-    for (mapType::iterator i = map.begin(); i != map.end(); i++)
+    for (typename mapType::iterator i = map.begin(); i != map.end(); i++)
     {
         SafeRelease(i->second.first);
     }
