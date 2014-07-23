@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d971b08d_948e04b2",
+        "filename": "src/libGLESv2/renderer/ShaderExecutable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-23T20:49:30Z",
+      "side": 1,
+      "message": "Lets use a std::vector\u003cuint8_t\u003e here instead.",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 8
+      },
+      "revId": "3137d5228c740cc8e67e5ac5950aed50de1e1ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
