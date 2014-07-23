@@ -23,17 +23,6 @@
   TypeName(const TypeName&);               \
   void operator=(const TypeName&)
 
-// Macros for writing try catch blocks. Defining ANGLE_NO_EXCEPTIONS
-// when building angle will disable the usage of try/catch for compilers
-// without proper support for them (such as clang-cl).
-#ifdef ANGLE_NO_EXCEPTIONS
-#define ANGLE_TRY if (true)
-#define ANGLE_CATCH_ALL else
-#else
-#define ANGLE_TRY try
-#define ANGLE_CATCH_ALL catch(...)
-#endif
-
 template <typename T, unsigned int N>
 inline unsigned int ArraySize(T(&)[N])
 {

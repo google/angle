@@ -71,8 +71,7 @@
                         'AdditionalOptions': ['/MP'],
                         'BufferSecurityCheck': 'true',
                         'DebugInformationFormat': '3',
-                        # TODO(alokp): Disable exceptions before integrating with chromium.
-                        #'ExceptionHandling': '0',
+                        'ExceptionHandling': '0',
                         'EnableFunctionLevelLinking': 'true',
                         'MinimalRebuild': 'false',
                         'RuntimeTypeInfo': 'true',
