@@ -21,7 +21,6 @@
 namespace gl
 {
 
-// ES3 has a specific set of permutations of internal formats, formats and types which are acceptable.
 struct ES3FormatCombination
 {
     GLenum internalFormat;
@@ -224,7 +223,8 @@ static bool ValidateTexImageFormatCombination(gl::Context *context, GLenum inter
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
     if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
-        return gl::error(GL_INVALID_ENUM, false);
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
     }
 
     // The type and format are valid if any supported internal format has that type and format
@@ -257,7 +257,8 @@ static bool ValidateTexImageFormatCombination(gl::Context *context, GLenum inter
 
     if (!typeSupported || !formatSupported)
     {
-        return gl::error(GL_INVALID_ENUM, false);
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
     }
 
     // Check if this is a valid format combination to load texture data
@@ -268,31 +269,35 @@ static bool ValidateTexImageFormatCombination(gl::Context *context, GLenum inter
 
     if (es3FormatSet.find(searchFormat) == es3FormatSet.end())
     {
-        return gl::error(GL_INVALID_OPERATION, false);
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
     return true;
 }
 
-bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint level, GLenum internalformat, bool isCompressed, bool isSubImage,
+bool ValidateES3TexImageParameters(Context *context, GLenum target, GLint level, GLenum internalformat, bool isCompressed, bool isSubImage,
                                    GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                    GLint border, GLenum format, GLenum type, const GLvoid *pixels)
 {
     if (!ValidTexture2DDestinationTarget(context, target))
     {
-        return gl::error(GL_INVALID_ENUM, false);
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
     }
 
     // Validate image size
     if (!ValidImageSize(context, target, level, width, height, depth))
     {
-        return gl::error(GL_INVALID_VALUE, false);
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
     }
 
     // Verify zero border
     if (border != 0)
     {
-        return gl::error(GL_INVALID_VALUE, false);
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
     }
 
     if (xoffset < 0 || yoffset < 0 || zoffset < 0 ||
@@ -300,7 +305,8 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
         std::numeric_limits<GLsizei>::max() - yoffset < height ||
         std::numeric_limits<GLsizei>::max() - zoffset < depth)
     {
-        return gl::error(GL_INVALID_VALUE, false);
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
     }
 
     const gl::Caps &caps = context->getCaps();
@@ -318,7 +324,8 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
             if (static_cast<GLuint>(width) > (caps.max2DTextureSize >> level) ||
                 static_cast<GLuint>(height) > (caps.max2DTextureSize >> level))
             {
-                return gl::error(GL_INVALID_VALUE, false);
+                context->recordError(Error(GL_INVALID_VALUE));
+                return false;
             }
 
             gl::Texture2D *texture2d = context->getTexture2D();
@@ -343,12 +350,14 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
         {
             if (!isSubImage && width != height)
             {
-                return gl::error(GL_INVALID_VALUE, false);
+                context->recordError(Error(GL_INVALID_VALUE));
+                return false;
             }
 
             if (static_cast<GLuint>(width) > (caps.maxCubeMapTextureSize >> level))
             {
-                return gl::error(GL_INVALID_VALUE, false);
+                context->recordError(Error(GL_INVALID_VALUE));
+                return false;
             }
 
             gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
@@ -370,7 +379,8 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
                 static_cast<GLuint>(height) > (caps.max3DTextureSize >> level) ||
                 static_cast<GLuint>(depth) > (caps.max3DTextureSize >> level))
             {
-                return gl::error(GL_INVALID_VALUE, false);
+                context->recordError(Error(GL_INVALID_VALUE));
+                return false;
             }
 
             gl::Texture3D *texture3d = context->getTexture3D();
@@ -392,7 +402,8 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
                   static_cast<GLuint>(height) > (caps.max2DTextureSize >> level) ||
                   static_cast<GLuint>(depth) > (caps.maxArrayTextureLayers >> level))
               {
-                  return gl::error(GL_INVALID_VALUE, false);
+                  context->recordError(Error(GL_INVALID_VALUE));
+                  return false;
               }
 
               gl::Texture2DArray *texture2darray = context->getTexture2DArray();
@@ -409,17 +420,20 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
           break;
 
       default:
-        return gl::error(GL_INVALID_ENUM, false);
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
     }
 
     if (!texture)
     {
-        return gl::error(GL_INVALID_OPERATION, false);
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
     if (texture->isImmutable() && !isSubImage)
     {
-        return gl::error(GL_INVALID_OPERATION, false);
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
     // Validate texture formats
@@ -429,17 +443,20 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
     {
         if (!ValidCompressedImageSize(context, actualInternalFormat, width, height))
         {
-            return gl::error(GL_INVALID_OPERATION, false);
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
         }
 
         if (!actualFormatInfo.compressed)
         {
-            return gl::error(GL_INVALID_ENUM, false);
+            context->recordError(Error(GL_INVALID_ENUM));
+            return false;
         }
 
         if (target == GL_TEXTURE_3D)
         {
-            return gl::error(GL_INVALID_OPERATION, false);
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
         }
     }
     else
@@ -451,7 +468,8 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
 
         if (target == GL_TEXTURE_3D && (format == GL_DEPTH_COMPONENT || format == GL_DEPTH_STENCIL))
         {
-            return gl::error(GL_INVALID_OPERATION, false);
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
         }
     }
 
@@ -460,7 +478,8 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
     {
         if (isCompressed != textureCompressed)
         {
-            return gl::error(GL_INVALID_OPERATION, false);
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
         }
 
         if (isCompressed)
@@ -468,7 +487,8 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
             if ((width % 4 != 0 && width != textureLevelWidth) ||
                 (height % 4 != 0 && height != textureLevelHeight))
             {
-                return gl::error(GL_INVALID_OPERATION, false);
+                context->recordError(Error(GL_INVALID_OPERATION));
+                return false;
             }
         }
 
@@ -479,21 +499,24 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
 
         if (xoffset < 0 || yoffset < 0 || zoffset < 0)
         {
-            return gl::error(GL_INVALID_VALUE, false);
+            context->recordError(Error(GL_INVALID_VALUE));
+            return false;
         }
 
         if (std::numeric_limits<GLsizei>::max() - xoffset < width ||
             std::numeric_limits<GLsizei>::max() - yoffset < height ||
             std::numeric_limits<GLsizei>::max() - zoffset < depth)
         {
-            return gl::error(GL_INVALID_VALUE, false);
+            context->recordError(Error(GL_INVALID_VALUE));
+            return false;
         }
 
         if (xoffset + width > textureLevelWidth ||
             yoffset + height > textureLevelHeight ||
             zoffset + depth > textureLevelDepth)
         {
-            return gl::error(GL_INVALID_VALUE, false);
+            context->recordError(Error(GL_INVALID_VALUE));
+            return false;
         }
     }
 
@@ -515,7 +538,8 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
             !rx::IsUnsignedMultiplicationSafe(widthSize * heightSize * depthSize, pixelBytes))
         {
             // Overflow past the end of the buffer
-            return gl::error(GL_INVALID_OPERATION, false);
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
         }
 
         size_t copyBytes = widthSize * heightSize * depthSize * pixelBytes;
@@ -525,7 +549,8 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
             ((offset + copyBytes) > static_cast<size_t>(pixelUnpackBuffer->getSize())))
         {
             // Overflow past the end of the buffer
-            return gl::error(GL_INVALID_OPERATION, false);
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
         }
 
         // ...data is not evenly divisible into the number of bytes needed to store in memory a datum
@@ -534,13 +559,15 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
 
         if ((offset % dataBytesPerPixel) != 0)
         {
-            return gl::error(GL_INVALID_OPERATION, false);
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
         }
 
         // ...the buffer object's data store is currently mapped.
         if (pixelUnpackBuffer->isMapped())
         {
-            return gl::error(GL_INVALID_OPERATION, false);
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
         }
     }
 
@@ -831,7 +858,7 @@ static bool IsValidES3CopyTexImageCombination(GLenum textureInternalFormat, GLen
     return false;
 }
 
-bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLint level, GLenum internalformat,
+bool ValidateES3CopyTexImageParameters(Context *context, GLenum target, GLint level, GLenum internalformat,
                                        bool isSubImage, GLint xoffset, GLint yoffset, GLint zoffset,
                                        GLint x, GLint y, GLsizei width, GLsizei height, GLint border)
 {
@@ -847,12 +874,14 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
 
     if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
-        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
+        context->recordError(Error(GL_INVALID_FRAMEBUFFER_OPERATION));
+        return false;
     }
 
     if (context->getState().getReadFramebuffer()->id() != 0 && framebuffer->getSamples() != 0)
     {
-        return gl::error(GL_INVALID_OPERATION, false);
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
     gl::FramebufferAttachment *source = framebuffer->getReadColorbuffer();
@@ -863,7 +892,8 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
         if (!IsValidES3CopyTexImageCombination(textureInternalFormat, colorbufferInternalFormat,
                                                context->getState().getReadFramebuffer()->id()))
         {
-            return gl::error(GL_INVALID_OPERATION, false);
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
         }
     }
     else
@@ -871,7 +901,8 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
         if (!gl::IsValidES3CopyTexImageCombination(internalformat, colorbufferInternalFormat,
                                                 context->getState().getReadFramebuffer()->id()))
         {
-            return gl::error(GL_INVALID_OPERATION, false);
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
         }
     }
 
@@ -879,17 +910,19 @@ bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
     return (width > 0 && height > 0);
 }
 
-bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsizei levels, GLenum internalformat,
+bool ValidateES3TexStorageParameters(Context *context, GLenum target, GLsizei levels, GLenum internalformat,
                                      GLsizei width, GLsizei height, GLsizei depth)
 {
     if (width < 1 || height < 1 || depth < 1 || levels < 1)
     {
-        return gl::error(GL_INVALID_VALUE, false);
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
     }
 
     if (levels > gl::log2(std::max(std::max(width, height), depth)) + 1)
     {
-        return gl::error(GL_INVALID_OPERATION, false);
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
     const gl::Caps &caps = context->getCaps();
@@ -904,7 +937,8 @@ bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsize
             if (static_cast<GLuint>(width) > caps.max2DTextureSize ||
                 static_cast<GLuint>(height) > caps.max2DTextureSize)
             {
-                return gl::error(GL_INVALID_VALUE, false);
+                context->recordError(Error(GL_INVALID_VALUE));
+                return false;
             }
         }
         break;
@@ -915,12 +949,14 @@ bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsize
 
             if (width != height)
             {
-                return gl::error(GL_INVALID_VALUE, false);
+                context->recordError(Error(GL_INVALID_VALUE));
+                return false;
             }
 
             if (static_cast<GLuint>(width) > caps.maxCubeMapTextureSize)
             {
-                return gl::error(GL_INVALID_VALUE, false);
+                context->recordError(Error(GL_INVALID_VALUE));
+                return false;
             }
         }
         break;
@@ -933,7 +969,8 @@ bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsize
                 static_cast<GLuint>(height) > caps.max3DTextureSize ||
                 static_cast<GLuint>(depth) > caps.max3DTextureSize)
             {
-                return gl::error(GL_INVALID_VALUE, false);
+                context->recordError(Error(GL_INVALID_VALUE));
+                return false;
             }
         }
         break;
@@ -946,50 +983,58 @@ bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsize
                 static_cast<GLuint>(height) > caps.max2DTextureSize ||
                 static_cast<GLuint>(depth) > caps.maxArrayTextureLayers)
             {
-                return gl::error(GL_INVALID_VALUE, false);
+                context->recordError(Error(GL_INVALID_VALUE));
+                return false;
             }
         }
         break;
 
       default:
-        return gl::error(GL_INVALID_ENUM, false);
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
     }
 
     if (!texture || texture->id() == 0)
     {
-        return gl::error(GL_INVALID_OPERATION, false);
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
     if (texture->isImmutable())
     {
-        return gl::error(GL_INVALID_OPERATION, false);
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
     if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
-        return gl::error(GL_INVALID_ENUM, false);
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
     }
 
     if (formatInfo.pixelBytes == 0)
     {
-        return gl::error(GL_INVALID_ENUM, false);
+        context->recordError(Error(GL_INVALID_ENUM));
+        return false;
     }
 
     return true;
 }
 
-bool ValidateFramebufferTextureLayer(const gl::Context *context, GLenum target, GLenum attachment,
+bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum attachment,
                                      GLuint texture, GLint level, GLint layer)
 {
     if (context->getClientVersion() < 3)
     {
-        return gl::error(GL_INVALID_OPERATION, false);
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
     if (layer < 0)
     {
-        return gl::error(GL_INVALID_VALUE, false);
+        context->recordError(Error(GL_INVALID_VALUE));
+        return false;
     }
 
     if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))
@@ -1009,18 +1054,21 @@ bool ValidateFramebufferTextureLayer(const gl::Context *context, GLenum target, 
             {
                 if (level > gl::log2(caps.max2DTextureSize))
                 {
-                    return gl::error(GL_INVALID_VALUE, false);
+                    context->recordError(Error(GL_INVALID_VALUE));
+                    return false;
                 }
 
                 if (static_cast<GLuint>(layer) >= caps.maxArrayTextureLayers)
                 {
-                    return gl::error(GL_INVALID_VALUE, false);
+                    context->recordError(Error(GL_INVALID_VALUE));
+                    return false;
                 }
 
                 gl::Texture2DArray *texArray = static_cast<gl::Texture2DArray *>(tex);
                 if (texArray->isCompressed(level))
                 {
-                    return gl::error(GL_INVALID_OPERATION, false);
+                    context->recordError(Error(GL_INVALID_OPERATION));
+                    return false;
                 }
             }
             break;
@@ -1029,31 +1077,35 @@ bool ValidateFramebufferTextureLayer(const gl::Context *context, GLenum target, 
             {
                 if (level > gl::log2(caps.max3DTextureSize))
                 {
-                    return gl::error(GL_INVALID_VALUE, false);
+                    context->recordError(Error(GL_INVALID_VALUE));
+                    return false;
                 }
 
                 if (static_cast<GLuint>(layer) >= caps.max3DTextureSize)
                 {
-                    return gl::error(GL_INVALID_VALUE, false);
+                    context->recordError(Error(GL_INVALID_VALUE));
+                    return false;
                 }
 
                 gl::Texture3D *tex3d = static_cast<gl::Texture3D *>(tex);
                 if (tex3d->isCompressed(level))
                 {
-                    return gl::error(GL_INVALID_OPERATION, false);
+                    context->recordError(Error(GL_INVALID_OPERATION));
+                    return false;
                 }
             }
             break;
 
           default:
-            return gl::error(GL_INVALID_OPERATION, false);
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
         }
     }
 
     return true;
 }
 
-bool ValidES3ReadFormatType(gl::Context *context, GLenum internalFormat, GLenum format, GLenum type)
+bool ValidES3ReadFormatType(Context *context, GLenum internalFormat, GLenum format, GLenum type)
 {
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
 
@@ -1130,7 +1182,7 @@ bool ValidES3ReadFormatType(gl::Context *context, GLenum internalFormat, GLenum 
     return true;
 }
 
-bool ValidateInvalidateFramebufferParameters(gl::Context *context, GLenum target, GLsizei numAttachments,
+bool ValidateInvalidateFramebufferParameters(Context *context, GLenum target, GLsizei numAttachments,
                                              const GLenum* attachments)
 {
     bool defaultFramebuffer = false;
@@ -1145,7 +1197,8 @@ bool ValidateInvalidateFramebufferParameters(gl::Context *context, GLenum target
         defaultFramebuffer = context->getState().getReadFramebuffer()->id() == 0;
         break;
       default:
-        return gl::error(GL_INVALID_ENUM, false);
+          context->recordError(Error(GL_INVALID_ENUM));
+          return false;
     }
 
     for (int i = 0; i < numAttachments; ++i)
@@ -1154,12 +1207,14 @@ bool ValidateInvalidateFramebufferParameters(gl::Context *context, GLenum target
         {
             if (defaultFramebuffer)
             {
-                return gl::error(GL_INVALID_ENUM, false);
+                context->recordError(Error(GL_INVALID_ENUM));
+                return false;
             }
 
             if (attachments[i] >= GL_COLOR_ATTACHMENT0 + context->getCaps().maxColorAttachments)
             {
-                return gl::error(GL_INVALID_OPERATION, false);
+                context->recordError(Error(GL_INVALID_OPERATION));
+                return false;
             }
         }
         else
@@ -1171,7 +1226,8 @@ bool ValidateInvalidateFramebufferParameters(gl::Context *context, GLenum target
               case GL_DEPTH_STENCIL_ATTACHMENT:
                 if (defaultFramebuffer)
                 {
-                    return gl::error(GL_INVALID_ENUM, false);
+                    context->recordError(Error(GL_INVALID_ENUM));
+                    return false;
                 }
                 break;
               case GL_COLOR:
@@ -1179,11 +1235,13 @@ bool ValidateInvalidateFramebufferParameters(gl::Context *context, GLenum target
               case GL_STENCIL:
                 if (!defaultFramebuffer)
                 {
-                    return gl::error(GL_INVALID_ENUM, false);
+                    context->recordError(Error(GL_INVALID_ENUM));
+                    return false;
                 }
                 break;
               default:
-                return gl::error(GL_INVALID_ENUM, false);
+                context->recordError(Error(GL_INVALID_ENUM));
+                return false;
             }
         }
     }
@@ -1191,27 +1249,30 @@ bool ValidateInvalidateFramebufferParameters(gl::Context *context, GLenum target
     return true;
 }
 
-bool ValidateClearBuffer(const gl::Context *context)
+bool ValidateClearBuffer(Context *context)
 {
     if (context->getClientVersion() < 3)
     {
-        return gl::error(GL_INVALID_OPERATION, false);
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
     const gl::Framebuffer *fbo = context->getState().getDrawFramebuffer();
     if (!fbo || fbo->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
-        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
+        context->recordError(Error(GL_INVALID_FRAMEBUFFER_OPERATION));
+        return false;
     }
 
     return true;
 }
 
-bool ValidateGetUniformuiv(const gl::Context *context, GLuint program, GLint location, GLuint* params)
+bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLuint* params)
 {
     if (context->getClientVersion() < 3)
     {
-        return gl::error(GL_INVALID_OPERATION, false);
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
     return ValidateGetUniformBase(context, program, location);

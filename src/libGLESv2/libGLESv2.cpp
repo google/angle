@@ -40,12 +40,12 @@ void __stdcall glActiveTexture(GLenum texture)
     EVENT("(GLenum texture = 0x%X)", texture);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (texture < GL_TEXTURE0 || texture > GL_TEXTURE0 + context->getCaps().maxCombinedTextureImageUnits - 1)
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         context->getState().setActiveSampler(texture - GL_TEXTURE0);
@@ -57,7 +57,6 @@ void __stdcall glAttachShader(GLuint program, GLuint shader)
     EVENT("(GLuint program = %d, GLuint shader = %d)", program, shader);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Program *programObject = context->getProgram(program);
@@ -67,11 +66,13 @@ void __stdcall glAttachShader(GLuint program, GLuint shader)
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -79,17 +80,20 @@ void __stdcall glAttachShader(GLuint program, GLuint shader)
         {
             if (context->getProgram(shader))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
         if (!programObject->attachShader(shaderObject))
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
     }
 }
@@ -99,7 +103,6 @@ void __stdcall glBeginQueryEXT(GLenum target, GLuint id)
     EVENT("(GLenum target = 0x%X, GLuint %d)", target, id);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateBeginQuery(context, target, id))
@@ -115,32 +118,35 @@ void __stdcall glBindAttribLocation(GLuint program, GLuint index, const GLchar* 
 {
     EVENT("(GLuint program = %d, GLuint index = %d, const GLchar* name = 0x%0.8p)", program, index, name);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         gl::Program *programObject = context->getProgram(program);
 
         if (!programObject)
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
         if (strncmp(name, "gl_", 3) == 0)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         programObject->bindAttributeLocation(index, name);
@@ -152,12 +158,12 @@ void __stdcall glBindBuffer(GLenum target, GLuint buffer)
     EVENT("(GLenum target = 0x%X, GLuint buffer = %d)", target, buffer);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!gl::ValidBufferTarget(context, target))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         switch (target)
@@ -186,8 +192,10 @@ void __stdcall glBindBuffer(GLenum target, GLuint buffer)
           case GL_TRANSFORM_FEEDBACK_BUFFER:
             context->bindGenericTransformFeedbackBuffer(buffer);
             return;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -196,15 +204,15 @@ void __stdcall glBindFramebuffer(GLenum target, GLuint framebuffer)
 {
     EVENT("(GLenum target = 0x%X, GLuint framebuffer = %d)", target, framebuffer);
 
-    if (!gl::ValidFramebufferTarget(target))
-    {
-        return gl::error(GL_INVALID_ENUM);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (!gl::ValidFramebufferTarget(target))
+        {
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
         if (target == GL_READ_FRAMEBUFFER_ANGLE || target == GL_FRAMEBUFFER)
         {
             context->bindReadFramebuffer(framebuffer);
@@ -221,15 +229,15 @@ void __stdcall glBindRenderbuffer(GLenum target, GLuint renderbuffer)
 {
     EVENT("(GLenum target = 0x%X, GLuint renderbuffer = %d)", target, renderbuffer);
 
-    if (target != GL_RENDERBUFFER)
-    {
-        return gl::error(GL_INVALID_ENUM);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (target != GL_RENDERBUFFER)
+        {
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
         context->bindRenderbuffer(renderbuffer);
     }
 }
@@ -239,14 +247,14 @@ void __stdcall glBindTexture(GLenum target, GLuint texture)
     EVENT("(GLenum target = 0x%X, GLuint texture = %d)", target, texture);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Texture *textureObject = context->getTexture(texture);
 
         if (textureObject && textureObject->getTarget() != target && texture != 0)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         switch (target)
@@ -254,25 +262,32 @@ void __stdcall glBindTexture(GLenum target, GLuint texture)
           case GL_TEXTURE_2D:
             context->bindTexture2D(texture);
             return;
+
           case GL_TEXTURE_CUBE_MAP:
             context->bindTextureCubeMap(texture);
             return;
+
           case GL_TEXTURE_3D:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             context->bindTexture3D(texture);
             return;
+
           case GL_TEXTURE_2D_ARRAY:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             context->bindTexture2DArray(texture);
             return;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -300,35 +315,36 @@ void __stdcall glBlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
     EVENT("(GLenum modeRGB = 0x%X, GLenum modeAlpha = 0x%X)", modeRGB, modeAlpha);
 
     gl::Context *context = gl::getNonLostContext();
-
-    switch (modeRGB)
-    {
-      case GL_FUNC_ADD:
-      case GL_FUNC_SUBTRACT:
-      case GL_FUNC_REVERSE_SUBTRACT:
-      case GL_MIN:
-      case GL_MAX:
-        break;
-
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
-    switch (modeAlpha)
-    {
-      case GL_FUNC_ADD:
-      case GL_FUNC_SUBTRACT:
-      case GL_FUNC_REVERSE_SUBTRACT:
-      case GL_MIN:
-      case GL_MAX:
-        break;
-
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
     if (context)
     {
+        switch (modeRGB)
+        {
+          case GL_FUNC_ADD:
+          case GL_FUNC_SUBTRACT:
+          case GL_FUNC_REVERSE_SUBTRACT:
+          case GL_MIN:
+          case GL_MAX:
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
+        switch (modeAlpha)
+        {
+          case GL_FUNC_ADD:
+          case GL_FUNC_SUBTRACT:
+          case GL_FUNC_REVERSE_SUBTRACT:
+          case GL_MIN:
+          case GL_MAX:
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
         context->getState().setBlendEquation(modeRGB, modeAlpha);
     }
 }
@@ -344,123 +360,131 @@ void __stdcall glBlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha
           srcRGB, dstRGB, srcAlpha, dstAlpha);
 
     gl::Context *context = gl::getNonLostContext();
-
-    switch (srcRGB)
-    {
-      case GL_ZERO:
-      case GL_ONE:
-      case GL_SRC_COLOR:
-      case GL_ONE_MINUS_SRC_COLOR:
-      case GL_DST_COLOR:
-      case GL_ONE_MINUS_DST_COLOR:
-      case GL_SRC_ALPHA:
-      case GL_ONE_MINUS_SRC_ALPHA:
-      case GL_DST_ALPHA:
-      case GL_ONE_MINUS_DST_ALPHA:
-      case GL_CONSTANT_COLOR:
-      case GL_ONE_MINUS_CONSTANT_COLOR:
-      case GL_CONSTANT_ALPHA:
-      case GL_ONE_MINUS_CONSTANT_ALPHA:
-      case GL_SRC_ALPHA_SATURATE:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
-    switch (dstRGB)
-    {
-      case GL_ZERO:
-      case GL_ONE:
-      case GL_SRC_COLOR:
-      case GL_ONE_MINUS_SRC_COLOR:
-      case GL_DST_COLOR:
-      case GL_ONE_MINUS_DST_COLOR:
-      case GL_SRC_ALPHA:
-      case GL_ONE_MINUS_SRC_ALPHA:
-      case GL_DST_ALPHA:
-      case GL_ONE_MINUS_DST_ALPHA:
-      case GL_CONSTANT_COLOR:
-      case GL_ONE_MINUS_CONSTANT_COLOR:
-      case GL_CONSTANT_ALPHA:
-      case GL_ONE_MINUS_CONSTANT_ALPHA:
-        break;
-
-      case GL_SRC_ALPHA_SATURATE:
-        if (!context || context->getClientVersion() < 3)
-        {
-            return gl::error(GL_INVALID_ENUM);
-        }
-        break;
-
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
-    switch (srcAlpha)
-    {
-      case GL_ZERO:
-      case GL_ONE:
-      case GL_SRC_COLOR:
-      case GL_ONE_MINUS_SRC_COLOR:
-      case GL_DST_COLOR:
-      case GL_ONE_MINUS_DST_COLOR:
-      case GL_SRC_ALPHA:
-      case GL_ONE_MINUS_SRC_ALPHA:
-      case GL_DST_ALPHA:
-      case GL_ONE_MINUS_DST_ALPHA:
-      case GL_CONSTANT_COLOR:
-      case GL_ONE_MINUS_CONSTANT_COLOR:
-      case GL_CONSTANT_ALPHA:
-      case GL_ONE_MINUS_CONSTANT_ALPHA:
-      case GL_SRC_ALPHA_SATURATE:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
-    switch (dstAlpha)
-    {
-      case GL_ZERO:
-      case GL_ONE:
-      case GL_SRC_COLOR:
-      case GL_ONE_MINUS_SRC_COLOR:
-      case GL_DST_COLOR:
-      case GL_ONE_MINUS_DST_COLOR:
-      case GL_SRC_ALPHA:
-      case GL_ONE_MINUS_SRC_ALPHA:
-      case GL_DST_ALPHA:
-      case GL_ONE_MINUS_DST_ALPHA:
-      case GL_CONSTANT_COLOR:
-      case GL_ONE_MINUS_CONSTANT_COLOR:
-      case GL_CONSTANT_ALPHA:
-      case GL_ONE_MINUS_CONSTANT_ALPHA:
-        break;
-
-      case GL_SRC_ALPHA_SATURATE:
-        if (!context || context->getClientVersion() < 3)
-        {
-            return gl::error(GL_INVALID_ENUM);
-        }
-        break;
-
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
-    bool constantColorUsed = (srcRGB == GL_CONSTANT_COLOR || srcRGB == GL_ONE_MINUS_CONSTANT_COLOR ||
-                              dstRGB == GL_CONSTANT_COLOR || dstRGB == GL_ONE_MINUS_CONSTANT_COLOR);
-
-    bool constantAlphaUsed = (srcRGB == GL_CONSTANT_ALPHA || srcRGB == GL_ONE_MINUS_CONSTANT_ALPHA ||
-                              dstRGB == GL_CONSTANT_ALPHA || dstRGB == GL_ONE_MINUS_CONSTANT_ALPHA);
-
-    if (constantColorUsed && constantAlphaUsed)
-    {
-        ERR("Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR invalid under WebGL");
-        return gl::error(GL_INVALID_OPERATION);
-    }
-
     if (context)
     {
+        switch (srcRGB)
+        {
+          case GL_ZERO:
+          case GL_ONE:
+          case GL_SRC_COLOR:
+          case GL_ONE_MINUS_SRC_COLOR:
+          case GL_DST_COLOR:
+          case GL_ONE_MINUS_DST_COLOR:
+          case GL_SRC_ALPHA:
+          case GL_ONE_MINUS_SRC_ALPHA:
+          case GL_DST_ALPHA:
+          case GL_ONE_MINUS_DST_ALPHA:
+          case GL_CONSTANT_COLOR:
+          case GL_ONE_MINUS_CONSTANT_COLOR:
+          case GL_CONSTANT_ALPHA:
+          case GL_ONE_MINUS_CONSTANT_ALPHA:
+          case GL_SRC_ALPHA_SATURATE:
+            break;
+
+          default:
+              context->recordError(gl::Error(GL_INVALID_ENUM));
+              return;
+        }
+
+        switch (dstRGB)
+        {
+          case GL_ZERO:
+          case GL_ONE:
+          case GL_SRC_COLOR:
+          case GL_ONE_MINUS_SRC_COLOR:
+          case GL_DST_COLOR:
+          case GL_ONE_MINUS_DST_COLOR:
+          case GL_SRC_ALPHA:
+          case GL_ONE_MINUS_SRC_ALPHA:
+          case GL_DST_ALPHA:
+          case GL_ONE_MINUS_DST_ALPHA:
+          case GL_CONSTANT_COLOR:
+          case GL_ONE_MINUS_CONSTANT_COLOR:
+          case GL_CONSTANT_ALPHA:
+          case GL_ONE_MINUS_CONSTANT_ALPHA:
+            break;
+
+          case GL_SRC_ALPHA_SATURATE:
+            if (context->getClientVersion() < 3)
+            {
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
+            }
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
+        switch (srcAlpha)
+        {
+          case GL_ZERO:
+          case GL_ONE:
+          case GL_SRC_COLOR:
+          case GL_ONE_MINUS_SRC_COLOR:
+          case GL_DST_COLOR:
+          case GL_ONE_MINUS_DST_COLOR:
+          case GL_SRC_ALPHA:
+          case GL_ONE_MINUS_SRC_ALPHA:
+          case GL_DST_ALPHA:
+          case GL_ONE_MINUS_DST_ALPHA:
+          case GL_CONSTANT_COLOR:
+          case GL_ONE_MINUS_CONSTANT_COLOR:
+          case GL_CONSTANT_ALPHA:
+          case GL_ONE_MINUS_CONSTANT_ALPHA:
+          case GL_SRC_ALPHA_SATURATE:
+            break;
+
+          default:
+              context->recordError(gl::Error(GL_INVALID_ENUM));
+              return;
+        }
+
+        switch (dstAlpha)
+        {
+          case GL_ZERO:
+          case GL_ONE:
+          case GL_SRC_COLOR:
+          case GL_ONE_MINUS_SRC_COLOR:
+          case GL_DST_COLOR:
+          case GL_ONE_MINUS_DST_COLOR:
+          case GL_SRC_ALPHA:
+          case GL_ONE_MINUS_SRC_ALPHA:
+          case GL_DST_ALPHA:
+          case GL_ONE_MINUS_DST_ALPHA:
+          case GL_CONSTANT_COLOR:
+          case GL_ONE_MINUS_CONSTANT_COLOR:
+          case GL_CONSTANT_ALPHA:
+          case GL_ONE_MINUS_CONSTANT_ALPHA:
+            break;
+
+          case GL_SRC_ALPHA_SATURATE:
+            if (context->getClientVersion() < 3)
+            {
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
+            }
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
+        bool constantColorUsed = (srcRGB == GL_CONSTANT_COLOR || srcRGB == GL_ONE_MINUS_CONSTANT_COLOR ||
+                                  dstRGB == GL_CONSTANT_COLOR || dstRGB == GL_ONE_MINUS_CONSTANT_COLOR);
+
+        bool constantAlphaUsed = (srcRGB == GL_CONSTANT_ALPHA || srcRGB == GL_ONE_MINUS_CONSTANT_ALPHA ||
+                                  dstRGB == GL_CONSTANT_ALPHA || dstRGB == GL_ONE_MINUS_CONSTANT_ALPHA);
+
+        if (constantColorUsed && constantAlphaUsed)
+        {
+            ERR("Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR invalid under WebGL");
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
+        }
+
         context->getState().setBlendFactors(srcRGB, dstRGB, srcAlpha, dstAlpha);
     }
 }
@@ -470,48 +494,52 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, 
     EVENT("(GLenum target = 0x%X, GLsizeiptr size = %d, const GLvoid* data = 0x%0.8p, GLenum usage = %d)",
           target, size, data, usage);
 
-    if (size < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
-    switch (usage)
-    {
-      case GL_STREAM_DRAW:
-      case GL_STATIC_DRAW:
-      case GL_DYNAMIC_DRAW:
-        break;
-
-      case GL_STREAM_READ:
-      case GL_STREAM_COPY:
-      case GL_STATIC_READ:
-      case GL_STATIC_COPY:
-      case GL_DYNAMIC_READ:
-      case GL_DYNAMIC_COPY:
-        if (context && context->getClientVersion() < 3)
-        {
-          return gl::error(GL_INVALID_ENUM);
-        }
-        break;
-
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
     if (context)
     {
+        if (size < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
+        switch (usage)
+        {
+          case GL_STREAM_DRAW:
+          case GL_STATIC_DRAW:
+          case GL_DYNAMIC_DRAW:
+            break;
+
+          case GL_STREAM_READ:
+          case GL_STREAM_COPY:
+          case GL_STATIC_READ:
+          case GL_STATIC_COPY:
+          case GL_DYNAMIC_READ:
+          case GL_DYNAMIC_COPY:
+            if (context->getClientVersion() < 3)
+            {
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
+            }
+            break;
+
+          default:
+              context->recordError(gl::Error(GL_INVALID_ENUM));
+              return;
+        }
+
         if (!gl::ValidBufferTarget(context, target))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         gl::Buffer *buffer = context->getState().getTargetBuffer(target);
 
         if (!buffer)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         buffer->bufferData(data, size, usage);
@@ -523,46 +551,51 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
     EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr size = %d, const GLvoid* data = 0x%0.8p)",
           target, offset, size, data);
 
-    if (size < 0 || offset < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
-    if (data == NULL)
-    {
-        return;
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (size < 0 || offset < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
+        if (data == NULL)
+        {
+            return;
+        }
+
         if (!gl::ValidBufferTarget(context, target))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         gl::Buffer *buffer = context->getState().getTargetBuffer(target);
 
         if (!buffer)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (buffer->isMapped())
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // Check for possible overflow of size + offset
         if (!rx::IsUnsignedAdditionSafe<size_t>(size, offset))
         {
-            return gl::error(GL_OUT_OF_MEMORY);
+            context->recordError(gl::Error(GL_OUT_OF_MEMORY));
+            return;
         }
 
         if (size + offset > buffer->getSize())
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         buffer->bufferSubData(data, size, offset);
@@ -573,15 +606,15 @@ GLenum __stdcall glCheckFramebufferStatus(GLenum target)
 {
     EVENT("(GLenum target = 0x%X)", target);
 
-    if (!gl::ValidFramebufferTarget(target))
-    {
-        return gl::error(GL_INVALID_ENUM, 0);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (!gl::ValidFramebufferTarget(target))
+        {
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return 0;
+        }
+
         gl::Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
         ASSERT(framebuffer);
         return framebuffer->completeness();
@@ -595,19 +628,20 @@ void __stdcall glClear(GLbitfield mask)
     EVENT("(GLbitfield mask = 0x%X)", mask);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Framebuffer *framebufferObject = context->getState().getDrawFramebuffer();
 
         if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
         {
-            return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_FRAMEBUFFER_OPERATION));
+            return;
         }
 
         if ((mask & ~(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT)) != 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         context->clear(mask);
@@ -620,7 +654,6 @@ void __stdcall glClearColor(GLclampf red, GLclampf green, GLclampf blue, GLclamp
           red, green, blue, alpha);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         context->getState().setClearColor(red, green, blue, alpha);
@@ -632,7 +665,6 @@ void __stdcall glClearDepthf(GLclampf depth)
     EVENT("(GLclampf depth = %f)", depth);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         context->getState().setClearDepth(depth);
@@ -644,7 +676,6 @@ void __stdcall glClearStencil(GLint s)
     EVENT("(GLint s = %d)", s);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         context->getState().setClearStencil(s);
@@ -657,7 +688,6 @@ void __stdcall glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboo
           red, green, blue, alpha);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         context->getState().setColorMask(red == GL_TRUE, green == GL_TRUE, blue == GL_TRUE, alpha == GL_TRUE);
@@ -669,7 +699,6 @@ void __stdcall glCompileShader(GLuint shader)
     EVENT("(GLuint shader = %d)", shader);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Shader *shaderObject = context->getShader(shader);
@@ -678,11 +707,13 @@ void __stdcall glCompileShader(GLuint shader)
         {
             if (context->getProgram(shader))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -698,7 +729,6 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
           target, level, internalformat, width, height, border, imageSize, data);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3 &&
@@ -718,7 +748,8 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
         const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
         if (imageSize < 0 || static_cast<GLuint>(imageSize) != formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         switch (target)
@@ -743,7 +774,8 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -757,7 +789,6 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
           target, level, xoffset, yoffset, width, height, format, imageSize, data);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3 &&
@@ -777,7 +808,8 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
         const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format);
         if (imageSize < 0 || static_cast<GLuint>(imageSize) != formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         switch (target)
@@ -802,7 +834,8 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -814,7 +847,6 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
           target, level, internalformat, x, y, width, height, border);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3 &&
@@ -854,8 +886,9 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
             }
             break;
 
-         default:
-            return gl::error(GL_INVALID_ENUM);
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -867,7 +900,6 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
           target, level, xoffset, yoffset, x, y, width, height);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3 &&
@@ -908,7 +940,8 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -931,7 +964,6 @@ GLuint __stdcall glCreateShader(GLenum type)
     EVENT("(GLenum type = 0x%X)", type);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         switch (type)
@@ -939,8 +971,10 @@ GLuint __stdcall glCreateShader(GLenum type)
           case GL_FRAGMENT_SHADER:
           case GL_VERTEX_SHADER:
             return context->createShader(type);
+
           default:
-            return gl::error(GL_INVALID_ENUM, 0);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return 0;
         }
     }
 
@@ -951,22 +985,22 @@ void __stdcall glCullFace(GLenum mode)
 {
     EVENT("(GLenum mode = 0x%X)", mode);
 
-    switch (mode)
+    gl::Context *context = gl::getNonLostContext();
+    if (context)
     {
-      case GL_FRONT:
-      case GL_BACK:
-      case GL_FRONT_AND_BACK:
+        switch (mode)
         {
-            gl::Context *context = gl::getNonLostContext();
+          case GL_FRONT:
+          case GL_BACK:
+          case GL_FRONT_AND_BACK:
+            break;
 
-            if (context)
-            {
-                context->getState().setCullMode(mode);
-            }
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
+
+        context->getState().setCullMode(mode);
     }
 }
 
@@ -974,15 +1008,15 @@ void __stdcall glDeleteBuffers(GLsizei n, const GLuint* buffers)
 {
     EVENT("(GLsizei n = %d, const GLuint* buffers = 0x%0.8p)", n, buffers);
 
-    if (n < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (n < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         for (int i = 0; i < n; i++)
         {
             context->deleteBuffer(buffers[i]);
@@ -994,15 +1028,15 @@ void __stdcall glDeleteFencesNV(GLsizei n, const GLuint* fences)
 {
     EVENT("(GLsizei n = %d, const GLuint* fences = 0x%0.8p)", n, fences);
 
-    if (n < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (n < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         for (int i = 0; i < n; i++)
         {
             context->deleteFenceNV(fences[i]);
@@ -1014,15 +1048,15 @@ void __stdcall glDeleteFramebuffers(GLsizei n, const GLuint* framebuffers)
 {
     EVENT("(GLsizei n = %d, const GLuint* framebuffers = 0x%0.8p)", n, framebuffers);
 
-    if (n < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (n < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         for (int i = 0; i < n; i++)
         {
             if (framebuffers[i] != 0)
@@ -1037,24 +1071,25 @@ void __stdcall glDeleteProgram(GLuint program)
 {
     EVENT("(GLuint program = %d)", program);
 
-    if (program == 0)
-    {
-        return;
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (program == 0)
+        {
+            return;
+        }
+
         if (!context->getProgram(program))
         {
             if(context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -1066,15 +1101,15 @@ void __stdcall glDeleteQueriesEXT(GLsizei n, const GLuint *ids)
 {
     EVENT("(GLsizei n = %d, const GLuint *ids = 0x%0.8p)", n, ids);
 
-    if (n < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (n < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         for (int i = 0; i < n; i++)
         {
             context->deleteQuery(ids[i]);
@@ -1086,15 +1121,15 @@ void __stdcall glDeleteRenderbuffers(GLsizei n, const GLuint* renderbuffers)
 {
     EVENT("(GLsizei n = %d, const GLuint* renderbuffers = 0x%0.8p)", n, renderbuffers);
 
-    if (n < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (n < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         for (int i = 0; i < n; i++)
         {
             context->deleteRenderbuffer(renderbuffers[i]);
@@ -1106,24 +1141,25 @@ void __stdcall glDeleteShader(GLuint shader)
 {
     EVENT("(GLuint shader = %d)", shader);
 
-    if (shader == 0)
-    {
-        return;
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (shader == 0)
+        {
+            return;
+        }
+
         if (!context->getShader(shader))
         {
             if(context->getProgram(shader))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -1135,15 +1171,15 @@ void __stdcall glDeleteTextures(GLsizei n, const GLuint* textures)
 {
     EVENT("(GLsizei n = %d, const GLuint* textures = 0x%0.8p)", n, textures);
 
-    if (n < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (n < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         for (int i = 0; i < n; i++)
         {
             if (textures[i] != 0)
@@ -1158,26 +1194,26 @@ void __stdcall glDepthFunc(GLenum func)
 {
     EVENT("(GLenum func = 0x%X)", func);
 
-    switch (func)
-    {
-      case GL_NEVER:
-      case GL_ALWAYS:
-      case GL_LESS:
-      case GL_LEQUAL:
-      case GL_EQUAL:
-      case GL_GREATER:
-      case GL_GEQUAL:
-      case GL_NOTEQUAL:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
-        context->getState().setDepthFunc(func);
+        switch (func)
+        {
+          case GL_NEVER:
+          case GL_ALWAYS:
+          case GL_LESS:
+          case GL_LEQUAL:
+          case GL_EQUAL:
+          case GL_GREATER:
+          case GL_GEQUAL:
+          case GL_NOTEQUAL:
+            context->getState().setDepthFunc(func);
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
     }
 }
 
@@ -1186,7 +1222,6 @@ void __stdcall glDepthMask(GLboolean flag)
     EVENT("(GLboolean flag = %u)", flag);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         context->getState().setDepthMask(flag != GL_FALSE);
@@ -1198,7 +1233,6 @@ void __stdcall glDepthRangef(GLclampf zNear, GLclampf zFar)
     EVENT("(GLclampf zNear = %f, GLclampf zFar = %f)", zNear, zFar);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         context->getState().setDepthRange(zNear, zFar);
@@ -1210,10 +1244,8 @@ void __stdcall glDetachShader(GLuint program, GLuint shader)
     EVENT("(GLuint program = %d, GLuint shader = %d)", program, shader);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
-
         gl::Program *programObject = context->getProgram(program);
         gl::Shader *shaderObject = context->getShader(shader);
 
@@ -1223,11 +1255,13 @@ void __stdcall glDetachShader(GLuint program, GLuint shader)
             shaderByProgramHandle = context->getShader(program);
             if (!shaderByProgramHandle)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
         }
 
@@ -1236,17 +1270,20 @@ void __stdcall glDetachShader(GLuint program, GLuint shader)
             gl::Program *programByShaderHandle = context->getProgram(shader);
             if (!programByShaderHandle)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
         }
 
         if (!programObject->detachShader(shaderObject))
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
     }
 }
@@ -1256,12 +1293,12 @@ void __stdcall glDisable(GLenum cap)
     EVENT("(GLenum cap = 0x%X)", cap);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidCap(context, cap))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         context->getState().setEnableFeature(cap, false);
@@ -1272,15 +1309,15 @@ void __stdcall glDisableVertexAttribArray(GLuint index)
 {
     EVENT("(GLuint index = %d)", index);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         context->getState().setEnableVertexAttribArray(index, false);
     }
 }
@@ -1290,7 +1327,6 @@ void __stdcall glDrawArrays(GLenum mode, GLint first, GLsizei count)
     EVENT("(GLenum mode = 0x%X, GLint first = %d, GLsizei count = %d)", mode, first, count);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateDrawArrays(context, mode, first, count, 0))
@@ -1307,7 +1343,6 @@ void __stdcall glDrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei coun
     EVENT("(GLenum mode = 0x%X, GLint first = %d, GLsizei count = %d, GLsizei primcount = %d)", mode, first, count, primcount);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateDrawArraysInstanced(context, mode, first, count, primcount))
@@ -1325,7 +1360,6 @@ void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
           mode, count, type, indices);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         rx::RangeUI indexRange;
@@ -1344,7 +1378,6 @@ void __stdcall glDrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum t
           mode, count, type, indices, primcount);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         rx::RangeUI indexRange;
@@ -1362,12 +1395,12 @@ void __stdcall glEnable(GLenum cap)
     EVENT("(GLenum cap = 0x%X)", cap);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidCap(context, cap))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         context->getState().setEnableFeature(cap, true);
@@ -1378,15 +1411,15 @@ void __stdcall glEnableVertexAttribArray(GLuint index)
 {
     EVENT("(GLuint index = %d)", index);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         context->getState().setEnableVertexAttribArray(index, true);
     }
 }
@@ -1396,7 +1429,6 @@ void __stdcall glEndQueryEXT(GLenum target)
     EVENT("GLenum target = 0x%X)", target);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateEndQuery(context, target))
@@ -1413,19 +1445,20 @@ void __stdcall glFinishFenceNV(GLuint fence)
     EVENT("(GLuint fence = %d)", fence);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::FenceNV *fenceObject = context->getFenceNV(fence);
 
         if (fenceObject == NULL)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (fenceObject->isFence() != GL_TRUE)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         fenceObject->finishFence();
@@ -1437,7 +1470,6 @@ void __stdcall glFinish(void)
     EVENT("()");
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         context->sync(true);
@@ -1449,7 +1481,6 @@ void __stdcall glFlush(void)
     EVENT("()");
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         context->sync(false);
@@ -1461,15 +1492,15 @@ void __stdcall glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenu
     EVENT("(GLenum target = 0x%X, GLenum attachment = 0x%X, GLenum renderbuffertarget = 0x%X, "
           "GLuint renderbuffer = %d)", target, attachment, renderbuffertarget, renderbuffer);
 
-    if (!gl::ValidFramebufferTarget(target) || (renderbuffertarget != GL_RENDERBUFFER && renderbuffer != 0))
-    {
-        return gl::error(GL_INVALID_ENUM);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (!gl::ValidFramebufferTarget(target) || (renderbuffertarget != GL_RENDERBUFFER && renderbuffer != 0))
+        {
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
         if (!gl::ValidateFramebufferRenderbufferParameters(context, target, attachment, renderbuffertarget, renderbuffer))
         {
             return;
@@ -1545,21 +1576,19 @@ void __stdcall glFrontFace(GLenum mode)
 {
     EVENT("(GLenum mode = 0x%X)", mode);
 
-    switch (mode)
+    gl::Context *context = gl::getNonLostContext();
+    if (context)
     {
-      case GL_CW:
-      case GL_CCW:
+        switch (mode)
         {
-            gl::Context *context = gl::getNonLostContext();
-
-            if (context)
-            {
-                context->getState().setFrontFace(mode);
-            }
+          case GL_CW:
+          case GL_CCW:
+            context->getState().setFrontFace(mode);
+            break;
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
     }
 }
 
@@ -1567,15 +1596,15 @@ void __stdcall glGenBuffers(GLsizei n, GLuint* buffers)
 {
     EVENT("(GLsizei n = %d, GLuint* buffers = 0x%0.8p)", n, buffers);
 
-    if (n < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (n < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         for (int i = 0; i < n; i++)
         {
             buffers[i] = context->createBuffer();
@@ -1588,19 +1617,20 @@ void __stdcall glGenerateMipmap(GLenum target)
     EVENT("(GLenum target = 0x%X)", target);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidTextureTarget(context, target))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         gl::Texture *texture = context->getTargetTexture(target);
 
         if (texture == NULL)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         GLenum internalFormat = texture->getBaseLevelInternalFormat();
@@ -1622,20 +1652,23 @@ void __stdcall glGenerateMipmap(GLenum target)
         if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0 || !formatCaps.filterable ||
             (!formatCaps.renderable && !isLUMA) || formatInfo.compressed)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // GL_EXT_sRGB does not support mipmap generation on sRGB textures
         if (context->getClientVersion() == 2 && formatInfo.colorEncoding == GL_SRGB)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // Non-power of 2 ES2 check
         if (!context->getExtensions().textureNPOT && (!gl::isPow2(texture->getBaseLevelWidth()) || !gl::isPow2(texture->getBaseLevelHeight())))
         {
             ASSERT(context->getClientVersion() <= 2 && (target == GL_TEXTURE_2D || target == GL_TEXTURE_CUBE_MAP));
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // Cube completeness check
@@ -1644,7 +1677,8 @@ void __stdcall glGenerateMipmap(GLenum target)
             gl::TextureCubeMap *textureCube = static_cast<gl::TextureCubeMap *>(texture);
             if (!textureCube->isCubeComplete())
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
         }
 
@@ -1656,15 +1690,15 @@ void __stdcall glGenFencesNV(GLsizei n, GLuint* fences)
 {
     EVENT("(GLsizei n = %d, GLuint* fences = 0x%0.8p)", n, fences);
 
-    if (n < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (n < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         for (int i = 0; i < n; i++)
         {
             fences[i] = context->createFenceNV();
@@ -1676,15 +1710,15 @@ void __stdcall glGenFramebuffers(GLsizei n, GLuint* framebuffers)
 {
     EVENT("(GLsizei n = %d, GLuint* framebuffers = 0x%0.8p)", n, framebuffers);
 
-    if (n < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (n < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         for (int i = 0; i < n; i++)
         {
             framebuffers[i] = context->createFramebuffer();
@@ -1697,12 +1731,12 @@ void __stdcall glGenQueriesEXT(GLsizei n, GLuint* ids)
     EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (n < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         for (GLsizei i = 0; i < n; i++)
@@ -1716,15 +1750,15 @@ void __stdcall glGenRenderbuffers(GLsizei n, GLuint* renderbuffers)
 {
     EVENT("(GLsizei n = %d, GLuint* renderbuffers = 0x%0.8p)", n, renderbuffers);
 
-    if (n < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (n < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         for (int i = 0; i < n; i++)
         {
             renderbuffers[i] = context->createRenderbuffer();
@@ -1736,15 +1770,15 @@ void __stdcall glGenTextures(GLsizei n, GLuint* textures)
 {
     EVENT("(GLsizei n = %d, GLuint* textures = 0x%0.8p)", n, textures);
 
-    if (n < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (n < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         for (int i = 0; i < n; i++)
         {
             textures[i] = context->createTexture();
@@ -1758,32 +1792,35 @@ void __stdcall glGetActiveAttrib(GLuint program, GLuint index, GLsizei bufsize, 
           "GLint *size = 0x%0.8p, GLenum *type = %0.8p, GLchar *name = %0.8p)",
           program, index, bufsize, length, size, type, name);
 
-    if (bufsize < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (bufsize < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         gl::Program *programObject = context->getProgram(program);
 
         if (!programObject)
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
         if (index >= (GLuint)programObject->getActiveAttributeCount())
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         programObject->getActiveAttribute(index, bufsize, length, size, type, name);
@@ -1796,32 +1833,36 @@ void __stdcall glGetActiveUniform(GLuint program, GLuint index, GLsizei bufsize,
           "GLsizei* length = 0x%0.8p, GLint* size = 0x%0.8p, GLenum* type = 0x%0.8p, GLchar* name = 0x%0.8p)",
           program, index, bufsize, length, size, type, name);
 
-    if (bufsize < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (bufsize < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         gl::Program *programObject = context->getProgram(program);
 
         if (!programObject)
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
         if (index >= (GLuint)programObject->getActiveUniformCount())
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         programObject->getActiveUniform(index, bufsize, length, size, type, name);
@@ -1833,26 +1874,28 @@ void __stdcall glGetAttachedShaders(GLuint program, GLsizei maxcount, GLsizei* c
     EVENT("(GLuint program = %d, GLsizei maxcount = %d, GLsizei* count = 0x%0.8p, GLuint* shaders = 0x%0.8p)",
           program, maxcount, count, shaders);
 
-    if (maxcount < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (maxcount < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         gl::Program *programObject = context->getProgram(program);
 
         if (!programObject)
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -1860,33 +1903,34 @@ void __stdcall glGetAttachedShaders(GLuint program, GLsizei maxcount, GLsizei* c
     }
 }
 
-int __stdcall glGetAttribLocation(GLuint program, const GLchar* name)
+GLint __stdcall glGetAttribLocation(GLuint program, const GLchar* name)
 {
     EVENT("(GLuint program = %d, const GLchar* name = %s)", program, name);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
-
         gl::Program *programObject = context->getProgram(program);
 
         if (!programObject)
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION, -1);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return -1;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE, -1);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return -1;
             }
         }
 
         gl::ProgramBinary *programBinary = programObject->getProgramBinary();
         if (!programObject->isLinked() || !programBinary)
         {
-            return gl::error(GL_INVALID_OPERATION, -1);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return -1;
         }
 
         return programBinary->getAttributeLocation(name);
@@ -1900,7 +1944,6 @@ void __stdcall glGetBooleanv(GLenum pname, GLboolean* params)
     EVENT("(GLenum pname = 0x%X, GLboolean* params = 0x%0.8p)",  pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         GLenum nativeType;
@@ -1926,17 +1969,18 @@ void __stdcall glGetBufferParameteriv(GLenum target, GLenum pname, GLint* params
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", target, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!gl::ValidBufferTarget(context, target))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         if (!gl::ValidBufferParameter(context, pname))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         gl::Buffer *buffer = context->getState().getTargetBuffer(target);
@@ -1944,7 +1988,8 @@ void __stdcall glGetBufferParameteriv(GLenum target, GLenum pname, GLint* params
         if (!buffer)
         {
             // A null buffer means that "0" is bound to the requested buffer target
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         switch (pname)
@@ -1990,21 +2035,21 @@ void __stdcall glGetFenceivNV(GLuint fence, GLenum pname, GLint *params)
 {
     EVENT("(GLuint fence = %d, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", fence, pname, params);
 
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::FenceNV *fenceObject = context->getFenceNV(fence);
 
         if (fenceObject == NULL)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (fenceObject->isFence() != GL_TRUE)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         switch (pname)
@@ -2013,7 +2058,9 @@ void __stdcall glGetFenceivNV(GLuint fence, GLenum pname, GLint *params)
           case GL_FENCE_CONDITION_NV:
             break;
 
-          default: return gl::error(GL_INVALID_ENUM);
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         params[0] = fenceObject->getFencei(pname);
@@ -2025,7 +2072,6 @@ void __stdcall glGetFloatv(GLenum pname, GLfloat* params)
     EVENT("(GLenum pname = 0x%X, GLfloat* params = 0x%0.8p)", pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         GLenum nativeType;
@@ -2052,12 +2098,12 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
           target, attachment, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!gl::ValidFramebufferTarget(target))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         int clientVersion = context->getClientVersion();
@@ -2069,12 +2115,15 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
           case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL:
           case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE:
             break;
+
           case GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING:
             if (clientVersion < 3 && !context->getExtensions().sRGB)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             break;
+
           case GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE:
           case GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE:
           case GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE:
@@ -2085,11 +2134,14 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
           case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER:
             if (clientVersion < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         // Determine if the attachment is a valid enum
@@ -2102,7 +2154,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
           case GL_DEPTH_STENCIL_ATTACHMENT:
             if (clientVersion < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             break;
 
@@ -2114,7 +2167,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             if (attachment < GL_COLOR_ATTACHMENT0_EXT ||
                 (attachment - GL_COLOR_ATTACHMENT0_EXT) >= context->getCaps().maxColorAttachments)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             break;
         }
@@ -2126,7 +2180,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
         {
             if (clientVersion < 3)
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
 
             switch (attachment)
@@ -2135,8 +2190,10 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
               case GL_DEPTH:
               case GL_STENCIL:
                 break;
+
               default:
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
         }
         else
@@ -2152,14 +2209,18 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                   case GL_DEPTH_ATTACHMENT:
                   case GL_STENCIL_ATTACHMENT:
                     break;
+
                   case GL_DEPTH_STENCIL_ATTACHMENT:
                     if (framebuffer->hasValidDepthStencil())
                     {
-                        return gl::error(GL_INVALID_OPERATION);
+                        context->recordError(gl::Error(GL_INVALID_OPERATION));
+                        return;
                     }
                     break;
+
                   default:
-                    return gl::error(GL_INVALID_OPERATION);
+                    context->recordError(gl::Error(GL_INVALID_OPERATION));
+                    return;
                 }
             }
         }
@@ -2216,7 +2277,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
               case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
                 if (clientVersion < 3)
                 {
-                    return gl::error(GL_INVALID_ENUM);
+                    context->recordError(gl::Error(GL_INVALID_ENUM));
+                    return;
                 }
                 *params = 0;
                 break;
@@ -2224,11 +2286,13 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
               default:
                 if (clientVersion < 3)
                 {
-                    return gl::error(GL_INVALID_ENUM);
+                    context->recordError(gl::Error(GL_INVALID_ENUM));
+                    return;
                 }
                 else
                 {
-                    gl::error(GL_INVALID_OPERATION);
+                    context->recordError(gl::Error(GL_INVALID_OPERATION));
+                    return;
                 }
             }
         }
@@ -2247,7 +2311,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
               case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
                 if (attachmentObjectType != GL_RENDERBUFFER && attachmentObjectType != GL_TEXTURE)
                 {
-                    return gl::error(GL_INVALID_ENUM);
+                    context->recordError(gl::Error(GL_INVALID_ENUM));
+                    return;
                 }
                 *params = attachmentHandle;
                 break;
@@ -2255,7 +2320,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
               case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL:
                 if (attachmentObjectType != GL_TEXTURE)
                 {
-                    return gl::error(GL_INVALID_ENUM);
+                    context->recordError(gl::Error(GL_INVALID_ENUM));
+                    return;
                 }
                 *params = attachmentLevel;
                 break;
@@ -2263,7 +2329,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
               case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE:
                 if (attachmentObjectType != GL_TEXTURE)
                 {
-                    return gl::error(GL_INVALID_ENUM);
+                    context->recordError(gl::Error(GL_INVALID_ENUM));
+                    return;
                 }
                 *params = gl::IsCubemapTextureTarget(attachmentType) ? attachmentType : 0;
                 break;
@@ -2295,7 +2362,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
               case GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE:
                 if (attachment == GL_DEPTH_STENCIL)
                 {
-                    gl::error(GL_INVALID_OPERATION);
+                    context->recordError(gl::Error(GL_INVALID_OPERATION));
+                    return;
                 }
                 *params = attachmentObject->getComponentType();
                 break;
@@ -2307,7 +2375,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
               case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER:
                 if (attachmentObjectType != GL_TEXTURE)
                 {
-                    return gl::error(GL_INVALID_ENUM);
+                    context->recordError(gl::Error(GL_INVALID_ENUM));
+                    return;
                 }
                 *params = attachmentLayer;
                 break;
@@ -2339,7 +2408,6 @@ void __stdcall glGetIntegerv(GLenum pname, GLint* params)
     EVENT("(GLenum pname = 0x%X, GLint* params = 0x%0.8p)", pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         GLenum nativeType;
@@ -2366,14 +2434,14 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
     EVENT("(GLuint program = %d, GLenum pname = %d, GLint* params = 0x%0.8p)", program, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Program *programObject = context->getProgram(program);
 
         if (!programObject)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         if (context->getClientVersion() < 3)
@@ -2385,7 +2453,8 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
               case GL_TRANSFORM_FEEDBACK_BUFFER_MODE:
               case GL_TRANSFORM_FEEDBACK_VARYINGS:
               case GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH:
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
         }
 
@@ -2436,8 +2505,10 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
           case GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH:
             *params = programObject->getTransformFeedbackVaryingMaxLength();
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -2447,20 +2518,21 @@ void __stdcall glGetProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei* len
     EVENT("(GLuint program = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLchar* infolog = 0x%0.8p)",
           program, bufsize, length, infolog);
 
-    if (bufsize < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (bufsize < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         gl::Program *programObject = context->getProgram(program);
 
         if (!programObject)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         programObject->getInfoLog(bufsize, length, infolog);
@@ -2472,12 +2544,12 @@ void __stdcall glGetQueryivEXT(GLenum target, GLenum pname, GLint *params)
     EVENT("GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidQueryType(context, target))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         switch (pname)
@@ -2487,7 +2559,8 @@ void __stdcall glGetQueryivEXT(GLenum target, GLenum pname, GLint *params)
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -2497,19 +2570,20 @@ void __stdcall glGetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
     EVENT("(GLuint id = %d, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", id, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Query *queryObject = context->getQuery(id, false, GL_NONE);
 
         if (!queryObject)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (context->getState().getActiveQueryId(queryObject->getType()) == id)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         switch(pname)
@@ -2521,7 +2595,8 @@ void __stdcall glGetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
             params[0] = queryObject->isResultAvailable();
             break;
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -2531,17 +2606,18 @@ void __stdcall glGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", target, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (target != GL_RENDERBUFFER)
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         if (context->getState().getRenderbufferId() == 0)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         gl::Renderbuffer *renderbuffer = context->getRenderbuffer(context->getState().getRenderbufferId());
@@ -2557,15 +2633,19 @@ void __stdcall glGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
           case GL_RENDERBUFFER_ALPHA_SIZE:      *params = renderbuffer->getAlphaSize();      break;
           case GL_RENDERBUFFER_DEPTH_SIZE:      *params = renderbuffer->getDepthSize();      break;
           case GL_RENDERBUFFER_STENCIL_SIZE:    *params = renderbuffer->getStencilSize();    break;
+
           case GL_RENDERBUFFER_SAMPLES_ANGLE:
             if (!context->getExtensions().framebufferMultisample)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = renderbuffer->getSamples();
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -2575,14 +2655,14 @@ void __stdcall glGetShaderiv(GLuint shader, GLenum pname, GLint* params)
     EVENT("(GLuint shader = %d, GLenum pname = %d, GLint* params = 0x%0.8p)", shader, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Shader *shaderObject = context->getShader(shader);
 
         if (!shaderObject)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         switch (pname)
@@ -2605,8 +2685,10 @@ void __stdcall glGetShaderiv(GLuint shader, GLenum pname, GLint* params)
           case GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE:
             *params = shaderObject->getTranslatedSourceLength();
             return;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -2616,20 +2698,21 @@ void __stdcall glGetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei* lengt
     EVENT("(GLuint shader = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLchar* infolog = 0x%0.8p)",
           shader, bufsize, length, infolog);
 
-    if (bufsize < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (bufsize < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         gl::Shader *shaderObject = context->getShader(shader);
 
         if (!shaderObject)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         shaderObject->getInfoLog(bufsize, length, infolog);
@@ -2641,36 +2724,45 @@ void __stdcall glGetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontyp
     EVENT("(GLenum shadertype = 0x%X, GLenum precisiontype = 0x%X, GLint* range = 0x%0.8p, GLint* precision = 0x%0.8p)",
           shadertype, precisiontype, range, precision);
 
-    switch (shadertype)
+    gl::Context *context = gl::getNonLostContext();
+    if (context)
     {
-      case GL_VERTEX_SHADER:
-      case GL_FRAGMENT_SHADER:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
+        switch (shadertype)
+        {
+          case GL_VERTEX_SHADER:
+          case GL_FRAGMENT_SHADER:
+            break;
 
-    switch (precisiontype)
-    {
-      case GL_LOW_FLOAT:
-      case GL_MEDIUM_FLOAT:
-      case GL_HIGH_FLOAT:
-        // Assume IEEE 754 precision
-        range[0] = 127;
-        range[1] = 127;
-        *precision = 23;
-        break;
-      case GL_LOW_INT:
-      case GL_MEDIUM_INT:
-      case GL_HIGH_INT:
-        // Some (most) hardware only supports single-precision floating-point numbers,
-        // which can accurately represent integers up to +/-16777216
-        range[0] = 24;
-        range[1] = 24;
-        *precision = 0;
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
+        switch (precisiontype)
+        {
+          case GL_LOW_FLOAT:
+          case GL_MEDIUM_FLOAT:
+          case GL_HIGH_FLOAT:
+            // Assume IEEE 754 precision
+            range[0] = 127;
+            range[1] = 127;
+            *precision = 23;
+            break;
+
+          case GL_LOW_INT:
+          case GL_MEDIUM_INT:
+          case GL_HIGH_INT:
+            // Some (most) hardware only supports single-precision floating-point numbers,
+            // which can accurately represent integers up to +/-16777216
+            range[0] = 24;
+            range[1] = 24;
+            *precision = 0;
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
     }
 }
 
@@ -2679,20 +2771,21 @@ void __stdcall glGetShaderSource(GLuint shader, GLsizei bufsize, GLsizei* length
     EVENT("(GLuint shader = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLchar* source = 0x%0.8p)",
           shader, bufsize, length, source);
 
-    if (bufsize < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (bufsize < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         gl::Shader *shaderObject = context->getShader(shader);
 
         if (!shaderObject)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         shaderObject->getSource(bufsize, length, source);
@@ -2704,20 +2797,21 @@ void __stdcall glGetTranslatedShaderSourceANGLE(GLuint shader, GLsizei bufsize, 
     EVENT("(GLuint shader = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLchar* source = 0x%0.8p)",
           shader, bufsize, length, source);
 
-    if (bufsize < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (bufsize < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         gl::Shader *shaderObject = context->getShader(shader);
 
         if (!shaderObject)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         shaderObject->getTranslatedSource(bufsize, length, source);
@@ -2734,8 +2828,10 @@ const GLubyte* __stdcall glGetString(GLenum name)
     {
       case GL_VENDOR:
         return (GLubyte*)"Google Inc.";
+
       case GL_RENDERER:
         return (GLubyte*)((context != NULL) ? context->getRendererString().c_str() : "ANGLE");
+
       case GL_VERSION:
         if (context->getClientVersion() == 2)
         {
@@ -2745,6 +2841,7 @@ const GLubyte* __stdcall glGetString(GLenum name)
         {
             return (GLubyte*)"OpenGL ES 3.0 (ANGLE " ANGLE_VERSION_STRING ")";
         }
+
       case GL_SHADING_LANGUAGE_VERSION:
         if (context->getClientVersion() == 2)
         {
@@ -2754,10 +2851,16 @@ const GLubyte* __stdcall glGetString(GLenum name)
         {
             return (GLubyte*)"OpenGL ES GLSL ES 3.00 (ANGLE " ANGLE_VERSION_STRING ")";
         }
+
       case GL_EXTENSIONS:
         return (GLubyte*)((context != NULL) ? context->getExtensionString().c_str() : "");
+
       default:
-        return gl::error(GL_INVALID_ENUM, (GLubyte*)NULL);
+        if (context)
+        {
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+        }
+        return NULL;
     }
 }
 
@@ -2766,14 +2869,14 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLfloat* params = 0x%0.8p)", target, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Texture *texture = context->getTargetTexture(target);
 
         if (!texture)
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         switch (pname)
@@ -2793,7 +2896,8 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
           case GL_TEXTURE_WRAP_R:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLfloat)texture->getSamplerState().wrapR;
             break;
@@ -2804,7 +2908,8 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
           case GL_TEXTURE_IMMUTABLE_LEVELS:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLfloat)texture->immutableLevelCount();
             break;
@@ -2814,68 +2919,79 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
           case GL_TEXTURE_MAX_ANISOTROPY_EXT:
             if (!context->getExtensions().textureFilterAnisotropic)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLfloat)texture->getSamplerState().maxAnisotropy;
             break;
           case GL_TEXTURE_SWIZZLE_R:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLfloat)texture->getSamplerState().swizzleRed;
             break;
           case GL_TEXTURE_SWIZZLE_G:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLfloat)texture->getSamplerState().swizzleGreen;
             break;
           case GL_TEXTURE_SWIZZLE_B:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLfloat)texture->getSamplerState().swizzleBlue;
             break;
           case GL_TEXTURE_SWIZZLE_A:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLfloat)texture->getSamplerState().swizzleAlpha;
             break;
           case GL_TEXTURE_BASE_LEVEL:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLfloat)texture->getSamplerState().baseLevel;
             break;
           case GL_TEXTURE_MAX_LEVEL:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLfloat)texture->getSamplerState().maxLevel;
             break;
           case GL_TEXTURE_MIN_LOD:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = texture->getSamplerState().minLod;
             break;
           case GL_TEXTURE_MAX_LOD:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = texture->getSamplerState().maxLod;
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -2885,14 +3001,14 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", target, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Texture *texture = context->getTargetTexture(target);
 
         if (!texture)
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         switch (pname)
@@ -2912,7 +3028,8 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
           case GL_TEXTURE_WRAP_R:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = texture->getSamplerState().wrapR;
             break;
@@ -2923,7 +3040,8 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
           case GL_TEXTURE_IMMUTABLE_LEVELS:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = texture->immutableLevelCount();
             break;
@@ -2933,68 +3051,79 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
           case GL_TEXTURE_MAX_ANISOTROPY_EXT:
             if (!context->getExtensions().textureFilterAnisotropic)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLint)texture->getSamplerState().maxAnisotropy;
             break;
           case GL_TEXTURE_SWIZZLE_R:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = texture->getSamplerState().swizzleRed;
             break;
           case GL_TEXTURE_SWIZZLE_G:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = texture->getSamplerState().swizzleGreen;
             break;
           case GL_TEXTURE_SWIZZLE_B:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = texture->getSamplerState().swizzleBlue;
             break;
           case GL_TEXTURE_SWIZZLE_A:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = texture->getSamplerState().swizzleAlpha;
             break;
           case GL_TEXTURE_BASE_LEVEL:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = texture->getSamplerState().baseLevel;
             break;
           case GL_TEXTURE_MAX_LEVEL:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = texture->getSamplerState().maxLevel;
             break;
           case GL_TEXTURE_MIN_LOD:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLint)texture->getSamplerState().minLod;
             break;
           case GL_TEXTURE_MAX_LOD:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             *params = (GLint)texture->getSamplerState().maxLod;
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -3004,13 +3133,7 @@ void __stdcall glGetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSiz
     EVENT("(GLuint program = %d, GLint location = %d, GLsizei bufSize = %d, GLfloat* params = 0x%0.8p)",
           program, location, bufSize, params);
 
-    if (bufSize < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateGetnUniformfvEXT(context, program, location, bufSize, params))
@@ -3030,7 +3153,6 @@ void __stdcall glGetUniformfv(GLuint program, GLint location, GLfloat* params)
     EVENT("(GLuint program = %d, GLint location = %d, GLfloat* params = 0x%0.8p)", program, location, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateGetUniformfv(context, program, location, params))
@@ -3050,13 +3172,7 @@ void __stdcall glGetnUniformivEXT(GLuint program, GLint location, GLsizei bufSiz
     EVENT("(GLuint program = %d, GLint location = %d, GLsizei bufSize = %d, GLint* params = 0x%0.8p)",
           program, location, bufSize, params);
 
-    if (bufSize < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateGetnUniformivEXT(context, program, location, bufSize, params))
@@ -3076,7 +3192,6 @@ void __stdcall glGetUniformiv(GLuint program, GLint location, GLint* params)
     EVENT("(GLuint program = %d, GLint location = %d, GLint* params = 0x%0.8p)", program, location, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateGetUniformiv(context, program, location, params))
@@ -3091,37 +3206,39 @@ void __stdcall glGetUniformiv(GLuint program, GLint location, GLint* params)
     }
 }
 
-int __stdcall glGetUniformLocation(GLuint program, const GLchar* name)
+GLint __stdcall glGetUniformLocation(GLuint program, const GLchar* name)
 {
     EVENT("(GLuint program = %d, const GLchar* name = 0x%0.8p)", program, name);
 
     gl::Context *context = gl::getNonLostContext();
-
-    if (strstr(name, "gl_") == name)
-    {
-        return -1;
-    }
-
     if (context)
     {
+        if (strstr(name, "gl_") == name)
+        {
+            return -1;
+        }
+
         gl::Program *programObject = context->getProgram(program);
 
         if (!programObject)
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION, -1);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return -1;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE, -1);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return -1;
             }
         }
 
         gl::ProgramBinary *programBinary = programObject->getProgramBinary();
         if (!programObject->isLinked() || !programBinary)
         {
-            return gl::error(GL_INVALID_OPERATION, -1);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return -1;
         }
 
         return programBinary->getUniformLocation(name);
@@ -3135,16 +3252,16 @@ void __stdcall glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
     EVENT("(GLuint index = %d, GLenum pname = 0x%X, GLfloat* params = 0x%0.8p)", index, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (index >= gl::MAX_VERTEX_ATTRIBS)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         const gl::VertexAttribute &attribState = context->getState().getVertexAttribState(index);
-        if (!gl::ValidateGetVertexAttribParameters(pname, context->getClientVersion()))
+        if (!gl::ValidateGetVertexAttribParameters(context, pname))
         {
             return;
         }
@@ -3169,17 +3286,17 @@ void __stdcall glGetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
     EVENT("(GLuint index = %d, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", index, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (index >= gl::MAX_VERTEX_ATTRIBS)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         const gl::VertexAttribute &attribState = context->getState().getVertexAttribState(index);
 
-        if (!gl::ValidateGetVertexAttribParameters(pname, context->getClientVersion()))
+        if (!gl::ValidateGetVertexAttribParameters(context, pname))
         {
             return;
         }
@@ -3205,17 +3322,18 @@ void __stdcall glGetVertexAttribPointerv(GLuint index, GLenum pname, GLvoid** po
     EVENT("(GLuint index = %d, GLenum pname = 0x%X, GLvoid** pointer = 0x%0.8p)", index, pname, pointer);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (index >= gl::MAX_VERTEX_ATTRIBS)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         if (pname != GL_VERTEX_ATTRIB_ARRAY_POINTER)
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         *pointer = const_cast<GLvoid*>(context->getState().getVertexAttribPointer(index));
@@ -3226,27 +3344,35 @@ void __stdcall glHint(GLenum target, GLenum mode)
 {
     EVENT("(GLenum target = 0x%X, GLenum mode = 0x%X)", target, mode);
 
-    switch (mode)
-    {
-      case GL_FASTEST:
-      case GL_NICEST:
-      case GL_DONT_CARE:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-    switch (target)
+    if (context)
     {
-      case GL_GENERATE_MIPMAP_HINT:
-        if (context) context->getState().setGenerateMipmapHint(mode);
-        break;
-      case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:
-        if (context) context->getState().setFragmentShaderDerivativeHint(mode);
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
+        switch (mode)
+        {
+          case GL_FASTEST:
+          case GL_NICEST:
+          case GL_DONT_CARE:
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
+        switch (target)
+        {
+          case GL_GENERATE_MIPMAP_HINT:
+            context->getState().setGenerateMipmapHint(mode);
+            break;
+
+          case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:
+            context->getState().setFragmentShaderDerivativeHint(mode);
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
     }
 }
 
@@ -3255,7 +3381,6 @@ GLboolean __stdcall glIsBuffer(GLuint buffer)
     EVENT("(GLuint buffer = %d)", buffer);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context && buffer)
     {
         gl::Buffer *bufferObject = context->getBuffer(buffer);
@@ -3274,12 +3399,12 @@ GLboolean __stdcall glIsEnabled(GLenum cap)
     EVENT("(GLenum cap = 0x%X)", cap);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidCap(context, cap))
         {
-            return gl::error(GL_INVALID_ENUM, false);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return GL_FALSE;
         }
 
         return context->getState().getEnableFeature(cap);
@@ -3293,7 +3418,6 @@ GLboolean __stdcall glIsFenceNV(GLuint fence)
     EVENT("(GLuint fence = %d)", fence);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::FenceNV *fenceObject = context->getFenceNV(fence);
@@ -3314,7 +3438,6 @@ GLboolean __stdcall glIsFramebuffer(GLuint framebuffer)
     EVENT("(GLuint framebuffer = %d)", framebuffer);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context && framebuffer)
     {
         gl::Framebuffer *framebufferObject = context->getFramebuffer(framebuffer);
@@ -3333,7 +3456,6 @@ GLboolean __stdcall glIsProgram(GLuint program)
     EVENT("(GLuint program = %d)", program);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context && program)
     {
         gl::Program *programObject = context->getProgram(program);
@@ -3352,7 +3474,6 @@ GLboolean __stdcall glIsQueryEXT(GLuint id)
     EVENT("(GLuint id = %d)", id);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         return (context->getQuery(id, false, GL_NONE) != NULL) ? GL_TRUE : GL_FALSE;
@@ -3366,7 +3487,6 @@ GLboolean __stdcall glIsRenderbuffer(GLuint renderbuffer)
     EVENT("(GLuint renderbuffer = %d)", renderbuffer);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context && renderbuffer)
     {
         gl::Renderbuffer *renderbufferObject = context->getRenderbuffer(renderbuffer);
@@ -3385,7 +3505,6 @@ GLboolean __stdcall glIsShader(GLuint shader)
     EVENT("(GLuint shader = %d)", shader);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context && shader)
     {
         gl::Shader *shaderObject = context->getShader(shader);
@@ -3404,7 +3523,6 @@ GLboolean __stdcall glIsTexture(GLuint texture)
     EVENT("(GLuint texture = %d)", texture);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context && texture)
     {
         gl::Texture *textureObject = context->getTexture(texture);
@@ -3422,15 +3540,15 @@ void __stdcall glLineWidth(GLfloat width)
 {
     EVENT("(GLfloat width = %f)", width);
 
-    if (width <= 0.0f)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (width <= 0.0f)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         context->getState().setLineWidth(width);
     }
 }
@@ -3440,7 +3558,6 @@ void __stdcall glLinkProgram(GLuint program)
     EVENT("(GLuint program = %d)", program);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Program *programObject = context->getProgram(program);
@@ -3449,11 +3566,13 @@ void __stdcall glLinkProgram(GLuint program)
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -3466,7 +3585,6 @@ void __stdcall glPixelStorei(GLenum pname, GLint param)
     EVENT("(GLenum pname = 0x%X, GLint param = %d)", pname, param);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         switch (pname)
@@ -3474,7 +3592,8 @@ void __stdcall glPixelStorei(GLenum pname, GLint param)
           case GL_UNPACK_ALIGNMENT:
             if (param != 1 && param != 2 && param != 4 && param != 8)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
 
             context->getState().setUnpackAlignment(param);
@@ -3483,7 +3602,8 @@ void __stdcall glPixelStorei(GLenum pname, GLint param)
           case GL_PACK_ALIGNMENT:
             if (param != 1 && param != 2 && param != 4 && param != 8)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
 
             context->getState().setPackAlignment(param);
@@ -3503,13 +3623,15 @@ void __stdcall glPixelStorei(GLenum pname, GLint param)
           case GL_PACK_SKIP_PIXELS:
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_ENUM);
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
             }
             UNIMPLEMENTED();
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -3519,7 +3641,6 @@ void __stdcall glPolygonOffset(GLfloat factor, GLfloat units)
     EVENT("(GLfloat factor = %f, GLfloat units = %f)", factor, units);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         context->getState().setPolygonOffsetParams(factor, units);
@@ -3534,15 +3655,15 @@ void __stdcall glReadnPixelsEXT(GLint x, GLint y, GLsizei width, GLsizei height,
           "GLenum format = 0x%X, GLenum type = 0x%X, GLsizei bufSize = 0x%d, GLvoid *data = 0x%0.8p)",
           x, y, width, height, format, type, bufSize, data);
 
-    if (width < 0 || height < 0 || bufSize < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (width < 0 || height < 0 || bufSize < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         if (!gl::ValidateReadPixelsParameters(context, x, y, width, height,
                                               format, type, &bufSize, data))
         {
@@ -3560,15 +3681,15 @@ void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
           "GLenum format = 0x%X, GLenum type = 0x%X, GLvoid* pixels = 0x%0.8p)",
           x, y, width, height, format, type,  pixels);
 
-    if (width < 0 || height < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (width < 0 || height < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         if (!gl::ValidateReadPixelsParameters(context, x, y, width, height,
                                               format, type, NULL, pixels))
         {
@@ -3597,7 +3718,6 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
           target, samples, internalformat, width, height);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateRenderbufferStorageParameters(context, target, samples, internalformat,
@@ -3631,20 +3751,21 @@ void __stdcall glSetFenceNV(GLuint fence, GLenum condition)
 {
     EVENT("(GLuint fence = %d, GLenum condition = 0x%X)", fence, condition);
 
-    if (condition != GL_ALL_COMPLETED_NV)
-    {
-        return gl::error(GL_INVALID_ENUM);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (condition != GL_ALL_COMPLETED_NV)
+        {
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
         gl::FenceNV *fenceObject = context->getFenceNV(fence);
 
         if (fenceObject == NULL)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         fenceObject->setFence(condition);
@@ -3655,15 +3776,15 @@ void __stdcall glScissor(GLint x, GLint y, GLsizei width, GLsizei height)
 {
     EVENT("(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)", x, y, width, height);
 
-    if (width < 0 || height < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context* context = gl::getNonLostContext();
-
     if (context)
     {
+        if (width < 0 || height < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         context->getState().setScissorParams(x, y, width, height);
     }
 }
@@ -3680,7 +3801,8 @@ void __stdcall glShaderBinary(GLsizei n, const GLuint* shaders, GLenum binaryfor
         const std::vector<GLenum> &shaderBinaryFormats = context->getCaps().shaderBinaryFormats;
         if (std::find(shaderBinaryFormats.begin(), shaderBinaryFormats.end(), binaryformat) == shaderBinaryFormats.end())
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         // No binary shader formats are supported.
@@ -3693,26 +3815,28 @@ void __stdcall glShaderSource(GLuint shader, GLsizei count, const GLchar* const*
     EVENT("(GLuint shader = %d, GLsizei count = %d, const GLchar** string = 0x%0.8p, const GLint* length = 0x%0.8p)",
           shader, count, string, length);
 
-    if (count < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (count < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         gl::Shader *shaderObject = context->getShader(shader);
 
         if (!shaderObject)
         {
             if (context->getProgram(shader))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -3729,35 +3853,38 @@ void __stdcall glStencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint
 {
     EVENT("(GLenum face = 0x%X, GLenum func = 0x%X, GLint ref = %d, GLuint mask = %d)", face, func, ref, mask);
 
-    switch (face)
-    {
-      case GL_FRONT:
-      case GL_BACK:
-      case GL_FRONT_AND_BACK:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
-    switch (func)
-    {
-      case GL_NEVER:
-      case GL_ALWAYS:
-      case GL_LESS:
-      case GL_LEQUAL:
-      case GL_EQUAL:
-      case GL_GEQUAL:
-      case GL_GREATER:
-      case GL_NOTEQUAL:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        switch (face)
+        {
+          case GL_FRONT:
+          case GL_BACK:
+          case GL_FRONT_AND_BACK:
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
+        switch (func)
+        {
+          case GL_NEVER:
+          case GL_ALWAYS:
+          case GL_LESS:
+          case GL_LEQUAL:
+          case GL_EQUAL:
+          case GL_GEQUAL:
+          case GL_GREATER:
+          case GL_NOTEQUAL:
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
         if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
         {
             context->getState().setStencilParams(func, ref, mask);
@@ -3779,20 +3906,21 @@ void __stdcall glStencilMaskSeparate(GLenum face, GLuint mask)
 {
     EVENT("(GLenum face = 0x%X, GLuint mask = %d)", face, mask);
 
-    switch (face)
-    {
-      case GL_FRONT:
-      case GL_BACK:
-      case GL_FRONT_AND_BACK:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        switch (face)
+        {
+          case GL_FRONT:
+          case GL_BACK:
+          case GL_FRONT_AND_BACK:
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
         if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
         {
             context->getState().setStencilWritemask(mask);
@@ -3815,65 +3943,72 @@ void __stdcall glStencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenu
     EVENT("(GLenum face = 0x%X, GLenum fail = 0x%X, GLenum zfail = 0x%X, GLenum zpas = 0x%Xs)",
           face, fail, zfail, zpass);
 
-    switch (face)
-    {
-      case GL_FRONT:
-      case GL_BACK:
-      case GL_FRONT_AND_BACK:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
-    switch (fail)
-    {
-      case GL_ZERO:
-      case GL_KEEP:
-      case GL_REPLACE:
-      case GL_INCR:
-      case GL_DECR:
-      case GL_INVERT:
-      case GL_INCR_WRAP:
-      case GL_DECR_WRAP:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
-    switch (zfail)
-    {
-      case GL_ZERO:
-      case GL_KEEP:
-      case GL_REPLACE:
-      case GL_INCR:
-      case GL_DECR:
-      case GL_INVERT:
-      case GL_INCR_WRAP:
-      case GL_DECR_WRAP:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
-    switch (zpass)
-    {
-      case GL_ZERO:
-      case GL_KEEP:
-      case GL_REPLACE:
-      case GL_INCR:
-      case GL_DECR:
-      case GL_INVERT:
-      case GL_INCR_WRAP:
-      case GL_DECR_WRAP:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        switch (face)
+        {
+          case GL_FRONT:
+          case GL_BACK:
+          case GL_FRONT_AND_BACK:
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
+        switch (fail)
+        {
+          case GL_ZERO:
+          case GL_KEEP:
+          case GL_REPLACE:
+          case GL_INCR:
+          case GL_DECR:
+          case GL_INVERT:
+          case GL_INCR_WRAP:
+          case GL_DECR_WRAP:
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
+        switch (zfail)
+        {
+          case GL_ZERO:
+          case GL_KEEP:
+          case GL_REPLACE:
+          case GL_INCR:
+          case GL_DECR:
+          case GL_INVERT:
+          case GL_INCR_WRAP:
+          case GL_DECR_WRAP:
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
+        switch (zpass)
+        {
+          case GL_ZERO:
+          case GL_KEEP:
+          case GL_REPLACE:
+          case GL_INCR:
+          case GL_DECR:
+          case GL_INVERT:
+          case GL_INCR_WRAP:
+          case GL_DECR_WRAP:
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
         if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
         {
             context->getState().setStencilOperations(fail, zfail, zpass);
@@ -3891,19 +4026,20 @@ GLboolean __stdcall glTestFenceNV(GLuint fence)
     EVENT("(GLuint fence = %d)", fence);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::FenceNV *fenceObject = context->getFenceNV(fence);
 
         if (fenceObject == NULL)
         {
-            return gl::error(GL_INVALID_OPERATION, GL_TRUE);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return GL_TRUE;
         }
 
         if (fenceObject->isFence() != GL_TRUE)
         {
-            return gl::error(GL_INVALID_OPERATION, GL_TRUE);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return GL_TRUE;
         }
 
         return fenceObject->testFence();
@@ -3920,7 +4056,6 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
           target, level, internalformat, width, height, border, format, type, pixels);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3 &&
@@ -3991,7 +4126,6 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint param = %f)", target, pname, param);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateTexParamParameters(context, pname, static_cast<GLint>(param)))
@@ -4003,7 +4137,8 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
 
         if (!texture)
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         switch (pname)
@@ -4040,7 +4175,6 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint param = %d)", target, pname, param);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateTexParamParameters(context, pname, param))
@@ -4052,7 +4186,8 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
 
         if (!texture)
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         switch (pname)
@@ -4090,12 +4225,12 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
            target, levels, internalformat, width, height);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!context->getExtensions().textureStorage)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (context->getClientVersion() < 3 &&
@@ -4127,7 +4262,8 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -4141,7 +4277,6 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
            target, level, xoffset, yoffset, width, height, format, type, pixels);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3 &&
@@ -4201,7 +4336,6 @@ void __stdcall glUniform1fv(GLint location, GLsizei count, const GLfloat* v)
     EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat* v = 0x%0.8p)", location, count, v);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_FLOAT, location, count))
@@ -4224,7 +4358,6 @@ void __stdcall glUniform1iv(GLint location, GLsizei count, const GLint* v)
     EVENT("(GLint location = %d, GLsizei count = %d, const GLint* v = 0x%0.8p)", location, count, v);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_INT, location, count))
@@ -4249,7 +4382,6 @@ void __stdcall glUniform2fv(GLint location, GLsizei count, const GLfloat* v)
     EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat* v = 0x%0.8p)", location, count, v);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_FLOAT_VEC2, location, count))
@@ -4274,7 +4406,6 @@ void __stdcall glUniform2iv(GLint location, GLsizei count, const GLint* v)
     EVENT("(GLint location = %d, GLsizei count = %d, const GLint* v = 0x%0.8p)", location, count, v);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_INT_VEC2, location, count))
@@ -4299,7 +4430,6 @@ void __stdcall glUniform3fv(GLint location, GLsizei count, const GLfloat* v)
     EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat* v = 0x%0.8p)", location, count, v);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_FLOAT_VEC3, location, count))
@@ -4324,7 +4454,6 @@ void __stdcall glUniform3iv(GLint location, GLsizei count, const GLint* v)
     EVENT("(GLint location = %d, GLsizei count = %d, const GLint* v = 0x%0.8p)", location, count, v);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_INT_VEC3, location, count))
@@ -4349,7 +4478,6 @@ void __stdcall glUniform4fv(GLint location, GLsizei count, const GLfloat* v)
     EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat* v = 0x%0.8p)", location, count, v);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_FLOAT_VEC4, location, count))
@@ -4374,7 +4502,6 @@ void __stdcall glUniform4iv(GLint location, GLsizei count, const GLint* v)
     EVENT("(GLint location = %d, GLsizei count = %d, const GLint* v = 0x%0.8p)", location, count, v);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_INT_VEC4, location, count))
@@ -4393,7 +4520,6 @@ void __stdcall glUniformMatrix2fv(GLint location, GLsizei count, GLboolean trans
           location, count, transpose, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniformMatrix(context, GL_FLOAT_MAT2, location, count, transpose))
@@ -4412,7 +4538,6 @@ void __stdcall glUniformMatrix3fv(GLint location, GLsizei count, GLboolean trans
           location, count, transpose, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniformMatrix(context, GL_FLOAT_MAT3, location, count, transpose))
@@ -4431,7 +4556,6 @@ void __stdcall glUniformMatrix4fv(GLint location, GLsizei count, GLboolean trans
           location, count, transpose, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniformMatrix(context, GL_FLOAT_MAT4, location, count, transpose))
@@ -4449,7 +4573,6 @@ void __stdcall glUseProgram(GLuint program)
     EVENT("(GLuint program = %d)", program);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Program *programObject = context->getProgram(program);
@@ -4458,17 +4581,20 @@ void __stdcall glUseProgram(GLuint program)
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
         if (program != 0 && !programObject->isLinked())
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         context->useProgram(program);
@@ -4480,7 +4606,6 @@ void __stdcall glValidateProgram(GLuint program)
     EVENT("(GLuint program = %d)", program);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Program *programObject = context->getProgram(program);
@@ -4489,11 +4614,13 @@ void __stdcall glValidateProgram(GLuint program)
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -4505,15 +4632,15 @@ void __stdcall glVertexAttrib1f(GLuint index, GLfloat x)
 {
     EVENT("(GLuint index = %d, GLfloat x = %f)", index, x);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         GLfloat vals[4] = { x, 0, 0, 1 };
         context->getState().setVertexAttribf(index, vals);
     }
@@ -4523,15 +4650,15 @@ void __stdcall glVertexAttrib1fv(GLuint index, const GLfloat* values)
 {
     EVENT("(GLuint index = %d, const GLfloat* values = 0x%0.8p)", index, values);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         GLfloat vals[4] = { values[0], 0, 0, 1 };
         context->getState().setVertexAttribf(index, vals);
     }
@@ -4541,15 +4668,15 @@ void __stdcall glVertexAttrib2f(GLuint index, GLfloat x, GLfloat y)
 {
     EVENT("(GLuint index = %d, GLfloat x = %f, GLfloat y = %f)", index, x, y);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         GLfloat vals[4] = { x, y, 0, 1 };
         context->getState().setVertexAttribf(index, vals);
     }
@@ -4559,15 +4686,15 @@ void __stdcall glVertexAttrib2fv(GLuint index, const GLfloat* values)
 {
     EVENT("(GLuint index = %d, const GLfloat* values = 0x%0.8p)", index, values);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         GLfloat vals[4] = { values[0], values[1], 0, 1 };
         context->getState().setVertexAttribf(index, vals);
     }
@@ -4577,15 +4704,15 @@ void __stdcall glVertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z)
 {
     EVENT("(GLuint index = %d, GLfloat x = %f, GLfloat y = %f, GLfloat z = %f)", index, x, y, z);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         GLfloat vals[4] = { x, y, z, 1 };
         context->getState().setVertexAttribf(index, vals);
     }
@@ -4595,15 +4722,15 @@ void __stdcall glVertexAttrib3fv(GLuint index, const GLfloat* values)
 {
     EVENT("(GLuint index = %d, const GLfloat* values = 0x%0.8p)", index, values);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         GLfloat vals[4] = { values[0], values[1], values[2], 1 };
         context->getState().setVertexAttribf(index, vals);
     }
@@ -4613,15 +4740,15 @@ void __stdcall glVertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, G
 {
     EVENT("(GLuint index = %d, GLfloat x = %f, GLfloat y = %f, GLfloat z = %f, GLfloat w = %f)", index, x, y, z, w);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         GLfloat vals[4] = { x, y, z, w };
         context->getState().setVertexAttribf(index, vals);
     }
@@ -4631,15 +4758,15 @@ void __stdcall glVertexAttrib4fv(GLuint index, const GLfloat* values)
 {
     EVENT("(GLuint index = %d, const GLfloat* values = 0x%0.8p)", index, values);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         context->getState().setVertexAttribf(index, values);
     }
 }
@@ -4648,15 +4775,15 @@ void __stdcall glVertexAttribDivisorANGLE(GLuint index, GLuint divisor)
 {
     EVENT("(GLuint index = %d, GLuint divisor = %d)", index, divisor);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         context->setVertexAttribDivisor(index, divisor);
     }
 }
@@ -4667,63 +4794,68 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
           "GLboolean normalized = %u, GLsizei stride = %d, const GLvoid* ptr = 0x%0.8p)",
           index, size, type, normalized, stride, ptr);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
-    if (size < 1 || size > 4)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
-    switch (type)
-    {
-      case GL_BYTE:
-      case GL_UNSIGNED_BYTE:
-      case GL_SHORT:
-      case GL_UNSIGNED_SHORT:
-      case GL_FIXED:
-      case GL_FLOAT:
-        break;
-      case GL_HALF_FLOAT:
-      case GL_INT:
-      case GL_UNSIGNED_INT:
-      case GL_INT_2_10_10_10_REV:
-      case GL_UNSIGNED_INT_2_10_10_10_REV:
-        if (context && context->getClientVersion() < 3)
-        {
-            return gl::error(GL_INVALID_ENUM);
-        }
-        else
-        {
-            break;
-        }
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
-
-    if (stride < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
-    if ((type == GL_INT_2_10_10_10_REV || type == GL_UNSIGNED_INT_2_10_10_10_REV) && size != 4)
-    {
-        return gl::error(GL_INVALID_OPERATION);
-    }
-
     if (context)
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
+        if (size < 1 || size > 4)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
+        switch (type)
+        {
+          case GL_BYTE:
+          case GL_UNSIGNED_BYTE:
+          case GL_SHORT:
+          case GL_UNSIGNED_SHORT:
+          case GL_FIXED:
+          case GL_FLOAT:
+            break;
+
+          case GL_HALF_FLOAT:
+          case GL_INT:
+          case GL_UNSIGNED_INT:
+          case GL_INT_2_10_10_10_REV:
+          case GL_UNSIGNED_INT_2_10_10_10_REV:
+            if (context->getClientVersion() < 3)
+            {
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
+            }
+            break;
+
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
+
+        if (stride < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
+        if ((type == GL_INT_2_10_10_10_REV || type == GL_UNSIGNED_INT_2_10_10_10_REV) && size != 4)
+        {
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
+        }
+
         // [OpenGL ES 3.0.2] Section 2.8 page 24:
         // An INVALID_OPERATION error is generated when a non-zero vertex array object
         // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
         // and the pointer argument is not NULL.
         if (context->getState().getVertexArray()->id() != 0 && context->getState().getArrayBufferId() == 0 && ptr != NULL)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         context->getState().setVertexAttribState(index, context->getState().getTargetBuffer(GL_ARRAY_BUFFER), size, type,
@@ -4735,15 +4867,15 @@ void __stdcall glViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 {
     EVENT("(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)", x, y, width, height);
 
-    if (width < 0 || height < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
+        if (width < 0 || height < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
+
         context->getState().setViewportParams(x, y, width, height);
     }
 }
@@ -4755,12 +4887,12 @@ void __stdcall glReadBuffer(GLenum mode)
     EVENT("(GLenum mode = 0x%X)", mode);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // glReadBuffer
@@ -4774,12 +4906,12 @@ void __stdcall glDrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsize
           "const GLvoid* indices = 0x%0.8p)", mode, start, end, count, type, indices);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // glDrawRangeElements
@@ -4795,12 +4927,12 @@ void __stdcall glTexImage3D(GLenum target, GLint level, GLint internalformat, GL
           target, level, internalformat, width, height, depth, border, format, type, pixels);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // validateES3TexImageFormat sets the error code if there is an error
@@ -4827,7 +4959,8 @@ void __stdcall glTexImage3D(GLenum target, GLint level, GLint internalformat, GL
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -4840,12 +4973,12 @@ void __stdcall glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint 
           target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // validateES3TexImageFormat sets the error code if there is an error
@@ -4879,7 +5012,8 @@ void __stdcall glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint 
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -4891,12 +5025,12 @@ void __stdcall glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
           target, level, xoffset, yoffset, zoffset, x, y, width, height);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!ValidateES3CopyTexImageParameters(context, target, level, GL_NONE, true, xoffset, yoffset, zoffset,
@@ -4918,7 +5052,8 @@ void __stdcall glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         texture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, framebuffer);
@@ -4933,18 +5068,19 @@ void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum interna
           target, level, internalformat, width, height, depth, border, imageSize, data);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
         if (imageSize < 0 || static_cast<GLuint>(imageSize) != formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         // validateES3TexImageFormat sets the error code if there is an error
@@ -4971,7 +5107,8 @@ void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum interna
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -4984,23 +5121,25 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
         target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format);
         if (imageSize < 0 || static_cast<GLuint>(imageSize) != formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         if (!data)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         // validateES3TexImageFormat sets the error code if there is an error
@@ -5034,8 +5173,9 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
             }
             break;
 
-        default:
-            return gl::error(GL_INVALID_ENUM);
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -5045,17 +5185,18 @@ void __stdcall glGenQueries(GLsizei n, GLuint* ids)
     EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (n < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         for (GLsizei i = 0; i < n; i++)
@@ -5070,17 +5211,18 @@ void __stdcall glDeleteQueries(GLsizei n, const GLuint* ids)
     EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (n < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         for (GLsizei i = 0; i < n; i++)
@@ -5095,12 +5237,12 @@ GLboolean __stdcall glIsQuery(GLuint id)
     EVENT("(GLuint id = %u)", id);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return GL_FALSE;
         }
 
         return (context->getQuery(id, false, GL_NONE) != NULL) ? GL_TRUE : GL_FALSE;
@@ -5114,12 +5256,12 @@ void __stdcall glBeginQuery(GLenum target, GLuint id)
     EVENT("(GLenum target = 0x%X, GLuint id = %u)", target, id);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!ValidateBeginQuery(context, target, id))
@@ -5135,12 +5277,12 @@ void __stdcall glEndQuery(GLenum target)
     EVENT("(GLenum target = 0x%X)", target);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!ValidateEndQuery(context, target))
@@ -5157,17 +5299,18 @@ void __stdcall glGetQueryiv(GLenum target, GLenum pname, GLint* params)
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", target, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!ValidQueryType(context, target))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         switch (pname)
@@ -5177,7 +5320,8 @@ void __stdcall glGetQueryiv(GLenum target, GLenum pname, GLint* params)
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -5187,24 +5331,26 @@ void __stdcall glGetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
     EVENT("(GLuint id = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", id, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         gl::Query *queryObject = context->getQuery(id, false, GL_NONE);
 
         if (!queryObject)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (context->getState().getActiveQueryId(queryObject->getType()) == id)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         switch(pname)
@@ -5212,11 +5358,14 @@ void __stdcall glGetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
           case GL_QUERY_RESULT:
             params[0] = queryObject->getResult();
             break;
+
           case GL_QUERY_RESULT_AVAILABLE:
             params[0] = queryObject->isResultAvailable();
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -5226,12 +5375,12 @@ GLboolean __stdcall glUnmapBuffer(GLenum target)
     EVENT("(GLenum target = 0x%X)", target);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return GL_FALSE;
         }
 
         return glUnmapBufferOES(target);
@@ -5245,12 +5394,12 @@ void __stdcall glGetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLvoid** params = 0x%0.8p)", target, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         glGetBufferPointervOES(target, pname, params);
@@ -5260,12 +5409,12 @@ void __stdcall glGetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
 void __stdcall glDrawBuffers(GLsizei n, const GLenum* bufs)
 {
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         glDrawBuffersEXT(n, bufs);
@@ -5278,7 +5427,6 @@ void __stdcall glUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean tra
           location, count, transpose, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniformMatrix(context, GL_FLOAT_MAT2x3, location, count, transpose))
@@ -5297,7 +5445,6 @@ void __stdcall glUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean tra
           location, count, transpose, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniformMatrix(context, GL_FLOAT_MAT3x2, location, count, transpose))
@@ -5316,7 +5463,6 @@ void __stdcall glUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean tra
           location, count, transpose, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniformMatrix(context, GL_FLOAT_MAT2x4, location, count, transpose))
@@ -5335,7 +5481,6 @@ void __stdcall glUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean tra
           location, count, transpose, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniformMatrix(context, GL_FLOAT_MAT4x2, location, count, transpose))
@@ -5354,7 +5499,6 @@ void __stdcall glUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean tra
           location, count, transpose, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniformMatrix(context, GL_FLOAT_MAT3x4, location, count, transpose))
@@ -5373,7 +5517,6 @@ void __stdcall glUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean tra
           location, count, transpose, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniformMatrix(context, GL_FLOAT_MAT4x3, location, count, transpose))
@@ -5397,7 +5540,8 @@ void __stdcall glBlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint sr
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!ValidateBlitFramebufferParameters(context, srcX0, srcY0, srcX1, srcY1,
@@ -5418,12 +5562,12 @@ void __stdcall glRenderbufferStorageMultisample(GLenum target, GLsizei samples, 
         target, samples, internalformat, width, height);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!ValidateRenderbufferStorageParameters(context, target, samples, internalformat,
@@ -5442,7 +5586,6 @@ void __stdcall glFramebufferTextureLayer(GLenum target, GLenum attachment, GLuin
         target, attachment, texture, level, layer);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateFramebufferTextureLayer(context, target, attachment, texture,
@@ -5480,12 +5623,12 @@ GLvoid* __stdcall glMapBufferRange(GLenum target, GLintptr offset, GLsizeiptr le
           target, offset, length, access);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return NULL;
         }
 
         return glMapBufferRangeEXT(target, offset, length, access);
@@ -5499,12 +5642,12 @@ void __stdcall glFlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeip
     EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d)", target, offset, length);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         glFlushMappedBufferRangeEXT(target, offset, length);
@@ -5516,12 +5659,12 @@ void __stdcall glBindVertexArray(GLuint array)
     EVENT("(GLuint array = %u)", array);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         gl::VertexArray *vao = context->getVertexArray(array);
@@ -5530,7 +5673,8 @@ void __stdcall glBindVertexArray(GLuint array)
         {
             // The default VAO should always exist
             ASSERT(array != 0);
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         context->bindVertexArray(array);
@@ -5542,17 +5686,18 @@ void __stdcall glDeleteVertexArrays(GLsizei n, const GLuint* arrays)
     EVENT("(GLsizei n = %d, const GLuint* arrays = 0x%0.8p)", n, arrays);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (n < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
@@ -5570,17 +5715,18 @@ void __stdcall glGenVertexArrays(GLsizei n, GLuint* arrays)
     EVENT("(GLsizei n = %d, GLuint* arrays = 0x%0.8p)", n, arrays);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (n < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
@@ -5595,12 +5741,12 @@ GLboolean __stdcall glIsVertexArray(GLuint array)
     EVENT("(GLuint array = %u)", array);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return GL_FALSE;
         }
 
         if (array == 0)
@@ -5622,12 +5768,12 @@ void __stdcall glGetIntegeri_v(GLenum target, GLuint index, GLint* data)
           target, index, data);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         const gl::Caps &caps = context->getCaps();
@@ -5638,19 +5784,24 @@ void __stdcall glGetIntegeri_v(GLenum target, GLuint index, GLint* data)
           case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
             if (index >= caps.maxTransformFeedbackSeparateAttributes)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
+
           case GL_UNIFORM_BUFFER_START:
           case GL_UNIFORM_BUFFER_SIZE:
           case GL_UNIFORM_BUFFER_BINDING:
             if (index >= caps.maxCombinedUniformBlocks)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         if (!(context->getIndexedIntegerv(target, index, data)))
@@ -5658,10 +5809,15 @@ void __stdcall glGetIntegeri_v(GLenum target, GLuint index, GLint* data)
             GLenum nativeType;
             unsigned int numParams = 0;
             if (!context->getIndexedQueryParameterInfo(target, &nativeType, &numParams))
-                return gl::error(GL_INVALID_ENUM);
+            {
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
+            }
 
             if (numParams == 0)
+            {
                 return; // it is known that pname is valid, but there are no parameters to return
+            }
 
             if (nativeType == GL_INT_64_ANGLEX)
             {
@@ -5692,12 +5848,12 @@ void __stdcall glBeginTransformFeedback(GLenum primitiveMode)
     EVENT("(GLenum primitiveMode = 0x%X)", primitiveMode);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         switch (primitiveMode)
@@ -5706,8 +5862,10 @@ void __stdcall glBeginTransformFeedback(GLenum primitiveMode)
           case GL_LINES:
           case GL_POINTS:
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         gl::TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
@@ -5715,7 +5873,8 @@ void __stdcall glBeginTransformFeedback(GLenum primitiveMode)
 
         if (transformFeedback->isStarted())
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (transformFeedback->isPaused())
@@ -5734,12 +5893,12 @@ void __stdcall glEndTransformFeedback(void)
     EVENT("(void)");
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         gl::TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
@@ -5747,7 +5906,8 @@ void __stdcall glEndTransformFeedback(void)
 
         if (!transformFeedback->isStarted())
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         transformFeedback->stop();
@@ -5760,12 +5920,12 @@ void __stdcall glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
           target, index, buffer, offset, size);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         const gl::Caps &caps = context->getCaps();
@@ -5774,24 +5934,28 @@ void __stdcall glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
           case GL_TRANSFORM_FEEDBACK_BUFFER:
             if (index >= caps.maxTransformFeedbackSeparateAttributes)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
 
           case GL_UNIFORM_BUFFER:
             if (index >= caps.maxUniformBufferBindings)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         if (buffer != 0 && size <= 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         switch (target)
@@ -5801,7 +5965,8 @@ void __stdcall glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
             // size and offset must be a multiple of 4
             if (buffer != 0 && ((offset % 4) != 0 || (size % 4) != 0))
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
 
             context->bindIndexedTransformFeedbackBuffer(buffer, index, offset, size);
@@ -5813,7 +5978,8 @@ void __stdcall glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
             // it is an error to bind an offset not a multiple of the alignment
             if (buffer != 0 && (offset % caps.uniformBufferOffsetAlignment) != 0)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
 
             context->bindIndexedUniformBuffer(buffer, index, offset, size);
@@ -5832,12 +5998,12 @@ void __stdcall glBindBufferBase(GLenum target, GLuint index, GLuint buffer)
           target, index, buffer);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         const gl::Caps &caps = context->getCaps();
@@ -5846,19 +6012,22 @@ void __stdcall glBindBufferBase(GLenum target, GLuint index, GLuint buffer)
           case GL_TRANSFORM_FEEDBACK_BUFFER:
             if (index >= caps.maxTransformFeedbackSeparateAttributes)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
 
           case GL_UNIFORM_BUFFER:
             if (index >= caps.maxUniformBufferBindings)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         switch (target)
@@ -5885,17 +6054,18 @@ void __stdcall glTransformFeedbackVaryings(GLuint program, GLsizei count, const 
           program, count, varyings, bufferMode);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (count < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         const gl::Caps &caps = context->getCaps();
@@ -5906,11 +6076,13 @@ void __stdcall glTransformFeedbackVaryings(GLuint program, GLsizei count, const 
           case GL_SEPARATE_ATTRIBS:
             if (static_cast<GLuint>(count) > caps.maxTransformFeedbackSeparateAttributes)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         if (!gl::ValidProgram(context, program))
@@ -5932,17 +6104,18 @@ void __stdcall glGetTransformFeedbackVarying(GLuint program, GLuint index, GLsiz
           program, index, bufSize, length, size, type, name);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (bufSize < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         if (!gl::ValidProgram(context, program))
@@ -5955,7 +6128,8 @@ void __stdcall glGetTransformFeedbackVarying(GLuint program, GLuint index, GLsiz
 
         if (index >= static_cast<GLuint>(programObject->getTransformFeedbackVaryingCount()))
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         programObject->getTransformFeedbackVarying(index, bufSize, length, size, type, name);
@@ -5968,59 +6142,63 @@ void __stdcall glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLs
           index, size, type, stride, pointer);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
-    }
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
 
-    if (size < 1 || size > 4)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
+        if (size < 1 || size > 4)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
 
-    switch (type)
-    {
-      case GL_BYTE:
-      case GL_UNSIGNED_BYTE:
-      case GL_SHORT:
-      case GL_UNSIGNED_SHORT:
-      case GL_INT:
-      case GL_UNSIGNED_INT:
-      case GL_INT_2_10_10_10_REV:
-      case GL_UNSIGNED_INT_2_10_10_10_REV:
-        break;
-      default:
-        return gl::error(GL_INVALID_ENUM);
-    }
+        switch (type)
+        {
+          case GL_BYTE:
+          case GL_UNSIGNED_BYTE:
+          case GL_SHORT:
+          case GL_UNSIGNED_SHORT:
+          case GL_INT:
+          case GL_UNSIGNED_INT:
+          case GL_INT_2_10_10_10_REV:
+          case GL_UNSIGNED_INT_2_10_10_10_REV:
+            break;
 
-    if (stride < 0)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
+          default:
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
+        }
 
-    if ((type == GL_INT_2_10_10_10_REV || type == GL_UNSIGNED_INT_2_10_10_10_REV) && size != 4)
-    {
-        return gl::error(GL_INVALID_OPERATION);
-    }
+        if (stride < 0)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
+        }
 
-    if (context)
-    {
+        if ((type == GL_INT_2_10_10_10_REV || type == GL_UNSIGNED_INT_2_10_10_10_REV) && size != 4)
+        {
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
+        }
+
         // [OpenGL ES 3.0.2] Section 2.8 page 24:
         // An INVALID_OPERATION error is generated when a non-zero vertex array object
         // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
         // and the pointer argument is not NULL.
         if (context->getState().getVertexArray()->id() != 0 && context->getState().getArrayBufferId() == 0 && pointer != NULL)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         context->getState().setVertexAttribState(index, context->getState().getTargetBuffer(GL_ARRAY_BUFFER), size, type, false, true,
@@ -6034,22 +6212,23 @@ void __stdcall glGetVertexAttribIiv(GLuint index, GLenum pname, GLint* params)
           index, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (index >= gl::MAX_VERTEX_ATTRIBS)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         const gl::VertexAttribute &attribState = context->getState().getVertexAttribState(index);
 
-        if (!gl::ValidateGetVertexAttribParameters(pname, context->getClientVersion()))
+        if (!gl::ValidateGetVertexAttribParameters(context, pname))
         {
             return;
         }
@@ -6075,22 +6254,23 @@ void __stdcall glGetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params)
           index, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (index >= gl::MAX_VERTEX_ATTRIBS)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         const gl::VertexAttribute &attribState = context->getState().getVertexAttribState(index);
 
-        if (!gl::ValidateGetVertexAttribParameters(pname, context->getClientVersion()))
+        if (!gl::ValidateGetVertexAttribParameters(context, pname))
         {
             return;
         }
@@ -6116,17 +6296,18 @@ void __stdcall glVertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint 
           index, x, y, z, w);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (index >= gl::MAX_VERTEX_ATTRIBS)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         GLint vals[4] = { x, y, z, w };
@@ -6140,17 +6321,18 @@ void __stdcall glVertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GL
           index, x, y, z, w);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (index >= gl::MAX_VERTEX_ATTRIBS)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         GLuint vals[4] = { x, y, z, w };
@@ -6163,17 +6345,18 @@ void __stdcall glVertexAttribI4iv(GLuint index, const GLint* v)
     EVENT("(GLuint index = %u, const GLint* v = 0x%0.8p)", index, v);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (index >= gl::MAX_VERTEX_ATTRIBS)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         context->getState().setVertexAttribi(index, v);
@@ -6185,17 +6368,18 @@ void __stdcall glVertexAttribI4uiv(GLuint index, const GLuint* v)
     EVENT("(GLuint index = %u, const GLuint* v = 0x%0.8p)", index, v);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (index >= gl::MAX_VERTEX_ATTRIBS)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         context->getState().setVertexAttribu(index, v);
@@ -6208,7 +6392,6 @@ void __stdcall glGetUniformuiv(GLuint program, GLint location, GLuint* params)
           program, location, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateGetUniformuiv(context, program, location, params))
@@ -6229,30 +6412,33 @@ GLint __stdcall glGetFragDataLocation(GLuint program, const GLchar *name)
           program, name);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, -1);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return -1;
         }
 
         if (program == 0)
         {
-            return gl::error(GL_INVALID_VALUE, -1);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return -1;
         }
 
         gl::Program *programObject = context->getProgram(program);
 
         if (!programObject || !programObject->isLinked())
         {
-            return gl::error(GL_INVALID_OPERATION, -1);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return -1;
         }
 
         gl::ProgramBinary *programBinary = programObject->getProgramBinary();
         if (!programBinary)
         {
-            return gl::error(GL_INVALID_OPERATION, -1);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return -1;
         }
 
         return programBinary->getFragDataLocation(name);
@@ -6290,7 +6476,6 @@ void __stdcall glUniform1uiv(GLint location, GLsizei count, const GLuint* value)
           location, count, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_UNSIGNED_INT, location, count))
@@ -6309,7 +6494,6 @@ void __stdcall glUniform2uiv(GLint location, GLsizei count, const GLuint* value)
           location, count, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_UNSIGNED_INT_VEC2, location, count))
@@ -6328,7 +6512,6 @@ void __stdcall glUniform3uiv(GLint location, GLsizei count, const GLuint* value)
           location, count, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_UNSIGNED_INT_VEC3, location, count))
@@ -6347,7 +6530,6 @@ void __stdcall glUniform4uiv(GLint location, GLsizei count, const GLuint* value)
           location, count, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateUniform(context, GL_UNSIGNED_INT_VEC4, location, count))
@@ -6366,7 +6548,6 @@ void __stdcall glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* val
           buffer, drawbuffer, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateClearBuffer(context))
@@ -6379,17 +6560,22 @@ void __stdcall glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* val
           case GL_COLOR:
             if (drawbuffer < 0 || static_cast<GLuint>(drawbuffer) >= context->getCaps().maxDrawBuffers)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
+
           case GL_STENCIL:
             if (drawbuffer != 0)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         context->clearBufferiv(buffer, drawbuffer, value);
@@ -6402,7 +6588,6 @@ void __stdcall glClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint* v
           buffer, drawbuffer, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateClearBuffer(context))
@@ -6415,11 +6600,14 @@ void __stdcall glClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint* v
           case GL_COLOR:
             if (drawbuffer < 0 || static_cast<GLuint>(drawbuffer) >= context->getCaps().maxDrawBuffers)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         context->clearBufferuiv(buffer, drawbuffer, value);
@@ -6432,7 +6620,6 @@ void __stdcall glClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* v
           buffer, drawbuffer, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateClearBuffer(context))
@@ -6445,17 +6632,22 @@ void __stdcall glClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* v
           case GL_COLOR:
             if (drawbuffer < 0 || static_cast<GLuint>(drawbuffer) >= context->getCaps().maxDrawBuffers)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
+
           case GL_DEPTH:
             if (drawbuffer != 0)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         context->clearBufferfv(buffer, drawbuffer, value);
@@ -6468,7 +6660,6 @@ void __stdcall glClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, G
           buffer, drawbuffer, depth, stencil);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateClearBuffer(context))
@@ -6481,11 +6672,14 @@ void __stdcall glClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, G
           case GL_DEPTH_STENCIL:
             if (drawbuffer != 0)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         context->clearBufferfi(buffer, drawbuffer, depth, stencil);
@@ -6497,22 +6691,24 @@ const GLubyte* __stdcall glGetStringi(GLenum name, GLuint index)
     EVENT("(GLenum name = 0x%X, GLuint index = %u)", name, index);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLubyte*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return NULL;
         }
 
         if (name != GL_EXTENSIONS)
         {
-            return gl::error(GL_INVALID_ENUM, reinterpret_cast<GLubyte*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return NULL;
         }
 
         if (index >= context->getExtensionStringCount())
         {
-            return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLubyte*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return NULL;
         }
 
         return reinterpret_cast<const GLubyte*>(context->getExtensionString(index).c_str());
@@ -6527,17 +6723,18 @@ void __stdcall glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintp
           readTarget, writeTarget, readOffset, writeOffset, size);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!gl::ValidBufferTarget(context, readTarget) || !gl::ValidBufferTarget(context, readTarget))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         gl::Buffer *readBuffer = context->getState().getTargetBuffer(readTarget);
@@ -6545,25 +6742,29 @@ void __stdcall glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintp
 
         if (!readBuffer || !writeBuffer)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // Verify that readBuffer and writeBuffer are not currently mapped
         if (readBuffer->isMapped() || writeBuffer->isMapped())
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (readOffset < 0 || writeOffset < 0 || size < 0 ||
             static_cast<unsigned int>(readOffset + size) > readBuffer->getSize() ||
             static_cast<unsigned int>(writeOffset + size) > writeBuffer->getSize())
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         if (readBuffer == writeBuffer && abs(readOffset - writeOffset) < size)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         // if size is zero, the copy is a successful no-op
@@ -6580,17 +6781,18 @@ void __stdcall glGetUniformIndices(GLuint program, GLsizei uniformCount, const G
           program, uniformCount, uniformNames, uniformIndices);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (uniformCount < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         gl::Program *programObject = context->getProgram(program);
@@ -6599,11 +6801,13 @@ void __stdcall glGetUniformIndices(GLuint program, GLsizei uniformCount, const G
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -6631,17 +6835,18 @@ void __stdcall glGetActiveUniformsiv(GLuint program, GLsizei uniformCount, const
           program, uniformCount, uniformIndices, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (uniformCount < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         gl::Program *programObject = context->getProgram(program);
@@ -6650,11 +6855,13 @@ void __stdcall glGetActiveUniformsiv(GLuint program, GLsizei uniformCount, const
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -6669,15 +6876,18 @@ void __stdcall glGetActiveUniformsiv(GLuint program, GLsizei uniformCount, const
           case GL_UNIFORM_MATRIX_STRIDE:
           case GL_UNIFORM_IS_ROW_MAJOR:
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         gl::ProgramBinary *programBinary = programObject->getProgramBinary();
 
         if (!programBinary && uniformCount > 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         for (int uniformId = 0; uniformId < uniformCount; uniformId++)
@@ -6686,7 +6896,8 @@ void __stdcall glGetActiveUniformsiv(GLuint program, GLsizei uniformCount, const
 
             if (index >= (GLuint)programBinary->getActiveUniformCount())
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -6703,12 +6914,12 @@ GLuint __stdcall glGetUniformBlockIndex(GLuint program, const GLchar* uniformBlo
     EVENT("(GLuint program = %u, const GLchar* uniformBlockName = 0x%0.8p)", program, uniformBlockName);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, GL_INVALID_INDEX);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return GL_INVALID_INDEX;
         }
 
         gl::Program *programObject = context->getProgram(program);
@@ -6717,11 +6928,13 @@ GLuint __stdcall glGetUniformBlockIndex(GLuint program, const GLchar* uniformBlo
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION, GL_INVALID_INDEX);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return GL_INVALID_INDEX;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE, GL_INVALID_INDEX);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return GL_INVALID_INDEX;
             }
         }
 
@@ -6743,12 +6956,12 @@ void __stdcall glGetActiveUniformBlockiv(GLuint program, GLuint uniformBlockInde
           program, uniformBlockIndex, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
         gl::Program *programObject = context->getProgram(program);
 
@@ -6756,11 +6969,13 @@ void __stdcall glGetActiveUniformBlockiv(GLuint program, GLuint uniformBlockInde
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -6768,7 +6983,8 @@ void __stdcall glGetActiveUniformBlockiv(GLuint program, GLuint uniformBlockInde
 
         if (!programBinary || uniformBlockIndex >= programBinary->getActiveUniformBlockCount())
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         switch (pname)
@@ -6787,7 +7003,8 @@ void __stdcall glGetActiveUniformBlockiv(GLuint program, GLuint uniformBlockInde
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -6798,12 +7015,12 @@ void __stdcall glGetActiveUniformBlockName(GLuint program, GLuint uniformBlockIn
           program, uniformBlockIndex, bufSize, length, uniformBlockName);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         gl::Program *programObject = context->getProgram(program);
@@ -6812,11 +7029,13 @@ void __stdcall glGetActiveUniformBlockName(GLuint program, GLuint uniformBlockIn
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -6824,7 +7043,8 @@ void __stdcall glGetActiveUniformBlockName(GLuint program, GLuint uniformBlockIn
 
         if (!programBinary || uniformBlockIndex >= programBinary->getActiveUniformBlockCount())
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         programBinary->getActiveUniformBlockName(uniformBlockIndex, bufSize, length, uniformBlockName);
@@ -6837,17 +7057,18 @@ void __stdcall glUniformBlockBinding(GLuint program, GLuint uniformBlockIndex, G
           program, uniformBlockIndex, uniformBlockBinding);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (uniformBlockBinding >= context->getCaps().maxUniformBufferBindings)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         gl::Program *programObject = context->getProgram(program);
@@ -6856,11 +7077,13 @@ void __stdcall glUniformBlockBinding(GLuint program, GLuint uniformBlockIndex, G
         {
             if (context->getShader(program))
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
             else
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
         }
 
@@ -6869,7 +7092,8 @@ void __stdcall glUniformBlockBinding(GLuint program, GLuint uniformBlockIndex, G
         // if never linked, there won't be any uniform blocks
         if (!programBinary || uniformBlockIndex >= programBinary->getActiveUniformBlockCount())
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         programObject->bindUniformBlock(uniformBlockIndex, uniformBlockBinding);
@@ -6882,12 +7106,12 @@ void __stdcall glDrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GL
           mode, first, count, instanceCount);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // glDrawArraysInstanced
@@ -6901,12 +7125,12 @@ void __stdcall glDrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, 
           mode, count, type, indices, instanceCount);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // glDrawElementsInstanced
@@ -6919,22 +7143,24 @@ GLsync __stdcall glFenceSync(GLenum condition, GLbitfield flags)
     EVENT("(GLenum condition = 0x%X, GLbitfield flags = 0x%X)", condition, flags);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLsync>(0));
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return 0;
         }
 
         if (condition != GL_SYNC_GPU_COMMANDS_COMPLETE)
         {
-            return gl::error(GL_INVALID_ENUM, reinterpret_cast<GLsync>(0));
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return 0;
         }
 
         if (flags != 0)
         {
-            return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLsync>(0));
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return 0;
         }
 
         return context->createFenceSync(condition);
@@ -6948,12 +7174,12 @@ GLboolean __stdcall glIsSync(GLsync sync)
     EVENT("(GLsync sync = 0x%0.8p)", sync);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return GL_FALSE;
         }
 
         return (context->getFenceSync(sync) != NULL);
@@ -6967,17 +7193,18 @@ void __stdcall glDeleteSync(GLsync sync)
     EVENT("(GLsync sync = 0x%0.8p)", sync);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (sync != static_cast<GLsync>(0) && !context->getFenceSync(sync))
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         context->deleteFenceSync(sync);
@@ -6990,24 +7217,26 @@ GLenum __stdcall glClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
           sync, flags, timeout);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, GL_WAIT_FAILED);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return GL_WAIT_FAILED;
         }
 
         if ((flags & ~(GL_SYNC_FLUSH_COMMANDS_BIT)) != 0)
         {
-            return gl::error(GL_INVALID_VALUE, GL_WAIT_FAILED);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return GL_WAIT_FAILED;
         }
 
         gl::FenceSync *fenceSync = context->getFenceSync(sync);
 
         if (!fenceSync)
         {
-            return gl::error(GL_INVALID_VALUE, GL_WAIT_FAILED);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return GL_WAIT_FAILED;
         }
 
         return fenceSync->clientWait(flags, timeout);
@@ -7022,29 +7251,32 @@ void __stdcall glWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
           sync, flags, timeout);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (flags != 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         if (timeout != GL_TIMEOUT_IGNORED)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         gl::FenceSync *fenceSync = context->getFenceSync(sync);
 
         if (!fenceSync)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         fenceSync->serverWait();
@@ -7057,12 +7289,12 @@ void __stdcall glGetInteger64v(GLenum pname, GLint64* params)
           pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         GLenum nativeType;
@@ -7089,24 +7321,26 @@ void __stdcall glGetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* 
           sync, pname, bufSize, length, values);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (bufSize < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         gl::FenceSync *fenceSync = context->getFenceSync(sync);
 
         if (!fenceSync)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         switch (pname)
@@ -7117,7 +7351,8 @@ void __stdcall glGetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* 
           case GL_SYNC_FLAGS:      values[0] = 0;                                              break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -7128,12 +7363,12 @@ void __stdcall glGetInteger64i_v(GLenum target, GLuint index, GLint64* data)
           target, index, data);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         const gl::Caps &caps = context->getCaps();
@@ -7144,19 +7379,24 @@ void __stdcall glGetInteger64i_v(GLenum target, GLuint index, GLint64* data)
           case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
             if (index >= caps.maxTransformFeedbackSeparateAttributes)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
+
           case GL_UNIFORM_BUFFER_START:
           case GL_UNIFORM_BUFFER_SIZE:
           case GL_UNIFORM_BUFFER_BINDING:
             if (index >= caps.maxUniformBufferBindings)
             {
-                return gl::error(GL_INVALID_VALUE);
+                context->recordError(gl::Error(GL_INVALID_VALUE));
+                return;
             }
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         if (!(context->getIndexedInteger64v(target, index, data)))
@@ -7164,7 +7404,10 @@ void __stdcall glGetInteger64i_v(GLenum target, GLuint index, GLint64* data)
             GLenum nativeType;
             unsigned int numParams = 0;
             if (!context->getIndexedQueryParameterInfo(target, &nativeType, &numParams))
-                return gl::error(GL_INVALID_ENUM);
+            {
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
+            }
 
             if (numParams == 0)
                 return; // it is known that pname is valid, but there are no parameters to return
@@ -7196,22 +7439,24 @@ void __stdcall glGetBufferParameteri64v(GLenum target, GLenum pname, GLint64* pa
           target, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!gl::ValidBufferTarget(context, target))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         if (!gl::ValidBufferParameter(context, pname))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         gl::Buffer *buffer = context->getState().getTargetBuffer(target);
@@ -7219,7 +7464,8 @@ void __stdcall glGetBufferParameteri64v(GLenum target, GLenum pname, GLint64* pa
         if (!buffer)
         {
             // A null buffer means that "0" is bound to the requested buffer target
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         switch (pname)
@@ -7252,17 +7498,18 @@ void __stdcall glGenSamplers(GLsizei count, GLuint* samplers)
     EVENT("(GLsizei count = %d, GLuint* samplers = 0x%0.8p)", count, samplers);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (count < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         for (int i = 0; i < count; i++)
@@ -7277,17 +7524,18 @@ void __stdcall glDeleteSamplers(GLsizei count, const GLuint* samplers)
     EVENT("(GLsizei count = %d, const GLuint* samplers = 0x%0.8p)", count, samplers);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (count < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         for (int i = 0; i < count; i++)
@@ -7302,12 +7550,12 @@ GLboolean __stdcall glIsSampler(GLuint sampler)
     EVENT("(GLuint sampler = %u)", sampler);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return GL_FALSE;
         }
 
         return context->isSampler(sampler);
@@ -7321,22 +7569,24 @@ void __stdcall glBindSampler(GLuint unit, GLuint sampler)
     EVENT("(GLuint unit = %u, GLuint sampler = %u)", unit, sampler);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (sampler != 0 && !context->isSampler(sampler))
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (unit >= context->getCaps().maxCombinedTextureImageUnits)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         context->bindSampler(unit, sampler);
@@ -7348,15 +7598,15 @@ void __stdcall glSamplerParameteri(GLuint sampler, GLenum pname, GLint param)
     EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint param = %d)", sampler, pname, param);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
-        if (!gl::ValidateSamplerObjectParameter(pname))
+        if (!gl::ValidateSamplerObjectParameter(context, pname))
         {
             return;
         }
@@ -7368,7 +7618,8 @@ void __stdcall glSamplerParameteri(GLuint sampler, GLenum pname, GLint param)
 
         if (!context->isSampler(sampler))
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         context->samplerParameteri(sampler, pname, param);
@@ -7385,15 +7636,15 @@ void __stdcall glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
     EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLfloat param = %g)", sampler, pname, param);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
-        if (!gl::ValidateSamplerObjectParameter(pname))
+        if (!gl::ValidateSamplerObjectParameter(context, pname))
         {
             return;
         }
@@ -7405,7 +7656,8 @@ void __stdcall glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
 
         if (!context->isSampler(sampler))
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         context->samplerParameterf(sampler, pname, param);
@@ -7422,22 +7674,23 @@ void __stdcall glGetSamplerParameteriv(GLuint sampler, GLenum pname, GLint* para
     EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", sampler, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
-        if (!gl::ValidateSamplerObjectParameter(pname))
+        if (!gl::ValidateSamplerObjectParameter(context, pname))
         {
             return;
         }
 
         if (!context->isSampler(sampler))
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         *params = context->getSamplerParameteri(sampler, pname);
@@ -7449,22 +7702,23 @@ void __stdcall glGetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat* pa
     EVENT("(GLuint sample = %ur, GLenum pname = 0x%X, GLfloat* params = 0x%0.8p)", sampler, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
-        if (!gl::ValidateSamplerObjectParameter(pname))
+        if (!gl::ValidateSamplerObjectParameter(context, pname))
         {
             return;
         }
 
         if (!context->isSampler(sampler))
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         *params = context->getSamplerParameterf(sampler, pname);
@@ -7475,18 +7729,19 @@ void __stdcall glVertexAttribDivisor(GLuint index, GLuint divisor)
 {
     EVENT("(GLuint index = %u, GLuint divisor = %u)", index, divisor);
 
-    if (index >= gl::MAX_VERTEX_ATTRIBS)
-    {
-        return gl::error(GL_INVALID_VALUE);
-    }
-
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
+        }
+
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         context->setVertexAttribDivisor(index, divisor);
@@ -7498,12 +7753,12 @@ void __stdcall glBindTransformFeedback(GLenum target, GLuint id)
     EVENT("(GLenum target = 0x%X, GLuint id = %u)", target, id);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         switch (target)
@@ -7514,13 +7769,15 @@ void __stdcall glBindTransformFeedback(GLenum target, GLuint id)
                 gl::TransformFeedback *curTransformFeedback = context->getState().getCurrentTransformFeedback();
                 if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
                 {
-                    return gl::error(GL_INVALID_OPERATION);
+                    context->recordError(gl::Error(GL_INVALID_OPERATION));
+                    return;
                 }
 
                 // Cannot bind a transform feedback object that does not exist (3.0.2 pg 85 section 2.14.1)
                 if (context->getTransformFeedback(id) == NULL)
                 {
-                    return gl::error(GL_INVALID_OPERATION);
+                    context->recordError(gl::Error(GL_INVALID_OPERATION));
+                    return;
                 }
 
                 context->bindTransformFeedback(id);
@@ -7528,7 +7785,8 @@ void __stdcall glBindTransformFeedback(GLenum target, GLuint id)
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -7538,12 +7796,12 @@ void __stdcall glDeleteTransformFeedbacks(GLsizei n, const GLuint* ids)
     EVENT("(GLsizei n = %d, const GLuint* ids = 0x%0.8p)", n, ids);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         for (int i = 0; i < n; i++)
@@ -7558,12 +7816,12 @@ void __stdcall glGenTransformFeedbacks(GLsizei n, GLuint* ids)
     EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         for (int i = 0; i < n; i++)
@@ -7578,12 +7836,12 @@ GLboolean __stdcall glIsTransformFeedback(GLuint id)
     EVENT("(GLuint id = %u)", id);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return GL_FALSE;
         }
 
         return ((context->getTransformFeedback(id) != NULL) ? GL_TRUE : GL_FALSE);
@@ -7597,12 +7855,12 @@ void __stdcall glPauseTransformFeedback(void)
     EVENT("(void)");
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         gl::TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
@@ -7611,7 +7869,8 @@ void __stdcall glPauseTransformFeedback(void)
         // Current transform feedback must be started and not paused in order to pause (3.0.2 pg 86)
         if (!transformFeedback->isStarted() || transformFeedback->isPaused())
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         transformFeedback->pause();
@@ -7623,12 +7882,12 @@ void __stdcall glResumeTransformFeedback(void)
     EVENT("(void)");
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         gl::TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
@@ -7637,7 +7896,8 @@ void __stdcall glResumeTransformFeedback(void)
         // Current transform feedback must be started and paused in order to resume (3.0.2 pg 86)
         if (!transformFeedback->isStarted() || !transformFeedback->isPaused())
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         transformFeedback->resume();
@@ -7650,12 +7910,12 @@ void __stdcall glGetProgramBinary(GLuint program, GLsizei bufSize, GLsizei* leng
           program, bufSize, length, binaryFormat, binary);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // glGetProgramBinary
@@ -7669,12 +7929,12 @@ void __stdcall glProgramBinary(GLuint program, GLenum binaryFormat, const GLvoid
           program, binaryFormat, binary, length);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // glProgramBinary
@@ -7688,12 +7948,12 @@ void __stdcall glProgramParameteri(GLuint program, GLenum pname, GLint value)
           program, pname, value);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // glProgramParameteri
@@ -7707,12 +7967,12 @@ void __stdcall glInvalidateFramebuffer(GLenum target, GLsizei numAttachments, co
           target, numAttachments, attachments);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!ValidateInvalidateFramebufferParameters(context, target, numAttachments, attachments))
@@ -7732,12 +7992,12 @@ void __stdcall glInvalidateSubFramebuffer(GLenum target, GLsizei numAttachments,
           target, numAttachments, attachments, x, y, width, height);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!ValidateInvalidateFramebufferParameters(context, target, numAttachments, attachments))
@@ -7755,12 +8015,12 @@ void __stdcall glTexStorage2D(GLenum target, GLsizei levels, GLenum internalform
           target, levels, internalformat, width, height);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!ValidateES3TexStorageParameters(context, target, levels, internalformat, width, height, 1))
@@ -7785,7 +8045,8 @@ void __stdcall glTexStorage2D(GLenum target, GLsizei levels, GLenum internalform
             break;
 
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -7797,12 +8058,12 @@ void __stdcall glTexStorage3D(GLenum target, GLsizei levels, GLenum internalform
           target, levels, internalformat, width, height, depth);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!ValidateES3TexStorageParameters(context, target, levels, internalformat, width, height, depth))
@@ -7839,28 +8100,31 @@ void __stdcall glGetInternalformativ(GLenum target, GLenum internalformat, GLenu
           target, internalformat, pname, bufSize, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (context->getClientVersion() < 3)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         const gl::TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
         if (!formatCaps.renderable)
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         if (target != GL_RENDERBUFFER)
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         if (bufSize < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         switch (pname)
@@ -7871,11 +8135,14 @@ void __stdcall glGetInternalformativ(GLenum target, GLenum internalformat, GLenu
                 *params = formatCaps.sampleCounts.size();
             }
             break;
+
           case GL_SAMPLES:
             std::copy_n(formatCaps.sampleCounts.rbegin(), std::min<size_t>(bufSize, formatCaps.sampleCounts.size()), params);
             break;
+
           default:
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
     }
 }
@@ -7891,7 +8158,6 @@ void __stdcall glBlitFramebufferANGLE(GLint srcX0, GLint srcY0, GLint srcX1, GLi
           srcX0, srcY0, srcX1, srcX1, dstX0, dstY0, dstX1, dstY1, mask, filter);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!ValidateBlitFramebufferParameters(context, srcX0, srcY0, srcX1, srcY1,
@@ -7924,26 +8190,28 @@ void __stdcall glGetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *l
           program, bufSize, length, binaryFormat, binary);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Program *programObject = context->getProgram(program);
 
         if (!programObject || !programObject->isLinked())
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         gl::ProgramBinary *programBinary = programObject->getProgramBinary();
 
         if (!programBinary)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!programBinary->save(binaryFormat, binary, bufSize, length))
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
     }
 }
@@ -7955,19 +8223,20 @@ void __stdcall glProgramBinaryOES(GLuint program, GLenum binaryFormat,
           program, binaryFormat, binary, length);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         const std::vector<GLenum> &programBinaryFormats = context->getCaps().programBinaryFormats;
         if (std::find(programBinaryFormats.begin(), programBinaryFormats.end(), binaryFormat) == programBinaryFormats.end())
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         gl::Program *programObject = context->getProgram(program);
         if (!programObject)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         context->setProgramBinary(program, binaryFormat, binary, length);
@@ -7979,24 +8248,26 @@ void __stdcall glDrawBuffersEXT(GLsizei n, const GLenum *bufs)
     EVENT("(GLenum n = %d, bufs = 0x%0.8p)", n, bufs);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (n < 0 || static_cast<GLuint>(n) > context->getCaps().maxDrawBuffers)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         if (context->getState().getDrawFramebuffer()->id() == 0)
         {
             if (n != 1)
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
 
             if (bufs[0] != GL_NONE && bufs[0] != GL_BACK)
             {
-                return gl::error(GL_INVALID_OPERATION);
+                context->recordError(gl::Error(GL_INVALID_OPERATION));
+                return;
             }
         }
         else
@@ -8006,7 +8277,8 @@ void __stdcall glDrawBuffersEXT(GLsizei n, const GLenum *bufs)
                 const GLenum attachment = GL_COLOR_ATTACHMENT0_EXT + colorAttachment;
                 if (bufs[colorAttachment] != GL_NONE && bufs[colorAttachment] != attachment)
                 {
-                    return gl::error(GL_INVALID_OPERATION);
+                    context->recordError(gl::Error(GL_INVALID_OPERATION));
+                    return;
                 }
             }
         }
@@ -8030,17 +8302,18 @@ void __stdcall glGetBufferPointervOES(GLenum target, GLenum pname, void** params
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLvoid** params = 0x%0.8p)", target, pname, params);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!gl::ValidBufferTarget(context, target))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         if (pname != GL_BUFFER_MAP_POINTER)
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         gl::Buffer *buffer = context->getState().getTargetBuffer(target);
@@ -8061,29 +8334,32 @@ void * __stdcall glMapBufferOES(GLenum target, GLenum access)
     EVENT("(GLenum target = 0x%X, GLbitfield access = 0x%X)", target, access);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!gl::ValidBufferTarget(context, target))
         {
-            return gl::error(GL_INVALID_ENUM, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return NULL;
         }
 
         gl::Buffer *buffer = context->getState().getTargetBuffer(target);
 
         if (buffer == NULL)
         {
-            return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return NULL;
         }
 
         if (access != GL_WRITE_ONLY_OES)
         {
-            return gl::error(GL_INVALID_ENUM, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return NULL;
         }
 
         if (buffer->isMapped())
         {
-            return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return NULL;
         }
 
         return buffer->mapRange(0, buffer->getSize(), GL_MAP_WRITE_BIT);
@@ -8097,19 +8373,20 @@ GLboolean __stdcall glUnmapBufferOES(GLenum target)
     EVENT("(GLenum target = 0x%X)", target);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!gl::ValidBufferTarget(context, target))
         {
-            return gl::error(GL_INVALID_ENUM, GL_FALSE);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return GL_FALSE;
         }
 
         gl::Buffer *buffer = context->getState().getTargetBuffer(target);
 
         if (buffer == NULL || !buffer->isMapped())
         {
-            return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return GL_FALSE;
         }
 
         // TODO: detect if we had corruption. if so, throw an error and return false.
@@ -8128,24 +8405,26 @@ void* __stdcall glMapBufferRangeEXT (GLenum target, GLintptr offset, GLsizeiptr 
           target, offset, length, access);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (!gl::ValidBufferTarget(context, target))
         {
-            return gl::error(GL_INVALID_ENUM, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return NULL;
         }
 
         if (offset < 0 || length < 0)
         {
-            return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return NULL;
         }
 
         gl::Buffer *buffer = context->getState().getTargetBuffer(target);
 
         if (buffer == NULL)
         {
-            return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return NULL;
         }
 
         // Check for buffer overflow
@@ -8155,7 +8434,8 @@ void* __stdcall glMapBufferRangeEXT (GLenum target, GLintptr offset, GLsizeiptr 
         if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
             offsetSize + lengthSize > static_cast<size_t>(buffer->getSize()))
         {
-            return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return NULL;
         }
 
         // Check for invalid bits in the mask
@@ -8168,18 +8448,21 @@ void* __stdcall glMapBufferRangeEXT (GLenum target, GLintptr offset, GLsizeiptr 
 
         if (access & ~(allAccessBits))
         {
-            return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return NULL;
         }
 
         if (length == 0 || buffer->isMapped())
         {
-            return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return NULL;
         }
 
         // Check for invalid bit combinations
         if ((access & (GL_MAP_READ_BIT | GL_MAP_WRITE_BIT)) == 0)
         {
-            return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return NULL;
         }
 
         GLbitfield writeOnlyBits = GL_MAP_INVALIDATE_RANGE_BIT |
@@ -8188,12 +8471,14 @@ void* __stdcall glMapBufferRangeEXT (GLenum target, GLintptr offset, GLsizeiptr 
 
         if ((access & GL_MAP_READ_BIT) != 0 && (access & writeOnlyBits) != 0)
         {
-            return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return NULL;
         }
 
         if ((access & GL_MAP_WRITE_BIT) == 0 && (access & GL_MAP_FLUSH_EXPLICIT_BIT) != 0)
         {
-            return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return NULL;
         }
 
         return buffer->mapRange(offset, length, access);
@@ -8207,29 +8492,32 @@ void __stdcall glFlushMappedBufferRangeEXT (GLenum target, GLintptr offset, GLsi
     EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d)", target, offset, length);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         if (offset < 0 || length < 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         if (!gl::ValidBufferTarget(context, target))
         {
-            return gl::error(GL_INVALID_ENUM);
+            context->recordError(gl::Error(GL_INVALID_ENUM));
+            return;
         }
 
         gl::Buffer *buffer = context->getState().getTargetBuffer(target);
 
         if (buffer == NULL)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         if (!buffer->isMapped() || (buffer->getAccessFlags() & GL_MAP_FLUSH_EXPLICIT_BIT) == 0)
         {
-            return gl::error(GL_INVALID_OPERATION);
+            context->recordError(gl::Error(GL_INVALID_OPERATION));
+            return;
         }
 
         // Check for buffer overflow
@@ -8239,7 +8527,8 @@ void __stdcall glFlushMappedBufferRangeEXT (GLenum target, GLintptr offset, GLsi
         if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
             offsetSize + lengthSize > static_cast<size_t>(buffer->getMapLength()))
         {
-            return gl::error(GL_INVALID_VALUE);
+            context->recordError(gl::Error(GL_INVALID_VALUE));
+            return;
         }
 
         // We do not currently support a non-trivial implementation of FlushMappedBufferRange
@@ -8310,7 +8599,6 @@ bool __stdcall glBindTexImage(egl::Surface *surface)
           surface);
 
     gl::Context *context = gl::getNonLostContext();
-
     if (context)
     {
         gl::Texture2D *textureObject = context->getTexture2D();
