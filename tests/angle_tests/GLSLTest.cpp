@@ -143,3 +143,65 @@ TEST_F(GLSLTest, DxPositionBug)
     GLuint program = compileProgram(vertexShaderSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
 }
+
+TEST_F(GLSLTest, ElseIfRewriting)
+{
+    const std::string &vertexShaderSource =
+        "attribute vec4 a_position;\n"
+        "varying float v;\n"
+        "void main() {\n"
+        "  gl_Position = a_position;\n"
+        "  v = 1.0;\n"
+        "  if (a_position.x <= 0.5) {\n"
+        "    v = 0.0;\n"
+        "  } else if (a_position.x >= 0.5) {\n"
+        "    v = 2.0;\n"
+        "  }\n"
+        "}\n";
+
+    const std::string &fragmentShaderSource =
+        "precision highp float;\n"
+        "varying float v;\n"
+        "void main() {\n"
+        "  vec4 color = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "  if (v >= 1.0) color = vec4(0.0, 1.0, 0.0, 1.0);\n"
+        "  if (v >= 2.0) color = vec4(0.0, 0.0, 1.0, 1.0);\n"
+        "  gl_FragColor = color;\n"
+        "}\n";
+
+    GLuint program = compileProgram(vertexShaderSource, fragmentShaderSource);
+    ASSERT_NE(0u, program);
+
+    drawQuad(program, "a_position", 0.5f);
+    swapBuffers();
+
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth()-1, 0, 0, 255, 0, 255);
+}
+
+TEST_F(GLSLTest, TwoElseIfRewriting)
+{
+    const std::string &vertexShaderSource =
+        "attribute vec4 a_position;\n"
+        "varying float v;\n"
+        "void main() {\n"
+        "  gl_Position = a_position;\n"
+        "  if (a_position.x == 0.0`) {\n"
+        "    v = 1.0;\n"
+        "  } else if (a_position.x > 0.5) {\n"
+        "    v = 0.0;\n"
+        "  } else if (a_position.x > 0.75) {\n"
+        "    v = 0.5;\n"
+        "  }\n"
+        "}\n";
+
+    const std::string &fragmentShaderSource =
+        "precision highp float;\n"
+        "varying float v;\n"
+        "void main() {\n"
+        "  gl_FragColor = vec4(v, 0.0, 0.0, 1.0);\n"
+        "}\n";
+
+    GLuint program = compileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}

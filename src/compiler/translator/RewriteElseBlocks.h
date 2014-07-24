@@ -15,21 +15,6 @@
 namespace sh
 {
 
-class ElseBlockRewriter : public TIntermTraverser
-{
-  public:
-    ElseBlockRewriter();
-
-  protected:
-    bool visitAggregate(Visit visit, TIntermAggregate *aggregate);
-
-  private:
-    int mTemporaryIndex;
-    const TType *mFunctionType;
-
-    TIntermNode *rewriteSelection(TIntermSelection *selection);
-};
-
 void RewriteElseBlocks(TIntermNode *node);
 
 }
