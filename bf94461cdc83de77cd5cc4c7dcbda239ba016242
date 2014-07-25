@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9949f84f_59daf435",
+        "filename": "src/libGLESv2/renderer/TextureImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-25T20:39:08Z",
+      "side": 1,
+      "message": "could we merge GLint level GLint layer into a simple struct? This would make me feel better somehow in the case where we have to pass in zero for an unused parameter. Then we could bake the functions that convert from face targets, etc, into that struct, in a nice encapsulated package.",
+      "range": {
+        "startLine": 58,
+        "startChar": 47,
+        "endLine": 58,
+        "endChar": 71
+      },
+      "revId": "bf94461cdc83de77cd5cc4c7dcbda239ba016242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
