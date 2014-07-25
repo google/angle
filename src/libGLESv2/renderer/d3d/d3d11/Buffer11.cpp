@@ -181,7 +181,7 @@ Buffer11 *Buffer11::makeBuffer11(BufferImpl *buffer)
     return static_cast<Buffer11*>(buffer);
 }
 
-void Buffer11::setData(const void *data, size_t size, GLenum usage)
+gl::Error Buffer11::setData(const void *data, size_t size, GLenum usage)
 {
     mDynamicUsage = (usage == GL_DYNAMIC_DRAW);
 
@@ -189,16 +189,22 @@ void Buffer11::setData(const void *data, size_t size, GLenum usage)
     {
         if (!mDynamicData.resize(size))
         {
-            return gl::error(GL_OUT_OF_MEMORY);
+            return gl::Error(GL_OUT_OF_MEMORY);
         }
     }
 
-    setSubData(data, size, 0);
+    gl::Error error = setSubData(data, size, 0);
+    if (error.isError())
+    {
+        return error;
+    }
 
     if (usage == GL_STATIC_DRAW)
     {
         initializeStaticData();
     }
+
+    return error;
 }
 
 void *Buffer11::getData()
@@ -242,12 +248,9 @@ void *Buffer11::getData()
     return mResolvedData.data();
 }
 
-void Buffer11::setSubData(const void *data, size_t size, size_t offset)
+gl::Error Buffer11::setSubData(const void *data, size_t size, size_t offset)
 {
     size_t requiredSize = size + offset;
-    mSize = std::max(mSize, requiredSize);
-
-    invalidateStaticData();
 
     if (data && size > 0)
     {
@@ -256,85 +259,96 @@ void Buffer11::setSubData(const void *data, size_t size, size_t offset)
             mDynamicDirtyRange.start = std::min(mDynamicDirtyRange.start, offset);
             mDynamicDirtyRange.end = std::max(mDynamicDirtyRange.end, size + offset);
             memcpy(mDynamicData.data() + offset, data, size);
-            return;
         }
-
-        NativeBuffer11 *stagingBuffer = getStagingBuffer();
-
-        if (!stagingBuffer)
+        else
         {
-            // Out-of-memory
-            return;
-        }
+            NativeBuffer11 *stagingBuffer = getStagingBuffer();
 
-        // Explicitly resize the staging buffer, preserving data if the new data will not
-        // completely fill the buffer
-        if (stagingBuffer->getSize() < requiredSize)
-        {
-            bool preserveData = (offset > 0);
-            if (!stagingBuffer->resize(requiredSize, preserveData))
+            if (!stagingBuffer)
             {
-                // Out-of-memory
-                return;
+                return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal staging buffer.");
             }
-        }
 
-        stagingBuffer->setData(D3D11_MAP_WRITE, reinterpret_cast<const uint8_t *>(data), size, offset);
-        stagingBuffer->setDataRevision(stagingBuffer->getDataRevision() + 1);
+            // Explicitly resize the staging buffer, preserving data if the new data will not
+            // completely fill the buffer
+            if (stagingBuffer->getSize() < requiredSize)
+            {
+                bool preserveData = (offset > 0);
+                if (!stagingBuffer->resize(requiredSize, preserveData))
+                {
+                    return gl::Error(GL_OUT_OF_MEMORY, "Failed to resize internal staging buffer.");
+                }
+            }
+
+            if (!stagingBuffer->setData(D3D11_MAP_WRITE, reinterpret_cast<const uint8_t *>(data), size, offset))
+            {
+                return gl::Error(GL_OUT_OF_MEMORY, "Failed to set data on internal staging buffer.");
+            }
+
+            stagingBuffer->setDataRevision(stagingBuffer->getDataRevision() + 1);
+        }
     }
+
+    mSize = std::max(mSize, requiredSize);
+    invalidateStaticData();
+
+    return gl::Error(GL_NO_ERROR);
 }
 
-void Buffer11::copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size)
+gl::Error Buffer11::copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size)
 {
     Buffer11 *sourceBuffer = makeBuffer11(source);
-    if (sourceBuffer)
+    ASSERT(sourceBuffer != NULL);
+
+    BufferStorage11 *copyDest = getLatestBufferStorage();
+    if (!copyDest)
     {
-        BufferStorage11 *dest = getLatestBufferStorage();
-        if (!dest)
-        {
-            dest = getStagingBuffer();
-        }
-
-        BufferStorage11 *source = sourceBuffer->getLatestBufferStorage();
-        if (source && dest)
-        {
-            // If copying to/from a pixel pack buffer, we must have a staging or
-            // pack buffer partner, because other native buffers can't be mapped
-            if (dest->getUsage() == BUFFER_USAGE_PIXEL_PACK && !source->isMappable())
-            {
-                source = sourceBuffer->getStagingBuffer();
-            }
-            else if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK && !dest->isMappable())
-            {
-                dest = getStagingBuffer();
-            }
-
-            // D3D11 does not allow overlapped copies until 11.1, and only if the
-            // device supports D3D11_FEATURE_DATA_D3D11_OPTIONS::CopyWithOverlap
-            // Get around this via a different source buffer
-            if (source == dest)
-            {
-                if (source->getUsage() == BUFFER_USAGE_STAGING)
-                {
-                    source = getBufferStorage(BUFFER_USAGE_VERTEX);
-                }
-                else
-                {
-                    source = getStagingBuffer();
-                }
-            }
-
-            dest->copyFromStorage(source, sourceOffset, size, destOffset);
-            dest->setDataRevision(dest->getDataRevision() + 1);
-        }
-
-        mSize = std::max<size_t>(mSize, destOffset + size);
+        copyDest = getStagingBuffer();
     }
 
+    BufferStorage11 *copySource = sourceBuffer->getLatestBufferStorage();
+
+    if (!copySource || !copyDest)
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal staging buffer.");
+    }
+
+    // If copying to/from a pixel pack buffer, we must have a staging or
+    // pack buffer partner, because other native buffers can't be mapped
+    if (copyDest->getUsage() == BUFFER_USAGE_PIXEL_PACK && !copySource->isMappable())
+    {
+        copySource = sourceBuffer->getStagingBuffer();
+    }
+    else if (copySource->getUsage() == BUFFER_USAGE_PIXEL_PACK && !copyDest->isMappable())
+    {
+        copyDest = getStagingBuffer();
+    }
+
+    // D3D11 does not allow overlapped copies until 11.1, and only if the
+    // device supports D3D11_FEATURE_DATA_D3D11_OPTIONS::CopyWithOverlap
+    // Get around this via a different source buffer
+    if (copySource == copyDest)
+    {
+        if (copySource->getUsage() == BUFFER_USAGE_STAGING)
+        {
+            copySource = getBufferStorage(BUFFER_USAGE_VERTEX);
+        }
+        else
+        {
+            copySource = getStagingBuffer();
+        }
+    }
+
+    copyDest->copyFromStorage(copySource, sourceOffset, size, destOffset);
+    copyDest->setDataRevision(copyDest->getDataRevision() + 1);
+
+    mSize = std::max<size_t>(mSize, destOffset + size);
     invalidateStaticData();
+
+    return gl::Error(GL_NO_ERROR);
 }
 
-GLvoid *Buffer11::map(size_t offset, size_t length, GLbitfield access)
+gl::Error Buffer11::map(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr)
 {
     ASSERT(!mMappedStorage);
 
@@ -355,8 +369,7 @@ GLvoid *Buffer11::map(size_t offset, size_t length, GLbitfield access)
 
     if (!mMappedStorage)
     {
-        // Out-of-memory
-        return NULL;
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate mappable internal buffer.");
     }
 
     if ((access & GL_MAP_WRITE_BIT) > 0)
@@ -365,14 +378,22 @@ GLvoid *Buffer11::map(size_t offset, size_t length, GLbitfield access)
         mMappedStorage->setDataRevision(mMappedStorage->getDataRevision() + 1);
     }
 
-    return mMappedStorage->map(offset, length, access);
+    void *mappedBuffer = mMappedStorage->map(offset, length, access);
+    if (!mappedBuffer)
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal buffer.");
+    }
+
+    *mapPtr = mappedBuffer;
+    return gl::Error(GL_NO_ERROR);
 }
 
-void Buffer11::unmap()
+gl::Error Buffer11::unmap()
 {
     ASSERT(mMappedStorage);
     mMappedStorage->unmap();
     mMappedStorage = NULL;
+    return gl::Error(GL_NO_ERROR);
 }
 
 void Buffer11::markTransformFeedbackUsage()

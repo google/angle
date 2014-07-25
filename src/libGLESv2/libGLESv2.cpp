@@ -542,7 +542,12 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, 
             return;
         }
 
-        buffer->bufferData(data, size, usage);
+        gl::Error error = buffer->bufferData(data, size, usage);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -598,7 +603,12 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
             return;
         }
 
-        buffer->bufferSubData(data, size, offset);
+        gl::Error error = buffer->bufferSubData(data, size, offset);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -6780,7 +6790,12 @@ void __stdcall glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintp
         // if size is zero, the copy is a successful no-op
         if (size > 0)
         {
-            writeBuffer->copyBufferSubData(readBuffer, readOffset, writeOffset, size);
+            gl::Error error = writeBuffer->copyBufferSubData(readBuffer, readOffset, writeOffset, size);
+            if (error.isError())
+            {
+                context->recordError(error);
+                return;
+            }
         }
     }
 }
@@ -8379,7 +8394,14 @@ void * __stdcall glMapBufferOES(GLenum target, GLenum access)
             return NULL;
         }
 
-        return buffer->mapRange(0, buffer->getSize(), GL_MAP_WRITE_BIT);
+        gl::Error error = buffer->mapRange(0, buffer->getSize(), GL_MAP_WRITE_BIT);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return NULL;
+        }
+
+        return buffer->getMapPointer();
     }
 
     return NULL;
@@ -8408,7 +8430,12 @@ GLboolean __stdcall glUnmapBufferOES(GLenum target)
 
         // TODO: detect if we had corruption. if so, throw an error and return false.
 
-        buffer->unmap();
+        gl::Error error = buffer->unmap();
+        if (error.isError())
+        {
+            context->recordError(error);
+            return GL_FALSE;
+        }
 
         return GL_TRUE;
     }
@@ -8498,7 +8525,14 @@ void* __stdcall glMapBufferRangeEXT (GLenum target, GLintptr offset, GLsizeiptr 
             return NULL;
         }
 
-        return buffer->mapRange(offset, length, access);
+        gl::Error error = buffer->mapRange(offset, length, access);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return NULL;
+        }
+
+        return buffer->getMapPointer();
     }
 
     return NULL;
