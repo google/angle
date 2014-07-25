@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f974b47c_7ec14013",
+        "filename": "src/libGLESv2/Caps.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-25T20:29:53Z",
+      "side": 1,
+      "message": "nit: Seeing as we insert sample counts in order, and have at most like 4 elements in the set, sems like a vector would be better here.",
+      "range": {
+        "startLine": 20,
+        "startChar": 13,
+        "endLine": 20,
+        "endChar": 16
+      },
+      "revId": "aaaaa03de626306e3bee925b595e5c79c63b80fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
