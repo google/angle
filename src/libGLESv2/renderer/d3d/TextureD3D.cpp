@@ -25,23 +25,6 @@
 namespace rx
 {
 
-bool IsMipmapFiltered(const gl::SamplerState &samplerState)
-{
-    switch (samplerState.minFilter)
-    {
-      case GL_NEAREST:
-      case GL_LINEAR:
-        return false;
-      case GL_NEAREST_MIPMAP_NEAREST:
-      case GL_LINEAR_MIPMAP_NEAREST:
-      case GL_NEAREST_MIPMAP_LINEAR:
-      case GL_LINEAR_MIPMAP_LINEAR:
-        return true;
-      default: UNREACHABLE();
-        return false;
-    }
-}
-
 bool IsRenderTargetUsage(GLenum usage)
 {
     return (usage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
@@ -57,6 +40,26 @@ TextureD3D::TextureD3D(Renderer *renderer)
 
 TextureD3D::~TextureD3D()
 {
+}
+
+TextureD3D *TextureD3D::makeTextureD3D(TextureImpl *texture)
+{
+    ASSERT(HAS_DYNAMIC_TYPE(TextureD3D*, texture));
+    return static_cast<TextureD3D*>(texture);
+}
+
+TextureStorageInterface *TextureD3D::getNativeTexture()
+{
+    // ensure the underlying texture is created
+    initializeStorage(false);
+
+    TextureStorageInterface *storage = getBaseLevelStorage();
+    if (storage)
+    {
+        updateStorage();
+    }
+
+    return storage;
 }
 
 GLint TextureD3D::getBaseLevelWidth() const
@@ -206,7 +209,6 @@ int TextureD3D::mipLevels() const
 
 TextureD3D_2D::TextureD3D_2D(Renderer *renderer)
     : TextureD3D(renderer),
-      Texture2DImpl(),
       mTexStorage(NULL)
 {
     for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
@@ -223,26 +225,6 @@ TextureD3D_2D::~TextureD3D_2D()
     {
         delete mImageArray[i];
     }
-}
-
-TextureD3D_2D *TextureD3D_2D::makeTextureD3D_2D(Texture2DImpl *texture)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureD3D_2D*, texture));
-    return static_cast<TextureD3D_2D*>(texture);
-}
-
-TextureStorageInterface *TextureD3D_2D::getNativeTexture()
-{
-    // ensure the underlying texture is created
-    initializeStorage(false);
-
-    TextureStorageInterface *storage = getBaseLevelStorage();
-    if (storage)
-    {
-        updateStorage();
-    }
-
-    return storage;
 }
 
 Image *TextureD3D_2D::getImage(int level, int layer) const
@@ -458,75 +440,6 @@ void TextureD3D_2D::storage(GLenum target, GLsizei levels, GLenum internalformat
     setCompleteTexStorage(new TextureStorageInterface2D(mRenderer, internalformat, IsRenderTargetUsage(mUsage), width, height, levels));
 }
 
-// Tests for 2D texture sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 85.
-bool TextureD3D_2D::isSamplerComplete(const gl::SamplerState &samplerState) const
-{
-    GLsizei width = getBaseLevelWidth();
-    GLsizei height = getBaseLevelHeight();
-
-    if (width <= 0 || height <= 0)
-    {
-        return false;
-    }
-
-    if (!mRenderer->getRendererTextureCaps().get(getInternalFormat(0)).filterable)
-    {
-        if (samplerState.magFilter != GL_NEAREST ||
-            (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
-        {
-            return false;
-        }
-    }
-
-    // TODO(geofflang): use context's extensions
-    bool npotSupport = mRenderer->getRendererExtensions().textureNPOT;
-
-    if (!npotSupport)
-    {
-        if ((samplerState.wrapS != GL_CLAMP_TO_EDGE && !gl::isPow2(width)) ||
-            (samplerState.wrapT != GL_CLAMP_TO_EDGE && !gl::isPow2(height)))
-        {
-            return false;
-        }
-    }
-
-    if (IsMipmapFiltered(samplerState))
-    {
-        if (!npotSupport)
-        {
-            if (!gl::isPow2(width) || !gl::isPow2(height))
-            {
-                return false;
-            }
-        }
-
-        if (!isMipmapComplete())
-        {
-            return false;
-        }
-    }
-
-    // OpenGLES 3.0.2 spec section 3.8.13 states that a texture is not mipmap complete if:
-    // The internalformat specified for the texture arrays is a sized internal depth or
-    // depth and stencil format (see table 3.13), the value of TEXTURE_COMPARE_-
-    // MODE is NONE, and either the magnification filter is not NEAREST or the mini-
-    // fication filter is neither NEAREST nor NEAREST_MIPMAP_NEAREST.
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(getInternalFormat(0));
-    if (formatInfo.depthBits > 0 && mRenderer->getCurrentClientVersion() > 2)
-    {
-        if (samplerState.compareMode == GL_NONE)
-        {
-            if ((samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST) ||
-                samplerState.magFilter != GL_NEAREST)
-            {
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
 void TextureD3D_2D::bindTexImage(egl::Surface *surface)
 {
     GLenum internalformat = surface->getFormat();
@@ -630,22 +543,6 @@ RenderTarget *TextureD3D_2D::getDepthStencil(GLint level, GLint layer)
     }
 
     return mTexStorage->getRenderTarget(level);
-}
-
-// Tests for 2D texture (mipmap) completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
-bool TextureD3D_2D::isMipmapComplete() const
-{
-    int levelCount = mipLevels();
-
-    for (int level = 0; level < levelCount; level++)
-    {
-        if (!isLevelComplete(level))
-        {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 bool TextureD3D_2D::isValidLevel(int level) const
@@ -851,8 +748,7 @@ void TextureD3D_2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsize
 
 
 TextureD3D_Cube::TextureD3D_Cube(Renderer *renderer)
-    : TextureCubeImpl(),
-      TextureD3D(renderer),
+    : TextureD3D(renderer),
       mTexStorage(NULL)
 {
     for (int i = 0; i < 6; i++)
@@ -875,26 +771,6 @@ TextureD3D_Cube::~TextureD3D_Cube()
             SafeDelete(mImageArray[i][j]);
         }
     }
-}
-
-TextureD3D_Cube *TextureD3D_Cube::makeTextureD3D_Cube(TextureCubeImpl *texture)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureD3D_Cube*, texture));
-    return static_cast<TextureD3D_Cube*>(texture);
-}
-
-TextureStorageInterface *TextureD3D_Cube::getNativeTexture()
-{
-    // ensure the underlying texture is created
-    initializeStorage(false);
-
-    TextureStorageInterface *storage = getBaseLevelStorage();
-    if (storage)
-    {
-        updateStorage();
-    }
-
-    return storage;
 }
 
 Image *TextureD3D_Cube::getImage(int level, int layer) const
@@ -1064,49 +940,6 @@ void TextureD3D_Cube::storage(GLenum target, GLsizei levels, GLenum internalform
     setCompleteTexStorage(new TextureStorageInterfaceCube(mRenderer, internalformat, IsRenderTargetUsage(mUsage), width, levels));
 }
 
-bool TextureD3D_Cube::isSamplerComplete(const gl::SamplerState &samplerState) const
-{
-    int size = getBaseLevelWidth();
-
-    bool mipmapping = IsMipmapFiltered(samplerState);
-
-    // TODO(geofflang): use context's texture caps
-    if (!mRenderer->getRendererTextureCaps().get(getInternalFormat(0, 0)).filterable)
-    {
-        if (samplerState.magFilter != GL_NEAREST ||
-            (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
-        {
-            return false;
-        }
-    }
-
-    // TODO(geofflang): use context's extensions
-    if (!gl::isPow2(size) && !mRenderer->getRendererExtensions().textureNPOT)
-    {
-        if (samplerState.wrapS != GL_CLAMP_TO_EDGE || samplerState.wrapT != GL_CLAMP_TO_EDGE || mipmapping)
-        {
-            return false;
-        }
-    }
-
-    if (!mipmapping)
-    {
-        if (!isCubeComplete())
-        {
-            return false;
-        }
-    }
-    else
-    {
-        if (!isMipmapCubeComplete())   // Also tests for isCubeComplete()
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 // Tests for cube texture completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool TextureD3D_Cube::isCubeComplete() const
 {
@@ -1133,6 +966,17 @@ bool TextureD3D_Cube::isCubeComplete() const
 
     return true;
 }
+
+void TextureD3D_Cube::bindTexImage(egl::Surface *surface)
+{
+    UNREACHABLE();
+}
+
+void TextureD3D_Cube::releaseTexImage()
+{
+    UNREACHABLE();
+}
+
 
 void TextureD3D_Cube::generateMipmaps()
 {
@@ -1327,39 +1171,10 @@ const ImageD3D *TextureD3D_Cube::getBaseLevelImage() const
     return mImageArray[0][0];
 }
 
-bool TextureD3D_Cube::isMipmapCubeComplete() const
-{
-    if (isImmutable())
-    {
-        return true;
-    }
-
-    if (!isCubeComplete())
-    {
-        return false;
-    }
-
-    int levelCount = mipLevels();
-
-    for (int face = 0; face < 6; face++)
-    {
-        for (int level = 1; level < levelCount; level++)
-        {
-            if (!isFaceLevelComplete(face, level))
-            {
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
 bool TextureD3D_Cube::isValidFaceLevel(int faceIndex, int level) const
 {
     return (mTexStorage ? (level >= 0 && level < mTexStorage->getLevelCount()) : 0);
 }
-
 
 bool TextureD3D_Cube::isFaceLevelComplete(int faceIndex, int level) const
 {
@@ -1457,8 +1272,7 @@ void TextureD3D_Cube::commitRect(int faceIndex, GLint level, GLint xoffset, GLin
 
 
 TextureD3D_3D::TextureD3D_3D(Renderer *renderer)
-    : Texture3DImpl(),
-      TextureD3D(renderer),
+    : TextureD3D(renderer),
       mTexStorage(NULL)
 {
     for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
@@ -1475,26 +1289,6 @@ TextureD3D_3D::~TextureD3D_3D()
     {
         delete mImageArray[i];
     }
-}
-
-TextureD3D_3D *TextureD3D_3D::makeTextureD3D_3D(Texture3DImpl *texture)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureD3D_3D*, texture));
-    return static_cast<TextureD3D_3D*>(texture);
-}
-
-TextureStorageInterface *TextureD3D_3D::getNativeTexture()
-{
-    // ensure the underlying texture is created
-    initializeStorage(false);
-
-    TextureStorageInterface *storage = getBaseLevelStorage();
-    if (storage)
-    {
-        updateStorage();
-    }
-
-    return storage;
 }
 
 Image *TextureD3D_3D::getImage(int level, int layer) const
@@ -1686,49 +1480,16 @@ void TextureD3D_3D::storage(GLenum target, GLsizei levels, GLenum internalformat
     setCompleteTexStorage(new TextureStorageInterface3D(mRenderer, internalformat, IsRenderTargetUsage(mUsage), width, height, depth, levels));
 }
 
-bool TextureD3D_3D::isSamplerComplete(const gl::SamplerState &samplerState) const
+void TextureD3D_3D::bindTexImage(egl::Surface *surface)
 {
-    GLsizei width = getBaseLevelWidth();
-    GLsizei height = getBaseLevelHeight();
-    GLsizei depth = getBaseLevelDepth();
-
-    if (width <= 0 || height <= 0 || depth <= 0)
-    {
-        return false;
-    }
-
-    // TODO(geofflang): use context's texture caps
-    if (!mRenderer->getRendererTextureCaps().get(getInternalFormat(0)).filterable)
-    {
-        if (samplerState.magFilter != GL_NEAREST ||
-            (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
-        {
-            return false;
-        }
-    }
-
-    if (IsMipmapFiltered(samplerState) && !isMipmapComplete())
-    {
-        return false;
-    }
-
-    return true;
+    UNREACHABLE();
 }
 
-bool TextureD3D_3D::isMipmapComplete() const
+void TextureD3D_3D::releaseTexImage()
 {
-    int levelCount = mipLevels();
-
-    for (int level = 0; level < levelCount; level++)
-    {
-        if (!isLevelComplete(level))
-        {
-            return false;
-        }
-    }
-
-    return true;
+    UNREACHABLE();
 }
+
 
 void TextureD3D_3D::generateMipmaps()
 {
@@ -2025,8 +1786,7 @@ void TextureD3D_3D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint 
 
 
 TextureD3D_2DArray::TextureD3D_2DArray(Renderer *renderer)
-    : Texture2DArrayImpl(),
-      TextureD3D(renderer),
+    : TextureD3D(renderer),
       mTexStorage(NULL)
 {
     for (int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++level)
@@ -2041,26 +1801,6 @@ TextureD3D_2DArray::~TextureD3D_2DArray()
     SafeDelete(mTexStorage);
 
     deleteImages();
-}
-
-TextureD3D_2DArray *TextureD3D_2DArray::makeTextureD3D_2DArray(Texture2DArrayImpl *texture)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureD3D_2DArray*, texture));
-    return static_cast<TextureD3D_2DArray*>(texture);
-}
-
-TextureStorageInterface *TextureD3D_2DArray::getNativeTexture()
-{
-    // ensure the underlying texture is created
-    initializeStorage(false);
-
-    TextureStorageInterface *storage = getBaseLevelStorage();
-    if (storage)
-    {
-        updateStorage();
-    }
-
-    return storage;
 }
 
 Image *TextureD3D_2DArray::getImage(int level, int layer) const
@@ -2243,49 +1983,16 @@ void TextureD3D_2DArray::storage(GLenum target, GLsizei levels, GLenum internalf
     setCompleteTexStorage(new TextureStorageInterface2DArray(mRenderer, internalformat, IsRenderTargetUsage(mUsage), width, height, depth, levels));
 }
 
-bool TextureD3D_2DArray::isSamplerComplete(const gl::SamplerState &samplerState) const
+void TextureD3D_2DArray::bindTexImage(egl::Surface *surface)
 {
-    GLsizei width = getBaseLevelWidth();
-    GLsizei height = getBaseLevelHeight();
-    GLsizei depth = getLayers(0);
-
-    if (width <= 0 || height <= 0 || depth <= 0)
-    {
-        return false;
-    }
-
-    // TODO(geofflang): use context's texture caps
-    if (!mRenderer->getRendererTextureCaps().get(getBaseLevelInternalFormat()).filterable)
-    {
-        if (samplerState.magFilter != GL_NEAREST ||
-            (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
-        {
-            return false;
-        }
-    }
-
-    if (IsMipmapFiltered(samplerState) && !isMipmapComplete())
-    {
-        return false;
-    }
-
-    return true;
+    UNREACHABLE();
 }
 
-bool TextureD3D_2DArray::isMipmapComplete() const
+void TextureD3D_2DArray::releaseTexImage()
 {
-    int levelCount = mipLevels();
-
-    for (int level = 1; level < levelCount; level++)
-    {
-        if (!isLevelComplete(level))
-        {
-            return false;
-        }
-    }
-
-    return true;
+    UNREACHABLE();
 }
+
 
 void TextureD3D_2DArray::generateMipmaps()
 {

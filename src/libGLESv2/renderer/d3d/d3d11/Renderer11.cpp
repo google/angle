@@ -473,7 +473,7 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
 
     if (texture)
     {
-        TextureImpl* textureImpl = texture->getImplementation();
+        TextureD3D* textureImpl = TextureD3D::makeTextureD3D(texture->getImplementation());
 
         TextureStorageInterface *texStorage = textureImpl->getNativeTexture();
         if (texStorage)
@@ -2799,24 +2799,19 @@ TextureStorage *Renderer11::createTextureStorage2DArray(GLenum internalformat, b
     return new TextureStorage11_2DArray(this, internalformat, renderTarget, width, height, depth, levels);
 }
 
-Texture2DImpl *Renderer11::createTexture2D()
+TextureImpl *Renderer11::createTexture(GLenum target)
 {
-    return new TextureD3D_2D(this);
-}
+    switch(target)
+    {
+      case GL_TEXTURE_2D: return new TextureD3D_2D(this);
+      case GL_TEXTURE_CUBE_MAP: return new TextureD3D_Cube(this);
+      case GL_TEXTURE_3D: return new TextureD3D_3D(this);
+      case GL_TEXTURE_2D_ARRAY: return new TextureD3D_2DArray(this);
+      default:
+        UNREACHABLE();
+    }
 
-TextureCubeImpl *Renderer11::createTextureCube()
-{
-    return new TextureD3D_Cube(this);
-}
-
-Texture3DImpl *Renderer11::createTexture3D()
-{
-    return new TextureD3D_3D(this);
-}
-
-Texture2DArrayImpl *Renderer11::createTexture2DArray()
-{
-    return new TextureD3D_2DArray(this);
+    return NULL;
 }
 
 void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,

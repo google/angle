@@ -20,6 +20,7 @@
 #include "libGLESv2/angletypes.h"
 #include "libGLESv2/constants.h"
 #include "libGLESv2/renderer/TextureImpl.h"
+#include "libGLESv2/Caps.h"
 
 namespace egl
 {
@@ -38,10 +39,12 @@ namespace gl
 class Framebuffer;
 class FramebufferAttachment;
 
+bool IsMipmapFiltered(const gl::SamplerState &samplerState);
+
 class Texture : public RefCountObject
 {
   public:
-    Texture(GLuint id, GLenum target);
+    Texture(rx::TextureImpl *impl, GLuint id, GLenum target);
 
     virtual ~Texture();
 
@@ -59,7 +62,7 @@ class Texture : public RefCountObject
     GLint getBaseLevelDepth() const;
     GLenum getBaseLevelInternalFormat() const;
 
-    bool isSamplerComplete(const SamplerState &samplerState) const;
+    virtual bool isSamplerComplete(const SamplerState &samplerState, const TextureCapsMap &textureCaps, const Extensions &extensions, int clientVersion) const = 0;
 
     rx::TextureStorageInterface *getNativeTexture();
 
@@ -71,13 +74,15 @@ class Texture : public RefCountObject
     bool isImmutable() const;
     int immutableLevelCount();
 
-    virtual rx::TextureImpl *getImplementation() = 0;
-    virtual const rx::TextureImpl *getImplementation() const = 0;
+    rx::TextureImpl *getImplementation() { return mTexture; }
+    const rx::TextureImpl *getImplementation() const { return mTexture; }
 
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
   protected:
     int mipLevels() const;
+
+    rx::TextureImpl *mTexture;
 
     SamplerState mSamplerState;
     GLenum mUsage;
@@ -86,18 +91,18 @@ class Texture : public RefCountObject
 
     GLenum mTarget;
 
+    const rx::Image *getBaseLevelImage() const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
-
-    const rx::Image *getBaseLevelImage() const;
 };
 
 class Texture2D : public Texture
 {
   public:
-    Texture2D(rx::Texture2DImpl *impl, GLuint id);
+    Texture2D(rx::TextureImpl *impl, GLuint id);
 
-    ~Texture2D();
+    virtual ~Texture2D();
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -113,15 +118,13 @@ class Texture2D : public Texture
     void copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
 
+    virtual bool isSamplerComplete(const SamplerState &samplerState, const TextureCapsMap &textureCaps, const Extensions &extensions, int clientVersion) const;
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
     virtual void generateMipmaps();
 
     unsigned int getRenderTargetSerial(GLint level);
-
-    virtual rx::TextureImpl *getImplementation() { return mTexture; }
-    virtual const rx::TextureImpl *getImplementation() const { return mTexture; }
 
   protected:
     friend class Texture2DAttachment;
@@ -131,16 +134,18 @@ class Texture2D : public Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
 
-    rx::Texture2DImpl *mTexture;
+    bool isMipmapComplete() const;
+    bool isLevelComplete(int level) const;
+
     egl::Surface *mSurface;
 };
 
 class TextureCubeMap : public Texture
 {
   public:
-    TextureCubeMap(rx::TextureCubeImpl *impl, GLuint id);
+    TextureCubeMap(rx::TextureImpl *impl, GLuint id);
 
-    ~TextureCubeMap();
+    virtual ~TextureCubeMap();
 
     GLsizei getWidth(GLenum target, GLint level) const;
     GLsizei getHeight(GLenum target, GLint level) const;
@@ -163,15 +168,14 @@ class TextureCubeMap : public Texture
     void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     void storage(GLsizei levels, GLenum internalformat, GLsizei size);
 
+    virtual bool isSamplerComplete(const SamplerState &samplerState, const TextureCapsMap &textureCaps, const Extensions &extensions, int clientVersion) const;
+
     bool isCubeComplete() const;
 
     unsigned int getRenderTargetSerial(GLenum target, GLint level);
 
     static int targetToLayerIndex(GLenum target);
     static GLenum layerIndexToTarget(GLint layer);
-
-    virtual rx::TextureImpl *getImplementation() { return mTexture; }
-    virtual const rx::TextureImpl *getImplementation() const { return mTexture; }
 
   protected:
     friend class TextureCubeMapAttachment;
@@ -181,15 +185,16 @@ class TextureCubeMap : public Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
 
-    rx::TextureCubeImpl *mTexture;
+    bool isMipmapComplete() const;
+    bool isFaceLevelComplete(int faceIndex, int level) const;
 };
 
 class Texture3D : public Texture
 {
   public:
-    Texture3D(rx::Texture3DImpl *impl, GLuint id);
+    Texture3D(rx::TextureImpl *impl, GLuint id);
 
-    ~Texture3D();
+    virtual ~Texture3D();
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -205,10 +210,9 @@ class Texture3D : public Texture
     void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
     void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
-    unsigned int getRenderTargetSerial(GLint level, GLint layer);
+    virtual bool isSamplerComplete(const SamplerState &samplerState, const TextureCapsMap &textureCaps, const Extensions &extensions, int clientVersion) const;
 
-    virtual rx::TextureImpl *getImplementation() { return mTexture; }
-    virtual const rx::TextureImpl *getImplementation() const { return mTexture; }
+    unsigned int getRenderTargetSerial(GLint level, GLint layer);
 
   protected:
     friend class Texture3DAttachment;
@@ -218,15 +222,16 @@ class Texture3D : public Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture3D);
 
-    rx::Texture3DImpl *mTexture;
+    bool isMipmapComplete() const;
+    bool isLevelComplete(int level) const;
 };
 
 class Texture2DArray : public Texture
 {
   public:
-    Texture2DArray(rx::Texture2DArrayImpl *impl, GLuint id);
+    Texture2DArray(rx::TextureImpl *impl, GLuint id);
 
-    ~Texture2DArray();
+    virtual ~Texture2DArray();
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -242,10 +247,9 @@ class Texture2DArray : public Texture
     void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
     void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
-    unsigned int getRenderTargetSerial(GLint level, GLint layer);
+    virtual bool isSamplerComplete(const SamplerState &samplerState, const TextureCapsMap &textureCaps, const Extensions &extensions, int clientVersion) const;
 
-    virtual rx::TextureImpl *getImplementation() { return mTexture; }
-    virtual const rx::TextureImpl *getImplementation() const { return mTexture; }
+    unsigned int getRenderTargetSerial(GLint level, GLint layer);
 
   protected:
     friend class Texture2DArrayAttachment;
@@ -255,7 +259,8 @@ class Texture2DArray : public Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2DArray);
 
-    rx::Texture2DArrayImpl *mTexture;
+    bool isMipmapComplete() const;
+    bool isLevelComplete(int level) const;
 };
 
 }

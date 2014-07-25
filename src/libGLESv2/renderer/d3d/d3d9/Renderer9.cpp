@@ -661,7 +661,7 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
 
     if (texture)
     {
-        TextureImpl* textureImpl = texture->getImplementation();
+        TextureD3D* textureImpl = TextureD3D::makeTextureD3D(texture->getImplementation());
 
         TextureStorageInterface *texStorage = textureImpl->getNativeTexture();
         if (texStorage)
@@ -3043,24 +3043,19 @@ TextureStorage *Renderer9::createTextureStorage2DArray(GLenum internalformat, bo
     return NULL;
 }
 
-Texture2DImpl *Renderer9::createTexture2D()
+TextureImpl *Renderer9::createTexture(GLenum target)
 {
-    return new TextureD3D_2D(this);
-}
+    switch(target)
+    {
+      case GL_TEXTURE_2D: return new TextureD3D_2D(this);
+      case GL_TEXTURE_CUBE_MAP: return new TextureD3D_Cube(this);
+      case GL_TEXTURE_3D: return new TextureD3D_3D(this);
+      case GL_TEXTURE_2D_ARRAY: return new TextureD3D_2DArray(this);
+      default:
+        UNREACHABLE();
+    }
 
-TextureCubeImpl *Renderer9::createTextureCube()
-{
-    return new TextureD3D_Cube(this);
-}
-
-Texture3DImpl *Renderer9::createTexture3D()
-{
-    return new TextureD3D_3D(this);
-}
-
-Texture2DArrayImpl *Renderer9::createTexture2DArray()
-{
-    return new TextureD3D_2DArray(this);
+    return NULL;
 }
 
 bool Renderer9::getLUID(LUID *adapterLuid) const

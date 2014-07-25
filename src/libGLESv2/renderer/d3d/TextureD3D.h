@@ -30,13 +30,19 @@ class TextureStorageInterfaceCube;
 class TextureStorageInterface3D;
 class TextureStorageInterface2DArray;
 
-bool IsMipmapFiltered(const gl::SamplerState &samplerState);
-
-class TextureD3D
+class TextureD3D : public TextureImpl
 {
   public:
     TextureD3D(Renderer *renderer);
     virtual ~TextureD3D();
+
+    static TextureD3D *makeTextureD3D(TextureImpl *texture);
+
+    virtual TextureStorageInterface *getNativeTexture();
+
+    virtual void setUsage(GLenum usage) { mUsage = usage; }
+    bool hasDirtyImages() const { return mDirtyImages; }
+    void resetDirty() { mDirtyImages = false; }
 
     GLint getBaseLevelWidth() const;
     GLint getBaseLevelHeight() const;
@@ -70,26 +76,21 @@ class TextureD3D
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D);
 
+    virtual void initializeStorage(bool renderTarget) = 0;
+
+    virtual void updateStorage() = 0;
     virtual TextureStorageInterface *getBaseLevelStorage() = 0;
     virtual const ImageD3D *getBaseLevelImage() const = 0;
 };
 
-class TextureD3D_2D : public Texture2DImpl, public TextureD3D
+class TextureD3D_2D : public TextureD3D
 {
   public:
     TextureD3D_2D(Renderer *renderer);
     virtual ~TextureD3D_2D();
 
-    static TextureD3D_2D *makeTextureD3D_2D(Texture2DImpl *texture);
-
-    virtual TextureStorageInterface *getNativeTexture();
-
     virtual Image *getImage(int level, int layer) const;
     virtual GLsizei getLayerCount(int level) const;
-
-    virtual bool hasDirtyImages() const { return mDirtyImages; }
-    virtual void resetDirty() { mDirtyImages = false; }
-    virtual void setUsage(GLenum usage) { mUsage = usage; }
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -105,7 +106,6 @@ class TextureD3D_2D : public Texture2DImpl, public TextureD3D
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
-    virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
@@ -119,16 +119,15 @@ class TextureD3D_2D : public Texture2DImpl, public TextureD3D
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2D);
 
-    void initializeStorage(bool renderTarget);
+    virtual void initializeStorage(bool renderTarget);
     TextureStorageInterface2D *createCompleteStorage(bool renderTarget) const;
     void setCompleteTexStorage(TextureStorageInterface2D *newCompleteTexStorage);
 
-    void updateStorage();
+    virtual void updateStorage();
     bool ensureRenderTarget();
     virtual TextureStorageInterface *getBaseLevelStorage();
     virtual const ImageD3D *getBaseLevelImage() const;
 
-    bool isMipmapComplete() const;
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
 
@@ -141,15 +140,11 @@ class TextureD3D_2D : public Texture2DImpl, public TextureD3D
     ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
-class TextureD3D_Cube : public TextureCubeImpl, public TextureD3D
+class TextureD3D_Cube : public TextureD3D
 {
   public:
     TextureD3D_Cube(Renderer *renderer);
     virtual ~TextureD3D_Cube();
-
-    static TextureD3D_Cube *makeTextureD3D_Cube(TextureCubeImpl *texture);
-
-    virtual TextureStorageInterface *getNativeTexture();
 
     virtual Image *getImage(int level, int layer) const;
     virtual GLsizei getLayerCount(int level) const;
@@ -169,8 +164,8 @@ class TextureD3D_Cube : public TextureCubeImpl, public TextureD3D
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
-    virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
-    virtual bool isCubeComplete() const;
+    virtual void bindTexImage(egl::Surface *surface);
+    virtual void releaseTexImage();
 
     virtual void generateMipmaps();
 
@@ -182,18 +177,18 @@ class TextureD3D_Cube : public TextureCubeImpl, public TextureD3D
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_Cube);
 
-    void initializeStorage(bool renderTarget);
+    virtual void initializeStorage(bool renderTarget);
     TextureStorageInterfaceCube *createCompleteStorage(bool renderTarget) const;
     void setCompleteTexStorage(TextureStorageInterfaceCube *newCompleteTexStorage);
 
-    void updateStorage();
+    virtual void updateStorage();
     bool ensureRenderTarget();
     virtual TextureStorageInterface *getBaseLevelStorage();
     virtual const ImageD3D *getBaseLevelImage() const;
 
-    bool isMipmapCubeComplete() const;
     bool isValidFaceLevel(int faceIndex, int level) const;
     bool isFaceLevelComplete(int faceIndex, int level) const;
+    bool isCubeComplete() const;
     void updateStorageFaceLevel(int faceIndex, int level);
 
     void redefineImage(int faceIndex, GLint level, GLenum internalformat, GLsizei width, GLsizei height);
@@ -204,22 +199,14 @@ class TextureD3D_Cube : public TextureCubeImpl, public TextureD3D
     TextureStorageInterfaceCube *mTexStorage;
 };
 
-class TextureD3D_3D : public Texture3DImpl, public TextureD3D
+class TextureD3D_3D : public TextureD3D
 {
   public:
     TextureD3D_3D(Renderer *renderer);
     virtual ~TextureD3D_3D();
 
-    static TextureD3D_3D *makeTextureD3D_3D(Texture3DImpl *texture);
-
-    virtual TextureStorageInterface *getNativeTexture();
-
     virtual Image *getImage(int level, int layer) const;
     virtual GLsizei getLayerCount(int level) const;
-
-    virtual bool hasDirtyImages() const { return mDirtyImages; }
-    virtual void resetDirty() { mDirtyImages = false; }
-    virtual void setUsage(GLenum usage) { mUsage = usage; }
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -235,7 +222,8 @@ class TextureD3D_3D : public Texture3DImpl, public TextureD3D
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
-    virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
+    virtual void bindTexImage(egl::Surface *surface);
+    virtual void releaseTexImage();
 
     virtual void generateMipmaps();
 
@@ -252,12 +240,11 @@ class TextureD3D_3D : public Texture3DImpl, public TextureD3D
     TextureStorageInterface3D *createCompleteStorage(bool renderTarget) const;
     void setCompleteTexStorage(TextureStorageInterface3D *newCompleteTexStorage);
 
-    void updateStorage();
+    virtual void updateStorage();
     bool ensureRenderTarget();
     virtual TextureStorageInterface *getBaseLevelStorage();
     virtual const ImageD3D *getBaseLevelImage() const;
 
-    bool isMipmapComplete() const;
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
     void updateStorageLevel(int level);
@@ -270,22 +257,14 @@ class TextureD3D_3D : public Texture3DImpl, public TextureD3D
     TextureStorageInterface3D *mTexStorage;
 };
 
-class TextureD3D_2DArray : public Texture2DArrayImpl, public TextureD3D
+class TextureD3D_2DArray : public TextureD3D
 {
   public:
     TextureD3D_2DArray(Renderer *renderer);
     virtual ~TextureD3D_2DArray();
 
-    static TextureD3D_2DArray *makeTextureD3D_2DArray(Texture2DArrayImpl *texture);
-
-    virtual TextureStorageInterface *getNativeTexture();
-
     virtual Image *getImage(int level, int layer) const;
     virtual GLsizei getLayerCount(int level) const;
-
-    virtual bool hasDirtyImages() const { return mDirtyImages; }
-    virtual void resetDirty() { mDirtyImages = false; }
-    virtual void setUsage(GLenum usage) { mUsage = usage; }
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -301,7 +280,8 @@ class TextureD3D_2DArray : public Texture2DArrayImpl, public TextureD3D
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
-    virtual bool isSamplerComplete(const gl::SamplerState &samplerState) const;
+    virtual void bindTexImage(egl::Surface *surface);
+    virtual void releaseTexImage();
 
     virtual void generateMipmaps();
 
@@ -317,12 +297,11 @@ class TextureD3D_2DArray : public Texture2DArrayImpl, public TextureD3D
     TextureStorageInterface2DArray *createCompleteStorage(bool renderTarget) const;
     void setCompleteTexStorage(TextureStorageInterface2DArray *newCompleteTexStorage);
 
-    void updateStorage();
+    virtual void updateStorage();
     bool ensureRenderTarget();
     virtual TextureStorageInterface *getBaseLevelStorage();
     virtual const ImageD3D *getBaseLevelImage() const;
 
-    bool isMipmapComplete() const;
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
     void updateStorageLevel(int level);

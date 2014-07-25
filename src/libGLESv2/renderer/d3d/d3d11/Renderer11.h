@@ -171,10 +171,7 @@ class Renderer11 : public Renderer
     virtual TextureStorage *createTextureStorage2DArray(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels);
 
     // Texture creation
-    virtual Texture2DImpl *createTexture2D();
-    virtual TextureCubeImpl *createTextureCube();
-    virtual Texture3DImpl *createTexture3D();
-    virtual Texture2DArrayImpl *createTexture2DArray();
+    virtual TextureImpl *createTexture(GLenum target);
 
     // Buffer creation
     virtual BufferImpl *createBuffer();

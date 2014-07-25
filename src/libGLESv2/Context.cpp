@@ -66,10 +66,10 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    mTexture2DZero.set(new Texture2D(mRenderer->createTexture2D(), 0));
-    mTextureCubeMapZero.set(new TextureCubeMap(mRenderer->createTextureCube(), 0));
-    mTexture3DZero.set(new Texture3D(mRenderer->createTexture3D(), 0));
-    mTexture2DArrayZero.set(new Texture2DArray(mRenderer->createTexture2DArray(), 0));
+    mTexture2DZero.set(new Texture2D(mRenderer->createTexture(GL_TEXTURE_2D), 0));
+    mTextureCubeMapZero.set(new TextureCubeMap(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), 0));
+    mTexture3DZero.set(new Texture3D(mRenderer->createTexture(GL_TEXTURE_3D), 0));
+    mTexture2DArrayZero.set(new Texture2DArray(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), 0));
 
     bindVertexArray(0);
     bindArrayBuffer(0);
@@ -1501,7 +1501,7 @@ void Context::applyTextures(SamplerType shaderType, Texture *textures[], Texture
         if (texture)
         {
             // TODO: std::binary_search may become unavailable using older versions of GCC
-            if (texture->isSamplerComplete(sampler) &&
+            if (texture->isSamplerComplete(sampler, mTextureCaps, mExtensions, mClientVersion) &&
                 !std::binary_search(framebufferSerials.begin(), framebufferSerials.begin() + framebufferSerialCount, texture->getTextureSerial()))
             {
                 mRenderer->setSamplerState(shaderType, samplerIndex, sampler);
@@ -2118,7 +2118,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
 
           case TEXTURE_2D:
             {
-                Texture2D *incomplete2d = new Texture2D(mRenderer->createTexture2D(), Texture::INCOMPLETE_TEXTURE_ID);
+                Texture2D *incomplete2d = new Texture2D(mRenderer->createTexture(GL_TEXTURE_2D), Texture::INCOMPLETE_TEXTURE_ID);
                 incomplete2d->setImage(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
                 t = incomplete2d;
             }
@@ -2126,7 +2126,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
 
           case TEXTURE_CUBE:
             {
-              TextureCubeMap *incompleteCube = new TextureCubeMap(mRenderer->createTextureCube(), Texture::INCOMPLETE_TEXTURE_ID);
+              TextureCubeMap *incompleteCube = new TextureCubeMap(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), Texture::INCOMPLETE_TEXTURE_ID);
 
               incompleteCube->setImagePosX(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
               incompleteCube->setImageNegX(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
@@ -2141,7 +2141,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
 
           case TEXTURE_3D:
             {
-                Texture3D *incomplete3d = new Texture3D(mRenderer->createTexture3D(), Texture::INCOMPLETE_TEXTURE_ID);
+                Texture3D *incomplete3d = new Texture3D(mRenderer->createTexture(GL_TEXTURE_3D), Texture::INCOMPLETE_TEXTURE_ID);
                 incomplete3d->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
 
                 t = incomplete3d;
@@ -2150,7 +2150,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
 
           case TEXTURE_2D_ARRAY:
             {
-                Texture2DArray *incomplete2darray = new Texture2DArray(mRenderer->createTexture2DArray(), Texture::INCOMPLETE_TEXTURE_ID);
+                Texture2DArray *incomplete2darray = new Texture2DArray(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), Texture::INCOMPLETE_TEXTURE_ID);
                 incomplete2darray->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
 
                 t = incomplete2darray;
