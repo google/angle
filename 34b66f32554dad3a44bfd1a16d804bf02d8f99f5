@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f922f488_74925693",
+        "filename": "src/libGLESv2/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-07-25T21:29:24Z",
+      "side": 0,
+      "message": "This didn\u0027t make much sense. We were only using it to query the index type in Renderer11. I added TranslatedIndexData::indexType to store that info instead. A non-null indexBuffer now indicates a valid (unmodified) static buffer was found (see \"else if (staticBuffer\" below).",
+      "range": {
+        "startLine": 168,
+        "startChar": 8,
+        "endLine": 168,
+        "endChar": 38
+      },
+      "revId": "34b66f32554dad3a44bfd1a16d804bf02d8f99f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
