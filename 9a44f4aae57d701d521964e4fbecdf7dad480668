@@ -22,6 +22,52 @@
       "revId": "9a44f4aae57d701d521964e4fbecdf7dad480668",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9949f84f_59e2f4a6",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1207,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-07-25T21:33:06Z",
+      "side": 1,
+      "message": "No semantic change here. Just avoids calling the methods twice.",
+      "range": {
+        "startLine": 1207,
+        "startChar": 41,
+        "endLine": 1207,
+        "endChar": 68
+      },
+      "revId": "9a44f4aae57d701d521964e4fbecdf7dad480668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9949f84f_79efb88d",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-07-25T21:33:06Z",
+      "side": 1,
+      "message": "No semantic change here. Just avoids calling the methods twice.",
+      "range": {
+        "startLine": 1318,
+        "startChar": 41,
+        "endLine": 1318,
+        "endChar": 68
+      },
+      "revId": "9a44f4aae57d701d521964e4fbecdf7dad480668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
