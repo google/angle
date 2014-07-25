@@ -26,11 +26,11 @@ bool HLSLCompiler::initialize()
     TRACE_EVENT0("gpu", "initializeCompiler");
 #if defined(ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES)
     // Find a D3DCompiler module that had already been loaded based on a predefined list of versions.
-    static TCHAR* d3dCompilerNames[] = ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES;
+    static const char *d3dCompilerNames[] = ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES;
 
     for (size_t i = 0; i < ArraySize(d3dCompilerNames); ++i)
     {
-        if (GetModuleHandleEx(0, d3dCompilerNames[i], &mD3DCompilerModule))
+        if (GetModuleHandleExA(0, d3dCompilerNames[i], &mD3DCompilerModule))
         {
             break;
         }

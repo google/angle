@@ -318,7 +318,7 @@
                         'GL_APICALL=',
                         'GL_GLEXT_PROTOTYPES=',
                         'EGLAPI=',
-                        'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ TEXT("d3dcompiler_46.dll"), TEXT("d3dcompiler_43.dll") }',
+                        'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ "d3dcompiler_46.dll", "d3dcompiler_43.dll" }',
                     ],
                     'conditions':
                     [
