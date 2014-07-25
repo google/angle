@@ -60,7 +60,7 @@ class Buffer11 : public BufferD3D
     ID3D11Buffer *getBuffer(BufferUsage usage);
     ID3D11ShaderResourceView *getSRV(DXGI_FORMAT srvFormat);
     bool isMapped() const { return mMappedStorage != NULL; }
-    void packPixels(ID3D11Texture2D *srcTexure, UINT srcSubresource, const PackPixelsParams &params);
+    gl::Error packPixels(ID3D11Texture2D *srcTexure, UINT srcSubresource, const PackPixelsParams &params);
 
     // BufferD3D implementation
     virtual size_t getSize() const { return mSize; }

@@ -2559,8 +2559,8 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
     return true;
 }
 
-void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
-                           GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels)
+gl::Error Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
+                                GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels)
 {
     ASSERT(pack.pixelBuffer.get() == NULL);
 
@@ -2581,7 +2581,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     if (!surface)
     {
         // context must be lost
-        return;
+        return gl::Error(GL_NO_ERROR);
     }
 
     D3DSURFACE_DESC desc;
@@ -2591,7 +2591,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     {
         UNIMPLEMENTED();   // FIXME: Requires resolve using StretchRect into non-multisampled render target
         SafeRelease(surface);
-        return gl::error(GL_OUT_OF_MEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "ReadPixels is unimplemented for multisampled framebuffer attachments.");
     }
 
     HRESULT result;
@@ -2619,7 +2619,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
             SafeRelease(surface);
-            return gl::error(GL_OUT_OF_MEMORY);
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal texture for ReadPixels.");
         }
     }
 
@@ -2635,20 +2635,19 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         if (d3d9::isDeviceLostError(result))
         {
             notifyDeviceLost();
-            return gl::error(GL_OUT_OF_MEMORY);
         }
         else
         {
             UNREACHABLE();
-            return;
         }
 
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to read internal render target data.");
     }
 
     if (directToPixels)
     {
         SafeRelease(systemSurface);
-        return;
+        return gl::Error(GL_NO_ERROR);
     }
 
     RECT rect;
@@ -2665,7 +2664,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         UNREACHABLE();
         SafeRelease(systemSurface);
 
-        return;   // No sensible error to generate
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock internal render target.");
     }
 
     uint8_t *source;
@@ -2734,6 +2733,8 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
 
     systemSurface->UnlockRect();
     SafeRelease(systemSurface);
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 RenderTarget *Renderer9::createRenderTarget(SwapChain *swapChain, bool depth)

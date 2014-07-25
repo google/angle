@@ -191,7 +191,7 @@ class Context
     Error clearBufferiv(GLenum buffer, int drawbuffer, const int *values);
     Error clearBufferfi(GLenum buffer, int drawbuffer, float depth, int stencil);
 
-    void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei *bufSize, void* pixels);
+    Error readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei *bufSize, void* pixels);
     void drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances);
     void drawElements(GLenum mode, GLsizei count, GLenum type,
                       const GLvoid *indices, GLsizei instances,
