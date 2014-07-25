@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f922f488_6e5fe3ca",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-07-25T13:12:01Z",
+      "side": 1,
+      "message": "Mind renaming this to \u0027RenderTargetAndMask\u0027? The other order sounds weird to me. Alternatively, \u0027MaskedClearRenderTarget\u0027 might work even better; it nicely corresponds with the \u0027maskedClearRenderTarget\u0027 variable name we\u0027re already using.",
+      "range": {
+        "startLine": 44,
+        "startChar": 11,
+        "endLine": 44,
+        "endChar": 30
+      },
+      "revId": "cd841c886b45c54697314ba35fb1420ea0e597e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
