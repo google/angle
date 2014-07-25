@@ -22,6 +22,30 @@
       "revId": "cd841c886b45c54697314ba35fb1420ea0e597e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f922f488_ce11b7eb",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-25T14:42:32Z",
+      "side": 1,
+      "message": "How about \"MaskedRenderTarget\", as it is local to Clear so the word Clear is redundant?",
+      "parentUuid": "f922f488_6e5fe3ca",
+      "range": {
+        "startLine": 44,
+        "startChar": 11,
+        "endLine": 44,
+        "endChar": 30
+      },
+      "revId": "cd841c886b45c54697314ba35fb1420ea0e597e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
