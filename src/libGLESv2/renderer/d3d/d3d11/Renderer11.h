@@ -89,7 +89,7 @@ class Renderer11 : public Renderer
     virtual void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
                               gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances);
 
-    virtual void clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer);
+    virtual gl::Error clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer);
 
     virtual void markAllStateDirty();
 

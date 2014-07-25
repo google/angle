@@ -1543,28 +1543,28 @@ void Context::markTransformFeedbackUsage()
     }
 }
 
-void Context::clear(GLbitfield mask)
+Error Context::clear(GLbitfield mask)
 {
     if (mState.isRasterizerDiscardEnabled())
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
     ClearParameters clearParams = mState.getClearParameters(mask);
 
     if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
-    mRenderer->clear(clearParams, mState.getDrawFramebuffer());
+    return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
 }
 
-void Context::clearBufferfv(GLenum buffer, int drawbuffer, const float *values)
+Error Context::clearBufferfv(GLenum buffer, int drawbuffer, const float *values)
 {
     if (mState.isRasterizerDiscardEnabled())
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
     // glClearBufferfv can be called to clear the color buffer or depth buffer
@@ -1588,17 +1588,17 @@ void Context::clearBufferfv(GLenum buffer, int drawbuffer, const float *values)
 
     if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
-    mRenderer->clear(clearParams, mState.getDrawFramebuffer());
+    return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
 }
 
-void Context::clearBufferuiv(GLenum buffer, int drawbuffer, const unsigned int *values)
+Error Context::clearBufferuiv(GLenum buffer, int drawbuffer, const unsigned int *values)
 {
     if (mState.isRasterizerDiscardEnabled())
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
     // glClearBufferuv can only be called to clear a color buffer
@@ -1612,17 +1612,17 @@ void Context::clearBufferuiv(GLenum buffer, int drawbuffer, const unsigned int *
 
     if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
-    mRenderer->clear(clearParams, mState.getDrawFramebuffer());
+    return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
 }
 
-void Context::clearBufferiv(GLenum buffer, int drawbuffer, const int *values)
+Error Context::clearBufferiv(GLenum buffer, int drawbuffer, const int *values)
 {
     if (mState.isRasterizerDiscardEnabled())
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
     // glClearBufferfv can be called to clear the color buffer or stencil buffer
@@ -1646,17 +1646,17 @@ void Context::clearBufferiv(GLenum buffer, int drawbuffer, const int *values)
 
     if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
-    mRenderer->clear(clearParams, mState.getDrawFramebuffer());
+    return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
 }
 
-void Context::clearBufferfi(GLenum buffer, int drawbuffer, float depth, int stencil)
+Error Context::clearBufferfi(GLenum buffer, int drawbuffer, float depth, int stencil)
 {
     if (mState.isRasterizerDiscardEnabled())
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
     // glClearBufferfi can only be called to clear a depth stencil buffer
@@ -1668,10 +1668,10 @@ void Context::clearBufferfi(GLenum buffer, int drawbuffer, float depth, int sten
 
     if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
-    mRenderer->clear(clearParams, mState.getDrawFramebuffer());
+    return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
 }
 
 void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,

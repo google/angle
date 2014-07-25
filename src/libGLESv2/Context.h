@@ -185,11 +185,11 @@ class Context
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
     bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
 
-    void clear(GLbitfield mask);
-    void clearBufferfv(GLenum buffer, int drawbuffer, const float *values);
-    void clearBufferuiv(GLenum buffer, int drawbuffer, const unsigned int *values);
-    void clearBufferiv(GLenum buffer, int drawbuffer, const int *values);
-    void clearBufferfi(GLenum buffer, int drawbuffer, float depth, int stencil);
+    Error clear(GLbitfield mask);
+    Error clearBufferfv(GLenum buffer, int drawbuffer, const float *values);
+    Error clearBufferuiv(GLenum buffer, int drawbuffer, const unsigned int *values);
+    Error clearBufferiv(GLenum buffer, int drawbuffer, const int *values);
+    Error clearBufferfi(GLenum buffer, int drawbuffer, float depth, int stencil);
 
     void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei *bufSize, void* pixels);
     void drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances);

@@ -1521,10 +1521,17 @@ void Renderer11::applyUniforms(const gl::ProgramBinary &programBinary)
     }
 }
 
-void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
+gl::Error Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
 {
-    mClear->clearFramebuffer(clearParams, frameBuffer);
+    gl::Error error = mClear->clearFramebuffer(clearParams, frameBuffer);
+    if (error.isError())
+    {
+        return error;
+    }
+
     invalidateFramebufferSwizzles(frameBuffer);
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 void Renderer11::markAllStateDirty()
