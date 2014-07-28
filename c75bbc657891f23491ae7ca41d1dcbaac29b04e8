@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7615332e_0d2e017b",
+        "filename": "src/compiler/translator/RegenerateStructNames.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-07-28T22:08:55Z",
+      "side": 1,
+      "message": "Yes, one of the conformance tests caught this bug.  My original run didn\u0027t catch this because I turned off name hashing to see how the struct names were mapped.  It took both this workaround and name hashing to trigger this bug.",
+      "parentUuid": "d91ff043_f0ed5eda",
+      "revId": "c75bbc657891f23491ae7ca41d1dcbaac29b04e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f922f488_0e566a91",
         "filename": "src/compiler/translator/RegenerateStructNames.h",
         "patchSetId": 2
