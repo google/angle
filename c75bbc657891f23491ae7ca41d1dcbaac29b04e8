@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "d91ff043_f0ed5eda",
+        "filename": "src/compiler/translator/RegenerateStructNames.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-07-28T21:31:31Z",
+      "side": 1,
+      "message": "Did one of the WebGL conformance tests catch the need for this test (i.e., for gl_DepthRange)? If not, could you add one?",
+      "revId": "c75bbc657891f23491ae7ca41d1dcbaac29b04e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f922f488_0e566a91",
         "filename": "src/compiler/translator/RegenerateStructNames.h",
         "patchSetId": 2
