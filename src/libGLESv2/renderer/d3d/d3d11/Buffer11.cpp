@@ -782,9 +782,11 @@ Buffer11::PackStorage11::~PackStorage11()
 }
 
 bool Buffer11::PackStorage11::copyFromStorage(BufferStorage11 *source, size_t sourceOffset,
-                                                     size_t size, size_t destOffset)
+                                              size_t size, size_t destOffset)
 {
-    UNIMPLEMENTED();
+    // We copy through a staging buffer when drawing with a pack buffer,
+    // or for other cases where we access the pack buffer
+    UNREACHABLE();
     return false;
 }
 
@@ -866,10 +868,8 @@ void Buffer11::PackStorage11::packPixels(ID3D11Texture2D *srcTexure, UINT srcSub
         ASSERT(SUCCEEDED(hr));
     }
 
-    if (textureDesc.SampleDesc.Count > 1)
-    {
-        UNIMPLEMENTED();
-    }
+    // ReadPixels from multisampled FBOs isn't supported in current GL
+    ASSERT(textureDesc.SampleDesc.Count > 1);
 
     ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
     D3D11_BOX srcBox;
