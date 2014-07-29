@@ -22,6 +22,30 @@
       "revId": "aaaaa03de626306e3bee925b595e5c79c63b80fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f974b47c_9795167c",
+        "filename": "src/libGLESv2/Caps.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-07-29T15:32:01Z",
+      "side": 1,
+      "message": "I think I still prefer the std::set for this case because it has a guarantee that everything remains in order so there are fewer caveats to remember.  I would be more inclined to use a std::vector if the set was touched much but it\u0027s only used for creating new renderbuffers and a query so it\u0027s not performance critical.",
+      "parentUuid": "f974b47c_7ec14013",
+      "range": {
+        "startLine": 20,
+        "startChar": 13,
+        "endLine": 20,
+        "endChar": 16
+      },
+      "revId": "aaaaa03de626306e3bee925b595e5c79c63b80fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
