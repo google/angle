@@ -46,6 +46,30 @@
       "revId": "aaaaa03de626306e3bee925b595e5c79c63b80fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f922f488_33dd4b2d",
+        "filename": "src/libGLESv2/Caps.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-07-29T16:52:14Z",
+      "side": 1,
+      "message": "I still prefer vector but don\u0027t want to hold back the review. +1",
+      "parentUuid": "f974b47c_9795167c",
+      "range": {
+        "startLine": 20,
+        "startChar": 13,
+        "endLine": 20,
+        "endChar": 16
+      },
+      "revId": "aaaaa03de626306e3bee925b595e5c79c63b80fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
