@@ -92,6 +92,7 @@ void Buffer9::setSubData(const void* data, size_t size, size_t offset)
 
 void Buffer9::copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size)
 {
+    // Note: this method is currently unreachable
     Buffer9* sourceBuffer = makeBuffer9(source);
     if (sourceBuffer)
     {

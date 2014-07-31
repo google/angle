@@ -6589,6 +6589,7 @@ void __stdcall glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintp
             return gl::error(GL_INVALID_OPERATION);
         }
 
+        // Verify that readBuffer and writeBuffer are not currently mapped
         if (readBuffer->isMapped() || writeBuffer->isMapped())
         {
             return gl::error(GL_INVALID_OPERATION);
@@ -6605,8 +6606,6 @@ void __stdcall glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintp
         {
             return gl::error(GL_INVALID_VALUE);
         }
-
-        // TODO: Verify that readBuffer and writeBuffer are not currently mapped (GL_INVALID_OPERATION)
 
         // if size is zero, the copy is a successful no-op
         if (size > 0)

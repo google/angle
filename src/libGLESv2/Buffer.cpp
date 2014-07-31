@@ -48,7 +48,7 @@ void Buffer::bufferSubData(const void *data, GLsizeiptr size, GLintptr offset)
 
 void Buffer::copyBufferSubData(Buffer* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size)
 {
-    mBuffer->copySubData(source->getImplementation(), size, sourceOffset, destOffset);
+    mBuffer->copySubData(source->getImplementation(), sourceOffset, destOffset, size);
 }
 
 GLvoid *Buffer::mapRange(GLintptr offset, GLsizeiptr length, GLbitfield access)
