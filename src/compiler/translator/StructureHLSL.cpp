@@ -306,13 +306,13 @@ void StructureHLSL::addConstructor(const TType &type, const TString &name, const
         }
         else if (parameter.isMatrix())
         {
-            for (int row = 0; row < rows; row++)
+            for (int col = 0; col < cols; col++)
             {
-                for (int col = 0; col < cols; col++)
+                for (int row = 0; row < rows; row++)
                 {
                     if (row < parameter.getRows() && col < parameter.getCols())
                     {
-                        constructor += TString("x0") + "[" + str(row) + "][" + str(col) + "]";
+                        constructor += TString("x0") + "[" + str(col) + "][" + str(row) + "]";
                     }
                     else
                     {
