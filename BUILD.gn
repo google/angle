@@ -199,6 +199,12 @@ if (is_win) {
   shared_library("libEGL") {
     sources = rebase_path(egl_gypi.angle_libegl_sources, ".", "src")
 
+    defines = [
+      "GL_APICALL=",
+      "GL_GLEXT_PROTOTYPES=",
+      "EGLAPI=",
+    ]
+
     configs -= [ "//build/config/compiler:chromium_code" ]
     configs += [
       ":internal_config",
@@ -206,7 +212,7 @@ if (is_win) {
     ]
 
     if (is_debug) {
-      defines = [ "ANGLE_ENABLE_PERF" ]
+      defines += [ "ANGLE_ENABLE_PERF" ]
     }
 
     include_dirs = [ "src/libGLESv2" ]
