@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "16979703_9e201dfe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f693e315_5dc4db7a",
+      "range": {
+        "startLine": 17,
+        "startChar": 4,
+        "endLine": 17,
+        "endChar": 7
+      },
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f693e315_bdbe3fe8",
         "filename": "src/libGLESv2/Context.cpp",
         "patchSetId": 11
@@ -36,6 +60,30 @@
       "writtenOn": "2014-08-01T16:46:56Z",
       "side": 1,
       "message": "minor style suggestion: keep the IsSizedInternalFormat function. You discard the results of GetInternalFormatInfo here anyway so you aren\u0027t saving a double map query, and it saves the reader from wondering what it means to have pixelBytes \u003e 0.",
+      "range": {
+        "startLine": 1724,
+        "startChar": 33,
+        "endLine": 1724,
+        "endChar": 77
+      },
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6a09f5c_3c2eb114",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1724,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "Done, created a helper function.  It doesn\u0027t save the double-map but it helps with clarity.",
+      "parentUuid": "f693e315_bdbe3fe8",
       "range": {
         "startLine": 1724,
         "startChar": 33,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "f693e315_bdb2bf7c",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "Done, added default constructors to all the structs.",
+      "parentUuid": "f693e315_3dac6fba",
+      "range": {
+        "startLine": 240,
+        "startChar": 19,
+        "endLine": 240,
+        "endChar": 32
+      },
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6a09f5c_9cc10567",
         "filename": "src/libGLESv2/formatutils.h",
         "patchSetId": 11
@@ -105,6 +177,30 @@
       "writtenOn": "2014-08-01T16:46:56Z",
       "side": 1,
       "message": "I was thinking that \"gl::InternalFormat\", \"gl::Type\", \"gl::FormatType\"... would be very clear and save on cruft.",
+      "range": {
+        "startLine": 53,
+        "startChar": 7,
+        "endLine": 53,
+        "endChar": 25
+      },
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16979703_be1dd9ca",
+        "filename": "src/libGLESv2/formatutils.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6a09f5c_9cc10567",
       "range": {
         "startLine": 53,
         "startChar": 7,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "f693e315_5de13b5d",
+        "filename": "src/libGLESv2/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f693e315_5d1a9b61",
+      "range": {
+        "startLine": 278,
+        "startChar": 55,
+        "endLine": 278,
+        "endChar": 98
+      },
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16979703_de7225b1",
         "filename": "src/libGLESv2/renderer/d3d/IndexDataManager.cpp",
         "patchSetId": 11
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "f693e315_7de67778",
+        "filename": "src/libGLESv2/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16979703_de7225b1",
+      "range": {
+        "startLine": 287,
+        "startChar": 44,
+        "endLine": 287,
+        "endChar": 87
+      },
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16979703_fe6fe1c3",
         "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 11
@@ -174,6 +318,30 @@
       "writtenOn": "2014-08-01T16:46:56Z",
       "side": 1,
       "message": "keep the helper, again",
+      "range": {
+        "startLine": 303,
+        "startChar": 33,
+        "endLine": 303,
+        "endChar": 85
+      },
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f693e315_1ddbb3b3",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16979703_fe6fe1c3",
       "range": {
         "startLine": 303,
         "startChar": 33,
@@ -232,6 +400,54 @@
     },
     {
       "key": {
+        "uuid": "16979703_5eb85563",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "No need on the mod operator.",
+      "parentUuid": "f693e315_7dc3d742",
+      "range": {
+        "startLine": 201,
+        "startChar": 76,
+        "endLine": 201,
+        "endChar": 81
+      },
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6a09f5c_bc39615a",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16979703_1e0badf9",
+      "range": {
+        "startLine": 201,
+        "startChar": 23,
+        "endLine": 201,
+        "endChar": 36
+      },
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16979703_3e10e924",
         "filename": "src/libGLESv2/validationES.cpp",
         "patchSetId": 11
@@ -243,6 +459,30 @@
       "writtenOn": "2014-08-01T16:46:56Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 202,
+        "startChar": 23,
+        "endLine": 202,
+        "endChar": 38
+      },
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16979703_7ebd1152",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16979703_3e10e924",
       "range": {
         "startLine": 202,
         "startChar": 23,
@@ -278,6 +518,30 @@
     },
     {
       "key": {
+        "uuid": "f693e315_ddd46b83",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "I opted against this, I think it\u0027s fairly clear.  If anything I think a better name could be chosen to make it more clear that 0 means it\u0027s unsized.",
+      "parentUuid": "d6a09f5c_bc4de150",
+      "range": {
+        "startLine": 310,
+        "startChar": 8,
+        "endLine": 310,
+        "endChar": 34
+      },
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6a09f5c_fcd8493c",
         "filename": "src/libGLESv2/validationES3.cpp",
         "patchSetId": 11
@@ -289,6 +553,24 @@
       "writtenOn": "2014-08-01T16:46:56Z",
       "side": 1,
       "message": "meganit: extra line",
+      "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6a09f5c_1c9e5513",
+        "filename": "src/libGLESv2/validationES3.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-01T19:01:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6a09f5c_fcd8493c",
       "revId": "31e54383d3bb9b3143e743c51f3bdc7e96975967",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
