@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6a09f5c_9c590570",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2963,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-01T20:27:05Z",
+      "side": 1,
+      "message": "suggestion: instead of this method, use a helper method or a slightly customized map, so you call info.getCopyFunction(format, type)",
+      "range": {
+        "startLine": 2963,
+        "startChar": 87,
+        "endLine": 2963,
+        "endChar": 153
+      },
+      "revId": "676813a06ce29b8abfd35a4b22674218d54f7161",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f693e315_80b2f81a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-01T20:27:05Z",
+      "side": 1,
+      "message": "multimap makes me a bit scared, can you think of an alternative? multimap seems like a heavyweight interface for the table, as it is only used once for init",
+      "range": {
+        "startLine": 432,
+        "startChar": 13,
+        "endLine": 432,
+        "endChar": 21
+      },
+      "revId": "676813a06ce29b8abfd35a4b22674218d54f7161",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f693e315_2043e45a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/formatutils11.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-01T20:27:05Z",
+      "side": 1,
+      "message": "what do you think of putting these structs in the d3d11 namespace? Seems like gl_d3d11::D3D11Format is rendundant, it could be d3d11::Format or d3d11::TextureFormat or something",
+      "range": {
+        "startLine": 51,
+        "startChar": 7,
+        "endLine": 51,
+        "endChar": 18
+      },
+      "revId": "676813a06ce29b8abfd35a4b22674218d54f7161",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

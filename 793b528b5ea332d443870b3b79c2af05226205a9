@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16979703_41fab4da",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-01T20:27:05Z",
+      "side": 0,
+      "message": "thanks for getting rid of this.",
+      "range": {
+        "startLine": 255,
+        "startChar": 19,
+        "endLine": 255,
+        "endChar": 41
+      },
+      "revId": "793b528b5ea332d443870b3b79c2af05226205a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
