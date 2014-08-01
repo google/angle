@@ -291,9 +291,9 @@ void StructureHLSL::addConstructor(const TType &type, const TString &name, const
 
         if (parameter.isScalar())
         {
-            for (int row = 0; row < rows; row++)
+            for (int col = 0; col < cols; col++)
             {
-                for (int col = 0; col < cols; col++)
+                for (int row = 0; row < rows; row++)
                 {
                     constructor += TString((row == col) ? "x0" : "0.0");
 
