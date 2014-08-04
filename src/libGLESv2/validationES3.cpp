@@ -222,7 +222,7 @@ static bool ValidateTexImageFormatCombination(gl::Context *context, GLenum inter
 {
     // Note: dEQP 2013.4 expects an INVALID_VALUE error for TexImage3D with an invalid
     // internal format. (dEQP-GLES3.functional.negative_api.texture.teximage3d)
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
     if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
         return gl::error(GL_INVALID_ENUM, false);
@@ -239,13 +239,19 @@ static bool ValidateTexImageFormatCombination(gl::Context *context, GLenum inter
         {
             const gl::InternalFormat &info = gl::GetInternalFormatInfo(i->internalFormat);
             bool supported = info.textureSupport(context->getClientVersion(), context->getExtensions());
-            if (supported && formatInfo.type == type)
+            if (supported && i->type == type)
             {
                 typeSupported = true;
             }
-            if (supported && formatInfo.format == format)
+            if (supported && i->format == format)
             {
                 formatSupported = true;
+            }
+
+            // Early-out if both type and format are supported now
+            if (typeSupported && formatSupported)
+            {
+                break;
             }
         }
     }
@@ -439,7 +445,7 @@ bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
     }
     else
     {
-        if (!ValidateTexImageFormatCombination(context, internalformat, format, type))
+        if (!ValidateTexImageFormatCombination(context, actualInternalFormat, format, type))
         {
             return false;
         }
