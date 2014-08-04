@@ -1301,7 +1301,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
     return true;
 }
 
-static bool ValidateDrawBase(const gl::Context *context, GLenum mode, GLsizei count)
+static bool ValidateDrawBase(const gl::State &state, GLenum mode, GLsizei count)
 {
     switch (mode)
     {
@@ -1323,14 +1323,14 @@ static bool ValidateDrawBase(const gl::Context *context, GLenum mode, GLsizei co
     }
 
     // Check for mapped buffers
-    if (context->hasMappedBuffer(GL_ARRAY_BUFFER))
+    if (state.hasMappedBuffer(GL_ARRAY_BUFFER))
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    const gl::DepthStencilState &depthStencilState = context->getState().getDepthStencilState();
+    const gl::DepthStencilState &depthStencilState = state.getDepthStencilState();
     if (depthStencilState.stencilWritemask != depthStencilState.stencilBackWritemask ||
-        context->getState().getStencilRef() != context->getState().getStencilBackRef() ||
+        state.getStencilRef() != state.getStencilBackRef() ||
         depthStencilState.stencilMask != depthStencilState.stencilBackMask)
     {
         // Note: these separate values are not supported in WebGL, due to D3D's limitations.
@@ -1340,18 +1340,18 @@ static bool ValidateDrawBase(const gl::Context *context, GLenum mode, GLsizei co
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    const gl::Framebuffer *fbo = context->getState().getDrawFramebuffer();
+    const gl::Framebuffer *fbo = state.getDrawFramebuffer();
     if (!fbo || fbo->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
         return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
     }
 
-    if (context->getState().getCurrentProgramId() == 0)
+    if (state.getCurrentProgramId() == 0)
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+    gl::ProgramBinary *programBinary = state.getCurrentProgramBinary();
     if (!programBinary->validateSamplers(NULL))
     {
         return gl::error(GL_INVALID_OPERATION, false);
@@ -1368,7 +1368,8 @@ bool ValidateDrawArrays(const gl::Context *context, GLenum mode, GLint first, GL
         return gl::error(GL_INVALID_VALUE, false);
     }
 
-    gl::TransformFeedback *curTransformFeedback = context->getState().getCurrentTransformFeedback();
+    const State &state = context->getState();
+    gl::TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
     if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused() &&
         curTransformFeedback->getDrawMode() != mode)
     {
@@ -1378,7 +1379,7 @@ bool ValidateDrawArrays(const gl::Context *context, GLenum mode, GLint first, GL
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (!ValidateDrawBase(context, mode, count))
+    if (!ValidateDrawBase(state, mode, count))
     {
         return false;
     }
@@ -1419,7 +1420,9 @@ bool ValidateDrawElements(const gl::Context *context, GLenum mode, GLsizei count
         return gl::error(GL_INVALID_ENUM, false);
     }
 
-    gl::TransformFeedback *curTransformFeedback = context->getState().getCurrentTransformFeedback();
+    const State &state = context->getState();
+
+    gl::TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
     if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
     {
         // It is an invalid operation to call DrawElements, DrawRangeElements or DrawElementsInstanced
@@ -1428,18 +1431,18 @@ bool ValidateDrawElements(const gl::Context *context, GLenum mode, GLsizei count
     }
 
     // Check for mapped buffers
-    if (context->hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
+    if (state.hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    gl::VertexArray *vao = context->getState().getVertexArray();
+    gl::VertexArray *vao = state.getVertexArray();
     if (!indices && !vao->getElementArrayBuffer())
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (!ValidateDrawBase(context, mode, count))
+    if (!ValidateDrawBase(state, mode, count))
     {
         return false;
     }

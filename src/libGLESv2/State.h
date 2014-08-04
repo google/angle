@@ -238,6 +238,8 @@ class State
     bool getIndexedIntegerv(GLenum target, GLuint index, GLint *data);
     bool getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data);
 
+    bool hasMappedBuffer(GLenum target) const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(State);
 

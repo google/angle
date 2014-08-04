@@ -2453,33 +2453,6 @@ void Context::invalidateFrameBuffer(GLenum target, GLsizei numAttachments, const
     }
 }
 
-bool Context::hasMappedBuffer(GLenum target) const
-{
-    if (target == GL_ARRAY_BUFFER)
-    {
-        for (unsigned int attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; attribIndex++)
-        {
-            const gl::VertexAttribute &vertexAttrib = mState.getVertexAttribState(attribIndex);
-            gl::Buffer *boundBuffer = vertexAttrib.buffer.get();
-            if (vertexAttrib.enabled && boundBuffer && boundBuffer->isMapped())
-            {
-                return true;
-            }
-        }
-    }
-    else if (target == GL_ELEMENT_ARRAY_BUFFER)
-    {
-        Buffer *elementBuffer = mState.getTargetBuffer(target);
-        return (elementBuffer && elementBuffer->isMapped());
-    }
-    else if (target == GL_TRANSFORM_FEEDBACK_BUFFER)
-    {
-        UNIMPLEMENTED();
-    }
-    else UNREACHABLE();
-    return false;
-}
-
 void Context::initCaps(GLuint clientVersion)
 {
     mCaps = mRenderer->getRendererCaps();

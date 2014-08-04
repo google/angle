@@ -230,8 +230,6 @@ class Context
     void invalidateFrameBuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments,
                                GLint x, GLint y, GLsizei width, GLsizei height);
 
-    bool hasMappedBuffer(GLenum target) const;
-
     rx::Renderer *getRenderer() { return mRenderer; }
 
     State &getState() { return mState; }
