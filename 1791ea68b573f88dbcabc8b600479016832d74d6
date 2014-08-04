@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6a09f5c_62e1f25d",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-08-04T15:35:12Z",
+      "side": 1,
+      "message": "I\u0027m pretty sure this is sufficiently validated at the parser level (where it should be, not in an Output class like here), so we can get rid of this comment. Alok is no longer actively contributing to ANGLE anyway.",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 65
+      },
+      "revId": "1791ea68b573f88dbcabc8b600479016832d74d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
