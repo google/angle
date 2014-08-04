@@ -1,5 +1,7 @@
 #include "ANGLETest.h"
 
+#include <cstdint>
+
 class BufferDataTest : public ANGLETest
 {
   protected:
@@ -117,24 +119,21 @@ TEST_F(BufferDataTest, HugeSetDataShouldNotCrash)
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     EXPECT_GL_NO_ERROR();
 
-    // use as large a size as possible without causing an exception
-    GLsizei hugeSize = (1 << 29);
+    GLsizei allocSize = std::numeric_limits<GLsizei>::max() >> 2;
 
-    // on x64, use as large a GLsizei value as possible
-    if (sizeof(size_t) > 4)
+    uint8_t *data = NULL;
+    while (data == NULL && allocSize >= 4)
     {
-        hugeSize = std::numeric_limits<GLsizei>::max();
+        data = new (std::nothrow) uint8_t[allocSize];
+
+        if (data == NULL)
+        {
+            allocSize <<= 1;
+        }
     }
 
-    char *data = new (std::nothrow) char[hugeSize];
-    ASSERT_NE((char * const)NULL, data);
-
-    if (data == NULL)
-    {
-        return;
-    }
-
-    memset(data, 0, hugeSize);
+    ASSERT_NE(static_cast<uint8_t*>(NULL), data);
+    memset(data, 0, allocSize);
 
     float * fValue = reinterpret_cast<float*>(data);
     for (unsigned int f = 0; f < 6; f++)
@@ -142,7 +141,7 @@ TEST_F(BufferDataTest, HugeSetDataShouldNotCrash)
         fValue[f] = 1.0f;
     }
 
-    glBufferData(GL_ARRAY_BUFFER, hugeSize, data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, allocSize, data, GL_STATIC_DRAW);
 
     GLenum error = glGetError();
     if (error == GL_NO_ERROR)
