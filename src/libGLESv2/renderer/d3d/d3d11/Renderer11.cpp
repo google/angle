@@ -2748,10 +2748,13 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
         area.width = width;
         area.height = height;
 
-        if (pack.pixelBuffer.get() != NULL)
+        gl::Buffer *packBuffer = pack.pixelBuffer.get();
+        if (packBuffer != NULL)
         {
-            rx::Buffer11 *packBufferStorage = Buffer11::makeBuffer11(pack.pixelBuffer.get()->getImplementation());
+            rx::Buffer11 *packBufferStorage = Buffer11::makeBuffer11(packBuffer->getImplementation());
             PackPixelsParams packParams(area, format, type, outputPitch, pack, reinterpret_cast<ptrdiff_t>(pixels));
+
+            packBuffer->getIndexRangeCache()->clear();
             packBufferStorage->packPixels(colorBufferTexture, subresourceIndex, packParams);
         }
         else

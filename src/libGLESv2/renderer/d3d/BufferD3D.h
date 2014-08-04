@@ -11,7 +11,6 @@
 
 #include "libGLESv2/renderer/BufferImpl.h"
 #include "libGLESv2/angletypes.h"
-#include "libGLESv2/renderer/IndexRangeCache.h"
 
 namespace rx
 {
@@ -36,7 +35,6 @@ class BufferD3D : public BufferImpl
 
     rx::StaticVertexBufferInterface *getStaticVertexBuffer() { return mStaticVertexBuffer; }
     rx::StaticIndexBufferInterface *getStaticIndexBuffer() { return mStaticIndexBuffer; }
-    rx::IndexRangeCache *getIndexRangeCache() { return &mIndexRangeCache; }
 
     void initializeStaticData();
     void invalidateStaticData();
@@ -50,7 +48,6 @@ class BufferD3D : public BufferImpl
 
     rx::StaticVertexBufferInterface *mStaticVertexBuffer;
     rx::StaticIndexBufferInterface *mStaticIndexBuffer;
-    rx::IndexRangeCache mIndexRangeCache;
     unsigned int mUnmodifiedDataUse;
 };
 

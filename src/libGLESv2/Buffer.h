@@ -13,6 +13,7 @@
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
+#include "libGLESv2/renderer/IndexRangeCache.h"
 
 namespace rx
 {
@@ -48,6 +49,8 @@ class Buffer : public RefCountObject
 
     void markTransformFeedbackUsage();
 
+    rx::IndexRangeCache *getIndexRangeCache() { return &mIndexRangeCache; }
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer);
 
@@ -60,6 +63,8 @@ class Buffer : public RefCountObject
     GLvoid *mMapPointer;
     GLint64 mMapOffset;
     GLint64 mMapLength;
+
+    rx::IndexRangeCache mIndexRangeCache;
 };
 
 }

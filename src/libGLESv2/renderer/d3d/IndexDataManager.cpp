@@ -184,10 +184,10 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     {
         streamOffset = offset;
 
-        if (!storage->getIndexRangeCache()->findRange(type, offset, count, &translated->indexRange, NULL))
+        if (!buffer->getIndexRangeCache()->findRange(type, offset, count, &translated->indexRange, NULL))
         {
             translated->indexRange = computeRange(type, indices, count);
-            storage->getIndexRangeCache()->addRange(type, offset, count, translated->indexRange, offset);
+            buffer->getIndexRangeCache()->addRange(type, offset, count, translated->indexRange, offset);
         }
     }
     else if (staticBuffer && staticBuffer->getBufferSize() != 0 && staticBuffer->getIndexType() == type && alignedOffset)
