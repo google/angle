@@ -1937,6 +1937,12 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             else if (variable && IsVaryingOut(variable->getQualifier()))
             {
+                // Skip translation of invariant declarations
+                if (variable->getBasicType() == EbtInvariant)
+                {
+                    return false;
+                }
+
                 for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); sit++)
                 {
                     TIntermSymbol *symbol = (*sit)->getAsSymbolNode();

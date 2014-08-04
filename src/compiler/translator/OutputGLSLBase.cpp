@@ -81,9 +81,11 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
 {
     TInfoSinkBase &out = objSink();
     TQualifier qualifier = type.getQualifier();
-    // TODO(alokp): Validate qualifier for variable declarations.
-    if (qualifier != EvqTemporary && qualifier != EvqGlobal)
+    if (qualifier != EvqTemporary && qualifier != EvqGlobal &&
+        type.getBasicType() != EbtInvariant)
+    {
         out << type.getQualifierString() << " ";
+    }
     // Declare the struct if we have not done so already.
     if (type.getBasicType() == EbtStruct && !structDeclared(type.getStruct()))
     {

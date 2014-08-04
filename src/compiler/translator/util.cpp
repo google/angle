@@ -268,6 +268,8 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
       case EvqFragmentIn:
       case EvqVaryingIn:
       case EvqVaryingOut:
+      case EvqInvariantVaryingIn:
+      case EvqInvariantVaryingOut:
         return INTERPOLATION_SMOOTH;
 
       case EvqCentroidIn:
