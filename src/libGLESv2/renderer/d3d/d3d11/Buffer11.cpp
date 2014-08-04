@@ -304,6 +304,21 @@ void Buffer11::copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr d
                 dest = getStagingBuffer();
             }
 
+            // D3D11 does not allow overlapped copies until 11.1, and only if the
+            // device supports D3D11_FEATURE_DATA_D3D11_OPTIONS::CopyWithOverlap
+            // Get around this via a different source buffer
+            if (source == dest)
+            {
+                if (source->getUsage() == BUFFER_USAGE_STAGING)
+                {
+                    source = getBufferStorage(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
+                }
+                else
+                {
+                    source = getStagingBuffer();
+                }
+            }
+
             dest->copyFromStorage(source, sourceOffset, size, destOffset);
             dest->setDataRevision(dest->getDataRevision() + 1);
         }
@@ -598,7 +613,7 @@ Buffer11::NativeBuffer11::~NativeBuffer11()
 
 // Returns true if it recreates the direct buffer
 bool Buffer11::NativeBuffer11::copyFromStorage(BufferStorage11 *source, size_t sourceOffset,
-                                                      size_t size, size_t destOffset)
+                                               size_t size, size_t destOffset)
 {
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
