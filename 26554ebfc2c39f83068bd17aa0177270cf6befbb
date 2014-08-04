@@ -69,6 +69,30 @@
       "revId": "26554ebfc2c39f83068bd17aa0177270cf6befbb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16979703_a4d86602",
+        "filename": "tests/angle_tests/BufferDataTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-08-04T15:11:38Z",
+      "side": 1,
+      "message": "Right, this can only affect glCopyBufferSubData?",
+      "parentUuid": "16979703_e468ae6f",
+      "range": {
+        "startLine": 199,
+        "startChar": 8,
+        "endLine": 199,
+        "endChar": 28
+      },
+      "revId": "26554ebfc2c39f83068bd17aa0177270cf6befbb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
