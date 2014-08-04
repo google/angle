@@ -186,7 +186,7 @@ TEST_F(GLSLTest, TwoElseIfRewriting)
         "varying float v;\n"
         "void main() {\n"
         "  gl_Position = a_position;\n"
-        "  if (a_position.x == 0.0`) {\n"
+        "  if (a_position.x == 0.0) {\n"
         "    v = 1.0;\n"
         "  } else if (a_position.x > 0.5) {\n"
         "    v = 0.0;\n"
