@@ -881,7 +881,7 @@ void Buffer11::PackStorage11::packPixels(ID3D11Texture2D *srcTexure, UINT srcSub
     }
 
     // ReadPixels from multisampled FBOs isn't supported in current GL
-    ASSERT(textureDesc.SampleDesc.Count > 1);
+    ASSERT(textureDesc.SampleDesc.Count <= 1);
 
     ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
     D3D11_BOX srcBox;
