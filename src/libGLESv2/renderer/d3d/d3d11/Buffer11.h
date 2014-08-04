@@ -59,7 +59,6 @@ class Buffer11 : public BufferD3D
 
     // BufferD3D implementation
     virtual size_t getSize() const { return mSize; }
-    virtual void clear();
     virtual bool supportsDirectBinding() const { return true; }
     virtual Renderer* getRenderer();
 

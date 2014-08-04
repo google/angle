@@ -2,7 +2,7 @@
 
 class BufferDataTest : public ANGLETest
 {
-protected:
+  protected:
     BufferDataTest()
         : mBuffer(0),
           mProgram(0),
@@ -184,3 +184,128 @@ TEST_F(BufferDataTest, HugeSetDataShouldNotCrash)
     delete[] data;
 }
 
+class IndexedBufferCopyTest : public ANGLETest
+{
+  protected:
+    IndexedBufferCopyTest()
+    {
+        setWindowWidth(16);
+        setWindowHeight(16);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+        setClientVersion(3);
+    }
+
+    virtual void SetUp()
+    {
+        ANGLETest::SetUp();
+
+        const char * vsSource = SHADER_SOURCE
+        (
+            attribute vec3 in_attrib;
+            varying vec3 v_attrib;
+            void main()
+            {
+                v_attrib = in_attrib;
+                gl_Position = vec4(0.0, 0.0, 0.5, 1.0);
+                gl_PointSize = 100.0;
+            }
+        );
+
+        const char * fsSource = SHADER_SOURCE
+        (
+            precision mediump float;
+            varying vec3 v_attrib;
+            void main()
+            {
+                gl_FragColor = vec4(v_attrib, 1);
+            }
+        );
+
+        glGenBuffers(2, mBuffers);
+        ASSERT_NE(mBuffers[0], 0U);
+        ASSERT_NE(mBuffers[1], 0U);
+
+        glGenBuffers(1, &mElementBuffer);
+        ASSERT_NE(mElementBuffer, 0U);
+
+        mProgram = compileProgram(vsSource, fsSource);
+        ASSERT_NE(mProgram, 0U);
+
+        mAttribLocation = glGetAttribLocation(mProgram, "in_attrib");
+        ASSERT_NE(mAttribLocation, -1);
+
+        glClearColor(0, 0, 0, 0);
+        glDisable(GL_DEPTH_TEST);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    virtual void TearDown()
+    {
+        glDeleteBuffers(2, mBuffers);
+        glDeleteBuffers(1, &mElementBuffer);
+        glDeleteProgram(mProgram);
+
+        ANGLETest::TearDown();
+    }
+
+    GLuint mBuffers[2];
+    GLuint mElementBuffer;
+    GLuint mProgram;
+    GLint mAttribLocation;
+};
+
+// The following test covers an ANGLE bug where our index ranges
+// weren't updated from CopyBufferSubData calls
+// https://code.google.com/p/angleproject/issues/detail?id=709
+TEST_F(IndexedBufferCopyTest, IndexRangeBug)
+{
+    unsigned char vertexData[] = { 255, 0, 0, 0, 0, 0 };
+    unsigned int indexData[] = { 0, 1 };
+
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffers[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(char) * 6, vertexData, GL_STATIC_DRAW);
+
+    glUseProgram(mProgram);
+    glVertexAttribPointer(mAttribLocation, 3, GL_UNSIGNED_BYTE, GL_TRUE, 3, NULL);
+    glEnableVertexAttribArray(mAttribLocation);
+
+    ASSERT_GL_NO_ERROR();
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 1, indexData, GL_STATIC_DRAW);
+
+    glUseProgram(mProgram);
+
+    ASSERT_GL_NO_ERROR();
+
+    glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, NULL);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+
+    glBindBuffer(GL_COPY_READ_BUFFER, mBuffers[1]);
+    glBufferData(GL_COPY_READ_BUFFER, 4, &indexData[1], GL_STATIC_DRAW);
+
+    glBindBuffer(GL_COPY_WRITE_BUFFER, mElementBuffer);
+
+    glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, sizeof(int));
+
+    ASSERT_GL_NO_ERROR();
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 0);
+
+    unsigned char newData[] = { 0, 255, 0 };
+    glBufferSubData(GL_ARRAY_BUFFER, 3, 3, newData);
+
+    glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, NULL);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+}

@@ -31,7 +31,6 @@ class BufferD3D : public BufferImpl
     unsigned int getSerial() const { return mSerial; }
 
     virtual size_t getSize() const = 0;
-    virtual void clear() = 0;
     virtual bool supportsDirectBinding() const = 0;
     virtual Renderer* getRenderer() = 0;
 

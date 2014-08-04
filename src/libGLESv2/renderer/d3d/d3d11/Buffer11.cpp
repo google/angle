@@ -162,31 +162,20 @@ Buffer11::Buffer11(Renderer11 *renderer)
       mMappedStorage(NULL),
       mResolvedDataRevision(0),
       mReadUsageCount(0)
-{
-}
+{}
 
 Buffer11::~Buffer11()
 {
-    clear();
+    for (auto it = mBufferStorages.begin(); it != mBufferStorages.end(); it++)
+    {
+        SafeDelete(it->second);
+    }
 }
 
 Buffer11 *Buffer11::makeBuffer11(BufferImpl *buffer)
 {
     ASSERT(HAS_DYNAMIC_TYPE(Buffer11*, buffer));
     return static_cast<Buffer11*>(buffer);
-}
-
-void Buffer11::clear()
-{
-    for (auto it = mBufferStorages.begin(); it != mBufferStorages.end(); it++)
-    {
-        SafeDelete(it->second);
-    }
-
-    mBufferStorages.clear();
-
-    mSize = 0;
-    mResolvedDataRevision = 0;
 }
 
 void Buffer11::setData(const void* data, size_t size, GLenum usage)
@@ -322,6 +311,7 @@ void Buffer11::copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr d
         mSize = std::max<size_t>(mSize, destOffset + size);
     }
 
+    mIndexRangeCache.invalidateRange(destOffset, size);
     invalidateStaticData();
 }
 
@@ -352,6 +342,8 @@ GLvoid *Buffer11::map(size_t offset, size_t length, GLbitfield access)
 
     if ((access & GL_MAP_WRITE_BIT) > 0)
     {
+        mIndexRangeCache.invalidateRange(offset, length);
+
         // Update the data revision immediately, since the data might be changed at any time
         mMappedStorage->setDataRevision(mMappedStorage->getDataRevision() + 1);
     }
@@ -375,6 +367,7 @@ void Buffer11::markTransformFeedbackUsage()
         transformFeedbackStorage->setDataRevision(transformFeedbackStorage->getDataRevision() + 1);
     }
 
+    mIndexRangeCache.clear();
     invalidateStaticData();
 }
 
@@ -470,6 +463,8 @@ void Buffer11::packPixels(ID3D11Texture2D *srcTexture, UINT srcSubresource, cons
         packStorage->packPixels(srcTexture, srcSubresource, params);
         packStorage->setDataRevision(latestStorage ? latestStorage->getDataRevision() + 1 : 1);
     }
+
+    mIndexRangeCache.clear();
 }
 
 Buffer11::BufferStorage11 *Buffer11::getBufferStorage(BufferUsage usage)
