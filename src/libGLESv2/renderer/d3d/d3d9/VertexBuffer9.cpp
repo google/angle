@@ -214,15 +214,8 @@ bool VertexBuffer9::spaceRequired(const gl::VertexAttribute &attrib, std::size_t
         }
         else
         {
-            if (static_cast<unsigned int>(instances) < std::numeric_limits<unsigned int>::max() - (attrib.divisor - 1))
-            {
-                // Round up
-                elementCount = (static_cast<unsigned int>(instances) + (attrib.divisor - 1)) / attrib.divisor;
-            }
-            else
-            {
-                elementCount = static_cast<unsigned int>(instances) / attrib.divisor;
-            }
+            // Round up to divisor, if possible
+            elementCount = rx::UnsignedCeilDivide(static_cast<unsigned int>(instances), attrib.divisor);
         }
 
         if (elementSize <= std::numeric_limits<unsigned int>::max() / elementCount)

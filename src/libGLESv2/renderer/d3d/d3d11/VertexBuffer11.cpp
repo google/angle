@@ -136,15 +136,8 @@ bool VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei
         }
         else
         {
-            if (static_cast<unsigned int>(instances) < std::numeric_limits<unsigned int>::max() - (attrib.divisor - 1))
-            {
-                // Round up
-                elementCount = rx::roundUp(static_cast<unsigned int>(instances), attrib.divisor);
-            }
-            else
-            {
-                elementCount = instances / attrib.divisor;
-            }
+            // Round up to divisor, if possible
+            elementCount = rx::UnsignedCeilDivide(static_cast<unsigned int>(instances), attrib.divisor);
         }
 
         gl::VertexFormat vertexFormat(attrib);
