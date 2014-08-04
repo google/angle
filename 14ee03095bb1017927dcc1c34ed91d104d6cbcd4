@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16979703_c45fb2c8",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-08-04T14:57:27Z",
+      "side": 1,
+      "message": "I\u0027m not sure if this function works properly for signed types, and since we only need it for unsigned int anyway (at least for now), I would remove the template.",
+      "range": {
+        "startLine": 521,
+        "startChar": 0,
+        "endLine": 521,
+        "endChar": 21
+      },
+      "revId": "14ee03095bb1017927dcc1c34ed91d104d6cbcd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
