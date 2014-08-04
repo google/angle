@@ -105,14 +105,11 @@ ShaderBlob *HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const char *hlsl
                 return gl::error(GL_OUT_OF_MEMORY, (ShaderBlob*)NULL);
             }
 
-            infoLog.append("Warning: D3D shader compilation failed with ");
-            infoLog.append(flagNames[i]);
-            infoLog.append(" flags.");
+            infoLog.append("Warning: D3D shader compilation failed with %s flags.", flagNames[i]);
+
             if (i + 1 < attempts)
             {
-                infoLog.append(" Retrying with ");
-                infoLog.append(flagNames[i + 1]);
-                infoLog.append(".\n");
+                infoLog.append(" Retrying with %s.\n", flagNames[i + 1]);
             }
         }
     }
