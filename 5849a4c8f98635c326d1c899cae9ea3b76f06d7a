@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6a09f5c_c5ec9029",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-04T16:41:29Z",
+      "side": 1,
+      "message": "nit: this returns unsigned",
+      "range": {
+        "startLine": 114,
+        "startChar": 26,
+        "endLine": 114,
+        "endChar": 42
+      },
+      "revId": "5849a4c8f98635c326d1c899cae9ea3b76f06d7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16979703_84ef6a61",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-04T16:41:29Z",
+      "side": 1,
+      "message": "i do kind of like a helper member function \".requiresDataInitialiation()\" to increase readability.. will leave that to your discretion.",
+      "range": {
+        "startLine": 265,
+        "startChar": 68,
+        "endLine": 265,
+        "endChar": 99
+      },
+      "revId": "5849a4c8f98635c326d1c899cae9ea3b76f06d7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16979703_e470ae1a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/formatutils9.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-04T16:41:29Z",
+      "side": 1,
+      "message": "same as the last patch... could rename this to d3d9::TextureFormat? and d3d9::VertexFormat.",
+      "range": {
+        "startLine": 59,
+        "startChar": 7,
+        "endLine": 59,
+        "endChar": 17
+      },
+      "revId": "5849a4c8f98635c326d1c899cae9ea3b76f06d7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
