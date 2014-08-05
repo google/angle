@@ -22,6 +22,30 @@
       "revId": "42590eb112ef1fbe3d9eac0c2dbcf4412eb03d14",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16aeb765_697b2198",
+        "filename": "src/libGLESv2/Error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-05T17:45:43Z",
+      "side": 1,
+      "message": "Removed the default constructor but we need the generated copy and assign operators since the Error objects need to be passed by value sometimes.",
+      "parentUuid": "f922f488_4eadc70b",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 9
+      },
+      "revId": "42590eb112ef1fbe3d9eac0c2dbcf4412eb03d14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
