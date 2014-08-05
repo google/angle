@@ -51,3 +51,8 @@ double Win32Timer::getElapsedTime() const
 
     return static_cast<double>(endTime - mStartTime) / mFrequency;
 }
+
+Timer *CreateTimer()
+{
+    return new Win32Timer();
+}

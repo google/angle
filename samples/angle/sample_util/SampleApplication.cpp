@@ -6,13 +6,6 @@
 
 #include "SampleApplication.h"
 
-#ifdef _WIN32
-#include "win32/Win32Timer.h"
-#include "win32/Win32Window.h"
-#else
-#error unsupported OS.
-#endif
-
 SampleApplication::SampleApplication(const std::string& name, size_t width, size_t height,
                                      EGLint glesMajorVersion, EGLint requestedRenderer)
     : mSurface(EGL_NO_SURFACE),
@@ -24,10 +17,8 @@ SampleApplication::SampleApplication(const std::string& name, size_t width, size
       mHeight(height),
       mName(name),
       mRunning(false),
-#ifdef _WIN32
-      mTimer(new Win32Timer()),
-      mWindow(new Win32Window())
-#endif
+      mTimer(CreateTimer()),
+      mWindow(CreateSampleWindow())
 {
 }
 

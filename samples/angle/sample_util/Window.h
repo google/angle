@@ -40,4 +40,6 @@ class Window
     std::list<Event> mEvents;
 };
 
+Window *CreateSampleWindow();
+
 #endif // SAMPLE_UTIL_WINDOW_H

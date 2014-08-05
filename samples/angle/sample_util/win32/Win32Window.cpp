@@ -469,3 +469,8 @@ void Win32Window::setMousePosition(int x, int y)
 
     SetCursorPos(topLeft.x + x, topLeft.y + y);
 }
+
+Window *CreateSampleWindow()
+{
+    return new Win32Window();
+}

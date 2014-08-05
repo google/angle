@@ -15,4 +15,6 @@ class Timer
     virtual double getElapsedTime() const = 0;
 };
 
+Timer *CreateTimer();
+
 #endif // SAMPLE_UTIL_TIMER_H
