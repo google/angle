@@ -21,16 +21,18 @@ class Query9 : public QueryImpl
     Query9(rx::Renderer9 *renderer, GLenum type);
     virtual ~Query9();
 
-    virtual void begin();
+    virtual bool begin();
     virtual void end();
     virtual GLuint getResult();
     virtual GLboolean isResultAvailable();
-    virtual bool isStarted() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Query9);
 
     GLboolean testQuery();
+
+    GLuint mResult;
+    GLboolean mStatus;
 
     rx::Renderer9 *mRenderer;
     IDirect3DQuery9 *mQuery;

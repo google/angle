@@ -30,7 +30,7 @@ static bool checkStreamOutPrimitivesWritten(ID3D11DeviceContext *context, ID3D11
     return (result == S_OK);
 }
 
-Query11::Query11(rx::Renderer11 *renderer, GLenum type) : QueryImpl(type)
+Query11::Query11(rx::Renderer11 *renderer, GLenum type) : QueryImpl(type), mStatus(GL_FALSE), mResult(0)
 {
     mRenderer = renderer;
     mQuery = NULL;
@@ -41,7 +41,7 @@ Query11::~Query11()
     SafeRelease(mQuery);
 }
 
-void Query11::begin()
+bool Query11::begin()
 {
     if (mQuery == NULL)
     {
@@ -51,11 +51,12 @@ void Query11::begin()
 
         if (FAILED(mRenderer->getDevice()->CreateQuery(&queryDesc, &mQuery)))
         {
-            return gl::error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY, false);
         }
     }
 
     mRenderer->getDeviceContext()->Begin(mQuery);
+    return true;
 }
 
 void Query11::end()
@@ -146,11 +147,6 @@ GLboolean Query11::testQuery()
     }
 
     return GL_TRUE; // prevent blocking when query is null
-}
-
-bool Query11::isStarted() const
-{
-    return (mQuery != NULL);
 }
 
 }

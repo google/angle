@@ -40,6 +40,8 @@ class Query : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(Query);
 
+    bool mStarted;
+
     rx::QueryImpl *mQuery;
 };
 

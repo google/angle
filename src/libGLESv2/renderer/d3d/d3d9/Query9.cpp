@@ -15,8 +15,7 @@
 
 namespace rx
 {
-
-Query9::Query9(rx::Renderer9 *renderer, GLenum type) : QueryImpl(type)
+Query9::Query9(rx::Renderer9 *renderer, GLenum type) : QueryImpl(type), mStatus(GL_FALSE), mResult(0)
 {
     mRenderer = renderer;
     mQuery = NULL;
@@ -27,19 +26,20 @@ Query9::~Query9()
     SafeRelease(mQuery);
 }
 
-void Query9::begin()
+bool Query9::begin()
 {
     if (mQuery == NULL)
     {
         if (FAILED(mRenderer->getDevice()->CreateQuery(D3DQUERYTYPE_OCCLUSION, &mQuery)))
         {
-            return gl::error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY, false);
         }
     }
 
     HRESULT result = mQuery->Issue(D3DISSUE_BEGIN);
     UNUSED_ASSERTION_VARIABLE(result);
     ASSERT(SUCCEEDED(result));
+    return true;
 }
 
 void Query9::end()
@@ -115,11 +115,6 @@ GLboolean Query9::testQuery()
     }
 
     return GL_TRUE; // prevent blocking when query is null
-}
-
-bool Query9::isStarted() const
-{
-    return (mQuery != NULL);
 }
 
 }
