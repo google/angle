@@ -266,7 +266,7 @@ IDirect3DSurface9 *TextureStorage9_Cube::getCubeMapSurface(GLenum faceTarget, in
 
 RenderTarget *TextureStorage9_Cube::getRenderTargetFace(GLenum faceTarget, int level)
 {
-    return mRenderTarget[TextureD3D_Cube::targetToIndex(faceTarget)];
+    return mRenderTarget[gl::TextureCubeMap::targetToLayerIndex(faceTarget)];
 }
 
 void TextureStorage9_Cube::generateMipmap(int faceIndex, int level)

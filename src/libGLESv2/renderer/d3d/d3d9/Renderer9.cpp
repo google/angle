@@ -661,7 +661,9 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
 
     if (texture)
     {
-        TextureStorageInterface *texStorage = texture->getNativeTexture();
+        TextureImpl* textureImpl = texture->getImplementation();
+
+        TextureStorageInterface *texStorage = textureImpl->getNativeTexture();
         if (texStorage)
         {
             TextureStorage9 *storage9 = TextureStorage9::makeTextureStorage9(texStorage->getStorageInstance());
@@ -670,8 +672,6 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
         // If we get NULL back from getBaseTexture here, something went wrong
         // in the texture class and we're unexpectedly missing the d3d texture
         ASSERT(d3dTexture != NULL);
-
-        TextureD3D* textureImpl = TextureD3D::makeTextureD3D(texture->getImplementation());
 
         serial = texture->getTextureSerial();
         forceSetTexture = textureImpl->hasDirtyImages();

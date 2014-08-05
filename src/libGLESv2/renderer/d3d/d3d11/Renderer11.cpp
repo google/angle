@@ -473,7 +473,9 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
 
     if (texture)
     {
-        TextureStorageInterface *texStorage = texture->getNativeTexture();
+        TextureImpl* textureImpl = texture->getImplementation();
+
+        TextureStorageInterface *texStorage = textureImpl->getNativeTexture();
         if (texStorage)
         {
             TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage->getStorageInstance());
@@ -486,7 +488,6 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
         // missing the shader resource view
         ASSERT(textureSRV != NULL);
 
-        TextureD3D* textureImpl = TextureD3D::makeTextureD3D(texture->getImplementation());
         forceSetTexture = textureImpl->hasDirtyImages();
         textureImpl->resetDirty();
     }

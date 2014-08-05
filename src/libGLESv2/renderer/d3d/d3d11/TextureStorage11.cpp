@@ -778,7 +778,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
 {
     if (level >= 0 && level < getLevelCount())
     {
-        int faceIndex = TextureD3D_Cube::targetToIndex(faceTarget);
+        int faceIndex = gl::TextureCubeMap::targetToLayerIndex(faceTarget);
         if (!mRenderTarget[faceIndex][level])
         {
             ID3D11Device *device = mRenderer->getDevice();
