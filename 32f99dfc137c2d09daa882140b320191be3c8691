@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "16431782_8fd2b76f",
+        "filename": "src/compiler/translator/RegenerateStructNames.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-06T23:59:21Z",
+      "side": 1,
+      "message": "typo fixed, but this is not related to a bug ID but this CL, because the bug is introduced by the older CL that does not exist outside this review site.",
+      "parentUuid": "f974b47c_20795148",
+      "revId": "32f99dfc137c2d09daa882140b320191be3c8691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b61a4b65_c2b45cd5",
         "filename": "src/compiler/translator/RegenerateStructNames.cpp",
         "patchSetId": 3
@@ -42,6 +60,24 @@
         "endLine": 38,
         "endChar": 22
       },
+      "revId": "32f99dfc137c2d09daa882140b320191be3c8691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6624b22_fc069dac",
+        "filename": "src/compiler/translator/RegenerateStructNames.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-06T23:59:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b61a4b65_c2b45cd5",
       "revId": "32f99dfc137c2d09daa882140b320191be3c8691",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -71,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "16431782_0fe6a74b",
+        "filename": "src/compiler/translator/RegenerateStructNames.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-06T23:59:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f922f488_2d007f9a",
+      "revId": "32f99dfc137c2d09daa882140b320191be3c8691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b61a4b65_c289fc14",
         "filename": "src/compiler/translator/RegenerateStructNames.cpp",
         "patchSetId": 3
@@ -94,6 +148,24 @@
     },
     {
       "key": {
+        "uuid": "96fd4775_66a33655",
+        "filename": "src/compiler/translator/RegenerateStructNames.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-06T23:59:21Z",
+      "side": 1,
+      "message": "Either way, I added a new string to hold the ID string to be on the safe side.",
+      "parentUuid": "b61a4b65_c289fc14",
+      "revId": "32f99dfc137c2d09daa882140b320191be3c8691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f974b47c_80686570",
         "filename": "src/compiler/translator/RegenerateStructNames.cpp",
         "patchSetId": 3
@@ -111,6 +183,24 @@
         "endLine": 67,
         "endChar": 44
       },
+      "revId": "32f99dfc137c2d09daa882140b320191be3c8691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16431782_ef39bbeb",
+        "filename": "src/compiler/translator/RegenerateStructNames.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-06T23:59:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f974b47c_80686570",
       "revId": "32f99dfc137c2d09daa882140b320191be3c8691",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
