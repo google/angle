@@ -12,8 +12,11 @@
 class ScalarizeVecAndMatConstructorArgs : public TIntermTraverser
 {
   public:
-    ScalarizeVecAndMatConstructorArgs()
-        : mTempVarCount(0) {}
+    ScalarizeVecAndMatConstructorArgs(sh::GLenum shaderType,
+                                      bool fragmentPrecisionHigh)
+        : mTempVarCount(0),
+          mShaderType(shaderType),
+          mFragmentPrecisionHigh(fragmentPrecisionHigh) {}
 
   protected:
     virtual bool visitAggregate(Visit visit, TIntermAggregate *node);
@@ -36,6 +39,9 @@ class ScalarizeVecAndMatConstructorArgs : public TIntermTraverser
 
     std::vector<TIntermSequence> mSequenceStack;
     int mTempVarCount;
+
+    sh::GLenum mShaderType;
+    bool mFragmentPrecisionHigh;
 };
 
 #endif  // COMPILER_TRANSLATOR_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS_H_

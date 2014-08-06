@@ -258,7 +258,8 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
         if (success && (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS))
         {
-            ScalarizeVecAndMatConstructorArgs scalarizer;
+            ScalarizeVecAndMatConstructorArgs scalarizer(
+                shaderType, fragmentPrecisionHigh);
             root->traverse(&scalarizer);
         }
 

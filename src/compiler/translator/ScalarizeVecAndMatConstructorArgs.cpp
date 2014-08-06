@@ -9,6 +9,7 @@
 
 #include <algorithm>
 
+#include "angle_gl.h"
 #include "common/angleutils.h"
 
 namespace
@@ -248,6 +249,16 @@ TString ScalarizeVecAndMatConstructorArgs::createTempVariable(TIntermTyped *orig
     ASSERT(original);
     TType type = original->getType();
     type.setQualifier(EvqTemporary);
+
+    if (mShaderType == GL_FRAGMENT_SHADER &&
+        type.getBasicType() == EbtFloat &&
+        type.getPrecision() == EbpUndefined)
+    {
+        // We use the highest available precision for the temporary variable
+        // to avoid computing the actual precision using the rules defined
+        // in GLSL ES 1.0 Section 4.5.2.
+        type.setPrecision(mFragmentPrecisionHigh ? EbpHigh : EbpMedium);
+    }
 
     TIntermBinary *init = new TIntermBinary(EOpInitialize);
     TIntermSymbol *symbolNode = new TIntermSymbol(-1, tempVarName, type);
