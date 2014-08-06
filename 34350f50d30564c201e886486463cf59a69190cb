@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d6a7bf88_b9be43e8",
+        "filename": "src/libGLESv2/renderer/QueryImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-06T23:15:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d665ff2a_d45f3cc8",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 20
+      },
+      "revId": "34350f50d30564c201e886486463cf59a69190cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16aeb765_8f6c5dd1",
         "filename": "src/libGLESv2/renderer/QueryImpl.h",
         "patchSetId": 3
@@ -59,6 +83,30 @@
       "writtenOn": "2014-08-06T21:16:34Z",
       "side": 1,
       "message": "+1 for question,",
+      "parentUuid": "16aeb765_8f6c5dd1",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 39
+      },
+      "revId": "34350f50d30564c201e886486463cf59a69190cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6a7bf88_d9a0dfc0",
+        "filename": "src/libGLESv2/renderer/QueryImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-06T23:15:06Z",
+      "side": 1,
+      "message": "So \"started\" is fairly simple to track in the GL object, but the type ends up needing to be passed through begin(), getResult(), and isResultAvailable(), because it affects how the D3D-side query is created, and how the results are interpreted. This is (as noted in Jamie\u0027s comments), a byproduct of the implementation\u0027s lack of access to the GL object. I think it\u0027s somewhat messy. Alternatively, the QueryImpl can get a pointer to the Query which it implements (I\u0027ve done it the first way in the next patch).",
       "parentUuid": "16aeb765_8f6c5dd1",
       "range": {
         "startLine": 27,
