@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d6a7bf88_9336c6fa",
+        "filename": "src/libGLESv2/Context.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-06T14:48:21Z",
+      "side": 1,
+      "message": "The insertion operation on this set is uncommon and the lookup operation only checks the set size in the common case which is likely faster than 5 separate branches.",
+      "parentUuid": "d6a7bf88_1343b65a",
+      "range": {
+        "startLine": 323,
+        "startChar": 29,
+        "endLine": 323,
+        "endChar": 37
+      },
+      "revId": "42590eb112ef1fbe3d9eac0c2dbcf4412eb03d14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f922f488_4eadc70b",
         "filename": "src/libGLESv2/Error.h",
         "patchSetId": 1
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "Chromium style guide suggests either to disallow or explicitly implement copy and assign.",
       "parentUuid": "16aeb765_697b2198",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 9
+      },
+      "revId": "42590eb112ef1fbe3d9eac0c2dbcf4412eb03d14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6a7bf88_f3393aeb",
+        "filename": "src/libGLESv2/Error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-06T14:48:21Z",
+      "side": 1,
+      "message": "The rule of 3(5 now for c++11) is that if you define one of (destructor, assignment operator, copy constructor) you should define all three and the generated ones here are sufficient.  Besides, we don\u0027t do that in any other place (see all the types in angletypes.h, Caps.h, VertexAttribute.h, etc).",
+      "parentUuid": "16aeb765_4fad05b9",
       "range": {
         "startLine": 20,
         "startChar": 4,
