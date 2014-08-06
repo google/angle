@@ -658,43 +658,54 @@ static inline void InsertD3D11FormatInfo(D3D11ES3FormatMap *map, GLenum internal
 
     // Compute the swizzle formats
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
-    if (internalFormat != GL_NONE && (formatInfo.componentCount == 4 || texFormat == DXGI_FORMAT_UNKNOWN ||
-                                      srvFormat == DXGI_FORMAT_UNKNOWN || rtvFormat == DXGI_FORMAT_UNKNOWN))
+    if (internalFormat != GL_NONE && formatInfo.pixelBytes > 0)
     {
-        // Get the maximum sized component
-        unsigned int maxBits = 1;
-        if (formatInfo.compressed)
+        if (formatInfo.componentCount != 4 || texFormat == DXGI_FORMAT_UNKNOWN ||
+            srvFormat == DXGI_FORMAT_UNKNOWN || rtvFormat == DXGI_FORMAT_UNKNOWN)
         {
-            unsigned int compressedBitsPerBlock = formatInfo.pixelBytes * 8;
-            unsigned int blockSize = formatInfo.compressedBlockWidth * formatInfo.compressedBlockHeight;
-            maxBits = std::max(compressedBitsPerBlock / blockSize, maxBits);
+            // Get the maximum sized component
+            unsigned int maxBits = 1;
+            if (formatInfo.compressed)
+            {
+                unsigned int compressedBitsPerBlock = formatInfo.pixelBytes * 8;
+                unsigned int blockSize = formatInfo.compressedBlockWidth * formatInfo.compressedBlockHeight;
+                maxBits = std::max(compressedBitsPerBlock / blockSize, maxBits);
+            }
+            else
+            {
+                maxBits = std::max(maxBits, formatInfo.alphaBits);
+                maxBits = std::max(maxBits, formatInfo.redBits);
+                maxBits = std::max(maxBits, formatInfo.greenBits);
+                maxBits = std::max(maxBits, formatInfo.blueBits);
+                maxBits = std::max(maxBits, formatInfo.luminanceBits);
+                maxBits = std::max(maxBits, formatInfo.depthBits);
+            }
+
+            maxBits = roundUp(maxBits, 8U);
+
+            static const SwizzleInfoMap swizzleMap = BuildSwizzleInfoMap();
+            SwizzleInfoMap::const_iterator swizzleIter = swizzleMap.find(SwizzleSizeType(maxBits, formatInfo.componentType));
+            ASSERT(swizzleIter != swizzleMap.end());
+
+            const SwizzleFormatInfo &swizzleInfo = swizzleIter->second;
+            info.swizzleTexFormat = swizzleInfo.mTexFormat;
+            info.swizzleSRVFormat = swizzleInfo.mSRVFormat;
+            info.swizzleRTVFormat = swizzleInfo.mRTVFormat;
         }
         else
         {
-            maxBits = std::max(maxBits, formatInfo.alphaBits);
-            maxBits = std::max(maxBits, formatInfo.redBits);
-            maxBits = std::max(maxBits, formatInfo.greenBits);
-            maxBits = std::max(maxBits, formatInfo.blueBits);
-            maxBits = std::max(maxBits, formatInfo.luminanceBits);
-            maxBits = std::max(maxBits, formatInfo.depthBits);
+            // The original texture format is suitable for swizzle operations
+            info.swizzleTexFormat = texFormat;
+            info.swizzleSRVFormat = srvFormat;
+            info.swizzleRTVFormat = rtvFormat;
         }
-
-        maxBits = roundUp(maxBits, 8U);
-
-        static const SwizzleInfoMap swizzleMap = BuildSwizzleInfoMap();
-        SwizzleInfoMap::const_iterator swizzleIter = swizzleMap.find(SwizzleSizeType(maxBits, formatInfo.componentType));
-        ASSERT(swizzleIter != swizzleMap.end());
-
-        const SwizzleFormatInfo &swizzleInfo = swizzleIter->second;
-        info.swizzleTexFormat = swizzleInfo.mTexFormat;
-        info.swizzleSRVFormat = swizzleInfo.mSRVFormat;
-        info.swizzleRTVFormat = swizzleInfo.mRTVFormat;
     }
     else
     {
-        info.swizzleTexFormat = texFormat;
-        info.swizzleSRVFormat = srvFormat;
-        info.swizzleRTVFormat = rtvFormat;
+        // Not possible to swizzle with this texture format since it is either unsized or GL_NONE
+        info.swizzleTexFormat = DXGI_FORMAT_UNKNOWN;
+        info.swizzleSRVFormat = DXGI_FORMAT_UNKNOWN;
+        info.swizzleRTVFormat = DXGI_FORMAT_UNKNOWN;
     }
 
     // Check if there is an initialization function for this texture format
