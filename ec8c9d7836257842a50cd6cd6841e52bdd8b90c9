@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6a7bf88_a7be24e8",
+        "filename": "src/libGLESv2/Caps.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-06T14:46:12Z",
+      "side": 1,
+      "message": "extra newline?",
+      "revId": "ec8c9d7836257842a50cd6cd6841e52bdd8b90c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d665ff2a_d4d57ccb",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1386,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-06T14:46:12Z",
+      "side": 1,
+      "message": "note: this change could be in a split patch -- no need to change it now.",
+      "range": {
+        "startLine": 1383,
+        "startChar": 1,
+        "endLine": 1386,
+        "endChar": 5
+      },
+      "revId": "ec8c9d7836257842a50cd6cd6841e52bdd8b90c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
