@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d6a7bf88_b390a28a",
+        "filename": "src/libGLESv2/Context.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-06T14:53:13Z",
+      "side": 1,
+      "message": "It certainly will be slower than consulting bool member vaues. I could benchmark set queries vs consulting bool values if you want. It\u0027s my suggestion we try to keep perf at a maximum for validation, since we will be running on Android and many other platforms. It\u0027s easy to keep accruing slowness over time, without really noticing. Just my two cents.",
+      "parentUuid": "d6a7bf88_9336c6fa",
+      "range": {
+        "startLine": 323,
+        "startChar": 29,
+        "endLine": 323,
+        "endChar": 37
+      },
+      "revId": "42590eb112ef1fbe3d9eac0c2dbcf4412eb03d14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f922f488_4eadc70b",
         "filename": "src/libGLESv2/Error.h",
         "patchSetId": 1
@@ -132,6 +156,30 @@
       "side": 1,
       "message": "The rule of 3(5 now for c++11) is that if you define one of (destructor, assignment operator, copy constructor) you should define all three and the generated ones here are sufficient.  Besides, we don\u0027t do that in any other place (see all the types in angletypes.h, Caps.h, VertexAttribute.h, etc).",
       "parentUuid": "16aeb765_4fad05b9",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 9
+      },
+      "revId": "42590eb112ef1fbe3d9eac0c2dbcf4412eb03d14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16aeb765_8f9a1d91",
+        "filename": "src/libGLESv2/Error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-06T14:53:13Z",
+      "side": 1,
+      "message": "http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Copy_Constructors\n\nIf a copy method is insufficient in your situation (e.g. for performance reasons, or because your class needs to be stored by value in an STL container), provide both a copy constructor and assignment operator.",
+      "parentUuid": "d6a7bf88_f3393aeb",
       "range": {
         "startLine": 20,
         "startChar": 4,
