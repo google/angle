@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96fd4775_32fb30e2",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-06T17:21:10Z",
+      "side": 1,
+      "message": "The cause of the ASSERTS was that on this line and the setImage call below it I has accidentally left the depth as 4 and 5 (The face index) rather than the ASSERTed 1. Since depth is ignored otherwise it had no effect on release builds of Chrome.",
+      "revId": "f3f252c784e9117026fd648d517e884c6ff29de3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
