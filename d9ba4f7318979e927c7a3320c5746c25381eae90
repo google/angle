@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6a7bf88_13f5f6ea",
+        "filename": "src/libGLESv2/renderer/QueryImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-06T14:26:00Z",
+      "side": 0,
+      "message": "mType should probably be a property of Query, rather than QueryImpl or inheriting classes, as it is not implementation specific",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 16
+      },
+      "revId": "d9ba4f7318979e927c7a3320c5746c25381eae90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
