@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16f157a2_f1840287",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-08-07T01:49:38Z",
+      "side": 1,
+      "message": "I\u0027d suggest naming this mHaveFragmentPrecisionHigh or similar -- found this confusing to read.",
+      "revId": "112475f8dba2c165895f5003f75d0272d6e333e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
