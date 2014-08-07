@@ -42,6 +42,7 @@ config("internal_config") {
 component("translator") {
   sources = [
     "src/compiler/translator/ShaderLang.cpp",
+    "src/compiler/translator/ShaderVars.cpp",
   ]
 
   defines = [ "ANGLE_TRANSLATOR_IMPLEMENTATION" ]
@@ -85,13 +86,17 @@ static_library("preprocessor") {
   ]
 }
 
-#TODO(jmadill): define static for this config only
+config("translator_static_config") {
+  defines = [ "ANGLE_TRANSLATOR_STATIC" ]
+}
+
 static_library("translator_lib") {
   sources = rebase_path(compiler_gypi.angle_translator_lib_sources, ".", "src")
 
   configs -= [ "//build/config/compiler:chromium_code" ]
   configs += [
     ":internal_config",
+    ":translator_static_config",
     "//build/config/compiler:no_chromium_code",
   ]
   direct_dependent_configs = [ ":external_config" ]
@@ -100,10 +105,6 @@ static_library("translator_lib") {
     ":includes",
     ":preprocessor",
   ]
-}
-
-config("translator_static_config") {
-  defines = [ "ANGLE_TRANSLATOR_STATIC" ]
 }
 
 static_library("translator_static") {
