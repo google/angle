@@ -16,6 +16,24 @@
       "revId": "112475f8dba2c165895f5003f75d0272d6e333e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6eda3ca_d34d8c50",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-07T02:14:34Z",
+      "side": 1,
+      "message": "I agree.  I was thinking use something similar to what you suggest, but this name is used as the public interface in https://code.google.com/p/chromium/codesearch#chromium/src/third_party/angle/include/GLSLANG/ShaderLang.h\u0026l\u003d246\n\nI think I\u0027ll keep it consistent at the moment and fix it in a separate CL.",
+      "parentUuid": "16f157a2_f1840287",
+      "revId": "112475f8dba2c165895f5003f75d0272d6e333e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
