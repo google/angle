@@ -168,6 +168,9 @@
     <ClCompile Include="..\..\src\compiler\translator\ParseContext.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\compiler\translator\RenameFunction.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\Types.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
@@ -255,9 +258,9 @@
     <ClInclude Include="..\..\src\compiler\translator\localintermediate.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\compiler\translator\StructureHLSL.h">
+    <ClCompile Include="..\..\src\compiler\translator\RegenerateStructNames.cpp">
       <Filter>src\compiler\translator</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="..\..\src\compiler\translator\OutputGLSLBase.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
@@ -288,7 +291,7 @@
     <ClCompile Include="..\..\src\compiler\translator\parseConst.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\compiler\translator\RenameFunction.h">
+    <ClInclude Include="..\..\src\compiler\translator\StructureHLSL.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\ValidateLimitations.h">
@@ -394,6 +397,9 @@
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\UniformHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\compiler\translator\RegenerateStructNames.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\DetectDiscontinuity.cpp">

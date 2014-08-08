@@ -94,12 +94,12 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;ANGLE_TRANSLATOR_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -123,6 +123,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\src;..\..\include;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>ANGLE_TRANSLATOR_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -169,12 +170,12 @@
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;ANGLE_TRANSLATOR_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -198,6 +199,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\src;..\..\include;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>ANGLE_TRANSLATOR_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -229,6 +231,7 @@
     <ClInclude Include="..\..\src\compiler\translator\OutputHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\BuiltInFunctionEmulator.h"/>
     <ClInclude Include="..\..\src\compiler\translator\DetectDiscontinuity.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\RenameFunction.h"/>
     <ClInclude Include="..\..\src\compiler\translator\UnfoldShortCircuit.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorGLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\SymbolTable.h"/>
@@ -247,14 +250,13 @@
     <ClInclude Include="..\..\src\compiler\translator\ValidateOutputs.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h"/>
     <ClInclude Include="..\..\src\compiler\translator\localintermediate.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\StructureHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputGLSLBase.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ForLoopUnroll.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Pragma.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Compiler.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputESSL.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\RenameFunction.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\StructureHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ValidateLimitations.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Types.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InfoSink.h"/>
@@ -271,6 +273,7 @@
     <ClInclude Include="..\..\src\compiler\translator\VariableInfo.h"/>
     <ClInclude Include="..\..\src\compiler\translator\LoopInfo.h"/>
     <ClInclude Include="..\..\src\compiler\translator\UniformHLSL.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\RegenerateStructNames.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang_tab.h"/>
     <ClInclude Include="..\..\src\compiler\translator\RewriteElseBlocks.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ExtensionBehavior.h"/>
@@ -322,6 +325,7 @@
     <ClCompile Include="..\..\src\compiler\translator\util.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ValidateOutputs.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\TranslatorESSL.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\RegenerateStructNames.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\VariablePacker.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ScalarizeVecAndMatConstructorArgs.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\DirectiveHandler.cpp"/>
