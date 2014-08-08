@@ -815,7 +815,7 @@ Query *Context::getQuery(unsigned int handle, bool create, GLenum type)
     {
         if (!query->second && create)
         {
-            query->second = new Query(mRenderer, type, handle);
+            query->second = new Query(mRenderer->createQuery(type), handle);
             query->second->addRef();
         }
         return query->second;

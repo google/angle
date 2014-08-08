@@ -16,7 +16,6 @@
 
 namespace rx
 {
-class Renderer;
 class QueryImpl;
 }
 
@@ -26,7 +25,7 @@ namespace gl
 class Query : public RefCountObject
 {
   public:
-    Query(rx::Renderer *renderer, GLenum type, GLuint id);
+    Query(rx::QueryImpl *impl, GLuint id);
     virtual ~Query();
 
     void begin();
