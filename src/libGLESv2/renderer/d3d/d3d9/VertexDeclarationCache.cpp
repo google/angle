@@ -48,6 +48,20 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
     int indexedAttribute = gl::MAX_VERTEX_ATTRIBS;
     int instancedAttribute = gl::MAX_VERTEX_ATTRIBS;
 
+    if (instances == 0)
+    {
+        for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; ++i)
+        {
+            if (attributes[i].divisor != 0)
+            {
+                // If a divisor is set, it still applies even if an instanced draw was not used, so treat
+                // as a single-instance draw.
+                instances = 1;
+                break;
+            }
+        }
+    }
+
     if (instances > 0)
     {
         // Find an indexed attribute to be mapped to D3D stream 0
