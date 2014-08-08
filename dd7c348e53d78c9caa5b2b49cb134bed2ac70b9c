@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "769e136e_14e8bac8",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/VertexDeclarationCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-08-08T21:48:27Z",
+      "side": 1,
+      "message": "Whitespace at end of line",
+      "revId": "dd7c348e53d78c9caa5b2b49cb134bed2ac70b9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
