@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -15,6 +15,7 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/renderer/IndexBuffer.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace rx
 {
@@ -54,10 +55,11 @@ IndexDataManager::~IndexDataManager()
     delete mCountingBuffer;
 }
 
-static void convertIndices(GLenum type, const void *input, GLsizei count, void *output)
+static void convertIndices(GLenum sourceType, GLenum destinationType, const void *input, GLsizei count, void *output)
 {
-    if (type == GL_UNSIGNED_BYTE)
+    if (sourceType == GL_UNSIGNED_BYTE)
     {
+        ASSERT(destinationType == GL_UNSIGNED_SHORT);
         const GLubyte *in = static_cast<const GLubyte*>(input);
         GLushort *out = static_cast<GLushort*>(output);
 
@@ -66,13 +68,28 @@ static void convertIndices(GLenum type, const void *input, GLsizei count, void *
             out[i] = in[i];
         }
     }
-    else if (type == GL_UNSIGNED_INT)
+    else if (sourceType == GL_UNSIGNED_INT)
     {
+        ASSERT(destinationType == GL_UNSIGNED_INT);
         memcpy(output, input, count * sizeof(GLuint));
     }
-    else if (type == GL_UNSIGNED_SHORT)
+    else if (sourceType == GL_UNSIGNED_SHORT)
     {
-        memcpy(output, input, count * sizeof(GLushort));
+        if (destinationType == GL_UNSIGNED_SHORT)
+        {
+            memcpy(output, input, count * sizeof(GLushort));
+        }
+        else if (destinationType == GL_UNSIGNED_INT)
+        {
+            const GLushort *in = static_cast<const GLushort*>(input);
+            GLuint *out = static_cast<GLuint*>(output);
+
+            for (GLsizei i = 0; i < count; i++)
+            {
+                out[i] = in[i];
+            }
+        }
+        else UNREACHABLE();
     }
     else UNREACHABLE();
 }
@@ -155,21 +172,18 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
         indices = static_cast<const GLubyte*>(storage->getData()) + offset;
     }
 
-    StreamingIndexBufferInterface *streamingBuffer = (type == GL_UNSIGNED_INT) ? mStreamingBufferInt : mStreamingBufferShort;
-
     StaticIndexBufferInterface *staticBuffer = buffer ? buffer->getStaticIndexBuffer() : NULL;
-    IndexBufferInterface *indexBuffer = streamingBuffer;
+    IndexBufferInterface *indexBuffer = NULL;
     bool directStorage = alignedOffset && storage && storage->supportsDirectBinding() &&
                          destinationIndexType == type;
     unsigned int streamOffset = 0;
 
     if (directStorage)
     {
-        indexBuffer = streamingBuffer;
         streamOffset = offset;
 
         if (!buffer->getIndexRangeCache()->findRange(type, offset, count, &translated->minIndex,
-                                                     &translated->maxIndex, NULL))
+            &translated->maxIndex, NULL))
         {
             computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
             buffer->getIndexRangeCache()->addRange(type, offset, count, translated->minIndex,
@@ -191,6 +205,22 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     }
     else
     {
+        computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
+    }
+
+    // Avoid D3D11's primitive restart index value
+    // see http://msdn.microsoft.com/en-us/library/windows/desktop/bb205124(v=vs.85).aspx
+    if (translated->maxIndex == 0xFFFF && type == GL_UNSIGNED_SHORT && mRenderer->getMajorShaderModel() > 3)
+    {
+        destinationIndexType = GL_UNSIGNED_INT;
+        directStorage = false;
+        indexBuffer = NULL;
+    }
+
+    if (!directStorage && !indexBuffer)
+    {
+        indexBuffer = (destinationIndexType == GL_UNSIGNED_INT) ? mStreamingBufferInt : mStreamingBufferShort;
+
         unsigned int convertCount = count;
 
         if (staticBuffer)
@@ -234,15 +264,13 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
             return GL_OUT_OF_MEMORY;
         }
 
-        convertIndices(type, staticBuffer ? storage->getData() : indices, convertCount, output);
+        convertIndices(type, destinationIndexType, staticBuffer ? storage->getData() : indices, convertCount, output);
 
         if (!indexBuffer->unmapBuffer())
         {
             ERR("Failed to unmap index buffer.");
             return GL_OUT_OF_MEMORY;
         }
-
-        computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
 
         if (staticBuffer)
         {
@@ -253,10 +281,11 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     }
 
     translated->storage = directStorage ? storage : NULL;
-    translated->indexBuffer = indexBuffer->getIndexBuffer();
+    translated->indexBuffer = indexBuffer ? indexBuffer->getIndexBuffer() : NULL;
     translated->serial = directStorage ? storage->getSerial() : indexBuffer->getSerial();
     translated->startIndex = streamOffset / gl::GetTypeBytes(destinationIndexType);
     translated->startOffset = streamOffset;
+    translated->indexType = destinationIndexType;
 
     if (buffer)
     {
