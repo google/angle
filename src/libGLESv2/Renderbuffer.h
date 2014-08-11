@@ -39,6 +39,7 @@ class Renderbuffer : public RefCountObject
 {
   public:
     Renderbuffer(GLuint id, RenderbufferStorage *newStorage);
+    virtual ~Renderbuffer();
 
     void setStorage(RenderbufferStorage *newStorage);
     RenderbufferStorage *getStorage();
