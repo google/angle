@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16d4f72c_36c2b86a",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-08-11T18:40:39Z",
+      "side": 1,
+      "message": "nit: It\u0027s cheaper to use !structure-\u003ename().empty()",
+      "range": {
+        "startLine": 144,
+        "startChar": 54,
+        "endLine": 144,
+        "endChar": 76
+      },
+      "revId": "d5bebd92a3b384e53ae3797e423d3887ac13905c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
