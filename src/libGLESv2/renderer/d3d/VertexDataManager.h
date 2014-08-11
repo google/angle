@@ -30,6 +30,9 @@ class Renderer;
 
 struct TranslatedAttribute
 {
+    TranslatedAttribute() : active(false), attribute(NULL), currentValueType(GL_NONE),
+                            offset(0), stride(0), vertexBuffer(NULL), storage(NULL),
+                            serial(0), divisor(0) {};
     bool active;
 
     const gl::VertexAttribute *attribute;
