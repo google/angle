@@ -137,7 +137,12 @@ TString UniformHLSL::uniformsHeader(ShShaderOutput outputType, const ReferencedS
         else
         {
             const TStructure *structure = type.getStruct();
-            const TString &typeName = (structure ? QualifiedStructNameString(*structure, false, false) : TypeString(type));
+            // If this is a nameless struct, we need to use its full definition, rather than its (empty) name.
+            // TypeString() will invoke defineNameless in this case, but layout qualifiers will not be taken into
+            // account in this case.
+            // TODO: handle nameless structs with layout qualifiers.
+            const TString &typeName = ((structure && !structure->name().empty()) ?
+                                        QualifiedStructNameString(*structure, false, false) : TypeString(type));
 
             const TString &registerString = TString("register(") + UniformRegisterPrefix(type) + str(registerIndex) + ")";
 
