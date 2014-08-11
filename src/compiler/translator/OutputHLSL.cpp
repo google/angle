@@ -582,7 +582,11 @@ void OutputHLSL::header()
         else
         {
             const TStructure *structure = type.getStruct();
-            const TString &typeName = (structure ? structureTypeName(*structure, false, false) : typeString(type));
+            // If this is a nameless struct, we need to use its full definition, rather than its (empty) name.
+            // TypeString() will invoke defineNameless in this case, but layout qualifiers, if relevant, will not
+            // be taken into account.
+            const TString &typeName = ((structure && !structure->name().empty()) ?
+                                        structureTypeName(*structure, false, false) : typeString(type));
 
             const TString &registerString = TString("register(") + RegisterPrefix(type) + str(registerIndex) + ")";
 
