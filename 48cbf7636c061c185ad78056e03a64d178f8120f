@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16d4f72c_051adc60",
+        "filename": "src/libGLESv2/Caps.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-12T22:23:56Z",
+      "side": 1,
+      "message": "Ditto my request for comments from the other patch. (They can be super-brief ones though.)",
+      "revId": "48cbf7636c061c185ad78056e03a64d178f8120f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16d4f72c_2535d8c5",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2046,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-12T22:23:56Z",
+      "side": 1,
+      "message": "Missed replacing a couple of these with the local.",
+      "range": {
+        "startLine": 2046,
+        "startChar": 54,
+        "endLine": 2046,
+        "endChar": 82
+      },
+      "revId": "48cbf7636c061c185ad78056e03a64d178f8120f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
