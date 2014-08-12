@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56baefee_81b6e0c3",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 815,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-12T18:31:44Z",
+      "side": 1,
+      "message": "mRenderer being null is an indication that eglInitialize() hasn\u0027t been called for this display. There are a couple of different errors that should be getting generated, depending on what the context and surface arguments are set to, and I don\u0027t think we\u0027re correctly handling all of them (see sec 3.7.3 of the EGL 1.4 spec, pg 47):\n\n- if context is not EGL_NO_CONTEXT and draw \u0026 read are not EGL_NO_SURFACE, but the display is not initialized, we should generate EGL_NOT_INITIALIZED. This case is caught and handled correctly in the call to validateContext() just above the context loss checks.\n- if context is EGL_NO_CONTEXT, and draw \u0026 read are not EGL_NO_SURFACE, or vice versa, we should generate EGL_BAD_MATCH regardless of whether display has been initialized. We currently fail to handle this case, and should fix this.\n- if context is EGL_NO_CONTEXT and draw \u0026 read are EGL_NO_SURFACE, we should correctly handle uninitialized displays and skip the context loss checks. I suspect this is what\u0027s happening in the utility in question, because otherwise the null renderer dereference would just be postponed to context::makeCurrent(). I think this would best be handled by skipping the device loss check block entirely if the display is uninitialized (that is, add \"\u0026\u0026 display-\u003eisInitialized()\" to the conditional on line 802).",
+      "range": {
+        "startLine": 805,
+        "startChar": 0,
+        "endLine": 815,
+        "endChar": 13
+      },
+      "revId": "c49660a965403adafb3fff613189e8d305c6fdc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
