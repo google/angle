@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "16d4f72c_85e6ec49",
+        "filename": "src/libGLESv2/Caps.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-12T20:32:04Z",
+      "side": 1,
+      "message": "Looks funky with just the one unexplained break. Mind adding comments to indicate what the categories are?",
+      "parentUuid": "16aeb765_d5d42683",
+      "revId": "ec8c9d7836257842a50cd6cd6841e52bdd8b90c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d665ff2a_d4d57ccb",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 6
@@ -53,6 +71,29 @@
         "startChar": 1,
         "endLine": 1386,
         "endChar": 5
+      },
+      "revId": "ec8c9d7836257842a50cd6cd6841e52bdd8b90c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16d4f72c_45c2146b",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-12T20:32:04Z",
+      "side": 1,
+      "message": "Should probably comment here about maxElementsIndices/Vertices being unused in ES2, as calling it a primitive count limit is a bit confusing.",
+      "range": {
+        "startLine": 375,
+        "startChar": 4,
+        "endLine": 375,
+        "endChar": 29
       },
       "revId": "ec8c9d7836257842a50cd6cd6841e52bdd8b90c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
