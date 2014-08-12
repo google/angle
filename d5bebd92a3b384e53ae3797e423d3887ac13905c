@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "16d9576f_aec1b7ca",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-12T00:45:38Z",
+      "side": 1,
+      "message": "I\u0027m not sure nameless structs can have layout qualifiers.. those are only in uniform blocks IIRC and there are no anonymous structs allowed IIRC. can delete the comment.",
+      "range": {
+        "startLine": 143,
+        "startChar": 11,
+        "endLine": 143,
+        "endChar": 68
+      },
+      "revId": "d5bebd92a3b384e53ae3797e423d3887ac13905c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16d4f72c_36c2b86a",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 1
