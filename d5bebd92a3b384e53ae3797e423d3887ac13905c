@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9633877e_c273a265",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-08-12T05:57:25Z",
+      "side": 1,
+      "message": "We need to verify that. And even if nameless structs can\u0027t have qualifiers, there appears to be opportunities to make the structure handling code more elegant. The TODO can help us remind to look into that. For now it was necessary to avoid regressing Stable so a very targeted fix was best.",
+      "parentUuid": "16d9576f_aec1b7ca",
+      "range": {
+        "startLine": 143,
+        "startChar": 11,
+        "endLine": 143,
+        "endChar": 68
+      },
+      "revId": "d5bebd92a3b384e53ae3797e423d3887ac13905c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16d4f72c_36c2b86a",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 1
