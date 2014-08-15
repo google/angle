@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76db73ad_690705aa",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-15T16:56:45Z",
+      "side": 1,
+      "message": "We\u0027re eventually going to pass around extensions \u0026 caps structs rather than the whole context for functions like this, right? Could this get a //TODO or //FIXME to that effect if that\u0027s the case?",
+      "revId": "b44dd9f0114ce62af00b6ebfdd566cb144b1ca42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f69da3d4_edc7854b",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-15T16:56:45Z",
+      "side": 1,
+      "message": "I\u0027m a little bit torn on these. Part of me wants to say they should be pure virtual at the TextureD3D level, and that any child for which they don\u0027t make sense should provide UNIMPLEMENTED() methods themselves explicitly, so no one\u0027s exposing them inadvertently. But another part of me would be annoyed at the code duplication. Other reviewers-- opinions?",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 1
+      },
+      "revId": "b44dd9f0114ce62af00b6ebfdd566cb144b1ca42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
