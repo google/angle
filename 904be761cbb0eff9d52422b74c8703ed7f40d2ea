@@ -89,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "76db73ad_4c068f3d",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1885,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-15T19:07:04Z",
+      "side": 1,
+      "message": "Ah, right. erase() continues to be one of the worst-named functions in the STL.",
+      "parentUuid": "5602efbb_fe4f39f2",
+      "range": {
+        "startLine": 1885,
+        "startChar": 8,
+        "endLine": 1885,
+        "endChar": 39
+      },
+      "revId": "904be761cbb0eff9d52422b74c8703ed7f40d2ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b626cb4d_33874802",
         "filename": "src/libGLESv2/Error.cpp",
         "patchSetId": 4
