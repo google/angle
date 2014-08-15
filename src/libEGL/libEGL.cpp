@@ -794,6 +794,13 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
     egl::Display *display = static_cast<egl::Display*>(dpy);
     gl::Context *context = static_cast<gl::Context*>(ctx);
 
+    bool noContext = (ctx == EGL_NO_CONTEXT);
+    bool noSurface = (draw == EGL_NO_SURFACE || read == EGL_NO_SURFACE);
+    if (noContext != noSurface)
+    {
+        return egl::error(EGL_BAD_MATCH, EGL_FALSE);
+    }
+
     if (ctx != EGL_NO_CONTEXT && !validateContext(display, context))
     {
         return EGL_FALSE;
