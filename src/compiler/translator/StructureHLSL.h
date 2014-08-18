@@ -26,7 +26,8 @@ namespace sh
 class Std140PaddingHelper
 {
   public:
-    explicit Std140PaddingHelper(const std::map<TString, int> &structElementIndexes);
+    explicit Std140PaddingHelper(const std::map<TString, int> &structElementIndexes,
+                                 unsigned *uniqueCounter);
 
     int elementIndex() const { return mElementIndex; }
     int prePadding(const TType &type);
@@ -34,7 +35,9 @@ class Std140PaddingHelper
     TString postPaddingString(const TType &type, bool useHLSLRowMajorPacking);
 
   private:
-    int mPaddingCounter;
+    TString next();
+
+    unsigned *mPaddingCounter;
     int mElementIndex;
     const std::map<TString, int> &mStructElementIndexes;
 };
@@ -50,9 +53,11 @@ class StructureHLSL
     TString defineQualified(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);
     static TString defineNameless(const TStructure &structure);
 
-    Std140PaddingHelper getPaddingHelper() const { return Std140PaddingHelper(mStd140StructElementIndexes); }
+    Std140PaddingHelper getPaddingHelper();
 
   private:
+    unsigned mUniquePaddingCounter;
+
     std::map<TString, int> mStd140StructElementIndexes;
 
     typedef std::set<TString> StructNames;

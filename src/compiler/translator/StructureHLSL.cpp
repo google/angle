@@ -17,11 +17,18 @@
 namespace sh
 {
 
-Std140PaddingHelper::Std140PaddingHelper(const std::map<TString, int> &structElementIndexes)
-    : mPaddingCounter(0),
+Std140PaddingHelper::Std140PaddingHelper(const std::map<TString, int> &structElementIndexes,
+                                         unsigned *uniqueCounter)
+    : mPaddingCounter(uniqueCounter),
       mElementIndex(0),
       mStructElementIndexes(structElementIndexes)
 {}
+
+TString Std140PaddingHelper::next()
+{
+    unsigned value = (*mPaddingCounter)++;
+    return str(value);
+}
 
 int Std140PaddingHelper::prePadding(const TType &type)
 {
@@ -68,7 +75,7 @@ TString Std140PaddingHelper::prePaddingString(const TType &type)
 
     for (int paddingIndex = 0; paddingIndex < paddingCount; paddingIndex++)
     {
-        padding += "    float pad_" + str(mPaddingCounter++) + ";\n";
+        padding += "    float pad_" + next() + ";\n";
     }
 
     return padding;
@@ -116,19 +123,25 @@ TString Std140PaddingHelper::postPaddingString(const TType &type, bool useHLSLRo
     TString padding;
     for (int paddingOffset = numComponents; paddingOffset < 4; paddingOffset++)
     {
-        padding += "    float pad_" + str(mPaddingCounter++) + ";\n";
+        padding += "    float pad_" + next() + ";\n";
     }
     return padding;
 }
 
 StructureHLSL::StructureHLSL()
+    : mUniquePaddingCounter(0)
 {}
+
+Std140PaddingHelper StructureHLSL::getPaddingHelper()
+{
+    return Std140PaddingHelper(mStd140StructElementIndexes, &mUniquePaddingCounter);
+}
 
 TString StructureHLSL::defineQualified(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing)
 {
     if (useStd140Packing)
     {
-        Std140PaddingHelper padHelper(mStd140StructElementIndexes);
+        Std140PaddingHelper padHelper = getPaddingHelper();
         return define(structure, useHLSLRowMajorPacking, useStd140Packing, &padHelper);
     }
     else
@@ -461,7 +474,7 @@ std::string StructureHLSL::structsHeader() const
 
 void StructureHLSL::storeStd140ElementIndex(const TStructure &structure, bool useHLSLRowMajorPacking)
 {
-    Std140PaddingHelper padHelper(mStd140StructElementIndexes);
+    Std140PaddingHelper padHelper = getPaddingHelper();
     const TFieldList &fields = structure.fields();
 
     for (unsigned int i = 0; i < fields.size(); i++)

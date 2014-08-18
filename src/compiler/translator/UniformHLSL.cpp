@@ -269,7 +269,7 @@ TString UniformHLSL::interfaceBlockMembersString(const TInterfaceBlock &interfac
         if (blockStorage == EbsStd140)
         {
             // 2 and 3 component vector types in some cases need pre-padding
-            hlsl += padHelper.prePadding(fieldType);
+            hlsl += padHelper.prePaddingString(fieldType);
         }
 
         hlsl += "    " + InterfaceBlockFieldTypeString(field, blockStorage) +
