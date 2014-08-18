@@ -58,6 +58,20 @@ class VertexDataManager
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexDataManager);
 
+    GLenum storeAttribute(const gl::VertexAttribute &attrib,
+                          const gl::VertexAttribCurrentValueData &currentValue,
+                          TranslatedAttribute *translated,
+                          GLint start,
+                          GLsizei count,
+                          GLsizei instances);
+
+    GLenum storeCurrentValue(const gl::VertexAttribute &attrib,
+                             const gl::VertexAttribCurrentValueData &currentValue,
+                             TranslatedAttribute *translated,
+                             gl::VertexAttribCurrentValueData *cachedValue,
+                             size_t *cachedOffset,
+                             StreamingVertexBufferInterface *buffer);
+
     rx::Renderer *const mRenderer;
 
     StreamingVertexBufferInterface *mStreamingBuffer;
