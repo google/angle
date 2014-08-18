@@ -39,6 +39,30 @@
       "revId": "b44dd9f0114ce62af00b6ebfdd566cb144b1ca42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7315452e_d9b1f3c9",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-18T15:45:59Z",
+      "side": 1,
+      "message": "I would agree with the suggestion to make it explicit, as the code duplication is pretty small. Also not a strong preference.",
+      "parentUuid": "f69da3d4_edc7854b",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 1
+      },
+      "revId": "b44dd9f0114ce62af00b6ebfdd566cb144b1ca42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
