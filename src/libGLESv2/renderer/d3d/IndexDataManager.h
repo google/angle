@@ -11,6 +11,7 @@
 #define LIBGLESV2_INDEXDATAMANAGER_H_
 
 #include "common/angleutils.h"
+#include "common/mathutil.h"
 
 namespace
 {
@@ -32,8 +33,7 @@ class Renderer;
 
 struct TranslatedIndexData
 {
-    unsigned int minIndex;
-    unsigned int maxIndex;
+    RangeUI indexRange;
     unsigned int startIndex;
     unsigned int startOffset;   // In bytes
 

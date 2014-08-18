@@ -1067,21 +1067,23 @@ void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool 
 void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
                               gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances)
 {
+    int minIndex = static_cast<int>(indexInfo.indexRange.start);
+
     if (mode == GL_LINE_LOOP)
     {
-        drawLineLoop(count, type, indices, indexInfo.minIndex, elementArrayBuffer);
+        drawLineLoop(count, type, indices, minIndex, elementArrayBuffer);
     }
     else if (mode == GL_TRIANGLE_FAN)
     {
-        drawTriangleFan(count, type, indices, indexInfo.minIndex, elementArrayBuffer, instances);
+        drawTriangleFan(count, type, indices, minIndex, elementArrayBuffer, instances);
     }
     else if (instances > 0)
     {
-        mDeviceContext->DrawIndexedInstanced(count, instances, 0, -static_cast<int>(indexInfo.minIndex), 0);
+        mDeviceContext->DrawIndexedInstanced(count, instances, 0, -minIndex, 0);
     }
     else
     {
-        mDeviceContext->DrawIndexed(count, 0, -static_cast<int>(indexInfo.minIndex));
+        mDeviceContext->DrawIndexed(count, 0, -minIndex);
     }
 }
 

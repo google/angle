@@ -16,10 +16,10 @@
 namespace rx
 {
 
-void IndexRangeCache::addRange(GLenum type, unsigned int offset, GLsizei count, unsigned int minIdx, unsigned int maxIdx,
+void IndexRangeCache::addRange(GLenum type, unsigned int offset, GLsizei count, const RangeUI &range,
                                unsigned int streamOffset)
 {
-    mIndexRangeCache[IndexRange(type, offset, count)] = IndexBounds(minIdx, maxIdx, streamOffset);
+    mIndexRangeCache[IndexRange(type, offset, count)] = IndexBounds(range, streamOffset);
 }
 
 void IndexRangeCache::invalidateRange(unsigned int offset, unsigned int size)
@@ -44,21 +44,19 @@ void IndexRangeCache::invalidateRange(unsigned int offset, unsigned int size)
     }
 }
 
-bool IndexRangeCache::findRange(GLenum type, unsigned int offset, GLsizei count, unsigned int *outMinIndex,
-                                unsigned int *outMaxIndex, unsigned int *outStreamOffset) const
+bool IndexRangeCache::findRange(GLenum type, unsigned int offset, GLsizei count,
+                                RangeUI *outRange, unsigned int *outStreamOffset) const
 {
     IndexRangeMap::const_iterator i = mIndexRangeCache.find(IndexRange(type, offset, count));
     if (i != mIndexRangeCache.end())
     {
-        if (outMinIndex)     *outMinIndex = i->second.minIndex;
-        if (outMaxIndex)     *outMaxIndex = i->second.maxIndex;
+        if (outRange)        *outRange = i->second.range;
         if (outStreamOffset) *outStreamOffset = i->second.streamOffset;
         return true;
     }
     else
     {
-        if (outMinIndex)     *outMinIndex = 0;
-        if (outMaxIndex)     *outMaxIndex = 0;
+        if (outRange)        *outRange = RangeUI(0, 0);
         if (outStreamOffset) *outStreamOffset = 0;
         return false;
     }
@@ -85,12 +83,13 @@ bool IndexRangeCache::IndexRange::operator<(const IndexRange& rhs) const
 }
 
 IndexRangeCache::IndexBounds::IndexBounds()
-    : minIndex(0), maxIndex(0), streamOffset(0)
+    : range(0, 0),
+      streamOffset(0)
 {
 }
 
-IndexRangeCache::IndexBounds::IndexBounds(unsigned int minIdx, unsigned int maxIdx, unsigned int offset)
-    : minIndex(minIdx), maxIndex(maxIdx), streamOffset(offset)
+IndexRangeCache::IndexBounds::IndexBounds(const RangeUI &rangeIn, unsigned int offset)
+    : range(rangeIn), streamOffset(offset)
 {
 }
 

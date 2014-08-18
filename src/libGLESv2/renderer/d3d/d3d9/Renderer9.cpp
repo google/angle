@@ -1329,20 +1329,22 @@ void Renderer9::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvo
 {
     startScene();
 
+    int minIndex = static_cast<int>(indexInfo.indexRange.start);
+
     if (mode == GL_POINTS)
     {
-        drawIndexedPoints(count, type, indices, indexInfo.minIndex, elementArrayBuffer);
+        drawIndexedPoints(count, type, indices, minIndex, elementArrayBuffer);
     }
     else if (mode == GL_LINE_LOOP)
     {
-        drawLineLoop(count, type, indices, indexInfo.minIndex, elementArrayBuffer);
+        drawLineLoop(count, type, indices, minIndex, elementArrayBuffer);
     }
     else
     {
         for (int i = 0; i < mRepeatDraw; i++)
         {
-            GLsizei vertexCount = indexInfo.maxIndex - indexInfo.minIndex + 1;
-            mDevice->DrawIndexedPrimitive(mPrimitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, vertexCount, indexInfo.startIndex, mPrimitiveCount);
+            GLsizei vertexCount = static_cast<int>(indexInfo.indexRange.length()) + 1;
+            mDevice->DrawIndexedPrimitive(mPrimitiveType, -minIndex, minIndex, vertexCount, indexInfo.startIndex, mPrimitiveCount);
         }
     }
 }

@@ -95,33 +95,34 @@ static void convertIndices(GLenum sourceType, GLenum destinationType, const void
 }
 
 template <class IndexType>
-static void computeRange(const IndexType *indices, GLsizei count, GLuint *minIndex, GLuint *maxIndex)
+static RangeUI computeRange(const IndexType *indices, GLsizei count)
 {
-    *minIndex = indices[0];
-    *maxIndex = indices[0];
+    unsigned int minIndex = indices[0];
+    unsigned int maxIndex = indices[0];
 
-    for (GLsizei i = 0; i < count; i++)
+    for (GLsizei i = 1; i < count; i++)
     {
-        if (*minIndex > indices[i]) *minIndex = indices[i];
-        if (*maxIndex < indices[i]) *maxIndex = indices[i];
+        if (minIndex > indices[i]) minIndex = indices[i];
+        if (maxIndex < indices[i]) maxIndex = indices[i];
     }
+
+    return RangeUI(minIndex, maxIndex);
 }
 
-static void computeRange(GLenum type, const GLvoid *indices, GLsizei count, GLuint *minIndex, GLuint *maxIndex)
+static RangeUI computeRange(GLenum type, const GLvoid *indices, GLsizei count)
 {
-    if (type == GL_UNSIGNED_BYTE)
+    switch (type)
     {
-        computeRange(static_cast<const GLubyte*>(indices), count, minIndex, maxIndex);
+      case GL_UNSIGNED_BYTE:
+        return computeRange(static_cast<const GLubyte*>(indices), count);
+      case GL_UNSIGNED_INT:
+        return computeRange(static_cast<const GLuint*>(indices), count);
+      case GL_UNSIGNED_SHORT:
+        return computeRange(static_cast<const GLushort*>(indices), count);
+      default:
+        UNREACHABLE();
+        return RangeUI();
     }
-    else if (type == GL_UNSIGNED_INT)
-    {
-        computeRange(static_cast<const GLuint*>(indices), count, minIndex, maxIndex);
-    }
-    else if (type == GL_UNSIGNED_SHORT)
-    {
-        computeRange(static_cast<const GLushort*>(indices), count, minIndex, maxIndex);
-    }
-    else UNREACHABLE();
 }
 
 GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer *buffer, const GLvoid *indices, TranslatedIndexData *translated)
@@ -183,35 +184,31 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     {
         streamOffset = offset;
 
-        if (!storage->getIndexRangeCache()->findRange(type, offset, count, &translated->minIndex,
-                                                     &translated->maxIndex, NULL))
+        if (!storage->getIndexRangeCache()->findRange(type, offset, count, &translated->indexRange, NULL))
         {
-            computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
-            storage->getIndexRangeCache()->addRange(type, offset, count, translated->minIndex,
-                                                   translated->maxIndex, offset);
+            translated->indexRange = computeRange(type, indices, count);
+            storage->getIndexRangeCache()->addRange(type, offset, count, translated->indexRange, offset);
         }
     }
     else if (staticBuffer && staticBuffer->getBufferSize() != 0 && staticBuffer->getIndexType() == type && alignedOffset)
     {
         indexBuffer = staticBuffer;
 
-        if (!staticBuffer->getIndexRangeCache()->findRange(type, offset, count, &translated->minIndex,
-                                                           &translated->maxIndex, &streamOffset))
+        if (!staticBuffer->getIndexRangeCache()->findRange(type, offset, count, &translated->indexRange, &streamOffset))
         {
             streamOffset = (offset / typeInfo.bytes) * gl::GetTypeInfo(destinationIndexType).bytes;
-            computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
-            staticBuffer->getIndexRangeCache()->addRange(type, offset, count, translated->minIndex,
-                                                         translated->maxIndex, streamOffset);
+            translated->indexRange = computeRange(type, indices, count);
+            staticBuffer->getIndexRangeCache()->addRange(type, offset, count, translated->indexRange, streamOffset);
         }
     }
     else
     {
-        computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
+        translated->indexRange = computeRange(type, indices, count);
     }
 
     // Avoid D3D11's primitive restart index value
     // see http://msdn.microsoft.com/en-us/library/windows/desktop/bb205124(v=vs.85).aspx
-    if (translated->maxIndex == 0xFFFF && type == GL_UNSIGNED_SHORT && mRenderer->getMajorShaderModel() > 3)
+    if (translated->indexRange.end == 0xFFFF && type == GL_UNSIGNED_SHORT && mRenderer->getMajorShaderModel() > 3)
     {
         destinationIndexType = GL_UNSIGNED_INT;
         directStorage = false;
@@ -277,8 +274,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
         if (staticBuffer)
         {
             streamOffset = (offset / typeInfo.bytes) * destTypeInfo.bytes;
-            staticBuffer->getIndexRangeCache()->addRange(type, offset, count, translated->minIndex,
-                                                         translated->maxIndex, streamOffset);
+            staticBuffer->getIndexRangeCache()->addRange(type, offset, count, translated->indexRange, streamOffset);
         }
     }
 

@@ -1832,8 +1832,10 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
         return gl::error(err);
     }
 
-    GLsizei vertexCount = indexInfo.maxIndex - indexInfo.minIndex + 1;
-    err = mRenderer->applyVertexBuffer(programBinary, vao->getVertexAttributes(), mState.getVertexAttribCurrentValues(), indexInfo.minIndex, vertexCount, instances);
+    GLsizei vertexCount = indexInfo.indexRange.length() + 1;
+    err = mRenderer->applyVertexBuffer(programBinary, vao->getVertexAttributes(),
+                                       mState.getVertexAttribCurrentValues(),
+                                       indexInfo.indexRange.start, vertexCount, instances);
     if (err != GL_NO_ERROR)
     {
         return gl::error(err);
