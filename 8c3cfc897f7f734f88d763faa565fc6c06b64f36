@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "933559d4_c866a8f1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1370,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-19T20:46:38Z",
+      "side": 1,
+      "message": "Comparing with the original code, here you lose the type\u0027s loc info.  I feel this CL should just stay pure refactoring and do not change any logic - to make things simple.",
+      "revId": "8c3cfc897f7f734f88d763faa565fc6c06b64f36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
