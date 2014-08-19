@@ -34,6 +34,24 @@
       "revId": "8c3cfc897f7f734f88d763faa565fc6c06b64f36",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3344ad56_24f7a8f1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1370,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-19T21:08:14Z",
+      "side": 1,
+      "message": "I know it\u0027s probably not used.  My point is in a refactoring CL, we should avoid changing logic. But I already +1, so your decision.",
+      "parentUuid": "7315452e_bf94dfec",
+      "revId": "8c3cfc897f7f734f88d763faa565fc6c06b64f36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
