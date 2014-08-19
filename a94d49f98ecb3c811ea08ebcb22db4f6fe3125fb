@@ -16,6 +16,24 @@
       "revId": "a94d49f98ecb3c811ea08ebcb22db4f6fe3125fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53f1214f_46786600",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-19T20:38:47Z",
+      "side": 1,
+      "message": "I\u0027ll add a comment... the error case is for mal-formed shaders. It creates a dummy variable in order to continue parsing without explosions. That\u0027s my understanding anyway.",
+      "parentUuid": "13296985_62611ede",
+      "revId": "a94d49f98ecb3c811ea08ebcb22db4f6fe3125fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
