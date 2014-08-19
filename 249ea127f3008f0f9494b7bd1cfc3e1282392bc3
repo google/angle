@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53f1214f_c68c7629",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-19T18:39:58Z",
+      "side": 1,
+      "message": "tabs",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 1
+      },
+      "revId": "249ea127f3008f0f9494b7bd1cfc3e1282392bc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3017df5_c136a6d0",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-19T18:39:58Z",
+      "side": 1,
+      "message": "nit: tabs and space",
+      "range": {
+        "startLine": 224,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 1
+      },
+      "revId": "249ea127f3008f0f9494b7bd1cfc3e1282392bc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53f1214f_a6897217",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-19T18:39:58Z",
+      "side": 1,
+      "message": "tabs",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 283,
+        "endChar": 1
+      },
+      "revId": "249ea127f3008f0f9494b7bd1cfc3e1282392bc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
