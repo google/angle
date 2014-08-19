@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/translator/localintermediate.h"
+#include "compiler/translator/Intermediate.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace

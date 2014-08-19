@@ -11,7 +11,7 @@
 #define TRANSLATOR_STRUCTUREHLSL_H_
 
 #include "compiler/translator/Common.h"
-#include "compiler/translator/intermediate.h"
+#include "compiler/translator/IntermNode.h"
 
 #include <set>
 

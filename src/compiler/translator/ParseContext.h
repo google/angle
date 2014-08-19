@@ -9,7 +9,7 @@
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/DirectiveHandler.h"
-#include "compiler/translator/localintermediate.h"
+#include "compiler/translator/Intermediate.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/preprocessor/Preprocessor.h"
 

@@ -249,13 +249,16 @@
     <ClInclude Include="..\..\src\compiler\translator\InitializeDll.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\compiler\translator\IntermNode.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\ValidateOutputs.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h">
+    <ClInclude Include="..\..\src\compiler\translator\Intermediate.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\compiler\translator\localintermediate.h">
+    <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\compiler\translator\RegenerateStructNames.cpp">
@@ -300,7 +303,7 @@
     <ClInclude Include="..\..\src\compiler\translator\Types.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\compiler\translator\InfoSink.h">
+    <ClInclude Include="..\..\src\compiler\translator\MMap.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\RemoveTree.h">
@@ -315,7 +318,7 @@
     <ClInclude Include="..\..\src\compiler\translator\DetectCallDepth.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\compiler\translator\MMap.h">
+    <ClInclude Include="..\..\src\compiler\translator\InfoSink.h">
       <Filter>src\compiler\translator</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\compiler\translator\VariablePacker.h">
@@ -340,6 +343,9 @@
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\compiler\translator\IntermTraverse.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\compiler\translator\IntermNode.cpp">
       <Filter>src\compiler\translator</Filter>
     </ClCompile>
     <None Include="..\..\src\compiler\translator\glslang.l">

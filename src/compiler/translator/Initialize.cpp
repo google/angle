@@ -12,7 +12,7 @@
 
 #include "compiler/translator/Initialize.h"
 
-#include "compiler/translator/intermediate.h"
+#include "compiler/translator/IntermNode.h"
 #include "angle_gl.h"
 
 void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInResources &resources, TSymbolTable &symbolTable)

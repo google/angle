@@ -7,7 +7,7 @@
 #ifndef COMPILER_TRANSLATOR_VERSIONGLSL_H_
 #define COMPILER_TRANSLATOR_VERSIONGLSL_H_
 
-#include "compiler/translator/intermediate.h"
+#include "compiler/translator/IntermNode.h"
 
 // Traverses the intermediate tree to return the minimum GLSL version
 // required to legally access all built-in features used in the shader.

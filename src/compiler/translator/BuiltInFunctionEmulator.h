@@ -8,7 +8,7 @@
 #define COMPILIER_BUILT_IN_FUNCTION_EMULATOR_H_
 
 #include "compiler/translator/InfoSink.h"
-#include "compiler/translator/intermediate.h"
+#include "compiler/translator/IntermNode.h"
 
 //
 // This class decides which built-in functions need to be replaced with the

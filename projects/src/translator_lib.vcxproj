@@ -247,9 +247,10 @@
     <ClInclude Include="..\..\src\compiler\translator\NodeSearch.h"/>
     <ClInclude Include="..\..\src\compiler\translator\TranslatorESSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeDll.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\IntermNode.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ValidateOutputs.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\Intermediate.h"/>
     <ClInclude Include="..\..\src\compiler\translator\InitializeVariables.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\localintermediate.h"/>
     <ClInclude Include="..\..\src\compiler\translator\OutputGLSLBase.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ForLoopUnroll.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Pragma.h"/>
@@ -259,10 +260,10 @@
     <ClInclude Include="..\..\src\compiler\translator\StructureHLSL.h"/>
     <ClInclude Include="..\..\src\compiler\translator\ValidateLimitations.h"/>
     <ClInclude Include="..\..\src\compiler\translator\Types.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\InfoSink.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\MMap.h"/>
     <ClInclude Include="..\..\src\compiler\translator\RemoveTree.h"/>
     <ClInclude Include="..\..\src\compiler\translator\DetectCallDepth.h"/>
-    <ClInclude Include="..\..\src\compiler\translator\MMap.h"/>
+    <ClInclude Include="..\..\src\compiler\translator\InfoSink.h"/>
     <ClInclude Include="..\..\src\compiler\translator\VariablePacker.h"/>
     <ClInclude Include="..\..\src\compiler\translator\glslang.h"/>
     <ClInclude Include="..\..\src\compiler\translator\SearchSymbol.h"/>
@@ -336,6 +337,7 @@
     <ClCompile Include="..\..\src\compiler\translator\CodeGen.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\Intermediate.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\IntermTraverse.cpp"/>
+    <ClCompile Include="..\..\src\compiler\translator\IntermNode.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\intermOut.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\glslang_tab.cpp"/>
     <ClCompile Include="..\..\src\compiler\translator\ForLoopUnroll.cpp"/>

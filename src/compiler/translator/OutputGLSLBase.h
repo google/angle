@@ -9,7 +9,7 @@
 
 #include <set>
 
-#include "compiler/translator/intermediate.h"
+#include "compiler/translator/IntermNode.h"
 #include "compiler/translator/LoopInfo.h"
 #include "compiler/translator/ParseContext.h"
 

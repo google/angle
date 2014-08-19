@@ -9,7 +9,7 @@
 
 #include <GLSLANG/ShaderLang.h>
 
-#include "compiler/translator/intermediate.h"
+#include "compiler/translator/IntermNode.h"
 
 // Traverses intermediate tree to collect all attributes, uniforms, varyings.
 class CollectVariables : public TIntermTraverser

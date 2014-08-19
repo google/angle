@@ -34,7 +34,7 @@
 
 #include "common/angleutils.h"
 #include "compiler/translator/InfoSink.h"
-#include "compiler/translator/intermediate.h"
+#include "compiler/translator/IntermNode.h"
 
 // Symbol base class. (Can build functions or variables out of these...)
 class TSymbol

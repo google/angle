@@ -7,7 +7,7 @@
 #ifndef COMPILER_INITIALIZE_VARIABLES_H_
 #define COMPILER_INITIALIZE_VARIABLES_H_
 
-#include "compiler/translator/intermediate.h"
+#include "compiler/translator/IntermNode.h"
 
 class InitializeVariables : public TIntermTraverser
 {
