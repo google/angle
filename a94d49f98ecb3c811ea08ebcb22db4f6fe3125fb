@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13296985_62611ede",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-19T20:31:28Z",
+      "side": 1,
+      "message": "Please add a comment for this function, as it is NOT a traditional find* function; it creates a new variable and insert into symbolTable in case it fails to find one. This behavior will need to be logged here, or you can move the fakeVariable part out of this function and make it a pure find* function.",
+      "revId": "a94d49f98ecb3c811ea08ebcb22db4f6fe3125fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
