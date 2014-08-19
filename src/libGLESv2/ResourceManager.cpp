@@ -151,7 +151,9 @@ GLuint ResourceManager::createFenceSync()
 {
     GLuint handle = mFenceSyncHandleAllocator.allocate();
 
-    mFenceSyncMap[handle] = new FenceSync(mRenderer, handle);
+    FenceSync *fenceSync = new FenceSync(mRenderer, handle);
+    fenceSync->addRef();
+    mFenceSyncMap[handle] = fenceSync;
 
     return handle;
 }
