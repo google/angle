@@ -1089,6 +1089,8 @@ const TFunction* TParseContext::findFunction(const TSourceLoc& line, TFunction* 
 // Initializers show up in several places in the grammar.  Have one set of
 // code to handle them here.
 //
+// Returns true on error, false if no error
+//
 bool TParseContext::executeInitializer(const TSourceLoc& line, const TString& identifier, TPublicType& pType, 
                                        TIntermTyped* initializer, TIntermNode*& intermNode, TVariable* variable)
 {
@@ -1352,6 +1354,7 @@ TIntermAggregate* TParseContext::parseInvariantDeclaration(const TSourceLoc &inv
                                                            const TString *identifier,
                                                            const TSymbol *symbol)
 {
+    // invariant declaration
     if (globalErrorCheck(invariantLoc, symbolTable.atGlobalLevel(), "invariant varying"))
     {
         recover();
@@ -1366,21 +1369,20 @@ TIntermAggregate* TParseContext::parseInvariantDeclaration(const TSourceLoc &inv
     }
     else
     {
-        TType type(EbtInvariant);
-        type.setQualifier(EvqInvariantVaryingOut);
-        TIntermSymbol *symbol = intermediate.addSymbol(0, *identifier, type, identifierLoc);
-        return intermediate.makeAggregate(symbol, identifierLoc);
+        const TVariable *variable = getNamedVariable(identifierLoc, identifier, symbol);
+        ASSERT(variable);
+        const TType &type = variable->getType();
+        TIntermSymbol *intermSymbol = intermediate.addSymbol(variable->getUniqueId(),
+                                                             *identifier, type, identifierLoc);
+
+        TIntermAggregate *aggregate = intermediate.makeAggregate(intermSymbol, identifierLoc);
+        aggregate->setOp(EOpInvariantDeclaration);
+        return aggregate;
     }
 }
 
 TIntermAggregate* TParseContext::parseDeclarator(TPublicType &publicType, TIntermAggregate *aggregateDeclaration, TSymbol *identifierSymbol, const TSourceLoc& identifierLocation, const TString &identifier)
 {
-    if (publicType.type == EbtInvariant && !identifierSymbol)
-    {
-        error(identifierLocation, "undeclared identifier declared as invariant", identifier.c_str());
-        recover();
-    }
-
     TIntermSymbol* symbol = intermediate.addSymbol(0, identifier, TType(publicType), identifierLocation);
     TIntermAggregate* intermAggregate = intermediate.growAggregate(aggregateDeclaration, symbol, identifierLocation);
 

@@ -69,7 +69,6 @@ enum TBasicType
     EbtStruct,
     EbtInterfaceBlock,
     EbtAddress,            // should be deprecated??
-    EbtInvariant          // used as a type when qualifying a previously declared variable as being invariant
 };
 
 const char* getBasicString(TBasicType t);

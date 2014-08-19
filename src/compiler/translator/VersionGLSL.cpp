@@ -67,6 +67,9 @@ bool TVersionGLSL::visitAggregate(Visit, TIntermAggregate *node)
             }
             break;
         }
+      case EOpInvariantDeclaration:
+        updateVersion(GLSL_VERSION_120);
+        break;
       case EOpParameters:
         {
             const TIntermSequence &params = *(node->getSequence());

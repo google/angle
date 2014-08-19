@@ -346,12 +346,7 @@ bool CollectVariables::visitAggregate(Visit, TIntermAggregate *node)
                     visitInfoList(sequence, mUniforms);
                     break;
                   default:
-                    // do not traverse invariant declarations such as
-                    //  "invariant gl_Position;"
-                    if (typedNode.getBasicType() != EbtInvariant)
-                    {
-                        visitInfoList(sequence, mVaryings);
-                    }
+                    visitInfoList(sequence, mVaryings);
                     break;
                 }
 

@@ -41,7 +41,6 @@ const char* getBasicString(TBasicType t)
       case EbtSampler2DArrayShadow: return "sampler2DArrayShadow"; break;
       case EbtStruct:               return "structure";            break;
       case EbtInterfaceBlock:       return "interface block";      break;
-      case EbtInvariant:            return "invariant";            break;
       default: UNREACHABLE();       return "unknown type";
     }
 }

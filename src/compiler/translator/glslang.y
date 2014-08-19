@@ -1072,8 +1072,7 @@ single_declaration
         $$.intermAggregate = context->parseSingleInitDeclaration($$.type, @2, *$2.string, @3, $4);
     }
     | INVARIANT IDENTIFIER {
-        VERTEX_ONLY("invariant declaration", @1);
-        $$.type.setBasic(EbtInvariant, EvqInvariantVaryingOut, @2);
+        // $$.type is not used in invariant declarations.
         $$.intermAggregate = context->parseInvariantDeclaration(@1, @2, $2.string, $2.symbol);
     }
     ;

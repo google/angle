@@ -1937,12 +1937,6 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             else if (variable && IsVaryingOut(variable->getQualifier()))
             {
-                // Skip translation of invariant declarations
-                if (variable->getBasicType() == EbtInvariant)
-                {
-                    return false;
-                }
-
                 for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); sit++)
                 {
                     TIntermSymbol *symbol = (*sit)->getAsSymbolNode();
@@ -1966,6 +1960,9 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             out << ", ";
         }
         break;
+      case EOpInvariantDeclaration:
+        // Do not do any translation
+        return false;
       case EOpPrototype:
         if (visit == PreVisit)
         {

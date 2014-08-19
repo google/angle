@@ -342,6 +342,7 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpMul:           out << "component-wise multiply"; break;
 
       case EOpDeclaration:   out << "Declaration: ";   break;
+      case EOpInvariantDeclaration: out << "Invariant Declaration: "; break;
 
       default:
         out.prefix(EPrefixError);

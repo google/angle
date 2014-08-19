@@ -81,8 +81,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
 {
     TInfoSinkBase &out = objSink();
     TQualifier qualifier = type.getQualifier();
-    if (qualifier != EvqTemporary && qualifier != EvqGlobal &&
-        type.getBasicType() != EbtInvariant)
+    if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
         out << type.getQualifierString() << " ";
     }
@@ -650,6 +649,17 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
             mDeclaringVariables = false;
         }
         break;
+      case EOpInvariantDeclaration: {
+            // Invariant declaration.
+            ASSERT(visit == PreVisit);
+            const TIntermSequence *sequence = node->getSequence();
+            ASSERT(sequence && sequence->size() == 1);
+            const TIntermSymbol *symbol = sequence->front()->getAsSymbolNode();
+            ASSERT(symbol);
+            out << "invariant " << symbol->getSymbol() << ";";
+            visitChildren = false;
+            break;
+        }
       case EOpConstructFloat:
         writeTriplet(visit, "float(", NULL, ")");
         break;

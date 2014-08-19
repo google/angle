@@ -37,6 +37,7 @@ enum TOperator
     EOpParameters,      // an aggregate listing the parameters to a function
 
     EOpDeclaration,
+    EOpInvariantDeclaration, // Specialized declarations for attributing invariance
     EOpPrototype,
 
     //
