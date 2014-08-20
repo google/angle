@@ -173,7 +173,7 @@ bool Program::attachShader(Shader *shader)
             return false;
         }
 
-        mVertexShader = (VertexShader*)shader;
+        mVertexShader = shader;
         mVertexShader->addRef();
     }
     else if (shader->getType() == GL_FRAGMENT_SHADER)
@@ -183,7 +183,7 @@ bool Program::attachShader(Shader *shader)
             return false;
         }
 
-        mFragmentShader = (FragmentShader*)shader;
+        mFragmentShader = shader;
         mFragmentShader->addRef();
     }
     else UNREACHABLE();

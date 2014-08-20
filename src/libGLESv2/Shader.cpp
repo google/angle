@@ -149,22 +149,4 @@ void Shader::flagForDeletion()
     mDeleteStatus = true;
 }
 
-VertexShader::VertexShader(ResourceManager *manager, rx::ShaderImpl *impl, GLuint handle)
-    : Shader(manager, impl, GL_VERTEX_SHADER, handle)
-{
-}
-
-VertexShader::~VertexShader()
-{
-}
-
-FragmentShader::FragmentShader(ResourceManager *manager, rx::ShaderImpl *impl, GLuint handle)
-    : Shader(manager, impl, GL_FRAGMENT_SHADER, handle)
-{
-}
-
-FragmentShader::~FragmentShader()
-{
-}
-
 }

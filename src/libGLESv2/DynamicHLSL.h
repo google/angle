@@ -15,6 +15,9 @@
 namespace rx
 {
 class Renderer;
+class ShaderD3D;
+class VertexShaderD3D;
+class FragmentShaderD3D;
 }
 
 namespace sh
@@ -27,8 +30,6 @@ namespace gl
 {
 
 class InfoLog;
-class FragmentShader;
-class VertexShader;
 struct VariableLocation;
 struct LinkedVarying;
 struct VertexAttribute;
@@ -50,22 +51,22 @@ class DynamicHLSL
   public:
     explicit DynamicHLSL(rx::Renderer *const renderer);
 
-    int packVaryings(InfoLog &infoLog, VaryingPacking packing, FragmentShader *fragmentShader,
-                     VertexShader *vertexShader, const std::vector<std::string>& transformFeedbackVaryings);
+    int packVaryings(InfoLog &infoLog, VaryingPacking packing, rx::FragmentShaderD3D *fragmentShader,
+                     rx::VertexShaderD3D *vertexShader, const std::vector<std::string>& transformFeedbackVaryings);
     std::string generateVertexShaderForInputLayout(const std::string &sourceShader, const VertexFormat inputLayout[],
                                                    const sh::Attribute shaderAttributes[]) const;
     std::string generatePixelShaderForOutputSignature(const std::string &sourceShader, const std::vector<PixelShaderOuputVariable> &outputVariables,
                                                       bool usesFragDepth, const std::vector<GLenum> &outputLayout) const;
     bool generateShaderLinkHLSL(InfoLog &infoLog, int registers, const VaryingPacking packing,
                                 std::string& pixelHLSL, std::string& vertexHLSL,
-                                FragmentShader *fragmentShader, VertexShader *vertexShader,
+                                rx::FragmentShaderD3D *fragmentShader, rx::VertexShaderD3D *vertexShader,
                                 const std::vector<std::string>& transformFeedbackVaryings,
                                 std::vector<LinkedVarying> *linkedVaryings,
                                 std::map<int, VariableLocation> *programOutputVars,
                                 std::vector<PixelShaderOuputVariable> *outPixelShaderKey,
                                 bool *outUsesFragDepth) const;
 
-    std::string generateGeometryShaderHLSL(int registers, FragmentShader *fragmentShader, VertexShader *vertexShader) const;
+    std::string generateGeometryShaderHLSL(int registers, rx::FragmentShaderD3D *fragmentShader, rx::VertexShaderD3D *vertexShader) const;
     void getInputLayoutSignature(const VertexFormat inputLayout[], GLenum signature[]) const;
 
   private:
@@ -79,11 +80,11 @@ class DynamicHLSL
     SemanticInfo getSemanticInfo(int startRegisters, bool fragCoord, bool pointCoord, bool pointSize,
                                         bool pixelShader) const;
     std::string generateVaryingLinkHLSL(const SemanticInfo &info, const std::string &varyingHLSL) const;
-    std::string generateVaryingHLSL(VertexShader *shader) const;
-    void storeUserLinkedVaryings(const VertexShader *vertexShader, std::vector<LinkedVarying> *linkedVaryings) const;
+    std::string generateVaryingHLSL(rx::VertexShaderD3D *shader) const;
+    void storeUserLinkedVaryings(const rx::VertexShaderD3D *vertexShader, std::vector<LinkedVarying> *linkedVaryings) const;
     void storeBuiltinLinkedVaryings(const SemanticInfo &info, std::vector<LinkedVarying> *linkedVaryings) const;
-    void defineOutputVariables(FragmentShader *fragmentShader, std::map<int, VariableLocation> *programOutputVars) const;
-    std::string generatePointSpriteHLSL(int registers, FragmentShader *fragmentShader, VertexShader *vertexShader) const;
+    void defineOutputVariables(rx::FragmentShaderD3D *fragmentShader, std::map<int, VariableLocation> *programOutputVars) const;
+    std::string generatePointSpriteHLSL(int registers, rx::FragmentShaderD3D *fragmentShader, rx::VertexShaderD3D *vertexShader) const;
 
     // Prepend an underscore
     static std::string decorateVariable(const std::string &name);

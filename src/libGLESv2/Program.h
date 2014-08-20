@@ -26,8 +26,6 @@ class Renderer;
 namespace gl
 {
 class ResourceManager;
-class FragmentShader;
-class VertexShader;
 class Shader;
 
 extern const char * const g_fakepath;
@@ -121,8 +119,8 @@ class Program
     void unlink(bool destroy = false);
     void resetUniformBlockBindings();
 
-    FragmentShader *mFragmentShader;
-    VertexShader *mVertexShader;
+    Shader *mFragmentShader;
+    Shader *mVertexShader;
 
     AttributeBindings mAttributeBindings;
 

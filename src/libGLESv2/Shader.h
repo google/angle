@@ -96,28 +96,6 @@ class Shader
     ResourceManager *mResourceManager;
 };
 
-// TODO: These are now stubs. We should remove them and use Shader exclusively.
-class VertexShader : public Shader
-{
-  public:
-    VertexShader(ResourceManager *manager, rx::ShaderImpl *impl, GLuint handle);
-
-    ~VertexShader();
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(VertexShader);
-};
-
-class FragmentShader : public Shader
-{
-  public:
-    FragmentShader(ResourceManager *manager, rx::ShaderImpl *impl, GLuint handle);
-
-    ~FragmentShader();
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(FragmentShader);
-};
 }
 
 #endif   // LIBGLESV2_SHADER_H_

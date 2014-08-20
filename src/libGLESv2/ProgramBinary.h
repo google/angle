@@ -39,8 +39,7 @@ class UniformStorage;
 
 namespace gl
 {
-class FragmentShader;
-class VertexShader;
+class Shader;
 class InfoLog;
 class AttributeBindings;
 class Buffer;
@@ -137,7 +136,7 @@ class ProgramBinary : public RefCountObject
     bool save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GLsizei *length);
     GLint getLength();
 
-    bool link(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader,
+    bool link(InfoLog &infoLog, const AttributeBindings &attributeBindings, Shader *fragmentShader, Shader *vertexShader,
               const std::vector<std::string>& transformFeedbackVaryings, GLenum transformFeedbackBufferMode);
     void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders);
 
@@ -194,8 +193,8 @@ class ProgramBinary : public RefCountObject
 
     void reset();
 
-    bool linkVaryings(InfoLog &infoLog, FragmentShader *fragmentShader, VertexShader *vertexShader);
-    bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
+    bool linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *vertexShader);
+    bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, Shader *fragmentShader, Shader *vertexShader);
 
     bool linkValidateVariablesBase(InfoLog &infoLog,
                                    const std::string &variableName,
@@ -206,7 +205,7 @@ class ProgramBinary : public RefCountObject
     bool linkValidateUniforms(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform);
     bool linkValidateVaryings(InfoLog &infoLog, const std::string &varyingName, const sh::Varying &vertexVarying, const sh::Varying &fragmentVarying);
     bool linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
-    bool linkUniforms(InfoLog &infoLog, const VertexShader &vertexShader, const FragmentShader &fragmentShader);
+    bool linkUniforms(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader);
     void defineUniformBase(GLenum shader, const sh::Uniform &uniform, unsigned int uniformRegister);
     void defineUniform(GLenum shader, const sh::ShaderVariable &uniform, const std::string &fullName, sh::HLSLBlockEncoder *encoder);
     bool indexSamplerUniform(const LinkedUniform &uniform, InfoLog &infoLog);
@@ -214,7 +213,7 @@ class ProgramBinary : public RefCountObject
     static bool assignSamplers(unsigned int startSamplerIndex, GLenum samplerType, unsigned int samplerCount,
                                Sampler *outArray, GLuint *usedRange, unsigned int limit);
     bool areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::InterfaceBlock &vertexInterfaceBlock, const sh::InterfaceBlock &fragmentInterfaceBlock);
-    bool linkUniformBlocks(InfoLog &infoLog, const VertexShader &vertexShader, const FragmentShader &fragmentShader);
+    bool linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader);
     bool gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std::vector<LinkedVarying> &linkedVaryings,
                                                const std::vector<std::string> &transformFeedbackVaryingNames,
                                                GLenum transformFeedbackBufferMode,
@@ -225,7 +224,7 @@ class ProgramBinary : public RefCountObject
                                    bool inRowMajorLayout);
     bool defineUniformBlock(InfoLog &infoLog, const Shader &shader, const sh::InterfaceBlock &interfaceBlock);
     bool assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex);
-    void defineOutputVariables(FragmentShader *fragmentShader);
+    void defineOutputVariables(Shader *fragmentShader);
     void initializeUniformStorage();
 
     template <typename T>
