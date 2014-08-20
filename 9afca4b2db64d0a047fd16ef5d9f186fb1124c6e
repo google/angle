@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "335d8d32_aa336f27",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-20T20:53:50Z",
+      "side": 1,
+      "message": "This should either update mWidth and mHeight or the corresponding functions should query those values from the OS.",
+      "range": {
+        "startLine": 478,
+        "startChar": 5,
+        "endLine": 478,
+        "endChar": 16
+      },
+      "revId": "9afca4b2db64d0a047fd16ef5d9f186fb1124c6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
