@@ -785,9 +785,10 @@ declaration
         context->symbolTable.pop();
     }
     | init_declarator_list SEMICOLON {
-        if ($1.intermAggregate)
-            $1.intermAggregate->setOp(EOpDeclaration);
-        $$ = $1.intermAggregate;
+        TIntermAggregate *aggNode = $1.intermAggregate;
+        if (aggNode && aggNode->getOp() == EOpNull)
+            aggNode->setOp(EOpDeclaration);
+        $$ = aggNode;
     }
     | PRECISION precision_qualifier type_specifier_no_prec SEMICOLON {
         if (($2 == EbpHigh) && (context->shaderType == GL_FRAGMENT_SHADER) && !context->fragmentPrecisionHigh) {
