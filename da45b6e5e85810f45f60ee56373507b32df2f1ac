@@ -22,6 +22,30 @@
       "revId": "da45b6e5e85810f45f60ee56373507b32df2f1ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d33271f0_2789e168",
+        "filename": "util/OSWindow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-20T20:49:27Z",
+      "side": 1,
+      "message": "Seems reasonable to me. I would have to go digging to figure out what an EGLDevice represented, but I know what this means at a glance.",
+      "parentUuid": "b3017df5_afd261dd",
+      "range": {
+        "startLine": 16,
+        "startChar": 6,
+        "endLine": 16,
+        "endChar": 14
+      },
+      "revId": "da45b6e5e85810f45f60ee56373507b32df2f1ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
