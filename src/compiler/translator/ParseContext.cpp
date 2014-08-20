@@ -1018,6 +1018,45 @@ void TParseContext::handlePragmaDirective(const TSourceLoc& loc, const char* nam
 //
 /////////////////////////////////////////////////////////////////////////////////
 
+const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
+                                                 const TString *name,
+                                                 const TSymbol *symbol)
+{
+    const TVariable *variable = NULL;
+
+    if (!symbol)
+    {
+        error(location, "undeclared identifier", name->c_str());
+        recover();
+    }
+    else if (!symbol->isVariable())
+    {
+        error(location, "variable expected", name->c_str());
+        recover();
+    }
+    else
+    {
+        variable = static_cast<const TVariable*>(symbol);
+
+        if (symbolTable.findBuiltIn(variable->getName(), shaderVersion) &&
+            !variable->getExtension().empty() &&
+            extensionErrorCheck(location, variable->getExtension()))
+        {
+            recover();
+        }
+    }
+
+    if (!variable)
+    {
+        TType type(EbtFloat, EbpUndefined);
+        TVariable *fakeVariable = new TVariable(name, type);
+        symbolTable.declare(fakeVariable);
+        variable = fakeVariable;
+    }
+
+    return variable;
+}
+
 //
 // Look up a function name in the symbol table, and make sure it is a function.
 //

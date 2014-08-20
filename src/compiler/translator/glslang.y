@@ -209,38 +209,7 @@ identifier
 variable_identifier
     : IDENTIFIER {
         // The symbol table search was done in the lexical phase
-        const TSymbol *symbol = $1.symbol;
-        const TVariable *variable = 0;
-
-        if (!symbol)
-        {
-            context->error(@1, "undeclared identifier", $1.string->c_str());
-            context->recover();
-        }
-        else if (!symbol->isVariable())
-        {
-            context->error(@1, "variable expected", $1.string->c_str());
-            context->recover();
-        }
-        else
-        {
-            variable = static_cast<const TVariable*>(symbol);
-
-            if (context->symbolTable.findBuiltIn(variable->getName(), context->shaderVersion) &&
-                !variable->getExtension().empty() &&
-                context->extensionErrorCheck(@1, variable->getExtension()))
-            {
-                context->recover();
-            }
-        }
-
-        if (!variable)
-        {
-            TType type(EbtFloat, EbpUndefined);
-            TVariable *fakeVariable = new TVariable($1.string, type);
-            context->symbolTable.declare(fakeVariable);
-            variable = fakeVariable;
-        }
+        const TVariable *variable = context->getNamedVariable(@1, $1.string, $1.symbol);
 
         if (variable->getType().getQualifier() == EvqConst)
         {
