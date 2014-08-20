@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53f1214f_54780c00",
+        "filename": "src/libGLESv2/Texture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-20T21:01:41Z",
+      "side": 1,
+      "message": "Lets make a helper function out of this too since it\u0027s used in every isSamplerComplete. IsPointSampled maybe.",
+      "range": {
+        "startLine": 272,
+        "startChar": 8,
+        "endLine": 273,
+        "endChar": 106
+      },
+      "revId": "83b215533bdb94d09029f7f03bd75591dcf36859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7315452e_0dfde116",
+        "filename": "src/libGLESv2/Texture.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-20T21:01:41Z",
+      "side": 1,
+      "message": "Can we replace this with the lower level parameters? Client version, extensions and texture caps should be enough. (or a TODO like Shannon mentioned)",
+      "range": {
+        "startLine": 121,
+        "startChar": 69,
+        "endLine": 121,
+        "endChar": 91
+      },
+      "revId": "83b215533bdb94d09029f7f03bd75591dcf36859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53f1214f_94e9f462",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 978,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-20T21:01:41Z",
+      "side": 1,
+      "message": "I\u0027d prefer an UNREACHABLE() since I don\u0027t think it\u0027s possible to bind these texture types to EGL surfaces.",
+      "range": {
+        "startLine": 970,
+        "startChar": 0,
+        "endLine": 978,
+        "endChar": 1
+      },
+      "revId": "83b215533bdb94d09029f7f03bd75591dcf36859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
