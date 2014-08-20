@@ -7,7 +7,7 @@
 #ifndef COMPILER_TRANSLATOR_REGENERATE_STRUCT_NAMES_H_
 #define COMPILER_TRANSLATOR_REGENERATE_STRUCT_NAMES_H_
 
-#include "compiler/translator/intermediate.h"
+#include "compiler/translator/Intermediate.h"
 #include "compiler/translator/SymbolTable.h"
 
 #include <set>
