@@ -128,7 +128,7 @@ TEST_F(BufferDataTest, HugeSetDataShouldNotCrash)
 
         if (data == NULL)
         {
-            allocSize <<= 1;
+            allocSize >>= 1;
         }
     }
 
