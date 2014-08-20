@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "53f1214f_b4bbd8a7",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-20T19:55:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76861367_31e3d0ea",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 48
+      },
+      "revId": "904be761cbb0eff9d52422b74c8703ed7f40d2ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36901b99_4f690d71",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 4
@@ -36,6 +60,24 @@
       "writtenOn": "2014-08-12T22:45:30Z",
       "side": 1,
       "message": "The default projects will also need to be regenerated with this change.",
+      "revId": "904be761cbb0eff9d52422b74c8703ed7f40d2ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53f1214f_94c8d439",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-20T19:55:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36901b99_4f690d71",
       "revId": "904be761cbb0eff9d52422b74c8703ed7f40d2ea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -130,6 +172,24 @@
     },
     {
       "key": {
+        "uuid": "7315452e_2d542586",
+        "filename": "src/libGLESv2/Error.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-20T19:55:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b626cb4d_33874802",
+      "revId": "904be761cbb0eff9d52422b74c8703ed7f40d2ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b626cb4d_5380c4ea",
         "filename": "src/libGLESv2/Error.h",
         "patchSetId": 4
@@ -141,6 +201,24 @@
       "writtenOn": "2014-08-12T22:45:30Z",
       "side": 1,
       "message": "Needs a description comment here.",
+      "revId": "904be761cbb0eff9d52422b74c8703ed7f40d2ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7315452e_0d5961be",
+        "filename": "src/libGLESv2/Error.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-20T19:55:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b626cb4d_5380c4ea",
       "revId": "904be761cbb0eff9d52422b74c8703ed7f40d2ea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
