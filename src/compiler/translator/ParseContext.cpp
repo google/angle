@@ -1347,6 +1347,32 @@ TIntermAggregate* TParseContext::parseSingleInitDeclaration(TPublicType &publicT
     }
 }
 
+TIntermAggregate* TParseContext::parseInvariantDeclaration(const TSourceLoc &invariantLoc,
+                                                           const TSourceLoc &identifierLoc,
+                                                           const TString *identifier,
+                                                           const TSymbol *symbol)
+{
+    if (globalErrorCheck(invariantLoc, symbolTable.atGlobalLevel(), "invariant varying"))
+    {
+        recover();
+    }
+
+    if (!symbol)
+    {
+        error(identifierLoc, "undeclared identifier declared as invariant", identifier->c_str());
+        recover();
+
+        return NULL;
+    }
+    else
+    {
+        TType type(EbtInvariant);
+        type.setQualifier(EvqInvariantVaryingOut);
+        TIntermSymbol *symbol = intermediate.addSymbol(0, *identifier, type, identifierLoc);
+        return intermediate.makeAggregate(symbol, identifierLoc);
+    }
+}
+
 TIntermAggregate* TParseContext::parseDeclarator(TPublicType &publicType, TIntermAggregate *aggregateDeclaration, TSymbol *identifierSymbol, const TSourceLoc& identifierLocation, const TString &identifier)
 {
     if (publicType.type == EbtInvariant && !identifierSymbol)

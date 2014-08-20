@@ -1072,21 +1072,8 @@ single_declaration
     }
     | INVARIANT IDENTIFIER {
         VERTEX_ONLY("invariant declaration", @1);
-        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "invariant varying"))
-            context->recover();
         $$.type.setBasic(EbtInvariant, EvqInvariantVaryingOut, @2);
-        if (!$2.symbol)
-        {
-            context->error(@2, "undeclared identifier declared as invariant", $2.string->c_str());
-            context->recover();
-            
-            $$.intermAggregate = 0;
-        }
-        else
-        {
-            TIntermSymbol *symbol = context->intermediate.addSymbol(0, *$2.string, TType($$.type), @2);
-            $$.intermAggregate = context->intermediate.makeAggregate(symbol, @2);
-        }
+        $$.intermAggregate = context->parseInvariantDeclaration(@1, @2, $2.string, $2.symbol);
     }
     ;
 
