@@ -282,6 +282,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\TransformFeedbackImpl.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderImpl.h">
+      <Filter>src\libGLESv2\renderer</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderExecutable.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
@@ -357,6 +360,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\IndexBuffer.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\ShaderD3D.cpp">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>
@@ -405,9 +411,15 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\VertexBuffer.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\TransformFeedbackD3D.cpp">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClCompile>
+=======
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\ShaderD3D.h">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClInclude>
+>>>>>>> Refactoring Shader objects
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\BufferD3D.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>

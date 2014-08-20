@@ -40,7 +40,6 @@ Renderer::Renderer(egl::Display *display)
 
 Renderer::~Renderer()
 {
-    gl::Shader::releaseCompiler();
 }
 
 const gl::Caps &Renderer::getRendererCaps() const
