@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "333e6deb_dfd2bbde",
+        "filename": "util/EGLWindow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-21T17:00:27Z",
+      "side": 1,
+      "message": "again, meant to put the question about naming on EGLWindow, sorry.",
+      "parentUuid": "53f1214f_d46bfc29",
+      "range": {
+        "startLine": 32,
+        "startChar": 6,
+        "endLine": 32,
+        "endChar": 15
+      },
+      "revId": "da45b6e5e85810f45f60ee56373507b32df2f1ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b3017df5_afd261dd",
         "filename": "util/OSWindow.h",
         "patchSetId": 1
