@@ -43,7 +43,7 @@ class ANGLETest : public testing::Test
   public:
     static bool InitTestWindow();
     static bool DestroyTestWindow();
-    static bool ReizeWindow(int width, int height);
+    static bool ResizeWindow(int width, int height);
 
   protected:
     virtual void SetUp();

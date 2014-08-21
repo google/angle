@@ -24,7 +24,7 @@ EGLNativeDisplayType ANGLETest::mNativeDisplay = 0;
 
 void ANGLETest::SetUp()
 {
-    ReizeWindow(mWidth, mHeight);
+    ResizeWindow(mWidth, mHeight);
     if (!createEGLContext())
     {
         FAIL() << "egl context creation failed.";
