@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d3a7d188_39f7b3f1",
+        "filename": "tests/angle_tests/ANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-21T23:15:18Z",
+      "side": 1,
+      "message": "Should be SetWindowLongPtr for 64 bit compatibility.",
+      "range": {
+        "startLine": 402,
+        "startChar": 4,
+        "endLine": 402,
+        "endChar": 17
+      },
+      "revId": "ceb5cebd3c74b241016014072747739cbbb95966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
