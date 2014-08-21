@@ -22,6 +22,30 @@
       "revId": "758ba2e6ac4d847250cdb1b53cae230d3669b926",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3a41d88_c3b796d5",
+        "filename": "samples/angle/sample_util/SampleApplication.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-21T17:05:44Z",
+      "side": 1,
+      "message": "this was intentional, I don\u0027t think it\u0027s good practice to use complex initialization and malloc logic in initializer lists. I recall getting a warning about it from some tool at one point.",
+      "parentUuid": "73346507_a10a3eb2",
+      "range": {
+        "startLine": 15,
+        "startChar": 4,
+        "endLine": 17,
+        "endChar": 38
+      },
+      "revId": "758ba2e6ac4d847250cdb1b53cae230d3669b926",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
