@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3a41d88_23a30a9f",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-21T17:04:06Z",
+      "side": 1,
+      "message": "No need for this, (ShowWindow(mNativeWindow, isVisible ? SW_SHOW : SW_HIDE) \u003d\u003d TRUE) is a bool.",
+      "range": {
+        "startLine": 499,
+        "startChar": 79,
+        "endLine": 499,
+        "endChar": 93
+      },
+      "revId": "65c7d8d19e2ef825f5b0a4563a087ad563075e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
