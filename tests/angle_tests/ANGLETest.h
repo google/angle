@@ -98,8 +98,8 @@ class ANGLETest : public testing::Test
     EGLConfig mConfig;
     EGLSurface mSurface;
     EGLContext mContext;
+    EGLDisplay mDisplay;
 
-    static EGLDisplay mDisplay;
     static EGLNativeWindowType mNativeWindow;
     static EGLNativeDisplayType mNativeDisplay;
 };

@@ -11,11 +11,14 @@ ANGLETest::ANGLETest()
       mAlphaBits(-1),
       mDepthBits(-1),
       mStencilBits(-1),
-      mMultisample(false)
+      mMultisample(false),
+      mConfig(0),
+      mSurface(EGL_NO_SURFACE),
+      mContext(EGL_NO_CONTEXT),
+      mDisplay(EGL_NO_DISPLAY)
 {
 }
 
-EGLDisplay ANGLETest::mDisplay = 0;
 EGLNativeWindowType ANGLETest::mNativeWindow = 0;
 EGLNativeDisplayType ANGLETest::mNativeDisplay = 0;
 
