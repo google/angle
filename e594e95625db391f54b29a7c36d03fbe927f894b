@@ -22,6 +22,30 @@
       "revId": "e594e95625db391f54b29a7c36d03fbe927f894b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73346507_6484c451",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-21T20:40:52Z",
+      "side": 1,
+      "message": "OK. (this was intentional, as we do use this style in 4 other places.)",
+      "parentUuid": "b3a41d88_23b0eac5",
+      "range": {
+        "startLine": 652,
+        "startChar": 35,
+        "endLine": 652,
+        "endChar": 37
+      },
+      "revId": "e594e95625db391f54b29a7c36d03fbe927f894b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
