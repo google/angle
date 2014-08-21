@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73346507_a10a3eb2",
+        "filename": "samples/angle/sample_util/SampleApplication.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-21T17:02:33Z",
+      "side": 1,
+      "message": "Can all of these be moved to the initializer list?",
+      "range": {
+        "startLine": 15,
+        "startChar": 4,
+        "endLine": 17,
+        "endChar": 38
+      },
+      "revId": "758ba2e6ac4d847250cdb1b53cae230d3669b926",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
