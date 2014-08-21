@@ -40,7 +40,6 @@ class EGLWindow
 
     void swap();
 
-    OSWindow *getWindow() const;
     EGLConfig getConfig() const;
     EGLDisplay getDisplay() const;
     EGLSurface getSurface() const;
@@ -48,7 +47,7 @@ class EGLWindow
     size_t getWidth() const { return mWidth; }
     size_t getHeight() const { return mHeight; }
 
-    bool initializeGL();
+    bool initializeGL(const OSWindow *osWindow);
     void destroyGL();
 
   private:
@@ -63,8 +62,6 @@ class EGLWindow
     EGLint mRequestedRenderer;
     size_t mWidth;
     size_t mHeight;
-
-    std::unique_ptr<OSWindow> mOSWindow;
 };
 
 #endif // UTIL_EGLWINDOW_H_

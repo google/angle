@@ -10,10 +10,11 @@
 SampleApplication::SampleApplication(const std::string& name, size_t width, size_t height,
                                      EGLint glesMajorVersion, EGLint requestedRenderer)
     : mName(name),
-      mRunning(false),
-      mTimer(CreateTimer())
+      mRunning(false)
 {
     mEGLWindow.reset(new EGLWindow(width, height, glesMajorVersion, requestedRenderer));
+    mTimer.reset(CreateTimer());
+    mOSWindow.reset(CreateOSWindow());
 }
 
 SampleApplication::~SampleApplication()
@@ -44,7 +45,7 @@ void SampleApplication::swap()
 
 OSWindow *SampleApplication::getWindow() const
 {
-    return mEGLWindow->getWindow();
+    return mOSWindow.get();
 }
 
 EGLConfig SampleApplication::getConfig() const
@@ -69,12 +70,12 @@ EGLContext SampleApplication::getContext() const
 
 int SampleApplication::run()
 {
-    if (!getWindow()->initialize(mName, mEGLWindow->getWidth(), mEGLWindow->getHeight()))
+    if (!mOSWindow->initialize(mName, mEGLWindow->getWidth(), mEGLWindow->getHeight()))
     {
         return -1;
     }
 
-    if (!mEGLWindow->initializeGL())
+    if (!mEGLWindow->initializeGL(mOSWindow.get()))
     {
         return -1;
     }
@@ -117,14 +118,14 @@ int SampleApplication::run()
         draw();
         swap();
 
-        getWindow()->messageLoop();
+        mOSWindow->messageLoop();
 
         prevTime = elapsedTime;
     }
 
     destroy();
     mEGLWindow->destroyGL();
-    getWindow()->destroy();
+    mOSWindow->destroy();
 
     return result;
 }
@@ -136,5 +137,5 @@ void SampleApplication::exit()
 
 bool SampleApplication::popEvent(Event *event)
 {
-    return getWindow()->popEvent(event);
+    return mOSWindow->popEvent(event);
 }

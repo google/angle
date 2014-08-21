@@ -24,8 +24,7 @@ EGLWindow::EGLWindow(size_t width, size_t height,
       mClientVersion(glesMajorVersion),
       mRequestedRenderer(requestedRenderer),
       mWidth(width),
-      mHeight(height),
-      mOSWindow(CreateOSWindow())
+      mHeight(height)
 {
 }
 
@@ -37,11 +36,6 @@ EGLWindow::~EGLWindow()
 void EGLWindow::swap()
 {
     eglSwapBuffers(mDisplay, mSurface);
-}
-
-OSWindow *EGLWindow::getWindow() const
-{
-    return mOSWindow.get();
 }
 
 EGLConfig EGLWindow::getConfig() const
@@ -64,7 +58,7 @@ EGLContext EGLWindow::getContext() const
     return mContext;
 }
 
-bool EGLWindow::initializeGL()
+bool EGLWindow::initializeGL(const OSWindow *osWindow)
 {
     PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
     if (!eglGetPlatformDisplayEXT)
@@ -78,7 +72,7 @@ bool EGLWindow::initializeGL()
         EGL_NONE,
     };
 
-    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, mOSWindow->getNativeDisplay(), displayAttributes);
+    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, osWindow->getNativeDisplay(), displayAttributes);
     if (mDisplay == EGL_NO_DISPLAY)
     {
         destroyGL();
@@ -124,7 +118,7 @@ bool EGLWindow::initializeGL()
         EGL_NONE, EGL_NONE,
     };
 
-    mSurface = eglCreateWindowSurface(mDisplay, mConfig, mOSWindow->getNativeWindow(), surfaceAttributes);
+    mSurface = eglCreateWindowSurface(mDisplay, mConfig, osWindow->getNativeWindow(), surfaceAttributes);
     if (mSurface == EGL_NO_SURFACE)
     {
         eglGetError(); // Clear error and try again

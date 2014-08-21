@@ -52,6 +52,7 @@ class SampleApplication
 
     std::unique_ptr<Timer> mTimer;
     std::unique_ptr<EGLWindow> mEGLWindow;
+    std::unique_ptr<OSWindow> mOSWindow;
 };
 
 #endif // SAMPLE_UTIL_SAMPLE_APPLICATION_H
