@@ -1613,7 +1613,7 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments, const TType 
 
         for (size_t i = 0; i < fields.size(); i++)
         {
-            if ((*args)[i]->getAsTyped()->getType() != *fields[i]->type())
+            if (i >= args->size() || (*args)[i]->getAsTyped()->getType() != *fields[i]->type())
             {
                 error(line, "Structure constructor arguments do not match structure fields", "Error");
                 recover();
