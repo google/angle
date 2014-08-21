@@ -69,6 +69,30 @@
       "revId": "da45b6e5e85810f45f60ee56373507b32df2f1ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3a41d88_83dafe1f",
+        "filename": "util/OSWindow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-21T16:57:34Z",
+      "side": 1,
+      "message": "What about NativeWindow?",
+      "parentUuid": "d33271f0_2789e168",
+      "range": {
+        "startLine": 16,
+        "startChar": 6,
+        "endLine": 16,
+        "endChar": 14
+      },
+      "revId": "da45b6e5e85810f45f60ee56373507b32df2f1ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
