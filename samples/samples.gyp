@@ -54,6 +54,7 @@
                     [
                         '../src/angle.gyp:libEGL',
                         '../src/angle.gyp:libGLESv2',
+                        '../util/util.gyp:angle_util',
                     ],
                     'include_dirs':
                     [
@@ -72,6 +73,7 @@
                         [
                             '../include',
                             'angle/sample_util',
+                            '../util',
                         ],
                     },
                 },

@@ -19,6 +19,9 @@ tests/*.vcxproj.filters
 build/*.sln
 build/*.vcxproj
 build/*.vcxproj.filters
+util/*.sln
+util/*.vcxproj
+util/*.vcxproj.filters
 *.vcxproj.user
 patches-*
 *.target.mk

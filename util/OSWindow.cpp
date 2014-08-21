@@ -4,25 +4,25 @@
 // found in the LICENSE file.
 //
 
-#include "Window.h"
+#include "OSWindow.h"
 
-Window::Window()
+OSWindow::OSWindow()
     : mWidth(0),
       mHeight(0)
 {
 }
 
-int Window::getWidth() const
+int OSWindow::getWidth() const
 {
     return mWidth;
 }
 
-int Window::getHeight() const
+int OSWindow::getHeight() const
 {
     return mHeight;
 }
 
-bool Window::popEvent(Event *event)
+bool OSWindow::popEvent(Event *event)
 {
     if (mEvents.size() > 0 && event)
     {
@@ -36,7 +36,7 @@ bool Window::popEvent(Event *event)
     }
 }
 
-void Window::pushEvent(Event event)
+void OSWindow::pushEvent(Event event)
 {
     switch (event.Type)
     {

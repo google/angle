@@ -7,11 +7,11 @@
 #ifndef SAMPLE_UTIL_WIN32_WINDOW_H
 #define SAMPLE_UTIL_WIN32_WINDOW_H
 
-#include "Window.h"
+#include "OSWindow.h"
 #include <string>
 #include <windows.h>
 
-class Win32Window : public Window
+class Win32Window : public OSWindow
 {
   public:
     Win32Window();

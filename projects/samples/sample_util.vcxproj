@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;..\..\util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -81,14 +81,14 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;..\..\util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;..\..\util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -119,13 +119,13 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;..\..\util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;..\..\util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -155,14 +155,14 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;..\..\util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;..\..\util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -192,7 +192,7 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\samples\angle\sample_util;..\..\util;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
     </ResourceCompile>
   </ItemDefinitionGroup>
@@ -200,36 +200,24 @@
     <None Include="..\..\samples\samples.gyp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\samples\angle\sample_util\Window.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\path_utils.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\Vector.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\keyboard.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\shader_utils.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\Matrix.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\Timer.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\mouse.h"/>
+    <ClInclude Include="..\..\samples\angle\sample_util\shader_utils.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\geometry_utils.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\Event.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\random_utils.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\tga_utils.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\SampleApplication.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\texture_utils.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\win32\Win32Timer.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\win32\Win32Window.h"/>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\samples\angle\sample_util\Window.cpp"/>
     <ClCompile Include="..\..\samples\angle\sample_util\texture_utils.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\Vector.cpp"/>
+    <ClCompile Include="..\..\samples\angle\sample_util\tga_utils.cpp"/>
     <ClCompile Include="..\..\samples\angle\sample_util\shader_utils.cpp"/>
     <ClCompile Include="..\..\samples\angle\sample_util\SampleApplication.cpp"/>
     <ClCompile Include="..\..\samples\angle\sample_util\geometry_utils.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\tga_utils.cpp"/>
+    <ClCompile Include="..\..\samples\angle\sample_util\Vector.cpp"/>
     <ClCompile Include="..\..\samples\angle\sample_util\random_utils.cpp"/>
     <ClCompile Include="..\..\samples\angle\sample_util\Matrix.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\win32\Win32Timer.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\win32\Win32Window.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\win32\Win32_path_utils.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\libEGL.vcxproj">

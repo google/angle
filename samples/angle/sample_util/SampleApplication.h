@@ -7,22 +7,18 @@
 #ifndef SAMPLE_UTIL_SAMPLE_APPLICATION_H
 #define SAMPLE_UTIL_SAMPLE_APPLICATION_H
 
-#define GL_GLEXT_PROTOTYPES
-
-#include <GLES3/gl3.h>
-#include <GLES3/gl3ext.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-#include "Window.h"
+#include "OSWindow.h"
 #include "Timer.h"
 
 #include <string>
 #include <list>
 #include <cstdint>
 #include <memory>
+
+class EGLWindow;
 
 class SampleApplication
 {
@@ -39,7 +35,7 @@ class SampleApplication
 
     virtual void swap();
 
-    Window *getWindow() const;
+    OSWindow *getWindow() const;
     EGLConfig getConfig() const;
     EGLDisplay getDisplay() const;
     EGLSurface getSurface() const;
@@ -51,24 +47,11 @@ class SampleApplication
     void exit();
 
   private:
-    bool initializeGL();
-    void destroyGL();
-
-    EGLConfig mConfig;
-    EGLDisplay mDisplay;
-    EGLSurface mSurface;
-    EGLContext mContext;
-
-    GLuint mClientVersion;
-    EGLint mRequestedRenderer;
-    size_t mWidth;
-    size_t mHeight;
     std::string mName;
-
     bool mRunning;
 
     std::unique_ptr<Timer> mTimer;
-    std::unique_ptr<Window> mWindow;
+    std::unique_ptr<EGLWindow> mEGLWindow;
 };
 
 #endif // SAMPLE_UTIL_SAMPLE_APPLICATION_H

@@ -19,6 +19,10 @@
                 {
                     'dependencies': [ '../tests/tests.gyp:*', ],
                 }],
+                ['angle_build_samples==1 or angle_build_tests==1',
+                {
+                    'dependencies': [ '../util/util.gyp:*', ],
+                }],
             ],
         },
     ],
