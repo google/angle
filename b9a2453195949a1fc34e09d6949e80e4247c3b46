@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73b9c5d7_9c0b0949",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-22T21:26:17Z",
+      "side": 1,
+      "message": "I think we should change this stuff to be ASSERTs to be consistent with ANGLE style. If these are real validation errors, we should catch them at the API level.",
+      "range": {
+        "startLine": 1603,
+        "startChar": 27,
+        "endLine": 1603,
+        "endChar": 74
+      },
+      "revId": "b9a2453195949a1fc34e09d6949e80e4247c3b46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93b479df_fdeb2310",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1608,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-22T21:26:17Z",
+      "side": 1,
+      "message": "ditto here",
+      "range": {
+        "startLine": 1608,
+        "startChar": 4,
+        "endLine": 1608,
+        "endChar": 11
+      },
+      "revId": "b9a2453195949a1fc34e09d6949e80e4247c3b46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
