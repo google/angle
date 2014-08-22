@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "73b9c5d7_59a1834c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-22T18:34:15Z",
+      "side": 1,
+      "message": "can you include the angle issue, and also in a second paragraph briefly (one or two sentences) describe the intent of the patch? hope this won\u0027t slow you down too much, just would be helpful for posterity.",
+      "revId": "8472a030708fb2de4f598ddef4c6e65ec7ef2c57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "13f169a2_632b2007",
         "filename": "src/libGLESv2/Shader.h",
         "patchSetId": 2
@@ -19,6 +36,116 @@
         "endLine": 98,
         "endChar": 14
       },
+      "revId": "8472a030708fb2de4f598ddef4c6e65ec7ef2c57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93b479df_7a19d90e",
+        "filename": "src/libGLESv2/Shader.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-22T18:34:15Z",
+      "side": 1,
+      "message": "+1... if we can eventually get rid of gl::VertexShader and gl::FragmentShader I\u0027d be happy.",
+      "parentUuid": "13f169a2_632b2007",
+      "range": {
+        "startLine": 98,
+        "startChar": 9,
+        "endLine": 98,
+        "endChar": 14
+      },
+      "revId": "8472a030708fb2de4f598ddef4c6e65ec7ef2c57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53ae8194_b887f9c2",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3641,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-22T18:34:15Z",
+      "side": 1,
+      "message": "happy to see this change.",
+      "range": {
+        "startLine": 3641,
+        "startChar": 17,
+        "endLine": 3641,
+        "endChar": 38
+      },
+      "revId": "8472a030708fb2de4f598ddef4c6e65ec7ef2c57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93b479df_ba0a91b2",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-22T18:34:15Z",
+      "side": 1,
+      "message": "nit: no indentation here",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 4
+      },
+      "revId": "8472a030708fb2de4f598ddef4c6e65ec7ef2c57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73b9c5d7_b93c5f4b",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-22T18:34:15Z",
+      "side": 1,
+      "message": "nit: no indentation here",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 4
+      },
+      "revId": "8472a030708fb2de4f598ddef4c6e65ec7ef2c57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53ae8194_78a64167",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-22T18:34:15Z",
+      "side": 1,
+      "message": "nit: two spaces indent for scope labels",
       "revId": "8472a030708fb2de4f598ddef4c6e65ec7ef2c57",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
