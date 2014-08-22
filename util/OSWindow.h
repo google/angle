@@ -34,6 +34,7 @@ class OSWindow
 
     virtual void setMousePosition(int x, int y) = 0;
     virtual bool resize(int width, int height) = 0;
+    virtual bool setVisible(bool isVisible) = 0;
 
   protected:
     int mWidth;

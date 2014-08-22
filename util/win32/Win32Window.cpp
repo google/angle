@@ -493,3 +493,8 @@ bool Win32Window::resize(int width, int height)
 
     return true;
 }
+
+bool Win32Window::setVisible(bool isVisible)
+{
+    return (ShowWindow(mNativeWindow, isVisible ? SW_SHOW : SW_HIDE) == TRUE);
+}
