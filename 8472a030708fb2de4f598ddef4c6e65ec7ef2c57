@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13f169a2_632b2007",
+        "filename": "src/libGLESv2/Shader.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-22T18:25:26Z",
+      "side": 1,
+      "message": "I want to go through and change all instances of VertexShader and FragmentShader to accept Shader instead (or possibly VertexShaderD3D/FragmentShaderD3D, depending on context.) That would add even more bulk to an already large patch, however, so I\u0027m deferring it to a follow-up CL.",
+      "range": {
+        "startLine": 98,
+        "startChar": 9,
+        "endLine": 98,
+        "endChar": 14
+      },
+      "revId": "8472a030708fb2de4f598ddef4c6e65ec7ef2c57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
