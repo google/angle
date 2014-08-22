@@ -8,7 +8,7 @@
 
 #include "libGLESv2/common_includes.h"
 
-#include "libGLESv2/DynamicHLSL.h"
+#include "libGLESv2/renderer/d3d/DynamicHLSL.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
@@ -20,6 +20,8 @@
 
 // For use with ArrayString, see angleutils.h
 META_ASSERT(GL_INVALID_INDEX == UINT_MAX);
+
+using namespace gl;
 
 namespace gl_d3d
 {
@@ -71,7 +73,7 @@ std::string HLSLTypeString(GLenum type)
 
 }
 
-namespace gl
+namespace rx
 {
 
 const std::string VERTEX_ATTRIBUTE_STUB_STRING = "@@ VERTEX ATTRIBUTES @@";

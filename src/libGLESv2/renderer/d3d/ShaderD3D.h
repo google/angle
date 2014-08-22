@@ -12,18 +12,13 @@
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/renderer/ShaderImpl.h"
 
-namespace gl
-{
-class DynamicHLSL;
-}
-
 namespace rx
 {
 class Renderer;
 
 class ShaderD3D : public ShaderImpl
 {
-    friend class gl::DynamicHLSL;
+    friend class DynamicHLSL;
 
   public:
     ShaderD3D(rx::Renderer *renderer);
@@ -95,7 +90,7 @@ class ShaderD3D : public ShaderImpl
 
 class VertexShaderD3D : public ShaderD3D
 {
-    friend class gl::DynamicHLSL;
+    friend class DynamicHLSL;
 
   public:
     VertexShaderD3D(rx::Renderer *renderer);
@@ -120,7 +115,7 @@ class VertexShaderD3D : public ShaderD3D
 
 class FragmentShaderD3D : public ShaderD3D
 {
-    friend class gl::DynamicHLSL;
+    friend class DynamicHLSL;
 
   public:
     FragmentShaderD3D(rx::Renderer *renderer);

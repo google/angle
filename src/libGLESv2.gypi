@@ -48,8 +48,6 @@
             'libGLESv2/Caps.h',
             'libGLESv2/Context.cpp',
             'libGLESv2/Context.h',
-            'libGLESv2/DynamicHLSL.cpp',
-            'libGLESv2/DynamicHLSL.h',
             'libGLESv2/Error.cpp',
             'libGLESv2/Error.h',
             'libGLESv2/Fence.cpp',
@@ -145,6 +143,8 @@
         [
             'libGLESv2/renderer/d3d/BufferD3D.cpp',
             'libGLESv2/renderer/d3d/BufferD3D.h',
+            'libGLESv2/renderer/d3d/DynamicHLSL.cpp',
+            'libGLESv2/renderer/d3d/DynamicHLSL.h',
             'libGLESv2/renderer/d3d/HLSLCompiler.cpp',
             'libGLESv2/renderer/d3d/HLSLCompiler.h',
             'libGLESv2/renderer/d3d/ImageD3D.cpp',

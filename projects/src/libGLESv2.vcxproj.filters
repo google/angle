@@ -81,9 +81,6 @@
     <ClInclude Include="..\..\src\libGLESv2\resource.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\libGLESv2\DynamicHLSL.cpp">
-      <Filter>src\libGLESv2</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\Sampler.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -201,9 +198,6 @@
     <ClCompile Include="..\..\src\libGLESv2\Context.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\libGLESv2\DynamicHLSL.h">
-      <Filter>src\libGLESv2</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\VertexAttribute.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -351,12 +345,18 @@
     <None Include="..\..\src\libGLESv2\renderer\generatemip.inl">
       <Filter>src\libGLESv2\renderer</Filter>
     </None>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\DynamicHLSL.h">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.cpp">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\IndexBuffer.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\DynamicHLSL.cpp">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\ShaderD3D.cpp">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClCompile>
@@ -621,9 +621,6 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgba2dui11ps.h">
       <Filter>src\libGLESv2\renderer\d3d\d3d11\shaders\compiled</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgb3dui11ps.h">
-      <Filter>src\libGLESv2\renderer\d3d\d3d11\shaders\compiled</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughr2di11ps.h">
       <Filter>src\libGLESv2\renderer\d3d\d3d11\shaders\compiled</Filter>
     </ClInclude>
@@ -658,6 +655,9 @@
       <Filter>src\libGLESv2\renderer\d3d\d3d11\shaders\compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\swizzlei3dps.h">
+      <Filter>src\libGLESv2\renderer\d3d\d3d11\shaders\compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgb3dui11ps.h">
       <Filter>src\libGLESv2\renderer\d3d\d3d11\shaders\compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\swizzlef2darrayps.h">

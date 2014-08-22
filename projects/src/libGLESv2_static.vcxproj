@@ -224,7 +224,6 @@
     <ClInclude Include="..\..\src\libGLESv2\Query.h"/>
     <ClInclude Include="..\..\src\libGLESv2\ResourceManager.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Texture.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\DynamicHLSL.h"/>
     <ClInclude Include="..\..\src\libGLESv2\VertexAttribute.h"/>
     <ClInclude Include="..\..\src\libGLESv2\validationES2.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Fence.h"/>
@@ -290,7 +289,6 @@
     <ClCompile Include="..\..\src\libGLESv2\State.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Error.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\validationES2.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\DynamicHLSL.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\HandleAllocator.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\queryconversions.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\libGLESv2.cpp"/>

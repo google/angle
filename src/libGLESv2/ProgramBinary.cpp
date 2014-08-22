@@ -22,11 +22,11 @@
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/d3d/DynamicHLSL.h"
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
 #include "libGLESv2/renderer/d3d/VertexDataManager.h"
 #include "libGLESv2/Context.h"
 #include "libGLESv2/Buffer.h"
-#include "libGLESv2/DynamicHLSL.h"
 #include "common/blocklayout.h"
 
 #undef near
@@ -212,7 +212,7 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer)
         mSamplersVS[index].active = false;
     }
 
-    mDynamicHLSL = new DynamicHLSL(renderer);
+    mDynamicHLSL = new rx::DynamicHLSL(renderer);
 }
 
 ProgramBinary::~ProgramBinary()
@@ -1517,7 +1517,7 @@ bool ProgramBinary::save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GL
     stream.writeInt(mPixelShaderKey.size());
     for (size_t pixelShaderKeyIndex = 0; pixelShaderKeyIndex < mPixelShaderKey.size(); pixelShaderKeyIndex++)
     {
-        const PixelShaderOuputVariable &variable = mPixelShaderKey[pixelShaderKeyIndex];
+        const rx::PixelShaderOuputVariable &variable = mPixelShaderKey[pixelShaderKeyIndex];
         stream.writeInt(variable.type);
         stream.writeString(variable.name);
         stream.writeString(variable.source);
@@ -1633,7 +1633,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     mVertexWorkarounds = vertexShaderD3D->getD3DWorkarounds();
 
     // Map the varyings to the register file
-    VaryingPacking packing = { NULL };
+    rx::VaryingPacking packing = { NULL };
     int registers = mDynamicHLSL->packVaryings(infoLog, packing, fragmentShaderD3D, vertexShaderD3D, transformFeedbackVaryings);
 
     if (registers < 0)

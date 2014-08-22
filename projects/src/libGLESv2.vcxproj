@@ -232,7 +232,6 @@
     <ClInclude Include="..\..\src\libGLESv2\HandleAllocator.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Error.h"/>
     <ClInclude Include="..\..\src\libGLESv2\ResourceManager.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\DynamicHLSL.h"/>
     <ClInclude Include="..\..\src\libGLESv2\VertexAttribute.h"/>
     <ClInclude Include="..\..\src\libGLESv2\validationES2.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Fence.h"/>
@@ -263,6 +262,7 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\generatemip.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\RenderTarget.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\vertexconversion.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\DynamicHLSL.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\IndexBuffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\ImageD3D.h"/>
@@ -323,7 +323,6 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\swizzlei2dps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrg2d11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgba2dui11ps.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgb3dui11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughr2di11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgba3d11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughlum3d11ps.h"/>
@@ -336,6 +335,7 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughlum2d11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgb2dui11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\swizzlei3dps.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgb3dui11ps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\swizzlef2darrayps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\buffertotexture11_vs.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\d3d11\shaders\compiled\passthroughrgb3di11ps.h"/>
@@ -396,7 +396,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\libGLESv2\Error.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\validationES2.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\DynamicHLSL.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\HandleAllocator.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\queryconversions.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\formatutils.cpp"/>
@@ -432,6 +431,7 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\Renderer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\IndexRangeCache.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\DynamicHLSL.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\ShaderD3D.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\BufferD3D.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\TransformFeedbackD3D.cpp"/>
