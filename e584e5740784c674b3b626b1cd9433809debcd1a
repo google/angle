@@ -22,6 +22,30 @@
       "revId": "e584e5740784c674b3b626b1cd9433809debcd1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93b479df_3a312175",
+        "filename": "tests/angle_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-22T18:54:21Z",
+      "side": 1,
+      "message": "Aha, yes, look in ANGLETest.h. That no longer includes the EGL headers, which in turn include the windows headers. :) We should eventually replace Sleep() with something cross-platform in the utils project.",
+      "parentUuid": "b3a41d88_e6b420d3",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 9
+      },
+      "revId": "e584e5740784c674b3b626b1cd9433809debcd1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
