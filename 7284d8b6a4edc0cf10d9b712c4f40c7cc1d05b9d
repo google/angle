@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53076152_ad6cdad4",
+        "filename": "src/libGLESv2/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-22T22:14:58Z",
+      "side": 1,
+      "message": "Typically not a fan of \"using\" but my goodness that\u0027s a whole lot of gl::\u0027s that it avoids adding.",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 19
+      },
+      "revId": "7284d8b6a4edc0cf10d9b712c4f40c7cc1d05b9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
