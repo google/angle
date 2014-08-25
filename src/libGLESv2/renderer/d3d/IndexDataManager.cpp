@@ -125,17 +125,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
           default: UNREACHABLE(); alignedOffset = false;
         }
 
-        // check for integer overflows
-        if (static_cast<unsigned int>(count) > (std::numeric_limits<unsigned int>::max() / typeInfo.bytes) ||
-            typeInfo.bytes * static_cast<unsigned int>(count) + offset < offset)
-        {
-            return GL_OUT_OF_MEMORY;
-        }
-
-        if (typeInfo.bytes * static_cast<unsigned int>(count) + offset > storage->getSize())
-        {
-            return GL_INVALID_OPERATION;
-        }
+        ASSERT(typeInfo.bytes * static_cast<unsigned int>(count) + offset <= storage->getSize());
 
         indices = static_cast<const GLubyte*>(storage->getData()) + offset;
     }
@@ -197,11 +187,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
             }
         }
 
-        if (!indexBuffer)
-        {
-            ERR("No valid index buffer.");
-            return GL_INVALID_OPERATION;
-        }
+        ASSERT(indexBuffer);
 
         if (convertCount > std::numeric_limits<unsigned int>::max() / destTypeInfo.bytes)
         {

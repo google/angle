@@ -58,7 +58,7 @@ class Buffer : public RefCountObject
     rx::BufferImpl *mBuffer;
 
     GLenum mUsage;
-    GLsizeiptr mSize;
+    GLint64 mSize;
     GLint mAccessFlags;
     GLboolean mMapped;
     GLvoid *mMapPointer;
