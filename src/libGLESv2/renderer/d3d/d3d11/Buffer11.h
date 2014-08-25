@@ -20,11 +20,16 @@ class Renderer11;
 enum BufferUsage
 {
     BUFFER_USAGE_STAGING,
-    BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK,
+    BUFFER_USAGE_VERTEX,
+    BUFFER_USAGE_TRANSFORM_FEEDBACK,
     BUFFER_USAGE_INDEX,
     BUFFER_USAGE_PIXEL_UNPACK,
     BUFFER_USAGE_PIXEL_PACK,
     BUFFER_USAGE_UNIFORM,
+
+    // Internal flags
+    BUFFER_USAGE_VERTEX_DYNAMIC,
+    BUFFER_USAGE_INDEX_DYNAMIC
 };
 
 struct PackPixelsParams
@@ -78,6 +83,13 @@ class Buffer11 : public BufferD3D
     class NativeBuffer11;
     class PackStorage11;
 
+    void markBufferUsage();
+    NativeBuffer11 *getStagingBuffer();
+    PackStorage11 *getPackStorage();
+
+    BufferStorage11 *getBufferStorage(BufferUsage usage);
+    BufferStorage11 *getLatestBufferStorage() const;
+
     rx::Renderer11 *mRenderer;
     size_t mSize;
 
@@ -92,12 +104,9 @@ class Buffer11 : public BufferD3D
     DataRevision mResolvedDataRevision;
     unsigned int mReadUsageCount;
 
-    void markBufferUsage();
-    NativeBuffer11 *getStagingBuffer();
-    PackStorage11 *getPackStorage();
-
-    BufferStorage11 *getBufferStorage(BufferUsage usage);
-    BufferStorage11 *getLatestBufferStorage() const;
+    MemoryBuffer mDynamicData;
+    bool mDynamicUsage;
+    Range<size_t> mDynamicDirtyRange;
 };
 
 }

@@ -968,7 +968,7 @@ void Renderer11::applyTransformFeedbackBuffers(gl::Buffer *transformFeedbackBuff
         if (transformFeedbackBuffers[i])
         {
             Buffer11 *storage = Buffer11::makeBuffer11(transformFeedbackBuffers[i]->getImplementation());
-            ID3D11Buffer *buffer = storage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
+            ID3D11Buffer *buffer = storage->getBuffer(BUFFER_USAGE_TRANSFORM_FEEDBACK);
 
             d3dBuffers[i] = buffer;
             d3dOffsets[i] = (mAppliedTFBuffers[i] != buffer) ? static_cast<UINT>(offsets[i]) : -1;

@@ -507,12 +507,12 @@ template <typename T>
 struct Range
 {
     Range() {}
-    Range(T lo, T hi) : start(lo), end(hi) { ASSERT(lo <= hi); }
+    Range(T lo, T hi) : start(lo), end(hi) { }
 
     T start;
     T end;
 
-    T length() const { return end - start; }
+    T length() const { return (end > start ? (end - start) : 0); }
 };
 
 typedef Range<int> RangeI;
