@@ -1691,6 +1691,11 @@ bool ValidateGetUniformBase(const gl::Context *context, GLuint program, GLint lo
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
+    if (!programBinary->isValidUniformLocation(location))
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
     return true;
 }
 
