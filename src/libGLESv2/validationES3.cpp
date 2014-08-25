@@ -1215,25 +1215,7 @@ bool ValidateGetUniformuiv(const gl::Context *context, GLuint program, GLint loc
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (program == 0)
-    {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    gl::Program *programObject = context->getProgram(program);
-
-    if (!programObject || !programObject->isLinked())
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-    if (!programBinary)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    return true;
+    return ValidateGetUniformBase(context, program, location);
 }
 
 }

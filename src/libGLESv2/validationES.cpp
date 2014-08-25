@@ -1671,7 +1671,7 @@ bool ValidateFramebufferTexture2D(const gl::Context *context, GLenum target, GLe
     return true;
 }
 
-bool ValidateGetUniformfv(const gl::Context *context, GLuint program, GLint location, GLfloat* params)
+bool ValidateGetUniformBase(const gl::Context *context, GLuint program, GLint location)
 {
     if (program == 0)
     {
@@ -1694,22 +1694,29 @@ bool ValidateGetUniformfv(const gl::Context *context, GLuint program, GLint loca
     return true;
 }
 
+bool ValidateGetUniformfv(const gl::Context *context, GLuint program, GLint location, GLfloat* params)
+{
+    return ValidateGetUniformBase(context, program, location);
+}
+
 bool ValidateGetUniformiv(const gl::Context *context, GLuint program, GLint location, GLint* params)
 {
-    if (program == 0)
+    return ValidateGetUniformBase(context, program, location);
+}
+
+static bool ValidateSizedGetUniform(const gl::Context *context, GLuint program, GLint location, GLsizei bufSize)
+{
+    if (!ValidateGetUniformBase(context, program, location))
     {
-        return gl::error(GL_INVALID_VALUE, false);
+        return false;
     }
 
-    gl::Program *programObject = context->getProgram(program);
+    gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
 
-    if (!programObject || !programObject->isLinked())
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-    if (!programBinary)
+    // sized queries -- ensure the provided buffer is large enough
+    LinkedUniform *uniform = programBinary->getUniformByLocation(location);
+    size_t requiredBytes = VariableExternalSize(uniform->type);
+    if (static_cast<size_t>(bufSize) < requiredBytes)
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
@@ -1719,64 +1726,12 @@ bool ValidateGetUniformiv(const gl::Context *context, GLuint program, GLint loca
 
 bool ValidateGetnUniformfvEXT(const gl::Context *context, GLuint program, GLint location, GLsizei bufSize, GLfloat* params)
 {
-    if (program == 0)
-    {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    gl::Program *programObject = context->getProgram(program);
-
-    if (!programObject || !programObject->isLinked())
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-    if (!programBinary)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    // sized queries -- ensure the provided buffer is large enough
-    LinkedUniform *uniform = programBinary->getUniformByLocation(location);
-    size_t requiredBytes = VariableExternalSize(uniform->type);
-    if (static_cast<size_t>(bufSize) < requiredBytes)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    return true;
+    return ValidateSizedGetUniform(context, program, location, bufSize);
 }
 
 bool ValidateGetnUniformivEXT(const gl::Context *context, GLuint program, GLint location, GLsizei bufSize, GLint* params)
 {
-    if (program == 0)
-    {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
-
-    gl::Program *programObject = context->getProgram(program);
-
-    if (!programObject || !programObject->isLinked())
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-    if (!programBinary)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    // sized queries -- ensure the provided buffer is large enough
-    LinkedUniform *uniform = programBinary->getUniformByLocation(location);
-    size_t requiredBytes = VariableExternalSize(uniform->type);
-    if (static_cast<size_t>(bufSize) < requiredBytes)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    return true;
+    return ValidateSizedGetUniform(context, program, location, bufSize);
 }
 
 }
