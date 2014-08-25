@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9399d985_6cc5b7d5",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-25T20:45:53Z",
+      "side": 1,
+      "message": "++uniformIndex",
+      "revId": "39181f54a310fa3ee07c5397131bb81cd2a2d83a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f389353b_3094e630",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-25T20:45:53Z",
+      "side": 1,
+      "message": "I think this deserves a helper function like findUniformByName().",
+      "revId": "39181f54a310fa3ee07c5397131bb81cd2a2d83a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9399d985_4ce71374",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-25T20:45:53Z",
+      "side": 1,
+      "message": "I think using anonymous namespace is better than static local functions.",
+      "revId": "39181f54a310fa3ee07c5397131bb81cd2a2d83a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f389353b_d0be4299",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-25T20:45:53Z",
+      "side": 1,
+      "message": "++fieldIndex",
+      "revId": "39181f54a310fa3ee07c5397131bb81cd2a2d83a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
