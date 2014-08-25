@@ -145,17 +145,17 @@ INSTANTIATE_TEST_CASE_P(A_Z_0_9,
 TEST_F(IdentifierTest, AllLetters)
 {
     std::string str;
-    for (int c = 'a'; c <= 'z'; ++c)
+    for (char c = 'a'; c <= 'z'; ++c)
         str.push_back(c);
 
     str.push_back('_');
 
-    for (int c = 'A'; c <= 'Z'; ++c)
+    for (char c = 'A'; c <= 'Z'; ++c)
         str.push_back(c);
 
     str.push_back('_');
 
-    for (int c = '0'; c <= '9'; ++c)
+    for (char c = '0'; c <= '9'; ++c)
         str.push_back(c);
 
     expectIdentifier(str);

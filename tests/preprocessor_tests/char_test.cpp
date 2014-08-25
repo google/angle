@@ -41,7 +41,7 @@ bool isWhitespace(char c)
 
 TEST_P(CharTest, Identified)
 {
-    std::string str(1, GetParam());
+    std::string str(1, static_cast<char>(GetParam()));
     const char* cstr = str.c_str();
     int length = 1;
 
