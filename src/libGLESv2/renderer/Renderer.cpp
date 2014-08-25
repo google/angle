@@ -117,7 +117,7 @@ rx::Renderer *glCreateRenderer(egl::Display *display, EGLNativeDisplayType nativ
     {
         // The default display is requested, try the D3D9 and D3D11 renderers, order them using
         // the definition of ANGLE_DEFAULT_D3D11
-#       if ANGLE_DEFAULT_D3D11
+#       if defined(ANGLE_DEFAULT_D3D11)
 #           if defined(ANGLE_ENABLE_D3D11)
                 rendererCreationFunctions.push_back(rx::CreateRenderer<rx::Renderer11>);
 #           endif
