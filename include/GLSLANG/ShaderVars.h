@@ -15,6 +15,7 @@
 #include <algorithm>
 
 // Assume ShaderLang.h is included before ShaderVars.h, for sh::GLenum
+// Note: make sure to increment ANGLE_SH_VERSION when changing ShaderVars.h
 
 namespace sh
 {
@@ -49,6 +50,7 @@ struct COMPILER_EXPORT ShaderVariable
 
     bool isArray() const { return arraySize > 0; }
     unsigned int elementCount() const { return std::max(1u, arraySize); }
+    bool isStruct() const { return !fields.empty(); }
 
     GLenum type;
     GLenum precision;
@@ -56,6 +58,8 @@ struct COMPILER_EXPORT ShaderVariable
     std::string mappedName;
     unsigned int arraySize;
     bool staticUse;
+    std::vector<ShaderVariable> fields;
+    std::string structName;
 };
 
 struct COMPILER_EXPORT Uniform : public ShaderVariable
@@ -64,10 +68,6 @@ struct COMPILER_EXPORT Uniform : public ShaderVariable
     ~Uniform();
     Uniform(const Uniform &other);
     Uniform &operator=(const Uniform &other);
-
-    bool isStruct() const { return !fields.empty(); }
-
-    std::vector<Uniform> fields;
 };
 
 struct COMPILER_EXPORT Attribute : public ShaderVariable
@@ -87,10 +87,7 @@ struct COMPILER_EXPORT InterfaceBlockField : public ShaderVariable
     InterfaceBlockField(const InterfaceBlockField &other);
     InterfaceBlockField &operator=(const InterfaceBlockField &other);
 
-    bool isStruct() const { return !fields.empty(); }
-
     bool isRowMajorMatrix;
-    std::vector<InterfaceBlockField> fields;
 };
 
 struct COMPILER_EXPORT Varying : public ShaderVariable
@@ -100,11 +97,8 @@ struct COMPILER_EXPORT Varying : public ShaderVariable
     Varying(const Varying &other);
     Varying &operator=(const Varying &other);
 
-    bool isStruct() const { return !fields.empty(); }
-
     InterpolationType interpolation;
-    std::vector<Varying> fields;
-    std::string structName;
+    bool isInvariant;
 };
 
 struct COMPILER_EXPORT InterfaceBlock
@@ -116,6 +110,7 @@ struct COMPILER_EXPORT InterfaceBlock
 
     std::string name;
     std::string mappedName;
+    std::string instanceName;
     unsigned int arraySize;
     BlockLayoutType layout;
     bool isRowMajorLayout;

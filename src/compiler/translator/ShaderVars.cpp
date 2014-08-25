@@ -35,7 +35,9 @@ ShaderVariable::ShaderVariable(const ShaderVariable &other)
       name(other.name),
       mappedName(other.mappedName),
       arraySize(other.arraySize),
-      staticUse(other.staticUse)
+      staticUse(other.staticUse),
+      fields(other.fields),
+      structName(other.structName)
 {}
 
 ShaderVariable &ShaderVariable::operator=(const ShaderVariable &other)
@@ -46,6 +48,8 @@ ShaderVariable &ShaderVariable::operator=(const ShaderVariable &other)
     mappedName = other.mappedName;
     arraySize = other.arraySize;
     staticUse = other.staticUse;
+    fields = other.fields;
+    structName = other.structName;
     return *this;
 }
 
@@ -56,14 +60,12 @@ Uniform::~Uniform()
 {}
 
 Uniform::Uniform(const Uniform &other)
-    : ShaderVariable(other),
-      fields(other.fields)
+    : ShaderVariable(other)
 {}
 
 Uniform &Uniform::operator=(const Uniform &other)
 {
     ShaderVariable::operator=(other);
-    fields = other.fields;
     return *this;
 }
 
@@ -95,20 +97,19 @@ InterfaceBlockField::~InterfaceBlockField()
 
 InterfaceBlockField::InterfaceBlockField(const InterfaceBlockField &other)
     : ShaderVariable(other),
-      isRowMajorMatrix(other.isRowMajorMatrix),
-      fields(other.fields)
+      isRowMajorMatrix(other.isRowMajorMatrix)
 {}
 
 InterfaceBlockField &InterfaceBlockField::operator=(const InterfaceBlockField &other)
 {
     ShaderVariable::operator=(other);
     isRowMajorMatrix = other.isRowMajorMatrix;
-    fields = other.fields;
     return *this;
 }
 
 Varying::Varying()
-    : interpolation(INTERPOLATION_SMOOTH)
+    : interpolation(INTERPOLATION_SMOOTH),
+      isInvariant(false)
 {}
 
 Varying::~Varying()
@@ -117,16 +118,14 @@ Varying::~Varying()
 Varying::Varying(const Varying &other)
     : ShaderVariable(other),
       interpolation(other.interpolation),
-      fields(other.fields),
-      structName(other.structName)
+      isInvariant(other.isInvariant)
 {}
 
 Varying &Varying::operator=(const Varying &other)
 {
     ShaderVariable::operator=(other);
     interpolation = other.interpolation;
-    fields = other.fields;
-    structName = other.structName;
+    isInvariant = other.isInvariant;
     return *this;
 }
 
@@ -143,6 +142,7 @@ InterfaceBlock::~InterfaceBlock()
 InterfaceBlock::InterfaceBlock(const InterfaceBlock &other)
     : name(other.name),
       mappedName(other.mappedName),
+      instanceName(other.instanceName),
       arraySize(other.arraySize),
       layout(other.layout),
       isRowMajorLayout(other.isRowMajorLayout),
@@ -154,6 +154,7 @@ InterfaceBlock &InterfaceBlock::operator=(const InterfaceBlock &other)
 {
     name = other.name;
     mappedName = other.mappedName;
+    instanceName = other.instanceName;
     arraySize = other.arraySize;
     layout = other.layout;
     isRowMajorLayout = other.isRowMajorLayout;

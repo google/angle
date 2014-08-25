@@ -9,20 +9,17 @@
 #include "compiler/translator/util.h"
 #include "common/utilities.h"
 
-template <typename VarT>
-static void ExpandUserDefinedVariable(const VarT &variable,
+static void ExpandUserDefinedVariable(const sh::ShaderVariable &variable,
                                       const std::string &name,
                                       const std::string &mappedName,
                                       bool markStaticUse,
-                                      std::vector<VarT> *expanded);
+                                      std::vector<sh::ShaderVariable> *expanded);
 
-// Returns info for an attribute, uniform, or varying.
-template <typename VarT>
-static void ExpandVariable(const VarT &variable,
+static void ExpandVariable(const sh::ShaderVariable &variable,
                            const std::string &name,
                            const std::string &mappedName,
                            bool markStaticUse,
-                           std::vector<VarT> *expanded)
+                           std::vector<sh::ShaderVariable> *expanded)
 {
     if (variable.isStruct())
     {
@@ -42,7 +39,7 @@ static void ExpandVariable(const VarT &variable,
     }
     else
     {
-        VarT expandedVar = variable;
+        sh::ShaderVariable expandedVar = variable;
 
         expandedVar.name = name;
         expandedVar.mappedName = mappedName;
@@ -63,20 +60,19 @@ static void ExpandVariable(const VarT &variable,
     }
 }
 
-template <class VarT>
-static void ExpandUserDefinedVariable(const VarT &variable,
+static void ExpandUserDefinedVariable(const sh::ShaderVariable &variable,
                                       const std::string &name,
                                       const std::string &mappedName,
                                       bool markStaticUse,
-                                      std::vector<VarT> *expanded)
+                                      std::vector<sh::ShaderVariable> *expanded)
 {
     ASSERT(variable.isStruct());
 
-    const std::vector<VarT> &fields = variable.fields;
+    const std::vector<sh::ShaderVariable> &fields = variable.fields;
 
     for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
     {
-        const VarT &field = fields[fieldIndex];
+        const sh::ShaderVariable &field = fields[fieldIndex];
         ExpandVariable(field,
                        name + "." + field.name,
                        mappedName + "." + field.mappedName,
@@ -216,17 +212,17 @@ void CollectVariables::visitSymbol(TIntermSymbol *symbol)
     }
 }
 
-template <typename VarT>
-class NameHashingTraverser : public sh::GetVariableTraverser<VarT>
+class NameHashingTraverser : public sh::GetVariableTraverser
 {
   public:
-    NameHashingTraverser(std::vector<VarT> *output, ShHashFunction64 hashFunction)
-        : sh::GetVariableTraverser<VarT>(output),
-          mHashFunction(hashFunction)
+    NameHashingTraverser(ShHashFunction64 hashFunction)
+        : mHashFunction(hashFunction)
     {}
 
   private:
-    void visitVariable(VarT *variable)
+    DISALLOW_COPY_AND_ASSIGN(NameHashingTraverser);
+
+    virtual void visitVariable(sh::ShaderVariable *variable)
     {
         TString stringName = TString(variable->name.c_str());
         variable->mappedName = TIntermTraverser::hash(stringName, mHashFunction).c_str();
@@ -262,26 +258,16 @@ void CollectVariables::visitVariable(const TIntermSymbol *variable,
 {
     sh::InterfaceBlock interfaceBlock;
     const TInterfaceBlock *blockType = variable->getType().getInterfaceBlock();
-
-    bool isRowMajor = (blockType->matrixPacking() == EmpRowMajor);
+    ASSERT(blockType);
 
     interfaceBlock.name = blockType->name().c_str();
     interfaceBlock.mappedName = TIntermTraverser::hash(variable->getSymbol(), mHashFunction).c_str();
+    interfaceBlock.instanceName = (blockType->hasInstanceName() ? blockType->instanceName().c_str() : "");
     interfaceBlock.arraySize = variable->getArraySize();
-    interfaceBlock.isRowMajorLayout = isRowMajor;
+    interfaceBlock.isRowMajorLayout = (blockType->matrixPacking() == EmpRowMajor);
     interfaceBlock.layout = sh::GetBlockLayoutType(blockType->blockStorage());
 
-    ASSERT(blockType);
-    const TFieldList &blockFields = blockType->fields();
-
-    for (size_t fieldIndex = 0; fieldIndex < blockFields.size(); fieldIndex++)
-    {
-        const TField *field = blockFields[fieldIndex];
-        ASSERT(field);
-
-        sh::GetInterfaceBlockFieldTraverser traverser(&interfaceBlock.fields, isRowMajor);
-        traverser.traverse(*field->type(), field->name());
-    }
+    sh::GetInterfaceBlockFields(*blockType, &interfaceBlock.fields);
 
     infoList->push_back(interfaceBlock);
 }
@@ -290,8 +276,8 @@ template <typename VarT>
 void CollectVariables::visitVariable(const TIntermSymbol *variable,
                                      std::vector<VarT> *infoList) const
 {
-    NameHashingTraverser<VarT> traverser(infoList, mHashFunction);
-    traverser.traverse(variable->getType(), variable->getSymbol());
+    NameHashingTraverser traverser(mHashFunction);
+    traverser.traverse(variable->getType(), variable->getSymbol(), infoList);
 }
 
 template <typename VarT>
@@ -361,14 +347,15 @@ bool CollectVariables::visitAggregate(Visit, TIntermAggregate *node)
 }
 
 template <typename VarT>
-void ExpandVariables(const std::vector<VarT> &compact, std::vector<VarT> *expanded)
+void ExpandVariables(const std::vector<VarT> &compact,
+                     std::vector<sh::ShaderVariable> *expanded)
 {
     for (size_t variableIndex = 0; variableIndex < compact.size(); variableIndex++)
     {
-        const VarT &variable = compact[variableIndex];
+        const sh::ShaderVariable &variable = compact[variableIndex];
         ExpandVariable(variable, variable.name, variable.mappedName, variable.staticUse, expanded);
     }
 }
 
-template void ExpandVariables(const std::vector<sh::Uniform> &, std::vector<sh::Uniform> *);
-template void ExpandVariables(const std::vector<sh::Varying> &, std::vector<sh::Varying> *);
+template void ExpandVariables(const std::vector<sh::Uniform> &, std::vector<sh::ShaderVariable> *);
+template void ExpandVariables(const std::vector<sh::Varying> &, std::vector<sh::ShaderVariable> *);

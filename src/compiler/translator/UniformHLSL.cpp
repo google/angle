@@ -30,18 +30,6 @@ static const char *UniformRegisterPrefix(const TType &type)
     }
 }
 
-static TString InterfaceBlockFieldName(const TInterfaceBlock &interfaceBlock, const TField &field)
-{
-    if (interfaceBlock.hasInstanceName())
-    {
-        return interfaceBlock.name() + "." + field.name();
-    }
-    else
-    {
-        return field.name();
-    }
-}
-
 static TString InterfaceBlockFieldTypeString(const TField &field, TLayoutBlockStorage blockStorage)
 {
     const TType &fieldType = *field.type();
@@ -94,8 +82,8 @@ unsigned int UniformHLSL::declareUniformAndAssignRegister(const TType &type, con
 {
     unsigned int registerIndex = (IsSampler(type.getBasicType()) ? mSamplerRegister : mUniformRegister);
 
-    GetVariableTraverser<Uniform> traverser(&mActiveUniforms);
-    traverser.traverse(type, name);
+    GetVariableTraverser traverser;
+    traverser.traverse(type, name, &mActiveUniforms);
 
     const sh::Uniform &activeUniform = mActiveUniforms.back();
     mUniformRegisterMap[activeUniform.name] = registerIndex;
@@ -162,7 +150,6 @@ TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedIn
     {
         const TType &nodeType = interfaceBlockIt->second->getType();
         const TInterfaceBlock &interfaceBlock = *nodeType.getInterfaceBlock();
-        const TFieldList &fieldList = interfaceBlock.fields();
 
         unsigned int arraySize = static_cast<unsigned int>(interfaceBlock.arraySize());
         unsigned int activeRegister = mInterfaceBlockRegister;
@@ -171,15 +158,7 @@ TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedIn
         activeBlock.name = interfaceBlock.name().c_str();
         activeBlock.arraySize = arraySize;
 
-        for (unsigned int typeIndex = 0; typeIndex < fieldList.size(); typeIndex++)
-        {
-            const TField &field = *fieldList[typeIndex];
-            const TString &fullFieldName = InterfaceBlockFieldName(interfaceBlock, field);
-
-            bool isRowMajor = (field.type()->getLayoutQualifier().matrixPacking == EmpRowMajor);
-            GetInterfaceBlockFieldTraverser traverser(&activeBlock.fields, isRowMajor);
-            traverser.traverse(*field.type(), fullFieldName);
-        }
+        GetInterfaceBlockFields(interfaceBlock, &activeBlock.fields);
 
         mInterfaceBlockRegisterMap[activeBlock.name] = activeRegister;
         mInterfaceBlockRegister += std::max(1u, arraySize);

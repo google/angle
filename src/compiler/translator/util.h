@@ -36,31 +36,23 @@ InterpolationType GetInterpolationType(TQualifier qualifier);
 BlockLayoutType GetBlockLayoutType(TLayoutBlockStorage blockStorage);
 TString ArrayString(const TType &type);
 
-template <typename VarT>
 class GetVariableTraverser
 {
   public:
-    GetVariableTraverser(std::vector<VarT> *output);
-    void traverse(const TType &type, const TString &name);
+    GetVariableTraverser() {}
+
+    template <typename VarT>
+    void traverse(const TType &type, const TString &name, std::vector<VarT> *output);
 
   protected:
     // May be overloaded
-    virtual void visitVariable(VarT *newVar) {}
+    virtual void visitVariable(ShaderVariable *newVar) {}
 
   private:
-    std::stack<std::vector<VarT> *> mOutputStack;
+    DISALLOW_COPY_AND_ASSIGN(GetVariableTraverser);
 };
 
-struct GetInterfaceBlockFieldTraverser : public GetVariableTraverser<InterfaceBlockField>
-{
-  public:
-    GetInterfaceBlockFieldTraverser(std::vector<InterfaceBlockField> *output, bool isRowMajorMatrix);
-
-  private:
-    virtual void visitVariable(InterfaceBlockField *newField);
-
-    bool mIsRowMajorMatrix;
-};
+void GetInterfaceBlockFields(const TInterfaceBlock &interfaceBlock, std::vector<InterfaceBlockField> *fieldsOut);
 
 }
 

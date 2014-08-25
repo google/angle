@@ -15,15 +15,17 @@ namespace sh
 {
 
 BlockLayoutEncoder::BlockLayoutEncoder()
-    : mCurrentOffset(0)
+    : mCurrentOffset(0),
+      mInRowMajorField(false)
 {
 }
 
-void BlockLayoutEncoder::encodeInterfaceBlockFields(const std::vector<InterfaceBlockField> &fields)
+template <typename VarT>
+void BlockLayoutEncoder::encodeVariables(const std::vector<VarT> &fields)
 {
     for (unsigned int fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
     {
-        const InterfaceBlockField &variable = fields[fieldIndex];
+        const VarT &variable = fields[fieldIndex];
 
         if (variable.fields.size() > 0)
         {
@@ -32,28 +34,38 @@ void BlockLayoutEncoder::encodeInterfaceBlockFields(const std::vector<InterfaceB
             for (unsigned int elementIndex = 0; elementIndex < elementCount; elementIndex++)
             {
                 enterAggregateType();
-                encodeInterfaceBlockFields(variable.fields);
+                encodeVariables(variable.fields);
                 exitAggregateType();
             }
         }
         else
         {
-            encodeInterfaceBlockField(variable);
+            encodeVariable(variable);
         }
     }
 }
 
-BlockMemberInfo BlockLayoutEncoder::encodeInterfaceBlockField(const InterfaceBlockField &field)
+// Only defined for interface block fields, and shader variable base
+template void BlockLayoutEncoder::encodeVariables(const std::vector<ShaderVariable> &);
+template void BlockLayoutEncoder::encodeVariables(const std::vector<InterfaceBlockField> &);
+
+BlockMemberInfo BlockLayoutEncoder::encodeVariable(const InterfaceBlockField &field)
+{
+    mInRowMajorField = field.isRowMajorMatrix;
+    return encodeVariable(static_cast<ShaderVariable>(field));
+}
+
+BlockMemberInfo BlockLayoutEncoder::encodeVariable(const sh::ShaderVariable &field)
 {
     int arrayStride;
     int matrixStride;
 
     ASSERT(field.fields.empty());
-    getBlockLayoutInfo(field.type, field.arraySize, field.isRowMajorMatrix, &arrayStride, &matrixStride);
+    getBlockLayoutInfo(field.type, field.arraySize, mInRowMajorField, &arrayStride, &matrixStride);
 
-    const BlockMemberInfo memberInfo(mCurrentOffset * BytesPerComponent, arrayStride * BytesPerComponent, matrixStride * BytesPerComponent, field.isRowMajorMatrix);
+    const BlockMemberInfo memberInfo(mCurrentOffset * BytesPerComponent, arrayStride * BytesPerComponent, matrixStride * BytesPerComponent, mInRowMajorField);
 
-    advanceOffset(field.type, field.arraySize, field.isRowMajorMatrix, arrayStride, matrixStride);
+    advanceOffset(field.type, field.arraySize, mInRowMajorField, arrayStride, matrixStride);
 
     return memberInfo;
 }

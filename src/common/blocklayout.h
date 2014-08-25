@@ -49,8 +49,12 @@ class BlockLayoutEncoder
   public:
     BlockLayoutEncoder();
 
-    void encodeInterfaceBlockFields(const std::vector<InterfaceBlockField> &fields);
-    BlockMemberInfo encodeInterfaceBlockField(const InterfaceBlockField &field);
+    template <typename VarT>
+    void encodeVariables(const std::vector<VarT> &fields);
+
+    BlockMemberInfo encodeVariable(const sh::ShaderVariable &field);
+    BlockMemberInfo encodeVariable(const InterfaceBlockField &field);
+
     void encodeType(GLenum type, unsigned int arraySize, bool isRowMajorMatrix);
 
     size_t getBlockSize() const { return mCurrentOffset * BytesPerComponent; }
@@ -65,6 +69,7 @@ class BlockLayoutEncoder
 
   protected:
     size_t mCurrentOffset;
+    bool mInRowMajorField;
 
     void nextRegister();
 
