@@ -3022,10 +3022,7 @@ void __stdcall glGetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSiz
         gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
         ASSERT(programBinary);
 
-        if (!programBinary->getUniformfv(location, &bufSize, params))
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        programBinary->getUniformfv(location, params);
     }
 }
 
@@ -3045,10 +3042,7 @@ void __stdcall glGetUniformfv(GLuint program, GLint location, GLfloat* params)
         gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
         ASSERT(programBinary);
 
-        if (!programBinary->getUniformfv(location, NULL, params))
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        programBinary->getUniformfv(location, params);
     }
 }
 
@@ -3074,10 +3068,7 @@ void __stdcall glGetnUniformivEXT(GLuint program, GLint location, GLsizei bufSiz
         gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
         ASSERT(programBinary);
 
-        if (!programBinary->getUniformiv(location, &bufSize, params))
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        programBinary->getUniformiv(location, params);
     }
 }
 
@@ -3097,10 +3088,7 @@ void __stdcall glGetUniformiv(GLuint program, GLint location, GLint* params)
         gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
         ASSERT(programBinary);
 
-        if (!programBinary->getUniformiv(location, NULL, params))
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        programBinary->getUniformiv(location, params);
     }
 }
 
@@ -6219,10 +6207,7 @@ void __stdcall glGetUniformuiv(GLuint program, GLint location, GLuint* params)
         gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
         ASSERT(programBinary);
 
-        if (!programBinary->getUniformuiv(location, NULL, params))
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        programBinary->getUniformuiv(location, params);
     }
 }
 

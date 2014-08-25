@@ -841,19 +841,9 @@ void ProgramBinary::setUniform4uiv(GLint location, GLsizei count, const GLuint *
 }
 
 template <typename T>
-bool ProgramBinary::getUniformv(GLint location, GLsizei *bufSize, T *params, GLenum uniformType)
+void ProgramBinary::getUniformv(GLint location, T *params, GLenum uniformType)
 {
     LinkedUniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
-    // sized queries -- ensure the provided buffer is large enough
-    if (bufSize)
-    {
-        int requiredBytes = VariableExternalSize(targetUniform->type);
-        if (*bufSize < requiredBytes)
-        {
-            return false;
-        }
-    }
 
     if (IsMatrixType(targetUniform->type))
     {
@@ -919,23 +909,21 @@ bool ProgramBinary::getUniformv(GLint location, GLsizei *bufSize, T *params, GLe
           default: UNREACHABLE();
         }
     }
-
-    return true;
 }
 
-bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params)
+void ProgramBinary::getUniformfv(GLint location, GLfloat *params)
 {
-    return getUniformv(location, bufSize, params, GL_FLOAT);
+    getUniformv(location, params, GL_FLOAT);
 }
 
-bool ProgramBinary::getUniformiv(GLint location, GLsizei *bufSize, GLint *params)
+void ProgramBinary::getUniformiv(GLint location, GLint *params)
 {
-    return getUniformv(location, bufSize, params, GL_INT);
+    getUniformv(location, params, GL_INT);
 }
 
-bool ProgramBinary::getUniformuiv(GLint location, GLsizei *bufSize, GLuint *params)
+void ProgramBinary::getUniformuiv(GLint location, GLuint *params)
 {
-    return getUniformv(location, bufSize, params, GL_UNSIGNED_INT);
+    getUniformv(location, params, GL_UNSIGNED_INT);
 }
 
 void ProgramBinary::dirtyAllUniforms()

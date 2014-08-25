@@ -125,9 +125,9 @@ class ProgramBinary : public RefCountObject
     void setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
     void setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
 
-    bool getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params);
-    bool getUniformiv(GLint location, GLsizei *bufSize, GLint *params);
-    bool getUniformuiv(GLint location, GLsizei *bufSize, GLuint *params);
+    void getUniformfv(GLint location, GLfloat *params);
+    void getUniformiv(GLint location, GLint *params);
+    void getUniformuiv(GLint location, GLuint *params);
 
     void dirtyAllUniforms();
     void applyUniforms();
@@ -234,7 +234,7 @@ class ProgramBinary : public RefCountObject
     void setUniformMatrixfv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value, GLenum targetUniformType);
 
     template <typename T>
-    bool getUniformv(GLint location, GLsizei *bufSize, T *params, GLenum uniformType);
+    void getUniformv(GLint location, T *params, GLenum uniformType);
 
     class VertexExecutable
     {

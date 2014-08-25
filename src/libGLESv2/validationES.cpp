@@ -1737,6 +1737,14 @@ bool ValidateGetnUniformfvEXT(const gl::Context *context, GLuint program, GLint 
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
+    // sized queries -- ensure the provided buffer is large enough
+    LinkedUniform *uniform = programBinary->getUniformByLocation(location);
+    size_t requiredBytes = VariableExternalSize(uniform->type);
+    if (static_cast<size_t>(bufSize) < requiredBytes)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
     return true;
 }
 
@@ -1756,6 +1764,14 @@ bool ValidateGetnUniformivEXT(const gl::Context *context, GLuint program, GLint 
 
     gl::ProgramBinary *programBinary = programObject->getProgramBinary();
     if (!programBinary)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    // sized queries -- ensure the provided buffer is large enough
+    LinkedUniform *uniform = programBinary->getUniformByLocation(location);
+    size_t requiredBytes = VariableExternalSize(uniform->type);
+    if (static_cast<size_t>(bufSize) < requiredBytes)
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
