@@ -58,6 +58,14 @@ class VertexDataManager
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexDataManager);
 
+    bool reserveSpaceForAttrib(const gl::VertexAttribute &attrib,
+                               const gl::VertexAttribCurrentValueData &currentValue,
+                               GLsizei count,
+                               GLsizei instances) const;
+
+    void invalidateMatchingStaticData(const gl::VertexAttribute &attrib,
+                                      const gl::VertexAttribCurrentValueData &currentValue) const;
+
     GLenum storeAttribute(const gl::VertexAttribute &attrib,
                           const gl::VertexAttribCurrentValueData &currentValue,
                           TranslatedAttribute *translated,
