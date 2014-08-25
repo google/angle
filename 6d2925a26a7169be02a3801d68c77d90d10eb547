@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "53ae8194_beb7e10c",
+        "filename": "src/libGLESv2/renderer/d3d/MemoryBuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T18:36:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53ae8194_be85214d",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 30
+      },
+      "revId": "6d2925a26a7169be02a3801d68c77d90d10eb547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73b9c5d7_9c522949",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "53ae8194_9eba1df6",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T18:36:25Z",
+      "side": 1,
+      "message": "This one is a bit problematic because of the setData() in certain situations, which would make the helper method do a bit of hidden magic.",
+      "parentUuid": "73b9c5d7_9c522949",
+      "range": {
+        "startLine": 492,
+        "startChar": 4,
+        "endLine": 515,
+        "endChar": 5
+      },
+      "revId": "6d2925a26a7169be02a3801d68c77d90d10eb547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "93b479df_7d6e3308",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2014-08-25T18:25:17Z",
       "side": 1,
       "message": "Formatting",
+      "range": {
+        "startLine": 766,
+        "startChar": 0,
+        "endLine": 766,
+        "endChar": 2
+      },
+      "revId": "6d2925a26a7169be02a3801d68c77d90d10eb547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53ae8194_dec49578",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T18:36:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "93b479df_7d6e3308",
       "range": {
         "startLine": 766,
         "startChar": 0,
