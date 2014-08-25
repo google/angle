@@ -3014,23 +3014,13 @@ void __stdcall glGetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSiz
 
     if (context)
     {
-        if (program == 0)
+        if (!ValidateGetnUniformfvEXT(context, program, location, bufSize, params))
         {
-            return gl::error(GL_INVALID_VALUE);
+            return;
         }
 
-        gl::Program *programObject = context->getProgram(program);
-
-        if (!programObject || !programObject->isLinked())
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        if (!programBinary)
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+        ASSERT(programBinary);
 
         if (!programBinary->getUniformfv(location, &bufSize, params))
         {
@@ -3047,23 +3037,13 @@ void __stdcall glGetUniformfv(GLuint program, GLint location, GLfloat* params)
 
     if (context)
     {
-        if (program == 0)
+        if (!ValidateGetUniformfv(context, program, location, params))
         {
-            return gl::error(GL_INVALID_VALUE);
+            return;
         }
 
-        gl::Program *programObject = context->getProgram(program);
-
-        if (!programObject || !programObject->isLinked())
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        if (!programBinary)
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+        ASSERT(programBinary);
 
         if (!programBinary->getUniformfv(location, NULL, params))
         {
@@ -3086,23 +3066,13 @@ void __stdcall glGetnUniformivEXT(GLuint program, GLint location, GLsizei bufSiz
 
     if (context)
     {
-        if (program == 0)
+        if (!ValidateGetnUniformivEXT(context, program, location, bufSize, params))
         {
-            return gl::error(GL_INVALID_VALUE);
+            return;
         }
 
-        gl::Program *programObject = context->getProgram(program);
-
-        if (!programObject || !programObject->isLinked())
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        if (!programBinary)
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+        ASSERT(programBinary);
 
         if (!programBinary->getUniformiv(location, &bufSize, params))
         {
@@ -3119,23 +3089,13 @@ void __stdcall glGetUniformiv(GLuint program, GLint location, GLint* params)
 
     if (context)
     {
-        if (program == 0)
+        if (!ValidateGetUniformiv(context, program, location, params))
         {
-            return gl::error(GL_INVALID_VALUE);
+            return;
         }
 
-        gl::Program *programObject = context->getProgram(program);
-
-        if (!programObject || !programObject->isLinked())
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        if (!programBinary)
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+        ASSERT(programBinary);
 
         if (!programBinary->getUniformiv(location, NULL, params))
         {
@@ -6251,28 +6211,13 @@ void __stdcall glGetUniformuiv(GLuint program, GLint location, GLuint* params)
 
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!ValidateGetUniformuiv(context, program, location, params))
         {
-            return gl::error(GL_INVALID_OPERATION);
+            return;
         }
 
-        if (program == 0)
-        {
-            return gl::error(GL_INVALID_VALUE);
-        }
-
-        gl::Program *programObject = context->getProgram(program);
-
-        if (!programObject || !programObject->isLinked())
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        if (!programBinary)
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+        ASSERT(programBinary);
 
         if (!programBinary->getUniformuiv(location, NULL, params))
         {

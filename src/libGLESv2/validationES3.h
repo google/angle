@@ -35,6 +35,8 @@ bool ValidateInvalidateFramebufferParameters(gl::Context *context, GLenum target
 
 bool ValidateClearBuffer(const gl::Context *context);
 
+bool ValidateGetUniformuiv(const gl::Context *context, GLuint program, GLint location, GLuint* params);
+
 }
 
 #endif // LIBGLESV2_VALIDATION_ES3_H

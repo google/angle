@@ -1671,4 +1671,96 @@ bool ValidateFramebufferTexture2D(const gl::Context *context, GLenum target, GLe
     return true;
 }
 
+bool ValidateGetUniformfv(const gl::Context *context, GLuint program, GLint location, GLfloat* params)
+{
+    if (program == 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    gl::Program *programObject = context->getProgram(program);
+
+    if (!programObject || !programObject->isLinked())
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+    if (!programBinary)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return true;
+}
+
+bool ValidateGetUniformiv(const gl::Context *context, GLuint program, GLint location, GLint* params)
+{
+    if (program == 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    gl::Program *programObject = context->getProgram(program);
+
+    if (!programObject || !programObject->isLinked())
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+    if (!programBinary)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return true;
+}
+
+bool ValidateGetnUniformfvEXT(const gl::Context *context, GLuint program, GLint location, GLsizei bufSize, GLfloat* params)
+{
+    if (program == 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    gl::Program *programObject = context->getProgram(program);
+
+    if (!programObject || !programObject->isLinked())
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+    if (!programBinary)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return true;
+}
+
+bool ValidateGetnUniformivEXT(const gl::Context *context, GLuint program, GLint location, GLsizei bufSize, GLint* params)
+{
+    if (program == 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    gl::Program *programObject = context->getProgram(program);
+
+    if (!programObject || !programObject->isLinked())
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+    if (!programBinary)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return true;
+}
+
 }

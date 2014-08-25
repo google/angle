@@ -75,6 +75,11 @@ bool ValidateFramebufferTextureBase(const gl::Context *context, GLenum target, G
 bool ValidateFramebufferTexture2D(const gl::Context *context, GLenum target, GLenum attachment,
                                   GLenum textarget, GLuint texture, GLint level);
 
+bool ValidateGetUniformfv(const gl::Context *context, GLuint program, GLint location, GLfloat* params);
+bool ValidateGetUniformiv(const gl::Context *context, GLuint program, GLint location, GLint* params);
+bool ValidateGetnUniformfvEXT(const gl::Context *context, GLuint program, GLint location, GLsizei bufSize, GLfloat* params);
+bool ValidateGetnUniformivEXT(const gl::Context *context, GLuint program, GLint location, GLsizei bufSize, GLint* params);
+
 }
 
 #endif // LIBGLESV2_VALIDATION_ES_H
