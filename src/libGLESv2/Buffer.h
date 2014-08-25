@@ -50,6 +50,7 @@ class Buffer : public RefCountObject
     void markTransformFeedbackUsage();
 
     rx::IndexRangeCache *getIndexRangeCache() { return &mIndexRangeCache; }
+    const rx::IndexRangeCache *getIndexRangeCache() const { return &mIndexRangeCache; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer);

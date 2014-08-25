@@ -1294,7 +1294,7 @@ void __stdcall glDrawArrays(GLenum mode, GLint first, GLsizei count)
 
     if (context)
     {
-        if (!ValidateDrawArrays(context, mode, first, count))
+        if (!ValidateDrawArrays(context, mode, first, count, 0))
         {
             return;
         }
@@ -1329,12 +1329,13 @@ void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
 
     if (context)
     {
-        if (!ValidateDrawElements(context, mode, count, type, indices))
+        rx::RangeUI indexRange;
+        if (!ValidateDrawElements(context, mode, count, type, indices, 0, &indexRange))
         {
             return;
         }
 
-        context->drawElements(mode, count, type, indices, 0);
+        context->drawElements(mode, count, type, indices, 0, indexRange);
     }
 }
 
@@ -1347,12 +1348,13 @@ void __stdcall glDrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum t
 
     if (context)
     {
-        if (!ValidateDrawElementsInstanced(context, mode, count, type, indices, primcount))
+        rx::RangeUI indexRange;
+        if (!ValidateDrawElementsInstanced(context, mode, count, type, indices, primcount, &indexRange))
         {
             return;
         }
 
-        context->drawElements(mode, count, type, indices, primcount);
+        context->drawElements(mode, count, type, indices, primcount, indexRange);
     }
 }
 

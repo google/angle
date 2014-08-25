@@ -20,6 +20,7 @@
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/TransformFeedback.h"
 #include "libGLESv2/VertexArray.h"
+#include "libGLESv2/renderer/BufferImpl.h"
 
 #include "common/mathutil.h"
 #include "common/utilities.h"
@@ -1301,7 +1302,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
     return true;
 }
 
-static bool ValidateDrawBase(const gl::State &state, GLenum mode, GLsizei count)
+static bool ValidateDrawBase(const gl::State &state, GLenum mode, GLsizei count, GLsizei maxVertex, GLsizei primcount)
 {
     switch (mode)
     {
@@ -1357,11 +1358,55 @@ static bool ValidateDrawBase(const gl::State &state, GLenum mode, GLsizei count)
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
+    // Buffer validations
+    const VertexArray *vao = state.getVertexArray();
+    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    {
+        const VertexAttribute &attrib = vao->getVertexAttribute(attributeIndex);
+        bool attribActive = (programBinary->getSemanticIndex(attributeIndex) != -1);
+        if (attribActive && attrib.enabled)
+        {
+            gl::Buffer *buffer = attrib.buffer.get();
+
+            if (buffer)
+            {
+                GLint64 attribStride = static_cast<GLint64>(ComputeVertexAttributeStride(attrib));
+                GLint64 maxVertexElement = 0;
+
+                if (attrib.divisor > 0)
+                {
+                    maxVertexElement = static_cast<GLint64>(primcount) / static_cast<GLint64>(attrib.divisor);
+                }
+                else
+                {
+                    maxVertexElement = static_cast<GLint64>(maxVertex);
+                }
+
+                GLint64 attribDataSize = maxVertexElement * attribStride;
+
+                // [OpenGL ES 3.0.2] section 2.9.4 page 40:
+                // We can return INVALID_OPERATION if our vertex attribute does not have
+                // enough backing data.
+                if (attribDataSize > buffer->getSize())
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+            }
+            else if (attrib.pointer == NULL)
+            {
+                // This is an application error that would normally result in a crash,
+                // but we catch it and return an error
+                ERR("An enabled vertex array has no buffer and no pointer.");
+                return gl::error(GL_INVALID_OPERATION, false);
+            }
+        }
+    }
+
     // No-op if zero count
     return (count > 0);
 }
 
-bool ValidateDrawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
+bool ValidateDrawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount)
 {
     if (first < 0)
     {
@@ -1379,7 +1424,7 @@ bool ValidateDrawArrays(const gl::Context *context, GLenum mode, GLint first, GL
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (!ValidateDrawBase(state, mode, count))
+    if (!ValidateDrawBase(state, mode, count, count, primcount))
     {
         return false;
     }
@@ -1394,7 +1439,7 @@ bool ValidateDrawArraysInstanced(const gl::Context *context, GLenum mode, GLint 
         return gl::error(GL_INVALID_VALUE, false);
     }
 
-    if (!ValidateDrawArrays(context, mode, first, count))
+    if (!ValidateDrawArrays(context, mode, first, count, primcount))
     {
         return false;
     }
@@ -1403,7 +1448,8 @@ bool ValidateDrawArraysInstanced(const gl::Context *context, GLenum mode, GLint 
     return (primcount > 0);
 }
 
-bool ValidateDrawElements(const gl::Context *context, GLenum mode, GLsizei count, GLenum type, const GLvoid* indices)
+bool ValidateDrawElements(const gl::Context *context, GLenum mode, GLsizei count, GLenum type,
+                          const GLvoid* indices, GLsizei primcount, rx::RangeUI *indexRangeOut)
 {
     switch (type)
     {
@@ -1436,13 +1482,32 @@ bool ValidateDrawElements(const gl::Context *context, GLenum mode, GLsizei count
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    gl::VertexArray *vao = state.getVertexArray();
-    if (!indices && !vao->getElementArrayBuffer())
+    const gl::VertexArray *vao = state.getVertexArray();
+    const gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
+    if (!indices && !elementArrayBuffer)
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (!ValidateDrawBase(state, mode, count))
+    // Use max index to validate if our vertex buffers are large enough for the pull.
+    // TODO: offer fast path, with disabled index validation.
+    // TODO: also disable index checking on back-ends that are robust to out-of-range accesses.
+    if (elementArrayBuffer)
+    {
+        unsigned int offset = reinterpret_cast<unsigned int>(indices);
+        if (!elementArrayBuffer->getIndexRangeCache()->findRange(type, offset, count, indexRangeOut, NULL))
+        {
+            const void *dataPointer = elementArrayBuffer->getImplementation()->getData();
+            const uint8_t *offsetPointer = static_cast<const uint8_t *>(dataPointer) + offset;
+            *indexRangeOut = rx::IndexRangeCache::ComputeRange(type, offsetPointer, count);
+        }
+    }
+    else
+    {
+        *indexRangeOut = rx::IndexRangeCache::ComputeRange(type, indices, count);
+    }
+
+    if (!ValidateDrawBase(state, mode, count, static_cast<GLsizei>(indexRangeOut->end), primcount))
     {
         return false;
     }
@@ -1450,15 +1515,17 @@ bool ValidateDrawElements(const gl::Context *context, GLenum mode, GLsizei count
     return true;
 }
 
-bool ValidateDrawElementsInstanced(const gl::Context *context, GLenum mode, GLsizei count, GLenum type,
-                                   const GLvoid *indices, GLsizei primcount)
+bool ValidateDrawElementsInstanced(const gl::Context *context,
+                                   GLenum mode, GLsizei count, GLenum type,
+                                   const GLvoid *indices, GLsizei primcount,
+                                   rx::RangeUI *indexRangeOut)
 {
     if (primcount < 0)
     {
         return gl::error(GL_INVALID_VALUE, false);
     }
 
-    if (!ValidateDrawElements(context, mode, count, type, indices))
+    if (!ValidateDrawElements(context, mode, count, type, indices, primcount, indexRangeOut))
     {
         return false;
     }

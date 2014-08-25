@@ -9,6 +9,8 @@
 #ifndef LIBGLESV2_VALIDATION_ES_H
 #define LIBGLESV2_VALIDATION_ES_H
 
+#include "common/mathutil.h"
+
 namespace gl
 {
 
@@ -59,11 +61,14 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
                                         GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height,
                                         GLint border, GLenum *textureInternalFormatOut);
 
-bool ValidateDrawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count);
+bool ValidateDrawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount);
 bool ValidateDrawArraysInstanced(const gl::Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount);
-bool ValidateDrawElements(const gl::Context *context, GLenum mode, GLsizei count, GLenum type, const GLvoid* indices);
+
+bool ValidateDrawElements(const gl::Context *context, GLenum mode, GLsizei count, GLenum type,
+                          const GLvoid* indices, GLsizei primcount, rx::RangeUI *indexRangeOut);
+
 bool ValidateDrawElementsInstanced(const gl::Context *context, GLenum mode, GLsizei count, GLenum type,
-                                   const GLvoid *indices, GLsizei primcount);
+                                   const GLvoid *indices, GLsizei primcount, rx::RangeUI *indexRangeOut);
 
 bool ValidateFramebufferTextureBase(const gl::Context *context, GLenum target, GLenum attachment,
                                     GLuint texture, GLint level);

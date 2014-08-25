@@ -28,6 +28,8 @@ class IndexRangeCache
     void invalidateRange(unsigned int offset, unsigned int size);
     void clear();
 
+    static RangeUI ComputeRange(GLenum type, const GLvoid *indices, GLsizei count);
+
   private:
     struct IndexRange
     {

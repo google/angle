@@ -144,13 +144,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 else
                 {
                     int totalCount = StreamingBufferElementCount(attribs[i], count, instances);
-
-                    // [OpenGL ES 3.0.2] section 2.9.4 page 40:
-                    // We can return INVALID_OPERATION if our vertex attribute does not have enough backing data.
-                    if (bufferImpl && ElementsInBuffer(attribs[i], bufferImpl->getSize()) < totalCount)
-                    {
-                        return GL_INVALID_OPERATION;
-                    }
+                    ASSERT(!bufferImpl || ElementsInBuffer(attribs[i], bufferImpl->getSize()) >= totalCount);
 
                     if (!mStreamingBuffer->reserveVertexSpace(attribs[i], totalCount, instances))
                     {
@@ -217,13 +211,7 @@ GLenum VertexDataManager::storeAttribute(const gl::VertexAttribute &attrib,
                                          GLsizei instances)
 {
     gl::Buffer *buffer = attrib.buffer.get();
-
-    if (!buffer && attrib.pointer == NULL)
-    {
-        // This is an application error that would normally result in a crash, but we catch it and return an error
-        ERR("An enabled vertex array has no buffer and no pointer.");
-        return GL_INVALID_OPERATION;
-    }
+    ASSERT(buffer || attrib.pointer);
 
     BufferD3D *storage = buffer ? BufferD3D::makeBufferD3D(buffer->getImplementation()) : NULL;
     StaticVertexBufferInterface *staticBuffer = storage ? storage->getStaticVertexBuffer() : NULL;

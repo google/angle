@@ -194,7 +194,9 @@ class Context
 
     void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei *bufSize, void* pixels);
     void drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances);
-    void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei instances);
+    void drawElements(GLenum mode, GLsizei count, GLenum type,
+                      const GLvoid *indices, GLsizei instances,
+                      const rx::RangeUI &indexRange);
     void sync(bool block);   // flush/finish
 
     void recordError(const Error &error);
