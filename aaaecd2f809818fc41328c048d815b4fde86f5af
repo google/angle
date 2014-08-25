@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "93b479df_bd844b88",
+        "filename": "src/libGLESv2/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-25T18:06:18Z",
+      "side": 1,
+      "message": "I think this also needs to be moved to the validation layer.  The check below depends on there not being an overflow.",
+      "range": {
+        "startLine": 129,
+        "startChar": 8,
+        "endLine": 133,
+        "endChar": 9
+      },
+      "revId": "aaaecd2f809818fc41328c048d815b4fde86f5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93b479df_7d7393f3",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1497,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-25T18:06:18Z",
+      "side": 1,
+      "message": "I hate how VS screws up this formatting",
+      "range": {
+        "startLine": 1497,
+        "startChar": 50,
+        "endLine": 1497,
+        "endChar": 51
+      },
+      "revId": "aaaecd2f809818fc41328c048d815b4fde86f5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
