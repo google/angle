@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3c4d562_3ec02dc6",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-25T17:51:39Z",
+      "side": 1,
+      "message": "nit: ++fieldIndex\n\nSee http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml?showone\u003dPreincrement_and_Predecrement#Preincrement_and_Predecrement",
+      "revId": "452c4f57471b564231d60a69fe4a8f5eda857ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9399d985_8649da7b",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-08-25T17:51:39Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this go inside the GetVariableTraverser::traverse() function?  So it can be set recursively and code looks cleaner here.",
+      "revId": "452c4f57471b564231d60a69fe4a8f5eda857ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
