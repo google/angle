@@ -24,6 +24,7 @@ class CollectVariables : public TIntermTraverser
 
     virtual void visitSymbol(TIntermSymbol *symbol);
     virtual bool visitAggregate(Visit, TIntermAggregate *node);
+    virtual bool visitBinary(Visit visit, TIntermBinary *binaryNode);
 
   private:
     template <typename VarT>
