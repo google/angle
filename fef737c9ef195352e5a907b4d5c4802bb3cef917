@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73b9c5d7_bc844d88",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-25T18:08:16Z",
+      "side": 1,
+      "message": "Can we use uint8_t* here instead?",
+      "range": {
+        "startLine": 121,
+        "startChar": 36,
+        "endLine": 121,
+        "endChar": 52
+      },
+      "revId": "fef737c9ef195352e5a907b4d5c4802bb3cef917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93b479df_1d5ff758",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-25T18:08:16Z",
+      "side": 1,
+      "message": "Here too.",
+      "range": {
+        "startLine": 765,
+        "startChar": 4,
+        "endLine": 765,
+        "endChar": 19
+      },
+      "revId": "fef737c9ef195352e5a907b4d5c4802bb3cef917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
