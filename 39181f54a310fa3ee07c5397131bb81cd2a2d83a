@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "73b9c5d7_5fa883aa",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T21:16:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9399d985_6cc5b7d5",
+      "revId": "39181f54a310fa3ee07c5397131bb81cd2a2d83a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f389353b_3094e630",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-08-25T20:45:53Z",
       "side": 1,
       "message": "I think this deserves a helper function like findUniformByName().",
+      "revId": "39181f54a310fa3ee07c5397131bb81cd2a2d83a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53ae8194_fefcf981",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T21:16:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f389353b_3094e630",
       "revId": "39181f54a310fa3ee07c5397131bb81cd2a2d83a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "93b479df_20c72e82",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T21:16:35Z",
+      "side": 1,
+      "message": "I agree. Done.",
+      "parentUuid": "9399d985_4ce71374",
+      "revId": "39181f54a310fa3ee07c5397131bb81cd2a2d83a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f389353b_d0be4299",
         "filename": "src/compiler/translator/VariableInfo.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2014-08-25T20:45:53Z",
       "side": 1,
       "message": "++fieldIndex",
+      "revId": "39181f54a310fa3ee07c5397131bb81cd2a2d83a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53ae8194_1ebd2dc3",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T21:16:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f389353b_d0be4299",
       "revId": "39181f54a310fa3ee07c5397131bb81cd2a2d83a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
