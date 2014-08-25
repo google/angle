@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "53ae8194_de4d7554",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T20:21:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3c4d562_3ec02dc6",
+      "revId": "452c4f57471b564231d60a69fe4a8f5eda857ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9399d985_8649da7b",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-08-25T17:51:39Z",
       "side": 1,
       "message": "Shouldn\u0027t this go inside the GetVariableTraverser::traverse() function?  So it can be set recursively and code looks cleaner here.",
+      "revId": "452c4f57471b564231d60a69fe4a8f5eda857ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53ae8194_7e3f09a1",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T20:21:34Z",
+      "side": 1,
+      "message": "I agree this line of code is cleaner in traverse.\nI moved the layout type update here because I made all of the nested struct information into \"ShaderVariables\" instead of nested \"InterfaceBlockFields\". In GLSL 3, it\u0027s impossible to modify the layout of nested struct fields; only the base interface block members have the information. Hence, there\u0027s no need for the recursion.",
+      "parentUuid": "9399d985_8649da7b",
       "revId": "452c4f57471b564231d60a69fe4a8f5eda857ba8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
