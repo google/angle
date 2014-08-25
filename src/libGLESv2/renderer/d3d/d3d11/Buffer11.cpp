@@ -118,6 +118,8 @@ class Buffer11::NativeBuffer11 : public Buffer11::BufferStorage11
     virtual void *map(size_t offset, size_t length, GLbitfield access);
     virtual void unmap();
 
+    bool setData(D3D11_MAP mapMode, const uint8_t *data, size_t size, size_t offset);
+
   private:
     ID3D11Buffer *mNativeBuffer;
 
@@ -178,7 +180,7 @@ Buffer11 *Buffer11::makeBuffer11(BufferImpl *buffer)
     return static_cast<Buffer11*>(buffer);
 }
 
-void Buffer11::setData(const void* data, size_t size, GLenum usage)
+void Buffer11::setData(const void *data, size_t size, GLenum usage)
 {
     setSubData(data, size, 0);
 
@@ -229,7 +231,7 @@ void *Buffer11::getData()
     return mResolvedData.data();
 }
 
-void Buffer11::setSubData(const void* data, size_t size, size_t offset)
+void Buffer11::setSubData(const void *data, size_t size, size_t offset)
 {
     size_t requiredSize = size + offset;
     mSize = std::max(mSize, requiredSize);
@@ -258,20 +260,7 @@ void Buffer11::setSubData(const void* data, size_t size, size_t offset)
             }
         }
 
-        ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-
-        D3D11_MAPPED_SUBRESOURCE mappedResource;
-        HRESULT result = context->Map(stagingBuffer->getNativeBuffer(), 0, D3D11_MAP_WRITE, 0, &mappedResource);
-        if (FAILED(result))
-        {
-            return gl::error(GL_OUT_OF_MEMORY);
-        }
-
-        unsigned char *offsetBufferPointer = reinterpret_cast<unsigned char *>(mappedResource.pData) + offset;
-        memcpy(offsetBufferPointer, data, size);
-
-        context->Unmap(stagingBuffer->getNativeBuffer(), 0);
-
+        stagingBuffer->setData(D3D11_MAP_WRITE, reinterpret_cast<const uint8_t *>(data), size, offset);
         stagingBuffer->setDataRevision(stagingBuffer->getDataRevision() + 1);
     }
 }
@@ -760,6 +749,25 @@ void *Buffer11::NativeBuffer11::map(size_t offset, size_t length, GLbitfield acc
     ASSERT(SUCCEEDED(result));
 
     return static_cast<GLubyte*>(mappedResource.pData) + offset;
+}
+
+bool Buffer11::NativeBuffer11::setData(D3D11_MAP mapMode, const uint8_t *data, size_t size, size_t offset)
+{
+    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    HRESULT result = context->Map(mNativeBuffer, 0, mapMode, 0, &mappedResource);
+    if (FAILED(result))
+    {
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    uint8_t *offsetBufferPointer = reinterpret_cast<uint8_t *>(mappedResource.pData) + offset;
+    memcpy(offsetBufferPointer, data, size);
+
+    context->Unmap(mNativeBuffer, 0);
+
+    return true;
 }
 
 void Buffer11::NativeBuffer11::unmap()
