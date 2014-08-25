@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73b9c5d7_bf9eff84",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T21:25:38Z",
+      "side": 1,
+      "message": "this will be very helpful. can you put the logic for the static ANGLE libGLESv2 in a split patch? if it\u0027s too much trouble, no problem, but is quite separate from xfb.",
+      "range": {
+        "startLine": 405,
+        "startChar": 17,
+        "endLine": 430,
+        "endChar": 22
+      },
+      "revId": "de4b0fef4f5553454242c38114098f8ee81adfb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53ae8194_dedad520",
+        "filename": "src/libGLESv2/TransformFeedback.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T21:25:38Z",
+      "side": 1,
+      "message": "nit: ASSERT(impl !\u003d NULL)",
+      "revId": "de4b0fef4f5553454242c38114098f8ee81adfb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73b9c5d7_df9bb393",
+        "filename": "src/libGLESv2/TransformFeedback.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T21:25:38Z",
+      "side": 1,
+      "message": "nit: SafeDelete",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 10
+      },
+      "revId": "de4b0fef4f5553454242c38114098f8ee81adfb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73b9c5d7_ff987799",
+        "filename": "src/libGLESv2/TransformFeedback.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T21:25:38Z",
+      "side": 1,
+      "message": "nit: no ; necessary",
+      "range": {
+        "startLine": 18,
+        "startChar": 1,
+        "endLine": 18,
+        "endChar": 2
+      },
+      "revId": "de4b0fef4f5553454242c38114098f8ee81adfb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73b9c5d7_1f19ab6a",
+        "filename": "tests/angle_implementation_unit_tests/TransformFeedback_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T21:25:38Z",
+      "side": 1,
+      "message": "nit: { on new line",
+      "range": {
+        "startLine": 14,
+        "startChar": 66,
+        "endLine": 14,
+        "endChar": 68
+      },
+      "revId": "de4b0fef4f5553454242c38114098f8ee81adfb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
