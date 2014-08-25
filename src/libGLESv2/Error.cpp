@@ -28,7 +28,7 @@ Error::Error(GLenum errorCode, const std::string &msg, ...)
 {
     va_list vararg;
     va_start(vararg, msg);
-    mMessage = Format(msg, vararg);
+    mMessage = FormatString(msg, vararg);
     va_end(vararg);
 }
 
