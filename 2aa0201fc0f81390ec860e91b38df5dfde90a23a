@@ -16,6 +16,47 @@
       "revId": "2aa0201fc0f81390ec860e91b38df5dfde90a23a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73b9c5d7_7c45557c",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T18:26:18Z",
+      "side": 1,
+      "message": "good point, will fix that.",
+      "parentUuid": "f3c4d562_a9e6c5ba",
+      "revId": "2aa0201fc0f81390ec860e91b38df5dfde90a23a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53ae8194_fe66b9f0",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-25T18:26:18Z",
+      "side": 1,
+      "message": "nit: spacing",
+      "range": {
+        "startLine": 370,
+        "startChar": 9,
+        "endLine": 370,
+        "endChar": 11
+      },
+      "revId": "2aa0201fc0f81390ec860e91b38df5dfde90a23a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
