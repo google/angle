@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d3cd11a8_14d8d426",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-26T18:34:30Z",
+      "side": 1,
+      "message": "The other option we have here is adding a new function like...\n\n   Error InvalidEnum(msg);\n\nso this call would become...\n\n    context-\u003erecordError(gl::InvalidEnum());\n\nI could go either way.",
+      "range": {
+        "startLine": 48,
+        "startChar": 33,
+        "endLine": 48,
+        "endChar": 59
+      },
+      "revId": "8649a0e29a2352670f99dcccc458fa8b01201393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
