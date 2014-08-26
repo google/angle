@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "b3b17d0f_dba5f38b",
+        "filename": "projects/src/libGLESv2.vcxproj",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-26T15:11:08Z",
+      "side": 1,
+      "message": "This file generated some weird changes, maybe a different version of gyp?",
+      "revId": "1da53de621e58f718436ae6b8f65f33b60bd6cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3b17d0f_bbaa275a",
+        "filename": "projects/src/libGLESv2.vcxproj",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-26T15:11:08Z",
+      "side": 1,
+      "message": "I don\u0027t think this is even valid XML.",
+      "range": {
+        "startLine": 87,
+        "startChar": 115,
+        "endLine": 87,
+        "endChar": 157
+      },
+      "revId": "1da53de621e58f718436ae6b8f65f33b60bd6cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3b431fe_3fb283e5",
         "filename": "src/libGLESv2/renderer/ShaderImpl.h",
         "patchSetId": 5
@@ -19,6 +59,109 @@
         "endLine": 7,
         "endChar": 59
       },
+      "revId": "1da53de621e58f718436ae6b8f65f33b60bd6cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3b17d0f_1bbc7b9e",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-26T15:11:08Z",
+      "side": 1,
+      "message": "I don\u0027t think this include is needed.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 29
+      },
+      "revId": "1da53de621e58f718436ae6b8f65f33b60bd6cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "739c6584_a110be23",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-26T15:11:08Z",
+      "side": 1,
+      "message": "Extra newline",
+      "revId": "1da53de621e58f718436ae6b8f65f33b60bd6cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3b17d0f_3bbf3797",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-26T15:11:08Z",
+      "side": 1,
+      "message": "Needs some extra indentation.",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 11
+      },
+      "revId": "1da53de621e58f718436ae6b8f65f33b60bd6cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "739c6584_6103d6e0",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-26T15:11:08Z",
+      "side": 1,
+      "message": "Is it feasible to remove the isCompiled() method and have compile(...) return a bool that the gl::Shader uses to track the result?",
+      "range": {
+        "startLine": 23,
+        "startChar": 8,
+        "endLine": 24,
+        "endChar": 44
+      },
+      "revId": "1da53de621e58f718436ae6b8f65f33b60bd6cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "739c6584_8106daee",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-26T15:11:08Z",
+      "side": 1,
+      "message": "Extra newline",
       "revId": "1da53de621e58f718436ae6b8f65f33b60bd6cd0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
