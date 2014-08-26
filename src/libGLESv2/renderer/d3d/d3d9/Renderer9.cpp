@@ -22,6 +22,7 @@
 #include "libGLESv2/renderer/d3d/d3d9/Fence9.h"
 #include "libGLESv2/renderer/d3d/d3d9/VertexArray9.h"
 #include "libGLESv2/renderer/d3d/IndexDataManager.h"
+#include "libGLESv2/renderer/d3d/ProgramD3D.h"
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/TransformFeedbackD3D.h"
@@ -2764,6 +2765,11 @@ RenderTarget *Renderer9::createRenderTarget(int width, int height, GLenum format
 ShaderImpl *Renderer9::createShader(GLenum type)
 {
     return new ShaderD3D(type, this);
+}
+
+ProgramImpl *Renderer9::createProgram()
+{
+    return new ProgramD3D(this);
 }
 
 void Renderer9::releaseShaderCompiler()

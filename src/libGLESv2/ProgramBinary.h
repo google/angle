@@ -47,6 +47,7 @@ class ShaderExecutable;
 class Renderer;
 struct TranslatedAttribute;
 class UniformStorage;
+class ProgramImpl;
 }
 
 namespace gl
@@ -94,8 +95,11 @@ struct LinkedVarying
 class ProgramBinary : public RefCountObject
 {
   public:
-    explicit ProgramBinary(rx::Renderer *renderer);
+    explicit ProgramBinary(rx::ProgramImpl *impl);
     ~ProgramBinary();
+
+    rx::ProgramImpl *getImplementation() { return mProgram; }
+    const rx::ProgramImpl *getImplementation() const { return mProgram; }
 
     rx::ShaderExecutable *getPixelExecutableForFramebuffer(const Framebuffer *fbo);
     rx::ShaderExecutable *getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputLayout);
@@ -189,8 +193,6 @@ class ProgramBinary : public RefCountObject
     void sortAttributesByLayout(rx::TranslatedAttribute attributes[MAX_VERTEX_ATTRIBS], int sortedSemanticIndices[MAX_VERTEX_ATTRIBS]) const;
 
     const std::vector<LinkedUniform*> &getUniforms() const { return mUniforms; }
-    const rx::UniformStorage &getVertexUniformStorage() const { return *mVertexUniformStorage; }
-    const rx::UniformStorage &getFragmentUniformStorage() const { return *mFragmentUniformStorage; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ProgramBinary);
@@ -239,7 +241,6 @@ class ProgramBinary : public RefCountObject
     bool defineUniformBlock(InfoLog &infoLog, const Shader &shader, const sh::InterfaceBlock &interfaceBlock, const Caps &caps);
     bool assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex, const Caps &caps);
     void defineOutputVariables(Shader *fragmentShader);
-    void initializeUniformStorage();
 
     template <typename T>
     void setUniform(GLint location, GLsizei count, const T* v, GLenum targetUniformType);
@@ -286,8 +287,7 @@ class ProgramBinary : public RefCountObject
         rx::ShaderExecutable *mShaderExecutable;
     };
 
-    rx::Renderer *const mRenderer;
-    rx::DynamicHLSL *mDynamicHLSL;
+    rx::ProgramImpl *mProgram;
 
     std::string mVertexHLSL;
     rx::D3DWorkaroundType mVertexWorkarounds;
@@ -321,8 +321,6 @@ class ProgramBinary : public RefCountObject
     std::vector<UniformBlock*> mUniformBlocks;
     std::vector<VariableLocation> mUniformIndex;
     std::map<int, VariableLocation> mOutputVariables;
-    rx::UniformStorage *mVertexUniformStorage;
-    rx::UniformStorage *mFragmentUniformStorage;
 
     bool mValidated;
 

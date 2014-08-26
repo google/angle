@@ -1,0 +1,57 @@
+//
+// Copyright (c) 2014 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
+// ProgramD3D.h: Defines the rx::ProgramD3D class which implements rx::ProgramImpl.
+
+#ifndef LIBGLESV2_RENDERER_PROGRAMD3D_H_
+#define LIBGLESV2_RENDERER_PROGRAMD3D_H_
+
+#include "libGLESv2/renderer/ProgramImpl.h"
+
+namespace gl
+{
+struct LinkedUniform;
+struct VertexFormat;
+}
+
+namespace rx
+{
+
+class UniformStorage;
+
+class ProgramD3D : public ProgramImpl
+{
+  public:
+    ProgramD3D(rx::Renderer *renderer);
+    virtual ~ProgramD3D();
+
+    static ProgramD3D *makeProgramD3D(ProgramImpl *impl);
+    static const ProgramD3D *makeProgramD3D(const ProgramImpl *impl);
+
+    Renderer *getRenderer() { return mRenderer; }
+    DynamicHLSL *getDynamicHLSL() { return mDynamicHLSL; }
+
+    // D3D only
+    void initializeUniformStorage(const std::vector<gl::LinkedUniform*> &uniforms);
+
+    const UniformStorage &getVertexUniformStorage() const { return *mVertexUniformStorage; }
+    const UniformStorage &getFragmentUniformStorage() const { return *mFragmentUniformStorage; }
+
+    void reset();
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(ProgramD3D);
+
+    Renderer *mRenderer;
+    DynamicHLSL *mDynamicHLSL;
+
+    UniformStorage *mVertexUniformStorage;
+    UniformStorage *mFragmentUniformStorage;
+};
+
+}
+
+#endif // LIBGLESV2_RENDERER_PROGRAMD3D_H_

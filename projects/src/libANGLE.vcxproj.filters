@@ -267,6 +267,9 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderExecutable.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\ProgramImpl.h">
+      <Filter>src\libGLESv2\renderer</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\loadimage.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
@@ -354,12 +357,18 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\ImageD3D.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\ProgramD3D.h">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\BufferD3D.cpp">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\MemoryBuffer.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\ProgramD3D.cpp">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\IndexBuffer.cpp">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClCompile>
