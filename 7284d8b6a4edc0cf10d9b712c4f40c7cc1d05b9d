@@ -46,6 +46,30 @@
       "revId": "7284d8b6a4edc0cf10d9b712c4f40c7cc1d05b9d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9397195e_456c5c42",
+        "filename": "src/libGLESv2/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-26T15:28:50Z",
+      "side": 1,
+      "message": "I\u0027d definitely be in favor of limiting blanket namespace inclusion as much as possible. (And am also not a fan of using.)",
+      "parentUuid": "33a66dd4_3fe967cb",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 19
+      },
+      "revId": "7284d8b6a4edc0cf10d9b712c4f40c7cc1d05b9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
