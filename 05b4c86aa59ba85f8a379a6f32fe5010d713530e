@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9397195e_4b958de6",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T19:58:13Z",
+      "side": 1,
+      "message": "this should be \u003dmaxVertexUniformComponents",
+      "range": {
+        "startLine": 433,
+        "startChar": 47,
+        "endLine": 433,
+        "endChar": 48
+      },
+      "revId": "05b4c86aa59ba85f8a379a6f32fe5010d713530e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9397195e_2b924900",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T19:58:13Z",
+      "side": 1,
+      "message": "same deal, \u003dmaxFragmentUniformComponents",
+      "range": {
+        "startLine": 434,
+        "startChar": 49,
+        "endLine": 434,
+        "endChar": 50
+      },
+      "revId": "05b4c86aa59ba85f8a379a6f32fe5010d713530e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
