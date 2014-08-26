@@ -13,34 +13,28 @@
     <ClInclude Include="..\..\samples\angle\sample_util\Vector.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\samples\angle\sample_util\geometry_utils.h">
+      <Filter>angle\sample_util</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\samples\angle\sample_util\texture_utils.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\samples\angle\sample_util\SampleApplication.cpp">
       <Filter>angle\sample_util</Filter>
     </ClCompile>
     <ClInclude Include="..\..\samples\angle\sample_util\Matrix.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\samples\angle\sample_util\tga_utils.cpp">
-      <Filter>angle\sample_util</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\samples\angle\sample_util\shader_utils.h">
-      <Filter>angle\sample_util</Filter>
-    </ClInclude>
-    <ClCompile Include="..\..\samples\angle\sample_util\shader_utils.cpp">
-      <Filter>angle\sample_util</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\samples\angle\sample_util\geometry_utils.h">
-      <Filter>angle\sample_util</Filter>
-    </ClInclude>
-    <ClCompile Include="..\..\samples\angle\sample_util\SampleApplication.cpp">
-      <Filter>angle\sample_util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\samples\angle\sample_util\geometry_utils.cpp">
-      <Filter>angle\sample_util</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\samples\angle\sample_util\random_utils.h">
       <Filter>angle\sample_util</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\samples\angle\sample_util\geometry_utils.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\samples\angle\sample_util\Vector.cpp">
+      <Filter>angle\sample_util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\samples\angle\sample_util\tga_utils.cpp">
       <Filter>angle\sample_util</Filter>
     </ClCompile>
     <ClInclude Include="..\..\samples\angle\sample_util\tga_utils.h">

@@ -14,6 +14,8 @@
 #include "angle_gl.h"
 #include <algorithm>
 
+#include "shared_utils.h"
+
 #define EXPECT_GL_ERROR(err) EXPECT_EQ((err), glGetError())
 #define EXPECT_GL_NO_ERROR() EXPECT_GL_ERROR(GL_NO_ERROR)
 
@@ -30,8 +32,6 @@
     EXPECT_EQ((b), pixel[2]); \
     EXPECT_EQ((a), pixel[3]); \
 }
-
-#define SHADER_SOURCE(...) #__VA_ARGS__
 
 class EGLWindow;
 class OSWindow;

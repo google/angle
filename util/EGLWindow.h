@@ -21,11 +21,7 @@
 #include <cstdint>
 #include <memory>
 
-// A macro to disallow the copy constructor and operator= functions
-// This must be used in the private: declarations for a class
-#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-    TypeName(const TypeName&);               \
-    void operator=(const TypeName&)
+#include "shared_utils.h"
 
 class OSWindow;
 
