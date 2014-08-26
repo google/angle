@@ -35,6 +35,8 @@
 
 #define SHADER_SOURCE(...) #__VA_ARGS__
 
+class OSWindow;
+
 class ANGLETest : public testing::Test
 {
   protected:
@@ -100,8 +102,7 @@ class ANGLETest : public testing::Test
     EGLContext mContext;
     EGLDisplay mDisplay;
 
-    static EGLNativeWindowType mNativeWindow;
-    static EGLNativeDisplayType mNativeDisplay;
+    static OSWindow *mOSWindow;
 };
 
 class ANGLETestEnvironment : public testing::Environment

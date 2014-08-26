@@ -1,4 +1,7 @@
 #include "ANGLETest.h"
+#include "OSWindow.h"
+
+OSWindow *ANGLETest::mOSWindow = NULL;
 
 ANGLETest::ANGLETest()
     : mTestPlatform(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE),
@@ -19,9 +22,6 @@ ANGLETest::ANGLETest()
 {
 }
 
-EGLNativeWindowType ANGLETest::mNativeWindow = 0;
-EGLNativeDisplayType ANGLETest::mNativeDisplay = 0;
-
 void ANGLETest::SetUp()
 {
     ResizeWindow(mWidth, mHeight);
@@ -37,6 +37,16 @@ void ANGLETest::TearDown()
     if (!destroyEGLContext())
     {
         FAIL() << "egl context destruction failed.";
+    }
+
+    // Check for quit message
+    Event myEvent;
+    while (mOSWindow->popEvent(&myEvent))
+    {
+        if (myEvent.Type == Event::EVENT_CLOSED)
+        {
+            exit(0);
+        }
     }
 }
 
@@ -264,7 +274,7 @@ bool ANGLETest::createEGLContext()
         EGL_NONE,
     };
 
-    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, mNativeDisplay, displayAttributes);
+    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, mOSWindow->getNativeDisplay(), displayAttributes);
     if (mDisplay == EGL_NO_DISPLAY)
     {
         destroyEGLContext();
@@ -315,7 +325,7 @@ bool ANGLETest::createEGLContext()
     eglGetConfigAttrib(mDisplay, mConfig, EGL_SAMPLE_BUFFERS, &samples);
     mMultisample = (samples != 0);
 
-    mSurface = eglCreateWindowSurface(mDisplay, mConfig, mNativeWindow, NULL);
+    mSurface = eglCreateWindowSurface(mDisplay, mConfig, mOSWindow->getNativeWindow(), NULL);
     if(mSurface == EGL_NO_SURFACE)
     {
         eglGetError(); // Clear error
@@ -373,6 +383,36 @@ bool ANGLETest::destroyEGLContext()
     }
 
     return true;
+}
+
+bool ANGLETest::InitTestWindow()
+{
+    mOSWindow = CreateOSWindow();
+    if (!mOSWindow->initialize("ANGLE_TEST", 128, 128))
+    {
+        return false;
+    }
+
+    mOSWindow->setVisible(true);
+
+    return true;
+}
+
+bool ANGLETest::DestroyTestWindow()
+{
+    if (mOSWindow)
+    {
+        mOSWindow->destroy();
+        delete mOSWindow;
+        mOSWindow = NULL;
+    }
+
+    return true;
+}
+
+bool ANGLETest::ResizeWindow(int width, int height)
+{
+    return mOSWindow->resize(width, height);
 }
 
 void ANGLETestEnvironment::SetUp()
