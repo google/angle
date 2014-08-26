@@ -2429,8 +2429,8 @@ D3DPOOL Renderer9::getBufferPool(DWORD usage) const
     return D3DPOOL_DEFAULT;
 }
 
-bool Renderer9::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                            GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level)
+gl::Error Renderer9::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                 GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level)
 {
     RECT rect;
     rect.left = sourceRect.x;
@@ -2441,8 +2441,8 @@ bool Renderer9::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &s
     return mBlit->copy2D(framebuffer, rect, destFormat, xoffset, yoffset, storage, level);
 }
 
-bool Renderer9::copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                              GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level)
+gl::Error Renderer9::copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                   GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level)
 {
     RECT rect;
     rect.left = sourceRect.x;
@@ -2453,20 +2453,20 @@ bool Renderer9::copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle 
     return mBlit->copyCube(framebuffer, rect, destFormat, xoffset, yoffset, storage, target, level);
 }
 
-bool Renderer9::copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                            GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level)
+gl::Error Renderer9::copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                 GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level)
 {
     // 3D textures are not available in the D3D9 backend.
     UNREACHABLE();
-    return false;
+    return gl::Error(GL_INVALID_OPERATION);
 }
 
-bool Renderer9::copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                 GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level)
+gl::Error Renderer9::copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                      GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level)
 {
     // 2D array textures are not available in the D3D9 backend.
     UNREACHABLE();
-    return false;
+    return gl::Error(GL_INVALID_OPERATION);
 }
 
 gl::Error Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &readRect, gl::Framebuffer *drawFramebuffer, const gl::Rectangle &drawRect,
@@ -2973,7 +2973,7 @@ rx::UniformStorage *Renderer9::createUniformStorage(size_t storageSize)
     return new UniformStorage(storageSize);
 }
 
-bool Renderer9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
+gl::Error Renderer9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 {
     return mBlit->boxFilter(source, dest);
 }

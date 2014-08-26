@@ -120,14 +120,14 @@ class Renderer11 : public Renderer
     virtual bool copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source);
     virtual bool copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source);
 
-    virtual bool copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                             GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level);
-    virtual bool copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                               GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level);
-    virtual bool copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                             GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level);
-    virtual bool copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+    virtual gl::Error copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                  GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level);
+    virtual gl::Error copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                    GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level);
+    virtual gl::Error copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                                   GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level);
+    virtual gl::Error copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                       GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level);
 
     virtual gl::Error blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                                const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter);

@@ -175,14 +175,14 @@ class Renderer
     virtual bool copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source) = 0;
     virtual bool copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source) = 0;
 
-    virtual bool copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                             GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level) = 0;
-    virtual bool copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                               GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level) = 0;
-    virtual bool copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                             GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level) = 0;
-    virtual bool copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+    virtual gl::Error copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                  GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level) = 0;
+    virtual gl::Error copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                    GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level) = 0;
+    virtual gl::Error copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                                   GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level) = 0;
+    virtual gl::Error copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                       GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level) = 0;
 
     virtual gl::Error blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                                const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter) = 0;
