@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "739c6584_01764a56",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T15:44:50Z",
+      "side": 1,
+      "message": "nit: are these destined to be context caps? if so, add a TODO, otherwise ignore this nit.",
+      "range": {
+        "startLine": 211,
+        "startChar": 45,
+        "endLine": 211,
+        "endChar": 60
+      },
+      "revId": "d80f2ed368b846c2562b4751af5674fedd8a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "739c6584_e17a463a",
+        "filename": "src/libGLESv2/DynamicHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T15:44:50Z",
+      "side": 1,
+      "message": "nit: are these destined to be context caps? if so, add a TODO, otherwise ignore this nit.",
+      "range": {
+        "startLine": 654,
+        "startChar": 45,
+        "endLine": 654,
+        "endChar": 60
+      },
+      "revId": "d80f2ed368b846c2562b4751af5674fedd8a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3b17d0f_fb442fdd",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T15:44:50Z",
+      "side": 1,
+      "message": "nit: are these destined to be context caps? if so, add a TODO, otherwise ignore this nit.",
+      "range": {
+        "startLine": 404,
+        "startChar": 74,
+        "endLine": 404,
+        "endChar": 91
+      },
+      "revId": "d80f2ed368b846c2562b4751af5674fedd8a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "739c6584_218a6e0b",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2696,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T15:44:50Z",
+      "side": 1,
+      "message": "nit: are these destined to be context caps? if so, add a TODO, otherwise ignore this nit.",
+      "range": {
+        "startLine": 2696,
+        "startChar": 65,
+        "endLine": 2696,
+        "endChar": 80
+      },
+      "revId": "d80f2ed368b846c2562b4751af5674fedd8a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "739c6584_c1986267",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T15:44:50Z",
+      "side": 1,
+      "message": "nit: make this return the GL type. this ensures we only get the expected rounding",
+      "range": {
+        "startLine": 770,
+        "startChar": 7,
+        "endLine": 770,
+        "endChar": 13
+      },
+      "revId": "d80f2ed368b846c2562b4751af5674fedd8a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "739c6584_a19d5e55",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 772,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T15:44:50Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 772,
+        "startChar": 10,
+        "endLine": 772,
+        "endChar": 16
+      },
+      "revId": "d80f2ed368b846c2562b4751af5674fedd8a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "739c6584_018f6a22",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T15:44:50Z",
+      "side": 1,
+      "message": "nit: I agree this is future-proof, yet it would be nice to just exclude it",
+      "range": {
+        "startLine": 433,
+        "startChar": 47,
+        "endLine": 433,
+        "endChar": 153
+      },
+      "revId": "d80f2ed368b846c2562b4751af5674fedd8a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3b17d0f_5b0b23b9",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T15:44:50Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 435,
+        "startChar": 49,
+        "endLine": 435,
+        "endChar": 157
+      },
+      "revId": "d80f2ed368b846c2562b4751af5674fedd8a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

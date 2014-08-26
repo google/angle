@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "739c6584_418d7221",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1787,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T15:44:50Z",
+      "side": 0,
+      "message": "I noticed the new method is missing these static asserts. Are they replicated somewhere? The second and third seem unnecessary but the first would be good to have for as long as we have that constant in the code.",
+      "range": {
+        "startLine": 1785,
+        "startChar": 4,
+        "endLine": 1787,
+        "endChar": 81
+      },
+      "revId": "2b97681b9ac01909bc60f5c6caecef3599b2acf9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
