@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3b17d0f_9b53eb9f",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T15:46:44Z",
+      "side": 1,
+      "message": "same nit as in previous patch.. is this intended to be a context caps? // TODO or fixme if so",
+      "range": {
+        "startLine": 2237,
+        "startChar": 38,
+        "endLine": 2237,
+        "endChar": 53
+      },
+      "revId": "c300de9547391cfec4638e0a830e35c39798122b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
