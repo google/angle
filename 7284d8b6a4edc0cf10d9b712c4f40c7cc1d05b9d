@@ -22,6 +22,30 @@
       "revId": "7284d8b6a4edc0cf10d9b712c4f40c7cc1d05b9d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33a66dd4_3fe967cb",
+        "filename": "src/libGLESv2/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-26T14:36:13Z",
+      "side": 1,
+      "message": "I\u0027m OK with it as long as it\u0027s in the cpp file. Alternatively you could add\n\n   using gl::InfoLog;\n   using gl::VertexFormat;\n   etc...\n\nto limit the potential conflicts.",
+      "parentUuid": "53076152_ad6cdad4",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 19
+      },
+      "revId": "7284d8b6a4edc0cf10d9b712c4f40c7cc1d05b9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
