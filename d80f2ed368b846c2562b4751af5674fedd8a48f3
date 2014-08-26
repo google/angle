@@ -237,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "d3cd11a8_543d2c44",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-26T19:14:24Z",
+      "side": 1,
+      "message": "OK. You could call this GetMaximumConstantBufferSize, for clarity.",
+      "parentUuid": "d3cd11a8_f419d813",
+      "range": {
+        "startLine": 770,
+        "startChar": 7,
+        "endLine": 770,
+        "endChar": 13
+      },
+      "revId": "d80f2ed368b846c2562b4751af5674fedd8a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "739c6584_a19d5e55",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 7
