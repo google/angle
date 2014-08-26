@@ -14,6 +14,7 @@
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
+#include "libGLESv2/renderer/d3d/TransformFeedbackD3D.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
@@ -2486,6 +2487,11 @@ QueryImpl *Renderer11::createQuery(GLenum type)
 FenceImpl *Renderer11::createFence()
 {
     return new Fence11(this);
+}
+
+TransformFeedbackImpl* Renderer11::createTransformFeedback()
+{
+    return new TransformFeedbackD3D();
 }
 
 bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const

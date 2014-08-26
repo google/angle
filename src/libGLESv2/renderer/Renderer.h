@@ -60,6 +60,7 @@ class Image;
 class TextureStorage;
 class UniformStorage;
 class TextureImpl;
+class TransformFeedbackImpl;
 
 struct ConfigDesc
 {
@@ -228,6 +229,9 @@ class Renderer
     // Query and Fence creation
     virtual QueryImpl *createQuery(GLenum type) = 0;
     virtual FenceImpl *createFence() = 0;
+
+    // Transform Feedback creation
+    virtual TransformFeedbackImpl* createTransformFeedback() = 0;
 
     // Current GLES client version
     void setCurrentClientVersion(int clientVersion) { mCurrentClientVersion = clientVersion; }

@@ -18,6 +18,7 @@
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/renderer/d3d/IndexDataManager.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
+#include "libGLESv2/renderer/d3d/TransformFeedbackD3D.h"
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
 #include "libGLESv2/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
@@ -598,6 +599,11 @@ QueryImpl *Renderer9::createQuery(GLenum type)
 FenceImpl *Renderer9::createFence()
 {
     return new Fence9(this);
+}
+
+TransformFeedbackImpl* Renderer9::createTransformFeedback()
+{
+    return new TransformFeedbackD3D();
 }
 
 bool Renderer9::supportsFastCopyBufferToTexture(GLenum internalFormat) const

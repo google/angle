@@ -113,6 +113,33 @@
                 'compiler_tests/compiler_test_main.cpp',
             ],
         },
+
+        {
+            'target_name': 'angle_implementation_unit_tests',
+            'type': 'executable',
+            'dependencies':
+            [
+                '../src/angle.gyp:libGLESv2_static',
+                'gtest',
+                'gmock',
+            ],
+            'include_dirs':
+            [
+                '../include',
+                '../src',
+                'third_party/googletest/include',
+                'third_party/googlemock/include',
+            ],
+            'includes':
+            [
+                '../build/common_defines.gypi',
+                'angle_implementation_unit_tests/angle_implementation_unit_tests.gypi',
+            ],
+            'sources':
+            [
+                'angle_implementation_unit_tests/angle_implementation_unit_tests_main.cpp',
+            ],
+        },
     ],
 
     'conditions':

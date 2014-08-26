@@ -114,6 +114,7 @@
             'libGLESv2/renderer/ShaderExecutable.h',
             'libGLESv2/renderer/SwapChain.h',
             'libGLESv2/renderer/TextureImpl.h',
+            'libGLESv2/renderer/TransformFeedbackImpl.h',
             'libGLESv2/renderer/VertexArrayImpl.h',
             'libGLESv2/renderer/copyimage.cpp',
             'libGLESv2/renderer/copyimage.h',
@@ -158,6 +159,8 @@
             'libGLESv2/renderer/d3d/TextureD3D.h',
             'libGLESv2/renderer/d3d/TextureStorage.cpp',
             'libGLESv2/renderer/d3d/TextureStorage.h',
+            'libGLESv2/renderer/d3d/TransformFeedbackD3D.cpp',
+            'libGLESv2/renderer/d3d/TransformFeedbackD3D.h',
             'libGLESv2/renderer/d3d/VertexBuffer.cpp',
             'libGLESv2/renderer/d3d/VertexBuffer.h',
             'libGLESv2/renderer/d3d/VertexDataManager.cpp',
@@ -398,6 +401,33 @@
                             },
                         },
                     },
+                },
+                {
+                    # This target supports angle_implementation_unittests.
+                    # It only executes cross-platform code and therefore
+                    # doesn't need any Direct3D DLLs.
+                    'target_name': 'libGLESv2_static',
+                    'type': 'static_library',
+                    'dependencies': [ 'translator', 'commit_id' ],
+                    'includes': [ '../build/common_defines.gypi', ],
+                    'include_dirs':
+                    [
+                        '.',
+                        '../include',
+                        'libGLESv2',
+                    ],
+                    'sources':
+                    [
+                        '<@(angle_libglesv2_sources)',
+                    ],
+                    'defines':
+                    [
+                        'GL_APICALL=',
+                        'GL_GLEXT_PROTOTYPES=',
+                        'EGLAPI=',
+                        # Workaround for D3D-specific code in Renderer.h
+                        'ANGLE_COMPILE_OPTIMIZATION_LEVEL=0',
+                    ],
                 },
             ],
         },

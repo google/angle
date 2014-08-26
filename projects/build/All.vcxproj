@@ -229,6 +229,10 @@
       <Project>{7FBD6F69-B9A4-69F1-A12B-8DACB3F8CD81}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\src\libGLESv2_static.vcxproj">
+      <Project>{F8ABD31A-EC2F-A211-D514-076C763B69F9}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\src\libEGL.vcxproj">
       <Project>{FBAEE4F6-562A-588F-01F9-72DCABB3B061}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

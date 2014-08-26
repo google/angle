@@ -178,6 +178,9 @@ class Renderer11 : public Renderer
     virtual QueryImpl *createQuery(GLenum type);
     virtual FenceImpl *createFence();
 
+    // Transform Feedback creation
+    virtual TransformFeedbackImpl* createTransformFeedback();
+
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };

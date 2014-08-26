@@ -279,6 +279,9 @@
     <None Include="..\..\src\libGLESv2\renderer\loadimage.inl">
       <Filter>src\libGLESv2\renderer</Filter>
     </None>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\TransformFeedbackImpl.h">
+      <Filter>src\libGLESv2\renderer</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderExecutable.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
@@ -396,9 +399,15 @@
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\IndexDataManager.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\TransformFeedbackD3D.h">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\VertexBuffer.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\TransformFeedbackD3D.cpp">
+      <Filter>src\libGLESv2\renderer\d3d</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\renderer\d3d\BufferD3D.h">
       <Filter>src\libGLESv2\renderer\d3d</Filter>
     </ClInclude>
