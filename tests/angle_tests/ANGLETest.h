@@ -12,8 +12,6 @@
 #define GL_GLEXT_PROTOTYPES
 
 #include "angle_gl.h"
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
 #include <algorithm>
 
 #define EXPECT_GL_ERROR(err) EXPECT_EQ((err), glGetError())
@@ -35,6 +33,7 @@
 
 #define SHADER_SOURCE(...) #__VA_ARGS__
 
+class EGLWindow;
 class OSWindow;
 
 class ANGLETest : public testing::Test
@@ -72,35 +71,13 @@ class ANGLETest : public testing::Test
     int getClientVersion() const;
     int getWindowWidth() const;
     int getWindowHeight() const;
-    int getConfigRedBits() const;
-    int getConfigGreenBits() const;
-    int getConfigBlueBits() const;
-    int getConfigAlphaBits() const;
-    int getConfigDepthBits() const;
-    int getConfigStencilBits() const;
     bool isMultisampleEnabled() const;
 
   private:
     bool createEGLContext();
     bool destroyEGLContext();
 
-    EGLint mTestPlatform;
-
-    int mClientVersion;
-    int mWidth;
-    int mHeight;
-    int mRedBits;
-    int mGreenBits;
-    int mBlueBits;
-    int mAlphaBits;
-    int mDepthBits;
-    int mStencilBits;
-    bool mMultisample;
-
-    EGLConfig mConfig;
-    EGLSurface mSurface;
-    EGLContext mContext;
-    EGLDisplay mDisplay;
+    EGLWindow *mEGLWindow;
 
     static OSWindow *mOSWindow;
 };

@@ -1,5 +1,8 @@
 #include "ANGLETest.h"
 
+// Needed for Sleep()
+#include <Windows.h>
+
 class OcclusionQueriesTest : public ANGLETest
 {
 protected:

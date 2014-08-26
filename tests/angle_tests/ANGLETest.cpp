@@ -1,30 +1,18 @@
 #include "ANGLETest.h"
+#include "EGLWindow.h"
 #include "OSWindow.h"
 
 OSWindow *ANGLETest::mOSWindow = NULL;
 
 ANGLETest::ANGLETest()
-    : mTestPlatform(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE),
-      mClientVersion(2),
-      mWidth(1280),
-      mHeight(720),
-      mRedBits(-1),
-      mGreenBits(-1),
-      mBlueBits(-1),
-      mAlphaBits(-1),
-      mDepthBits(-1),
-      mStencilBits(-1),
-      mMultisample(false),
-      mConfig(0),
-      mSurface(EGL_NO_SURFACE),
-      mContext(EGL_NO_CONTEXT),
-      mDisplay(EGL_NO_DISPLAY)
+    : mEGLWindow(NULL)
 {
+    mEGLWindow = new EGLWindow(1280, 720, 2, EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
 }
 
 void ANGLETest::SetUp()
 {
-    ResizeWindow(mWidth, mHeight);
+    ResizeWindow(mEGLWindow->getWidth(), mEGLWindow->getHeight());
     if (!createEGLContext())
     {
         FAIL() << "egl context creation failed.";
@@ -52,7 +40,7 @@ void ANGLETest::TearDown()
 
 void ANGLETest::swapBuffers()
 {
-    eglSwapBuffers(mDisplay, mSurface);
+    mEGLWindow->swap();
 }
 
 void ANGLETest::drawQuad(GLuint program, const std::string& positionAttribName, GLfloat quadDepth)
@@ -162,226 +150,82 @@ bool ANGLETest::extensionEnabled(const std::string &extName)
 
 void ANGLETest::setClientVersion(int clientVersion)
 {
-    mClientVersion = clientVersion;
+    mEGLWindow->setClientVersion(clientVersion);
 }
 
 void ANGLETest::setWindowWidth(int width)
 {
-    mWidth = width;
+    mEGLWindow->setWidth(width);
 }
 
 void ANGLETest::setWindowHeight(int height)
 {
-    mHeight = height;
+    mEGLWindow->setHeight(height);
 }
 
 void ANGLETest::setConfigRedBits(int bits)
 {
-    mRedBits = bits;
+    mEGLWindow->setConfigRedBits(bits);
 }
 
 void ANGLETest::setConfigGreenBits(int bits)
 {
-    mGreenBits = bits;
+    mEGLWindow->setConfigGreenBits(bits);
 }
 
 void ANGLETest::setConfigBlueBits(int bits)
 {
-    mBlueBits = bits;
+    mEGLWindow->setConfigBlueBits(bits);
 }
 
 void ANGLETest::setConfigAlphaBits(int bits)
 {
-    mAlphaBits = bits;
+    mEGLWindow->setConfigAlphaBits(bits);
 }
 
 void ANGLETest::setConfigDepthBits(int bits)
 {
-    mDepthBits = bits;
+    mEGLWindow->setConfigDepthBits(bits);
 }
 
 void ANGLETest::setConfigStencilBits(int bits)
 {
-    mStencilBits = bits;
+    mEGLWindow->setConfigStencilBits(bits);
 }
 
 void ANGLETest::setMultisampleEnabled(bool enabled)
 {
-    mMultisample = enabled;
+    mEGLWindow->setMultisample(enabled);
 }
 
 int ANGLETest::getClientVersion() const
 {
-    return mClientVersion;
+    return mEGLWindow->getClientVersion();
 }
 
 int ANGLETest::getWindowWidth() const
 {
-    return mWidth;
+    return mEGLWindow->getWidth();
 }
 
 int ANGLETest::getWindowHeight() const
 {
-    return mHeight;
-}
-
-int ANGLETest::getConfigRedBits() const
-{
-    return mRedBits;
-}
-
-int ANGLETest::getConfigGreenBits() const
-{
-    return mGreenBits;
-}
-
-int ANGLETest::getConfigBlueBits() const
-{
-    return mBlueBits;
-}
-
-int ANGLETest::getConfigAlphaBits() const
-{
-    return mAlphaBits;
-}
-
-int ANGLETest::getConfigDepthBits() const
-{
-    return mDepthBits;
-}
-
-int ANGLETest::getConfigStencilBits() const
-{
-    return mStencilBits;
+    return mEGLWindow->getHeight();
 }
 
 bool ANGLETest::isMultisampleEnabled() const
 {
-    return mMultisample;
+    return mEGLWindow->isMultisample();
 }
 
 bool ANGLETest::createEGLContext()
 {
-    PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
-    if (!eglGetPlatformDisplayEXT)
-    {
-        return false;
-    }
-
-    const EGLint displayAttributes[] =
-    {
-        EGL_PLATFORM_ANGLE_TYPE_ANGLE, mTestPlatform,
-        EGL_NONE,
-    };
-
-    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, mOSWindow->getNativeDisplay(), displayAttributes);
-    if (mDisplay == EGL_NO_DISPLAY)
-    {
-        destroyEGLContext();
-        return false;
-    }
-
-    EGLint majorVersion, minorVersion;
-    if (!eglInitialize(mDisplay, &majorVersion, &minorVersion))
-    {
-        destroyEGLContext();
-        return false;
-    }
-
-    eglBindAPI(EGL_OPENGL_ES_API);
-    if (eglGetError() != EGL_SUCCESS)
-    {
-        destroyEGLContext();
-        return false;
-    }
-
-    const EGLint configAttributes[] =
-    {
-        EGL_RED_SIZE,       (mRedBits >= 0)     ? mRedBits     : EGL_DONT_CARE,
-        EGL_GREEN_SIZE,     (mGreenBits >= 0)   ? mGreenBits   : EGL_DONT_CARE,
-        EGL_BLUE_SIZE,      (mBlueBits >= 0)    ? mBlueBits    : EGL_DONT_CARE,
-        EGL_ALPHA_SIZE,     (mAlphaBits >= 0)   ? mAlphaBits   : EGL_DONT_CARE,
-        EGL_DEPTH_SIZE,     (mDepthBits >= 0)   ? mDepthBits   : EGL_DONT_CARE,
-        EGL_STENCIL_SIZE,   (mStencilBits >= 0) ? mStencilBits : EGL_DONT_CARE,
-        EGL_SAMPLE_BUFFERS, mMultisample ? 1 : 0,
-        EGL_NONE
-    };
-
-    EGLint configCount;
-    if (!eglChooseConfig(mDisplay, configAttributes, &mConfig, 1, &configCount) || (configCount != 1))
-    {
-        destroyEGLContext();
-        return false;
-    }
-
-    eglGetConfigAttrib(mDisplay, mConfig, EGL_RED_SIZE, &mRedBits);
-    eglGetConfigAttrib(mDisplay, mConfig, EGL_GREEN_SIZE, &mGreenBits);
-    eglGetConfigAttrib(mDisplay, mConfig, EGL_BLUE_SIZE, &mBlueBits);
-    eglGetConfigAttrib(mDisplay, mConfig, EGL_ALPHA_SIZE, &mBlueBits);
-    eglGetConfigAttrib(mDisplay, mConfig, EGL_DEPTH_SIZE, &mDepthBits);
-    eglGetConfigAttrib(mDisplay, mConfig, EGL_STENCIL_SIZE, &mStencilBits);
-
-    EGLint samples;
-    eglGetConfigAttrib(mDisplay, mConfig, EGL_SAMPLE_BUFFERS, &samples);
-    mMultisample = (samples != 0);
-
-    mSurface = eglCreateWindowSurface(mDisplay, mConfig, mOSWindow->getNativeWindow(), NULL);
-    if(mSurface == EGL_NO_SURFACE)
-    {
-        eglGetError(); // Clear error
-        mSurface = eglCreateWindowSurface(mDisplay, mConfig, NULL, NULL);
-    }
-
-    if (eglGetError() != EGL_SUCCESS)
-    {
-        destroyEGLContext();
-        return false;
-    }
-
-    EGLint contextAttibutes[] =
-    {
-        EGL_CONTEXT_CLIENT_VERSION, mClientVersion,
-        EGL_NONE
-    };
-    mContext = eglCreateContext(mDisplay, mConfig, NULL, contextAttibutes);
-    if (eglGetError() != EGL_SUCCESS)
-    {
-        destroyEGLContext();
-        return false;
-    }
-
-    eglMakeCurrent(mDisplay, mSurface, mSurface, mContext);
-    if (eglGetError() != EGL_SUCCESS)
-    {
-        destroyEGLContext();
-        return false;
-    }
-
-    return true;
+    return mEGLWindow->initializeGL(mOSWindow);
 }
 
 bool ANGLETest::destroyEGLContext()
 {
-    if (mDisplay != EGL_NO_DISPLAY)
-    {
-        eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-
-        if (mSurface != EGL_NO_SURFACE)
-        {
-            eglDestroySurface(mDisplay, mSurface);
-            mSurface = EGL_NO_SURFACE;
-        }
-
-        if (mContext != EGL_NO_CONTEXT)
-        {
-            eglDestroyContext(mDisplay, mContext);
-            mContext = EGL_NO_CONTEXT;
-        }
-
-        eglTerminate(mDisplay);
-        mDisplay = EGL_NO_DISPLAY;
-    }
-
+    mEGLWindow->destroyGL();
     return true;
 }
 

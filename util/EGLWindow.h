@@ -38,6 +38,9 @@ class EGLWindow
 
     ~EGLWindow();
 
+    void setClientVersion(EGLint glesMajorVersion) { mClientVersion = glesMajorVersion; }
+    void setWidth(size_t width) { mWidth = width; }
+    void setHeight(size_t height) { mHeight = height; }
     void setConfigRedBits(int bits) { mRedBits = bits; }
     void setConfigGreenBits(int bits) { mGreenBits = bits; }
     void setConfigBlueBits(int bits) { mBlueBits = bits; }
@@ -49,6 +52,7 @@ class EGLWindow
 
     void swap();
 
+    GLuint getClientVersion() const { return mClientVersion; }
     EGLConfig getConfig() const;
     EGLDisplay getDisplay() const;
     EGLSurface getSurface() const;
