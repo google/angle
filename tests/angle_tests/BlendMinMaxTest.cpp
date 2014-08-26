@@ -88,7 +88,7 @@ protected:
             }
         );
 
-        mProgram = compileProgram(testVertexShaderSource, testFragmentShaderSource);
+        mProgram = CompileProgram(testVertexShaderSource, testFragmentShaderSource);
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";

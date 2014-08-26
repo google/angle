@@ -68,8 +68,8 @@ protected:
             }
         );
 
-        m2DProgram = compileProgram(vertexShaderSource, fragmentShaderSource2D);
-        mCubeProgram = compileProgram(vertexShaderSource, fragmentShaderSourceCube);
+        m2DProgram = CompileProgram(vertexShaderSource, fragmentShaderSource2D);
+        mCubeProgram = CompileProgram(vertexShaderSource, fragmentShaderSourceCube);
         if (m2DProgram == 0 || mCubeProgram == 0)
         {
             FAIL() << "shader compilation failed.";

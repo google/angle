@@ -48,7 +48,7 @@ class BufferDataTest : public ANGLETest
         glGenBuffers(1, &mBuffer);
         ASSERT_NE(mBuffer, 0U);
 
-        mProgram = compileProgram(vsSource, fsSource);
+        mProgram = CompileProgram(vsSource, fsSource);
         ASSERT_NE(mProgram, 0U);
 
         mAttribLocation = glGetAttribLocation(mProgram, "in_attrib");
@@ -231,7 +231,7 @@ class IndexedBufferCopyTest : public ANGLETest
         glGenBuffers(1, &mElementBuffer);
         ASSERT_NE(mElementBuffer, 0U);
 
-        mProgram = compileProgram(vsSource, fsSource);
+        mProgram = CompileProgram(vsSource, fsSource);
         ASSERT_NE(mProgram, 0U);
 
         mAttribLocation = glGetAttribLocation(mProgram, "in_attrib");

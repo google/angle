@@ -40,7 +40,7 @@ protected:
             }
         );
 
-        mProgram = compileProgram(vsSource, fsSource);
+        mProgram = CompileProgram(vsSource, fsSource);
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";

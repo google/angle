@@ -52,8 +52,8 @@ protected:
             }
         );
 
-        mTextureProgram = compileProgram(vsSource, textureFSSource);
-        mBlueProgram = compileProgram(vsSource, blueFSSource);
+        mTextureProgram = CompileProgram(vsSource, textureFSSource);
+        mBlueProgram = CompileProgram(vsSource, blueFSSource);
         if (mTextureProgram == 0 || mBlueProgram == 0)
         {
             FAIL() << "shader compilation failed.";

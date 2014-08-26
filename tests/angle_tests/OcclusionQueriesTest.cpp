@@ -41,7 +41,7 @@ protected:
             }
         );
 
-        mProgram = compileProgram(passthroughVS, passthroughPS);
+        mProgram = CompileProgram(passthroughVS, passthroughPS);
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";

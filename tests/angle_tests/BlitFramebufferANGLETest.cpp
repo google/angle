@@ -92,8 +92,8 @@ protected:
             }
         );
 
-        mCheckerProgram = compileProgram(passthroughVS, checkeredFS);
-        mBlueProgram = compileProgram(passthroughVS, blueFS);
+        mCheckerProgram = CompileProgram(passthroughVS, checkeredFS);
+        mBlueProgram = CompileProgram(passthroughVS, blueFS);
         if (mCheckerProgram == 0 || mBlueProgram == 0)
         {
             FAIL() << "shader compilation failed.";

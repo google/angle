@@ -99,49 +99,6 @@ GLuint ANGLETest::compileShader(GLenum type, const std::string &source)
     return shader;
 }
 
-GLuint ANGLETest::compileProgram(const std::string &vsSource, const std::string &fsSource)
-{
-    GLuint program = glCreateProgram();
-
-    GLuint vs = compileShader(GL_VERTEX_SHADER, vsSource);
-    GLuint fs = compileShader(GL_FRAGMENT_SHADER, fsSource);
-
-    if (vs == 0 || fs == 0)
-    {
-        glDeleteShader(fs);
-        glDeleteShader(vs);
-        glDeleteProgram(program);
-        return 0;
-    }
-
-    glAttachShader(program, vs);
-    glDeleteShader(vs);
-
-    glAttachShader(program, fs);
-    glDeleteShader(fs);
-
-    glLinkProgram(program);
-
-    GLint linkStatus;
-    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
-
-    if (linkStatus == 0)
-    {
-        GLint infoLogLength;
-        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-        std::vector<GLchar> infoLog(infoLogLength);
-        glGetProgramInfoLog(program, infoLog.size(), NULL, infoLog.data());
-
-        std::cerr << "program link failed: " << infoLog.data();
-
-        glDeleteProgram(program);
-        return 0;
-    }
-
-    return program;
-}
-
 bool ANGLETest::extensionEnabled(const std::string &extName)
 {
     const char* extString = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));

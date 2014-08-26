@@ -74,7 +74,7 @@ protected:
             }
         );
 
-        mProgram = compileProgram(vertexShaderSource, fragmentShaderSource);
+        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";

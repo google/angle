@@ -48,7 +48,7 @@ protected:
             }
         );
 
-        mProgram = compileProgram(vertexShaderSrc, fragmentShaderSrc);
+        mProgram = CompileProgram(vertexShaderSrc, fragmentShaderSrc);
 
         glGenTextures(1, &mTexture);
         glBindTexture(GL_TEXTURE_2D, mTexture);

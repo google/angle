@@ -50,7 +50,7 @@ protected:
                 }
             );
 
-            mProgram = compileProgram(vertexShaderSrc, fragmentShaderSrc);
+            mProgram = CompileProgram(vertexShaderSrc, fragmentShaderSrc);
 
             glGenBuffers(1, &mPositionVBO);
             glBindBuffer(GL_ARRAY_BUFFER, mPositionVBO);

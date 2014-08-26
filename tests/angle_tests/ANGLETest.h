@@ -15,6 +15,7 @@
 #include <algorithm>
 
 #include "shared_utils.h"
+#include "shader_utils.h"
 
 #define EXPECT_GL_ERROR(err) EXPECT_EQ((err), glGetError())
 #define EXPECT_GL_NO_ERROR() EXPECT_GL_ERROR(GL_NO_ERROR)
@@ -54,7 +55,6 @@ class ANGLETest : public testing::Test
 
     static void drawQuad(GLuint program, const std::string& positionAttribName, GLfloat quadDepth);
     static GLuint compileShader(GLenum type, const std::string &source);
-    static GLuint compileProgram(const std::string &vsSource, const std::string &fsSource);
     static bool extensionEnabled(const std::string &extName);
 
     void setClientVersion(int clientVersion);
