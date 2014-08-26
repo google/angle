@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d3b431fe_3fb283e5",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-26T15:10:25Z",
+      "side": 1,
+      "message": "Cut \u0026 paste needs updating",
+      "range": {
+        "startLine": 7,
+        "startChar": 2,
+        "endLine": 7,
+        "endChar": 59
+      },
+      "revId": "1da53de621e58f718436ae6b8f65f33b60bd6cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9397195e_2560385c",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-26T15:10:25Z",
+      "side": 1,
+      "message": "needs update",
+      "range": {
+        "startLine": 8,
+        "startChar": 3,
+        "endLine": 8,
+        "endChar": 80
+      },
+      "revId": "1da53de621e58f718436ae6b8f65f33b60bd6cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9397195e_45633c6b",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-26T15:10:25Z",
+      "side": 1,
+      "message": "Needs update",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 78
+      },
+      "revId": "1da53de621e58f718436ae6b8f65f33b60bd6cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
