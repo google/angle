@@ -504,9 +504,9 @@ gl::Error Blit11::swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderT
     return gl::Error(GL_NO_ERROR);
 }
 
-bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                         ID3D11RenderTargetView *dest, const gl::Box &destArea, const gl::Extents &destSize,
-                         const gl::Rectangle *scissor, GLenum destFormat, GLenum filter)
+gl::Error Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                              ID3D11RenderTargetView *dest, const gl::Box &destArea, const gl::Extents &destSize,
+                              const gl::Rectangle *scissor, GLenum destFormat, GLenum filter)
 {
     HRESULT result;
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
@@ -528,7 +528,7 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     if (i == mBlitShaderMap.end())
     {
         UNREACHABLE();
-        return false;
+        return gl::Error(GL_OUT_OF_MEMORY, "Could not find appropriate shader for internal texture blit.");
     }
 
     const Shader& shader = i->second;
@@ -538,8 +538,7 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     result = deviceContext->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
-        ERR("Failed to map vertex buffer for texture copy, HRESULT: 0x%X.", result);
-        return false;
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal vertex buffer for texture copy, HRESULT: 0x%X.", result);
     }
 
     UINT stride = 0;
@@ -609,7 +608,10 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     {
       case GL_NEAREST: sampler = mPointSampler;  break;
       case GL_LINEAR:  sampler = mLinearSampler; break;
-      default:         UNREACHABLE(); return false;
+
+      default:
+        UNREACHABLE();
+        return gl::Error(GL_OUT_OF_MEMORY, "Internal error, unknown blit filter mode.");
     }
     deviceContext->PSSetSamplers(0, 1, &sampler);
 
@@ -627,21 +629,21 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
 
     mRenderer->markAllStateDirty();
 
-    return true;
+    return gl::Error(GL_NO_ERROR);
 }
 
-bool Blit11::copyStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                         ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
-                         const gl::Rectangle *scissor)
+gl::Error Blit11::copyStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                              ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
+                              const gl::Rectangle *scissor)
 {
     return copyDepthStencil(source, sourceSubresource, sourceArea, sourceSize,
                             dest, destSubresource, destArea, destSize,
                             scissor, true);
 }
 
-bool Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                       ID3D11DepthStencilView *dest, const gl::Box &destArea, const gl::Extents &destSize,
-                       const gl::Rectangle *scissor)
+gl::Error Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                            ID3D11DepthStencilView *dest, const gl::Box &destArea, const gl::Extents &destSize,
+                            const gl::Rectangle *scissor)
 {
     HRESULT result;
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
@@ -651,8 +653,7 @@ bool Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sourceAr
     result = deviceContext->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
-        ERR("Failed to map vertex buffer for texture copy, HRESULT: 0x%X.", result);
-        return false;
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal vertex buffer for texture copy, HRESULT: 0x%X.", result);
     }
 
     UINT stride = 0;
@@ -733,21 +734,21 @@ bool Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sourceAr
 
     mRenderer->markAllStateDirty();
 
-    return true;
+    return gl::Error(GL_NO_ERROR);
 }
 
-bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                              ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
-                              const gl::Rectangle *scissor)
+gl::Error Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                                   ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
+                                   const gl::Rectangle *scissor)
 {
     return copyDepthStencil(source, sourceSubresource, sourceArea, sourceSize,
                             dest, destSubresource, destArea, destSize,
                             scissor, false);
 }
 
-bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                              ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
-                              const gl::Rectangle *scissor, bool stencilOnly)
+gl::Error Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                                   ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
+                                   const gl::Rectangle *scissor, bool stencilOnly)
 {
     ID3D11Device *device = mRenderer->getDevice();
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
@@ -761,7 +762,7 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
     {
         SafeRelease(sourceStaging);
         SafeRelease(destStaging);
-        return false;
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal staging textures for depth stencil blit.");
     }
 
     DXGI_FORMAT format = GetTextureFormat(source);
@@ -782,23 +783,23 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
                dxgiFormatInfo.depthBits   % 8 == 0);
     }
 
-    D3D11_MAPPED_SUBRESOURCE sourceMapping, destMapping;
-    deviceContext->Map(sourceStaging, 0, D3D11_MAP_READ, 0, &sourceMapping);
-    deviceContext->Map(destStaging, 0, D3D11_MAP_WRITE, 0, &destMapping);
-
-    if (!sourceMapping.pData || !destMapping.pData)
+    D3D11_MAPPED_SUBRESOURCE sourceMapping;
+    HRESULT result = deviceContext->Map(sourceStaging, 0, D3D11_MAP_READ, 0, &sourceMapping);
+    if (FAILED(result))
     {
-        if (!sourceMapping.pData)
-        {
-            deviceContext->Unmap(sourceStaging, 0);
-        }
-        if (!destMapping.pData)
-        {
-            deviceContext->Unmap(destStaging, 0);
-        }
         SafeRelease(sourceStaging);
         SafeRelease(destStaging);
-        return false;
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal source staging texture for depth stencil blit, HRESULT: 0x%X.", result);
+    }
+
+    D3D11_MAPPED_SUBRESOURCE destMapping;
+    result = deviceContext->Map(destStaging, 0, D3D11_MAP_WRITE, 0, &destMapping);
+    if (FAILED(result))
+    {
+        deviceContext->Unmap(sourceStaging, 0);
+        SafeRelease(sourceStaging);
+        SafeRelease(destStaging);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal destination staging texture for depth stencil blit, HRESULT: 0x%X.", result);
     }
 
     gl::Rectangle clippedDestArea(destArea.x, destArea.y, destArea.width, destArea.height);
@@ -877,7 +878,7 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
     SafeRelease(sourceStaging);
     SafeRelease(destStaging);
 
-    return true;
+    return gl::Error(GL_NO_ERROR);
 }
 
 bool Blit11::compareBlitParameters(const Blit11::BlitParameters &a, const Blit11::BlitParameters &b)

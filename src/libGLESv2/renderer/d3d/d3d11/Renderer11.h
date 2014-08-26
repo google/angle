@@ -129,8 +129,8 @@ class Renderer11 : public Renderer
     virtual bool copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                                   GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level);
 
-    virtual bool blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
-                          const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter);
+    virtual gl::Error blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
+                               const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter);
 
     virtual gl::Error readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
                                  GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels);
@@ -212,9 +212,9 @@ class Renderer11 : public Renderer
     gl::Error readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
                               GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels);
 
-    bool blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
-                              RenderTarget *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
-                              bool colorBlit, bool depthBlit, bool stencilBlit);
+    gl::Error blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
+                                   RenderTarget *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
+                                   bool colorBlit, bool depthBlit, bool stencilBlit);
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
 
     static void invalidateFBOAttachmentSwizzles(gl::FramebufferAttachment *attachment, int mipLevel);

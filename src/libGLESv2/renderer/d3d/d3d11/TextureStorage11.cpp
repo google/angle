@@ -316,9 +316,9 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsign
             // CopySubresourceRegion cannot copy partial depth stencils, use the blitter instead
             Blit11 *blitter = mRenderer->getBlitter();
 
-            return blitter->copyDepthStencil(srcTexture, sourceSubresource, copyArea, texSize,
-                                             dstTexture, dstSubresource, copyArea, texSize,
-                                             NULL);
+            return !blitter->copyDepthStencil(srcTexture, sourceSubresource, copyArea, texSize,
+                                              dstTexture, dstSubresource, copyArea, texSize,
+                                              NULL).isError();
         }
         else
         {

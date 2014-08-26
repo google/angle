@@ -2469,8 +2469,8 @@ bool Renderer9::copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectang
     return false;
 }
 
-bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &readRect, gl::Framebuffer *drawFramebuffer, const gl::Rectangle &drawRect,
-                         const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter)
+gl::Error Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &readRect, gl::Framebuffer *drawFramebuffer, const gl::Rectangle &drawRect,
+                              const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter)
 {
     ASSERT(filter == GL_NEAREST);
 
@@ -2505,8 +2505,7 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
         if (!readSurface || !drawSurface)
         {
-            ERR("Failed to retrieve the render target.");
-            return gl::error(GL_OUT_OF_MEMORY, false);
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to retrieve the internal render targets for the blit framebuffers.");
         }
 
         gl::Extents srcSize(readRenderTarget->getWidth(), readRenderTarget->getHeight(), 1);
@@ -2600,8 +2599,7 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
         if (FAILED(result))
         {
-            ERR("BlitFramebufferANGLE failed: StretchRect returned %x.", result);
-            return false;
+            return gl::Error(GL_OUT_OF_MEMORY, "Internal blit failed, StretchRect returned 0x%X.", result);
         }
     }
 
@@ -2634,8 +2632,7 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
         if (!readSurface || !drawSurface)
         {
-            ERR("Failed to retrieve the render target.");
-            return gl::error(GL_OUT_OF_MEMORY, false);
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to retrieve the internal render targets for the blit framebuffers.");
         }
 
         HRESULT result = mDevice->StretchRect(readSurface, NULL, drawSurface, NULL, D3DTEXF_NONE);
@@ -2645,12 +2642,11 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
         if (FAILED(result))
         {
-            ERR("BlitFramebufferANGLE failed: StretchRect returned %x.", result);
-            return false;
+            return gl::Error(GL_OUT_OF_MEMORY, "Internal blit failed, StretchRect returned 0x%X.", result);
         }
     }
 
-    return true;
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
