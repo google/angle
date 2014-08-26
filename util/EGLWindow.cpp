@@ -24,7 +24,15 @@ EGLWindow::EGLWindow(size_t width, size_t height,
       mClientVersion(glesMajorVersion),
       mRequestedRenderer(requestedRenderer),
       mWidth(width),
-      mHeight(height)
+      mHeight(height),
+      mRedBits(-1),
+      mGreenBits(-1),
+      mBlueBits(-1),
+      mAlphaBits(-1),
+      mDepthBits(-1),
+      mStencilBits(-1),
+      mMultisample(false),
+      mSwapInterval(-1)
 {
 }
 
@@ -95,13 +103,13 @@ bool EGLWindow::initializeGL(const OSWindow *osWindow)
 
     const EGLint configAttributes[] =
     {
-        EGL_RED_SIZE,       8,
-        EGL_GREEN_SIZE,     8,
-        EGL_BLUE_SIZE,      8,
-        EGL_ALPHA_SIZE,     8,
-        EGL_DEPTH_SIZE,     24,
-        EGL_STENCIL_SIZE,   8,
-        EGL_SAMPLE_BUFFERS, EGL_DONT_CARE,
+        EGL_RED_SIZE,       (mRedBits >= 0)     ? mRedBits     : EGL_DONT_CARE,
+        EGL_GREEN_SIZE,     (mGreenBits >= 0)   ? mGreenBits   : EGL_DONT_CARE,
+        EGL_BLUE_SIZE,      (mBlueBits >= 0)    ? mBlueBits    : EGL_DONT_CARE,
+        EGL_ALPHA_SIZE,     (mAlphaBits >= 0)   ? mAlphaBits   : EGL_DONT_CARE,
+        EGL_DEPTH_SIZE,     (mDepthBits >= 0)   ? mDepthBits   : EGL_DONT_CARE,
+        EGL_STENCIL_SIZE,   (mStencilBits >= 0) ? mStencilBits : EGL_DONT_CARE,
+        EGL_SAMPLE_BUFFERS, mMultisample ? 1 : 0,
         EGL_NONE
     };
 
@@ -111,6 +119,13 @@ bool EGLWindow::initializeGL(const OSWindow *osWindow)
         destroyGL();
         return false;
     }
+
+    eglGetConfigAttrib(mDisplay, mConfig, EGL_RED_SIZE, &mRedBits);
+    eglGetConfigAttrib(mDisplay, mConfig, EGL_GREEN_SIZE, &mGreenBits);
+    eglGetConfigAttrib(mDisplay, mConfig, EGL_BLUE_SIZE, &mBlueBits);
+    eglGetConfigAttrib(mDisplay, mConfig, EGL_ALPHA_SIZE, &mBlueBits);
+    eglGetConfigAttrib(mDisplay, mConfig, EGL_DEPTH_SIZE, &mDepthBits);
+    eglGetConfigAttrib(mDisplay, mConfig, EGL_STENCIL_SIZE, &mStencilBits);
 
     const EGLint surfaceAttributes[] =
     {
@@ -136,6 +151,7 @@ bool EGLWindow::initializeGL(const OSWindow *osWindow)
         EGL_CONTEXT_CLIENT_VERSION, mClientVersion,
         EGL_NONE
     };
+
     mContext = eglCreateContext(mDisplay, mConfig, NULL, contextAttibutes);
     if (eglGetError() != EGL_SUCCESS)
     {
@@ -150,8 +166,10 @@ bool EGLWindow::initializeGL(const OSWindow *osWindow)
         return false;
     }
 
-    // Turn off vsync
-    eglSwapInterval(mDisplay, 0);
+    if (mSwapInterval != -1)
+    {
+        eglSwapInterval(mDisplay, mSwapInterval);
+    }
 
     return true;
 }

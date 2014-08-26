@@ -15,6 +15,16 @@ SampleApplication::SampleApplication(const std::string& name, size_t width, size
     mEGLWindow.reset(new EGLWindow(width, height, glesMajorVersion, requestedRenderer));
     mTimer.reset(CreateTimer());
     mOSWindow.reset(CreateOSWindow());
+
+    mEGLWindow->setConfigRedBits(8);
+    mEGLWindow->setConfigGreenBits(8);
+    mEGLWindow->setConfigBlueBits(8);
+    mEGLWindow->setConfigAlphaBits(8);
+    mEGLWindow->setConfigDepthBits(24);
+    mEGLWindow->setConfigStencilBits(8);
+
+    // Disable vsync
+    mEGLWindow->setSwapInterval(0);
 }
 
 SampleApplication::~SampleApplication()
