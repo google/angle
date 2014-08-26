@@ -35,10 +35,12 @@ class ResourceManager;
 struct PackedVarying : public sh::Varying
 {
     unsigned int registerIndex; // Assigned during link
+    unsigned int columnIndex; // Assigned during link, defaults to 0
 
     PackedVarying(const sh::Varying &varying)
       : sh::Varying(varying),
-        registerIndex(GL_INVALID_INDEX)
+        registerIndex(GL_INVALID_INDEX),
+        columnIndex(0)
     {}
 
     bool registerAssigned() const { return registerIndex != GL_INVALID_INDEX; }

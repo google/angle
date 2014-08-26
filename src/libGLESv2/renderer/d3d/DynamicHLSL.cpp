@@ -126,6 +126,7 @@ static bool packVarying(PackedVarying *varying, const int maxVaryingVectors, Var
             if (available)
             {
                 varying->registerIndex = r;
+                varying->columnIndex = 0;
 
                 for (int y = 0; y < registers; y++)
                 {
@@ -159,6 +160,7 @@ static bool packVarying(PackedVarying *varying, const int maxVaryingVectors, Var
                 if (available)
                 {
                     varying->registerIndex = r;
+                    varying->columnIndex = 2;
 
                     for (int y = 0; y < registers; y++)
                     {
@@ -189,7 +191,7 @@ static bool packVarying(PackedVarying *varying, const int maxVaryingVectors, Var
 
         for (int x = 0; x < 4; x++)
         {
-            if (space[x] >= registers && space[x] < space[column])
+            if (space[x] >= registers && (space[column] < registers || space[x] < space[column]))
             {
                 column = x;
             }
@@ -202,6 +204,7 @@ static bool packVarying(PackedVarying *varying, const int maxVaryingVectors, Var
                 if (!packing[r][column])
                 {
                     varying->registerIndex = r;
+                    varying->columnIndex = column;
 
                     for (int y = r; y < r + registers; y++)
                     {
@@ -320,6 +323,10 @@ std::string DynamicHLSL::generateVaryingHLSL(const ShaderD3D *shader) const
             {
                 for (int row = 0; row < variableRows; row++)
                 {
+                    // TODO: Add checks to ensure D3D interpolation modifiers don't result in too many registers being used.
+                    // For example, if there are N registers, and we have N vec3 varyings and 1 float varying, then D3D will pack them into N registers.
+                    // If the float varying has the 'nointerpolation' modifier on it then we would need N + 1 registers, and D3D compilation will fail.
+
                     switch (varying.interpolation)
                     {
                       case sh::INTERPOLATION_SMOOTH:   varyingHLSL += "    ";                 break;
@@ -328,7 +335,7 @@ std::string DynamicHLSL::generateVaryingHLSL(const ShaderD3D *shader) const
                       default:  UNREACHABLE();
                     }
 
-                    unsigned int semanticIndex = elementIndex * variableRows + varying.registerIndex + row;
+                    unsigned int semanticIndex = elementIndex * variableRows + varying.columnIndex * mRenderer->getRendererCaps().maxVaryingVectors + varying.registerIndex + row;
                     std::string n = Str(semanticIndex);
 
                     std::string typeString;
@@ -765,38 +772,8 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
 
                 for (int row = 0; row < variableRows; row++)
                 {
-                    int r = varying.registerIndex + elementIndex * variableRows + row;
+                    int r = varying.registerIndex + varying.columnIndex * mRenderer->getRendererCaps().maxVaryingVectors + elementIndex * variableRows + row;
                     vertexHLSL += "    output.v" + Str(r);
-
-                    bool sharedRegister = false;   // Register used by multiple varyings
-
-                    for (int x = 0; x < 4; x++)
-                    {
-                        if (packing[r][x] && packing[r][x] != packing[r][0])
-                        {
-                            sharedRegister = true;
-                            break;
-                        }
-                    }
-
-                    if(sharedRegister)
-                    {
-                        vertexHLSL += ".";
-
-                        for (int x = 0; x < 4; x++)
-                        {
-                            if (packing[r][x] == &varying)
-                            {
-                                switch(x)
-                                {
-                                  case 0: vertexHLSL += "x"; break;
-                                  case 1: vertexHLSL += "y"; break;
-                                  case 2: vertexHLSL += "z"; break;
-                                  case 3: vertexHLSL += "w"; break;
-                                }
-                            }
-                        }
-                    }
 
                     vertexHLSL += " = _" + varying.name;
 
@@ -943,7 +920,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
                 int variableRows = (varying.isStruct() ? 1 : VariableRowCount(transposedType));
                 for (int row = 0; row < variableRows; row++)
                 {
-                    std::string n = Str(varying.registerIndex + elementIndex * variableRows + row);
+                    std::string n = Str(varying.registerIndex + varying.columnIndex * mRenderer->getRendererCaps().maxVaryingVectors + elementIndex * variableRows + row);
                     pixelHLSL += "    _" + varying.name;
 
                     if (varying.isArray())

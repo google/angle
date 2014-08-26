@@ -27,6 +27,230 @@ protected:
         );
     }
 
+    std::string GenerateVaryingType(GLint vectorSize)
+    {
+        char varyingType[10];
+
+        if (vectorSize == 1)
+        {
+            sprintf(varyingType, "float");
+        }
+        else
+        {
+            sprintf(varyingType, "vec%d", vectorSize);
+        }
+
+        return std::string(varyingType);
+    }
+
+    std::string GenerateVectorVaryingDeclaration(GLint vectorSize, GLint arraySize, GLint id)
+    {
+        char buff[100];
+
+        if (arraySize == 1)
+        {
+            sprintf(buff, "varying %s v%d;\n", GenerateVaryingType(vectorSize).c_str(), id);
+        }
+        else
+        {
+            sprintf(buff, "varying %s v%d[%d];\n", GenerateVaryingType(vectorSize).c_str(), id, arraySize);
+        }
+
+        return std::string(buff);
+    }
+
+    std::string GenerateVectorVaryingSettingCode(GLint vectorSize, GLint arraySize, GLint id)
+    {
+        std::string returnString;
+        char buff[100];
+
+        if (arraySize == 1)
+        {
+            sprintf(buff, "\t v%d = %s(1.0);\n", id, GenerateVaryingType(vectorSize).c_str());
+            returnString += buff;
+        }
+        else
+        {
+            for (int i = 0; i < arraySize; i++)
+            {
+                sprintf(buff, "\t v%d[%d] = %s(1.0);\n", id, i, GenerateVaryingType(vectorSize).c_str());
+                returnString += buff;
+            }
+        }
+
+        return returnString;
+    }
+
+    std::string GenerateVectorVaryingUseCode(GLint arraySize, GLint id)
+    {
+        if (arraySize == 1)
+        {
+            char buff[100];
+            sprintf(buff, "v%d + ", id);
+            return std::string(buff);
+        }
+        else
+        {
+            std::string returnString;
+            for (int i = 0; i < arraySize; i++)
+            {
+                char buff[100];
+                sprintf(buff, "v%d[%d] + ", id, i);
+                returnString += buff;
+            }
+            return returnString;
+        }
+    }
+
+    void GenerateGLSLWithVaryings(GLint floatCount, GLint floatArrayCount, GLint vec2Count, GLint vec2ArrayCount, GLint vec3Count, GLint vec3ArrayCount, std::string* fragmentShader, std::string* vertexShader)
+    {
+        // Generate a string declaring the varyings, to share between the fragment shader and the vertex shader.
+        std::string varyingDeclaration;
+
+        unsigned int varyingCount = 0;
+
+        for (GLint i = 0; i < floatCount; i++)
+        {
+            varyingDeclaration += GenerateVectorVaryingDeclaration(1, 1, varyingCount);
+            varyingCount += 1;
+        }
+
+        for (GLint i = 0; i < floatArrayCount; i++)
+        {
+            varyingDeclaration += GenerateVectorVaryingDeclaration(1, 2, varyingCount);
+            varyingCount += 1;
+        }
+
+        for (GLint i = 0; i < vec2Count; i++)
+        {
+            varyingDeclaration += GenerateVectorVaryingDeclaration(2, 1, varyingCount);
+            varyingCount += 1;
+        }
+
+        for (GLint i = 0; i < vec2ArrayCount; i++)
+        {
+            varyingDeclaration += GenerateVectorVaryingDeclaration(2, 2, varyingCount);
+            varyingCount += 1;
+        }
+
+        for (GLint i = 0; i < vec3Count; i++)
+        {
+            varyingDeclaration += GenerateVectorVaryingDeclaration(3, 1, varyingCount);
+            varyingCount += 1;
+        }
+
+        for (GLint i = 0; i < vec3ArrayCount; i++)
+        {
+            varyingDeclaration += GenerateVectorVaryingDeclaration(3, 2, varyingCount);
+            varyingCount += 1;
+        }
+
+        // Generate the vertex shader
+        vertexShader->clear();
+        vertexShader->append(varyingDeclaration);
+        vertexShader->append("\nvoid main()\n{\n");
+
+        unsigned int currentVSVarying = 0;
+
+        for (GLint i = 0; i < floatCount; i++)
+        {
+            vertexShader->append(GenerateVectorVaryingSettingCode(1, 1, currentVSVarying));
+            currentVSVarying += 1;
+        }
+
+        for (GLint i = 0; i < floatArrayCount; i++)
+        {
+            vertexShader->append(GenerateVectorVaryingSettingCode(1, 2, currentVSVarying));
+            currentVSVarying += 1;
+        }
+
+        for (GLint i = 0; i < vec2Count; i++)
+        {
+            vertexShader->append(GenerateVectorVaryingSettingCode(2, 1, currentVSVarying));
+            currentVSVarying += 1;
+        }
+
+        for (GLint i = 0; i < vec2ArrayCount; i++)
+        {
+            vertexShader->append(GenerateVectorVaryingSettingCode(2, 2, currentVSVarying));
+            currentVSVarying += 1;
+        }
+
+        for (GLint i = 0; i < vec3Count; i++)
+        {
+            vertexShader->append(GenerateVectorVaryingSettingCode(3, 1, currentVSVarying));
+            currentVSVarying += 1;
+        }
+
+        for (GLint i = 0; i < vec3ArrayCount; i++)
+        {
+            vertexShader->append(GenerateVectorVaryingSettingCode(3, 2, currentVSVarying));
+            currentVSVarying += 1;
+        }
+
+        vertexShader->append("}\n");
+
+        // Generate the fragment shader
+        fragmentShader->clear();
+        fragmentShader->append("precision highp float;\n");
+        fragmentShader->append(varyingDeclaration);
+        fragmentShader->append("\nvoid main() \n{ \n\tvec4 retColor = vec4(0,0,0,0);\n");
+
+        unsigned int currentFSVarying = 0;
+
+        // Make use of the float varyings
+        fragmentShader->append("\tretColor += vec4(");
+
+        for (GLint i = 0; i < floatCount; i++)
+        {
+            fragmentShader->append(GenerateVectorVaryingUseCode(1, currentFSVarying));
+            currentFSVarying += 1;
+        }
+
+        for (GLint i = 0; i < floatArrayCount; i++)
+        {
+            fragmentShader->append(GenerateVectorVaryingUseCode(2, currentFSVarying));
+            currentFSVarying += 1;
+        }
+
+        fragmentShader->append("0.0, 0.0, 0.0, 0.0);\n");
+
+        // Make use of the vec2 varyings
+        fragmentShader->append("\tretColor += vec4(");
+
+        for (GLint i = 0; i < vec2Count; i++)
+        {
+            fragmentShader->append(GenerateVectorVaryingUseCode(1, currentFSVarying));
+            currentFSVarying += 1;
+        }
+
+        for (GLint i = 0; i < vec2ArrayCount; i++)
+        {
+            fragmentShader->append(GenerateVectorVaryingUseCode(2, currentFSVarying));
+            currentFSVarying += 1;
+        }
+
+        fragmentShader->append("vec2(0.0, 0.0), 0.0, 0.0);\n");
+
+        // Make use of the vec3 varyings
+        fragmentShader->append("\tretColor += vec4(");
+
+        for (GLint i = 0; i < vec3Count; i++)
+        {
+            fragmentShader->append(GenerateVectorVaryingUseCode(1, currentFSVarying));
+            currentFSVarying += 1;
+        }
+
+        for (GLint i = 0; i < vec3ArrayCount; i++)
+        {
+            fragmentShader->append(GenerateVectorVaryingUseCode(2, currentFSVarying));
+            currentFSVarying += 1;
+        }
+
+        fragmentShader->append("vec3(0.0, 0.0, 0.0), 0.0);\n");
+        fragmentShader->append("\tgl_FragColor = retColor;\n}");
+    }
+
     std::string mSimpleVSSource;
 };
 
@@ -341,4 +565,158 @@ TEST_F(GLSLTest, InvariantAll)
 
     GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
+}
+
+TEST_F(GLSLTest, MaxVaryingVec3)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::string fragmentShaderSource;
+    std::string vertexShaderSource;
+
+    GenerateGLSLWithVaryings(0, 0, 0, 0, maxVaryings, 0, &fragmentShaderSource, &vertexShaderSource);
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+TEST_F(GLSLTest, MaxVaryingVec3Array)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::string fragmentShaderSource;
+    std::string vertexShaderSource;
+
+    GenerateGLSLWithVaryings(0, 0, 0, 0, 0, maxVaryings / 2, &fragmentShaderSource, &vertexShaderSource);
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+TEST_F(GLSLTest, MaxVaryingVec3AndOneFloat)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::string fragmentShaderSource;
+    std::string vertexShaderSource;
+
+    GenerateGLSLWithVaryings(1, 0, 0, 0, maxVaryings, 0, &fragmentShaderSource, &vertexShaderSource);
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+TEST_F(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::string fragmentShaderSource;
+    std::string vertexShaderSource;
+
+    GenerateGLSLWithVaryings(0, 1, 0, 0, 0, maxVaryings / 2, &fragmentShaderSource, &vertexShaderSource);
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+TEST_F(GLSLTest, TwiceMaxVaryingVec2)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::string fragmentShaderSource;
+    std::string vertexShaderSource;
+
+    GenerateGLSLWithVaryings(0, 0, 2 * maxVaryings, 0, 0, 0, &fragmentShaderSource, &vertexShaderSource);
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+TEST_F(GLSLTest, MaxVaryingVec2Arrays)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::string fragmentShaderSource;
+    std::string vertexShaderSource;
+
+    GenerateGLSLWithVaryings(0, 0, 0, maxVaryings, 0, 0, &fragmentShaderSource, &vertexShaderSource);
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+TEST_F(GLSLTest, MaxPlusOneVaryingVec3)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::string fragmentShaderSource;
+    std::string vertexShaderSource;
+
+    GenerateGLSLWithVaryings(0, 0, 0, 0, maxVaryings + 1, 0, &fragmentShaderSource, &vertexShaderSource);
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_EQ(0u, program);
+}
+
+TEST_F(GLSLTest, MaxPlusOneVaryingVec3Array)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::string fragmentShaderSource;
+    std::string vertexShaderSource;
+
+    GenerateGLSLWithVaryings(0, 0, 0, 0, 0, maxVaryings / 2 + 1, &fragmentShaderSource, &vertexShaderSource);
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_EQ(0u, program);
+}
+
+TEST_F(GLSLTest, MaxVaryingVec3AndOneVec2)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::string fragmentShaderSource;
+    std::string vertexShaderSource;
+
+    GenerateGLSLWithVaryings(0, 0, 1, 0, maxVaryings, 0, &fragmentShaderSource, &vertexShaderSource);
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_EQ(0u, program);
+}
+
+TEST_F(GLSLTest, MaxPlusOneVaryingVec2)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::string fragmentShaderSource;
+    std::string vertexShaderSource;
+
+    GenerateGLSLWithVaryings(0, 0, 2 * maxVaryings + 1, 0, 0, 0, &fragmentShaderSource, &vertexShaderSource);
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_EQ(0u, program);
+}
+
+TEST_F(GLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    std::string fragmentShaderSource;
+    std::string vertexShaderSource;
+
+    GenerateGLSLWithVaryings(0, maxVaryings / 2 + 1, 0, 0, 0, maxVaryings / 2, &fragmentShaderSource, &vertexShaderSource);
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_EQ(0u, program);
 }
