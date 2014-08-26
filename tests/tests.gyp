@@ -191,6 +191,29 @@
                         '<!@(python <(angle_path)/enumerate_files.py standalone_tests -types *.cpp *.h)'
                     ],
                 },
+                {
+                    'target_name': 'angle_perf_tests',
+                    'type': 'executable',
+                    'includes': [ '../build/common_defines.gypi', ],
+                    'dependencies':
+                    [
+                        '../src/angle.gyp:libGLESv2',
+                        '../src/angle.gyp:libEGL',
+                        'gtest',
+                        '../util/util.gyp:angle_util',
+                    ],
+                    'include_dirs':
+                    [
+                        '../include',
+                        'third_party/googletest/include',
+                    ],
+                    'sources':
+                    [
+                        'perf_tests/SimpleBenchmark.cpp',
+                        'perf_tests/SimpleBenchmark.h',
+                        'perf_tests/SimpleBenchmarks.cpp',
+                    ],
+                },
             ],
             'conditions':
             [
