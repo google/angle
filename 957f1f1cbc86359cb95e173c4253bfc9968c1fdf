@@ -22,6 +22,30 @@
       "revId": "957f1f1cbc86359cb95e173c4253bfc9968c1fdf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7338e55c_27005ed1",
+        "filename": "src/libGLESv2/Query.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-27T18:30:43Z",
+      "side": 1,
+      "message": "mStarted basically only ends up being used by ValidateEndQuery, to catch the case where BeginQuery was called, but the query wasn\u0027t successfully created, and return INVALID_OP. It\u0027s a proxy for the D3D query object having been created, which is always true once begin() returns successfully.\n\nAn alternate solution to the problem might be to propagate the success/failure value from begin() up to the calling Context, and reset the active query ID to zero if the query was not successfully created, but I\u0027d need to check the spec to see if that behavior is kosher. Thoughts?",
+      "parentUuid": "533da14b_63a2dcca",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 18
+      },
+      "revId": "957f1f1cbc86359cb95e173c4253bfc9968c1fdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
