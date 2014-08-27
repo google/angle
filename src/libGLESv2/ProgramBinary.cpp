@@ -110,6 +110,16 @@ void GetInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAttributes
     }
 }
 
+bool IsRowMajorLayout(const sh::InterfaceBlockField &var)
+{
+    return var.isRowMajorLayout;
+}
+
+bool IsRowMajorLayout(const sh::ShaderVariable &var)
+{
+    return false;
+}
+
 }
 
 VariableLocation::VariableLocation(const std::string &name, unsigned int element, unsigned int index)
@@ -1879,7 +1889,7 @@ bool ProgramBinary::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std
         return false;
     }
 
-    if (vertexUniform.isRowMajorMatrix != fragmentUniform.isRowMajorMatrix)
+    if (vertexUniform.isRowMajorLayout != fragmentUniform.isRowMajorLayout)
     {
         infoLog.append("Matrix packings for %s differ between vertex and fragment shaders", uniformName.c_str());
         return false;
@@ -2273,7 +2283,8 @@ bool ProgramBinary::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, cons
 
 template <typename VarT>
 void ProgramBinary::defineUniformBlockMembers(const std::vector<VarT> &fields, const std::string &prefix, int blockIndex,
-                                              sh::BlockLayoutEncoder *encoder, std::vector<unsigned int> *blockUniformIndexes)
+                                              sh::BlockLayoutEncoder *encoder, std::vector<unsigned int> *blockUniformIndexes,
+                                              bool inRowMajorLayout)
 {
     for (unsigned int uniformIndex = 0; uniformIndex < fields.size(); uniformIndex++)
     {
@@ -2282,19 +2293,23 @@ void ProgramBinary::defineUniformBlockMembers(const std::vector<VarT> &fields, c
 
         if (field.isStruct())
         {
+            bool rowMajorLayout = (inRowMajorLayout || IsRowMajorLayout(field));
+
             for (unsigned int arrayElement = 0; arrayElement < field.elementCount(); arrayElement++)
             {
                 encoder->enterAggregateType();
 
                 const std::string uniformElementName = fieldName + (field.isArray() ? ArrayString(arrayElement) : "");
-                defineUniformBlockMembers(field.fields, uniformElementName, blockIndex, encoder, blockUniformIndexes);
+                defineUniformBlockMembers(field.fields, uniformElementName, blockIndex, encoder, blockUniformIndexes, rowMajorLayout);
 
                 encoder->exitAggregateType();
             }
         }
         else
         {
-            sh::BlockMemberInfo memberInfo = encoder->encodeVariable(field);
+            bool isRowMajorMatrix = (IsMatrixType(field.type) && inRowMajorLayout);
+
+            sh::BlockMemberInfo memberInfo = encoder->encodeType(field.type, field.arraySize, isRowMajorMatrix);
 
             LinkedUniform *newUniform = new LinkedUniform(field.type, field.precision, fieldName, field.arraySize,
                                                           blockIndex, memberInfo);
@@ -2329,7 +2344,7 @@ bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, const Shader &shader, c
         }
         ASSERT(encoder);
 
-        defineUniformBlockMembers(interfaceBlock.fields, "", blockIndex, encoder, &blockUniformIndexes);
+        defineUniformBlockMembers(interfaceBlock.fields, "", blockIndex, encoder, &blockUniformIndexes, interfaceBlock.isRowMajorLayout);
 
         size_t dataSize = encoder->getBlockSize();
 

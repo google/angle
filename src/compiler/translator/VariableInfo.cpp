@@ -272,6 +272,7 @@ void CollectVariables::visitVariable(const TIntermSymbol *variable,
     interfaceBlock.isRowMajorLayout = (blockType->matrixPacking() == EmpRowMajor);
     interfaceBlock.layout = sh::GetBlockLayoutType(blockType->blockStorage());
 
+    // Gather field information
     sh::GetInterfaceBlockFields(*blockType, &interfaceBlock.fields);
 
     infoList->push_back(interfaceBlock);
@@ -356,13 +357,14 @@ bool CollectVariables::visitBinary(Visit, TIntermBinary *binaryNode)
 {
     if (binaryNode->getOp() == EOpIndexDirectInterfaceBlock)
     {
-        TIntermSymbol *symbol = binaryNode->getLeft()->getAsSymbolNode();
-        ASSERT(symbol);
+        // NOTE: we do not determine static use for individual blocks of an array
+        TIntermTyped *blockNode = binaryNode->getLeft()->getAsTyped();
+        ASSERT(blockNode);
 
         TIntermConstantUnion *constantUnion = binaryNode->getRight()->getAsConstantUnion();
         ASSERT(constantUnion);
 
-        const TInterfaceBlock *interfaceBlock = symbol->getType().getInterfaceBlock();
+        const TInterfaceBlock *interfaceBlock = blockNode->getType().getInterfaceBlock();
         sh::InterfaceBlock *namedBlock = FindVariable(interfaceBlock->name(), mInterfaceBlocks);
         ASSERT(namedBlock);
         namedBlock->staticUse = true;

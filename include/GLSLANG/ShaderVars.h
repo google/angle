@@ -87,7 +87,7 @@ struct COMPILER_EXPORT InterfaceBlockField : public ShaderVariable
     InterfaceBlockField(const InterfaceBlockField &other);
     InterfaceBlockField &operator=(const InterfaceBlockField &other);
 
-    bool isRowMajorMatrix;
+    bool isRowMajorLayout;
 };
 
 struct COMPILER_EXPORT Varying : public ShaderVariable

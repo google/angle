@@ -164,7 +164,7 @@ TEST_F(CollectVertexVariablesTest, SimpleInterfaceBlock)
     EXPECT_TRUE(field.staticUse);
     EXPECT_GLENUM_EQ(GL_FLOAT, field.type);
     EXPECT_EQ("f", field.name);
-    EXPECT_FALSE(field.isRowMajorMatrix);
+    EXPECT_FALSE(field.isRowMajorLayout);
     EXPECT_TRUE(field.fields.empty());
 }
 
@@ -201,7 +201,7 @@ TEST_F(CollectVertexVariablesTest, SimpleInstancedInterfaceBlock)
     EXPECT_TRUE(field.staticUse);
     EXPECT_GLENUM_EQ(GL_FLOAT, field.type);
     EXPECT_EQ("b.f", field.name);
-    EXPECT_FALSE(field.isRowMajorMatrix);
+    EXPECT_FALSE(field.isRowMajorLayout);
     EXPECT_TRUE(field.fields.empty());
 }
 
@@ -238,7 +238,7 @@ TEST_F(CollectVertexVariablesTest, StructInterfaceBlock)
     EXPECT_TRUE(field.isStruct());
     EXPECT_TRUE(field.staticUse);
     EXPECT_EQ("s", field.name);
-    EXPECT_FALSE(field.isRowMajorMatrix);
+    EXPECT_FALSE(field.isRowMajorLayout);
 
     const sh::ShaderVariable &member = field.fields[0];
 
@@ -282,7 +282,7 @@ TEST_F(CollectVertexVariablesTest, StructInstancedInterfaceBlock)
     EXPECT_TRUE(field.isStruct());
     EXPECT_TRUE(field.staticUse);
     EXPECT_EQ("b.s", field.name);
-    EXPECT_FALSE(field.isRowMajorMatrix);
+    EXPECT_FALSE(field.isRowMajorLayout);
 
     const sh::ShaderVariable &member = field.fields[0];
 
@@ -290,5 +290,49 @@ TEST_F(CollectVertexVariablesTest, StructInstancedInterfaceBlock)
     EXPECT_FALSE(member.isStruct());
     EXPECT_EQ("f", member.name);
     EXPECT_GLENUM_EQ(GL_FLOAT, member.type);
+    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, member.precision);
+}
+
+TEST_F(CollectVertexVariablesTest, NestedStructRowMajorInterfaceBlock)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "struct st { mat2 m; };"
+        "layout(row_major) uniform b {\n"
+        "  st s;\n"
+        "};"
+        "void main() {\n"
+        "   gl_Position = vec4(s.m);\n"
+        "}\n";
+
+    const char *shaderStrings[] = { shaderString.c_str() };
+    ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, SH_VARIABLES));
+
+    const std::vector<sh::InterfaceBlock> &interfaceBlocks = mTranslator->getInterfaceBlocks();
+    ASSERT_EQ(1u, interfaceBlocks.size());
+
+    const sh::InterfaceBlock &interfaceBlock = interfaceBlocks[0];
+
+    EXPECT_EQ(0u, interfaceBlock.arraySize);
+    EXPECT_TRUE(interfaceBlock.isRowMajorLayout);
+    EXPECT_EQ(sh::BLOCKLAYOUT_SHARED, interfaceBlock.layout);
+    EXPECT_EQ("b", interfaceBlock.name);
+    EXPECT_TRUE(interfaceBlock.staticUse);
+
+    ASSERT_EQ(1u, interfaceBlock.fields.size());
+
+    const sh::InterfaceBlockField &field = interfaceBlock.fields[0];
+
+    EXPECT_TRUE(field.isStruct());
+    EXPECT_TRUE(field.staticUse);
+    EXPECT_EQ("s", field.name);
+    EXPECT_TRUE(field.isRowMajorLayout);
+
+    const sh::ShaderVariable &member = field.fields[0];
+
+    // NOTE: we don't currently mark struct members as statically used or not
+    EXPECT_FALSE(member.isStruct());
+    EXPECT_EQ("m", member.name);
+    EXPECT_GLENUM_EQ(GL_FLOAT_MAT2, member.type);
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, member.precision);
 }

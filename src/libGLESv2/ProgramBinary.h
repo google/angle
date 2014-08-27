@@ -221,7 +221,8 @@ class ProgramBinary : public RefCountObject
                                                std::vector<LinkedVarying> *outTransformFeedbackLinkedVaryings) const;
     template <typename VarT>
     void defineUniformBlockMembers(const std::vector<VarT> &fields, const std::string &prefix, int blockIndex,
-                                   sh::BlockLayoutEncoder *encoder, std::vector<unsigned int> *blockUniformIndexes);
+                                   sh::BlockLayoutEncoder *encoder, std::vector<unsigned int> *blockUniformIndexes,
+                                   bool inRowMajorLayout);
     bool defineUniformBlock(InfoLog &infoLog, const Shader &shader, const sh::InterfaceBlock &interfaceBlock);
     bool assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex);
     void defineOutputVariables(FragmentShader *fragmentShader);

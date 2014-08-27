@@ -15,62 +15,11 @@ namespace sh
 {
 
 BlockLayoutEncoder::BlockLayoutEncoder()
-    : mCurrentOffset(0),
-      mInRowMajorField(false)
+    : mCurrentOffset(0)
 {
 }
 
-template <typename VarT>
-void BlockLayoutEncoder::encodeVariables(const std::vector<VarT> &fields)
-{
-    for (unsigned int fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
-    {
-        const VarT &variable = fields[fieldIndex];
-
-        if (variable.fields.size() > 0)
-        {
-            const unsigned int elementCount = std::max(1u, variable.arraySize);
-
-            for (unsigned int elementIndex = 0; elementIndex < elementCount; elementIndex++)
-            {
-                enterAggregateType();
-                encodeVariables(variable.fields);
-                exitAggregateType();
-            }
-        }
-        else
-        {
-            encodeVariable(variable);
-        }
-    }
-}
-
-// Only defined for interface block fields, and shader variable base
-template void BlockLayoutEncoder::encodeVariables(const std::vector<ShaderVariable> &);
-template void BlockLayoutEncoder::encodeVariables(const std::vector<InterfaceBlockField> &);
-
-BlockMemberInfo BlockLayoutEncoder::encodeVariable(const InterfaceBlockField &field)
-{
-    mInRowMajorField = field.isRowMajorMatrix;
-    return encodeVariable(static_cast<ShaderVariable>(field));
-}
-
-BlockMemberInfo BlockLayoutEncoder::encodeVariable(const sh::ShaderVariable &field)
-{
-    int arrayStride;
-    int matrixStride;
-
-    ASSERT(field.fields.empty());
-    getBlockLayoutInfo(field.type, field.arraySize, mInRowMajorField, &arrayStride, &matrixStride);
-
-    const BlockMemberInfo memberInfo(mCurrentOffset * BytesPerComponent, arrayStride * BytesPerComponent, matrixStride * BytesPerComponent, mInRowMajorField);
-
-    advanceOffset(field.type, field.arraySize, mInRowMajorField, arrayStride, matrixStride);
-
-    return memberInfo;
-}
-
-void BlockLayoutEncoder::encodeType(GLenum type, unsigned int arraySize, bool isRowMajorMatrix)
+BlockMemberInfo BlockLayoutEncoder::encodeType(GLenum type, unsigned int arraySize, bool isRowMajorMatrix)
 {
     int arrayStride;
     int matrixStride;
@@ -80,6 +29,8 @@ void BlockLayoutEncoder::encodeType(GLenum type, unsigned int arraySize, bool is
     const BlockMemberInfo memberInfo(mCurrentOffset * BytesPerComponent, arrayStride * BytesPerComponent, matrixStride * BytesPerComponent, isRowMajorMatrix);
 
     advanceOffset(type, arraySize, isRowMajorMatrix, arrayStride, matrixStride);
+
+    return memberInfo;
 }
 
 void BlockLayoutEncoder::nextRegister()

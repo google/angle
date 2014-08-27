@@ -356,7 +356,7 @@ void GetInterfaceBlockFields(const TInterfaceBlock &interfaceBlock, std::vector<
         GetVariableTraverser traverser;
         traverser.traverse(fieldType, fullFieldName, fieldsOut);
 
-        fieldsOut->back().isRowMajorMatrix = (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
+        fieldsOut->back().isRowMajorLayout = (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
     }
 }
 

@@ -89,7 +89,7 @@ Attribute &Attribute::operator=(const Attribute &other)
 }
 
 InterfaceBlockField::InterfaceBlockField()
-    : isRowMajorMatrix(false)
+    : isRowMajorLayout(false)
 {}
 
 InterfaceBlockField::~InterfaceBlockField()
@@ -97,13 +97,13 @@ InterfaceBlockField::~InterfaceBlockField()
 
 InterfaceBlockField::InterfaceBlockField(const InterfaceBlockField &other)
     : ShaderVariable(other),
-      isRowMajorMatrix(other.isRowMajorMatrix)
+      isRowMajorLayout(other.isRowMajorLayout)
 {}
 
 InterfaceBlockField &InterfaceBlockField::operator=(const InterfaceBlockField &other)
 {
     ShaderVariable::operator=(other);
-    isRowMajorMatrix = other.isRowMajorMatrix;
+    isRowMajorLayout = other.isRowMajorLayout;
     return *this;
 }
 
