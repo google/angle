@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f343f5df_1dc57371",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-27T17:40:13Z",
+      "side": 1,
+      "message": "suggestion: wrap the paragraphs. I don\u0027t know .md, but in HTML whitespace is ignored, and improves raw-text readability in some cases.",
+      "revId": "37de3b90abe026e6984228fd2c41f106ea07726f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
