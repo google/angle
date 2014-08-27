@@ -145,7 +145,11 @@ class Renderer11 : public Renderer
     virtual RenderTarget *createRenderTarget(SwapChain *swapChain, bool depth);
     virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples);
 
+    // Shader creation
+    virtual ShaderImpl *createShader(GLenum type);
+
     // Shader operations
+    virtual void releaseShaderCompiler();
     virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type,
                                              const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                              bool separatedOutputBuffers);

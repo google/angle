@@ -25,7 +25,7 @@
 
 namespace rx
 {
-class Renderer;
+class ShaderImpl;
 }
 
 namespace gl
@@ -51,15 +51,16 @@ struct PackedVarying : public sh::Varying
 
 class Shader
 {
-    friend class DynamicHLSL;
-
   public:
-    Shader(ResourceManager *manager, const rx::Renderer *renderer, GLuint handle);
+    Shader(ResourceManager *manager, rx::ShaderImpl *impl, GLenum type, GLuint handle);
 
     virtual ~Shader();
 
-    virtual GLenum getType() const = 0;
+    GLenum getType() const { return mType; }
     GLuint getHandle() const;
+
+    rx::ShaderImpl *getImplementation() { return mShader; }
+    const rx::ShaderImpl *getImplementation() const { return mShader; }
 
     void deleteSource();
     void setSource(GLsizei count, const char *const *string, const GLint *length);
@@ -69,121 +70,53 @@ class Shader
     void getSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
     int getTranslatedSourceLength() const;
     void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
-    const std::vector<sh::Uniform> &getUniforms() const;
-    const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const;
-    std::vector<PackedVarying> &getVaryings();
 
-    virtual void compile() = 0;
-    virtual void uncompile();
-    bool isCompiled() const;
-    const std::string &getHLSL() const;
+    void compile();
+    bool isCompiled() const { return mCompiled; }
 
     void addRef();
     void release();
     unsigned int getRefCount() const;
     bool isFlaggedForDeletion() const;
     void flagForDeletion();
-    int getShaderVersion() const;
-    void resetVaryingsRegisterAssignment();
-
-    static void releaseCompiler();
-    static ShShaderOutput getCompilerOutputType(GLenum shader);
-    unsigned int getUniformRegister(const std::string &uniformName) const;
-    unsigned int getInterfaceBlockRegister(const std::string &blockName) const;
-
-    bool usesDepthRange() const { return mUsesDepthRange; }
-    bool usesPointSize() const { return mUsesPointSize; }
-    rx::D3DWorkaroundType getD3DWorkarounds() const;
-
-  protected:
-    void parseVaryings(void *compiler);
-
-    void compileToHLSL(void *compiler);
-
-    void getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *length, char *buffer) const;
-
-    static bool compareVarying(const PackedVarying &x, const PackedVarying &y);
-
-    const rx::Renderer *const mRenderer;
-
-    std::vector<PackedVarying> mVaryings;
-
-    bool mUsesMultipleRenderTargets;
-    bool mUsesFragColor;
-    bool mUsesFragData;
-    bool mUsesFragCoord;
-    bool mUsesFrontFacing;
-    bool mUsesPointSize;
-    bool mUsesPointCoord;
-    bool mUsesDepthRange;
-    bool mUsesFragDepth;
-    int mShaderVersion;
-    bool mUsesDiscardRewriting;
-    bool mUsesNestedBreak;
-
-    static void *mFragmentCompiler;
-    static void *mVertexCompiler;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Shader);
 
-    void initializeCompiler();
+    static void getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *length, char *buffer);
 
+    rx::ShaderImpl *mShader;
     const GLuint mHandle;
+    const GLenum mType;
+    std::string mSource;
     unsigned int mRefCount;     // Number of program objects this shader is attached to
     bool mDeleteStatus;         // Flag to indicate that the shader can be deleted when no longer in use
-
-    std::string mSource;
-    std::string mHlsl;
-    std::string mInfoLog;
-    std::vector<sh::Uniform> mActiveUniforms;
-    std::vector<sh::InterfaceBlock> mActiveInterfaceBlocks;
-    std::map<std::string, unsigned int> mUniformRegisterMap;
-    std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
+    bool mCompiled;             // Indicates if this shader has been successfully compiled
 
     ResourceManager *mResourceManager;
 };
 
+// TODO: These are now stubs. We should remove them and use Shader exclusively.
 class VertexShader : public Shader
 {
-    friend class DynamicHLSL;
-
   public:
-    VertexShader(ResourceManager *manager, const rx::Renderer *renderer, GLuint handle);
+    VertexShader(ResourceManager *manager, rx::ShaderImpl *impl, GLuint handle);
 
     ~VertexShader();
 
-    virtual GLenum getType() const;
-    virtual void compile();
-    virtual void uncompile();
-    int getSemanticIndex(const std::string &attributeName);
-
-    const std::vector<sh::Attribute> &activeAttributes() const { return mActiveAttributes; }
-
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexShader);
-
-    void parseAttributes();
-
-    std::vector<sh::Attribute> mActiveAttributes;
 };
 
 class FragmentShader : public Shader
 {
   public:
-    FragmentShader(ResourceManager *manager,const rx::Renderer *renderer, GLuint handle);
+    FragmentShader(ResourceManager *manager, rx::ShaderImpl *impl, GLuint handle);
 
     ~FragmentShader();
 
-    virtual GLenum getType() const;
-    virtual void compile();
-    virtual void uncompile();
-    const std::vector<sh::Attribute> &getOutputVariables() const;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(FragmentShader);
-
-    std::vector<sh::Attribute> mActiveOutputVariables;
 };
 }
 

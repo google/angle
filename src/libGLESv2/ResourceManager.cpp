@@ -95,11 +95,11 @@ GLuint ResourceManager::createShader(GLenum type)
 
     if (type == GL_VERTEX_SHADER)
     {
-        mShaderMap[handle] = new VertexShader(this, mRenderer, handle);
+        mShaderMap[handle] = new VertexShader(this, mRenderer->createShader(type), handle);
     }
     else if (type == GL_FRAGMENT_SHADER)
     {
-        mShaderMap[handle] = new FragmentShader(this, mRenderer, handle);
+        mShaderMap[handle] = new FragmentShader(this, mRenderer->createShader(type), handle);
     }
     else UNREACHABLE();
 

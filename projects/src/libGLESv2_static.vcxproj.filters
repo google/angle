@@ -270,6 +270,9 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\Image.cpp">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClCompile>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderImpl.h">
+      <Filter>src\libGLESv2\renderer</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\TransformFeedbackImpl.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>
