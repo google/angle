@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "931c79fc_fa1d2956",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-27T21:42:08Z",
+      "side": 1,
+      "message": "The return-errors-from-all-functions paradigm worries me slightly because of things like this-- does this mean we\u0027ll need to avoid ever actually using the return variable for actual data? Errors really feel like something that should be handled out-of-band, but I admit that\u0027s more of a feeling than something I can back up with reasoning \u0026 data...",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 64
+      },
+      "revId": "5edd5424a4e7dc4a913443c289e5babfbc73baa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
