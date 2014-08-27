@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9333997e_c5f96c9d",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1707,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-27T17:14:26Z",
+      "side": 1,
+      "message": "This should be static.",
+      "range": {
+        "startLine": 1707,
+        "startChar": 0,
+        "endLine": 1707,
+        "endChar": 105
+      },
+      "revId": "6d6fa5e608f7fda5a8ba375790270eaf3487ce6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
