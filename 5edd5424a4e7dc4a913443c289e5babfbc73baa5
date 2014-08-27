@@ -22,6 +22,30 @@
       "revId": "5edd5424a4e7dc4a913443c289e5babfbc73baa5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "731385dc_8c0e0799",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-27T22:13:12Z",
+      "side": 1,
+      "message": "Having a global Context stored in TLS seems pretty good to me... like a global variable, but safe for threads. Geoff didn\u0027t seem to like this idea, can\u0027t remember why.",
+      "parentUuid": "931c79fc_fa1d2956",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 64
+      },
+      "revId": "5edd5424a4e7dc4a913443c289e5babfbc73baa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
