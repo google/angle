@@ -22,6 +22,30 @@
       "revId": "e51128a1b4091285a488893e93612304ec9c037f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f343f5df_1d6a53b8",
+        "filename": "tests/angle_tests/OcclusionQueriesTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-27T17:36:43Z",
+      "side": 1,
+      "message": "Or define a cross-platform Sleep method, like OSSleep(), in our utils. It could even use a timer as implementation.",
+      "parentUuid": "9333997e_054f5481",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 20
+      },
+      "revId": "e51128a1b4091285a488893e93612304ec9c037f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
