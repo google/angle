@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9333997e_65bbc0fc",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1764,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-27T17:01:43Z",
+      "side": 1,
+      "message": "These all seem like good candidates for a ValidateGetUniformBase.",
+      "range": {
+        "startLine": 1674,
+        "startChar": 0,
+        "endLine": 1764,
+        "endChar": 1
+      },
+      "revId": "42760bb6a4b506ab6089bf5350d09d56d46b69e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
