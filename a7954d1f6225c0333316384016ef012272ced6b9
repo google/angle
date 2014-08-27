@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f343f5df_7d86f758",
+        "filename": "tests/perf_tests/SimpleBenchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-27T17:34:30Z",
+      "side": 1,
+      "message": "Let\u0027s remove this if possible.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 20
+      },
+      "revId": "a7954d1f6225c0333316384016ef012272ced6b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73c54578_88af1f19",
         "filename": "tests/perf_tests/SimpleBenchmark.h",
         "patchSetId": 2
@@ -41,6 +64,29 @@
         "startChar": 0,
         "endLine": 9,
         "endChar": 26
+      },
+      "revId": "a7954d1f6225c0333316384016ef012272ced6b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f343f5df_bd5a3f2b",
+        "filename": "tests/tests.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-27T17:34:30Z",
+      "side": 1,
+      "message": "Is this needed?",
+      "range": {
+        "startLine": 208,
+        "startChar": 24,
+        "endLine": 208,
+        "endChar": 38
       },
       "revId": "a7954d1f6225c0333316384016ef012272ced6b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
