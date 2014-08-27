@@ -3584,12 +3584,7 @@ void __stdcall glReleaseShaderCompiler(void)
 {
     EVENT("()");
 
-    gl::Context *context = gl::getNonLostContext();
-
-    if (context)
-    {
-        context->releaseShaderCompiler();
-    }
+    gl::Shader::releaseCompiler();
 }
 
 void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)

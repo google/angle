@@ -234,8 +234,6 @@ class Context
     State &getState() { return mState; }
     const State &getState() const { return mState; }
 
-    void releaseShaderCompiler();
-
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
 

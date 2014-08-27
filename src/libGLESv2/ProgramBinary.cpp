@@ -22,7 +22,6 @@
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/renderer/d3d/ShaderD3D.h"
 #include "libGLESv2/renderer/d3d/VertexDataManager.h"
 #include "libGLESv2/Context.h"
 #include "libGLESv2/Buffer.h"
@@ -1053,11 +1052,8 @@ bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuff
 
 bool ProgramBinary::linkVaryings(InfoLog &infoLog, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
-    rx::VertexShaderD3D *vertexShaderD3D = rx::VertexShaderD3D::makeVertexShaderD3D(vertexShader->getImplementation());
-    rx::FragmentShaderD3D *fragmentShaderD3D = rx::FragmentShaderD3D::makeFragmentShaderD3D(fragmentShader->getImplementation());
-
-    std::vector<PackedVarying> &fragmentVaryings = fragmentShaderD3D->getVaryings();
-    std::vector<PackedVarying> &vertexVaryings = vertexShaderD3D->getVaryings();
+    std::vector<PackedVarying> &fragmentVaryings = fragmentShader->getVaryings();
+    std::vector<PackedVarying> &vertexVaryings = vertexShader->getVaryings();
 
     for (size_t fragVaryingIndex = 0; fragVaryingIndex < fragmentVaryings.size(); fragVaryingIndex++)
     {
@@ -1609,16 +1605,13 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 
     mTransformFeedbackBufferMode = transformFeedbackBufferMode;
 
-    rx::VertexShaderD3D *vertexShaderD3D = rx::VertexShaderD3D::makeVertexShaderD3D(vertexShader->getImplementation());
-    rx::FragmentShaderD3D *fragmentShaderD3D = rx::FragmentShaderD3D::makeFragmentShaderD3D(fragmentShader->getImplementation());
+    mShaderVersion = vertexShader->getShaderVersion();
 
-    mShaderVersion = vertexShaderD3D->getShaderVersion();
+    mPixelHLSL = fragmentShader->getHLSL();
+    mPixelWorkarounds = fragmentShader->getD3DWorkarounds();
 
-    mPixelHLSL = fragmentShaderD3D->getTranslatedSource();
-    mPixelWorkarounds = fragmentShaderD3D->getD3DWorkarounds();
-
-    mVertexHLSL = vertexShaderD3D->getTranslatedSource();
-    mVertexWorkarounds = vertexShaderD3D->getD3DWorkarounds();
+    mVertexHLSL = vertexShader->getHLSL();
+    mVertexWorkarounds = vertexShader->getD3DWorkarounds();
 
     // Map the varyings to the register file
     VaryingPacking packing = { NULL };
@@ -1634,7 +1627,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         return false;
     }
 
-    mUsesPointSize = vertexShaderD3D->usesPointSize();
+    mUsesPointSize = vertexShader->usesPointSize();
     std::vector<LinkedVarying> linkedVaryings;
     if (!mDynamicHLSL->generateShaderLinkHLSL(infoLog, registers, packing, mPixelHLSL, mVertexHLSL,
                                               fragmentShader, vertexShader, transformFeedbackVaryings,
@@ -1656,7 +1649,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     }
 
     // special case for gl_DepthRange, the only built-in uniform (also a struct)
-    if (vertexShaderD3D->usesDepthRange() || fragmentShaderD3D->usesDepthRange())
+    if (vertexShader->usesDepthRange() || fragmentShader->usesDepthRange())
     {
         const sh::BlockMemberInfo &defaultInfo = sh::BlockMemberInfo::getDefaultBlockInfo();
 
@@ -1679,7 +1672,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     if (success)
     {
         VertexFormat defaultInputLayout[MAX_VERTEX_ATTRIBS];
-        GetInputLayoutFromShader(vertexShaderD3D->getActiveAttributes(), defaultInputLayout);
+        GetInputLayoutFromShader(vertexShader->activeAttributes(), defaultInputLayout);
         rx::ShaderExecutable *defaultVertexExecutable = getVertexExecutableForInputLayout(defaultInputLayout);
 
         std::vector<GLenum> defaultPixelOutput(IMPLEMENTATION_MAX_DRAW_BUFFERS);
@@ -1712,10 +1705,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
 bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
-    rx::VertexShaderD3D *vertexShaderD3D = rx::VertexShaderD3D::makeVertexShaderD3D(vertexShader->getImplementation());
-
     unsigned int usedLocations = 0;
-    const std::vector<sh::Attribute> &activeAttributes = vertexShaderD3D->getActiveAttributes();
+    const std::vector<sh::Attribute> &activeAttributes = vertexShader->activeAttributes();
 
     // Link attributes that have a binding location
     for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
@@ -1782,7 +1773,7 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
 
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; )
     {
-        int index = vertexShaderD3D->getSemanticIndex(mLinkedAttribute[attributeIndex].name);
+        int index = vertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].name);
         int rows = VariableRegisterCount(mLinkedAttribute[attributeIndex].type);
 
         for (int r = 0; r < rows; r++)
@@ -1890,11 +1881,8 @@ bool ProgramBinary::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std
 
 bool ProgramBinary::linkUniforms(InfoLog &infoLog, const VertexShader &vertexShader, const FragmentShader &fragmentShader)
 {
-    const rx::VertexShaderD3D *vertexShaderD3D = rx::VertexShaderD3D::makeVertexShaderD3D(vertexShader.getImplementation());
-    const rx::FragmentShaderD3D *fragmentShaderD3D = rx::FragmentShaderD3D::makeFragmentShaderD3D(fragmentShader.getImplementation());
-
-    const std::vector<sh::Uniform> &vertexUniforms = vertexShaderD3D->getUniforms();
-    const std::vector<sh::Uniform> &fragmentUniforms = fragmentShaderD3D->getUniforms();
+    const std::vector<sh::Uniform> &vertexUniforms = vertexShader.getUniforms();
+    const std::vector<sh::Uniform> &fragmentUniforms = fragmentShader.getUniforms();
 
     // Check that uniforms defined in the vertex and fragment shaders are identical
     typedef std::map<std::string, const sh::Uniform*> UniformMap;
@@ -1924,13 +1912,13 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const VertexShader &vertexSha
     for (unsigned int uniformIndex = 0; uniformIndex < vertexUniforms.size(); uniformIndex++)
     {
         const sh::Uniform &uniform = vertexUniforms[uniformIndex];
-        defineUniformBase(GL_VERTEX_SHADER, uniform, vertexShaderD3D->getUniformRegister(uniform.name));
+        defineUniformBase(GL_VERTEX_SHADER, uniform, vertexShader.getUniformRegister(uniform.name));
     }
 
     for (unsigned int uniformIndex = 0; uniformIndex < fragmentUniforms.size(); uniformIndex++)
     {
         const sh::Uniform &uniform = fragmentUniforms[uniformIndex];
-        defineUniformBase(GL_FRAGMENT_SHADER, uniform, fragmentShaderD3D->getUniformRegister(uniform.name));
+        defineUniformBase(GL_FRAGMENT_SHADER, uniform, fragmentShader.getUniformRegister(uniform.name));
     }
 
     if (!indexUniforms(infoLog))
@@ -1945,7 +1933,7 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const VertexShader &vertexSha
 
 void ProgramBinary::defineUniformBase(GLenum shader, const sh::Uniform &uniform, unsigned int uniformRegister)
 {
-    ShShaderOutput outputType = rx::ShaderD3D::getCompilerOutputType(shader);
+    ShShaderOutput outputType = Shader::getCompilerOutputType(shader);
     sh::HLSLBlockEncoder encoder(sh::HLSLBlockEncoder::GetStrategyFor(outputType));
     encoder.skipRegisters(uniformRegister);
 
@@ -2164,11 +2152,8 @@ bool ProgramBinary::areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::Inter
 bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const VertexShader &vertexShader,
                                       const FragmentShader &fragmentShader)
 {
-    const rx::VertexShaderD3D *vertexShaderD3D = rx::VertexShaderD3D::makeVertexShaderD3D(vertexShader.getImplementation());
-    const rx::FragmentShaderD3D *fragmentShaderD3D = rx::FragmentShaderD3D::makeFragmentShaderD3D(fragmentShader.getImplementation());
-
-    const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks = vertexShaderD3D->getInterfaceBlocks();
-    const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks = fragmentShaderD3D->getInterfaceBlocks();
+    const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks = vertexShader.getInterfaceBlocks();
+    const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks = fragmentShader.getInterfaceBlocks();
 
     // Check that interface blocks defined in the vertex and fragment shaders are identical
     typedef std::map<std::string, const sh::InterfaceBlock*> UniformBlockMap;
@@ -2308,8 +2293,6 @@ void ProgramBinary::defineUniformBlockMembers(const std::vector<VarT> &fields, c
 
 bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, const Shader &shader, const sh::InterfaceBlock &interfaceBlock)
 {
-    const rx::ShaderD3D* shaderD3D = rx::ShaderD3D::makeShaderD3D(shader.getImplementation());
-
     // create uniform block entries if they do not exist
     if (getUniformBlockIndex(interfaceBlock.name) == GL_INVALID_INDEX)
     {
@@ -2357,7 +2340,7 @@ bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, const Shader &shader, c
     ASSERT(blockIndex != GL_INVALID_INDEX);
     ASSERT(blockIndex + elementCount <= mUniformBlocks.size());
 
-    unsigned int interfaceBlockRegister = shaderD3D->getInterfaceBlockRegister(interfaceBlock.name);
+    unsigned int interfaceBlockRegister = shader.getInterfaceBlockRegister(interfaceBlock.name);
 
     for (unsigned int uniformBlockElement = 0; uniformBlockElement < elementCount; uniformBlockElement++)
     {

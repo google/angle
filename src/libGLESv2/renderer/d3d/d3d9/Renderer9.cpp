@@ -17,7 +17,6 @@
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/renderer/d3d/IndexDataManager.h"
-#include "libGLESv2/renderer/d3d/ShaderD3D.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/TransformFeedbackD3D.h"
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
@@ -155,7 +154,6 @@ Renderer9::~Renderer9()
 
 void Renderer9::release()
 {
-    releaseShaderCompiler();
     releaseDeviceResources();
 
     SafeRelease(mDevice);
@@ -2785,25 +2783,6 @@ RenderTarget *Renderer9::createRenderTarget(int width, int height, GLenum format
 {
     RenderTarget9 *renderTarget = new RenderTarget9(this, width, height, format, samples);
     return renderTarget;
-}
-
-ShaderImpl *Renderer9::createShader(GLenum type)
-{
-    switch (type)
-    {
-      case GL_VERTEX_SHADER:
-        return new VertexShaderD3D(this);
-      case GL_FRAGMENT_SHADER:
-        return new FragmentShaderD3D(this);
-      default:
-        UNREACHABLE();
-        return NULL;
-    }
-}
-
-void Renderer9::releaseShaderCompiler()
-{
-    ShaderD3D::releaseCompiler();
 }
 
 ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length, rx::ShaderType type,

@@ -53,7 +53,6 @@ class BufferImpl;
 class VertexArrayImpl;
 class BufferStorage;
 struct TranslatedIndexData;
-class ShaderImpl;
 class ShaderExecutable;
 class SwapChain;
 class RenderTarget;
@@ -198,11 +197,7 @@ class Renderer
     virtual RenderTarget *createRenderTarget(SwapChain *swapChain, bool depth) = 0;
     virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples) = 0;
 
-    // Shader creation
-    virtual ShaderImpl *createShader(GLenum type) = 0;
-
     // Shader operations
-    virtual void releaseShaderCompiler() = 0;
     virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type,
                                              const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                              bool separatedOutputBuffers) = 0;

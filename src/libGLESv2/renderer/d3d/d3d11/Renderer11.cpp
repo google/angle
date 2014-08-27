@@ -13,7 +13,6 @@
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/Framebuffer.h"
-#include "libGLESv2/renderer/d3d/ShaderD3D.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/TransformFeedbackD3D.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
@@ -1693,7 +1692,6 @@ bool Renderer11::testDeviceResettable()
 
 void Renderer11::release()
 {
-    releaseShaderCompiler();
     releaseDeviceResources();
 
     SafeRelease(mDxgiFactory);
@@ -2284,25 +2282,6 @@ RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum forma
 {
     RenderTarget11 *renderTarget = new RenderTarget11(this, width, height, format, samples);
     return renderTarget;
-}
-
-ShaderImpl *Renderer11::createShader(GLenum type)
-{
-    switch (type)
-    {
-      case GL_VERTEX_SHADER:
-        return new VertexShaderD3D(this);
-      case GL_FRAGMENT_SHADER:
-        return new FragmentShaderD3D(this);
-      default:
-        UNREACHABLE();
-        return NULL;
-    }
-}
-
-void Renderer11::releaseShaderCompiler()
-{
-    ShaderD3D::releaseCompiler();
 }
 
 ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length, rx::ShaderType type,
