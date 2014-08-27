@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "533da14b_63a2dcca",
+        "filename": "src/libGLESv2/Query.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-27T16:40:33Z",
+      "side": 1,
+      "message": "Do we need to update mStarted here?",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 18
+      },
+      "revId": "957f1f1cbc86359cb95e173c4253bfc9968c1fdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
