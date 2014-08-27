@@ -243,8 +243,8 @@ class Renderer
 
     // Buffer-to-texture and Texture-to-buffer copies
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const = 0;
-    virtual bool fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
-                                         GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
+    virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
+                                              GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
 
     virtual bool getLUID(LUID *adapterLuid) const = 0;
     virtual rx::VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const = 0;

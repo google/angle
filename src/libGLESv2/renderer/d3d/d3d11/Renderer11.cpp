@@ -2476,8 +2476,8 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     return true;
 }
 
-bool Renderer11::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
-                                         GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
+gl::Error Renderer11::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
+                                              GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
 {
     ASSERT(supportsFastCopyBufferToTexture(destinationFormat));
     return mPixelTransfer->copyBufferToTexture(unpack, offset, destRenderTarget, destinationFormat, sourcePixelsType, destArea);

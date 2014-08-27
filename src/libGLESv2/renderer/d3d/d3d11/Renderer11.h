@@ -189,8 +189,8 @@ class Renderer11 : public Renderer
 
     // Buffer-to-texture and Texture-to-buffer copies
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const;
-    virtual bool fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
-                                         GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
+    virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
+                                              GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
 
     bool getRenderTargetResource(gl::FramebufferAttachment *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource);
     void unapplyRenderTargets();

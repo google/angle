@@ -186,8 +186,8 @@ class Renderer9 : public Renderer
 
     // Buffer-to-texture and Texture-to-buffer copies
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const;
-    virtual bool fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
-                                         GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
+    virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
+                                              GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
 
     // D3D9-renderer specific methods
     gl::Error boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);

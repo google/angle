@@ -628,12 +628,12 @@ bool Renderer9::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     return false;
 }
 
-bool Renderer9::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
-                                        GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
+gl::Error Renderer9::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
+                                             GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
 {
     // Pixel buffer objects are not supported in D3D9, since D3D9 is ES2-only and PBOs are ES3.
     UNREACHABLE();
-    return false;
+    return gl::Error(GL_INVALID_OPERATION);
 }
 
 gl::Error Renderer9::generateSwizzle(gl::Texture *texture)

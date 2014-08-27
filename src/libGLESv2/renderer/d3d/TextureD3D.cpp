@@ -188,7 +188,13 @@ bool TextureD3D::fastUnpackPixels(const gl::PixelUnpackState &unpack, const void
 
     unsigned int offset = reinterpret_cast<unsigned int>(pixels);
 
-    return mRenderer->fastCopyBufferToTexture(unpack, offset, destRenderTarget, sizedInternalFormat, type, destArea);
+    gl::Error error = mRenderer->fastCopyBufferToTexture(unpack, offset, destRenderTarget, sizedInternalFormat, type, destArea);
+    if (error.isError())
+    {
+        return false;
+    }
+
+    return true;
 }
 
 GLint TextureD3D::creationLevels(GLsizei width, GLsizei height, GLsizei depth) const
