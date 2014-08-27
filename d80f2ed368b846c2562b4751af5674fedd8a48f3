@@ -261,6 +261,30 @@
     },
     {
       "key": {
+        "uuid": "f343f5df_1ddb3327",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-08-27T17:58:10Z",
+      "side": 1,
+      "message": "Can we add a comment about truncation expectations? Would like to document intent here.",
+      "parentUuid": "d3cd11a8_f419d813",
+      "range": {
+        "startLine": 770,
+        "startChar": 7,
+        "endLine": 770,
+        "endChar": 13
+      },
+      "revId": "d80f2ed368b846c2562b4751af5674fedd8a48f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "739c6584_a19d5e55",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 7
