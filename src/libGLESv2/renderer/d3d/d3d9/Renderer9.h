@@ -119,10 +119,10 @@ class Renderer9 : public Renderer
     virtual int getMaxSwapInterval() const;
 
     // Pixel operations
-    virtual bool copyToRenderTarget2D(TextureStorage *dest, TextureStorage *source);
-    virtual bool copyToRenderTargetCube(TextureStorage *dest, TextureStorage *source);
-    virtual bool copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source);
-    virtual bool copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source);
+    virtual gl::Error copyToRenderTarget2D(TextureStorage *dest, TextureStorage *source);
+    virtual gl::Error copyToRenderTargetCube(TextureStorage *dest, TextureStorage *source);
+    virtual gl::Error copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source);
+    virtual gl::Error copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source);
 
     virtual gl::Error copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                                   GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level);
@@ -214,7 +214,7 @@ class Renderer9 : public Renderer
 
     gl::Error getCountingIB(size_t count, StaticIndexBufferInterface **outIB);
 
-    bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
+    gl::Error copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
     gl::FramebufferAttachment *getNullColorbuffer(gl::FramebufferAttachment *depthbuffer);
 
     D3DPOOL getBufferPool(DWORD usage) const;

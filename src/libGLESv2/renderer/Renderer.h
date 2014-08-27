@@ -170,10 +170,10 @@ class Renderer
     virtual int getMaxSwapInterval() const = 0;
 
     // Pixel operations
-    virtual bool copyToRenderTarget2D(TextureStorage *dest, TextureStorage *source) = 0;
-    virtual bool copyToRenderTargetCube(TextureStorage *dest, TextureStorage *source) = 0;
-    virtual bool copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source) = 0;
-    virtual bool copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source) = 0;
+    virtual gl::Error copyToRenderTarget2D(TextureStorage *dest, TextureStorage *source) = 0;
+    virtual gl::Error copyToRenderTargetCube(TextureStorage *dest, TextureStorage *source) = 0;
+    virtual gl::Error copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source) = 0;
+    virtual gl::Error copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source) = 0;
 
     virtual gl::Error copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                                   GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level) = 0;

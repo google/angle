@@ -1879,72 +1879,60 @@ int Renderer11::getMaxSwapInterval() const
     return 4;
 }
 
-bool Renderer11::copyToRenderTarget2D(TextureStorage *dest, TextureStorage *source)
+gl::Error Renderer11::copyToRenderTarget2D(TextureStorage *dest, TextureStorage *source)
 {
-    if (source && dest)
-    {
-        TextureStorage11_2D *source11 = TextureStorage11_2D::makeTextureStorage11_2D(source);
-        TextureStorage11_2D *dest11 = TextureStorage11_2D::makeTextureStorage11_2D(dest);
+    ASSERT(source && dest);
 
-        mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
+    TextureStorage11_2D *source11 = TextureStorage11_2D::makeTextureStorage11_2D(source);
+    TextureStorage11_2D *dest11 = TextureStorage11_2D::makeTextureStorage11_2D(dest);
 
-        dest11->invalidateSwizzleCache();
+    mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
-        return true;
-    }
+    dest11->invalidateSwizzleCache();
 
-    return false;
+    return gl::Error(GL_NO_ERROR);
 }
 
-bool Renderer11::copyToRenderTargetCube(TextureStorage *dest, TextureStorage *source)
+gl::Error Renderer11::copyToRenderTargetCube(TextureStorage *dest, TextureStorage *source)
 {
-    if (source && dest)
-    {
-        TextureStorage11_Cube *source11 = TextureStorage11_Cube::makeTextureStorage11_Cube(source);
-        TextureStorage11_Cube *dest11 = TextureStorage11_Cube::makeTextureStorage11_Cube(dest);
+    ASSERT(source && dest);
 
-        mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
+    TextureStorage11_Cube *source11 = TextureStorage11_Cube::makeTextureStorage11_Cube(source);
+    TextureStorage11_Cube *dest11 = TextureStorage11_Cube::makeTextureStorage11_Cube(dest);
 
-        dest11->invalidateSwizzleCache();
+    mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
-        return true;
-    }
+    dest11->invalidateSwizzleCache();
 
-    return false;
+    return gl::Error(GL_NO_ERROR);
 }
 
-bool Renderer11::copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source)
+gl::Error Renderer11::copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source)
 {
-    if (source && dest)
-    {
-        TextureStorage11_3D *source11 = TextureStorage11_3D::makeTextureStorage11_3D(source);
-        TextureStorage11_3D *dest11 = TextureStorage11_3D::makeTextureStorage11_3D(dest);
+    ASSERT(source && dest);
 
-        mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
+    TextureStorage11_3D *source11 = TextureStorage11_3D::makeTextureStorage11_3D(source);
+    TextureStorage11_3D *dest11 = TextureStorage11_3D::makeTextureStorage11_3D(dest);
 
-        dest11->invalidateSwizzleCache();
+    mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
-        return true;
-    }
+    dest11->invalidateSwizzleCache();
 
-    return false;
+    return gl::Error(GL_NO_ERROR);
 }
 
-bool Renderer11::copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source)
+gl::Error Renderer11::copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source)
 {
-    if (source && dest)
-    {
-        TextureStorage11_2DArray *source11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(source);
-        TextureStorage11_2DArray *dest11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(dest);
+    ASSERT(source && dest);
 
-        mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
+    TextureStorage11_2DArray *source11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(source);
+    TextureStorage11_2DArray *dest11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(dest);
 
-        dest11->invalidateSwizzleCache();
+    mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
-        return true;
-    }
+    dest11->invalidateSwizzleCache();
 
-    return false;
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error Renderer11::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,

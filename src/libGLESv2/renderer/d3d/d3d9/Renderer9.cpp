@@ -2336,80 +2336,74 @@ int Renderer9::getMaxSwapInterval() const
     return mMaxSwapInterval;
 }
 
-bool Renderer9::copyToRenderTarget2D(TextureStorage *dest, TextureStorage *source)
+gl::Error Renderer9::copyToRenderTarget2D(TextureStorage *dest, TextureStorage *source)
 {
-    bool result = false;
+    ASSERT(source && dest);
 
-    if (source && dest)
+    TextureStorage9_2D *source9 = TextureStorage9_2D::makeTextureStorage9_2D(source);
+    TextureStorage9_2D *dest9 = TextureStorage9_2D::makeTextureStorage9_2D(dest);
+
+    int levels = source9->getLevelCount();
+    for (int i = 0; i < levels; ++i)
     {
-        TextureStorage9_2D *source9 = TextureStorage9_2D::makeTextureStorage9_2D(source);
-        TextureStorage9_2D *dest9 = TextureStorage9_2D::makeTextureStorage9_2D(dest);
+        IDirect3DSurface9 *srcSurf = source9->getSurfaceLevel(i, false);
+        IDirect3DSurface9 *dstSurf = dest9->getSurfaceLevel(i, false);
 
-        int levels = source9->getLevelCount();
-        for (int i = 0; i < levels; ++i)
+        gl::Error error = copyToRenderTarget(dstSurf, srcSurf, source9->isManaged());
+
+        SafeRelease(srcSurf);
+        SafeRelease(dstSurf);
+
+        if (error.isError())
         {
-            IDirect3DSurface9 *srcSurf = source9->getSurfaceLevel(i, false);
-            IDirect3DSurface9 *dstSurf = dest9->getSurfaceLevel(i, false);
+            return error;
+        }
+    }
 
-            result = copyToRenderTarget(dstSurf, srcSurf, source9->isManaged());
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error Renderer9::copyToRenderTargetCube(TextureStorage *dest, TextureStorage *source)
+{
+    ASSERT(source && dest);
+
+    TextureStorage9_Cube *source9 = TextureStorage9_Cube::makeTextureStorage9_Cube(source);
+    TextureStorage9_Cube *dest9 = TextureStorage9_Cube::makeTextureStorage9_Cube(dest);
+    int levels = source9->getLevelCount();
+    for (int f = 0; f < 6; f++)
+    {
+        for (int i = 0; i < levels; i++)
+        {
+            IDirect3DSurface9 *srcSurf = source9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, false);
+            IDirect3DSurface9 *dstSurf = dest9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, true);
+
+            gl::Error error = copyToRenderTarget(dstSurf, srcSurf, source9->isManaged());
 
             SafeRelease(srcSurf);
             SafeRelease(dstSurf);
 
-            if (!result)
+            if (error.isError())
             {
-                return false;
+                return error;
             }
         }
     }
 
-    return result;
+    return gl::Error(GL_NO_ERROR);
 }
 
-bool Renderer9::copyToRenderTargetCube(TextureStorage *dest, TextureStorage *source)
-{
-    bool result = false;
-
-    if (source && dest)
-    {
-        TextureStorage9_Cube *source9 = TextureStorage9_Cube::makeTextureStorage9_Cube(source);
-        TextureStorage9_Cube *dest9 = TextureStorage9_Cube::makeTextureStorage9_Cube(dest);
-        int levels = source9->getLevelCount();
-        for (int f = 0; f < 6; f++)
-        {
-            for (int i = 0; i < levels; i++)
-            {
-                IDirect3DSurface9 *srcSurf = source9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, false);
-                IDirect3DSurface9 *dstSurf = dest9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, true);
-
-                result = copyToRenderTarget(dstSurf, srcSurf, source9->isManaged());
-
-                SafeRelease(srcSurf);
-                SafeRelease(dstSurf);
-
-                if (!result)
-                {
-                    return false;
-                }
-            }
-        }
-    }
-
-    return result;
-}
-
-bool Renderer9::copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source)
+gl::Error Renderer9::copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source)
 {
     // 3D textures are not available in the D3D9 backend.
     UNREACHABLE();
-    return false;
+    return gl::Error(GL_INVALID_OPERATION);
 }
 
-bool Renderer9::copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source)
+gl::Error Renderer9::copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source)
 {
     // 2D array textures are not supported by the D3D9 backend.
     UNREACHABLE();
-    return false;
+    return gl::Error(GL_INVALID_OPERATION);
 }
 
 D3DPOOL Renderer9::getBufferPool(DWORD usage) const
@@ -2995,41 +2989,40 @@ D3DPOOL Renderer9::getTexturePool(DWORD usage) const
     return D3DPOOL_DEFAULT;
 }
 
-bool Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged)
+gl::Error Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged)
 {
-    if (source && dest)
+    ASSERT(source && dest);
+
+    HRESULT result = D3DERR_OUTOFVIDEOMEMORY;
+
+    if (fromManaged)
     {
-        HRESULT result = D3DERR_OUTOFVIDEOMEMORY;
+        D3DSURFACE_DESC desc;
+        source->GetDesc(&desc);
 
-        if (fromManaged)
+        IDirect3DSurface9 *surf = 0;
+        result = mDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
+
+        if (SUCCEEDED(result))
         {
-            D3DSURFACE_DESC desc;
-            source->GetDesc(&desc);
-
-            IDirect3DSurface9 *surf = 0;
-            result = mDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
-
-            if (SUCCEEDED(result))
-            {
-                Image9::copyLockableSurfaces(surf, source);
-                result = mDevice->UpdateSurface(surf, NULL, dest, NULL);
-                SafeRelease(surf);
-            }
-        }
-        else
-        {
-            endScene();
-            result = mDevice->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
-        }
-
-        if (FAILED(result))
-        {
-            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return false;
+            Image9::copyLockableSurfaces(surf, source);
+            result = mDevice->UpdateSurface(surf, NULL, dest, NULL);
+            SafeRelease(surf);
         }
     }
+    else
+    {
+        endScene();
+        result = mDevice->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
+    }
 
-    return true;
+    if (FAILED(result))
+    {
+        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to blit internal texture, result: 0x%X.", result);
+    }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 Image *Renderer9::createImage()
