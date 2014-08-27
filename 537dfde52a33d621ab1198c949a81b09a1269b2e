@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1302498d_e9e1f160",
+        "filename": "projects/src/libGLESv2.vcxproj.filters",
+        "patchSetId": 10
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-27T22:11:04Z",
+      "side": 1,
+      "message": "hey Brandon, it looks like you may have committed a merge conflict. In this case I see some conflict markers here. Can you regenerate the public projects and re-commit?",
+      "range": {
+        "startLine": 414,
+        "startChar": 0,
+        "endLine": 414,
+        "endChar": 12
+      },
+      "revId": "537dfde52a33d621ab1198c949a81b09a1269b2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
