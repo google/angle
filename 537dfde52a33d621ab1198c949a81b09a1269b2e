@@ -22,6 +22,30 @@
       "revId": "537dfde52a33d621ab1198c949a81b09a1269b2e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73eaa5f0_7a3dc844",
+        "filename": "projects/src/libGLESv2.vcxproj.filters",
+        "patchSetId": 10
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-27T22:14:11Z",
+      "side": 1,
+      "message": "*Double Facepalm* I haven\u0027t the foggiest idea how that snuck in, but yeah. I\u0027ll fix it.",
+      "parentUuid": "1302498d_e9e1f160",
+      "range": {
+        "startLine": 414,
+        "startChar": 0,
+        "endLine": 414,
+        "endChar": 12
+      },
+      "revId": "537dfde52a33d621ab1198c949a81b09a1269b2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
