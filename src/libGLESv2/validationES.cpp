@@ -1859,7 +1859,9 @@ static bool ValidateSizedGetUniform(Context *context, GLuint program, GLint loca
         return false;
     }
 
-    gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+    gl::Program *programObject = context->getProgram(program);
+    ASSERT(programObject);
+    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
 
     // sized queries -- ensure the provided buffer is large enough
     LinkedUniform *uniform = programBinary->getUniformByLocation(location);

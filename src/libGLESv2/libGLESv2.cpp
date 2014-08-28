@@ -3141,7 +3141,9 @@ void __stdcall glGetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSiz
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+        gl::Program *programObject = context->getProgram(program);
+        ASSERT(programObject);
+        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
         ASSERT(programBinary);
 
         programBinary->getUniformfv(location, params);
@@ -3160,7 +3162,9 @@ void __stdcall glGetUniformfv(GLuint program, GLint location, GLfloat* params)
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+        gl::Program *programObject = context->getProgram(program);
+        ASSERT(programObject);
+        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
         ASSERT(programBinary);
 
         programBinary->getUniformfv(location, params);
@@ -3180,7 +3184,9 @@ void __stdcall glGetnUniformivEXT(GLuint program, GLint location, GLsizei bufSiz
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+        gl::Program *programObject = context->getProgram(program);
+        ASSERT(programObject);
+        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
         ASSERT(programBinary);
 
         programBinary->getUniformiv(location, params);
@@ -3199,7 +3205,9 @@ void __stdcall glGetUniformiv(GLuint program, GLint location, GLint* params)
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+        gl::Program *programObject = context->getProgram(program);
+        ASSERT(programObject);
+        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
         ASSERT(programBinary);
 
         programBinary->getUniformiv(location, params);
@@ -6399,7 +6407,9 @@ void __stdcall glGetUniformuiv(GLuint program, GLint location, GLuint* params)
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+        gl::Program *programObject = context->getProgram(program);
+        ASSERT(programObject);
+        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
         ASSERT(programBinary);
 
         programBinary->getUniformuiv(location, params);
