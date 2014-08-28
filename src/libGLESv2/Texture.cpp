@@ -226,11 +226,11 @@ GLenum Texture2D::getActualFormat(GLint level) const
         return GL_NONE;
 }
 
-void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     releaseTexImage();
 
-    mTexture->setImage(GL_TEXTURE_2D, level, width, height, 1, internalFormat, format, type, unpack, pixels);
+    return mTexture->setImage(GL_TEXTURE_2D, level, width, height, 1, internalFormat, format, type, unpack, pixels);
 }
 
 void Texture2D::bindTexImage(egl::Surface *surface)
@@ -261,9 +261,9 @@ void Texture2D::setCompressedImage(GLint level, GLenum format, GLsizei width, GL
     mTexture->setCompressedImage(GL_TEXTURE_2D, level, format, width, height, 1, imageSize, pixels);
 }
 
-void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->subImage(GL_TEXTURE_2D, level, xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels);
+    return mTexture->subImage(GL_TEXTURE_2D, level, xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels);
 }
 
 void Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels)
@@ -467,34 +467,34 @@ GLenum TextureCubeMap::getActualFormat(GLenum target, GLint level) const
         return GL_NONE;
 }
 
-void TextureCubeMap::setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error TextureCubeMap::setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->setImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X, level, width, height, 1, internalFormat, format, type, unpack, pixels);
+    return mTexture->setImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X, level, width, height, 1, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImageNegX(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error TextureCubeMap::setImageNegX(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->setImage(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, level, width, height, 1, internalFormat, format, type, unpack, pixels);
+    return mTexture->setImage(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, level, width, height, 1, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImagePosY(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error TextureCubeMap::setImagePosY(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->setImage(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, level, width, height, 1, internalFormat, format, type, unpack, pixels);
+    return mTexture->setImage(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, level, width, height, 1, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImageNegY(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error TextureCubeMap::setImageNegY(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->setImage(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, level, width, height, 1, internalFormat, format, type, unpack, pixels);
+    return mTexture->setImage(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, level, width, height, 1, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImagePosZ(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error TextureCubeMap::setImagePosZ(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->setImage(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, level, width, height, 1, internalFormat, format, type, unpack, pixels);
+    return mTexture->setImage(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, level, width, height, 1, internalFormat, format, type, unpack, pixels);
 }
 
-void TextureCubeMap::setImageNegZ(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error TextureCubeMap::setImageNegZ(GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->setImage(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, level, width, height, 1, internalFormat, format, type, unpack, pixels);
+    return mTexture->setImage(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, level, width, height, 1, internalFormat, format, type, unpack, pixels);
 }
 
 void TextureCubeMap::setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
@@ -502,9 +502,9 @@ void TextureCubeMap::setCompressedImage(GLenum target, GLint level, GLenum forma
     mTexture->setCompressedImage(target, level, format, width, height, 1, imageSize, pixels);
 }
 
-void TextureCubeMap::subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error TextureCubeMap::subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->subImage(target, level, xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels);
+    return mTexture->subImage(target, level, xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels);
 }
 
 void TextureCubeMap::subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels)
@@ -734,9 +734,9 @@ bool Texture3D::isDepth(GLint level) const
     return GetInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
-void Texture3D::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error Texture3D::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->setImage(GL_TEXTURE_3D, level, width, height, depth, internalFormat, format, type, unpack, pixels);
+    return mTexture->setImage(GL_TEXTURE_3D, level, width, height, depth, internalFormat, format, type, unpack, pixels);
 }
 
 void Texture3D::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels)
@@ -744,9 +744,9 @@ void Texture3D::setCompressedImage(GLint level, GLenum format, GLsizei width, GL
     mTexture->setCompressedImage(GL_TEXTURE_3D, level, format, width, height, depth, imageSize, pixels);
 }
 
-void Texture3D::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error Texture3D::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->subImage(GL_TEXTURE_3D, level, xoffset, yoffset, zoffset, width, height, depth, format, type, unpack, pixels);
+    return mTexture->subImage(GL_TEXTURE_3D, level, xoffset, yoffset, zoffset, width, height, depth, format, type, unpack, pixels);
 }
 
 void Texture3D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels)
@@ -892,9 +892,9 @@ bool Texture2DArray::isDepth(GLint level) const
     return GetInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
-void Texture2DArray::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error Texture2DArray::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->setImage(GL_TEXTURE_2D_ARRAY, level, width, height, depth, internalFormat, format, type, unpack, pixels);
+    return mTexture->setImage(GL_TEXTURE_2D_ARRAY, level, width, height, depth, internalFormat, format, type, unpack, pixels);
 }
 
 void Texture2DArray::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels)
@@ -902,9 +902,9 @@ void Texture2DArray::setCompressedImage(GLint level, GLenum format, GLsizei widt
     mTexture->setCompressedImage(GL_TEXTURE_2D_ARRAY, level, format, width, height, depth, imageSize, pixels);
 }
 
-void Texture2DArray::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
+Error Texture2DArray::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
-    mTexture->subImage(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, zoffset, width, height, depth, format, type, unpack, pixels);
+    return mTexture->subImage(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, zoffset, width, height, depth, format, type, unpack, pixels);
 }
 
 void Texture2DArray::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels)

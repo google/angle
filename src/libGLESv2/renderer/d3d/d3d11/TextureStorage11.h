@@ -57,9 +57,9 @@ class TextureStorage11 : public TextureStorage
     void invalidateSwizzleCacheLevel(int mipLevel);
     void invalidateSwizzleCache();
 
-    bool updateSubresourceLevel(ID3D11Resource *texture, unsigned int sourceSubresource, int level,
-                                int layerTarget, GLint xoffset, GLint yoffset, GLint zoffset,
-                                GLsizei width, GLsizei height, GLsizei depth);
+    gl::Error updateSubresourceLevel(ID3D11Resource *texture, unsigned int sourceSubresource, int level,
+                                     int layerTarget, GLint xoffset, GLint yoffset, GLint zoffset,
+                                     GLsizei width, GLsizei height, GLsizei depth);
 
     bool copySubresourceLevel(ID3D11Resource* dstTexture, unsigned int dstSubresource, int level,
                               int layerTarget, GLint xoffset, GLint yoffset, GLint zoffset,

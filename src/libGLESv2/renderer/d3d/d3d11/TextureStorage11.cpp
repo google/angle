@@ -287,60 +287,57 @@ void TextureStorage11::invalidateSwizzleCache()
     }
 }
 
-bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsigned int sourceSubresource,
-                                              int level, int layerTarget, GLint xoffset, GLint yoffset, GLint zoffset,
-                                              GLsizei width, GLsizei height, GLsizei depth)
+gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsigned int sourceSubresource,
+                                                   int level, int layerTarget, GLint xoffset, GLint yoffset, GLint zoffset,
+                                                   GLsizei width, GLsizei height, GLsizei depth)
 {
-    if (srcTexture)
+    ASSERT(srcTexture);
+
+    invalidateSwizzleCacheLevel(level);
+
+    gl::Extents texSize(getLevelWidth(level), getLevelHeight(level), getLevelDepth(level));
+    gl::Box copyArea(xoffset, yoffset, zoffset, width, height, depth);
+
+    bool fullCopy = copyArea.x == 0 &&
+                    copyArea.y == 0 &&
+                    copyArea.z == 0 &&
+                    copyArea.width  == texSize.width &&
+                    copyArea.height == texSize.height &&
+                    copyArea.depth  == texSize.depth;
+
+    ID3D11Resource *dstTexture = getResource();
+    unsigned int dstSubresource = getSubresourceIndex(level + mTopLevel, layerTarget);
+
+    ASSERT(dstTexture);
+
+    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mTextureFormat);
+    if (!fullCopy && (dxgiFormatInfo.depthBits > 0 || dxgiFormatInfo.stencilBits > 0))
     {
-        invalidateSwizzleCacheLevel(level);
+        // CopySubresourceRegion cannot copy partial depth stencils, use the blitter instead
+        Blit11 *blitter = mRenderer->getBlitter();
 
-        gl::Extents texSize(getLevelWidth(level), getLevelHeight(level), getLevelDepth(level));
-        gl::Box copyArea(xoffset, yoffset, zoffset, width, height, depth);
-
-        bool fullCopy = copyArea.x == 0 &&
-                        copyArea.y == 0 &&
-                        copyArea.z == 0 &&
-                        copyArea.width  == texSize.width &&
-                        copyArea.height == texSize.height &&
-                        copyArea.depth  == texSize.depth;
-
-        ID3D11Resource *dstTexture = getResource();
-        unsigned int dstSubresource = getSubresourceIndex(level + mTopLevel, layerTarget);
-
-        ASSERT(dstTexture);
-
-        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mTextureFormat);
-        if (!fullCopy && (dxgiFormatInfo.depthBits > 0 || dxgiFormatInfo.stencilBits > 0))
-        {
-            // CopySubresourceRegion cannot copy partial depth stencils, use the blitter instead
-            Blit11 *blitter = mRenderer->getBlitter();
-
-            return !blitter->copyDepthStencil(srcTexture, sourceSubresource, copyArea, texSize,
-                                              dstTexture, dstSubresource, copyArea, texSize,
-                                              NULL).isError();
-        }
-        else
-        {
-            const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mTextureFormat);
-
-            D3D11_BOX srcBox;
-            srcBox.left = copyArea.x;
-            srcBox.top = copyArea.y;
-            srcBox.right = copyArea.x + roundUp((unsigned int)width, dxgiFormatInfo.blockWidth);
-            srcBox.bottom = copyArea.y + roundUp((unsigned int)height, dxgiFormatInfo.blockHeight);
-            srcBox.front = copyArea.z;
-            srcBox.back = copyArea.z + copyArea.depth;
-
-            ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-
-            context->CopySubresourceRegion(dstTexture, dstSubresource, copyArea.x, copyArea.y, copyArea.z,
-                                           srcTexture, sourceSubresource, fullCopy ? NULL : &srcBox);
-            return true;
-        }
+        return blitter->copyDepthStencil(srcTexture, sourceSubresource, copyArea, texSize,
+                                         dstTexture, dstSubresource, copyArea, texSize,
+                                         NULL);
     }
+    else
+    {
+        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mTextureFormat);
 
-    return false;
+        D3D11_BOX srcBox;
+        srcBox.left = copyArea.x;
+        srcBox.top = copyArea.y;
+        srcBox.right = copyArea.x + roundUp((unsigned int)width, dxgiFormatInfo.blockWidth);
+        srcBox.bottom = copyArea.y + roundUp((unsigned int)height, dxgiFormatInfo.blockHeight);
+        srcBox.front = copyArea.z;
+        srcBox.back = copyArea.z + copyArea.depth;
+
+        ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+        context->CopySubresourceRegion(dstTexture, dstSubresource, copyArea.x, copyArea.y, copyArea.z,
+                                       srcTexture, sourceSubresource, fullCopy ? NULL : &srcBox);
+        return gl::Error(GL_NO_ERROR);
+    }
 }
 
 bool TextureStorage11::copySubresourceLevel(ID3D11Resource* dstTexture, unsigned int dstSubresource,
