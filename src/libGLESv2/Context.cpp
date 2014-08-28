@@ -652,7 +652,7 @@ void Context::linkProgram(GLuint program)
 {
     Program *programObject = mResourceManager->getProgram(program);
 
-    bool linked = programObject->link();
+    bool linked = programObject->link(getCaps());
 
     // if the current program was relinked successfully we
     // need to install the new executables
@@ -1409,7 +1409,7 @@ size_t Context::getCurrentTexturesAndSamplerStates(ProgramBinary *programBinary,
     for (size_t i = 0; i < samplerRange; i++)
     {
         outTextureTypes[i] = programBinary->getSamplerTextureType(type, i);
-        GLint textureUnit = programBinary->getSamplerMapping(type, i);   // OpenGL texture image unit index
+        GLint textureUnit = programBinary->getSamplerMapping(type, i, getCaps());   // OpenGL texture image unit index
         if (textureUnit != -1)
         {
             outTextures[i] = getSamplerTexture(textureUnit, outTextureTypes[i]);
@@ -1508,7 +1508,7 @@ bool Context::applyUniformBuffers()
         }
     }
 
-    return programBinary->applyUniformBuffers(boundBuffers);
+    return programBinary->applyUniformBuffers(boundBuffers, getCaps());
 }
 
 bool Context::applyTransformFeedbackBuffers()

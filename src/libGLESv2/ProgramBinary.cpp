@@ -384,7 +384,7 @@ bool ProgramBinary::usesGeometryShader() const
 
 // Returns the index of the texture image unit (0-19) corresponding to a Direct3D 9 sampler
 // index (0-15 for the pixel shader and 0-3 for the vertex shader).
-GLint ProgramBinary::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
+GLint ProgramBinary::getSamplerMapping(SamplerType type, unsigned int samplerIndex, const Caps &caps)
 {
     GLint logicalTextureUnit = -1;
 
@@ -409,8 +409,7 @@ GLint ProgramBinary::getSamplerMapping(SamplerType type, unsigned int samplerInd
       default: UNREACHABLE();
     }
 
-    // TODO (geofflang):  Use context's caps
-    if (logicalTextureUnit >= 0 && logicalTextureUnit < (GLint)mRenderer->getRendererCaps().maxCombinedTextureImageUnits)
+    if (logicalTextureUnit >= 0 && logicalTextureUnit < static_cast<GLint>(caps.maxCombinedTextureImageUnits))
     {
         return logicalTextureUnit;
     }
@@ -1014,7 +1013,7 @@ void ProgramBinary::applyUniforms()
     }
 }
 
-bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers)
+bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers, const Caps &caps)
 {
     const gl::Buffer *vertexUniformBuffers[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS] = {NULL};
     const gl::Buffer *fragmentUniformBuffers[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS] = {NULL};
@@ -1043,7 +1042,7 @@ bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuff
         {
             unsigned int registerIndex = uniformBlock->vsRegisterIndex - reservedBuffersInVS;
             ASSERT(vertexUniformBuffers[registerIndex] == NULL);
-            ASSERT(registerIndex < mRenderer->getRendererCaps().maxVertexUniformBlocks);
+            ASSERT(registerIndex < caps.maxVertexUniformBlocks);
             vertexUniformBuffers[registerIndex] = uniformBuffer;
         }
 
@@ -1051,7 +1050,7 @@ bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuff
         {
             unsigned int registerIndex = uniformBlock->psRegisterIndex - reservedBuffersInFS;
             ASSERT(fragmentUniformBuffers[registerIndex] == NULL);
-            ASSERT(registerIndex < mRenderer->getRendererCaps().maxFragmentUniformBlocks);
+            ASSERT(registerIndex < caps.maxFragmentUniformBlocks);
             fragmentUniformBuffers[registerIndex] = uniformBuffer;
         }
     }
@@ -1601,7 +1600,7 @@ GLint ProgramBinary::getLength()
 }
 
 bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBindings, Shader *fragmentShader, Shader *vertexShader,
-                         const std::vector<std::string>& transformFeedbackVaryings, GLenum transformFeedbackBufferMode)
+                         const std::vector<std::string>& transformFeedbackVaryings, GLenum transformFeedbackBufferMode, const Caps &caps)
 {
     if (!fragmentShader || !fragmentShader->isCompiled())
     {
@@ -1660,7 +1659,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         success = false;
     }
 
-    if (!linkUniforms(infoLog, *vertexShader, *fragmentShader))
+    if (!linkUniforms(infoLog, *vertexShader, *fragmentShader, caps))
     {
         success = false;
     }
@@ -1675,13 +1674,13 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         mUniforms.push_back(new LinkedUniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.diff", 0, -1, defaultInfo));
     }
 
-    if (!linkUniformBlocks(infoLog, *vertexShader, *fragmentShader))
+    if (!linkUniformBlocks(infoLog, *vertexShader, *fragmentShader, caps))
     {
         success = false;
     }
 
     if (!gatherTransformFeedbackLinkedVaryings(infoLog, linkedVaryings, transformFeedbackVaryings,
-                                               transformFeedbackBufferMode, &mTransformFeedbackLinkedVaryings))
+                                               transformFeedbackBufferMode, &mTransformFeedbackLinkedVaryings, caps))
     {
         success = false;
     }
@@ -1898,7 +1897,7 @@ bool ProgramBinary::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std
     return true;
 }
 
-bool ProgramBinary::linkUniforms(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader)
+bool ProgramBinary::linkUniforms(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader, const Caps &caps)
 {
     const rx::VertexShaderD3D *vertexShaderD3D = rx::VertexShaderD3D::makeVertexShaderD3D(vertexShader.getImplementation());
     const rx::FragmentShaderD3D *fragmentShaderD3D = rx::FragmentShaderD3D::makeFragmentShaderD3D(fragmentShader.getImplementation());
@@ -1943,7 +1942,7 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const Shader &vertexShader, c
         defineUniformBase(GL_FRAGMENT_SHADER, uniform, fragmentShaderD3D->getUniformRegister(uniform.name));
     }
 
-    if (!indexUniforms(infoLog))
+    if (!indexUniforms(infoLog, caps))
     {
         return false;
     }
@@ -2026,12 +2025,11 @@ void ProgramBinary::defineUniform(GLenum shader, const sh::ShaderVariable &unifo
     }
 }
 
-bool ProgramBinary::indexSamplerUniform(const LinkedUniform &uniform, InfoLog &infoLog)
+bool ProgramBinary::indexSamplerUniform(const LinkedUniform &uniform, InfoLog &infoLog, const Caps &caps)
 {
     ASSERT(IsSampler(uniform.type));
     ASSERT(uniform.vsRegisterIndex != GL_INVALID_INDEX || uniform.psRegisterIndex != GL_INVALID_INDEX);
 
-    const gl::Caps &caps = mRenderer->getRendererCaps();
     if (uniform.vsRegisterIndex != GL_INVALID_INDEX)
     {
         if (!assignSamplers(uniform.vsRegisterIndex, uniform.type, uniform.arraySize, mSamplersVS,
@@ -2073,7 +2071,7 @@ bool ProgramBinary::indexSamplerUniform(const LinkedUniform &uniform, InfoLog &i
     return true;
 }
 
-bool ProgramBinary::indexUniforms(InfoLog &infoLog)
+bool ProgramBinary::indexUniforms(InfoLog &infoLog, const Caps &caps)
 {
     for (size_t uniformIndex = 0; uniformIndex < mUniforms.size(); uniformIndex++)
     {
@@ -2081,7 +2079,7 @@ bool ProgramBinary::indexUniforms(InfoLog &infoLog)
 
         if (IsSampler(uniform.type))
         {
-            if (!indexSamplerUniform(uniform, infoLog))
+            if (!indexSamplerUniform(uniform, infoLog, caps))
             {
                 return false;
             }
@@ -2171,7 +2169,7 @@ bool ProgramBinary::areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::Inter
     return true;
 }
 
-bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader)
+bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader, const Caps &caps)
 {
     const rx::VertexShaderD3D *vertexShaderD3D = rx::VertexShaderD3D::makeVertexShaderD3D(vertexShader.getImplementation());
     const rx::FragmentShaderD3D *fragmentShaderD3D = rx::FragmentShaderD3D::makeFragmentShaderD3D(fragmentShader.getImplementation());
@@ -2205,7 +2203,7 @@ bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShad
 
     for (unsigned int blockIndex = 0; blockIndex < vertexInterfaceBlocks.size(); blockIndex++)
     {
-        if (!defineUniformBlock(infoLog, vertexShader, vertexInterfaceBlocks[blockIndex]))
+        if (!defineUniformBlock(infoLog, vertexShader, vertexInterfaceBlocks[blockIndex], caps))
         {
             return false;
         }
@@ -2213,7 +2211,7 @@ bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShad
 
     for (unsigned int blockIndex = 0; blockIndex < fragmentInterfaceBlocks.size(); blockIndex++)
     {
-        if (!defineUniformBlock(infoLog, fragmentShader, fragmentInterfaceBlocks[blockIndex]))
+        if (!defineUniformBlock(infoLog, fragmentShader, fragmentInterfaceBlocks[blockIndex], caps))
         {
             return false;
         }
@@ -2225,12 +2223,10 @@ bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShad
 bool ProgramBinary::gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std::vector<LinkedVarying> &linkedVaryings,
                                                           const std::vector<std::string> &transformFeedbackVaryingNames,
                                                           GLenum transformFeedbackBufferMode,
-                                                          std::vector<LinkedVarying> *outTransformFeedbackLinkedVaryings) const
+                                                          std::vector<LinkedVarying> *outTransformFeedbackLinkedVaryings,
+                                                          const Caps &caps) const
 {
     size_t totalComponents = 0;
-
-    // TODO (geofflang): Use context's caps.
-    const gl::Caps &caps = mRenderer->getRendererCaps();
 
     // Gather the linked varyings that are used for transform feedback, they should all exist.
     outTransformFeedbackLinkedVaryings->clear();
@@ -2321,7 +2317,7 @@ void ProgramBinary::defineUniformBlockMembers(const std::vector<VarT> &fields, c
     }
 }
 
-bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, const Shader &shader, const sh::InterfaceBlock &interfaceBlock)
+bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, const Shader &shader, const sh::InterfaceBlock &interfaceBlock, const Caps &caps)
 {
     const rx::ShaderD3D* shaderD3D = rx::ShaderD3D::makeShaderD3D(shader.getImplementation());
 
@@ -2380,7 +2376,7 @@ bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, const Shader &shader, c
         ASSERT(uniformBlock->name == interfaceBlock.name);
 
         if (!assignUniformBlockRegister(infoLog, uniformBlock, shader.getType(),
-                                        interfaceBlockRegister + uniformBlockElement))
+                                        interfaceBlockRegister + uniformBlockElement, caps))
         {
             return false;
         }
@@ -2389,9 +2385,8 @@ bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, const Shader &shader, c
     return true;
 }
 
-bool ProgramBinary::assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex)
+bool ProgramBinary::assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex, const Caps &caps)
 {
-    const gl::Caps &caps = mRenderer->getRendererCaps();
     if (shader == GL_VERTEX_SHADER)
     {
         uniformBlock->vsRegisterIndex = registerIndex;
@@ -2676,10 +2671,10 @@ GLuint ProgramBinary::getActiveUniformBlockMaxLength() const
     return maxLength;
 }
 
-void ProgramBinary::validate(InfoLog &infoLog)
+void ProgramBinary::validate(InfoLog &infoLog, const Caps &caps)
 {
     applyUniforms();
-    if (!validateSamplers(&infoLog))
+    if (!validateSamplers(&infoLog, caps))
     {
         mValidated = false;
     }
@@ -2689,15 +2684,14 @@ void ProgramBinary::validate(InfoLog &infoLog)
     }
 }
 
-bool ProgramBinary::validateSamplers(InfoLog *infoLog)
+bool ProgramBinary::validateSamplers(InfoLog *infoLog, const Caps &caps)
 {
     // if any two active samplers in a program are of different types, but refer to the same
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
     updateSamplerMapping();
 
-    // TODO (geofflang):  Use context's caps
-    const unsigned int maxCombinedTextureImageUnits = mRenderer->getRendererCaps().maxCombinedTextureImageUnits;
+    const unsigned int maxCombinedTextureImageUnits = caps.maxCombinedTextureImageUnits;
     TextureType textureUnitType[IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
 
     for (unsigned int i = 0; i < IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS; ++i)

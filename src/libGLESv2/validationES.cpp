@@ -1466,7 +1466,7 @@ static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsiz
     }
 
     gl::ProgramBinary *programBinary = state.getCurrentProgramBinary();
-    if (!programBinary->validateSamplers(NULL))
+    if (!programBinary->validateSamplers(NULL, context->getCaps()))
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;

@@ -4632,7 +4632,7 @@ void __stdcall glValidateProgram(GLuint program)
             }
         }
 
-        programObject->validate();
+        programObject->validate(context->getCaps());
     }
 }
 

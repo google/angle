@@ -28,6 +28,7 @@ class Renderer;
 
 namespace gl
 {
+struct Caps;
 class ResourceManager;
 class Shader;
 
@@ -76,7 +77,7 @@ class Program
 
     void bindAttributeLocation(GLuint index, const char *name);
 
-    bool link();
+    bool link(const Caps &caps);
     bool isLinked();
     bool setProgramBinary(GLenum binaryFormat, const void *binary, GLsizei length);
     ProgramBinary *getProgramBinary() const;
@@ -111,7 +112,7 @@ class Program
     void flagForDeletion();
     bool isFlaggedForDeletion() const;
 
-    void validate();
+    void validate(const Caps &caps);
     bool isValidated() const;
 
     GLint getProgramBinaryLength() const;

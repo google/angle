@@ -243,7 +243,7 @@ void Program::bindAttributeLocation(GLuint index, const char *name)
 // Links the HLSL code of the vertex and pixel shader by matching up their varyings,
 // compiling them into binaries, determining the attribute mappings, and collecting
 // a list of uniforms
-bool Program::link()
+bool Program::link(const Caps &caps)
 {
     unlink(false);
 
@@ -252,7 +252,7 @@ bool Program::link()
 
     mProgramBinary.set(new ProgramBinary(mRenderer));
     mLinked = mProgramBinary->link(mInfoLog, mAttributeBindings, mFragmentShader, mVertexShader,
-                                   mTransformFeedbackVaryings, mTransformFeedbackBufferMode);
+                                   mTransformFeedbackVaryings, mTransformFeedbackBufferMode, caps);
 
     return mLinked;
 }
@@ -501,14 +501,14 @@ bool Program::isFlaggedForDeletion() const
     return mDeleteStatus;
 }
 
-void Program::validate()
+void Program::validate(const Caps &caps)
 {
     mInfoLog.reset();
 
     ProgramBinary *programBinary = getProgramBinary();
     if (isLinked() && programBinary)
     {
-        programBinary->validate(mInfoLog);
+        programBinary->validate(mInfoLog, caps);
     }
     else
     {
