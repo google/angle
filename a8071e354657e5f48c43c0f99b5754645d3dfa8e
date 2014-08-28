@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f35a15dc_5ad1c104",
+        "filename": "src/libGLESv2/Shader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-28T20:33:23Z",
+      "side": 1,
+      "message": "As I recall we had a conversation during the Texture refactor about this pattern and there was a general desire to avoid it.",
+      "range": {
+        "startLine": 36,
+        "startChar": 10,
+        "endLine": 36,
+        "endChar": 17
+      },
+      "revId": "a8071e354657e5f48c43c0f99b5754645d3dfa8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "736f0577_d2f7daf0",
+        "filename": "src/libGLESv2/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-28T20:33:23Z",
+      "side": 1,
+      "message": "I\u0027d rather go back to passing in Shader objects and then casting them to the D3D variants where necessary than retain a shader pointer in the impl.",
+      "range": {
+        "startLine": 220,
+        "startChar": 55,
+        "endLine": 220,
+        "endChar": 69
+      },
+      "revId": "a8071e354657e5f48c43c0f99b5754645d3dfa8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
