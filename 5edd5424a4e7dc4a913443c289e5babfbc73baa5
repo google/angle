@@ -118,6 +118,30 @@
       "revId": "5edd5424a4e7dc4a913443c289e5babfbc73baa5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73862567_11b9ec60",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-28T15:04:45Z",
+      "side": 1,
+      "message": "I don\u0027t think you\u0027d want to have libANGLE static in both libEGL and libGLESv2... that would cause a very large binary.",
+      "parentUuid": "33902d99_cf197d14",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 64
+      },
+      "revId": "5edd5424a4e7dc4a913443c289e5babfbc73baa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
