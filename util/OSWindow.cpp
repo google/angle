@@ -12,6 +12,9 @@ OSWindow::OSWindow()
 {
 }
 
+OSWindow::~OSWindow()
+{}
+
 int OSWindow::getWidth() const
 {
     return mWidth;
