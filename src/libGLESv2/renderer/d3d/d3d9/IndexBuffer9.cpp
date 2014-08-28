@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +6,7 @@
 
 // Indexffer9.cpp: Defines the D3D9 IndexBuffer implementation.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d9/IndexBuffer9.h"
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
 

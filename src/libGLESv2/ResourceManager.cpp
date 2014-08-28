@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,6 +7,7 @@
 // ResourceManager.cpp: Implements the gl::ResourceManager class, which tracks and 
 // retrieves objects which may be shared by multiple Contexts.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/ResourceManager.h"
 
 #include "libGLESv2/Buffer.h"

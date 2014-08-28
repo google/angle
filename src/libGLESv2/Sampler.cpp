@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,6 +7,7 @@
 // Sampler.cpp : Implements the Sampler class, which represents a GLES 3
 // sampler object. Sampler objects store some state needed to sample textures.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Sampler.h"
 #include "libGLESv2/angletypes.h"
 

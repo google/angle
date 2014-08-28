@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2013-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,6 +7,7 @@
 // formatutils9.cpp: Queries for GL image formats and their translations to D3D9
 // formats.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
 #include "libGLESv2/renderer/generatemip.h"

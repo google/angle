@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -9,6 +8,7 @@
 // in a separated file for GCC, which can enable SSE usage only per-file,
 // not for code blocks that use SSE2 explicitly.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/loadimage.h"
 
 namespace rx

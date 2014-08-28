@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +6,7 @@
 
 // TextureD3D.cpp: Implementations of the Texture interfaces shared betweeen the D3D backends.
 
+#include "libGLESv2/common_includes.h"
 #include "common/mathutil.h"
 #include "common/utilities.h"
 #include "libEGL/Surface.h"

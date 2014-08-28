@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +6,7 @@
 // Implementation of the state class for mananging GLES 3 Vertex Array Objects.
 //
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/VertexAttribute.h"
 
 namespace gl

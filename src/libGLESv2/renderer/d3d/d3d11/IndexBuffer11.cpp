@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +6,7 @@
 
 // IndexBuffer11.cpp: Defines the D3D11 IndexBuffer implementation.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/IndexBuffer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 

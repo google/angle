@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,6 +7,7 @@
 // IndexRangeCache.cpp: Defines the rx::IndexRangeCache class which stores information about
 // ranges of indices.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/IndexRangeCache.h"
 #include "libGLESv2/formatutils.h"
 #include "common/debug.h"

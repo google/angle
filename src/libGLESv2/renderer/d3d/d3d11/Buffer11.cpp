@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +6,7 @@
 
 // Buffer11.cpp Defines the Buffer11 class.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/Buffer11.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"

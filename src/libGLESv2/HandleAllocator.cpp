@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,6 +7,7 @@
 // HandleAllocator.cpp: Implements the gl::HandleAllocator class, which is used
 // to allocate GL handles.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/HandleAllocator.h"
 
 #include "libGLESv2/main.h"

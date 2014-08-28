@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2012-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,6 +7,7 @@
 // TextureStorage11.cpp: Implements the abstract rx::TextureStorage11 class and its concrete derived
 // classes TextureStorage11_2D and TextureStorage11_Cube, which act as the interface to the D3D11 texture.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/TextureStorage11.h"
 
 #include "libGLESv2/renderer/d3d/TextureD3D.h"

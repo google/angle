@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +6,7 @@
 
 // State.cpp: Implements the State class, encapsulating raw GL state.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/State.h"
 
 #include "libGLESv2/Context.h"

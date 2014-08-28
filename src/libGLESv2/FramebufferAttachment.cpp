@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,6 +7,7 @@
 // FramebufferAttachment.cpp: the gl::FramebufferAttachment class and its derived classes
 // objects and related functionality. [OpenGL ES 2.0.24] section 4.4.3 page 108.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/renderer/RenderTarget.h"
 

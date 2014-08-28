@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -9,6 +8,7 @@
 // Colorbuffer, Depthbuffer and Stencilbuffer. Implements GL renderbuffer
 // objects and related functionality. [OpenGL ES 2.0.24] section 4.4.3 page 108.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/renderer/RenderTarget.h"
 

@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +6,7 @@
 
 // Query.cpp: Implements the gl::Query class
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Query.h"
 #include "libGLESv2/renderer/QueryImpl.h"
 

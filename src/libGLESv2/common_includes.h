@@ -6,6 +6,8 @@
 
 // precompiled.h: Precompiled header file for libGLESv2.
 
+// TODO: use only the necessary includes in each individual file
+
 #include "angle_gl.h"
 #include <EGL/egl.h>
 #include <EGL/eglext.h>

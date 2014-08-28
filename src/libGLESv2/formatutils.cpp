@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2013-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +6,7 @@
 
 // formatutils.cpp: Queries for GL image formats.
 
+#include "libGLESv2/common_includes.h"
 #include "common/mathutil.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Context.h"

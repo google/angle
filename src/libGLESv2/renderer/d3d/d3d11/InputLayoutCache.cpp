@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,6 +7,7 @@
 // InputLayoutCache.cpp: Defines InputLayoutCache, a class that builds and caches
 // D3D11 input layouts.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/d3d11/InputLayoutCache.h"
 #include "libGLESv2/renderer/d3d/d3d11/VertexBuffer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Buffer11.h"

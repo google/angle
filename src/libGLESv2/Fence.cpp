@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -18,6 +17,7 @@
 // We still opt to use QPC. In the present and moving forward, most newer systems will not suffer
 // from buggy implementations.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Fence.h"
 #include "libGLESv2/renderer/FenceImpl.h"
 #include "libGLESv2/renderer/Renderer.h"

@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -9,6 +8,7 @@
 // classes TextureStorageInterface2D and TextureStorageInterfaceCube, which act as the interface to the
 // GPU-side texture.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/TextureStorage.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/Renderer.h"

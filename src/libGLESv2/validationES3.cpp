@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2013-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +6,7 @@
 
 // validationES3.cpp: Validation functions for OpenGL ES 3.0 entry point parameters
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/validationES3.h"
 #include "libGLESv2/validationES.h"
 #include "libGLESv2/Context.h"

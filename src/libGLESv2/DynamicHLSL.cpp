@@ -6,7 +6,7 @@
 // DynamicHLSL.cpp: Implementation for link and run-time HLSL generation
 //
 
-#include "precompiled.h"
+#include "libGLESv2/common_includes.h"
 
 #include "libGLESv2/DynamicHLSL.h"
 #include "libGLESv2/Shader.h"

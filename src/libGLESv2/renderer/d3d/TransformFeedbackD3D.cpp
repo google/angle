@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +6,7 @@
 
 // TransformFeedbackD3D.cpp is a no-op implementation for both the D3D9 and D3D11 renderers.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/renderer/d3d/TransformFeedbackD3D.h"
 
 namespace rx

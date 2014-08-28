@@ -218,7 +218,6 @@
     <ClInclude Include="..\..\src\libGLESv2\Caps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Sampler.h"/>
     <ClInclude Include="..\..\src\libGLESv2\HandleAllocator.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\precompiled.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Error.h"/>
     <ClInclude Include="..\..\src\libGLESv2\TransformFeedback.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Context.h"/>
@@ -231,6 +230,7 @@
     <ClInclude Include="..\..\src\libGLESv2\Fence.h"/>
     <ClInclude Include="..\..\src\libGLESv2\VertexArray.h"/>
     <ClInclude Include="..\..\src\libGLESv2\main.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\common_includes.h"/>
     <ClInclude Include="..\..\src\libGLESv2\ProgramBinary.h"/>
     <ClInclude Include="..\..\src\libGLESv2\angletypes.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Uniform.h"/>
@@ -290,7 +290,6 @@
     <ClCompile Include="..\..\src\libGLESv2\State.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Error.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\validationES2.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\precompiled.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\DynamicHLSL.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\HandleAllocator.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\queryconversions.cpp"/>

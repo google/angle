@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -9,6 +8,7 @@
 // Texture2D and TextureCubeMap. Implements GL texture objects and related
 // functionality. [OpenGL ES 2.0.24] section 3.7 page 63.
 
+#include "libGLESv2/common_includes.h"
 #include "libGLESv2/Texture.h"
 
 #include "libGLESv2/main.h"

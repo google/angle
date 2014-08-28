@@ -69,9 +69,6 @@
     <ClInclude Include="..\..\src\libGLESv2\resource.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\src\libGLESv2\precompiled.cpp">
-      <Filter>src\libGLESv2</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\DynamicHLSL.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
@@ -105,9 +102,6 @@
     <ClCompile Include="..\..\src\libGLESv2\libGLESv2.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\src\libGLESv2\precompiled.h">
-      <Filter>src\libGLESv2</Filter>
-    </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\formatutils.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
@@ -190,6 +184,9 @@
       <Filter>src\libGLESv2</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\libGLESv2\main.h">
+      <Filter>src\libGLESv2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\common_includes.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
     <ClCompile Include="..\..\src\libGLESv2\Float16ToFloat32.cpp">
