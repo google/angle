@@ -61,7 +61,7 @@
                             ],
                         },
                     ],
-                    'direct_dependent_settings':
+                    'all_dependent_settings':
                     {
                         'include_dirs':
                         [
@@ -84,7 +84,7 @@
                             'files': [ '<(angle_id_header_base)' ]
                         }
                     ],
-                    'direct_dependent_settings':
+                    'all_dependent_settings':
                     {
                         'include_dirs':
                         [

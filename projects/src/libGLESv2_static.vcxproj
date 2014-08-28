@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)obj\global_intermediate\angle;..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -60,7 +60,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_COMPILE_OPTIMIZATION_LEVEL=0;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -81,14 +81,14 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)obj\global_intermediate\angle;..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_COMPILE_OPTIMIZATION_LEVEL=0;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)obj\global_intermediate\angle;..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -98,7 +98,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_COMPILE_OPTIMIZATION_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -119,14 +119,14 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)obj\global_intermediate\angle;..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_COMPILE_OPTIMIZATION_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)obj\global_intermediate\angle;..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -135,7 +135,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_COMPILE_OPTIMIZATION_LEVEL=0;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -156,14 +156,14 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)obj\global_intermediate\angle;..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_COMPILE_OPTIMIZATION_LEVEL=0;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)obj\global_intermediate\angle;..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -172,7 +172,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_COMPILE_OPTIMIZATION_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -193,152 +193,19 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)obj\global_intermediate\angle;..\..\src;..\..\include;..\..\src\libGLESv2;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_COMPILE_OPTIMIZATION_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\..\src\angle.gyp"/>
-    <None Include="..\..\src\libGLESv2\libGLESv2.def"/>
-    <None Include="..\..\src\libGLESv2\renderer\copyvertex.inl"/>
-    <None Include="..\..\src\libGLESv2\renderer\loadimage.inl"/>
-    <None Include="..\..\src\libGLESv2\renderer\copyimage.inl"/>
-    <None Include="..\..\src\libGLESv2\renderer\generatemip.inl"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\libGLESv2\constants.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Shader.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\BinaryStream.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\resource.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\queryconversions.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\validationES3.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Renderbuffer.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Program.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Caps.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Sampler.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\HandleAllocator.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Error.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\TransformFeedback.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Context.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Query.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\ResourceManager.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Texture.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\VertexAttribute.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\validationES2.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Fence.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\VertexArray.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\main.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\ProgramBinary.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\angletypes.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Uniform.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\FramebufferAttachment.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Framebuffer.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\formatutils.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\Buffer.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\State.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\validationES.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\TextureImpl.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\Renderer.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\SwapChain.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderImpl.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\TransformFeedbackImpl.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\imageformats.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderExecutable.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\QueryImpl.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\loadimage.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\copyimage.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\IndexRangeCache.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\FenceImpl.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\Image.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\generatemip.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\BufferImpl.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\vertexconversion.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\RenderTarget.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\VertexArrayImpl.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\renderer\copyvertex.h"/>
-    <ClInclude Include="..\..\src\common\RefCountObject.h"/>
-    <ClInclude Include="..\..\src\common\tls.h"/>
-    <ClInclude Include="..\..\src\common\mathutil.h"/>
-    <ClInclude Include="..\..\src\common\event_tracer.h"/>
-    <ClInclude Include="..\..\src\common\blocklayout.h"/>
-    <ClInclude Include="..\..\src\common\debug.h"/>
-    <ClInclude Include="..\..\src\common\platform.h"/>
-    <ClInclude Include="..\..\src\common\version.h"/>
-    <ClInclude Include="..\..\src\common\utilities.h"/>
-    <ClInclude Include="..\..\src\common\angleutils.h"/>
-    <ClInclude Include="..\..\src\third_party\systeminfo\SystemInfo.h"/>
-    <ClInclude Include="..\..\src\third_party\murmurhash\MurmurHash3.h"/>
-    <ClInclude Include="..\..\include\angle_gl.h"/>
-    <ClInclude Include="..\..\include\KHR\khrplatform.h"/>
-    <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h"/>
-    <ClInclude Include="..\..\include\GLSLANG\ShaderVars.h"/>
-    <ClInclude Include="..\..\include\GLES2\gl2platform.h"/>
-    <ClInclude Include="..\..\include\GLES2\gl2ext.h"/>
-    <ClInclude Include="..\..\include\GLES2\gl2.h"/>
-    <ClInclude Include="..\..\include\GLES3\gl3ext.h"/>
-    <ClInclude Include="..\..\include\GLES3\gl3.h"/>
-    <ClInclude Include="..\..\include\GLES3\gl3platform.h"/>
-    <ClInclude Include="..\..\include\EGL\eglext.h"/>
-    <ClInclude Include="..\..\include\EGL\egl.h"/>
-    <ClInclude Include="..\..\include\EGL\eglplatform.h"/>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\libGLESv2\Caps.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\State.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Error.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\validationES2.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\HandleAllocator.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\queryconversions.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\libGLESv2.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\formatutils.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Context.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Fence.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\TransformFeedback.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\ProgramBinary.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\VertexAttribute.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\validationES.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Buffer.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Renderbuffer.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\VertexArray.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Program.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Shader.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Uniform.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\main.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\angletypes.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Float16ToFloat32.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\ResourceManager.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\validationES3.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Sampler.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\FramebufferAttachment.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Framebuffer.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Texture.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\Query.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\copyimage.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\loadimageSSE2.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\Image.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\loadimage.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\IndexRangeCache.cpp"/>
-    <ClCompile Include="..\..\src\libGLESv2\renderer\Renderer.cpp"/>
-    <ClCompile Include="..\..\src\common\event_tracer.cpp"/>
-    <ClCompile Include="..\..\src\common\utilities.cpp"/>
-    <ClCompile Include="..\..\src\common\debug.cpp"/>
-    <ClCompile Include="..\..\src\common\RefCountObject.cpp"/>
-    <ClCompile Include="..\..\src\common\mathutil.cpp"/>
-    <ClCompile Include="..\..\src\common\tls.cpp"/>
-    <ClCompile Include="..\..\src\common\angleutils.cpp"/>
-    <ClCompile Include="..\..\src\common\blocklayout.cpp"/>
-    <ClCompile Include="..\..\src\third_party\systeminfo\SystemInfo.cpp"/>
-    <ClCompile Include="..\..\src\third_party\murmurhash\MurmurHash3.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\libGLESv2\libGLESv2.rc"/>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="commit_id.vcxproj">
-      <Project>{3B7F5656-177F-52EE-26B3-D6A75368D0A9}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <ImportGroup Label="ExtensionTargets"/>

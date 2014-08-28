@@ -150,7 +150,12 @@ if (is_win) {
   angle_enable_d3d11 = true
 
   shared_library("libGLESv2") {
-    sources = rebase_path(gles_gypi.angle_libglesv2_sources, ".", "src")
+    sources = rebase_path(gles_gypi.angle_libangle_sources, ".", "src")
+    sources += [
+      "libGLESv2/libGLESv2.cpp",
+      "libGLESv2/libGLESv2.def",
+      "libGLESv2/libGLESv2.rc",
+    ]
 
     defines = [
       "ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ " +

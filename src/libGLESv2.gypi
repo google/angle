@@ -8,7 +8,7 @@
         'angle_enable_d3d9%': 1,
         'angle_enable_d3d11%': 1,
         # These file lists are shared with the GN build.
-        'angle_libglesv2_sources':
+        'angle_libangle_sources':
         [
             '../include/EGL/egl.h',
             '../include/EGL/eglext.h',
@@ -90,9 +90,6 @@
             'libGLESv2/constants.h',
             'libGLESv2/formatutils.cpp',
             'libGLESv2/formatutils.h',
-            'libGLESv2/libGLESv2.cpp',
-            'libGLESv2/libGLESv2.def',
-            'libGLESv2/libGLESv2.rc',
             'libGLESv2/main.cpp',
             'libGLESv2/main.h',
             'libGLESv2/queryconversions.cpp',
@@ -308,8 +305,9 @@
             'targets':
             [
                 {
-                    'target_name': 'libGLESv2',
-                    'type': 'shared_library',
+                    'target_name': 'libANGLE',
+                    #TODO(jamdill/geofflang): support shared
+                    'type': 'static_library',
                     'dependencies': [ 'translator', 'commit_id', 'copy_compiler_dll' ],
                     'includes': [ '../build/common_defines.gypi', ],
                     'include_dirs':
@@ -320,7 +318,7 @@
                     ],
                     'sources':
                     [
-                        '<@(angle_libglesv2_sources)',
+                        '<@(angle_libangle_sources)',
                     ],
                     'defines':
                     [
@@ -329,6 +327,22 @@
                         'EGLAPI=',
                         'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ "d3dcompiler_46.dll", "d3dcompiler_43.dll" }',
                     ],
+                    'direct_dependent_settings':
+                    {
+                        'include_dirs':
+                        [
+                            '.',
+                            '../include',
+                            'libGLESv2',
+                        ],
+                        'defines':
+                        [
+                            'GL_APICALL=',
+                            'GL_GLEXT_PROTOTYPES=',
+                            'EGLAPI=',
+                            'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ "d3dcompiler_46.dll", "d3dcompiler_43.dll" }',
+                        ],
+                    },
                     'conditions':
                     [
                         ['angle_enable_d3d9==1 or angle_enable_d3d11==1',
@@ -348,15 +362,18 @@
                             [
                                 'ANGLE_ENABLE_D3D9',
                             ],
-                            'msvs_settings':
+                            'link_settings':
                             {
-                                'VCLinkerTool':
+                                'msvs_settings':
                                 {
-                                    'AdditionalDependencies':
-                                    [
-                                        'd3d9.lib',
-                                    ]
-                                }
+                                    'VCLinkerTool':
+                                    {
+                                        'AdditionalDependencies':
+                                        [
+                                            'd3d9.lib',
+                                        ]
+                                    }
+                                },
                             },
                         }],
                         ['angle_enable_d3d11==1',
@@ -369,14 +386,17 @@
                             [
                                 'ANGLE_ENABLE_D3D11',
                             ],
-                            'msvs_settings':
+                            'link_settings':
                             {
-                                'VCLinkerTool':
+                                'msvs_settings':
                                 {
-                                    'AdditionalDependencies':
-                                    [
-                                        'dxguid.lib',
-                                    ],
+                                    'VCLinkerTool':
+                                    {
+                                        'AdditionalDependencies':
+                                        [
+                                            'dxguid.lib',
+                                        ]
+                                    }
                                 },
                             },
                         }],
@@ -404,30 +424,26 @@
                     },
                 },
                 {
-                    # This target supports angle_implementation_unittests.
-                    # It only executes cross-platform code and therefore
-                    # doesn't need any Direct3D DLLs.
-                    'target_name': 'libGLESv2_static',
-                    'type': 'static_library',
-                    'dependencies': [ 'translator', 'commit_id' ],
+                    'target_name': 'libGLESv2',
+                    'type': 'shared_library',
+                    'dependencies': [ 'libANGLE' ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'include_dirs':
-                    [
-                        '.',
-                        '../include',
-                        'libGLESv2',
-                    ],
                     'sources':
                     [
-                        '<@(angle_libglesv2_sources)',
+                        'libGLESv2/libGLESv2.cpp',
+                        'libGLESv2/libGLESv2.def',
+                        'libGLESv2/libGLESv2.rc',
                     ],
-                    'defines':
+                },
+                {
+                    'target_name': 'libGLESv2_static',
+                    'type': 'static_library',
+                    'dependencies': [ 'libANGLE' ],
+                    'includes': [ '../build/common_defines.gypi', ],
+                    'sources':
                     [
-                        'GL_APICALL=',
-                        'GL_GLEXT_PROTOTYPES=',
-                        'EGLAPI=',
-                        # Workaround for D3D-specific code in Renderer.h
-                        'ANGLE_COMPILE_OPTIMIZATION_LEVEL=0',
+                        'libGLESv2/libGLESv2.cpp',
+                        'libGLESv2/libGLESv2.rc',
                     ],
                 },
             ],
