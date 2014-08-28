@@ -94,6 +94,30 @@
       "revId": "5edd5424a4e7dc4a913443c289e5babfbc73baa5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33902d99_cf197d14",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-28T14:51:11Z",
+      "side": 1,
+      "message": "Global variables in static libraries are messy.\n\nAn example:\nlibANGLE: static_lib, contains current context global variable\nlibGLESv2: shared_lib, links libANGLE\nlibEGL: shared_lib, links libANGLE and libGLESv2\n\nif someone calls eglMakeCurrent, libEGL will set only it\u0027s own instance of libANGLE\u0027s current context to the new context but cannot set libGLESv2\u0027s.  The next time any gl function is called, say glEnable, libGLESv2 doesn\u0027t know the current context.\n\nLinking against a static lib from multiple DLLs would essentially create copies of the globals for each DLL.\n\nThere are ways around this, such as using extern but then we require that anything that links libANGLE supplies a current context variable which isn\u0027t user friendly.\n\n\nFurther reading:\nhttps://stackoverflow.com/questions/19373061/what-happens-to-global-and-static-variables-in-a-shared-library-when-it-is-dynam\nhttps://stackoverflow.com/questions/3186926/shared-global-variable-in-c-static-library\nThe general consensus from stack overflow is that it is possible but works differently on different platforms and is a bad idea.",
+      "parentUuid": "73862567_f18228af",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 64
+      },
+      "revId": "5edd5424a4e7dc4a913443c289e5babfbc73baa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
