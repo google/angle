@@ -70,6 +70,30 @@
       "revId": "5edd5424a4e7dc4a913443c289e5babfbc73baa5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73862567_f18228af",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-28T14:30:39Z",
+      "side": 1,
+      "message": "I could agree it would require needing a mock context for tracking errors in testing. I\u0027m not sure I understand your first point; wouldn\u0027t that make global variables impossible in every project that uses multiple DLLs?",
+      "parentUuid": "538be16f_b001f8a2",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 64
+      },
+      "revId": "5edd5424a4e7dc4a913443c289e5babfbc73baa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
