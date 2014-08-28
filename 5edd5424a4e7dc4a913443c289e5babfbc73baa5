@@ -46,6 +46,30 @@
       "revId": "5edd5424a4e7dc4a913443c289e5babfbc73baa5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "538be16f_b001f8a2",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-28T14:06:51Z",
+      "side": 1,
+      "message": "We would either have to go C-style-every-function-returns-an-int or use exceptions to pass errors around.  \n\nI feel like having a global context isn\u0027t an option for several reasons:\n* When we split libANGLE away from the entry points, it can\u0027t have any global variables.  The current context would need to be stored in the libGLESv2 project to avoid duplicating it and that would create a circular dependency.  The EGL current context would have the same issue when errors are set on it.\n* Having a global variable is bad for being a modular GL library.  The renderers shouldn\u0027t need to be aware of the current GL context, they should be oblivious to everything other than the state they are given.\n* Having a global variable is also bad for testing.  If we are attempting to test an individual GL object\u0027s methods, we would want to verify that it does or doesn\u0027t return an error.  Also, if the object attempts to call the global gl::error the test may crash or have strange results if we do not set up a context and set it as current for just receiving errors.\n\nSurprisingly, there are very few places we return things from functions that could generate errors. There are a couple in the buffers, RenderStateCache and textures.",
+      "parentUuid": "731385dc_8c0e0799",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 64
+      },
+      "revId": "5edd5424a4e7dc4a913443c289e5babfbc73baa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
