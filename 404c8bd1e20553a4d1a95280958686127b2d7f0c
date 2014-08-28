@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f35a15dc_4e67c2ed",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2210,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-28T21:03:35Z",
+      "side": 1,
+      "message": "Maybe just pass type in here to prevent the need to ask the Shader object?",
+      "range": {
+        "startLine": 2210,
+        "startChar": 15,
+        "endLine": 2210,
+        "endChar": 24
+      },
+      "revId": "404c8bd1e20553a4d1a95280958686127b2d7f0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f35a15dc_0ecc6aa2",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2763,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-28T21:03:35Z",
+      "side": 1,
+      "message": "Ditto",
+      "range": {
+        "startLine": 2763,
+        "startChar": 15,
+        "endLine": 2763,
+        "endChar": 24
+      },
+      "revId": "404c8bd1e20553a4d1a95280958686127b2d7f0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
