@@ -294,6 +294,14 @@
                             [
                                 'CONFORMANCE_TESTS_TYPE=CONFORMANCE_TESTS_ES3',
                             ],
+                            'msvs_settings':
+                            {
+                                'VCCLCompilerTool':
+                                {
+                                    # MSVS has trouble compiling this due to the obj files becoming too large.
+                                    'AdditionalOptions': [ '/bigobj' ],
+                                },
+                            },
                             'actions':
                             [
                                 {
