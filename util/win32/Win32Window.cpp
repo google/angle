@@ -406,8 +406,6 @@ bool Win32Window::initialize(const std::string &name, size_t width, size_t heigh
                                     sizeRect.right - sizeRect.left, sizeRect.bottom - sizeRect.top, NULL, NULL,
                                     GetModuleHandle(NULL), this);
 
-    SetWindowLongPtrA(mNativeWindow, GWLP_USERDATA, reinterpret_cast<LONG>(this));
-
     ShowWindow(mNativeWindow, SW_SHOW);
 
     mNativeDisplay = GetDC(mNativeWindow);
