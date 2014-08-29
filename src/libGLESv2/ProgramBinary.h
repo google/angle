@@ -194,6 +194,8 @@ class ProgramBinary : public RefCountObject
 
     const std::vector<LinkedUniform*> &getUniforms() const { return mUniforms; }
 
+    static bool linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *vertexShader);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(ProgramBinary);
 
@@ -208,18 +210,17 @@ class ProgramBinary : public RefCountObject
 
     void reset();
 
-    bool linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *vertexShader);
     bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, const Shader *vertexShader);
 
-    bool linkValidateVariablesBase(InfoLog &infoLog,
-                                   const std::string &variableName,
-                                   const sh::ShaderVariable &vertexVariable,
-                                   const sh::ShaderVariable &fragmentVariable,
-                                   bool validatePrecision);
+    static bool linkValidateVariablesBase(InfoLog &infoLog,
+                                          const std::string &variableName,
+                                          const sh::ShaderVariable &vertexVariable,
+                                          const sh::ShaderVariable &fragmentVariable,
+                                          bool validatePrecision);
 
-    bool linkValidateUniforms(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform);
-    bool linkValidateVaryings(InfoLog &infoLog, const std::string &varyingName, const sh::Varying &vertexVarying, const sh::Varying &fragmentVarying);
-    bool linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
+    static bool linkValidateUniforms(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform);
+    static bool linkValidateVaryings(InfoLog &infoLog, const std::string &varyingName, const sh::Varying &vertexVarying, const sh::Varying &fragmentVarying);
+    static bool linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
     bool linkUniforms(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader, const Caps &caps);
     void defineUniformBase(GLenum shader, const sh::Uniform &uniform, unsigned int uniformRegister);
     void defineUniform(GLenum shader, const sh::ShaderVariable &uniform, const std::string &fullName, sh::HLSLBlockEncoder *encoder);
@@ -289,14 +290,7 @@ class ProgramBinary : public RefCountObject
 
     rx::ProgramImpl *mProgram;
 
-    std::string mVertexHLSL;
-    rx::D3DWorkaroundType mVertexWorkarounds;
     std::vector<VertexExecutable *> mVertexExecutables;
-
-    std::string mPixelHLSL;
-    rx::D3DWorkaroundType mPixelWorkarounds;
-    bool mUsesFragDepth;
-    std::vector<rx::PixelShaderOutputVariable> mPixelShaderKey;
     std::vector<PixelExecutable *> mPixelExecutables;
 
     rx::ShaderExecutable *mGeometryExecutable;

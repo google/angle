@@ -11,9 +11,13 @@
 
 #include "libGLESv2/renderer/ProgramImpl.h"
 
+#include <string>
+#include <vector>
+
 namespace gl
 {
 struct LinkedUniform;
+struct VariableLocation;
 struct VertexFormat;
 }
 
@@ -33,6 +37,24 @@ class ProgramD3D : public ProgramImpl
 
     Renderer *getRenderer() { return mRenderer; }
     DynamicHLSL *getDynamicHLSL() { return mDynamicHLSL; }
+    const std::vector<rx::PixelShaderOutputVariable> &getPixelShaderKey() { return mPixelShaderKey; }
+
+    GLenum getBinaryFormat() { return GL_PROGRAM_BINARY_ANGLE; }
+    bool load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream);
+    bool save(gl::BinaryOutputStream *stream);
+
+    ShaderExecutable *getPixelExecutableForOutputLayout(gl::InfoLog &infoLog, const std::vector<GLenum> &outputSignature,
+                                                        const std::vector<gl::LinkedVarying> &transformFeedbackLinkedVaryings,
+                                                        bool separatedOutputBuffers);
+    ShaderExecutable *getVertexExecutableForInputLayout(gl::InfoLog &infoLog,
+                                                        const gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS],
+                                                        const sh::Attribute shaderAttributes[],
+                                                        const std::vector<gl::LinkedVarying> &transformFeedbackLinkedVaryings,
+                                                        bool separatedOutputBuffers);
+
+    bool link(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
+              const std::vector<std::string> &transformFeedbackVaryings, int *registers,
+              std::vector<gl::LinkedVarying> *linkedVaryings, std::map<int, gl::VariableLocation> *outputVariables);
 
     // D3D only
     void initializeUniformStorage(const std::vector<gl::LinkedUniform*> &uniforms);
@@ -47,6 +69,14 @@ class ProgramD3D : public ProgramImpl
 
     Renderer *mRenderer;
     DynamicHLSL *mDynamicHLSL;
+
+    std::string mVertexHLSL;
+    rx::D3DWorkaroundType mVertexWorkarounds;
+
+    std::string mPixelHLSL;
+    rx::D3DWorkaroundType mPixelWorkarounds;
+    bool mUsesFragDepth;
+    std::vector<rx::PixelShaderOutputVariable> mPixelShaderKey;
 
     UniformStorage *mVertexUniformStorage;
     UniformStorage *mFragmentUniformStorage;
