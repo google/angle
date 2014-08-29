@@ -2341,7 +2341,7 @@ void Context::invalidateFrameBuffer(GLenum target, GLsizei numAttachments, const
 
                 if (attachment)
                 {
-                    renderTarget = attachment->getDepthStencil();
+                    renderTarget = attachment->getRenderTarget();
                 }
             }
 

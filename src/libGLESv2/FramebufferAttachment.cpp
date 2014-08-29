@@ -92,11 +92,6 @@ rx::RenderTarget *Texture2DAttachment::getRenderTarget()
     return mTexture2D->getRenderTarget(mLevel);
 }
 
-rx::RenderTarget *Texture2DAttachment::getDepthStencil()
-{
-    return mTexture2D->getDepthStencil(mLevel);
-}
-
 rx::TextureStorage *Texture2DAttachment::getTextureStorage()
 {
     return mTexture2D->getNativeTexture()->getStorageInstance();
@@ -173,11 +168,6 @@ TextureCubeMapAttachment::~TextureCubeMapAttachment()
 rx::RenderTarget *TextureCubeMapAttachment::getRenderTarget()
 {
     return mTextureCubeMap->getRenderTarget(mFaceTarget, mLevel);
-}
-
-rx::RenderTarget *TextureCubeMapAttachment::getDepthStencil()
-{
-    return mTextureCubeMap->getDepthStencil(mFaceTarget, mLevel);
 }
 
 rx::TextureStorage *TextureCubeMapAttachment::getTextureStorage()
@@ -258,11 +248,6 @@ rx::RenderTarget *Texture3DAttachment::getRenderTarget()
     return mTexture3D->getRenderTarget(mLevel, mLayer);
 }
 
-rx::RenderTarget *Texture3DAttachment::getDepthStencil()
-{
-    return mTexture3D->getDepthStencil(mLevel, mLayer);
-}
-
 rx::TextureStorage *Texture3DAttachment::getTextureStorage()
 {
     return mTexture3D->getNativeTexture()->getStorageInstance();
@@ -341,11 +326,6 @@ rx::RenderTarget *Texture2DArrayAttachment::getRenderTarget()
     return mTexture2DArray->getRenderTarget(mLevel, mLayer);
 }
 
-rx::RenderTarget *Texture2DArrayAttachment::getDepthStencil()
-{
-    return mTexture2DArray->getDepthStencil(mLevel, mLayer);
-}
-
 rx::TextureStorage *Texture2DArrayAttachment::getTextureStorage()
 {
     return mTexture2DArray->getNativeTexture()->getStorageInstance();
@@ -422,11 +402,6 @@ RenderbufferAttachment::~RenderbufferAttachment()
 rx::RenderTarget *RenderbufferAttachment::getRenderTarget()
 {
     return mRenderbuffer->getStorage()->getRenderTarget();
-}
-
-rx::RenderTarget *RenderbufferAttachment::getDepthStencil()
-{
-    return mRenderbuffer->getStorage()->getDepthStencil();
 }
 
 rx::TextureStorage *RenderbufferAttachment::getTextureStorage()

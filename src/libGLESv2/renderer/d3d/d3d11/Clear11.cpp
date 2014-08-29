@@ -286,7 +286,7 @@ void Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Frame
         gl::FramebufferAttachment *attachment = frameBuffer->getDepthOrStencilbuffer();
         if (attachment)
         {
-            RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(attachment->getDepthStencil());
+            RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(attachment->getRenderTarget());
             if (!renderTarget)
             {
                 ERR("Depth stencil render target pointer unexpectedly null.");

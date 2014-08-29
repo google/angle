@@ -244,7 +244,7 @@ ClearParameters State::getClearParameters(GLbitfield mask) const
     {
         if (framebufferObject->getStencilbuffer() != NULL)
         {
-            rx::RenderTarget *depthStencil = framebufferObject->getStencilbuffer()->getDepthStencil();
+            rx::RenderTarget *depthStencil = framebufferObject->getStencilbuffer()->getRenderTarget();
             if (!depthStencil)
             {
                 ERR("Depth stencil pointer unexpectedly null.");

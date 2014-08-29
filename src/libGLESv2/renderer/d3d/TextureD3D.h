@@ -114,7 +114,6 @@ class TextureD3D_2D : public TextureD3D
     virtual unsigned int getRenderTargetSerial(GLint level, GLint layer);
 
     virtual RenderTarget *getRenderTarget(GLint level, GLint layer);
-    virtual RenderTarget *getDepthStencil(GLint level, GLint layer);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2D);
@@ -172,7 +171,6 @@ class TextureD3D_Cube : public TextureD3D
     virtual unsigned int getRenderTargetSerial(GLint level, GLint layer);
 
     virtual RenderTarget *getRenderTarget(GLint level, GLint layer);
-    virtual RenderTarget *getDepthStencil(GLint level, GLint layer);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_Cube);
@@ -231,7 +229,6 @@ class TextureD3D_3D : public TextureD3D
 
     virtual RenderTarget *getRenderTarget(GLint level);
     virtual RenderTarget *getRenderTarget(GLint level, GLint layer);
-    virtual RenderTarget *getDepthStencil(GLint level, GLint layer);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_3D);
@@ -288,7 +285,6 @@ class TextureD3D_2DArray : public TextureD3D
     virtual unsigned int getRenderTargetSerial(GLint level, GLint layer);
 
     virtual RenderTarget *getRenderTarget(GLint level, GLint layer);
-    virtual RenderTarget *getDepthStencil(GLint level, GLint layer);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2DArray);

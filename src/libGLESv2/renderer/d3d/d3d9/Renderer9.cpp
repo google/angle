@@ -1197,7 +1197,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         if (depthStencil)
         {
             IDirect3DSurface9 *depthStencilSurface = NULL;
-            RenderTarget *depthStencilRenderTarget = depthStencil->getDepthStencil();
+            RenderTarget *depthStencilRenderTarget = depthStencil->getRenderTarget();
 
             if (depthStencilRenderTarget)
             {
@@ -2520,11 +2520,11 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
         if (readBuffer)
         {
-            readDepthStencil = RenderTarget9::makeRenderTarget9(readBuffer->getDepthStencil());
+            readDepthStencil = RenderTarget9::makeRenderTarget9(readBuffer->getRenderTarget());
         }
         if (drawBuffer)
         {
-            drawDepthStencil = RenderTarget9::makeRenderTarget9(drawBuffer->getDepthStencil());
+            drawDepthStencil = RenderTarget9::makeRenderTarget9(drawBuffer->getRenderTarget());
         }
 
         if (readDepthStencil)

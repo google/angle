@@ -251,7 +251,7 @@ DepthStencilbuffer::~DepthStencilbuffer()
     }
 }
 
-rx::RenderTarget *DepthStencilbuffer::getDepthStencil()
+rx::RenderTarget *DepthStencilbuffer::getRenderTarget()
 {
     return mDepthStencil;
 }

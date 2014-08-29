@@ -858,7 +858,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
     ID3D11DepthStencilView* framebufferDSV = NULL;
     if (depthStencil)
     {
-        RenderTarget11 *depthStencilRenderTarget = RenderTarget11::makeRenderTarget11(depthStencil->getDepthStencil());
+        RenderTarget11 *depthStencilRenderTarget = RenderTarget11::makeRenderTarget11(depthStencil->getRenderTarget());
         if (!depthStencilRenderTarget)
         {
             ERR("render target pointer unexpectedly null.");
@@ -2567,8 +2567,9 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
             return gl::error(GL_OUT_OF_MEMORY, false);
         }
 
-        RenderTarget *readRenderTarget = readBuffer->getDepthStencil();
-        RenderTarget *drawRenderTarget = drawBuffer->getDepthStencil();
+        RenderTarget *readRenderTarget = readBuffer->getRenderTarget();
+        RenderTarget *drawRenderTarget = drawBuffer->getRenderTarget();
+        ASSERT(readRenderTarget && drawRenderTarget);
 
         if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, filter, scissor,
                                   false, blitDepth, blitStencil))

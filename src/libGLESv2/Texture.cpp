@@ -352,11 +352,6 @@ rx::RenderTarget *Texture2D::getRenderTarget(GLint level)
     return mTexture->getRenderTarget(level, 0);
 }
 
-rx::RenderTarget *Texture2D::getDepthStencil(GLint level)
-{
-    return mTexture->getDepthStencil(level, 0);
-}
-
 // Tests for 2D texture (mipmap) completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool Texture2D::isMipmapComplete() const
 {
@@ -622,11 +617,6 @@ rx::RenderTarget *TextureCubeMap::getRenderTarget(GLenum target, GLint level)
     return mTexture->getRenderTarget(level, targetToLayerIndex(target));
 }
 
-rx::RenderTarget *TextureCubeMap::getDepthStencil(GLenum target, GLint level)
-{
-    return mTexture->getDepthStencil(level, targetToLayerIndex(target));
-}
-
 bool TextureCubeMap::isMipmapComplete() const
 {
     if (isImmutable())
@@ -802,11 +792,6 @@ rx::RenderTarget *Texture3D::getRenderTarget(GLint level, GLint layer)
     return mTexture->getRenderTarget(level, layer);
 }
 
-rx::RenderTarget *Texture3D::getDepthStencil(GLint level, GLint layer)
-{
-    return mTexture->getDepthStencil(level, layer);
-}
-
 bool Texture3D::isMipmapComplete() const
 {
     int levelCount = mipLevels();
@@ -973,11 +958,6 @@ unsigned int Texture2DArray::getRenderTargetSerial(GLint level, GLint layer)
 rx::RenderTarget *Texture2DArray::getRenderTarget(GLint level, GLint layer)
 {
     return mTexture->getRenderTarget(level, layer);
-}
-
-rx::RenderTarget *Texture2DArray::getDepthStencil(GLint level, GLint layer)
-{
-    return mTexture->getDepthStencil(level, layer);
 }
 
 bool Texture2DArray::isMipmapComplete() const

@@ -58,7 +58,6 @@ class FramebufferAttachment
 
     // Child class interface
     virtual rx::RenderTarget *getRenderTarget() = 0;
-    virtual rx::RenderTarget *getDepthStencil() = 0;
     virtual rx::TextureStorage *getTextureStorage() = 0;
 
     virtual GLsizei getWidth() const = 0;
@@ -87,7 +86,6 @@ class Texture2DAttachment : public FramebufferAttachment
     virtual ~Texture2DAttachment();
 
     rx::RenderTarget *getRenderTarget();
-    rx::RenderTarget *getDepthStencil();
     rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
@@ -119,7 +117,6 @@ class TextureCubeMapAttachment : public FramebufferAttachment
     virtual ~TextureCubeMapAttachment();
 
     rx::RenderTarget *getRenderTarget();
-    rx::RenderTarget *getDepthStencil();
     rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
@@ -152,7 +149,6 @@ class Texture3DAttachment : public FramebufferAttachment
     virtual ~Texture3DAttachment();
 
     rx::RenderTarget *getRenderTarget();
-    rx::RenderTarget *getDepthStencil();
     rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
@@ -185,7 +181,6 @@ class Texture2DArrayAttachment : public FramebufferAttachment
     virtual ~Texture2DArrayAttachment();
 
     rx::RenderTarget *getRenderTarget();
-    rx::RenderTarget *getDepthStencil();
     rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
@@ -218,7 +213,6 @@ class RenderbufferAttachment : public FramebufferAttachment
     virtual ~RenderbufferAttachment();
 
     rx::RenderTarget *getRenderTarget();
-    rx::RenderTarget *getDepthStencil();
     rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;

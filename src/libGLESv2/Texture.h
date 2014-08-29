@@ -129,7 +129,6 @@ class Texture2D : public Texture
   protected:
     friend class Texture2DAttachment;
     rx::RenderTarget *getRenderTarget(GLint level);
-    rx::RenderTarget *getDepthStencil(GLint level);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
@@ -180,7 +179,6 @@ class TextureCubeMap : public Texture
   protected:
     friend class TextureCubeMapAttachment;
     rx::RenderTarget *getRenderTarget(GLenum target, GLint level);
-    rx::RenderTarget *getDepthStencil(GLenum target, GLint level);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
@@ -217,7 +215,6 @@ class Texture3D : public Texture
   protected:
     friend class Texture3DAttachment;
     rx::RenderTarget *getRenderTarget(GLint level, GLint layer);
-    rx::RenderTarget *getDepthStencil(GLint level, GLint layer);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture3D);
@@ -254,7 +251,6 @@ class Texture2DArray : public Texture
   protected:
     friend class Texture2DArrayAttachment;
     rx::RenderTarget *getRenderTarget(GLint level, GLint layer);
-    rx::RenderTarget *getDepthStencil(GLint level, GLint layer);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2DArray);
