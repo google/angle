@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3125d0c_d3487478",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-29T21:01:32Z",
+      "side": 0,
+      "message": "one of the few logic changes in this patch series. It seems safe.",
+      "range": {
+        "startLine": 608,
+        "startChar": 29,
+        "endLine": 608,
+        "endChar": 52
+      },
+      "revId": "d53a12785f7eb2d809c647bc65f8fabdae2a5889",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
