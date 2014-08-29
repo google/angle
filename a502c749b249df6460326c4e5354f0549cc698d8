@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33ee6d35_d3a0747e",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-29T15:51:16Z",
+      "side": 0,
+      "message": "this was being called twice. the correct call is in the window proc.",
+      "range": {
+        "startLine": 409,
+        "startChar": 4,
+        "endLine": 409,
+        "endChar": 21
+      },
+      "revId": "a502c749b249df6460326c4e5354f0549cc698d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
