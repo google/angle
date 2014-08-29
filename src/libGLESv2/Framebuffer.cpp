@@ -15,6 +15,7 @@
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/RenderTarget.h"
 
 #include "common/utilities.h"
 
@@ -559,6 +560,65 @@ GLenum Framebuffer::completeness() const
 
     return GL_FRAMEBUFFER_COMPLETE;
 }
+
+void Framebuffer::invalidate(GLsizei numAttachments, const GLenum* attachments,
+                             GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    ASSERT(completeness() == GL_FRAMEBUFFER_COMPLETE);
+    for (int i = 0; i < numAttachments; ++i)
+    {
+        rx::RenderTarget *renderTarget = NULL;
+
+        if (attachments[i] >= GL_COLOR_ATTACHMENT0 && attachments[i] <= GL_COLOR_ATTACHMENT15)
+        {
+            gl::FramebufferAttachment *attachment = getColorbuffer(attachments[i] - GL_COLOR_ATTACHMENT0);
+            if (attachment)
+            {
+                renderTarget = attachment->getRenderTarget();
+            }
+        }
+        else if (attachments[i] == GL_COLOR)
+        {
+            gl::FramebufferAttachment *attachment = getColorbuffer(0);
+            if (attachment)
+            {
+                renderTarget = attachment->getRenderTarget();
+            }
+        }
+        else
+        {
+            gl::FramebufferAttachment *attachment = NULL;
+            switch (attachments[i])
+            {
+              case GL_DEPTH_ATTACHMENT:
+              case GL_DEPTH:
+                attachment = mDepthbuffer;
+                break;
+              case GL_STENCIL_ATTACHMENT:
+              case GL_STENCIL:
+                attachment = mStencilbuffer;
+                break;
+              case GL_DEPTH_STENCIL_ATTACHMENT:
+                attachment = getDepthOrStencilbuffer();
+                break;
+              default:
+                UNREACHABLE();
+            }
+
+            if (attachment)
+            {
+                renderTarget = attachment->getRenderTarget();
+            }
+        }
+
+        if (renderTarget)
+        {
+            renderTarget->invalidate(x, y, width, height);
+        }
+    }
+}
+
+
 
 DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, Colorbuffer *colorbuffer, DepthStencilbuffer *depthStencil)
     : Framebuffer(renderer, 0)

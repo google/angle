@@ -67,6 +67,9 @@ class Framebuffer
     virtual GLenum completeness() const;
     bool hasValidDepthStencil() const;
 
+    void invalidate(GLsizei numAttachments, const GLenum* attachments,
+                    GLint x, GLint y, GLsizei width, GLsizei height);
+
   protected:
     rx::Renderer *mRenderer;
 
