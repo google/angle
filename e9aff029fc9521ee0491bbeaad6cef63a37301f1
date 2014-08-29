@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3541db2_ccc65e29",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-08-29T21:04:00Z",
+      "side": 1,
+      "message": "need to double-check that the stencil buffer \"Actual format\" is the same as the stencil render target \"Actual format\".. and/or if it would matter in this case. (stencil bits would need to differ in zero-ness)",
+      "range": {
+        "startLine": 247,
+        "startChar": 19,
+        "endLine": 247,
+        "endChar": 38
+      },
+      "revId": "e9aff029fc9521ee0491bbeaad6cef63a37301f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
