@@ -7990,8 +7990,11 @@ void __stdcall glInvalidateFramebuffer(GLenum target, GLsizei numAttachments, co
             return;
         }
 
-        GLuint maxDimension = context->getCaps().maxRenderbufferSize;
-        context->invalidateFrameBuffer(target, numAttachments, attachments, 0, 0, maxDimension, maxDimension);
+        gl::Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
+        if (framebuffer && framebuffer->completeness() == GL_FRAMEBUFFER_COMPLETE)
+        {
+            framebuffer->invalidate(context->getCaps(), numAttachments, attachments);
+        }
     }
 }
 
@@ -8015,7 +8018,11 @@ void __stdcall glInvalidateSubFramebuffer(GLenum target, GLsizei numAttachments,
             return;
         }
 
-        context->invalidateFrameBuffer(target, numAttachments, attachments, x, y, width, height);
+        gl::Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
+        if (framebuffer && framebuffer->completeness() == GL_FRAMEBUFFER_COMPLETE)
+        {
+            framebuffer->invalidateSub(context->getCaps(), numAttachments, attachments, x, y, width, height);
+        }
     }
 }
 

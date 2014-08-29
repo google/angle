@@ -2279,29 +2279,6 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
     }
 }
 
-void Context::invalidateFrameBuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments,
-                                    GLint x, GLint y, GLsizei width, GLsizei height)
-{
-    Framebuffer *framebuffer = NULL;
-    switch (target)
-    {
-      case GL_FRAMEBUFFER:
-      case GL_DRAW_FRAMEBUFFER:
-        framebuffer = mState.getDrawFramebuffer();
-        break;
-      case GL_READ_FRAMEBUFFER:
-        framebuffer = mState.getReadFramebuffer();
-        break;
-      default:
-        UNREACHABLE();
-    }
-
-    if (framebuffer && framebuffer->completeness() == GL_FRAMEBUFFER_COMPLETE)
-    {
-        framebuffer->invalidate(numAttachments, attachments, x, y, width, height);
-    }
-}
-
 void Context::releaseShaderCompiler()
 {
     mRenderer->releaseShaderCompiler();

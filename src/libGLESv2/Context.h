@@ -221,9 +221,6 @@ class Context
     void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
                          GLbitfield mask, GLenum filter);
 
-    void invalidateFrameBuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments,
-                               GLint x, GLint y, GLsizei width, GLsizei height);
-
     rx::Renderer *getRenderer() { return mRenderer; }
 
     State &getState() { return mState; }
