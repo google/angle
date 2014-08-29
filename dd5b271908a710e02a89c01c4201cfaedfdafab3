@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53e9212a_14dbe48a",
+        "filename": "tests/perf_tests/BufferSubData.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-29T17:32:22Z",
+      "side": 1,
+      "message": "nit: formatting",
+      "range": {
+        "startLine": 118,
+        "startChar": 11,
+        "endLine": 118,
+        "endChar": 12
+      },
+      "revId": "dd5b271908a710e02a89c01c4201cfaedfdafab3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93df197f_286faf39",
+        "filename": "tests/perf_tests/BufferSubData.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-29T17:32:22Z",
+      "side": 1,
+      "message": "nit: formatting and std::vector\u003cuint8_t\u003e if possible",
+      "range": {
+        "startLine": 42,
+        "startChar": 8,
+        "endLine": 42,
+        "endChar": 10
+      },
+      "revId": "dd5b271908a710e02a89c01c4201cfaedfdafab3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53e9212a_34e26838",
+        "filename": "tests/perf_tests/BufferSubData.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-29T17:32:22Z",
+      "side": 1,
+      "message": "I think it\u0027s better to just copy the params here.  There isn\u0027t much of a guarantee that the vector holding them won\u0027t re-arrange them or be deleted.",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 38
+      },
+      "revId": "dd5b271908a710e02a89c01c4201cfaedfdafab3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d357d1b2_f8fc39d7",
+        "filename": "util/shared_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-08-29T17:32:22Z",
+      "side": 1,
+      "message": "Let\u0027s change these to size_t.",
+      "range": {
+        "startLine": 18,
+        "startChar": 22,
+        "endLine": 18,
+        "endChar": 34
+      },
+      "revId": "dd5b271908a710e02a89c01c4201cfaedfdafab3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
