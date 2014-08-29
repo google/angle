@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3f97d00_15d12438",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-08-29T20:10:06Z",
+      "side": 1,
+      "message": "Does Fixme still apply? Different bug?",
+      "range": {
+        "startLine": 274,
+        "startChar": 11,
+        "endLine": 274,
+        "endChar": 16
+      },
+      "revId": "563278017621c6ce6e7bdae3ee8e4638db8f924a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
