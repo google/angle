@@ -24,8 +24,8 @@
   TypeName(const TypeName&);               \
   void operator=(const TypeName&)
 
-template <typename T, unsigned int N>
-inline unsigned int ArraySize(T(&)[N])
+template <typename T, size_t N>
+inline size_t ArraySize(T(&)[N])
 {
     return N;
 }

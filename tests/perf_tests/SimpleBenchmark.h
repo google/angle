@@ -30,9 +30,6 @@ class SimpleBenchmark
 
     virtual ~SimpleBenchmark() { };
 
-    virtual int drawIterations() const { return 10; }
-    virtual double runTimeSeconds() const { return 10.0; }
-
     virtual bool initializeBenchmark() { return true; }
     virtual void destroyBenchmark() { }
 
@@ -46,6 +43,10 @@ class SimpleBenchmark
     bool popEvent(Event *event);
 
     OSWindow *getWindow();
+
+  protected:
+    unsigned int mDrawIterations;
+    double mRunTimeSeconds;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(SimpleBenchmark);

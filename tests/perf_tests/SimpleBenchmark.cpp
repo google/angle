@@ -10,7 +10,9 @@
 SimpleBenchmark::SimpleBenchmark(const std::string &name, size_t width, size_t height, EGLint glesMajorVersion, EGLint requestedRenderer)
     : mNumFrames(0),
       mName(name),
-      mRunning(false)
+      mRunning(false),
+      mDrawIterations(10),
+      mRunTimeSeconds(5.0)
 {
     mOSWindow.reset(CreateOSWindow());
     mEGLWindow.reset(new EGLWindow(width, height, glesMajorVersion, requestedRenderer));
@@ -41,7 +43,7 @@ void SimpleBenchmark::step(float dt, double totalTime)
 
 void SimpleBenchmark::draw()
 {
-    if (mTimer->getElapsedTime() > runTimeSeconds()) {
+    if (mTimer->getElapsedTime() > mRunTimeSeconds) {
         mRunning = false;
         return;
     }
@@ -50,7 +52,7 @@ void SimpleBenchmark::draw()
 
     beginDrawBenchmark();
 
-    for (int i = 0; i < drawIterations(); ++i)
+    for (unsigned int iteration = 0; iteration < mDrawIterations; ++iteration)
     {
         drawBenchmark();
     }
