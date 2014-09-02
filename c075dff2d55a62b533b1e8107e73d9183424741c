@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "734e2558_854b123e",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-02T20:17:49Z",
+      "side": 1,
+      "message": "I think this can be removed.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 1
+      },
+      "revId": "c075dff2d55a62b533b1e8107e73d9183424741c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d371918d_a8bc83c7",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-02T20:17:49Z",
+      "side": 1,
+      "message": "These could be part of the ShaderD3D class.  ProgramBinary can access them by casting the Shader\u0027s impl to ShaderD3D.  That way we won\u0027t need to pipe them up through the Shader class and it keeps this interface pure.",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 54
+      },
+      "revId": "c075dff2d55a62b533b1e8107e73d9183424741c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
