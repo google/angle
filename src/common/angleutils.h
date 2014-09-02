@@ -132,8 +132,8 @@ inline std::string Str(int i)
     return strstr.str();
 }
 
-std::string FormatString(const std::string &fmt, va_list vararg);
-std::string FormatString(const std::string &fmt, ...);
+std::string FormatString(const char *fmt, va_list vararg);
+std::string FormatString(const char *fmt, ...);
 
 #if defined(_MSC_VER)
 #define snprintf _snprintf

@@ -22,7 +22,7 @@ Error::Error(GLenum errorCode)
 {
 }
 
-Error::Error(GLenum errorCode, const std::string &msg, ...)
+Error::Error(GLenum errorCode, const char *msg, ...)
     : mCode(errorCode),
       mMessage()
 {

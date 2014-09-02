@@ -20,7 +20,7 @@ class Error
 {
   public:
     explicit Error(GLenum errorCode);
-    Error(GLenum errorCode, const std::string &msg, ...);
+    Error(GLenum errorCode, const char *msg, ...);
     Error(const Error &other);
     Error &operator=(const Error &other);
 
