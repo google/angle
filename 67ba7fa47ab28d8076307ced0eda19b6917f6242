@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "532cc17a_0219de0f",
+        "filename": "tests/angle_tests/DrawBuffersTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-02T20:54:31Z",
+      "side": 1,
+      "message": "Stray whitespace",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 8
+      },
+      "revId": "67ba7fa47ab28d8076307ced0eda19b6917f6242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
