@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "532cc17a_5193a694",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-02T16:07:46Z",
+      "side": 1,
+      "message": "Super minor nit: If you make any updates to this CL mind taking care of this pre-existing whitespace issue?",
+      "range": {
+        "startLine": 190,
+        "startChar": 88,
+        "endLine": 190,
+        "endChar": 89
+      },
+      "revId": "62be443d2785555fd5767201d47e25206040dccd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
