@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "734e2558_059e4250",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-02T20:38:57Z",
+      "side": 1,
+      "message": "This can be in the ShaderD3D class, It\u0027s only referenced from there.",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 17
+      },
+      "revId": "fc0ce8aab9b0ecd31993c340752b097c266a5862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
