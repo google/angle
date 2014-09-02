@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f374d57c_5e3809e5",
+        "filename": "src/libGLESv2/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-02T14:28:42Z",
+      "side": 1,
+      "message": "Even though the columnIndex defalts to 0, I\u0027d prefer that we assigned it here too.  Reduces the potential for future bugs.",
+      "range": {
+        "startLine": 113,
+        "startChar": 16,
+        "endLine": 113,
+        "endChar": 43
+      },
+      "revId": "29902e4a9f12d840f229a657209e5f8790297425",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
