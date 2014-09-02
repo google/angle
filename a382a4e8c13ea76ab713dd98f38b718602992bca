@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f374d57c_de55f9fc",
+        "filename": "util/shared_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-02T14:31:38Z",
+      "side": 1,
+      "message": "Sorry, the return type too please.",
+      "range": {
+        "startLine": 19,
+        "startChar": 7,
+        "endLine": 19,
+        "endChar": 19
+      },
+      "revId": "a382a4e8c13ea76ab713dd98f38b718602992bca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
