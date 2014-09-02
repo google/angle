@@ -766,7 +766,12 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
           case GL_TEXTURE_2D:
             {
                 gl::Texture2D *texture = context->getTexture2D();
-                texture->setCompressedImage(level, internalformat, width, height, imageSize, data);
+                gl::Error error = texture->setCompressedImage(level, internalformat, width, height, imageSize, data);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
@@ -778,7 +783,12 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                texture->setCompressedImage(target, level, internalformat, width, height, imageSize, data);
+                gl::Error error = texture->setCompressedImage(target, level, internalformat, width, height, imageSize, data);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
@@ -826,7 +836,12 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
           case GL_TEXTURE_2D:
             {
                 gl::Texture2D *texture = context->getTexture2D();
-                texture->subImageCompressed(level, xoffset, yoffset, width, height, format, imageSize, data);
+                gl::Error error = texture->subImageCompressed(level, xoffset, yoffset, width, height, format, imageSize, data);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
@@ -838,7 +853,12 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                texture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+                gl::Error error = texture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
@@ -5180,14 +5200,24 @@ void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum interna
           case GL_TEXTURE_3D:
             {
                 gl::Texture3D *texture = context->getTexture3D();
-                texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, data);
+                gl::Error error = texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, data);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
           case GL_TEXTURE_2D_ARRAY:
             {
                 gl::Texture2DArray *texture = context->getTexture2DArray();
-                texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, data);
+                gl::Error error = texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, data);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
@@ -5245,16 +5275,26 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
           case GL_TEXTURE_3D:
             {
                 gl::Texture3D *texture = context->getTexture3D();
-                texture->subImageCompressed(level, xoffset, yoffset, zoffset, width, height, depth,
-                                            format, imageSize, data);
+                gl::Error error = texture->subImageCompressed(level, xoffset, yoffset, zoffset, width, height, depth,
+                                                              format, imageSize, data);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
           case GL_TEXTURE_2D_ARRAY:
             {
                 gl::Texture2DArray *texture = context->getTexture2DArray();
-                texture->subImageCompressed(level, xoffset, yoffset, zoffset, width, height, depth,
-                                            format, imageSize, data);
+                gl::Error error = texture->subImageCompressed(level, xoffset, yoffset, zoffset, width, height, depth,
+                                                              format, imageSize, data);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
