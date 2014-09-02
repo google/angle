@@ -4153,65 +4153,16 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                 }
             }
             break;
+
           case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-            {
-                gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                gl::Error error = texture->setImagePosX(level, width, height, internalformat, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-            {
-                gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                gl::Error error = texture->setImageNegX(level, width, height, internalformat, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
           case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-            {
-                gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                gl::Error error = texture->setImagePosY(level, width, height, internalformat, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-            {
-                gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                gl::Error error = texture->setImageNegY(level, width, height, internalformat, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
           case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-            {
-                gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                gl::Error error = texture->setImagePosZ(level, width, height, internalformat, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                gl::Error error = texture->setImageNegZ(level, width, height, internalformat, format, type, context->getState().getUnpackState(), pixels);
+                gl::Error error = texture->setImage(target, level, width, height, internalformat, format, type, context->getState().getUnpackState(), pixels);
                 if (error.isError())
                 {
                     context->recordError(error);
@@ -4219,6 +4170,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                 }
             }
             break;
+
           default: UNREACHABLE();
         }
     }
