@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f04e8b81_7fe88f5b",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-03T22:05:55Z",
+      "side": 1,
+      "message": "I\u0027ll fix the indenting. Apparently I had a flashback to the Chrome style guide. :)\n\nAnd no, this is not the expected pattern at the end of the refactor. I have another CL in-progress that moves multiple calls like this one into the D3D class. Taking things in smaller steps to avoid dropping a single uber-patch.",
+      "parentUuid": "10979f03_01858c4b",
+      "range": {
+        "startLine": 269,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 86
+      },
+      "revId": "bb8abef6409b4c4bccdd40aa2122b7118c0d7608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10979f03_c167a4ed",
         "filename": "src/libGLESv2/ProgramBinary.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "10523f23_f515c25b",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1654,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-03T22:05:55Z",
+      "side": 1,
+      "message": "Ah! I wasn\u0027t aware of that limit. Thanks!",
+      "parentUuid": "10979f03_c167a4ed",
+      "range": {
+        "startLine": 1653,
+        "startChar": 12,
+        "endLine": 1654,
+        "endChar": 110
+      },
+      "revId": "bb8abef6409b4c4bccdd40aa2122b7118c0d7608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3092e312_421ab404",
         "filename": "src/libGLESv2/renderer/ProgramBinaryImpl.h",
         "patchSetId": 7
@@ -59,6 +107,30 @@
       "writtenOn": "2014-09-03T20:47:08Z",
       "side": 1,
       "message": "I think this is a good opportunity to name this ProgramImpl instead.  I\u0027d like to merge the Program and ProgramBinary classes as part of the MANGLE refactor because ProgramBinary isn\u0027t a distinct GL object.",
+      "range": {
+        "startLine": 22,
+        "startChar": 6,
+        "endLine": 22,
+        "endChar": 23
+      },
+      "revId": "bb8abef6409b4c4bccdd40aa2122b7118c0d7608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50583741_f7b38ad1",
+        "filename": "src/libGLESv2/renderer/ProgramBinaryImpl.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-03T22:05:55Z",
+      "side": 1,
+      "message": "Sounds like a great idea!",
+      "parentUuid": "3092e312_421ab404",
       "range": {
         "startLine": 22,
         "startChar": 6,
