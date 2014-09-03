@@ -75,6 +75,28 @@ bool FramebufferAttachment::isTexture() const
     return (type() != GL_RENDERBUFFER);
 }
 
+///// TextureAttachment Implementation ////////
+
+rx::TextureStorage *TextureAttachment::getTextureStorage()
+{
+    return getTexture()->getNativeTexture()->getStorageInstance();
+}
+
+GLsizei TextureAttachment::getSamples() const
+{
+    return 0;
+}
+
+GLuint TextureAttachment::id() const
+{
+    return getTexture()->id();
+}
+
+unsigned int TextureAttachment::getTextureSerial() const
+{
+    return getTexture()->getTextureSerial();
+}
+
 ///// Texture2DAttachment Implementation ////////
 
 Texture2DAttachment::Texture2DAttachment(Texture2D *texture, GLint level) : mLevel(level)
@@ -90,11 +112,6 @@ Texture2DAttachment::~Texture2DAttachment()
 rx::RenderTarget *Texture2DAttachment::getRenderTarget()
 {
     return mTexture2D->getRenderTarget(mLevel);
-}
-
-rx::TextureStorage *Texture2DAttachment::getTextureStorage()
-{
-    return mTexture2D->getNativeTexture()->getStorageInstance();
 }
 
 GLsizei Texture2DAttachment::getWidth() const
@@ -117,19 +134,9 @@ GLenum Texture2DAttachment::getActualFormat() const
     return mTexture2D->getActualFormat(mLevel);
 }
 
-GLsizei Texture2DAttachment::getSamples() const
-{
-    return 0;
-}
-
 unsigned int Texture2DAttachment::getSerial() const
 {
     return mTexture2D->getRenderTargetSerial(mLevel);
-}
-
-GLuint Texture2DAttachment::id() const
-{
-    return mTexture2D->id();
 }
 
 GLenum Texture2DAttachment::type() const
@@ -147,9 +154,9 @@ GLint Texture2DAttachment::layer() const
     return 0;
 }
 
-unsigned int Texture2DAttachment::getTextureSerial() const
+Texture *Texture2DAttachment::getTexture() const
 {
-    return mTexture2D->getTextureSerial();
+    return mTexture2D.get();
 }
 
 ///// TextureCubeMapAttachment Implementation ////////
@@ -168,11 +175,6 @@ TextureCubeMapAttachment::~TextureCubeMapAttachment()
 rx::RenderTarget *TextureCubeMapAttachment::getRenderTarget()
 {
     return mTextureCubeMap->getRenderTarget(mFaceTarget, mLevel);
-}
-
-rx::TextureStorage *TextureCubeMapAttachment::getTextureStorage()
-{
-    return mTextureCubeMap->getNativeTexture()->getStorageInstance();
 }
 
 GLsizei TextureCubeMapAttachment::getWidth() const
@@ -195,19 +197,9 @@ GLenum TextureCubeMapAttachment::getActualFormat() const
     return mTextureCubeMap->getActualFormat(mFaceTarget, mLevel);
 }
 
-GLsizei TextureCubeMapAttachment::getSamples() const
-{
-    return 0;
-}
-
 unsigned int TextureCubeMapAttachment::getSerial() const
 {
     return mTextureCubeMap->getRenderTargetSerial(mFaceTarget, mLevel);
-}
-
-GLuint TextureCubeMapAttachment::id() const
-{
-    return mTextureCubeMap->id();
 }
 
 GLenum TextureCubeMapAttachment::type() const
@@ -225,9 +217,9 @@ GLint TextureCubeMapAttachment::layer() const
     return 0;
 }
 
-unsigned int TextureCubeMapAttachment::getTextureSerial() const
+Texture *TextureCubeMapAttachment::getTexture() const
 {
-    return mTextureCubeMap->getTextureSerial();
+    return mTextureCubeMap.get();
 }
 
 ///// Texture3DAttachment Implementation ////////
@@ -246,11 +238,6 @@ Texture3DAttachment::~Texture3DAttachment()
 rx::RenderTarget *Texture3DAttachment::getRenderTarget()
 {
     return mTexture3D->getRenderTarget(mLevel, mLayer);
-}
-
-rx::TextureStorage *Texture3DAttachment::getTextureStorage()
-{
-    return mTexture3D->getNativeTexture()->getStorageInstance();
 }
 
 GLsizei Texture3DAttachment::getWidth() const
@@ -273,19 +260,9 @@ GLenum Texture3DAttachment::getActualFormat() const
     return mTexture3D->getActualFormat(mLevel);
 }
 
-GLsizei Texture3DAttachment::getSamples() const
-{
-    return 0;
-}
-
 unsigned int Texture3DAttachment::getSerial() const
 {
     return mTexture3D->getRenderTargetSerial(mLevel, mLayer);
-}
-
-GLuint Texture3DAttachment::id() const
-{
-    return mTexture3D->id();
 }
 
 GLenum Texture3DAttachment::type() const
@@ -303,9 +280,9 @@ GLint Texture3DAttachment::layer() const
     return mLayer;
 }
 
-unsigned int Texture3DAttachment::getTextureSerial() const
+Texture *Texture3DAttachment::getTexture() const
 {
-    return mTexture3D->getTextureSerial();
+    return mTexture3D.get();
 }
 
 ////// Texture2DArrayAttachment Implementation //////
@@ -324,11 +301,6 @@ Texture2DArrayAttachment::~Texture2DArrayAttachment()
 rx::RenderTarget *Texture2DArrayAttachment::getRenderTarget()
 {
     return mTexture2DArray->getRenderTarget(mLevel, mLayer);
-}
-
-rx::TextureStorage *Texture2DArrayAttachment::getTextureStorage()
-{
-    return mTexture2DArray->getNativeTexture()->getStorageInstance();
 }
 
 GLsizei Texture2DArrayAttachment::getWidth() const
@@ -351,19 +323,9 @@ GLenum Texture2DArrayAttachment::getActualFormat() const
     return mTexture2DArray->getActualFormat(mLevel);
 }
 
-GLsizei Texture2DArrayAttachment::getSamples() const
-{
-    return 0;
-}
-
 unsigned int Texture2DArrayAttachment::getSerial() const
 {
     return mTexture2DArray->getRenderTargetSerial(mLevel, mLayer);
-}
-
-GLuint Texture2DArrayAttachment::id() const
-{
-    return mTexture2DArray->id();
 }
 
 GLenum Texture2DArrayAttachment::type() const
@@ -381,9 +343,9 @@ GLint Texture2DArrayAttachment::layer() const
     return mLayer;
 }
 
-unsigned int Texture2DArrayAttachment::getTextureSerial() const
+Texture *Texture2DArrayAttachment::getTexture() const
 {
-    return mTexture2DArray->getTextureSerial();
+    return mTexture2DArray.get();
 }
 
 ////// RenderbufferAttachment Implementation //////

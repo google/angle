@@ -24,6 +24,7 @@ class TextureStorage;
 
 namespace gl
 {
+class Texture;
 class Texture2D;
 class TextureCubeMap;
 class Texture3D;
@@ -78,7 +79,24 @@ class FramebufferAttachment
     DISALLOW_COPY_AND_ASSIGN(FramebufferAttachment);
 };
 
-class Texture2DAttachment : public FramebufferAttachment
+class TextureAttachment : public FramebufferAttachment
+{
+  public:
+    TextureAttachment() {}
+
+    rx::TextureStorage *getTextureStorage();
+    virtual GLsizei getSamples() const;
+    virtual GLuint id() const;
+    virtual unsigned int getTextureSerial() const;
+
+  protected:
+    virtual Texture *getTexture() const = 0;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureAttachment);
+};
+
+class Texture2DAttachment : public TextureAttachment
 {
   public:
     Texture2DAttachment(Texture2D *texture, GLint level);
@@ -86,21 +104,18 @@ class Texture2DAttachment : public FramebufferAttachment
     virtual ~Texture2DAttachment();
 
     rx::RenderTarget *getRenderTarget();
-    rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
     virtual GLenum getActualFormat() const;
-    virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
 
-    virtual GLuint id() const;
     virtual GLenum type() const;
     virtual GLint mipLevel() const;
     virtual GLint layer() const;
-    virtual unsigned int getTextureSerial() const;
+    virtual Texture *getTexture() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2DAttachment);
@@ -109,7 +124,7 @@ class Texture2DAttachment : public FramebufferAttachment
     const GLint mLevel;
 };
 
-class TextureCubeMapAttachment : public FramebufferAttachment
+class TextureCubeMapAttachment : public TextureAttachment
 {
   public:
     TextureCubeMapAttachment(TextureCubeMap *texture, GLenum faceTarget, GLint level);
@@ -117,21 +132,18 @@ class TextureCubeMapAttachment : public FramebufferAttachment
     virtual ~TextureCubeMapAttachment();
 
     rx::RenderTarget *getRenderTarget();
-    rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
     virtual GLenum getActualFormat() const;
-    virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
 
-    virtual GLuint id() const;
     virtual GLenum type() const;
     virtual GLint mipLevel() const;
     virtual GLint layer() const;
-    virtual unsigned int getTextureSerial() const;
+    virtual Texture *getTexture() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMapAttachment);
@@ -141,7 +153,7 @@ class TextureCubeMapAttachment : public FramebufferAttachment
     const GLenum mFaceTarget;
 };
 
-class Texture3DAttachment : public FramebufferAttachment
+class Texture3DAttachment : public TextureAttachment
 {
   public:
     Texture3DAttachment(Texture3D *texture, GLint level, GLint layer);
@@ -149,21 +161,18 @@ class Texture3DAttachment : public FramebufferAttachment
     virtual ~Texture3DAttachment();
 
     rx::RenderTarget *getRenderTarget();
-    rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
     virtual GLenum getActualFormat() const;
-    virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
 
-    virtual GLuint id() const;
     virtual GLenum type() const;
     virtual GLint mipLevel() const;
     virtual GLint layer() const;
-    virtual unsigned int getTextureSerial() const;
+    virtual Texture *getTexture() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture3DAttachment);
@@ -173,7 +182,7 @@ class Texture3DAttachment : public FramebufferAttachment
     const GLint mLayer;
 };
 
-class Texture2DArrayAttachment : public FramebufferAttachment
+class Texture2DArrayAttachment : public TextureAttachment
 {
   public:
     Texture2DArrayAttachment(Texture2DArray *texture, GLint level, GLint layer);
@@ -181,21 +190,18 @@ class Texture2DArrayAttachment : public FramebufferAttachment
     virtual ~Texture2DArrayAttachment();
 
     rx::RenderTarget *getRenderTarget();
-    rx::TextureStorage *getTextureStorage();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
     virtual GLenum getActualFormat() const;
-    virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
 
-    virtual GLuint id() const;
     virtual GLenum type() const;
     virtual GLint mipLevel() const;
     virtual GLint layer() const;
-    virtual unsigned int getTextureSerial() const;
+    virtual Texture *getTexture() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2DArrayAttachment);
