@@ -22,6 +22,30 @@
       "revId": "fc0ce8aab9b0ecd31993c340752b097c266a5862",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0f76b45_9dba43a2",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-03T13:51:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "734e2558_059e4250",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 17
+      },
+      "revId": "fc0ce8aab9b0ecd31993c340752b097c266a5862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
