@@ -45,6 +45,29 @@
       "revId": "bb8abef6409b4c4bccdd40aa2122b7118c0d7608",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3092e312_421ab404",
+        "filename": "src/libGLESv2/renderer/ProgramBinaryImpl.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-03T20:47:08Z",
+      "side": 1,
+      "message": "I think this is a good opportunity to name this ProgramImpl instead.  I\u0027d like to merge the Program and ProgramBinary classes as part of the MANGLE refactor because ProgramBinary isn\u0027t a distinct GL object.",
+      "range": {
+        "startLine": 22,
+        "startChar": 6,
+        "endLine": 22,
+        "endChar": 23
+      },
+      "revId": "bb8abef6409b4c4bccdd40aa2122b7118c0d7608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
