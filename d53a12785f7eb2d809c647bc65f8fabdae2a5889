@@ -22,6 +22,30 @@
       "revId": "d53a12785f7eb2d809c647bc65f8fabdae2a5889",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10979f03_7e32f17b",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-03T19:16:16Z",
+      "side": 0,
+      "message": "I don\u0027t think getDepthOrStencilbuffer() can be switched out for getAttachment() here. getAttachment() in the case of GL_DEPTH_STENCIL calls through to getDepthStencilBuffer(), which returns NULL if hasValidDepthStencil() returns false. hasValidDepthStencil() is only true if both attachment points are non-null, and the same attachment is used for both, so using GL_DEPTH_STENCIL on a framebuffer with only a depth or a stencil attachment would result in a null attachment pointer, and that in turn would mean that whichever of depth \u0026 stencil that the FBO *did* have wouldn\u0027t get cleared. But the spec says:\n\n\"Including DEPTH_STENCIL_ATTACHMENT in the attachments list is a special case causing both the depth and stencil attachments of the framebuffer object to be invalidated.\"\n\nand:\n\n\"If an attachment is specified that does not exist in the framebuffer bound to target, is is ignored.\"\n\nI don\u0027t the spec requires that GL_DEPTH_STENCIL_ATTACHMENT only have an effect if a unified depth stencil is used.",
+      "parentUuid": "b3125d0c_d3487478",
+      "range": {
+        "startLine": 608,
+        "startChar": 29,
+        "endLine": 608,
+        "endChar": 52
+      },
+      "revId": "d53a12785f7eb2d809c647bc65f8fabdae2a5889",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
