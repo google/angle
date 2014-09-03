@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10979f03_01858c4b",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-03T20:46:30Z",
+      "side": 1,
+      "message": "Is there a better indentation scheme that you could use? I\u0027m not aware of anywhere else in the codebase that we don\u0027t maintain alignment with an open paren, open brace, or operator. (This comment applies several places throughout the CL.)\n\nIs calling through a Renderer pointer contained in the program binary the expected pattern at the end of the refactor? If so, I might consider adding a compilation helper function to the program binary impl itself.",
+      "range": {
+        "startLine": 269,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 86
+      },
+      "revId": "bb8abef6409b4c4bccdd40aa2122b7118c0d7608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10979f03_c167a4ed",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1654,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-03T20:46:30Z",
+      "side": 1,
+      "message": "This in particular should definitely be aligned with the opening paren of generateShaderLinkHLSL. Also please note that ANGLE permits up to 120 character width.",
+      "range": {
+        "startLine": 1653,
+        "startChar": 12,
+        "endLine": 1654,
+        "endChar": 110
+      },
+      "revId": "bb8abef6409b4c4bccdd40aa2122b7118c0d7608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
