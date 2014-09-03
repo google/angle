@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "703a9bc6_51c1543a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-03T15:31:52Z",
+      "side": 1,
+      "message": "I think we should either still iterate over the whole key to make sure it\u0027s all initialized.",
+      "range": {
+        "startLine": 96,
+        "startChar": 55,
+        "endLine": 96,
+        "endChar": 74
+      },
+      "revId": "06b0773d8dcc66d9e127766206749ae9da68d8f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "703a9bc6_31c6d054",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-03T15:31:52Z",
+      "side": 1,
+      "message": "Or remove this and bank on the\n\n   BlendStateKey key \u003d { 0 };\n\nto cover the initialization.",
+      "range": {
+        "startLine": 114,
+        "startChar": 8,
+        "endLine": 120,
+        "endChar": 9
+      },
+      "revId": "06b0773d8dcc66d9e127766206749ae9da68d8f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
