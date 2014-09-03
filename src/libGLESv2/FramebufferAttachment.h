@@ -82,7 +82,8 @@ class FramebufferAttachment
 class TextureAttachment : public FramebufferAttachment
 {
   public:
-    TextureAttachment(GLenum binding, const ImageIndex &index);
+    TextureAttachment(GLenum binding, Texture *texture, const ImageIndex &index);
+    virtual ~TextureAttachment();
 
     rx::TextureStorage *getTextureStorage();
     virtual GLsizei getSamples() const;
@@ -101,75 +102,11 @@ class TextureAttachment : public FramebufferAttachment
     virtual rx::RenderTarget *getRenderTarget();
     virtual unsigned int getSerial() const;
 
-  protected:
-    virtual Texture *getTexture() const = 0;
-    ImageIndex mIndex;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureAttachment);
-};
 
-class Texture2DAttachment : public TextureAttachment
-{
-  public:
-    Texture2DAttachment(GLenum binding, Texture2D *texture, GLint level);
-
-    virtual ~Texture2DAttachment();
-    virtual Texture *getTexture() const;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Texture2DAttachment);
-
-    BindingPointer<Texture2D> mTexture2D;
-    const GLint mLevel;
-};
-
-class TextureCubeMapAttachment : public TextureAttachment
-{
-  public:
-    TextureCubeMapAttachment(GLenum binding, TextureCubeMap *texture, GLenum faceTarget, GLint level);
-
-    virtual ~TextureCubeMapAttachment();
-    virtual Texture *getTexture() const;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TextureCubeMapAttachment);
-
-    BindingPointer<TextureCubeMap> mTextureCubeMap;
-    const GLint mLevel;
-    const GLenum mFaceTarget;
-};
-
-class Texture3DAttachment : public TextureAttachment
-{
-  public:
-    Texture3DAttachment(GLenum binding, Texture3D *texture, GLint level, GLint layer);
-
-    virtual ~Texture3DAttachment();
-    virtual Texture *getTexture() const;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Texture3DAttachment);
-
-    BindingPointer<Texture3D> mTexture3D;
-    const GLint mLevel;
-    const GLint mLayer;
-};
-
-class Texture2DArrayAttachment : public TextureAttachment
-{
-  public:
-    Texture2DArrayAttachment(GLenum binding, Texture2DArray *texture, GLint level, GLint layer);
-
-    virtual ~Texture2DArrayAttachment();
-    virtual Texture *getTexture() const;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Texture2DArrayAttachment);
-
-    BindingPointer<Texture2DArray> mTexture2DArray;
-    const GLint mLevel;
-    const GLint mLayer;
+    BindingPointer<Texture> mTexture;
+    ImageIndex mIndex;
 };
 
 class RenderbufferAttachment : public FramebufferAttachment
