@@ -793,15 +793,15 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
     ID3D11RenderTargetView* framebufferRTVs[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {NULL};
     bool missingColorRenderTarget = true;
 
-    for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
-    {
-        const GLenum drawBufferState = framebuffer->getDrawBufferState(colorAttachment);
-        gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(colorAttachment);
+    const gl::ColorbufferInfo &colorbuffers = framebuffer->getColorbuffersForRender();
 
-        if (colorbuffer && drawBufferState != GL_NONE)
+    for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
+    {
+        gl::FramebufferAttachment *colorbuffer = colorbuffers[colorAttachment];
+
+        if (colorbuffer)
         {
             // the draw buffer must be either "none", "back" for the default buffer or the same index as this color (in order)
-            ASSERT(drawBufferState == GL_BACK || drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + colorAttachment));
 
             // check for zero-sized default framebuffer, which is a special case.
             // in this case we do not wish to modify any state and just silently return false.

@@ -89,29 +89,27 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::Framebuffer *framebu
 
     bool mrt = false;
 
+    const gl::ColorbufferInfo &colorbuffers = framebuffer->getColorbuffersForRender();
+
     BlendStateKey key = { 0 };
     key.blendState = blendState;
-    for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
+    for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
     {
-        const gl::FramebufferAttachment *attachment = framebuffer->getColorbuffer(i);
+        const gl::FramebufferAttachment *attachment = colorbuffers[colorAttachment];
+
+        auto rtChannels = key.rtChannels[colorAttachment];
+
         if (attachment)
         {
-            if (i > 0)
+            if (colorAttachment > 0)
             {
                 mrt = true;
             }
 
-            key.rtChannels[i][0] = attachment->getRedSize()   > 0;
-            key.rtChannels[i][1] = attachment->getGreenSize() > 0;
-            key.rtChannels[i][2] = attachment->getBlueSize()  > 0;
-            key.rtChannels[i][3] = attachment->getAlphaSize() > 0;
-        }
-        else
-        {
-            key.rtChannels[i][0] = false;
-            key.rtChannels[i][1] = false;
-            key.rtChannels[i][2] = false;
-            key.rtChannels[i][3] = false;
+            rtChannels[0] = attachment->getRedSize()   > 0;
+            rtChannels[1] = attachment->getGreenSize() > 0;
+            rtChannels[2] = attachment->getBlueSize()  > 0;
+            rtChannels[3] = attachment->getAlphaSize() > 0;
         }
     }
 

@@ -10,6 +10,8 @@
 #ifndef LIBGLESV2_FRAMEBUFFER_H_
 #define LIBGLESV2_FRAMEBUFFER_H_
 
+#include <vector>
+
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 #include "constants.h"
@@ -27,6 +29,8 @@ class Depthbuffer;
 class Stencilbuffer;
 class DepthStencilbuffer;
 struct Caps;
+
+typedef std::vector<FramebufferAttachment *> ColorbufferInfo;
 
 class Framebuffer
 {
@@ -71,6 +75,11 @@ class Framebuffer
     void invalidate(const Caps &caps, GLsizei numAttachments, const GLenum *attachments);
     void invalidateSub(const Caps &caps, GLsizei numAttachments, const GLenum *attachments,
                        GLint x, GLint y, GLsizei width, GLsizei height);
+
+    // Use this method to retrieve the color buffer map when doing rendering.
+    // It will apply a workaround for poor shader performance on some systems
+    // by compacting the list to skip NULL values.
+    ColorbufferInfo getColorbuffersForRender() const;
 
   protected:
     rx::Renderer *mRenderer;

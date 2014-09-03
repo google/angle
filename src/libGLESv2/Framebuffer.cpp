@@ -668,6 +668,29 @@ bool Framebuffer::hasValidDepthStencil() const
             mDepthbuffer->id() == mStencilbuffer->id());
 }
 
+ColorbufferInfo Framebuffer::getColorbuffersForRender() const
+{
+    ColorbufferInfo colorbuffersForRender;
+
+    for (size_t colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; ++colorAttachment)
+    {
+        GLenum drawBufferState = mDrawBufferStates[colorAttachment];
+        FramebufferAttachment *colorbuffer = mColorbuffers[colorAttachment];
+
+        if (colorbuffer != NULL && drawBufferState != GL_NONE)
+        {
+            ASSERT(drawBufferState == GL_BACK || drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + colorAttachment));
+            colorbuffersForRender.push_back(colorbuffer);
+        }
+        else
+        {
+            colorbuffersForRender.push_back(NULL);
+        }
+    }
+
+    return colorbuffersForRender;
+}
+
 GLenum DefaultFramebuffer::completeness() const
 {
     // The default framebuffer *must* always be complete, though it may not be
