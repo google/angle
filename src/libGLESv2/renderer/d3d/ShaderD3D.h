@@ -16,6 +16,7 @@
 
 namespace rx
 {
+class DynamicHLSL;
 class Renderer;
 
 class ShaderD3D : public ShaderImpl

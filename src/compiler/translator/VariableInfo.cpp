@@ -9,17 +9,43 @@
 #include "compiler/translator/util.h"
 #include "common/utilities.h"
 
-static void ExpandUserDefinedVariable(const sh::ShaderVariable &variable,
-                                      const std::string &name,
-                                      const std::string &mappedName,
-                                      bool markStaticUse,
-                                      std::vector<sh::ShaderVariable> *expanded);
+namespace
+{
 
-static void ExpandVariable(const sh::ShaderVariable &variable,
-                           const std::string &name,
-                           const std::string &mappedName,
-                           bool markStaticUse,
-                           std::vector<sh::ShaderVariable> *expanded)
+TString InterfaceBlockFieldName(const TInterfaceBlock &interfaceBlock, const TField &field)
+{
+    if (interfaceBlock.hasInstanceName())
+    {
+        return interfaceBlock.name() + "." + field.name();
+    }
+    else
+    {
+        return field.name();
+    }
+}
+
+sh::BlockLayoutType GetBlockLayoutType(TLayoutBlockStorage blockStorage)
+{
+    switch (blockStorage)
+    {
+      case EbsPacked:         return sh::BLOCKLAYOUT_PACKED;
+      case EbsShared:         return sh::BLOCKLAYOUT_SHARED;
+      case EbsStd140:         return sh::BLOCKLAYOUT_STANDARD;
+      default: UNREACHABLE(); return sh::BLOCKLAYOUT_SHARED;
+    }
+}
+
+void ExpandUserDefinedVariable(const sh::ShaderVariable &variable,
+                               const std::string &name,
+                               const std::string &mappedName,
+                               bool markStaticUse,
+                               std::vector<sh::ShaderVariable> *expanded);
+
+void ExpandVariable(const sh::ShaderVariable &variable,
+                    const std::string &name,
+                    const std::string &mappedName,
+                    bool markStaticUse,
+                    std::vector<sh::ShaderVariable> *expanded)
 {
     if (variable.isStruct())
     {
@@ -60,11 +86,11 @@ static void ExpandVariable(const sh::ShaderVariable &variable,
     }
 }
 
-static void ExpandUserDefinedVariable(const sh::ShaderVariable &variable,
-                                      const std::string &name,
-                                      const std::string &mappedName,
-                                      bool markStaticUse,
-                                      std::vector<sh::ShaderVariable> *expanded)
+void ExpandUserDefinedVariable(const sh::ShaderVariable &variable,
+                               const std::string &name,
+                               const std::string &mappedName,
+                               bool markStaticUse,
+                               std::vector<sh::ShaderVariable> *expanded)
 {
     ASSERT(variable.isStruct());
 
@@ -82,8 +108,8 @@ static void ExpandUserDefinedVariable(const sh::ShaderVariable &variable,
 }
 
 template <class VarT>
-static VarT *FindVariable(const TString &name,
-                          std::vector<VarT> *infoList)
+VarT *FindVariable(const TString &name,
+                  std::vector<VarT> *infoList)
 {
     // TODO(zmo): optimize this function.
     for (size_t ii = 0; ii < infoList->size(); ++ii)
@@ -93,6 +119,8 @@ static VarT *FindVariable(const TString &name,
     }
 
     return NULL;
+}
+
 }
 
 CollectVariables::CollectVariables(std::vector<sh::Attribute> *attribs,
@@ -270,10 +298,22 @@ void CollectVariables::visitVariable(const TIntermSymbol *variable,
     interfaceBlock.instanceName = (blockType->hasInstanceName() ? blockType->instanceName().c_str() : "");
     interfaceBlock.arraySize = variable->getArraySize();
     interfaceBlock.isRowMajorLayout = (blockType->matrixPacking() == EmpRowMajor);
-    interfaceBlock.layout = sh::GetBlockLayoutType(blockType->blockStorage());
+    interfaceBlock.layout = GetBlockLayoutType(blockType->blockStorage());
 
     // Gather field information
-    sh::GetInterfaceBlockFields(*blockType, &interfaceBlock.fields);
+    const TFieldList &fieldList = blockType->fields();
+
+    for (size_t fieldIndex = 0; fieldIndex < fieldList.size(); ++fieldIndex)
+    {
+        const TField &field = *fieldList[fieldIndex];
+        const TString &fullFieldName = InterfaceBlockFieldName(*blockType, field);
+        const TType &fieldType = *field.type();
+
+        sh::GetVariableTraverser traverser;
+        traverser.traverse(fieldType, fullFieldName, &interfaceBlock.fields);
+
+        interfaceBlock.fields.back().isRowMajorLayout = (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
+    }
 
     infoList->push_back(interfaceBlock);
 }

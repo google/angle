@@ -87,7 +87,7 @@ class DynamicHLSL
     SemanticInfo getSemanticInfo(int startRegisters, bool fragCoord, bool pointCoord, bool pointSize,
                                         bool pixelShader) const;
     std::string generateVaryingLinkHLSL(const SemanticInfo &info, const std::string &varyingHLSL) const;
-    std::string generateVaryingHLSL(rx::ShaderD3D *shader) const;
+    std::string generateVaryingHLSL(const ShaderD3D *shader) const;
     void storeUserLinkedVaryings(const rx::ShaderD3D *vertexShader, std::vector<gl::LinkedVarying> *linkedVaryings) const;
     void storeBuiltinLinkedVaryings(const SemanticInfo &info, std::vector<gl::LinkedVarying> *linkedVaryings) const;
     void defineOutputVariables(rx::ShaderD3D *fragmentShader, std::map<int, gl::VariableLocation> *programOutputVars) const;

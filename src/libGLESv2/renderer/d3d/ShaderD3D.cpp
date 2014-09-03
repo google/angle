@@ -16,13 +16,30 @@
 namespace rx
 {
 
+template <typename VarT>
+void FilterInactiveVariables(std::vector<VarT> *variableList)
+{
+    ASSERT(variableList);
+
+    for (size_t varIndex = 0; varIndex < variableList->size();)
+    {
+        if (!(*variableList)[varIndex].staticUse)
+        {
+            variableList->erase(variableList->begin() + varIndex);
+        }
+        else
+        {
+            varIndex++;
+        }
+    }
+}
+
 void *ShaderD3D::mFragmentCompiler = NULL;
 void *ShaderD3D::mVertexCompiler = NULL;
 
 template <typename VarT>
 const std::vector<VarT> *GetShaderVariables(const std::vector<VarT> *variableList)
 {
-    // TODO: handle staticUse. for now, assume all returned variables are active.
     ASSERT(variableList);
     return variableList;
 }
@@ -111,12 +128,12 @@ void ShaderD3D::parseVaryings(void *compiler)
 {
      if (!mHlsl.empty())
     {
-        const std::vector<sh::Varying> *activeVaryings = ShGetVaryings(compiler);
-        ASSERT(activeVaryings);
+        const std::vector<sh::Varying> *varyings = ShGetVaryings(compiler);
+        ASSERT(varyings);
 
-        for (size_t varyingIndex = 0; varyingIndex < activeVaryings->size(); varyingIndex++)
+        for (size_t varyingIndex = 0; varyingIndex < varyings->size(); varyingIndex++)
         {
-            mVaryings.push_back(gl::PackedVarying((*activeVaryings)[varyingIndex]));
+            mVaryings.push_back(gl::PackedVarying((*varyings)[varyingIndex]));
         }
 
         mUsesMultipleRenderTargets = mHlsl.find("GL_USES_MRT")          != std::string::npos;
@@ -173,7 +190,7 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
     // ensure the compiler is loaded
     initializeCompiler();
 
-    int compileOptions = SH_OBJECT_CODE;
+    int compileOptions = (SH_OBJECT_CODE | SH_VARIABLES);
     std::string sourcePath;
     if (gl::perfActive())
     {
@@ -251,12 +268,15 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
         {
             const sh::Uniform &uniform = mUniforms[uniformIndex];
 
-            unsigned int index = -1;
-            bool result = ShGetUniformRegister(compiler, uniform.name.c_str(), &index);
-            UNUSED_ASSERTION_VARIABLE(result);
-            ASSERT(result);
+            if (uniform.staticUse)
+            {
+                unsigned int index = -1;
+                bool result = ShGetUniformRegister(compiler, uniform.name.c_str(), &index);
+                UNUSED_ASSERTION_VARIABLE(result);
+                ASSERT(result);
 
-            mUniformRegisterMap[uniform.name] = index;
+                mUniformRegisterMap[uniform.name] = index;
+            }
         }
 
         mInterfaceBlocks = *GetShaderVariables(ShGetInterfaceBlocks(compiler));
@@ -265,12 +285,15 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
         {
             const sh::InterfaceBlock &interfaceBlock = mInterfaceBlocks[blockIndex];
 
-            unsigned int index = -1;
-            bool result = ShGetInterfaceBlockRegister(compiler, interfaceBlock.name.c_str(), &index);
-            UNUSED_ASSERTION_VARIABLE(result);
-            ASSERT(result);
+            if (interfaceBlock.staticUse)
+            {
+                unsigned int index = -1;
+                bool result = ShGetInterfaceBlockRegister(compiler, interfaceBlock.name.c_str(), &index);
+                UNUSED_ASSERTION_VARIABLE(result);
+                ASSERT(result);
 
-            mInterfaceBlockRegisterMap[interfaceBlock.name] = index;
+                mInterfaceBlockRegisterMap[interfaceBlock.name] = index;
+            }
         }
     }
     else
@@ -393,6 +416,7 @@ bool ShaderD3D::compile(const std::string &source)
         if (!hlsl.empty())
         {
             mActiveOutputVariables = *GetShaderVariables(ShGetOutputVariables(compiler));
+            FilterInactiveVariables(&mActiveOutputVariables);
         }
     }
 
@@ -405,6 +429,7 @@ void ShaderD3D::parseAttributes(void *compiler)
     if (!hlsl.empty())
     {
         mActiveAttributes = *GetShaderVariables(ShGetAttributes(compiler));
+        FilterInactiveVariables(&mActiveAttributes);
     }
 }
 

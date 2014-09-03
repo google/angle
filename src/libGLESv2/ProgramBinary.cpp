@@ -1068,6 +1068,12 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shade
         PackedVarying *input = &fragmentVaryings[fragVaryingIndex];
         bool matched = false;
 
+        // Built-in varyings obey special rules
+        if (input->isBuiltIn())
+        {
+            continue;
+        }
+
         for (size_t vertVaryingIndex = 0; vertVaryingIndex < vertexVaryings.size(); vertVaryingIndex++)
         {
             PackedVarying *output = &vertexVaryings[vertVaryingIndex];
@@ -1085,7 +1091,8 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shade
             }
         }
 
-        if (!matched)
+        // We permit unmatched, unreferenced varyings
+        if (!matched && input->staticUse)
         {
             infoLog.append("Fragment varying %s does not match any vertex varying", input->name.c_str());
             return false;
@@ -1721,12 +1728,15 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     const rx::ShaderD3D *vertexShaderD3D = rx::ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
 
     unsigned int usedLocations = 0;
-    const std::vector<sh::Attribute> &activeAttributes = vertexShader->getActiveAttributes();
+    const std::vector<sh::Attribute> &shaderAttributes = vertexShader->getActiveAttributes();
 
     // Link attributes that have a binding location
-    for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
+    for (unsigned int attributeIndex = 0; attributeIndex < shaderAttributes.size(); attributeIndex++)
     {
-        const sh::Attribute &attribute = activeAttributes[attributeIndex];
+        const sh::Attribute &attribute = shaderAttributes[attributeIndex];
+
+        ASSERT(attribute.staticUse);
+
         const int location = attribute.location == -1 ? attributeBindings.getAttributeBinding(attribute.name) : attribute.location;
 
         mShaderAttributes[attributeIndex] = attribute;
@@ -1765,9 +1775,12 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     }
 
     // Link attributes that don't have a binding location
-    for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
+    for (unsigned int attributeIndex = 0; attributeIndex < shaderAttributes.size(); attributeIndex++)
     {
-        const sh::Attribute &attribute = activeAttributes[attributeIndex];
+        const sh::Attribute &attribute = shaderAttributes[attributeIndex];
+
+        ASSERT(attribute.staticUse);
+
         const int location = attribute.location == -1 ? attributeBindings.getAttributeBinding(attribute.name) : attribute.location;
 
         if (location == -1)   // Not set by glBindAttribLocation or by location layout qualifier
@@ -1930,13 +1943,21 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const Shader &vertexShader, c
     for (unsigned int uniformIndex = 0; uniformIndex < vertexUniforms.size(); uniformIndex++)
     {
         const sh::Uniform &uniform = vertexUniforms[uniformIndex];
-        defineUniformBase(GL_VERTEX_SHADER, uniform, vertexShaderD3D->getUniformRegister(uniform.name));
+
+        if (uniform.staticUse)
+        {
+            defineUniformBase(GL_VERTEX_SHADER, uniform, vertexShaderD3D->getUniformRegister(uniform.name));
+        }
     }
 
     for (unsigned int uniformIndex = 0; uniformIndex < fragmentUniforms.size(); uniformIndex++)
     {
         const sh::Uniform &uniform = fragmentUniforms[uniformIndex];
-        defineUniformBase(GL_FRAGMENT_SHADER, uniform, fragmentShaderD3D->getUniformRegister(uniform.name));
+
+        if (uniform.staticUse)
+        {
+            defineUniformBase(GL_FRAGMENT_SHADER, uniform, fragmentShaderD3D->getUniformRegister(uniform.name));
+        }
     }
 
     if (!indexUniforms(infoLog, caps))
@@ -2197,17 +2218,27 @@ bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShad
 
     for (unsigned int blockIndex = 0; blockIndex < vertexInterfaceBlocks.size(); blockIndex++)
     {
-        if (!defineUniformBlock(infoLog, vertexShader, vertexInterfaceBlocks[blockIndex], caps))
+        const sh::InterfaceBlock &interfaceBlock = vertexInterfaceBlocks[blockIndex];
+
+        if (interfaceBlock.staticUse)
         {
-            return false;
+            if (!defineUniformBlock(infoLog, vertexShader, interfaceBlock, caps))
+            {
+                return false;
+            }
         }
     }
 
     for (unsigned int blockIndex = 0; blockIndex < fragmentInterfaceBlocks.size(); blockIndex++)
     {
-        if (!defineUniformBlock(infoLog, fragmentShader, fragmentInterfaceBlocks[blockIndex], caps))
+        const sh::InterfaceBlock &interfaceBlock = fragmentInterfaceBlocks[blockIndex];
+
+        if (interfaceBlock.staticUse)
         {
-            return false;
+            if (!defineUniformBlock(infoLog, fragmentShader, interfaceBlock, caps))
+            {
+                return false;
+            }
         }
     }
 
