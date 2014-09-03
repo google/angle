@@ -99,6 +99,11 @@ class Texture : public RefCountObject
 
     const rx::Image *getBaseLevelImage() const;
 
+    // TODO: move these to TextureD3D
+    friend class TextureAttachment;
+    rx::RenderTarget *getRenderTarget(const ImageIndex &index);
+    unsigned int getRenderTargetSerial(const ImageIndex &index);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 };
@@ -129,12 +134,6 @@ class Texture2D : public Texture
     virtual void releaseTexImage();
 
     virtual void generateMipmaps();
-
-    unsigned int getRenderTargetSerial(GLint level);
-
-  protected:
-    friend class Texture2DAttachment;
-    rx::RenderTarget *getRenderTarget(GLint level);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
@@ -177,14 +176,8 @@ class TextureCubeMap : public Texture
 
     bool isCubeComplete() const;
 
-    unsigned int getRenderTargetSerial(GLenum target, GLint level);
-
     static int targetToLayerIndex(GLenum target);
     static GLenum layerIndexToTarget(GLint layer);
-
-  protected:
-    friend class TextureCubeMapAttachment;
-    rx::RenderTarget *getRenderTarget(GLenum target, GLint level);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
@@ -216,12 +209,6 @@ class Texture3D : public Texture
 
     virtual bool isSamplerComplete(const SamplerState &samplerState, const TextureCapsMap &textureCaps, const Extensions &extensions, int clientVersion) const;
 
-    unsigned int getRenderTargetSerial(GLint level, GLint layer);
-
-  protected:
-    friend class Texture3DAttachment;
-    rx::RenderTarget *getRenderTarget(GLint level, GLint layer);
-
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture3D);
 
@@ -251,12 +238,6 @@ class Texture2DArray : public Texture
     void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
     virtual bool isSamplerComplete(const SamplerState &samplerState, const TextureCapsMap &textureCaps, const Extensions &extensions, int clientVersion) const;
-
-    unsigned int getRenderTargetSerial(GLint level, GLint layer);
-
-  protected:
-    friend class Texture2DArrayAttachment;
-    rx::RenderTarget *getRenderTarget(GLint level, GLint layer);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2DArray);

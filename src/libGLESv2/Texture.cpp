@@ -179,6 +179,16 @@ const rx::Image *Texture::getBaseLevelImage() const
     return (getImplementation()->getLayerCount(0) > 0 ? getImplementation()->getImage(0, 0) : NULL);
 }
 
+rx::RenderTarget *Texture::getRenderTarget(const ImageIndex &index)
+{
+    return mTexture->getRenderTarget(index.mipIndex, index.layerIndex);
+}
+
+unsigned int Texture::getRenderTargetSerial(const ImageIndex &index)
+{
+    return mTexture->getRenderTargetSerial(index.mipIndex, index.layerIndex);
+}
+
 Texture2D::Texture2D(rx::TextureImpl *impl, GLuint id)
     : Texture(impl, id, GL_TEXTURE_2D)
 {
@@ -364,16 +374,6 @@ void Texture2D::generateMipmaps()
     releaseTexImage();
 
     mTexture->generateMipmaps();
-}
-
-unsigned int Texture2D::getRenderTargetSerial(GLint level)
-{
-    return mTexture->getRenderTargetSerial(level, 0);
-}
-
-rx::RenderTarget *Texture2D::getRenderTarget(GLint level)
-{
-    return mTexture->getRenderTarget(level, 0);
 }
 
 // Tests for 2D texture (mipmap) completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
@@ -609,11 +609,6 @@ bool TextureCubeMap::isSamplerComplete(const SamplerState &samplerState, const T
     return true;
 }
 
-unsigned int TextureCubeMap::getRenderTargetSerial(GLenum target, GLint level)
-{
-    return mTexture->getRenderTargetSerial(level, targetToLayerIndex(target));
-}
-
 int TextureCubeMap::targetToLayerIndex(GLenum target)
 {
     META_ASSERT(GL_TEXTURE_CUBE_MAP_NEGATIVE_X - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 1);
@@ -634,11 +629,6 @@ GLenum TextureCubeMap::layerIndexToTarget(GLint layer)
     META_ASSERT(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 5);
 
     return GL_TEXTURE_CUBE_MAP_POSITIVE_X + layer;
-}
-
-rx::RenderTarget *TextureCubeMap::getRenderTarget(GLenum target, GLint level)
-{
-    return mTexture->getRenderTarget(level, targetToLayerIndex(target));
 }
 
 bool TextureCubeMap::isMipmapComplete() const
@@ -805,17 +795,6 @@ bool Texture3D::isSamplerComplete(const SamplerState &samplerState, const Textur
     return true;
 }
 
-unsigned int Texture3D::getRenderTargetSerial(GLint level, GLint layer)
-{
-    return mTexture->getRenderTargetSerial(level, layer);
-}
-
-
-rx::RenderTarget *Texture3D::getRenderTarget(GLint level, GLint layer)
-{
-    return mTexture->getRenderTarget(level, layer);
-}
-
 bool Texture3D::isMipmapComplete() const
 {
     int levelCount = mipLevels();
@@ -972,16 +951,6 @@ bool Texture2DArray::isSamplerComplete(const SamplerState &samplerState, const T
     }
 
     return true;
-}
-
-unsigned int Texture2DArray::getRenderTargetSerial(GLint level, GLint layer)
-{
-    return mTexture->getRenderTargetSerial(level, layer);
-}
-
-rx::RenderTarget *Texture2DArray::getRenderTarget(GLint level, GLint layer)
-{
-    return mTexture->getRenderTarget(level, layer);
 }
 
 bool Texture2DArray::isMipmapComplete() const

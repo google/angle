@@ -138,6 +138,16 @@ GLint TextureAttachment::layer() const
     return mIndex.layerIndex;
 }
 
+rx::RenderTarget *TextureAttachment::getRenderTarget()
+{
+    return getTexture()->getRenderTarget(mIndex);
+}
+
+unsigned int TextureAttachment::getSerial() const
+{
+    return getTexture()->getRenderTargetSerial(mIndex);
+}
+
 ///// Texture2DAttachment Implementation ////////
 
 Texture2DAttachment::Texture2DAttachment(GLenum binding, Texture2D *texture, GLint level)
@@ -150,16 +160,6 @@ Texture2DAttachment::Texture2DAttachment(GLenum binding, Texture2D *texture, GLi
 Texture2DAttachment::~Texture2DAttachment()
 {
     mTexture2D.set(NULL);
-}
-
-rx::RenderTarget *Texture2DAttachment::getRenderTarget()
-{
-    return mTexture2D->getRenderTarget(mLevel);
-}
-
-unsigned int Texture2DAttachment::getSerial() const
-{
-    return mTexture2D->getRenderTargetSerial(mLevel);
 }
 
 Texture *Texture2DAttachment::getTexture() const
@@ -182,16 +182,6 @@ TextureCubeMapAttachment::~TextureCubeMapAttachment()
     mTextureCubeMap.set(NULL);
 }
 
-rx::RenderTarget *TextureCubeMapAttachment::getRenderTarget()
-{
-    return mTextureCubeMap->getRenderTarget(mFaceTarget, mLevel);
-}
-
-unsigned int TextureCubeMapAttachment::getSerial() const
-{
-    return mTextureCubeMap->getRenderTargetSerial(mFaceTarget, mLevel);
-}
-
 Texture *TextureCubeMapAttachment::getTexture() const
 {
     return mTextureCubeMap.get();
@@ -212,16 +202,6 @@ Texture3DAttachment::~Texture3DAttachment()
     mTexture3D.set(NULL);
 }
 
-rx::RenderTarget *Texture3DAttachment::getRenderTarget()
-{
-    return mTexture3D->getRenderTarget(mLevel, mLayer);
-}
-
-unsigned int Texture3DAttachment::getSerial() const
-{
-    return mTexture3D->getRenderTargetSerial(mLevel, mLayer);
-}
-
 Texture *Texture3DAttachment::getTexture() const
 {
     return mTexture3D.get();
@@ -240,16 +220,6 @@ Texture2DArrayAttachment::Texture2DArrayAttachment(GLenum binding, Texture2DArra
 Texture2DArrayAttachment::~Texture2DArrayAttachment()
 {
     mTexture2DArray.set(NULL);
-}
-
-rx::RenderTarget *Texture2DArrayAttachment::getRenderTarget()
-{
-    return mTexture2DArray->getRenderTarget(mLevel, mLayer);
-}
-
-unsigned int Texture2DArrayAttachment::getSerial() const
-{
-    return mTexture2DArray->getRenderTargetSerial(mLevel, mLayer);
 }
 
 Texture *Texture2DArrayAttachment::getTexture() const
