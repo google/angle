@@ -38,6 +38,7 @@ namespace gl
 {
 class Framebuffer;
 class FramebufferAttachment;
+struct ImageIndex;
 
 bool IsMipmapFiltered(const gl::SamplerState &samplerState);
 
@@ -61,6 +62,11 @@ class Texture : public RefCountObject
     GLint getBaseLevelHeight() const;
     GLint getBaseLevelDepth() const;
     GLenum getBaseLevelInternalFormat() const;
+
+    GLsizei getWidth(const ImageIndex &index) const;
+    GLsizei getHeight(const ImageIndex &index) const;
+    GLenum getInternalFormat(const ImageIndex &index) const;
+    GLenum getActualFormat(const ImageIndex &index) const;
 
     virtual bool isSamplerComplete(const SamplerState &samplerState, const TextureCapsMap &textureCaps, const Extensions &extensions, int clientVersion) const = 0;
 
@@ -257,6 +263,54 @@ class Texture2DArray : public Texture
 
     bool isMipmapComplete() const;
     bool isLevelComplete(int level) const;
+};
+
+struct ImageIndex
+{
+    GLenum type;
+    GLint mipIndex;
+    GLint layerIndex;
+
+    ImageIndex(const ImageIndex &other)
+        : type(other.type),
+          mipIndex(other.mipIndex),
+          layerIndex(other.layerIndex)
+    {}
+
+    ImageIndex &operator=(const ImageIndex &other)
+    {
+        type = other.type;
+        mipIndex = other.mipIndex;
+        layerIndex = other.layerIndex;
+        return *this;
+    }
+
+    static ImageIndex Make2D(GLint mipIndex)
+    {
+        return ImageIndex(GL_TEXTURE_2D, mipIndex, 0);
+    }
+
+    static ImageIndex MakeCube(GLenum target, GLint mipIndex)
+    {
+        return ImageIndex(target, mipIndex, TextureCubeMap::targetToLayerIndex(target));
+    }
+
+    static ImageIndex Make2DArray(GLint mipIndex, GLint layerIndex)
+    {
+        return ImageIndex(GL_TEXTURE_2D_ARRAY, mipIndex, layerIndex);
+    }
+
+    static ImageIndex Make3D(GLint mipIndex, GLint layerIndex = 0)
+    {
+        return ImageIndex(GL_TEXTURE_3D, mipIndex, layerIndex);
+    }
+
+  private:
+      ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn)
+        : type(typeIn),
+          mipIndex(mipIndexIn),
+          layerIndex(layerIndexIn)
+    {}
 };
 
 }

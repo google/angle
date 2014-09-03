@@ -114,6 +114,30 @@ GLenum Texture::getBaseLevelInternalFormat() const
     return (baseImage ? baseImage->getInternalFormat() : GL_NONE);
 }
 
+GLsizei Texture::getWidth(const ImageIndex &index) const
+{
+    rx::Image *image = mTexture->getImage(index.mipIndex, index.layerIndex);
+    return image->getWidth();
+}
+
+GLsizei Texture::getHeight(const ImageIndex &index) const
+{
+    rx::Image *image = mTexture->getImage(index.mipIndex, index.layerIndex);
+    return image->getHeight();
+}
+
+GLenum Texture::getInternalFormat(const ImageIndex &index) const
+{
+    rx::Image *image = mTexture->getImage(index.mipIndex, index.layerIndex);
+    return image->getInternalFormat();
+}
+
+GLenum Texture::getActualFormat(const ImageIndex &index) const
+{
+    rx::Image *image = mTexture->getImage(index.mipIndex, index.layerIndex);
+    return image->getActualFormat();
+}
+
 rx::TextureStorageInterface *Texture::getNativeTexture()
 {
     return getImplementation()->getNativeTexture();
