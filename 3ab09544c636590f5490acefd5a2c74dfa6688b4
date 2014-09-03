@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70637bf2_4c62cfe5",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-03T20:13:35Z",
+      "side": 1,
+      "message": "whoops, this should be GL_DEPTH_STENCIL_ATTACHMENT",
+      "range": {
+        "startLine": 579,
+        "startChar": 33,
+        "endLine": 579,
+        "endChar": 49
+      },
+      "revId": "3ab09544c636590f5490acefd5a2c74dfa6688b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
