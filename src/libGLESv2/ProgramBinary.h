@@ -202,7 +202,7 @@ class ProgramBinary : public RefCountObject
     void reset();
 
     bool linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *vertexShader);
-    bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, Shader *fragmentShader, Shader *vertexShader);
+    bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, const Shader *vertexShader);
 
     bool linkValidateVariablesBase(InfoLog &infoLog,
                                    const std::string &variableName,

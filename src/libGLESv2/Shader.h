@@ -80,6 +80,18 @@ class Shader
     bool isFlaggedForDeletion() const;
     void flagForDeletion();
 
+    const std::vector<gl::PackedVarying> &getVaryings() const;
+    const std::vector<sh::Uniform> &getUniforms() const;
+    const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const;
+    const std::vector<sh::Attribute> &getActiveAttributes() const;
+    const std::vector<sh::Attribute> &getActiveOutputVariables() const;
+
+    std::vector<gl::PackedVarying> &getVaryings();
+    std::vector<sh::Uniform> &getUniforms();
+    std::vector<sh::InterfaceBlock> &getInterfaceBlocks();
+    std::vector<sh::Attribute> &getActiveAttributes();
+    std::vector<sh::Attribute> &getActiveOutputVariables();
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Shader);
 

@@ -43,9 +43,6 @@ class ShaderD3D : public ShaderImpl
     int getShaderVersion() const { return mShaderVersion; }
     bool usesDepthRange() const { return mUsesDepthRange; }
     bool usesPointSize() const { return mUsesPointSize; }
-    std::vector<gl::PackedVarying> &getVaryings() { return mVaryings; }
-    const std::vector<sh::Uniform> &getUniforms() const { return mActiveUniforms; }
-    const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const  { return mActiveInterfaceBlocks; }
 
     static void releaseCompiler();
     static ShShaderOutput getCompilerOutputType(GLenum shader);
@@ -60,8 +57,6 @@ class ShaderD3D : public ShaderImpl
     static void *mVertexCompiler;
 
     rx::Renderer *mRenderer;
-
-    std::vector<gl::PackedVarying> mVaryings;
 
     int mShaderVersion;
 
@@ -84,8 +79,6 @@ class ShaderD3D : public ShaderImpl
 
     std::string mHlsl;
     std::string mInfoLog;
-    std::vector<sh::Uniform> mActiveUniforms;
-    std::vector<sh::InterfaceBlock> mActiveInterfaceBlocks;
     std::map<std::string, unsigned int> mUniformRegisterMap;
     std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
 };
@@ -102,17 +95,13 @@ class VertexShaderD3D : public ShaderD3D
     static const VertexShaderD3D *makeVertexShaderD3D(const ShaderImpl *impl);
 
     virtual bool compile(const std::string &source);
-    virtual void uncompile();
 
-    int getSemanticIndex(const std::string &attributeName);
-    virtual const std::vector<sh::Attribute> &getActiveAttributes() const { return mActiveAttributes; }
+    int getSemanticIndex(const std::string &attributeName) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexShaderD3D);
 
     void parseAttributes();
-
-    std::vector<sh::Attribute> mActiveAttributes;
 };
 
 class FragmentShaderD3D : public ShaderD3D
@@ -127,14 +116,9 @@ class FragmentShaderD3D : public ShaderD3D
     static const FragmentShaderD3D *makeFragmentShaderD3D(const ShaderImpl *impl);
 
     virtual bool compile(const std::string &source);
-    virtual void uncompile();
-
-    virtual const std::vector<sh::Attribute> &getOutputVariables() const { return mActiveOutputVariables; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(FragmentShaderD3D);
-
-    std::vector<sh::Attribute> mActiveOutputVariables;
 };
 
 }

@@ -135,7 +135,7 @@ void ShaderD3D::parseVaryings(void *compiler)
 
 void ShaderD3D::resetVaryingsRegisterAssignment()
 {
-    for (unsigned int varyingIndex = 0; varyingIndex < mVaryings.size(); varyingIndex++)
+    for (size_t varyingIndex = 0; varyingIndex < mVaryings.size(); varyingIndex++)
     {
         mVaryings[varyingIndex].resetRegisterAssignment();
     }
@@ -147,9 +147,6 @@ void ShaderD3D::uncompile()
     // set by compileToHLSL
     mHlsl.clear();
     mInfoLog.clear();
-
-    // set by parseVaryings
-    mVaryings.clear();
 
     mUsesMultipleRenderTargets = false;
     mUsesFragColor = false;
@@ -164,8 +161,11 @@ void ShaderD3D::uncompile()
     mUsesDiscardRewriting = false;
     mUsesNestedBreak = false;
 
-    mActiveUniforms.clear();
-    mActiveInterfaceBlocks.clear();
+    mVaryings.clear();
+    mUniforms.clear();
+    mInterfaceBlocks.clear();
+    mActiveAttributes.clear();
+    mActiveOutputVariables.clear();
 }
 
 void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
@@ -245,11 +245,11 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
 
         SafeDeleteArray(outputHLSL);
 
-        mActiveUniforms = *GetShaderVariables(ShGetUniforms(compiler));
+        mUniforms = *GetShaderVariables(ShGetUniforms(compiler));
 
-        for (size_t uniformIndex = 0; uniformIndex < mActiveUniforms.size(); uniformIndex++)
+        for (size_t uniformIndex = 0; uniformIndex < mUniforms.size(); uniformIndex++)
         {
-            const sh::Uniform &uniform = mActiveUniforms[uniformIndex];
+            const sh::Uniform &uniform = mUniforms[uniformIndex];
 
             unsigned int index = -1;
             bool result = ShGetUniformRegister(compiler, uniform.name.c_str(), &index);
@@ -259,11 +259,11 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
             mUniformRegisterMap[uniform.name] = index;
         }
 
-        mActiveInterfaceBlocks = *GetShaderVariables(ShGetInterfaceBlocks(compiler));
+        mInterfaceBlocks = *GetShaderVariables(ShGetInterfaceBlocks(compiler));
 
-        for (size_t blockIndex = 0; blockIndex < mActiveInterfaceBlocks.size(); blockIndex++)
+        for (size_t blockIndex = 0; blockIndex < mInterfaceBlocks.size(); blockIndex++)
         {
-            const sh::InterfaceBlock &interfaceBlock = mActiveInterfaceBlocks[blockIndex];
+            const sh::InterfaceBlock &interfaceBlock = mInterfaceBlocks[blockIndex];
 
             unsigned int index = -1;
             bool result = ShGetInterfaceBlockRegister(compiler, interfaceBlock.name.c_str(), &index);
@@ -388,14 +388,6 @@ bool VertexShaderD3D::compile(const std::string &source)
     return !getTranslatedSource().empty();
 }
 
-void VertexShaderD3D::uncompile()
-{
-    ShaderD3D::uncompile();
-
-    // set by ParseAttributes
-    mActiveAttributes.clear();
-}
-
 void VertexShaderD3D::parseAttributes()
 {
     const std::string &hlsl = getTranslatedSource();
@@ -405,12 +397,12 @@ void VertexShaderD3D::parseAttributes()
     }
 }
 
-int VertexShaderD3D::getSemanticIndex(const std::string &attributeName)
+int VertexShaderD3D::getSemanticIndex(const std::string &attributeName) const
 {
     if (!attributeName.empty())
     {
         int semanticIndex = 0;
-        for (unsigned int attributeIndex = 0; attributeIndex < mActiveAttributes.size(); attributeIndex++)
+        for (size_t attributeIndex = 0; attributeIndex < mActiveAttributes.size(); attributeIndex++)
         {
             const sh::ShaderVariable &attribute = mActiveAttributes[attributeIndex];
 
@@ -452,6 +444,7 @@ bool FragmentShaderD3D::compile(const std::string &source)
 
     compileToHLSL(mFragmentCompiler, source);
     parseVaryings(mFragmentCompiler);
+
     std::sort(mVaryings.begin(), mVaryings.end(), compareVarying);
 
     const std::string &hlsl = getTranslatedSource();
@@ -461,13 +454,6 @@ bool FragmentShaderD3D::compile(const std::string &source)
         return true;
     }
     return false;
-}
-
-void FragmentShaderD3D::uncompile()
-{
-    ShaderD3D::uncompile();
-
-    mActiveOutputVariables.clear();
 }
 
 }
