@@ -12,6 +12,7 @@
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
+#include "Texture.h"
 
 #include "angle_gl.h"
 
@@ -24,11 +25,6 @@ class TextureStorage;
 
 namespace gl
 {
-class Texture;
-class Texture2D;
-class TextureCubeMap;
-class Texture3D;
-class Texture2DArray;
 class Renderbuffer;
 
 // FramebufferAttachment implements a GL framebuffer attachment.
@@ -86,15 +82,25 @@ class FramebufferAttachment
 class TextureAttachment : public FramebufferAttachment
 {
   public:
-    TextureAttachment(GLenum binding);
+    TextureAttachment(GLenum binding, const ImageIndex &index);
 
     rx::TextureStorage *getTextureStorage();
     virtual GLsizei getSamples() const;
     virtual GLuint id() const;
     virtual unsigned int getTextureSerial() const;
 
+    virtual GLsizei getWidth() const;
+    virtual GLsizei getHeight() const;
+    virtual GLenum getInternalFormat() const;
+    virtual GLenum getActualFormat() const;
+
+    virtual GLenum type() const;
+    virtual GLint mipLevel() const;
+    virtual GLint layer() const;
+
   protected:
     virtual Texture *getTexture() const = 0;
+    ImageIndex mIndex;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureAttachment);
@@ -108,17 +114,8 @@ class Texture2DAttachment : public TextureAttachment
     virtual ~Texture2DAttachment();
 
     rx::RenderTarget *getRenderTarget();
-
-    virtual GLsizei getWidth() const;
-    virtual GLsizei getHeight() const;
-    virtual GLenum getInternalFormat() const;
-    virtual GLenum getActualFormat() const;
-
     virtual unsigned int getSerial() const;
 
-    virtual GLenum type() const;
-    virtual GLint mipLevel() const;
-    virtual GLint layer() const;
     virtual Texture *getTexture() const;
 
   private:
@@ -136,17 +133,8 @@ class TextureCubeMapAttachment : public TextureAttachment
     virtual ~TextureCubeMapAttachment();
 
     rx::RenderTarget *getRenderTarget();
-
-    virtual GLsizei getWidth() const;
-    virtual GLsizei getHeight() const;
-    virtual GLenum getInternalFormat() const;
-    virtual GLenum getActualFormat() const;
-
     virtual unsigned int getSerial() const;
 
-    virtual GLenum type() const;
-    virtual GLint mipLevel() const;
-    virtual GLint layer() const;
     virtual Texture *getTexture() const;
 
   private:
@@ -165,17 +153,8 @@ class Texture3DAttachment : public TextureAttachment
     virtual ~Texture3DAttachment();
 
     rx::RenderTarget *getRenderTarget();
-
-    virtual GLsizei getWidth() const;
-    virtual GLsizei getHeight() const;
-    virtual GLenum getInternalFormat() const;
-    virtual GLenum getActualFormat() const;
-
     virtual unsigned int getSerial() const;
 
-    virtual GLenum type() const;
-    virtual GLint mipLevel() const;
-    virtual GLint layer() const;
     virtual Texture *getTexture() const;
 
   private:
@@ -194,17 +173,8 @@ class Texture2DArrayAttachment : public TextureAttachment
     virtual ~Texture2DArrayAttachment();
 
     rx::RenderTarget *getRenderTarget();
-
-    virtual GLsizei getWidth() const;
-    virtual GLsizei getHeight() const;
-    virtual GLenum getInternalFormat() const;
-    virtual GLenum getActualFormat() const;
-
     virtual unsigned int getSerial() const;
 
-    virtual GLenum type() const;
-    virtual GLint mipLevel() const;
-    virtual GLint layer() const;
     virtual Texture *getTexture() const;
 
   private:
