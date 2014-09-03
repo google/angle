@@ -571,55 +571,21 @@ void Framebuffer::invalidateSub(const Caps &caps, GLsizei numAttachments, const 
                                 GLint x, GLint y, GLsizei width, GLsizei height)
 {
     ASSERT(completeness() == GL_FRAMEBUFFER_COMPLETE);
-    for (int i = 0; i < numAttachments; ++i)
+    for (GLsizei attachIndex = 0; attachIndex < numAttachments; ++attachIndex)
     {
-        rx::RenderTarget *renderTarget = NULL;
+        GLenum attachmentTarget = attachments[attachIndex];
 
-        if (attachments[i] >= GL_COLOR_ATTACHMENT0 && attachments[i] <= GL_COLOR_ATTACHMENT15)
-        {
-            gl::FramebufferAttachment *attachment = getColorbuffer(attachments[i] - GL_COLOR_ATTACHMENT0);
-            if (attachment)
-            {
-                renderTarget = attachment->getRenderTarget();
-            }
-        }
-        else if (attachments[i] == GL_COLOR)
-        {
-            gl::FramebufferAttachment *attachment = getColorbuffer(0);
-            if (attachment)
-            {
-                renderTarget = attachment->getRenderTarget();
-            }
-        }
-        else
-        {
-            gl::FramebufferAttachment *attachment = NULL;
-            switch (attachments[i])
-            {
-              case GL_DEPTH_ATTACHMENT:
-              case GL_DEPTH:
-                attachment = mDepthbuffer;
-                break;
-              case GL_STENCIL_ATTACHMENT:
-              case GL_STENCIL:
-                attachment = mStencilbuffer;
-                break;
-              case GL_DEPTH_STENCIL_ATTACHMENT:
-                attachment = getDepthOrStencilbuffer();
-                break;
-              default:
-                UNREACHABLE();
-            }
+        gl::FramebufferAttachment *attachment =
+            (attachmentTarget == GL_DEPTH_STENCIL_ATTACHMENT) ? getDepthOrStencilbuffer() :
+                                                                getAttachment(attachmentTarget);
 
-            if (attachment)
-            {
-                renderTarget = attachment->getRenderTarget();
-            }
-        }
-
-        if (renderTarget)
+        if (attachment)
         {
-            renderTarget->invalidate(x, y, width, height);
+            rx::RenderTarget *renderTarget = attachment->getRenderTarget();
+            if (renderTarget)
+            {
+                renderTarget->invalidate(x, y, width, height);
+            }
         }
     }
 }
@@ -702,6 +668,7 @@ FramebufferAttachment *DefaultFramebuffer::getAttachment(GLenum attachment) cons
 {
     switch (attachment)
     {
+      case GL_COLOR:
       case GL_BACK:
         return getColorbuffer(0);
       case GL_DEPTH:
