@@ -70,6 +70,30 @@
       "revId": "d53a12785f7eb2d809c647bc65f8fabdae2a5889",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "305d8332_671b720b",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-03T19:38:15Z",
+      "side": 0,
+      "message": "Note we don\u0027t currently have a test for this. I think it\u0027s something we consider contributing to dEQP, if we\u0027re sure our interpretation is correct.",
+      "parentUuid": "305d8332_c767be9f",
+      "range": {
+        "startLine": 608,
+        "startChar": 29,
+        "endLine": 608,
+        "endChar": 52
+      },
+      "revId": "d53a12785f7eb2d809c647bc65f8fabdae2a5889",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
