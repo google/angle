@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10979f03_e1b8a0c7",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-03T21:07:59Z",
+      "side": 1,
+      "message": "It looks like a similar GL_DEPTH_STENCIL/GL_DEPTH_STENCIL_ATTACHMENT swap was made in glGetFramebufferAttachmentParameteriv, when checking for the depth-stencil attachment case when param is GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE-- we should either address that here, or open a new issue. Also-- DefaultFramebuffer::getAttachment() currently handles DEPTH_STENCIL, but I\u0027m not sure that\u0027s actually a valid attachment. That value is correctly filtered out by ValidateInvalidateFramebufferParameters, but I don\u0027t think it\u0027s valid to attempt to retrieve it from the default framebuffer at all...",
+      "range": {
+        "startLine": 579,
+        "startChar": 12,
+        "endLine": 579,
+        "endChar": 60
+      },
+      "revId": "5c4b9a73a378a32b6778d5f517e0914aab5b6f70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
