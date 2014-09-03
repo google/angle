@@ -1036,7 +1036,11 @@ bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuff
             return false;
         }
 
-        ASSERT(uniformBlock->isReferencedByVertexShader() || uniformBlock->isReferencedByFragmentShader());
+        // Unnecessary to apply an unreferenced standard or shared UBO
+        if (!uniformBlock->isReferencedByVertexShader() && !uniformBlock->isReferencedByFragmentShader())
+        {
+            continue;
+        }
 
         if (uniformBlock->isReferencedByVertexShader())
         {
@@ -2220,7 +2224,8 @@ bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShad
     {
         const sh::InterfaceBlock &interfaceBlock = vertexInterfaceBlocks[blockIndex];
 
-        if (interfaceBlock.staticUse)
+        // Note: shared and std140 layouts are always considered active
+        if (interfaceBlock.staticUse || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED)
         {
             if (!defineUniformBlock(infoLog, vertexShader, interfaceBlock, caps))
             {
@@ -2233,7 +2238,8 @@ bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShad
     {
         const sh::InterfaceBlock &interfaceBlock = fragmentInterfaceBlocks[blockIndex];
 
-        if (interfaceBlock.staticUse)
+        // Note: shared and std140 layouts are always considered active
+        if (interfaceBlock.staticUse || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED)
         {
             if (!defineUniformBlock(infoLog, fragmentShader, interfaceBlock, caps))
             {
@@ -2387,23 +2393,26 @@ bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, const Shader &shader, c
         }
     }
 
-    // Assign registers to the uniform blocks
-    const GLuint blockIndex = getUniformBlockIndex(interfaceBlock.name);
-    const unsigned int elementCount = std::max(1u, interfaceBlock.arraySize);
-    ASSERT(blockIndex != GL_INVALID_INDEX);
-    ASSERT(blockIndex + elementCount <= mUniformBlocks.size());
-
-    unsigned int interfaceBlockRegister = shaderD3D->getInterfaceBlockRegister(interfaceBlock.name);
-
-    for (unsigned int uniformBlockElement = 0; uniformBlockElement < elementCount; uniformBlockElement++)
+    if (interfaceBlock.staticUse)
     {
-        UniformBlock *uniformBlock = mUniformBlocks[blockIndex + uniformBlockElement];
-        ASSERT(uniformBlock->name == interfaceBlock.name);
+        // Assign registers to the uniform blocks
+        const GLuint blockIndex = getUniformBlockIndex(interfaceBlock.name);
+        const unsigned int elementCount = std::max(1u, interfaceBlock.arraySize);
+        ASSERT(blockIndex != GL_INVALID_INDEX);
+        ASSERT(blockIndex + elementCount <= mUniformBlocks.size());
 
-        if (!assignUniformBlockRegister(infoLog, uniformBlock, shader.getType(),
-                                        interfaceBlockRegister + uniformBlockElement, caps))
+        unsigned int interfaceBlockRegister = shaderD3D->getInterfaceBlockRegister(interfaceBlock.name);
+
+        for (unsigned int uniformBlockElement = 0; uniformBlockElement < elementCount; uniformBlockElement++)
         {
-            return false;
+            UniformBlock *uniformBlock = mUniformBlocks[blockIndex + uniformBlockElement];
+            ASSERT(uniformBlock->name == interfaceBlock.name);
+
+            if (!assignUniformBlockRegister(infoLog, uniformBlock, shader.getType(),
+                                            interfaceBlockRegister + uniformBlockElement, caps))
+            {
+                return false;
+            }
         }
     }
 
