@@ -22,6 +22,30 @@
       "revId": "5c4b9a73a378a32b6778d5f517e0914aab5b6f70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50667713_b88e596c",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-03T21:27:45Z",
+      "side": 1,
+      "message": "nice catch on the component_type thing.. I think that\u0027s something we should do in another change. the second point seems OK - I checked the spec, and it claims DEPTH_STENCIL is a valid parameter to ClearBufferfi when the argument FB is zero. This seems to set the precedent for default D_S attachments using that enum.",
+      "parentUuid": "10979f03_e1b8a0c7",
+      "range": {
+        "startLine": 579,
+        "startChar": 12,
+        "endLine": 579,
+        "endChar": 60
+      },
+      "revId": "5c4b9a73a378a32b6778d5f517e0914aab5b6f70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
