@@ -20,6 +20,7 @@ namespace rx
 class ShaderImpl
 {
   public:
+    ShaderImpl() { }
     virtual ~ShaderImpl() { }
 
     virtual bool compile(const std::string &source) = 0;
@@ -39,6 +40,8 @@ class ShaderImpl
     std::vector<sh::Attribute> &getActiveOutputVariables() { return mActiveOutputVariables; }
 
   protected:
+    DISALLOW_COPY_AND_ASSIGN(ShaderImpl);
+
     std::vector<gl::PackedVarying> mVaryings;
     std::vector<sh::Uniform> mUniforms;
     std::vector<sh::InterfaceBlock> mInterfaceBlocks;

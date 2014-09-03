@@ -27,8 +27,8 @@ const std::vector<VarT> *GetShaderVariables(const std::vector<VarT> *variableLis
     return variableList;
 }
 
-ShaderD3D::ShaderD3D(rx::Renderer *renderer)
-    : ShaderImpl(),
+ShaderD3D::ShaderD3D(GLenum type, rx::Renderer *renderer)
+    : mType(type),
       mRenderer(renderer),
       mShaderVersion(100)
 {
@@ -340,15 +340,28 @@ unsigned int ShaderD3D::getInterfaceBlockRegister(const std::string &blockName) 
     return mInterfaceBlockRegisterMap.find(blockName)->second;
 }
 
+void *ShaderD3D::getCompiler()
+{
+    if (mType == GL_VERTEX_SHADER)
+    {
+        return mVertexCompiler;
+    }
+    else
+    {
+        ASSERT(mType == GL_FRAGMENT_SHADER);
+        return mFragmentCompiler;
+    }
+}
+
 ShShaderOutput ShaderD3D::getCompilerOutputType(GLenum shader)
 {
     void *compiler = NULL;
 
     switch (shader)
     {
-    case GL_VERTEX_SHADER:   compiler = mVertexCompiler;   break;
-    case GL_FRAGMENT_SHADER: compiler = mFragmentCompiler; break;
-    default: UNREACHABLE();  return SH_HLSL9_OUTPUT;
+      case GL_VERTEX_SHADER:   compiler = mVertexCompiler;   break;
+      case GL_FRAGMENT_SHADER: compiler = mFragmentCompiler; break;
+      default: UNREACHABLE();  return SH_HLSL9_OUTPUT;
     }
 
     size_t outputType = 0;
@@ -357,47 +370,45 @@ ShShaderOutput ShaderD3D::getCompilerOutputType(GLenum shader)
     return static_cast<ShShaderOutput>(outputType);
 }
 
-VertexShaderD3D::VertexShaderD3D(rx::Renderer *renderer) : ShaderD3D(renderer)
-{
-}
-
-VertexShaderD3D::~VertexShaderD3D()
-{
-}
-
-VertexShaderD3D *VertexShaderD3D::makeVertexShaderD3D(ShaderImpl *impl)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(VertexShaderD3D*, impl));
-    return static_cast<VertexShaderD3D*>(impl);
-}
-
-const VertexShaderD3D *VertexShaderD3D::makeVertexShaderD3D(const ShaderImpl *impl)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(const VertexShaderD3D*, impl));
-    return static_cast<const VertexShaderD3D*>(impl);
-}
-
-bool VertexShaderD3D::compile(const std::string &source)
+bool ShaderD3D::compile(const std::string &source)
 {
     uncompile();
 
-    compileToHLSL(mVertexCompiler, source);
-    parseAttributes();
-    parseVaryings(mVertexCompiler);
+    void *compiler = getCompiler();
+
+    compileToHLSL(compiler, source);
+
+    if (mType == GL_VERTEX_SHADER)
+    {
+        parseAttributes(compiler);
+    }
+
+    parseVaryings(compiler);
+
+    if (mType == GL_FRAGMENT_SHADER)
+    {
+        std::sort(mVaryings.begin(), mVaryings.end(), compareVarying);
+
+        const std::string &hlsl = getTranslatedSource();
+        if (!hlsl.empty())
+        {
+            mActiveOutputVariables = *GetShaderVariables(ShGetOutputVariables(compiler));
+        }
+    }
 
     return !getTranslatedSource().empty();
 }
 
-void VertexShaderD3D::parseAttributes()
+void ShaderD3D::parseAttributes(void *compiler)
 {
     const std::string &hlsl = getTranslatedSource();
     if (!hlsl.empty())
     {
-        mActiveAttributes = *GetShaderVariables(ShGetAttributes(mVertexCompiler));
+        mActiveAttributes = *GetShaderVariables(ShGetAttributes(compiler));
     }
 }
 
-int VertexShaderD3D::getSemanticIndex(const std::string &attributeName) const
+int ShaderD3D::getSemanticIndex(const std::string &attributeName) const
 {
     if (!attributeName.empty())
     {
@@ -416,44 +427,6 @@ int VertexShaderD3D::getSemanticIndex(const std::string &attributeName) const
     }
 
     return -1;
-}
-
-FragmentShaderD3D::FragmentShaderD3D(rx::Renderer *renderer) : ShaderD3D(renderer)
-{
-}
-
-FragmentShaderD3D::~FragmentShaderD3D()
-{
-}
-
-FragmentShaderD3D *FragmentShaderD3D::makeFragmentShaderD3D(ShaderImpl *impl)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(FragmentShaderD3D*, impl));
-    return static_cast<FragmentShaderD3D*>(impl);
-}
-
-const FragmentShaderD3D *FragmentShaderD3D::makeFragmentShaderD3D(const ShaderImpl *impl)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(const FragmentShaderD3D*, impl));
-    return static_cast<const FragmentShaderD3D*>(impl);
-}
-
-bool FragmentShaderD3D::compile(const std::string &source)
-{
-    uncompile();
-
-    compileToHLSL(mFragmentCompiler, source);
-    parseVaryings(mFragmentCompiler);
-
-    std::sort(mVaryings.begin(), mVaryings.end(), compareVarying);
-
-    const std::string &hlsl = getTranslatedSource();
-    if (!hlsl.empty())
-    {
-        mActiveOutputVariables = *GetShaderVariables(ShGetOutputVariables(mFragmentCompiler));
-        return true;
-    }
-    return false;
 }
 
 }

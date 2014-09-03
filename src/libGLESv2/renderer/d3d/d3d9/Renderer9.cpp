@@ -2760,16 +2760,7 @@ RenderTarget *Renderer9::createRenderTarget(int width, int height, GLenum format
 
 ShaderImpl *Renderer9::createShader(GLenum type)
 {
-    switch (type)
-    {
-      case GL_VERTEX_SHADER:
-        return new VertexShaderD3D(this);
-      case GL_FRAGMENT_SHADER:
-        return new FragmentShaderD3D(this);
-      default:
-        UNREACHABLE();
-        return NULL;
-    }
+    return new ShaderD3D(type, this);
 }
 
 void Renderer9::releaseShaderCompiler()

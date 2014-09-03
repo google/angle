@@ -1615,8 +1615,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 
     mTransformFeedbackBufferMode = transformFeedbackBufferMode;
 
-    rx::VertexShaderD3D *vertexShaderD3D = rx::VertexShaderD3D::makeVertexShaderD3D(vertexShader->getImplementation());
-    rx::FragmentShaderD3D *fragmentShaderD3D = rx::FragmentShaderD3D::makeFragmentShaderD3D(fragmentShader->getImplementation());
+    rx::ShaderD3D *vertexShaderD3D = rx::ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
+    rx::ShaderD3D *fragmentShaderD3D = rx::ShaderD3D::makeShaderD3D(fragmentShader->getImplementation());
 
     mShaderVersion = vertexShaderD3D->getShaderVersion();
 
@@ -1718,7 +1718,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
 bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, const Shader *vertexShader)
 {
-    const rx::VertexShaderD3D *vertexShaderD3D = rx::VertexShaderD3D::makeVertexShaderD3D(vertexShader->getImplementation());
+    const rx::ShaderD3D *vertexShaderD3D = rx::ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
 
     unsigned int usedLocations = 0;
     const std::vector<sh::Attribute> &activeAttributes = vertexShader->getActiveAttributes();
@@ -1896,8 +1896,8 @@ bool ProgramBinary::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std
 
 bool ProgramBinary::linkUniforms(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader, const Caps &caps)
 {
-    const rx::VertexShaderD3D *vertexShaderD3D = rx::VertexShaderD3D::makeVertexShaderD3D(vertexShader.getImplementation());
-    const rx::FragmentShaderD3D *fragmentShaderD3D = rx::FragmentShaderD3D::makeFragmentShaderD3D(fragmentShader.getImplementation());
+    const rx::ShaderD3D *vertexShaderD3D = rx::ShaderD3D::makeShaderD3D(vertexShader.getImplementation());
+    const rx::ShaderD3D *fragmentShaderD3D = rx::ShaderD3D::makeShaderD3D(fragmentShader.getImplementation());
 
     const std::vector<sh::Uniform> &vertexUniforms = vertexShader.getUniforms();
     const std::vector<sh::Uniform> &fragmentUniforms = fragmentShader.getUniforms();

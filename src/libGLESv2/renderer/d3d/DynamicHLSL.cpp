@@ -207,8 +207,8 @@ static bool packVarying(PackedVarying *varying, const int maxVaryingVectors, Var
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
 // Returns the number of used varying registers, or -1 if unsuccesful
-int DynamicHLSL::packVaryings(InfoLog &infoLog, VaryingPacking packing, rx::FragmentShaderD3D *fragmentShader,
-                              rx::VertexShaderD3D *vertexShader, const std::vector<std::string>& transformFeedbackVaryings)
+int DynamicHLSL::packVaryings(InfoLog &infoLog, VaryingPacking packing, rx::ShaderD3D *fragmentShader,
+                              rx::ShaderD3D *vertexShader, const std::vector<std::string>& transformFeedbackVaryings)
 {
     // TODO (geofflang):  Use context's caps
     const int maxVaryingVectors = mRenderer->getRendererCaps().maxVaryingVectors;
@@ -278,7 +278,7 @@ int DynamicHLSL::packVaryings(InfoLog &infoLog, VaryingPacking packing, rx::Frag
     return registers;
 }
 
-std::string DynamicHLSL::generateVaryingHLSL(rx::VertexShaderD3D *shader) const
+std::string DynamicHLSL::generateVaryingHLSL(rx::ShaderD3D *shader) const
 {
     std::string varyingSemantic = getVaryingSemantic(shader->mUsesPointSize);
     std::string varyingHLSL;
@@ -607,7 +607,7 @@ void DynamicHLSL::storeBuiltinLinkedVaryings(const SemanticInfo &info,
     }
 }
 
-void DynamicHLSL::storeUserLinkedVaryings(const rx::VertexShaderD3D *vertexShader,
+void DynamicHLSL::storeUserLinkedVaryings(const rx::ShaderD3D *vertexShader,
                                           std::vector<LinkedVarying> *linkedVaryings) const
 {
     const std::string &varyingSemantic = getVaryingSemantic(vertexShader->mUsesPointSize);
@@ -630,7 +630,7 @@ void DynamicHLSL::storeUserLinkedVaryings(const rx::VertexShaderD3D *vertexShade
 
 bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const VaryingPacking packing,
                                          std::string& pixelHLSL, std::string& vertexHLSL,
-                                         rx::FragmentShaderD3D *fragmentShader, rx::VertexShaderD3D *vertexShader,
+                                         rx::ShaderD3D *fragmentShader, rx::ShaderD3D *vertexShader,
                                          const std::vector<std::string>& transformFeedbackVaryings,
                                          std::vector<LinkedVarying> *linkedVaryings,
                                          std::map<int, VariableLocation> *programOutputVars,
@@ -956,7 +956,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
     return true;
 }
 
-void DynamicHLSL::defineOutputVariables(rx::FragmentShaderD3D *fragmentShader, std::map<int, VariableLocation> *programOutputVars) const
+void DynamicHLSL::defineOutputVariables(rx::ShaderD3D *fragmentShader, std::map<int, VariableLocation> *programOutputVars) const
 {
     const std::vector<sh::Attribute> &shaderOutputVars = fragmentShader->getActiveOutputVariables();
 
@@ -982,14 +982,14 @@ void DynamicHLSL::defineOutputVariables(rx::FragmentShaderD3D *fragmentShader, s
     }
 }
 
-std::string DynamicHLSL::generateGeometryShaderHLSL(int registers, rx::FragmentShaderD3D *fragmentShader, rx::VertexShaderD3D *vertexShader) const
+std::string DynamicHLSL::generateGeometryShaderHLSL(int registers, rx::ShaderD3D *fragmentShader, rx::ShaderD3D *vertexShader) const
 {
     // for now we only handle point sprite emulation
     ASSERT(vertexShader->mUsesPointSize && mRenderer->getMajorShaderModel() >= 4);
     return generatePointSpriteHLSL(registers, fragmentShader, vertexShader);
 }
 
-std::string DynamicHLSL::generatePointSpriteHLSL(int registers, rx::FragmentShaderD3D *fragmentShader, rx::VertexShaderD3D *vertexShader) const
+std::string DynamicHLSL::generatePointSpriteHLSL(int registers, rx::ShaderD3D *fragmentShader, rx::ShaderD3D *vertexShader) const
 {
     ASSERT(registers >= 0);
     ASSERT(vertexShader->mUsesPointSize);
