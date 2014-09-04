@@ -92,35 +92,47 @@ void Image9::generateMipmap(Image9 *dest, Image9 *source)
     dest->markDirty();
 }
 
-void Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source)
+gl::Error Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source)
 {
     D3DLOCKED_RECT sourceLock = {0};
     D3DLOCKED_RECT destLock = {0};
 
-    source->LockRect(&sourceLock, NULL, 0);
-    dest->LockRect(&destLock, NULL, 0);
+    HRESULT result;
 
-    if (sourceLock.pBits && destLock.pBits)
+    result = source->LockRect(&sourceLock, NULL, 0);
+    if (FAILED(result))
     {
-        D3DSURFACE_DESC desc;
-        source->GetDesc(&desc);
-
-        const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
-        unsigned int rows = desc.Height / d3dFormatInfo.blockHeight;
-
-        unsigned int bytes = d3d9::ComputeBlockSize(desc.Format, desc.Width, d3dFormatInfo.blockHeight);
-        ASSERT(bytes <= static_cast<unsigned int>(sourceLock.Pitch) &&
-               bytes <= static_cast<unsigned int>(destLock.Pitch));
-
-        for(unsigned int i = 0; i < rows; i++)
-        {
-            memcpy((char*)destLock.pBits + destLock.Pitch * i, (char*)sourceLock.pBits + sourceLock.Pitch * i, bytes);
-        }
-
-        source->UnlockRect();
-        dest->UnlockRect();
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock source surface for copy, result: 0x%X.", result);
     }
-    else UNREACHABLE();
+
+    result = dest->LockRect(&destLock, NULL, 0);
+    if (FAILED(result))
+    {
+        source->UnlockRect();
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock source surface for copy, result: 0x%X.", result);
+    }
+
+    ASSERT(sourceLock.pBits && destLock.pBits);
+
+    D3DSURFACE_DESC desc;
+    source->GetDesc(&desc);
+
+    const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
+    unsigned int rows = desc.Height / d3dFormatInfo.blockHeight;
+
+    unsigned int bytes = d3d9::ComputeBlockSize(desc.Format, desc.Width, d3dFormatInfo.blockHeight);
+    ASSERT(bytes <= static_cast<unsigned int>(sourceLock.Pitch) &&
+           bytes <= static_cast<unsigned int>(destLock.Pitch));
+
+    for(unsigned int i = 0; i < rows; i++)
+    {
+        memcpy((char*)destLock.pBits + destLock.Pitch * i, (char*)sourceLock.pBits + sourceLock.Pitch * i, bytes);
+    }
+
+    source->UnlockRect();
+    dest->UnlockRect();
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 bool Image9::redefine(rx::Renderer *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
@@ -270,19 +282,19 @@ IDirect3DSurface9 *Image9::getSurface()
     return mSurface;
 }
 
-void Image9::setManagedSurface2D(TextureStorage *storage, int level)
+gl::Error Image9::setManagedSurface2D(TextureStorage *storage, int level)
 {
     TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage);
-    setManagedSurface(storage9->getSurfaceLevel(level, false));
+    return setManagedSurface(storage9->getSurfaceLevel(level, false));
 }
 
-void Image9::setManagedSurfaceCube(TextureStorage *storage, int face, int level)
+gl::Error Image9::setManagedSurfaceCube(TextureStorage *storage, int face, int level)
 {
     TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage);
-    setManagedSurface(storage9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false));
+    return setManagedSurface(storage9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false));
 }
 
-void Image9::setManagedSurface(IDirect3DSurface9 *surface)
+gl::Error Image9::setManagedSurface(IDirect3DSurface9 *surface)
 {
     D3DSURFACE_DESC desc;
     surface->GetDesc(&desc);
@@ -292,13 +304,19 @@ void Image9::setManagedSurface(IDirect3DSurface9 *surface)
     {
         if (mSurface)
         {
-            copyLockableSurfaces(surface, mSurface);
+            gl::Error error = copyLockableSurfaces(surface, mSurface);
             SafeRelease(mSurface);
+            if (error.isError())
+            {
+                return error;
+            }
         }
 
         mSurface = surface;
         mD3DPool = desc.Pool;
     }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error Image9::copyToStorage2D(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
@@ -466,7 +484,7 @@ gl::Error Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset
 }
 
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
-void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, RenderTarget *source)
+gl::Error Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, RenderTarget *source)
 {
     ASSERT(source);
 
@@ -483,8 +501,7 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectang
 
     if (!surface)
     {
-        ERR("Failed to retrieve the render target.");
-        return gl::error(GL_OUT_OF_MEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to retrieve the internal render target.");
     }
 
     IDirect3DDevice9 *device = mRenderer->getDevice();
@@ -497,19 +514,17 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectang
 
     if (FAILED(result))
     {
-        ERR("Could not create matching destination surface.");
         SafeRelease(surface);
-        return gl::error(GL_OUT_OF_MEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "Could not create matching destination surface, result: 0x%X.", result);
     }
 
     result = device->GetRenderTargetData(surface, renderTargetData);
 
     if (FAILED(result))
     {
-        ERR("GetRenderTargetData unexpectedly failed.");
         SafeRelease(renderTargetData);
         SafeRelease(surface);
-        return gl::error(GL_OUT_OF_MEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "GetRenderTargetData unexpectedly failed, result: 0x%X.", result);
     }
 
     int width = sourceArea.width;
@@ -523,10 +538,9 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectang
 
     if (FAILED(result))
     {
-        ERR("Failed to lock the source surface (rectangle might be invalid).");
         SafeRelease(renderTargetData);
         SafeRelease(surface);
-        return gl::error(GL_OUT_OF_MEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock the source surface (rectangle might be invalid), result: 0x%X.", result);
     }
 
     D3DLOCKED_RECT destLock = {0};
@@ -534,178 +548,167 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectang
 
     if (FAILED(result))
     {
-        ERR("Failed to lock the destination surface (rectangle might be invalid).");
         renderTargetData->UnlockRect();
         SafeRelease(renderTargetData);
         SafeRelease(surface);
-        return gl::error(GL_OUT_OF_MEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock the destination surface (rectangle might be invalid), result: 0x%X.", result);
     }
 
-    if (destLock.pBits && sourceLock.pBits)
-    {
-        unsigned char *source = (unsigned char*)sourceLock.pBits;
-        unsigned char *dest = (unsigned char*)destLock.pBits;
+    ASSERT(destLock.pBits && sourceLock.pBits);
 
-        switch (description.Format)
+    unsigned char *sourcePixels = (unsigned char*)sourceLock.pBits;
+    unsigned char *destPixels = (unsigned char*)destLock.pBits;
+
+    switch (description.Format)
+    {
+      case D3DFMT_X8R8G8B8:
+      case D3DFMT_A8R8G8B8:
+        switch (getD3DFormat())
         {
           case D3DFMT_X8R8G8B8:
           case D3DFMT_A8R8G8B8:
-            switch(getD3DFormat())
+            for (int y = 0; y < height; y++)
             {
-              case D3DFMT_X8R8G8B8:
-              case D3DFMT_A8R8G8B8:
-                for (int y = 0; y < height; y++)
-                {
-                    memcpy(dest, source, 4 * width);
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              case D3DFMT_L8:
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        dest[x] = source[x * 4 + 2];
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              case D3DFMT_A8L8:
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        dest[x * 2 + 0] = source[x * 4 + 2];
-                        dest[x * 2 + 1] = source[x * 4 + 3];
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              default:
-                UNREACHABLE();
+                memcpy(destPixels, sourcePixels, 4 * width);
+                sourcePixels += sourceLock.Pitch;
+                destPixels += destLock.Pitch;
             }
             break;
-          case D3DFMT_R5G6B5:
-            switch(getD3DFormat())
+          case D3DFMT_L8:
+            for (int y = 0; y < height; y++)
             {
-              case D3DFMT_X8R8G8B8:
-                for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
                 {
-                    for (int x = 0; x < width; x++)
-                    {
-                        unsigned short rgb = ((unsigned short*)source)[x];
-                        unsigned char red = (rgb & 0xF800) >> 8;
-                        unsigned char green = (rgb & 0x07E0) >> 3;
-                        unsigned char blue = (rgb & 0x001F) << 3;
-                        dest[x + 0] = blue | (blue >> 5);
-                        dest[x + 1] = green | (green >> 6);
-                        dest[x + 2] = red | (red >> 5);
-                        dest[x + 3] = 0xFF;
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
+                    destPixels[x] = sourcePixels[x * 4 + 2];
                 }
-                break;
-              case D3DFMT_L8:
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        unsigned char red = source[x * 2 + 1] & 0xF8;
-                        dest[x] = red | (red >> 5);
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              default:
-                UNREACHABLE();
+                sourcePixels += sourceLock.Pitch;
+                destPixels += destLock.Pitch;
             }
             break;
-          case D3DFMT_A1R5G5B5:
-            switch (getD3DFormat())
+          case D3DFMT_A8L8:
+            for (int y = 0; y < height; y++)
             {
-              case D3DFMT_X8R8G8B8:
-                for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
                 {
-                    for (int x = 0; x < width; x++)
-                    {
-                        unsigned short argb = ((unsigned short*)source)[x];
-                        unsigned char red = (argb & 0x7C00) >> 7;
-                        unsigned char green = (argb & 0x03E0) >> 2;
-                        unsigned char blue = (argb & 0x001F) << 3;
-                        dest[x + 0] = blue | (blue >> 5);
-                        dest[x + 1] = green | (green >> 5);
-                        dest[x + 2] = red | (red >> 5);
-                        dest[x + 3] = 0xFF;
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
+                    destPixels[x * 2 + 0] = sourcePixels[x * 4 + 2];
+                    destPixels[x * 2 + 1] = sourcePixels[x * 4 + 3];
                 }
-                break;
-              case D3DFMT_A8R8G8B8:
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        unsigned short argb = ((unsigned short*)source)[x];
-                        unsigned char red = (argb & 0x7C00) >> 7;
-                        unsigned char green = (argb & 0x03E0) >> 2;
-                        unsigned char blue = (argb & 0x001F) << 3;
-                        unsigned char alpha = (signed short)argb >> 15;
-                        dest[x + 0] = blue | (blue >> 5);
-                        dest[x + 1] = green | (green >> 5);
-                        dest[x + 2] = red | (red >> 5);
-                        dest[x + 3] = alpha;
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              case D3DFMT_L8:
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        unsigned char red = source[x * 2 + 1] & 0x7C;
-                        dest[x] = (red << 1) | (red >> 4);
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              case D3DFMT_A8L8:
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        unsigned char red = source[x * 2 + 1] & 0x7C;
-                        dest[x * 2 + 0] = (red << 1) | (red >> 4);
-                        dest[x * 2 + 1] = (signed char)source[x * 2 + 1] >> 7;
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              default:
-                UNREACHABLE();
+                sourcePixels += sourceLock.Pitch;
+                destPixels += destLock.Pitch;
             }
             break;
           default:
             UNREACHABLE();
         }
+        break;
+      case D3DFMT_R5G6B5:
+        switch (getD3DFormat())
+        {
+          case D3DFMT_X8R8G8B8:
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    unsigned short rgb = ((unsigned short*)sourcePixels)[x];
+                    unsigned char red = (rgb & 0xF800) >> 8;
+                    unsigned char green = (rgb & 0x07E0) >> 3;
+                    unsigned char blue = (rgb & 0x001F) << 3;
+                    destPixels[x + 0] = blue | (blue >> 5);
+                    destPixels[x + 1] = green | (green >> 6);
+                    destPixels[x + 2] = red | (red >> 5);
+                    destPixels[x + 3] = 0xFF;
+                }
+                sourcePixels += sourceLock.Pitch;
+                destPixels += destLock.Pitch;
+            }
+            break;
+          case D3DFMT_L8:
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    unsigned char red = sourcePixels[x * 2 + 1] & 0xF8;
+                    destPixels[x] = red | (red >> 5);
+                }
+                sourcePixels += sourceLock.Pitch;
+                destPixels += destLock.Pitch;
+            }
+            break;
+          default:
+            UNREACHABLE();
+        }
+        break;
+      case D3DFMT_A1R5G5B5:
+        switch (getD3DFormat())
+        {
+          case D3DFMT_X8R8G8B8:
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    unsigned short argb = ((unsigned short*)sourcePixels)[x];
+                    unsigned char red = (argb & 0x7C00) >> 7;
+                    unsigned char green = (argb & 0x03E0) >> 2;
+                    unsigned char blue = (argb & 0x001F) << 3;
+                    destPixels[x + 0] = blue | (blue >> 5);
+                    destPixels[x + 1] = green | (green >> 5);
+                    destPixels[x + 2] = red | (red >> 5);
+                    destPixels[x + 3] = 0xFF;
+                }
+                sourcePixels += sourceLock.Pitch;
+                destPixels += destLock.Pitch;
+            }
+            break;
+          case D3DFMT_A8R8G8B8:
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    unsigned short argb = ((unsigned short*)sourcePixels)[x];
+                    unsigned char red = (argb & 0x7C00) >> 7;
+                    unsigned char green = (argb & 0x03E0) >> 2;
+                    unsigned char blue = (argb & 0x001F) << 3;
+                    unsigned char alpha = (signed short)argb >> 15;
+                    destPixels[x + 0] = blue | (blue >> 5);
+                    destPixels[x + 1] = green | (green >> 5);
+                    destPixels[x + 2] = red | (red >> 5);
+                    destPixels[x + 3] = alpha;
+                }
+                sourcePixels += sourceLock.Pitch;
+                destPixels += destLock.Pitch;
+            }
+            break;
+          case D3DFMT_L8:
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    unsigned char red = sourcePixels[x * 2 + 1] & 0x7C;
+                    destPixels[x] = (red << 1) | (red >> 4);
+                }
+                sourcePixels += sourceLock.Pitch;
+                destPixels += destLock.Pitch;
+            }
+            break;
+          case D3DFMT_A8L8:
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    unsigned char red = sourcePixels[x * 2 + 1] & 0x7C;
+                    destPixels[x * 2 + 0] = (red << 1) | (red >> 4);
+                    destPixels[x * 2 + 1] = (signed char)sourcePixels[x * 2 + 1] >> 7;
+                }
+                sourcePixels += sourceLock.Pitch;
+                destPixels += destLock.Pitch;
+            }
+            break;
+          default:
+            UNREACHABLE();
+        }
+        break;
+      default:
+        UNREACHABLE();
     }
 
     unlock();
@@ -715,12 +718,14 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectang
     SafeRelease(surface);
 
     mDirty = true;
+    return gl::Error(GL_NO_ERROR);
 }
 
-void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &area, const gl::ImageIndex &srcIndex, TextureStorage *srcStorage)
+gl::Error Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &area, const gl::ImageIndex &srcIndex, TextureStorage *srcStorage)
 {
     // Currently unreachable, due to only being used in a D3D11-only workaround
     UNIMPLEMENTED();
+    return gl::Error(GL_INVALID_OPERATION);
 }
 
 }

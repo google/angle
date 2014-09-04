@@ -899,7 +899,12 @@ void GL_APIENTRY glCopyTexImage2D(GLenum target, GLint level, GLenum internalfor
           case GL_TEXTURE_2D:
             {
                 gl::Texture2D *texture = context->getTexture2D();
-                texture->copyImage(level, internalformat, x, y, width, height, framebuffer);
+                gl::Error error = texture->copyImage(level, internalformat, x, y, width, height, framebuffer);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
@@ -911,7 +916,12 @@ void GL_APIENTRY glCopyTexImage2D(GLenum target, GLint level, GLenum internalfor
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                texture->copyImage(target, level, internalformat, x, y, width, height, framebuffer);
+                gl::Error error = texture->copyImage(target, level, internalformat, x, y, width, height, framebuffer);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
@@ -952,7 +962,12 @@ void GL_APIENTRY glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, 
           case GL_TEXTURE_2D:
             {
                 gl::Texture2D *texture = context->getTexture2D();
-                texture->copySubImage(target, level, xoffset, yoffset, 0, x, y, width, height, framebuffer);
+                gl::Error error = texture->copySubImage(target, level, xoffset, yoffset, 0, x, y, width, height, framebuffer);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
@@ -964,7 +979,12 @@ void GL_APIENTRY glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, 
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                texture->copySubImage(target, level, xoffset, yoffset, 0, x, y, width, height, framebuffer);
+                gl::Error error = texture->copySubImage(target, level, xoffset, yoffset, 0, x, y, width, height, framebuffer);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
@@ -5194,7 +5214,12 @@ void GL_APIENTRY glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, 
             return;
         }
 
-        texture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, framebuffer);
+        gl::Error error = texture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, framebuffer);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 

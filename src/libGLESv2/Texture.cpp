@@ -148,9 +148,10 @@ void Texture::generateMipmaps()
     getImplementation()->generateMipmaps();
 }
 
-void Texture::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
+Error Texture::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
+                           GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    getImplementation()->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, source);
+    return mTexture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, source);
 }
 
 unsigned int Texture::getTextureSerial()
@@ -273,11 +274,12 @@ Error Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, G
     return mTexture->subImageCompressed(GL_TEXTURE_2D, level, xoffset, yoffset, 0, width, height, 1, format, imageSize, pixels);
 }
 
-void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
+Error Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height,
+                           Framebuffer *source)
 {
     releaseTexImage();
 
-    mTexture->copyImage(GL_TEXTURE_2D, level, format, x, y, width, height, source);
+    return mTexture->copyImage(GL_TEXTURE_2D, level, format, x, y, width, height, source);
 }
 
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
@@ -529,9 +531,10 @@ bool TextureCubeMap::isDepth(GLenum target, GLint level) const
     return GetInternalFormatInfo(getInternalFormat(target, level)).depthBits > 0;
 }
 
-void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
+Error TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y,
+                                GLsizei width, GLsizei height, Framebuffer *source)
 {
-    mTexture->copyImage(target, level, format, x, y, width, height, source);
+    return mTexture->copyImage(target, level, format, x, y, width, height, source);
 }
 
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)

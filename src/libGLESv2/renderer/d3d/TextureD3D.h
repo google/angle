@@ -78,10 +78,10 @@ class TextureD3D : public TextureImpl
     virtual void initMipmapsImages() = 0;
     bool isBaseImageZeroSize() const;
 
-    virtual bool ensureRenderTarget();
+    virtual gl::Error ensureRenderTarget();
 
-    virtual TextureStorage *createCompleteStorage(bool renderTarget) const = 0;
-    virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage) = 0;
+    virtual gl::Error createCompleteStorage(bool renderTarget, TextureStorage **outTexStorage) const = 0;
+    virtual gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage) = 0;
     virtual gl::Error commitRegion(const gl::ImageIndex &index, const gl::Box &region) = 0;
 
     Renderer *mRenderer;
@@ -96,9 +96,9 @@ class TextureD3D : public TextureImpl
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D);
 
-    virtual void initializeStorage(bool renderTarget) = 0;
+    virtual gl::Error initializeStorage(bool renderTarget) = 0;
 
-    virtual void updateStorage() = 0;
+    virtual gl::Error updateStorage() = 0;
 };
 
 class TextureD3D_2D : public TextureD3D
@@ -121,8 +121,8 @@ class TextureD3D_2D : public TextureD3D
     virtual gl::Error setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
     virtual gl::Error subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
     virtual gl::Error subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
-    virtual void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual gl::Error copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual gl::Error copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
     virtual void bindTexImage(egl::Surface *surface);
@@ -137,18 +137,18 @@ class TextureD3D_2D : public TextureD3D
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2D);
 
-    virtual void initializeStorage(bool renderTarget);
-    virtual TextureStorage *createCompleteStorage(bool renderTarget) const;
-    virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
+    virtual gl::Error initializeStorage(bool renderTarget);
+    gl::Error createCompleteStorage(bool renderTarget, TextureStorage **outTexStorage) const;
+    gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
     gl::Error commitRegion(const gl::ImageIndex &index, const gl::Box &region);
 
-    virtual void updateStorage();
+    virtual gl::Error updateStorage();
     virtual void initMipmapsImages();
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
 
-    void updateStorageLevel(int level);
+    gl::Error updateStorageLevel(int level);
 
     void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height);
 
@@ -176,8 +176,8 @@ class TextureD3D_Cube : public TextureD3D
     virtual gl::Error setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
     virtual gl::Error subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
     virtual gl::Error subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
-    virtual void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual gl::Error copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual gl::Error copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
     virtual void bindTexImage(egl::Surface *surface);
@@ -192,18 +192,18 @@ class TextureD3D_Cube : public TextureD3D
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_Cube);
 
-    virtual void initializeStorage(bool renderTarget);
-    virtual TextureStorage *createCompleteStorage(bool renderTarget) const;
-    virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
+    virtual gl::Error initializeStorage(bool renderTarget);
+    gl::Error createCompleteStorage(bool renderTarget, TextureStorage **outTexStorage) const;
+    gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
     virtual gl::Error commitRegion(const gl::ImageIndex &index, const gl::Box &region);
 
-    virtual void updateStorage();
+    virtual gl::Error updateStorage();
     virtual void initMipmapsImages();
 
     bool isValidFaceLevel(int faceIndex, int level) const;
     bool isFaceLevelComplete(int faceIndex, int level) const;
     bool isCubeComplete() const;
-    void updateStorageFaceLevel(int faceIndex, int level);
+    gl::Error updateStorageFaceLevel(int faceIndex, int level);
 
     void redefineImage(int faceIndex, GLint level, GLenum internalformat, GLsizei width, GLsizei height);
 
@@ -230,8 +230,8 @@ class TextureD3D_3D : public TextureD3D
     virtual gl::Error setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
     virtual gl::Error subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
     virtual gl::Error subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
-    virtual void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual gl::Error copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual gl::Error copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
     virtual void bindTexImage(egl::Surface *surface);
@@ -246,17 +246,17 @@ class TextureD3D_3D : public TextureD3D
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_3D);
 
-    virtual void initializeStorage(bool renderTarget);
-    virtual TextureStorage *createCompleteStorage(bool renderTarget) const;
-    virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
+    virtual gl::Error initializeStorage(bool renderTarget);
+    gl::Error createCompleteStorage(bool renderTarget, TextureStorage **outStorage) const;
+    gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
     virtual gl::Error commitRegion(const gl::ImageIndex &index, const gl::Box &region);
 
-    virtual void updateStorage();
+    virtual gl::Error updateStorage();
     virtual void initMipmapsImages();
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
-    void updateStorageLevel(int level);
+    gl::Error updateStorageLevel(int level);
 
     void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
@@ -282,8 +282,8 @@ class TextureD3D_2DArray : public TextureD3D
     virtual gl::Error setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
     virtual gl::Error subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
     virtual gl::Error subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
-    virtual void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual gl::Error copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
+    virtual gl::Error copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
     virtual void storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
 
     virtual void bindTexImage(egl::Surface *surface);
@@ -298,17 +298,17 @@ class TextureD3D_2DArray : public TextureD3D
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2DArray);
 
-    virtual void initializeStorage(bool renderTarget);
-    virtual TextureStorage *createCompleteStorage(bool renderTarget) const;
-    virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
+    virtual gl::Error initializeStorage(bool renderTarget);
+    gl::Error createCompleteStorage(bool renderTarget, TextureStorage **outStorage) const;
+    gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
     virtual gl::Error commitRegion(const gl::ImageIndex &index, const gl::Box &region);
 
-    virtual void updateStorage();
+    virtual gl::Error updateStorage();
     virtual void initMipmapsImages();
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
-    void updateStorageLevel(int level);
+    gl::Error updateStorageLevel(int level);
 
     void deleteImages();
     void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
