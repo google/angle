@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7071bbc6_c23238dc",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-04T15:01:54Z",
+      "side": 1,
+      "message": "could also make libGLESv2_static depend directly on commit_id. Am also looking in to if it\u0027s a gyp bug that the hard_deps aren\u0027t inherited.",
+      "range": {
+        "startLine": 313,
+        "startChar": 20,
+        "endLine": 313,
+        "endChar": 41
+      },
+      "revId": "cd173401e8d39fc146a499b77229678f0b9a59ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
