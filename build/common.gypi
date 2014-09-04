@@ -151,6 +151,7 @@
                     },
                     'VCLibrarianTool':
                     {
+                        'TargetMachine': '1',
                         'AdditionalLibraryDirectories':
                         [
                             '<(windows_sdk_path)/Lib/win8/um/x86',
