@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7071bbc6_e2e5fcb1",
+        "filename": "projects/samples/multi_texture.vcxproj",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-04T16:16:02Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 82,
+        "startChar": 21,
+        "endLine": 82,
+        "endChar": 31
+      },
+      "revId": "7e73b280d5524b3edf75166882cf6696050f509a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "306bc3de_bd6727ee",
+        "filename": "projects/samples/multi_texture.vcxproj",
+        "patchSetId": 3
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-04T16:16:02Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 108,
+        "startChar": 5,
+        "endLine": 108,
+        "endChar": 8
+      },
+      "revId": "7e73b280d5524b3edf75166882cf6696050f509a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "306bc3de_5dc60b87",
+        "filename": "projects/samples/multi_texture.vcxproj",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-04T16:16:02Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 120,
+        "startChar": 21,
+        "endLine": 120,
+        "endChar": 31
+      },
+      "revId": "7e73b280d5524b3edf75166882cf6696050f509a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
