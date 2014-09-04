@@ -46,6 +46,30 @@
       "revId": "cd173401e8d39fc146a499b77229678f0b9a59ea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7071bbc6_22fc544b",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-04T16:13:58Z",
+      "side": 1,
+      "message": "Yeah, I did that (look at the other files in this patch).\n\nIt seems there\u0027s an issue with gyp where hard_deps aren\u0027t passed on from libANGLE to libGLESv2_static. Then my above comment will make sense. :)",
+      "parentUuid": "50667713_9eefbd8e",
+      "range": {
+        "startLine": 313,
+        "startChar": 20,
+        "endLine": 313,
+        "endChar": 41
+      },
+      "revId": "cd173401e8d39fc146a499b77229678f0b9a59ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
