@@ -95,6 +95,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libGLESv2", "..\src\libGLES
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libGLESv2_static", "..\src\libGLESv2_static.vcxproj", "{F8ABD31A-EC2F-A211-D514-076C763B69F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3B7F5656-177F-52EE-26B3-D6A75368D0A9} = {3B7F5656-177F-52EE-26B3-D6A75368D0A9}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mip_map_2d", "..\samples\mip_map_2d.vcxproj", "{A6E86EB3-561F-9FAB-670F-EF23556344BE}"
 	ProjectSection(ProjectDependencies) = postProject

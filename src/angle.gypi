@@ -26,6 +26,7 @@
         {
             'target_name': 'copy_scripts',
             'type': 'none',
+            'hard_dependency': 1,
             'copies':
             [
                 {
@@ -46,6 +47,7 @@
                     'type': 'none',
                     'includes': [ '../build/common_defines.gypi', ],
                     'dependencies': [ 'copy_scripts', ],
+                    'hard_dependency': 1,
                     'actions':
                     [
                         {
@@ -77,6 +79,7 @@
                 {
                     'target_name': 'commit_id',
                     'type': 'none',
+                    'hard_dependency': 1,
                     'copies':
                     [
                         {

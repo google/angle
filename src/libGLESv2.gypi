@@ -438,7 +438,9 @@
                 {
                     'target_name': 'libGLESv2_static',
                     'type': 'static_library',
-                    'dependencies': [ 'libANGLE' ],
+                    # make sure we depend on commit_id as a hard dependency, otherwise
+                    # we will try to build the static_lib in parallel
+                    'dependencies': [ 'libANGLE', 'commit_id' ],
                     'includes': [ '../build/common_defines.gypi', ],
                     'sources':
                     [

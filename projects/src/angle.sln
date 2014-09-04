@@ -33,6 +33,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libGLESv2", "libGLESv2.vcxp
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libGLESv2_static", "libGLESv2_static.vcxproj", "{F8ABD31A-EC2F-A211-D514-076C763B69F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3B7F5656-177F-52EE-26B3-D6A75368D0A9} = {3B7F5656-177F-52EE-26B3-D6A75368D0A9}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "preprocessor", "preprocessor.vcxproj", "{C7BAF548-697D-2DCB-9DF3-9D1506A7B444}"
 EndProject
