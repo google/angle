@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "306bc3de_66ea60c6",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-05T14:45:40Z",
+      "side": 1,
+      "message": "it is actually in a namespace {} block. i kinda like the name as it matches with the above function GetInputLayout and the Shader completely determines it",
+      "parentUuid": "306bc3de_46271ca3",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 112
+      },
+      "revId": "f38bf7ead7d51723babb4b85ba0d0c2d0909c67b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10c5df23_91055e7d",
         "filename": "src/libGLESv2/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 11
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "306bc3de_c64b2c3c",
+        "filename": "src/libGLESv2/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-05T14:45:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10c5df23_91055e7d",
+      "range": {
+        "startLine": 415,
+        "startChar": 0,
+        "endLine": 415,
+        "endChar": 136
+      },
+      "revId": "f38bf7ead7d51723babb4b85ba0d0c2d0909c67b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10c5df23_f1f86226",
         "filename": "src/libGLESv2/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 11
@@ -59,6 +107,30 @@
       "writtenOn": "2014-09-05T14:34:19Z",
       "side": 1,
       "message": "nit: extra space",
+      "range": {
+        "startLine": 450,
+        "startChar": 31,
+        "endLine": 450,
+        "endChar": 32
+      },
+      "revId": "f38bf7ead7d51723babb4b85ba0d0c2d0909c67b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10c5df23_110bae8b",
+        "filename": "src/libGLESv2/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-05T14:45:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10c5df23_f1f86226",
       "range": {
         "startLine": 450,
         "startChar": 31,
