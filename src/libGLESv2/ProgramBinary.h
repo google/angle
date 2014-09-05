@@ -296,7 +296,7 @@ class ProgramBinary : public RefCountObject
     std::string mPixelHLSL;
     rx::D3DWorkaroundType mPixelWorkarounds;
     bool mUsesFragDepth;
-    std::vector<rx::PixelShaderOuputVariable> mPixelShaderKey;
+    std::vector<rx::PixelShaderOutputVariable> mPixelShaderKey;
     std::vector<PixelExecutable *> mPixelExecutables;
 
     rx::ShaderExecutable *mGeometryExecutable;

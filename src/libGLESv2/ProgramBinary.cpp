@@ -108,7 +108,7 @@ void GetDefaultInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAtt
     }
 }
 
-std::vector<GLenum> GetDefaultOutputLayoutFromShader(const std::vector<rx::PixelShaderOuputVariable> &shaderOutputVars)
+std::vector<GLenum> GetDefaultOutputLayoutFromShader(const std::vector<rx::PixelShaderOutputVariable> &shaderOutputVars)
 {
     std::vector<GLenum> defaultPixelOutput(1);
 
@@ -1537,7 +1537,7 @@ bool ProgramBinary::save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GL
     stream.writeInt(mPixelShaderKey.size());
     for (size_t pixelShaderKeyIndex = 0; pixelShaderKeyIndex < mPixelShaderKey.size(); pixelShaderKeyIndex++)
     {
-        const rx::PixelShaderOuputVariable &variable = mPixelShaderKey[pixelShaderKeyIndex];
+        const rx::PixelShaderOutputVariable &variable = mPixelShaderKey[pixelShaderKeyIndex];
         stream.writeInt(variable.type);
         stream.writeString(variable.name);
         stream.writeString(variable.source);

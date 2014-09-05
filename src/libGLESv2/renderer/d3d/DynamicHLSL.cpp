@@ -70,7 +70,7 @@ std::string HLSLTypeString(GLenum type)
     return HLSLComponentTypeString(gl::VariableComponentType(type), gl::VariableComponentCount(type));
 }
 
-const rx::PixelShaderOuputVariable &GetOutputAtLocation(const std::vector<rx::PixelShaderOuputVariable> &outputVariables,
+const rx::PixelShaderOutputVariable &GetOutputAtLocation(const std::vector<rx::PixelShaderOutputVariable> &outputVariables,
                                                         unsigned int location)
 {
     for (size_t variableIndex = 0; variableIndex < outputVariables.size(); ++variableIndex)
@@ -427,7 +427,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
     return vertexHLSL;
 }
 
-std::string DynamicHLSL::generatePixelShaderForOutputSignature(const std::string &sourceShader, const std::vector<PixelShaderOuputVariable> &outputVariables,
+std::string DynamicHLSL::generatePixelShaderForOutputSignature(const std::string &sourceShader, const std::vector<PixelShaderOutputVariable> &outputVariables,
                                                                bool usesFragDepth, const std::vector<GLenum> &outputLayout) const
 {
     const int shaderModel = mRenderer->getMajorShaderModel();
@@ -445,7 +445,7 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(const std::string
         {
             unsigned int location = (binding - GL_COLOR_ATTACHMENT0);
 
-            const PixelShaderOuputVariable &outputVariable = GetOutputAtLocation(outputVariables, location);
+            const PixelShaderOutputVariable &outputVariable = GetOutputAtLocation(outputVariables, location);
 
             declarationHLSL += "    " + HLSLTypeString(outputVariable.type) + " " + outputVariable.name +
                                " : " + targetSemantic + Str(layoutIndex) + ";\n";
@@ -662,7 +662,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
                                          const std::vector<std::string>& transformFeedbackVaryings,
                                          std::vector<LinkedVarying> *linkedVaryings,
                                          std::map<int, VariableLocation> *programOutputVars,
-                                         std::vector<PixelShaderOuputVariable> *outPixelShaderKey,
+                                         std::vector<PixelShaderOutputVariable> *outPixelShaderKey,
                                          bool *outUsesFragDepth) const
 {
     if (pixelHLSL.empty() || vertexHLSL.empty())
@@ -830,7 +830,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
     {
         for (unsigned int renderTargetIndex = 0; renderTargetIndex < numRenderTargets; renderTargetIndex++)
         {
-            PixelShaderOuputVariable outputKeyVariable;
+            PixelShaderOutputVariable outputKeyVariable;
             outputKeyVariable.type = GL_FLOAT_VEC4;
             outputKeyVariable.name = "gl_Color" + Str(renderTargetIndex);
             outputKeyVariable.source = broadcast ? "gl_Color[0]" : "gl_Color[" + Str(renderTargetIndex) + "]";
@@ -855,7 +855,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
 
             ASSERT(outputVariable.staticUse);
 
-            PixelShaderOuputVariable outputKeyVariable;
+            PixelShaderOutputVariable outputKeyVariable;
             outputKeyVariable.type = outputVariable.type;
             outputKeyVariable.name = variableName + elementString;
             outputKeyVariable.source = variableName + ArrayString(outputLocation.element);
