@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "10c5df23_f1aaa206",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-05T14:55:08Z",
+      "side": 1,
+      "message": "Ah, I see the namespace now.\n\nI think they should match too.. maybe the above should be changed too then since they are generating default layouts but the names don\u0027t indicate that.",
+      "parentUuid": "306bc3de_66ea60c6",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 112
+      },
+      "revId": "f38bf7ead7d51723babb4b85ba0d0c2d0909c67b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10c5df23_91055e7d",
         "filename": "src/libGLESv2/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 11
