@@ -22,6 +22,30 @@
       "revId": "29902e4a9f12d840f229a657209e5f8790297425",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10c5df23_772782d5",
+        "filename": "src/libGLESv2/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-05T21:16:25Z",
+      "side": 1,
+      "message": "I\u0027m on board with this, too.",
+      "parentUuid": "f374d57c_5e3809e5",
+      "range": {
+        "startLine": 113,
+        "startChar": 16,
+        "endLine": 113,
+        "endChar": 43
+      },
+      "revId": "29902e4a9f12d840f229a657209e5f8790297425",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
