@@ -110,15 +110,7 @@ void GetDefaultInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAtt
 
 std::vector<GLenum> GetDefaultOutputLayoutFromShader(const std::vector<rx::PixelShaderOuputVariable> &shaderOutputVars)
 {
-#if (ANGLE_MRT_PERF_WORKAROUND == ANGLE_WORKAROUND_ENABLED)
     std::vector<GLenum> defaultPixelOutput(1);
-#else
-    std::vector<GLenum> defaultPixelOutput(IMPLEMENTATION_MAX_DRAW_BUFFERS);
-#endif
-    for (size_t i = 0; i < defaultPixelOutput.size(); i++)
-    {
-        defaultPixelOutput[i] = GL_NONE;
-    }
 
     ASSERT(!shaderOutputVars.empty());
     defaultPixelOutput[0] = GL_COLOR_ATTACHMENT0 + shaderOutputVars[0].outputIndex;
@@ -279,9 +271,7 @@ rx::ShaderExecutable *ProgramBinary::getPixelExecutableForOutputLayout(const std
 {
     for (size_t executableIndex = 0; executableIndex < mPixelExecutables.size(); executableIndex++)
     {
-#if (ANGLE_MRT_PERF_WORKAROUND == ANGLE_WORKAROUND_ENABLED)
         if (mPixelExecutables[executableIndex]->matchesSignature(outputSignature))
-#endif
         {
             return mPixelExecutables[executableIndex]->shaderExecutable();
         }
