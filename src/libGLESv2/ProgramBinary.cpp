@@ -10,6 +10,7 @@
 #include "libGLESv2/BinaryStream.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/renderer/ShaderExecutable.h"
 
@@ -235,17 +236,21 @@ unsigned int ProgramBinary::issueSerial()
 
 rx::ShaderExecutable *ProgramBinary::getPixelExecutableForFramebuffer(const Framebuffer *fbo)
 {
-    std::vector<GLenum> outputs(IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    for (size_t outputIndex = 0; outputIndex < IMPLEMENTATION_MAX_DRAW_BUFFERS; outputIndex++)
+    std::vector<GLenum> outputs;
+
+    const gl::ColorbufferInfo &colorbuffers = fbo->getColorbuffersForRender();
+
+    for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
     {
-        if (fbo->getColorbuffer(outputIndex) != NULL)
+        const gl::FramebufferAttachment *colorbuffer = colorbuffers[colorAttachment];
+
+        if (colorbuffer)
         {
-            // Always output floats for now
-            outputs[outputIndex] = GL_FLOAT;
+            outputs.push_back(colorbuffer->getBinding() == GL_BACK ? GL_COLOR_ATTACHMENT0 : colorbuffer->getBinding());
         }
         else
         {
-            outputs[outputIndex] = GL_NONE;
+            outputs.push_back(GL_NONE);
         }
     }
 
@@ -1702,7 +1707,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         std::vector<GLenum> defaultPixelOutput(IMPLEMENTATION_MAX_DRAW_BUFFERS);
         for (size_t i = 0; i < defaultPixelOutput.size(); i++)
         {
-            defaultPixelOutput[i] = (i == 0) ? GL_FLOAT : GL_NONE;
+            defaultPixelOutput[i] = (i == 0) ? GL_COLOR_ATTACHMENT0 : GL_NONE;
         }
         rx::ShaderExecutable *defaultPixelExecutable = getPixelExecutableForOutputLayout(defaultPixelOutput);
 

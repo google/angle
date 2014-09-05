@@ -93,10 +93,10 @@ class Framebuffer
     FramebufferAttachment *mDepthbuffer;
     FramebufferAttachment *mStencilbuffer;
 
-private:
+  private:
     DISALLOW_COPY_AND_ASSIGN(Framebuffer);
 
-    FramebufferAttachment *createAttachment(GLenum type, GLuint handle, GLint level, GLint layer) const;
+    FramebufferAttachment *createAttachment(GLenum binding, GLenum type, GLuint handle, GLint level, GLint layer) const;
 };
 
 class DefaultFramebuffer : public Framebuffer
