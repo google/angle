@@ -265,35 +265,24 @@ void __stdcall glBindTexture(GLenum target, GLuint texture)
         switch (target)
         {
           case GL_TEXTURE_2D:
-            context->bindTexture2D(texture);
-            return;
-
           case GL_TEXTURE_CUBE_MAP:
-            context->bindTextureCubeMap(texture);
-            return;
+            break;
 
           case GL_TEXTURE_3D:
-            if (context->getClientVersion() < 3)
-            {
-                context->recordError(gl::Error(GL_INVALID_ENUM));
-                return;
-            }
-            context->bindTexture3D(texture);
-            return;
-
           case GL_TEXTURE_2D_ARRAY:
             if (context->getClientVersion() < 3)
             {
                 context->recordError(gl::Error(GL_INVALID_ENUM));
                 return;
             }
-            context->bindTexture2DArray(texture);
-            return;
+            break;
 
           default:
             context->recordError(gl::Error(GL_INVALID_ENUM));
             return;
         }
+
+        context->bindTexture(target, texture);
     }
 }
 

@@ -19,17 +19,6 @@ class ProgramBinary;
 struct VertexAttribute;
 struct VertexAttribCurrentValueData;
 
-enum TextureType
-{
-    TEXTURE_2D,
-    TEXTURE_CUBE,
-    TEXTURE_3D,
-    TEXTURE_2D_ARRAY,
-
-    TEXTURE_TYPE_COUNT,
-    TEXTURE_UNKNOWN
-};
-
 enum SamplerType
 {
     SAMPLER_PIXEL,

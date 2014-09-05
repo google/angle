@@ -115,10 +115,7 @@ class Context
 
     void bindArrayBuffer(GLuint buffer);
     void bindElementArrayBuffer(GLuint buffer);
-    void bindTexture2D(GLuint texture);
-    void bindTextureCubeMap(GLuint texture);
-    void bindTexture3D(GLuint texture);
-    void bindTexture2DArray(GLuint texture);
+    void bindTexture(GLenum target, GLuint texture);
     void bindReadFramebuffer(GLuint framebuffer);
     void bindDrawFramebuffer(GLuint framebuffer);
     void bindRenderbuffer(GLuint renderbuffer);
@@ -170,7 +167,7 @@ class Context
     Texture3D *getTexture3D() const;
     Texture2DArray *getTexture2DArray() const;
 
-    Texture *getSamplerTexture(unsigned int sampler, TextureType type) const;
+    Texture *getSamplerTexture(unsigned int sampler, GLenum type) const;
 
     bool isSampler(GLuint samplerName) const;
 
@@ -237,9 +234,9 @@ class Context
     void applyRenderTarget(GLenum drawMode, bool ignoreViewport);
     void applyState(GLenum drawMode);
     void applyShaders(ProgramBinary *programBinary, bool transformFeedbackActive);
-    void applyTextures(SamplerType shaderType, Texture *textures[], TextureType *textureTypes, SamplerState *samplers,
-                       size_t textureCount, const FramebufferTextureSerialArray& framebufferSerials,
+    void applyTextures(ProgramBinary *programBinary, SamplerType shaderType, const FramebufferTextureSerialArray &framebufferSerials,
                        size_t framebufferSerialCount);
+    void applyTextures(ProgramBinary *programBinary);
     bool applyUniformBuffers();
     bool applyTransformFeedbackBuffers();
     void markTransformFeedbackUsage();
@@ -252,10 +249,10 @@ class Context
     void detachTransformFeedback(GLuint transformFeedback);
     void detachSampler(GLuint sampler);
 
-    void generateSwizzles(Texture *textures[], size_t count);
-    size_t getCurrentTexturesAndSamplerStates(ProgramBinary *programBinary, SamplerType type, Texture **outTextures,
-                                              TextureType *outTextureTypes, SamplerState *outSamplers);
-    Texture *getIncompleteTexture(TextureType type);
+    void generateSwizzles(ProgramBinary *programBinary, SamplerType type);
+    void generateSwizzles(ProgramBinary *programBinary);
+
+    Texture *getIncompleteTexture(GLenum type);
 
     bool skipDraw(GLenum drawMode);
 
@@ -276,10 +273,9 @@ class Context
 
     int mClientVersion;
 
-    BindingPointer<Texture2D> mTexture2DZero;
-    BindingPointer<TextureCubeMap> mTextureCubeMapZero;
-    BindingPointer<Texture3D> mTexture3DZero;
-    BindingPointer<Texture2DArray> mTexture2DArrayZero;
+    typedef std::map< GLenum, BindingPointer<Texture> > TextureMap;
+    TextureMap mZeroTextures;
+    TextureMap mIncompleteTextures;
 
     typedef std::unordered_map<GLuint, Framebuffer*> FramebufferMap;
     FramebufferMap mFramebufferMap;
@@ -305,8 +301,6 @@ class Context
     std::string mRendererString;
     std::string mExtensionString;
     std::vector<std::string> mExtensionStrings;
-
-    BindingPointer<Texture> mIncompleteTextures[TEXTURE_TYPE_COUNT];
 
     // Recorded errors
     typedef std::set<GLenum> ErrorSet;

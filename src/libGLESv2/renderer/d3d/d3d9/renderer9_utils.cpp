@@ -436,7 +436,7 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
 
     // Aggregate shader limits
     caps->maxVaryingVectors = caps->maxVertexOutputComponents / 4;
-    caps->maxCombinedTextureImageUnits = caps->maxVertexTextureImageUnits + caps->maxFragmentInputComponents;
+    caps->maxCombinedTextureImageUnits = caps->maxVertexTextureImageUnits + caps->maxTextureImageUnits;
 
     // Transform feedback limits
     caps->maxTransformFeedbackInterleavedComponents = 0;

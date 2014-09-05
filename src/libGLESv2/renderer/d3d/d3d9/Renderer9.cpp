@@ -379,6 +379,17 @@ void Renderer9::initializeDevice()
         mDevice->SetRenderState(D3DRS_POINTSIZE_MAX, 0x3F800000);   // 1.0f
     }
 
+    const gl::Caps &rendererCaps = getRendererCaps();
+
+    mForceSetVertexSamplerStates.resize(rendererCaps.maxVertexTextureImageUnits);
+    mCurVertexSamplerStates.resize(rendererCaps.maxVertexTextureImageUnits);
+
+    mForceSetPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
+    mCurPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
+
+    mCurVertexTextureSerials.resize(rendererCaps.maxVertexTextureImageUnits);
+    mCurPixelTextureSerials.resize(rendererCaps.maxTextureImageUnits);
+
     markAllStateDirty();
 
     mSceneStarted = false;
@@ -633,8 +644,8 @@ void Renderer9::generateSwizzle(gl::Texture *texture)
 
 void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
 {
-    bool *forceSetSamplers = (type == gl::SAMPLER_PIXEL) ? mForceSetPixelSamplerStates : mForceSetVertexSamplerStates;
-    gl::SamplerState *appliedSamplers = (type == gl::SAMPLER_PIXEL) ? mCurPixelSamplerStates: mCurVertexSamplerStates;
+    std::vector<bool> &forceSetSamplers = (type == gl::SAMPLER_PIXEL) ? mForceSetPixelSamplerStates : mForceSetVertexSamplerStates;
+    std::vector<gl::SamplerState> &appliedSamplers = (type == gl::SAMPLER_PIXEL) ? mCurPixelSamplerStates: mCurVertexSamplerStates;
 
     if (forceSetSamplers[index] || memcmp(&samplerState, &appliedSamplers[index], sizeof(gl::SamplerState)) != 0)
     {
@@ -668,7 +679,7 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
     unsigned int serial = 0;
     bool forceSetTexture = false;
 
-    unsigned int *appliedSerials = (type == gl::SAMPLER_PIXEL) ? mCurPixelTextureSerials : mCurVertexTextureSerials;
+    std::vector<unsigned int> &appliedSerials = (type == gl::SAMPLER_PIXEL) ? mCurPixelTextureSerials : mCurVertexTextureSerials;
 
     if (texture)
     {
@@ -2022,12 +2033,15 @@ void Renderer9::markAllStateDirty()
     mForceSetViewport = true;
     mForceSetBlendState = true;
 
-    for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; i++)
+    ASSERT(mForceSetVertexSamplerStates.size() == mCurVertexTextureSerials.size());
+    for (unsigned int i = 0; i < mForceSetVertexSamplerStates.size(); i++)
     {
         mForceSetVertexSamplerStates[i] = true;
         mCurVertexTextureSerials[i] = 0;
     }
-    for (unsigned int i = 0; i < gl::MAX_TEXTURE_IMAGE_UNITS; i++)
+
+    ASSERT(mForceSetPixelSamplerStates.size() == mCurPixelTextureSerials.size());
+    for (unsigned int i = 0; i < mForceSetPixelSamplerStates.size(); i++)
     {
         mForceSetPixelSamplerStates[i] = true;
         mCurPixelTextureSerials[i] = 0;
@@ -3082,12 +3096,9 @@ TextureImpl *Renderer9::createTexture(GLenum target)
 {
     switch(target)
     {
-      case GL_TEXTURE_2D: return new TextureD3D_2D(this);
+      case GL_TEXTURE_2D:       return new TextureD3D_2D(this);
       case GL_TEXTURE_CUBE_MAP: return new TextureD3D_Cube(this);
-      case GL_TEXTURE_3D: return new TextureD3D_3D(this);
-      case GL_TEXTURE_2D_ARRAY: return new TextureD3D_2DArray(this);
-      default:
-        UNREACHABLE();
+      default:                  UNREACHABLE();
     }
 
     return NULL;

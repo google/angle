@@ -295,15 +295,15 @@ class Renderer9 : public Renderer
     GLuint mCurSampleMask;
 
     // Currently applied sampler states
-    bool mForceSetVertexSamplerStates[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
-    gl::SamplerState mCurVertexSamplerStates[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
+    std::vector<bool> mForceSetVertexSamplerStates;
+    std::vector<gl::SamplerState> mCurVertexSamplerStates;
 
-    bool mForceSetPixelSamplerStates[gl::MAX_TEXTURE_IMAGE_UNITS];
-    gl::SamplerState mCurPixelSamplerStates[gl::MAX_TEXTURE_IMAGE_UNITS];
+    std::vector<bool> mForceSetPixelSamplerStates;
+    std::vector<gl::SamplerState> mCurPixelSamplerStates;
 
     // Currently applied textures
-    unsigned int mCurVertexTextureSerials[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
-    unsigned int mCurPixelTextureSerials[gl::MAX_TEXTURE_IMAGE_UNITS];
+    std::vector<unsigned int> mCurVertexTextureSerials;
+    std::vector<unsigned int> mCurPixelTextureSerials;
 
     unsigned int mAppliedIBSerial;
     IDirect3DVertexShader9 *mAppliedVertexShader;

@@ -37,7 +37,7 @@ namespace gl
 namespace
 {
 
-TextureType GetTextureType(GLenum samplerType)
+GLenum GetTextureType(GLenum samplerType)
 {
     switch (samplerType)
     {
@@ -45,26 +45,26 @@ TextureType GetTextureType(GLenum samplerType)
       case GL_INT_SAMPLER_2D:
       case GL_UNSIGNED_INT_SAMPLER_2D:
       case GL_SAMPLER_2D_SHADOW:
-        return TEXTURE_2D;
+        return GL_TEXTURE_2D;
       case GL_SAMPLER_3D:
       case GL_INT_SAMPLER_3D:
       case GL_UNSIGNED_INT_SAMPLER_3D:
-        return TEXTURE_3D;
+        return GL_TEXTURE_3D;
       case GL_SAMPLER_CUBE:
       case GL_SAMPLER_CUBE_SHADOW:
-        return TEXTURE_CUBE;
+        return GL_TEXTURE_CUBE_MAP;
       case GL_INT_SAMPLER_CUBE:
       case GL_UNSIGNED_INT_SAMPLER_CUBE:
-        return TEXTURE_CUBE;
+        return GL_TEXTURE_CUBE_MAP;
       case GL_SAMPLER_2D_ARRAY:
       case GL_INT_SAMPLER_2D_ARRAY:
       case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
       case GL_SAMPLER_2D_ARRAY_SHADOW:
-        return TEXTURE_2D_ARRAY;
+        return GL_TEXTURE_2D_ARRAY;
       default: UNREACHABLE();
     }
 
-    return TEXTURE_2D;
+    return GL_TEXTURE_2D;
 }
 
 unsigned int ParseAndStripArrayIndex(std::string* name)
@@ -206,16 +206,6 @@ ProgramBinary::ProgramBinary(rx::ProgramImpl *impl)
     for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
     {
         mSemanticIndex[index] = -1;
-    }
-
-    for (int index = 0; index < MAX_TEXTURE_IMAGE_UNITS; index++)
-    {
-        mSamplersPS[index].active = false;
-    }
-
-    for (int index = 0; index < IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; index++)
-    {
-        mSamplersVS[index].active = false;
     }
 }
 
@@ -380,8 +370,6 @@ bool ProgramBinary::usesGeometryShader() const
     return usesPointSpriteEmulation();
 }
 
-// Returns the index of the texture image unit (0-19) corresponding to a Direct3D 9 sampler
-// index (0-15 for the pixel shader and 0-3 for the vertex shader).
 GLint ProgramBinary::getSamplerMapping(SamplerType type, unsigned int samplerIndex, const Caps &caps)
 {
     GLint logicalTextureUnit = -1;
@@ -389,17 +377,15 @@ GLint ProgramBinary::getSamplerMapping(SamplerType type, unsigned int samplerInd
     switch (type)
     {
       case SAMPLER_PIXEL:
-        ASSERT(samplerIndex < ArraySize(mSamplersPS));
-
-        if (mSamplersPS[samplerIndex].active)
+        ASSERT(samplerIndex < caps.maxTextureImageUnits);
+        if (samplerIndex < mSamplersPS.size() && mSamplersPS[samplerIndex].active)
         {
             logicalTextureUnit = mSamplersPS[samplerIndex].logicalTextureUnit;
         }
         break;
       case SAMPLER_VERTEX:
-        ASSERT(samplerIndex < ArraySize(mSamplersVS));
-
-        if (mSamplersVS[samplerIndex].active)
+        ASSERT(samplerIndex < caps.maxVertexTextureImageUnits);
+        if (samplerIndex < mSamplersVS.size() && mSamplersVS[samplerIndex].active)
         {
             logicalTextureUnit = mSamplersVS[samplerIndex].logicalTextureUnit;
         }
@@ -417,22 +403,22 @@ GLint ProgramBinary::getSamplerMapping(SamplerType type, unsigned int samplerInd
 
 // Returns the texture type for a given Direct3D 9 sampler type and
 // index (0-15 for the pixel shader and 0-3 for the vertex shader).
-TextureType ProgramBinary::getSamplerTextureType(SamplerType type, unsigned int samplerIndex)
+GLenum ProgramBinary::getSamplerTextureType(SamplerType type, unsigned int samplerIndex)
 {
     switch (type)
     {
       case SAMPLER_PIXEL:
-        ASSERT(samplerIndex < ArraySize(mSamplersPS));
+        ASSERT(samplerIndex < mSamplersPS.size());
         ASSERT(mSamplersPS[samplerIndex].active);
         return mSamplersPS[samplerIndex].textureType;
       case SAMPLER_VERTEX:
-        ASSERT(samplerIndex < ArraySize(mSamplersVS));
+        ASSERT(samplerIndex < mSamplersVS.size());
         ASSERT(mSamplersVS[samplerIndex].active);
         return mSamplersVS[samplerIndex].textureType;
       default: UNREACHABLE();
     }
 
-    return TEXTURE_2D;
+    return GL_TEXTURE_2D;
 }
 
 GLint ProgramBinary::getUniformLocation(std::string name)
@@ -955,7 +941,7 @@ void ProgramBinary::updateSamplerMapping()
                     {
                         unsigned int samplerIndex = firstIndex + i;
 
-                        if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
+                        if (samplerIndex < mSamplersPS.size())
                         {
                             ASSERT(mSamplersPS[samplerIndex].active);
                             mSamplersPS[samplerIndex].logicalTextureUnit = v[i][0];
@@ -971,7 +957,7 @@ void ProgramBinary::updateSamplerMapping()
                     {
                         unsigned int samplerIndex = firstIndex + i;
 
-                        if (samplerIndex < IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS)
+                        if (samplerIndex < mSamplersVS.size())
                         {
                             ASSERT(mSamplersVS[samplerIndex].active);
                             mSamplersVS[samplerIndex].logicalTextureUnit = v[i][0];
@@ -1142,18 +1128,23 @@ bool ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *bina
 
     initAttributesByLayout();
 
-    for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
+    const unsigned int psSamplerCount = stream.readInt<unsigned int>();
+    for (unsigned int i = 0; i < psSamplerCount; ++i)
     {
-        stream.readBool(&mSamplersPS[i].active);
-        stream.readInt(&mSamplersPS[i].logicalTextureUnit);
-        stream.readInt(&mSamplersPS[i].textureType);
+        Sampler sampler;
+        stream.readBool(&sampler.active);
+        stream.readInt(&sampler.logicalTextureUnit);
+        stream.readInt(&sampler.textureType);
+        mSamplersPS.push_back(sampler);
     }
-
-    for (unsigned int i = 0; i < IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; ++i)
+    const unsigned int vsSamplerCount = stream.readInt<unsigned int>();
+    for (unsigned int i = 0; i < vsSamplerCount; ++i)
     {
-        stream.readBool(&mSamplersVS[i].active);
-        stream.readInt(&mSamplersVS[i].logicalTextureUnit);
-        stream.readInt(&mSamplersVS[i].textureType);
+        Sampler sampler;
+        stream.readBool(&sampler.active);
+        stream.readInt(&sampler.logicalTextureUnit);
+        stream.readInt(&sampler.textureType);
+        mSamplersVS.push_back(sampler);
     }
 
     stream.readInt(&mUsedVertexSamplerRange);
@@ -1383,14 +1374,16 @@ bool ProgramBinary::save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GL
         stream.writeInt(mSemanticIndex[i]);
     }
 
-    for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
+    stream.writeInt(mSamplersPS.size());
+    for (unsigned int i = 0; i < mSamplersPS.size(); ++i)
     {
         stream.writeInt(mSamplersPS[i].active);
         stream.writeInt(mSamplersPS[i].logicalTextureUnit);
         stream.writeInt(mSamplersPS[i].textureType);
     }
 
-    for (unsigned int i = 0; i < IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; ++i)
+    stream.writeInt(mSamplersVS.size());
+    for (unsigned int i = 0; i < mSamplersVS.size(); ++i)
     {
         stream.writeInt(mSamplersVS[i].active);
         stream.writeInt(mSamplersVS[i].logicalTextureUnit);
@@ -1590,6 +1583,9 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     ASSERT(vertexShader->getType() == GL_VERTEX_SHADER);
 
     reset();
+
+    mSamplersPS.resize(caps.maxTextureImageUnits);
+    mSamplersVS.resize(caps.maxVertexTextureImageUnits);
 
     mTransformFeedbackBufferMode = transformFeedbackBufferMode;
 
@@ -1998,10 +1994,10 @@ bool ProgramBinary::indexSamplerUniform(const LinkedUniform &uniform, InfoLog &i
     if (uniform.vsRegisterIndex != GL_INVALID_INDEX)
     {
         if (!assignSamplers(uniform.vsRegisterIndex, uniform.type, uniform.arraySize, mSamplersVS,
-                            &mUsedVertexSamplerRange, caps.maxVertexTextureImageUnits))
+                            &mUsedVertexSamplerRange))
         {
             infoLog.append("Vertex shader sampler count exceeds the maximum vertex texture units (%d).",
-                           caps.maxVertexTextureImageUnits);
+                           mSamplersVS.size());
             return false;
         }
 
@@ -2017,10 +2013,10 @@ bool ProgramBinary::indexSamplerUniform(const LinkedUniform &uniform, InfoLog &i
     if (uniform.psRegisterIndex != GL_INVALID_INDEX)
     {
         if (!assignSamplers(uniform.psRegisterIndex, uniform.type, uniform.arraySize, mSamplersPS,
-                            &mUsedPixelSamplerRange, caps.maxTextureImageUnits))
+                            &mUsedPixelSamplerRange))
         {
             infoLog.append("Pixel shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS (%d).",
-                           caps.maxTextureImageUnits);
+                           mSamplersPS.size());
             return false;
         }
 
@@ -2062,20 +2058,20 @@ bool ProgramBinary::indexUniforms(InfoLog &infoLog, const Caps &caps)
 bool ProgramBinary::assignSamplers(unsigned int startSamplerIndex,
                                    GLenum samplerType,
                                    unsigned int samplerCount,
-                                   Sampler *outArray,
-                                   GLuint *usedRange,
-                                   unsigned int limit)
+                                   std::vector<Sampler> &outSamplers,
+                                   GLuint *outUsedRange)
 {
     unsigned int samplerIndex = startSamplerIndex;
 
     do
     {
-        if (samplerIndex < limit)
+        if (samplerIndex < outSamplers.size())
         {
-            outArray[samplerIndex].active = true;
-            outArray[samplerIndex].textureType = GetTextureType(samplerType);
-            outArray[samplerIndex].logicalTextureUnit = 0;
-            *usedRange = std::max(samplerIndex + 1, *usedRange);
+            Sampler& sampler = outSamplers[samplerIndex];
+            sampler.active = true;
+            sampler.textureType = GetTextureType(samplerType);
+            sampler.logicalTextureUnit = 0;
+            *outUsedRange = std::max(samplerIndex + 1, *outUsedRange);
         }
         else
         {
@@ -2668,13 +2664,7 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog, const Caps &caps)
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
     updateSamplerMapping();
 
-    const unsigned int maxCombinedTextureImageUnits = caps.maxCombinedTextureImageUnits;
-    TextureType textureUnitType[IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
-
-    for (unsigned int i = 0; i < IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS; ++i)
-    {
-        textureUnitType[i] = TEXTURE_UNKNOWN;
-    }
+    std::vector<GLenum> textureUnitTypes(caps.maxCombinedTextureImageUnits, GL_NONE);
 
     for (unsigned int i = 0; i < mUsedPixelSamplerRange; ++i)
     {
@@ -2682,19 +2672,19 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog, const Caps &caps)
         {
             unsigned int unit = mSamplersPS[i].logicalTextureUnit;
 
-            if (unit >= maxCombinedTextureImageUnits)
+            if (unit >= textureUnitTypes.size())
             {
                 if (infoLog)
                 {
-                    infoLog->append("Sampler uniform (%d) exceeds IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
+                    infoLog->append("Sampler uniform (%d) exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, textureUnitTypes.size());
                 }
 
                 return false;
             }
 
-            if (textureUnitType[unit] != TEXTURE_UNKNOWN)
+            if (textureUnitTypes[unit] != GL_NONE)
             {
-                if (mSamplersPS[i].textureType != textureUnitType[unit])
+                if (mSamplersPS[i].textureType != textureUnitTypes[unit])
                 {
                     if (infoLog)
                     {
@@ -2706,7 +2696,7 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog, const Caps &caps)
             }
             else
             {
-                textureUnitType[unit] = mSamplersPS[i].textureType;
+                textureUnitTypes[unit] = mSamplersPS[i].textureType;
             }
         }
     }
@@ -2717,19 +2707,19 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog, const Caps &caps)
         {
             unsigned int unit = mSamplersVS[i].logicalTextureUnit;
 
-            if (unit >= maxCombinedTextureImageUnits)
+            if (unit >= textureUnitTypes.size())
             {
                 if (infoLog)
                 {
-                    infoLog->append("Sampler uniform (%d) exceeds IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
+                    infoLog->append("Sampler uniform (%d) exceeds GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, textureUnitTypes.size());
                 }
 
                 return false;
             }
 
-            if (textureUnitType[unit] != TEXTURE_UNKNOWN)
+            if (textureUnitTypes[unit] != GL_NONE)
             {
-                if (mSamplersVS[i].textureType != textureUnitType[unit])
+                if (mSamplersVS[i].textureType != textureUnitTypes[unit])
                 {
                     if (infoLog)
                     {
@@ -2741,7 +2731,7 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog, const Caps &caps)
             }
             else
             {
-                textureUnitType[unit] = mSamplersVS[i].textureType;
+                textureUnitTypes[unit] = mSamplersVS[i].textureType;
             }
         }
     }
@@ -2749,7 +2739,7 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog, const Caps &caps)
     return true;
 }
 
-ProgramBinary::Sampler::Sampler() : active(false), logicalTextureUnit(0), textureType(TEXTURE_2D)
+ProgramBinary::Sampler::Sampler() : active(false), logicalTextureUnit(0), textureType(GL_TEXTURE_2D)
 {
 }
 
@@ -2807,14 +2797,9 @@ void ProgramBinary::reset()
     mTransformFeedbackBufferMode = GL_NONE;
     mTransformFeedbackLinkedVaryings.clear();
 
-    for (size_t i = 0; i < ArraySize(mSamplersPS); i++)
-    {
-        mSamplersPS[i] = Sampler();
-    }
-    for (size_t i = 0; i < ArraySize(mSamplersVS); i++)
-    {
-        mSamplersVS[i] = Sampler();
-    }
+    mSamplersPS.clear();
+    mSamplersVS.clear();
+
     mUsedVertexSamplerRange = 0;
     mUsedPixelSamplerRange = 0;
     mUsesPointSize = false;

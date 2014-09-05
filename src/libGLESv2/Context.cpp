@@ -43,6 +43,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     ASSERT(robustAccess == false);   // Unimplemented
 
     initCaps(clientVersion);
+    mState.initialize(mCaps, clientVersion);
 
     mClientVersion = clientVersion;
 
@@ -64,16 +65,26 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    mTexture2DZero.set(new Texture2D(mRenderer->createTexture(GL_TEXTURE_2D), 0));
-    mTextureCubeMapZero.set(new TextureCubeMap(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), 0));
-    mTexture3DZero.set(new Texture3D(mRenderer->createTexture(GL_TEXTURE_3D), 0));
-    mTexture2DArrayZero.set(new Texture2DArray(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), 0));
+    mZeroTextures[GL_TEXTURE_2D].set(new Texture2D(mRenderer->createTexture(GL_TEXTURE_2D), 0));
+    bindTexture(GL_TEXTURE_2D, 0);
+
+    mZeroTextures[GL_TEXTURE_CUBE_MAP].set(new TextureCubeMap(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), 0));
+    bindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+    if (mClientVersion >= 3)
+    {
+        // TODO: These could also be enabled via extension
+        mZeroTextures[GL_TEXTURE_3D].set(new Texture3D(mRenderer->createTexture(GL_TEXTURE_3D), 0));
+        bindTexture(GL_TEXTURE_3D, 0);
+
+        mZeroTextures[GL_TEXTURE_2D_ARRAY].set(new Texture2DArray(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), 0));
+        bindTexture(GL_TEXTURE_2D_ARRAY, 0);
+    }
 
     bindVertexArray(0);
     bindArrayBuffer(0);
     bindElementArrayBuffer(0);
-    bindTextureCubeMap(0);
-    bindTexture2D(0);
+
     bindReadFramebuffer(0);
     bindDrawFramebuffer(0);
     bindRenderbuffer(0);
@@ -151,15 +162,17 @@ Context::~Context()
         deleteTransformFeedback(mTransformFeedbackMap.begin()->first);
     }
 
-    for (int type = 0; type < TEXTURE_TYPE_COUNT; type++)
+    for (TextureMap::iterator i = mIncompleteTextures.begin(); i != mIncompleteTextures.end(); i++)
     {
-        mIncompleteTextures[type].set(NULL);
+        i->second.set(NULL);
     }
+    mIncompleteTextures.clear();
 
-    mTexture2DZero.set(NULL);
-    mTextureCubeMapZero.set(NULL);
-    mTexture3DZero.set(NULL);
-    mTexture2DArrayZero.set(NULL);
+    for (TextureMap::iterator i = mZeroTextures.begin(); i != mZeroTextures.end(); i++)
+    {
+        i->second.set(NULL);
+    }
+    mZeroTextures.clear();
 
     mResourceManager->release();
 }
@@ -501,32 +514,11 @@ void Context::bindElementArrayBuffer(unsigned int buffer)
     mState.getVertexArray()->setElementArrayBuffer(getBuffer(buffer));
 }
 
-void Context::bindTexture2D(GLuint texture)
+void Context::bindTexture(GLenum target, GLuint texture)
 {
-    mResourceManager->checkTextureAllocation(texture, TEXTURE_2D);
+    mResourceManager->checkTextureAllocation(texture, target);
 
-    mState.setSamplerTexture(TEXTURE_2D, getTexture(texture));
-}
-
-void Context::bindTextureCubeMap(GLuint texture)
-{
-    mResourceManager->checkTextureAllocation(texture, TEXTURE_CUBE);
-
-    mState.setSamplerTexture(TEXTURE_CUBE, getTexture(texture));
-}
-
-void Context::bindTexture3D(GLuint texture)
-{
-    mResourceManager->checkTextureAllocation(texture, TEXTURE_3D);
-
-    mState.setSamplerTexture(TEXTURE_3D, getTexture(texture));
-}
-
-void Context::bindTexture2DArray(GLuint texture)
-{
-    mResourceManager->checkTextureAllocation(texture, TEXTURE_2D_ARRAY);
-
-    mState.setSamplerTexture(TEXTURE_2D_ARRAY, getTexture(texture));
+    mState.setSamplerTexture(target, getTexture(texture));
 }
 
 void Context::bindReadFramebuffer(GLuint framebuffer)
@@ -569,7 +561,7 @@ void Context::bindVertexArray(GLuint vertexArray)
 
 void Context::bindSampler(GLuint textureUnit, GLuint sampler)
 {
-    ASSERT(textureUnit < IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS); // TODO: Update for backend-determined array size
+    ASSERT(textureUnit < mCaps.maxCombinedTextureImageUnits);
     mResourceManager->checkSamplerAllocation(sampler);
 
     mState.setSamplerBinding(textureUnit, getSampler(sampler));
@@ -824,36 +816,29 @@ Texture *Context::getTargetTexture(GLenum target) const
 
 Texture2D *Context::getTexture2D() const
 {
-    return static_cast<Texture2D*>(getSamplerTexture(mState.getActiveSampler(), TEXTURE_2D));
+    return static_cast<Texture2D*>(getSamplerTexture(mState.getActiveSampler(), GL_TEXTURE_2D));
 }
 
 TextureCubeMap *Context::getTextureCubeMap() const
 {
-    return static_cast<TextureCubeMap*>(getSamplerTexture(mState.getActiveSampler(), TEXTURE_CUBE));
+    return static_cast<TextureCubeMap*>(getSamplerTexture(mState.getActiveSampler(), GL_TEXTURE_CUBE_MAP));
 }
 
 Texture3D *Context::getTexture3D() const
 {
-    return static_cast<Texture3D*>(getSamplerTexture(mState.getActiveSampler(), TEXTURE_3D));
+    return static_cast<Texture3D*>(getSamplerTexture(mState.getActiveSampler(), GL_TEXTURE_3D));
 }
 
 Texture2DArray *Context::getTexture2DArray() const
 {
-    return static_cast<Texture2DArray*>(getSamplerTexture(mState.getActiveSampler(), TEXTURE_2D_ARRAY));
+    return static_cast<Texture2DArray*>(getSamplerTexture(mState.getActiveSampler(), GL_TEXTURE_2D_ARRAY));
 }
 
-Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type) const
+Texture *Context::getSamplerTexture(unsigned int sampler, GLenum type) const
 {
     if (mState.getSamplerTextureId(sampler, type) == 0)
     {
-        switch (type)
-        {
-          default: UNREACHABLE();
-          case TEXTURE_2D:       return mTexture2DZero.get();
-          case TEXTURE_CUBE:     return mTextureCubeMapZero.get();
-          case TEXTURE_3D:       return mTexture3DZero.get();
-          case TEXTURE_2D_ARRAY: return mTexture2DArrayZero.get();
-        }
+        return mZeroTextures.at(type).get();
     }
     else
     {
@@ -1405,63 +1390,54 @@ void Context::applyShaders(ProgramBinary *programBinary, bool transformFeedbackA
     programBinary->applyUniforms();
 }
 
-size_t Context::getCurrentTexturesAndSamplerStates(ProgramBinary *programBinary, SamplerType type, Texture **outTextures,
-                                                   TextureType *outTextureTypes, SamplerState *outSamplers)
+void Context::generateSwizzles(ProgramBinary *programBinary, SamplerType type)
 {
     size_t samplerRange = programBinary->getUsedSamplerRange(type);
+
     for (size_t i = 0; i < samplerRange; i++)
     {
-        outTextureTypes[i] = programBinary->getSamplerTextureType(type, i);
-        GLint textureUnit = programBinary->getSamplerMapping(type, i, getCaps());   // OpenGL texture image unit index
+        GLenum textureType = programBinary->getSamplerTextureType(type, i);
+        GLint textureUnit = programBinary->getSamplerMapping(type, i, getCaps());
         if (textureUnit != -1)
         {
-            outTextures[i] = getSamplerTexture(textureUnit, outTextureTypes[i]);
-            outTextures[i]->getSamplerStateWithNativeOffset(&outSamplers[i]);
-            Sampler *samplerObject = mState.getSampler(textureUnit);
-            if (samplerObject)
+            Texture* texture = getSamplerTexture(textureUnit, textureType);
+            if (texture->getSamplerState().swizzleRequired())
             {
-                samplerObject->getState(&outSamplers[i]);
+                mRenderer->generateSwizzle(texture);
             }
         }
-        else
-        {
-            outTextures[i] = NULL;
-        }
     }
-
-    return samplerRange;
 }
 
-void Context::generateSwizzles(Texture *textures[], size_t count)
+void Context::generateSwizzles(ProgramBinary *programBinary)
 {
-    for (size_t i = 0; i < count; i++)
-    {
-        if (textures[i] && textures[i]->getSamplerState().swizzleRequired())
-        {
-            mRenderer->generateSwizzle(textures[i]);
-        }
-    }
+    generateSwizzles(programBinary, SAMPLER_VERTEX);
+    generateSwizzles(programBinary, SAMPLER_PIXEL);
 }
 
 // For each Direct3D sampler of either the pixel or vertex stage,
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).
-void Context::applyTextures(SamplerType shaderType, Texture *textures[], TextureType *textureTypes, SamplerState *samplers,
-                            size_t textureCount, const FramebufferTextureSerialArray& framebufferSerials,
-                            size_t framebufferSerialCount)
+void Context::applyTextures(ProgramBinary *programBinary, SamplerType shaderType,
+                            const FramebufferTextureSerialArray &framebufferSerials, size_t framebufferSerialCount)
 {
-    // Range of Direct3D samplers of given sampler type
-    size_t samplerCount = (shaderType == SAMPLER_PIXEL) ? mCaps.maxTextureImageUnits
-                                                        : mCaps.maxVertexTextureImageUnits;
-
-    for (size_t samplerIndex = 0; samplerIndex < textureCount; samplerIndex++)
+    size_t samplerRange = programBinary->getUsedSamplerRange(shaderType);
+    for (size_t samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
-        Texture *texture = textures[samplerIndex];
-        const SamplerState &sampler = samplers[samplerIndex];
-        TextureType textureType = textureTypes[samplerIndex];
-
-        if (texture)
+        GLenum textureType = programBinary->getSamplerTextureType(shaderType, samplerIndex);
+        GLint textureUnit = programBinary->getSamplerMapping(shaderType, samplerIndex, getCaps());
+        if (textureUnit != -1)
         {
+            SamplerState sampler;
+            Texture* texture = getSamplerTexture(textureUnit, textureType);
+            texture->getSamplerStateWithNativeOffset(&sampler);
+
+            Sampler *samplerObject = mState.getSampler(textureUnit);
+            if (samplerObject)
+            {
+                samplerObject->getState(&sampler);
+            }
+
             // TODO: std::binary_search may become unavailable using older versions of GCC
             if (texture->isSamplerComplete(sampler, mTextureCaps, mExtensions, mClientVersion) &&
                 !std::binary_search(framebufferSerials.begin(), framebufferSerials.begin() + framebufferSerialCount, texture->getTextureSerial()))
@@ -1471,20 +1447,34 @@ void Context::applyTextures(SamplerType shaderType, Texture *textures[], Texture
             }
             else
             {
+                // Texture is not sampler complete or it is in use by the framebuffer.  Bind the incomplete texture.
                 Texture *incompleteTexture = getIncompleteTexture(textureType);
                 mRenderer->setTexture(shaderType, samplerIndex, incompleteTexture);
             }
         }
         else
         {
+            // No texture bound to this slot even though it is used by the shader, bind a NULL texture
             mRenderer->setTexture(shaderType, samplerIndex, NULL);
         }
     }
 
-    for (size_t samplerIndex = textureCount; samplerIndex < samplerCount; samplerIndex++)
+    // Set all the remaining textures to NULL
+    size_t samplerCount = (shaderType == SAMPLER_PIXEL) ? mCaps.maxTextureImageUnits
+                                                        : mCaps.maxVertexTextureImageUnits;
+    for (size_t samplerIndex = samplerRange; samplerIndex < samplerCount; samplerIndex++)
     {
         mRenderer->setTexture(shaderType, samplerIndex, NULL);
     }
+}
+
+void Context::applyTextures(ProgramBinary *programBinary)
+{
+    FramebufferTextureSerialArray framebufferSerials;
+    size_t framebufferSerialCount = getBoundFramebufferTextureSerials(&framebufferSerials);
+
+    applyTextures(programBinary, SAMPLER_VERTEX, framebufferSerials, framebufferSerialCount);
+    applyTextures(programBinary, SAMPLER_PIXEL, framebufferSerials, framebufferSerialCount);
 }
 
 bool Context::applyUniformBuffers()
@@ -1683,18 +1673,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     ProgramBinary *programBinary = mState.getCurrentProgramBinary();
     programBinary->updateSamplerMapping();
 
-    Texture *vsTextures[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
-    TextureType vsTextureTypes[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
-    SamplerState vsSamplers[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
-    size_t vsTextureCount = getCurrentTexturesAndSamplerStates(programBinary, SAMPLER_VERTEX, vsTextures, vsTextureTypes, vsSamplers);
-
-    Texture *psTextures[MAX_TEXTURE_IMAGE_UNITS];
-    TextureType psTextureTypes[MAX_TEXTURE_IMAGE_UNITS];
-    SamplerState psSamplers[MAX_TEXTURE_IMAGE_UNITS];
-    size_t psTextureCount = getCurrentTexturesAndSamplerStates(programBinary, SAMPLER_PIXEL, psTextures, psTextureTypes, psSamplers);
-
-    generateSwizzles(vsTextures, vsTextureCount);
-    generateSwizzles(psTextures, psTextureCount);
+    generateSwizzles(programBinary);
 
     if (!mRenderer->applyPrimitiveType(mode, count))
     {
@@ -1714,11 +1693,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
 
     applyShaders(programBinary, transformFeedbackActive);
 
-    FramebufferTextureSerialArray frameBufferSerials;
-    size_t framebufferSerialCount = getBoundFramebufferTextureSerials(&frameBufferSerials);
-
-    applyTextures(SAMPLER_VERTEX, vsTextures, vsTextureTypes, vsSamplers, vsTextureCount, frameBufferSerials, framebufferSerialCount);
-    applyTextures(SAMPLER_PIXEL, psTextures, psTextureTypes, psSamplers, psTextureCount, frameBufferSerials, framebufferSerialCount);
+    applyTextures(programBinary);
 
     if (!applyUniformBuffers())
     {
@@ -1745,18 +1720,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
     ProgramBinary *programBinary = mState.getCurrentProgramBinary();
     programBinary->updateSamplerMapping();
 
-    Texture *vsTextures[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
-    TextureType vsTextureTypes[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
-    SamplerState vsSamplers[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
-    size_t vsTextureCount = getCurrentTexturesAndSamplerStates(programBinary, SAMPLER_VERTEX, vsTextures, vsTextureTypes, vsSamplers);
-
-    Texture *psTextures[MAX_TEXTURE_IMAGE_UNITS];
-    TextureType psTextureTypes[MAX_TEXTURE_IMAGE_UNITS];
-    SamplerState psSamplers[MAX_TEXTURE_IMAGE_UNITS];
-    size_t psTextureCount = getCurrentTexturesAndSamplerStates(programBinary, SAMPLER_PIXEL, psTextures, psTextureTypes, psSamplers);
-
-    generateSwizzles(vsTextures, vsTextureCount);
-    generateSwizzles(psTextures, psTextureCount);
+    generateSwizzles(programBinary);
 
     if (!mRenderer->applyPrimitiveType(mode, count))
     {
@@ -1791,11 +1755,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
 
     applyShaders(programBinary, transformFeedbackActive);
 
-    FramebufferTextureSerialArray frameBufferSerials;
-    size_t framebufferSerialCount = getBoundFramebufferTextureSerials(&frameBufferSerials);
-
-    applyTextures(SAMPLER_VERTEX, vsTextures, vsTextureTypes, vsSamplers, vsTextureCount, frameBufferSerials, framebufferSerialCount);
-    applyTextures(SAMPLER_PIXEL, psTextures, psTextureTypes, psSamplers, psTextureCount, frameBufferSerials, framebufferSerialCount);
+    applyTextures(programBinary);
 
     if (!applyUniformBuffers())
     {
@@ -1981,22 +1941,21 @@ void Context::detachSampler(GLuint sampler)
     mState.detachSampler(sampler);
 }
 
-Texture *Context::getIncompleteTexture(TextureType type)
+Texture *Context::getIncompleteTexture(GLenum type)
 {
-    Texture *t = mIncompleteTextures[type].get();
-
-    if (t == NULL)
+    if (mIncompleteTextures.find(type) == mIncompleteTextures.end())
     {
         const GLubyte color[] = { 0, 0, 0, 255 };
         const PixelUnpackState incompleteUnpackState(1);
 
+        Texture* t = NULL;
         switch (type)
         {
           default:
             UNREACHABLE();
             // default falls through to TEXTURE_2D
 
-          case TEXTURE_2D:
+          case GL_TEXTURE_2D:
             {
                 Texture2D *incomplete2d = new Texture2D(mRenderer->createTexture(GL_TEXTURE_2D), Texture::INCOMPLETE_TEXTURE_ID);
                 incomplete2d->setImage(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
@@ -2004,7 +1963,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
             }
             break;
 
-          case TEXTURE_CUBE:
+          case GL_TEXTURE_CUBE_MAP:
             {
               TextureCubeMap *incompleteCube = new TextureCubeMap(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), Texture::INCOMPLETE_TEXTURE_ID);
 
@@ -2019,7 +1978,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
             }
             break;
 
-          case TEXTURE_3D:
+          case GL_TEXTURE_3D:
             {
                 Texture3D *incomplete3d = new Texture3D(mRenderer->createTexture(GL_TEXTURE_3D), Texture::INCOMPLETE_TEXTURE_ID);
                 incomplete3d->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
@@ -2028,7 +1987,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
             }
             break;
 
-          case TEXTURE_2D_ARRAY:
+          case GL_TEXTURE_2D_ARRAY:
             {
                 Texture2DArray *incomplete2darray = new Texture2DArray(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), Texture::INCOMPLETE_TEXTURE_ID);
                 incomplete2darray->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
@@ -2041,7 +2000,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
         mIncompleteTextures[type].set(t);
     }
 
-    return t;
+    return mIncompleteTextures[type].get();
 }
 
 bool Context::skipDraw(GLenum drawMode)
@@ -2287,14 +2246,10 @@ void Context::initCaps(GLuint clientVersion)
 
     // Apply implementation limits
     mCaps.maxVertexAttributes = std::min<GLuint>(mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);
-    mCaps.maxVertexTextureImageUnits = std::min<GLuint>(mCaps.maxVertexTextureImageUnits, IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
     mCaps.maxVertexUniformBlocks = std::min<GLuint>(mCaps.maxVertexUniformBlocks, IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS);
     mCaps.maxVertexOutputComponents = std::min<GLuint>(mCaps.maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
 
     mCaps.maxFragmentInputComponents = std::min<GLuint>(mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
-    mCaps.maxTextureImageUnits = std::min<GLuint>(mCaps.maxTextureImageUnits, MAX_TEXTURE_IMAGE_UNITS);
-
-    mCaps.maxCombinedTextureImageUnits = std::min<GLuint>(mCaps.maxCombinedTextureImageUnits, IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
 
     GLuint maxSamples = 0;
     mCaps.compressedTextureFormats.clear();

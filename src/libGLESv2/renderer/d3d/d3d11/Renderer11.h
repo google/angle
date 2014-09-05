@@ -245,15 +245,15 @@ class Renderer11 : public Renderer
     rx::RenderTarget::Desc mRenderTargetDesc;
 
     // Currently applied sampler states
-    bool mForceSetVertexSamplerStates[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
-    gl::SamplerState mCurVertexSamplerStates[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
+    std::vector<bool> mForceSetVertexSamplerStates;
+    std::vector<gl::SamplerState> mCurVertexSamplerStates;
 
-    bool mForceSetPixelSamplerStates[gl::MAX_TEXTURE_IMAGE_UNITS];
-    gl::SamplerState mCurPixelSamplerStates[gl::MAX_TEXTURE_IMAGE_UNITS];
+    std::vector<bool> mForceSetPixelSamplerStates;
+    std::vector<gl::SamplerState> mCurPixelSamplerStates;
 
     // Currently applied textures
-    ID3D11ShaderResourceView *mCurVertexSRVs[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
-    ID3D11ShaderResourceView *mCurPixelSRVs[gl::MAX_TEXTURE_IMAGE_UNITS];
+    std::vector<ID3D11ShaderResourceView*> mCurVertexSRVs;
+    std::vector<ID3D11ShaderResourceView*> mCurPixelSRVs;
 
     // Currently applied blend state
     bool mForceSetBlendState;

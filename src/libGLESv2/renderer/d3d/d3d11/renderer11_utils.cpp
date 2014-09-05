@@ -944,7 +944,7 @@ void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *text
                                                  static_cast<GLint64>(caps->maxFragmentUniformComponents);
     caps->maxVaryingComponents = GetMaximumVertexOutputVectors(featureLevel) * 4;
     caps->maxVaryingVectors = GetMaximumVertexOutputVectors(featureLevel);
-    caps->maxCombinedTextureImageUnits = caps->maxVertexTextureImageUnits + caps->maxFragmentInputComponents;
+    caps->maxCombinedTextureImageUnits = caps->maxVertexTextureImageUnits + caps->maxTextureImageUnits;
 
     // Transform feedback limits
     caps->maxTransformFeedbackInterleavedComponents = GetMaximumStreamOutputInterleavedComponenets(featureLevel);

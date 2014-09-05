@@ -110,7 +110,7 @@ class ProgramBinary : public RefCountObject
     int getSemanticIndex(int attributeIndex);
 
     GLint getSamplerMapping(SamplerType type, unsigned int samplerIndex, const Caps &caps);
-    TextureType getSamplerTextureType(SamplerType type, unsigned int samplerIndex);
+    GLenum getSamplerTextureType(SamplerType type, unsigned int samplerIndex);
     GLint getUsedSamplerRange(SamplerType type);
     bool usesPointSize() const;
     bool usesPointSpriteEmulation() const;
@@ -205,7 +205,7 @@ class ProgramBinary : public RefCountObject
 
         bool active;
         GLint logicalTextureUnit;
-        TextureType textureType;
+        GLenum textureType;
     };
 
     void reset();
@@ -227,7 +227,7 @@ class ProgramBinary : public RefCountObject
     bool indexSamplerUniform(const LinkedUniform &uniform, InfoLog &infoLog, const Caps &caps);
     bool indexUniforms(InfoLog &infoLog, const Caps &caps);
     static bool assignSamplers(unsigned int startSamplerIndex, GLenum samplerType, unsigned int samplerCount,
-                               Sampler *outArray, GLuint *usedRange, unsigned int limit);
+                               std::vector<Sampler> &outSamplers, GLuint *outUsedRange);
     bool areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::InterfaceBlock &vertexInterfaceBlock, const sh::InterfaceBlock &fragmentInterfaceBlock);
     bool linkUniformBlocks(InfoLog &infoLog, const Shader &vertexShader, const Shader &fragmentShader, const Caps &caps);
     bool gatherTransformFeedbackLinkedVaryings(InfoLog &infoLog, const std::vector<LinkedVarying> &linkedVaryings,
@@ -303,8 +303,8 @@ class ProgramBinary : public RefCountObject
     GLenum mTransformFeedbackBufferMode;
     std::vector<LinkedVarying> mTransformFeedbackLinkedVaryings;
 
-    Sampler mSamplersPS[MAX_TEXTURE_IMAGE_UNITS];
-    Sampler mSamplersVS[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
+    std::vector<Sampler> mSamplersPS;
+    std::vector<Sampler> mSamplersVS;
     GLuint mUsedVertexSamplerRange;
     GLuint mUsedPixelSamplerRange;
     bool mUsesPointSize;
