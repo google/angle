@@ -4378,14 +4378,24 @@ void GL_APIENTRY glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum interna
           case GL_TEXTURE_2D:
             {
                 gl::Texture2D *texture2d = context->getTexture2D();
-                texture2d->storage(levels, internalformat, width, height);
+                gl::Error error = texture2d->storage(levels, internalformat, width, height);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
           case GL_TEXTURE_CUBE_MAP:
             {
                 gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
-                textureCube->storage(levels, internalformat, width);
+                gl::Error error = textureCube->storage(levels, internalformat, width);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
@@ -8313,14 +8323,24 @@ void GL_APIENTRY glTexStorage2D(GLenum target, GLsizei levels, GLenum internalfo
           case GL_TEXTURE_2D:
             {
                 gl::Texture2D *texture2d = context->getTexture2D();
-                texture2d->storage(levels, internalformat, width, height);
+                gl::Error error = texture2d->storage(levels, internalformat, width, height);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
           case GL_TEXTURE_CUBE_MAP:
             {
                 gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
-                textureCube->storage(levels, internalformat, width);
+                gl::Error error = textureCube->storage(levels, internalformat, width);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
@@ -8356,14 +8376,24 @@ void GL_APIENTRY glTexStorage3D(GLenum target, GLsizei levels, GLenum internalfo
           case GL_TEXTURE_3D:
             {
                 gl::Texture3D *texture3d = context->getTexture3D();
-                texture3d->storage(levels, internalformat, width, height, depth);
+                gl::Error error = texture3d->storage(levels, internalformat, width, height, depth);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
           case GL_TEXTURE_2D_ARRAY:
             {
                 gl::Texture2DArray *texture2darray = context->getTexture2DArray();
-                texture2darray->storage(levels, internalformat, width, height, depth);
+                gl::Error error = texture2darray->storage(levels, internalformat, width, height, depth);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
             }
             break;
 
