@@ -22,7 +22,7 @@ META_ASSERT(GL_INVALID_INDEX == UINT_MAX);
 
 using namespace gl;
 
-namespace gl_d3d
+namespace
 {
 
 std::string HLSLComponentTypeString(GLenum componentType)
@@ -68,6 +68,21 @@ std::string HLSLTypeString(GLenum type)
     }
 
     return HLSLComponentTypeString(gl::VariableComponentType(type), gl::VariableComponentCount(type));
+}
+
+const rx::PixelShaderOuputVariable &GetOutputAtLocation(const std::vector<rx::PixelShaderOuputVariable> &outputVariables,
+                                                        unsigned int location)
+{
+    for (size_t variableIndex = 0; variableIndex < outputVariables.size(); ++variableIndex)
+    {
+        if (outputVariables[variableIndex].outputIndex == location)
+        {
+            return outputVariables[variableIndex];
+        }
+    }
+
+    UNREACHABLE();
+    return outputVariables[0];
 }
 
 }
@@ -328,7 +343,7 @@ std::string DynamicHLSL::generateVaryingHLSL(const ShaderD3D *shader) const
                     {
                         GLenum componentType = VariableComponentType(transposedType);
                         int columnCount = VariableColumnCount(transposedType);
-                        typeString = gl_d3d::HLSLComponentTypeString(componentType, columnCount);
+                        typeString = HLSLComponentTypeString(componentType, columnCount);
                     }
                     varyingHLSL += typeString + " v" + n + " : " + varyingSemantic + n + ";\n";
                 }
@@ -361,12 +376,12 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
             if (IsMatrixType(shaderAttribute.type))
             {
                 // Matrix types are always transposed
-                structHLSL += "    " + gl_d3d::HLSLMatrixTypeString(TransposeMatrixType(shaderAttribute.type));
+                structHLSL += "    " + HLSLMatrixTypeString(TransposeMatrixType(shaderAttribute.type));
             }
             else
             {
                 GLenum componentType = mRenderer->getVertexComponentType(vertexFormat);
-                structHLSL += "    " + gl_d3d::HLSLComponentTypeString(componentType, VariableComponentCount(shaderAttribute.type));
+                structHLSL += "    " + HLSLComponentTypeString(componentType, VariableComponentCount(shaderAttribute.type));
             }
 
             structHLSL += " " + decorateVariable(shaderAttribute.name) + " : TEXCOORD" + Str(semanticIndex) + ";\n";
@@ -421,17 +436,19 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(const std::string
 
     std::string declarationHLSL;
     std::string copyHLSL;
-    for (size_t i = 0; i < outputVariables.size(); i++)
-    {
-        const PixelShaderOuputVariable& outputVariable = outputVariables[i];
-        ASSERT(outputLayout.size() > outputVariable.outputIndex);
 
-        // FIXME(geofflang): Work around NVIDIA driver bug by repacking buffers
-        bool outputIndexEnabled = true; // outputLayout[outputVariable.outputIndex] != GL_NONE
-        if (outputIndexEnabled)
+    for (size_t layoutIndex = 0; layoutIndex < outputLayout.size(); ++layoutIndex)
+    {
+        GLenum binding = outputLayout[layoutIndex];
+
+        if (binding != GL_NONE)
         {
-            declarationHLSL += "    " + gl_d3d::HLSLTypeString(outputVariable.type) + " " + outputVariable.name +
-                               " : " + targetSemantic + Str(outputVariable.outputIndex) + ";\n";
+            unsigned int location = (binding - GL_COLOR_ATTACHMENT0);
+
+            const PixelShaderOuputVariable &outputVariable = GetOutputAtLocation(outputVariables, location);
+
+            declarationHLSL += "    " + HLSLTypeString(outputVariable.type) + " " + outputVariable.name +
+                               " : " + targetSemantic + Str(layoutIndex) + ";\n";
 
             copyHLSL += "    output." + outputVariable.name + " = " + outputVariable.source + ";\n";
         }
