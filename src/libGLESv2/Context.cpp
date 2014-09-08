@@ -1683,10 +1683,10 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     applyRenderTarget(mode, false);
     applyState(mode);
 
-    GLenum err = mRenderer->applyVertexBuffer(programBinary, mState.getVertexArray()->getVertexAttributes(), mState.getVertexAttribCurrentValues(), first, count, instances);
-    if (err != GL_NO_ERROR)
+    Error error = mRenderer->applyVertexBuffer(programBinary, mState.getVertexArray()->getVertexAttributes(), mState.getVertexAttribCurrentValues(), first, count, instances);
+    if (error.isError())
     {
-        return gl::error(err);
+        return gl::error(error.getCode());
     }
 
     bool transformFeedbackActive = applyTransformFeedbackBuffers();
@@ -1740,12 +1740,12 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
     }
 
     GLsizei vertexCount = indexInfo.indexRange.length() + 1;
-    GLenum err = mRenderer->applyVertexBuffer(programBinary, vao->getVertexAttributes(),
-                                              mState.getVertexAttribCurrentValues(),
-                                              indexInfo.indexRange.start, vertexCount, instances);
-    if (err != GL_NO_ERROR)
+    error = mRenderer->applyVertexBuffer(programBinary, vao->getVertexAttributes(),
+                                         mState.getVertexAttribCurrentValues(),
+                                         indexInfo.indexRange.start, vertexCount, instances);
+    if (error.isError())
     {
-        return gl::error(err);
+        return gl::error(error.getCode());
     }
 
     bool transformFeedbackActive = applyTransformFeedbackBuffers();
