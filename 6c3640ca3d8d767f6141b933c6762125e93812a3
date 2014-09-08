@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "10c5df23_5d138733",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-08T19:06:50Z",
+      "side": 1,
+      "message": "This check has to be done in either case-- why not nest the dynamic/static if/else clause inside the nonzero data check? That\u0027d also fix Geoff\u0027s concern about skipping the data invalidation call below, I think.",
+      "range": {
+        "startLine": 277,
+        "startChar": 4,
+        "endLine": 277,
+        "endChar": 25
+      },
+      "revId": "6c3640ca3d8d767f6141b933c6762125e93812a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10c5df23_bd8e2b6c",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -36,6 +59,30 @@
       "writtenOn": "2014-09-08T18:24:42Z",
       "side": 1,
       "message": "Can this get a comment, something like \"dynamic data now synced, reset the dirty range\"?",
+      "range": {
+        "startLine": 589,
+        "startChar": 12,
+        "endLine": 590,
+        "endChar": 72
+      },
+      "revId": "6c3640ca3d8d767f6141b933c6762125e93812a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70029b43_d15e24a3",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-08T19:06:50Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "10c5df23_fd6d93cf",
       "range": {
         "startLine": 589,
         "startChar": 12,
