@@ -58,26 +58,10 @@ static void ConvertIndices(GLenum sourceType, GLenum destinationType, const void
 }
 
 IndexDataManager::IndexDataManager(Renderer *renderer)
-    : mRenderer(renderer)
+    : mRenderer(renderer),
+      mStreamingBufferShort(NULL),
+      mStreamingBufferInt(NULL)
 {
-    mStreamingBufferShort = new StreamingIndexBufferInterface(mRenderer);
-    if (!mStreamingBufferShort->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_SHORT))
-    {
-        SafeDelete(mStreamingBufferShort);
-    }
-
-    mStreamingBufferInt = new StreamingIndexBufferInterface(mRenderer);
-    if (!mStreamingBufferInt->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT))
-    {
-        SafeDelete(mStreamingBufferInt);
-    }
-
-    if (!mStreamingBufferShort)
-    {
-        // Make sure both buffers are deleted.
-        SafeDelete(mStreamingBufferInt);
-        ERR("Failed to allocate the streaming index buffer(s).");
-    }
 }
 
 IndexDataManager::~IndexDataManager()
@@ -88,11 +72,6 @@ IndexDataManager::~IndexDataManager()
 
 GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer *buffer, const GLvoid *indices, TranslatedIndexData *translated)
 {
-    if (!mStreamingBufferShort)
-    {
-        return GL_OUT_OF_MEMORY;
-    }
-
     const gl::Type &typeInfo = gl::GetTypeInfo(type);
 
     GLenum destinationIndexType = (type == GL_UNSIGNED_INT) ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT;
@@ -164,7 +143,11 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
 
     if (!directStorage && !indexBuffer)
     {
-        indexBuffer = (destinationIndexType == GL_UNSIGNED_INT) ? mStreamingBufferInt : mStreamingBufferShort;
+        GLenum err = getStreamingIndexBuffer(destinationIndexType, &indexBuffer);
+        if (err != GL_NO_ERROR)
+        {
+            return err;
+        }
 
         unsigned int convertCount = count;
 
@@ -232,6 +215,45 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     }
 
     return GL_NO_ERROR;
+}
+
+GLenum IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType, IndexBufferInterface **outBuffer)
+{
+    ASSERT(outBuffer);
+    if (destinationIndexType == GL_UNSIGNED_INT)
+    {
+        if (!mStreamingBufferInt)
+        {
+            mStreamingBufferInt = new StreamingIndexBufferInterface(mRenderer);
+            if (!mStreamingBufferInt->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT))
+            {
+                SafeDelete(mStreamingBufferInt);
+                ERR("Failed to allocate the streaming GL_UNSIGNED_INT index buffer.");
+                return GL_OUT_OF_MEMORY;
+            }
+        }
+
+        *outBuffer = mStreamingBufferInt;
+        return GL_NO_ERROR;
+    }
+    else
+    {
+        ASSERT(destinationIndexType == GL_UNSIGNED_SHORT);
+
+        if (!mStreamingBufferShort)
+        {
+            mStreamingBufferShort = new StreamingIndexBufferInterface(mRenderer);
+            if (!mStreamingBufferShort->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_SHORT))
+            {
+                SafeDelete(mStreamingBufferShort);
+                ERR("Failed to allocate the streaming GL_UNSIGNED_SHORT index buffer.");
+                return GL_OUT_OF_MEMORY;
+            }
+        }
+
+        *outBuffer = mStreamingBufferShort;
+        return GL_NO_ERROR;
+    }
 }
 
 }

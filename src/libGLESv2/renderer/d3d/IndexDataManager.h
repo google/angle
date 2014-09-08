@@ -27,6 +27,7 @@ class Buffer;
 
 namespace rx
 {
+class IndexBufferInterface;
 class StaticIndexBufferInterface;
 class StreamingIndexBufferInterface;
 class IndexBuffer;
@@ -54,6 +55,8 @@ class IndexDataManager
     GLenum prepareIndexData(GLenum type, GLsizei count, gl::Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
 
   private:
+    GLenum getStreamingIndexBuffer(GLenum destinationIndexType, IndexBufferInterface **outBuffer);
+
     DISALLOW_COPY_AND_ASSIGN(IndexDataManager);
 
     Renderer *const mRenderer;
