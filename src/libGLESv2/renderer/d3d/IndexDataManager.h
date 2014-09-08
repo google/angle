@@ -52,7 +52,6 @@ class IndexDataManager
     virtual ~IndexDataManager();
 
     GLenum prepareIndexData(GLenum type, GLsizei count, gl::Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
-    StaticIndexBufferInterface *getCountingIndices(GLsizei count);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(IndexDataManager);
@@ -61,7 +60,6 @@ class IndexDataManager
 
     StreamingIndexBufferInterface *mStreamingBufferShort;
     StreamingIndexBufferInterface *mStreamingBufferInt;
-    StaticIndexBufferInterface *mCountingBuffer;
 };
 
 }

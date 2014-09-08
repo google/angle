@@ -78,15 +78,12 @@ IndexDataManager::IndexDataManager(Renderer *renderer)
         SafeDelete(mStreamingBufferInt);
         ERR("Failed to allocate the streaming index buffer(s).");
     }
-
-    mCountingBuffer = NULL;
 }
 
 IndexDataManager::~IndexDataManager()
 {
     SafeDelete(mStreamingBufferShort);
     SafeDelete(mStreamingBufferInt);
-    SafeDelete(mCountingBuffer);
 }
 
 GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer *buffer, const GLvoid *indices, TranslatedIndexData *translated)
@@ -235,76 +232,6 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     }
 
     return GL_NO_ERROR;
-}
-
-StaticIndexBufferInterface *IndexDataManager::getCountingIndices(GLsizei count)
-{
-    if (count <= 65536)   // 16-bit indices
-    {
-        const unsigned int spaceNeeded = count * sizeof(unsigned short);
-
-        if (!mCountingBuffer || mCountingBuffer->getBufferSize() < spaceNeeded)
-        {
-            delete mCountingBuffer;
-            mCountingBuffer = new StaticIndexBufferInterface(mRenderer);
-            mCountingBuffer->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT);
-
-            void* mappedMemory = NULL;
-            if (!mCountingBuffer->mapBuffer(spaceNeeded, &mappedMemory, NULL))
-            {
-                ERR("Failed to map counting buffer.");
-                return NULL;
-            }
-
-            unsigned short *data = reinterpret_cast<unsigned short*>(mappedMemory);
-            for(int i = 0; i < count; i++)
-            {
-                data[i] = i;
-            }
-
-            if (!mCountingBuffer->unmapBuffer())
-            {
-                ERR("Failed to unmap counting buffer.");
-                return NULL;
-            }
-        }
-    }
-    else if (mStreamingBufferInt)   // 32-bit indices supported
-    {
-        const unsigned int spaceNeeded = count * sizeof(unsigned int);
-
-        if (!mCountingBuffer || mCountingBuffer->getBufferSize() < spaceNeeded)
-        {
-            delete mCountingBuffer;
-            mCountingBuffer = new StaticIndexBufferInterface(mRenderer);
-            mCountingBuffer->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT);
-
-            void* mappedMemory = NULL;
-            if (!mCountingBuffer->mapBuffer(spaceNeeded, &mappedMemory, NULL))
-            {
-                ERR("Failed to map counting buffer.");
-                return NULL;
-            }
-
-            unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
-            for(int i = 0; i < count; i++)
-            {
-                data[i] = i;
-            }
-
-            if (!mCountingBuffer->unmapBuffer())
-            {
-                ERR("Failed to unmap counting buffer.");
-                return NULL;
-            }
-        }
-    }
-    else
-    {
-        return NULL;
-    }
-
-    return mCountingBuffer;
 }
 
 }

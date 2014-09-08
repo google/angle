@@ -27,6 +27,7 @@ namespace rx
 class VertexDataManager;
 class IndexDataManager;
 class StreamingIndexBufferInterface;
+class StaticIndexBufferInterface;
 struct TranslatedAttribute;
 class Blit9;
 
@@ -211,6 +212,8 @@ class Renderer9 : public Renderer
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
     void drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
 
+    StaticIndexBufferInterface *getCountingIB(size_t count);
+
     bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
     gl::FramebufferAttachment *getNullColorbuffer(gl::FramebufferAttachment *depthbuffer);
 
@@ -321,6 +324,7 @@ class Renderer9 : public Renderer
 
     IndexDataManager *mIndexDataManager;
     StreamingIndexBufferInterface *mLineLoopIB;
+    StaticIndexBufferInterface *mCountingIB;
 
     enum { NUM_NULL_COLORBUFFER_CACHE_ENTRIES = 12 };
     struct NullColorbufferCacheEntry

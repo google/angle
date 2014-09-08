@@ -126,6 +126,7 @@ Renderer9::Renderer9(egl::Display *display, EGLNativeDisplayType hDc, EGLint req
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
     mLineLoopIB = NULL;
+    mCountingIB = NULL;
 
     mMaxNullColorbufferLRU = 0;
     for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
@@ -1306,26 +1307,23 @@ void Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool t
     }
     else if (instances > 0)
     {
-        StaticIndexBufferInterface *countingIB = mIndexDataManager->getCountingIndices(count);
-        if (countingIB)
+        StaticIndexBufferInterface *countingIB = getCountingIB(count);
+        if (!countingIB)
         {
-            if (mAppliedIBSerial != countingIB->getSerial())
-            {
-                IndexBuffer9 *indexBuffer = IndexBuffer9::makeIndexBuffer9(countingIB->getIndexBuffer());
-
-                mDevice->SetIndices(indexBuffer->getBuffer());
-                mAppliedIBSerial = countingIB->getSerial();
-            }
-
-            for (int i = 0; i < mRepeatDraw; i++)
-            {
-                mDevice->DrawIndexedPrimitive(mPrimitiveType, 0, 0, count, 0, mPrimitiveCount);
-            }
+            return;
         }
-        else
+
+        if (mAppliedIBSerial != countingIB->getSerial())
         {
-            ERR("Could not create a counting index buffer for glDrawArraysInstanced.");
-            return gl::error(GL_OUT_OF_MEMORY);
+            IndexBuffer9 *indexBuffer = IndexBuffer9::makeIndexBuffer9(countingIB->getIndexBuffer());
+
+            mDevice->SetIndices(indexBuffer->getBuffer());
+            mAppliedIBSerial = countingIB->getSerial();
+        }
+
+        for (int i = 0; i < mRepeatDraw; i++)
+        {
+            mDevice->DrawIndexedPrimitive(mPrimitiveType, 0, 0, count, 0, mPrimitiveCount);
         }
     }
     else   // Regular case
@@ -1574,6 +1572,80 @@ void Renderer9::drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indi
         case GL_UNSIGNED_SHORT: drawPoints<GLushort>(mDevice, count, indices, minIndex); break;
         case GL_UNSIGNED_INT:   drawPoints<GLuint>(mDevice, count, indices, minIndex);   break;
         default: UNREACHABLE();
+    }
+}
+
+StaticIndexBufferInterface *Renderer9::getCountingIB(size_t count)
+{
+    // Update the counting index buffer if it is not large enough or has not been created yet.
+    if (count <= 65536)   // 16-bit indices
+    {
+        const unsigned int spaceNeeded = count * sizeof(unsigned short);
+
+        if (!mCountingIB || mCountingIB->getBufferSize() < spaceNeeded)
+        {
+            SafeDelete(mCountingIB);
+            mCountingIB = new StaticIndexBufferInterface(this);
+            mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT);
+
+            void *mappedMemory = NULL;
+            if (!mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, NULL))
+            {
+                ERR("Failed to map counting buffer.");
+                return NULL;
+            }
+
+            unsigned short *data = reinterpret_cast<unsigned short*>(mappedMemory);
+            for (int i = 0; i < count; i++)
+            {
+                data[i] = i;
+            }
+
+            if (!mCountingIB->unmapBuffer())
+            {
+                ERR("Failed to unmap counting buffer.");
+                return NULL;
+            }
+        }
+
+        return mCountingIB;
+    }
+    else if (getRendererExtensions().elementIndexUint)
+    {
+        const unsigned int spaceNeeded = count * sizeof(unsigned int);
+
+        if (!mCountingIB || mCountingIB->getBufferSize() < spaceNeeded)
+        {
+            SafeDelete(mCountingIB);
+            mCountingIB = new StaticIndexBufferInterface(this);
+            mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT);
+
+            void *mappedMemory = NULL;
+            if (!mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, NULL))
+            {
+                ERR("Failed to map counting buffer.");
+                return NULL;
+            }
+
+            unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
+            for (int i = 0; i < count; i++)
+            {
+                data[i] = i;
+            }
+
+            if (!mCountingIB->unmapBuffer())
+            {
+                ERR("Failed to unmap counting buffer.");
+                return NULL;
+            }
+        }
+
+        return mCountingIB;
+    }
+    else
+    {
+        ERR("Could not create a counting index buffer for glDrawArraysInstanced.");
+        return gl::error<StaticIndexBufferInterface*>(GL_OUT_OF_MEMORY, NULL);
     }
 }
 
@@ -1982,6 +2054,7 @@ void Renderer9::releaseDeviceResources()
     SafeDelete(mVertexDataManager);
     SafeDelete(mIndexDataManager);
     SafeDelete(mLineLoopIB);
+    SafeDelete(mCountingIB);
 
     for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
     {
