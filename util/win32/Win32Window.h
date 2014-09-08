@@ -25,17 +25,18 @@ class Win32Window : public OSWindow
 
     void messageLoop();
 
-    bool popEvent(Event *event);
-    void pushEvent(Event event);
+    virtual void pushEvent(Event event);
 
     void setMousePosition(int x, int y);
     bool resize(int width, int height);
     bool setVisible(bool isVisible);
 
   private:
-    std::string mClassName;
+    std::string mParentClassName;
+    std::string mChildClassName;
 
     EGLNativeWindowType mNativeWindow;
+    EGLNativeWindowType mParentWindow;
     EGLNativeDisplayType mNativeDisplay;
 };
 

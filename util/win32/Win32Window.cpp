@@ -362,8 +362,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 Win32Window::Win32Window()
-    : mClassName(),
-      mNativeWindow(0),
+    : mNativeWindow(0),
+      mParentWindow(0),
       mNativeDisplay(0)
 {
 }
@@ -377,36 +377,55 @@ bool Win32Window::initialize(const std::string &name, size_t width, size_t heigh
 {
     destroy();
 
-    mClassName = name;
+    mParentClassName = name;
+    mChildClassName = name + "Child";
 
-    WNDCLASSEXA windowClass = { 0 };
-    windowClass.cbSize = sizeof(WNDCLASSEXA);
-    windowClass.style = CS_OWNDC;
-    windowClass.lpfnWndProc = WndProc;
-    windowClass.cbClsExtra = 0;
-    windowClass.cbWndExtra = 0;
-    windowClass.hInstance = GetModuleHandle(NULL);
-    windowClass.hIcon = NULL;
-    windowClass.hCursor = LoadCursorA(NULL, IDC_ARROW);
-    windowClass.hbrBackground = 0;
-    windowClass.lpszMenuName = NULL;
-    windowClass.lpszClassName = mClassName.c_str();
-    if (!RegisterClassExA(&windowClass))
+    WNDCLASSEXA parentWindowClass = { 0 };
+    parentWindowClass.cbSize = sizeof(WNDCLASSEXA);
+    parentWindowClass.style = 0;
+    parentWindowClass.lpfnWndProc = WndProc;
+    parentWindowClass.cbClsExtra = 0;
+    parentWindowClass.cbWndExtra = 0;
+    parentWindowClass.hInstance = GetModuleHandle(NULL);
+    parentWindowClass.hIcon = NULL;
+    parentWindowClass.hCursor = LoadCursorA(NULL, IDC_ARROW);
+    parentWindowClass.hbrBackground = 0;
+    parentWindowClass.lpszMenuName = NULL;
+    parentWindowClass.lpszClassName = mParentClassName.c_str();
+    if (!RegisterClassExA(&parentWindowClass))
     {
         return false;
     }
 
-    DWORD style = WS_VISIBLE | WS_CAPTION | WS_MINIMIZEBOX | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_SYSMENU;
-    DWORD extendedStyle = WS_EX_APPWINDOW;
+    WNDCLASSEXA childWindowClass = { 0 };
+    childWindowClass.cbSize = sizeof(WNDCLASSEXA);
+    childWindowClass.style = CS_OWNDC;
+    childWindowClass.lpfnWndProc = WndProc;
+    childWindowClass.cbClsExtra = 0;
+    childWindowClass.cbWndExtra = 0;
+    childWindowClass.hInstance = GetModuleHandle(NULL);
+    childWindowClass.hIcon = NULL;
+    childWindowClass.hCursor = LoadCursorA(NULL, IDC_ARROW);
+    childWindowClass.hbrBackground = 0;
+    childWindowClass.lpszMenuName = NULL;
+    childWindowClass.lpszClassName = mChildClassName.c_str();
+    if (!RegisterClassExA(&childWindowClass))
+    {
+        return false;
+    }
+
+    DWORD parentStyle = WS_VISIBLE | WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU;
+    DWORD parentExtendedStyle = WS_EX_APPWINDOW;
 
     RECT sizeRect = { 0, 0, width, height };
-    AdjustWindowRectEx(&sizeRect, style, false, extendedStyle);
+    AdjustWindowRectEx(&sizeRect, parentStyle, FALSE, parentExtendedStyle);
 
-    mNativeWindow = CreateWindowExA(extendedStyle, mClassName.c_str(), name.c_str(), style, CW_USEDEFAULT, CW_USEDEFAULT,
+    mParentWindow = CreateWindowExA(parentExtendedStyle, mParentClassName.c_str(), name.c_str(), parentStyle, CW_USEDEFAULT, CW_USEDEFAULT,
                                     sizeRect.right - sizeRect.left, sizeRect.bottom - sizeRect.top, NULL, NULL,
                                     GetModuleHandle(NULL), this);
 
-    ShowWindow(mNativeWindow, SW_SHOW);
+    mNativeWindow = CreateWindowExA(0, mChildClassName.c_str(), name.c_str(), WS_VISIBLE | WS_CHILD, 0, 0, width, height,
+                                    mParentWindow, NULL, GetModuleHandle(NULL), this);
 
     mNativeDisplay = GetDC(mNativeWindow);
     if (!mNativeDisplay)
@@ -432,7 +451,14 @@ void Win32Window::destroy()
         mNativeWindow = 0;
     }
 
-    UnregisterClassA(mClassName.c_str(), NULL);
+    if (mParentWindow)
+    {
+        DestroyWindow(mParentWindow);
+        mParentWindow = 0;
+    }
+
+    UnregisterClassA(mParentClassName.c_str(), NULL);
+    UnregisterClassA(mChildClassName.c_str(), NULL);
 }
 
 EGLNativeWindowType Win32Window::getNativeWindow() const
@@ -475,24 +501,54 @@ OSWindow *CreateOSWindow()
 
 bool Win32Window::resize(int width, int height)
 {
+    if (width == mWidth && height == mHeight)
+    {
+        return true;
+    }
+
     RECT windowRect;
-    if (!GetWindowRect(mNativeWindow, &windowRect))
+    if (!GetWindowRect(mParentWindow, &windowRect))
     {
         return false;
     }
 
-    if (!MoveWindow(mNativeWindow, windowRect.left, windowRect.top, width, height, FALSE))
+    RECT clientRect;
+    if (!GetClientRect(mParentWindow, &clientRect))
     {
         return false;
     }
 
-    mWidth = width;
-    mHeight = height;
+    LONG diffX = (windowRect.right - windowRect.left) - clientRect.right;
+    LONG diffY = (windowRect.bottom - windowRect.top) - clientRect.bottom;
+    if (!MoveWindow(mParentWindow, windowRect.left, windowRect.top, width + diffX, height + diffY, FALSE))
+    {
+        return false;
+    }
+
+    if (!MoveWindow(mNativeWindow, 0, 0, width, height, FALSE))
+    {
+        return false;
+    }
 
     return true;
 }
 
 bool Win32Window::setVisible(bool isVisible)
 {
-    return (ShowWindow(mNativeWindow, isVisible ? SW_SHOW : SW_HIDE) == TRUE);
+    int flag = (isVisible ? SW_SHOW : SW_HIDE);
+
+    return (ShowWindow(mNativeWindow, flag) == TRUE) &&
+           (ShowWindow(mParentWindow, flag) == TRUE);
+}
+
+void Win32Window::pushEvent(Event event)
+{
+    OSWindow::pushEvent(event);
+
+    switch (event.Type)
+    {
+      case Event::EVENT_RESIZED:
+        MoveWindow(mNativeWindow, 0, 0, mWidth, mHeight, FALSE);
+        break;
+    }
 }

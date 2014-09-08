@@ -22,6 +22,8 @@ void ANGLETest::SetUp()
 void ANGLETest::TearDown()
 {
     swapBuffers();
+    mOSWindow->messageLoop();
+
     if (!destroyEGLContext())
     {
         FAIL() << "egl context destruction failed.";
