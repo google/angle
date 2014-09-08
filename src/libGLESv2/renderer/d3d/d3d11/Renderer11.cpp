@@ -427,12 +427,13 @@ void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::Samp
 
         if (mForceSetPixelSamplerStates[index] || memcmp(&samplerState, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
-            ID3D11SamplerState *dxSamplerState = mStateCache.getSamplerState(samplerState);
-
-            if (!dxSamplerState)
+            ID3D11SamplerState *dxSamplerState = NULL;
+            gl::Error error = mStateCache.getSamplerState(samplerState, &dxSamplerState);
+            if (error.isError())
             {
                 ERR("NULL sampler state returned by RenderStateCache::getSamplerState, setting the default"
                     "sampler state for pixel shaders at slot %i.", index);
+                dxSamplerState = NULL;
             }
 
             mDeviceContext->PSSetSamplers(index, 1, &dxSamplerState);
@@ -448,12 +449,13 @@ void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::Samp
 
         if (mForceSetVertexSamplerStates[index] || memcmp(&samplerState, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
-            ID3D11SamplerState *dxSamplerState = mStateCache.getSamplerState(samplerState);
-
-            if (!dxSamplerState)
+            ID3D11SamplerState *dxSamplerState = NULL;
+            gl::Error error = mStateCache.getSamplerState(samplerState, &dxSamplerState);
+            if (error.isError())
             {
                 ERR("NULL sampler state returned by RenderStateCache::getSamplerState, setting the default"
                     "sampler state for vertex shaders at slot %i.", index);
+                dxSamplerState = NULL;
             }
 
             mDeviceContext->VSSetSamplers(index, 1, &dxSamplerState);
@@ -570,11 +572,13 @@ void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
 {
     if (mForceSetRasterState || memcmp(&rasterState, &mCurRasterState, sizeof(gl::RasterizerState)) != 0)
     {
-        ID3D11RasterizerState *dxRasterState = mStateCache.getRasterizerState(rasterState, mScissorEnabled);
-        if (!dxRasterState)
+        ID3D11RasterizerState *dxRasterState = NULL;
+        gl::Error error = mStateCache.getRasterizerState(rasterState, mScissorEnabled, &dxRasterState);
+        if (error.isError())
         {
             ERR("NULL rasterizer state returned by RenderStateCache::getRasterizerState, setting the default"
                 "rasterizer state.");
+            dxRasterState = NULL;
         }
 
         mDeviceContext->RSSetState(dxRasterState);
@@ -593,11 +597,13 @@ void Renderer11::setBlendState(gl::Framebuffer *framebuffer, const gl::BlendStat
         memcmp(&blendColor, &mCurBlendColor, sizeof(gl::ColorF)) != 0 ||
         sampleMask != mCurSampleMask)
     {
-        ID3D11BlendState *dxBlendState = mStateCache.getBlendState(framebuffer, blendState);
-        if (!dxBlendState)
+        ID3D11BlendState *dxBlendState = NULL;
+        gl::Error error = mStateCache.getBlendState(framebuffer, blendState, &dxBlendState);
+        if (error.isError())
         {
             ERR("NULL blend state returned by RenderStateCache::getBlendState, setting the default "
                 "blend state.");
+            dxBlendState = NULL;
         }
 
         float blendColors[4] = {0.0f};
@@ -638,11 +644,13 @@ void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilS
         ASSERT(stencilRef == stencilBackRef);
         ASSERT(depthStencilState.stencilMask == depthStencilState.stencilBackMask);
 
-        ID3D11DepthStencilState *dxDepthStencilState = mStateCache.getDepthStencilState(depthStencilState);
-        if (!dxDepthStencilState)
+        ID3D11DepthStencilState *dxDepthStencilState = NULL;
+        gl::Error error = mStateCache.getDepthStencilState(depthStencilState, &dxDepthStencilState);
+        if (error.isError())
         {
             ERR("NULL depth stencil state returned by RenderStateCache::getDepthStencilState, "
                 "setting the default depth stencil state.");
+            dxDepthStencilState = NULL;
         }
 
         // Max D3D11 stencil reference value is 0xFF, corresponding to the max 8 bits in a stencil buffer
