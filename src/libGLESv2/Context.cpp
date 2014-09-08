@@ -1788,16 +1788,16 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
     VertexArray *vao = mState.getVertexArray();
     rx::TranslatedIndexData indexInfo;
     indexInfo.indexRange = indexRange;
-    GLenum err = mRenderer->applyIndexBuffer(indices, vao->getElementArrayBuffer(), count, mode, type, &indexInfo);
-    if (err != GL_NO_ERROR)
+    Error error = mRenderer->applyIndexBuffer(indices, vao->getElementArrayBuffer(), count, mode, type, &indexInfo);
+    if (error.isError())
     {
-        return gl::error(err);
+        return gl::error(error.getCode());
     }
 
     GLsizei vertexCount = indexInfo.indexRange.length() + 1;
-    err = mRenderer->applyVertexBuffer(programBinary, vao->getVertexAttributes(),
-                                       mState.getVertexAttribCurrentValues(),
-                                       indexInfo.indexRange.start, vertexCount, instances);
+    GLenum err = mRenderer->applyVertexBuffer(programBinary, vao->getVertexAttributes(),
+                                              mState.getVertexAttribCurrentValues(),
+                                              indexInfo.indexRange.start, vertexCount, instances);
     if (err != GL_NO_ERROR)
     {
         return gl::error(err);

@@ -1269,25 +1269,26 @@ GLenum Renderer9::applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
-GLenum Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
+gl::Error Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
 {
-    GLenum err = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices, indexInfo);
-
-    if (err == GL_NO_ERROR)
+    gl::Error error = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices, indexInfo);
+    if (error.isError())
     {
-        // Directly binding the storage buffer is not supported for d3d9
-        ASSERT(indexInfo->storage == NULL);
-
-        if (indexInfo->serial != mAppliedIBSerial)
-        {
-            IndexBuffer9* indexBuffer = IndexBuffer9::makeIndexBuffer9(indexInfo->indexBuffer);
-
-            mDevice->SetIndices(indexBuffer->getBuffer());
-            mAppliedIBSerial = indexInfo->serial;
-        }
+        return error;
     }
 
-    return err;
+    // Directly binding the storage buffer is not supported for d3d9
+    ASSERT(indexInfo->storage == NULL);
+
+    if (indexInfo->serial != mAppliedIBSerial)
+    {
+        IndexBuffer9* indexBuffer = IndexBuffer9::makeIndexBuffer9(indexInfo->indexBuffer);
+
+        mDevice->SetIndices(indexBuffer->getBuffer());
+        mAppliedIBSerial = indexInfo->serial;
+    }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 void Renderer9::applyTransformFeedbackBuffers(gl::Buffer *transformFeedbackBuffers[], GLintptr offsets[])
@@ -1375,10 +1376,10 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         if (!mLineLoopIB)
         {
             mLineLoopIB = new StreamingIndexBufferInterface(this);
-            if (!mLineLoopIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT))
+            gl::Error error = mLineLoopIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT);
+            if (error.isError())
             {
-                delete mLineLoopIB;
-                mLineLoopIB = NULL;
+                SafeDelete(mLineLoopIB);
 
                 ERR("Could not create a 32-bit looping index buffer for GL_LINE_LOOP.");
                 return gl::error(GL_OUT_OF_MEMORY);
@@ -1394,8 +1395,9 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
             return gl::error(GL_OUT_OF_MEMORY);
         }
 
-        const unsigned int spaceNeeded = (static_cast<unsigned int>(count) + 1) * sizeof(unsigned int);
-        if (!mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT))
+        const unsigned int spaceNeeded = (static_cast<unsigned int>(count)+1) * sizeof(unsigned int);
+        gl::Error error = mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT);
+        if (error.isError())
         {
             ERR("Could not reserve enough space in looping index buffer for GL_LINE_LOOP.");
             return gl::error(GL_OUT_OF_MEMORY);
@@ -1403,7 +1405,8 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
 
         void* mappedMemory = NULL;
         unsigned int offset = 0;
-        if (!mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset))
+        error = mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset);
+        if (error.isError())
         {
             ERR("Could not map index buffer for GL_LINE_LOOP.");
             return gl::error(GL_OUT_OF_MEMORY);
@@ -1445,7 +1448,8 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
           default: UNREACHABLE();
         }
 
-        if (!mLineLoopIB->unmapBuffer())
+        error = mLineLoopIB->unmapBuffer();
+        if (error.isError())
         {
             ERR("Could not unmap index buffer for GL_LINE_LOOP.");
             return gl::error(GL_OUT_OF_MEMORY);
@@ -1456,10 +1460,10 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         if (!mLineLoopIB)
         {
             mLineLoopIB = new StreamingIndexBufferInterface(this);
-            if (!mLineLoopIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_SHORT))
+            gl::Error error = mLineLoopIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_SHORT);
+            if (error.isError())
             {
-                delete mLineLoopIB;
-                mLineLoopIB = NULL;
+                SafeDelete(mLineLoopIB);
 
                 ERR("Could not create a 16-bit looping index buffer for GL_LINE_LOOP.");
                 return gl::error(GL_OUT_OF_MEMORY);
@@ -1476,7 +1480,8 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         }
 
         const unsigned int spaceNeeded = (static_cast<unsigned int>(count) + 1) * sizeof(unsigned short);
-        if (!mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT))
+        gl::Error error = mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT);
+        if (error.isError())
         {
             ERR("Could not reserve enough space in looping index buffer for GL_LINE_LOOP.");
             return gl::error(GL_OUT_OF_MEMORY);
@@ -1484,7 +1489,8 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
 
         void* mappedMemory = NULL;
         unsigned int offset;
-        if (mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset))
+        error = mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset);
+        if (error.isError())
         {
             ERR("Could not map index buffer for GL_LINE_LOOP.");
             return gl::error(GL_OUT_OF_MEMORY);
@@ -1526,7 +1532,8 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
           default: UNREACHABLE();
         }
 
-        if (!mLineLoopIB->unmapBuffer())
+        error = mLineLoopIB->unmapBuffer();
+        if (error.isError())
         {
             ERR("Could not unmap index buffer for GL_LINE_LOOP.");
             return gl::error(GL_OUT_OF_MEMORY);
@@ -1589,7 +1596,8 @@ StaticIndexBufferInterface *Renderer9::getCountingIB(size_t count)
             mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT);
 
             void *mappedMemory = NULL;
-            if (!mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, NULL))
+            gl::Error error = mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, NULL);
+            if (error.isError())
             {
                 ERR("Failed to map counting buffer.");
                 return NULL;
@@ -1601,7 +1609,8 @@ StaticIndexBufferInterface *Renderer9::getCountingIB(size_t count)
                 data[i] = i;
             }
 
-            if (!mCountingIB->unmapBuffer())
+            error = mCountingIB->unmapBuffer();
+            if (error.isError())
             {
                 ERR("Failed to unmap counting buffer.");
                 return NULL;
@@ -1621,7 +1630,8 @@ StaticIndexBufferInterface *Renderer9::getCountingIB(size_t count)
             mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT);
 
             void *mappedMemory = NULL;
-            if (!mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, NULL))
+            gl::Error error = mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, NULL);
+            if (error.isError())
             {
                 ERR("Failed to map counting buffer.");
                 return NULL;
@@ -1633,7 +1643,8 @@ StaticIndexBufferInterface *Renderer9::getCountingIB(size_t count)
                 data[i] = i;
             }
 
-            if (!mCountingIB->unmapBuffer())
+            error = mCountingIB->unmapBuffer();
+            if (error.isError())
             {
                 ERR("Failed to unmap counting buffer.");
                 return NULL;

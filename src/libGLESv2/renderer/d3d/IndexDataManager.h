@@ -12,6 +12,7 @@
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
+#include "libGLESv2/Error.h"
 
 #include <GLES2/gl2.h>
 
@@ -52,10 +53,10 @@ class IndexDataManager
     explicit IndexDataManager(Renderer *renderer);
     virtual ~IndexDataManager();
 
-    GLenum prepareIndexData(GLenum type, GLsizei count, gl::Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
+    gl::Error prepareIndexData(GLenum type, GLsizei count, gl::Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
 
   private:
-    GLenum getStreamingIndexBuffer(GLenum destinationIndexType, IndexBufferInterface **outBuffer);
+     gl::Error getStreamingIndexBuffer(GLenum destinationIndexType, IndexBufferInterface **outBuffer);
 
     DISALLOW_COPY_AND_ASSIGN(IndexDataManager);
 
