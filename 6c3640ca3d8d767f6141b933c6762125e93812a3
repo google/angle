@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10c5df23_bd8e2b6c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-08T18:24:42Z",
+      "side": 1,
+      "message": "We\u0027re now skipping this, it may have side-effects by not invaliding the static data.",
+      "range": {
+        "startLine": 305,
+        "startChar": 4,
+        "endLine": 306,
+        "endChar": 27
+      },
+      "revId": "6c3640ca3d8d767f6141b933c6762125e93812a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10c5df23_fd6d93cf",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-08T18:24:42Z",
+      "side": 1,
+      "message": "Can this get a comment, something like \"dynamic data now synced, reset the dirty range\"?",
+      "range": {
+        "startLine": 589,
+        "startChar": 12,
+        "endLine": 590,
+        "endChar": 72
+      },
+      "revId": "6c3640ca3d8d767f6141b933c6762125e93812a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10c5df23_3d5c7b26",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 874,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-08T18:24:42Z",
+      "side": 1,
+      "message": "I don\u0027t think it makes much sense to have the offset be for both the source and destination since we control the source data before passing it to setData.  You can just add an offset to the data before calling setData.",
+      "range": {
+        "startLine": 874,
+        "startChar": 37,
+        "endLine": 874,
+        "endChar": 45
+      },
+      "revId": "6c3640ca3d8d767f6141b933c6762125e93812a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
