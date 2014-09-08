@@ -60,34 +60,34 @@ class Renderer11 : public Renderer
     virtual SwapChain *createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
 
     virtual gl::Error generateSwizzle(gl::Texture *texture);
-    virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
-    virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
+    virtual gl::Error setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
+    virtual gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 
-    virtual bool setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[]);
+    virtual gl::Error setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[]);
 
-    virtual void setRasterizerState(const gl::RasterizerState &rasterState);
-    virtual void setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
-                               unsigned int sampleMask);
-    virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
-                                      int stencilBackRef, bool frontFaceCCW);
+    virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState);
+    virtual gl::Error setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
+                                    unsigned int sampleMask);
+    virtual gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
+                                           int stencilBackRef, bool frontFaceCCW);
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
     virtual void setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
                              bool ignoreViewport);
 
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count);
-    virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
-    virtual void applyShaders(gl::ProgramBinary *programBinary, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
-                              bool rasterizerDiscard, bool transformFeedbackActive);
-    virtual void applyUniforms(const gl::ProgramBinary &programBinary);
+    virtual gl::Error applyRenderTarget(gl::Framebuffer *frameBuffer);
+    virtual gl::Error applyShaders(gl::ProgramBinary *programBinary, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
+                                   bool rasterizerDiscard, bool transformFeedbackActive);
+    virtual gl::Error applyUniforms(const gl::ProgramBinary &programBinary);
     virtual gl::Error applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], const gl::VertexAttribCurrentValueData currentValues[],
                                         GLint first, GLsizei count, GLsizei instances);
     virtual gl::Error applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
     virtual void applyTransformFeedbackBuffers(gl::Buffer *transformFeedbackBuffers[], GLintptr offsets[]);
 
-    virtual void drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive);
-    virtual void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
-                              gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances);
+    virtual gl::Error drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive);
+    virtual gl::Error drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
+                                   gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances);
 
     virtual gl::Error clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer);
 
@@ -206,8 +206,8 @@ class Renderer11 : public Renderer
 
     virtual void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const;
 
-    void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
-    void drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);
+    gl::Error drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
+    gl::Error drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);
 
     gl::Error readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
                               GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels);

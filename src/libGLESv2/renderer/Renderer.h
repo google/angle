@@ -110,34 +110,34 @@ class Renderer
     virtual SwapChain *createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
 
     virtual gl::Error generateSwizzle(gl::Texture *texture) = 0;
-    virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler) = 0;
-    virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture) = 0;
+    virtual gl::Error setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler) = 0;
+    virtual gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture) = 0;
 
-    virtual bool setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[]) = 0;
+    virtual gl::Error setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[]) = 0;
 
-    virtual void setRasterizerState(const gl::RasterizerState &rasterState) = 0;
-    virtual void setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
-                               unsigned int sampleMask) = 0;
-    virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
-                                      int stencilBackRef, bool frontFaceCCW) = 0;
+    virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState) = 0;
+    virtual gl::Error setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
+                                    unsigned int sampleMask) = 0;
+    virtual gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
+                                           int stencilBackRef, bool frontFaceCCW) = 0;
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled) = 0;
     virtual void setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
                              bool ignoreViewport) = 0;
 
-    virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
-    virtual void applyShaders(gl::ProgramBinary *programBinary, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
-                              bool rasterizerDiscard, bool transformFeedbackActive) = 0;
-    virtual void applyUniforms(const gl::ProgramBinary &programBinary) = 0;
+    virtual gl::Error applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
+    virtual gl::Error applyShaders(gl::ProgramBinary *programBinary, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
+                                   bool rasterizerDiscard, bool transformFeedbackActive) = 0;
+    virtual gl::Error applyUniforms(const gl::ProgramBinary &programBinary) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount) = 0;
     virtual gl::Error applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], const gl::VertexAttribCurrentValueData currentValues[],
                                         GLint first, GLsizei count, GLsizei instances) = 0;
     virtual gl::Error applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo) = 0;
     virtual void applyTransformFeedbackBuffers(gl::Buffer *transformFeedbackBuffers[], GLintptr offsets[]) = 0;
 
-    virtual void drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive) = 0;
-    virtual void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
-                              gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances) = 0;
+    virtual gl::Error drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive) = 0;
+    virtual gl::Error drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
+                                   gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances) = 0;
 
     virtual gl::Error clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer) = 0;
 

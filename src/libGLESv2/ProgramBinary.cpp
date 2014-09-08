@@ -970,19 +970,25 @@ void ProgramBinary::updateSamplerMapping()
 }
 
 // Applies all the uniforms set for this program object to the renderer
-void ProgramBinary::applyUniforms()
+Error ProgramBinary::applyUniforms()
 {
     updateSamplerMapping();
 
-    mProgram->getRenderer()->applyUniforms(*this);
+    Error error = mProgram->getRenderer()->applyUniforms(*this);
+    if (error.isError())
+    {
+        return error;
+    }
 
     for (size_t uniformIndex = 0; uniformIndex < mUniforms.size(); uniformIndex++)
     {
         mUniforms[uniformIndex]->dirty = false;
     }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
-bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers, const Caps &caps)
+Error ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers, const Caps &caps)
 {
     const gl::Buffer *vertexUniformBuffers[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS] = {NULL};
     const gl::Buffer *fragmentUniformBuffers[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS] = {NULL};
@@ -1002,7 +1008,7 @@ bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuff
         if (uniformBuffer->getSize() < uniformBlock->dataSize)
         {
             // undefined behaviour
-            return false;
+            return gl::Error(GL_INVALID_OPERATION, "It is undefined behaviour to use a uniform buffer that is too small.");
         }
 
         // Unnecessary to apply an unreferenced standard or shared UBO

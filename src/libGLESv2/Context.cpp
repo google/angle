@@ -1310,12 +1310,16 @@ bool Context::getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned
 
 // Applies the render target surface, depth stencil surface, viewport rectangle and
 // scissor rectangle to the renderer
-void Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
+Error Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
 {
     Framebuffer *framebufferObject = mState.getDrawFramebuffer();
     ASSERT(framebufferObject && framebufferObject->completeness() == GL_FRAMEBUFFER_COMPLETE);
 
-    mRenderer->applyRenderTarget(framebufferObject);
+    gl::Error error = mRenderer->applyRenderTarget(framebufferObject);
+    if (error.isError())
+    {
+        return error;
+    }
 
     float nearZ, farZ;
     mState.getDepthRange(&nearZ, &farZ);
@@ -1323,10 +1327,12 @@ void Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
                            ignoreViewport);
 
     mRenderer->setScissorRectangle(mState.getScissor(), mState.isScissorTestEnabled());
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 // Applies the fixed-function state (culling, depth test, alpha blending, stenciling, etc) to the Direct3D 9 device
-void Context::applyState(GLenum drawMode)
+Error Context::applyState(GLenum drawMode)
 {
     Framebuffer *framebufferObject = mState.getDrawFramebuffer();
     int samples = framebufferObject->getSamples();
@@ -1335,7 +1341,11 @@ void Context::applyState(GLenum drawMode)
     rasterizer.pointDrawMode = (drawMode == GL_POINTS);
     rasterizer.multiSample = (samples != 0);
 
-    mRenderer->setRasterizerState(rasterizer);
+    Error error = mRenderer->setRasterizerState(rasterizer);
+    if (error.isError())
+    {
+        return error;
+    }
 
     unsigned int mask = 0;
     if (mState.isSampleCoverageEnabled())
@@ -1345,7 +1355,6 @@ void Context::applyState(GLenum drawMode)
         mState.getSampleCoverageParams(&coverageValue, &coverageInvert);
         if (coverageValue != 0)
         {
-
             float threshold = 0.5f;
 
             for (int i = 0; i < samples; ++i)
@@ -1369,14 +1378,24 @@ void Context::applyState(GLenum drawMode)
     {
         mask = 0xFFFFFFFF;
     }
-    mRenderer->setBlendState(framebufferObject, mState.getBlendState(), mState.getBlendColor(), mask);
+    error = mRenderer->setBlendState(framebufferObject, mState.getBlendState(), mState.getBlendColor(), mask);
+    if (error.isError())
+    {
+        return error;
+    }
 
-    mRenderer->setDepthStencilState(mState.getDepthStencilState(), mState.getStencilRef(), mState.getStencilBackRef(),
-                                    rasterizer.frontFace == GL_CCW);
+    error = mRenderer->setDepthStencilState(mState.getDepthStencilState(), mState.getStencilRef(), mState.getStencilBackRef(),
+                                            rasterizer.frontFace == GL_CCW);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    return Error(GL_NO_ERROR);
 }
 
 // Applies the shaders and shader constants to the Direct3D 9 device
-void Context::applyShaders(ProgramBinary *programBinary, bool transformFeedbackActive)
+Error Context::applyShaders(ProgramBinary *programBinary, bool transformFeedbackActive)
 {
     const VertexAttribute *vertexAttributes = mState.getVertexArray()->getVertexAttributes();
 
@@ -1385,9 +1404,13 @@ void Context::applyShaders(ProgramBinary *programBinary, bool transformFeedbackA
 
     const Framebuffer *fbo = mState.getDrawFramebuffer();
 
-    mRenderer->applyShaders(programBinary, inputLayout, fbo, mState.getRasterizerState().rasterizerDiscard, transformFeedbackActive);
+    Error error = mRenderer->applyShaders(programBinary, inputLayout, fbo, mState.getRasterizerState().rasterizerDiscard, transformFeedbackActive);
+    if (error.isError())
+    {
+        return error;
+    }
 
-    programBinary->applyUniforms();
+    return programBinary->applyUniforms();
 }
 
 Error Context::generateSwizzles(ProgramBinary *programBinary, SamplerType type)
@@ -1435,8 +1458,8 @@ Error Context::generateSwizzles(ProgramBinary *programBinary)
 // For each Direct3D sampler of either the pixel or vertex stage,
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).
-void Context::applyTextures(ProgramBinary *programBinary, SamplerType shaderType,
-                            const FramebufferTextureSerialArray &framebufferSerials, size_t framebufferSerialCount)
+Error Context::applyTextures(ProgramBinary *programBinary, SamplerType shaderType,
+                             const FramebufferTextureSerialArray &framebufferSerials, size_t framebufferSerialCount)
 {
     size_t samplerRange = programBinary->getUsedSamplerRange(shaderType);
     for (size_t samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
@@ -1459,20 +1482,37 @@ void Context::applyTextures(ProgramBinary *programBinary, SamplerType shaderType
             if (texture->isSamplerComplete(sampler, mTextureCaps, mExtensions, mClientVersion) &&
                 !std::binary_search(framebufferSerials.begin(), framebufferSerials.begin() + framebufferSerialCount, texture->getTextureSerial()))
             {
-                mRenderer->setSamplerState(shaderType, samplerIndex, sampler);
-                mRenderer->setTexture(shaderType, samplerIndex, texture);
+                Error error = mRenderer->setSamplerState(shaderType, samplerIndex, sampler);
+                if (error.isError())
+                {
+                    return error;
+                }
+
+                error = mRenderer->setTexture(shaderType, samplerIndex, texture);
+                if (error.isError())
+                {
+                    return error;
+                }
             }
             else
             {
                 // Texture is not sampler complete or it is in use by the framebuffer.  Bind the incomplete texture.
                 Texture *incompleteTexture = getIncompleteTexture(textureType);
-                mRenderer->setTexture(shaderType, samplerIndex, incompleteTexture);
+                gl::Error error = mRenderer->setTexture(shaderType, samplerIndex, incompleteTexture);
+                if (error.isError())
+                {
+                    return error;
+                }
             }
         }
         else
         {
             // No texture bound to this slot even though it is used by the shader, bind a NULL texture
-            mRenderer->setTexture(shaderType, samplerIndex, NULL);
+            Error error = mRenderer->setTexture(shaderType, samplerIndex, NULL);
+            if (error.isError())
+            {
+                return error;
+            }
         }
     }
 
@@ -1481,20 +1521,37 @@ void Context::applyTextures(ProgramBinary *programBinary, SamplerType shaderType
                                                         : mCaps.maxVertexTextureImageUnits;
     for (size_t samplerIndex = samplerRange; samplerIndex < samplerCount; samplerIndex++)
     {
-        mRenderer->setTexture(shaderType, samplerIndex, NULL);
+        Error error = mRenderer->setTexture(shaderType, samplerIndex, NULL);
+        if (error.isError())
+        {
+            return error;
+        }
     }
+
+    return Error(GL_NO_ERROR);
 }
 
-void Context::applyTextures(ProgramBinary *programBinary)
+Error Context::applyTextures(ProgramBinary *programBinary)
 {
     FramebufferTextureSerialArray framebufferSerials;
     size_t framebufferSerialCount = getBoundFramebufferTextureSerials(&framebufferSerials);
 
-    applyTextures(programBinary, SAMPLER_VERTEX, framebufferSerials, framebufferSerialCount);
-    applyTextures(programBinary, SAMPLER_PIXEL, framebufferSerials, framebufferSerialCount);
+    Error error = applyTextures(programBinary, SAMPLER_VERTEX, framebufferSerials, framebufferSerialCount);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    error = applyTextures(programBinary, SAMPLER_PIXEL, framebufferSerials, framebufferSerialCount);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    return Error(GL_NO_ERROR);
 }
 
-bool Context::applyUniformBuffers()
+Error Context::applyUniformBuffers()
 {
     Program *programObject = getProgram(mState.getCurrentProgramId());
     ProgramBinary *programBinary = programObject->getProgramBinary();
@@ -1508,7 +1565,7 @@ bool Context::applyUniformBuffers()
         if (mState.getIndexedUniformBuffer(blockBinding)->id() == 0)
         {
             // undefined behaviour
-            return false;
+            return gl::Error(GL_INVALID_OPERATION, "It is undefined behaviour to have a used but unbound uniform buffer.");
         }
         else
         {
@@ -1683,7 +1740,7 @@ Error Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
                                  reinterpret_cast<uint8_t*>(pixels));
 }
 
-void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances)
+Error Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances)
 {
     ASSERT(mState.getCurrentProgramId() != 0);
 
@@ -1693,48 +1750,72 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     Error error = generateSwizzles(programBinary);
     if (error.isError())
     {
-        return gl::error(error.getCode());
+        return error;
     }
 
     if (!mRenderer->applyPrimitiveType(mode, count))
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
-    applyRenderTarget(mode, false);
-    applyState(mode);
+    error = applyRenderTarget(mode, false);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    error = applyState(mode);
+    if (error.isError())
+    {
+        return error;
+    }
 
     error = mRenderer->applyVertexBuffer(programBinary, mState.getVertexArray()->getVertexAttributes(), mState.getVertexAttribCurrentValues(), first, count, instances);
     if (error.isError())
     {
-        return gl::error(error.getCode());
+        return error;
     }
 
     bool transformFeedbackActive = applyTransformFeedbackBuffers();
 
-    applyShaders(programBinary, transformFeedbackActive);
-
-    applyTextures(programBinary);
-
-    if (!applyUniformBuffers())
+    error = applyShaders(programBinary, transformFeedbackActive);
+    if (error.isError())
     {
-        return;
+        return error;
+    }
+
+    error = applyTextures(programBinary);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    error = applyUniformBuffers();
+    if (error.isError())
+    {
+        return error;
     }
 
     if (!skipDraw(mode))
     {
-        mRenderer->drawArrays(mode, count, instances, transformFeedbackActive);
+        error = mRenderer->drawArrays(mode, count, instances, transformFeedbackActive);
+        if (error.isError())
+        {
+            return error;
+        }
 
         if (transformFeedbackActive)
         {
             markTransformFeedbackUsage();
         }
     }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
-void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
-                           const GLvoid *indices, GLsizei instances,
-                           const rx::RangeUI &indexRange)
+Error Context::drawElements(GLenum mode, GLsizei count, GLenum type,
+                            const GLvoid *indices, GLsizei instances,
+                            const rx::RangeUI &indexRange)
 {
     ASSERT(mState.getCurrentProgramId() != 0);
 
@@ -1744,16 +1825,25 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
     Error error = generateSwizzles(programBinary);
     if (error.isError())
     {
-        return gl::error(error.getCode());
+        return error;
     }
 
     if (!mRenderer->applyPrimitiveType(mode, count))
     {
-        return;
+        return Error(GL_NO_ERROR);
     }
 
-    applyRenderTarget(mode, false);
-    applyState(mode);
+    error = applyRenderTarget(mode, false);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    error = applyState(mode);
+    if (error.isError())
+    {
+        return error;
+    }
 
     VertexArray *vao = mState.getVertexArray();
     rx::TranslatedIndexData indexInfo;
@@ -1761,7 +1851,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
     error = mRenderer->applyIndexBuffer(indices, vao->getElementArrayBuffer(), count, mode, type, &indexInfo);
     if (error.isError())
     {
-        return gl::error(error.getCode());
+        return error;
     }
 
     GLsizei vertexCount = indexInfo.indexRange.length() + 1;
@@ -1770,7 +1860,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
                                          indexInfo.indexRange.start, vertexCount, instances);
     if (error.isError())
     {
-        return gl::error(error.getCode());
+        return error;
     }
 
     bool transformFeedbackActive = applyTransformFeedbackBuffers();
@@ -1778,19 +1868,34 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
     // layer.
     ASSERT(!transformFeedbackActive);
 
-    applyShaders(programBinary, transformFeedbackActive);
-
-    applyTextures(programBinary);
-
-    if (!applyUniformBuffers())
+    error = applyShaders(programBinary, transformFeedbackActive);
+    if (error.isError())
     {
-        return;
+        return error;
+    }
+
+    error = applyTextures(programBinary);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    error = applyUniformBuffers();
+    if (error.isError())
+    {
+        return error;
     }
 
     if (!skipDraw(mode))
     {
-        mRenderer->drawElements(mode, count, type, indices, vao->getElementArrayBuffer(), indexInfo, instances);
+        error = mRenderer->drawElements(mode, count, type, indices, vao->getElementArrayBuffer(), indexInfo, instances);
+        if (error.isError())
+        {
+            return error;
+        }
     }
+
+    return Error(GL_NO_ERROR);
 }
 
 // Implements glFlush when block is false, glFinish when block is true

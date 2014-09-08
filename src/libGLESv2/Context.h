@@ -189,10 +189,10 @@ class Context
     Error clearBufferfi(GLenum buffer, int drawbuffer, float depth, int stencil);
 
     Error readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei *bufSize, void* pixels);
-    void drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances);
-    void drawElements(GLenum mode, GLsizei count, GLenum type,
-                      const GLvoid *indices, GLsizei instances,
-                      const rx::RangeUI &indexRange);
+    Error drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances);
+    Error drawElements(GLenum mode, GLsizei count, GLenum type,
+                       const GLvoid *indices, GLsizei instances,
+                       const rx::RangeUI &indexRange);
     void sync(bool block);   // flush/finish
 
     void recordError(const Error &error);
@@ -231,13 +231,13 @@ class Context
     // TODO: std::array may become unavailable using older versions of GCC
     typedef std::array<unsigned int, IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS> FramebufferTextureSerialArray;
 
-    void applyRenderTarget(GLenum drawMode, bool ignoreViewport);
-    void applyState(GLenum drawMode);
-    void applyShaders(ProgramBinary *programBinary, bool transformFeedbackActive);
-    void applyTextures(ProgramBinary *programBinary, SamplerType shaderType, const FramebufferTextureSerialArray &framebufferSerials,
-                       size_t framebufferSerialCount);
-    void applyTextures(ProgramBinary *programBinary);
-    bool applyUniformBuffers();
+    Error applyRenderTarget(GLenum drawMode, bool ignoreViewport);
+    Error applyState(GLenum drawMode);
+    Error applyShaders(ProgramBinary *programBinary, bool transformFeedbackActive);
+    Error applyTextures(ProgramBinary *programBinary, SamplerType shaderType, const FramebufferTextureSerialArray &framebufferSerials,
+                        size_t framebufferSerialCount);
+    Error applyTextures(ProgramBinary *programBinary);
+    Error applyUniformBuffers();
     bool applyTransformFeedbackBuffers();
     void markTransformFeedbackUsage();
 

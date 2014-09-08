@@ -1343,7 +1343,12 @@ void __stdcall glDrawArrays(GLenum mode, GLint first, GLsizei count)
             return;
         }
 
-        context->drawArrays(mode, first, count, 0);
+        gl::Error error = context->drawArrays(mode, first, count, 0);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -1359,7 +1364,12 @@ void __stdcall glDrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei coun
             return;
         }
 
-        context->drawArrays(mode, first, count, primcount);
+        gl::Error error = context->drawArrays(mode, first, count, primcount);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -1377,7 +1387,12 @@ void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
             return;
         }
 
-        context->drawElements(mode, count, type, indices, 0, indexRange);
+        gl::Error error = context->drawElements(mode, count, type, indices, 0, indexRange);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -1395,7 +1410,12 @@ void __stdcall glDrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum t
             return;
         }
 
-        context->drawElements(mode, count, type, indices, primcount, indexRange);
+        gl::Error error = context->drawElements(mode, count, type, indices, primcount, indexRange);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
