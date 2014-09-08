@@ -110,7 +110,12 @@ void __stdcall glBeginQueryEXT(GLenum target, GLuint id)
             return;
         }
 
-        context->beginQuery(target, id);
+        gl::Error error = context->beginQuery(target, id);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -1451,7 +1456,12 @@ void __stdcall glEndQueryEXT(GLenum target)
             return;
         }
 
-        context->endQuery(target);
+        gl::Error error = context->endQuery(target);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -2604,11 +2614,27 @@ void __stdcall glGetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
         switch(pname)
         {
           case GL_QUERY_RESULT_EXT:
-            params[0] = queryObject->getResult();
+            {
+                gl::Error error = queryObject->getResult(params);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
+            }
             break;
+
           case GL_QUERY_RESULT_AVAILABLE_EXT:
-            params[0] = queryObject->isResultAvailable();
+            {
+                gl::Error error = queryObject->isResultAvailable(params);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
+            }
             break;
+
           default:
             context->recordError(gl::Error(GL_INVALID_ENUM));
             return;
@@ -5301,7 +5327,13 @@ void __stdcall glBeginQuery(GLenum target, GLuint id)
         {
             return;
         }
-        context->beginQuery(target, id);
+
+        gl::Error error = context->beginQuery(target, id);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -5323,7 +5355,12 @@ void __stdcall glEndQuery(GLenum target)
             return;
         }
 
-        context->endQuery(target);
+        gl::Error error = context->endQuery(target);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -5388,12 +5425,26 @@ void __stdcall glGetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
 
         switch(pname)
         {
-          case GL_QUERY_RESULT:
-            params[0] = queryObject->getResult();
+          case GL_QUERY_RESULT_EXT:
+            {
+                gl::Error error = queryObject->getResult(params);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
+            }
             break;
 
-          case GL_QUERY_RESULT_AVAILABLE:
-            params[0] = queryObject->isResultAvailable();
+          case GL_QUERY_RESULT_AVAILABLE_EXT:
+            {
+                gl::Error error = queryObject->isResultAvailable(params);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
+            }
             break;
 
           default:

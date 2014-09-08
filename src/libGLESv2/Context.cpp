@@ -681,26 +681,35 @@ void Context::bindTransformFeedback(GLuint transformFeedback)
     mState.setTransformFeedbackBinding(getTransformFeedback(transformFeedback));
 }
 
-void Context::beginQuery(GLenum target, GLuint query)
+Error Context::beginQuery(GLenum target, GLuint query)
 {
     Query *queryObject = getQuery(query, true, target);
     ASSERT(queryObject);
 
-    // set query as active for specified target
+    // begin query
+    Error error = queryObject->begin();
+    if (error.isError())
+    {
+        return error;
+    }
+
+    // set query as active for specified target only if begin succeeded
     mState.setActiveQuery(target, queryObject);
 
-    // begin query
-    queryObject->begin();
+    return Error(GL_NO_ERROR);
 }
 
-void Context::endQuery(GLenum target)
+Error Context::endQuery(GLenum target)
 {
     Query *queryObject = mState.getActiveQuery(target);
     ASSERT(queryObject);
 
-    queryObject->end();
+    gl::Error error = queryObject->end();
 
+    // Always unbind the query, even if there was an error. This may delete the query object.
     mState.setActiveQuery(target, NULL);
+
+    return error;
 }
 
 void Context::setFramebufferZero(Framebuffer *buffer)

@@ -1038,12 +1038,6 @@ bool ValidateEndQuery(gl::Context *context, GLenum target)
         return false;
     }
 
-    if (!queryObject->isStarted())
-    {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
     return true;
 }
 

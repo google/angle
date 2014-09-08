@@ -137,8 +137,8 @@ class Context
     void setProgramBinary(GLuint program, GLenum binaryFormat, const void *binary, GLint length);
     void bindTransformFeedback(GLuint transformFeedback);
 
-    void beginQuery(GLenum target, GLuint query);
-    void endQuery(GLenum target);
+    Error beginQuery(GLenum target, GLuint query);
+    Error endQuery(GLenum target);
 
     void setFramebufferZero(Framebuffer *framebuffer);
 
