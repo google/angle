@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70029b43_74d00635",
+        "filename": "tests/angle_tests/ANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-08T21:38:57Z",
+      "side": 1,
+      "message": "this ensures we flush any resize and paint events.",
+      "range": {
+        "startLine": 25,
+        "startChar": 15,
+        "endLine": 25,
+        "endChar": 26
+      },
+      "revId": "1207028b04701185a1b34430a504385d9240f6df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

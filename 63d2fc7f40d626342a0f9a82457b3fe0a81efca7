@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10c5df23_dd88d79d",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-08T21:38:57Z",
+      "side": 0,
+      "message": "we update this already in pushEvent",
+      "range": {
+        "startLine": 489,
+        "startChar": 4,
+        "endLine": 489,
+        "endChar": 10
+      },
+      "revId": "63d2fc7f40d626342a0f9a82457b3fe0a81efca7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
