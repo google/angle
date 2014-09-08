@@ -368,8 +368,8 @@ static inline unsigned int GetSwizzleIndex(GLenum swizzle)
     return colorIndex;
 }
 
-bool Blit11::swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTargetView *dest, const gl::Extents &size,
-                            GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha)
+gl::Error Blit11::swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTargetView *dest, const gl::Extents &size,
+                                 GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha)
 {
     HRESULT result;
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
@@ -407,7 +407,7 @@ bool Blit11::swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTarget
     if (i == mSwizzleShaderMap.end())
     {
         UNREACHABLE();
-        return false;
+        return gl::Error(GL_INVALID_OPERATION, "Internal error, missing swizzle shader.");
     }
 
     const Shader &shader = i->second;
@@ -417,8 +417,7 @@ bool Blit11::swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTarget
     result = deviceContext->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
-        ERR("Failed to map vertex buffer for texture swizzle, HRESULT: 0x%X.", result);
-        return false;
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal vertex buffer for swizzle, HRESULT: 0x%X.", result);
     }
 
     UINT stride = 0;
@@ -435,8 +434,7 @@ bool Blit11::swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTarget
     result = deviceContext->Map(mSwizzleCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
-        ERR("Failed to map constant buffer for texture swizzle, HRESULT: 0x%X.", result);
-        return false;
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal constant buffer for swizzle, HRESULT: 0x%X.", result);
     }
 
     unsigned int *swizzleIndices = reinterpret_cast<unsigned int*>(mappedResource.pData);
@@ -503,7 +501,7 @@ bool Blit11::swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTarget
 
     mRenderer->markAllStateDirty();
 
-    return true;
+    return gl::Error(GL_NO_ERROR);
 }
 
 bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,

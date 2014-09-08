@@ -240,7 +240,7 @@ ID3D11ShaderResourceView *TextureStorage11::getSRVLevel(int mipLevel)
     }
 }
 
-void TextureStorage11::generateSwizzles(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha)
+gl::Error TextureStorage11::generateSwizzles(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha)
 {
     SwizzleCacheValue swizzleTarget(swizzleRed, swizzleGreen, swizzleBlue, swizzleAlpha);
     for (int level = 0; level < getLevelCount(); level++)
@@ -256,16 +256,17 @@ void TextureStorage11::generateSwizzles(GLenum swizzleRed, GLenum swizzleGreen, 
 
             Blit11 *blitter = mRenderer->getBlitter();
 
-            if (blitter->swizzleTexture(sourceSRV, destRTV, size, swizzleRed, swizzleGreen, swizzleBlue, swizzleAlpha))
+            gl::Error error = blitter->swizzleTexture(sourceSRV, destRTV, size, swizzleRed, swizzleGreen, swizzleBlue, swizzleAlpha);
+            if (error.isError())
             {
-                mSwizzleCache[level] = swizzleTarget;
+                return error;
             }
-            else
-            {
-                ERR("Failed to swizzle texture.");
-            }
+
+            mSwizzleCache[level] = swizzleTarget;
         }
     }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 void TextureStorage11::invalidateSwizzleCacheLevel(int mipLevel)

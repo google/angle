@@ -60,7 +60,7 @@ class Renderer9 : public Renderer
     IDirect3DPixelShader9 *createPixelShader(const DWORD *function, size_t length);
     HRESULT createVertexBuffer(UINT Length, DWORD Usage, IDirect3DVertexBuffer9 **ppVertexBuffer);
     HRESULT createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, IDirect3DIndexBuffer9 **ppIndexBuffer);
-    virtual void generateSwizzle(gl::Texture *texture);
+    virtual gl::Error generateSwizzle(gl::Texture *texture);
     virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
     virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 

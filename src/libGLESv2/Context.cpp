@@ -1390,7 +1390,7 @@ void Context::applyShaders(ProgramBinary *programBinary, bool transformFeedbackA
     programBinary->applyUniforms();
 }
 
-void Context::generateSwizzles(ProgramBinary *programBinary, SamplerType type)
+Error Context::generateSwizzles(ProgramBinary *programBinary, SamplerType type)
 {
     size_t samplerRange = programBinary->getUsedSamplerRange(type);
 
@@ -1403,16 +1403,33 @@ void Context::generateSwizzles(ProgramBinary *programBinary, SamplerType type)
             Texture* texture = getSamplerTexture(textureUnit, textureType);
             if (texture->getSamplerState().swizzleRequired())
             {
-                mRenderer->generateSwizzle(texture);
+                Error error = mRenderer->generateSwizzle(texture);
+                if (error.isError())
+                {
+                    return error;
+                }
             }
         }
     }
+
+    return Error(GL_NO_ERROR);
 }
 
-void Context::generateSwizzles(ProgramBinary *programBinary)
+Error Context::generateSwizzles(ProgramBinary *programBinary)
 {
-    generateSwizzles(programBinary, SAMPLER_VERTEX);
-    generateSwizzles(programBinary, SAMPLER_PIXEL);
+    Error error = generateSwizzles(programBinary, SAMPLER_VERTEX);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    error = generateSwizzles(programBinary, SAMPLER_PIXEL);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    return Error(GL_NO_ERROR);
 }
 
 // For each Direct3D sampler of either the pixel or vertex stage,
@@ -1673,7 +1690,11 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     ProgramBinary *programBinary = mState.getCurrentProgramBinary();
     programBinary->updateSamplerMapping();
 
-    generateSwizzles(programBinary);
+    Error error = generateSwizzles(programBinary);
+    if (error.isError())
+    {
+        return gl::error(error.getCode());
+    }
 
     if (!mRenderer->applyPrimitiveType(mode, count))
     {
@@ -1683,7 +1704,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     applyRenderTarget(mode, false);
     applyState(mode);
 
-    Error error = mRenderer->applyVertexBuffer(programBinary, mState.getVertexArray()->getVertexAttributes(), mState.getVertexAttribCurrentValues(), first, count, instances);
+    error = mRenderer->applyVertexBuffer(programBinary, mState.getVertexArray()->getVertexAttributes(), mState.getVertexAttribCurrentValues(), first, count, instances);
     if (error.isError())
     {
         return gl::error(error.getCode());
@@ -1720,7 +1741,11 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
     ProgramBinary *programBinary = mState.getCurrentProgramBinary();
     programBinary->updateSamplerMapping();
 
-    generateSwizzles(programBinary);
+    Error error = generateSwizzles(programBinary);
+    if (error.isError())
+    {
+        return gl::error(error.getCode());
+    }
 
     if (!mRenderer->applyPrimitiveType(mode, count))
     {
@@ -1733,7 +1758,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
     VertexArray *vao = mState.getVertexArray();
     rx::TranslatedIndexData indexInfo;
     indexInfo.indexRange = indexRange;
-    Error error = mRenderer->applyIndexBuffer(indices, vao->getElementArrayBuffer(), count, mode, type, &indexInfo);
+    error = mRenderer->applyIndexBuffer(indices, vao->getElementArrayBuffer(), count, mode, type, &indexInfo);
     if (error.isError())
     {
         return gl::error(error.getCode());

@@ -59,7 +59,7 @@ class Renderer11 : public Renderer
 
     virtual SwapChain *createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
 
-    virtual void generateSwizzle(gl::Texture *texture);
+    virtual gl::Error generateSwizzle(gl::Texture *texture);
     virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
     virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 

@@ -11,6 +11,7 @@
 #define LIBGLESV2_RENDERER_TEXTURESTORAGE11_H_
 
 #include "libGLESv2/Texture.h"
+#include "libGLESv2/Error.h"
 #include "libGLESv2/renderer/d3d/TextureStorage.h"
 
 #include <map>
@@ -52,7 +53,7 @@ class TextureStorage11 : public TextureStorage
     virtual int getLevelCount() const;
     UINT getSubresourceIndex(int mipLevel, int layerTarget) const;
 
-    void generateSwizzles(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
+    gl::Error generateSwizzles(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
     void invalidateSwizzleCacheLevel(int mipLevel);
     void invalidateSwizzleCache();
 

@@ -413,7 +413,7 @@ SwapChain *Renderer11::createSwapChain(HWND window, HANDLE shareHandle, GLenum b
     return new rx::SwapChain11(this, window, shareHandle, backBufferFormat, depthBufferFormat);
 }
 
-void Renderer11::generateSwizzle(gl::Texture *texture)
+gl::Error Renderer11::generateSwizzle(gl::Texture *texture)
 {
     if (texture)
     {
@@ -422,12 +422,18 @@ void Renderer11::generateSwizzle(gl::Texture *texture)
         {
             TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage);
 
-            storage11->generateSwizzles(texture->getSamplerState().swizzleRed,
-                                        texture->getSamplerState().swizzleGreen,
-                                        texture->getSamplerState().swizzleBlue,
-                                        texture->getSamplerState().swizzleAlpha);
+            gl::Error error = storage11->generateSwizzles(texture->getSamplerState().swizzleRed,
+                                                          texture->getSamplerState().swizzleGreen,
+                                                          texture->getSamplerState().swizzleBlue,
+                                                          texture->getSamplerState().swizzleAlpha);
+            if (error.isError())
+            {
+                return error;
+            }
         }
     }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)

@@ -11,6 +11,7 @@
 
 #include "common/angleutils.h"
 #include "libGLESv2/angletypes.h"
+#include "libGLESv2/Error.h"
 
 #include <map>
 
@@ -30,8 +31,8 @@ class Blit11
     explicit Blit11(Renderer11 *renderer);
     ~Blit11();
 
-    bool swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTargetView *dest, const gl::Extents &size,
-                        GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
+    gl::Error swizzleTexture(ID3D11ShaderResourceView *source, ID3D11RenderTargetView *dest, const gl::Extents &size,
+                             GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
 
     bool copyTexture(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,
                      ID3D11RenderTargetView *dest, const gl::Box &destArea, const gl::Extents &destSize,

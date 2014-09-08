@@ -249,8 +249,8 @@ class Context
     void detachTransformFeedback(GLuint transformFeedback);
     void detachSampler(GLuint sampler);
 
-    void generateSwizzles(ProgramBinary *programBinary, SamplerType type);
-    void generateSwizzles(ProgramBinary *programBinary);
+    Error generateSwizzles(ProgramBinary *programBinary, SamplerType type);
+    Error generateSwizzles(ProgramBinary *programBinary);
 
     Texture *getIncompleteTexture(GLenum type);
 

@@ -636,10 +636,11 @@ bool Renderer9::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsi
     return false;
 }
 
-void Renderer9::generateSwizzle(gl::Texture *texture)
+gl::Error Renderer9::generateSwizzle(gl::Texture *texture)
 {
     // Swizzled textures are not available in ES2 or D3D9
     UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
 }
 
 void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
