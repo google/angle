@@ -47,6 +47,7 @@ class SimpleBenchmark
   protected:
     unsigned int mDrawIterations;
     double mRunTimeSeconds;
+    int mNumFrames;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(SimpleBenchmark);
@@ -57,7 +58,6 @@ class SimpleBenchmark
     void step(float dt, double totalTime);
     void draw();
 
-    int mNumFrames;
     std::string mName;
     bool mRunning;
 

@@ -14,11 +14,12 @@ EGLint platforms[] =
 };
 
 GLenum vertexTypes[] = { GL_FLOAT };
-GLint componentCounts[] = { 2, 3, 4 };
+GLint componentCounts[] = { 4 };
 GLboolean vertexNorms[] = { GL_FALSE };
-GLsizeiptr updateSizes[] = { 300 };
+GLsizeiptr updateSizes[] = { 0, 300 };
 GLsizeiptr bufferSizes[] = { 1024 * 1024 };
 unsigned int iterationCounts[] = { 10 };
+unsigned int updatesEveryNFrames[] = { 1, 4 };
 
 int main(int argc, char **argv)
 {
@@ -44,16 +45,32 @@ int main(int argc, char **argv)
                         {
                             for (size_t itIt = 0; itIt < ArraySize(iterationCounts); itIt++)
                             {
-                                BufferSubDataParams params;
-                                params.requestedRenderer = platforms[platIt];
-                                params.vertexType = vertexTypes[typeIt];
-                                params.vertexComponentCount = componentCounts[compIt];
-                                params.vertexNormalized = vertexNorms[normIt];
-                                params.updateSize = updateSizes[updateIt];
-                                params.bufferSize = bufferSizes[bufszIt];
-                                params.iterations = iterationCounts[itIt];
+                                for (size_t nfrIt = 0; nfrIt < ArraySize(updatesEveryNFrames); nfrIt++)
+                                {
+                                    BufferSubDataParams params;
+                                    params.requestedRenderer = platforms[platIt];
+                                    params.vertexType = vertexTypes[typeIt];
+                                    params.vertexComponentCount = componentCounts[compIt];
+                                    params.vertexNormalized = vertexNorms[normIt];
+                                    params.updateSize = updateSizes[updateIt];
+                                    params.bufferSize = bufferSizes[bufszIt];
+                                    params.iterations = iterationCounts[itIt];
+                                    params.updatesEveryNFrames = updatesEveryNFrames[nfrIt];
 
-                                benchmarks.push_back(params);
+                                    if (updateSizes[updateIt] == 0)
+                                    {
+                                        if (nfrIt > 0)
+                                        {
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            params.updatesEveryNFrames = 1;
+                                        }
+                                    }
+
+                                    benchmarks.push_back(params);
+                                }
                             }
                         }
                     }

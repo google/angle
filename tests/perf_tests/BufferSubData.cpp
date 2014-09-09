@@ -158,7 +158,7 @@ std::string BufferSubDataParams::name() const
 
     strstr << vertexComponentCount;
 
-    strstr << " - " << updateSize << "b updates - ";
+    strstr << " - " << updateSize << "b updates (per " << updatesEveryNFrames << ") - ";
     strstr << (bufferSize >> 10) << "k buffer - ";
     strstr << iterations << " updates";
 
@@ -167,6 +167,10 @@ std::string BufferSubDataParams::name() const
 
 BufferSubDataBenchmark::BufferSubDataBenchmark(const BufferSubDataParams &params)
     : SimpleBenchmark(params.name(), 1280, 720, 2, params.requestedRenderer),
+      mProgram(0),
+      mBuffer(0),
+      mUpdateData(NULL),
+      mNumTris(0),
       mParams(params)
 {
     mDrawIterations = mParams.iterations;
@@ -208,15 +212,22 @@ bool BufferSubDataBenchmark::initializeBenchmark()
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
+
+    std::vector<uint8_t> zeroData(mParams.bufferSize);
+    memset(zeroData.data(), 0, zeroData.size());
+
     glGenBuffers(1, &mBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mParams.bufferSize, 0, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, mParams.bufferSize, zeroData.data(), GL_DYNAMIC_DRAW);
 
     glVertexAttribPointer(0, mParams.vertexComponentCount, mParams.vertexType,
                           mParams.vertexNormalized, 0, 0);
     glEnableVertexAttribArray(0);
 
-    mUpdateData = new uint8_t[mParams.updateSize];
+    if (mParams.updateSize > 0)
+    {
+        mUpdateData = new uint8_t[mParams.updateSize];
+    }
 
     std::vector<uint8_t> data;
     GLsizei triDataSize = GetVertexData(mParams.vertexType,
@@ -228,6 +239,12 @@ bool BufferSubDataBenchmark::initializeBenchmark()
     {
         memcpy(mUpdateData + offset, data.data(), triDataSize);
         offset += triDataSize;
+    }
+
+    if (mParams.updateSize == 0)
+    {
+        mNumTris = 1;
+        glBufferSubData(GL_ARRAY_BUFFER, 0, data.size(), data.data());
     }
 
     // Set the viewport
@@ -271,7 +288,11 @@ void BufferSubDataBenchmark::drawBenchmark()
 {
     for (unsigned int it = 0; it < mParams.iterations; it++)
     {
-        glBufferSubData(GL_ARRAY_BUFFER, 0, mParams.updateSize, mUpdateData);
+        if (mParams.updateSize > 0 && ((mNumFrames % mParams.updatesEveryNFrames) == 0))
+        {
+            glBufferSubData(GL_ARRAY_BUFFER, 0, mParams.updateSize, mUpdateData);
+        }
+
         glDrawArrays(GL_TRIANGLES, 0, 3 * mNumTris);
     }
 }

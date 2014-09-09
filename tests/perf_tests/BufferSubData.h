@@ -20,6 +20,7 @@ struct BufferSubDataParams : public BenchmarkParams
     GLsizeiptr updateSize;
     GLsizeiptr bufferSize;
     unsigned int iterations;
+    unsigned int updatesEveryNFrames;
 
     virtual std::string name() const;
 };
