@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "10f15fa2_d76736ed",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-09T20:07:06Z",
+      "side": 1,
+      "message": "Is this a good metric for whether it\u0027s dynamic? We don\u0027t create the static buffers until we pass a larger threshold-- maybe we should be either using the existence of the static buffers, or tracking with a separate flag. The above code seems like it could get us using direct binding for buffers that change every other frame, if I\u0027m reading it right?",
+      "range": {
+        "startLine": 604,
+        "startChar": 4,
+        "endLine": 604,
+        "endChar": 34
+      },
+      "revId": "b1fb13063fd6ada5ae1287e1a27b05dbc94363e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0edabca_ac9fb680",
         "filename": "tests/perf_tests/BufferSubData.cpp",
         "patchSetId": 2
