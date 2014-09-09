@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "70029b43_45226ac6",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-09T21:04:03Z",
+      "side": 1,
+      "message": "I think your suggestion to use the static interface pointers to determine when we have dynamic data is much better. I benchmarked and saw a slight but noticeable improvement in frame time when we don\u0027t switch to direct buffers as often. (~18.8 instead of ~18.9 ms per frame)",
+      "parentUuid": "70029b43_7a0bcd8a",
+      "range": {
+        "startLine": 604,
+        "startChar": 4,
+        "endLine": 604,
+        "endChar": 34
+      },
+      "revId": "b1fb13063fd6ada5ae1287e1a27b05dbc94363e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0edabca_ac9fb680",
         "filename": "tests/perf_tests/BufferSubData.cpp",
         "patchSetId": 2
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "I had put it in for std::min/std::max, looks like I don\u0027t use them anymore. Will remove it, thanks!",
       "parentUuid": "f0edabca_ac9fb680",
+      "range": {
+        "startLine": 11,
+        "startChar": 10,
+        "endLine": 11,
+        "endChar": 19
+      },
+      "revId": "b1fb13063fd6ada5ae1287e1a27b05dbc94363e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70029b43_252766d6",
+        "filename": "tests/perf_tests/BufferSubData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-09T21:04:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70029b43_1a8441bb",
       "range": {
         "startLine": 11,
         "startChar": 10,
