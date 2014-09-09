@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10f15fa2_f782327a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/IndexBuffer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-09T22:13:37Z",
+      "side": 1,
+      "message": "The following call path exists:\n  Renderer9::initializeDevice()\n  IndexDataManager::IndexDataManager(Renderer *this)\n  StreamingIndexBufferInterface::reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT)\n  IndexBufferInterface::setBufferSize(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT)\n  IndexBuffer9::initialize(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT, true)\n\nI don\u0027t think the presence of the extension is checked anywhere in there, so this assertion seems like it would be triggered any time that UINT indices aren\u0027t supported.",
+      "range": {
+        "startLine": 43,
+        "startChar": 12,
+        "endLine": 43,
+        "endChar": 72
+      },
+      "revId": "46656f12188497565a9fa5f325e87410633a5c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
