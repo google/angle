@@ -365,13 +365,12 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
 
     for (unsigned int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        ASSERT(inputIndex < MAX_VERTEX_ATTRIBS);
-
-        const VertexFormat &vertexFormat = inputLayout[inputIndex];
         const sh::Attribute &shaderAttribute = shaderAttributes[attributeIndex];
-
         if (!shaderAttribute.name.empty())
         {
+            ASSERT(inputIndex < MAX_VERTEX_ATTRIBS);
+            const VertexFormat &vertexFormat = inputLayout[inputIndex];
+
             // HLSL code for input structure
             if (IsMatrixType(shaderAttribute.type))
             {
