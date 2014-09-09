@@ -162,9 +162,7 @@ Buffer11::Buffer11(Renderer11 *renderer)
       mSize(0),
       mMappedStorage(NULL),
       mResolvedDataRevision(0),
-      mReadUsageCount(0),
-      mDynamicUsage(0),
-      mDynamicDirtyRange(std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::min())
+      mReadUsageCount(0)
 {}
 
 Buffer11::~Buffer11()
@@ -183,16 +181,6 @@ Buffer11 *Buffer11::makeBuffer11(BufferImpl *buffer)
 
 gl::Error Buffer11::setData(const void *data, size_t size, GLenum usage)
 {
-    mDynamicUsage = (usage == GL_DYNAMIC_DRAW);
-
-    if (mDynamicUsage)
-    {
-        if (!mDynamicData.resize(size))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY);
-        }
-    }
-
     gl::Error error = setSubData(data, size, 0);
     if (error.isError())
     {
@@ -254,39 +242,30 @@ gl::Error Buffer11::setSubData(const void *data, size_t size, size_t offset)
 
     if (data && size > 0)
     {
-        if (mDynamicUsage)
+        NativeBuffer11 *stagingBuffer = getStagingBuffer();
+
+        if (!stagingBuffer)
         {
-            mDynamicDirtyRange.start = std::min(mDynamicDirtyRange.start, offset);
-            mDynamicDirtyRange.end = std::max(mDynamicDirtyRange.end, size + offset);
-            memcpy(mDynamicData.data() + offset, data, size);
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal staging buffer.");
         }
-        else
+
+        // Explicitly resize the staging buffer, preserving data if the new data will not
+        // completely fill the buffer
+        if (stagingBuffer->getSize() < requiredSize)
         {
-            NativeBuffer11 *stagingBuffer = getStagingBuffer();
-
-            if (!stagingBuffer)
+            bool preserveData = (offset > 0);
+            if (!stagingBuffer->resize(requiredSize, preserveData))
             {
-                return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal staging buffer.");
+                return gl::Error(GL_OUT_OF_MEMORY, "Failed to resize internal staging buffer.");
             }
-
-            // Explicitly resize the staging buffer, preserving data if the new data will not
-            // completely fill the buffer
-            if (stagingBuffer->getSize() < requiredSize)
-            {
-                bool preserveData = (offset > 0);
-                if (!stagingBuffer->resize(requiredSize, preserveData))
-                {
-                    return gl::Error(GL_OUT_OF_MEMORY, "Failed to resize internal staging buffer.");
-                }
-            }
-
-            if (!stagingBuffer->setData(D3D11_MAP_WRITE, reinterpret_cast<const uint8_t *>(data), size, offset))
-            {
-                return gl::Error(GL_OUT_OF_MEMORY, "Failed to set data on internal staging buffer.");
-            }
-
-            stagingBuffer->setDataRevision(stagingBuffer->getDataRevision() + 1);
         }
+
+        if (!stagingBuffer->setData(D3D11_MAP_WRITE, reinterpret_cast<const uint8_t *>(data), size, offset))
+        {
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to set data on internal staging buffer.");
+        }
+
+        stagingBuffer->setDataRevision(stagingBuffer->getDataRevision() + 1);
     }
 
     mSize = std::max(mSize, requiredSize);
@@ -331,7 +310,7 @@ gl::Error Buffer11::copySubData(BufferImpl* source, GLintptr sourceOffset, GLint
     {
         if (copySource->getUsage() == BUFFER_USAGE_STAGING)
         {
-            copySource = getBufferStorage(BUFFER_USAGE_VERTEX);
+            copySource = getBufferStorage(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
         }
         else
         {
@@ -398,7 +377,7 @@ gl::Error Buffer11::unmap()
 
 void Buffer11::markTransformFeedbackUsage()
 {
-    BufferStorage11 *transformFeedbackStorage = getBufferStorage(BUFFER_USAGE_TRANSFORM_FEEDBACK);
+    BufferStorage11 *transformFeedbackStorage = getBufferStorage(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
 
     if (transformFeedbackStorage)
     {
@@ -510,38 +489,10 @@ gl::Error Buffer11::packPixels(ID3D11Texture2D *srcTexture, UINT srcSubresource,
     return gl::Error(GL_NO_ERROR);
 }
 
-Buffer11::BufferStorage11 *Buffer11::getBufferStorage(BufferUsage requestedUsage)
+Buffer11::BufferStorage11 *Buffer11::getBufferStorage(BufferUsage usage)
 {
-    ASSERT(requestedUsage != BUFFER_USAGE_VERTEX_DYNAMIC);
-    ASSERT(requestedUsage != BUFFER_USAGE_INDEX_DYNAMIC);
-
-    BufferUsage internalUsage = requestedUsage;
-
-    if (mDynamicUsage)
-    {
-        if (requestedUsage == BUFFER_USAGE_VERTEX)
-        {
-            internalUsage = BUFFER_USAGE_VERTEX_DYNAMIC;
-        }
-        else if (requestedUsage == BUFFER_USAGE_INDEX)
-        {
-            internalUsage = BUFFER_USAGE_INDEX_DYNAMIC;
-        }
-        else
-        {
-            // Convert out of dynamic usage
-            setData(mDynamicData.data(), mDynamicData.size(), GL_STATIC_DRAW);
-        }
-    }
-
-    // Internally we share the same NativeBuffer11 for stream out and vertex data
-    if (requestedUsage == BUFFER_USAGE_TRANSFORM_FEEDBACK)
-    {
-        internalUsage = BUFFER_USAGE_VERTEX;
-    }
-
     BufferStorage11 *directBuffer = NULL;
-    auto directBufferIt = mBufferStorages.find(internalUsage);
+    auto directBufferIt = mBufferStorages.find(usage);
     if (directBufferIt != mBufferStorages.end())
     {
         directBuffer = directBufferIt->second;
@@ -549,17 +500,17 @@ Buffer11::BufferStorage11 *Buffer11::getBufferStorage(BufferUsage requestedUsage
 
     if (!directBuffer)
     {
-        if (internalUsage == BUFFER_USAGE_PIXEL_PACK)
+        if (usage == BUFFER_USAGE_PIXEL_PACK)
         {
             directBuffer = new PackStorage11(mRenderer);
         }
         else
         {
             // buffer is not allocated, create it
-            directBuffer = new NativeBuffer11(mRenderer, internalUsage);
+            directBuffer = new NativeBuffer11(mRenderer, usage);
         }
 
-        mBufferStorages.insert(std::make_pair(internalUsage, directBuffer));
+        mBufferStorages.insert(std::make_pair(usage, directBuffer));
     }
 
     // resize buffer
@@ -570,18 +521,6 @@ Buffer11::BufferStorage11 *Buffer11::getBufferStorage(BufferUsage requestedUsage
             // Out of memory error
             return NULL;
         }
-    }
-
-    if (mDynamicUsage)
-    {
-        if (!mDynamicData.empty() && mDynamicDirtyRange.length() > 0)
-        {
-            ASSERT(HAS_DYNAMIC_TYPE(NativeBuffer11*, directBuffer));
-            NativeBuffer11 *dynamicBuffer = static_cast<NativeBuffer11*>(directBuffer);
-            dynamicBuffer->setData(D3D11_MAP_WRITE_NO_OVERWRITE, mDynamicData.data(), mDynamicDirtyRange.length(), mDynamicDirtyRange.start);
-        }
-
-        return directBuffer;
     }
 
     BufferStorage11 *latestBuffer = getLatestBufferStorage();
@@ -787,8 +726,7 @@ void Buffer11::NativeBuffer11::fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Ren
         bufferDesc->CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
         break;
 
-      case BUFFER_USAGE_VERTEX:
-      case BUFFER_USAGE_TRANSFORM_FEEDBACK:
+      case BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK:
         bufferDesc->Usage = D3D11_USAGE_DEFAULT;
         bufferDesc->BindFlags = D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_STREAM_OUTPUT;
         bufferDesc->CPUAccessFlags = 0;
@@ -815,18 +753,6 @@ void Buffer11::NativeBuffer11::fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Ren
         // For our purposes we ignore any buffer data past the maximum constant buffer size
         bufferDesc->ByteWidth = roundUp(bufferDesc->ByteWidth, 16u);
         bufferDesc->ByteWidth = std::min<UINT>(bufferDesc->ByteWidth, renderer->getRendererCaps().maxUniformBlockSize);
-        break;
-
-      case BUFFER_USAGE_VERTEX_DYNAMIC:
-        bufferDesc->Usage = D3D11_USAGE_DYNAMIC;
-        bufferDesc->BindFlags = D3D11_BIND_VERTEX_BUFFER;
-        bufferDesc->CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        break;
-
-      case BUFFER_USAGE_INDEX_DYNAMIC:
-        bufferDesc->Usage = D3D11_USAGE_DYNAMIC;
-        bufferDesc->BindFlags = D3D11_BIND_INDEX_BUFFER;
-        bufferDesc->CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         break;
 
     default:
