@@ -3086,7 +3086,8 @@ ID3D11Texture2D *Renderer11::resolveMultisampledTexture(ID3D11Texture2D *source,
 void Renderer11::invalidateFBOAttachmentSwizzles(gl::FramebufferAttachment *attachment, int mipLevel)
 {
     ASSERT(attachment->isTexture());
-    TextureStorage *texStorage = attachment->getTextureStorage();
+    gl::Texture *texture = attachment->getTexture();
+    TextureStorage *texStorage = texture->getNativeTexture()->getStorageInstance();
     if (texStorage)
     {
         TextureStorage11 *texStorage11 = TextureStorage11::makeTextureStorage11(texStorage);
