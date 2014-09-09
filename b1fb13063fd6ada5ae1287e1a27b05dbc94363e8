@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "70029b43_7a0bcd8a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-09T20:13:00Z",
+      "side": 1,
+      "message": "I benchmarked with buffers that change every 4 frames, and didn\u0027t see a regression... but it\u0027s possible you\u0027re correct. It may be we do the same for our D3D9 code, let me investigate.",
+      "parentUuid": "10f15fa2_d76736ed",
+      "range": {
+        "startLine": 604,
+        "startChar": 4,
+        "endLine": 604,
+        "endChar": 34
+      },
+      "revId": "b1fb13063fd6ada5ae1287e1a27b05dbc94363e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0edabca_ac9fb680",
         "filename": "tests/perf_tests/BufferSubData.cpp",
         "patchSetId": 2
