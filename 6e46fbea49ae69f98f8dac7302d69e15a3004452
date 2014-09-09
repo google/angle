@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0f7b398_cbbaf5a2",
+        "filename": "src/libGLESv2/ResourceManager.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-09T19:21:00Z",
+      "side": 1,
+      "message": "Big fan of using the standard enums here!",
+      "range": {
+        "startLine": 369,
+        "startChar": 61,
+        "endLine": 369,
+        "endChar": 67
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b04973a6_ed28a770",
+        "filename": "src/libGLESv2/ResourceManager.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-09T19:21:00Z",
+      "side": 1,
+      "message": "If you make any revisions to this CL, mind taking out this bit of whitespace while you\u0027re there? Thanks!",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 4
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b04973a6_90f2d879",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-09T19:21:00Z",
+      "side": 1,
+      "message": "Same here. Please clean up this unrelated whitespace if you update the CL.",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 337,
+        "endChar": 4
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
