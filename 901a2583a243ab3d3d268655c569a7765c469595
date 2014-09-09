@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "306bc3de_4ac3961b",
+        "filename": "tests/perf_tests/TexSubImage.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-09T21:14:15Z",
+      "side": 1,
+      "message": "Moved to base class.",
+      "parentUuid": "70029b43_34d03e66",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 5
+      },
+      "revId": "901a2583a243ab3d3d268655c569a7765c469595",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70029b43_54dfc273",
         "filename": "tests/perf_tests/TexSubImage.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2014-09-08T20:42:25Z",
       "side": 1,
       "message": "Formatting",
+      "range": {
+        "startLine": 196,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 91
+      },
+      "revId": "901a2583a243ab3d3d268655c569a7765c469595",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10c5df23_b505df7c",
+        "filename": "tests/perf_tests/TexSubImage.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-09T21:14:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70029b43_54dfc273",
       "range": {
         "startLine": 196,
         "startChar": 0,
