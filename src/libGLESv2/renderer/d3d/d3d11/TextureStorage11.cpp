@@ -53,40 +53,9 @@ TextureStorage11::SRVKey::SRVKey(int baseLevel, int mipLevels, bool swizzle)
 {
 }
 
-bool TextureStorage11::SRVKey::operator==(const SRVKey &rhs) const
+bool TextureStorage11::SRVKey::operator<(const SRVKey &rhs) const
 {
-    return baseLevel == rhs.baseLevel &&
-           mipLevels == rhs.mipLevels &&
-           swizzle == rhs.swizzle;
-}
-
-TextureStorage11::SRVCache::~SRVCache()
-{
-    for (size_t i = 0; i < cache.size(); i++)
-    {
-        SafeRelease(cache[i].srv);
-    }
-}
-
-ID3D11ShaderResourceView *TextureStorage11::SRVCache::find(const SRVKey &key) const
-{
-    for (size_t i = 0; i < cache.size(); i++)
-    {
-        if (cache[i].key == key)
-        {
-            return cache[i].srv;
-        }
-    }
-
-    return NULL;
-}
-
-ID3D11ShaderResourceView *TextureStorage11::SRVCache::add(const SRVKey &key, ID3D11ShaderResourceView *srv)
-{
-    SRVPair pair = {key, srv};
-    cache.push_back(pair);
-
-    return srv;
+    return std::tie(baseLevel, mipLevels, swizzle) < std::tie(rhs.baseLevel, rhs.mipLevels, rhs.swizzle);
 }
 
 TextureStorage11::TextureStorage11(Renderer *renderer, UINT bindFlags)
@@ -115,6 +84,12 @@ TextureStorage11::~TextureStorage11()
     {
         SafeRelease(mLevelSRVs[level]);
     }
+
+    for (SRVCache::iterator i = mSrvCache.begin(); i != mSrvCache.end(); i++)
+    {
+        SafeRelease(i->second);
+    }
+    mSrvCache.clear();
 }
 
 TextureStorage11 *TextureStorage11::makeTextureStorage11(TextureStorage *storage)
@@ -210,21 +185,23 @@ ID3D11ShaderResourceView *TextureStorage11::getSRV(const gl::SamplerState &sampl
     {
         verifySwizzleExists(samplerState.swizzleRed, samplerState.swizzleGreen, samplerState.swizzleBlue, samplerState.swizzleAlpha);
     }
-    
-    SRVKey key(samplerState.baseLevel, mipLevels, swizzleRequired);
-    ID3D11ShaderResourceView *srv = srvCache.find(key);
 
-    if(srv)
+    SRVKey key(samplerState.baseLevel, mipLevels, swizzleRequired);
+    SRVCache::const_iterator iter = mSrvCache.find(key);
+    if (iter != mSrvCache.end())
     {
+        return iter->second;
+    }
+    else
+    {
+        DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
+        ID3D11Resource *texture = swizzleRequired ? getSwizzleTexture() : getResource();
+
+        ID3D11ShaderResourceView *srv = createSRV(samplerState.baseLevel, mipLevels, format, texture);
+        mSrvCache.insert(std::make_pair(key, srv));
+
         return srv;
     }
-
-    DXGI_FORMAT format = (swizzleRequired ? mSwizzleShaderResourceFormat : mShaderResourceFormat);
-    ID3D11Resource *texture = swizzleRequired ? getSwizzleTexture() : getResource();
-
-    srv = createSRV(samplerState.baseLevel, mipLevels, format, texture);
-    
-    return srvCache.add(key, srv);
 }
 
 ID3D11ShaderResourceView *TextureStorage11::getSRVLevel(int mipLevel)
