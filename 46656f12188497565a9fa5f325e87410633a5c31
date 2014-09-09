@@ -22,6 +22,30 @@
       "revId": "46656f12188497565a9fa5f325e87410633a5c31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "702b7bc3_ac6a2b66",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/IndexBuffer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-09T22:15:29Z",
+      "side": 1,
+      "message": "Ah, it looks like this is addressed in the previous patch in the series. Nevermind.",
+      "parentUuid": "10f15fa2_f782327a",
+      "range": {
+        "startLine": 43,
+        "startChar": 12,
+        "endLine": 43,
+        "endChar": 72
+      },
+      "revId": "46656f12188497565a9fa5f325e87410633a5c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
