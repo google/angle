@@ -541,7 +541,11 @@ gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *t
         TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage);
         gl::SamplerState samplerState;
         texture->getSamplerStateWithNativeOffset(&samplerState);
-        textureSRV = storage11->getSRV(samplerState);
+        gl::Error error = storage11->getSRV(samplerState, &textureSRV);
+        if (error.isError())
+        {
+            return error;
+        }
 
         // If we get NULL back from getSRV here, something went wrong in the texture class and we're unexpectedly
         // missing the shader resource view
