@@ -46,6 +46,29 @@
       "revId": "711a97989db9fa5c90d6c28575b9cb2fa9af849a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70029b43_a054e486",
+        "filename": "src/libGLESv2/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T14:25:17Z",
+      "side": 1,
+      "message": "ditto here",
+      "range": {
+        "startLine": 164,
+        "startChar": 17,
+        "endLine": 164,
+        "endChar": 38
+      },
+      "revId": "711a97989db9fa5c90d6c28575b9cb2fa9af849a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
