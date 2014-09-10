@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90cb8f65_c2b68212",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1309,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T14:23:40Z",
+      "side": 1,
+      "message": "nit: could we move this code to a function?",
+      "range": {
+        "startLine": 1309,
+        "startChar": 8,
+        "endLine": 1309,
+        "endChar": 45
+      },
+      "revId": "e6506bbcc5f6e5854069742e5bbac695a92cbe3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
