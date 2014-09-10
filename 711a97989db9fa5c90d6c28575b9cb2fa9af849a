@@ -22,6 +22,30 @@
       "revId": "711a97989db9fa5c90d6c28575b9cb2fa9af849a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70029b43_c057688a",
+        "filename": "src/libGLESv2/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T14:24:50Z",
+      "side": 1,
+      "message": "could also use a member function like \"getStreamingBufferInt\" that initializes it on first use",
+      "parentUuid": "10f15fa2_22d59656",
+      "range": {
+        "startLine": 148,
+        "startChar": 12,
+        "endLine": 157,
+        "endChar": 13
+      },
+      "revId": "711a97989db9fa5c90d6c28575b9cb2fa9af849a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
