@@ -136,7 +136,11 @@ gl::Error Image11::copyToStorageImpl(TextureStorage11 *storage11, const gl::Imag
     if (attemptToReleaseStagingTexture)
     {
         // If another image is relying on this Storage for its data, then we must let it recover its data before we overwrite it.
-        storage11->releaseAssociatedImage(index, this);
+        gl::Error error = storage11->releaseAssociatedImage(index, this);
+        if (error.isError())
+        {
+            return error;
+        }
     }
 
     gl::Error error = storage11->updateSubresourceLevel(getStagingTexture(), getStagingSubresource(),
@@ -164,7 +168,7 @@ bool Image11::isAssociatedStorageValid(TextureStorage11* textureStorage) const
     return (mAssociatedStorage == textureStorage);
 }
 
-bool Image11::recoverFromAssociatedStorage()
+gl::Error Image11::recoverFromAssociatedStorage()
 {
     if (mRecoverFromStorage)
     {
@@ -180,17 +184,20 @@ bool Image11::recoverFromAssociatedStorage()
         {
             // CopySubResource from the Storage to the Staging texture
             gl::Box region(0, 0, 0, mWidth, mHeight, mDepth);
-            mAssociatedStorage->copySubresourceLevel(mStagingTexture, mStagingSubresource, mAssociatedImageIndex, region);
+            gl::Error error = mAssociatedStorage->copySubresourceLevel(mStagingTexture, mStagingSubresource, mAssociatedImageIndex, region);
+            if (error.isError())
+            {
+                return error;
+            }
+
             mRecoveredFromStorageCount += 1;
         }
 
         // Reset all the recovery parameters, even if the texture storage association is broken.
         disassociateStorage();
-
-        return textureStorageCorrect;
     }
 
-    return false;
+    return gl::Error(GL_NO_ERROR);
 }
 
 void Image11::disassociateStorage()

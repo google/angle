@@ -60,13 +60,13 @@ class TextureStorage11 : public TextureStorage
     gl::Error updateSubresourceLevel(ID3D11Resource *texture, unsigned int sourceSubresource,
                                      const gl::ImageIndex &index, const gl::Box &copyArea);
 
-    bool copySubresourceLevel(ID3D11Resource* dstTexture, unsigned int dstSubresource,
-                              const gl::ImageIndex &index, const gl::Box &region);
+    gl::Error copySubresourceLevel(ID3D11Resource* dstTexture, unsigned int dstSubresource,
+                                   const gl::ImageIndex &index, const gl::Box &region);
 
     virtual void associateImage(Image11* image, const gl::ImageIndex &index) = 0;
     virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage) = 0;
     virtual bool isAssociatedImageValid(const gl::ImageIndex &index, Image11* expectedImage) = 0;
-    virtual void releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage) = 0;
+    virtual gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage) = 0;
 
     virtual gl::Error copyToStorage(TextureStorage *destStorage);
     virtual gl::Error setData(const gl::ImageIndex &index, const gl::Box &sourceBox, GLenum internalFormat, GLenum type,
@@ -152,7 +152,7 @@ class TextureStorage11_2D : public TextureStorage11
     virtual void associateImage(Image11* image, const gl::ImageIndex &index);
     virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage);
     virtual bool isAssociatedImageValid(const gl::ImageIndex &index, Image11* expectedImage);
-    virtual void releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
+    virtual gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
 
   protected:
     virtual ID3D11Resource *getSwizzleTexture();
@@ -186,7 +186,7 @@ class TextureStorage11_Cube : public TextureStorage11
     virtual void associateImage(Image11* image, const gl::ImageIndex &index);
     virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage);
     virtual bool isAssociatedImageValid(const gl::ImageIndex &index, Image11* expectedImage);
-    virtual void releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
+    virtual gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
 
   protected:
     virtual ID3D11Resource *getSwizzleTexture();
@@ -223,7 +223,7 @@ class TextureStorage11_3D : public TextureStorage11
     virtual void associateImage(Image11* image, const gl::ImageIndex &index);
     virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage);
     virtual bool isAssociatedImageValid(const gl::ImageIndex &index, Image11* expectedImage);
-    virtual void releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
+    virtual gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
 
   protected:
     virtual ID3D11Resource *getSwizzleTexture();
@@ -262,7 +262,7 @@ class TextureStorage11_2DArray : public TextureStorage11
     virtual void associateImage(Image11* image, const gl::ImageIndex &index);
     virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage);
     virtual bool isAssociatedImageValid(const gl::ImageIndex &index, Image11* expectedImage);
-    virtual void releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
+    virtual gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
 
   protected:
     virtual ID3D11Resource *getSwizzleTexture();
