@@ -48,7 +48,7 @@ class TextureD3D : public TextureImpl
 
     bool isImmutable() const { return mImmutable; }
 
-    virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index) = 0;
+    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT) = 0;
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index) = 0;
 
     // Returns an iterator over all "Images" for this particular Texture.
@@ -130,7 +130,7 @@ class TextureD3D_2D : public TextureD3D
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
+    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;
@@ -185,7 +185,7 @@ class TextureD3D_Cube : public TextureD3D
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
+    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;
@@ -239,7 +239,7 @@ class TextureD3D_3D : public TextureD3D
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
+    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;
@@ -291,7 +291,7 @@ class TextureD3D_2DArray : public TextureD3D
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
+    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;

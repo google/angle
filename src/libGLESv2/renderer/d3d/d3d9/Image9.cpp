@@ -479,17 +479,9 @@ gl::Error Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Re
     ASSERT(zoffset == 0);
 
     RenderTarget9 *renderTarget = RenderTarget9::makeRenderTarget9(source);
-    IDirect3DSurface9 *surface = NULL;
 
-    if (renderTarget)
-    {
-        surface = renderTarget->getSurface();
-    }
-
-    if (!surface)
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to retrieve the internal render target.");
-    }
+    IDirect3DSurface9 *surface = renderTarget->getSurface();
+    ASSERT(surface);
 
     IDirect3DDevice9 *device = mRenderer->getDevice();
 

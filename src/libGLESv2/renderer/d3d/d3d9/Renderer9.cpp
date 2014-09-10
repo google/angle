@@ -1191,28 +1191,23 @@ gl::Error Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
     {
         attachment = getNullColorbuffer(framebuffer->getDepthbuffer());
     }
-    if (!attachment)
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Unable to locate renderbuffer for FBO.");
-    }
+    ASSERT(attachment);
 
     bool renderTargetChanged = false;
     unsigned int renderTargetSerial = GetAttachmentSerial(attachment);
     if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
         // Apply the render target on the device
-        IDirect3DSurface9 *renderTargetSurface = NULL;
-
-        RenderTarget9 *renderTarget = d3d9::GetAttachmentRenderTarget(attachment);
-        if (renderTarget)
+        RenderTarget9 *renderTarget = NULL;
+        gl::Error error = d3d9::GetAttachmentRenderTarget(attachment, &renderTarget);
+        if (error.isError())
         {
-            renderTargetSurface = renderTarget->getSurface();
+            return error;
         }
+        ASSERT(renderTarget);
 
-        if (!renderTargetSurface)
-        {
-            return gl::Error(GL_OUT_OF_MEMORY, "Internal render target pointer unexpectedly null.");
-        }
+        IDirect3DSurface9 *renderTargetSurface = renderTarget->getSurface();
+        ASSERT(renderTargetSurface);
 
         mDevice->SetRenderTarget(0, renderTargetSurface);
         SafeRelease(renderTargetSurface);
@@ -1244,18 +1239,16 @@ gl::Error Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         // Apply the depth stencil on the device
         if (depthStencil)
         {
-            IDirect3DSurface9 *depthStencilSurface = NULL;
-            rx::RenderTarget9 *depthStencilRenderTarget = d3d9::GetAttachmentRenderTarget(depthStencil);
-
-            if (depthStencilRenderTarget)
+            RenderTarget9 *depthStencilRenderTarget = NULL;
+            gl::Error error = d3d9::GetAttachmentRenderTarget(depthStencil, &depthStencilRenderTarget);
+            if (error.isError())
             {
-                depthStencilSurface = depthStencilRenderTarget->getSurface();
+                return error;
             }
+            ASSERT(depthStencilRenderTarget);
 
-            if (!depthStencilSurface)
-            {
-                return gl::Error(GL_OUT_OF_MEMORY, "Internal depth stencil pointer unexpectedly null.");
-            }
+            IDirect3DSurface9 *depthStencilSurface = depthStencilRenderTarget->getSurface();
+            ASSERT(depthStencilSurface);
 
             mDevice->SetDepthStencilSurface(depthStencilSurface);
             SafeRelease(depthStencilSurface);
@@ -2447,34 +2440,33 @@ gl::Error Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectan
     if (blitRenderTarget)
     {
         gl::FramebufferAttachment *readBuffer = readFramebuffer->getColorbuffer(0);
-        gl::FramebufferAttachment *drawBuffer = drawFramebuffer->getColorbuffer(0);
+        ASSERT(readBuffer);
+
         RenderTarget9 *readRenderTarget = NULL;
+        gl::Error error = d3d9::GetAttachmentRenderTarget(readBuffer, &readRenderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(readRenderTarget);
+
+        gl::FramebufferAttachment *drawBuffer = drawFramebuffer->getColorbuffer(0);
+        ASSERT(drawBuffer);
+
         RenderTarget9 *drawRenderTarget = NULL;
-        IDirect3DSurface9* readSurface = NULL;
-        IDirect3DSurface9* drawSurface = NULL;
+        error = d3d9::GetAttachmentRenderTarget(drawBuffer, &drawRenderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(drawRenderTarget);
 
-        if (readBuffer)
-        {
-            readRenderTarget = d3d9::GetAttachmentRenderTarget(readBuffer);
-        }
-        if (drawBuffer)
-        {
-            drawRenderTarget = d3d9::GetAttachmentRenderTarget(drawBuffer);
-        }
+        // The getSurface calls do an AddRef so save them until after no errors are possible
+        IDirect3DSurface9* readSurface = readRenderTarget->getSurface();
+        ASSERT(readSurface);
 
-        if (readRenderTarget)
-        {
-            readSurface = readRenderTarget->getSurface();
-        }
-        if (drawRenderTarget)
-        {
-            drawSurface = drawRenderTarget->getSurface();
-        }
-
-        if (!readSurface || !drawSurface)
-        {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to retrieve the internal render targets for the blit framebuffers.");
-        }
+        IDirect3DSurface9* drawSurface = drawRenderTarget->getSurface();
+        ASSERT(drawSurface);
 
         gl::Extents srcSize(readRenderTarget->getWidth(), readRenderTarget->getHeight(), 1);
         gl::Extents dstSize(drawRenderTarget->getWidth(), drawRenderTarget->getHeight(), 1);
@@ -2574,34 +2566,33 @@ gl::Error Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectan
     if (blitDepth || blitStencil)
     {
         gl::FramebufferAttachment *readBuffer = readFramebuffer->getDepthOrStencilbuffer();
-        gl::FramebufferAttachment *drawBuffer = drawFramebuffer->getDepthOrStencilbuffer();
+        ASSERT(readBuffer);
+
         RenderTarget9 *readDepthStencil = NULL;
+        gl::Error error = d3d9::GetAttachmentRenderTarget(readBuffer, &readDepthStencil);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(readDepthStencil);
+
+        gl::FramebufferAttachment *drawBuffer = drawFramebuffer->getDepthOrStencilbuffer();
+        ASSERT(drawBuffer);
+
         RenderTarget9 *drawDepthStencil = NULL;
-        IDirect3DSurface9* readSurface = NULL;
-        IDirect3DSurface9* drawSurface = NULL;
+        error = d3d9::GetAttachmentRenderTarget(drawBuffer, &drawDepthStencil);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(drawDepthStencil);
 
-        if (readBuffer)
-        {
-            readDepthStencil = d3d9::GetAttachmentRenderTarget(readBuffer);
-        }
-        if (drawBuffer)
-        {
-            drawDepthStencil = d3d9::GetAttachmentRenderTarget(drawBuffer);
-        }
+        // The getSurface calls do an AddRef so save them until after no errors are possible
+        IDirect3DSurface9* readSurface = readDepthStencil->getSurface();
+        ASSERT(readDepthStencil);
 
-        if (readDepthStencil)
-        {
-            readSurface = readDepthStencil->getSurface();
-        }
-        if (drawDepthStencil)
-        {
-            drawSurface = drawDepthStencil->getSurface();
-        }
-
-        if (!readSurface || !drawSurface)
-        {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to retrieve the internal render targets for the blit framebuffers.");
-        }
+        IDirect3DSurface9* drawSurface = drawDepthStencil->getSurface();
+        ASSERT(drawDepthStencil);
 
         HRESULT result = mDevice->StretchRect(readSurface, NULL, drawSurface, NULL, D3DTEXF_NONE);
 
@@ -2622,25 +2613,19 @@ gl::Error Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, 
 {
     ASSERT(pack.pixelBuffer.get() == NULL);
 
-    RenderTarget9 *renderTarget = NULL;
-    IDirect3DSurface9 *surface = NULL;
     gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(0);
+    ASSERT(colorbuffer);
 
-    if (colorbuffer)
+    RenderTarget9 *renderTarget = NULL;
+    gl::Error error = d3d9::GetAttachmentRenderTarget(colorbuffer, &renderTarget);
+    if (error.isError())
     {
-        renderTarget = d3d9::GetAttachmentRenderTarget(colorbuffer);
+        return error;
     }
+    ASSERT(renderTarget);
 
-    if (renderTarget)
-    {
-        surface = renderTarget->getSurface();
-    }
-
-    if (!surface)
-    {
-        // context must be lost
-        return gl::Error(GL_NO_ERROR);
-    }
+    IDirect3DSurface9 *surface = renderTarget->getSurface();
+    ASSERT(surface);
 
     D3DSURFACE_DESC desc;
     surface->GetDesc(&desc);

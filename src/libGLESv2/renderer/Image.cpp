@@ -32,7 +32,13 @@ gl::Error Image::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rec
     gl::FramebufferAttachment *colorbuffer = source->getReadColorbuffer();
     ASSERT(colorbuffer);
 
-    RenderTarget *renderTarget = GetAttachmentRenderTarget(colorbuffer);
+    RenderTarget *renderTarget = NULL;
+    gl::Error error = GetAttachmentRenderTarget(colorbuffer, &renderTarget);
+    if (error.isError())
+    {
+        return error;
+    }
+
     ASSERT(renderTarget);
     return copy(xoffset, yoffset, zoffset, area, renderTarget);
 }
