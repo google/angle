@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "306bc3de_cc79019e",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T18:16:49Z",
+      "side": 1,
+      "message": "nit: could make this GLenum",
+      "range": {
+        "startLine": 1118,
+        "startChar": 32,
+        "endLine": 1118,
+        "endChar": 35
+      },
+      "revId": "e108576518bb4f1b993fbe28a86828d482494a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70029b43_0b36b1d1",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T18:16:49Z",
+      "side": 1,
+      "message": "nit: spacing here",
+      "range": {
+        "startLine": 216,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 35
+      },
+      "revId": "e108576518bb4f1b993fbe28a86828d482494a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90cb8f65_620bf68a",
+        "filename": "src/libGLESv2/renderer/ProgramImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T18:16:49Z",
+      "side": 1,
+      "message": "and here. this could be const if we used iterators, but i think we use an internal iterator for the streams.",
+      "range": {
+        "startLine": 34,
+        "startChar": 66,
+        "endLine": 34,
+        "endChar": 67
+      },
+      "revId": "e108576518bb4f1b993fbe28a86828d482494a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "306bc3de_ac5dad27",
+        "filename": "src/libGLESv2/renderer/ProgramImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T18:16:49Z",
+      "side": 1,
+      "message": "using pointers here is also style-conformant",
+      "range": {
+        "startLine": 35,
+        "startChar": 45,
+        "endLine": 35,
+        "endChar": 46
+      },
+      "revId": "e108576518bb4f1b993fbe28a86828d482494a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "306bc3de_ec3885e5",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T18:16:49Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 4
+      },
+      "revId": "e108576518bb4f1b993fbe28a86828d482494a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70029b43_eb99ad9b",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T18:16:49Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 4
+      },
+      "revId": "e108576518bb4f1b993fbe28a86828d482494a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "306bc3de_0c3619f9",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T18:16:49Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "range": {
+        "startLine": 197,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 4
+      },
+      "revId": "e108576518bb4f1b993fbe28a86828d482494a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "306bc3de_8c83094a",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T18:16:49Z",
+      "side": 1,
+      "message": "we should use a pointer here to conform to Chromium style",
+      "range": {
+        "startLine": 53,
+        "startChar": 71,
+        "endLine": 53,
+        "endChar": 76
+      },
+      "revId": "e108576518bb4f1b993fbe28a86828d482494a83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
