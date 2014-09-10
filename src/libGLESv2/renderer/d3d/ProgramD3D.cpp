@@ -25,8 +25,10 @@ ProgramD3D::ProgramD3D(rx::Renderer *renderer)
       mDynamicHLSL(NULL),
       mVertexWorkarounds(rx::ANGLE_D3D_WORKAROUND_NONE),
       mPixelWorkarounds(rx::ANGLE_D3D_WORKAROUND_NONE),
+      mUsesPointSize(false),
       mVertexUniformStorage(NULL),
-      mFragmentUniformStorage(NULL)
+      mFragmentUniformStorage(NULL),
+      mShaderVersion(100)
 {
     mDynamicHLSL = new rx::DynamicHLSL(renderer);
 }
@@ -49,13 +51,31 @@ const ProgramD3D *ProgramD3D::makeProgramD3D(const ProgramImpl *impl)
     return static_cast<const ProgramD3D*>(impl);
 }
 
+bool ProgramD3D::usesPointSize() const
+{
+    return mUsesPointSize;
+}
+
+bool ProgramD3D::usesPointSpriteEmulation() const
+{
+    return mUsesPointSize && mRenderer->getMajorShaderModel() >= 4;
+}
+
+bool ProgramD3D::usesGeometryShader() const
+{
+    return usesPointSpriteEmulation();
+}
+
 bool ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 {
+    stream->readInt(&mShaderVersion);
+
     stream->readString(&mVertexHLSL);
     stream->readInt(&mVertexWorkarounds);
     stream->readString(&mPixelHLSL);
     stream->readInt(&mPixelWorkarounds);
     stream->readBool(&mUsesFragDepth);
+    stream->readBool(&mUsesPointSize);
 
     const size_t pixelShaderKeySize = stream->readInt<unsigned int>();
     mPixelShaderKey.resize(pixelShaderKeySize);
@@ -72,11 +92,14 @@ bool ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 
 bool ProgramD3D::save(gl::BinaryOutputStream *stream)
 {
+    stream->writeInt(mShaderVersion);
+
     stream->writeString(mVertexHLSL);
     stream->writeInt(mVertexWorkarounds);
     stream->writeString(mPixelHLSL);
     stream->writeInt(mPixelWorkarounds);
     stream->writeInt(mUsesFragDepth);
+    stream->writeInt(mUsesPointSize);
 
     const std::vector<rx::PixelShaderOutputVariable> &pixelShaderKey = mPixelShaderKey;
     stream->writeInt(pixelShaderKey.size());
@@ -125,6 +148,22 @@ rx::ShaderExecutable *ProgramD3D::getVertexExecutableForInputLayout(gl::InfoLog 
     return vertexExecutable;
 }
 
+rx::ShaderExecutable *ProgramD3D::getGeometryExecutable(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
+                                                        const std::vector<gl::LinkedVarying> &transformFeedbackLinkedVaryings,
+                                                        bool separatedOutputBuffers, int registers)
+{
+    rx::ShaderD3D *vertexShaderD3D = rx::ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
+    rx::ShaderD3D *fragmentShaderD3D = rx::ShaderD3D::makeShaderD3D(fragmentShader->getImplementation());
+
+    std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(registers, fragmentShaderD3D, vertexShaderD3D);
+
+    rx::ShaderExecutable *geometryExecutable = mRenderer->compileToExecutable(infoLog, geometryHLSL.c_str(),
+                                                                              rx::SHADER_GEOMETRY, transformFeedbackLinkedVaryings,
+                                                                              separatedOutputBuffers, rx::ANGLE_D3D_WORKAROUND_NONE);
+
+    return geometryExecutable;
+}
+
 bool ProgramD3D::link(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
                       const std::vector<std::string> &transformFeedbackVaryings, int *registers,
                       std::vector<gl::LinkedVarying> *linkedVaryings, std::map<int, gl::VariableLocation> *outputVariables)
@@ -137,6 +176,7 @@ bool ProgramD3D::link(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shad
 
     mVertexHLSL = vertexShaderD3D->getTranslatedSource();
     mVertexWorkarounds = vertexShaderD3D->getD3DWorkarounds();
+    mShaderVersion = vertexShaderD3D->getShaderVersion();
 
     // Map the varyings to the register file
     rx::VaryingPacking packing = { NULL };
@@ -159,7 +199,14 @@ bool ProgramD3D::link(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shad
         return false;
     }
 
+    mUsesPointSize = vertexShaderD3D->usesPointSize();
+
     return true;
+}
+
+void ProgramD3D::getInputLayoutSignature(const gl::VertexFormat inputLayout[], GLenum signature[]) const
+{
+    mDynamicHLSL->getInputLayoutSignature(inputLayout, signature);
 }
 
 void ProgramD3D::initializeUniformStorage(const std::vector<gl::LinkedUniform*> &uniforms)
@@ -192,11 +239,13 @@ void ProgramD3D::reset()
 {
     mVertexHLSL.clear();
     mVertexWorkarounds = rx::ANGLE_D3D_WORKAROUND_NONE;
+    mShaderVersion = 100;
 
     mPixelHLSL.clear();
     mPixelWorkarounds = rx::ANGLE_D3D_WORKAROUND_NONE;
     mUsesFragDepth = false;
     mPixelShaderKey.clear();
+    mUsesPointSize = false;
 
     SafeDelete(mVertexUniformStorage);
     SafeDelete(mFragmentUniformStorage);

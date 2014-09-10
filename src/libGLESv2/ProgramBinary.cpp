@@ -24,7 +24,6 @@
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/ProgramImpl.h"
 #include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/renderer/d3d/DynamicHLSL.h"
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
 #include "libGLESv2/renderer/d3d/VertexDataManager.h"
 #include "libGLESv2/Context.h"
@@ -195,8 +194,6 @@ ProgramBinary::ProgramBinary(rx::ProgramImpl *impl)
       mGeometryExecutable(NULL),
       mUsedVertexSamplerRange(0),
       mUsedPixelSamplerRange(0),
-      mUsesPointSize(false),
-      mShaderVersion(100),
       mDirtySamplerMapping(true),
       mValidated(false),
       mSerial(issueSerial())
@@ -218,11 +215,6 @@ ProgramBinary::~ProgramBinary()
 unsigned int ProgramBinary::getSerial() const
 {
     return mSerial;
-}
-
-int ProgramBinary::getShaderVersion() const
-{
-    return mShaderVersion;
 }
 
 unsigned int ProgramBinary::issueSerial()
@@ -284,7 +276,7 @@ rx::ShaderExecutable *ProgramBinary::getPixelExecutableForOutputLayout(const std
 rx::ShaderExecutable *ProgramBinary::getVertexExecutableForInputLayout(const VertexFormat inputLayout[MAX_VERTEX_ATTRIBS])
 {
     GLenum signature[MAX_VERTEX_ATTRIBS];
-    mProgram->getDynamicHLSL()->getInputLayoutSignature(inputLayout, signature);
+    mProgram->getInputLayoutSignature(inputLayout, signature);
 
     for (size_t executableIndex = 0; executableIndex < mVertexExecutables.size(); executableIndex++)
     {
@@ -357,17 +349,7 @@ GLint ProgramBinary::getUsedSamplerRange(SamplerType type)
 
 bool ProgramBinary::usesPointSize() const
 {
-    return mUsesPointSize;
-}
-
-bool ProgramBinary::usesPointSpriteEmulation() const
-{
-    return mUsesPointSize && mProgram->getRenderer()->getMajorShaderModel() >= 4;
-}
-
-bool ProgramBinary::usesGeometryShader() const
-{
-    return usesPointSpriteEmulation();
+    return mProgram->usesPointSize();
 }
 
 GLint ProgramBinary::getSamplerMapping(SamplerType type, unsigned int samplerIndex, const Caps &caps)
@@ -1155,8 +1137,6 @@ bool ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *bina
 
     stream.readInt(&mUsedVertexSamplerRange);
     stream.readInt(&mUsedPixelSamplerRange);
-    stream.readBool(&mUsesPointSize);
-    stream.readInt(&mShaderVersion);
 
     const unsigned int uniformCount = stream.readInt<unsigned int>();
     if (stream.error())
@@ -1278,7 +1258,7 @@ bool ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *bina
 
         // generated converted input layout
         GLenum signature[MAX_VERTEX_ATTRIBS];
-        mProgram->getDynamicHLSL()->getInputLayoutSignature(inputLayout, signature);
+        mProgram->getInputLayoutSignature(inputLayout, signature);
 
         // add new binary
         mVertexExecutables.push_back(new VertexExecutable(inputLayout, signature, shaderExecutable));
@@ -1398,8 +1378,6 @@ bool ProgramBinary::save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GL
 
     stream.writeInt(mUsedVertexSamplerRange);
     stream.writeInt(mUsedPixelSamplerRange);
-    stream.writeInt(mUsesPointSize);
-    stream.writeInt(mShaderVersion);
 
     stream.writeInt(mUniforms.size());
     for (size_t uniformIndex = 0; uniformIndex < mUniforms.size(); ++uniformIndex)
@@ -1598,16 +1576,12 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     rx::ShaderD3D *vertexShaderD3D = rx::ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
     rx::ShaderD3D *fragmentShaderD3D = rx::ShaderD3D::makeShaderD3D(fragmentShader->getImplementation());
 
-    mShaderVersion = vertexShaderD3D->getShaderVersion();
-
     int registers;
     std::vector<LinkedVarying> linkedVaryings;
     if (!mProgram->link(infoLog, fragmentShader, vertexShader, transformFeedbackVaryings, &registers, &linkedVaryings, &mOutputVariables))
     {
         return false;
     }
-
-    mUsesPointSize = vertexShaderD3D->usesPointSize();
 
     bool success = true;
 
@@ -1651,16 +1625,15 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         std::vector<GLenum> defaultPixelOutput = GetDefaultOutputLayoutFromShader(mProgram->getPixelShaderKey());
         rx::ShaderExecutable *defaultPixelExecutable = getPixelExecutableForOutputLayout(defaultPixelOutput);
 
-        if (usesGeometryShader())
+        if (mProgram->usesGeometryShader())
         {
-            std::string geometryHLSL = mProgram->getDynamicHLSL()->generateGeometryShaderHLSL(registers, fragmentShaderD3D, vertexShaderD3D);
-            mGeometryExecutable = mProgram->getRenderer()->compileToExecutable(infoLog, geometryHLSL.c_str(),
-                                                                               rx::SHADER_GEOMETRY, mTransformFeedbackLinkedVaryings,
-                                                                               (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
-                                                                               rx::ANGLE_D3D_WORKAROUND_NONE);
+            mGeometryExecutable = mProgram->getGeometryExecutable(infoLog, fragmentShader, vertexShader,
+                                                                  mTransformFeedbackLinkedVaryings,
+                                                                  (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
+                                                                  registers);
         }
 
-        if (!defaultVertexExecutable || !defaultPixelExecutable || (usesGeometryShader() && !mGeometryExecutable))
+        if (!defaultVertexExecutable || !defaultPixelExecutable || (mProgram->usesGeometryShader() && !mGeometryExecutable))
         {
             infoLog.append("Failed to create D3D shaders.");
             success = false;
@@ -1708,7 +1681,7 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
 
                 // In GLSL 3.00, attribute aliasing produces a link error
                 // In GLSL 1.00, attribute aliasing is allowed
-                if (mShaderVersion >= 300)
+                if (mProgram->getShaderVersion() >= 300)
                 {
                     if (!linkedAttribute.name.empty())
                     {
@@ -2797,7 +2770,6 @@ void ProgramBinary::reset()
 {
     SafeDeleteContainer(mVertexExecutables);
     SafeDeleteContainer(mPixelExecutables);
-
     SafeDelete(mGeometryExecutable);
 
     mTransformFeedbackBufferMode = GL_NONE;
@@ -2808,8 +2780,6 @@ void ProgramBinary::reset()
 
     mUsedVertexSamplerRange = 0;
     mUsedPixelSamplerRange = 0;
-    mUsesPointSize = false;
-    mShaderVersion = 0;
     mDirtySamplerMapping = true;
 
     SafeDeleteContainer(mUniforms);

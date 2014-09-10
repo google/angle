@@ -36,8 +36,12 @@ class ProgramD3D : public ProgramImpl
     static const ProgramD3D *makeProgramD3D(const ProgramImpl *impl);
 
     Renderer *getRenderer() { return mRenderer; }
-    DynamicHLSL *getDynamicHLSL() { return mDynamicHLSL; }
     const std::vector<rx::PixelShaderOutputVariable> &getPixelShaderKey() { return mPixelShaderKey; }
+    int getShaderVersion() const { return mShaderVersion; }
+
+    bool usesPointSize() const;
+    bool usesPointSpriteEmulation() const;
+    bool usesGeometryShader() const;
 
     GLenum getBinaryFormat() { return GL_PROGRAM_BINARY_ANGLE; }
     bool load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream);
@@ -51,10 +55,15 @@ class ProgramD3D : public ProgramImpl
                                                         const sh::Attribute shaderAttributes[],
                                                         const std::vector<gl::LinkedVarying> &transformFeedbackLinkedVaryings,
                                                         bool separatedOutputBuffers);
+    ShaderExecutable *getGeometryExecutable(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
+                                            const std::vector<gl::LinkedVarying> &transformFeedbackLinkedVaryings,
+                                            bool separatedOutputBuffers, int registers);
 
     bool link(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
               const std::vector<std::string> &transformFeedbackVaryings, int *registers,
               std::vector<gl::LinkedVarying> *linkedVaryings, std::map<int, gl::VariableLocation> *outputVariables);
+
+    void getInputLayoutSignature(const gl::VertexFormat inputLayout[], GLenum signature[]) const;
 
     // D3D only
     void initializeUniformStorage(const std::vector<gl::LinkedUniform*> &uniforms);
@@ -78,8 +87,12 @@ class ProgramD3D : public ProgramImpl
     bool mUsesFragDepth;
     std::vector<rx::PixelShaderOutputVariable> mPixelShaderKey;
 
+    bool mUsesPointSize;
+
     UniformStorage *mVertexUniformStorage;
     UniformStorage *mFragmentUniformStorage;
+
+    int mShaderVersion;
 };
 
 }

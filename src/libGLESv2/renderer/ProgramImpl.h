@@ -17,7 +17,6 @@
 namespace rx
 {
 
-class DynamicHLSL;
 class Renderer;
 
 class ProgramImpl
@@ -27,8 +26,11 @@ public:
 
     // TODO: Temporary interfaces to ease migration. Remove soon!
     virtual Renderer *getRenderer() = 0;
-    virtual DynamicHLSL *getDynamicHLSL() = 0;
     virtual const std::vector<rx::PixelShaderOutputVariable> &getPixelShaderKey() = 0;
+
+    virtual bool usesPointSize() const = 0;
+    virtual bool usesGeometryShader() const = 0;
+    virtual int getShaderVersion() const = 0;
 
     virtual GLenum getBinaryFormat() = 0;
     virtual bool load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream) = 0;
@@ -42,11 +44,16 @@ public:
                                                                     const sh::Attribute shaderAttributes[],
                                                                     const std::vector<gl::LinkedVarying> &transformFeedbackLinkedVaryings,
                                                                     bool separatedOutputBuffers) = 0;
+    virtual rx::ShaderExecutable *getGeometryExecutable(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
+                                                        const std::vector<gl::LinkedVarying> &transformFeedbackLinkedVaryings,
+                                                        bool separatedOutputBuffers, int registers) = 0;
 
     virtual bool link(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
                       const std::vector<std::string> &transformFeedbackVaryings, int *registers,
                       std::vector<gl::LinkedVarying> *linkedVaryings, std::map<int,
                       gl::VariableLocation> *outputVariables) = 0;
+
+    virtual void getInputLayoutSignature(const gl::VertexFormat inputLayout[], GLenum signature[]) const = 0;
 
     virtual void initializeUniformStorage(const std::vector<gl::LinkedUniform*> &uniforms) = 0;
 
