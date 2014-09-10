@@ -1604,7 +1604,7 @@ StaticIndexBufferInterface *Renderer9::getCountingIB(size_t count)
             }
 
             unsigned short *data = reinterpret_cast<unsigned short*>(mappedMemory);
-            for (int i = 0; i < count; i++)
+            for (size_t i = 0; i < count; i++)
             {
                 data[i] = i;
             }
@@ -1638,7 +1638,7 @@ StaticIndexBufferInterface *Renderer9::getCountingIB(size_t count)
             }
 
             unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
-            for (int i = 0; i < count; i++)
+            for (size_t i = 0; i < count; i++)
             {
                 data[i] = i;
             }
