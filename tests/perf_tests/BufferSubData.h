@@ -6,11 +6,6 @@
 
 #include "SimpleBenchmark.h"
 
-const int BUFFER_SIZE = 1024 * 1024;
-const int UPDATE_SIZE = 300;
-
-#include "shader_utils.h"
-
 struct BufferSubDataParams : public BenchmarkParams
 {
     EGLint requestedRenderer;

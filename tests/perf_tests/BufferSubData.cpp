@@ -9,6 +9,8 @@
 #include <cassert>
 #include <sstream>
 
+#include "shader_utils.h"
+
 namespace
 {
 
@@ -128,16 +130,7 @@ std::string BufferSubDataParams::name() const
 {
     std::stringstream strstr;
 
-    strstr << "BufferSubData - ";
-
-    switch (requestedRenderer)
-    {
-      case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE: strstr << "D3D11"; break;
-      case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE: strstr << "D3D9"; break;
-      default: strstr << "UNKNOWN RENDERER (" << requestedRenderer << ")"; break;
-    }
-
-    strstr << " - ";
+    strstr << "BufferSubData - " << BenchmarkParams::name() << " - ";
 
     if (vertexNormalized)
     {
