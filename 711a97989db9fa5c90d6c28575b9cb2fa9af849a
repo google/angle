@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "306bc3de_69a9c7ac",
+        "filename": "src/libGLESv2/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-10T14:33:39Z",
+      "side": 0,
+      "message": "something tells me this should be a validation error, whether or not it\u0027s out-of-spec, and this should be an ASSERT",
+      "range": {
+        "startLine": 88,
+        "startChar": 19,
+        "endLine": 88,
+        "endChar": 35
+      },
+      "revId": "711a97989db9fa5c90d6c28575b9cb2fa9af849a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
