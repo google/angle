@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10df9f24_8753ac9f",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-11T12:27:16Z",
+      "side": 0,
+      "message": "good cleanup.. it seems like it\u0027s impossible to reach this code.",
+      "range": {
+        "startLine": 1041,
+        "startChar": 0,
+        "endLine": 1045,
+        "endChar": 5
+      },
+      "revId": "f9479effa6c976dba1b1243c6257107791d03656",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
