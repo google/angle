@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10df9f24_0706bcae",
+        "filename": "src/libGLESv2/renderer/ProgramImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-11T12:15:09Z",
+      "side": 1,
+      "message": "nit: const \u0026 is okay here (see other note)",
+      "range": {
+        "startLine": 44,
+        "startChar": 43,
+        "endLine": 44,
+        "endChar": 44
+      },
+      "revId": "5e301e5af0951e64158371d597600cccc399de33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10df9f24_e708f0bb",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-11T12:15:09Z",
+      "side": 1,
+      "message": "nit: const \u0026 is okay for this vector\n\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Reference_Arguments",
+      "range": {
+        "startLine": 53,
+        "startChar": 43,
+        "endLine": 53,
+        "endChar": 44
+      },
+      "revId": "5e301e5af0951e64158371d597600cccc399de33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
