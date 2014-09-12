@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9099cf85_98b85dc7",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-12T20:22:25Z",
+      "side": 1,
+      "message": "The left 6 or so columns of each of these lines are being highlighted in my viewer. These didn\u0027t get changed from spaces to tabs, did they?",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 66
+      },
+      "revId": "a5af8552ccdba717803ea40903cb6b7cb20d69c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90cb8f65_7c9639cb",
+        "filename": "src/libGLESv2/renderer/ProgramImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-12T20:22:25Z",
+      "side": 1,
+      "message": "more indentation nit",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 118
+      },
+      "revId": "a5af8552ccdba717803ea40903cb6b7cb20d69c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90b46fdf_690d910d",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-12T20:22:25Z",
+      "side": 1,
+      "message": "Standard indentation style nit",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 114
+      },
+      "revId": "a5af8552ccdba717803ea40903cb6b7cb20d69c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
