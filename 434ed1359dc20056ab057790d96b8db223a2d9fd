@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90cb8f65_bc88c19c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/renderer9_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-12T20:24:22Z",
+      "side": 1,
+      "message": "An EOL whitespace if you wanna get reeeeeeeeally nitty",
+      "range": {
+        "startLine": 7,
+        "startChar": 69,
+        "endLine": 7,
+        "endChar": 70
+      },
+      "revId": "434ed1359dc20056ab057790d96b8db223a2d9fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
