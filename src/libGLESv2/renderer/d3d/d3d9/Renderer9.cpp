@@ -1156,10 +1156,10 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         // Apply the render target on the device
         IDirect3DSurface9 *renderTargetSurface = NULL;
 
-        RenderTarget *renderTarget = attachment->getRenderTarget();
+        RenderTarget9 *renderTarget = d3d9::GetAttachmentRenderTarget(attachment);
         if (renderTarget)
         {
-            renderTargetSurface = RenderTarget9::makeRenderTarget9(renderTarget)->getSurface();
+            renderTargetSurface = renderTarget->getSurface();
         }
 
         if (!renderTargetSurface)
@@ -1199,11 +1199,11 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         if (depthStencil)
         {
             IDirect3DSurface9 *depthStencilSurface = NULL;
-            RenderTarget *depthStencilRenderTarget = depthStencil->getRenderTarget();
+            rx::RenderTarget9 *depthStencilRenderTarget = d3d9::GetAttachmentRenderTarget(depthStencil);
 
             if (depthStencilRenderTarget)
             {
-                depthStencilSurface = RenderTarget9::makeRenderTarget9(depthStencilRenderTarget)->getSurface();
+                depthStencilSurface = depthStencilRenderTarget->getSurface();
             }
 
             if (!depthStencilSurface)
@@ -2478,11 +2478,11 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
         if (readBuffer)
         {
-            readRenderTarget = RenderTarget9::makeRenderTarget9(readBuffer->getRenderTarget());
+            readRenderTarget = d3d9::GetAttachmentRenderTarget(readBuffer);
         }
         if (drawBuffer)
         {
-            drawRenderTarget = RenderTarget9::makeRenderTarget9(drawBuffer->getRenderTarget());
+            drawRenderTarget = d3d9::GetAttachmentRenderTarget(drawBuffer);
         }
 
         if (readRenderTarget)
@@ -2607,11 +2607,11 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
         if (readBuffer)
         {
-            readDepthStencil = RenderTarget9::makeRenderTarget9(readBuffer->getRenderTarget());
+            readDepthStencil = d3d9::GetAttachmentRenderTarget(readBuffer);
         }
         if (drawBuffer)
         {
-            drawDepthStencil = RenderTarget9::makeRenderTarget9(drawBuffer->getRenderTarget());
+            drawDepthStencil = d3d9::GetAttachmentRenderTarget(drawBuffer);
         }
 
         if (readDepthStencil)
@@ -2655,7 +2655,7 @@ gl::Error Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, 
 
     if (colorbuffer)
     {
-        renderTarget = RenderTarget9::makeRenderTarget9(colorbuffer->getRenderTarget());
+        renderTarget = d3d9::GetAttachmentRenderTarget(colorbuffer);
     }
 
     if (renderTarget)

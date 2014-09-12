@@ -211,7 +211,7 @@ gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::
             gl::FramebufferAttachment *attachment = frameBuffer->getColorbuffer(colorAttachment);
             if (attachment)
             {
-                RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(attachment->getRenderTarget());
+                RenderTarget11 *renderTarget = d3d11::GetAttachmentRenderTarget(attachment);
                 if (!renderTarget)
                 {
                     return gl::Error(GL_OUT_OF_MEMORY, "Internal render target view pointer unexpectedly null.");
@@ -284,7 +284,7 @@ gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::
         gl::FramebufferAttachment *attachment = frameBuffer->getDepthOrStencilbuffer();
         if (attachment)
         {
-            RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(attachment->getRenderTarget());
+            RenderTarget11 *renderTarget = d3d11::GetAttachmentRenderTarget(attachment);
             if (!renderTarget)
             {
                 return gl::Error(GL_OUT_OF_MEMORY, "Internal depth stencil view pointer unexpectedly null.");

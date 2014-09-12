@@ -16,8 +16,30 @@
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/RenderTarget.h"
+#include "libGLESv2/renderer/d3d/TextureD3D.h"
 
 #include "common/utilities.h"
+
+namespace rx
+{
+RenderTarget *GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment)
+{
+    if (attachment->isTexture())
+    {
+        gl::Texture *texture = attachment->getTexture();
+        ASSERT(texture);
+        TextureD3D *textureD3D = TextureD3D::makeTextureD3D(texture->getImplementation());
+        return textureD3D->getRenderTarget(attachment->mipLevel(), attachment->layer());
+    }
+
+    gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
+    ASSERT(renderbuffer);
+
+    // TODO: cast to RenderbufferD3D
+    return renderbuffer->getStorage()->getRenderTarget();
+}
+
+}
 
 namespace gl
 {
@@ -578,7 +600,7 @@ void Framebuffer::invalidateSub(const Caps &caps, GLsizei numAttachments, const 
 
         if (attachment)
         {
-            rx::RenderTarget *renderTarget = attachment->getRenderTarget();
+            rx::RenderTarget *renderTarget = rx::GetAttachmentRenderTarget(attachment);
             if (renderTarget)
             {
                 renderTarget->invalidate(x, y, width, height);

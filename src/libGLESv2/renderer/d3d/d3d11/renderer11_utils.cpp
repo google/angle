@@ -9,7 +9,9 @@
 
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
+#include "libGLESv2/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libGLESv2/ProgramBinary.h"
+#include "libGLESv2/Framebuffer.h"
 
 #include "common/debug.h"
 
@@ -1061,6 +1063,12 @@ HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 #else
     return S_OK;
 #endif
+}
+
+RenderTarget11 *GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment)
+{
+    RenderTarget *renderTarget = rx::GetAttachmentRenderTarget(attachment);
+    return RenderTarget11::makeRenderTarget11(renderTarget);
 }
 
 }

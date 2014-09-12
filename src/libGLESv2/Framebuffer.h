@@ -113,4 +113,12 @@ class DefaultFramebuffer : public Framebuffer
 
 }
 
+namespace rx
+{
+class RenderTarget;
+
+// TODO: place this in FramebufferD3D.h
+RenderTarget *GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment);
+}
+
 #endif   // LIBGLESV2_FRAMEBUFFER_H_

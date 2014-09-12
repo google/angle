@@ -216,9 +216,9 @@ bool Blit9::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum de
 
     if (colorbuffer)
     {
-        renderTarget = RenderTarget9::makeRenderTarget9(colorbuffer->getRenderTarget());
+        renderTarget = d3d9::GetAttachmentRenderTarget(colorbuffer);
     }
-    
+
     if (renderTarget)
     {
         source = renderTarget->getSurface();
@@ -233,7 +233,7 @@ bool Blit9::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum de
     TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage->getStorageInstance());
     IDirect3DSurface9 *destSurface = storage9->getSurfaceLevel(level, true);
     bool result = false;
-        
+
     if (destSurface)
     {
         result = copy(source, sourceRect, destFormat, xoffset, yoffset, destSurface);
@@ -252,9 +252,9 @@ bool Blit9::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum de
 
     if (colorbuffer)
     {
-        renderTarget = RenderTarget9::makeRenderTarget9(colorbuffer->getRenderTarget());
+        renderTarget = d3d9::GetAttachmentRenderTarget(colorbuffer);
     }
-    
+
     if (renderTarget)
     {
         source = renderTarget->getSurface();

@@ -56,8 +56,6 @@ class FramebufferAttachment
     GLenum getBinding() const { return mBinding; }
 
     // Child class interface
-    virtual rx::RenderTarget *getRenderTarget() = 0;
-
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;
     virtual GLenum getInternalFormat() const = 0;
@@ -98,7 +96,6 @@ class TextureAttachment : public FramebufferAttachment
     virtual GLint mipLevel() const;
     virtual GLint layer() const;
 
-    virtual rx::RenderTarget *getRenderTarget();
     virtual unsigned int getSerial() const;
 
     virtual Texture *getTexture();
@@ -117,8 +114,6 @@ class RenderbufferAttachment : public FramebufferAttachment
     RenderbufferAttachment(GLenum binding, Renderbuffer *renderbuffer);
 
     virtual ~RenderbufferAttachment();
-
-    rx::RenderTarget *getRenderTarget();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;

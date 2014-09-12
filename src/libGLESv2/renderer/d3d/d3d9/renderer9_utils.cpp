@@ -10,6 +10,8 @@
 #include "libGLESv2/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
 #include "libGLESv2/formatutils.h"
+#include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/renderer/d3d/d3d9/RenderTarget9.h"
 
 #include "common/mathutil.h"
 #include "common/debug.h"
@@ -529,6 +531,12 @@ void MakeValidSize(bool isImage, D3DFORMAT format, GLsizei *requestWidth, GLsize
         }
     }
     *levelOffset = upsampleCount;
+}
+
+RenderTarget9 *GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment)
+{
+    RenderTarget *renderTarget = rx::GetAttachmentRenderTarget(attachment);
+    return RenderTarget9::makeRenderTarget9(renderTarget);
 }
 
 }
