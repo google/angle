@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9099cf85_d591ce8d",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Blit9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-12T14:41:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70b9bbd7_bff8bf25",
+      "range": {
+        "startLine": 221,
+        "startChar": 0,
+        "endLine": 221,
+        "endChar": 4
+      },
+      "revId": "f09fbb4b8be5d7b28648a4fbc4204dc7082b52e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10c87f74_761010b4",
         "filename": "src/libGLESv2/renderer/d3d/d3d9/Image9.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2014-09-11T17:34:10Z",
       "side": 1,
       "message": "Same here",
+      "range": {
+        "startLine": 467,
+        "startChar": 0,
+        "endLine": 467,
+        "endChar": 4
+      },
+      "revId": "f09fbb4b8be5d7b28648a4fbc4204dc7082b52e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90b46fdf_0ed7bbf9",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-12T14:41:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10c87f74_761010b4",
       "range": {
         "startLine": 467,
         "startChar": 0,
