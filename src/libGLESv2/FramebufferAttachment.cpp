@@ -135,11 +135,6 @@ GLint TextureAttachment::layer() const
     return mIndex.layerIndex;
 }
 
-unsigned int TextureAttachment::getSerial() const
-{
-    return mTexture->getRenderTargetSerial(mIndex);
-}
-
 Texture *TextureAttachment::getTexture()
 {
     return mTexture.get();
@@ -188,11 +183,6 @@ GLenum RenderbufferAttachment::getActualFormat() const
 GLsizei RenderbufferAttachment::getSamples() const
 {
     return mRenderbuffer->getStorage()->getSamples();
-}
-
-unsigned int RenderbufferAttachment::getSerial() const
-{
-    return mRenderbuffer->getStorage()->getSerial();
 }
 
 GLuint RenderbufferAttachment::id() const

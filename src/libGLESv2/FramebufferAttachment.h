@@ -62,8 +62,6 @@ class FramebufferAttachment
     virtual GLenum getActualFormat() const = 0;
     virtual GLsizei getSamples() const = 0;
 
-    virtual unsigned int getSerial() const = 0;
-
     virtual GLuint id() const = 0;
     virtual GLenum type() const = 0;
     virtual GLint mipLevel() const = 0;
@@ -96,8 +94,6 @@ class TextureAttachment : public FramebufferAttachment
     virtual GLint mipLevel() const;
     virtual GLint layer() const;
 
-    virtual unsigned int getSerial() const;
-
     virtual Texture *getTexture();
     virtual Renderbuffer *getRenderbuffer();
 
@@ -120,8 +116,6 @@ class RenderbufferAttachment : public FramebufferAttachment
     virtual GLenum getInternalFormat() const;
     virtual GLenum getActualFormat() const;
     virtual GLsizei getSamples() const;
-
-    virtual unsigned int getSerial() const;
 
     virtual GLuint id() const;
     virtual GLenum type() const;

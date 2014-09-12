@@ -820,7 +820,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
                 return false;
             }
 
-            renderTargetSerials[colorAttachment] = colorbuffer->getSerial();
+            renderTargetSerials[colorAttachment] = GetAttachmentSerial(colorbuffer);
 
             // Extract the render target dimensions and view
             RenderTarget11 *renderTarget = d3d11::GetAttachmentRenderTarget(colorbuffer);
@@ -850,18 +850,18 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         }
     }
 
-    // Get the depth stencil render buffer and serials
+    // Get the depth stencil render buffter and serials
     gl::FramebufferAttachment *depthStencil = framebuffer->getDepthbuffer();
     unsigned int depthbufferSerial = 0;
     unsigned int stencilbufferSerial = 0;
     if (depthStencil)
     {
-        depthbufferSerial = depthStencil->getSerial();
+        depthbufferSerial = GetAttachmentSerial(depthStencil);
     }
     else if (framebuffer->getStencilbuffer())
     {
         depthStencil = framebuffer->getStencilbuffer();
-        stencilbufferSerial = depthStencil->getSerial();
+        stencilbufferSerial = GetAttachmentSerial(depthStencil);
     }
 
     ID3D11DepthStencilView* framebufferDSV = NULL;

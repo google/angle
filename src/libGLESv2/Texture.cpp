@@ -14,7 +14,6 @@
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/renderer/Image.h"
-#include "libGLESv2/renderer/RenderTarget.h"
 #include "libGLESv2/renderer/d3d/TextureStorage.h"
 
 #include "libEGL/Surface.h"
@@ -177,16 +176,6 @@ int Texture::mipLevels() const
 const rx::Image *Texture::getBaseLevelImage() const
 {
     return (getImplementation()->getLayerCount(0) > 0 ? getImplementation()->getImage(0, 0) : NULL);
-}
-
-rx::RenderTarget *Texture::getRenderTarget(const ImageIndex &index)
-{
-    return mTexture->getRenderTarget(index.mipIndex, index.layerIndex);
-}
-
-unsigned int Texture::getRenderTargetSerial(const ImageIndex &index)
-{
-    return mTexture->getRenderTargetSerial(index.mipIndex, index.layerIndex);
 }
 
 Texture2D::Texture2D(rx::TextureImpl *impl, GLuint id)

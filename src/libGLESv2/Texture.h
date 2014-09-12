@@ -99,11 +99,6 @@ class Texture : public RefCountObject
 
     const rx::Image *getBaseLevelImage() const;
 
-    // TODO: move these to TextureD3D
-    friend class TextureAttachment;
-    rx::RenderTarget *getRenderTarget(const ImageIndex &index);
-    unsigned int getRenderTargetSerial(const ImageIndex &index);
-
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 };

@@ -29,6 +29,7 @@ RenderTarget *GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment)
         gl::Texture *texture = attachment->getTexture();
         ASSERT(texture);
         TextureD3D *textureD3D = TextureD3D::makeTextureD3D(texture->getImplementation());
+
         return textureD3D->getRenderTarget(attachment->mipLevel(), attachment->layer());
     }
 
@@ -37,6 +38,24 @@ RenderTarget *GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment)
 
     // TODO: cast to RenderbufferD3D
     return renderbuffer->getStorage()->getRenderTarget();
+}
+
+// Note: RenderTarget serials should ideally be in the RenderTargets themselves.
+unsigned int GetAttachmentSerial(gl::FramebufferAttachment *attachment)
+{
+    if (attachment->isTexture())
+    {
+        gl::Texture *texture = attachment->getTexture();
+        ASSERT(texture);
+        TextureD3D *textureD3D = TextureD3D::makeTextureD3D(texture->getImplementation());
+        return textureD3D->getRenderTargetSerial(attachment->mipLevel(), attachment->layer());
+    }
+
+    gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
+    ASSERT(renderbuffer);
+
+    // TODO: cast to RenderbufferD3D
+    return renderbuffer->getStorage()->getSerial();
 }
 
 }

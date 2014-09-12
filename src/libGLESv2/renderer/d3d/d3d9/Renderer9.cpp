@@ -1150,7 +1150,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
     }
 
     bool renderTargetChanged = false;
-    unsigned int renderTargetSerial = attachment->getSerial();
+    unsigned int renderTargetSerial = GetAttachmentSerial(attachment);
     if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
         // Apply the render target on the device
@@ -1180,12 +1180,12 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
     unsigned int stencilbufferSerial = 0;
     if (depthStencil)
     {
-        depthbufferSerial = depthStencil->getSerial();
+        depthbufferSerial = GetAttachmentSerial(depthStencil);
     }
     else if (framebuffer->getStencilbuffer())
     {
         depthStencil = framebuffer->getStencilbuffer();
-        stencilbufferSerial = depthStencil->getSerial();
+        stencilbufferSerial = GetAttachmentSerial(depthStencil);
     }
 
     if (depthbufferSerial != mAppliedDepthbufferSerial ||
