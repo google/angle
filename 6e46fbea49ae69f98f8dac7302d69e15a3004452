@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "90b46fdf_c9285d71",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1162,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-12T20:06:59Z",
+      "side": 1,
+      "message": "Should we ASSERT here that the sampler count is within the allowable range? I assume we\u0027ve checked it before streaming it out, but theoretically it\u0027s possible that someone screwed with the binary before we\u0027re reloading it...",
+      "range": {
+        "startLine": 1162,
+        "startChar": 0,
+        "endLine": 1162,
+        "endChar": 71
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9099cf85_f84b293b",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-12T20:06:59Z",
+      "side": 1,
+      "message": "It feels really strange to be passing container classes around by pointers. Did we run into this issue before? It feels like a conversation we\u0027ve already had recently, but this miiiiight be an acceptable case for non-const references. (Although for all I know I thought the opposite last time...)",
+      "range": {
+        "startLine": 227,
+        "startChar": 31,
+        "endLine": 227,
+        "endChar": 61
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0f7b398_cbbaf5a2",
         "filename": "src/libGLESv2/ResourceManager.cpp",
         "patchSetId": 6
