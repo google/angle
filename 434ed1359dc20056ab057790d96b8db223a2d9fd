@@ -46,6 +46,29 @@
       "revId": "434ed1359dc20056ab057790d96b8db223a2d9fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90cb8f65_3caf51b6",
+        "filename": "src/libGLESv2/renderer/TextureImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-12T17:07:19Z",
+      "side": 0,
+      "message": "realized i could remove this",
+      "range": {
+        "startLine": 32,
+        "startChar": 6,
+        "endLine": 32,
+        "endChar": 18
+      },
+      "revId": "434ed1359dc20056ab057790d96b8db223a2d9fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
