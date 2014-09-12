@@ -30,7 +30,6 @@ class Surface;
 namespace rx
 {
 class TextureStorageInterface;
-class RenderTarget;
 class Image;
 }
 

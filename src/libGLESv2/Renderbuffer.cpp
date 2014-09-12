@@ -125,11 +125,6 @@ rx::RenderTarget *RenderbufferStorage::getRenderTarget()
     return NULL;
 }
 
-rx::RenderTarget *RenderbufferStorage::getDepthStencil()
-{
-    return NULL;
-}
-
 GLsizei RenderbufferStorage::getWidth() const
 {
     return mWidth;
