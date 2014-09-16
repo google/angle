@@ -70,6 +70,30 @@
       "revId": "ca94101c4d34138fc2e0159a800a8112bd7721b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10ab1f9f_5e70b515",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/VertexDeclarationCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-16T18:23:45Z",
+      "side": 1,
+      "message": "Ack, you\u0027re right, I thought this was moved to the validation layer now.  Created a patch before this one to validate this (looks like it wasn\u0027t validated at all in D3D11).",
+      "parentUuid": "f0d5ab33_8d5ba12f",
+      "range": {
+        "startLine": 84,
+        "startChar": 8,
+        "endLine": 84,
+        "endChar": 59
+      },
+      "revId": "ca94101c4d34138fc2e0159a800a8112bd7721b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
