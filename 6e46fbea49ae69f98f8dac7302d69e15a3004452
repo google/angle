@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "30a663d4_a20fa094",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1162,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-16T21:03:09Z",
+      "side": 1,
+      "message": "It could be a useful assertion but we can\u0027t without passing a caps object to the load function.  There are a few other places where we resize containers based on values we read from the binary so I don\u0027t think it\u0027s possible to protect against everything here.",
+      "parentUuid": "90b46fdf_c9285d71",
+      "range": {
+        "startLine": 1162,
+        "startChar": 0,
+        "endLine": 1162,
+        "endChar": 71
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9099cf85_f84b293b",
         "filename": "src/libGLESv2/ProgramBinary.h",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2014-09-12T20:06:59Z",
       "side": 1,
       "message": "It feels really strange to be passing container classes around by pointers. Did we run into this issue before? It feels like a conversation we\u0027ve already had recently, but this miiiiight be an acceptable case for non-const references. (Although for all I know I thought the opposite last time...)",
+      "range": {
+        "startLine": 227,
+        "startChar": 31,
+        "endLine": 227,
+        "endChar": 61
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30a663d4_0211acba",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-16T21:03:09Z",
+      "side": 1,
+      "message": "We\u0027ve done it in a couple places before.  You\u0027ve gone and open the flood gates now :D\n\nDone.",
+      "parentUuid": "9099cf85_f84b293b",
       "range": {
         "startLine": 227,
         "startChar": 31,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "10ab1f9f_e14fe07d",
+        "filename": "src/libGLESv2/ResourceManager.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-16T21:03:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b04973a6_ed28a770",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 4
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b04973a6_90f2d879",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 6
@@ -105,6 +177,30 @@
       "writtenOn": "2014-09-09T19:21:00Z",
       "side": 1,
       "message": "Same here. Please clean up this unrelated whitespace if you update the CL.",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 337,
+        "endChar": 4
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30a663d4_02e88c5a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-16T21:03:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b04973a6_90f2d879",
       "range": {
         "startLine": 337,
         "startChar": 0,
