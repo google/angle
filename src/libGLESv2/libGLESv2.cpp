@@ -1365,7 +1365,7 @@ void __stdcall glDrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei coun
     gl::Context *context = gl::getNonLostContext();
     if (context)
     {
-        if (!ValidateDrawArraysInstanced(context, mode, first, count, primcount))
+        if (!ValidateDrawArraysInstancedANGLE(context, mode, first, count, primcount))
         {
             return;
         }
@@ -1401,7 +1401,7 @@ void __stdcall glDrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum t
     if (context)
     {
         rx::RangeUI indexRange;
-        if (!ValidateDrawElementsInstanced(context, mode, count, type, indices, primcount, &indexRange))
+        if (!ValidateDrawElementsInstancedANGLE(context, mode, count, type, indices, primcount, &indexRange))
         {
             return;
         }

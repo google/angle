@@ -81,10 +81,9 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
             }
         }
 
-        if (indexedAttribute == gl::MAX_VERTEX_ATTRIBS)
-        {
-            return GL_INVALID_OPERATION;
-        }
+        // The validation layer checks that there is at least one active attribute with a zero divisor as per
+        // the GL_ANGLE_instanced_arrays spec.
+        ASSERT(indexedAttribute != gl::MAX_VERTEX_ATTRIBS);
     }
 
     D3DCAPS9 caps;

@@ -1560,6 +1560,39 @@ bool ValidateDrawArraysInstanced(Context *context, GLenum mode, GLint first, GLs
     return (primcount > 0);
 }
 
+static bool ValidateDrawInstancedANGLE(Context *context)
+{
+    // Verify there is at least one active attribute with a divisor of zero
+    const gl::State& state = context->getState();
+
+    gl::ProgramBinary *programBinary = state.getCurrentProgramBinary();
+
+    const VertexArray *vao = state.getVertexArray();
+    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    {
+        const VertexAttribute &attrib = vao->getVertexAttribute(attributeIndex);
+        bool active = (programBinary->getSemanticIndex(attributeIndex) != -1);
+        if (active && attrib.divisor == 0)
+        {
+            return true;
+        }
+    }
+
+    context->recordError(Error(GL_INVALID_OPERATION, "ANGLE_instanced_arrays requires that at least one active attribute"
+                                                     "has a divisor of zero."));
+    return false;
+}
+
+bool ValidateDrawArraysInstancedANGLE(Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount)
+{
+    if (!ValidateDrawInstancedANGLE(context))
+    {
+        return false;
+    }
+
+    return ValidateDrawArraysInstanced(context, mode, first, count, primcount);
+}
+
 bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum type,
                           const GLvoid* indices, GLsizei primcount, rx::RangeUI *indexRangeOut)
 {
@@ -1679,6 +1712,17 @@ bool ValidateDrawElementsInstanced(Context *context,
 
     // No-op zero primitive count
     return (primcount > 0);
+}
+
+bool ValidateDrawElementsInstancedANGLE(Context *context, GLenum mode, GLsizei count, GLenum type,
+                                        const GLvoid *indices, GLsizei primcount, rx::RangeUI *indexRangeOut)
+{
+    if (!ValidateDrawInstancedANGLE(context))
+    {
+        return false;
+    }
+
+    return ValidateDrawElementsInstanced(context, mode, count, type, indices, primcount, indexRangeOut);
 }
 
 bool ValidateFramebufferTextureBase(Context *context, GLenum target, GLenum attachment,
