@@ -572,16 +572,17 @@ void ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum
 
         for (int i = 0; i < count; i++)
         {
+            T *dest = target + (i * 4);
+            const T *source = v + (i * components);
+
             for (int c = 0; c < components; c++)
             {
-                SetIfDirty(target + c, v[c], &targetUniform->dirty);
+                SetIfDirty(dest + c, source[c], &targetUniform->dirty);
             }
             for (int c = components; c < 4; c++)
             {
-                SetIfDirty(target + c, T(0), &targetUniform->dirty);
+                SetIfDirty(dest + c, T(0), &targetUniform->dirty);
             }
-            target += 4;
-            v += components;
         }
     }
     else if (targetUniform->type == targetBoolType)
@@ -590,16 +591,17 @@ void ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum
 
         for (int i = 0; i < count; i++)
         {
+            GLint *dest = boolParams + (i * 4);
+            const T *source = v + (i * components);
+
             for (int c = 0; c < components; c++)
             {
-                SetIfDirty(boolParams + c, (v[c] == static_cast<T>(0)) ? GL_FALSE : GL_TRUE, &targetUniform->dirty);
+                SetIfDirty(dest + c, (source[c] == static_cast<T>(0)) ? GL_FALSE : GL_TRUE, &targetUniform->dirty);
             }
             for (int c = components; c < 4; c++)
             {
-                SetIfDirty(boolParams + c, GL_FALSE, &targetUniform->dirty);
+                SetIfDirty(dest + c, GL_FALSE, &targetUniform->dirty);
             }
-            boolParams += 4;
-            v += components;
         }
     }
     else UNREACHABLE();
