@@ -568,7 +568,7 @@ void ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum
 
     if (targetUniform->type == targetUniformType)
     {
-        T *target = (T*)targetUniform->data + mUniformIndex[location].element * 4;
+        T *target = reinterpret_cast<T*>(targetUniform->data) + mUniformIndex[location].element * 4;
 
         for (int i = 0; i < count; i++)
         {
@@ -587,7 +587,7 @@ void ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum
     }
     else if (targetUniform->type == targetBoolType)
     {
-        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
+        GLint *boolParams = reinterpret_cast<GLint*>(targetUniform->data) + mUniformIndex[location].element * 4;
 
         for (int i = 0; i < count; i++)
         {
@@ -602,6 +602,30 @@ void ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum
             {
                 SetIfDirty(dest + c, GL_FALSE, &targetUniform->dirty);
             }
+        }
+    }
+    else if (IsSampler(targetUniform->type))
+    {
+        ASSERT(targetUniformType == GL_INT);
+
+        GLint *target = reinterpret_cast<GLint*>(targetUniform->data) + mUniformIndex[location].element * 4;
+
+        bool wasDirty = targetUniform->dirty;
+
+        for (int i = 0; i < count; i++)
+        {
+            GLint *dest = target + (i * 4);
+            const GLint *source = reinterpret_cast<const GLint*>(v) + (i * components);
+
+            SetIfDirty(dest + 0, source[0], &targetUniform->dirty);
+            SetIfDirty(dest + 1, 0, &targetUniform->dirty);
+            SetIfDirty(dest + 2, 0, &targetUniform->dirty);
+            SetIfDirty(dest + 3, 0, &targetUniform->dirty);
+        }
+
+        if (!wasDirty && targetUniform->dirty)
+        {
+            mDirtySamplerMapping = true;
         }
     }
     else UNREACHABLE();
@@ -769,48 +793,7 @@ void ProgramBinary::setUniformMatrix4x3fv(GLint location, GLsizei count, GLboole
 
 void ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
-    LinkedUniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
-    int elementCount = targetUniform->elementCount();
-
-    count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-
-    if (targetUniform->type == GL_INT || IsSampler(targetUniform->type))
-    {
-        GLint *target = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
-
-        for (int i = 0; i < count; i++)
-        {
-            SetIfDirty(target + 0, v[0], &targetUniform->dirty);
-            SetIfDirty(target + 1, 0, &targetUniform->dirty);
-            SetIfDirty(target + 2, 0, &targetUniform->dirty);
-            SetIfDirty(target + 3, 0, &targetUniform->dirty);
-            target += 4;
-            v += 1;
-        }
-    }
-    else if (targetUniform->type == GL_BOOL)
-    {
-        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
-
-        for (int i = 0; i < count; i++)
-        {
-            SetIfDirty(boolParams + 0, (v[0] == 0) ? GL_FALSE : GL_TRUE, &targetUniform->dirty);
-            SetIfDirty(boolParams + 1, GL_FALSE, &targetUniform->dirty);
-            SetIfDirty(boolParams + 2, GL_FALSE, &targetUniform->dirty);
-            SetIfDirty(boolParams + 3, GL_FALSE, &targetUniform->dirty);
-            boolParams += 4;
-            v += 1;
-        }
-    }
-    else UNREACHABLE();
-
-    // Set a special flag if we change a sampler uniform
-    if (IsSampler(targetUniform->type) &&
-        (memcmp(targetUniform->data, v, sizeof(GLint)) != 0))
-    {
-        mDirtySamplerMapping = true;
-    }
+    setUniform(location, count, v, GL_INT);
 }
 
 void ProgramBinary::setUniform2iv(GLint location, GLsizei count, const GLint *v)
