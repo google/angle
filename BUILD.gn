@@ -152,9 +152,9 @@ if (is_win) {
   shared_library("libGLESv2") {
     sources = rebase_path(gles_gypi.angle_libangle_sources, ".", "src")
     sources += [
-      "libGLESv2/libGLESv2.cpp",
-      "libGLESv2/libGLESv2.def",
-      "libGLESv2/libGLESv2.rc",
+      "src/libGLESv2/libGLESv2.cpp",
+      "src/libGLESv2/libGLESv2.def",
+      "src/libGLESv2/libGLESv2.rc",
     ]
 
     defines = [
