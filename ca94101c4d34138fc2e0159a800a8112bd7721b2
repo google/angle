@@ -22,6 +22,54 @@
       "revId": "ca94101c4d34138fc2e0159a800a8112bd7721b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0e2671a_8c3f279f",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/VertexDeclarationCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-16T12:54:16Z",
+      "side": 1,
+      "message": "Question ping",
+      "parentUuid": "502037de_88d3d795",
+      "range": {
+        "startLine": 84,
+        "startChar": 8,
+        "endLine": 84,
+        "endChar": 59
+      },
+      "revId": "ca94101c4d34138fc2e0159a800a8112bd7721b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0d5ab33_8d5ba12f",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/VertexDeclarationCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-16T12:54:16Z",
+      "side": 1,
+      "message": "Ping on this question",
+      "parentUuid": "502037de_88d3d795",
+      "range": {
+        "startLine": 84,
+        "startChar": 8,
+        "endLine": 84,
+        "endChar": 59
+      },
+      "revId": "ca94101c4d34138fc2e0159a800a8112bd7721b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
