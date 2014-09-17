@@ -244,7 +244,7 @@ Image *TextureD3D_2D::getImage(int level, int layer) const
 Image *TextureD3D_2D::getImage(const gl::ImageIndex &index) const
 {
     ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(index.layerIndex == 0);
+    ASSERT(!index.hasLayer());
     ASSERT(index.type == GL_TEXTURE_2D);
     return mImageArray[index.mipIndex];
 }
@@ -305,8 +305,10 @@ void TextureD3D_2D::setImage(GLenum target, GLint level, GLsizei width, GLsizei 
     // Attempt a fast gpu copy of the pixel data to the surface
     if (isFastUnpackable(unpack, sizedInternalFormat) && isLevelComplete(level))
     {
+        gl::ImageIndex index = gl::ImageIndex::Make2D(level);
+
         // Will try to create RT storage if it does not exist
-        RenderTarget *destRenderTarget = getRenderTarget(level, 0);
+        RenderTarget *destRenderTarget = getRenderTarget(index);
         gl::Box destArea(0, 0, 0, getWidth(level), getHeight(level), 1);
 
         if (destRenderTarget && fastUnpackPixels(unpack, pixels, destArea, sizedInternalFormat, type, destRenderTarget))
@@ -340,9 +342,10 @@ void TextureD3D_2D::subImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
     bool fastUnpacked = false;
 
+    gl::ImageIndex index = gl::ImageIndex::Make2D(level);
     if (isFastUnpackable(unpack, getInternalFormat(level)) && isLevelComplete(level))
     {
-        RenderTarget *renderTarget = getRenderTarget(level, 0);
+        RenderTarget *renderTarget = getRenderTarget(index);
         gl::Box destArea(xoffset, yoffset, 0, width, height, 1);
 
         if (renderTarget && fastUnpackPixels(unpack, pixels, destArea, getInternalFormat(level), type, renderTarget))
@@ -354,7 +357,6 @@ void TextureD3D_2D::subImage(GLenum target, GLint level, GLint xoffset, GLint yo
         }
     }
 
-    gl::ImageIndex index = gl::ImageIndex::Make2D(level);
     if (!fastUnpacked && TextureD3D::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels, index))
     {
         commitRect(level, xoffset, yoffset, width, height);
@@ -513,15 +515,15 @@ void TextureD3D_2D::generateMipmaps()
     }
 }
 
-unsigned int TextureD3D_2D::getRenderTargetSerial(GLint level, GLint layer)
+unsigned int TextureD3D_2D::getRenderTargetSerial(const gl::ImageIndex &index)
 {
-    ASSERT(layer == 0);
-    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(level) : 0);
+    ASSERT(!index.hasLayer());
+    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(index.mipIndex) : 0);
 }
 
-RenderTarget *TextureD3D_2D::getRenderTarget(GLint level, GLint layer)
+RenderTarget *TextureD3D_2D::getRenderTarget(const gl::ImageIndex &index)
 {
-    ASSERT(layer == 0);
+    ASSERT(!index.hasLayer());
 
     // ensure the underlying texture is created
     if (!ensureRenderTarget())
@@ -529,8 +531,8 @@ RenderTarget *TextureD3D_2D::getRenderTarget(GLint level, GLint layer)
         return NULL;
     }
 
-    updateStorageLevel(level);
-    return mTexStorage->getRenderTarget(level);
+    updateStorageLevel(index.mipIndex);
+    return mTexStorage->getStorageInstance()->getRenderTarget(index);
 }
 
 bool TextureD3D_2D::isValidLevel(int level) const
@@ -1014,16 +1016,14 @@ void TextureD3D_Cube::generateMipmaps()
     }
 }
 
-unsigned int TextureD3D_Cube::getRenderTargetSerial(GLint level, GLint layer)
+unsigned int TextureD3D_Cube::getRenderTargetSerial(const gl::ImageIndex &index)
 {
-    GLenum target = gl::TextureCubeMap::layerIndexToTarget(layer);
-    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(target, level) : 0);
+    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(index.type, index.mipIndex) : 0);
 }
 
-RenderTarget *TextureD3D_Cube::getRenderTarget(GLint level, GLint layer)
+RenderTarget *TextureD3D_Cube::getRenderTarget(const gl::ImageIndex &index)
 {
-    GLenum target = gl::TextureCubeMap::layerIndexToTarget(layer);
-    ASSERT(gl::IsCubemapTextureTarget(target));
+    ASSERT(gl::IsCubemapTextureTarget(index.type));
 
     // ensure the underlying texture is created
     if (!ensureRenderTarget())
@@ -1031,8 +1031,8 @@ RenderTarget *TextureD3D_Cube::getRenderTarget(GLint level, GLint layer)
         return NULL;
     }
 
-    updateStorageFaceLevel(layer, level);
-    return mTexStorage->getRenderTarget(target, level);
+    updateStorageFaceLevel(index.layerIndex, index.mipIndex);
+    return mTexStorage->getStorageInstance()->getRenderTarget(index);
 }
 
 void TextureD3D_Cube::initializeStorage(bool renderTarget)
@@ -1274,7 +1274,7 @@ Image *TextureD3D_3D::getImage(int level, int layer) const
 Image *TextureD3D_3D::getImage(const gl::ImageIndex &index) const
 {
     ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(index.layerIndex == 0);
+    ASSERT(!index.hasLayer());
     ASSERT(index.type == GL_TEXTURE_3D);
     return mImageArray[index.mipIndex];
 }
@@ -1335,7 +1335,8 @@ void TextureD3D_3D::setImage(GLenum target, GLint level, GLsizei width, GLsizei 
     if (isFastUnpackable(unpack, sizedInternalFormat))
     {
         // Will try to create RT storage if it does not exist
-        RenderTarget *destRenderTarget = getRenderTarget(level);
+        gl::ImageIndex index = gl::ImageIndex::Make3D(level);
+        RenderTarget *destRenderTarget = getRenderTarget(index);
         gl::Box destArea(0, 0, 0, getWidth(level), getHeight(level), getDepth(level));
 
         if (destRenderTarget && fastUnpackPixels(unpack, pixels, destArea, sizedInternalFormat, type, destRenderTarget))
@@ -1369,10 +1370,12 @@ void TextureD3D_3D::subImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
     bool fastUnpacked = false;
 
+    gl::ImageIndex index = gl::ImageIndex::Make3D(level);
+
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
     if (isFastUnpackable(unpack, getInternalFormat(level)))
     {
-        RenderTarget *destRenderTarget = getRenderTarget(level);
+        RenderTarget *destRenderTarget = getRenderTarget(index);
         gl::Box destArea(xoffset, yoffset, zoffset, width, height, depth);
 
         if (destRenderTarget && fastUnpackPixels(unpack, pixels, destArea, getInternalFormat(level), type, destRenderTarget))
@@ -1384,7 +1387,6 @@ void TextureD3D_3D::subImage(GLenum target, GLint level, GLint xoffset, GLint yo
         }
     }
 
-    gl::ImageIndex index = gl::ImageIndex::Make3D(level);
     if (!fastUnpacked && TextureD3D::subImage(xoffset, yoffset, zoffset, width, height, depth, format, type, unpack, pixels, index))
     {
         commitRect(level, xoffset, yoffset, zoffset, width, height, depth);
@@ -1503,12 +1505,12 @@ void TextureD3D_3D::generateMipmaps()
     }
 }
 
-unsigned int TextureD3D_3D::getRenderTargetSerial(GLint level, GLint layer)
+unsigned int TextureD3D_3D::getRenderTargetSerial(const gl::ImageIndex &index)
 {
-    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(level, layer) : 0);
+    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(index.mipIndex, index.layerIndex) : 0);
 }
 
-RenderTarget *TextureD3D_3D::getRenderTarget(GLint level)
+RenderTarget *TextureD3D_3D::getRenderTarget(const gl::ImageIndex &index)
 {
     // ensure the underlying texture is created
     if (!ensureRenderTarget())
@@ -1516,28 +1518,16 @@ RenderTarget *TextureD3D_3D::getRenderTarget(GLint level)
         return NULL;
     }
 
-    updateStorageLevel(level);
-
-    // ensure this is NOT a depth texture
-    if (isDepth(level))
+    if (index.hasLayer())
     {
-        return NULL;
+        updateStorage();
+    }
+    else
+    {
+        updateStorageLevel(index.mipIndex);
     }
 
-    return mTexStorage->getRenderTarget(level);
-}
-
-RenderTarget *TextureD3D_3D::getRenderTarget(GLint level, GLint layer)
-{
-    // ensure the underlying texture is created
-    if (!ensureRenderTarget())
-    {
-        return NULL;
-    }
-
-    updateStorage();
-
-    return mTexStorage->getRenderTarget(level, layer);
+    return mTexStorage->getStorageInstance()->getRenderTarget(index);
 }
 
 void TextureD3D_3D::initializeStorage(bool renderTarget)
@@ -2000,12 +1990,12 @@ void TextureD3D_2DArray::generateMipmaps()
     }
 }
 
-unsigned int TextureD3D_2DArray::getRenderTargetSerial(GLint level, GLint layer)
+unsigned int TextureD3D_2DArray::getRenderTargetSerial(const gl::ImageIndex &index)
 {
-    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(level, layer) : 0);
+    return (ensureRenderTarget() ? mTexStorage->getRenderTargetSerial(index.mipIndex, index.layerIndex) : 0);
 }
 
-RenderTarget *TextureD3D_2DArray::getRenderTarget(GLint level, GLint layer)
+RenderTarget *TextureD3D_2DArray::getRenderTarget(const gl::ImageIndex &index)
 {
     // ensure the underlying texture is created
     if (!ensureRenderTarget())
@@ -2013,8 +2003,8 @@ RenderTarget *TextureD3D_2DArray::getRenderTarget(GLint level, GLint layer)
         return NULL;
     }
 
-    updateStorageLevel(level);
-    return mTexStorage->getRenderTarget(level, layer);
+    updateStorageLevel(index.mipIndex);
+    return mTexStorage->getStorageInstance()->getRenderTarget(index);
 }
 
 void TextureD3D_2DArray::initializeStorage(bool renderTarget)

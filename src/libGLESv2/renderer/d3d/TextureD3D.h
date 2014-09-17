@@ -52,8 +52,8 @@ class TextureD3D : public TextureImpl
 
     bool isImmutable() const { return mImmutable; }
 
-    virtual RenderTarget *getRenderTarget(GLint level, GLint layer) = 0;
-    virtual unsigned int getRenderTargetSerial(GLint level, GLint layer) = 0;
+    virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index) = 0;
+    virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index) = 0;
 
   protected:
     void setImage(const gl::PixelUnpackState &unpack, GLenum type, const void *pixels, Image *image);
@@ -116,8 +116,8 @@ class TextureD3D_2D : public TextureD3D
 
     virtual void generateMipmaps();
 
-    virtual RenderTarget *getRenderTarget(GLint level, GLint layer);
-    virtual unsigned int getRenderTargetSerial(GLint level, GLint layer);
+    virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
+    virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2D);
@@ -173,8 +173,8 @@ class TextureD3D_Cube : public TextureD3D
 
     virtual void generateMipmaps();
 
-    virtual RenderTarget *getRenderTarget(GLint level, GLint layer);
-    virtual unsigned int getRenderTargetSerial(GLint level, GLint layer);
+    virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
+    virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_Cube);
@@ -230,9 +230,8 @@ class TextureD3D_3D : public TextureD3D
 
     virtual void generateMipmaps();
 
-    RenderTarget *getRenderTarget(GLint level);
-    virtual RenderTarget *getRenderTarget(GLint level, GLint layer);
-    virtual unsigned int getRenderTargetSerial(GLint level, GLint layer);
+    virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
+    virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_3D);
@@ -287,8 +286,8 @@ class TextureD3D_2DArray : public TextureD3D
 
     virtual void generateMipmaps();
 
-    virtual RenderTarget *getRenderTarget(GLint level, GLint layer);
-    virtual unsigned int getRenderTargetSerial(GLint level, GLint layer);
+    virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
+    virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2DArray);

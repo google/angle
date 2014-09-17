@@ -79,11 +79,6 @@ TextureStorageInterface2D::~TextureStorageInterface2D()
 {
 }
 
-RenderTarget *TextureStorageInterface2D::getRenderTarget(GLint level) const
-{
-    return mInstance->getRenderTarget(level);
-}
-
 void TextureStorageInterface2D::generateMipmap(int level)
 {
     mInstance->generateMipmap(level);
@@ -102,11 +97,6 @@ TextureStorageInterfaceCube::TextureStorageInterfaceCube(Renderer *renderer, GLe
 
 TextureStorageInterfaceCube::~TextureStorageInterfaceCube()
 {
-}
-
-RenderTarget *TextureStorageInterfaceCube::getRenderTarget(GLenum faceTarget, GLint level) const
-{
-    return mInstance->getRenderTargetFace(faceTarget, level);
 }
 
 void TextureStorageInterfaceCube::generateMipmap(int faceIndex, int level)
@@ -136,16 +126,6 @@ void TextureStorageInterface3D::generateMipmap(int level)
     mInstance->generateMipmap(level);
 }
 
-RenderTarget *TextureStorageInterface3D::getRenderTarget(GLint level) const
-{
-    return mInstance->getRenderTarget(level);
-}
-
-RenderTarget *TextureStorageInterface3D::getRenderTarget(GLint level, GLint layer) const
-{
-    return mInstance->getRenderTargetLayer(level, layer);
-}
-
 unsigned int TextureStorageInterface3D::getRenderTargetSerial(GLint level, GLint layer) const
 {
     return mFirstRenderTargetSerial + static_cast<unsigned int>((layer * mInstance->getLevelCount()) + level);
@@ -165,11 +145,6 @@ TextureStorageInterface2DArray::~TextureStorageInterface2DArray()
 void TextureStorageInterface2DArray::generateMipmap(int level)
 {
     mInstance->generateMipmap(level);
-}
-
-RenderTarget *TextureStorageInterface2DArray::getRenderTarget(GLint level, GLint layer) const
-{
-    return mInstance->getRenderTargetLayer(level, layer);
 }
 
 unsigned int TextureStorageInterface2DArray::getRenderTargetSerial(GLint level, GLint layer) const

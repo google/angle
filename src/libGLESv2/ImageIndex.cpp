@@ -29,7 +29,7 @@ ImageIndex &ImageIndex::operator=(const ImageIndex &other)
 
 ImageIndex ImageIndex::Make2D(GLint mipIndex)
 {
-    return ImageIndex(GL_TEXTURE_2D, mipIndex, 0);
+    return ImageIndex(GL_TEXTURE_2D, mipIndex, ENTIRE_LEVEL);
 }
 
 ImageIndex ImageIndex::MakeCube(GLenum target, GLint mipIndex)

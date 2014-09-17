@@ -15,6 +15,11 @@
 
 #include <GLES2/gl2.h>
 
+namespace gl
+{
+struct ImageIndex;
+}
+
 namespace rx
 {
 class Renderer;
@@ -32,9 +37,7 @@ class TextureStorage
     virtual bool isManaged() const = 0;
     virtual int getLevelCount() const = 0;
 
-    virtual RenderTarget *getRenderTarget(int level) = 0;
-    virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level) = 0;
-    virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer) = 0;
+    virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index) = 0;
     virtual void generateMipmap(int level) = 0;
     virtual void generateMipmap(int face, int level) = 0;
 
@@ -78,7 +81,6 @@ class TextureStorageInterface2D : public TextureStorageInterface
     virtual ~TextureStorageInterface2D();
 
     void generateMipmap(int level);
-    RenderTarget *getRenderTarget(GLint level) const;
 
     unsigned int getRenderTargetSerial(GLint level) const;
 
@@ -95,7 +97,6 @@ class TextureStorageInterfaceCube : public TextureStorageInterface
     virtual ~TextureStorageInterfaceCube();
 
     void generateMipmap(int faceIndex, int level);
-    RenderTarget *getRenderTarget(GLenum faceTarget, GLint level) const;
 
     virtual unsigned int getRenderTargetSerial(GLenum target, GLint level) const;
 
@@ -113,8 +114,6 @@ class TextureStorageInterface3D : public TextureStorageInterface
     virtual ~TextureStorageInterface3D();
 
     void generateMipmap(int level);
-    RenderTarget *getRenderTarget(GLint level) const;
-    RenderTarget *getRenderTarget(GLint level, GLint layer) const;
 
     virtual unsigned int getRenderTargetSerial(GLint level, GLint layer) const;
 
@@ -132,7 +131,6 @@ class TextureStorageInterface2DArray : public TextureStorageInterface
     virtual ~TextureStorageInterface2DArray();
 
     void generateMipmap(int level);
-    RenderTarget *getRenderTarget(GLint level, GLint layer) const;
 
     virtual unsigned int getRenderTargetSerial(GLint level, GLint layer) const;
 

@@ -1958,7 +1958,8 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTarget(level));
+    gl::ImageIndex index = gl::ImageIndex::Make2D(level);
+    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTarget(index));
     if (!destRenderTarget)
     {
         ERR("Failed to retrieve the render target from the destination storage.");
@@ -2019,7 +2020,8 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTargetFace(target, level));
+    gl::ImageIndex index = gl::ImageIndex::MakeCube(target, level);
+    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTarget(index));
     if (!destRenderTarget)
     {
         ERR("Failed to retrieve the render target from the destination storage.");
@@ -2080,7 +2082,8 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTargetLayer(level, zOffset));
+    gl::ImageIndex index = gl::ImageIndex::Make3D(level, zOffset);
+    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTarget(index));
     if (!destRenderTarget)
     {
         ERR("Failed to retrieve the render target from the destination storage.");
@@ -2142,7 +2145,8 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTargetLayer(level, zOffset));
+    gl::ImageIndex index = gl::ImageIndex::Make2DArray(level, zOffset);
+    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTarget(index));
     if (!destRenderTarget)
     {
         SafeRelease(source);

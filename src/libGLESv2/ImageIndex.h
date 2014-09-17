@@ -23,10 +23,14 @@ struct ImageIndex
     ImageIndex(const ImageIndex &other);
     ImageIndex &operator=(const ImageIndex &other);
 
+    bool hasLayer() const { return layerIndex != ENTIRE_LEVEL; }
+
     static ImageIndex Make2D(GLint mipIndex);
     static ImageIndex MakeCube(GLenum target, GLint mipIndex);
     static ImageIndex Make2DArray(GLint mipIndex, GLint layerIndex);
-    static ImageIndex Make3D(GLint mipIndex, GLint layerIndex = 0);
+    static ImageIndex Make3D(GLint mipIndex, GLint layerIndex = ENTIRE_LEVEL);
+
+    static const GLint ENTIRE_LEVEL = static_cast<GLint>(-1);
 
   private:
     ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn);

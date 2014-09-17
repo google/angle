@@ -140,6 +140,11 @@ Texture *TextureAttachment::getTexture()
     return mTexture.get();
 }
 
+const ImageIndex *TextureAttachment::getTextureImageIndex() const
+{
+    return &mIndex;
+}
+
 Renderbuffer *TextureAttachment::getRenderbuffer()
 {
     UNREACHABLE();
@@ -206,6 +211,12 @@ GLint RenderbufferAttachment::layer() const
 }
 
 Texture *RenderbufferAttachment::getTexture()
+{
+    UNREACHABLE();
+    return NULL;
+}
+
+const ImageIndex *RenderbufferAttachment::getTextureImageIndex() const
 {
     UNREACHABLE();
     return NULL;

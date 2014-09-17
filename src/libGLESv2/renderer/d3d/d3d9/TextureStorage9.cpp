@@ -157,7 +157,7 @@ IDirect3DSurface9 *TextureStorage9_2D::getSurfaceLevel(int level, bool dirty)
     return surface;
 }
 
-RenderTarget *TextureStorage9_2D::getRenderTarget(int level)
+RenderTarget *TextureStorage9_2D::getRenderTarget(const gl::ImageIndex &/*index*/)
 {
     return mRenderTarget;
 }
@@ -263,9 +263,9 @@ IDirect3DSurface9 *TextureStorage9_Cube::getCubeMapSurface(GLenum faceTarget, in
     return surface;
 }
 
-RenderTarget *TextureStorage9_Cube::getRenderTargetFace(GLenum faceTarget, int level)
+RenderTarget *TextureStorage9_Cube::getRenderTarget(const gl::ImageIndex &index)
 {
-    return mRenderTarget[gl::TextureCubeMap::targetToLayerIndex(faceTarget)];
+    return mRenderTarget[index.layerIndex];
 }
 
 void TextureStorage9_Cube::generateMipmap(int faceIndex, int level)

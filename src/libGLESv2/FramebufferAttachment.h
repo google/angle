@@ -68,6 +68,7 @@ class FramebufferAttachment
     virtual GLint layer() const = 0;
 
     virtual Texture *getTexture() = 0;
+    virtual const ImageIndex *getTextureImageIndex() const = 0;
     virtual Renderbuffer *getRenderbuffer() = 0;
 
   private:
@@ -95,6 +96,7 @@ class TextureAttachment : public FramebufferAttachment
     virtual GLint layer() const;
 
     virtual Texture *getTexture();
+    virtual const ImageIndex *getTextureImageIndex() const;
     virtual Renderbuffer *getRenderbuffer();
 
   private:
@@ -123,6 +125,7 @@ class RenderbufferAttachment : public FramebufferAttachment
     virtual GLint layer() const;
 
     virtual Texture *getTexture();
+    virtual const ImageIndex *getTextureImageIndex() const;
     virtual Renderbuffer *getRenderbuffer();
 
   private:
