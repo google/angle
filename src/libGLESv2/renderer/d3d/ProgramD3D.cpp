@@ -142,7 +142,7 @@ bool ProgramD3D::link(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shad
     rx::VaryingPacking packing = { NULL };
     *registers = mDynamicHLSL->packVaryings(infoLog, packing, fragmentShaderD3D, vertexShaderD3D, transformFeedbackVaryings);
 
-    if (registers < 0)
+    if (*registers < 0)
     {
         return false;
     }
