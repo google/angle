@@ -1325,7 +1325,7 @@ bool Context::getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned
 
 // Applies the render target surface, depth stencil surface, viewport rectangle and
 // scissor rectangle to the renderer
-bool Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
+void Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
 {
     Framebuffer *framebufferObject = mState.getDrawFramebuffer();
     ASSERT(framebufferObject && framebufferObject->completeness() == GL_FRAMEBUFFER_COMPLETE);
@@ -1334,15 +1334,10 @@ bool Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
 
     float nearZ, farZ;
     mState.getDepthRange(&nearZ, &farZ);
-    if (!mRenderer->setViewport(mState.getViewport(), nearZ, farZ, drawMode, mState.getRasterizerState().frontFace,
-                                ignoreViewport))
-    {
-        return false;
-    }
+    mRenderer->setViewport(mState.getViewport(), nearZ, farZ, drawMode, mState.getRasterizerState().frontFace,
+                           ignoreViewport);
 
     mRenderer->setScissorRectangle(mState.getScissor(), mState.isScissorTestEnabled());
-
-    return true;
 }
 
 // Applies the fixed-function state (culling, depth test, alpha blending, stenciling, etc) to the Direct3D 9 device
@@ -1561,10 +1556,7 @@ Error Context::clear(GLbitfield mask)
 
     ClearParameters clearParams = mState.getClearParameters(mask);
 
-    if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
-    {
-        return Error(GL_NO_ERROR);
-    }
+    applyRenderTarget(GL_TRIANGLES, true);   // Clips the clear to the scissor rectangle but not the viewport
 
     return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
 }
@@ -1595,10 +1587,7 @@ Error Context::clearBufferfv(GLenum buffer, int drawbuffer, const float *values)
         clearParams.depthClearValue = values[0];
     }
 
-    if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
-    {
-        return Error(GL_NO_ERROR);
-    }
+    applyRenderTarget(GL_TRIANGLES, true);   // Clips the clear to the scissor rectangle but not the viewport
 
     return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
 }
@@ -1619,10 +1608,7 @@ Error Context::clearBufferuiv(GLenum buffer, int drawbuffer, const unsigned int 
     clearParams.colorUIClearValue = ColorUI(values[0], values[1], values[2], values[3]);
     clearParams.colorClearType = GL_UNSIGNED_INT;
 
-    if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
-    {
-        return Error(GL_NO_ERROR);
-    }
+    applyRenderTarget(GL_TRIANGLES, true);   // Clips the clear to the scissor rectangle but not the viewport
 
     return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
 }
@@ -1653,10 +1639,7 @@ Error Context::clearBufferiv(GLenum buffer, int drawbuffer, const int *values)
         clearParams.stencilClearValue = values[1];
     }
 
-    if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
-    {
-        return Error(GL_NO_ERROR);
-    }
+    applyRenderTarget(GL_TRIANGLES, true);   // Clips the clear to the scissor rectangle but not the viewport
 
     return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
 }
@@ -1675,10 +1658,7 @@ Error Context::clearBufferfi(GLenum buffer, int drawbuffer, float depth, int ste
     clearParams.clearStencil = true;
     clearParams.stencilClearValue = stencil;
 
-    if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
-    {
-        return Error(GL_NO_ERROR);
-    }
+    applyRenderTarget(GL_TRIANGLES, true);   // Clips the clear to the scissor rectangle but not the viewport
 
     return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
 }
@@ -1721,11 +1701,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
         return;
     }
 
-    if (!applyRenderTarget(mode, false))
-    {
-        return;
-    }
-
+    applyRenderTarget(mode, false);
     applyState(mode);
 
     GLenum err = mRenderer->applyVertexBuffer(programBinary, mState.getVertexArray()->getVertexAttributes(), mState.getVertexAttribCurrentValues(), first, count, instances);
@@ -1787,11 +1763,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type,
         return;
     }
 
-    if (!applyRenderTarget(mode, false))
-    {
-        return;
-    }
-
+    applyRenderTarget(mode, false);
     applyState(mode);
 
     VertexArray *vao = mState.getVertexArray();

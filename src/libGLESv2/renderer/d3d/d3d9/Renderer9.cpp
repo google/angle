@@ -964,7 +964,7 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
     mForceSetScissor = false;
 }
 
-bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
+void Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
                             bool ignoreViewport)
 {
     gl::Rectangle actualViewport = viewport;
@@ -987,11 +987,6 @@ bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
     dxViewport.Height = gl::clamp(actualViewport.height, 0, static_cast<int>(mRenderTargetDesc.height) - static_cast<int>(dxViewport.Y));
     dxViewport.MinZ = actualZNear;
     dxViewport.MaxZ = actualZFar;
-
-    if (dxViewport.Width <= 0 || dxViewport.Height <= 0)
-    {
-        return false;   // Nothing to render
-    }
 
     float depthFront = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);
 
@@ -1045,7 +1040,6 @@ bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
     }
 
     mForceSetViewport = false;
-    return true;
 }
 
 bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count)

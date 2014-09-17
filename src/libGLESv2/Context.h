@@ -234,7 +234,7 @@ class Context
     // TODO: std::array may become unavailable using older versions of GCC
     typedef std::array<unsigned int, IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS> FramebufferTextureSerialArray;
 
-    bool applyRenderTarget(GLenum drawMode, bool ignoreViewport);
+    void applyRenderTarget(GLenum drawMode, bool ignoreViewport);
     void applyState(GLenum drawMode);
     void applyShaders(ProgramBinary *programBinary, bool transformFeedbackActive);
     void applyTextures(SamplerType shaderType, Texture *textures[], TextureType *textureTypes, SamplerState *samplers,
