@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "50a117b9_c75bcd2e",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1162,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-17T20:23:22Z",
+      "side": 1,
+      "message": "Chrome\u0027s shader cache would actually catch this I think.  The texture unit sizes are part of the compiler resources struct.\n\nIt would be possible to load a shader under different caps than it was initially compiled with but there are many parameters of the shader that could change between saving/loading such as if an extension was available or max varyings.  We may have to serialize some hash of the caps to verify they haven\u0027t changed and verify all the counts for varyings/textures/samplers/etc are within the caps to protect ourselves.",
+      "parentUuid": "50ef57ff_13feae77",
+      "range": {
+        "startLine": 1162,
+        "startChar": 0,
+        "endLine": 1162,
+        "endChar": 71
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9099cf85_f84b293b",
         "filename": "src/libGLESv2/ProgramBinary.h",
         "patchSetId": 6
