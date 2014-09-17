@@ -178,6 +178,30 @@
     },
     {
       "key": {
+        "uuid": "70137bdc_52042ae7",
+        "filename": "src/libGLESv2/ImageIndex.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-17T20:02:13Z",
+      "side": 1,
+      "message": "I think it would be ideal to use size_t\u0027s in as many places as possible and have the conversion from the GLints and GLsizeis happen as soon as we know they are validated.  It doesn\u0027t makes sense to make that change right now though since those changes tend to cascade.",
+      "parentUuid": "70137bdc_b2212691",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 21
+      },
+      "revId": "c28c52ef1650fa20e6b304782a5494ee4df08caf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70137bdc_cfc0713a",
         "filename": "src/libGLESv2/ImageIndex.h",
         "patchSetId": 4
