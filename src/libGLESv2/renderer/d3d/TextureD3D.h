@@ -58,7 +58,7 @@ class TextureD3D : public TextureImpl
   protected:
     void setImage(const gl::PixelUnpackState &unpack, GLenum type, const void *pixels, Image *image);
     bool subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                  GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels, Image *image);
+                  GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels, const gl::ImageIndex &index);
     void setCompressedImage(GLsizei imageSize, const void *pixels, Image *image);
     bool subImageCompressed(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                             GLenum format, GLsizei imageSize, const void *pixels, Image *image);
@@ -94,6 +94,7 @@ class TextureD3D_2D : public TextureD3D
     virtual ~TextureD3D_2D();
 
     virtual Image *getImage(int level, int layer) const;
+    virtual Image *getImage(const gl::ImageIndex &index) const;
     virtual GLsizei getLayerCount(int level) const;
 
     GLsizei getWidth(GLint level) const;
@@ -149,6 +150,7 @@ class TextureD3D_Cube : public TextureD3D
     virtual ~TextureD3D_Cube();
 
     virtual Image *getImage(int level, int layer) const;
+    virtual Image *getImage(const gl::ImageIndex &index) const;
     virtual GLsizei getLayerCount(int level) const;
 
     virtual bool hasDirtyImages() const { return mDirtyImages; }
@@ -206,6 +208,7 @@ class TextureD3D_3D : public TextureD3D
     virtual ~TextureD3D_3D();
 
     virtual Image *getImage(int level, int layer) const;
+    virtual Image *getImage(const gl::ImageIndex &index) const;
     virtual GLsizei getLayerCount(int level) const;
 
     GLsizei getWidth(GLint level) const;
@@ -262,6 +265,7 @@ class TextureD3D_2DArray : public TextureD3D
     virtual ~TextureD3D_2DArray();
 
     virtual Image *getImage(int level, int layer) const;
+    virtual Image *getImage(const gl::ImageIndex &index) const;
     virtual GLsizei getLayerCount(int level) const;
 
     GLsizei getWidth(GLint level) const;

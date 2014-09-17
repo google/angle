@@ -211,6 +211,7 @@
     <ClInclude Include="..\..\src\libGLESv2\Shader.h"/>
     <ClInclude Include="..\..\src\libGLESv2\BinaryStream.h"/>
     <ClInclude Include="..\..\src\libGLESv2\resource.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\ImageIndex.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Sampler.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Caps.h"/>
     <ClInclude Include="..\..\src\libGLESv2\TransformFeedback.h"/>
@@ -418,6 +419,7 @@
     <ClCompile Include="..\..\src\libGLESv2\Uniform.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\main.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Renderbuffer.cpp"/>
+    <ClCompile Include="..\..\src\libGLESv2\ImageIndex.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Sampler.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Framebuffer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Texture.cpp"/>

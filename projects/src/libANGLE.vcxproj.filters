@@ -81,6 +81,9 @@
     <ClInclude Include="..\..\src\libGLESv2\resource.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\libGLESv2\ImageIndex.h">
+      <Filter>src\libGLESv2</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\Sampler.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
@@ -222,6 +225,9 @@
     <ClInclude Include="..\..\src\libGLESv2\VertexArray.h">
       <Filter>src\libGLESv2</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\libGLESv2\ImageIndex.cpp">
+      <Filter>src\libGLESv2</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\libGLESv2\Sampler.cpp">
       <Filter>src\libGLESv2</Filter>
     </ClCompile>

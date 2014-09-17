@@ -12,6 +12,7 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/Context.h"
 #include "libGLESv2/formatutils.h"
+#include "libGLESv2/ImageIndex.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/renderer/Image.h"
 #include "libGLESv2/renderer/d3d/TextureStorage.h"
@@ -115,25 +116,25 @@ GLenum Texture::getBaseLevelInternalFormat() const
 
 GLsizei Texture::getWidth(const ImageIndex &index) const
 {
-    rx::Image *image = mTexture->getImage(index.mipIndex, index.layerIndex);
+    rx::Image *image = mTexture->getImage(index);
     return image->getWidth();
 }
 
 GLsizei Texture::getHeight(const ImageIndex &index) const
 {
-    rx::Image *image = mTexture->getImage(index.mipIndex, index.layerIndex);
+    rx::Image *image = mTexture->getImage(index);
     return image->getHeight();
 }
 
 GLenum Texture::getInternalFormat(const ImageIndex &index) const
 {
-    rx::Image *image = mTexture->getImage(index.mipIndex, index.layerIndex);
+    rx::Image *image = mTexture->getImage(index);
     return image->getInternalFormat();
 }
 
 GLenum Texture::getActualFormat(const ImageIndex &index) const
 {
-    rx::Image *image = mTexture->getImage(index.mipIndex, index.layerIndex);
+    rx::Image *image = mTexture->getImage(index);
     return image->getActualFormat();
 }
 

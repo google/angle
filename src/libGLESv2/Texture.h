@@ -240,54 +240,6 @@ class Texture2DArray : public Texture
     bool isLevelComplete(int level) const;
 };
 
-struct ImageIndex
-{
-    GLenum type;
-    GLint mipIndex;
-    GLint layerIndex;
-
-    ImageIndex(const ImageIndex &other)
-        : type(other.type),
-          mipIndex(other.mipIndex),
-          layerIndex(other.layerIndex)
-    {}
-
-    ImageIndex &operator=(const ImageIndex &other)
-    {
-        type = other.type;
-        mipIndex = other.mipIndex;
-        layerIndex = other.layerIndex;
-        return *this;
-    }
-
-    static ImageIndex Make2D(GLint mipIndex)
-    {
-        return ImageIndex(GL_TEXTURE_2D, mipIndex, 0);
-    }
-
-    static ImageIndex MakeCube(GLenum target, GLint mipIndex)
-    {
-        return ImageIndex(target, mipIndex, TextureCubeMap::targetToLayerIndex(target));
-    }
-
-    static ImageIndex Make2DArray(GLint mipIndex, GLint layerIndex)
-    {
-        return ImageIndex(GL_TEXTURE_2D_ARRAY, mipIndex, layerIndex);
-    }
-
-    static ImageIndex Make3D(GLint mipIndex, GLint layerIndex = 0)
-    {
-        return ImageIndex(GL_TEXTURE_3D, mipIndex, layerIndex);
-    }
-
-  private:
-      ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn)
-        : type(typeIn),
-          mipIndex(mipIndexIn),
-          layerIndex(layerIndexIn)
-    {}
-};
-
 }
 
 #endif   // LIBGLESV2_TEXTURE_H_

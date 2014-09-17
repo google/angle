@@ -13,6 +13,8 @@
 
 #include "angle_gl.h"
 
+#include "libGLESv2/ImageIndex.h"
+
 namespace egl
 {
 class Surface;
@@ -42,7 +44,9 @@ class TextureImpl
     // higher level code should not rely on it.
     virtual TextureStorageInterface *getNativeTexture() = 0;
 
+    // Deprecated in favour of the ImageIndex method
     virtual Image *getImage(int level, int layer) const = 0;
+    virtual Image *getImage(const gl::ImageIndex &index) const = 0;
     virtual GLsizei getLayerCount(int level) const = 0;
 
     virtual void setUsage(GLenum usage) = 0;

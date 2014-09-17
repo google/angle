@@ -121,7 +121,7 @@ void TextureD3D::setImage(const gl::PixelUnpackState &unpack, GLenum type, const
 }
 
 bool TextureD3D::subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                       GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels, Image *image)
+                          GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels, const gl::ImageIndex &index)
 {
     const void *pixelData = pixels;
 
@@ -138,6 +138,9 @@ bool TextureD3D::subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei w
 
     if (pixelData != NULL)
     {
+        Image *image = getImage(index);
+        ASSERT(image);
+
         image->loadData(xoffset, yoffset, zoffset, width, height, depth, unpack.alignment, type, pixelData);
         mDirtyImages = true;
     }
@@ -236,6 +239,14 @@ Image *TextureD3D_2D::getImage(int level, int layer) const
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(layer == 0);
     return mImageArray[level];
+}
+
+Image *TextureD3D_2D::getImage(const gl::ImageIndex &index) const
+{
+    ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
+    ASSERT(index.layerIndex == 0);
+    ASSERT(index.type == GL_TEXTURE_2D);
+    return mImageArray[index.mipIndex];
 }
 
 GLsizei TextureD3D_2D::getLayerCount(int level) const
@@ -343,7 +354,8 @@ void TextureD3D_2D::subImage(GLenum target, GLint level, GLint xoffset, GLint yo
         }
     }
 
-    if (!fastUnpacked && TextureD3D::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels, mImageArray[level]))
+    gl::ImageIndex index = gl::ImageIndex::Make2D(level);
+    if (!fastUnpacked && TextureD3D::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels, index))
     {
         commitRect(level, xoffset, yoffset, width, height);
     }
@@ -759,6 +771,13 @@ Image *TextureD3D_Cube::getImage(int level, int layer) const
     return mImageArray[layer][level];
 }
 
+Image *TextureD3D_Cube::getImage(const gl::ImageIndex &index) const
+{
+    ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
+    ASSERT(index.layerIndex < 6);
+    return mImageArray[index.layerIndex][index.mipIndex];
+}
+
 GLsizei TextureD3D_Cube::getLayerCount(int level) const
 {
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
@@ -808,7 +827,8 @@ void TextureD3D_Cube::subImage(GLenum target, GLint level, GLint xoffset, GLint 
 
     int faceIndex = gl::TextureCubeMap::targetToLayerIndex(target);
 
-    if (TextureD3D::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels, mImageArray[faceIndex][level]))
+    gl::ImageIndex index = gl::ImageIndex::MakeCube(target, level);
+    if (TextureD3D::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels, index))
     {
         commitRect(faceIndex, level, xoffset, yoffset, width, height);
     }
@@ -1251,6 +1271,14 @@ Image *TextureD3D_3D::getImage(int level, int layer) const
     return mImageArray[level];
 }
 
+Image *TextureD3D_3D::getImage(const gl::ImageIndex &index) const
+{
+    ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
+    ASSERT(index.layerIndex == 0);
+    ASSERT(index.type == GL_TEXTURE_3D);
+    return mImageArray[index.mipIndex];
+}
+
 GLsizei TextureD3D_3D::getLayerCount(int level) const
 {
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
@@ -1356,7 +1384,8 @@ void TextureD3D_3D::subImage(GLenum target, GLint level, GLint xoffset, GLint yo
         }
     }
 
-    if (!fastUnpacked && TextureD3D::subImage(xoffset, yoffset, zoffset, width, height, depth, format, type, unpack, pixels, mImageArray[level]))
+    gl::ImageIndex index = gl::ImageIndex::Make3D(level);
+    if (!fastUnpacked && TextureD3D::subImage(xoffset, yoffset, zoffset, width, height, depth, format, type, unpack, pixels, index))
     {
         commitRect(level, xoffset, yoffset, zoffset, width, height, depth);
     }
@@ -1740,6 +1769,14 @@ Image *TextureD3D_2DArray::getImage(int level, int layer) const
     return mImageArray[level][layer];
 }
 
+Image *TextureD3D_2DArray::getImage(const gl::ImageIndex &index) const
+{
+    ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
+    ASSERT(index.layerIndex < mLayerCounts[index.mipIndex]);
+    ASSERT(index.type == GL_TEXTURE_2D_ARRAY);
+    return mImageArray[index.mipIndex][index.layerIndex];
+}
+
 GLsizei TextureD3D_2DArray::getLayerCount(int level) const
 {
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
@@ -1818,7 +1855,8 @@ void TextureD3D_2DArray::subImage(GLenum target, GLint level, GLint xoffset, GLi
         int layer = zoffset + i;
         const void *layerPixels = pixels ? (reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i)) : NULL;
 
-        if (TextureD3D::subImage(xoffset, yoffset, zoffset, width, height, 1, format, type, unpack, layerPixels, mImageArray[level][layer]))
+        gl::ImageIndex index = gl::ImageIndex::Make2DArray(level, layer);
+        if (TextureD3D::subImage(xoffset, yoffset, zoffset, width, height, 1, format, type, unpack, layerPixels, index))
         {
             commitRect(level, xoffset, yoffset, layer, width, height);
         }

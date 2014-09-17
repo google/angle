@@ -59,6 +59,8 @@
             'libGLESv2/FramebufferAttachment.h',
             'libGLESv2/HandleAllocator.cpp',
             'libGLESv2/HandleAllocator.h',
+            'libGLESv2/ImageIndex.h',
+            'libGLESv2/ImageIndex.cpp',
             'libGLESv2/Program.cpp',
             'libGLESv2/Program.h',
             'libGLESv2/ProgramBinary.cpp',
