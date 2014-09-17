@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10ab1f9f_32b078db",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-17T19:58:38Z",
+      "side": 1,
+      "message": "Can make this return a static variable so it\u0027s a valid const reference.",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 222,
+        "endChar": 37
+      },
+      "revId": "224b3606e8fa0fcfaf9121628f034fef86966001",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70137bdc_af9e5d56",
+        "filename": "src/libGLESv2/FramebufferAttachment.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-17T19:58:38Z",
+      "side": 1,
+      "message": "Lets make this a const reference.  Better to copy one pointer than 3 integers.",
+      "range": {
+        "startLine": 71,
+        "startChar": 12,
+        "endLine": 71,
+        "endChar": 22
+      },
+      "revId": "224b3606e8fa0fcfaf9121628f034fef86966001",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50a117b9_d59ed657",
+        "filename": "src/libGLESv2/ImageIndex.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-17T19:58:38Z",
+      "side": 1,
+      "message": "I think a better name might be ENTIRE_LEVEL or ALL_LAYERS.  INVALID_LAYER implies that there was an error.",
+      "range": {
+        "startLine": 33,
+        "startChar": 23,
+        "endLine": 33,
+        "endChar": 36
+      },
+      "revId": "224b3606e8fa0fcfaf9121628f034fef86966001",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50a117b9_f57b1a3c",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-17T19:58:38Z",
+      "side": 1,
+      "message": "I think this could be merged with the other getRenderTarget  now.",
+      "range": {
+        "startLine": 254,
+        "startChar": 4,
+        "endLine": 254,
+        "endChar": 47
+      },
+      "revId": "224b3606e8fa0fcfaf9121628f034fef86966001",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10ab1f9f_92b98ccc",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/TextureStorage9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-17T19:58:38Z",
+      "side": 1,
+      "message": "Could alternatively remove/comment out the parameter name.",
+      "range": {
+        "startLine": 162,
+        "startChar": 4,
+        "endLine": 162,
+        "endChar": 28
+      },
+      "revId": "224b3606e8fa0fcfaf9121628f034fef86966001",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
