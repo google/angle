@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "50ef57ff_13feae77",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1162,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-17T15:46:40Z",
+      "side": 1,
+      "message": "Is it possible for the caps to change between save and load without rendering the binary format incompatible? Would someone possibly try to load a binary under different caps than it was saved? (Note that we shouldn\u0027t rely entirely on Chrome\u0027s shader cache to validate this.) Given that the caps do influence the binary format directly, I\u0027m not sure it\u0027s unreasonable to need to pass it in to the function...",
+      "parentUuid": "30a663d4_a20fa094",
+      "range": {
+        "startLine": 1162,
+        "startChar": 0,
+        "endLine": 1162,
+        "endChar": 71
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9099cf85_f84b293b",
         "filename": "src/libGLESv2/ProgramBinary.h",
         "patchSetId": 6
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "We\u0027ve done it in a couple places before.  You\u0027ve gone and open the flood gates now :D\n\nDone.",
       "parentUuid": "9099cf85_f84b293b",
+      "range": {
+        "startLine": 227,
+        "startChar": 31,
+        "endLine": 227,
+        "endChar": 61
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70ea9bf0_1738dc51",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-17T15:46:40Z",
+      "side": 1,
+      "message": "Are there analogous places where we\u0027re doing it via pointer? I also don\u0027t want to fragment style, and I don\u0027t want to open the floodgates without consensus, so it would be good for others to weigh in here on preference.",
+      "parentUuid": "30a663d4_0211acba",
       "range": {
         "startLine": 227,
         "startChar": 31,
