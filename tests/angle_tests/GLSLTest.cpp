@@ -226,6 +226,43 @@ TEST_F(GLSLTest, InvariantVaryingOut)
     EXPECT_NE(0u, program);
 }
 
+TEST_F(GLSLTest, FrontFacingAndVarying)
+{
+    const std::string vertexShaderSource = SHADER_SOURCE
+    (
+        attribute vec4 a_position;
+        varying float v_varying;
+        void main()
+        {
+            v_varying = a_position.x;
+            gl_Position = a_position;
+        }
+    );
+
+    const std::string fragmentShaderSource = SHADER_SOURCE
+    (
+        precision mediump float;
+        varying float v_varying;
+        void main()
+        {
+            vec4 c;
+
+            if (gl_FrontFacing)
+            {
+                c = vec4(v_varying, 0, 0, 1.0);
+            }
+            else
+            {
+                c = vec4(0, v_varying, 0, 1.0);
+            }
+            gl_FragColor = c;
+        }
+    );
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
 TEST_F(GLSLTest, InvariantVaryingIn)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE

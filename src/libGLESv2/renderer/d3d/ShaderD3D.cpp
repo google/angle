@@ -348,7 +348,7 @@ bool ShaderD3D::compareVarying(const gl::PackedVarying &x, const gl::PackedVaryi
         return true;
     }
 
-    return gl::VariableSortOrder(x.type) <= gl::VariableSortOrder(y.type);
+    return gl::VariableSortOrder(x.type) < gl::VariableSortOrder(y.type);
 }
 
 unsigned int ShaderD3D::getUniformRegister(const std::string &uniformName) const
