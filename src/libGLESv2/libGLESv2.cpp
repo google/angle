@@ -2385,7 +2385,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                 break;
 
               case GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE:
-                if (attachment == GL_DEPTH_STENCIL)
+                if (attachment == GL_DEPTH_STENCIL_ATTACHMENT)
                 {
                     context->recordError(gl::Error(GL_INVALID_OPERATION));
                     return;
