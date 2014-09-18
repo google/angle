@@ -162,18 +162,23 @@ RenderTarget *TextureStorage9_2D::getRenderTarget(const gl::ImageIndex &/*index*
     return mRenderTarget;
 }
 
-void TextureStorage9_2D::generateMipmap(int level)
+void TextureStorage9_2D::generateMipmaps()
 {
-    IDirect3DSurface9 *upper = getSurfaceLevel(level - 1, false);
-    IDirect3DSurface9 *lower = getSurfaceLevel(level, true);
+    // Base level must already be defined
 
-    if (upper != NULL && lower != NULL)
+    for (int level = 1; level < getLevelCount(); level++)
     {
-        mRenderer->boxFilter(upper, lower);
-    }
+        IDirect3DSurface9 *upper = getSurfaceLevel(level - 1, false);
+        IDirect3DSurface9 *lower = getSurfaceLevel(level, true);
 
-    SafeRelease(upper);
-    SafeRelease(lower);
+        if (upper != NULL && lower != NULL)
+        {
+            mRenderer->boxFilter(upper, lower);
+        }
+
+        SafeRelease(upper);
+        SafeRelease(lower);
+    }
 }
 
 IDirect3DBaseTexture9 *TextureStorage9_2D::getBaseTexture() const
@@ -268,18 +273,26 @@ RenderTarget *TextureStorage9_Cube::getRenderTarget(const gl::ImageIndex &index)
     return mRenderTarget[index.layerIndex];
 }
 
-void TextureStorage9_Cube::generateMipmap(int faceIndex, int level)
+void TextureStorage9_Cube::generateMipmaps()
 {
-    IDirect3DSurface9 *upper = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level - 1, false);
-    IDirect3DSurface9 *lower = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level, true);
+    // Base level must already be defined
 
-    if (upper != NULL && lower != NULL)
+    for (int faceIndex = 0; faceIndex < 6; faceIndex++)
     {
-        mRenderer->boxFilter(upper, lower);
-    }
+        for (int level = 1; level < getLevelCount(); level++)
+        {
+            IDirect3DSurface9 *upper = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level - 1, false);
+            IDirect3DSurface9 *lower = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level, true);
 
-    SafeRelease(upper);
-    SafeRelease(lower);
+            if (upper != NULL && lower != NULL)
+            {
+                mRenderer->boxFilter(upper, lower);
+            }
+
+            SafeRelease(upper);
+            SafeRelease(lower);
+        }
+    }
 }
 
 IDirect3DBaseTexture9 *TextureStorage9_Cube::getBaseTexture() const

@@ -501,10 +501,9 @@ void TextureD3D_2D::generateMipmaps()
 
     if (mTexStorage && mTexStorage->isRenderTarget())
     {
+        mTexStorage->getStorageInstance()->generateMipmaps();
         for (int level = 1; level < levelCount; level++)
         {
-            mTexStorage->generateMipmap(level);
-
             mImageArray[level]->markClean();
         }
     }
@@ -1000,12 +999,12 @@ void TextureD3D_Cube::generateMipmaps()
 
     if (mTexStorage && mTexStorage->isRenderTarget())
     {
+        mTexStorage->getStorageInstance()->generateMipmaps();
+
         for (int faceIndex = 0; faceIndex < 6; faceIndex++)
         {
             for (int level = 1; level < levelCount; level++)
             {
-                mTexStorage->generateMipmap(faceIndex, level);
-
                 mImageArray[faceIndex][level]->markClean();
             }
         }
@@ -1498,10 +1497,10 @@ void TextureD3D_3D::generateMipmaps()
 
     if (mTexStorage && mTexStorage->isRenderTarget())
     {
+        mTexStorage->getStorageInstance()->generateMipmaps();
+
         for (int level = 1; level < levelCount; level++)
         {
-            mTexStorage->generateMipmap(level);
-
             mImageArray[level]->markClean();
         }
     }
@@ -1982,10 +1981,10 @@ void TextureD3D_2DArray::generateMipmaps()
 
     if (mTexStorage && mTexStorage->isRenderTarget())
     {
+        mTexStorage->getStorageInstance()->generateMipmaps();
+
         for (int level = 1; level < levelCount; level++)
         {
-            mTexStorage->generateMipmap(level);
-
             for (int layer = 0; layer < mLayerCounts[level]; layer++)
             {
                 mImageArray[level][layer]->markClean();

@@ -706,17 +706,22 @@ ID3D11ShaderResourceView *TextureStorage11_2D::createSRV(int baseLevel, int mipL
     return SRV;
 }
 
-void TextureStorage11_2D::generateMipmap(int level)
+void TextureStorage11_2D::generateMipmaps()
 {
-    invalidateSwizzleCacheLevel(level);
+    // Base level must already be defined
 
-    gl::ImageIndex srcIndex = gl::ImageIndex::Make2D(level - 1);
-    gl::ImageIndex destIndex = gl::ImageIndex::Make2D(level);
+    for (int level = 1; level < getLevelCount(); level++)
+    {
+        invalidateSwizzleCacheLevel(level);
 
-    RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(srcIndex));
-    RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(destIndex));
+        gl::ImageIndex srcIndex = gl::ImageIndex::Make2D(level - 1);
+        gl::ImageIndex destIndex = gl::ImageIndex::Make2D(level);
 
-    generateMipmapLayer(source, dest);
+        RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(srcIndex));
+        RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(destIndex));
+
+        generateMipmapLayer(source, dest);
+    }
 }
 
 ID3D11Resource *TextureStorage11_2D::getSwizzleTexture()
@@ -1109,17 +1114,25 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::createSRV(int baseLevel, int mi
     return SRV;
 }
 
-void TextureStorage11_Cube::generateMipmap(int faceIndex, int level)
+void TextureStorage11_Cube::generateMipmaps()
 {
-    invalidateSwizzleCacheLevel(level);
+    // Base level must already be defined
 
-    gl::ImageIndex srcIndex = gl::ImageIndex::MakeCube(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level - 1);
-    gl::ImageIndex destIndex = gl::ImageIndex::MakeCube(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level);
+    for (int faceIndex = 0; faceIndex < 6; faceIndex++)
+    {
+        for (int level = 1; level < getLevelCount(); level++)
+        {
+            invalidateSwizzleCacheLevel(level);
 
-    RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(srcIndex));
-    RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(destIndex));
+            gl::ImageIndex srcIndex = gl::ImageIndex::MakeCube(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level - 1);
+            gl::ImageIndex destIndex = gl::ImageIndex::MakeCube(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, level);
 
-    generateMipmapLayer(source, dest);
+            RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(srcIndex));
+            RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(destIndex));
+
+            generateMipmapLayer(source, dest);
+        }
+    }
 }
 
 ID3D11Resource *TextureStorage11_Cube::getSwizzleTexture()
@@ -1482,17 +1495,22 @@ RenderTarget *TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index)
     return NULL;
 }
 
-void TextureStorage11_3D::generateMipmap(int level)
+void TextureStorage11_3D::generateMipmaps()
 {
-    invalidateSwizzleCacheLevel(level);
+    // Base level must already be defined
 
-    gl::ImageIndex srcIndex = gl::ImageIndex::Make3D(level - 1);
-    gl::ImageIndex destIndex = gl::ImageIndex::Make3D(level);
+    for (int level = 1; level < getLevelCount(); level++)
+    {
+        invalidateSwizzleCacheLevel(level);
 
-    RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(srcIndex));
-    RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(destIndex));
+        gl::ImageIndex srcIndex = gl::ImageIndex::Make3D(level - 1);
+        gl::ImageIndex destIndex = gl::ImageIndex::Make3D(level);
 
-    generateMipmapLayer(source, dest);
+        RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(srcIndex));
+        RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(destIndex));
+
+        generateMipmapLayer(source, dest);
+    }
 }
 
 ID3D11Resource *TextureStorage11_3D::getSwizzleTexture()
@@ -1832,18 +1850,23 @@ RenderTarget *TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &in
     }
 }
 
-void TextureStorage11_2DArray::generateMipmap(int level)
+void TextureStorage11_2DArray::generateMipmaps()
 {
-    invalidateSwizzleCacheLevel(level);
-    for (unsigned int layer = 0; layer < mTextureDepth; layer++)
+    // Base level must already be defined
+
+    for (int level = 0; level < getLevelCount(); level++)
     {
-        gl::ImageIndex sourceIndex = gl::ImageIndex::Make2DArray(level - 1, layer);
-        gl::ImageIndex destIndex = gl::ImageIndex::Make2DArray(level, layer);
+        invalidateSwizzleCacheLevel(level);
+        for (unsigned int layer = 0; layer < mTextureDepth; layer++)
+        {
+            gl::ImageIndex sourceIndex = gl::ImageIndex::Make2DArray(level - 1, layer);
+            gl::ImageIndex destIndex = gl::ImageIndex::Make2DArray(level, layer);
 
-        RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(sourceIndex));
-        RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(destIndex));
+            RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(sourceIndex));
+            RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(destIndex));
 
-        generateMipmapLayer(source, dest);
+            generateMipmapLayer(source, dest);
+        }
     }
 }
 

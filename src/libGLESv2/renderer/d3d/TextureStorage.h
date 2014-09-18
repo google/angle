@@ -38,8 +38,7 @@ class TextureStorage
     virtual int getLevelCount() const = 0;
 
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index) = 0;
-    virtual void generateMipmap(int level) = 0;
-    virtual void generateMipmap(int face, int level) = 0;
+    virtual void generateMipmaps() = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage);
@@ -85,8 +84,6 @@ class TextureStorageInterface2D : public TextureStorageInterface
     TextureStorageInterface2D(TextureStorage *storageInstance);
     virtual ~TextureStorageInterface2D();
 
-    void generateMipmap(int level);
-
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface2D);
 };
@@ -96,8 +93,6 @@ class TextureStorageInterfaceCube : public TextureStorageInterface
   public:
     TextureStorageInterfaceCube(TextureStorage *storageInstance);
     virtual ~TextureStorageInterfaceCube();
-
-    void generateMipmap(int faceIndex, int level);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterfaceCube);
@@ -109,8 +104,6 @@ class TextureStorageInterface3D : public TextureStorageInterface
     TextureStorageInterface3D(TextureStorage *storageInstance, unsigned int depth);
     virtual ~TextureStorageInterface3D();
 
-    void generateMipmap(int level);
-
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface3D);
 };
@@ -120,8 +113,6 @@ class TextureStorageInterface2DArray : public TextureStorageInterface
   public:
     TextureStorageInterface2DArray(TextureStorage *storageInstance, unsigned int depth);
     virtual ~TextureStorageInterface2DArray();
-
-    void generateMipmap(int level);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface2DArray);

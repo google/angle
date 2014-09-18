@@ -80,22 +80,12 @@ TextureStorageInterface2D::TextureStorageInterface2D(TextureStorage *storageInst
 TextureStorageInterface2D::~TextureStorageInterface2D()
 {}
 
-void TextureStorageInterface2D::generateMipmap(int level)
-{
-    mInstance->generateMipmap(level);
-}
-
 TextureStorageInterfaceCube::TextureStorageInterfaceCube(TextureStorage *storageInstance)
     : TextureStorageInterface(storageInstance, 6)
 {}
 
 TextureStorageInterfaceCube::~TextureStorageInterfaceCube()
 {}
-
-void TextureStorageInterfaceCube::generateMipmap(int faceIndex, int level)
-{
-    mInstance->generateMipmap(faceIndex, level);
-}
 
 TextureStorageInterface3D::TextureStorageInterface3D(TextureStorage *storageInstance, unsigned int depth)
     : TextureStorageInterface(storageInstance, depth)
@@ -104,21 +94,11 @@ TextureStorageInterface3D::TextureStorageInterface3D(TextureStorage *storageInst
 TextureStorageInterface3D::~TextureStorageInterface3D()
 {}
 
-void TextureStorageInterface3D::generateMipmap(int level)
-{
-    mInstance->generateMipmap(level);
-}
-
 TextureStorageInterface2DArray::TextureStorageInterface2DArray(TextureStorage *storageInstance, unsigned int depth)
     : TextureStorageInterface(storageInstance, depth)
 {}
 
 TextureStorageInterface2DArray::~TextureStorageInterface2DArray()
 {}
-
-void TextureStorageInterface2DArray::generateMipmap(int level)
-{
-    mInstance->generateMipmap(level);
-}
 
 }
