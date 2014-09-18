@@ -70,6 +70,30 @@
       "revId": "1041367fb54374e7e0929eaf55deff70ca4d1203",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10307f7d_d9c8773a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/VertexDeclarationCache.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-18T18:24:06Z",
+      "side": 1,
+      "message": "I just ended up checking the return code of the CreateVertexDeclaration function which is in line with our D3D9 style of only checking the return codes of the functions that create objects.",
+      "parentUuid": "501677dd_81b600d9",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 9
+      },
+      "revId": "1041367fb54374e7e0929eaf55deff70ca4d1203",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
