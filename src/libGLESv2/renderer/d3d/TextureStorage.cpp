@@ -4,9 +4,7 @@
 // found in the LICENSE file.
 //
 
-// TextureStorage.cpp: Implements the abstract rx::TextureStorageInterface class and its concrete derived
-// classes TextureStorageInterface2D and TextureStorageInterfaceCube, which act as the interface to the
-// GPU-side texture.
+// TextureStorage.cpp: Shared members of abstract rx::TextureStorage class.
 
 #include "libGLESv2/renderer/d3d/TextureStorage.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
@@ -68,37 +66,5 @@ unsigned int TextureStorageInterface::getRenderTargetSerial(const gl::ImageIndex
     unsigned int layerOffset = (index.hasLayer() ? (static_cast<unsigned int>(index.layerIndex) * mRenderTargetSerialsLayerStride) : 0);
     return mFirstRenderTargetSerial + static_cast<unsigned int>(index.mipIndex) + layerOffset;
 }
-
-TextureStorageInterface2D::TextureStorageInterface2D(Renderer *renderer, SwapChain *swapchain)
-    : TextureStorageInterface(renderer->createTextureStorage2D(swapchain), 1)
-{}
-
-TextureStorageInterface2D::TextureStorageInterface2D(TextureStorage *storageInstance)
-    : TextureStorageInterface(storageInstance, 1)
-{}
-
-TextureStorageInterface2D::~TextureStorageInterface2D()
-{}
-
-TextureStorageInterfaceCube::TextureStorageInterfaceCube(TextureStorage *storageInstance)
-    : TextureStorageInterface(storageInstance, 6)
-{}
-
-TextureStorageInterfaceCube::~TextureStorageInterfaceCube()
-{}
-
-TextureStorageInterface3D::TextureStorageInterface3D(TextureStorage *storageInstance, unsigned int depth)
-    : TextureStorageInterface(storageInstance, depth)
-{}
-
-TextureStorageInterface3D::~TextureStorageInterface3D()
-{}
-
-TextureStorageInterface2DArray::TextureStorageInterface2DArray(TextureStorage *storageInstance, unsigned int depth)
-    : TextureStorageInterface(storageInstance, depth)
-{}
-
-TextureStorageInterface2DArray::~TextureStorageInterface2DArray()
-{}
 
 }

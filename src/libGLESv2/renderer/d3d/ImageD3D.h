@@ -21,10 +21,7 @@ class Framebuffer;
 
 namespace rx
 {
-class TextureStorageInterface2D;
-class TextureStorageInterfaceCube;
-class TextureStorageInterface3D;
-class TextureStorageInterface2DArray;
+class TextureStorageInterface;
 
 class ImageD3D : public Image
 {
@@ -36,14 +33,14 @@ class ImageD3D : public Image
 
     virtual bool isDirty() const = 0;
 
-    virtual void setManagedSurface(TextureStorageInterface2D *storage, int level) {};
-    virtual void setManagedSurface(TextureStorageInterfaceCube *storage, int face, int level) {};
-    virtual void setManagedSurface(TextureStorageInterface3D *storage, int level) {};
-    virtual void setManagedSurface(TextureStorageInterface2DArray *storage, int layer, int level) {};
-    virtual bool copyToStorage(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height) = 0;
-    virtual bool copyToStorage(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height) = 0;
-    virtual bool copyToStorage(TextureStorageInterface3D *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth) = 0;
-    virtual bool copyToStorage(TextureStorageInterface2DArray *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height) = 0;
+    virtual void setManagedSurface2D(TextureStorageInterface *storage, int level) {};
+    virtual void setManagedSurfaceCube(TextureStorageInterface *storage, int face, int level) {};
+    virtual void setManagedSurface3D(TextureStorageInterface *storage, int level) {};
+    virtual void setManagedSurface2DArray(TextureStorageInterface *storage, int layer, int level) {};
+    virtual bool copyToStorage2D(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height) = 0;
+    virtual bool copyToStorageCube(TextureStorageInterface *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height) = 0;
+    virtual bool copyToStorage3D(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth) = 0;
+    virtual bool copyToStorage2DArray(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height) = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ImageD3D);

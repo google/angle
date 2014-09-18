@@ -22,8 +22,7 @@ namespace rx
 {
 class Renderer;
 class Renderer9;
-class TextureStorageInterface2D;
-class TextureStorageInterfaceCube;
+class TextureStorageInterface;
 
 class Image9 : public ImageD3D
 {
@@ -44,12 +43,12 @@ class Image9 : public ImageD3D
     virtual bool isDirty() const;
     IDirect3DSurface9 *getSurface();
 
-    virtual void setManagedSurface(TextureStorageInterface2D *storage, int level);
-    virtual void setManagedSurface(TextureStorageInterfaceCube *storage, int face, int level);
-    virtual bool copyToStorage(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    virtual bool copyToStorage(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    virtual bool copyToStorage(TextureStorageInterface3D *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);
-    virtual bool copyToStorage(TextureStorageInterface2DArray *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height);
+    virtual void setManagedSurface2D(TextureStorageInterface *storage, int level);
+    virtual void setManagedSurfaceCube(TextureStorageInterface *storage, int face, int level);
+    virtual bool copyToStorage2D(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    virtual bool copyToStorageCube(TextureStorageInterface *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    virtual bool copyToStorage3D(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);
+    virtual bool copyToStorage2DArray(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height);
 
     virtual void loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                           GLint unpackAlignment, GLenum type, const void *input);

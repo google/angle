@@ -26,10 +26,6 @@ class ImageD3D;
 class Renderer;
 class RenderTarget;
 class TextureStorageInterface;
-class TextureStorageInterface2D;
-class TextureStorageInterfaceCube;
-class TextureStorageInterface3D;
-class TextureStorageInterface2DArray;
 
 class TextureD3D : public TextureImpl
 {
@@ -123,8 +119,8 @@ class TextureD3D_2D : public TextureD3D
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2D);
 
     virtual void initializeStorage(bool renderTarget);
-    TextureStorageInterface2D *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(TextureStorageInterface2D *newCompleteTexStorage);
+    TextureStorageInterface *createCompleteStorage(bool renderTarget) const;
+    void setCompleteTexStorage(TextureStorageInterface *newCompleteTexStorage);
 
     virtual void updateStorage();
     bool ensureRenderTarget();
@@ -139,7 +135,7 @@ class TextureD3D_2D : public TextureD3D
     void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
-    TextureStorageInterface2D *mTexStorage;
+    TextureStorageInterface *mTexStorage;
     ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
@@ -180,8 +176,8 @@ class TextureD3D_Cube : public TextureD3D
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_Cube);
 
     virtual void initializeStorage(bool renderTarget);
-    TextureStorageInterfaceCube *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(TextureStorageInterfaceCube *newCompleteTexStorage);
+    TextureStorageInterface *createCompleteStorage(bool renderTarget) const;
+    void setCompleteTexStorage(TextureStorageInterface *newCompleteTexStorage);
 
     virtual void updateStorage();
     bool ensureRenderTarget();
@@ -198,7 +194,7 @@ class TextureD3D_Cube : public TextureD3D
 
     ImageD3D *mImageArray[6][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    TextureStorageInterfaceCube *mTexStorage;
+    TextureStorageInterface *mTexStorage;
 };
 
 class TextureD3D_3D : public TextureD3D
@@ -237,8 +233,8 @@ class TextureD3D_3D : public TextureD3D
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_3D);
 
     virtual void initializeStorage(bool renderTarget);
-    TextureStorageInterface3D *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(TextureStorageInterface3D *newCompleteTexStorage);
+    TextureStorageInterface *createCompleteStorage(bool renderTarget) const;
+    void setCompleteTexStorage(TextureStorageInterface *newCompleteTexStorage);
 
     virtual void updateStorage();
     bool ensureRenderTarget();
@@ -254,7 +250,7 @@ class TextureD3D_3D : public TextureD3D
 
     ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    TextureStorageInterface3D *mTexStorage;
+    TextureStorageInterface *mTexStorage;
 };
 
 class TextureD3D_2DArray : public TextureD3D
@@ -293,8 +289,8 @@ class TextureD3D_2DArray : public TextureD3D
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2DArray);
 
     virtual void initializeStorage(bool renderTarget);
-    TextureStorageInterface2DArray *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(TextureStorageInterface2DArray *newCompleteTexStorage);
+    TextureStorageInterface *createCompleteStorage(bool renderTarget) const;
+    void setCompleteTexStorage(TextureStorageInterface *newCompleteTexStorage);
 
     virtual void updateStorage();
     bool ensureRenderTarget();
@@ -316,7 +312,7 @@ class TextureD3D_2DArray : public TextureD3D
     GLsizei mLayerCounts[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
     ImageD3D **mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    TextureStorageInterface2DArray *mTexStorage;
+    TextureStorageInterface *mTexStorage;
 };
 
 }

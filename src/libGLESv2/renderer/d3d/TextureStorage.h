@@ -4,9 +4,7 @@
 // found in the LICENSE file.
 //
 
-// TextureStorage.h: Defines the abstract rx::TextureStorageInterface class and its concrete derived
-// classes TextureStorageInterface2D and TextureStorageInterfaceCube, which act as the interface to the
-// GPU-side texture.
+// TextureStorage.h: Defines the abstract rx::TextureStorage class.
 
 #ifndef LIBGLESV2_RENDERER_TEXTURESTORAGE_H_
 #define LIBGLESV2_RENDERER_TEXTURESTORAGE_H_
@@ -75,47 +73,6 @@ class TextureStorageInterface
 
     unsigned int mFirstRenderTargetSerial;
     unsigned int mRenderTargetSerialsLayerStride;
-};
-
-class TextureStorageInterface2D : public TextureStorageInterface
-{
-  public:
-    TextureStorageInterface2D(Renderer *renderer, SwapChain *swapchain);
-    TextureStorageInterface2D(TextureStorage *storageInstance);
-    virtual ~TextureStorageInterface2D();
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface2D);
-};
-
-class TextureStorageInterfaceCube : public TextureStorageInterface
-{
-  public:
-    TextureStorageInterfaceCube(TextureStorage *storageInstance);
-    virtual ~TextureStorageInterfaceCube();
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorageInterfaceCube);
-};
-
-class TextureStorageInterface3D : public TextureStorageInterface
-{
-  public:
-    TextureStorageInterface3D(TextureStorage *storageInstance, unsigned int depth);
-    virtual ~TextureStorageInterface3D();
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface3D);
-};
-
-class TextureStorageInterface2DArray : public TextureStorageInterface
-{
-  public:
-    TextureStorageInterface2DArray(TextureStorage *storageInstance, unsigned int depth);
-    virtual ~TextureStorageInterface2DArray();
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface2DArray);
 };
 
 }
