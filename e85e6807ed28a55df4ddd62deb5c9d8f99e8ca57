@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "301bc308_9afbc954",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1427,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-18T17:09:31Z",
+      "side": 1,
+      "message": "nit: spacing",
+      "range": {
+        "startLine": 1427,
+        "startChar": 63,
+        "endLine": 1427,
+        "endChar": 64
+      },
+      "revId": "e85e6807ed28a55df4ddd62deb5c9d8f99e8ca57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "301bc308_daf14178",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1430,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-18T17:09:31Z",
+      "side": 1,
+      "message": "nit: can move this down after the first samplerRange loop",
+      "range": {
+        "startLine": 1430,
+        "startChar": 11,
+        "endLine": 1430,
+        "endChar": 23
+      },
+      "revId": "e85e6807ed28a55df4ddd62deb5c9d8f99e8ca57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
