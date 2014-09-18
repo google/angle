@@ -1568,17 +1568,17 @@ void Renderer11::markAllStateDirty()
     mRenderTargetDescInitialized = false;
 
     ASSERT(mForceSetVertexSamplerStates.size() == mCurVertexSRVs.size());
-    for (int i = 0; i < mForceSetVertexSamplerStates.size(); i++)
+    for (size_t vsamplerId = 0; vsamplerId < mForceSetVertexSamplerStates.size(); ++vsamplerId)
     {
-        mForceSetVertexSamplerStates[i] = true;
-        mCurVertexSRVs[i] = NULL;
+        mForceSetVertexSamplerStates[vsamplerId] = true;
+        mCurVertexSRVs[vsamplerId] = NULL;
     }
 
     ASSERT(mForceSetPixelSamplerStates.size() == mCurPixelSRVs.size());
-    for (int i = 0; i < mForceSetPixelSamplerStates.size(); i++)
+    for (size_t fsamplerId = 0; fsamplerId < mForceSetPixelSamplerStates.size(); ++fsamplerId)
     {
-        mForceSetPixelSamplerStates[i] = true;
-        mCurPixelSRVs[i] = NULL;
+        mForceSetPixelSamplerStates[fsamplerId] = true;
+        mCurPixelSRVs[fsamplerId] = NULL;
     }
 
     mForceSetBlendState = true;
