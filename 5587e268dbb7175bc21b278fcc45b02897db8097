@@ -22,6 +22,30 @@
       "revId": "5587e268dbb7175bc21b278fcc45b02897db8097",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "901c6ffc_dd95bfef",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1405,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-09-18T16:16:43Z",
+      "side": 1,
+      "message": "I\u0027m also concerned about the change in per-draw-call overhead of this patch set, but reserve() has no effect when the vector is already big enough so that\u0027s negligible. Unless I missed anything else that would cause frequent allocations it seems fine.",
+      "parentUuid": "501677dd_fe1c395a",
+      "range": {
+        "startLine": 1403,
+        "startChar": 0,
+        "endLine": 1405,
+        "endChar": 38
+      },
+      "revId": "5587e268dbb7175bc21b278fcc45b02897db8097",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
