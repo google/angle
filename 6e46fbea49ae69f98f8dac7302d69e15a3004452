@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "901c6ffc_3deddb94",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1162,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-18T14:22:58Z",
+      "side": 1,
+      "message": "What I meant by saying that we shouldn\u0027t rely entirely on Chrome\u0027s shader cache is that Chrome isn\u0027t the only thing using ANGLE, so we can\u0027t assume that this is entirely handled outside of our implementation. The spec states that loading \"may fail\" if the hardware or software config has changed since the binary was compiled-- if we\u0027re not already handling that gracefully, shouldn\u0027t we? What currently happens if a non-Chrome app, compiles a binary with, say, the DX11 Renderer, but then tries to load it with the DX9 one? Or compiles with a discrete GPU, and then loads it later with an integrated one? Do we already have a way to fail out?",
+      "parentUuid": "50a117b9_c75bcd2e",
+      "range": {
+        "startLine": 1162,
+        "startChar": 0,
+        "endLine": 1162,
+        "endChar": 71
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9099cf85_f84b293b",
         "filename": "src/libGLESv2/ProgramBinary.h",
         "patchSetId": 6
