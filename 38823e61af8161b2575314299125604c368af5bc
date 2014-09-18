@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "501677dd_2ce84bc5",
+        "filename": "src/libGLESv2/renderer/d3d/TextureStorage.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-18T18:42:19Z",
+      "side": 1,
+      "message": "This parameter changes name between the .cpp and .h file.",
+      "range": {
+        "startLine": 24,
+        "startChar": 81,
+        "endLine": 24,
+        "endChar": 114
+      },
+      "revId": "38823e61af8161b2575314299125604c368af5bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "301bc308_1a35790c",
+        "filename": "src/libGLESv2/renderer/d3d/TextureStorage.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-18T18:42:19Z",
+      "side": 1,
+      "message": "This will cause the base class to issue no serials.",
+      "range": {
+        "startLine": 77,
+        "startChar": 47,
+        "endLine": 77,
+        "endChar": 48
+      },
+      "revId": "38823e61af8161b2575314299125604c368af5bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
