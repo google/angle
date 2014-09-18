@@ -264,6 +264,30 @@
     },
     {
       "key": {
+        "uuid": "3042e3dc_742cce83",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-09-18T16:27:51Z",
+      "side": 1,
+      "message": "InsertD3DFormatInfo() is an existing example of passing in an STL container that\u0027s going to be modified, by pointer. That said I\u0027m perfectly OK with non-const references, contrary to the Google style guidelines. They advise against non-const references due to potential confusion about side-effects of the function. Personally I don\u0027t pointers make it a whole lot clearer, and it kind of forces you to always have to check for NULL every time you pass them into any function, which references should not require. ANGLE is not the average C++ application, and we all understand references really well.\n\nI do believe that adding \u0027out\u0027 or \u0027output\u0027 to the parameter name, and having it as either the first or last parameter, helps avoid confusion.",
+      "parentUuid": "7021bb30_3932cf25",
+      "range": {
+        "startLine": 227,
+        "startChar": 31,
+        "endLine": 227,
+        "endChar": 61
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0f7b398_cbbaf5a2",
         "filename": "src/libGLESv2/ResourceManager.cpp",
         "patchSetId": 6
