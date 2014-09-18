@@ -21,7 +21,7 @@ class Framebuffer;
 namespace rx
 {
 class Renderer9;
-class TextureStorageInterface;
+class TextureStorage;
 
 class Blit9
 {
@@ -31,8 +31,8 @@ class Blit9
 
     // Copy from source surface to dest surface.
     // sourceRect, xoffset, yoffset are in D3D coordinates (0,0 in upper-left)
-    bool copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageInterface *storage, GLint level);
-    bool copyCube(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageInterface *storage, GLenum target, GLint level);
+    bool copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level);
+    bool copyCube(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level);
 
     // Copy from source surface to dest surface.
     // sourceRect, xoffset, yoffset are in D3D coordinates (0,0 in upper-left)

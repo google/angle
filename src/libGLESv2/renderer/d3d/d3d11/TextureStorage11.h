@@ -84,8 +84,6 @@ class TextureStorage11 : public TextureStorage
 
     void verifySwizzleExists(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
 
-    virtual unsigned int getTextureLevelDepth(int mipLevel) const = 0;
-
     Renderer11 *mRenderer;
     int mTopLevel;
     unsigned int mMipLevels;
@@ -175,8 +173,6 @@ class TextureStorage11_2D : public TextureStorage11
     virtual ID3D11Resource *getSwizzleTexture();
     virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
 
-    virtual unsigned int getTextureLevelDepth(int mipLevel) const;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2D);
 
@@ -212,8 +208,6 @@ class TextureStorage11_Cube : public TextureStorage11
   protected:
     virtual ID3D11Resource *getSwizzleTexture();
     virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
-
-    virtual unsigned int getTextureLevelDepth(int mipLevel) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_Cube);
@@ -253,8 +247,6 @@ class TextureStorage11_3D : public TextureStorage11
   protected:
     virtual ID3D11Resource *getSwizzleTexture();
     virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
-
-    virtual unsigned int getTextureLevelDepth(int mipLevel) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_3D);
@@ -296,8 +288,6 @@ class TextureStorage11_2DArray : public TextureStorage11
   protected:
     virtual ID3D11Resource *getSwizzleTexture();
     virtual ID3D11RenderTargetView *getSwizzleRenderTarget(int mipLevel);
-
-    virtual unsigned int getTextureLevelDepth(int mipLevel) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2DArray);

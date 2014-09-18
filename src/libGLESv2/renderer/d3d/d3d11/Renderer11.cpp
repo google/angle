@@ -417,10 +417,10 @@ void Renderer11::generateSwizzle(gl::Texture *texture)
 {
     if (texture)
     {
-        TextureStorageInterface *texStorage = texture->getNativeTexture();
+        TextureStorage *texStorage = texture->getNativeTexture();
         if (texStorage)
         {
-            TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage->getStorageInstance());
+            TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage);
 
             storage11->generateSwizzles(texture->getSamplerState().swizzleRed,
                                         texture->getSamplerState().swizzleGreen,
@@ -488,10 +488,10 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
     {
         TextureD3D* textureImpl = TextureD3D::makeTextureD3D(texture->getImplementation());
 
-        TextureStorageInterface *texStorage = textureImpl->getNativeTexture();
+        TextureStorage *texStorage = textureImpl->getNativeTexture();
         if (texStorage)
         {
-            TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage->getStorageInstance());
+            TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage);
             gl::SamplerState samplerState;
             texture->getSamplerStateWithNativeOffset(&samplerState);
             textureSRV = storage11->getSRV(samplerState);
@@ -1873,12 +1873,12 @@ int Renderer11::getMaxSwapInterval() const
     return 4;
 }
 
-bool Renderer11::copyToRenderTarget2D(TextureStorageInterface *dest, TextureStorageInterface *source)
+bool Renderer11::copyToRenderTarget2D(TextureStorage *dest, TextureStorage *source)
 {
     if (source && dest)
     {
-        TextureStorage11_2D *source11 = TextureStorage11_2D::makeTextureStorage11_2D(source->getStorageInstance());
-        TextureStorage11_2D *dest11 = TextureStorage11_2D::makeTextureStorage11_2D(dest->getStorageInstance());
+        TextureStorage11_2D *source11 = TextureStorage11_2D::makeTextureStorage11_2D(source);
+        TextureStorage11_2D *dest11 = TextureStorage11_2D::makeTextureStorage11_2D(dest);
 
         mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
@@ -1890,12 +1890,12 @@ bool Renderer11::copyToRenderTarget2D(TextureStorageInterface *dest, TextureStor
     return false;
 }
 
-bool Renderer11::copyToRenderTargetCube(TextureStorageInterface *dest, TextureStorageInterface *source)
+bool Renderer11::copyToRenderTargetCube(TextureStorage *dest, TextureStorage *source)
 {
     if (source && dest)
     {
-        TextureStorage11_Cube *source11 = TextureStorage11_Cube::makeTextureStorage11_Cube(source->getStorageInstance());
-        TextureStorage11_Cube *dest11 = TextureStorage11_Cube::makeTextureStorage11_Cube(dest->getStorageInstance());
+        TextureStorage11_Cube *source11 = TextureStorage11_Cube::makeTextureStorage11_Cube(source);
+        TextureStorage11_Cube *dest11 = TextureStorage11_Cube::makeTextureStorage11_Cube(dest);
 
         mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
@@ -1907,12 +1907,12 @@ bool Renderer11::copyToRenderTargetCube(TextureStorageInterface *dest, TextureSt
     return false;
 }
 
-bool Renderer11::copyToRenderTarget3D(TextureStorageInterface *dest, TextureStorageInterface *source)
+bool Renderer11::copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source)
 {
     if (source && dest)
     {
-        TextureStorage11_3D *source11 = TextureStorage11_3D::makeTextureStorage11_3D(source->getStorageInstance());
-        TextureStorage11_3D *dest11 = TextureStorage11_3D::makeTextureStorage11_3D(dest->getStorageInstance());
+        TextureStorage11_3D *source11 = TextureStorage11_3D::makeTextureStorage11_3D(source);
+        TextureStorage11_3D *dest11 = TextureStorage11_3D::makeTextureStorage11_3D(dest);
 
         mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
@@ -1924,12 +1924,12 @@ bool Renderer11::copyToRenderTarget3D(TextureStorageInterface *dest, TextureStor
     return false;
 }
 
-bool Renderer11::copyToRenderTarget2DArray(TextureStorageInterface *dest, TextureStorageInterface *source)
+bool Renderer11::copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source)
 {
     if (source && dest)
     {
-        TextureStorage11_2DArray *source11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(source->getStorageInstance());
-        TextureStorage11_2DArray *dest11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(dest->getStorageInstance());
+        TextureStorage11_2DArray *source11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(source);
+        TextureStorage11_2DArray *dest11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(dest);
 
         mDeviceContext->CopyResource(dest11->getResource(), source11->getResource());
 
@@ -1942,7 +1942,7 @@ bool Renderer11::copyToRenderTarget2DArray(TextureStorageInterface *dest, Textur
 }
 
 bool Renderer11::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                             GLint xoffset, GLint yoffset, TextureStorageInterface *storage, GLint level)
+                             GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level)
 {
     gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     if (!colorbuffer)
@@ -1965,7 +1965,7 @@ bool Renderer11::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    TextureStorage11_2D *storage11 = TextureStorage11_2D::makeTextureStorage11_2D(storage->getStorageInstance());
+    TextureStorage11_2D *storage11 = TextureStorage11_2D::makeTextureStorage11_2D(storage);
     if (!storage11)
     {
         ERR("Failed to retrieve the texture storage from the destination.");
@@ -2004,7 +2004,7 @@ bool Renderer11::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &
 }
 
 bool Renderer11::copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                               GLint xoffset, GLint yoffset, TextureStorageInterface *storage, GLenum target, GLint level)
+                               GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level)
 {
     gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     if (!colorbuffer)
@@ -2027,7 +2027,7 @@ bool Renderer11::copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    TextureStorage11_Cube *storage11 = TextureStorage11_Cube::makeTextureStorage11_Cube(storage->getStorageInstance());
+    TextureStorage11_Cube *storage11 = TextureStorage11_Cube::makeTextureStorage11_Cube(storage);
     if (!storage11)
     {
         ERR("Failed to retrieve the texture storage from the destination.");
@@ -2066,7 +2066,7 @@ bool Renderer11::copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle
 }
 
 bool Renderer11::copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                             GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface *storage, GLint level)
+                             GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level)
 {
     gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     if (!colorbuffer)
@@ -2089,7 +2089,7 @@ bool Renderer11::copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    TextureStorage11_3D *storage11 = TextureStorage11_3D::makeTextureStorage11_3D(storage->getStorageInstance());
+    TextureStorage11_3D *storage11 = TextureStorage11_3D::makeTextureStorage11_3D(storage);
     if (!storage11)
     {
         ERR("Failed to retrieve the texture storage from the destination.");
@@ -2128,7 +2128,7 @@ bool Renderer11::copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &
 }
 
 bool Renderer11::copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                  GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface *storage, GLint level)
+                                  GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level)
 {
     gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     if (!colorbuffer)
@@ -2151,7 +2151,7 @@ bool Renderer11::copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectan
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    TextureStorage11_2DArray *storage11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(storage->getStorageInstance());
+    TextureStorage11_2DArray *storage11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(storage);
     if (!storage11)
     {
         SafeRelease(source);
@@ -3115,7 +3115,7 @@ void Renderer11::invalidateFBOAttachmentSwizzles(gl::FramebufferAttachment *atta
     ASSERT(attachment->isTexture());
     gl::Texture *texture = attachment->getTexture();
 
-    TextureStorage *texStorage = texture->getNativeTexture()->getStorageInstance();
+    TextureStorage *texStorage = texture->getNativeTexture();
     if (texStorage)
     {
         TextureStorage11 *texStorage11 = TextureStorage11::makeTextureStorage11(texStorage);

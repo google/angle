@@ -27,7 +27,7 @@ class RenderTarget;
 class TextureStorage
 {
   public:
-    TextureStorage() {};
+    TextureStorage();
     virtual ~TextureStorage() {};
 
     virtual int getTopLevel() const = 0;
@@ -38,33 +38,14 @@ class TextureStorage
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index) = 0;
     virtual void generateMipmaps() = 0;
 
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage);
-
-};
-
-class TextureStorageInterface
-{
-  public:
-    TextureStorageInterface(TextureStorage *storageInstance, unsigned int rtSerialLayerStride);
-    virtual ~TextureStorageInterface();
-
-    TextureStorage *getStorageInstance() { return mInstance; }
-
+    unsigned int getRenderTargetSerial(const gl::ImageIndex &index) const;
     unsigned int getTextureSerial() const;
 
-    virtual int getTopLevel() const;
-    virtual bool isRenderTarget() const;
-    virtual bool isManaged() const;
-    virtual int getLevelCount() const;
-
-    unsigned int getRenderTargetSerial(const gl::ImageIndex &index) const;
-
   protected:
-    TextureStorage *mInstance;
+    void initializeSerials(unsigned int rtSerialsToReserve, unsigned int rtSerialsLayerStride);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface);
+    DISALLOW_COPY_AND_ASSIGN(TextureStorage);
 
     const unsigned int mTextureSerial;
     static unsigned int issueTextureSerial();

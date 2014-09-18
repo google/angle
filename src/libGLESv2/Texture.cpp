@@ -77,7 +77,7 @@ void Texture::getSamplerStateWithNativeOffset(SamplerState *sampler)
     *sampler = mSamplerState;
 
     // Offset the effective base level by the texture storage's top level
-    rx::TextureStorageInterface *texture = getNativeTexture();
+    rx::TextureStorage *texture = getNativeTexture();
     int topLevel = texture ? texture->getTopLevel() : 0;
     sampler->baseLevel = topLevel + mSamplerState.baseLevel;
 }
@@ -138,7 +138,7 @@ GLenum Texture::getActualFormat(const ImageIndex &index) const
     return image->getActualFormat();
 }
 
-rx::TextureStorageInterface *Texture::getNativeTexture()
+rx::TextureStorage *Texture::getNativeTexture()
 {
     return getImplementation()->getNativeTexture();
 }
@@ -155,7 +155,7 @@ void Texture::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoff
 
 unsigned int Texture::getTextureSerial()
 {
-    rx::TextureStorageInterface *texture = getNativeTexture();
+    rx::TextureStorage *texture = getNativeTexture();
     return texture ? texture->getTextureSerial() : 0;
 }
 
@@ -166,7 +166,7 @@ bool Texture::isImmutable() const
 
 int Texture::immutableLevelCount()
 {
-    return (mImmutable ? getNativeTexture()->getStorageInstance()->getLevelCount() : 0);
+    return (mImmutable ? getNativeTexture()->getLevelCount() : 0);
 }
 
 int Texture::mipLevels() const

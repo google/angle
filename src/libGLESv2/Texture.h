@@ -69,7 +69,7 @@ class Texture : public RefCountObject
 
     virtual bool isSamplerComplete(const SamplerState &samplerState, const TextureCapsMap &textureCaps, const Extensions &extensions, int clientVersion) const = 0;
 
-    rx::TextureStorageInterface *getNativeTexture();
+    rx::TextureStorage *getNativeTexture();
 
     virtual void generateMipmaps();
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);

@@ -99,27 +99,27 @@ bool Image11::isDirty() const
     return mDirty;
 }
 
-bool Image11::copyToStorage2D(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+bool Image11::copyToStorage2D(TextureStorage *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    TextureStorage11_2D *storage11 = TextureStorage11_2D::makeTextureStorage11_2D(storage->getStorageInstance());
+    TextureStorage11_2D *storage11 = TextureStorage11_2D::makeTextureStorage11_2D(storage);
     return copyToStorageImpl(storage11, level, 0, xoffset, yoffset, width, height);
 }
 
-bool Image11::copyToStorageCube(TextureStorageInterface *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+bool Image11::copyToStorageCube(TextureStorage *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    TextureStorage11_Cube *storage11 = TextureStorage11_Cube::makeTextureStorage11_Cube(storage->getStorageInstance());
+    TextureStorage11_Cube *storage11 = TextureStorage11_Cube::makeTextureStorage11_Cube(storage);
     return copyToStorageImpl(storage11, level, face, xoffset, yoffset, width, height);
 }
 
-bool Image11::copyToStorage3D(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth)
+bool Image11::copyToStorage3D(TextureStorage *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth)
 {
-    TextureStorage11_3D *storage11 = TextureStorage11_3D::makeTextureStorage11_3D(storage->getStorageInstance());
+    TextureStorage11_3D *storage11 = TextureStorage11_3D::makeTextureStorage11_3D(storage);
     return copyToStorageImpl(storage11, level, 0, xoffset, yoffset, width, height);
 }
 
-bool Image11::copyToStorage2DArray(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLint arrayLayer, GLsizei width, GLsizei height)
+bool Image11::copyToStorage2DArray(TextureStorage *storage, int level, GLint xoffset, GLint yoffset, GLint arrayLayer, GLsizei width, GLsizei height)
 {
-    TextureStorage11_2DArray *storage11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(storage->getStorageInstance());
+    TextureStorage11_2DArray *storage11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(storage);
     return copyToStorageImpl(storage11, level, arrayLayer, xoffset, yoffset, width, height);
 }
 

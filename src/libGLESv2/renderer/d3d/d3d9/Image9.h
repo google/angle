@@ -22,7 +22,6 @@ namespace rx
 {
 class Renderer;
 class Renderer9;
-class TextureStorageInterface;
 
 class Image9 : public ImageD3D
 {
@@ -43,12 +42,12 @@ class Image9 : public ImageD3D
     virtual bool isDirty() const;
     IDirect3DSurface9 *getSurface();
 
-    virtual void setManagedSurface2D(TextureStorageInterface *storage, int level);
-    virtual void setManagedSurfaceCube(TextureStorageInterface *storage, int face, int level);
-    virtual bool copyToStorage2D(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    virtual bool copyToStorageCube(TextureStorageInterface *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    virtual bool copyToStorage3D(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);
-    virtual bool copyToStorage2DArray(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height);
+    virtual void setManagedSurface2D(TextureStorage *storage, int level);
+    virtual void setManagedSurfaceCube(TextureStorage *storage, int face, int level);
+    virtual bool copyToStorage2D(TextureStorage *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    virtual bool copyToStorageCube(TextureStorage *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    virtual bool copyToStorage3D(TextureStorage *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);
+    virtual bool copyToStorage2DArray(TextureStorage *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height);
 
     virtual void loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                           GLint unpackAlignment, GLenum type, const void *input);

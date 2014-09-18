@@ -685,10 +685,10 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
     {
         TextureD3D* textureImpl = TextureD3D::makeTextureD3D(texture->getImplementation());
 
-        TextureStorageInterface *texStorage = textureImpl->getNativeTexture();
+        TextureStorage *texStorage = textureImpl->getNativeTexture();
         if (texStorage)
         {
-            TextureStorage9 *storage9 = TextureStorage9::makeTextureStorage9(texStorage->getStorageInstance());
+            TextureStorage9 *storage9 = TextureStorage9::makeTextureStorage9(texStorage);
             d3dTexture = storage9->getBaseTexture();
         }
         // If we get NULL back from getBaseTexture here, something went wrong
@@ -2335,14 +2335,14 @@ int Renderer9::getMaxSwapInterval() const
     return mMaxSwapInterval;
 }
 
-bool Renderer9::copyToRenderTarget2D(TextureStorageInterface *dest, TextureStorageInterface *source)
+bool Renderer9::copyToRenderTarget2D(TextureStorage *dest, TextureStorage *source)
 {
     bool result = false;
 
     if (source && dest)
     {
-        TextureStorage9_2D *source9 = TextureStorage9_2D::makeTextureStorage9_2D(source->getStorageInstance());
-        TextureStorage9_2D *dest9 = TextureStorage9_2D::makeTextureStorage9_2D(dest->getStorageInstance());
+        TextureStorage9_2D *source9 = TextureStorage9_2D::makeTextureStorage9_2D(source);
+        TextureStorage9_2D *dest9 = TextureStorage9_2D::makeTextureStorage9_2D(dest);
 
         int levels = source9->getLevelCount();
         for (int i = 0; i < levels; ++i)
@@ -2365,14 +2365,14 @@ bool Renderer9::copyToRenderTarget2D(TextureStorageInterface *dest, TextureStora
     return result;
 }
 
-bool Renderer9::copyToRenderTargetCube(TextureStorageInterface *dest, TextureStorageInterface *source)
+bool Renderer9::copyToRenderTargetCube(TextureStorage *dest, TextureStorage *source)
 {
     bool result = false;
 
     if (source && dest)
     {
-        TextureStorage9_Cube *source9 = TextureStorage9_Cube::makeTextureStorage9_Cube(source->getStorageInstance());
-        TextureStorage9_Cube *dest9 = TextureStorage9_Cube::makeTextureStorage9_Cube(dest->getStorageInstance());
+        TextureStorage9_Cube *source9 = TextureStorage9_Cube::makeTextureStorage9_Cube(source);
+        TextureStorage9_Cube *dest9 = TextureStorage9_Cube::makeTextureStorage9_Cube(dest);
         int levels = source9->getLevelCount();
         for (int f = 0; f < 6; f++)
         {
@@ -2397,14 +2397,14 @@ bool Renderer9::copyToRenderTargetCube(TextureStorageInterface *dest, TextureSto
     return result;
 }
 
-bool Renderer9::copyToRenderTarget3D(TextureStorageInterface *dest, TextureStorageInterface *source)
+bool Renderer9::copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source)
 {
     // 3D textures are not available in the D3D9 backend.
     UNREACHABLE();
     return false;
 }
 
-bool Renderer9::copyToRenderTarget2DArray(TextureStorageInterface *dest, TextureStorageInterface *source)
+bool Renderer9::copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source)
 {
     // 2D array textures are not supported by the D3D9 backend.
     UNREACHABLE();
@@ -2429,7 +2429,7 @@ D3DPOOL Renderer9::getBufferPool(DWORD usage) const
 }
 
 bool Renderer9::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                            GLint xoffset, GLint yoffset, TextureStorageInterface *storage, GLint level)
+                            GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level)
 {
     RECT rect;
     rect.left = sourceRect.x;
@@ -2441,7 +2441,7 @@ bool Renderer9::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &s
 }
 
 bool Renderer9::copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                              GLint xoffset, GLint yoffset, TextureStorageInterface *storage, GLenum target, GLint level)
+                              GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level)
 {
     RECT rect;
     rect.left = sourceRect.x;
@@ -2453,7 +2453,7 @@ bool Renderer9::copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle 
 }
 
 bool Renderer9::copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                            GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface *storage, GLint level)
+                            GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level)
 {
     // 3D textures are not available in the D3D9 backend.
     UNREACHABLE();
@@ -2461,7 +2461,7 @@ bool Renderer9::copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &s
 }
 
 bool Renderer9::copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                 GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface *storage, GLint level)
+                                 GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level)
 {
     // 2D array textures are not available in the D3D9 backend.
     UNREACHABLE();

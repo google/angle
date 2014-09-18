@@ -270,15 +270,15 @@ IDirect3DSurface9 *Image9::getSurface()
     return mSurface;
 }
 
-void Image9::setManagedSurface2D(TextureStorageInterface *storage, int level)
+void Image9::setManagedSurface2D(TextureStorage *storage, int level)
 {
-    TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage->getStorageInstance());
+    TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage);
     setManagedSurface(storage9->getSurfaceLevel(level, false));
 }
 
-void Image9::setManagedSurfaceCube(TextureStorageInterface *storage, int face, int level)
+void Image9::setManagedSurfaceCube(TextureStorage *storage, int face, int level)
 {
-    TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage->getStorageInstance());
+    TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage);
     setManagedSurface(storage9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false));
 }
 
@@ -301,28 +301,28 @@ void Image9::setManagedSurface(IDirect3DSurface9 *surface)
     }
 }
 
-bool Image9::copyToStorage2D(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+bool Image9::copyToStorage2D(TextureStorage *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     ASSERT(getSurface() != NULL);
-    TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage->getStorageInstance());
+    TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage);
     return copyToSurface(storage9->getSurfaceLevel(level, true), xoffset, yoffset, width, height);
 }
 
-bool Image9::copyToStorageCube(TextureStorageInterface *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+bool Image9::copyToStorageCube(TextureStorage *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     ASSERT(getSurface() != NULL);
-    TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage->getStorageInstance());
+    TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage);
     return copyToSurface(storage9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true), xoffset, yoffset, width, height);
 }
 
-bool Image9::copyToStorage3D(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth)
+bool Image9::copyToStorage3D(TextureStorage *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth)
 {
     // 3D textures are not supported by the D3D9 backend.
     UNREACHABLE();
     return false;
 }
 
-bool Image9::copyToStorage2DArray(TextureStorageInterface *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height)
+bool Image9::copyToStorage2DArray(TextureStorage *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height)
 {
     // 2D array textures are not supported by the D3D9 backend.
     UNREACHABLE();

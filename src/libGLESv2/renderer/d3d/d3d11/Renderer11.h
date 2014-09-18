@@ -115,19 +115,19 @@ class Renderer11 : public Renderer
     virtual int getMaxSwapInterval() const;
 
     // Pixel operations
-    virtual bool copyToRenderTarget2D(TextureStorageInterface *dest, TextureStorageInterface *source);
-    virtual bool copyToRenderTargetCube(TextureStorageInterface *dest, TextureStorageInterface *source);
-    virtual bool copyToRenderTarget3D(TextureStorageInterface *dest, TextureStorageInterface *source);
-    virtual bool copyToRenderTarget2DArray(TextureStorageInterface *dest, TextureStorageInterface *source);
+    virtual bool copyToRenderTarget2D(TextureStorage *dest, TextureStorage *source);
+    virtual bool copyToRenderTargetCube(TextureStorage *dest, TextureStorage *source);
+    virtual bool copyToRenderTarget3D(TextureStorage *dest, TextureStorage *source);
+    virtual bool copyToRenderTarget2DArray(TextureStorage *dest, TextureStorage *source);
 
     virtual bool copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                             GLint xoffset, GLint yoffset, TextureStorageInterface *storage, GLint level);
+                             GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level);
     virtual bool copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                               GLint xoffset, GLint yoffset, TextureStorageInterface *storage, GLenum target, GLint level);
+                               GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level);
     virtual bool copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                             GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface *storage, GLint level);
+                             GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level);
     virtual bool copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                  GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface *storage, GLint level);
+                                  GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level);
 
     virtual bool blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                           const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter);

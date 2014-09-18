@@ -208,7 +208,7 @@ bool Blit9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     return true;
 }
 
-bool Blit9::copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageInterface *storage, GLint level)
+bool Blit9::copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level)
 {
     RenderTarget9 *renderTarget = NULL;
     IDirect3DSurface9 *source = NULL;
@@ -230,7 +230,7 @@ bool Blit9::copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum 
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage->getStorageInstance());
+    TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage);
     IDirect3DSurface9 *destSurface = storage9->getSurfaceLevel(level, true);
     bool result = false;
 
@@ -244,7 +244,7 @@ bool Blit9::copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum 
     return result;
 }
 
-bool Blit9::copyCube(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageInterface *storage, GLenum target, GLint level)
+bool Blit9::copyCube(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level)
 {
     RenderTarget9 *renderTarget = NULL;
     IDirect3DSurface9 *source = NULL;
@@ -266,7 +266,7 @@ bool Blit9::copyCube(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenu
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage->getStorageInstance());
+    TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage);
     IDirect3DSurface9 *destSurface = storage9->getCubeMapSurface(target, level, true);
     bool result = false;
 

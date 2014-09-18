@@ -396,11 +396,11 @@ void TextureStorage11::verifySwizzleExists(GLenum swizzleRed, GLenum swizzleGree
 }
 
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapchain)
-    : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE)
+    : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
+      mTexture(swapchain->getOffscreenTexture()),
+      mSwizzleTexture(NULL)
 {
-    mTexture = swapchain->getOffscreenTexture();
     mTexture->AddRef();
-    mSwizzleTexture = NULL;
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
@@ -434,14 +434,15 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
     mSwizzleRenderTargetFormat = formatInfo.swizzleRTVFormat;
 
     mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
+
+    initializeSerials(1, 1);
 }
 
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels)
-    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderTarget))
+    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderTarget)),
+      mTexture(NULL),
+      mSwizzleTexture(NULL)
 {
-    mTexture = NULL;
-    mSwizzleTexture = NULL;
-
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
         mAssociatedImages[i] = NULL;
@@ -503,6 +504,8 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, GLenum internalform
             mTextureDepth = 1;
         }
     }
+
+    initializeSerials(getLevelCount(), 1);
 }
 
 TextureStorage11_2D::~TextureStorage11_2D()
@@ -790,11 +793,6 @@ ID3D11RenderTargetView *TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel
     }
 }
 
-unsigned int TextureStorage11_2D::getTextureLevelDepth(int mipLevel) const
-{
-    return 1;
-}
-
 TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, GLenum internalformat, bool renderTarget, int size, int levels)
     : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderTarget))
 {
@@ -860,7 +858,10 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, GLenum internal
             mTextureDepth = 1;
         }
     }
+
+    initializeSerials(getLevelCount() * 6, 6);
 }
+
 
 TextureStorage11_Cube::~TextureStorage11_Cube()
 {
@@ -1204,11 +1205,6 @@ ID3D11RenderTargetView *TextureStorage11_Cube::getSwizzleRenderTarget(int mipLev
     }
 }
 
-unsigned int TextureStorage11_Cube::getTextureLevelDepth(int mipLevel) const
-{
-    return 6;
-}
-
 TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, GLenum internalformat, bool renderTarget,
                                          GLsizei width, GLsizei height, GLsizei depth, int levels)
     : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderTarget))
@@ -1275,6 +1271,8 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, GLenum internalform
             mTextureDepth = desc.Depth;
         }
     }
+
+    initializeSerials(getLevelCount() * depth, depth);
 }
 
 TextureStorage11_3D::~TextureStorage11_3D()
@@ -1580,12 +1578,6 @@ ID3D11RenderTargetView *TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel
     }
 }
 
-unsigned int TextureStorage11_3D::getTextureLevelDepth(int mipLevel) const
-{
-    return std::max(mTextureDepth >> mipLevel, 1U);
-}
-
-
 TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, GLenum internalformat, bool renderTarget,
                                                    GLsizei width, GLsizei height, GLsizei depth, int levels)
     : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderTarget))
@@ -1652,6 +1644,8 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, GLenum in
             mTextureDepth = desc.ArraySize;
         }
     }
+
+    initializeSerials(getLevelCount() * depth, depth);
 }
 
 TextureStorage11_2DArray::~TextureStorage11_2DArray()
@@ -1937,11 +1931,6 @@ ID3D11RenderTargetView *TextureStorage11_2DArray::getSwizzleRenderTarget(int mip
     {
         return NULL;
     }
-}
-
-unsigned int TextureStorage11_2DArray::getTextureLevelDepth(int mipLevel) const
-{
-    return mTextureDepth;
 }
 
 }

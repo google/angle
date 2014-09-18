@@ -17,54 +17,35 @@
 
 namespace rx
 {
-unsigned int TextureStorageInterface::mCurrentTextureSerial = 1;
 
-TextureStorageInterface::TextureStorageInterface(TextureStorage *textureStorage, unsigned int rtSerialLayerStride)
+unsigned int TextureStorage::mCurrentTextureSerial = 1;
+
+TextureStorage::TextureStorage()
     : mTextureSerial(issueTextureSerial()),
-      mInstance(textureStorage),
-      mFirstRenderTargetSerial(gl::RenderbufferStorage::issueSerials(static_cast<unsigned int>(textureStorage->getLevelCount()) * rtSerialLayerStride)),
-      mRenderTargetSerialsLayerStride(rtSerialLayerStride)
+      mFirstRenderTargetSerial(0),
+      mRenderTargetSerialsLayerStride(0)
 {}
 
-TextureStorageInterface::~TextureStorageInterface()
+void TextureStorage::initializeSerials(unsigned int rtSerialsToReserve, unsigned int rtSerialsLayerStride)
 {
-    delete mInstance;
+    mFirstRenderTargetSerial = gl::RenderbufferStorage::issueSerials(rtSerialsToReserve);
+    mRenderTargetSerialsLayerStride = rtSerialsLayerStride;
 }
 
-bool TextureStorageInterface::isRenderTarget() const
+unsigned int TextureStorage::getRenderTargetSerial(const gl::ImageIndex &index) const
 {
-    return mInstance->isRenderTarget();
+    unsigned int layerOffset = (index.hasLayer() ? (static_cast<unsigned int>(index.layerIndex) * mRenderTargetSerialsLayerStride) : 0);
+    return mFirstRenderTargetSerial + static_cast<unsigned int>(index.mipIndex) + layerOffset;
 }
 
-bool TextureStorageInterface::isManaged() const
-{
-    return mInstance->isManaged();
-}
-
-unsigned int TextureStorageInterface::getTextureSerial() const
+unsigned int TextureStorage::getTextureSerial() const
 {
     return mTextureSerial;
 }
 
-unsigned int TextureStorageInterface::issueTextureSerial()
+unsigned int TextureStorage::issueTextureSerial()
 {
     return mCurrentTextureSerial++;
-}
-
-int TextureStorageInterface::getTopLevel() const
-{
-    return mInstance->getTopLevel();
-}
-
-int TextureStorageInterface::getLevelCount() const
-{
-    return mInstance->getLevelCount();
-}
-
-unsigned int TextureStorageInterface::getRenderTargetSerial(const gl::ImageIndex &index) const
-{
-    unsigned int layerOffset = (index.hasLayer() ? (static_cast<unsigned int>(index.layerIndex) * mRenderTargetSerialsLayerStride) : 0);
-    return mFirstRenderTargetSerial + static_cast<unsigned int>(index.mipIndex) + layerOffset;
 }
 
 }
