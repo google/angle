@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "b04df311_21012ad7",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1405,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-09-18T17:56:51Z",
+      "side": 1,
+      "message": "Thanks, I missed those details. Looks like these concerns were addressed in the last revision.",
+      "parentUuid": "501677dd_7e86e991",
+      "range": {
+        "startLine": 1403,
+        "startChar": 0,
+        "endLine": 1405,
+        "endChar": 38
+      },
+      "revId": "5587e268dbb7175bc21b278fcc45b02897db8097",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10307f7d_399acb90",
         "filename": "src/libGLESv2/Context.cpp",
         "patchSetId": 7
