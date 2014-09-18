@@ -288,6 +288,30 @@
     },
     {
       "key": {
+        "uuid": "b04df311_0162eee4",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-18T17:38:31Z",
+      "side": 1,
+      "message": "Ok. Let\u0027s discuss an explicit amendment to the ANGLE style guide at our next meeting, and then generate a CL to unify style for those. As far as making this the last arg-- usedRange is also an output var, yes? Our style guide requires output params at the end, and I\u0027d agree with pointers-after-refs, but we should probably tag that one with \"out\" as well. (Sorry for the endless style nattering.)",
+      "parentUuid": "3042e3dc_742cce83",
+      "range": {
+        "startLine": 227,
+        "startChar": 31,
+        "endLine": 227,
+        "endChar": 61
+      },
+      "revId": "6e46fbea49ae69f98f8dac7302d69e15a3004452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0f7b398_cbbaf5a2",
         "filename": "src/libGLESv2/ResourceManager.cpp",
         "patchSetId": 6
