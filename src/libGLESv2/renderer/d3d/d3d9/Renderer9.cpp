@@ -395,8 +395,11 @@ void Renderer9::initializeDevice()
 
     mSceneStarted = false;
 
-    ASSERT(!mBlit && !mVertexDataManager && !mIndexDataManager);
+    ASSERT(!mBlit);
     mBlit = new Blit9(this);
+    mBlit->initialize();
+
+    ASSERT(!mVertexDataManager && !mIndexDataManager);
     mVertexDataManager = new rx::VertexDataManager(this);
     mIndexDataManager = new rx::IndexDataManager(this);
 }

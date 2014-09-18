@@ -46,10 +46,16 @@ const size_t g_shaderSize[] =
 
 namespace rx
 {
+
 Blit9::Blit9(rx::Renderer9 *renderer)
-  : mRenderer(renderer), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL), mSavedStateBlock(NULL), mSavedRenderTarget(NULL), mSavedDepthStencil(NULL)
+    : mRenderer(renderer),
+      mGeometryLoaded(false),
+      mQuadVertexBuffer(NULL),
+      mQuadVertexDeclaration(NULL),
+      mSavedStateBlock(NULL),
+      mSavedRenderTarget(NULL),
+      mSavedDepthStencil(NULL)
 {
-    initGeometry();
     memset(mCompiledShaders, 0, sizeof(mCompiledShaders));
 }
 
@@ -65,8 +71,13 @@ Blit9::~Blit9()
     }
 }
 
-void Blit9::initGeometry()
+gl::Error Blit9::initialize()
 {
+    if (mGeometryLoaded)
+    {
+        return gl::Error(GL_NO_ERROR);
+    }
+
     static const float quad[] =
     {
         -1, -1,
@@ -82,7 +93,7 @@ void Blit9::initGeometry()
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return gl::error(GL_OUT_OF_MEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal blit vertex shader, result: 0x%X.", result);
     }
 
     void *lockPtr = NULL;
@@ -91,7 +102,8 @@ void Blit9::initGeometry()
     if (FAILED(result) || lockPtr == NULL)
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return gl::error(GL_OUT_OF_MEMORY);
+        SafeRelease(mQuadVertexBuffer);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock internal blit vertex shader, result: 0x%X.", result);
     }
 
     memcpy(lockPtr, quad, sizeof(quad));
@@ -108,8 +120,12 @@ void Blit9::initGeometry()
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return gl::error(GL_OUT_OF_MEMORY);
+        SafeRelease(mQuadVertexBuffer);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock internal blit vertex declaration, result: 0x%X.", result);
     }
+
+    mGeometryLoaded = true;
+    return gl::Error(GL_NO_ERROR);
 }
 
 template <class D3DShaderType>
@@ -174,8 +190,14 @@ RECT Blit9::getSurfaceRect(IDirect3DSurface9 *surface) const
 
 gl::Error Blit9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 {
+    gl::Error error = initialize();
+    if (error.isError())
+    {
+        return error;
+    }
+
     IDirect3DTexture9 *texture = NULL;
-    gl::Error error = copySurfaceToTexture(source, getSurfaceRect(source), &texture);
+    error = copySurfaceToTexture(source, getSurfaceRect(source), &texture);
     if (error.isError())
     {
         return error;
@@ -208,11 +230,17 @@ gl::Error Blit9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 
 gl::Error Blit9::copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level)
 {
+    gl::Error error = initialize();
+    if (error.isError())
+    {
+        return error;
+    }
+
     gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(0);
     ASSERT(colorbuffer);
 
     RenderTarget9 *renderTarget9 = NULL;
-    gl::Error error = d3d9::GetAttachmentRenderTarget(colorbuffer, &renderTarget9);
+    error = d3d9::GetAttachmentRenderTarget(colorbuffer, &renderTarget9);
     if (error.isError())
     {
         return error;
@@ -236,11 +264,17 @@ gl::Error Blit9::copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GL
 
 gl::Error Blit9::copyCube(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level)
 {
+    gl::Error error = initialize();
+    if (error.isError())
+    {
+        return error;
+    }
+
     gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(0);
     ASSERT(colorbuffer);
 
     RenderTarget9 *renderTarget9 = NULL;
-    gl::Error error = d3d9::GetAttachmentRenderTarget(colorbuffer, &renderTarget9);
+    error = d3d9::GetAttachmentRenderTarget(colorbuffer, &renderTarget9);
     if (error.isError())
     {
         return error;
@@ -295,8 +329,14 @@ gl::Error Blit9::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum 
 
 gl::Error Blit9::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
 {
+    gl::Error error = initialize();
+    if (error.isError())
+    {
+        return error;
+    }
+
     IDirect3DTexture9 *texture = NULL;
-    gl::Error error = copySurfaceToTexture(source, sourceRect, &texture);
+    error = copySurfaceToTexture(source, sourceRect, &texture);
     if (error.isError())
     {
         return error;
