@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "501677dd_fe1c395a",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1405,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-18T14:45:48Z",
+      "side": 1,
+      "message": "In my ANGLE profiling I\u0027ve found that our dynamic memory allocation from std::vector::reserve is one of the biggest hotspots when dealing with large numbers of draw calls in the aquarium sample. I would strongly recommend we do not add 3 more allocations here.",
+      "range": {
+        "startLine": 1403,
+        "startChar": 0,
+        "endLine": 1405,
+        "endChar": 38
+      },
+      "revId": "5587e268dbb7175bc21b278fcc45b02897db8097",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
