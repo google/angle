@@ -46,6 +46,30 @@
       "revId": "5587e268dbb7175bc21b278fcc45b02897db8097",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "501677dd_7e86e991",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1405,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-18T16:40:05Z",
+      "side": 1,
+      "message": "Nicolas, these lines will allocate memory. The vectors are initially empty, and the lines below will push_back the data. Unless I misunderstood your concerns?",
+      "parentUuid": "901c6ffc_dd95bfef",
+      "range": {
+        "startLine": 1403,
+        "startChar": 0,
+        "endLine": 1405,
+        "endChar": 38
+      },
+      "revId": "5587e268dbb7175bc21b278fcc45b02897db8097",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
