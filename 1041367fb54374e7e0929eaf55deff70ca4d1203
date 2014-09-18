@@ -22,6 +22,30 @@
       "revId": "1041367fb54374e7e0929eaf55deff70ca4d1203",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10307f7d_f9ee93d6",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/VertexDeclarationCache.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-18T17:27:16Z",
+      "side": 1,
+      "message": "It could now, yes.  There are a lot of unchecked HRESULTs from creating D3D objects in this function though.   We should probably check them.",
+      "parentUuid": "10307f7d_795283f4",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 9
+      },
+      "revId": "1041367fb54374e7e0929eaf55deff70ca4d1203",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
