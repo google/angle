@@ -49,7 +49,7 @@ class TextureStorage
 class TextureStorageInterface
 {
   public:
-    TextureStorageInterface();
+    TextureStorageInterface(TextureStorage *storageInstance, unsigned int rtSerialLayerStride);
     virtual ~TextureStorageInterface();
 
     TextureStorage *getStorageInstance() { return mInstance; }
@@ -61,6 +61,8 @@ class TextureStorageInterface
     virtual bool isManaged() const;
     virtual int getLevelCount() const;
 
+    unsigned int getRenderTargetSerial(const gl::ImageIndex &index) const;
+
   protected:
     TextureStorage *mInstance;
 
@@ -71,73 +73,58 @@ class TextureStorageInterface
     static unsigned int issueTextureSerial();
 
     static unsigned int mCurrentTextureSerial;
+
+    unsigned int mFirstRenderTargetSerial;
+    unsigned int mRenderTargetSerialsLayerStride;
 };
 
 class TextureStorageInterface2D : public TextureStorageInterface
 {
   public:
     TextureStorageInterface2D(Renderer *renderer, SwapChain *swapchain);
-    TextureStorageInterface2D(Renderer *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels);
+    TextureStorageInterface2D(TextureStorage *storageInstance);
     virtual ~TextureStorageInterface2D();
 
     void generateMipmap(int level);
 
-    unsigned int getRenderTargetSerial(GLint level) const;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface2D);
-
-    unsigned int mFirstRenderTargetSerial;
 };
 
 class TextureStorageInterfaceCube : public TextureStorageInterface
 {
   public:
-    TextureStorageInterfaceCube(Renderer *renderer, GLenum internalformat, bool renderTarget, int size, int levels);
+    TextureStorageInterfaceCube(TextureStorage *storageInstance);
     virtual ~TextureStorageInterfaceCube();
 
     void generateMipmap(int faceIndex, int level);
 
-    virtual unsigned int getRenderTargetSerial(GLenum target, GLint level) const;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterfaceCube);
-
-    unsigned int mFirstRenderTargetSerial;
 };
 
 class TextureStorageInterface3D : public TextureStorageInterface
 {
   public:
-    TextureStorageInterface3D(Renderer *renderer, GLenum internalformat, bool renderTarget,
-                              GLsizei width, GLsizei height, GLsizei depth, int levels);
+    TextureStorageInterface3D(TextureStorage *storageInstance, unsigned int depth);
     virtual ~TextureStorageInterface3D();
 
     void generateMipmap(int level);
 
-    virtual unsigned int getRenderTargetSerial(GLint level, GLint layer) const;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface3D);
-
-    unsigned int mFirstRenderTargetSerial;
 };
 
 class TextureStorageInterface2DArray : public TextureStorageInterface
 {
   public:
-    TextureStorageInterface2DArray(Renderer *renderer, GLenum internalformat, bool renderTarget,
-                                   GLsizei width, GLsizei height, GLsizei depth, int levels);
+    TextureStorageInterface2DArray(TextureStorage *storageInstance, unsigned int depth);
     virtual ~TextureStorageInterface2DArray();
 
     void generateMipmap(int level);
 
-    virtual unsigned int getRenderTargetSerial(GLint level, GLint layer) const;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface2DArray);
-
-    unsigned int mFirstRenderTargetSerial;
 };
 
 }

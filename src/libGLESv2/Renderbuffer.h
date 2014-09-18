@@ -83,7 +83,7 @@ class RenderbufferStorage
     virtual bool isTexture() const;
     virtual unsigned int getTextureSerial() const;
 
-    static unsigned int issueSerials(GLuint count);
+    static unsigned int issueSerials(unsigned int count);
 
   protected:
     GLsizei mWidth;

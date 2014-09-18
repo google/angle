@@ -137,4 +137,54 @@ TEST_F(ClearTest, MaskedClearBufferBug)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, 0, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
     EXPECT_PIXEL_EQ(0, 0, 0, 127, 255, 255);
+
+    glDeleteTextures(2, textures);
+}
+
+TEST_F(ClearTest, BadFBOSerialBug)
+{
+    // First make a simple framebuffer, and clear it to green
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+
+    GLuint textures[2];
+    glGenTextures(2, &textures[0]);
+
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, getWindowWidth(), getWindowHeight());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
+
+    GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, drawBuffers);
+
+    float clearValues1[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+    glClearBufferfv(GL_COLOR, 0, clearValues1);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+
+    // Next make a second framebuffer, and draw it to red
+    // (Triggers bad applied render target serial)
+    GLuint fbo2;
+    glGenFramebuffers(1, &fbo2);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, getWindowWidth(), getWindowHeight());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
+
+    glDrawBuffers(1, drawBuffers);
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+
+    // Check that the first framebuffer is still green.
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+
+    glDeleteTextures(2, textures);
+    glDeleteFramebuffers(1, &fbo2);
 }

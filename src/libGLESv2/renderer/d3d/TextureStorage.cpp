@@ -21,11 +21,12 @@ namespace rx
 {
 unsigned int TextureStorageInterface::mCurrentTextureSerial = 1;
 
-TextureStorageInterface::TextureStorageInterface()
+TextureStorageInterface::TextureStorageInterface(TextureStorage *textureStorage, unsigned int rtSerialLayerStride)
     : mTextureSerial(issueTextureSerial()),
-      mInstance(NULL)
-{
-}
+      mInstance(textureStorage),
+      mFirstRenderTargetSerial(gl::RenderbufferStorage::issueSerials(static_cast<unsigned int>(textureStorage->getLevelCount()) * rtSerialLayerStride)),
+      mRenderTargetSerialsLayerStride(rtSerialLayerStride)
+{}
 
 TextureStorageInterface::~TextureStorageInterface()
 {
@@ -62,94 +63,62 @@ int TextureStorageInterface::getLevelCount() const
     return mInstance->getLevelCount();
 }
 
+unsigned int TextureStorageInterface::getRenderTargetSerial(const gl::ImageIndex &index) const
+{
+    unsigned int layerOffset = (index.hasLayer() ? (static_cast<unsigned int>(index.layerIndex) * mRenderTargetSerialsLayerStride) : 0);
+    return mFirstRenderTargetSerial + static_cast<unsigned int>(index.mipIndex) + layerOffset;
+}
+
 TextureStorageInterface2D::TextureStorageInterface2D(Renderer *renderer, SwapChain *swapchain)
-{
-    mFirstRenderTargetSerial = gl::RenderbufferStorage::issueSerials(1);
+    : TextureStorageInterface(renderer->createTextureStorage2D(swapchain), 1)
+{}
 
-    mInstance = renderer->createTextureStorage2D(swapchain);
-}
-
-TextureStorageInterface2D::TextureStorageInterface2D(Renderer *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels)
-{
-    mInstance = renderer->createTextureStorage2D(internalformat, renderTarget, width, height, levels);
-    mFirstRenderTargetSerial = gl::RenderbufferStorage::issueSerials(static_cast<GLuint>(mInstance->getLevelCount()));
-}
+TextureStorageInterface2D::TextureStorageInterface2D(TextureStorage *storageInstance)
+    : TextureStorageInterface(storageInstance, 1)
+{}
 
 TextureStorageInterface2D::~TextureStorageInterface2D()
-{
-}
+{}
 
 void TextureStorageInterface2D::generateMipmap(int level)
 {
     mInstance->generateMipmap(level);
 }
 
-unsigned int TextureStorageInterface2D::getRenderTargetSerial(GLint level) const
-{
-    return mFirstRenderTargetSerial + level;
-}
-
-TextureStorageInterfaceCube::TextureStorageInterfaceCube(Renderer *renderer, GLenum internalformat, bool renderTarget, int size, int levels)
-{
-    mInstance = renderer->createTextureStorageCube(internalformat, renderTarget, size, levels);
-    mFirstRenderTargetSerial = gl::RenderbufferStorage::issueSerials(static_cast<GLuint>(mInstance->getLevelCount() * 6));
-}
+TextureStorageInterfaceCube::TextureStorageInterfaceCube(TextureStorage *storageInstance)
+    : TextureStorageInterface(storageInstance, 6)
+{}
 
 TextureStorageInterfaceCube::~TextureStorageInterfaceCube()
-{
-}
+{}
 
 void TextureStorageInterfaceCube::generateMipmap(int faceIndex, int level)
 {
     mInstance->generateMipmap(faceIndex, level);
 }
 
-unsigned int TextureStorageInterfaceCube::getRenderTargetSerial(GLenum target, GLint level) const
-{
-    return mFirstRenderTargetSerial + (level * 6) + gl::TextureCubeMap::targetToLayerIndex(target);
-}
-
-TextureStorageInterface3D::TextureStorageInterface3D(Renderer *renderer, GLenum internalformat, bool renderTarget,
-                                                     GLsizei width, GLsizei height, GLsizei depth, int levels)
-{
-
-    mInstance = renderer->createTextureStorage3D(internalformat, renderTarget, width, height, depth, levels);
-    mFirstRenderTargetSerial = gl::RenderbufferStorage::issueSerials(static_cast<GLuint>(mInstance->getLevelCount() * depth));
-}
+TextureStorageInterface3D::TextureStorageInterface3D(TextureStorage *storageInstance, unsigned int depth)
+    : TextureStorageInterface(storageInstance, depth)
+{}
 
 TextureStorageInterface3D::~TextureStorageInterface3D()
-{
-}
+{}
 
 void TextureStorageInterface3D::generateMipmap(int level)
 {
     mInstance->generateMipmap(level);
 }
 
-unsigned int TextureStorageInterface3D::getRenderTargetSerial(GLint level, GLint layer) const
-{
-    return mFirstRenderTargetSerial + static_cast<unsigned int>((layer * mInstance->getLevelCount()) + level);
-}
-
-TextureStorageInterface2DArray::TextureStorageInterface2DArray(Renderer *renderer, GLenum internalformat, bool renderTarget,
-                                                               GLsizei width, GLsizei height, GLsizei depth, int levels)
-{
-    mInstance = renderer->createTextureStorage2DArray(internalformat, renderTarget, width, height, depth, levels);
-    mFirstRenderTargetSerial = gl::RenderbufferStorage::issueSerials(static_cast<GLuint>(mInstance->getLevelCount() * depth));
-}
+TextureStorageInterface2DArray::TextureStorageInterface2DArray(TextureStorage *storageInstance, unsigned int depth)
+    : TextureStorageInterface(storageInstance, depth)
+{}
 
 TextureStorageInterface2DArray::~TextureStorageInterface2DArray()
-{
-}
+{}
 
 void TextureStorageInterface2DArray::generateMipmap(int level)
 {
     mInstance->generateMipmap(level);
-}
-
-unsigned int TextureStorageInterface2DArray::getRenderTargetSerial(GLint level, GLint layer) const
-{
-    return mFirstRenderTargetSerial + static_cast<unsigned int>((layer * mInstance->getLevelCount()) + level);
 }
 
 }

@@ -155,7 +155,7 @@ unsigned int RenderbufferStorage::getSerial() const
     return mSerial;
 }
 
-unsigned int RenderbufferStorage::issueSerials(GLuint count)
+unsigned int RenderbufferStorage::issueSerials(unsigned int count)
 {
     unsigned int firstSerial = mCurrentSerial;
     mCurrentSerial += count;
