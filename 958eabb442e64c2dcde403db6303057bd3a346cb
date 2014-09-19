@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "30690375_dbe29365",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-19T17:51:14Z",
+      "side": 1,
+      "message": "was using the same approach as here.",
+      "range": {
+        "startLine": 204,
+        "startChar": 8,
+        "endLine": 204,
+        "endChar": 24
+      },
+      "revId": "958eabb442e64c2dcde403db6303057bd3a346cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "901c6ffc_14ed4c6a",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 2
@@ -13,6 +36,30 @@
       "writtenOn": "2014-09-19T17:48:43Z",
       "side": 1,
       "message": "Is this avoiding recording the error on purpose, or is it because this is expected to get refactored imminently?",
+      "range": {
+        "startLine": 241,
+        "startChar": 12,
+        "endLine": 241,
+        "endChar": 28
+      },
+      "revId": "958eabb442e64c2dcde403db6303057bd3a346cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "301bc308_d1112429",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-19T17:51:14Z",
+      "side": 1,
+      "message": "I was thinking of the refactor, but I should probably add the error to be consistent with the other places... it\u0027s a bit obscure how we return NULL in one place but generate an error in others.",
+      "parentUuid": "901c6ffc_14ed4c6a",
       "range": {
         "startLine": 241,
         "startChar": 12,
