@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "b04df311_508f5a69",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-19T21:23:20Z",
+      "side": 1,
+      "message": "Oh! I think I completely misunderstood the point of this-- I thought it was intended to be an indication of a null-renderer, so that if this value was set, *all* rendering calls would be noopped. I understand now why it\u0027s part of validation-- maybe there\u0027s something else it could be named that would make it clearer? Not sure what, though.",
+      "parentUuid": "30690375_764ffea3",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 15
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "901c6ffc_ef7481e0",
         "filename": "src/libGLESv2/validationES.h",
         "patchSetId": 2
