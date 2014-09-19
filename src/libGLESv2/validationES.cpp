@@ -1671,8 +1671,15 @@ bool ValidateDrawElements(Context *context, GLenum mode, GLsizei count, GLenum t
         uintptr_t offset = reinterpret_cast<uintptr_t>(indices);
         if (!elementArrayBuffer->getIndexRangeCache()->findRange(type, offset, count, indexRangeOut, NULL))
         {
-            const void *dataPointer = elementArrayBuffer->getImplementation()->getData();
-            const uint8_t *offsetPointer = static_cast<const uint8_t *>(dataPointer) + offset;
+            const uint8_t *dataPointer = NULL;
+            Error error = elementArrayBuffer->getImplementation()->getData(&dataPointer);
+            if (error.isError())
+            {
+                context->recordError(error);
+                return false;
+            }
+
+            const uint8_t *offsetPointer = dataPointer + offset;
             *indexRangeOut = rx::IndexRangeCache::ComputeRange(type, offsetPointer, count);
         }
     }

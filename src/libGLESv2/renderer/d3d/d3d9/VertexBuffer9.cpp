@@ -98,7 +98,12 @@ gl::Error VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib
         if (buffer)
         {
             BufferImpl *storage = buffer->getImplementation();
-            input = static_cast<const uint8_t*>(storage->getData()) + static_cast<int>(attrib.offset);
+            gl::Error error = storage->getData(&input);
+            if (error.isError())
+            {
+                return error;
+            }
+            input += static_cast<int>(attrib.offset);
         }
         else
         {

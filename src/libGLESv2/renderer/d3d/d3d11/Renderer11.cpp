@@ -1197,7 +1197,15 @@ gl::Error Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *ind
         gl::Buffer *indexBuffer = elementArrayBuffer;
         BufferImpl *storage = indexBuffer->getImplementation();
         intptr_t offset = reinterpret_cast<intptr_t>(indices);
-        indices = static_cast<const GLubyte*>(storage->getData()) + offset;
+
+        const uint8_t *bufferData = NULL;
+        gl::Error error = storage->getData(&bufferData);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        indices = bufferData + offset;
     }
 
     if (!mLineLoopIB)
@@ -1301,7 +1309,15 @@ gl::Error Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *
         gl::Buffer *indexBuffer = elementArrayBuffer;
         BufferImpl *storage = indexBuffer->getImplementation();
         intptr_t offset = reinterpret_cast<intptr_t>(indices);
-        indices = static_cast<const GLubyte*>(storage->getData()) + offset;
+
+        const uint8_t *bufferData = NULL;
+        gl::Error error = storage->getData(&bufferData);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        indices = bufferData + offset;
     }
 
     if (!mTriangleFanIB)
