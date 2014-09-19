@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "901c6ffc_14ed4c6a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-19T17:48:43Z",
+      "side": 1,
+      "message": "Is this avoiding recording the error on purpose, or is it because this is expected to get refactored imminently?",
+      "range": {
+        "startLine": 241,
+        "startChar": 12,
+        "endLine": 241,
+        "endChar": 28
+      },
+      "revId": "958eabb442e64c2dcde403db6303057bd3a346cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
