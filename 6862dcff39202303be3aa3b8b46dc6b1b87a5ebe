@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10307f7d_85db6c35",
+        "filename": "tests/angle_tests/BufferDataTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-19T17:20:56Z",
+      "side": 1,
+      "message": "removed",
+      "range": {
+        "startLine": 128,
+        "startChar": 4,
+        "endLine": 128,
+        "endChar": 15
+      },
+      "revId": "6862dcff39202303be3aa3b8b46dc6b1b87a5ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
