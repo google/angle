@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7021bb30_8dcdd16c",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3772,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-19T20:53:09Z",
+      "side": 1,
+      "message": "Hrm. On the one hand, this kind of makes it look like the function is expected to have side effects/do what\u0027s described in the GL spec for this func. On the other hand, I think it would be really pointless to prefix every method of the validator with \"validate\" or \"check\". I don\u0027t have any really great other ideas, though.",
+      "range": {
+        "startLine": 3772,
+        "startChar": 8,
+        "endLine": 3772,
+        "endChar": 102
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7021bb30_6dde3d28",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-19T20:53:09Z",
+      "side": 1,
+      "message": "These lines kind of imply that fail() returns a value-- I think the explicit separate valueless returns are preferable.",
+      "range": {
+        "startLine": 328,
+        "startChar": 8,
+        "endLine": 328,
+        "endChar": 44
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "901c6ffc_8ff9452b",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-19T20:53:09Z",
+      "side": 1,
+      "message": "I\u0027m not sure about expressing \"detected no error, and the context is free to render\" as \"ready\". It kind of makes more sense to me for whether-or-not-something-gets-drawn not to be any of the validator\u0027s business at all. Although that would be complicated by the need to go without a context or renderer for a mock setup. Could we create a mock base class for one of those objects, or would that just be making a mess?",
+      "range": {
+        "startLine": 35,
+        "startChar": 9,
+        "endLine": 35,
+        "endChar": 14
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7021bb30_edbb2dcd",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-19T20:53:09Z",
+      "side": 1,
+      "message": "This is a good idea, but it strikes me as maybe better as a member of the Context, which could be cached here if it\u0027s really needed? It\u0027s the context that\u0027s really noopping functions, rather than the validator, which still validates.",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 15
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "901c6ffc_ef7481e0",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-19T20:53:09Z",
+      "side": 1,
+      "message": "Why does this go here, rather than at the head of the file, with the base class? (Or in the ES2 validation header?)\n\nI like the definition of the helper/base validation functions as private.",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 133,
+        "endChar": 2
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
