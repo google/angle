@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "30690375_56899a9e",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3772,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-19T21:12:53Z",
+      "side": 1,
+      "message": "Indeed... my line of thought on this as well. A 2-3 letter prefix seems possible. Or just calling it Validation instead of Validator.",
+      "parentUuid": "7021bb30_8dcdd16c",
+      "range": {
+        "startLine": 3772,
+        "startChar": 8,
+        "endLine": 3772,
+        "endChar": 102
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7021bb30_6dde3d28",
         "filename": "src/libGLESv2/validationES.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2014-09-19T20:53:09Z",
       "side": 1,
       "message": "These lines kind of imply that fail() returns a value-- I think the explicit separate valueless returns are preferable.",
+      "range": {
+        "startLine": 328,
+        "startChar": 8,
+        "endLine": 328,
+        "endChar": 44
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "301bc308_2c6b67bc",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-19T21:12:53Z",
+      "side": 1,
+      "message": "OK, seems fair. I liked our old one-line style but it\u0027s good either way.",
+      "parentUuid": "7021bb30_6dde3d28",
       "range": {
         "startLine": 328,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "10307f7d_9052ccf1",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-19T21:12:53Z",
+      "side": 1,
+      "message": "Renaming ready seems good, I was just shooting for something short that wasn\u0027t \u0027no error.",
+      "parentUuid": "901c6ffc_8ff9452b",
+      "range": {
+        "startLine": 35,
+        "startChar": 9,
+        "endLine": 35,
+        "endChar": 14
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7021bb30_edbb2dcd",
         "filename": "src/libGLESv2/validationES.h",
         "patchSetId": 2
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "30690375_764ffea3",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-19T21:12:53Z",
+      "side": 1,
+      "message": "Can you clarify? I see the step that computes the \"no-op-ness\" as separate from Context as it is decides, essentially, that we don\u0027t have to modify any state in GL\n\nYou\u0027re saying we should mutate Context to indicate the last validated call was determined to be a no-op? Or you want a separate evaluation step to determine if a call equates to a no-op? The latter could work, although really I\u0027d rather just rename Validator to something sensible.",
+      "parentUuid": "7021bb30_edbb2dcd",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 15
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "901c6ffc_ef7481e0",
         "filename": "src/libGLESv2/validationES.h",
         "patchSetId": 2
@@ -105,6 +201,30 @@
       "writtenOn": "2014-09-19T20:53:09Z",
       "side": 1,
       "message": "Why does this go here, rather than at the head of the file, with the base class? (Or in the ES2 validation header?)\n\nI like the definition of the helper/base validation functions as private.",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 133,
+        "endChar": 2
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30690375_165c825a",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-19T21:12:53Z",
+      "side": 1,
+      "message": "Will move it to the top. No real reason, just was a work-in-progress so I left it on the bottom as stylistically \u0027unfinished\u0027",
+      "parentUuid": "901c6ffc_ef7481e0",
       "range": {
         "startLine": 115,
         "startChar": 0,
