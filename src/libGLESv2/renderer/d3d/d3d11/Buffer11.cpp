@@ -233,6 +233,17 @@ void *Buffer11::getData()
 
     mReadUsageCount = 0;
 
+    // Only happens if we initialized the buffer with no data (NULL)
+    if (mResolvedData.empty())
+    {
+        if (!mResolvedData.resize(mSize))
+        {
+            return gl::error(GL_OUT_OF_MEMORY, (void*)NULL);
+        }
+    }
+
+    ASSERT(mResolvedData.size() >= mSize);
+
     return mResolvedData.data();
 }
 

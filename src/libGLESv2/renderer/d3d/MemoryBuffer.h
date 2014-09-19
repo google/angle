@@ -21,6 +21,7 @@ class MemoryBuffer
 
     bool resize(size_t size);
     size_t size() const;
+    bool empty() const { return mSize == 0; }
 
     const uint8_t *data() const;
     uint8_t *data();

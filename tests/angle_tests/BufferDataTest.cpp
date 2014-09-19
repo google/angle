@@ -114,6 +114,19 @@ TEST_F(BufferDataTest, ZeroNonNULLData)
     delete [] zeroData;
 }
 
+TEST_F(BufferDataTest, NULLResolvedData)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    glBufferData(GL_ARRAY_BUFFER, 128, NULL, GL_DYNAMIC_DRAW);
+
+    glUseProgram(mProgram);
+    glVertexAttribPointer(mAttribLocation, 1, GL_FLOAT, GL_FALSE, 4, NULL);
+    glEnableVertexAttribArray(mAttribLocation);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    drawQuad(mProgram, "position", 0.5f);
+}
+
 TEST_F(BufferDataTest, HugeSetDataShouldNotCrash)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
