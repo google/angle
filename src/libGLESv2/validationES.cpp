@@ -304,8 +304,8 @@ bool ValidateRenderbufferStorageParameters(gl::Context *context, GLenum target, 
         return false;
     }
 
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
-    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
+    const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
+    if (!formatCaps.renderable)
     {
         context->recordError(Error(GL_INVALID_ENUM));
         return false;
@@ -315,6 +315,7 @@ bool ValidateRenderbufferStorageParameters(gl::Context *context, GLenum target, 
     // sized but it does state that the format must be in the ES2.0 spec table 4.5 which contains
     // only sized internal formats. The ES3 spec (section 4.4.2) does, however, state that the
     // internal format must be sized and not an integer format if samples is greater than zero.
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
     if (formatInfo.pixelBytes == 0)
     {
         context->recordError(Error(GL_INVALID_ENUM));
@@ -324,13 +325,6 @@ bool ValidateRenderbufferStorageParameters(gl::Context *context, GLenum target, 
     if ((formatInfo.componentType == GL_UNSIGNED_INT || formatInfo.componentType == GL_INT) && samples > 0)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
-    if (!formatCaps.renderable)
-    {
-        context->recordError(Error(GL_INVALID_ENUM));
         return false;
     }
 

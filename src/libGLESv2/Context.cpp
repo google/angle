@@ -2391,26 +2391,25 @@ void Context::initCaps(GLuint clientVersion)
         TextureCaps formatCaps = i->second;
 
         const InternalFormat &formatInfo = GetInternalFormatInfo(format);
-        if (formatCaps.texturable && formatInfo.textureSupport(clientVersion, mExtensions))
+
+        // Update the format caps based on the client version and extensions
+        formatCaps.texturable = formatInfo.textureSupport(clientVersion, mExtensions);
+        formatCaps.renderable = formatInfo.renderSupport(clientVersion, mExtensions);
+        formatCaps.filterable = formatInfo.filterSupport(clientVersion, mExtensions);
+
+        // OpenGL ES does not support multisampling with integer formats
+        if (!formatInfo.renderSupport || formatInfo.componentType == GL_INT || formatInfo.componentType == GL_UNSIGNED_INT)
         {
-            // Update the format caps based on the client version and extensions
-            formatCaps.renderable = formatInfo.renderSupport(clientVersion, mExtensions);
-            formatCaps.filterable = formatInfo.filterSupport(clientVersion, mExtensions);
-
-            // OpenGL ES does not support multisampling with integer formats
-            if (formatInfo.componentType == GL_INT || formatInfo.componentType == GL_UNSIGNED_INT)
-            {
-                formatCaps.sampleCounts.clear();
-            }
-            maxSamples = std::max(maxSamples, formatCaps.getMaxSamples());
-
-            if (formatInfo.compressed)
-            {
-                mCaps.compressedTextureFormats.push_back(format);
-            }
-
-            mTextureCaps.insert(format, formatCaps);
+            formatCaps.sampleCounts.clear();
         }
+        maxSamples = std::max(maxSamples, formatCaps.getMaxSamples());
+
+        if (formatCaps.texturable && formatInfo.compressed)
+        {
+            mCaps.compressedTextureFormats.push_back(format);
+        }
+
+        mTextureCaps.insert(format, formatCaps);
     }
 
     mExtensions.maxSamples = maxSamples;
