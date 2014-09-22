@@ -11,6 +11,7 @@
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/State.h"
 #include "libGLESv2/renderer/d3d/ProgramD3D.h"
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
@@ -939,17 +940,16 @@ gl::Error Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], const gl::VertexAttribCurrentValueData currentValues[],
-                                        GLint first, GLsizei count, GLsizei instances)
+gl::Error Renderer11::applyVertexBuffer(const gl::State &state, GLint first, GLsizei count, GLsizei instances)
 {
     TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS];
-    gl::Error error = mVertexDataManager->prepareVertexData(vertexAttributes, currentValues, programBinary, first, count, attributes, instances);
+    gl::Error error = mVertexDataManager->prepareVertexData(state, first, count, attributes, instances);
     if (error.isError())
     {
         return error;
     }
 
-    return mInputLayoutCache.applyVertexBuffers(attributes, programBinary);
+    return mInputLayoutCache.applyVertexBuffers(attributes, state.getCurrentProgramBinary());
 }
 
 gl::Error Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)

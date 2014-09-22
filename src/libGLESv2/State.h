@@ -218,7 +218,6 @@ class State
                               bool normalized, bool pureInteger, GLsizei stride, const void *pointer);
     const VertexAttribute &getVertexAttribState(unsigned int attribNum) const;
     const VertexAttribCurrentValueData &getVertexAttribCurrentValue(unsigned int attribNum) const;
-    const VertexAttribCurrentValueData *getVertexAttribCurrentValues() const;
     const void *getVertexAttribPointer(unsigned int attribNum) const;
 
     // Pixel pack state manipulation

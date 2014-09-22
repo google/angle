@@ -33,6 +33,7 @@
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/ProgramBinary.h"
+#include "libGLESv2/State.h"
 #include "libGLESv2/angletypes.h"
 
 #include "libEGL/Display.h"
@@ -1268,17 +1269,16 @@ gl::Error Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], const gl::VertexAttribCurrentValueData currentValues[],
-                                       GLint first, GLsizei count, GLsizei instances)
+gl::Error Renderer9::applyVertexBuffer(const gl::State &state, GLint first, GLsizei count, GLsizei instances)
 {
     TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS];
-    gl::Error error = mVertexDataManager->prepareVertexData(vertexAttributes, currentValues, programBinary, first, count, attributes, instances);
+    gl::Error error = mVertexDataManager->prepareVertexData(state, first, count, attributes, instances);
     if (error.isError())
     {
         return error;
     }
 
-    return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, programBinary, instances, &mRepeatDraw);
+    return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, state.getCurrentProgramBinary(), instances, &mRepeatDraw);
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
