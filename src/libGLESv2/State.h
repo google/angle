@@ -282,7 +282,8 @@ class State
     GLuint mCurrentProgramId;
     BindingPointer<ProgramBinary> mCurrentProgramBinary;
 
-    VertexAttribCurrentValueData mVertexAttribCurrentValues[MAX_VERTEX_ATTRIBS]; // From glVertexAttrib
+    typedef std::vector<VertexAttribCurrentValueData> VertexAttribVector;
+    VertexAttribVector mVertexAttribCurrentValues; // From glVertexAttrib
     VertexArray *mVertexArray;
 
     // Texture and sampler bindings

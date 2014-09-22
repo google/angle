@@ -114,7 +114,8 @@ void State::initialize(const Caps& caps, GLuint clientVersion)
     mActiveSampler = 0;
 
     const GLfloat defaultFloatValues[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    for (int attribIndex = 0; attribIndex < MAX_VERTEX_ATTRIBS; attribIndex++)
+    mVertexAttribCurrentValues.resize(caps.maxVertexAttributes);
+    for (size_t attribIndex = 0; attribIndex < mVertexAttribCurrentValues.size(); ++attribIndex)
     {
         mVertexAttribCurrentValues[attribIndex].setFloatValues(defaultFloatValues);
     }
@@ -154,12 +155,6 @@ void State::reset()
     for (size_t samplerIdx = 0; samplerIdx < mSamplers.size(); samplerIdx++)
     {
         mSamplers[samplerIdx].set(NULL);
-    }
-
-    const GLfloat defaultFloatValues[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    for (int attribIndex = 0; attribIndex < MAX_VERTEX_ATTRIBS; attribIndex++)
-    {
-        mVertexAttribCurrentValues[attribIndex].setFloatValues(defaultFloatValues);
     }
 
     mArrayBuffer.set(NULL);
@@ -1036,19 +1031,19 @@ void State::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
 
 void State::setVertexAttribf(GLuint index, const GLfloat values[4])
 {
-    ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
+    ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setFloatValues(values);
 }
 
 void State::setVertexAttribu(GLuint index, const GLuint values[4])
 {
-    ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
+    ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setUnsignedIntValues(values);
 }
 
 void State::setVertexAttribi(GLuint index, const GLint values[4])
 {
-    ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
+    ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setIntValues(values);
 }
 
@@ -1065,7 +1060,7 @@ const VertexAttribute &State::getVertexAttribState(unsigned int attribNum) const
 
 const VertexAttribCurrentValueData &State::getVertexAttribCurrentValue(unsigned int attribNum) const
 {
-    ASSERT(attribNum < MAX_VERTEX_ATTRIBS);
+    ASSERT(static_cast<size_t>(attribNum) < mVertexAttribCurrentValues.size());
     return mVertexAttribCurrentValues[attribNum];
 }
 
@@ -1431,9 +1426,9 @@ bool State::hasMappedBuffer(GLenum target) const
 {
     if (target == GL_ARRAY_BUFFER)
     {
-        for (unsigned int attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; attribIndex++)
+        for (size_t attribIndex = 0; attribIndex < mVertexAttribCurrentValues.size(); attribIndex++)
         {
-            const gl::VertexAttribute &vertexAttrib = getVertexAttribState(attribIndex);
+            const gl::VertexAttribute &vertexAttrib = getVertexAttribState(static_cast<unsigned int>(attribIndex));
             gl::Buffer *boundBuffer = vertexAttrib.buffer.get();
             if (vertexAttrib.enabled && boundBuffer && boundBuffer->isMapped())
             {
