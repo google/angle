@@ -331,14 +331,21 @@ gl::Error Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::R
     TextureStorage11 *sourceStorage11 = TextureStorage11::makeTextureStorage11(source);
 
     UINT subresourceIndex = sourceStorage11->getSubresourceIndex(sourceIndex);
-    ID3D11Texture2D *sourceTexture2D = d3d11::DynamicCastComObject<ID3D11Texture2D>(sourceStorage11->getResource());
+    ID3D11Resource *resource = NULL;
+    gl::Error error = sourceStorage11->getResource(&resource);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    ID3D11Texture2D *sourceTexture2D = d3d11::DynamicCastComObject<ID3D11Texture2D>(resource);
 
     if (!sourceTexture2D)
     {
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to retrieve the ID3D11Texture2D from the source TextureStorage.");
     }
 
-    gl::Error error = copy(xoffset, yoffset, zoffset, sourceArea, sourceTexture2D, subresourceIndex);
+    error = copy(xoffset, yoffset, zoffset, sourceArea, sourceTexture2D, subresourceIndex);
 
     SafeRelease(sourceTexture2D);
 

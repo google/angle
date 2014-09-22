@@ -41,7 +41,7 @@ class TextureStorage11 : public TextureStorage
 
     UINT getBindFlags() const;
 
-    virtual ID3D11Resource *getResource() const = 0;
+    virtual gl::Error getResource(ID3D11Resource **outResource) = 0;
     virtual gl::Error getSRV(const gl::SamplerState &samplerState, ID3D11ShaderResourceView **outSRV);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT) = 0;
 
@@ -147,7 +147,7 @@ class TextureStorage11_2D : public TextureStorage11
 
     static TextureStorage11_2D *makeTextureStorage11_2D(TextureStorage *storage);
 
-    virtual ID3D11Resource *getResource() const;
+    virtual gl::Error getResource(ID3D11Resource **outResource);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
 
     virtual void associateImage(Image11* image, const gl::ImageIndex &index);
@@ -182,7 +182,7 @@ class TextureStorage11_Cube : public TextureStorage11
 
     static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
 
-    virtual ID3D11Resource *getResource() const;
+    virtual gl::Error getResource(ID3D11Resource **outResource);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
 
     virtual void associateImage(Image11* image, const gl::ImageIndex &index);
@@ -220,7 +220,7 @@ class TextureStorage11_3D : public TextureStorage11
 
     static TextureStorage11_3D *makeTextureStorage11_3D(TextureStorage *storage);
 
-    virtual ID3D11Resource *getResource() const;
+    virtual gl::Error getResource(ID3D11Resource **outResource);
 
     // Handles both layer and non-layer RTs
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
@@ -262,7 +262,7 @@ class TextureStorage11_2DArray : public TextureStorage11
 
     static TextureStorage11_2DArray *makeTextureStorage11_2DArray(TextureStorage *storage);
 
-    virtual ID3D11Resource *getResource() const;
+    virtual gl::Error getResource(ID3D11Resource **outResource);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
 
     virtual void associateImage(Image11* image, const gl::ImageIndex &index);
