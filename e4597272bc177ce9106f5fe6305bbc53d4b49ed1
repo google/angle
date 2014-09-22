@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5002f7bb_7bbe9b99",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-22T19:02:12Z",
+      "side": 1,
+      "message": "note for the future: your renaming makes it hard to see the diff... not so bad for this patch but something to keep in mind in the future to keep refactoring split",
+      "range": {
+        "startLine": 225,
+        "startChar": 12,
+        "endLine": 225,
+        "endChar": 22
+      },
+      "revId": "e4597272bc177ce9106f5fe6305bbc53d4b49ed1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
