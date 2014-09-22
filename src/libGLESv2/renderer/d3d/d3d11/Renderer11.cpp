@@ -1392,10 +1392,8 @@ gl::Error Renderer11::applyShaders(gl::ProgramBinary *programBinary, const gl::V
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::applyUniforms(const gl::ProgramBinary &programBinary)
+gl::Error Renderer11::applyUniforms(const ProgramImpl &program, const std::vector<gl::LinkedUniform*> &uniformArray)
 {
-    const std::vector<gl::LinkedUniform*> &uniformArray = programBinary.getUniforms();
-
     unsigned int totalRegisterCountVS = 0;
     unsigned int totalRegisterCountPS = 0;
 
@@ -1419,7 +1417,7 @@ gl::Error Renderer11::applyUniforms(const gl::ProgramBinary &programBinary)
         }
     }
 
-    const ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(programBinary.getImplementation());
+    const ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(&program);
     const UniformStorage11 *vertexUniformStorage = UniformStorage11::makeUniformStorage11(&programD3D->getVertexUniformStorage());
     const UniformStorage11 *fragmentUniformStorage = UniformStorage11::makeUniformStorage11(&programD3D->getFragmentUniformStorage());
     ASSERT(vertexUniformStorage);

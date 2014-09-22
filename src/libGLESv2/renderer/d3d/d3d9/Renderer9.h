@@ -79,7 +79,7 @@ class Renderer9 : public Renderer
     virtual gl::Error applyRenderTarget(gl::Framebuffer *frameBuffer);
     virtual gl::Error applyShaders(gl::ProgramBinary *programBinary, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
                                    bool rasterizerDiscard, bool transformFeedbackActive);
-    virtual gl::Error applyUniforms(const gl::ProgramBinary &programBinary);
+    virtual gl::Error applyUniforms(const ProgramImpl &program, const std::vector<gl::LinkedUniform*> &uniformArray);
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount);
     virtual gl::Error applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], const gl::VertexAttribCurrentValueData currentValues[],
                                         GLint first, GLsizei count, GLsizei instances);

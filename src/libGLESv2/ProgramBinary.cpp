@@ -23,9 +23,7 @@
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/ProgramImpl.h"
-#include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
-#include "libGLESv2/renderer/d3d/VertexDataManager.h"
 #include "libGLESv2/Context.h"
 #include "libGLESv2/Buffer.h"
 #include "common/blocklayout.h"
@@ -956,7 +954,7 @@ Error ProgramBinary::applyUniforms()
 {
     updateSamplerMapping();
 
-    Error error = mProgram->getRenderer()->applyUniforms(*this);
+    Error error = mProgram->applyUniforms(mUniforms);
     if (error.isError())
     {
         return error;
@@ -972,51 +970,8 @@ Error ProgramBinary::applyUniforms()
 
 Error ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers, const Caps &caps)
 {
-    const gl::Buffer *vertexUniformBuffers[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS] = {NULL};
-    const gl::Buffer *fragmentUniformBuffers[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS] = {NULL};
-
-    const unsigned int reservedBuffersInVS = mProgram->getRenderer()->getReservedVertexUniformBuffers();
-    const unsigned int reservedBuffersInFS = mProgram->getRenderer()->getReservedFragmentUniformBuffers();
-
     ASSERT(boundBuffers.size() == mUniformBlocks.size());
-
-    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < mUniformBlocks.size(); uniformBlockIndex++)
-    {
-        UniformBlock *uniformBlock = getUniformBlockByIndex(uniformBlockIndex);
-        gl::Buffer *uniformBuffer = boundBuffers[uniformBlockIndex];
-
-        ASSERT(uniformBlock && uniformBuffer);
-
-        if (uniformBuffer->getSize() < uniformBlock->dataSize)
-        {
-            // undefined behaviour
-            return gl::Error(GL_INVALID_OPERATION, "It is undefined behaviour to use a uniform buffer that is too small.");
-        }
-
-        // Unnecessary to apply an unreferenced standard or shared UBO
-        if (!uniformBlock->isReferencedByVertexShader() && !uniformBlock->isReferencedByFragmentShader())
-        {
-            continue;
-        }
-
-        if (uniformBlock->isReferencedByVertexShader())
-        {
-            unsigned int registerIndex = uniformBlock->vsRegisterIndex - reservedBuffersInVS;
-            ASSERT(vertexUniformBuffers[registerIndex] == NULL);
-            ASSERT(registerIndex < caps.maxVertexUniformBlocks);
-            vertexUniformBuffers[registerIndex] = uniformBuffer;
-        }
-
-        if (uniformBlock->isReferencedByFragmentShader())
-        {
-            unsigned int registerIndex = uniformBlock->psRegisterIndex - reservedBuffersInFS;
-            ASSERT(fragmentUniformBuffers[registerIndex] == NULL);
-            ASSERT(registerIndex < caps.maxFragmentUniformBlocks);
-            fragmentUniformBuffers[registerIndex] = uniformBuffer;
-        }
-    }
-
-    return mProgram->getRenderer()->setUniformBuffers(vertexUniformBuffers, fragmentUniformBuffers);
+    return mProgram->applyUniformBuffers(mUniformBlocks, boundBuffers, caps);
 }
 
 bool ProgramBinary::linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *vertexShader)
@@ -1246,10 +1201,10 @@ bool ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *bina
 
         unsigned int vertexShaderSize = stream.readInt<unsigned int>();
         const unsigned char *vertexShaderFunction = reinterpret_cast<const unsigned char*>(binary) + stream.offset();
-        rx::ShaderExecutable *shaderExecutable = mProgram->getRenderer()->loadExecutable(reinterpret_cast<const DWORD*>(vertexShaderFunction),
-                                                                           vertexShaderSize, rx::SHADER_VERTEX,
-                                                                           mTransformFeedbackLinkedVaryings,
-                                                                           (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
+        rx::ShaderExecutable *shaderExecutable = mProgram->loadExecutable(reinterpret_cast<const DWORD*>(vertexShaderFunction),
+                                                                          vertexShaderSize, rx::SHADER_VERTEX,
+                                                                          mTransformFeedbackLinkedVaryings,
+                                                                          (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
         if (!shaderExecutable)
         {
             infoLog.append("Could not create vertex shader.");
@@ -1278,8 +1233,7 @@ bool ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *bina
 
         const size_t pixelShaderSize = stream.readInt<unsigned int>();
         const unsigned char *pixelShaderFunction = reinterpret_cast<const unsigned char*>(binary) + stream.offset();
-        rx::Renderer *renderer = mProgram->getRenderer();
-        rx::ShaderExecutable *shaderExecutable = renderer->loadExecutable(pixelShaderFunction, pixelShaderSize,
+        rx::ShaderExecutable *shaderExecutable = mProgram->loadExecutable(pixelShaderFunction, pixelShaderSize,
                                                                           rx::SHADER_PIXEL, mTransformFeedbackLinkedVaryings,
                                                                           (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
 
@@ -1300,8 +1254,7 @@ bool ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *bina
     if (geometryShaderSize > 0)
     {
         const char *geometryShaderFunction = (const char*) binary + stream.offset();
-        rx::Renderer *renderer = mProgram->getRenderer();
-        mGeometryExecutable = renderer->loadExecutable(reinterpret_cast<const DWORD*>(geometryShaderFunction),
+        mGeometryExecutable = mProgram->loadExecutable(reinterpret_cast<const DWORD*>(geometryShaderFunction),
                                                        geometryShaderSize, rx::SHADER_GEOMETRY, mTransformFeedbackLinkedVaryings,
                                                        (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
 
@@ -1315,18 +1268,6 @@ bool ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *bina
 
     if (!mProgram->load(infoLog, &stream))
     {
-        return false;
-    }
-
-    const char *ptr = (const char*) binary + stream.offset();
-
-    const GUID *binaryIdentifier = (const GUID *) ptr;
-    ptr += sizeof(GUID);
-
-    GUID identifier = mProgram->getRenderer()->getAdapterIdentifier();
-    if (memcmp(&identifier, binaryIdentifier, sizeof(GUID)) != 0)
-    {
-        infoLog.append("Invalid program binary.");
         return false;
     }
 
@@ -1501,13 +1442,10 @@ bool ProgramBinary::save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GL
         return false;
     }
 
-    GUID identifier = mProgram->getRenderer()->getAdapterIdentifier();
-
     GLsizei streamLength = stream.length();
     const void *streamData = stream.data();
 
-    GLsizei totalLength = streamLength + sizeof(GUID);
-    if (totalLength > bufSize)
+    if (streamLength > bufSize)
     {
         if (length)
         {
@@ -1524,15 +1462,12 @@ bool ProgramBinary::save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GL
         memcpy(ptr, streamData, streamLength);
         ptr += streamLength;
 
-        memcpy(ptr, &identifier, sizeof(GUID));
-        ptr += sizeof(GUID);
-
-        ASSERT(ptr - totalLength == binary);
+        ASSERT(ptr - streamLength == binary);
     }
 
     if (length)
     {
-        *length = totalLength;
+        *length = streamLength;
     }
 
     return true;
@@ -1980,7 +1915,7 @@ bool ProgramBinary::indexSamplerUniform(const LinkedUniform &uniform, InfoLog &i
             return false;
         }
 
-        unsigned int maxVertexVectors = mProgram->getRenderer()->getReservedVertexUniformVectors() + caps.maxVertexUniformVectors;
+        unsigned int maxVertexVectors = mProgram->getReservedUniformVectors(GL_VERTEX_SHADER) + caps.maxVertexUniformVectors;
         if (uniform.vsRegisterIndex + uniform.registerCount > maxVertexVectors)
         {
             infoLog.append("Vertex shader active uniforms exceed GL_MAX_VERTEX_UNIFORM_VECTORS (%u)",
@@ -1999,7 +1934,7 @@ bool ProgramBinary::indexSamplerUniform(const LinkedUniform &uniform, InfoLog &i
             return false;
         }
 
-        unsigned int maxFragmentVectors = mProgram->getRenderer()->getReservedFragmentUniformVectors() + caps.maxFragmentUniformVectors;
+        unsigned int maxFragmentVectors = mProgram->getReservedUniformVectors(GL_FRAGMENT_SHADER) + caps.maxFragmentUniformVectors;
         if (uniform.psRegisterIndex + uniform.registerCount > maxFragmentVectors)
         {
             infoLog.append("Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (%u)",
@@ -2326,38 +2261,13 @@ bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, const Shader &shader, c
             UniformBlock *uniformBlock = mUniformBlocks[blockIndex + uniformBlockElement];
             ASSERT(uniformBlock->name == interfaceBlock.name);
 
-            if (!assignUniformBlockRegister(infoLog, uniformBlock, shader.getType(),
-                                            interfaceBlockRegister + uniformBlockElement, caps))
+            if (!mProgram->assignUniformBlockRegister(infoLog, uniformBlock, shader.getType(),
+                                                      interfaceBlockRegister + uniformBlockElement, caps))
             {
                 return false;
             }
         }
     }
-
-    return true;
-}
-
-bool ProgramBinary::assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex, const Caps &caps)
-{
-    if (shader == GL_VERTEX_SHADER)
-    {
-        uniformBlock->vsRegisterIndex = registerIndex;
-        if (registerIndex - mProgram->getRenderer()->getReservedVertexUniformBuffers() >= caps.maxVertexUniformBlocks)
-        {
-            infoLog.append("Vertex shader uniform block count exceed GL_MAX_VERTEX_UNIFORM_BLOCKS (%u)", caps.maxVertexUniformBlocks);
-            return false;
-        }
-    }
-    else if (shader == GL_FRAGMENT_SHADER)
-    {
-        uniformBlock->psRegisterIndex = registerIndex;
-        if (registerIndex - mProgram->getRenderer()->getReservedFragmentUniformBuffers() >= caps.maxFragmentUniformBlocks)
-        {
-            infoLog.append("Fragment shader uniform block count exceed GL_MAX_FRAGMENT_UNIFORM_BLOCKS (%u)", caps.maxFragmentUniformBlocks);
-            return false;
-        }
-    }
-    else UNREACHABLE();
 
     return true;
 }
