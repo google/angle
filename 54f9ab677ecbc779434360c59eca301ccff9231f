@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0c347c9_6439eae7",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-23T21:14:43Z",
+      "side": 1,
+      "message": "for some reason having a type start with a lower case p gave me pause... maybe D3DCompileFunc or something",
+      "range": {
+        "startLine": 69,
+        "startChar": 39,
+        "endLine": 69,
+        "endChar": 50
+      },
+      "revId": "54f9ab677ecbc779434360c59eca301ccff9231f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
