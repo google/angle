@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b0f97300_a462c81a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1704,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-23T14:39:43Z",
+      "side": 1,
+      "message": "This call will eventually have errors in it because the dynamically generated shaders can generate errors.",
+      "parentUuid": "10307f7d_c0c38fd2",
+      "range": {
+        "startLine": 1704,
+        "startChar": 21,
+        "endLine": 1704,
+        "endChar": 32
+      },
+      "revId": "b38077b816fb37d28d6314e2c420683806c2d141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5002f7bb_db0087a0",
         "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2014-09-22T19:21:04Z",
       "side": 1,
       "message": "same deal here... was there a reason you made them return errors when they can\u0027t generate any at the moment?",
+      "range": {
+        "startLine": 1760,
+        "startChar": 21,
+        "endLine": 1760,
+        "endChar": 32
+      },
+      "revId": "b38077b816fb37d28d6314e2c420683806c2d141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50b7574c_b0179836",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1760,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-23T14:39:43Z",
+      "side": 1,
+      "message": "This call will also eventually have errors in it because the D3D11 side creates/mapps buffers in it.",
+      "parentUuid": "5002f7bb_db0087a0",
       "range": {
         "startLine": 1760,
         "startChar": 21,
