@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "5002f7bb_ac611be2",
+        "filename": "tests/perf_tests/PointSprites.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-23T15:22:13Z",
+      "side": 1,
+      "message": "This is never deleted.  Can it be a std::vector instead? Also helps with setting the correct buffer size.",
+      "range": {
+        "startLine": 65,
+        "startChar": 11,
+        "endLine": 65,
+        "endChar": 27
+      },
+      "revId": "4394e18392b813c700e55d39d3f67d978b2cf7b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5002f7bb_61038c77",
         "filename": "tests/perf_tests/PointSprites.cpp",
         "patchSetId": 5
