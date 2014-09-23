@@ -208,7 +208,7 @@ class Renderer
 
     // Image operations
     virtual Image *createImage() = 0;
-    virtual void generateMipmap(Image *dest, Image *source) = 0;
+    virtual gl::Error generateMipmap(Image *dest, Image *source) = 0;
     virtual TextureStorage *createTextureStorage2D(SwapChain *swapChain) = 0;
     virtual TextureStorage *createTextureStorage2D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels) = 0;
     virtual TextureStorage *createTextureStorageCube(GLenum internalformat, bool renderTarget, int size, int levels) = 0;

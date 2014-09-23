@@ -131,9 +131,9 @@ GLenum Texture::getActualFormat(const ImageIndex &index) const
     return image->getActualFormat();
 }
 
-void Texture::generateMipmaps()
+Error Texture::generateMipmaps()
 {
-    getImplementation()->generateMipmaps();
+    return getImplementation()->generateMipmaps();
 }
 
 Error Texture::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
@@ -361,11 +361,11 @@ bool Texture2D::isDepth(GLint level) const
     return GetInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
-void Texture2D::generateMipmaps()
+Error Texture2D::generateMipmaps()
 {
     releaseTexImage();
 
-    mTexture->generateMipmaps();
+    return mTexture->generateMipmaps();
 }
 
 // Tests for 2D texture (mipmap) completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.

@@ -35,7 +35,6 @@ class TextureStorage9 : public TextureStorage
 
     virtual gl::Error getBaseTexture(IDirect3DBaseTexture9 **outTexture) = 0;
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT) = 0;
-    virtual void generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex) = 0;
 
     virtual int getTopLevel() const;
     virtual bool isRenderTarget() const;
@@ -75,7 +74,7 @@ class TextureStorage9_2D : public TextureStorage9
     gl::Error getSurfaceLevel(int level, bool dirty, IDirect3DSurface9 **outSurface);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
     virtual gl::Error getBaseTexture(IDirect3DBaseTexture9 **outTexture);
-    virtual void generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex);
+    virtual gl::Error generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex);
     virtual gl::Error copyToStorage(TextureStorage *destStorage);
 
   private:
@@ -96,7 +95,7 @@ class TextureStorage9_Cube : public TextureStorage9
     gl::Error getCubeMapSurface(GLenum faceTarget, int level, bool dirty, IDirect3DSurface9 **outSurface);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
     virtual gl::Error getBaseTexture(IDirect3DBaseTexture9 **outTexture);
-    virtual void generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex);
+    virtual gl::Error generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex);
     virtual gl::Error copyToStorage(TextureStorage *destStorage);
 
   private:

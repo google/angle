@@ -337,13 +337,13 @@ Image *TextureD3D::getBaseLevelImage() const
     return getImage(getImageIndex(0, 0));
 }
 
-void TextureD3D::generateMipmaps()
+gl::Error TextureD3D::generateMipmaps()
 {
     GLint mipCount = mipLevels();
 
     if (mipCount == 1)
     {
-        return; // no-op
+        return gl::Error(GL_NO_ERROR); // no-op
     }
 
     // Set up proper mipmap chain in our Image array.
@@ -366,12 +366,20 @@ void TextureD3D::generateMipmaps()
 
                 Image *image = getImage(srcIndex);
                 gl::Rectangle area(0, 0, image->getWidth(), image->getHeight());
-                image->copy(0, 0, 0, area, srcIndex, mTexStorage);
+                gl::Error error = image->copy(0, 0, 0, area, srcIndex, mTexStorage);
+                if (error.isError())
+                {
+                    return error;
+                }
             }
         }
         else
         {
-            updateStorage();
+            gl::Error error = updateStorage();
+            if (error.isError())
+            {
+                return error;
+            }
         }
     }
 
@@ -389,15 +397,25 @@ void TextureD3D::generateMipmaps()
             if (renderableStorage)
             {
                 // GPU-side mipmapping
-                mTexStorage->generateMipmap(sourceIndex, destIndex);
+                gl::Error error = mTexStorage->generateMipmap(sourceIndex, destIndex);
+                if (error.isError())
+                {
+                    return error;
+                }
             }
             else
             {
                 // CPU-side mipmapping
-                mRenderer->generateMipmap(getImage(destIndex), getImage(sourceIndex));
+                gl::Error error = mRenderer->generateMipmap(getImage(destIndex), getImage(sourceIndex));
+                if (error.isError())
+                {
+                    return error;
+                }
             }
         }
     }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 bool TextureD3D::isBaseImageZeroSize() const

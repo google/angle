@@ -154,7 +154,7 @@ class Renderer9 : public Renderer
 
     // Image operations
     virtual Image *createImage();
-    virtual void generateMipmap(Image *dest, Image *source);
+    virtual gl::Error generateMipmap(Image *dest, Image *source);
     virtual TextureStorage *createTextureStorage2D(SwapChain *swapChain);
     virtual TextureStorage *createTextureStorage2D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels);
     virtual TextureStorage *createTextureStorageCube(GLenum internalformat, bool renderTarget, int size, int levels);

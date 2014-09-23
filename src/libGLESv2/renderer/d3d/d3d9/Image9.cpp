@@ -36,15 +36,23 @@ Image9::~Image9()
     SafeRelease(mSurface);
 }
 
-void Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface)
+gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface)
 {
     D3DSURFACE_DESC destDesc;
     HRESULT result = destSurface->GetDesc(&destDesc);
     ASSERT(SUCCEEDED(result));
+    if (FAILED(result))
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to query the source surface description for mipmap generation, result: 0x%X.", result);
+    }
 
     D3DSURFACE_DESC sourceDesc;
     result = sourceSurface->GetDesc(&sourceDesc);
     ASSERT(SUCCEEDED(result));
+    if (FAILED(result))
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to query the destination surface description for mipmap generation, result: 0x%X.", result);
+    }
 
     ASSERT(sourceDesc.Format == destDesc.Format);
     ASSERT(sourceDesc.Width == 1 || sourceDesc.Width / 2 == destDesc.Width);
@@ -56,22 +64,32 @@ void Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sour
     D3DLOCKED_RECT sourceLocked = {0};
     result = sourceSurface->LockRect(&sourceLocked, NULL, D3DLOCK_READONLY);
     ASSERT(SUCCEEDED(result));
+    if (FAILED(result))
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock the source surface for mipmap generation, result: 0x%X.", result);
+    }
 
     D3DLOCKED_RECT destLocked = {0};
     result = destSurface->LockRect(&destLocked, NULL, 0);
     ASSERT(SUCCEEDED(result));
+    if (FAILED(result))
+    {
+        sourceSurface->UnlockRect();
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock the destination surface for mipmap generation, result: 0x%X.", result);
+    }
 
     const uint8_t *sourceData = reinterpret_cast<const uint8_t*>(sourceLocked.pBits);
     uint8_t *destData = reinterpret_cast<uint8_t*>(destLocked.pBits);
 
-    if (sourceData && destData)
-    {
-        d3dFormatInfo.mipGenerationFunction(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0,
-                                            destData, destLocked.Pitch, 0);
-    }
+    ASSERT(sourceData && destData);
+
+    d3dFormatInfo.mipGenerationFunction(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0,
+                                        destData, destLocked.Pitch, 0);
 
     destSurface->UnlockRect();
     sourceSurface->UnlockRect();
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 Image9 *Image9::makeImage9(Image *img)
@@ -80,16 +98,21 @@ Image9 *Image9::makeImage9(Image *img)
     return static_cast<rx::Image9*>(img);
 }
 
-void Image9::generateMipmap(Image9 *dest, Image9 *source)
+gl::Error Image9::generateMipmap(Image9 *dest, Image9 *source)
 {
     IDirect3DSurface9 *sourceSurface = source->getSurface();
-    if (sourceSurface == NULL)
-        return gl::error(GL_OUT_OF_MEMORY);
+    ASSERT(sourceSurface);
 
     IDirect3DSurface9 *destSurface = dest->getSurface();
-    generateMip(destSurface, sourceSurface);
+    gl::Error error = generateMip(destSurface, sourceSurface);
+    if (error.isError())
+    {
+        return error;
+    }
 
     dest->markDirty();
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source)

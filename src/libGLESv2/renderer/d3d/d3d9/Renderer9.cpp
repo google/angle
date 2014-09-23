@@ -3037,11 +3037,11 @@ Image *Renderer9::createImage()
     return new Image9();
 }
 
-void Renderer9::generateMipmap(Image *dest, Image *src)
+gl::Error Renderer9::generateMipmap(Image *dest, Image *src)
 {
     Image9 *src9 = Image9::makeImage9(src);
     Image9 *dst9 = Image9::makeImage9(dest);
-    Image9::generateMipmap(dst9, src9);
+    return Image9::generateMipmap(dst9, src9);
 }
 
 TextureStorage *Renderer9::createTextureStorage2D(SwapChain *swapChain)

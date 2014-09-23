@@ -2659,11 +2659,11 @@ Image *Renderer11::createImage()
     return new Image11();
 }
 
-void Renderer11::generateMipmap(Image *dest, Image *src)
+gl::Error Renderer11::generateMipmap(Image *dest, Image *src)
 {
     Image11 *dest11 = Image11::makeImage11(dest);
     Image11 *src11 = Image11::makeImage11(src);
-    Image11::generateMipmap(dest11, src11);
+    return Image11::generateMipmap(dest11, src11);
 }
 
 TextureStorage *Renderer11::createTextureStorage2D(SwapChain *swapChain)

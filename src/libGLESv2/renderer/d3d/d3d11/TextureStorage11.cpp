@@ -388,7 +388,7 @@ gl::Error TextureStorage11::copySubresourceLevel(ID3D11Resource* dstTexture, uns
     return gl::Error(GL_NO_ERROR);
 }
 
-void TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex)
+gl::Error TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex)
 {
     ASSERT(sourceIndex.layerIndex == destIndex.layerIndex);
 
@@ -398,14 +398,14 @@ void TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex, const g
     gl::Error error = getRenderTarget(sourceIndex, &source);
     if (error.isError())
     {
-        return;
+        return error;
     }
 
     RenderTarget *dest = NULL;
     error = getRenderTarget(destIndex, &dest);
     if (error.isError())
     {
-        return;
+        return error;
     }
 
     ID3D11ShaderResourceView *sourceSRV = RenderTarget11::makeRenderTarget11(source)->getShaderResourceView();
@@ -418,8 +418,8 @@ void TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex, const g
     gl::Extents destSize(dest->getWidth(), dest->getHeight(), dest->getDepth());
 
     Blit11 *blitter = mRenderer->getBlitter();
-    blitter->copyTexture(sourceSRV, sourceArea, sourceSize, destRTV, destArea, destSize, NULL,
-                         gl::GetInternalFormatInfo(source->getInternalFormat()).format, GL_LINEAR);
+    return blitter->copyTexture(sourceSRV, sourceArea, sourceSize, destRTV, destArea, destSize, NULL,
+                                gl::GetInternalFormatInfo(source->getInternalFormat()).format, GL_LINEAR);
 }
 
 void TextureStorage11::verifySwizzleExists(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha)

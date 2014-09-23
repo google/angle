@@ -68,7 +68,8 @@ class Texture : public RefCountObject
 
     virtual bool isSamplerComplete(const SamplerState &samplerState, const TextureCapsMap &textureCaps, const Extensions &extensions, int clientVersion) const = 0;
 
-    virtual void generateMipmaps();
+    virtual Error generateMipmaps();
+
     virtual Error copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
 
     // Texture serials provide a unique way of identifying a Texture that isn't a raw pointer.
@@ -129,7 +130,7 @@ class Texture2D : public Texture
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    virtual void generateMipmaps();
+    virtual Error generateMipmaps();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);

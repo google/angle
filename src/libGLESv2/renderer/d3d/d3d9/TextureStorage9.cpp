@@ -194,13 +194,13 @@ gl::Error TextureStorage9_2D::getRenderTarget(const gl::ImageIndex &/*index*/, R
     return gl::Error(GL_NO_ERROR);
 }
 
-void TextureStorage9_2D::generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex)
+gl::Error TextureStorage9_2D::generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex)
 {
     IDirect3DSurface9 *upper = NULL;
     gl::Error error = getSurfaceLevel(sourceIndex.mipIndex, false, &upper);
     if (error.isError())
     {
-        return;
+        return error;
     }
 
     IDirect3DSurface9 *lower = NULL;
@@ -208,14 +208,16 @@ void TextureStorage9_2D::generateMipmap(const gl::ImageIndex &sourceIndex, const
     if (error.isError())
     {
         SafeRelease(upper);
-        return;
+        return error;
     }
 
     ASSERT(upper && lower);
-    mRenderer->boxFilter(upper, lower);
+    error = mRenderer->boxFilter(upper, lower);
 
     SafeRelease(upper);
     SafeRelease(lower);
+
+    return error;
 }
 
 gl::Error TextureStorage9_2D::getBaseTexture(IDirect3DBaseTexture9 **outTexture)
@@ -369,13 +371,13 @@ gl::Error TextureStorage9_Cube::getRenderTarget(const gl::ImageIndex &index, Ren
     return gl::Error(GL_NO_ERROR);
 }
 
-void TextureStorage9_Cube::generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex)
+gl::Error TextureStorage9_Cube::generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex)
 {
     IDirect3DSurface9 *upper = NULL;
     gl::Error error = getCubeMapSurface(sourceIndex.type, sourceIndex.mipIndex, false, &upper);
     if (error.isError())
     {
-        return;
+        return error;
     }
 
     IDirect3DSurface9 *lower = NULL;
@@ -383,14 +385,16 @@ void TextureStorage9_Cube::generateMipmap(const gl::ImageIndex &sourceIndex, con
     if (error.isError())
     {
         SafeRelease(upper);
-        return;
+        return error;
     }
 
     ASSERT(upper && lower);
-    mRenderer->boxFilter(upper, lower);
+    error = mRenderer->boxFilter(upper, lower);
 
     SafeRelease(upper);
     SafeRelease(lower);
+
+    return error;
 }
 
 gl::Error TextureStorage9_Cube::getBaseTexture(IDirect3DBaseTexture9 **outTexture)

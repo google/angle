@@ -43,7 +43,7 @@ class TextureStorage
     virtual int getLevelCount() const = 0;
 
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT) = 0;
-    virtual void generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex) = 0;
+    virtual gl::Error generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex) = 0;
 
     virtual gl::Error copyToStorage(TextureStorage *destStorage) = 0;
     virtual gl::Error setData(const gl::ImageIndex &index, Image *image, const gl::Box *destBox, GLenum type,

@@ -47,7 +47,7 @@ Image11 *Image11::makeImage11(Image *img)
     return static_cast<rx::Image11*>(img);
 }
 
-void Image11::generateMipmap(Image11 *dest, Image11 *src)
+gl::Error Image11::generateMipmap(Image11 *dest, Image11 *src)
 {
     ASSERT(src->getDXGIFormat() == dest->getDXGIFormat());
     ASSERT(src->getWidth() == 1 || src->getWidth() / 2 == dest->getWidth());
@@ -60,18 +60,15 @@ void Image11::generateMipmap(Image11 *dest, Image11 *src)
     HRESULT destMapResult = dest->map(D3D11_MAP_WRITE, &destMapped);
     if (FAILED(destMapResult))
     {
-        ERR("Failed to map destination image for mip map generation. HRESULT:0x%X", destMapResult);
-        return;
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map destination image for mipmap generation, result: 0x%X", destMapResult);
     }
 
     D3D11_MAPPED_SUBRESOURCE srcMapped;
     HRESULT srcMapResult = src->map(D3D11_MAP_READ, &srcMapped);
     if (FAILED(srcMapResult))
     {
-        ERR("Failed to map source image for mip map generation. HRESULT:0x%X", srcMapResult);
-
         dest->unmap();
-        return;
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map source image for mip map generation, result: 0x%X", srcMapResult);
     }
 
     const uint8_t *sourceData = reinterpret_cast<const uint8_t*>(srcMapped.pData);
@@ -85,6 +82,8 @@ void Image11::generateMipmap(Image11 *dest, Image11 *src)
     src->unmap();
 
     dest->markDirty();
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 bool Image11::isDirty() const
