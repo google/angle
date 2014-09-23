@@ -731,7 +731,12 @@ gl::Error Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *te
         if (texStorage)
         {
             TextureStorage9 *storage9 = TextureStorage9::makeTextureStorage9(texStorage);
-            d3dTexture = storage9->getBaseTexture();
+
+            gl::Error error = storage9->getBaseTexture(&d3dTexture);
+            if (error.isError())
+            {
+                return error;
+            }
         }
         // If we get NULL back from getBaseTexture here, something went wrong
         // in the texture class and we're unexpectedly missing the d3d texture

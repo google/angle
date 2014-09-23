@@ -33,7 +33,7 @@ class TextureStorage9 : public TextureStorage
     D3DPOOL getPool() const;
     DWORD getUsage() const;
 
-    virtual IDirect3DBaseTexture9 *getBaseTexture() const = 0;
+    virtual gl::Error getBaseTexture(IDirect3DBaseTexture9 **outTexture) = 0;
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT) = 0;
     virtual void generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex) = 0;
 
@@ -47,6 +47,11 @@ class TextureStorage9 : public TextureStorage
 
   protected:
     int mTopLevel;
+    size_t mMipLevels;
+    size_t mTextureWidth;
+    size_t mTextureHeight;
+    D3DFORMAT mTextureFormat;
+
     Renderer9 *mRenderer;
 
     TextureStorage9(Renderer *renderer, DWORD usage);
@@ -67,16 +72,14 @@ class TextureStorage9_2D : public TextureStorage9
 
     static TextureStorage9_2D *makeTextureStorage9_2D(TextureStorage *storage);
 
-    IDirect3DSurface9 *getSurfaceLevel(int level, bool dirty);
+    gl::Error getSurfaceLevel(int level, bool dirty, IDirect3DSurface9 **outSurface);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
-    virtual IDirect3DBaseTexture9 *getBaseTexture() const;
+    virtual gl::Error getBaseTexture(IDirect3DBaseTexture9 **outTexture);
     virtual void generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex);
     virtual gl::Error copyToStorage(TextureStorage *destStorage);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage9_2D);
-
-    void initializeRenderTarget();
 
     IDirect3DTexture9 *mTexture;
     RenderTarget9 *mRenderTarget;
@@ -90,16 +93,14 @@ class TextureStorage9_Cube : public TextureStorage9
 
     static TextureStorage9_Cube *makeTextureStorage9_Cube(TextureStorage *storage);
 
-    IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level, bool dirty);
+    gl::Error getCubeMapSurface(GLenum faceTarget, int level, bool dirty, IDirect3DSurface9 **outSurface);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
-    virtual IDirect3DBaseTexture9 *getBaseTexture() const;
+    virtual gl::Error getBaseTexture(IDirect3DBaseTexture9 **outTexture);
     virtual void generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex);
     virtual gl::Error copyToStorage(TextureStorage *destStorage);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage9_Cube);
-
-    void initializeRenderTarget();
 
     static const size_t CUBE_FACE_COUNT = 6;
 

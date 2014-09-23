@@ -250,8 +250,13 @@ gl::Error Blit9::copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GL
     IDirect3DSurface9 *source = renderTarget9->getSurface();
     ASSERT(source);
 
+    IDirect3DSurface9 *destSurface = NULL;
     TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage);
-    IDirect3DSurface9 *destSurface = storage9->getSurfaceLevel(level, true);
+    error = storage9->getSurfaceLevel(level, true, &destSurface);
+    if (error.isError())
+    {
+        return error;
+    }
     ASSERT(destSurface);
 
     gl::Error result = copy(source, sourceRect, destFormat, xoffset, yoffset, destSurface);
@@ -284,8 +289,13 @@ gl::Error Blit9::copyCube(gl::Framebuffer *framebuffer, const RECT &sourceRect, 
     IDirect3DSurface9 *source = renderTarget9->getSurface();
     ASSERT(source);
 
+    IDirect3DSurface9 *destSurface = NULL;
     TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage);
-    IDirect3DSurface9 *destSurface = storage9->getCubeMapSurface(target, level, true);
+    error = storage9->getCubeMapSurface(target, level, true, &destSurface);
+    if (error.isError())
+    {
+        return error;
+    }
     ASSERT(destSurface);
 
     gl::Error result = copy(source, sourceRect, destFormat, xoffset, yoffset, destSurface);
