@@ -2345,7 +2345,7 @@ ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length
     return executable;
 }
 
-ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type,
+ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, rx::ShaderType type,
                                                   const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                                   bool separatedOutputBuffers, D3DWorkaroundType workaround)
 {
@@ -2366,25 +2366,28 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
         return NULL;
     }
 
-    const char *profileVersion = NULL;
+    unsigned int profileMajorVersion = 0;
+    unsigned int profileMinorVersion = 0;
     switch (mFeatureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0:
-        profileVersion = "5_0";
+        profileMajorVersion = 5;
+        profileMinorVersion = 0;
         break;
       case D3D_FEATURE_LEVEL_10_1:
-        profileVersion = "4_1";
+        profileMajorVersion = 4;
+        profileMinorVersion = 1;
         break;
       case D3D_FEATURE_LEVEL_10_0:
-        profileVersion = "4_0";
+        profileMajorVersion = 4;
+        profileMinorVersion = 0;
         break;
       default:
         UNREACHABLE();
         return NULL;
     }
 
-    char profile[32];
-    snprintf(profile, ArraySize(profile), "%s_%s", profileType, profileVersion);
+    std::string profile = FormatString("%s_%u_%u", profileType, profileMajorVersion, profileMinorVersion);
 
     UINT flags = D3DCOMPILE_OPTIMIZATION_LEVEL0;
 
@@ -2403,29 +2406,18 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
 
     // Sometimes D3DCompile will fail with the default compilation flags for complicated shaders when it would otherwise pass with alternative options.
     // Try the default flags first and if compilation fails, try some alternatives.
-    const UINT extraFlags[] =
-    {
-        flags,
-        flags | D3DCOMPILE_SKIP_VALIDATION,
-        flags | D3DCOMPILE_SKIP_OPTIMIZATION
-    };
+    std::vector<CompileConfig> configs;
+    configs.push_back(CompileConfig(flags,                                "default"          ));
+    configs.push_back(CompileConfig(flags | D3DCOMPILE_SKIP_VALIDATION,   "skip validation"  ));
+    configs.push_back(CompileConfig(flags | D3DCOMPILE_SKIP_OPTIMIZATION, "skip optimization"));
 
-    const static char *extraFlagNames[] =
-    {
-        "default",
-        "skip validation",
-        "skip optimization"
-    };
-
-    int attempts = ArraySize(extraFlags);
-
-    ID3DBlob *binary = (ID3DBlob*)mCompiler.compileToBinary(infoLog, shaderHLSL, profile, extraFlags, extraFlagNames, attempts);
+    ID3DBlob *binary = mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs);
     if (!binary)
     {
         return NULL;
     }
 
-    ShaderExecutable *executable = loadExecutable((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize(), type,
+    ShaderExecutable *executable = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type,
                                                   transformFeedbackVaryings, separatedOutputBuffers);
     SafeRelease(binary);
 

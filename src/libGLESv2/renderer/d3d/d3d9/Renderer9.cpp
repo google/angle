@@ -2907,27 +2907,29 @@ ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length,
     return executable;
 }
 
-ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type,
+ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, rx::ShaderType type,
                                                  const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                                  bool separatedOutputBuffers, D3DWorkaroundType workaround)
 {
     // Transform feedback is not supported in ES2 or D3D9
     ASSERT(transformFeedbackVaryings.size() == 0);
 
-    const char *profile = NULL;
-
+    const char *profileType = NULL;
     switch (type)
     {
       case rx::SHADER_VERTEX:
-        profile = getMajorShaderModel() >= 3 ? "vs_3_0" : "vs_2_0";
+        profileType = "vs";
         break;
       case rx::SHADER_PIXEL:
-        profile = getMajorShaderModel() >= 3 ? "ps_3_0" : "ps_2_0";
+        profileType = "ps";
         break;
       default:
         UNREACHABLE();
         return NULL;
     }
+    unsigned int profileMajorVersion = (getMajorShaderModel() >= 3) ? 3 : 2;
+    unsigned int profileMinorVersion = 0;
+    std::string profile = FormatString("%s_%u_%u", profileType, profileMajorVersion, profileMinorVersion);
 
     UINT flags = ANGLE_COMPILE_OPTIMIZATION_LEVEL;
 
@@ -2956,23 +2958,12 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
 
     // Sometimes D3DCompile will fail with the default compilation flags for complicated shaders when it would otherwise pass with alternative options.
     // Try the default flags first and if compilation fails, try some alternatives.
-    const UINT extraFlags[] =
-    {
-        flags,
-        flags | D3DCOMPILE_AVOID_FLOW_CONTROL,
-        flags | D3DCOMPILE_PREFER_FLOW_CONTROL
-    };
+    std::vector<CompileConfig> configs;
+    configs.push_back(CompileConfig(flags,                                  "default"            ));
+    configs.push_back(CompileConfig(flags | D3DCOMPILE_AVOID_FLOW_CONTROL,  "avoid flow control" ));
+    configs.push_back(CompileConfig(flags | D3DCOMPILE_PREFER_FLOW_CONTROL, "prefer flow control"));
 
-    const static char *extraFlagNames[] =
-    {
-        "default",
-        "avoid flow control",
-        "prefer flow control"
-    };
-
-    int attempts = ArraySize(extraFlags);
-
-    ID3DBlob *binary = (ID3DBlob*)mCompiler.compileToBinary(infoLog, shaderHLSL, profile, extraFlags, extraFlagNames, attempts);
+    ID3DBlob *binary = mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs);
     if (!binary)
     {
         return NULL;

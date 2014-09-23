@@ -137,7 +137,7 @@ ShaderExecutable *ProgramD3D::getPixelExecutableForOutputLayout(gl::InfoLog &inf
                                                                                      outputSignature);
 
     // Generate new pixel executable
-    ShaderExecutable *pixelExecutable = mRenderer->compileToExecutable(infoLog, finalPixelHLSL.c_str(), rx::SHADER_PIXEL,
+    ShaderExecutable *pixelExecutable = mRenderer->compileToExecutable(infoLog, finalPixelHLSL, rx::SHADER_PIXEL,
                                                                         transformFeedbackLinkedVaryings, separatedOutputBuffers,
                                                                         mPixelWorkarounds);
 
@@ -154,7 +154,7 @@ ShaderExecutable *ProgramD3D::getVertexExecutableForInputLayout(gl::InfoLog &inf
     std::string finalVertexHLSL = mDynamicHLSL->generateVertexShaderForInputLayout(mVertexHLSL, inputLayout, shaderAttributes);
 
     // Generate new vertex executable
-    ShaderExecutable *vertexExecutable = mRenderer->compileToExecutable(infoLog, finalVertexHLSL.c_str(),
+    ShaderExecutable *vertexExecutable = mRenderer->compileToExecutable(infoLog, finalVertexHLSL,
                                                                         rx::SHADER_VERTEX,
                                                                         transformFeedbackLinkedVaryings, separatedOutputBuffers,
                                                                         mVertexWorkarounds);
@@ -171,7 +171,7 @@ ShaderExecutable *ProgramD3D::getGeometryExecutable(gl::InfoLog &infoLog, gl::Sh
 
     std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(registers, fragmentShaderD3D, vertexShaderD3D);
 
-    ShaderExecutable *geometryExecutable = mRenderer->compileToExecutable(infoLog, geometryHLSL.c_str(),
+    ShaderExecutable *geometryExecutable = mRenderer->compileToExecutable(infoLog, geometryHLSL,
                                                                           rx::SHADER_GEOMETRY, transformFeedbackLinkedVaryings,
                                                                           separatedOutputBuffers, rx::ANGLE_D3D_WORKAROUND_NONE);
 

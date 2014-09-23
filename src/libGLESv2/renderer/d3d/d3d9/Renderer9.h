@@ -152,7 +152,7 @@ class Renderer9 : public Renderer
     virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type,
                                              const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                              bool separatedOutputBuffers);
-    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type,
+    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, rx::ShaderType type,
                                                   const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                                   bool separatedOutputBuffers, D3DWorkaroundType workaround);
     virtual UniformStorage *createUniformStorage(size_t storageSize);
