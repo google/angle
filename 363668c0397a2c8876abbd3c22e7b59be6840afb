@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0f97300_0468dcf8",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-23T14:42:11Z",
+      "side": 1,
+      "message": "seems like this should be a member of Shader or ShaderImpl... not that I can tell exactly how that should work. It is a GL-thing though, rather than D3D.",
+      "range": {
+        "startLine": 31,
+        "startChar": 6,
+        "endLine": 31,
+        "endChar": 20
+      },
+      "revId": "363668c0397a2c8876abbd3c22e7b59be6840afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
