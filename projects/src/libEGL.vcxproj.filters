@@ -10,6 +10,9 @@
     <Filter Include="src\common">
       <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\common\win32">
+      <UniqueIdentifier>{789FEF16-EFE7-512E-F91B-DF7E0D72FB79}</UniqueIdentifier>
+    </Filter>
     <Filter Include="include">
       <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
     </Filter>
@@ -116,6 +119,12 @@
     </ClInclude>
     <ClCompile Include="..\..\src\common\angleutils.cpp">
       <Filter>src\common</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\src\common\NativeWindow.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\src\common\win32\NativeWindow.cpp">
+      <Filter>src\common\win32</Filter>
     </ClCompile>
     <ClInclude Include="..\..\include\angle_gl.h">
       <Filter>include</Filter>

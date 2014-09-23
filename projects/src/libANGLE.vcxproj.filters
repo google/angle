@@ -34,6 +34,9 @@
     <Filter Include="src\common">
       <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\common\win32">
+      <UniqueIdentifier>{789FEF16-EFE7-512E-F91B-DF7E0D72FB79}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\third_party">
       <UniqueIdentifier>{D6C6CEA7-AAD0-03AD-2394-AC6FCBF8A498}</UniqueIdentifier>
     </Filter>
@@ -854,6 +857,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\common\angleutils.cpp">
       <Filter>src\common</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\src\common\NativeWindow.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\src\common\win32\NativeWindow.cpp">
+      <Filter>src\common\win32</Filter>
     </ClCompile>
     <ClInclude Include="..\..\src\third_party\systeminfo\SystemInfo.h">
       <Filter>src\third_party\systeminfo</Filter>

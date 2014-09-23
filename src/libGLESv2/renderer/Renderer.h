@@ -13,6 +13,7 @@
 #include "libGLESv2/Uniform.h"
 #include "libGLESv2/angletypes.h"
 #include "libGLESv2/Caps.h"
+#include "common/NativeWindow.h"
 #include "libGLESv2/Error.h"
 
 #include <cstdint>
@@ -107,7 +108,7 @@ class Renderer
 
     virtual void sync(bool block) = 0;
 
-    virtual SwapChain *createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
+    virtual SwapChain *createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
 
     virtual gl::Error generateSwizzle(gl::Texture *texture) = 0;
     virtual gl::Error setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler) = 0;

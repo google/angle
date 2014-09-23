@@ -50,7 +50,7 @@ class Renderer9 : public Renderer
 
     virtual void sync(bool block);
 
-    virtual SwapChain *createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
+    virtual SwapChain *createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
 
     IDirect3DQuery9* allocateEventQuery();
     void freeEventQuery(IDirect3DQuery9* query);

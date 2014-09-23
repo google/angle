@@ -376,6 +376,7 @@
     <ClInclude Include="..\..\src\common\angleutils.h"/>
     <ClInclude Include="..\..\src\common\platform.h"/>
     <ClInclude Include="..\..\src\common\version.h"/>
+    <ClInclude Include="..\..\src\common\NativeWindow.h"/>
     <ClInclude Include="..\..\src\third_party\systeminfo\SystemInfo.h"/>
     <ClInclude Include="..\..\src\third_party\murmurhash\MurmurHash3.h"/>
     <ClInclude Include="..\..\include\angle_gl.h"/>
@@ -484,6 +485,7 @@
     <ClCompile Include="..\..\src\common\debug.cpp"/>
     <ClCompile Include="..\..\src\common\blocklayout.cpp"/>
     <ClCompile Include="..\..\src\common\angleutils.cpp"/>
+    <ClCompile Include="..\..\src\common\win32\NativeWindow.cpp"/>
     <ClCompile Include="..\..\src\third_party\systeminfo\SystemInfo.cpp"/>
     <ClCompile Include="..\..\src\third_party\murmurhash\MurmurHash3.cpp"/>
   </ItemGroup>

@@ -408,9 +408,9 @@ void Renderer11::sync(bool block)
     }
 }
 
-SwapChain *Renderer11::createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
+SwapChain *Renderer11::createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
 {
-    return new rx::SwapChain11(this, window, shareHandle, backBufferFormat, depthBufferFormat);
+    return new rx::SwapChain11(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat);
 }
 
 gl::Error Renderer11::generateSwizzle(gl::Texture *texture)

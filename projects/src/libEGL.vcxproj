@@ -223,6 +223,7 @@
     <ClInclude Include="..\..\src\common\utilities.h"/>
     <ClInclude Include="..\..\src\common\tls.h"/>
     <ClInclude Include="..\..\src\common\angleutils.h"/>
+    <ClInclude Include="..\..\src\common\NativeWindow.h"/>
     <ClInclude Include="..\..\include\angle_gl.h"/>
     <ClInclude Include="..\..\include\KHR\khrplatform.h"/>
     <ClInclude Include="..\..\include\GLSLANG\ShaderLang.h"/>
@@ -250,6 +251,7 @@
     <ClCompile Include="..\..\src\common\event_tracer.cpp"/>
     <ClCompile Include="..\..\src\common\utilities.cpp"/>
     <ClCompile Include="..\..\src\common\angleutils.cpp"/>
+    <ClCompile Include="..\..\src\common\win32\NativeWindow.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\libEGL\libEGL.rc"/>
