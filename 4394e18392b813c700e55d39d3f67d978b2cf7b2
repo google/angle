@@ -22,6 +22,52 @@
       "revId": "4394e18392b813c700e55d39d3f67d978b2cf7b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5002f7bb_61038c77",
+        "filename": "tests/perf_tests/PointSprites.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-23T14:21:48Z",
+      "side": 1,
+      "message": "If you\u0027re interested, there is random_utils.h in the sample_util project.",
+      "range": {
+        "startLine": 68,
+        "startChar": 38,
+        "endLine": 68,
+        "endChar": 90
+      },
+      "revId": "4394e18392b813c700e55d39d3f67d978b2cf7b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0f97300_64a7202f",
+        "filename": "tests/perf_tests/PointSprites.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-23T14:21:48Z",
+      "side": 1,
+      "message": "Is it possible to do an indexed version as well? We do some silly hacks to get that to work and we might not care too much about its perf but it could be useful to see the results.",
+      "range": {
+        "startLine": 120,
+        "startChar": 8,
+        "endLine": 120,
+        "endChar": 50
+      },
+      "revId": "4394e18392b813c700e55d39d3f67d978b2cf7b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
