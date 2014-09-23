@@ -300,7 +300,8 @@ class State
     ActiveQueryMap mActiveQueries;
 
     BindingPointer<Buffer> mGenericUniformBuffer;
-    OffsetBindingPointer<Buffer> mUniformBuffers[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
+    typedef std::vector< OffsetBindingPointer<Buffer> > UniformBufferVector;
+    UniformBufferVector mUniformBuffers;
 
     BindingPointer<TransformFeedback> mTransformFeedback;
     BindingPointer<Buffer> mGenericTransformFeedbackBuffer;

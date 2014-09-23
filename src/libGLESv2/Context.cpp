@@ -91,7 +91,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     bindRenderbuffer(0);
 
     bindGenericUniformBuffer(0);
-    for (int i = 0; i < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS; i++)
+    for (unsigned int i = 0; i < mCaps.maxCombinedUniformBlocks; i++)
     {
         bindIndexedUniformBuffer(0, i, 0, -1);
     }

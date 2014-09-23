@@ -120,6 +120,8 @@ void State::initialize(const Caps& caps, GLuint clientVersion)
         mVertexAttribCurrentValues[attribIndex].setFloatValues(defaultFloatValues);
     }
 
+    mUniformBuffers.resize(caps.maxCombinedUniformBlocks);
+
     mSamplerTextures[GL_TEXTURE_2D].resize(caps.maxCombinedTextureImageUnits);
     mSamplerTextures[GL_TEXTURE_CUBE_MAP].resize(caps.maxCombinedTextureImageUnits);
     if (clientVersion >= 3)
@@ -168,12 +170,12 @@ void State::reset()
     }
 
     mGenericUniformBuffer.set(NULL);
-    for (int i = 0; i < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS; i++)
+    mGenericTransformFeedbackBuffer.set(NULL);
+    for (UniformBufferVector::iterator bufItr = mUniformBuffers.begin(); bufItr != mUniformBuffers.end(); ++bufItr)
     {
-        mUniformBuffers[i].set(NULL);
+        bufItr->set(NULL);
     }
 
-    mGenericTransformFeedbackBuffer.set(NULL);
     for (int i = 0; i < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
     {
         mTransformFeedbackBuffers[i].set(NULL);
@@ -945,14 +947,14 @@ void State::setIndexedUniformBufferBinding(GLuint index, Buffer *buffer, GLintpt
 
 GLuint State::getIndexedUniformBufferId(GLuint index) const
 {
-    ASSERT(index < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS);
+    ASSERT(static_cast<size_t>(index) < mUniformBuffers.size());
 
     return mUniformBuffers[index].id();
 }
 
 Buffer *State::getIndexedUniformBuffer(GLuint index) const
 {
-    ASSERT(index < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS);
+    ASSERT(static_cast<size_t>(index) < mUniformBuffers.size());
 
     return mUniformBuffers[index].get();
 }
@@ -1375,7 +1377,7 @@ bool State::getIndexedIntegerv(GLenum target, GLuint index, GLint *data)
         }
         break;
       case GL_UNIFORM_BUFFER_BINDING:
-        if (index < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS)
+        if (static_cast<size_t>(index) < mUniformBuffers.size())
         {
             *data = mUniformBuffers[index].id();
         }
@@ -1404,13 +1406,13 @@ bool State::getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data)
         }
         break;
       case GL_UNIFORM_BUFFER_START:
-        if (index < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS)
+        if (static_cast<size_t>(index) < mUniformBuffers.size())
         {
             *data = mUniformBuffers[index].getOffset();
         }
         break;
       case GL_UNIFORM_BUFFER_SIZE:
-        if (index < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS)
+        if (static_cast<size_t>(index) < mUniformBuffers.size())
         {
             *data = mUniformBuffers[index].getSize();
         }
