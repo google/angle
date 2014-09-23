@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "b0f97300_4f6b1d6d",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-23T17:39:56Z",
+      "side": 1,
+      "message": "Is ProgramBinary fully de-D3Ded at this point, or is there more work to be done to reach that point? Before we consider it complete, we should probably change references to pixel shaders/executables/programs to fragment, to keep the D3D/GL distinction clear. (Unless there arguments that that would create confusion following code down the stack, which I could see.)",
+      "range": {
+        "startLine": 291,
+        "startChar": 35,
+        "endLine": 291,
+        "endChar": 53
+      },
+      "revId": "363668c0397a2c8876abbd3c22e7b59be6840afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50b7574c_b08b18a4",
+        "filename": "src/libGLESv2/renderer/ProgramImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-23T17:39:56Z",
+      "side": 1,
+      "message": "Is this going to remain exposed outside the renderer/across APIs? We don\u0027t support geometry shaders in ES-- will we be able to distinguish between geometry shaders used in DX to emulate ES features, and the concept of geometry shaders in ES?",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 104
+      },
+      "revId": "363668c0397a2c8876abbd3c22e7b59be6840afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5002f7bb_ec0f9393",
+        "filename": "src/libGLESv2/renderer/ProgramImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-23T17:39:56Z",
+      "side": 1,
+      "message": "Similar question-- ILs are DX-specific. Is this just a during-migration function?",
+      "range": {
+        "startLine": 56,
+        "startChar": 3,
+        "endLine": 56,
+        "endChar": 109
+      },
+      "revId": "363668c0397a2c8876abbd3c22e7b59be6840afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0f97300_0468dcf8",
         "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 4
@@ -13,6 +82,30 @@
       "writtenOn": "2014-09-23T14:42:11Z",
       "side": 1,
       "message": "seems like this should be a member of Shader or ShaderImpl... not that I can tell exactly how that should work. It is a GL-thing though, rather than D3D.",
+      "range": {
+        "startLine": 31,
+        "startChar": 6,
+        "endLine": 31,
+        "endChar": 20
+      },
+      "revId": "363668c0397a2c8876abbd3c22e7b59be6840afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5002f7bb_ec7dd3ef",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-23T17:39:56Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "b0f97300_0468dcf8",
       "range": {
         "startLine": 31,
         "startChar": 6,
