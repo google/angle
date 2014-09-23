@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0f97300_244fd8a4",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-23T14:46:04Z",
+      "side": 1,
+      "message": "it might make sense to have reserved vectors in GL shaders, just a thought. could be necessary for workarounds (although I don\u0027t know of any currently that use uniforms)",
+      "range": {
+        "startLine": 76,
+        "startChar": 17,
+        "endLine": 76,
+        "endChar": 42
+      },
+      "revId": "385eb33812e9585ce66c6ca49eac3cabb1212344",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
