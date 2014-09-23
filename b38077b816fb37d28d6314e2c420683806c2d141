@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "50b7574c_10294473",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1704,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-23T14:49:58Z",
+      "side": 1,
+      "message": "Sure, if you think that\u0027s in the near future, can leave them in.",
+      "parentUuid": "b0f97300_a462c81a",
+      "range": {
+        "startLine": 1704,
+        "startChar": 21,
+        "endLine": 1704,
+        "endChar": 32
+      },
+      "revId": "b38077b816fb37d28d6314e2c420683806c2d141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5002f7bb_db0087a0",
         "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 8
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "This call will also eventually have errors in it because the D3D11 side creates/mapps buffers in it.",
       "parentUuid": "5002f7bb_db0087a0",
+      "range": {
+        "startLine": 1760,
+        "startChar": 21,
+        "endLine": 1760,
+        "endChar": 32
+      },
+      "revId": "b38077b816fb37d28d6314e2c420683806c2d141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0f97300_a44be892",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1760,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-23T14:49:58Z",
+      "side": 1,
+      "message": "If there\u0027s a future patch in this chain that adds them, sounds good. Otherwise maybe add them in this patch?",
+      "parentUuid": "50b7574c_b0179836",
       "range": {
         "startLine": 1760,
         "startChar": 21,
