@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0c093c0_a3c59a7a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2399,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-23T21:15:39Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 2399,
+        "startChar": 0,
+        "endLine": 2399,
+        "endChar": 12
+      },
+      "revId": "56b4f015426e6666bde25dd3f91acbf3beab054d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0c093c0_436826bd",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2951,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-23T21:15:39Z",
+      "side": 1,
+      "message": "indentation off here... i think i like the flush #ifdef in either case",
+      "range": {
+        "startLine": 2951,
+        "startChar": 0,
+        "endLine": 2951,
+        "endChar": 12
+      },
+      "revId": "56b4f015426e6666bde25dd3f91acbf3beab054d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
