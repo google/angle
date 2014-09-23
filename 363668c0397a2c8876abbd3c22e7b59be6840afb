@@ -49,6 +49,54 @@
     },
     {
       "key": {
+        "uuid": "30bca331_e30f9a93",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-23T18:34:37Z",
+      "side": 1,
+      "message": "This is good feedback, actually, because I had considered these to be more generic. I\u0027ll refactor them in a future patch.",
+      "parentUuid": "50b7574c_70aa50f8",
+      "range": {
+        "startLine": 291,
+        "startChar": 35,
+        "endLine": 291,
+        "endChar": 53
+      },
+      "revId": "363668c0397a2c8876abbd3c22e7b59be6840afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30bca331_e3f67a3b",
+        "filename": "src/libGLESv2/ProgramBinary.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-23T18:34:37Z",
+      "side": 1,
+      "message": "There\u0027s still some D3D-isms in here. There\u0027s still some references to Renderer (removed in the next patch) and multiple places where we\u0027re still casting shaders to ShaderD3D. So yeah, there\u0027s more patches on the way.\n\nRemoving D3D-isms like \"Pixel Shaders\", though, is a good idea. I\u0027ll add it to the TODO list.",
+      "parentUuid": "b0f97300_4f6b1d6d",
+      "range": {
+        "startLine": 291,
+        "startChar": 35,
+        "endLine": 291,
+        "endChar": 53
+      },
+      "revId": "363668c0397a2c8876abbd3c22e7b59be6840afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50b7574c_b08b18a4",
         "filename": "src/libGLESv2/renderer/ProgramImpl.h",
         "patchSetId": 4
@@ -96,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "d01507f5_29f97529",
+        "filename": "src/libGLESv2/renderer/ProgramImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-23T18:34:37Z",
+      "side": 1,
+      "message": "Yeah, this is follow-up-patch material. Trying to move everything in one go would make for a prohibitively complicated CL.",
+      "parentUuid": "b0f97300_2fb171ca",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 104
+      },
+      "revId": "363668c0397a2c8876abbd3c22e7b59be6840afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5002f7bb_ec0f9393",
         "filename": "src/libGLESv2/renderer/ProgramImpl.h",
         "patchSetId": 4
@@ -107,6 +179,30 @@
       "writtenOn": "2014-09-23T17:39:56Z",
       "side": 1,
       "message": "Similar question-- ILs are DX-specific. Is this just a during-migration function?",
+      "range": {
+        "startLine": 56,
+        "startChar": 3,
+        "endLine": 56,
+        "endChar": 109
+      },
+      "revId": "363668c0397a2c8876abbd3c22e7b59be6840afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70b29b5d_e575de48",
+        "filename": "src/libGLESv2/renderer/ProgramImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-23T18:34:37Z",
+      "side": 1,
+      "message": "Actually didn\u0027t realize that. I don\u0027t know that I want to completely remove this interface in this particular patch (again, to avoid too much complexity in one go) but I\u0027ll definitely mark it to be refactored away soon.",
+      "parentUuid": "5002f7bb_ec0f9393",
       "range": {
         "startLine": 56,
         "startChar": 3,
@@ -153,6 +249,30 @@
       "writtenOn": "2014-09-23T17:39:56Z",
       "side": 1,
       "message": "+1",
+      "parentUuid": "b0f97300_0468dcf8",
+      "range": {
+        "startLine": 31,
+        "startChar": 6,
+        "endLine": 31,
+        "endChar": 20
+      },
+      "revId": "363668c0397a2c8876abbd3c22e7b59be6840afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70b29b5d_65bbaea8",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-23T18:34:37Z",
+      "side": 1,
+      "message": "That\u0027s a good point. It got moved because it\u0027s getting the value from the ShaderD3D, so maybe that interface needs to change too.",
       "parentUuid": "b0f97300_0468dcf8",
       "range": {
         "startLine": 31,
