@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7069bba1_f949f779",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1889,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:03:48Z",
+      "side": 1,
+      "message": "see note in d3d9 file for these as well",
+      "range": {
+        "startLine": 1886,
+        "startChar": 0,
+        "endLine": 1889,
+        "endChar": 5
+      },
+      "revId": "46e4b39c3944a3a1dc075be6d08f40873f10fb70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_d9443365",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2346,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:03:48Z",
+      "side": 1,
+      "message": "i think these should be ASSERTs... this is not an error from any D3D runtime, this is an internal bug in our coding, and our usual policy for enforcing assumptions is ASSERT.. what do you think?",
+      "range": {
+        "startLine": 2343,
+        "startChar": 3,
+        "endLine": 2346,
+        "endChar": 5
+      },
+      "revId": "46e4b39c3944a3a1dc075be6d08f40873f10fb70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_67356c0c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2376,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:03:48Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 2373,
+        "startChar": 0,
+        "endLine": 2376,
+        "endChar": 5
+      },
+      "revId": "46e4b39c3944a3a1dc075be6d08f40873f10fb70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
