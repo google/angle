@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "7069bba1_9c10e9b8",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2346,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-24T23:10:39Z",
+      "side": 1,
+      "message": "I agree-- these are only called from the ensureRenderTarget() functions, and we\u0027re already asserting there if source is null, so there\u0027s no reason for that to generate an error here. We also create the destination object just before calling this function, and if we want to check that that allocation happened, the right place to do it is where it\u0027s created; if it reaches here undetected, that\u0027s ASSERT-worthy.\n\nIt might be best to split that change into a separate CL, though, as that changes functional behavior (albeit behavior that should not be reached).",
+      "parentUuid": "7069bba1_d9443365",
+      "range": {
+        "startLine": 2343,
+        "startChar": 3,
+        "endLine": 2346,
+        "endChar": 5
+      },
+      "revId": "46e4b39c3944a3a1dc075be6d08f40873f10fb70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0c347c9_67356c0c",
         "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 7
