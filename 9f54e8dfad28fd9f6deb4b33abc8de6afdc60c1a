@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7069bba1_79cec7ee",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-24T19:09:15Z",
+      "side": 1,
+      "message": "It doesn\u0027t matter that these persist and don\u0027t reset after a call is validated as long as the validator is created and destroyed once per API call, but that might be an easy pitfall for future coders. We should probably at least stick a comment on the validator that it needs to be destroyed each time we\u0027re done checking the results of the validation, or possibly have the validation functions return a Error-plus-side-effect-bool blob?\n\nIt also feels a little weird to be creating a new validator every API call-- I doubt there\u0027s much overhead in creating a bunch of references, but my first instinct is to wonder why it\u0027s not just part of the context. (Although if the aim is to run validation without a context for testing purposes, I suppose it makes sense. It just... feels strange.)",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 31
+      },
+      "revId": "9f54e8dfad28fd9f6deb4b33abc8de6afdc60c1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
