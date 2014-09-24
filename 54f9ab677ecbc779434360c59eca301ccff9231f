@@ -22,6 +22,30 @@
       "revId": "54f9ab677ecbc779434360c59eca301ccff9231f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50859788_e3a94c67",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-24T15:42:06Z",
+      "side": 1,
+      "message": "This is a typedef from D3dcompiler.h",
+      "parentUuid": "d0c347c9_6439eae7",
+      "range": {
+        "startLine": 69,
+        "startChar": 39,
+        "endLine": 69,
+        "endChar": 50
+      },
+      "revId": "54f9ab677ecbc779434360c59eca301ccff9231f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
