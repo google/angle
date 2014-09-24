@@ -22,6 +22,30 @@
       "revId": "9f54e8dfad28fd9f6deb4b33abc8de6afdc60c1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_79808772",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T19:22:05Z",
+      "side": 1,
+      "message": "The design pattern is called a Functor... see http://en.wikipedia.org/wiki/Function_object\n\nThe section on \"Maintaining state\" is particularly relevant. My functor here is slightly different in that it takes several different methods instead of a single operator() method. (This is per Geoff\u0027s suggestion to reuse classes instead of making one class per api call). \n\nWe don\u0027t use this pattern everywhere in ANGLE but we do in a few places. See Std140PaddingHelper or AttributeSorter for some variations.\n\nI\u0027ll add a note of the ephemerality of the class. As you say there\u0027s no performance penalty to putting some variables on the stack, and it does technically save a few bytes of memory. It\u0027s kind of nice to keep them isolated from Context.",
+      "parentUuid": "7069bba1_79cec7ee",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 31
+      },
+      "revId": "9f54e8dfad28fd9f6deb4b33abc8de6afdc60c1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
