@@ -1329,9 +1329,10 @@ gl::Error Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *
 gl::Error Renderer11::applyShaders(gl::ProgramBinary *programBinary, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
                                    bool rasterizerDiscard, bool transformFeedbackActive)
 {
-    ShaderExecutable *vertexExe = programBinary->getVertexExecutableForInputLayout(inputLayout);
-    ShaderExecutable *pixelExe = programBinary->getPixelExecutableForFramebuffer(framebuffer);
-    ShaderExecutable *geometryExe = programBinary->getGeometryExecutable();
+    ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(programBinary->getImplementation());
+    ShaderExecutable *vertexExe = programD3D->getVertexExecutableForInputLayout(inputLayout);
+    ShaderExecutable *pixelExe = programD3D->getPixelExecutableForFramebuffer(framebuffer);
+    ShaderExecutable *geometryExe = programD3D->getGeometryExecutable();
 
     ID3D11VertexShader *vertexShader = (vertexExe ? ShaderExecutable11::makeShaderExecutable11(vertexExe)->getVertexShader() : NULL);
 

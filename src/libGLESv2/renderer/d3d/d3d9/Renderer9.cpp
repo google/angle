@@ -1670,8 +1670,9 @@ gl::Error Renderer9::applyShaders(gl::ProgramBinary *programBinary, const gl::Ve
     ASSERT(!transformFeedbackActive);
     ASSERT(!rasterizerDiscard);
 
-    ShaderExecutable *vertexExe = programBinary->getVertexExecutableForInputLayout(inputLayout);
-    ShaderExecutable *pixelExe = programBinary->getPixelExecutableForFramebuffer(framebuffer);
+    ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(programBinary->getImplementation());
+    ShaderExecutable *vertexExe = programD3D->getVertexExecutableForInputLayout(inputLayout);
+    ShaderExecutable *pixelExe = programD3D->getPixelExecutableForFramebuffer(framebuffer);
 
     IDirect3DVertexShader9 *vertexShader = (vertexExe ? ShaderExecutable9::makeShaderExecutable9(vertexExe)->getVertexShader() : NULL);
     IDirect3DPixelShader9 *pixelShader = (pixelExe ? ShaderExecutable9::makeShaderExecutable9(pixelExe)->getPixelShader() : NULL);

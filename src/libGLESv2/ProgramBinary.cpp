@@ -80,42 +80,6 @@ unsigned int ParseAndStripArrayIndex(std::string* name)
     return subscript;
 }
 
-void GetDefaultInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAttributes, VertexFormat inputLayout[MAX_VERTEX_ATTRIBS])
-{
-    size_t layoutIndex = 0;
-    for (size_t attributeIndex = 0; attributeIndex < shaderAttributes.size(); attributeIndex++)
-    {
-        ASSERT(layoutIndex < MAX_VERTEX_ATTRIBS);
-
-        const sh::Attribute &shaderAttr = shaderAttributes[attributeIndex];
-
-        if (shaderAttr.type != GL_NONE)
-        {
-            GLenum transposedType = TransposeMatrixType(shaderAttr.type);
-
-            for (size_t rowIndex = 0; static_cast<int>(rowIndex) < VariableRowCount(transposedType); rowIndex++, layoutIndex++)
-            {
-                VertexFormat *defaultFormat = &inputLayout[layoutIndex];
-
-                defaultFormat->mType = VariableComponentType(transposedType);
-                defaultFormat->mNormalized = false;
-                defaultFormat->mPureInteger = (defaultFormat->mType != GL_FLOAT); // note: inputs can not be bool
-                defaultFormat->mComponents = VariableColumnCount(transposedType);
-            }
-        }
-    }
-}
-
-std::vector<GLenum> GetDefaultOutputLayoutFromShader(const std::vector<rx::PixelShaderOutputVariable> &shaderOutputVars)
-{
-    std::vector<GLenum> defaultPixelOutput(1);
-
-    ASSERT(!shaderOutputVars.empty());
-    defaultPixelOutput[0] = GL_COLOR_ATTACHMENT0 + shaderOutputVars[0].outputIndex;
-
-    return defaultPixelOutput;
-}
-
 bool IsRowMajorLayout(const sh::InterfaceBlockField &var)
 {
     return var.isRowMajorLayout;
@@ -133,47 +97,6 @@ VariableLocation::VariableLocation(const std::string &name, unsigned int element
 {
 }
 
-ProgramBinary::VertexExecutable::VertexExecutable(const VertexFormat inputLayout[],
-                                                  const GLenum signature[],
-                                                  rx::ShaderExecutable *shaderExecutable)
-    : mShaderExecutable(shaderExecutable)
-{
-    for (size_t attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
-    {
-        mInputs[attributeIndex] = inputLayout[attributeIndex];
-        mSignature[attributeIndex] = signature[attributeIndex];
-    }
-}
-
-ProgramBinary::VertexExecutable::~VertexExecutable()
-{
-    SafeDelete(mShaderExecutable);
-}
-
-bool ProgramBinary::VertexExecutable::matchesSignature(const GLenum signature[]) const
-{
-    for (size_t attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
-    {
-        if (mSignature[attributeIndex] != signature[attributeIndex])
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-ProgramBinary::PixelExecutable::PixelExecutable(const std::vector<GLenum> &outputSignature, rx::ShaderExecutable *shaderExecutable)
-    : mOutputSignature(outputSignature),
-      mShaderExecutable(shaderExecutable)
-{
-}
-
-ProgramBinary::PixelExecutable::~PixelExecutable()
-{
-    SafeDelete(mShaderExecutable);
-}
-
 LinkedVarying::LinkedVarying()
 {
 }
@@ -189,7 +112,6 @@ unsigned int ProgramBinary::mCurrentSerial = 1;
 ProgramBinary::ProgramBinary(rx::ProgramImpl *impl)
     : RefCountObject(0),
       mProgram(impl),
-      mGeometryExecutable(NULL),
       mUsedVertexSamplerRange(0),
       mUsedPixelSamplerRange(0),
       mDirtySamplerMapping(true),
@@ -218,93 +140,6 @@ unsigned int ProgramBinary::getSerial() const
 unsigned int ProgramBinary::issueSerial()
 {
     return mCurrentSerial++;
-}
-
-rx::ShaderExecutable *ProgramBinary::getPixelExecutableForFramebuffer(const Framebuffer *fbo)
-{
-    std::vector<GLenum> outputs;
-
-    const gl::ColorbufferInfo &colorbuffers = fbo->getColorbuffersForRender();
-
-    for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
-    {
-        const gl::FramebufferAttachment *colorbuffer = colorbuffers[colorAttachment];
-
-        if (colorbuffer)
-        {
-            outputs.push_back(colorbuffer->getBinding() == GL_BACK ? GL_COLOR_ATTACHMENT0 : colorbuffer->getBinding());
-        }
-        else
-        {
-            outputs.push_back(GL_NONE);
-        }
-    }
-
-    return getPixelExecutableForOutputLayout(outputs);
-}
-
-rx::ShaderExecutable *ProgramBinary::getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputSignature)
-{
-    for (size_t executableIndex = 0; executableIndex < mPixelExecutables.size(); executableIndex++)
-    {
-        if (mPixelExecutables[executableIndex]->matchesSignature(outputSignature))
-        {
-            return mPixelExecutables[executableIndex]->shaderExecutable();
-        }
-    }
-
-    InfoLog tempInfoLog;
-    rx::ShaderExecutable *pixelExecutable = mProgram->getPixelExecutableForOutputLayout(tempInfoLog, outputSignature,
-            mTransformFeedbackLinkedVaryings, (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
-
-    if (!pixelExecutable)
-    {
-        std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
-        tempInfoLog.getLog(tempInfoLog.getLength(), NULL, &tempCharBuffer[0]);
-        ERR("Error compiling dynamic pixel executable:\n%s\n", &tempCharBuffer[0]);
-    }
-    else
-    {
-        mPixelExecutables.push_back(new PixelExecutable(outputSignature, pixelExecutable));
-    }
-
-    return pixelExecutable;
-}
-
-rx::ShaderExecutable *ProgramBinary::getVertexExecutableForInputLayout(const VertexFormat inputLayout[MAX_VERTEX_ATTRIBS])
-{
-    GLenum signature[MAX_VERTEX_ATTRIBS];
-    mProgram->getInputLayoutSignature(inputLayout, signature);
-
-    for (size_t executableIndex = 0; executableIndex < mVertexExecutables.size(); executableIndex++)
-    {
-        if (mVertexExecutables[executableIndex]->matchesSignature(signature))
-        {
-            return mVertexExecutables[executableIndex]->shaderExecutable();
-        }
-    }
-
-    InfoLog tempInfoLog;
-    rx::ShaderExecutable *vertexExecutable = mProgram->getVertexExecutableForInputLayout(tempInfoLog, inputLayout, mShaderAttributes,
-            mTransformFeedbackLinkedVaryings, (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
-
-    if (!vertexExecutable)
-    {
-        std::vector<char> tempCharBuffer(tempInfoLog.getLength()+3);
-        tempInfoLog.getLog(tempInfoLog.getLength(), NULL, &tempCharBuffer[0]);
-        ERR("Error compiling dynamic vertex executable:\n%s\n", &tempCharBuffer[0]);
-    }
-    else
-    {
-        mVertexExecutables.push_back(new VertexExecutable(inputLayout, signature, vertexExecutable));
-    }
-
-    return vertexExecutable;
-}
-
-rx::ShaderExecutable *ProgramBinary::getGeometryExecutable() const
-{
-    return mGeometryExecutable;
 }
 
 GLuint ProgramBinary::getAttributeLocation(const char *name)
@@ -497,17 +332,17 @@ GLint ProgramBinary::getFragDataLocation(const char *name) const
 
 size_t ProgramBinary::getTransformFeedbackVaryingCount() const
 {
-    return mTransformFeedbackLinkedVaryings.size();
+    return mProgram->getTransformFeedbackLinkedVaryings().size();
 }
 
 const LinkedVarying &ProgramBinary::getTransformFeedbackVarying(size_t idx) const
 {
-    return mTransformFeedbackLinkedVaryings[idx];
+    return mProgram->getTransformFeedbackLinkedVaryings()[idx];
 }
 
 GLenum ProgramBinary::getTransformFeedbackBufferMode() const
 {
-    return mTransformFeedbackBufferMode;
+    return mProgram->getTransformFeedbackBufferMode();
 }
 
 template <typename T>
@@ -1064,8 +899,8 @@ bool ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *bina
     {
         stream.readInt(&mLinkedAttribute[i].type);
         stream.readString(&mLinkedAttribute[i].name);
-        stream.readInt(&mShaderAttributes[i].type);
-        stream.readString(&mShaderAttributes[i].name);
+        stream.readInt(&mProgram->getShaderAttributes()[i].type);
+        stream.readString(&mProgram->getShaderAttributes()[i].name);
         stream.readInt(&mSemanticIndex[i]);
     }
 
@@ -1170,102 +1005,6 @@ bool ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *bina
         stream.readInt(&mUniformIndex[uniformIndexIndex].index);
     }
 
-    stream.readInt(&mTransformFeedbackBufferMode);
-    const unsigned int transformFeedbackVaryingCount = stream.readInt<unsigned int>();
-    mTransformFeedbackLinkedVaryings.resize(transformFeedbackVaryingCount);
-    for (unsigned int varyingIndex = 0; varyingIndex < transformFeedbackVaryingCount; varyingIndex++)
-    {
-        LinkedVarying &varying = mTransformFeedbackLinkedVaryings[varyingIndex];
-
-        stream.readString(&varying.name);
-        stream.readInt(&varying.type);
-        stream.readInt(&varying.size);
-        stream.readString(&varying.semanticName);
-        stream.readInt(&varying.semanticIndex);
-        stream.readInt(&varying.semanticIndexCount);
-    }
-
-    const unsigned int vertexShaderCount = stream.readInt<unsigned int>();
-    for (unsigned int vertexShaderIndex = 0; vertexShaderIndex < vertexShaderCount; vertexShaderIndex++)
-    {
-        VertexFormat inputLayout[MAX_VERTEX_ATTRIBS];
-
-        for (size_t inputIndex = 0; inputIndex < MAX_VERTEX_ATTRIBS; inputIndex++)
-        {
-            VertexFormat *vertexInput = &inputLayout[inputIndex];
-            stream.readInt(&vertexInput->mType);
-            stream.readInt(&vertexInput->mNormalized);
-            stream.readInt(&vertexInput->mComponents);
-            stream.readBool(&vertexInput->mPureInteger);
-        }
-
-        unsigned int vertexShaderSize = stream.readInt<unsigned int>();
-        const unsigned char *vertexShaderFunction = reinterpret_cast<const unsigned char*>(binary) + stream.offset();
-        rx::ShaderExecutable *shaderExecutable = mProgram->loadExecutable(reinterpret_cast<const DWORD*>(vertexShaderFunction),
-                                                                          vertexShaderSize, rx::SHADER_VERTEX,
-                                                                          mTransformFeedbackLinkedVaryings,
-                                                                          (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
-        if (!shaderExecutable)
-        {
-            infoLog.append("Could not create vertex shader.");
-            return false;
-        }
-
-        // generated converted input layout
-        GLenum signature[MAX_VERTEX_ATTRIBS];
-        mProgram->getInputLayoutSignature(inputLayout, signature);
-
-        // add new binary
-        mVertexExecutables.push_back(new VertexExecutable(inputLayout, signature, shaderExecutable));
-
-        stream.skip(vertexShaderSize);
-    }
-
-    const size_t pixelShaderCount = stream.readInt<unsigned int>();
-    for (size_t pixelShaderIndex = 0; pixelShaderIndex < pixelShaderCount; pixelShaderIndex++)
-    {
-        const size_t outputCount = stream.readInt<unsigned int>();
-        std::vector<GLenum> outputs(outputCount);
-        for (size_t outputIndex = 0; outputIndex < outputCount; outputIndex++)
-        {
-            stream.readInt(&outputs[outputIndex]);
-        }
-
-        const size_t pixelShaderSize = stream.readInt<unsigned int>();
-        const unsigned char *pixelShaderFunction = reinterpret_cast<const unsigned char*>(binary) + stream.offset();
-        rx::ShaderExecutable *shaderExecutable = mProgram->loadExecutable(pixelShaderFunction, pixelShaderSize,
-                                                                          rx::SHADER_PIXEL, mTransformFeedbackLinkedVaryings,
-                                                                          (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
-
-        if (!shaderExecutable)
-        {
-            infoLog.append("Could not create pixel shader.");
-            return false;
-        }
-
-        // add new binary
-        mPixelExecutables.push_back(new PixelExecutable(outputs, shaderExecutable));
-
-        stream.skip(pixelShaderSize);
-    }
-
-    unsigned int geometryShaderSize = stream.readInt<unsigned int>();
-
-    if (geometryShaderSize > 0)
-    {
-        const char *geometryShaderFunction = (const char*) binary + stream.offset();
-        mGeometryExecutable = mProgram->loadExecutable(reinterpret_cast<const DWORD*>(geometryShaderFunction),
-                                                       geometryShaderSize, rx::SHADER_GEOMETRY, mTransformFeedbackLinkedVaryings,
-                                                       (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS));
-
-        if (!mGeometryExecutable)
-        {
-            infoLog.append("Could not create geometry shader.");
-            return false;
-        }
-        stream.skip(geometryShaderSize);
-    }
-
     if (!mProgram->load(infoLog, &stream))
     {
         return false;
@@ -1296,8 +1035,8 @@ bool ProgramBinary::save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GL
     {
         stream.writeInt(mLinkedAttribute[i].type);
         stream.writeString(mLinkedAttribute[i].name);
-        stream.writeInt(mShaderAttributes[i].type);
-        stream.writeString(mShaderAttributes[i].name);
+        stream.writeInt(mProgram->getShaderAttributes()[i].type);
+        stream.writeString(mProgram->getShaderAttributes()[i].name);
         stream.writeInt(mSemanticIndex[i]);
     }
 
@@ -1367,69 +1106,6 @@ bool ProgramBinary::save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GL
         stream.writeString(mUniformIndex[i].name);
         stream.writeInt(mUniformIndex[i].element);
         stream.writeInt(mUniformIndex[i].index);
-    }
-
-    stream.writeInt(mTransformFeedbackBufferMode);
-    stream.writeInt(mTransformFeedbackLinkedVaryings.size());
-    for (size_t i = 0; i < mTransformFeedbackLinkedVaryings.size(); i++)
-    {
-        const LinkedVarying &varying = mTransformFeedbackLinkedVaryings[i];
-
-        stream.writeString(varying.name);
-        stream.writeInt(varying.type);
-        stream.writeInt(varying.size);
-        stream.writeString(varying.semanticName);
-        stream.writeInt(varying.semanticIndex);
-        stream.writeInt(varying.semanticIndexCount);
-    }
-
-    stream.writeInt(mVertexExecutables.size());
-    for (size_t vertexExecutableIndex = 0; vertexExecutableIndex < mVertexExecutables.size(); vertexExecutableIndex++)
-    {
-        VertexExecutable *vertexExecutable = mVertexExecutables[vertexExecutableIndex];
-
-        for (size_t inputIndex = 0; inputIndex < gl::MAX_VERTEX_ATTRIBS; inputIndex++)
-        {
-            const VertexFormat &vertexInput = vertexExecutable->inputs()[inputIndex];
-            stream.writeInt(vertexInput.mType);
-            stream.writeInt(vertexInput.mNormalized);
-            stream.writeInt(vertexInput.mComponents);
-            stream.writeInt(vertexInput.mPureInteger);
-        }
-
-        size_t vertexShaderSize = vertexExecutable->shaderExecutable()->getLength();
-        stream.writeInt(vertexShaderSize);
-
-        const uint8_t *vertexBlob = vertexExecutable->shaderExecutable()->getFunction();
-        stream.writeBytes(vertexBlob, vertexShaderSize);
-    }
-
-    stream.writeInt(mPixelExecutables.size());
-    for (size_t pixelExecutableIndex = 0; pixelExecutableIndex < mPixelExecutables.size(); pixelExecutableIndex++)
-    {
-        PixelExecutable *pixelExecutable = mPixelExecutables[pixelExecutableIndex];
-
-        const std::vector<GLenum> outputs = pixelExecutable->outputSignature();
-        stream.writeInt(outputs.size());
-        for (size_t outputIndex = 0; outputIndex < outputs.size(); outputIndex++)
-        {
-            stream.writeInt(outputs[outputIndex]);
-        }
-
-        size_t pixelShaderSize = pixelExecutable->shaderExecutable()->getLength();
-        stream.writeInt(pixelShaderSize);
-
-        const uint8_t *pixelBlob = pixelExecutable->shaderExecutable()->getFunction();
-        stream.writeBytes(pixelBlob, pixelShaderSize);
-    }
-
-    size_t geometryShaderSize = (mGeometryExecutable != NULL) ? mGeometryExecutable->getLength() : 0;
-    stream.writeInt(geometryShaderSize);
-
-    if (mGeometryExecutable != NULL && geometryShaderSize > 0)
-    {
-        const uint8_t *geometryBlob = mGeometryExecutable->getFunction();
-        stream.writeBytes(geometryBlob, geometryShaderSize);
     }
 
     if (!mProgram->save(&stream))
@@ -1506,14 +1182,13 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     mSamplersPS.resize(caps.maxTextureImageUnits);
     mSamplersVS.resize(caps.maxVertexTextureImageUnits);
 
-    mTransformFeedbackBufferMode = transformFeedbackBufferMode;
-
     rx::ShaderD3D *vertexShaderD3D = rx::ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
     rx::ShaderD3D *fragmentShaderD3D = rx::ShaderD3D::makeShaderD3D(fragmentShader->getImplementation());
 
     int registers;
     std::vector<LinkedVarying> linkedVaryings;
-    if (!mProgram->link(infoLog, fragmentShader, vertexShader, transformFeedbackVaryings, &registers, &linkedVaryings, &mOutputVariables))
+    if (!mProgram->link(infoLog, fragmentShader, vertexShader, transformFeedbackVaryings, transformFeedbackBufferMode,
+                        &registers, &linkedVaryings, &mOutputVariables, caps))
     {
         return false;
     }
@@ -1546,29 +1221,16 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     }
 
     if (!gatherTransformFeedbackLinkedVaryings(infoLog, linkedVaryings, transformFeedbackVaryings,
-                                               transformFeedbackBufferMode, &mTransformFeedbackLinkedVaryings, caps))
+                                               transformFeedbackBufferMode, &mProgram->getTransformFeedbackLinkedVaryings(), caps))
     {
         success = false;
     }
 
     if (success)
     {
-        VertexFormat defaultInputLayout[MAX_VERTEX_ATTRIBS];
-        GetDefaultInputLayoutFromShader(vertexShader->getActiveAttributes(), defaultInputLayout);
-        rx::ShaderExecutable *defaultVertexExecutable = getVertexExecutableForInputLayout(defaultInputLayout);
-
-        std::vector<GLenum> defaultPixelOutput = GetDefaultOutputLayoutFromShader(mProgram->getPixelShaderKey());
-        rx::ShaderExecutable *defaultPixelExecutable = getPixelExecutableForOutputLayout(defaultPixelOutput);
-
-        if (mProgram->usesGeometryShader())
-        {
-            mGeometryExecutable = mProgram->getGeometryExecutable(infoLog, fragmentShader, vertexShader,
-                                                                  mTransformFeedbackLinkedVaryings,
-                                                                  (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS),
-                                                                  registers);
-        }
-
-        if (!defaultVertexExecutable || !defaultPixelExecutable || (mProgram->usesGeometryShader() && !mGeometryExecutable))
+        // TODO: The concept of "executables" is D3D only, and as such this belongs in ProgramD3D. It must be called,
+        // however, last in this function, so it can't simply be moved to ProgramD3D::link without further shuffling.
+        if (!mProgram->compileProgramExecutables(infoLog, fragmentShader, vertexShader, registers))
         {
             infoLog.append("Failed to create D3D shaders.");
             success = false;
@@ -1596,7 +1258,7 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
 
         const int location = attribute.location == -1 ? attributeBindings.getAttributeBinding(attribute.name) : attribute.location;
 
-        mShaderAttributes[attributeIndex] = attribute;
+        mProgram->getShaderAttributes()[attributeIndex] = attribute;
 
         if (location != -1)   // Set by glBindAttribLocation or by location layout qualifier
         {
@@ -2678,13 +2340,6 @@ void ProgramBinary::sortAttributesByLayout(rx::TranslatedAttribute attributes[MA
 
 void ProgramBinary::reset()
 {
-    SafeDeleteContainer(mVertexExecutables);
-    SafeDeleteContainer(mPixelExecutables);
-    SafeDelete(mGeometryExecutable);
-
-    mTransformFeedbackBufferMode = GL_NONE;
-    mTransformFeedbackLinkedVaryings.clear();
-
     mSamplersPS.clear();
     mSamplersVS.clear();
 

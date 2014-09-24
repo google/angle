@@ -101,11 +101,6 @@ class ProgramBinary : public RefCountObject
     rx::ProgramImpl *getImplementation() { return mProgram; }
     const rx::ProgramImpl *getImplementation() const { return mProgram; }
 
-    rx::ShaderExecutable *getPixelExecutableForFramebuffer(const Framebuffer *fbo);
-    rx::ShaderExecutable *getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputLayout);
-    rx::ShaderExecutable *getVertexExecutableForInputLayout(const VertexFormat inputLayout[MAX_VERTEX_ATTRIBS]);
-    rx::ShaderExecutable *getGeometryExecutable() const;
-
     GLuint getAttributeLocation(const char *name);
     int getSemanticIndex(int attributeIndex);
 
@@ -250,55 +245,11 @@ class ProgramBinary : public RefCountObject
     template <typename T>
     void getUniformv(GLint location, T *params, GLenum uniformType);
 
-    class VertexExecutable
-    {
-      public:
-        VertexExecutable(const VertexFormat inputLayout[MAX_VERTEX_ATTRIBS],
-                         const GLenum signature[MAX_VERTEX_ATTRIBS],
-                         rx::ShaderExecutable *shaderExecutable);
-        ~VertexExecutable();
-
-        bool matchesSignature(const GLenum convertedLayout[MAX_VERTEX_ATTRIBS]) const;
-
-        const VertexFormat *inputs() const { return mInputs; }
-        const GLenum *signature() const { return mSignature; }
-        rx::ShaderExecutable *shaderExecutable() const { return mShaderExecutable; }
-
-      private:
-        VertexFormat mInputs[MAX_VERTEX_ATTRIBS];
-        GLenum mSignature[MAX_VERTEX_ATTRIBS];
-        rx::ShaderExecutable *mShaderExecutable;
-    };
-
-    class PixelExecutable
-    {
-      public:
-        PixelExecutable(const std::vector<GLenum> &outputSignature, rx::ShaderExecutable *shaderExecutable);
-        ~PixelExecutable();
-
-        bool matchesSignature(const std::vector<GLenum> &signature) const { return mOutputSignature == signature; }
-
-        const std::vector<GLenum> &outputSignature() const { return mOutputSignature; }
-        rx::ShaderExecutable *shaderExecutable() const { return mShaderExecutable; }
-
-      private:
-        std::vector<GLenum> mOutputSignature;
-        rx::ShaderExecutable *mShaderExecutable;
-    };
-
     rx::ProgramImpl *mProgram;
 
-    std::vector<VertexExecutable *> mVertexExecutables;
-    std::vector<PixelExecutable *> mPixelExecutables;
-    rx::ShaderExecutable *mGeometryExecutable;
-
     sh::Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
-    sh::Attribute mShaderAttributes[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];
     int mAttributesByLayout[MAX_VERTEX_ATTRIBS];
-
-    GLenum mTransformFeedbackBufferMode;
-    std::vector<LinkedVarying> mTransformFeedbackLinkedVaryings;
 
     std::vector<Sampler> mSamplersPS;
     std::vector<Sampler> mSamplersVS;
