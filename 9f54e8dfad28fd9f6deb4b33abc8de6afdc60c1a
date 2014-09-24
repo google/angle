@@ -46,6 +46,30 @@
       "revId": "9f54e8dfad28fd9f6deb4b33abc8de6afdc60c1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_6806f788",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-24T20:57:09Z",
+      "side": 1,
+      "message": "Given that the class doesn\u0027t follow the key feature of the pattern by having multiple methods invoked by name rather than using operator(), and its name doesn\u0027t include the pattern name, it\u0027s not a good idea to count on it being recognized as the pattern. I\u0027m not really sure what qualifies it as a functor here, or why the pattern is particularly useful for this case-- we don\u0027t need to pass the validator around or invoke it on the contents of a container, and where the internally maintained state is concerned, mError and mCallHasNoSideEffects aren\u0027t useful or necessary pieces of information to maintain between subsequent validation calls. If this *did* have a single operator() function, it still wouldn\u0027t want to aggregate information with mError-- consecutive calls to validate() would need to be interspersed with validate.error(GL_NO_ERROR) to keep it from stepping on its own toes.",
+      "parentUuid": "7069bba1_79808772",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 31
+      },
+      "revId": "9f54e8dfad28fd9f6deb4b33abc8de6afdc60c1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
