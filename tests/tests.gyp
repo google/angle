@@ -211,6 +211,8 @@
                     [
                         'perf_tests/BufferSubData.cpp',
                         'perf_tests/BufferSubData.h',
+                        'perf_tests/PointSprites.cpp',
+                        'perf_tests/PointSprites.h',
                         'perf_tests/SimpleBenchmark.cpp',
                         'perf_tests/SimpleBenchmark.h',
                         'perf_tests/SimpleBenchmarks.cpp',

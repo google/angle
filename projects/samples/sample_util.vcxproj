@@ -205,7 +205,6 @@
     <ClInclude Include="..\..\samples\angle\sample_util\Vector.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\geometry_utils.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\Matrix.h"/>
-    <ClInclude Include="..\..\samples\angle\sample_util\random_utils.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\tga_utils.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\SampleApplication.h"/>
     <ClInclude Include="..\..\samples\angle\sample_util\texture_utils.h"/>
@@ -213,10 +212,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\samples\angle\sample_util\texture_utils.cpp"/>
     <ClCompile Include="..\..\samples\angle\sample_util\SampleApplication.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\geometry_utils.cpp"/>
     <ClCompile Include="..\..\samples\angle\sample_util\Vector.cpp"/>
+    <ClCompile Include="..\..\samples\angle\sample_util\geometry_utils.cpp"/>
     <ClCompile Include="..\..\samples\angle\sample_util\tga_utils.cpp"/>
-    <ClCompile Include="..\..\samples\angle\sample_util\random_utils.cpp"/>
     <ClCompile Include="..\..\samples\angle\sample_util\Matrix.cpp"/>
   </ItemGroup>
   <ItemGroup>

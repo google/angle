@@ -28,6 +28,8 @@
                         'keyboard.h',
                         'mouse.h',
                         'path_utils.h',
+                        'random_utils.cpp',
+                        'random_utils.h',
                         'shader_utils.cpp',
                         'shader_utils.h',
                         'shared_utils.h',

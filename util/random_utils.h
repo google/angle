@@ -4,9 +4,9 @@
 // found in the LICENSE file.
 //
 
-#ifndef SAMPLE_UTIL_RANDOM_UTILS_H
-#define SAMPLE_UTIL_RANDOM_UTILS_H
+#ifndef UTIL_RANDOM_UTILS_H
+#define UTIL_RANDOM_UTILS_H
 
 float RandomBetween(float min, float max);
 
-#endif // SAMPLE_UTIL_RANDOM_UTILS_H
+#endif // UTIL_RANDOM_UTILS_H

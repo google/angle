@@ -8,20 +8,22 @@
   <ItemGroup>
     <ClInclude Include="..\..\util\mouse.h"/>
     <ClInclude Include="..\..\util\shared_utils.h"/>
-    <ClInclude Include="..\..\util\Timer.h"/>
+    <ClCompile Include="..\..\util\random_utils.cpp"/>
     <ClInclude Include="..\..\util\EGLWindow.h"/>
+    <ClInclude Include="..\..\util\Timer.h"/>
     <ClInclude Include="..\..\util\path_utils.h"/>
     <None Include="..\..\util\util.gyp"/>
     <ClInclude Include="..\..\util\shader_utils.h"/>
     <ClCompile Include="..\..\util\shader_utils.cpp"/>
     <ClInclude Include="..\..\util\OSWindow.h"/>
+    <ClInclude Include="..\..\util\random_utils.h"/>
     <ClCompile Include="..\..\util\OSWindow.cpp"/>
     <ClInclude Include="..\..\util\keyboard.h"/>
     <ClCompile Include="..\..\util\EGLWindow.cpp"/>
     <ClInclude Include="..\..\util\Event.h"/>
-    <ClCompile Include="..\..\util\win32\Win32_path_utils.cpp">
+    <ClInclude Include="..\..\util\win32\Win32Timer.h">
       <Filter>win32</Filter>
-    </ClCompile>
+    </ClInclude>
     <ClCompile Include="..\..\util\win32\Win32Window.cpp">
       <Filter>win32</Filter>
     </ClCompile>
@@ -31,8 +33,8 @@
     <ClInclude Include="..\..\util\win32\Win32Window.h">
       <Filter>win32</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\util\win32\Win32Timer.h">
+    <ClCompile Include="..\..\util\win32\Win32_path_utils.cpp">
       <Filter>win32</Filter>
-    </ClInclude>
+    </ClCompile>
   </ItemGroup>
 </Project>
