@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "907b8f5f_05e2b462",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3772,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:25:12Z",
+      "side": 1,
+      "message": "Renamed the variable to validate for readability.",
+      "parentUuid": "30690375_56899a9e",
+      "range": {
+        "startLine": 3772,
+        "startChar": 8,
+        "endLine": 3772,
+        "endChar": 102
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7021bb30_6dde3d28",
         "filename": "src/libGLESv2/validationES.cpp",
         "patchSetId": 2
@@ -96,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "907b8f5f_85b5e465",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:25:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "301bc308_2c6b67bc",
+      "range": {
+        "startLine": 328,
+        "startChar": 8,
+        "endLine": 328,
+        "endChar": 44
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "901c6ffc_8ff9452b",
         "filename": "src/libGLESv2/validationES.h",
         "patchSetId": 2
@@ -131,6 +179,30 @@
       "side": 1,
       "message": "Renaming ready seems good, I was just shooting for something short that wasn\u0027t \u0027no error.",
       "parentUuid": "901c6ffc_8ff9452b",
+      "range": {
+        "startLine": 35,
+        "startChar": 9,
+        "endLine": 35,
+        "endChar": 14
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_a5e2e863",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:25:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10307f7d_9052ccf1",
       "range": {
         "startLine": 35,
         "startChar": 9,
@@ -214,6 +286,30 @@
     },
     {
       "key": {
+        "uuid": "907b8f5f_c5e7ec72",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:25:12Z",
+      "side": 1,
+      "message": "Done, renamed and commented.",
+      "parentUuid": "b04df311_508f5a69",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 15
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "901c6ffc_ef7481e0",
         "filename": "src/libGLESv2/validationES.h",
         "patchSetId": 2
@@ -249,6 +345,30 @@
       "side": 1,
       "message": "Will move it to the top. No real reason, just was a work-in-progress so I left it on the bottom as stylistically \u0027unfinished\u0027",
       "parentUuid": "901c6ffc_ef7481e0",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 133,
+        "endChar": 2
+      },
+      "revId": "40c76668ce27cc38032f6f261fc6ffbaa7d550e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_e5dcf0a9",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:25:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30690375_165c825a",
       "range": {
         "startLine": 115,
         "startChar": 0,
