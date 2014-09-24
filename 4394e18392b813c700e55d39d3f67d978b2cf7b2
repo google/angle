@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7069bba1_99739bbf",
+        "filename": "tests/perf_tests/PointSprites.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:46:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "101a3fb4_8e5c6d28",
+      "range": {
+        "startLine": 18,
+        "startChar": 15,
+        "endLine": 18,
+        "endChar": 28
+      },
+      "revId": "4394e18392b813c700e55d39d3f67d978b2cf7b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5002f7bb_ac611be2",
         "filename": "tests/perf_tests/PointSprites.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2014-09-23T15:22:13Z",
       "side": 1,
       "message": "This is never deleted.  Can it be a std::vector instead? Also helps with setting the correct buffer size.",
+      "range": {
+        "startLine": 65,
+        "startChar": 11,
+        "endLine": 65,
+        "endChar": 27
+      },
+      "revId": "4394e18392b813c700e55d39d3f67d978b2cf7b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_ca30a70a",
+        "filename": "tests/perf_tests/PointSprites.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:46:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5002f7bb_ac611be2",
       "range": {
         "startLine": 65,
         "startChar": 11,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "907b8f5f_e595d0bd",
+        "filename": "tests/perf_tests/PointSprites.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:46:49Z",
+      "side": 1,
+      "message": "Thanks for the tip. Done.",
+      "parentUuid": "5002f7bb_61038c77",
+      "range": {
+        "startLine": 68,
+        "startChar": 38,
+        "endLine": 68,
+        "endChar": 90
+      },
+      "revId": "4394e18392b813c700e55d39d3f67d978b2cf7b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0f97300_64a7202f",
         "filename": "tests/perf_tests/PointSprites.cpp",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2014-09-23T14:21:48Z",
       "side": 1,
       "message": "Is it possible to do an indexed version as well? We do some silly hacks to get that to work and we might not care too much about its perf but it could be useful to see the results.",
+      "range": {
+        "startLine": 120,
+        "startChar": 8,
+        "endLine": 120,
+        "endChar": 50
+      },
+      "revId": "4394e18392b813c700e55d39d3f67d978b2cf7b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_45d4bc7d",
+        "filename": "tests/perf_tests/PointSprites.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T14:46:49Z",
+      "side": 1,
+      "message": "Sure, I\u0027ll add a TODO and we can do it in a follow up patch.",
+      "parentUuid": "b0f97300_64a7202f",
       "range": {
         "startLine": 120,
         "startChar": 8,
