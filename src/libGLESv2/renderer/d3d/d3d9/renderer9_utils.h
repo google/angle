@@ -21,6 +21,7 @@ class FramebufferAttachment;
 namespace rx
 {
 class RenderTarget9;
+struct Workarounds;
 
 namespace gl_d3d9
 {
@@ -75,6 +76,7 @@ inline bool isDeviceLostError(HRESULT errorCode)
 }
 
 RenderTarget9 *GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment);
+Workarounds GenerateWorkarounds();
 
 }
 

@@ -115,6 +115,7 @@
             'libGLESv2/renderer/TextureImpl.h',
             'libGLESv2/renderer/TransformFeedbackImpl.h',
             'libGLESv2/renderer/VertexArrayImpl.h',
+            'libGLESv2/renderer/Workarounds.h',
             'libGLESv2/renderer/copyimage.cpp',
             'libGLESv2/renderer/copyimage.h',
             'libGLESv2/renderer/copyimage.inl',

@@ -9,6 +9,7 @@
 
 #include "libGLESv2/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
+#include "libGLESv2/renderer/Workarounds.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/renderer/d3d/d3d9/RenderTarget9.h"
@@ -535,6 +536,13 @@ RenderTarget9 *GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment)
 {
     RenderTarget *renderTarget = rx::GetAttachmentRenderTarget(attachment);
     return RenderTarget9::makeRenderTarget9(renderTarget);
+}
+
+Workarounds GenerateWorkarounds()
+{
+    Workarounds workarounds;
+    workarounds.mrtPerfWorkaround = true;
+    return workarounds;
 }
 
 }

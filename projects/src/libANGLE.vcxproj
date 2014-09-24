@@ -242,6 +242,7 @@
     <ClInclude Include="..\..\src\libGLESv2\validationES.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\TextureImpl.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\Renderer.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\Workarounds.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderImpl.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\TransformFeedbackImpl.h"/>
     <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderExecutable.h"/>
