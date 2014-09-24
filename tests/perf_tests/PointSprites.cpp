@@ -8,6 +8,7 @@
 
 #include <cassert>
 #include <sstream>
+#include <iostream>
 
 #include "shader_utils.h"
 #include "random_utils.h"
@@ -17,7 +18,8 @@ std::string PointSpritesParams::name() const
     std::stringstream strstr;
 
     strstr << "PointSprites - " << BenchmarkParams::name()
-           << " - " << count << " sprites - size " << size;
+           << " - " << count << " sprites - size " << size
+           << " - " << numVaryings << " varyings";
 
     return strstr.str();
 }
@@ -32,27 +34,61 @@ PointSpritesBenchmark::PointSpritesBenchmark(const PointSpritesParams &params)
 
 bool PointSpritesBenchmark::initializeBenchmark()
 {
-    const std::string vs = SHADER_SOURCE
-    (
-        attribute vec2 vPosition;
-        uniform float uPointSize;
-        void main()
-        {
-            gl_Position = vec4(vPosition, 0.0, 1.0);
-            gl_PointSize = uPointSize;
-        }
-    );
+    std::stringstream vstrstr;
 
-    const std::string fs = SHADER_SOURCE
-    (
-        precision mediump float;
-        void main()
-        {
-            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-        }
-    );
+    // Verify "numVaryings" is within MAX_VARYINGS limit
+    GLint maxVaryings;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    mProgram = CompileProgram(vs, fs);
+    if (mParams.numVaryings > static_cast<unsigned int>(maxVaryings))
+    {
+        std::cerr << "Varying count (" << mParams.numVaryings << ")"
+                  << " exceeds maximum varyings: " << maxVaryings << std::endl;
+        return false;
+    }
+
+    vstrstr << "attribute vec2 vPosition;\n"
+               "uniform float uPointSize;\n";
+
+    for (unsigned int varCount = 0; varCount < mParams.numVaryings; varCount++)
+    {
+        vstrstr << "varying vec4 v" << varCount << ";\n";
+    }
+
+    vstrstr << "void main()\n"
+               "{\n";
+
+    for (unsigned int varCount = 0; varCount < mParams.numVaryings; varCount++)
+    {
+        vstrstr << "    v" << varCount << " = vec4(1.0);\n";
+    }
+
+    vstrstr << "    gl_Position = vec4(vPosition, 0, 1.0);\n"
+               "    gl_PointSize = uPointSize;\n"
+               "}";
+
+    std::stringstream fstrstr;
+
+    fstrstr << "precision mediump float;\n";
+
+    for (unsigned int varCount = 0; varCount < mParams.numVaryings; varCount++)
+    {
+        fstrstr << "varying vec4 v" << varCount << ";\n";
+    }
+
+    fstrstr << "void main()\n"
+               "{\n"
+               "    vec4 colorOut = vec4(1.0, 0.0, 0.0, 1.0);\n";
+
+    for (unsigned int varCount = 0; varCount < mParams.numVaryings; varCount++)
+    {
+        fstrstr << "    colorOut.r += v" << varCount << ".r;\n";
+    }
+
+    fstrstr << "    gl_FragColor = colorOut;\n"
+               "}\n";
+
+    mProgram = CompileProgram(vstrstr.str(), fstrstr.str());
     if (!mProgram)
     {
         return false;

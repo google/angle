@@ -112,6 +112,7 @@ int main(int argc, char **argv)
         params.iterations = 10;
         params.count = 10;
         params.size = 3.0f;
+        params.numVaryings = 3;
 
         pointSpriteParams.push_back(params);
     }
