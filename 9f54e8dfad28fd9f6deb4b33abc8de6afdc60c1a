@@ -70,6 +70,30 @@
       "revId": "9f54e8dfad28fd9f6deb4b33abc8de6afdc60c1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_18db3537",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T21:07:44Z",
+      "side": 1,
+      "message": "Simply because it stores the state and doesn\u0027t have to pass it around via the stack.",
+      "parentUuid": "907b8f5f_6806f788",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 31
+      },
+      "revId": "9f54e8dfad28fd9f6deb4b33abc8de6afdc60c1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
