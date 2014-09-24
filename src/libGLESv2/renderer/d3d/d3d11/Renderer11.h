@@ -205,6 +205,7 @@ class Renderer11 : public Renderer
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
 
     virtual void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const;
+    virtual Workarounds generateWorkarounds() const;
 
     gl::Error drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
     gl::Error drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);

@@ -202,6 +202,7 @@ class Renderer9 : public Renderer
     DISALLOW_COPY_AND_ASSIGN(Renderer9);
 
     virtual void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const;
+    virtual Workarounds generateWorkarounds() const;
 
     void release();
 

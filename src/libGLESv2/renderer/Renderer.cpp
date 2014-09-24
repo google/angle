@@ -38,6 +38,7 @@ namespace rx
 Renderer::Renderer(egl::Display *display)
     : mDisplay(display),
       mCapsInitialized(false),
+      mWorkaroundsInitialized(false),
       mCurrentClientVersion(2)
 {
 }
@@ -77,6 +78,17 @@ const gl::Extensions &Renderer::getRendererExtensions() const
     }
 
     return mExtensions;
+}
+
+const Workarounds &Renderer::getWorkarounds() const
+{
+    if (!mWorkaroundsInitialized)
+    {
+        mWorkarounds = generateWorkarounds();
+        mWorkaroundsInitialized = true;
+    }
+
+    return mWorkarounds;
 }
 
 typedef Renderer *(*CreateRendererFunction)(egl::Display*, EGLNativeDisplayType, EGLint);

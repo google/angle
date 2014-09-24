@@ -267,6 +267,9 @@
     <None Include="..\..\src\libGLESv2\renderer\loadimage.inl">
       <Filter>src\libGLESv2\renderer</Filter>
     </None>
+    <ClInclude Include="..\..\src\libGLESv2\renderer\Workarounds.h">
+      <Filter>src\libGLESv2\renderer</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libGLESv2\renderer\ShaderImpl.h">
       <Filter>src\libGLESv2\renderer</Filter>
     </ClInclude>

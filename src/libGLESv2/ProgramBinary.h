@@ -24,11 +24,6 @@
 #include <string>
 #include <vector>
 
-// TODO(jmadill): place this in workarounds library
-#define ANGLE_WORKAROUND_ENABLED 1
-#define ANGLE_WORKAROUND_DISABLED 2
-#define ANGLE_MRT_PERF_WORKAROUND ANGLE_WORKAROUND_ENABLED
-
 namespace sh
 {
 class HLSLBlockEncoder;
