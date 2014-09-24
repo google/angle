@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7069bba1_7ce5d5ec",
+        "filename": "src/libGLESv2/ImageIndex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-24T21:24:35Z",
+      "side": 1,
+      "message": "forgot to take this out... could leave it in, with a TODO, or take it out, or implement it.",
+      "range": {
+        "startLine": 48,
+        "startChar": 9,
+        "endLine": 48,
+        "endChar": 29
+      },
+      "revId": "9a568dfcf31ef060542aaa696bbdbbf191b72cd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
