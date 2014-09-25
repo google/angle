@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7069bba1_82896017",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-25T17:13:14Z",
+      "side": 1,
+      "message": "maybe change this to uint8_t now? we started using that convention recently.",
+      "range": {
+        "startLine": 118,
+        "startChar": 10,
+        "endLine": 118,
+        "endChar": 14
+      },
+      "revId": "6fcb350fea6c524d9f5c88f06ab16e11f541e05d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_992607d7",
+        "filename": "src/libGLESv2/BinaryStream.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-25T17:13:14Z",
+      "side": 1,
+      "message": "here as well?",
+      "range": {
+        "startLine": 127,
+        "startChar": 10,
+        "endLine": 127,
+        "endChar": 14
+      },
+      "revId": "6fcb350fea6c524d9f5c88f06ab16e11f541e05d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
