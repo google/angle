@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7069bba1_823320e0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-25T15:39:47Z",
+      "side": 1,
+      "message": "Please also add \n\n   BUG\u003dangle:758",
+      "revId": "9ed6e1c15e0c840c7f7083e5c5f1c295f8363179",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_9eec2d70",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-25T15:39:47Z",
+      "side": 1,
+      "message": "I think this is a good opportunity to change this to a std::vector\u003cchar\u003e and make use of RAII.  Would you mind changing this and the outputHLSL variable above?",
+      "range": {
+        "startLine": 304,
+        "startChar": 8,
+        "endLine": 304,
+        "endChar": 45
+      },
+      "revId": "9ed6e1c15e0c840c7f7083e5c5f1c295f8363179",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
