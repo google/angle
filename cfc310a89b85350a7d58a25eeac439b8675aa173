@@ -1,0 +1,326 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "907b8f5f_8b4c1556",
+        "filename": "src/common/surfacehost.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "ANGLE convention is to name files that implement/define a class with the same capitalization scheme as the class itself.",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 16
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_1352f6f2",
+        "filename": "src/common/surfacehost.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "I think this class could be named to more clearly convey its purpose-- SurfaceHost sounds more client/server-y than this looks. Maybe WindowHandler or SurfaceInterface or... maybe Geoff has a better idea here.",
+      "range": {
+        "startLine": 29,
+        "startChar": 6,
+        "endLine": 29,
+        "endChar": 17
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_cbee1dd7",
+        "filename": "src/common/surfacehost.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "public/protected/private keywords need to be indented two spaces.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 7
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_13131678",
+        "filename": "src/common/surfacehost.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "This constructor needs the \"explicit\" keyword.",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 44
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_abe9d9d1",
+        "filename": "src/common/surfacehost.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "Stray whitespace.",
+      "range": {
+        "startLine": 36,
+        "startChar": 52,
+        "endLine": 36,
+        "endChar": 53
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_6be8b1c6",
+        "filename": "src/common/surfacehost.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "Would prefer to use \"IsIconic(mWindow) \u003d\u003d TRUE\" here, rather than implicit cast.",
+      "range": {
+        "startLine": 40,
+        "startChar": 36,
+        "endLine": 40,
+        "endChar": 38
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_7336cad2",
+        "filename": "src/common/surfacehost.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "This function sounds like it\u0027s a query of what the native window type is (as a result of EGLNativeWindowType being unfortunately named)-- would getNativeWindow() work here?",
+      "range": {
+        "startLine": 43,
+        "startChar": 31,
+        "endLine": 43,
+        "endChar": 50
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_3c4fdda4",
+        "filename": "src/common/win32/hwndhost.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "The intent here is to choose the file containing the correct implementation for the system type at compile time, right? This file should either get named SurfaceHost.cpp to reflect the class, and stuck in a directory reflecting the implementation it belongs to (which win32 may be sufficient to denote-- I\u0027m not familiar with all of the nomenclature), or get named SurfaceHostHWND.cpp, to follow the pattern of, e.g., the renderers.\n\nThis is somewhat intertwined with a greater file organization issue I\u0027ve got, which I\u0027ll cover in the overall comment.",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 15
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_8bb095dd",
+        "filename": "src/common/win32/hwndhost.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "Same complaint here as for IsIconic in the header.",
+      "range": {
+        "startLine": 14,
+        "startChar": 11,
+        "endLine": 14,
+        "endChar": 13
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_dc67c129",
+        "filename": "src/common/win32/hwndhost.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "ANGLE convention is to list the first parameter on the same line as the function definition, and align following parameters with that one. See src/libGLESv2/renderer/d3d/d3d11/RenderStateCache.cpp for an example.",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 19
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_6b651196",
+        "filename": "src/common/win32/hwndhost.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "We try to keep line length \u003c 120char.",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 1
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_dcc341d2",
+        "filename": "src/common/win32/hwndhost.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "Stray whitespace.",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 8
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_fc45657e",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "Function parameter alignment in ANGLE is generally: the first or more parameters on the line with the function name, following lines indented to align with the first character of the first parameter.",
+      "range": {
+        "startLine": 403,
+        "startChar": 12,
+        "endLine": 405,
+        "endChar": 60
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_5333cee0",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/SwapChain9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-25T00:23:04Z",
+      "side": 1,
+      "message": "Initializer alignment (mentioned previously in more detail).",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 92
+      },
+      "revId": "cfc310a89b85350a7d58a25eeac439b8675aa173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
