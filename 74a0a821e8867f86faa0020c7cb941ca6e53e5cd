@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7069bba1_0d5ca125",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-25T20:26:41Z",
+      "side": 1,
+      "message": "Looks good, one last request: use the data() method instead of the index operator.",
+      "range": {
+        "startLine": 239,
+        "startChar": 34,
+        "endLine": 239,
+        "endChar": 48
+      },
+      "revId": "74a0a821e8867f86faa0020c7cb941ca6e53e5cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
