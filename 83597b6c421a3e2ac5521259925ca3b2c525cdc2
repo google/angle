@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7069bba1_e2fbfc52",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-25T18:02:21Z",
+      "side": 1,
+      "message": "Formatting.",
+      "range": {
+        "startLine": 67,
+        "startChar": 46,
+        "endLine": 67,
+        "endChar": 50
+      },
+      "revId": "83597b6c421a3e2ac5521259925ca3b2c525cdc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_310d3a5c",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-25T18:02:21Z",
+      "side": 1,
+      "message": "Formatting.",
+      "range": {
+        "startLine": 155,
+        "startChar": 48,
+        "endLine": 155,
+        "endChar": 51
+      },
+      "revId": "83597b6c421a3e2ac5521259925ca3b2c525cdc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_91044637",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-25T18:02:21Z",
+      "side": 1,
+      "message": "No need for the namespace prefix.",
+      "range": {
+        "startLine": 441,
+        "startChar": 0,
+        "endLine": 441,
+        "endChar": 4
+      },
+      "revId": "83597b6c421a3e2ac5521259925ca3b2c525cdc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_42e3c8ac",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-25T18:02:21Z",
+      "side": 1,
+      "message": "Can be removed too.  Looks like there are a couple more, let\u0027s just do a find-replace on rx:: in this file.",
+      "range": {
+        "startLine": 486,
+        "startChar": 4,
+        "endLine": 486,
+        "endChar": 8
+      },
+      "revId": "83597b6c421a3e2ac5521259925ca3b2c525cdc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
