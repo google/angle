@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7069bba1_ada495a9",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-25T20:50:54Z",
+      "side": 1,
+      "message": "nit: use can use std::vector\u003cchar\u003e infoLog(infoLogLen) as a constructor",
+      "range": {
+        "startLine": 302,
+        "startChar": 32,
+        "endLine": 302,
+        "endChar": 53
+      },
+      "revId": "c328984d3ffaa5e6ef34c440b887c229cd1f2843",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
