@@ -235,8 +235,8 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
         size_t objCodeLen = 0;
         ShGetInfo(compiler, SH_OBJECT_CODE_LENGTH, &objCodeLen);
 
-        char* outputHLSL = new char[objCodeLen];
-        ShGetObjectCode(compiler, outputHLSL);
+        std::vector<char> outputHLSL(objCodeLen);
+        ShGetObjectCode(compiler, outputHLSL.data());
 
 #ifdef _DEBUG
         std::ostringstream hlslStream;
@@ -254,13 +254,11 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
             curPos = (nextLine == std::string::npos) ? std::string::npos : (nextLine + 1);
         }
         hlslStream << "\n\n";
-        hlslStream << outputHLSL;
+        hlslStream << outputHLSL.data();
         mHlsl = hlslStream.str();
 #else
-        mHlsl = outputHLSL;
+        mHlsl = outputHLSL.data();
 #endif
-
-        SafeDeleteArray(outputHLSL);
 
         mUniforms = *GetShaderVariables(ShGetUniforms(compiler));
 
@@ -301,11 +299,11 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
         size_t infoLogLen = 0;
         ShGetInfo(compiler, SH_INFO_LOG_LENGTH, &infoLogLen);
 
-        char* infoLog = new char[infoLogLen];
-        ShGetInfoLog(compiler, infoLog);
-        mInfoLog = infoLog;
+        std::vector<char> infoLog(infoLogLen);
+        ShGetInfoLog(compiler, infoLog.data());
+        mInfoLog = infoLog.data();
 
-        TRACE("\n%s", mInfoLog.c_str());
+        TRACE("\n%s", infoLog.data());
     }
 }
 
