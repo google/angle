@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0c347c9_7f04c835",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-26T21:22:24Z",
+      "side": 1,
+      "message": "Awesome, much cleaner (not having to remember to call the base class\u0027s generateMipmaps).",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 41
+      },
+      "revId": "427946a2c21b9152cdc890097982848d0ced0ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_c98d4229",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-26T21:22:24Z",
+      "side": 1,
+      "message": "Lets make these private or protected.",
+      "range": {
+        "startLine": 123,
+        "startChar": 4,
+        "endLine": 123,
+        "endChar": 37
+      },
+      "revId": "427946a2c21b9152cdc890097982848d0ced0ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
