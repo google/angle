@@ -22,6 +22,30 @@
       "revId": "fec316a61a2a65652733c01a672460558ef5b1f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50859788_aa5f109e",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-26T15:24:14Z",
+      "side": 1,
+      "message": "Chromium doesn\u0027t require updates every time we alter ShBuiltInResources anymore, actually-- we need only to add new fields to TCompiler::setResourceString, which I believe this patch does.",
+      "parentUuid": "907b8f5f_fc9f290a",
+      "range": {
+        "startLine": 253,
+        "startChar": 4,
+        "endLine": 253,
+        "endChar": 24
+      },
+      "revId": "fec316a61a2a65652733c01a672460558ef5b1f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
