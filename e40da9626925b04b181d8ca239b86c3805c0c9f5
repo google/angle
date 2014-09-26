@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d046e741_0c167767",
+        "filename": "src/libGLESv2/renderer/Image.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-26T17:40:02Z",
+      "side": 1,
+      "message": "Nit: could nuke the extra whitespace while you\u0027re in here.",
+      "range": {
+        "startLine": 7,
+        "startChar": 70,
+        "endLine": 7,
+        "endChar": 72
+      },
+      "revId": "e40da9626925b04b181d8ca239b86c3805c0c9f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d046e741_ec304b0a",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-26T17:40:02Z",
+      "side": 1,
+      "message": "Nit: Could get the no-op comment here to match setImage.",
+      "range": {
+        "startLine": 193,
+        "startChar": 4,
+        "endLine": 193,
+        "endChar": 75
+      },
+      "revId": "e40da9626925b04b181d8ca239b86c3805c0c9f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "108f9fae_593bc402",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-26T17:40:02Z",
+      "side": 1,
+      "message": "This should probably be the responsibility of the call level where the surface is created or requested.",
+      "range": {
+        "startLine": 359,
+        "startChar": 12,
+        "endLine": 359,
+        "endChar": 37
+      },
+      "revId": "e40da9626925b04b181d8ca239b86c3805c0c9f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d046e741_8c7347bf",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-26T17:40:02Z",
+      "side": 1,
+      "message": "Ditto above.",
+      "range": {
+        "startLine": 369,
+        "startChar": 12,
+        "endLine": 369,
+        "endChar": 37
+      },
+      "revId": "e40da9626925b04b181d8ca239b86c3805c0c9f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d046e741_6c361bfa",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-26T17:40:02Z",
+      "side": 1,
+      "message": "Ditto above.",
+      "range": {
+        "startLine": 380,
+        "startChar": 12,
+        "endLine": 380,
+        "endChar": 37
+      },
+      "revId": "e40da9626925b04b181d8ca239b86c3805c0c9f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d046e741_ac78039a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Image9.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-26T17:40:02Z",
+      "side": 1,
+      "message": "Nit: Nuke whitespace while you\u0027re in here?",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 3
+      },
+      "revId": "e40da9626925b04b181d8ca239b86c3805c0c9f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
