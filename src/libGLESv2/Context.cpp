@@ -119,8 +119,6 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mResetStatus = GL_NO_ERROR;
     mResetStrategy = (notifyResets ? GL_LOSE_CONTEXT_ON_RESET_EXT : GL_NO_RESET_NOTIFICATION_EXT);
     mRobustAccess = robustAccess;
-
-    mState.setContext(this);
 }
 
 Context::~Context()

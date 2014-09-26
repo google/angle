@@ -35,8 +35,6 @@ class State
     void initialize(const Caps& caps, GLuint clientVersion);
     void reset();
 
-    void setContext(Context *context) { mContext = context; }
-
     // State chunk getters
     const RasterizerState &getRasterizerState() const;
     const BlendState &getBlendState() const;
@@ -247,7 +245,9 @@ class State
   private:
     DISALLOW_COPY_AND_ASSIGN(State);
 
-    Context *mContext;
+    // Cached values from Context's caps
+    GLuint mMaxDrawBuffers;
+    GLuint mMaxCombinedTextureImageUnits;
 
     ColorF mColorClearValue;
     GLclampf mDepthClearValue;

@@ -22,6 +22,8 @@ namespace gl
 
 State::State()
 {
+    mMaxDrawBuffers = 0;
+    mMaxCombinedTextureImageUnits = 0;
 }
 
 State::~State()
@@ -31,7 +33,8 @@ State::~State()
 
 void State::initialize(const Caps& caps, GLuint clientVersion)
 {
-    mContext = NULL;
+    mMaxDrawBuffers = caps.maxDrawBuffers;
+    mMaxCombinedTextureImageUnits = caps.maxCombinedTextureImageUnits;
 
     setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -1185,7 +1188,7 @@ void State::getIntegerv(GLenum pname, GLint *params)
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
     {
         unsigned int colorAttachment = (pname - GL_DRAW_BUFFER0_EXT);
-        ASSERT(colorAttachment < mContext->getCaps().maxDrawBuffers);
+        ASSERT(colorAttachment < mMaxDrawBuffers);
         Framebuffer *framebuffer = mDrawFramebuffer;
         *params = framebuffer->getDrawBufferState(colorAttachment);
         return;
@@ -1332,19 +1335,19 @@ void State::getIntegerv(GLenum pname, GLint *params)
         }
         break;
       case GL_TEXTURE_BINDING_2D:
-        ASSERT(mActiveSampler < mContext->getCaps().maxCombinedTextureImageUnits);
+        ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
         *params = mSamplerTextures.at(GL_TEXTURE_2D)[mActiveSampler].id();
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
-        ASSERT(mActiveSampler < mContext->getCaps().maxCombinedTextureImageUnits);
+        ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
         *params = mSamplerTextures.at(GL_TEXTURE_CUBE_MAP)[mActiveSampler].id();
         break;
       case GL_TEXTURE_BINDING_3D:
-        ASSERT(mActiveSampler <mContext->getCaps().maxCombinedTextureImageUnits);
+        ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
         *params = mSamplerTextures.at(GL_TEXTURE_3D)[mActiveSampler].id();
         break;
       case GL_TEXTURE_BINDING_2D_ARRAY:
-        ASSERT(mActiveSampler < mContext->getCaps().maxCombinedTextureImageUnits);
+        ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
         *params = mSamplerTextures.at(GL_TEXTURE_2D_ARRAY)[mActiveSampler].id();
         break;
       case GL_UNIFORM_BUFFER_BINDING:
