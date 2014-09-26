@@ -1,0 +1,187 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "907b8f5f_1c012da2",
+        "filename": "src/common/SurfaceHandler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-26T14:33:57Z",
+      "side": 1,
+      "message": "nit: Extra whitespace at the end of some lines.",
+      "revId": "ee843ac027c149c9d855f59387cdf710af95924b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_4822070a",
+        "filename": "src/common/SurfaceHandler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-26T14:33:57Z",
+      "side": 1,
+      "message": "You can include common/platform.h instead of these.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 18
+      },
+      "revId": "ee843ac027c149c9d855f59387cdf710af95924b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_9ced3d97",
+        "filename": "src/common/SurfaceHandler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-26T14:33:57Z",
+      "side": 1,
+      "message": "In the future, ANGLE will be turning the EGL classes into interfaces to so that we can support other OSs.  I think a good name for this class would be just NativeWindow (we can move it into the EGL namespace later) and it will be a wrapper around the EGLNativeWindowType.",
+      "range": {
+        "startLine": 30,
+        "startChar": 6,
+        "endLine": 30,
+        "endChar": 20
+      },
+      "revId": "ee843ac027c149c9d855f59387cdf710af95924b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_eea4905f",
+        "filename": "src/common/SurfaceHandler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-26T14:33:57Z",
+      "side": 1,
+      "message": "No need for the destructor since it doesn\u0027t do anything (Unless the Windows Store one will?)",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 22
+      },
+      "revId": "ee843ac027c149c9d855f59387cdf710af95924b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_1c1a0d04",
+        "filename": "src/common/SurfaceHandler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-26T14:33:57Z",
+      "side": 1,
+      "message": "Extra newline.",
+      "revId": "ee843ac027c149c9d855f59387cdf710af95924b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_2825d310",
+        "filename": "src/common/win32/SurfaceHandler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-26T14:33:57Z",
+      "side": 1,
+      "message": "nit: Extra whitespace.",
+      "revId": "ee843ac027c149c9d855f59387cdf710af95924b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_68d18b8c",
+        "filename": "src/common/win32/SurfaceHandler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-26T14:33:57Z",
+      "side": 1,
+      "message": "Extra newline",
+      "revId": "ee843ac027c149c9d855f59387cdf710af95924b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_88cedfeb",
+        "filename": "src/common/win32/SurfaceHandler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-26T14:33:57Z",
+      "side": 1,
+      "message": "Formatting.",
+      "range": {
+        "startLine": 30,
+        "startChar": 40,
+        "endLine": 30,
+        "endChar": 42
+      },
+      "revId": "ee843ac027c149c9d855f59387cdf710af95924b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_6e91c0fb",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-26T14:33:57Z",
+      "side": 1,
+      "message": "Needs a little bit more indenting.",
+      "range": {
+        "startLine": 404,
+        "startChar": 45,
+        "endLine": 404,
+        "endChar": 47
+      },
+      "revId": "ee843ac027c149c9d855f59387cdf710af95924b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
