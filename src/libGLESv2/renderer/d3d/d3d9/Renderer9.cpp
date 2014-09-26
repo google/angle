@@ -1304,7 +1304,7 @@ gl::Error Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *element
     return gl::Error(GL_NO_ERROR);
 }
 
-void Renderer9::applyTransformFeedbackBuffers(gl::Buffer *transformFeedbackBuffers[], GLintptr offsets[])
+void Renderer9::applyTransformFeedbackBuffers(const gl::State& state)
 {
     UNREACHABLE();
 }

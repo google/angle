@@ -97,7 +97,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     }
 
     bindGenericTransformFeedbackBuffer(0);
-    for (int i = 0; i < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
+    for (unsigned int i = 0; i < mCaps.maxTransformFeedbackSeparateAttributes; i++)
     {
         bindIndexedTransformFeedbackBuffer(0, i, 0, -1);
     }
@@ -1580,14 +1580,7 @@ bool Context::applyTransformFeedbackBuffers()
     TransformFeedback *curTransformFeedback = mState.getCurrentTransformFeedback();
     if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
     {
-        Buffer *transformFeedbackBuffers[IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS];
-        GLintptr transformFeedbackOffsets[IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS];
-        for (size_t i = 0; i < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
-        {
-            transformFeedbackBuffers[i] = mState.getIndexedTransformFeedbackBuffer(i);
-            transformFeedbackOffsets[i] = mState.getIndexedTransformFeedbackBufferOffset(i);
-        }
-        mRenderer->applyTransformFeedbackBuffers(transformFeedbackBuffers, transformFeedbackOffsets);
+        mRenderer->applyTransformFeedbackBuffers(mState);
         return true;
     }
     else
@@ -1598,7 +1591,7 @@ bool Context::applyTransformFeedbackBuffers()
 
 void Context::markTransformFeedbackUsage()
 {
-    for (size_t i = 0; i < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
+    for (size_t i = 0; i < mCaps.maxTransformFeedbackSeparateAttributes; i++)
     {
         Buffer *buffer = mState.getIndexedTransformFeedbackBuffer(i);
         if (buffer)

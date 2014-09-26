@@ -121,6 +121,7 @@ void State::initialize(const Caps& caps, GLuint clientVersion)
     }
 
     mUniformBuffers.resize(caps.maxCombinedUniformBlocks);
+    mTransformFeedbackBuffers.resize(caps.maxTransformFeedbackSeparateAttributes);
 
     mSamplerTextures[GL_TEXTURE_2D].resize(caps.maxCombinedTextureImageUnits);
     mSamplerTextures[GL_TEXTURE_CUBE_MAP].resize(caps.maxCombinedTextureImageUnits);
@@ -171,14 +172,14 @@ void State::reset()
 
     mGenericUniformBuffer.set(NULL);
     mGenericTransformFeedbackBuffer.set(NULL);
-    for (UniformBufferVector::iterator bufItr = mUniformBuffers.begin(); bufItr != mUniformBuffers.end(); ++bufItr)
+    for (BufferVector::iterator bufItr = mUniformBuffers.begin(); bufItr != mUniformBuffers.end(); ++bufItr)
     {
         bufItr->set(NULL);
     }
 
-    for (int i = 0; i < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
+    for (BufferVector::iterator bufItr = mTransformFeedbackBuffers.begin(); bufItr != mTransformFeedbackBuffers.end(); ++bufItr)
     {
-        mTransformFeedbackBuffers[i].set(NULL);
+        bufItr->set(NULL);
     }
 
     mCopyReadBuffer.set(NULL);
@@ -971,23 +972,28 @@ void State::setIndexedTransformFeedbackBufferBinding(GLuint index, Buffer *buffe
 
 GLuint State::getIndexedTransformFeedbackBufferId(GLuint index) const
 {
-    ASSERT(index < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS);
+    ASSERT(static_cast<size_t>(index) < mTransformFeedbackBuffers.size());
 
     return mTransformFeedbackBuffers[index].id();
 }
 
 Buffer *State::getIndexedTransformFeedbackBuffer(GLuint index) const
 {
-    ASSERT(index < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS);
+    ASSERT(static_cast<size_t>(index) < mTransformFeedbackBuffers.size());
 
     return mTransformFeedbackBuffers[index].get();
 }
 
 GLuint State::getIndexedTransformFeedbackBufferOffset(GLuint index) const
 {
-    ASSERT(index < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS);
+    ASSERT(static_cast<size_t>(index) < mTransformFeedbackBuffers.size());
 
     return mTransformFeedbackBuffers[index].getOffset();
+}
+
+size_t State::getTransformFeedbackBufferIndexRange() const
+{
+    return mTransformFeedbackBuffers.size();
 }
 
 void State::setCopyReadBufferBinding(Buffer *buffer)
@@ -1371,7 +1377,7 @@ bool State::getIndexedIntegerv(GLenum target, GLuint index, GLint *data)
     switch (target)
     {
       case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
-        if (index < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS)
+        if (static_cast<size_t>(index) < mTransformFeedbackBuffers.size())
         {
             *data = mTransformFeedbackBuffers[index].id();
         }
@@ -1394,13 +1400,13 @@ bool State::getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data)
     switch (target)
     {
       case GL_TRANSFORM_FEEDBACK_BUFFER_START:
-        if (index < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS)
+        if (static_cast<size_t>(index) < mTransformFeedbackBuffers.size())
         {
             *data = mTransformFeedbackBuffers[index].getOffset();
         }
         break;
       case GL_TRANSFORM_FEEDBACK_BUFFER_SIZE:
-        if (index < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS)
+        if (static_cast<size_t>(index) < mTransformFeedbackBuffers.size())
         {
             *data = mTransformFeedbackBuffers[index].getSize();
         }
