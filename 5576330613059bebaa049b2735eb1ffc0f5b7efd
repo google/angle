@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7069bba1_d317ac1c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T16:58:56Z",
+      "side": 1,
+      "message": "Good point. Some code I had was redundant (because getNativeTexture() calls updateStorage() and marks the images clean) and I had neglected to change the description.",
+      "parentUuid": "907b8f5f_dcbee54c",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 36
+      },
+      "revId": "5576330613059bebaa049b2735eb1ffc0f5b7efd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7069bba1_b37318bf",
         "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 2
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "7069bba1_736b40bb",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T16:58:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7069bba1_b37318bf",
+      "revId": "5576330613059bebaa049b2735eb1ffc0f5b7efd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0c347c9_a1fd89d2",
         "filename": "src/libGLESv2/renderer/d3d/TextureD3D.h",
         "patchSetId": 2
@@ -53,6 +95,30 @@
       "writtenOn": "2014-09-26T15:56:24Z",
       "side": 1,
       "message": "generateMipmaps is a public member of TextureImpl. While this is valid, a different name would be better I think.",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 35
+      },
+      "revId": "5576330613059bebaa049b2735eb1ffc0f5b7efd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_5c4f35a3",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T16:58:56Z",
+      "side": 1,
+      "message": "Reworked this.",
+      "parentUuid": "d0c347c9_a1fd89d2",
       "range": {
         "startLine": 75,
         "startChar": 4,
