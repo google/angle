@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7069bba1_a846438b",
+        "filename": "projects/src/libANGLE.vcxproj",
+        "patchSetId": 1
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T14:59:06Z",
+      "side": 1,
+      "message": "Yeah, this is outside our control. MSVS sometimes shuffles things around according to logic unknown to common men.",
+      "parentUuid": "704e1b58_85c15268",
+      "range": {
+        "startLine": 350,
+        "startChar": 62,
+        "endLine": 350,
+        "endChar": 77
+      },
+      "revId": "8dbd01aab7f8faf88624fb95a2c0452a89b7131e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9049cf4f_fcfb9652",
         "filename": "projects/src/libANGLE.vcxproj.filters",
         "patchSetId": 1
@@ -59,6 +83,24 @@
       "writtenOn": "2014-09-25T23:07:28Z",
       "side": 1,
       "message": "Empty file is EEEEEMMMMMMPPPTTTTYYYYY.... Probably shouldn\u0027t add this till it has something in it.",
+      "revId": "8dbd01aab7f8faf88624fb95a2c0452a89b7131e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_0eddaca3",
+        "filename": "src/libGLESv2/renderer/Workarounds.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T14:59:06Z",
+      "side": 1,
+      "message": "Thanks for pointing this out. Fixed.",
+      "parentUuid": "704e1b58_e5f3febb",
       "revId": "8dbd01aab7f8faf88624fb95a2c0452a89b7131e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
