@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "907b8f5f_3cfc3119",
+        "filename": "src/libGLESv2/ImageIndex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T16:58:25Z",
+      "side": 1,
+      "message": "I agree in a perfect world we could hide this method. The cost of using a friend class seems like a stronger negative to me, in this case (and in most cases). Especially as this is a struct has no other private members.",
+      "parentUuid": "d0c347c9_8e5cfc5c",
+      "range": {
+        "startLine": 23,
+        "startChar": 4,
+        "endLine": 23,
+        "endChar": 68
+      },
+      "revId": "3f194226aeee0f71cff11e5d927173076a2ea417",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7069bba1_93eb7411",
         "filename": "src/libGLESv2/ImageIndex.h",
         "patchSetId": 2
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "7069bba1_1331240c",
+        "filename": "src/libGLESv2/ImageIndex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T16:58:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7069bba1_93eb7411",
+      "revId": "3f194226aeee0f71cff11e5d927173076a2ea417",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0c347c9_ce7434e1",
         "filename": "src/libGLESv2/ImageIndex.h",
         "patchSetId": 2
@@ -53,6 +95,30 @@
       "writtenOn": "2014-09-26T15:30:53Z",
       "side": 1,
       "message": "What about changing this to:\n\n  const ImageIndex \u0026operator*() const; // calls getIndex, maybe not needed\n  const ImageIndex \u0026getIndex() const;\n  bool valid() const;\n  ImageIndexIterator \u0026operator++();\n\nso that we could more easily use it in for-loops:\n\n  for (auto i \u003d foo-\u003eimageIterator(); i.valid(); i++)\n  {\n      Image *bar \u003d getImage(*i); // or use i.getIndex()\n  }\n\nAs it stands, there isn\u0027t a way to get the ImageIndex without incrementing it and this make it more stl-like.",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 25
+      },
+      "revId": "3f194226aeee0f71cff11e5d927173076a2ea417",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_33162868",
+        "filename": "src/libGLESv2/ImageIndex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T16:58:25Z",
+      "side": 1,
+      "message": "Do you prefer STL style? I find this style to be cleaner, easier to use, and readable. If you feel strongly, could change it.\n\n  for (auto it \u003d thing.begin(); it !\u003d thing.end() it++) { value \u003d *it; }\n  for (auto it \u003d thing.iterator(); it.hasNext();) { value \u003d it.next(); }",
+      "parentUuid": "d0c347c9_ce7434e1",
       "range": {
         "startLine": 46,
         "startChar": 4,
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "907b8f5f_7c06b988",
+        "filename": "src/libGLESv2/ImageIndex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T16:58:25Z",
+      "side": 1,
+      "message": "mType is not the same as mCurIndex.type. (cube maps)",
+      "parentUuid": "907b8f5f_9c38dd54",
+      "range": {
+        "startLine": 56,
+        "startChar": 3,
+        "endLine": 56,
+        "endChar": 17
+      },
+      "revId": "3f194226aeee0f71cff11e5d927173076a2ea417",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "907b8f5f_7c6dd93c",
         "filename": "src/libGLESv2/ImageIndex.h",
         "patchSetId": 2
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "907b8f5f_9c037d76",
+        "filename": "src/libGLESv2/ImageIndex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T16:58:25Z",
+      "side": 1,
+      "message": "Sure. Done.",
+      "parentUuid": "907b8f5f_7c6dd93c",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 20
+      },
+      "revId": "3f194226aeee0f71cff11e5d927173076a2ea417",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "907b8f5f_7c3b1951",
         "filename": "tests/angle_implementation_unit_tests/ImageIndexIterator_unittest.cpp",
         "patchSetId": 2
@@ -122,6 +236,30 @@
       "writtenOn": "2014-09-26T15:30:53Z",
       "side": 1,
       "message": "Since we\u0027re not mocking, is there a need for this?",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 28
+      },
+      "revId": "3f194226aeee0f71cff11e5d927173076a2ea417",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_2e386804",
+        "filename": "tests/angle_implementation_unit_tests/ImageIndexIterator_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T16:58:25Z",
+      "side": 1,
+      "message": "Probably not, removed.",
+      "parentUuid": "907b8f5f_7c3b1951",
       "range": {
         "startLine": 24,
         "startChar": 4,
