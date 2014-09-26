@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d046e741_ec520b9c",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-26T18:56:33Z",
+      "side": 1,
+      "message": "We mostly use \": param(arg),\" on the same line as the last line of the constructor definition, though I don\u0027t think it\u0027s specifically codified in the style guide.",
+      "parentUuid": "d0c347c9_4152d54c",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 54
+      },
+      "revId": "ae39c9b1140027b621b591d8240633d0457cfd40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "108f9fae_740405e8",
         "filename": "src/libGLESv2/validationES.h",
         "patchSetId": 4
