@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d046e741_0cd03702",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-26T18:26:28Z",
+      "side": 1,
+      "message": "Nit: We should probably follow the same indentation pattern for this as for our class methods in .cpp files.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 54
+      },
+      "revId": "ae39c9b1140027b621b591d8240633d0457cfd40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "108f9fae_740405e8",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-26T18:26:28Z",
+      "side": 1,
+      "message": "Should this be DISALLOW_COPY_AND_ASSIGNed?",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 15
+      },
+      "revId": "ae39c9b1140027b621b591d8240633d0457cfd40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "108f9fae_14c66153",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-26T18:26:28Z",
+      "side": 1,
+      "message": "These should get lowercase first characters, since they\u0027re methods.",
+      "range": {
+        "startLine": 83,
+        "startChar": 19,
+        "endLine": 83,
+        "endChar": 20
+      },
+      "revId": "ae39c9b1140027b621b591d8240633d0457cfd40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
