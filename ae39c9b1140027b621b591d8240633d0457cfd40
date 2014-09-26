@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d0c347c9_4152d54c",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T18:32:21Z",
+      "side": 1,
+      "message": "What\u0027s the indentation style? Seems good to me?",
+      "parentUuid": "d046e741_0cd03702",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 54
+      },
+      "revId": "ae39c9b1140027b621b591d8240633d0457cfd40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "108f9fae_740405e8",
         "filename": "src/libGLESv2/validationES.h",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "907b8f5f_37e60abe",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T18:32:21Z",
+      "side": 1,
+      "message": "Yes, will add.",
+      "parentUuid": "108f9fae_740405e8",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 15
+      },
+      "revId": "ae39c9b1140027b621b591d8240633d0457cfd40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "108f9fae_14c66153",
         "filename": "src/libGLESv2/validationES.h",
         "patchSetId": 4
@@ -59,6 +107,30 @@
       "writtenOn": "2014-09-26T18:26:28Z",
       "side": 1,
       "message": "These should get lowercase first characters, since they\u0027re methods.",
+      "range": {
+        "startLine": 83,
+        "startChar": 19,
+        "endLine": 83,
+        "endChar": 20
+      },
+      "revId": "ae39c9b1140027b621b591d8240633d0457cfd40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907b8f5f_77f0926d",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-26T18:32:21Z",
+      "side": 1,
+      "message": "They probably should.. I was toying with the idea of letting them stay as upper case. That way, if we refactored every validation entry point, we could *almost* auto-generate them. The exception would be re-using cached data from the validator... which reminds me. That was another reason I wanted to use validator objects. I may have to re-think my design in this patch.",
+      "parentUuid": "108f9fae_14c66153",
       "range": {
         "startLine": 83,
         "startChar": 19,
