@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1026bf9c_ac4f277e",
+        "filename": "src/libGLESv2/State.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T17:25:30Z",
+      "side": 0,
+      "message": "Should be able to remove this constant now.",
+      "range": {
+        "startLine": 303,
+        "startChar": 49,
+        "endLine": 303,
+        "endChar": 99
+      },
+      "revId": "0ed6643975e1a303186fc533494f159d989e957c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
