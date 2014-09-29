@@ -22,6 +22,30 @@
       "revId": "a17f42527e8cd81fba4ecfcdaca99cf8e4c80125",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d046e741_9b12972e",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1769,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-29T20:42:56Z",
+      "side": 1,
+      "message": "You already mentioned this in a previous review, and it is fixed in the patch series I will next be uploading, which is why I haven\u0027t yet posted a \"done\" response. You\u0027ll need to wait until I finish straightening out issues in Transform Feedback.",
+      "parentUuid": "d0c347c9_dcb3431d",
+      "range": {
+        "startLine": 1769,
+        "startChar": 41,
+        "endLine": 1769,
+        "endChar": 54
+      },
+      "revId": "a17f42527e8cd81fba4ecfcdaca99cf8e4c80125",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
