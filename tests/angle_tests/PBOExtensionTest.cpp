@@ -1,11 +1,15 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(PBOExtensionTest, TestFixtureTypes);
+
+template<typename T>
 class PBOExtensionTest : public ANGLETest
 {
 protected:
-    PBOExtensionTest()
+    PBOExtensionTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
-        setClientVersion(2);
         setWindowWidth(32);
         setWindowHeight(32);
         setConfigRedBits(8);
@@ -73,7 +77,7 @@ protected:
     GLuint mPositionVBO;
 };
 
-TEST_F(PBOExtensionTest, PBOWithOtherTarget)
+TYPED_TEST(PBOExtensionTest, PBOWithOtherTarget)
 {
     if (extensionEnabled("NV_pixel_buffer_object"))
     {
@@ -101,7 +105,7 @@ TEST_F(PBOExtensionTest, PBOWithOtherTarget)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(PBOExtensionTest, PBOWithExistingData)
+TYPED_TEST(PBOExtensionTest, PBOWithExistingData)
 {
     if (extensionEnabled("NV_pixel_buffer_object"))
     {

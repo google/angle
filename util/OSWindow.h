@@ -28,6 +28,9 @@ class OSWindow
     virtual EGLNativeWindowType getNativeWindow() const = 0;
     virtual EGLNativeDisplayType getNativeDisplay() const = 0;
 
+    void setRequestedRenderer(EGLint requestedDisplayType);
+    EGLint getRequestedRenderer() const ;
+
     virtual void messageLoop() = 0;
 
     bool popEvent(Event *event);
@@ -40,6 +43,8 @@ class OSWindow
   protected:
     int mWidth;
     int mHeight;
+
+    EGLint mRequestedRenderer;
 
     std::list<Event> mEvents;
 };

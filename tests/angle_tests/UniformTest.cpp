@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(UniformTest, TestFixtureTypes);
+
+template<typename T>
 class UniformTest : public ANGLETest
 {
   protected:
-    UniformTest()
+    UniformTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -47,7 +52,7 @@ class UniformTest : public ANGLETest
     GLint mUniformILocation;
 };
 
-TEST_F(UniformTest, GetUniformNoCurrentProgram)
+TYPED_TEST(UniformTest, GetUniformNoCurrentProgram)
 {
     glUseProgram(mProgram);
     glUniform1f(mUniformFLocation, 1.0f);

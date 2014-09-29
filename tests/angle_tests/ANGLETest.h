@@ -17,6 +17,8 @@
 #include "shared_utils.h"
 #include "shader_utils.h"
 
+#include "testfixturetypes.h"
+
 #define EXPECT_GL_ERROR(err) EXPECT_EQ((err), glGetError())
 #define EXPECT_GL_NO_ERROR() EXPECT_GL_ERROR(GL_NO_ERROR)
 
@@ -40,7 +42,7 @@ class OSWindow;
 class ANGLETest : public testing::Test
 {
   protected:
-    ANGLETest();
+    ANGLETest(EGLint requestedRenderer, EGLint glesMajorVersion);
 
   public:
     static bool InitTestWindow();
@@ -57,7 +59,6 @@ class ANGLETest : public testing::Test
     static GLuint compileShader(GLenum type, const std::string &source);
     static bool extensionEnabled(const std::string &extName);
 
-    void setClientVersion(int clientVersion);
     void setWindowWidth(int width);
     void setWindowHeight(int height);
     void setConfigRedBits(int bits);
@@ -78,6 +79,8 @@ class ANGLETest : public testing::Test
     bool destroyEGLContext();
 
     EGLWindow *mEGLWindow;
+
+    EGLint mRequestedRenderer;
 
     static OSWindow *mOSWindow;
 };

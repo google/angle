@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(FramebufferFormatsTest, TestFixtureTypes);
+
+template<typename T>
 class FramebufferFormatsTest : public ANGLETest
 {
 protected:
-    FramebufferFormatsTest()
+    FramebufferFormatsTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -71,27 +76,27 @@ protected:
     }
 };
 
-TEST_F(FramebufferFormatsTest, RGBA4)
+TYPED_TEST(FramebufferFormatsTest, RGBA4)
 {
     testTextureFormat(GL_RGBA4, 4, 4, 4, 4);
 }
 
-TEST_F(FramebufferFormatsTest, RGB565)
+TYPED_TEST(FramebufferFormatsTest, RGB565)
 {
     testTextureFormat(GL_RGB565, 5, 6, 5, 0);
 }
 
-TEST_F(FramebufferFormatsTest, RGB8)
+TYPED_TEST(FramebufferFormatsTest, RGB8)
 {
     testTextureFormat(GL_RGB8_OES, 8, 8, 8, 0);
 }
 
-TEST_F(FramebufferFormatsTest, BGRA8)
+TYPED_TEST(FramebufferFormatsTest, BGRA8)
 {
     testTextureFormat(GL_BGRA8_EXT, 8, 8, 8, 8);
 }
 
-TEST_F(FramebufferFormatsTest, RGBA8)
+TYPED_TEST(FramebufferFormatsTest, RGBA8)
 {
     testTextureFormat(GL_RGBA8_OES, 8, 8, 8, 8);
 }

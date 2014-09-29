@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(BlitFramebufferANGLETest, TestFixtureTypes);
+
+template<typename T>
 class BlitFramebufferANGLETest : public ANGLETest
 {
 protected:
-    BlitFramebufferANGLETest()
+    BlitFramebufferANGLETest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(256);
         setWindowHeight(256);
@@ -302,7 +307,7 @@ protected:
 };
 
 // Draw to user-created framebuffer, blit whole-buffer color to original framebuffer.
-TEST_F(BlitFramebufferANGLETest, BlitColorToDefault)
+TYPED_TEST(BlitFramebufferANGLETest, BlitColorToDefault)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -329,7 +334,7 @@ TEST_F(BlitFramebufferANGLETest, BlitColorToDefault)
 }
 
 // Draw to system framebuffer, blit whole-buffer color to user-created framebuffer.
-TEST_F(BlitFramebufferANGLETest, ReverseColorBlit)
+TYPED_TEST(BlitFramebufferANGLETest, ReverseColorBlit)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
@@ -356,7 +361,7 @@ TEST_F(BlitFramebufferANGLETest, ReverseColorBlit)
 }
 
 // blit from user-created FBO to system framebuffer, with the scissor test enabled.
-TEST_F(BlitFramebufferANGLETest, ScissoredBlit)
+TYPED_TEST(BlitFramebufferANGLETest, ScissoredBlit)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -391,7 +396,7 @@ TEST_F(BlitFramebufferANGLETest, ScissoredBlit)
 }
 
 // blit from system FBO to user-created framebuffer, with the scissor test enabled.
-TEST_F(BlitFramebufferANGLETest, ReverseScissoredBlit)
+TYPED_TEST(BlitFramebufferANGLETest, ReverseScissoredBlit)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
@@ -426,7 +431,7 @@ TEST_F(BlitFramebufferANGLETest, ReverseScissoredBlit)
 }
 
 // blit from user-created FBO to system framebuffer, using region larger than buffer.
-TEST_F(BlitFramebufferANGLETest, OversizedBlit)
+TYPED_TEST(BlitFramebufferANGLETest, OversizedBlit)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -456,7 +461,7 @@ TEST_F(BlitFramebufferANGLETest, OversizedBlit)
 }
 
 // blit from system FBO to user-created framebuffer, using region larger than buffer.
-TEST_F(BlitFramebufferANGLETest, ReverseOversizedBlit)
+TYPED_TEST(BlitFramebufferANGLETest, ReverseOversizedBlit)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
@@ -485,7 +490,7 @@ TEST_F(BlitFramebufferANGLETest, ReverseOversizedBlit)
 }
 
 // blit from user-created FBO to system framebuffer, with depth buffer.
-TEST_F(BlitFramebufferANGLETest, BlitWithDepth)
+TYPED_TEST(BlitFramebufferANGLETest, BlitWithDepth)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -522,7 +527,7 @@ TEST_F(BlitFramebufferANGLETest, BlitWithDepth)
 }
 
 // blit from system FBO to user-created framebuffer, with depth buffer.
-TEST_F(BlitFramebufferANGLETest, ReverseBlitWithDepth)
+TYPED_TEST(BlitFramebufferANGLETest, ReverseBlitWithDepth)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
@@ -559,7 +564,7 @@ TEST_F(BlitFramebufferANGLETest, ReverseBlitWithDepth)
 }
 
 // blit from one region of the system fbo to another-- this should fail.
-TEST_F(BlitFramebufferANGLETest, BlitSameBufferOriginal)
+TYPED_TEST(BlitFramebufferANGLETest, BlitSameBufferOriginal)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
@@ -575,7 +580,7 @@ TEST_F(BlitFramebufferANGLETest, BlitSameBufferOriginal)
 }
 
 // blit from one region of the system fbo to another.
-TEST_F(BlitFramebufferANGLETest, BlitSameBufferUser)
+TYPED_TEST(BlitFramebufferANGLETest, BlitSameBufferUser)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -590,7 +595,7 @@ TEST_F(BlitFramebufferANGLETest, BlitSameBufferUser)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
-TEST_F(BlitFramebufferANGLETest, BlitPartialColor)
+TYPED_TEST(BlitFramebufferANGLETest, BlitPartialColor)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -619,7 +624,7 @@ TEST_F(BlitFramebufferANGLETest, BlitPartialColor)
     EXPECT_PIXEL_EQ(    getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255,   0,   0, 255);
 }
 
-TEST_F(BlitFramebufferANGLETest, BlitDifferentSizes)
+TYPED_TEST(BlitFramebufferANGLETest, BlitDifferentSizes)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -647,7 +652,7 @@ TEST_F(BlitFramebufferANGLETest, BlitDifferentSizes)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(BlitFramebufferANGLETest, BlitWithMissingAttachments)
+TYPED_TEST(BlitFramebufferANGLETest, BlitWithMissingAttachments)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mColorOnlyFBO);
 
@@ -685,7 +690,7 @@ TEST_F(BlitFramebufferANGLETest, BlitWithMissingAttachments)
     EXPECT_PIXEL_EQ(    getWindowWidth() / 4, 3 * getWindowHeight() / 4,   0,   0, 255, 255);
 }
 
-TEST_F(BlitFramebufferANGLETest, BlitStencil)
+TYPED_TEST(BlitFramebufferANGLETest, BlitStencil)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -727,7 +732,7 @@ TEST_F(BlitFramebufferANGLETest, BlitStencil)
 }
 
 // make sure that attempting to blit a partial depth buffer issues an error
-TEST_F(BlitFramebufferANGLETest, BlitPartialDepthStencil)
+TYPED_TEST(BlitFramebufferANGLETest, BlitPartialDepthStencil)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -746,7 +751,7 @@ TEST_F(BlitFramebufferANGLETest, BlitPartialDepthStencil)
 }
 
 // Test blit with MRT framebuffers
-TEST_F(BlitFramebufferANGLETest, BlitMRT)
+TYPED_TEST(BlitFramebufferANGLETest, BlitMRT)
 {
     if (!extensionEnabled("GL_EXT_draw_buffers"))
     {
@@ -794,7 +799,7 @@ TEST_F(BlitFramebufferANGLETest, BlitMRT)
 }
 
 // Make sure that attempts to stretch in a blit call issue an error
-TEST_F(BlitFramebufferANGLETest, ErrorStretching)
+TYPED_TEST(BlitFramebufferANGLETest, ErrorStretching)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -813,7 +818,7 @@ TEST_F(BlitFramebufferANGLETest, ErrorStretching)
 }
 
 // Make sure that attempts to flip in a blit call issue an error
-TEST_F(BlitFramebufferANGLETest, ErrorFlipping)
+TYPED_TEST(BlitFramebufferANGLETest, ErrorFlipping)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -831,7 +836,7 @@ TEST_F(BlitFramebufferANGLETest, ErrorFlipping)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
-TEST_F(BlitFramebufferANGLETest, Errors)
+TYPED_TEST(BlitFramebufferANGLETest, Errors)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 

@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(VertexAttributeTest, TestFixtureTypes);
+
+template<typename T>
 class VertexAttributeTest : public ANGLETest
 {
 protected:
-    VertexAttributeTest()
+    VertexAttributeTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -118,7 +123,7 @@ protected:
     GLint mExpectedAttrib;
 };
 
-TEST_F(VertexAttributeTest, UnsignedByteUnnormalized)
+TYPED_TEST(VertexAttributeTest, UnsignedByteUnnormalized)
 {
     GLubyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255 };
     GLfloat expectedData[mVertexCount];
@@ -131,7 +136,7 @@ TEST_F(VertexAttributeTest, UnsignedByteUnnormalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, UnsignedByteNormalized)
+TYPED_TEST(VertexAttributeTest, UnsignedByteNormalized)
 {
     GLubyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255 };
     GLfloat expectedData[mVertexCount];
@@ -144,7 +149,7 @@ TEST_F(VertexAttributeTest, UnsignedByteNormalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, ByteUnnormalized)
+TYPED_TEST(VertexAttributeTest, ByteUnnormalized)
 {
     GLbyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126 };
     GLfloat expectedData[mVertexCount];
@@ -157,7 +162,7 @@ TEST_F(VertexAttributeTest, ByteUnnormalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, ByteNormalized)
+TYPED_TEST(VertexAttributeTest, ByteNormalized)
 {
     GLbyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126 };
     GLfloat expectedData[mVertexCount];
@@ -170,7 +175,7 @@ TEST_F(VertexAttributeTest, ByteNormalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, UnsignedShortUnnormalized)
+TYPED_TEST(VertexAttributeTest, UnsignedShortUnnormalized)
 {
     GLushort inputData[mVertexCount] = { 0, 1, 2, 3, 254, 255, 256, 32766, 32767, 32768, 65533, 65534, 65535 };
     GLfloat expectedData[mVertexCount];
@@ -183,7 +188,7 @@ TEST_F(VertexAttributeTest, UnsignedShortUnnormalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, UnsignedShortNormalized)
+TYPED_TEST(VertexAttributeTest, UnsignedShortNormalized)
 {
     GLushort inputData[mVertexCount] = { 0, 1, 2, 3, 254, 255, 256, 32766, 32767, 32768, 65533, 65534, 65535 };
     GLfloat expectedData[mVertexCount];
@@ -196,7 +201,7 @@ TEST_F(VertexAttributeTest, UnsignedShortNormalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, ShortUnnormalized)
+TYPED_TEST(VertexAttributeTest, ShortUnnormalized)
 {
     GLshort inputData[mVertexCount] = {  0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766 };
     GLfloat expectedData[mVertexCount];
@@ -209,7 +214,7 @@ TEST_F(VertexAttributeTest, ShortUnnormalized)
     runTest(data);
 }
 
-TEST_F(VertexAttributeTest, ShortNormalized)
+TYPED_TEST(VertexAttributeTest, ShortNormalized)
 {
     GLshort inputData[mVertexCount] = {  0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766 };
     GLfloat expectedData[mVertexCount];

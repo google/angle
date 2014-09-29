@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(MaxTextureSizeTest, TestFixtureTypes);
+
+template<typename T>
 class MaxTextureSizeTest : public ANGLETest
 {
 protected:
-    MaxTextureSizeTest()
+    MaxTextureSizeTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(512);
         setWindowHeight(512);
@@ -86,7 +91,7 @@ protected:
     GLint mMaxRenderbufferSize;
 };
 
-TEST_F(MaxTextureSizeTest, SpecificationTexImage)
+TYPED_TEST(MaxTextureSizeTest, SpecificationTexImage)
 {
     GLuint tex;
     glGenTextures(1, &tex);
@@ -141,7 +146,7 @@ TEST_F(MaxTextureSizeTest, SpecificationTexImage)
     }
 }
 
-TEST_F(MaxTextureSizeTest, SpecificationTexStorage)
+TYPED_TEST(MaxTextureSizeTest, SpecificationTexStorage)
 {
     if (getClientVersion() < 3 && (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")))
     {
@@ -211,7 +216,7 @@ TEST_F(MaxTextureSizeTest, SpecificationTexStorage)
     }
 }
 
-TEST_F(MaxTextureSizeTest, RenderToTexture)
+TYPED_TEST(MaxTextureSizeTest, RenderToTexture)
 {
     GLuint fbo = 0;
     GLuint textureId = 0;

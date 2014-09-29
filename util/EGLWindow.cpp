@@ -66,7 +66,7 @@ EGLContext EGLWindow::getContext() const
     return mContext;
 }
 
-bool EGLWindow::initializeGL(const OSWindow *osWindow)
+bool EGLWindow::initializeGL(OSWindow *osWindow)
 {
     PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
     if (!eglGetPlatformDisplayEXT)
@@ -86,6 +86,15 @@ bool EGLWindow::initializeGL(const OSWindow *osWindow)
         destroyGL();
         return false;
     }
+
+    if (osWindow->getRequestedRenderer() != EGL_NONE && osWindow->getRequestedRenderer() != mRequestedRenderer)
+    {
+        // The OS window should be recreated in this case, to ensure the requested renderer is created.
+        destroyGL();
+        return false;
+    }
+
+    osWindow->setRequestedRenderer(mRequestedRenderer);
 
     EGLint majorVersion, minorVersion;
     if (!eglInitialize(mDisplay, &majorVersion, &minorVersion))

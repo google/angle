@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(SRGBTextureTest, TestFixtureTypes);
+
+template<typename T>
 class SRGBTextureTest : public ANGLETest
 {
 protected:
-    SRGBTextureTest()
+    SRGBTextureTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -24,7 +29,7 @@ protected:
     }
 };
 
-TEST_F(SRGBTextureTest, SRGBValidation)
+TYPED_TEST(SRGBTextureTest, SRGBValidation)
 {
     bool supported = extensionEnabled("GL_EXT_sRGB") || getClientVersion() == 3;
 
@@ -52,7 +57,7 @@ TEST_F(SRGBTextureTest, SRGBValidation)
     glDeleteTextures(1, &tex);
 }
 
-TEST_F(SRGBTextureTest, SRGBAValidation)
+TYPED_TEST(SRGBTextureTest, SRGBAValidation)
 {
     bool supported = extensionEnabled("GL_EXT_sRGB") || getClientVersion() == 3;
 
@@ -87,7 +92,7 @@ TEST_F(SRGBTextureTest, SRGBAValidation)
     glDeleteTextures(1, &tex);
 }
 
-TEST_F(SRGBTextureTest, SRGBARenderbuffer)
+TYPED_TEST(SRGBTextureTest, SRGBARenderbuffer)
 {
     bool supported = extensionEnabled("GL_EXT_sRGB") || getClientVersion() == 3;
 

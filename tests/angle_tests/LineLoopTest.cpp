@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(LineLoopTest, TestFixtureTypes);
+
+template<typename T>
 class LineLoopTest : public ANGLETest
 {
 protected:
-    LineLoopTest()
+    LineLoopTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(256);
         setWindowHeight(256);
@@ -126,19 +131,19 @@ protected:
     GLint mColorLocation;
 };
 
-TEST_F(LineLoopTest, LineLoopUByteIndices)
+TYPED_TEST(LineLoopTest, LineLoopUByteIndices)
 {
     static const GLubyte indices[] = { 0, 7, 6, 9, 8, 0 };
     runTest(GL_UNSIGNED_BYTE, 0, indices + 1);
 }
 
-TEST_F(LineLoopTest, LineLoopUShortIndices)
+TYPED_TEST(LineLoopTest, LineLoopUShortIndices)
 {
     static const GLushort indices[] = { 0, 7, 6, 9, 8, 0 };
     runTest(GL_UNSIGNED_SHORT, 0, indices + 1);
 }
 
-TEST_F(LineLoopTest, LineLoopUIntIndices)
+TYPED_TEST(LineLoopTest, LineLoopUIntIndices)
 {
     if (!extensionEnabled("GL_OES_element_index_uint"))
     {
@@ -149,7 +154,7 @@ TEST_F(LineLoopTest, LineLoopUIntIndices)
     runTest(GL_UNSIGNED_INT, 0, indices + 1);
 }
 
-TEST_F(LineLoopTest, LineLoopUByteIndexBuffer)
+TYPED_TEST(LineLoopTest, LineLoopUByteIndexBuffer)
 {
     static const GLubyte indices[] = { 0, 7, 6, 9, 8, 0 };
 
@@ -163,7 +168,7 @@ TEST_F(LineLoopTest, LineLoopUByteIndexBuffer)
     glDeleteBuffers(1, &buf);
 }
 
-TEST_F(LineLoopTest, LineLoopUShortIndexBuffer)
+TYPED_TEST(LineLoopTest, LineLoopUShortIndexBuffer)
 {
     static const GLushort indices[] = { 0, 7, 6, 9, 8, 0 };
 
@@ -177,7 +182,7 @@ TEST_F(LineLoopTest, LineLoopUShortIndexBuffer)
     glDeleteBuffers(1, &buf);
 }
 
-TEST_F(LineLoopTest, LineLoopUIntIndexBuffer)
+TYPED_TEST(LineLoopTest, LineLoopUIntIndexBuffer)
 {
     if (!extensionEnabled("GL_OES_element_index_uint"))
     {

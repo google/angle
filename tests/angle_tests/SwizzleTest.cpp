@@ -2,10 +2,15 @@
 
 #include <vector>
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>> TestFixtureTypes;
+TYPED_TEST_CASE(SwizzleTest, TestFixtureTypes);
+
+template<typename T>
 class SwizzleTest : public ANGLETest
 {
 protected:
-    SwizzleTest()
+    SwizzleTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -13,7 +18,6 @@ protected:
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
-        setClientVersion(3);
 
         GLenum swizzles[] =
         {
@@ -181,77 +185,77 @@ protected:
     std::vector<swizzlePermutation> mPermutations;
 };
 
-TEST_F(SwizzleTest, RGBA8_2D)
+TYPED_TEST(SwizzleTest, RGBA8_2D)
 {
     GLubyte data[] = { 1, 64, 128, 200 };
     init2DTexture(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, data);
     runTest2D();
 }
 
-TEST_F(SwizzleTest, RGB8_2D)
+TYPED_TEST(SwizzleTest, RGB8_2D)
 {
     GLubyte data[] = { 77, 66, 55 };
     init2DTexture(GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE, data);
     runTest2D();
 }
 
-TEST_F(SwizzleTest, RG8_2D)
+TYPED_TEST(SwizzleTest, RG8_2D)
 {
     GLubyte data[] = { 11, 99 };
     init2DTexture(GL_RG8, GL_RG, GL_UNSIGNED_BYTE, data);
     runTest2D();
 }
 
-TEST_F(SwizzleTest, R8_2D)
+TYPED_TEST(SwizzleTest, R8_2D)
 {
     GLubyte data[] = { 2 };
     init2DTexture<GLubyte>(GL_R8, GL_RED, GL_UNSIGNED_BYTE, data);
     runTest2D();
 }
 
-TEST_F(SwizzleTest, RGBA32F_2D)
+TYPED_TEST(SwizzleTest, RGBA32F_2D)
 {
     GLfloat data[] = { 0.25f, 0.5f, 0.75f, 0.8f };
     init2DTexture(GL_RGBA32F, GL_RGBA, GL_FLOAT, data);
     runTest2D();
 }
 
-TEST_F(SwizzleTest, RGB32F_2D)
+TYPED_TEST(SwizzleTest, RGB32F_2D)
 {
     GLfloat data[] = { 0.1f, 0.2f, 0.3f };
     init2DTexture(GL_RGB32F, GL_RGB, GL_FLOAT, data);
     runTest2D();
 }
 
-TEST_F(SwizzleTest, RG32F_2D)
+TYPED_TEST(SwizzleTest, RG32F_2D)
 {
     GLfloat data[] = { 0.9f, 0.1f  };
     init2DTexture(GL_RG32F, GL_RG, GL_FLOAT, data);
     runTest2D();
 }
 
-TEST_F(SwizzleTest, R32F_2D)
+TYPED_TEST(SwizzleTest, R32F_2D)
 {
     GLfloat data[] = { 0.5f };
     init2DTexture(GL_R32F, GL_RED, GL_FLOAT, data);
     runTest2D();
 }
 
-TEST_F(SwizzleTest, D32F_2D)
+TYPED_TEST(SwizzleTest, D32F_2D)
 {
     GLfloat data[] = { 0.5f };
     init2DTexture(GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_FLOAT, data);
     runTest2D();
 }
 
-TEST_F(SwizzleTest, D16_2D)
+TYPED_TEST(SwizzleTest, D16_2D)
 {
     GLushort data[] = { 0xFF };
     init2DTexture(GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, data);
     runTest2D();
 }
 
-TEST_F(SwizzleTest, D24_2D)
+TYPED_TEST(SwizzleTest, D24_2D)
 {
     GLuint data[] = { 0xFFFF };
     init2DTexture(GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, data);
@@ -260,7 +264,7 @@ TEST_F(SwizzleTest, D24_2D)
 
 #include "media/pixel.inl"
 
-TEST_F(SwizzleTest, CompressedDXT_2D)
+TYPED_TEST(SwizzleTest, CompressedDXT_2D)
 {
     init2DCompressedTexture(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_width, pixel_0_height, pixel_0_size, pixel_0_data);
     runTest2D();

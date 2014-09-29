@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>, TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9> > TestFixtureTypes;
+TYPED_TEST_CASE(DrawBuffersTest, TestFixtureTypes);
+
+template<typename T>
 class DrawBuffersTest : public ANGLETest
 {
   protected:
-    DrawBuffersTest(int clientVersion)
+    DrawBuffersTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -12,7 +17,6 @@ class DrawBuffersTest : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
-        setClientVersion(clientVersion);
     }
 
     virtual void SetUp()
@@ -190,140 +194,94 @@ class DrawBuffersTest : public ANGLETest
         EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, r, g, b, 255);
     }
 
-    void gapsTest()
-    {
-        glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[0], 0);
-
-        bool flags[8] = { false, true };
-
-        GLuint program;
-        setupMRTProgram(flags, &program);
-
-        const GLenum bufs[] =
-        {
-            GL_NONE,
-            GL_COLOR_ATTACHMENT1
-        };
-        glUseProgram(program);
-        glDrawBuffersEXT(2, bufs);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        verifyAttachment(1, mTextures[0]);
-
-        glDeleteProgram(program);
-    }
-
-    void firstAndLastTest()
-    {
-        glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
-
-        glBindTexture(GL_TEXTURE_2D, mTextures[1]);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, mTextures[1], 0);
-
-        bool flags[8] = { true, false, false, true };
-
-        GLuint program;
-        setupMRTProgram(flags, &program);
-
-        const GLenum bufs[] =
-        {
-            GL_COLOR_ATTACHMENT0,
-            GL_NONE,
-            GL_NONE,
-            GL_COLOR_ATTACHMENT3
-        };
-
-        glUseProgram(program);
-        glDrawBuffersEXT(4, bufs);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        verifyAttachment(0, mTextures[0]);
-        verifyAttachment(3, mTextures[1]);
-
-        EXPECT_GL_NO_ERROR();
-
-        glDeleteProgram(program);
-    }
-
-    void firstHalfNULLTest()
-    {
-        bool flags[8] = { false };
-        GLenum bufs[8] = { GL_NONE };
-
-        for (unsigned int texIndex = 0; texIndex < 4; texIndex++)
-        {
-            glBindTexture(GL_TEXTURE_2D, mTextures[texIndex]);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4 + texIndex, GL_TEXTURE_2D, mTextures[texIndex], 0);
-            flags[texIndex + 4] = true;
-            bufs[texIndex + 4] = GL_COLOR_ATTACHMENT4 + texIndex;
-        }
-
-        GLuint program;
-        setupMRTProgram(flags, &program);
-
-        glUseProgram(program);
-        glDrawBuffersEXT(8, bufs);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        for (unsigned int texIndex = 0; texIndex < 4; texIndex++)
-        {
-            verifyAttachment(texIndex + 4, mTextures[texIndex]);
-        }
-
-        EXPECT_GL_NO_ERROR();
-
-        glDeleteProgram(program);
-    }
-
     GLuint mFBO;
     GLuint mTextures[4];
     GLuint mBuffer;
 };
 
-class DrawBuffersTestESSL3 : public DrawBuffersTest
+TYPED_TEST(DrawBuffersTest, Gaps)
 {
-  protected:
-    DrawBuffersTestESSL3()
-        : DrawBuffersTest(3)
-    {}
-};
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[0], 0);
 
-class DrawBuffersTestESSL1 : public DrawBuffersTest
-{
-  protected:
-    DrawBuffersTestESSL1()
-        : DrawBuffersTest(2)
-    {}
-};
+    bool flags[8] = { false, true };
 
-TEST_F(DrawBuffersTestESSL3, Gaps)
-{
-    gapsTest();
+    GLuint program;
+    setupMRTProgram(flags, &program);
+
+    const GLenum bufs[] =
+    {
+        GL_NONE,
+        GL_COLOR_ATTACHMENT1
+    };
+    glUseProgram(program);
+    glDrawBuffersEXT(2, bufs);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    verifyAttachment(1, mTextures[0]);
+
+    glDeleteProgram(program);
 }
 
-TEST_F(DrawBuffersTestESSL1, Gaps)
+TYPED_TEST(DrawBuffersTest, FirstAndLast)
 {
-    gapsTest();
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+
+    glBindTexture(GL_TEXTURE_2D, mTextures[1]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, mTextures[1], 0);
+
+    bool flags[8] = { true, false, false, true };
+
+    GLuint program;
+    setupMRTProgram(flags, &program);
+
+    const GLenum bufs[] =
+    {
+        GL_COLOR_ATTACHMENT0,
+        GL_NONE,
+        GL_NONE,
+        GL_COLOR_ATTACHMENT3
+    };
+
+    glUseProgram(program);
+    glDrawBuffersEXT(4, bufs);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    verifyAttachment(0, mTextures[0]);
+    verifyAttachment(3, mTextures[1]);
+
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
 }
 
-TEST_F(DrawBuffersTestESSL3, FirstAndLast)
+TYPED_TEST(DrawBuffersTest, FirstHalfNULL)
 {
-    firstAndLastTest();
-}
+    bool flags[8] = { false };
+    GLenum bufs[8] = { GL_NONE };
 
-TEST_F(DrawBuffersTestESSL1, FirstAndLast)
-{
-    firstAndLastTest();
-}
+    for (unsigned int texIndex = 0; texIndex < 4; texIndex++)
+    {
+        glBindTexture(GL_TEXTURE_2D, mTextures[texIndex]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4 + texIndex, GL_TEXTURE_2D, mTextures[texIndex], 0);
+        flags[texIndex + 4] = true;
+        bufs[texIndex + 4] = GL_COLOR_ATTACHMENT4 + texIndex;
+    }
 
-TEST_F(DrawBuffersTestESSL3, FirstHalfNULL)
-{
-    firstHalfNULLTest();
-}
+    GLuint program;
+    setupMRTProgram(flags, &program);
 
-TEST_F(DrawBuffersTestESSL1, FirstHalfNULL)
-{
-    firstHalfNULLTest();
+    glUseProgram(program);
+    glDrawBuffersEXT(8, bufs);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    for (unsigned int texIndex = 0; texIndex < 4; texIndex++)
+    {
+        verifyAttachment(texIndex + 4, mTextures[texIndex]);
+    }
+
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
 }

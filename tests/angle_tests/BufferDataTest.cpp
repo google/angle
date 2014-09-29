@@ -2,13 +2,15 @@
 
 #include <cstdint>
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(BufferDataTest, TestFixtureTypes);
+
+template<typename T>
 class BufferDataTest : public ANGLETest
 {
   protected:
-    BufferDataTest()
-        : mBuffer(0),
-          mProgram(0),
-          mAttribLocation(-1)
+    BufferDataTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(16);
         setWindowHeight(16);
@@ -17,6 +19,10 @@ class BufferDataTest : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
+
+        mBuffer = 0;
+        mProgram = 0;
+        mAttribLocation = -1;
     }
 
     virtual void SetUp()
@@ -76,7 +82,7 @@ class BufferDataTest : public ANGLETest
     GLint mAttribLocation;
 };
 
-TEST_F(BufferDataTest, NULLData)
+TYPED_TEST(BufferDataTest, NULLData)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     EXPECT_GL_NO_ERROR();
@@ -99,7 +105,7 @@ TEST_F(BufferDataTest, NULLData)
     }
 }
 
-TEST_F(BufferDataTest, ZeroNonNULLData)
+TYPED_TEST(BufferDataTest, ZeroNonNULLData)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     EXPECT_GL_NO_ERROR();
@@ -114,7 +120,7 @@ TEST_F(BufferDataTest, ZeroNonNULLData)
     delete [] zeroData;
 }
 
-TEST_F(BufferDataTest, NULLResolvedData)
+TYPED_TEST(BufferDataTest, NULLResolvedData)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     glBufferData(GL_ARRAY_BUFFER, 128, NULL, GL_DYNAMIC_DRAW);
@@ -127,7 +133,7 @@ TEST_F(BufferDataTest, NULLResolvedData)
     drawQuad(mProgram, "position", 0.5f);
 }
 
-TEST_F(BufferDataTest, HugeSetDataShouldNotCrash)
+TYPED_TEST(BufferDataTest, HugeSetDataShouldNotCrash)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     EXPECT_GL_NO_ERROR();
@@ -196,10 +202,15 @@ TEST_F(BufferDataTest, HugeSetDataShouldNotCrash)
     delete[] data;
 }
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>> TestFixtureTypesIndexedBufferCopyTest;
+TYPED_TEST_CASE(IndexedBufferCopyTest, TestFixtureTypesIndexedBufferCopyTest);
+
+template<typename T>
 class IndexedBufferCopyTest : public ANGLETest
 {
   protected:
-    IndexedBufferCopyTest()
+    IndexedBufferCopyTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(16);
         setWindowHeight(16);
@@ -208,7 +219,6 @@ class IndexedBufferCopyTest : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
-        setClientVersion(3);
     }
 
     virtual void SetUp()
@@ -275,7 +285,7 @@ class IndexedBufferCopyTest : public ANGLETest
 // The following test covers an ANGLE bug where our index ranges
 // weren't updated from CopyBufferSubData calls
 // https://code.google.com/p/angleproject/issues/detail?id=709
-TEST_F(IndexedBufferCopyTest, IndexRangeBug)
+TYPED_TEST(IndexedBufferCopyTest, IndexRangeBug)
 {
     unsigned char vertexData[] = { 255, 0, 0, 0, 0, 0 };
     unsigned int indexData[] = { 0, 1 };

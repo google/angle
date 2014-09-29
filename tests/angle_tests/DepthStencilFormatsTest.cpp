@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(DepthStencilFormatsTest, TestFixtureTypes);
+
+template<typename T>
 class DepthStencilFormatsTest : public ANGLETest
 {
 protected:
-    DepthStencilFormatsTest()
+    DepthStencilFormatsTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -11,7 +16,6 @@ protected:
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
-        setClientVersion(2);
     }
 
     bool checkTexImageFormatSupport(GLenum format, GLenum type)
@@ -64,7 +68,7 @@ protected:
     }
 };
 
-TEST_F(DepthStencilFormatsTest, DepthTexture)
+TYPED_TEST(DepthStencilFormatsTest, DepthTexture)
 {
     bool shouldHaveTextureSupport = extensionEnabled("GL_ANGLE_depth_texture");
     EXPECT_EQ(shouldHaveTextureSupport, checkTexImageFormatSupport(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT));
@@ -77,7 +81,7 @@ TEST_F(DepthStencilFormatsTest, DepthTexture)
     }
 }
 
-TEST_F(DepthStencilFormatsTest, PackedDepthStencil)
+TYPED_TEST(DepthStencilFormatsTest, PackedDepthStencil)
 {
     // Expected to fail in D3D9 if GL_OES_packed_depth_stencil is not present.
     // Expected to fail in D3D11 if GL_OES_packed_depth_stencil or GL_ANGLE_depth_texture is not present.

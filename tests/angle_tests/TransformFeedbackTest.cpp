@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>> TestFixtureTypes;
+TYPED_TEST_CASE(TransformFeedbackTest, TestFixtureTypes);
+
+template<typename T>
 class TransformFeedbackTest : public ANGLETest
 {
   protected:
-      TransformFeedbackTest()
+    TransformFeedbackTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -11,7 +16,6 @@ class TransformFeedbackTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
-        setClientVersion(3);
     }
 
     virtual void SetUp()
@@ -66,7 +70,7 @@ class TransformFeedbackTest : public ANGLETest
     GLuint mTransformFeedbackBuffer;
 };
 
-TEST_F(TransformFeedbackTest, ZeroSizedViewport)
+TYPED_TEST(TransformFeedbackTest, ZeroSizedViewport)
 {
     // Set the program's transform feedback varyings (just gl_Position)
     const GLchar* transformFeedbackVaryings[] =

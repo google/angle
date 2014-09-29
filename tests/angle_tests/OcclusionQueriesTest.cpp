@@ -3,10 +3,15 @@
 // Needed for Sleep()
 #include <Windows.h>
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(OcclusionQueriesTest, TestFixtureTypes);
+
+template<typename T>
 class OcclusionQueriesTest : public ANGLETest
 {
 protected:
-    OcclusionQueriesTest()
+    OcclusionQueriesTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -58,7 +63,7 @@ protected:
     GLuint mProgram;
 };
 
-TEST_F(OcclusionQueriesTest, IsOccluded)
+TYPED_TEST(OcclusionQueriesTest, IsOccluded)
 {
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -98,7 +103,7 @@ TEST_F(OcclusionQueriesTest, IsOccluded)
     EXPECT_EQ(result, GL_FALSE);
 }
 
-TEST_F(OcclusionQueriesTest, IsNotOccluded)
+TYPED_TEST(OcclusionQueriesTest, IsNotOccluded)
 {
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -125,7 +130,7 @@ TEST_F(OcclusionQueriesTest, IsNotOccluded)
     EXPECT_EQ(result, GL_TRUE);
 }
 
-TEST_F(OcclusionQueriesTest, Errors)
+TYPED_TEST(OcclusionQueriesTest, Errors)
 {
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

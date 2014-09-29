@@ -1,10 +1,15 @@
 #include "ANGLETest.h"
 #include "media/pixel.inl"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(CompressedTextureTest, TestFixtureTypes);
+
+template<typename T>
 class CompressedTextureTest : public ANGLETest
 {
 protected:
-    CompressedTextureTest()
+    CompressedTextureTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(512);
         setWindowHeight(512);
@@ -66,7 +71,7 @@ protected:
     GLint mTextureUniformLocation;
 };
 
-TEST_F(CompressedTextureTest, CompressedTexImage)
+TYPED_TEST(CompressedTextureTest, CompressedTexImage)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
@@ -106,7 +111,7 @@ TEST_F(CompressedTextureTest, CompressedTexImage)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(CompressedTextureTest, CompressedTexStorage)
+TYPED_TEST(CompressedTextureTest, CompressedTexStorage)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {

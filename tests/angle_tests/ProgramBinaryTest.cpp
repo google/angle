@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(ProgramBinaryTest, TestFixtureTypes);
+
+template<typename T>
 class ProgramBinaryTest : public ANGLETest
 {
 protected:
-    ProgramBinaryTest()
+    ProgramBinaryTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -62,7 +67,7 @@ protected:
 
 // This tests the assumption that float attribs of different size
 // should not internally cause a vertex shader recompile (for conversion).
-TEST_F(ProgramBinaryTest, FloatDynamicShaderSize)
+TYPED_TEST(ProgramBinaryTest, FloatDynamicShaderSize)
 {
     glUseProgram(mProgram);
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);

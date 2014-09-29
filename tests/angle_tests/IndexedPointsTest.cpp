@@ -5,7 +5,7 @@ template <typename IndexType, GLenum IndexTypeName>
 class IndexedPointsTest : public ANGLETest
 {
 protected:
-    IndexedPointsTest()
+    IndexedPointsTest() : ANGLETest(2, EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
     {
         setWindowWidth(128);
         setWindowHeight(128);

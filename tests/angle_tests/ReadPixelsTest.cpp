@@ -1,11 +1,15 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>> TestFixtureTypes;
+TYPED_TEST_CASE(ReadPixelsTest, TestFixtureTypes);
+
+template<typename T>
 class ReadPixelsTest : public ANGLETest
 {
 protected:
-    ReadPixelsTest()
+    ReadPixelsTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
-        setClientVersion(3);
         setWindowWidth(32);
         setWindowHeight(32);
         setConfigRedBits(8);
@@ -84,7 +88,7 @@ protected:
     GLuint mPositionVBO;
 };
 
-TEST_F(ReadPixelsTest, OutOfBounds)
+TYPED_TEST(ReadPixelsTest, OutOfBounds)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -117,7 +121,7 @@ TEST_F(ReadPixelsTest, OutOfBounds)
     }
 }
 
-TEST_F(ReadPixelsTest, PBOWithOtherTarget)
+TYPED_TEST(ReadPixelsTest, PBOWithOtherTarget)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -142,7 +146,7 @@ TEST_F(ReadPixelsTest, PBOWithOtherTarget)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(ReadPixelsTest, PBOWithExistingData)
+TYPED_TEST(ReadPixelsTest, PBOWithExistingData)
 {
     // Clear backbuffer to red
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
@@ -180,7 +184,7 @@ TEST_F(ReadPixelsTest, PBOWithExistingData)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(ReadPixelsTest, PBOAndSubData)
+TYPED_TEST(ReadPixelsTest, PBOAndSubData)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -208,7 +212,7 @@ TEST_F(ReadPixelsTest, PBOAndSubData)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(ReadPixelsTest, PBOAndSubDataOffset)
+TYPED_TEST(ReadPixelsTest, PBOAndSubDataOffset)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -241,7 +245,7 @@ TEST_F(ReadPixelsTest, PBOAndSubDataOffset)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_F(ReadPixelsTest, DrawWithPBO)
+TYPED_TEST(ReadPixelsTest, DrawWithPBO)
 {
     unsigned char data[4] = { 1, 2, 3, 4 };
 
@@ -294,7 +298,7 @@ TEST_F(ReadPixelsTest, DrawWithPBO)
     EXPECT_EQ(4, data[3]);
 }
 
-TEST_F(ReadPixelsTest, MultisampledPBO)
+TYPED_TEST(ReadPixelsTest, MultisampledPBO)
 {
     GLuint fbo;
     glGenFramebuffers(1, &fbo);

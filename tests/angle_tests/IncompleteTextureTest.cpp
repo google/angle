@@ -2,10 +2,15 @@
 
 #include <vector>
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(IncompleteTextureTest, TestFixtureTypes);
+
+template<typename T>
 class IncompleteTextureTest : public ANGLETest
 {
 protected:
-    IncompleteTextureTest()
+    IncompleteTextureTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -76,7 +81,7 @@ protected:
     GLint mTextureUniformLocation;
 };
 
-TEST_F(IncompleteTextureTest, IncompleteTexture2D)
+TYPED_TEST(IncompleteTextureTest, IncompleteTexture2D)
 {
     GLuint tex;
     glGenTextures(1, &tex);
@@ -110,7 +115,7 @@ TEST_F(IncompleteTextureTest, IncompleteTexture2D)
     glDeleteTextures(1, &tex);
 }
 
-TEST_F(IncompleteTextureTest, UpdateTexture)
+TYPED_TEST(IncompleteTextureTest, UpdateTexture)
 {
     GLuint tex;
     glGenTextures(1, &tex);

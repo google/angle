@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(TextureTest, TestFixtureTypes);
+
+template<typename T>
 class TextureTest : public ANGLETest
 {
 protected:
-    TextureTest()
+    TextureTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -96,7 +101,7 @@ protected:
     GLint mTexture2DUniformLocation;
 };
 
-TEST_F(TextureTest, NegativeAPISubImage)
+TYPED_TEST(TextureTest, NegativeAPISubImage)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     EXPECT_GL_ERROR(GL_NO_ERROR);
@@ -106,7 +111,7 @@ TEST_F(TextureTest, NegativeAPISubImage)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
-TEST_F(TextureTest, ZeroSizedUploads)
+TYPED_TEST(TextureTest, ZeroSizedUploads)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     EXPECT_GL_ERROR(GL_NO_ERROR);
@@ -129,7 +134,7 @@ TEST_F(TextureTest, ZeroSizedUploads)
 }
 
 // Test drawing with two texture types, to trigger an ANGLE bug in validation
-TEST_F(TextureTest, CubeMapBug)
+TYPED_TEST(TextureTest, CubeMapBug)
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);

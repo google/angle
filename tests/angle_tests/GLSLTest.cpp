@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
+TYPED_TEST_CASE(GLSLTest, TestFixtureTypes);
+
+template<typename T>
 class GLSLTest : public ANGLETest
 {
 protected:
-    GLSLTest()
+    GLSLTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -254,7 +259,7 @@ protected:
     std::string mSimpleVSSource;
 };
 
-TEST_F(GLSLTest, NamelessScopedStructs)
+TYPED_TEST(GLSLTest, NamelessScopedStructs)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -275,7 +280,8 @@ TEST_F(GLSLTest, NamelessScopedStructs)
     GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
 }
-TEST_F(GLSLTest, ScopedStructsOrderBug)
+
+TYPED_TEST(GLSLTest, ScopedStructsOrderBug)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -307,7 +313,7 @@ TEST_F(GLSLTest, ScopedStructsOrderBug)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, ScopedStructsBug)
+TYPED_TEST(GLSLTest, ScopedStructsBug)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -339,7 +345,7 @@ TEST_F(GLSLTest, ScopedStructsBug)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, DxPositionBug)
+TYPED_TEST(GLSLTest, DxPositionBug)
 {
     const std::string &vertexShaderSource = SHADER_SOURCE
     (
@@ -368,7 +374,7 @@ TEST_F(GLSLTest, DxPositionBug)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, ElseIfRewriting)
+TYPED_TEST(GLSLTest, ElseIfRewriting)
 {
     const std::string &vertexShaderSource =
         "attribute vec4 a_position;\n"
@@ -403,7 +409,7 @@ TEST_F(GLSLTest, ElseIfRewriting)
     EXPECT_PIXEL_EQ(getWindowWidth()-1, 0, 0, 255, 0, 255);
 }
 
-TEST_F(GLSLTest, TwoElseIfRewriting)
+TYPED_TEST(GLSLTest, TwoElseIfRewriting)
 {
     const std::string &vertexShaderSource =
         "attribute vec4 a_position;\n"
@@ -430,7 +436,7 @@ TEST_F(GLSLTest, TwoElseIfRewriting)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, InvariantVaryingOut)
+TYPED_TEST(GLSLTest, InvariantVaryingOut)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -450,7 +456,7 @@ TEST_F(GLSLTest, InvariantVaryingOut)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, FrontFacingAndVarying)
+TYPED_TEST(GLSLTest, FrontFacingAndVarying)
 {
     const std::string vertexShaderSource = SHADER_SOURCE
     (
@@ -487,7 +493,7 @@ TEST_F(GLSLTest, FrontFacingAndVarying)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, InvariantVaryingIn)
+TYPED_TEST(GLSLTest, InvariantVaryingIn)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -507,7 +513,7 @@ TEST_F(GLSLTest, InvariantVaryingIn)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, InvariantVaryingBoth)
+TYPED_TEST(GLSLTest, InvariantVaryingBoth)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -527,7 +533,7 @@ TEST_F(GLSLTest, InvariantVaryingBoth)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, InvariantGLPosition)
+TYPED_TEST(GLSLTest, InvariantGLPosition)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -548,7 +554,7 @@ TEST_F(GLSLTest, InvariantGLPosition)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, InvariantAll)
+TYPED_TEST(GLSLTest, InvariantAll)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -567,7 +573,7 @@ TEST_F(GLSLTest, InvariantAll)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, MaxVaryingVec3)
+TYPED_TEST(GLSLTest, MaxVaryingVec3)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -581,7 +587,7 @@ TEST_F(GLSLTest, MaxVaryingVec3)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, MaxVaryingVec3Array)
+TYPED_TEST(GLSLTest, MaxVaryingVec3Array)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -595,7 +601,7 @@ TEST_F(GLSLTest, MaxVaryingVec3Array)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, MaxVaryingVec3AndOneFloat)
+TYPED_TEST(GLSLTest, MaxVaryingVec3AndOneFloat)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -609,7 +615,7 @@ TEST_F(GLSLTest, MaxVaryingVec3AndOneFloat)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
+TYPED_TEST(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -623,7 +629,7 @@ TEST_F(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, TwiceMaxVaryingVec2)
+TYPED_TEST(GLSLTest, TwiceMaxVaryingVec2)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -637,7 +643,7 @@ TEST_F(GLSLTest, TwiceMaxVaryingVec2)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, MaxVaryingVec2Arrays)
+TYPED_TEST(GLSLTest, MaxVaryingVec2Arrays)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -651,7 +657,7 @@ TEST_F(GLSLTest, MaxVaryingVec2Arrays)
     EXPECT_NE(0u, program);
 }
 
-TEST_F(GLSLTest, MaxPlusOneVaryingVec3)
+TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec3)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -665,7 +671,7 @@ TEST_F(GLSLTest, MaxPlusOneVaryingVec3)
     EXPECT_EQ(0u, program);
 }
 
-TEST_F(GLSLTest, MaxPlusOneVaryingVec3Array)
+TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec3Array)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -679,7 +685,7 @@ TEST_F(GLSLTest, MaxPlusOneVaryingVec3Array)
     EXPECT_EQ(0u, program);
 }
 
-TEST_F(GLSLTest, MaxVaryingVec3AndOneVec2)
+TYPED_TEST(GLSLTest, MaxVaryingVec3AndOneVec2)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -693,7 +699,7 @@ TEST_F(GLSLTest, MaxVaryingVec3AndOneVec2)
     EXPECT_EQ(0u, program);
 }
 
-TEST_F(GLSLTest, MaxPlusOneVaryingVec2)
+TYPED_TEST(GLSLTest, MaxPlusOneVaryingVec2)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
@@ -707,7 +713,7 @@ TEST_F(GLSLTest, MaxPlusOneVaryingVec2)
     EXPECT_EQ(0u, program);
 }
 
-TEST_F(GLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
+TYPED_TEST(GLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);

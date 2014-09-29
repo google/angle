@@ -8,7 +8,8 @@
 
 OSWindow::OSWindow()
     : mWidth(0),
-      mHeight(0)
+      mHeight(0),
+      mRequestedRenderer(EGL_NONE)
 {
 }
 
@@ -50,4 +51,14 @@ void OSWindow::pushEvent(Event event)
     }
 
     mEvents.push_back(event);
+}
+
+void OSWindow::setRequestedRenderer(EGLint requestedDisplayType)
+{
+    mRequestedRenderer = requestedDisplayType;
+}
+
+EGLint OSWindow::getRequestedRenderer() const
+{
+    return mRequestedRenderer;
 }

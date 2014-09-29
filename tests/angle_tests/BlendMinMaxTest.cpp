@@ -1,9 +1,14 @@
 #include "ANGLETest.h"
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+typedef ::testing::Types<TFT<Gles::Two, Rend::D3D9>, TFT<Gles::Two, Rend::D3D11>> TestFixtureTypes;
+TYPED_TEST_CASE(BlendMinMaxTest, TestFixtureTypes);
+
+template<typename T>
 class BlendMinMaxTest : public ANGLETest
 {
 protected:
-    BlendMinMaxTest()
+    BlendMinMaxTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -136,19 +141,19 @@ protected:
     GLuint mColorRenderbuffer;
 };
 
-TEST_F(BlendMinMaxTest, RGBA8)
+TYPED_TEST(BlendMinMaxTest, RGBA8)
 {
     SetUpFramebuffer(GL_RGBA8);
     runTest();
 }
 
-TEST_F(BlendMinMaxTest, RGBA32f)
+TYPED_TEST(BlendMinMaxTest, RGBA32f)
 {
     SetUpFramebuffer(GL_RGBA32F);
     runTest();
 }
 
-TEST_F(BlendMinMaxTest, RGBA16F)
+TYPED_TEST(BlendMinMaxTest, RGBA16F)
 {
     SetUpFramebuffer(GL_RGBA16F);
     runTest();
