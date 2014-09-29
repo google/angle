@@ -54,6 +54,10 @@ class TextureD3D : public TextureImpl
     // Returns an iterator over all "Images" for this particular Texture.
     virtual gl::ImageIndexIterator imageIterator() const = 0;
 
+    // Returns an ImageIndex for a particular "Image". 3D Textures do not have images for
+    // slices of their depth texures, so 3D textures ignore the layer parameter.
+    virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const = 0;
+
   protected:
     void setImage(const gl::PixelUnpackState &unpack, GLenum type, const void *pixels, Image *image);
     bool subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
@@ -119,6 +123,7 @@ class TextureD3D_2D : public TextureD3D
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;
+    virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2D);
@@ -178,6 +183,7 @@ class TextureD3D_Cube : public TextureD3D
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;
+    virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_Cube);
@@ -237,6 +243,7 @@ class TextureD3D_3D : public TextureD3D
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;
+    virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_3D);
@@ -295,6 +302,7 @@ class TextureD3D_2DArray : public TextureD3D
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
     virtual gl::ImageIndexIterator imageIterator() const;
+    virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2DArray);

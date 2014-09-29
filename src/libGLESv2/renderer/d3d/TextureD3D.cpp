@@ -744,6 +744,12 @@ gl::ImageIndexIterator TextureD3D_2D::imageIterator() const
     return gl::ImageIndexIterator::Make2D(0, mTexStorage->getLevelCount());
 }
 
+gl::ImageIndex TextureD3D_2D::getImageIndex(GLint mip, GLint /*layer*/) const
+{
+    // "layer" does not apply to 2D Textures.
+    return gl::ImageIndex::Make2D(mip);
+}
+
 TextureD3D_Cube::TextureD3D_Cube(Renderer *renderer)
     : TextureD3D(renderer),
       mTexStorage(NULL)
@@ -1254,6 +1260,12 @@ gl::ImageIndexIterator TextureD3D_Cube::imageIterator() const
     return gl::ImageIndexIterator::MakeCube(0, mTexStorage->getLevelCount());
 }
 
+gl::ImageIndex TextureD3D_Cube::getImageIndex(GLint mip, GLint layer) const
+{
+    // The "layer" of the image index corresponds to the cube face
+    return gl::ImageIndex::MakeCube(gl::TextureCubeMap::layerIndexToTarget(layer), mip);
+}
+
 TextureD3D_3D::TextureD3D_3D(Renderer *renderer)
     : TextureD3D(renderer),
       mTexStorage(NULL)
@@ -1751,6 +1763,12 @@ gl::ImageIndexIterator TextureD3D_3D::imageIterator() const
 {
     return gl::ImageIndexIterator::Make3D(0, mTexStorage->getLevelCount(),
                                           gl::ImageIndex::ENTIRE_LEVEL, gl::ImageIndex::ENTIRE_LEVEL);
+}
+
+gl::ImageIndex TextureD3D_3D::getImageIndex(GLint mip, GLint /*layer*/) const
+{
+    // The "layer" here does not apply to 3D images. We use one Image per mip.
+    return gl::ImageIndex::Make3D(mip);
 }
 
 TextureD3D_2DArray::TextureD3D_2DArray(Renderer *renderer)
@@ -2273,6 +2291,11 @@ void TextureD3D_2DArray::commitRect(GLint level, GLint xoffset, GLint yoffset, G
 gl::ImageIndexIterator TextureD3D_2DArray::imageIterator() const
 {
     return gl::ImageIndexIterator::Make2DArray(0, mTexStorage->getLevelCount(), mLayerCounts);
+}
+
+gl::ImageIndex TextureD3D_2DArray::getImageIndex(GLint mip, GLint layer) const
+{
+    return gl::ImageIndex::Make2DArray(mip, layer);
 }
 
 }
