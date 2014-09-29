@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7069bba1_7b8cf225",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1034,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T16:47:37Z",
+      "side": 1,
+      "message": "nit: chromium style guide suggests avoiding c-style casts.\n\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Casting",
+      "range": {
+        "startLine": 1034,
+        "startChar": 12,
+        "endLine": 1034,
+        "endChar": 18
+      },
+      "revId": "0ed6643975e1a303186fc533494f159d989e957c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_f65d7e5e",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1431,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T16:47:37Z",
+      "side": 1,
+      "message": "nit: implicit conversion",
+      "range": {
+        "startLine": 1431,
+        "startChar": 75,
+        "endLine": 1431,
+        "endChar": 86
+      },
+      "revId": "0ed6643975e1a303186fc533494f159d989e957c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
