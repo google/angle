@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1026bf9c_49aa25f8",
+        "filename": "src/libGLESv2/renderer/Image.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T15:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d046e741_0c167767",
+      "range": {
+        "startLine": 7,
+        "startChar": 70,
+        "endLine": 7,
+        "endChar": 72
+      },
+      "revId": "e40da9626925b04b181d8ca239b86c3805c0c9f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d046e741_ec304b0a",
         "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "7069bba1_9be546f0",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T15:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d046e741_ec304b0a",
+      "range": {
+        "startLine": 193,
+        "startChar": 4,
+        "endLine": 193,
+        "endChar": 75
+      },
+      "revId": "e40da9626925b04b181d8ca239b86c3805c0c9f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "108f9fae_593bc402",
         "filename": "src/libGLESv2/renderer/d3d/d3d9/Image9.cpp",
         "patchSetId": 8
@@ -59,6 +107,30 @@
       "writtenOn": "2014-09-26T17:40:02Z",
       "side": 1,
       "message": "This should probably be the responsibility of the call level where the surface is created or requested.",
+      "range": {
+        "startLine": 359,
+        "startChar": 12,
+        "endLine": 359,
+        "endChar": 37
+      },
+      "revId": "e40da9626925b04b181d8ca239b86c3805c0c9f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_bb120a2e",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T15:13:57Z",
+      "side": 1,
+      "message": "Done, created https://chromium-review.googlesource.com/219866",
+      "parentUuid": "108f9fae_593bc402",
       "range": {
         "startLine": 359,
         "startChar": 12,
@@ -128,6 +200,30 @@
       "writtenOn": "2014-09-26T17:40:02Z",
       "side": 1,
       "message": "Nit: Nuke whitespace while you\u0027re in here?",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 3
+      },
+      "revId": "e40da9626925b04b181d8ca239b86c3805c0c9f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_96d40acd",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Image9.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T15:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d046e741_ac78039a",
       "range": {
         "startLine": 68,
         "startChar": 0,
