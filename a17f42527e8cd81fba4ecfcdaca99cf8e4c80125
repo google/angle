@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0c347c9_dcb3431d",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1769,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T20:37:43Z",
+      "side": 1,
+      "message": "mState kind of obviates \"programBinary\" that we pass through the whole chain... do you think we should clean that up?",
+      "range": {
+        "startLine": 1769,
+        "startChar": 41,
+        "endLine": 1769,
+        "endChar": 54
+      },
+      "revId": "a17f42527e8cd81fba4ecfcdaca99cf8e4c80125",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
