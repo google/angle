@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1026bf9c_ec303f0a",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T17:21:35Z",
+      "side": 1,
+      "message": "This will crash, you need to set the initial vector size or use push_back.\n\nThis adds some dynamic allocation to the draw calls but I\u0027m not sure there is a simple way of fixing it for now unless Renderer::applyTransformFeedbackBuffers only took one buffer at a time.  We can just cover this when the renderer will be applying the buffers directly.",
+      "range": {
+        "startLine": 1582,
+        "startChar": 8,
+        "endLine": 1588,
+        "endChar": 9
+      },
+      "revId": "4e33e2bee1e2425a07064ffebdfa1e44145c816f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1026bf9c_2c133778",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1365,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T17:21:35Z",
+      "side": 1,
+      "message": "Formatting",
+      "range": {
+        "startLine": 1365,
+        "startChar": 8,
+        "endLine": 1365,
+        "endChar": 10
+      },
+      "revId": "4e33e2bee1e2425a07064ffebdfa1e44145c816f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1026bf9c_8c4a6b6f",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T17:21:35Z",
+      "side": 1,
+      "message": "Needs a reference.",
+      "range": {
+        "startLine": 137,
+        "startChar": 132,
+        "endLine": 137,
+        "endChar": 133
+      },
+      "revId": "4e33e2bee1e2425a07064ffebdfa1e44145c816f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_590ac544",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 992,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T17:21:35Z",
+      "side": 1,
+      "message": "Also need to be sized to the same as the inputs (and maybe an assertion that both input vectors are the same size)",
+      "range": {
+        "startLine": 991,
+        "startChar": 4,
+        "endLine": 992,
+        "endChar": 33
+      },
+      "revId": "4e33e2bee1e2425a07064ffebdfa1e44145c816f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_f921f1c1",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T17:21:35Z",
+      "side": 1,
+      "message": "Extra whitespace.",
+      "range": {
+        "startLine": 1022,
+        "startChar": 83,
+        "endLine": 1022,
+        "endChar": 84
+      },
+      "revId": "4e33e2bee1e2425a07064ffebdfa1e44145c816f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
