@@ -79,17 +79,6 @@ const gl::Extensions &Renderer::getRendererExtensions() const
     return mExtensions;
 }
 
-const Workarounds &Renderer::getWorkarounds() const
-{
-    if (!mWorkaroundsInitialized)
-    {
-        mWorkarounds = generateWorkarounds();
-        mWorkaroundsInitialized = true;
-    }
-
-    return mWorkarounds;
-}
-
 typedef Renderer *(*CreateRendererFunction)(egl::Display*, EGLNativeDisplayType, EGLint);
 
 template <typename RendererType>

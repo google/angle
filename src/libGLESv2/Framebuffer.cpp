@@ -16,7 +16,6 @@
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/RenderTarget.h"
-#include "libGLESv2/renderer/Workarounds.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 
 #include "common/utilities.h"
@@ -690,10 +689,12 @@ ColorbufferInfo Framebuffer::getColorbuffersForRender() const
             ASSERT(drawBufferState == GL_BACK || drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + colorAttachment));
             colorbuffersForRender.push_back(colorbuffer);
         }
-        else if (!mRenderer->getWorkarounds().mrtPerfWorkaround)
+#if (ANGLE_MRT_PERF_WORKAROUND == ANGLE_WORKAROUND_DISABLED)
+        else
         {
             colorbuffersForRender.push_back(NULL);
         }
+#endif
     }
 
     return colorbuffersForRender;

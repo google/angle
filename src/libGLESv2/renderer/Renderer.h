@@ -15,7 +15,6 @@
 #include "libGLESv2/Caps.h"
 #include "common/NativeWindow.h"
 #include "libGLESv2/Error.h"
-#include "libGLESv2/renderer/Workarounds.h"
 
 #include <cstdint>
 
@@ -250,8 +249,6 @@ class Renderer
     virtual rx::VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const = 0;
     virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const = 0;
 
-    const Workarounds &getWorkarounds() const;
-
   protected:
     egl::Display *mDisplay;
 
@@ -259,15 +256,11 @@ class Renderer
     DISALLOW_COPY_AND_ASSIGN(Renderer);
 
     virtual void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps, gl::Extensions *outExtensions) const = 0;
-    virtual Workarounds generateWorkarounds() const = 0;
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mCaps;
     mutable gl::TextureCapsMap mTextureCaps;
     mutable gl::Extensions mExtensions;
-
-    mutable bool mWorkaroundsInitialized;
-    mutable Workarounds mWorkarounds;
 
     int mCurrentClientVersion;
 };

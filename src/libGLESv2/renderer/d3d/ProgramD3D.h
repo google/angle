@@ -10,7 +10,6 @@
 #define LIBGLESV2_RENDERER_PROGRAMD3D_H_
 
 #include "libGLESv2/renderer/ProgramImpl.h"
-#include "libGLESv2/renderer/Workarounds.h"
 
 #include <string>
 #include <vector>

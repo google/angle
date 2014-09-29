@@ -10,7 +10,6 @@
 #define LIBGLESV2_RENDERER_SHADERD3D_H_
 
 #include "libGLESv2/renderer/ShaderImpl.h"
-#include "libGLESv2/renderer/Workarounds.h"
 #include "libGLESv2/Shader.h"
 
 #include <map>

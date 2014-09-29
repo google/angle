@@ -3156,9 +3156,4 @@ void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureC
     d3d11_gl::GenerateCaps(mDevice, outCaps, outTextureCaps, outExtensions);
 }
 
-Workarounds Renderer11::generateWorkarounds() const
-{
-    return d3d11::GenerateWorkarounds();
-}
-
 }
