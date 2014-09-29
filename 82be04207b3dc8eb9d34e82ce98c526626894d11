@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "308ae39d_886b36ba",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T15:05:07Z",
+      "side": 1,
+      "message": "nit: we should always use size_t for iterating std::vectors, and make sure we don\u0027t implicitly cast from size_t to any signed or 32-bit only type",
+      "range": {
+        "startLine": 118,
+        "startChar": 9,
+        "endLine": 118,
+        "endChar": 21
+      },
+      "revId": "82be04207b3dc8eb9d34e82ce98c526626894d11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_fbf3a2bb",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1034,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T15:05:07Z",
+      "side": 1,
+      "message": "nit: could be an implicit conversion, in these asserts. worth checking in 32/64 bit Debug for warnings at the very least.",
+      "range": {
+        "startLine": 1034,
+        "startChar": 11,
+        "endLine": 1034,
+        "endChar": 16
+      },
+      "revId": "82be04207b3dc8eb9d34e82ce98c526626894d11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "108f9fae_8a6de83f",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1429,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T15:05:07Z",
+      "side": 1,
+      "message": "nit: same size_t nit as above",
+      "range": {
+        "startLine": 1429,
+        "startChar": 13,
+        "endLine": 1429,
+        "endChar": 25
+      },
+      "revId": "82be04207b3dc8eb9d34e82ce98c526626894d11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
