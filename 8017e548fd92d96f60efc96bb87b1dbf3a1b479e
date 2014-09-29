@@ -22,6 +22,30 @@
       "revId": "8017e548fd92d96f60efc96bb87b1dbf3a1b479e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_998f1d69",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T17:38:35Z",
+      "side": 1,
+      "message": "I prefer calling MAKEINTERSOURCEA than casting a unicode string to a non-unicode one.",
+      "parentUuid": "d0c347c9_5985a54a",
+      "range": {
+        "startLine": 394,
+        "startChar": 50,
+        "endLine": 394,
+        "endChar": 58
+      },
+      "revId": "8017e548fd92d96f60efc96bb87b1dbf3a1b479e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
