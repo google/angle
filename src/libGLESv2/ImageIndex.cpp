@@ -54,4 +54,90 @@ ImageIndex::ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn)
       layerIndex(layerIndexIn)
 {}
 
+ImageIndexIterator ImageIndexIterator::Make2D(GLint minMip, GLint maxMip)
+{
+    return ImageIndexIterator(GL_TEXTURE_2D, rx::Range<GLint>(minMip, maxMip),
+                              rx::Range<GLint>(ImageIndex::ENTIRE_LEVEL, ImageIndex::ENTIRE_LEVEL), NULL);
+}
+
+ImageIndexIterator ImageIndexIterator::MakeCube(GLint minMip, GLint maxMip)
+{
+    return ImageIndexIterator(GL_TEXTURE_CUBE_MAP, rx::Range<GLint>(minMip, maxMip), rx::Range<GLint>(0, 6), NULL);
+}
+
+ImageIndexIterator ImageIndexIterator::Make3D(GLint minMip, GLint maxMip,
+                                              GLint minLayer, GLint maxLayer)
+{
+    return ImageIndexIterator(GL_TEXTURE_3D, rx::Range<GLint>(minMip, maxMip), rx::Range<GLint>(minLayer, maxLayer), NULL);
+}
+
+ImageIndexIterator ImageIndexIterator::Make2DArray(GLint minMip, GLint maxMip,
+                                                   const GLsizei *layerCounts)
+{
+    return ImageIndexIterator(GL_TEXTURE_2D_ARRAY, rx::Range<GLint>(minMip, maxMip),
+                              rx::Range<GLint>(0, IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS), layerCounts);
+}
+
+ImageIndexIterator::ImageIndexIterator(GLenum type, const rx::Range<GLint> &mipRange,
+                                       const rx::Range<GLint> &layerRange, const GLsizei *layerCounts)
+    : mType(type),
+      mMipRange(mipRange),
+      mLayerRange(layerRange),
+      mLayerCounts(layerCounts),
+      mCurrentMip(mipRange.start),
+      mCurrentLayer(layerRange.start)
+{}
+
+GLint ImageIndexIterator::maxLayer() const
+{
+    return (mLayerCounts ? static_cast<GLint>(mLayerCounts[mCurrentMip]) : mLayerRange.end);
+}
+
+ImageIndex ImageIndexIterator::next()
+{
+    ASSERT(hasNext());
+
+    ImageIndex value = current();
+
+    // Iterate layers in the inner loop for now. We can add switchable
+    // layer or mip iteration if we need it.
+
+    if (mCurrentLayer != ImageIndex::ENTIRE_LEVEL)
+    {
+        if (mCurrentLayer < maxLayer()-1)
+        {
+            mCurrentLayer++;
+        }
+        else if (mCurrentMip < mMipRange.end-1)
+        {
+            mCurrentMip++;
+            mCurrentLayer = mLayerRange.start;
+        }
+    }
+    else if (mCurrentMip < mMipRange.end-1)
+    {
+        mCurrentMip++;
+        mCurrentLayer = mLayerRange.start;
+    }
+
+    return value;
+}
+
+ImageIndex ImageIndexIterator::current() const
+{
+    ImageIndex value(mType, mCurrentMip, mCurrentLayer);
+
+    if (mType == GL_TEXTURE_CUBE_MAP)
+    {
+        value.type = TextureCubeMap::layerIndexToTarget(mCurrentLayer);
+    }
+
+    return value;
+}
+
+bool ImageIndexIterator::hasNext() const
+{
+    return (mCurrentMip < mMipRange.end || mCurrentLayer < maxLayer());
+}
+
 }

@@ -739,6 +739,10 @@ void TextureD3D_2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsize
     }
 }
 
+gl::ImageIndexIterator TextureD3D_2D::imageIterator() const
+{
+    return gl::ImageIndexIterator::Make2D(0, mTexStorage->getLevelCount());
+}
 
 TextureD3D_Cube::TextureD3D_Cube(Renderer *renderer)
     : TextureD3D(renderer),
@@ -1245,6 +1249,10 @@ void TextureD3D_Cube::commitRect(int faceIndex, GLint level, GLint xoffset, GLin
     }
 }
 
+gl::ImageIndexIterator TextureD3D_Cube::imageIterator() const
+{
+    return gl::ImageIndexIterator::MakeCube(0, mTexStorage->getLevelCount());
+}
 
 TextureD3D_3D::TextureD3D_3D(Renderer *renderer)
     : TextureD3D(renderer),
@@ -1739,6 +1747,11 @@ void TextureD3D_3D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint 
     }
 }
 
+gl::ImageIndexIterator TextureD3D_3D::imageIterator() const
+{
+    return gl::ImageIndexIterator::Make3D(0, mTexStorage->getLevelCount(),
+                                          gl::ImageIndex::ENTIRE_LEVEL, gl::ImageIndex::ENTIRE_LEVEL);
+}
 
 TextureD3D_2DArray::TextureD3D_2DArray(Renderer *renderer)
     : TextureD3D(renderer),
@@ -2255,6 +2268,11 @@ void TextureD3D_2DArray::commitRect(GLint level, GLint xoffset, GLint yoffset, G
             image->markClean();
         }
     }
+}
+
+gl::ImageIndexIterator TextureD3D_2DArray::imageIterator() const
+{
+    return gl::ImageIndexIterator::Make2DArray(0, mTexStorage->getLevelCount(), mLayerCounts);
 }
 
 }
