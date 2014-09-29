@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0c347c9_5985a54a",
+        "filename": "util/win32/Win32Window.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T17:37:27Z",
+      "side": 1,
+      "message": "The other option is casting IDC_ARROW to LPCSTR.  Not sure which is cleaner.",
+      "range": {
+        "startLine": 394,
+        "startChar": 50,
+        "endLine": 394,
+        "endChar": 58
+      },
+      "revId": "8017e548fd92d96f60efc96bb87b1dbf3a1b479e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
