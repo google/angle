@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f0220b89_25550e82",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-29T16:04:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "308ae39d_886b36ba",
+      "range": {
+        "startLine": 118,
+        "startChar": 9,
+        "endLine": 118,
+        "endChar": 21
+      },
+      "revId": "82be04207b3dc8eb9d34e82ce98c526626894d11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7069bba1_fbf3a2bb",
         "filename": "src/libGLESv2/State.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2014-09-29T15:05:07Z",
       "side": 1,
       "message": "nit: could be an implicit conversion, in these asserts. worth checking in 32/64 bit Debug for warnings at the very least.",
+      "range": {
+        "startLine": 1034,
+        "startChar": 11,
+        "endLine": 1034,
+        "endChar": 16
+      },
+      "revId": "82be04207b3dc8eb9d34e82ce98c526626894d11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01fc743_245272f3",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1034,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-29T16:04:18Z",
+      "side": 1,
+      "message": "No warnings in either build, but added explicit casts anyway.",
+      "parentUuid": "7069bba1_fbf3a2bb",
       "range": {
         "startLine": 1034,
         "startChar": 11,
