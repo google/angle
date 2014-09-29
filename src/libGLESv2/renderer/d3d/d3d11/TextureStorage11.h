@@ -45,7 +45,7 @@ class TextureStorage11 : public TextureStorage
     virtual ID3D11ShaderResourceView *getSRV(const gl::SamplerState &samplerState);
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index) = 0;
 
-    virtual void generateMipmaps() = 0;
+    virtual void generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex);
 
     virtual int getTopLevel() const;
     virtual bool isRenderTarget() const;
@@ -72,7 +72,6 @@ class TextureStorage11 : public TextureStorage
 
   protected:
     TextureStorage11(Renderer *renderer, UINT bindFlags);
-    void generateMipmapLayer(RenderTarget11 *source, RenderTarget11 *dest);
     int getLevelWidth(int mipLevel) const;
     int getLevelHeight(int mipLevel) const;
     int getLevelDepth(int mipLevel) const;
@@ -163,8 +162,6 @@ class TextureStorage11_2D : public TextureStorage11
     virtual ID3D11Resource *getResource() const;
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
 
-    virtual void generateMipmaps();
-
     virtual void associateImage(Image11* image, int level, int layerTarget);
     virtual void disassociateImage(int level, int layerTarget, Image11* expectedImage);
     virtual bool isAssociatedImageValid(int level, int layerTarget, Image11* expectedImage);
@@ -198,8 +195,6 @@ class TextureStorage11_Cube : public TextureStorage11
 
     virtual ID3D11Resource *getResource() const;
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
-
-    virtual void generateMipmaps();
 
     virtual void associateImage(Image11* image, int level, int layerTarget);
     virtual void disassociateImage(int level, int layerTarget, Image11* expectedImage);
@@ -237,8 +232,6 @@ class TextureStorage11_3D : public TextureStorage11
 
     // Handles both layer and non-layer RTs
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
-
-    virtual void generateMipmaps();
 
     virtual void associateImage(Image11* image, int level, int layerTarget);
     virtual void disassociateImage(int level, int layerTarget, Image11* expectedImage);
@@ -278,8 +271,6 @@ class TextureStorage11_2DArray : public TextureStorage11
 
     virtual ID3D11Resource *getResource() const;
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
-
-    virtual void generateMipmaps();
 
     virtual void associateImage(Image11* image, int level, int layerTarget);
     virtual void disassociateImage(int level, int layerTarget, Image11* expectedImage);

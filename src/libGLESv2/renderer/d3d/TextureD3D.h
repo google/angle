@@ -58,6 +58,8 @@ class TextureD3D : public TextureImpl
     // slices of their depth texures, so 3D textures ignore the layer parameter.
     virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const = 0;
 
+    virtual void generateMipmaps();
+
   protected:
     void setImage(const gl::PixelUnpackState &unpack, GLenum type, const void *pixels, Image *image);
     bool subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
@@ -71,6 +73,7 @@ class TextureD3D : public TextureImpl
 
     GLint creationLevels(GLsizei width, GLsizei height, GLsizei depth) const;
     int mipLevels() const;
+    virtual void initMipmapsImages() = 0;
 
     Renderer *mRenderer;
 
@@ -117,8 +120,6 @@ class TextureD3D_2D : public TextureD3D
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    virtual void generateMipmaps();
-
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
@@ -136,6 +137,7 @@ class TextureD3D_2D : public TextureD3D
     bool ensureRenderTarget();
     virtual TextureStorage *getBaseLevelStorage();
     virtual const ImageD3D *getBaseLevelImage() const;
+    virtual void initMipmapsImages();
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
@@ -177,8 +179,6 @@ class TextureD3D_Cube : public TextureD3D
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    virtual void generateMipmaps();
-
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
@@ -196,6 +196,7 @@ class TextureD3D_Cube : public TextureD3D
     bool ensureRenderTarget();
     virtual TextureStorage *getBaseLevelStorage();
     virtual const ImageD3D *getBaseLevelImage() const;
+    virtual void initMipmapsImages();
 
     bool isValidFaceLevel(int faceIndex, int level) const;
     bool isFaceLevelComplete(int faceIndex, int level) const;
@@ -237,8 +238,6 @@ class TextureD3D_3D : public TextureD3D
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    virtual void generateMipmaps();
-
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
@@ -256,6 +255,7 @@ class TextureD3D_3D : public TextureD3D
     bool ensureRenderTarget();
     virtual TextureStorage *getBaseLevelStorage();
     virtual const ImageD3D *getBaseLevelImage() const;
+    virtual void initMipmapsImages();
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
@@ -296,8 +296,6 @@ class TextureD3D_2DArray : public TextureD3D
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
-    virtual void generateMipmaps();
-
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index);
     virtual unsigned int getRenderTargetSerial(const gl::ImageIndex &index);
 
@@ -315,6 +313,7 @@ class TextureD3D_2DArray : public TextureD3D
     bool ensureRenderTarget();
     virtual TextureStorage *getBaseLevelStorage();
     virtual const ImageD3D *getBaseLevelImage() const;
+    virtual void initMipmapsImages();
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;

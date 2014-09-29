@@ -36,7 +36,7 @@ class TextureStorage
     virtual int getLevelCount() const = 0;
 
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index) = 0;
-    virtual void generateMipmaps() = 0;
+    virtual void generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex) = 0;
 
     unsigned int getRenderTargetSerial(const gl::ImageIndex &index) const;
     unsigned int getTextureSerial() const;
