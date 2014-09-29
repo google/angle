@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7069bba1_3bdefa26",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T15:11:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7069bba1_93037476",
+      "range": {
+        "startLine": 191,
+        "startChar": 11,
+        "endLine": 191,
+        "endChar": 12
+      },
+      "revId": "941cfcd5b72836cd48f36c54b1ecf0b421335d54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "108f9fae_b44ccd55",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/PixelTransfer11.cpp",
         "patchSetId": 8
