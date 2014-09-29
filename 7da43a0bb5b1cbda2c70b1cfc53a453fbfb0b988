@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50f83838_9d4c8309",
+        "filename": "tests/angle_tests/ANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-09-29T20:18:06Z",
+      "side": 1,
+      "message": "Sorry, will fix this.",
+      "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50f83838_7da9b721",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-09-29T20:18:06Z",
+      "side": 1,
+      "message": "Will fix these too.",
+      "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
