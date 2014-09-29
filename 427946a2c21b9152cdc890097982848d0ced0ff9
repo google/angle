@@ -45,6 +45,30 @@
       "revId": "427946a2c21b9152cdc890097982848d0ced0ff9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_5b29ee71",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T14:57:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "907b8f5f_c98d4229",
+      "range": {
+        "startLine": 123,
+        "startChar": 4,
+        "endLine": 123,
+        "endChar": 37
+      },
+      "revId": "427946a2c21b9152cdc890097982848d0ced0ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
