@@ -2,6 +2,69 @@
   "comments": [
     {
       "key": {
+        "uuid": "1026bf9c_accd6748",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T20:26:22Z",
+      "side": 1,
+      "message": "nit: can you associate this CL with the public issue by adding a line \"BUG\u003dangle:611\"",
+      "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1026bf9c_ccc2a317",
+        "filename": "tests/angle_tests/ANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T20:26:22Z",
+      "side": 1,
+      "message": "nit: add to initializer list",
+      "range": {
+        "startLine": 11,
+        "startChar": 4,
+        "endLine": 11,
+        "endChar": 22
+      },
+      "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_7c168f68",
+        "filename": "tests/angle_tests/ANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T20:26:22Z",
+      "side": 1,
+      "message": "nit: use EGL_NONE in place of 0 for requested renderer",
+      "range": {
+        "startLine": 19,
+        "startChar": 45,
+        "endLine": 19,
+        "endChar": 46
+      },
+      "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50f83838_9d4c8309",
         "filename": "tests/angle_tests/ANGLETest.cpp",
         "patchSetId": 1
@@ -19,6 +82,75 @@
     },
     {
       "key": {
+        "uuid": "d0c347c9_9c1d4b81",
+        "filename": "tests/angle_tests/BufferDataTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T20:26:22Z",
+      "side": 1,
+      "message": "nit: these should still be able to live in the initializer list?",
+      "range": {
+        "startLine": 23,
+        "startChar": 8,
+        "endLine": 23,
+        "endChar": 15
+      },
+      "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_dc4fc37d",
+        "filename": "tests/angle_tests/RendererTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T20:26:22Z",
+      "side": 1,
+      "message": "nit: use c++-style casts according to our style guide",
+      "range": {
+        "startLine": 28,
+        "startChar": 46,
+        "endLine": 28,
+        "endChar": 50
+      },
+      "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_763c09d9",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T20:26:22Z",
+      "side": 1,
+      "message": "nit: EGL_NONE",
+      "range": {
+        "startLine": 90,
+        "startChar": 44,
+        "endLine": 90,
+        "endChar": 45
+      },
+      "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50f83838_7da9b721",
         "filename": "util/testfixturetypes.h",
         "patchSetId": 1
@@ -30,6 +162,75 @@
       "writtenOn": "2014-09-29T20:18:06Z",
       "side": 1,
       "message": "Will fix these too.",
+      "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_dcfd03d2",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T20:26:22Z",
+      "side": 1,
+      "message": "nit: did you try using statics for these classes?\n\n  struct D3D11 : RendererType { static EGLint GetRenderer() { return EGL_PLATFORM....; } };",
+      "range": {
+        "startLine": 49,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 9
+      },
+      "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7069bba1_162cadb4",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T20:26:22Z",
+      "side": 1,
+      "message": "nit: I think if you use \"GlesVersionT\" and \"RendererT\" instead of G and R I think it would enhance readability.",
+      "range": {
+        "startLine": 74,
+        "startChar": 21,
+        "endLine": 74,
+        "endChar": 29
+      },
+      "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1026bf9c_6cbb6fa8",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T20:26:22Z",
+      "side": 1,
+      "message": "with the statics, something like:\n\n   requestedRenderer \u003d RendererT::GetRenderer();",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 25
+      },
       "revId": "7da43a0bb5b1cbda2c70b1cfc53a453fbfb0b988",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
