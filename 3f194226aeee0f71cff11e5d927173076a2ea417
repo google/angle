@@ -203,6 +203,30 @@
     },
     {
       "key": {
+        "uuid": "d0c347c9_d67b223c",
+        "filename": "src/libGLESv2/ImageIndex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T14:57:24Z",
+      "side": 1,
+      "message": "Added a current() method, PTAL",
+      "parentUuid": "308ae39d_88925690",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 25
+      },
+      "revId": "3f194226aeee0f71cff11e5d927173076a2ea417",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "907b8f5f_9c38dd54",
         "filename": "src/libGLESv2/ImageIndex.h",
         "patchSetId": 2
