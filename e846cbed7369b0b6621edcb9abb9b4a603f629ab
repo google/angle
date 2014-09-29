@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7069bba1_bbf12a79",
+        "filename": "src/libGLESv2/renderer/Workarounds.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T17:29:07Z",
+      "side": 1,
+      "message": "Whoops, I think this needs to be LIBGLESV2_RENDERER_WORKAROUNDS_H_",
+      "range": {
+        "startLine": 9,
+        "startChar": 8,
+        "endLine": 9,
+        "endChar": 32
+      },
+      "revId": "e846cbed7369b0b6621edcb9abb9b4a603f629ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
