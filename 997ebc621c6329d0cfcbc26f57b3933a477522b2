@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1026bf9c_e96cb10e",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3157,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-09-29T15:47:41Z",
+      "side": 1,
+      "message": "This is mixing styles a bit.  We should either add the workarounds pointer to the parameter list or add another pure method called generateWorkarounds (and make it a private member of Renderer).",
+      "range": {
+        "startLine": 3157,
+        "startChar": 4,
+        "endLine": 3157,
+        "endChar": 46
+      },
+      "revId": "997ebc621c6329d0cfcbc26f57b3933a477522b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
