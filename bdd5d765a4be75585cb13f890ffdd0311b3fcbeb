@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1026bf9c_2c86d790",
+        "filename": "tests/angle_tests/RendererTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T21:57:44Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 8,
+        "startChar": 84,
+        "endLine": 8,
+        "endChar": 85
+      },
+      "revId": "bdd5d765a4be75585cb13f890ffdd0311b3fcbeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
