@@ -305,14 +305,22 @@ gl::Error Image9::copyToStorage2D(TextureStorage *storage, int level, GLint xoff
 {
     ASSERT(getSurface() != NULL);
     TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage);
-    return copyToSurface(storage9->getSurfaceLevel(level, true), xoffset, yoffset, width, height);
+    IDirect3DSurface9 *destSurface = storage9->getSurfaceLevel(level, true);
+
+    gl::Error error = copyToSurface(destSurface, xoffset, yoffset, width, height);
+    SafeRelease(destSurface);
+    return error;
 }
 
 gl::Error Image9::copyToStorageCube(TextureStorage *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     ASSERT(getSurface() != NULL);
     TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage);
-    return copyToSurface(storage9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true), xoffset, yoffset, width, height);
+    IDirect3DSurface9 *destSurface = storage9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true);
+
+    gl::Error error = copyToSurface(destSurface, xoffset, yoffset, width, height);
+    SafeRelease(destSurface);
+    return error;
 }
 
 gl::Error Image9::copyToStorage3D(TextureStorage *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth)
@@ -356,7 +364,6 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, GLint xoffset, G
         HRESULT result = device->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
         if (FAILED(result))
         {
-            SafeRelease(destSurface);
             return gl::Error(GL_OUT_OF_MEMORY, "Internal CreateOffscreenPlainSurface call failed, result: 0x%X.", result);
         }
 
@@ -366,7 +373,6 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, GLint xoffset, G
         ASSERT(SUCCEEDED(result));
         if (FAILED(result))
         {
-            SafeRelease(destSurface);
             return gl::Error(GL_OUT_OF_MEMORY, "Internal UpdateSurface call failed, result: 0x%X.", result);
         }
     }
@@ -377,12 +383,10 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, GLint xoffset, G
         ASSERT(SUCCEEDED(result));
         if (FAILED(result))
         {
-            SafeRelease(destSurface);
             return gl::Error(GL_OUT_OF_MEMORY, "Internal UpdateSurface call failed, result: 0x%X.", result);
         }
     }
 
-    SafeRelease(destSurface);
     return gl::Error(GL_NO_ERROR);
 }
 
