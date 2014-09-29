@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d0c347c9_d94fd57d",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-29T17:27:42Z",
+      "side": 1,
+      "message": "Good catch on the crash, +1 for fixing that.\n\nIf we\u0027re doing a stop-gap measure, IMHO we should use one that doesn\u0027t introduce regressions, perf or runtime error-wise. An idea is simply to pass the OffsetBindingPointer array directly from state to Renderer -- as you say we can clean this up in the draw refactor patch. What do you think?",
+      "parentUuid": "1026bf9c_ec303f0a",
+      "range": {
+        "startLine": 1582,
+        "startChar": 8,
+        "endLine": 1588,
+        "endChar": 9
+      },
+      "revId": "4e33e2bee1e2425a07064ffebdfa1e44145c816f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1026bf9c_2c133778",
         "filename": "src/libGLESv2/State.cpp",
         "patchSetId": 3
