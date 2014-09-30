@@ -205,7 +205,7 @@ gl::Error TextureStorage9_2D::copyToStorage(TextureStorage *destStorage)
     for (int i = 0; i < levels; ++i)
     {
         IDirect3DSurface9 *srcSurf = getSurfaceLevel(i, false);
-        IDirect3DSurface9 *dstSurf = dest9->getSurfaceLevel(i, false);
+        IDirect3DSurface9 *dstSurf = dest9->getSurfaceLevel(i, true);
 
         gl::Error error = mRenderer->copyToRenderTarget(dstSurf, srcSurf, isManaged());
 
