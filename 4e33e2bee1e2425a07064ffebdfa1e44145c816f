@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f05e8c2a_aad24f0c",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-30T22:30:53Z",
+      "side": 1,
+      "message": "Ugh, I must have been thinking about std::map semantic while typing this.\n\nI addressed the greater dynamic allocation issue by passing the state directly to the renderer. Some further work there removes the need for dynamic allocation.",
+      "parentUuid": "1026bf9c_ec303f0a",
+      "range": {
+        "startLine": 1582,
+        "startChar": 8,
+        "endLine": 1588,
+        "endChar": 9
+      },
+      "revId": "4e33e2bee1e2425a07064ffebdfa1e44145c816f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1026bf9c_2c133778",
         "filename": "src/libGLESv2/State.cpp",
         "patchSetId": 3
@@ -60,6 +84,30 @@
       "writtenOn": "2014-09-29T17:21:35Z",
       "side": 1,
       "message": "Formatting",
+      "range": {
+        "startLine": 1365,
+        "startChar": 8,
+        "endLine": 1365,
+        "endChar": 10
+      },
+      "revId": "4e33e2bee1e2425a07064ffebdfa1e44145c816f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06348f0_49ae412c",
+        "filename": "src/libGLESv2/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1365,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-30T22:30:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1026bf9c_2c133778",
       "range": {
         "startLine": 1365,
         "startChar": 8,
@@ -118,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "b0589442_48dabf2d",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 992,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-30T22:30:53Z",
+      "side": 1,
+      "message": "The changes here include keeping track of d3d buffer/offset data in class member arrays, which can be changed to vectors when the arrays outside of State are taken care of. This will avoid the need for allocations in this function, and all vectors can be sized with the same caps value.",
+      "parentUuid": "d0c347c9_590ac544",
+      "range": {
+        "startLine": 991,
+        "startChar": 4,
+        "endLine": 992,
+        "endChar": 33
+      },
+      "revId": "4e33e2bee1e2425a07064ffebdfa1e44145c816f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0c347c9_f921f1c1",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -129,6 +201,30 @@
       "writtenOn": "2014-09-29T17:21:35Z",
       "side": 1,
       "message": "Extra whitespace.",
+      "range": {
+        "startLine": 1022,
+        "startChar": 83,
+        "endLine": 1022,
+        "endChar": 84
+      },
+      "revId": "4e33e2bee1e2425a07064ffebdfa1e44145c816f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06348f0_69f7c539",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-09-30T22:30:53Z",
+      "side": 1,
+      "message": "Done. Also shortened the comment, as there\u0027s now an assertion at the head of the function that illustrates this.",
+      "parentUuid": "d0c347c9_f921f1c1",
       "range": {
         "startLine": 1022,
         "startChar": 83,
