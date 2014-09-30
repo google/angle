@@ -284,6 +284,57 @@ void TextureD3D::generateMipmaps()
     }
 }
 
+bool TextureD3D::isBaseImageZeroSize() const
+{
+    Image *baseImage = getImage(getImageIndex(0, 0));
+
+    if (!baseImage || baseImage->getWidth() <= 0)
+    {
+        return true;
+    }
+
+    if (!gl::IsCubemapTextureTarget(baseImage->getTarget()) && baseImage->getHeight() <= 0)
+    {
+        return true;
+    }
+
+    if (baseImage->getTarget() == GL_TEXTURE_3D && baseImage->getDepth() <= 0)
+    {
+        return true;
+    }
+
+    if (baseImage->getTarget() == GL_TEXTURE_2D_ARRAY && getLayerCount(0) <= 0)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool TextureD3D::ensureRenderTarget()
+{
+    initializeStorage(true);
+
+    if (!isBaseImageZeroSize())
+    {
+        ASSERT(mTexStorage);
+        if (!mTexStorage->isRenderTarget())
+        {
+            TextureStorage *newRenderTargetStorage = createCompleteStorage(true);
+
+            if (mTexStorage->copyToStorage(newRenderTargetStorage).isError())
+            {
+                delete newRenderTargetStorage;
+                return gl::error(GL_OUT_OF_MEMORY, false);
+            }
+
+            setCompleteTexStorage(newRenderTargetStorage);
+        }
+    }
+
+    return (mTexStorage && mTexStorage->isRenderTarget());
+}
+
 TextureD3D_2D::TextureD3D_2D(Renderer *renderer)
     : TextureD3D(renderer)
 {
@@ -758,30 +809,6 @@ void TextureD3D_2D::updateStorage()
     }
 }
 
-bool TextureD3D_2D::ensureRenderTarget()
-{
-    initializeStorage(true);
-
-    if (getBaseLevelWidth() > 0 && getBaseLevelHeight() > 0)
-    {
-        ASSERT(mTexStorage);
-        if (!mTexStorage->isRenderTarget())
-        {
-            TextureStorage *newRenderTargetStorage = createCompleteStorage(true);
-
-            if (mTexStorage->copyToStorage(newRenderTargetStorage).isError())
-            {
-                delete newRenderTargetStorage;
-                return gl::error(GL_OUT_OF_MEMORY, false);
-            }
-
-            setCompleteTexStorage(newRenderTargetStorage);
-        }
-    }
-
-    return (mTexStorage && mTexStorage->isRenderTarget());
-}
-
 const ImageD3D *TextureD3D_2D::getBaseLevelImage() const
 {
     return mImageArray[0];
@@ -1226,30 +1253,6 @@ void TextureD3D_Cube::updateStorage()
             }
         }
     }
-}
-
-bool TextureD3D_Cube::ensureRenderTarget()
-{
-    initializeStorage(true);
-
-    if (getBaseLevelWidth() > 0)
-    {
-        ASSERT(mTexStorage);
-        if (!mTexStorage->isRenderTarget())
-        {
-            TextureStorage *newRenderTargetStorage = createCompleteStorage(true);
-
-            if (mTexStorage->copyToStorage(newRenderTargetStorage).isError())
-            {
-                delete newRenderTargetStorage;
-                return gl::error(GL_OUT_OF_MEMORY, false);
-            }
-
-            setCompleteTexStorage(newRenderTargetStorage);
-        }
-    }
-
-    return (mTexStorage && mTexStorage->isRenderTarget());
 }
 
 const ImageD3D *TextureD3D_Cube::getBaseLevelImage() const
@@ -1760,30 +1763,6 @@ void TextureD3D_3D::updateStorage()
     }
 }
 
-bool TextureD3D_3D::ensureRenderTarget()
-{
-    initializeStorage(true);
-
-    if (getBaseLevelWidth() > 0 && getBaseLevelHeight() > 0 && getBaseLevelDepth() > 0)
-    {
-        ASSERT(mTexStorage);
-        if (!mTexStorage->isRenderTarget())
-        {
-            TextureStorage *newRenderTargetStorage = createCompleteStorage(true);
-
-            if (mTexStorage->copyToStorage(newRenderTargetStorage).isError())
-            {
-                delete newRenderTargetStorage;
-                return gl::error(GL_OUT_OF_MEMORY, false);
-            }
-
-            setCompleteTexStorage(newRenderTargetStorage);
-        }
-    }
-
-    return (mTexStorage && mTexStorage->isRenderTarget());
-}
-
 const ImageD3D *TextureD3D_3D::getBaseLevelImage() const
 {
     return mImageArray[0];
@@ -2265,30 +2244,6 @@ void TextureD3D_2DArray::updateStorage()
             updateStorageLevel(level);
         }
     }
-}
-
-bool TextureD3D_2DArray::ensureRenderTarget()
-{
-    initializeStorage(true);
-
-    if (getBaseLevelWidth() > 0 && getBaseLevelHeight() > 0 && getLayers(0) > 0)
-    {
-        ASSERT(mTexStorage);
-        if (!mTexStorage->isRenderTarget())
-        {
-            TextureStorage *newRenderTargetStorage = createCompleteStorage(true);
-
-            if (mTexStorage->copyToStorage(newRenderTargetStorage).isError())
-            {
-                delete newRenderTargetStorage;
-                return gl::error(GL_OUT_OF_MEMORY, false);
-            }
-
-            setCompleteTexStorage(newRenderTargetStorage);
-        }
-    }
-
-    return (mTexStorage && mTexStorage->isRenderTarget());
 }
 
 const ImageD3D *TextureD3D_2DArray::getBaseLevelImage() const

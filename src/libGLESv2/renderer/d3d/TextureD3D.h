@@ -75,6 +75,12 @@ class TextureD3D : public TextureImpl
     GLint creationLevels(GLsizei width, GLsizei height, GLsizei depth) const;
     int mipLevels() const;
     virtual void initMipmapsImages() = 0;
+    bool isBaseImageZeroSize() const;
+
+    virtual bool ensureRenderTarget();
+
+    virtual TextureStorage *createCompleteStorage(bool renderTarget) const = 0;
+    virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage) = 0;
 
     Renderer *mRenderer;
 
@@ -131,11 +137,10 @@ class TextureD3D_2D : public TextureD3D
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2D);
 
     virtual void initializeStorage(bool renderTarget);
-    TextureStorage *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
+    virtual TextureStorage *createCompleteStorage(bool renderTarget) const;
+    virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual void updateStorage();
-    bool ensureRenderTarget();
     virtual const ImageD3D *getBaseLevelImage() const;
     virtual void initMipmapsImages();
 
@@ -188,11 +193,10 @@ class TextureD3D_Cube : public TextureD3D
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_Cube);
 
     virtual void initializeStorage(bool renderTarget);
-    TextureStorage *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
+    virtual TextureStorage *createCompleteStorage(bool renderTarget) const;
+    virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual void updateStorage();
-    bool ensureRenderTarget();
     virtual const ImageD3D *getBaseLevelImage() const;
     virtual void initMipmapsImages();
 
@@ -244,11 +248,10 @@ class TextureD3D_3D : public TextureD3D
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_3D);
 
     virtual void initializeStorage(bool renderTarget);
-    TextureStorage *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
+    virtual TextureStorage *createCompleteStorage(bool renderTarget) const;
+    virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual void updateStorage();
-    bool ensureRenderTarget();
     virtual const ImageD3D *getBaseLevelImage() const;
     virtual void initMipmapsImages();
 
@@ -299,11 +302,10 @@ class TextureD3D_2DArray : public TextureD3D
     DISALLOW_COPY_AND_ASSIGN(TextureD3D_2DArray);
 
     virtual void initializeStorage(bool renderTarget);
-    TextureStorage *createCompleteStorage(bool renderTarget) const;
-    void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
+    virtual TextureStorage *createCompleteStorage(bool renderTarget) const;
+    virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual void updateStorage();
-    bool ensureRenderTarget();
     virtual const ImageD3D *getBaseLevelImage() const;
     virtual void initMipmapsImages();
 
