@@ -70,6 +70,8 @@ class TextureStorage11 : public TextureStorage
     virtual bool isAssociatedImageValid(int level, int layerTarget, Image11* expectedImage) = 0;
     virtual void releaseAssociatedImage(int level, int layerTarget, Image11* incomingImage) = 0;
 
+    virtual gl::Error copyToStorage(TextureStorage *destStorage);
+
   protected:
     TextureStorage11(Renderer *renderer, UINT bindFlags);
     int getLevelWidth(int mipLevel) const;

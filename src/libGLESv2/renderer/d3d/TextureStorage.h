@@ -10,6 +10,7 @@
 #define LIBGLESV2_RENDERER_TEXTURESTORAGE_H_
 
 #include "common/debug.h"
+#include "libGLESv2/Error.h"
 
 #include <GLES2/gl2.h>
 
@@ -37,6 +38,8 @@ class TextureStorage
 
     virtual RenderTarget *getRenderTarget(const gl::ImageIndex &index) = 0;
     virtual void generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex) = 0;
+
+    virtual gl::Error copyToStorage(TextureStorage *destStorage) = 0;
 
     unsigned int getRenderTargetSerial(const gl::ImageIndex &index) const;
     unsigned int getTextureSerial() const;

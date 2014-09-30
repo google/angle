@@ -400,6 +400,20 @@ void TextureStorage11::verifySwizzleExists(GLenum swizzleRed, GLenum swizzleGree
     }
 }
 
+gl::Error TextureStorage11::copyToStorage(TextureStorage *destStorage)
+{
+    ASSERT(destStorage);
+
+    TextureStorage11 *dest11 = TextureStorage11::makeTextureStorage11(destStorage);
+
+    ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
+    immediateContext->CopyResource(dest11->getResource(), getResource());
+
+    dest11->invalidateSwizzleCache();
+
+    return gl::Error(GL_NO_ERROR);
+}
+
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapchain)
     : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
       mTexture(swapchain->getOffscreenTexture()),
