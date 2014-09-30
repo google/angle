@@ -22,6 +22,30 @@
       "revId": "e9ad353ba3ea4044004df74078bd902f1baf0cb8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1026bf9c_3568da6e",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-30T18:54:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0150830_338fe8ba",
+      "range": {
+        "startLine": 430,
+        "startChar": 0,
+        "endLine": 430,
+        "endChar": 4
+      },
+      "revId": "e9ad353ba3ea4044004df74078bd902f1baf0cb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
