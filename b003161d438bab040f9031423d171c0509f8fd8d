@@ -22,6 +22,30 @@
       "revId": "b003161d438bab040f9031423d171c0509f8fd8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1026bf9c_d5786602",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-30T19:40:22Z",
+      "side": 1,
+      "message": "Went with isBaseImageZeroSize.. since that\u0027s pretty much what it checks. (0 could be a \"valid\" size)",
+      "parentUuid": "1026bf9c_3587fac5",
+      "range": {
+        "startLine": 78,
+        "startChar": 4,
+        "endLine": 78,
+        "endChar": 26
+      },
+      "revId": "b003161d438bab040f9031423d171c0509f8fd8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
