@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1026bf9c_957eeeec",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-30T19:39:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "100240f8_a42e08ab",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 17
+      },
+      "revId": "7fa52e032657930153431f46f40419f56401da88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0c347c9_cb8377b3",
         "filename": "src/libGLESv2/renderer/d3d/d3d9/TextureStorage9.h",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2014-09-30T19:20:45Z",
       "side": 1,
       "message": "Don\u0027t need this declaration.",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 69
+      },
+      "revId": "7fa52e032657930153431f46f40419f56401da88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c347c9_ab1f1bbf",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/TextureStorage9.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-09-30T19:39:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0c347c9_cb8377b3",
       "range": {
         "startLine": 45,
         "startChar": 4,
