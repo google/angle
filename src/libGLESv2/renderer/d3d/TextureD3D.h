@@ -60,6 +60,7 @@ class TextureD3D : public TextureImpl
 
     virtual void generateMipmaps();
     TextureStorage *getStorage();
+    Image *getBaseLevelImage() const;
 
   protected:
     gl::Error setImage(const gl::PixelUnpackState &unpack, GLenum type, const void *pixels, Image *image);
@@ -97,7 +98,6 @@ class TextureD3D : public TextureImpl
     virtual void initializeStorage(bool renderTarget) = 0;
 
     virtual void updateStorage() = 0;
-    virtual const ImageD3D *getBaseLevelImage() const = 0;
 };
 
 class TextureD3D_2D : public TextureD3D
@@ -141,7 +141,6 @@ class TextureD3D_2D : public TextureD3D
     virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual void updateStorage();
-    virtual const ImageD3D *getBaseLevelImage() const;
     virtual void initMipmapsImages();
 
     bool isValidLevel(int level) const;
@@ -197,7 +196,6 @@ class TextureD3D_Cube : public TextureD3D
     virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual void updateStorage();
-    virtual const ImageD3D *getBaseLevelImage() const;
     virtual void initMipmapsImages();
 
     bool isValidFaceLevel(int faceIndex, int level) const;
@@ -252,7 +250,6 @@ class TextureD3D_3D : public TextureD3D
     virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual void updateStorage();
-    virtual const ImageD3D *getBaseLevelImage() const;
     virtual void initMipmapsImages();
 
     bool isValidLevel(int level) const;
@@ -277,7 +274,6 @@ class TextureD3D_2DArray : public TextureD3D
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
-    GLsizei getLayers(GLint level) const;
     GLenum getInternalFormat(GLint level) const;
     bool isDepth(GLint level) const;
 
@@ -306,7 +302,6 @@ class TextureD3D_2DArray : public TextureD3D
     virtual void setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual void updateStorage();
-    virtual const ImageD3D *getBaseLevelImage() const;
     virtual void initMipmapsImages();
 
     bool isValidLevel(int level) const;
