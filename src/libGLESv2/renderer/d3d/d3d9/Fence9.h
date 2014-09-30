@@ -21,10 +21,8 @@ class Fence9 : public FenceImpl
     explicit Fence9(rx::Renderer9 *renderer);
     virtual ~Fence9();
 
-    bool isSet() const;
-    void set();
-    bool test(bool flushCommandBuffer);
-    bool hasError() const;
+    gl::Error set();
+    gl::Error test(bool flushCommandBuffer, GLboolean *outFinished);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Fence9);

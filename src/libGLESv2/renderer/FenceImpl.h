@@ -9,6 +9,8 @@
 #ifndef LIBGLESV2_RENDERER_FENCEIMPL_H_
 #define LIBGLESV2_RENDERER_FENCEIMPL_H_
 
+#include "libGLESv2/Error.h"
+
 #include "common/angleutils.h"
 
 namespace rx
@@ -20,10 +22,8 @@ class FenceImpl
     FenceImpl() { };
     virtual ~FenceImpl() { };
 
-    virtual bool isSet() const = 0;
-    virtual void set() = 0;
-    virtual bool test(bool flushCommandBuffer) = 0;
-    virtual bool hasError() const = 0;
+    virtual gl::Error set() = 0;
+    virtual gl::Error test(bool flushCommandBuffer, GLboolean *outFinished) = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(FenceImpl);

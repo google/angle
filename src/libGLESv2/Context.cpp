@@ -240,14 +240,9 @@ GLuint Context::createRenderbuffer()
     return mResourceManager->createRenderbuffer();
 }
 
-GLsync Context::createFenceSync(GLenum condition)
+GLsync Context::createFenceSync()
 {
     GLuint handle = mResourceManager->createFenceSync();
-
-    gl::FenceSync *fenceSync = mResourceManager->getFenceSync(handle);
-    ASSERT(fenceSync);
-
-    fenceSync->set(condition);
 
     return reinterpret_cast<GLsync>(handle);
 }

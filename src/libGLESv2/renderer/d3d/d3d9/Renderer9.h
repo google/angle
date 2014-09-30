@@ -52,7 +52,7 @@ class Renderer9 : public Renderer
 
     virtual SwapChain *createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
 
-    IDirect3DQuery9* allocateEventQuery();
+    gl::Error allocateEventQuery(IDirect3DQuery9 **outQuery);
     void freeEventQuery(IDirect3DQuery9* query);
 
     // resource creation

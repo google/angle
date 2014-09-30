@@ -9,6 +9,8 @@
 #ifndef LIBGLESV2_FENCE_H_
 #define LIBGLESV2_FENCE_H_
 
+#include "libGLESv2/Error.h"
+
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 
@@ -28,10 +30,10 @@ class FenceNV
     virtual ~FenceNV();
 
     GLboolean isFence() const;
-    void setFence(GLenum condition);
-    GLboolean testFence();
-    void finishFence();
-    GLint getFencei(GLenum pname);
+    Error setFence(GLenum condition);
+    Error testFence(GLboolean *outResult);
+    Error finishFence();
+    Error getFencei(GLenum pname, GLint *params);
 
     GLboolean getStatus() const { return mStatus; }
     GLuint getCondition() const { return mCondition; }
@@ -40,6 +42,8 @@ class FenceNV
     DISALLOW_COPY_AND_ASSIGN(FenceNV);
 
     rx::FenceImpl *mFence;
+
+    bool mIsSet;
 
     GLboolean mStatus;
     GLenum mCondition;
@@ -51,10 +55,10 @@ class FenceSync : public RefCountObject
     explicit FenceSync(rx::Renderer *renderer, GLuint id);
     virtual ~FenceSync();
 
-    void set(GLenum condition);
-    GLenum clientWait(GLbitfield flags, GLuint64 timeout);
-    void serverWait();
-    GLenum getStatus() const;
+    Error set(GLenum condition);
+    Error clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult);
+    Error serverWait();
+    Error getStatus(GLint *outResult) const;
 
     GLuint getCondition() const { return mCondition; }
 

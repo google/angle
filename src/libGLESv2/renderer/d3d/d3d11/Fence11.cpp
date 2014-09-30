@@ -14,9 +14,9 @@ namespace rx
 {
 
 Fence11::Fence11(rx::Renderer11 *renderer)
+    : mRenderer(renderer),
+      mQuery(NULL)
 {
-    mRenderer = renderer;
-    mQuery = NULL;
 }
 
 Fence11::~Fence11()
@@ -24,12 +24,7 @@ Fence11::~Fence11()
     SafeRelease(mQuery);
 }
 
-bool Fence11::isSet() const
-{
-    return mQuery != NULL;
-}
-
-void Fence11::set()
+gl::Error Fence11::set()
 {
     if (!mQuery)
     {
@@ -37,34 +32,36 @@ void Fence11::set()
         queryDesc.Query = D3D11_QUERY_EVENT;
         queryDesc.MiscFlags = 0;
 
-        if (FAILED(mRenderer->getDevice()->CreateQuery(&queryDesc, &mQuery)))
+        HRESULT result = mRenderer->getDevice()->CreateQuery(&queryDesc, &mQuery);
+        if (FAILED(result))
         {
-            return gl::error(GL_OUT_OF_MEMORY);
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create event query, result: 0x%X.", result);
         }
     }
 
     mRenderer->getDeviceContext()->End(mQuery);
+    return gl::Error(GL_NO_ERROR);
 }
 
-bool Fence11::test(bool flushCommandBuffer)
+gl::Error Fence11::test(bool flushCommandBuffer, GLboolean *outFinished)
 {
     ASSERT(mQuery);
 
     UINT getDataFlags = (flushCommandBuffer ? 0 : D3D11_ASYNC_GETDATA_DONOTFLUSH);
     HRESULT result = mRenderer->getDeviceContext()->GetData(mQuery, NULL, 0, getDataFlags);
 
-    if (mRenderer->isDeviceLost())
+    if (FAILED(result))
     {
-       return gl::error(GL_OUT_OF_MEMORY, true);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to get query data, result: 0x%X.", result);
+    }
+    else if (mRenderer->isDeviceLost())
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Device was lost while querying result of an event query.");
     }
 
     ASSERT(result == S_OK || result == S_FALSE);
-    return (result == S_OK);
-}
-
-bool Fence11::hasError() const
-{
-    return mRenderer->isDeviceLost();
+    *outFinished = ((result == S_OK) ? GL_TRUE : GL_FALSE);
+    return gl::Error(GL_NO_ERROR);
 }
 
 }

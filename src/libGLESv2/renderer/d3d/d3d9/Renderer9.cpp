@@ -492,15 +492,14 @@ void Renderer9::endScene()
 
 void Renderer9::sync(bool block)
 {
-    HRESULT result;
-
-    IDirect3DQuery9* query = allocateEventQuery();
-    if (!query)
+    IDirect3DQuery9* query = NULL;
+    gl::Error error = allocateEventQuery(&query);
+    if (error.isError())
     {
         return;
     }
 
-    result = query->Issue(D3DISSUE_END);
+    HRESULT result = query->Issue(D3DISSUE_END);
     ASSERT(SUCCEEDED(result));
 
     do
@@ -535,23 +534,24 @@ SwapChain *Renderer9::createSwapChain(rx::NativeWindow nativeWindow, HANDLE shar
     return new rx::SwapChain9(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat);
 }
 
-IDirect3DQuery9* Renderer9::allocateEventQuery()
+gl::Error Renderer9::allocateEventQuery(IDirect3DQuery9 **outQuery)
 {
-    IDirect3DQuery9 *query = NULL;
-
     if (mEventQueryPool.empty())
     {
-        HRESULT result = mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &query);
-        UNUSED_ASSERTION_VARIABLE(result);
-        ASSERT(SUCCEEDED(result));
+        HRESULT result = mDevice->CreateQuery(D3DQUERYTYPE_EVENT, outQuery);
+        if (FAILED(result))
+        {
+            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate event query, result: 0x%X.", result);
+        }
     }
     else
     {
-        query = mEventQueryPool.back();
+        *outQuery = mEventQueryPool.back();
         mEventQueryPool.pop_back();
     }
 
-    return query;
+    return gl::Error(GL_NO_ERROR);
 }
 
 void Renderer9::freeEventQuery(IDirect3DQuery9* query)

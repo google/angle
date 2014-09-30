@@ -86,7 +86,7 @@ class Context
     GLuint createRenderbuffer();
     GLuint createSampler();
     GLuint createTransformFeedback();
-    GLsync createFenceSync(GLenum condition);
+    GLsync createFenceSync();
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);

@@ -2117,7 +2117,12 @@ void __stdcall glGetFenceivNV(GLuint fence, GLenum pname, GLint *params)
             return;
         }
 
-        params[0] = fenceObject->getFencei(pname);
+        gl::Error error = fenceObject->getFencei(pname, params);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -3861,7 +3866,12 @@ void __stdcall glSetFenceNV(GLuint fence, GLenum condition)
             return;
         }
 
-        fenceObject->setFence(condition);
+        gl::Error error = fenceObject->setFence(condition);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -4135,7 +4145,15 @@ GLboolean __stdcall glTestFenceNV(GLuint fence)
             return GL_TRUE;
         }
 
-        return fenceObject->testFence();
+        GLboolean result;
+        gl::Error error = fenceObject->testFence(&result);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return GL_TRUE;
+        }
+
+        return result;
     }
 
     return GL_TRUE;
@@ -7350,7 +7368,18 @@ GLsync __stdcall glFenceSync(GLenum condition, GLbitfield flags)
             return 0;
         }
 
-        return context->createFenceSync(condition);
+        GLsync fenceSync = context->createFenceSync();
+
+        gl::FenceSync *fenceSyncObject = context->getFenceSync(fenceSync);
+        gl::Error error = fenceSyncObject->set(condition);
+        if (error.isError())
+        {
+            context->deleteFenceSync(fenceSync);
+            context->recordError(error);
+            return NULL;
+        }
+
+        return fenceSync;
     }
 
     return NULL;
@@ -7426,7 +7455,15 @@ GLenum __stdcall glClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
             return GL_WAIT_FAILED;
         }
 
-        return fenceSync->clientWait(flags, timeout);
+        GLenum result = GL_WAIT_FAILED;
+        gl::Error error = fenceSync->clientWait(flags, timeout, &result);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return GL_WAIT_FAILED;
+        }
+
+        return result;
     }
 
     return GL_FALSE;
@@ -7466,7 +7503,11 @@ void __stdcall glWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
             return;
         }
 
-        fenceSync->serverWait();
+        gl::Error error = fenceSync->serverWait();
+        if (error.isError())
+        {
+            context->recordError(error);
+        }
     }
 }
 
@@ -7533,9 +7574,19 @@ void __stdcall glGetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* 
         switch (pname)
         {
           case GL_OBJECT_TYPE:     values[0] = static_cast<GLint>(GL_SYNC_FENCE);              break;
-          case GL_SYNC_STATUS:     values[0] = static_cast<GLint>(fenceSync->getStatus());     break;
           case GL_SYNC_CONDITION:  values[0] = static_cast<GLint>(fenceSync->getCondition());  break;
           case GL_SYNC_FLAGS:      values[0] = 0;                                              break;
+
+          case GL_SYNC_STATUS:
+            {
+                gl::Error error = fenceSync->getStatus(values);
+                if (error.isError())
+                {
+                    context->recordError(error);
+                    return;
+                }
+                break;
+            }
 
           default:
             context->recordError(gl::Error(GL_INVALID_ENUM));
