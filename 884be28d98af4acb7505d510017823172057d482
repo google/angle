@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0150830_33eb683a",
+        "filename": "src/libGLESv2/renderer/Image.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-30T18:58:49Z",
+      "side": 1,
+      "message": "Can you clean up this unrelated whitespace and the one below when you next update this patch? Thanks!",
+      "range": {
+        "startLine": 7,
+        "startChar": 74,
+        "endLine": 7,
+        "endChar": 75
+      },
+      "revId": "884be28d98af4acb7505d510017823172057d482",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "101b206c_e751aa5b",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-09-30T18:58:49Z",
+      "side": 1,
+      "message": "Nit: Whitespace",
+      "range": {
+        "startLine": 273,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 4
+      },
+      "revId": "884be28d98af4acb7505d510017823172057d482",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
