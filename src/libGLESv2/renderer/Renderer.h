@@ -196,12 +196,13 @@ class Renderer
 
     // Shader operations
     virtual void releaseShaderCompiler() = 0;
-    virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type,
-                                             const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                             bool separatedOutputBuffers) = 0;
-    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, rx::ShaderType type,
-                                                  const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                                  bool separatedOutputBuffers, D3DWorkaroundType workaround) = 0;
+    virtual gl::Error loadExecutable(const void *function, size_t length, rx::ShaderType type,
+                                     const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
+                                     bool separatedOutputBuffers, ShaderExecutable **outExecutable) = 0;
+    virtual gl::Error compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, rx::ShaderType type,
+                                          const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
+                                          bool separatedOutputBuffers, D3DWorkaroundType workaround,
+                                          ShaderExecutable **outExectuable) = 0;
     virtual UniformStorage *createUniformStorage(size_t storageSize) = 0;
 
     // Image operations

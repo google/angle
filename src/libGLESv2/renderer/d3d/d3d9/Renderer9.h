@@ -56,8 +56,8 @@ class Renderer9 : public Renderer
     void freeEventQuery(IDirect3DQuery9* query);
 
     // resource creation
-    IDirect3DVertexShader9 *createVertexShader(const DWORD *function, size_t length);
-    IDirect3DPixelShader9 *createPixelShader(const DWORD *function, size_t length);
+    gl::Error createVertexShader(const DWORD *function, size_t length, IDirect3DVertexShader9 **outShader);
+    gl::Error createPixelShader(const DWORD *function, size_t length, IDirect3DPixelShader9 **outShader);
     HRESULT createVertexBuffer(UINT Length, DWORD Usage, IDirect3DVertexBuffer9 **ppVertexBuffer);
     HRESULT createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, IDirect3DIndexBuffer9 **ppIndexBuffer);
     virtual gl::Error generateSwizzle(gl::Texture *texture);
@@ -143,12 +143,13 @@ class Renderer9 : public Renderer
 
     // Shader operations
     virtual void releaseShaderCompiler();
-    virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type,
-                                             const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                             bool separatedOutputBuffers);
-    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, rx::ShaderType type,
-                                                  const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                                  bool separatedOutputBuffers, D3DWorkaroundType workaround);
+    virtual gl::Error loadExecutable(const void *function, size_t length, rx::ShaderType type,
+                                     const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
+                                     bool separatedOutputBuffers, ShaderExecutable **outExecutable);
+    virtual gl::Error compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, rx::ShaderType type,
+                                          const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
+                                          bool separatedOutputBuffers, D3DWorkaroundType workaround,
+                                          ShaderExecutable **outExectuable);
     virtual UniformStorage *createUniformStorage(size_t storageSize);
 
     // Image operations

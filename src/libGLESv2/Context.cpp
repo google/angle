@@ -638,33 +638,44 @@ void Context::useProgram(GLuint program)
     }
 }
 
-void Context::linkProgram(GLuint program)
+Error Context::linkProgram(GLuint program)
 {
     Program *programObject = mResourceManager->getProgram(program);
 
-    bool linked = programObject->link(getCaps());
+    Error error = programObject->link(getCaps());
+    if (error.isError())
+    {
+        return error;
+    }
 
     // if the current program was relinked successfully we
     // need to install the new executables
-    if (linked && program == mState.getCurrentProgramId())
+    if (programObject->isLinked() && program == mState.getCurrentProgramId())
     {
         mState.setCurrentProgramBinary(programObject->getProgramBinary());
     }
+
+    return Error(GL_NO_ERROR);
 }
 
-void Context::setProgramBinary(GLuint program, GLenum binaryFormat, const void *binary, GLint length)
+Error Context::setProgramBinary(GLuint program, GLenum binaryFormat, const void *binary, GLint length)
 {
     Program *programObject = mResourceManager->getProgram(program);
 
-    bool loaded = programObject->setProgramBinary(binaryFormat, binary, length);
+    Error error = programObject->setProgramBinary(binaryFormat, binary, length);
+    if (error.isError())
+    {
+        return error;
+    }
 
     // if the current program was reloaded successfully we
     // need to install the new executables
-    if (loaded && program == mState.getCurrentProgramId())
+    if (programObject->isLinked() && program == mState.getCurrentProgramId())
     {
         mState.setCurrentProgramBinary(programObject->getProgramBinary());
     }
 
+    return Error(GL_NO_ERROR);
 }
 
 void Context::bindTransformFeedback(GLuint transformFeedback)
