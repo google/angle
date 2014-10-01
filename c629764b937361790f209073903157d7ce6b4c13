@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5094b8fe_661d848c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1004,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-01T14:29:14Z",
+      "side": 1,
+      "message": "is this the final patch series? it seems like you could design this code to not have to use mCurrentD3DBuffers.\n\nthe requiresUpdate check doesn\u0027t need to pre-cache the values... you can iterate them once to determine requiresUpdate then do the mAppliedBuffers update in a second loop.",
+      "range": {
+        "startLine": 1004,
+        "startChar": 12,
+        "endLine": 1004,
+        "endChar": 30
+      },
+      "revId": "c629764b937361790f209073903157d7ce6b4c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
