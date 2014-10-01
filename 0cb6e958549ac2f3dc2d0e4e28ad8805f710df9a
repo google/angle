@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0589442_abe935be",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 989,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-01T15:32:39Z",
+      "side": 1,
+      "message": "To the question about this function in patch set 7: because I don\u0027t think this is better. It\u0027s less clear, still adds an extra array (which I am guessing is what you mean by code style issues?), and requires redundant retrieval of storage objects. But if consensus would prefer this, that\u0027s fine.",
+      "range": {
+        "startLine": 989,
+        "startChar": 17,
+        "endLine": 989,
+        "endChar": 70
+      },
+      "revId": "0cb6e958549ac2f3dc2d0e4e28ad8805f710df9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06348f0_0f1cc90c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1025,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-01T15:32:39Z",
+      "side": 1,
+      "message": "Note that there is a functional change in here, to fix a bug where we would append to buffers instead of start at the new offset if a buffer was rebound with a different offset. This is not really material, given that we can\u0027t really perform this rebinding while XFB is active, because the only allowed way to do so is by changing the current XFB object, and we do not currently track XFB buffer bindings per-object, but there was no point in not addressing it if the function was being overhauled.",
+      "range": {
+        "startLine": 1025,
+        "startChar": 40,
+        "endLine": 1025,
+        "endChar": 115
+      },
+      "revId": "0cb6e958549ac2f3dc2d0e4e28ad8805f710df9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
