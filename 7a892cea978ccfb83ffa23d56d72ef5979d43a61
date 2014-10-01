@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30a1045f_c2b3260c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 946,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-01T14:23:16Z",
+      "side": 1,
+      "message": "this is also redundant.. you can either clean this up now or we can look at it in a future patch, I\u0027m good either way.",
+      "range": {
+        "startLine": 946,
+        "startChar": 60,
+        "endLine": 946,
+        "endChar": 98
+      },
+      "revId": "7a892cea978ccfb83ffa23d56d72ef5979d43a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "109ec022_61b9f2f3",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1275,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-01T14:23:16Z",
+      "side": 1,
+      "message": "ditto here",
+      "range": {
+        "startLine": 1275,
+        "startChar": 60,
+        "endLine": 1275,
+        "endChar": 98
+      },
+      "revId": "7a892cea978ccfb83ffa23d56d72ef5979d43a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
