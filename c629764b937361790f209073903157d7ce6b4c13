@@ -46,6 +46,30 @@
       "revId": "c629764b937361790f209073903157d7ce6b4c13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "109ec022_01910e5a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1004,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-01T14:51:55Z",
+      "side": 1,
+      "message": "That\u0027s good, I\u0027m glad you\u0027re fixing it all up later. I\u0027d still like to avoid adding the code style issues since the fix is so easy -- is there something that I\u0027m missing here? Because it seems like the change is very simple.",
+      "parentUuid": "f05e8c2a_4da88d6d",
+      "range": {
+        "startLine": 1004,
+        "startChar": 12,
+        "endLine": 1004,
+        "endChar": 30
+      },
+      "revId": "c629764b937361790f209073903157d7ce6b4c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
