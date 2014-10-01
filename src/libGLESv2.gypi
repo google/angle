@@ -101,6 +101,7 @@
             'libGLESv2/renderer/Image.h',
             'libGLESv2/renderer/IndexRangeCache.cpp',
             'libGLESv2/renderer/IndexRangeCache.h',
+            'libGLESv2/renderer/ProgramImpl.cpp',
             'libGLESv2/renderer/ProgramImpl.h',
             'libGLESv2/renderer/QueryImpl.h',
             'libGLESv2/renderer/RenderTarget.h',

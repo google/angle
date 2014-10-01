@@ -549,6 +549,7 @@
     <ClCompile Include="..\..\..\..\src\libGLESv2\queryconversions.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\Image.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\IndexRangeCache.cpp"/>
+    <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\ProgramImpl.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\Renderer.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\copyimage.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\loadimage.cpp"/>

@@ -1467,7 +1467,7 @@ gl::Error Renderer11::applyShaders(gl::ProgramBinary *programBinary, const gl::V
 
     if (dirtyUniforms)
     {
-        programBinary->dirtyAllUniforms();
+        programD3D->dirtyAllUniforms();
     }
 
     return gl::Error(GL_NO_ERROR);

@@ -1758,7 +1758,7 @@ gl::Error Renderer9::applyShaders(gl::ProgramBinary *programBinary, const gl::Ve
     unsigned int programSerial = programBinary->getSerial();
     if (programSerial != mAppliedProgramSerial)
     {
-        programBinary->dirtyAllUniforms();
+        programD3D->dirtyAllUniforms();
         mDxUniformsDirty = true;
         mAppliedProgramSerial = programSerial;
     }
