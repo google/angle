@@ -68,6 +68,30 @@
       "revId": "0cb6e958549ac2f3dc2d0e4e28ad8805f710df9a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30a1045f_2201aa73",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-01T16:50:34Z",
+      "side": 1,
+      "message": "Actually, I was wrong in the above -- D3D11 buffer and D3D11 offset isn\u0027t enough information, since you lose the original offset ID. I think GL buffer and offset are sufficient though -- is that correct?",
+      "parentUuid": "30a1045f_a27dba0c",
+      "range": {
+        "startLine": 296,
+        "startChar": 9,
+        "endLine": 296,
+        "endChar": 27
+      },
+      "revId": "0cb6e958549ac2f3dc2d0e4e28ad8805f710df9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
