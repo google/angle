@@ -2,31 +2,25 @@
 #include "EGLWindow.h"
 #include "OSWindow.h"
 
-OSWindow *ANGLETest::mOSWindow = NULL;
-
 ANGLETest::ANGLETest(EGLint glesMajorVersion, EGLint requestedRenderer)
     : mEGLWindow(NULL),
-      mRequestedRenderer(requestedRenderer)
+      mOSWindow(NULL)
 {
     mEGLWindow = new EGLWindow(1280, 720, glesMajorVersion, requestedRenderer);
 }
 
 void ANGLETest::SetUp()
 {
-    // As per the spec for ANGLE_platform_angle, the value of EGL_PLATFORM_ANGLE_TYPE_ANGLE is ignored if an EGLDisplay
-    // was previously created for any value of EGLNativeDisplayType.
-    // As a result, if we wish to request a different display type then we need to recreate the OS Window.
-    if (mOSWindow->getRequestedRenderer() != EGL_NONE && mOSWindow->getRequestedRenderer() != mRequestedRenderer)
+    if (!initTestWindow())
     {
-        ANGLETest::DestroyTestWindow();
-
-        if (!ANGLETest::InitTestWindow())
-        {
-            FAIL() << "Failed to create ANGLE test window.";
-        }
+        FAIL() << "Failed to create ANGLE test window.";
     }
 
-    ResizeWindow(mEGLWindow->getWidth(), mEGLWindow->getHeight());
+    if (!resizeWindow(mEGLWindow->getWidth(), mEGLWindow->getHeight()))
+    {
+        FAIL() << "Failed to resize ANGLE test window.";
+    }
+
     if (!createEGLContext())
     {
         FAIL() << "egl context creation failed.";
@@ -51,6 +45,11 @@ void ANGLETest::TearDown()
         {
             exit(0);
         }
+    }
+
+    if (!destroyTestWindow())
+    {
+        FAIL() << "ANGLE test window destruction failed.";
     }
 }
 
@@ -197,7 +196,7 @@ bool ANGLETest::destroyEGLContext()
     return true;
 }
 
-bool ANGLETest::InitTestWindow()
+bool ANGLETest::initTestWindow()
 {
     mOSWindow = CreateOSWindow();
     if (!mOSWindow->initialize("ANGLE_TEST", 128, 128))
@@ -205,12 +204,12 @@ bool ANGLETest::InitTestWindow()
         return false;
     }
 
-    mOSWindow->setVisible(true);
+    mOSWindow->setVisible(false);
 
     return true;
 }
 
-bool ANGLETest::DestroyTestWindow()
+bool ANGLETest::destroyTestWindow()
 {
     if (mOSWindow)
     {
@@ -222,20 +221,12 @@ bool ANGLETest::DestroyTestWindow()
     return true;
 }
 
-bool ANGLETest::ResizeWindow(int width, int height)
+bool ANGLETest::resizeWindow(int width, int height)
 {
     return mOSWindow->resize(width, height);
 }
 
-void ANGLETestEnvironment::SetUp()
+void ANGLETest::setWindowVisible(bool isVisible)
 {
-    if (!ANGLETest::InitTestWindow())
-    {
-        FAIL() << "Failed to create ANGLE test window.";
-    }
-}
-
-void ANGLETestEnvironment::TearDown()
-{
-    ANGLETest::DestroyTestWindow();
+    mOSWindow->setVisible(isVisible);
 }

@@ -85,6 +85,8 @@ int SampleApplication::run()
         return -1;
     }
 
+    mOSWindow->setVisible(true);
+
     if (!mEGLWindow->initializeGL(mOSWindow.get()))
     {
         return -1;

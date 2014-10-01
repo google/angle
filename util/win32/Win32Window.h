@@ -29,7 +29,7 @@ class Win32Window : public OSWindow
 
     void setMousePosition(int x, int y);
     bool resize(int width, int height);
-    bool setVisible(bool isVisible);
+    void setVisible(bool isVisible);
 
   private:
     std::string mParentClassName;

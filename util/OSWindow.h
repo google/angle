@@ -28,9 +28,6 @@ class OSWindow
     virtual EGLNativeWindowType getNativeWindow() const = 0;
     virtual EGLNativeDisplayType getNativeDisplay() const = 0;
 
-    void setRequestedRenderer(EGLint requestedDisplayType);
-    EGLint getRequestedRenderer() const ;
-
     virtual void messageLoop() = 0;
 
     bool popEvent(Event *event);
@@ -38,13 +35,11 @@ class OSWindow
 
     virtual void setMousePosition(int x, int y) = 0;
     virtual bool resize(int width, int height) = 0;
-    virtual bool setVisible(bool isVisible) = 0;
+    virtual void setVisible(bool isVisible) = 0;
 
   protected:
     int mWidth;
     int mHeight;
-
-    EGLint mRequestedRenderer;
 
     std::list<Event> mEvents;
 };

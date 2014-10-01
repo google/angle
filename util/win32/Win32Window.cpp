@@ -417,7 +417,7 @@ bool Win32Window::initialize(const std::string &name, size_t width, size_t heigh
         return false;
     }
 
-    DWORD parentStyle = WS_VISIBLE | WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU;
+    DWORD parentStyle = WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU;
     DWORD parentExtendedStyle = WS_EX_APPWINDOW;
 
     RECT sizeRect = { 0, 0, width, height };
@@ -427,7 +427,7 @@ bool Win32Window::initialize(const std::string &name, size_t width, size_t heigh
                                     sizeRect.right - sizeRect.left, sizeRect.bottom - sizeRect.top, NULL, NULL,
                                     GetModuleHandle(NULL), this);
 
-    mNativeWindow = CreateWindowExA(0, mChildClassName.c_str(), name.c_str(), WS_VISIBLE | WS_CHILD, 0, 0, width, height,
+    mNativeWindow = CreateWindowExA(0, mChildClassName.c_str(), name.c_str(), WS_CHILD, 0, 0, width, height,
                                     mParentWindow, NULL, GetModuleHandle(NULL), this);
 
     mNativeDisplay = GetDC(mNativeWindow);
@@ -536,12 +536,12 @@ bool Win32Window::resize(int width, int height)
     return true;
 }
 
-bool Win32Window::setVisible(bool isVisible)
+void Win32Window::setVisible(bool isVisible)
 {
     int flag = (isVisible ? SW_SHOW : SW_HIDE);
 
-    return (ShowWindow(mNativeWindow, flag) == TRUE) &&
-           (ShowWindow(mParentWindow, flag) == TRUE);
+    ShowWindow(mParentWindow, flag);
+    ShowWindow(mNativeWindow, flag);
 }
 
 void Win32Window::pushEvent(Event event)
