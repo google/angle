@@ -6,9 +6,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\samples\samples.gyp"/>
     <ClCompile Include="..\..\samples\dds_to_header\main.cpp">
       <Filter>dds_to_header</Filter>
     </ClCompile>
+    <None Include="..\..\samples\samples.gyp"/>
   </ItemGroup>
 </Project>

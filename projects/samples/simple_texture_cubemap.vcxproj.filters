@@ -9,9 +9,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\samples\samples.gyp"/>
     <ClCompile Include="..\..\samples\angle\simple_texture_cubemap\SimpleTextureCubemap.cpp">
       <Filter>angle\simple_texture_cubemap</Filter>
     </ClCompile>
+    <None Include="..\..\samples\samples.gyp"/>
   </ItemGroup>
 </Project>

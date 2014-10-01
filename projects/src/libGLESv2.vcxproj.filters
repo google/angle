@@ -4,17 +4,23 @@
     <Filter Include="libGLESv2">
       <UniqueIdentifier>{A62A9415-2E9D-A6D2-631D-1F25A5CD626F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="libGLESv2">
+      <UniqueIdentifier>{A62A9415-2E9D-A6D2-631D-1F25A5CD626F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libGLESv2">
+      <UniqueIdentifier>{A62A9415-2E9D-A6D2-631D-1F25A5CD626F}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\src\angle.gyp"/>
+    <ClCompile Include="..\..\src\libGLESv2\libGLESv2.cpp">
+      <Filter>libGLESv2</Filter>
+    </ClCompile>
     <None Include="..\..\src\libGLESv2\libGLESv2.def">
       <Filter>libGLESv2</Filter>
     </None>
     <ResourceCompile Include="..\..\src\libGLESv2\libGLESv2.rc">
       <Filter>libGLESv2</Filter>
     </ResourceCompile>
-    <ClCompile Include="..\..\src\libGLESv2\libGLESv2.cpp">
-      <Filter>libGLESv2</Filter>
-    </ClCompile>
+    <None Include="..\..\src\angle.gyp"/>
   </ItemGroup>
 </Project>

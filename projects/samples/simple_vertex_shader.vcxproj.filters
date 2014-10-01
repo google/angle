@@ -9,9 +9,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\samples\samples.gyp"/>
     <ClCompile Include="..\..\samples\angle\simple_vertex_shader\SimpleVertexShader.cpp">
       <Filter>angle\simple_vertex_shader</Filter>
     </ClCompile>
+    <None Include="..\..\samples\samples.gyp"/>
   </ItemGroup>
 </Project>

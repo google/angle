@@ -22,6 +22,7 @@
     <ProjectGuid>{C7BAF548-697D-2DCB-9DF3-9D1506A7B444}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>preprocessor</RootNamespace>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <PropertyGroup Label="Configuration">
@@ -54,12 +55,14 @@
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -81,6 +84,9 @@
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </Midl>
     <ResourceCompile>
       <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
@@ -93,12 +99,14 @@
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -119,6 +127,9 @@
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </Midl>
     <ResourceCompile>
       <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
@@ -129,12 +140,14 @@
       <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -156,6 +169,9 @@
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </Midl>
     <ResourceCompile>
       <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
@@ -167,12 +183,14 @@
       <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -193,44 +211,47 @@
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </Midl>
     <ResourceCompile>
       <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\..\src\angle.gyp"/>
     <None Include="..\..\src\compiler\preprocessor\ExpressionParser.y"/>
     <None Include="..\..\src\compiler\preprocessor\Tokenizer.l"/>
+    <None Include="..\..\src\angle.gyp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\compiler\preprocessor\Tokenizer.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\Lexer.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\Token.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\Preprocessor.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\ExpressionParser.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\MacroExpander.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\Macro.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\pp_utils.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\Input.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\SourceLocation.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\numeric_lex.h"/>
-    <ClInclude Include="..\..\src\compiler\preprocessor\DirectiveParser.h"/>
     <ClInclude Include="..\..\src\compiler\preprocessor\DiagnosticsBase.h"/>
     <ClInclude Include="..\..\src\compiler\preprocessor\DirectiveHandlerBase.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\DirectiveParser.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\ExpressionParser.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\Input.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\Lexer.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\Macro.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\MacroExpander.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\Preprocessor.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\SourceLocation.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\Token.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\Tokenizer.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\numeric_lex.h"/>
+    <ClInclude Include="..\..\src\compiler\preprocessor\pp_utils.h"/>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\compiler\preprocessor\DiagnosticsBase.cpp"/>
+    <ClCompile Include="..\..\src\compiler\preprocessor\DirectiveHandlerBase.cpp"/>
+    <ClCompile Include="..\..\src\compiler\preprocessor\DirectiveParser.cpp"/>
     <ClCompile Include="..\..\src\compiler\preprocessor\ExpressionParser.cpp"/>
     <ClCompile Include="..\..\src\compiler\preprocessor\Input.cpp"/>
-    <ClCompile Include="..\..\src\compiler\preprocessor\Tokenizer.cpp"/>
-    <ClCompile Include="..\..\src\compiler\preprocessor\DirectiveHandlerBase.cpp"/>
     <ClCompile Include="..\..\src\compiler\preprocessor\Lexer.cpp"/>
-    <ClCompile Include="..\..\src\compiler\preprocessor\Token.cpp"/>
     <ClCompile Include="..\..\src\compiler\preprocessor\Macro.cpp"/>
-    <ClCompile Include="..\..\src\compiler\preprocessor\DiagnosticsBase.cpp"/>
-    <ClCompile Include="..\..\src\compiler\preprocessor\Preprocessor.cpp"/>
-    <ClCompile Include="..\..\src\compiler\preprocessor\DirectiveParser.cpp"/>
     <ClCompile Include="..\..\src\compiler\preprocessor\MacroExpander.cpp"/>
+    <ClCompile Include="..\..\src\compiler\preprocessor\Preprocessor.cpp"/>
+    <ClCompile Include="..\..\src\compiler\preprocessor\Token.cpp"/>
+    <ClCompile Include="..\..\src\compiler\preprocessor\Tokenizer.cpp"/>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <ImportGroup Label="ExtensionTargets"/>

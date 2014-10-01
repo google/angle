@@ -9,9 +9,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\samples\samples.gyp"/>
     <ClCompile Include="..\..\samples\angle\post_sub_buffer\PostSubBuffer.cpp">
       <Filter>angle\post_sub_buffer</Filter>
     </ClCompile>
+    <None Include="..\..\samples\samples.gyp"/>
   </ItemGroup>
 </Project>
