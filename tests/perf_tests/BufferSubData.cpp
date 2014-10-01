@@ -207,11 +207,11 @@ bool BufferSubDataBenchmark::initializeBenchmark()
 
 
     std::vector<uint8_t> zeroData(mParams.bufferSize);
-    memset(zeroData.data(), 0, zeroData.size());
+    memset(&zeroData[0], 0, zeroData.size());
 
     glGenBuffers(1, &mBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mParams.bufferSize, zeroData.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, mParams.bufferSize, &zeroData[0], GL_DYNAMIC_DRAW);
 
     glVertexAttribPointer(0, mParams.vertexComponentCount, mParams.vertexType,
                           mParams.vertexNormalized, 0, 0);
@@ -230,14 +230,14 @@ bool BufferSubDataBenchmark::initializeBenchmark()
     mNumTris = mParams.updateSize / triDataSize;
     for (int i = 0, offset = 0; i < mNumTris; ++i)
     {
-        memcpy(mUpdateData + offset, data.data(), triDataSize);
+        memcpy(mUpdateData + offset, &data[0], triDataSize);
         offset += triDataSize;
     }
 
     if (mParams.updateSize == 0)
     {
         mNumTris = 1;
-        glBufferSubData(GL_ARRAY_BUFFER, 0, data.size(), data.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, data.size(), &data[0]);
     }
 
     // Set the viewport

@@ -99,14 +99,14 @@ TYPED_TEST(ReadPixelsTest, OutOfBounds)
     GLint offset = 16;
     std::vector<GLubyte> pixels((pixelsWidth + offset) * (pixelsHeight + offset) * 4);
 
-    glReadPixels(-offset, -offset, pixelsWidth + offset, pixelsHeight + offset, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+    glReadPixels(-offset, -offset, pixelsWidth + offset, pixelsHeight + offset, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
     EXPECT_GL_NO_ERROR();
 
     for (int y = pixelsHeight / 2; y < pixelsHeight; y++)
     {
         for (int x = pixelsWidth / 2; x < pixelsWidth; x++)
         {
-            const GLubyte* pixel = pixels.data() + ((y * (pixelsWidth + offset) + x) * 4);
+            const GLubyte* pixel = &pixels[0] + ((y * (pixelsWidth + offset) + x) * 4);
             unsigned int r = static_cast<unsigned int>(pixel[0]);
             unsigned int g = static_cast<unsigned int>(pixel[1]);
             unsigned int b = static_cast<unsigned int>(pixel[2]);

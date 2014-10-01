@@ -111,13 +111,13 @@ protected:
         glDrawElements(GL_LINE_STRIP, 5, GL_UNSIGNED_BYTE, stripIndices);
 
         std::vector<GLubyte> pixels(getWindowWidth() * getWindowHeight() * 4);
-        glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+        glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
 
         for (int y = 0; y < getWindowHeight(); y++)
         {
             for (int x = 0; x < getWindowWidth(); x++)
             {
-                const GLubyte* pixel = pixels.data() + ((y * getWindowWidth() + x) * 4);
+                const GLubyte* pixel = &pixels[0] + ((y * getWindowWidth() + x) * 4);
 
                 EXPECT_EQ(pixel[0], 0);
                 EXPECT_EQ(pixel[1], pixel[2]);

@@ -96,7 +96,7 @@ TYPED_TEST(IncompleteTextureTest, IncompleteTexture2D)
     std::vector<GLubyte> textureData(textureWidth * textureHeight * 4);
     fillTextureData(textureData, 255, 0, 0, 255);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.data());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, &textureData[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     drawQuad(mProgram, "position", 0.5f);
@@ -107,7 +107,7 @@ TYPED_TEST(IncompleteTextureTest, IncompleteTexture2D)
     drawQuad(mProgram, "position", 0.5f);
     EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 255);
 
-    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, textureWidth >> 1, textureHeight >> 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, textureWidth >> 1, textureHeight >> 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &textureData[0]);
 
     drawQuad(mProgram, "position", 0.5f);
     EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
@@ -132,7 +132,7 @@ TYPED_TEST(IncompleteTextureTest, UpdateTexture)
     for (size_t i = 0; i < 7; i++)
     {
         glTexImage2D(GL_TEXTURE_2D, i, GL_RGBA, redTextureWidth >> i, redTextureHeight >> i, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                     redTextureData.data());
+                     &redTextureData[0]);
     }
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -150,7 +150,7 @@ TYPED_TEST(IncompleteTextureTest, UpdateTexture)
     {
         glTexSubImage2D(GL_TEXTURE_2D, i, greenTextureWidth >> i, greenTextureHeight >> i,
                         greenTextureWidth >> i, greenTextureHeight >> i, GL_RGBA, GL_UNSIGNED_BYTE,
-                        greenTextureData.data());
+                        &greenTextureData[0]);
     }
 
     drawQuad(mProgram, "position", 0.5f);

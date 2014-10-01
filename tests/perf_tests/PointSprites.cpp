@@ -107,7 +107,7 @@ bool PointSpritesBenchmark::initializeBenchmark()
 
     glGenBuffers(1, &mBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-    glBufferData(GL_ARRAY_BUFFER, vertexPositions.size() * sizeof(float), vertexPositions.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertexPositions.size() * sizeof(float), &vertexPositions[0], GL_STATIC_DRAW);
 
     int positionLocation = glGetAttribLocation(mProgram, "vPosition");
     if (positionLocation == -1)
