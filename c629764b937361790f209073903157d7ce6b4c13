@@ -22,6 +22,30 @@
       "revId": "c629764b937361790f209073903157d7ce6b4c13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f05e8c2a_4da88d6d",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1004,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-01T14:46:23Z",
+      "side": 1,
+      "message": "This is going to end up being rewritten in any case, because the current XFB implementation stores the bindings globally, instead of per-XFB object. That being the case, my aim here was just to produce no functional changes.",
+      "parentUuid": "5094b8fe_661d848c",
+      "range": {
+        "startLine": 1004,
+        "startChar": 12,
+        "endLine": 1004,
+        "endChar": 30
+      },
+      "revId": "c629764b937361790f209073903157d7ce6b4c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
