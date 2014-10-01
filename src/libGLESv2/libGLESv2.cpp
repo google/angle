@@ -1526,7 +1526,12 @@ void __stdcall glFinish(void)
     gl::Context *context = gl::getNonLostContext();
     if (context)
     {
-        context->sync(true);
+        gl::Error error = context->sync(true);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 
@@ -1537,7 +1542,12 @@ void __stdcall glFlush(void)
     gl::Context *context = gl::getNonLostContext();
     if (context)
     {
-        context->sync(false);
+        gl::Error error = context->sync(false);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 

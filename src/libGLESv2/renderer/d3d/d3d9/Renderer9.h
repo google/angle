@@ -48,7 +48,7 @@ class Renderer9 : public Renderer
     void startScene();
     void endScene();
 
-    virtual void sync(bool block);
+    virtual gl::Error sync(bool block);
 
     virtual SwapChain *createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
 

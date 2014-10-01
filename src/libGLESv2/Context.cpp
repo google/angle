@@ -1893,9 +1893,9 @@ Error Context::drawElements(GLenum mode, GLsizei count, GLenum type,
 }
 
 // Implements glFlush when block is false, glFinish when block is true
-void Context::sync(bool block)
+Error Context::sync(bool block)
 {
-    mRenderer->sync(block);
+    return mRenderer->sync(block);
 }
 
 void Context::recordError(const Error &error)

@@ -490,43 +490,67 @@ void Renderer9::endScene()
     }
 }
 
-void Renderer9::sync(bool block)
+gl::Error Renderer9::sync(bool block)
 {
     IDirect3DQuery9* query = NULL;
     gl::Error error = allocateEventQuery(&query);
     if (error.isError())
     {
-        return;
+        return error;
     }
 
     HRESULT result = query->Issue(D3DISSUE_END);
-    ASSERT(SUCCEEDED(result));
-
-    do
+    if (FAILED(result))
     {
+        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to issue event query, result: 0x%X.", result);
+    }
+
+    // Grab the query data once in blocking and non-blocking case
+    result = query->GetData(NULL, 0, D3DGETDATA_FLUSH);
+    if (FAILED(result))
+    {
+        if (d3d9::isDeviceLostError(result))
+        {
+            notifyDeviceLost();
+        }
+
+        freeEventQuery(query);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.", result);
+    }
+
+    // If blocking, loop until the query completes
+    while (block && result == S_FALSE)
+    {
+        // Keep polling, but allow other threads to do something useful first
+        Sleep(0);
+
         result = query->GetData(NULL, 0, D3DGETDATA_FLUSH);
 
-        if(block && result == S_FALSE)
+        // explicitly check for device loss
+        // some drivers seem to return S_FALSE even if the device is lost
+        // instead of D3DERR_DEVICELOST like they should
+        if (result == S_FALSE && testDeviceLost(false))
         {
-            // Keep polling, but allow other threads to do something useful first
-            Sleep(0);
-            // explicitly check for device loss
-            // some drivers seem to return S_FALSE even if the device is lost
-            // instead of D3DERR_DEVICELOST like they should
-            if (testDeviceLost(false))
-            {
-                result = D3DERR_DEVICELOST;
-            }
+            result = D3DERR_DEVICELOST;
         }
+
+        if (FAILED(result))
+        {
+            if (d3d9::isDeviceLostError(result))
+            {
+                notifyDeviceLost();
+            }
+
+            freeEventQuery(query);
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.", result);
+        }
+
     }
-    while(block && result == S_FALSE);
 
     freeEventQuery(query);
 
-    if (d3d9::isDeviceLostError(result))
-    {
-        notifyDeviceLost();
-    }
+    return gl::Error(GL_NO_ERROR);
 }
 
 SwapChain *Renderer9::createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)

@@ -370,7 +370,7 @@ void Renderer11::deleteConfigs(ConfigDesc *configDescList)
     delete [] (configDescList);
 }
 
-void Renderer11::sync(bool block)
+gl::Error Renderer11::sync(bool block)
 {
     if (block)
     {
@@ -384,6 +384,10 @@ void Renderer11::sync(bool block)
 
             result = mDevice->CreateQuery(&queryDesc, &mSyncQuery);
             ASSERT(SUCCEEDED(result));
+            if (FAILED(result))
+            {
+                return gl::Error(GL_OUT_OF_MEMORY, "Failed to create event query, result: 0x%X.", result);
+            }
         }
 
         mDeviceContext->End(mSyncQuery);
@@ -392,13 +396,17 @@ void Renderer11::sync(bool block)
         do
         {
             result = mDeviceContext->GetData(mSyncQuery, NULL, 0, D3D11_ASYNC_GETDATA_DONOTFLUSH);
+            if (FAILED(result))
+            {
+                return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.", result);
+            }
 
             // Keep polling, but allow other threads to do something useful first
             Sleep(0);
 
             if (testDeviceLost(true))
             {
-                return;
+                return gl::Error(GL_OUT_OF_MEMORY, "Device was lost while waiting for sync.");
             }
         }
         while (result == S_FALSE);
@@ -407,6 +415,8 @@ void Renderer11::sync(bool block)
     {
         mDeviceContext->Flush();
     }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 SwapChain *Renderer11::createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)

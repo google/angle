@@ -107,7 +107,7 @@ class Renderer
     virtual int generateConfigs(ConfigDesc **configDescList) = 0;
     virtual void deleteConfigs(ConfigDesc *configDescList) = 0;
 
-    virtual void sync(bool block) = 0;
+    virtual gl::Error sync(bool block) = 0;
 
     virtual SwapChain *createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
 
