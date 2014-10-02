@@ -9,6 +9,7 @@
 
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Image11.h"
+#include "libGLESv2/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libGLESv2/renderer/d3d/d3d11/TextureStorage11.h"
 #include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
@@ -320,69 +321,72 @@ gl::Error Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffse
     return gl::Error(GL_NO_ERROR);
 }
 
-void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source)
+void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, RenderTarget *source)
 {
-    gl::FramebufferAttachment *colorbuffer = source->getReadColorbuffer();
+    RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(source);
 
-    if (colorbuffer && colorbuffer->getActualFormat() == mActualFormat)
+    ID3D11Texture2D *colorBufferTexture = mRenderer->getRenderTargetResource(renderTarget);
+    unsigned int subresourceIndex = renderTarget->getSubresourceIndex();
+
+    if (!colorBufferTexture)
+    {
+        // Error already generated
+        return;
+    }
+
+    if (source->getActualFormat() == mActualFormat)
     {
         // No conversion needed-- use copyback fastpath
-        ID3D11Texture2D *colorBufferTexture = NULL;
-        unsigned int subresourceIndex = 0;
+        D3D11_TEXTURE2D_DESC textureDesc;
+        colorBufferTexture->GetDesc(&textureDesc);
 
-        if (mRenderer->getRenderTargetResource(colorbuffer, &subresourceIndex, &colorBufferTexture))
+        ID3D11Device *device = mRenderer->getDevice();
+        ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+        ID3D11Texture2D* srcTex = NULL;
+        if (textureDesc.SampleDesc.Count > 1)
         {
-            D3D11_TEXTURE2D_DESC textureDesc;
-            colorBufferTexture->GetDesc(&textureDesc);
+            D3D11_TEXTURE2D_DESC resolveDesc;
+            resolveDesc.Width = textureDesc.Width;
+            resolveDesc.Height = textureDesc.Height;
+            resolveDesc.MipLevels = 1;
+            resolveDesc.ArraySize = 1;
+            resolveDesc.Format = textureDesc.Format;
+            resolveDesc.SampleDesc.Count = 1;
+            resolveDesc.SampleDesc.Quality = 0;
+            resolveDesc.Usage = D3D11_USAGE_DEFAULT;
+            resolveDesc.BindFlags = 0;
+            resolveDesc.CPUAccessFlags = 0;
+            resolveDesc.MiscFlags = 0;
 
-            ID3D11Device *device = mRenderer->getDevice();
-            ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-
-            ID3D11Texture2D* srcTex = NULL;
-            if (textureDesc.SampleDesc.Count > 1)
+            HRESULT result = device->CreateTexture2D(&resolveDesc, NULL, &srcTex);
+            if (FAILED(result))
             {
-                D3D11_TEXTURE2D_DESC resolveDesc;
-                resolveDesc.Width = textureDesc.Width;
-                resolveDesc.Height = textureDesc.Height;
-                resolveDesc.MipLevels = 1;
-                resolveDesc.ArraySize = 1;
-                resolveDesc.Format = textureDesc.Format;
-                resolveDesc.SampleDesc.Count = 1;
-                resolveDesc.SampleDesc.Quality = 0;
-                resolveDesc.Usage = D3D11_USAGE_DEFAULT;
-                resolveDesc.BindFlags = 0;
-                resolveDesc.CPUAccessFlags = 0;
-                resolveDesc.MiscFlags = 0;
-
-                HRESULT result = device->CreateTexture2D(&resolveDesc, NULL, &srcTex);
-                if (FAILED(result))
-                {
-                    ERR("Failed to create resolve texture for Image11::copy, HRESULT: 0x%X.", result);
-                    return;
-                }
-
-                deviceContext->ResolveSubresource(srcTex, 0, colorBufferTexture, subresourceIndex, textureDesc.Format);
-                subresourceIndex = 0;
-            }
-            else
-            {
-                srcTex = colorBufferTexture;
-                srcTex->AddRef();
+                ERR("Failed to create resolve texture for Image11::copy, HRESULT: 0x%X.", result);
+                return;
             }
 
-            D3D11_BOX srcBox;
-            srcBox.left = x;
-            srcBox.right = x + width;
-            srcBox.top = y;
-            srcBox.bottom = y + height;
-            srcBox.front = 0;
-            srcBox.back = 1;
-
-            deviceContext->CopySubresourceRegion(mStagingTexture, 0, xoffset, yoffset, zoffset, srcTex, subresourceIndex, &srcBox);
-
-            SafeRelease(srcTex);
-            SafeRelease(colorBufferTexture);
+            deviceContext->ResolveSubresource(srcTex, 0, colorBufferTexture, subresourceIndex, textureDesc.Format);
+            subresourceIndex = 0;
         }
+        else
+        {
+            srcTex = colorBufferTexture;
+            srcTex->AddRef();
+        }
+
+        D3D11_BOX srcBox;
+        srcBox.left = x;
+        srcBox.right = x + width;
+        srcBox.top = y;
+        srcBox.bottom = y + height;
+        srcBox.front = 0;
+        srcBox.back = 1;
+
+        deviceContext->CopySubresourceRegion(mStagingTexture, 0, xoffset, yoffset, zoffset, srcTex, subresourceIndex, &srcBox);
+
+        SafeRelease(srcTex);
+        SafeRelease(colorBufferTexture);
     }
     else
     {
@@ -401,7 +405,8 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y
 
         const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
 
-        mRenderer->readPixels(source, x, y, width, height, formatInfo.format, formatInfo.type, mappedImage.RowPitch, gl::PixelPackState(), dataOffset);
+        gl::Rectangle area(x, y, width, height);
+        mRenderer->readTextureData(colorBufferTexture, subresourceIndex, area, formatInfo.format, formatInfo.type, mappedImage.RowPitch, gl::PixelPackState(), dataOffset);
 
         unmap();
     }

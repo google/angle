@@ -33,6 +33,7 @@ class StreamingIndexBufferInterface;
 class Blit11;
 class Clear11;
 class PixelTransfer11;
+class RenderTarget11;
 struct PackPixelsParams;
 
 enum
@@ -188,6 +189,7 @@ class Renderer11 : public Renderer
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
 
     bool getRenderTargetResource(gl::FramebufferAttachment *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource);
+    ID3D11Texture2D *getRenderTargetResource(RenderTarget11 *renderTarget);
     void unapplyRenderTargets();
     void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);
     void packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams &params, uint8_t *pixelsOut);
@@ -195,6 +197,9 @@ class Renderer11 : public Renderer
     virtual bool getLUID(LUID *adapterLuid) const;
     virtual rx::VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const;
     virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const;
+
+    gl::Error readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
+                              GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
@@ -204,9 +209,6 @@ class Renderer11 : public Renderer
 
     gl::Error drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
     gl::Error drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);
-
-    gl::Error readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
-                              GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels);
 
     gl::Error blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
                                    RenderTarget *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,

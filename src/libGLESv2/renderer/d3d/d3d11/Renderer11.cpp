@@ -2432,35 +2432,44 @@ bool Renderer11::getRenderTargetResource(gl::FramebufferAttachment *colorbuffer,
     ASSERT(colorbuffer != NULL);
 
     RenderTarget11 *renderTarget = d3d11::GetAttachmentRenderTarget(colorbuffer);
-    if (renderTarget)
+    if (!renderTarget)
     {
-        *subresourceIndex = renderTarget->getSubresourceIndex();
+        return false;
+    }
 
-        ID3D11RenderTargetView *colorBufferRTV = renderTarget->getRenderTargetView();
-        if (colorBufferRTV)
+    *subresourceIndex = renderTarget->getSubresourceIndex();
+    *resource = getRenderTargetResource(renderTarget);
+
+    return (*resource != NULL);
+}
+
+ID3D11Texture2D *Renderer11::getRenderTargetResource(RenderTarget11 *renderTarget)
+{
+    ASSERT(renderTarget);
+
+    ID3D11RenderTargetView *colorBufferRTV = renderTarget->getRenderTargetView();
+    ID3D11Texture2D *texture2D = NULL;
+
+    if (colorBufferRTV)
+    {
+        ID3D11Resource *textureResource = NULL;
+        colorBufferRTV->GetResource(&textureResource);
+
+        if (textureResource)
         {
-            ID3D11Resource *textureResource = NULL;
-            colorBufferRTV->GetResource(&textureResource);
+            HRESULT result = textureResource->QueryInterface(__uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&texture2D));
+            SafeRelease(textureResource);
 
-            if (textureResource)
+            if (FAILED(result))
             {
-                HRESULT result = textureResource->QueryInterface(__uuidof(ID3D11Texture2D), (void**)resource);
-                SafeRelease(textureResource);
-
-                if (SUCCEEDED(result))
-                {
-                    return true;
-                }
-                else
-                {
-                    ERR("Failed to extract the ID3D11Texture2D from the render target resource, "
-                        "HRESULT: 0x%X.", result);
-                }
+                ERR("Failed to extract the ID3D11Texture2D from the render target resource, "
+                    "HRESULT: 0x%X.", result);
+                return gl::error(GL_OUT_OF_MEMORY, static_cast <ID3D11Texture2D*>(NULL));
             }
         }
     }
 
-    return false;
+    return texture2D;
 }
 
 gl::Error Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
