@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "50abd856_3906d78c",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-02T18:08:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "907b8f5f_37e60abe",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 15
+      },
+      "revId": "ae39c9b1140027b621b591d8240633d0457cfd40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "108f9fae_14c66153",
         "filename": "src/libGLESv2/validationES.h",
         "patchSetId": 4
@@ -179,6 +203,30 @@
       "side": 1,
       "message": "They probably should.. I was toying with the idea of letting them stay as upper case. That way, if we refactored every validation entry point, we could *almost* auto-generate them. The exception would be re-using cached data from the validator... which reminds me. That was another reason I wanted to use validator objects. I may have to re-think my design in this patch.",
       "parentUuid": "108f9fae_14c66153",
+      "range": {
+        "startLine": 83,
+        "startChar": 19,
+        "endLine": 83,
+        "endChar": 20
+      },
+      "revId": "ae39c9b1140027b621b591d8240633d0457cfd40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f02f6cb3_ab17b936",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-02T18:08:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "907b8f5f_77f0926d",
       "range": {
         "startLine": 83,
         "startChar": 19,
