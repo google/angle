@@ -22,6 +22,30 @@
       "revId": "2d938f8e8c09641eacdb4f346b71288555091004",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f02f6cb3_68b2d7de",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-02T15:07:21Z",
+      "side": 1,
+      "message": "Hm... I don\u0027t see a reason to return subresource when it\u0027s already a query on the RenderTarget11 *renderTarget. The above method returns a subResourceIndex because the calling context never sees the RenderTarget11.\nI could change it to return Error if you like... however I think the calling syntax is fine (and preferable to returning void or bool) as it stands if we don\u0027t return Errors.",
+      "parentUuid": "b052544f_5816bd3e",
+      "range": {
+        "startLine": 192,
+        "startChar": 4,
+        "endLine": 192,
+        "endChar": 74
+      },
+      "revId": "2d938f8e8c09641eacdb4f346b71288555091004",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
