@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b052544f_5816bd3e",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-02T14:37:04Z",
+      "side": 1,
+      "message": "I think this function should have the same prototype as the one above.  They have the same name yet one returns bools for success and the other will return NULL objects.  This one could also return the subresource index to match.",
+      "range": {
+        "startLine": 192,
+        "startChar": 4,
+        "endLine": 192,
+        "endChar": 74
+      },
+      "revId": "2d938f8e8c09641eacdb4f346b71288555091004",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
