@@ -15,6 +15,7 @@
 #include "libGLESv2/renderer/d3d/d3d11/Blit11.h"
 #include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Image11.h"
+#include "libGLESv2/renderer/d3d/MemoryBuffer.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/ImageIndex.h"
@@ -410,6 +411,61 @@ gl::Error TextureStorage11::copyToStorage(TextureStorage *destStorage)
     immediateContext->CopyResource(dest11->getResource(), getResource());
 
     dest11->invalidateSwizzleCache();
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error TextureStorage11::setData(const gl::ImageIndex &index, const gl::Box &destBox, GLenum internalFormat, GLenum type,
+                                    const gl::PixelUnpackState &unpack, const uint8_t *pixelData)
+{
+    ID3D11Resource *resource = getResource();
+    ASSERT(resource);
+
+    UINT destSubresource = getSubresourceIndex(index.mipIndex, index.hasLayer() ? index.layerIndex : 0);
+
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
+
+    // TODO(jmadill): Handle compressed formats
+    // Compressed formats have different load syntax, so we'll have to handle them with slightly
+    // different logic. Will implemnent this in a follow-up patch, and ensure we do not use SetData
+    // with compressed formats in the calling logic.
+    ASSERT(!internalFormatInfo.compressed);
+
+    UINT srcRowPitch = internalFormatInfo.computeRowPitch(type, destBox.width, unpack.alignment);
+    UINT srcDepthPitch = internalFormatInfo.computeDepthPitch(type, destBox.width, destBox.height, unpack.alignment);
+
+    D3D11_BOX destD3DBox;
+    destD3DBox.left = destBox.x;
+    destD3DBox.right = destBox.x + destBox.width;
+    destD3DBox.top = destBox.y;
+    destD3DBox.bottom = destBox.y + destBox.height;
+    destD3DBox.front = 0;
+    destD3DBox.back = 1;
+
+    const d3d11::TextureFormat &d3d11Format = d3d11::GetTextureFormatInfo(internalFormat);
+    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(d3d11Format.texFormat);
+
+    size_t outputPixelSize = dxgiFormatInfo.pixelBytes;
+
+    UINT bufferRowPitch = outputPixelSize * destBox.width;
+    UINT bufferDepthPitch = bufferRowPitch * destBox.height;
+
+    MemoryBuffer conversionBuffer;
+    if (!conversionBuffer.resize(bufferDepthPitch * destBox.depth))
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal buffer.");
+    }
+
+    // TODO: fast path
+    LoadImageFunction loadFunction = d3d11Format.loadFunctions.at(type);
+    loadFunction(destBox.width, destBox.height, destBox.depth,
+                 pixelData, srcRowPitch, srcDepthPitch,
+                 conversionBuffer.data(), bufferRowPitch, bufferDepthPitch);
+
+    ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
+    immediateContext->UpdateSubresource(resource, destSubresource,
+                                        &destD3DBox, conversionBuffer.data(),
+                                        bufferRowPitch, bufferDepthPitch);
 
     return gl::Error(GL_NO_ERROR);
 }

@@ -71,6 +71,8 @@ class TextureStorage11 : public TextureStorage
     virtual void releaseAssociatedImage(int level, int layerTarget, Image11* incomingImage) = 0;
 
     virtual gl::Error copyToStorage(TextureStorage *destStorage);
+    virtual gl::Error setData(const gl::ImageIndex &index, const gl::Box &sourceBox, GLenum internalFormat, GLenum type,
+                              const gl::PixelUnpackState &unpack, const uint8_t *pixelData);
 
   protected:
     TextureStorage11(Renderer *renderer, UINT bindFlags);
