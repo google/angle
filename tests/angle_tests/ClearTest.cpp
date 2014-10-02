@@ -4,11 +4,14 @@
 typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>, TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
 TYPED_TEST_CASE(ClearTest, TestFixtureTypes);
 
+typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>> TestFixtureTypesES3;
+TYPED_TEST_CASE(ClearTestES3, TestFixtureTypesES3);
+
 template<typename T>
-class ClearTest : public ANGLETest
+class ClearTestBase : public ANGLETest
 {
-protected:
-    ClearTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
+  protected:
+    ClearTestBase() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -67,6 +70,14 @@ protected:
     GLuint mFBO;
 };
 
+template <typename T>
+class ClearTest : public ClearTestBase<T>
+{};
+
+template <typename T>
+class ClearTestES3 : public ClearTestBase<T>
+{};
+
 TYPED_TEST(ClearTest, ClearIssue)
 {
     glEnable(GL_DEPTH_TEST);
@@ -108,7 +119,7 @@ TYPED_TEST(ClearTest, ClearIssue)
 // Requires ES3
 // This tests a bug where in a masked clear when calling "ClearBuffer", we would
 // mistakenly clear every channel (including the masked-out ones)
-TYPED_TEST(ClearTest, MaskedClearBufferBug)
+TYPED_TEST(ClearTestES3, MaskedClearBufferBug)
 {
     unsigned char pixelData[] = { 255, 255, 255, 255 };
 
@@ -145,7 +156,7 @@ TYPED_TEST(ClearTest, MaskedClearBufferBug)
     glDeleteTextures(2, textures);
 }
 
-TYPED_TEST(ClearTest, BadFBOSerialBug)
+TYPED_TEST(ClearTestES3, BadFBOSerialBug)
 {
     // First make a simple framebuffer, and clear it to green
     glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
