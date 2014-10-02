@@ -116,6 +116,30 @@
       "revId": "0cb6e958549ac2f3dc2d0e4e28ad8805f710df9a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30a8245b_2d43f56c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-02T15:58:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30a1045f_42471698",
+      "range": {
+        "startLine": 296,
+        "startChar": 9,
+        "endLine": 296,
+        "endChar": 27
+      },
+      "revId": "0cb6e958549ac2f3dc2d0e4e28ad8805f710df9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
