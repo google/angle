@@ -155,6 +155,13 @@ gl::Error TextureD3D::subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsi
             return error;
         }
 
+        gl::Box region(xoffset, yoffset, zoffset, width, height, depth);
+        error = commitRegion(index, region);
+        if (error.isError())
+        {
+            return error;
+        }
+
         mDirtyImages = true;
     }
 
@@ -511,18 +518,8 @@ gl::Error TextureD3D_2D::subImage(GLenum target, GLint level, GLint xoffset, GLi
 
     if (!fastUnpacked)
     {
-        gl::Error error = TextureD3D::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack,
-                                               pixels, index);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        error = commitRegion(index, destArea);
-        if (error.isError())
-        {
-            return error;
-        }
+        return TextureD3D::subImage(xoffset, yoffset, 0, width, height, 1, format, type,
+                                    unpack, pixels, index);
     }
 
     return gl::Error(GL_NO_ERROR);
@@ -976,17 +973,8 @@ gl::Error TextureD3D_Cube::subImage(GLenum target, GLint level, GLint xoffset, G
                                     const gl::PixelUnpackState &unpack, const void *pixels)
 {
     ASSERT(depth == 1 && zoffset == 0);
-
     gl::ImageIndex index = gl::ImageIndex::MakeCube(target, level);
-    gl::Error error = TextureD3D::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels,
-                                           index);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    gl::Box region(xoffset, yoffset, 0, width, height, 1);
-    return commitRegion(index, region);
+    return TextureD3D::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpack, pixels, index);
 }
 
 gl::Error TextureD3D_Cube::subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
@@ -1515,7 +1503,6 @@ gl::Error TextureD3D_3D::subImage(GLenum target, GLint level, GLint xoffset, GLi
     bool fastUnpacked = false;
 
     gl::ImageIndex index = gl::ImageIndex::Make3D(level);
-    gl::Box destArea(xoffset, yoffset, zoffset, width, height, depth);
 
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
     if (isFastUnpackable(unpack, getInternalFormat(level)))
@@ -1524,6 +1511,7 @@ gl::Error TextureD3D_3D::subImage(GLenum target, GLint level, GLint xoffset, GLi
 
         if (destRenderTarget)
         {
+            gl::Box destArea(xoffset, yoffset, zoffset, width, height, depth);
             gl::Error error = fastUnpackPixels(unpack, pixels, destArea, getInternalFormat(level), type, destRenderTarget);
             if (error.isError())
             {
@@ -1539,14 +1527,8 @@ gl::Error TextureD3D_3D::subImage(GLenum target, GLint level, GLint xoffset, GLi
 
     if (!fastUnpacked)
     {
-        gl::Error error = TextureD3D::subImage(xoffset, yoffset, zoffset, width, height, depth, format, type, unpack,
-                                               pixels, index);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        return commitRegion(index, destArea);
+        return TextureD3D::subImage(xoffset, yoffset, zoffset, width, height, depth, format, type,
+                                    unpack, pixels, index);
     }
 
     return gl::Error(GL_NO_ERROR);
@@ -1998,15 +1980,8 @@ gl::Error TextureD3D_2DArray::subImage(GLenum target, GLint level, GLint xoffset
         const void *layerPixels = pixels ? (reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i)) : NULL;
 
         gl::ImageIndex index = gl::ImageIndex::Make2DArray(level, layer);
-        gl::Error error = TextureD3D::subImage(xoffset, yoffset, zoffset, width, height, 1, format, type, unpack,
-                                               layerPixels, index);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        gl::Box region(xoffset, yoffset, 0, width, height, 1);
-        error = commitRegion(index, region);
+        gl::Error error = TextureD3D::subImage(xoffset, yoffset, zoffset, width, height, 1, format, type,
+                                               unpack, layerPixels, index);
         if (error.isError())
         {
             return error;
