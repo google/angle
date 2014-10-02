@@ -46,6 +46,30 @@
       "revId": "2d938f8e8c09641eacdb4f346b71288555091004",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f02f6cb3_08c18b27",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-02T15:10:21Z",
+      "side": 1,
+      "message": "You can leave it this way if you want.  The Error patches will make it look the same as the other in a couple of days.",
+      "parentUuid": "f02f6cb3_68b2d7de",
+      "range": {
+        "startLine": 192,
+        "startChar": 4,
+        "endLine": 192,
+        "endChar": 74
+      },
+      "revId": "2d938f8e8c09641eacdb4f346b71288555091004",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
