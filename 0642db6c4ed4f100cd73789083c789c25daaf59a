@@ -22,6 +22,30 @@
       "revId": "0642db6c4ed4f100cd73789083c789c25daaf59a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50abd856_ce6ed76f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-02T14:57:15Z",
+      "side": 1,
+      "message": "This is a purely refactoring patch, I could update the message.\nIn a subsequent patch, I changed TextureD3D::subData to commit only a) if there was no error and b) if we didn\u0027t update the TextureStorage directly already with the SubData performance workaround. Hence, error or no-error wasn\u0027t enough information.",
+      "parentUuid": "f02f6cb3_e8cf0763",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 54
+      },
+      "revId": "0642db6c4ed4f100cd73789083c789c25daaf59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
