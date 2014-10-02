@@ -46,7 +46,9 @@ TYPED_TEST(RendererTest, RequestedRendererCreated)
     // Ensure that the renderer uses WARP, if we requested it.
     if (fixtureType.GetRequestedRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_WARP_ANGLE)
     {
-        ASSERT_NE(rendererString.find(std::string("microsoft basic render")), std::string::npos);
+        auto basicRenderPos = rendererString.find(std::string("microsoft basic render"));
+        auto softwareAdapterPos = rendererString.find(std::string("software adapter"));
+        ASSERT_TRUE(basicRenderPos != std::string::npos || softwareAdapterPos != std::string::npos);
     }
 
     // Ensure that the renderer string contains GL ES 3.0, if we requested a GL ES 3.0
