@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10f88089_8b2e2dfd",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-03T20:26:28Z",
+      "side": 1,
+      "message": "If we intend to handle the error gracefully, do we really want to assert on it?",
+      "range": {
+        "startLine": 542,
+        "startChar": 0,
+        "endLine": 543,
+        "endChar": 27
+      },
+      "revId": "5d6515ceb92989d55a73bdecd789c8695b9526cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
