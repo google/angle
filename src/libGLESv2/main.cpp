@@ -159,7 +159,7 @@ Context *getNonLostContext()
     {
         if (context->isContextLost())
         {
-            gl::error(GL_OUT_OF_MEMORY);
+            context->recordError(Error(GL_OUT_OF_MEMORY, "Context has been lost."));
             return NULL;
         }
         else
@@ -175,33 +175,6 @@ egl::Display *getDisplay()
     Current *current = GetCurrentData();
 
     return current->display;
-}
-
-// Records an error code
-void error(GLenum errorCode)
-{
-    gl::Context *context = glGetCurrentContext();
-    context->recordError(Error(errorCode));
-
-    switch (errorCode)
-    {
-      case GL_INVALID_ENUM:
-        TRACE("\t! Error generated: invalid enum\n");
-        break;
-      case GL_INVALID_VALUE:
-        TRACE("\t! Error generated: invalid value\n");
-        break;
-      case GL_INVALID_OPERATION:
-        TRACE("\t! Error generated: invalid operation\n");
-        break;
-      case GL_OUT_OF_MEMORY:
-        TRACE("\t! Error generated: out of memory\n");
-        break;
-      case GL_INVALID_FRAMEBUFFER_OPERATION:
-        TRACE("\t! Error generated: invalid framebuffer operation\n");
-        break;
-      default: UNREACHABLE();
-    }
 }
 
 }
