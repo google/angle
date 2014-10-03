@@ -27,7 +27,7 @@ Image::Image()
     mDirty = false;
 }
 
-void Image::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source)
+void Image::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &area, gl::Framebuffer *source)
 {
     gl::FramebufferAttachment *colorbuffer = source->getReadColorbuffer();
 
@@ -38,7 +38,7 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, 
 
     RenderTarget *renderTarget = GetAttachmentRenderTarget(colorbuffer);
     ASSERT(renderTarget);
-    copy(xoffset, yoffset, zoffset, x, y, width, height, renderTarget);
+    copy(xoffset, yoffset, zoffset, area, renderTarget);
 }
 
 }

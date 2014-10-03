@@ -549,9 +549,11 @@ void TextureD3D_2D::copyImage(GLenum target, GLint level, GLenum format, GLint x
     GLenum sizedInternalFormat = gl::GetSizedInternalFormat(format, GL_UNSIGNED_BYTE);
     redefineImage(level, sizedInternalFormat, width, height);
 
+    gl::Rectangle sourceRect(x, y, width, height);
+
     if (!mImageArray[level]->isRenderableFormat())
     {
-        mImageArray[level]->copy(0, 0, 0, x, y, width, height, source);
+        mImageArray[level]->copy(0, 0, 0, sourceRect, source);
         mDirtyImages = true;
     }
     else
@@ -561,12 +563,6 @@ void TextureD3D_2D::copyImage(GLenum target, GLint level, GLenum format, GLint x
 
         if (width != 0 && height != 0 && isValidLevel(level))
         {
-            gl::Rectangle sourceRect;
-            sourceRect.x = x;
-            sourceRect.width = width;
-            sourceRect.y = y;
-            sourceRect.height = height;
-
             mRenderer->copyImage2D(source, sourceRect, format, 0, 0, mTexStorage, level);
         }
     }
@@ -580,9 +576,11 @@ void TextureD3D_2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLin
     // the current level we're copying to is defined (with appropriate format, width & height)
     bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
 
+    gl::Rectangle sourceRect(x, y, width, height);
+
     if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
     {
-        mImageArray[level]->copy(xoffset, yoffset, 0, x, y, width, height, source);
+        mImageArray[level]->copy(xoffset, yoffset, 0, sourceRect, source);
         mDirtyImages = true;
     }
     else
@@ -592,12 +590,6 @@ void TextureD3D_2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLin
         if (isValidLevel(level))
         {
             updateStorageLevel(level);
-
-            gl::Rectangle sourceRect;
-            sourceRect.x = x;
-            sourceRect.width = width;
-            sourceRect.y = y;
-            sourceRect.height = height;
 
             mRenderer->copyImage2D(source, sourceRect,
                                    gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
@@ -1002,9 +994,11 @@ void TextureD3D_Cube::copyImage(GLenum target, GLint level, GLenum format, GLint
 
     redefineImage(faceIndex, level, sizedInternalFormat, width, height);
 
+    gl::Rectangle sourceRect(x, y, width, height);
+
     if (!mImageArray[faceIndex][level]->isRenderableFormat())
     {
-        mImageArray[faceIndex][level]->copy(0, 0, 0, x, y, width, height, source);
+        mImageArray[faceIndex][level]->copy(0, 0, 0, sourceRect, source);
         mDirtyImages = true;
     }
     else
@@ -1016,12 +1010,6 @@ void TextureD3D_Cube::copyImage(GLenum target, GLint level, GLenum format, GLint
 
         if (width > 0 && isValidFaceLevel(faceIndex, level))
         {
-            gl::Rectangle sourceRect;
-            sourceRect.x = x;
-            sourceRect.width = width;
-            sourceRect.y = y;
-            sourceRect.height = height;
-
             mRenderer->copyImageCube(source, sourceRect, format, 0, 0, mTexStorage, target, level);
         }
     }
@@ -1036,9 +1024,11 @@ void TextureD3D_Cube::copySubImage(GLenum target, GLint level, GLint xoffset, GL
     // rely on the "getBaseLevel*" methods reliably otherwise.
     bool canCreateRenderTarget = isFaceLevelComplete(faceIndex, level) && isCubeComplete();
 
+    gl::Rectangle sourceRect(x, y, width, height);
+
     if (!mImageArray[faceIndex][level]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
     {
-        mImageArray[faceIndex][level]->copy(0, 0, 0, x, y, width, height, source);
+        mImageArray[faceIndex][level]->copy(0, 0, 0, sourceRect, source);
         mDirtyImages = true;
     }
     else
@@ -1048,12 +1038,6 @@ void TextureD3D_Cube::copySubImage(GLenum target, GLint level, GLint xoffset, GL
         if (isValidFaceLevel(faceIndex, level))
         {
             updateStorageFaceLevel(faceIndex, level);
-
-            gl::Rectangle sourceRect;
-            sourceRect.x = x;
-            sourceRect.width = width;
-            sourceRect.y = y;
-            sourceRect.height = height;
 
             mRenderer->copyImageCube(source, sourceRect, gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
                                      xoffset, yoffset, mTexStorage, target, level);
@@ -1565,9 +1549,11 @@ void TextureD3D_3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLin
     // the current level we're copying to is defined (with appropriate format, width & height)
     bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
 
+    gl::Rectangle sourceRect(x, y, width, height);
+
     if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
     {
-        mImageArray[level]->copy(xoffset, yoffset, zoffset, x, y, width, height, source);
+        mImageArray[level]->copy(xoffset, yoffset, zoffset, sourceRect, source);
         mDirtyImages = true;
     }
     else
@@ -1577,12 +1563,6 @@ void TextureD3D_3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLin
         if (isValidLevel(level))
         {
             updateStorageLevel(level);
-
-            gl::Rectangle sourceRect;
-            sourceRect.x = x;
-            sourceRect.width = width;
-            sourceRect.y = y;
-            sourceRect.height = height;
 
             mRenderer->copyImage3D(source, sourceRect,
                                    gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
@@ -2036,9 +2016,11 @@ void TextureD3D_2DArray::copySubImage(GLenum target, GLint level, GLint xoffset,
     // the current level we're copying to is defined (with appropriate format, width & height)
     bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
 
+    gl::Rectangle sourceRect(x, y, width, height);
+
     if (!mImageArray[level][0]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
     {
-        mImageArray[level][zoffset]->copy(xoffset, yoffset, 0, x, y, width, height, source);
+        mImageArray[level][zoffset]->copy(xoffset, yoffset, 0, sourceRect, source);
         mDirtyImages = true;
     }
     else
@@ -2048,12 +2030,6 @@ void TextureD3D_2DArray::copySubImage(GLenum target, GLint level, GLint xoffset,
         if (isValidLevel(level))
         {
             updateStorageLevel(level);
-
-            gl::Rectangle sourceRect;
-            sourceRect.x = x;
-            sourceRect.width = width;
-            sourceRect.y = y;
-            sourceRect.height = height;
 
             mRenderer->copyImage2DArray(source, sourceRect, gl::GetInternalFormatInfo(getInternalFormat(0)).format,
                                         xoffset, yoffset, zoffset, mTexStorage, level);

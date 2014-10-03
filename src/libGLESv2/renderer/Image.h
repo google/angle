@@ -19,6 +19,7 @@
 namespace gl
 {
 class Framebuffer;
+struct Rectangle;
 }
 
 namespace rx
@@ -51,8 +52,8 @@ class Image
     virtual gl::Error loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                          const void *input) = 0;
 
-    void copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual void copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, RenderTarget *renderTarget) = 0;
+    void copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, gl::Framebuffer *source);
+    virtual void copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, RenderTarget *source) = 0;
 
   protected:
     GLsizei mWidth;
