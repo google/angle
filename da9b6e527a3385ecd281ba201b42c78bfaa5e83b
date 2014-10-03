@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b007b451_f387ea6a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-03T15:38:58Z",
+      "side": 1,
+      "message": "I\u0027m fine with either way as long as we\u0027re consistent! There\u0027s a funny case with operator[] and const/non-const forms where we already allow ourselves to make an exception, so that could be a push towards allowing them.\nFWIW in my own code I would use non-const \u0026.",
+      "parentUuid": "70ae1c67_bae639ea",
+      "range": {
+        "startLine": 91,
+        "startChar": 27,
+        "endLine": 91,
+        "endChar": 72
+      },
+      "revId": "da9b6e527a3385ecd281ba201b42c78bfaa5e83b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b052544f_1b98bfda",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 1
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "I\u0027ve been waiting for a usable foreach in C++ for ages. No objections from me!",
       "parentUuid": "50691805_35f7903a",
+      "range": {
+        "startLine": 95,
+        "startChar": 8,
+        "endLine": 95,
+        "endChar": 27
+      },
+      "revId": "da9b6e527a3385ecd281ba201b42c78bfaa5e83b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0026841_d75c543c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-03T15:38:58Z",
+      "side": 1,
+      "message": "Great!",
+      "parentUuid": "70ae1c67_9ae9fdbe",
       "range": {
         "startLine": 95,
         "startChar": 8,
