@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0026841_d7429402",
+        "filename": "src/libGLESv2/renderer/Image.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-03T16:57:56Z",
+      "side": 1,
+      "message": "Can these be renamed to sourceArea?",
+      "range": {
+        "startLine": 55,
+        "startChar": 80,
+        "endLine": 55,
+        "endChar": 84
+      },
+      "revId": "92548740ccaf7cc1db423c0bc78af6e776c6f16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
