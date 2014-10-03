@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0268cf7_ed31c10e",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-03T21:43:20Z",
+      "side": 1,
+      "message": "Since Uniform::isSameType and Varying::isSameType both take two const references I would suggest you just make them methods of these classes / structs.",
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70f1bca1_d7845669",
+        "filename": "tests/compiler_tests/ShaderVariable_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-03T21:43:20Z",
+      "side": 1,
+      "message": "Comment looks wrong: should be \"varying float vary\"?",
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
