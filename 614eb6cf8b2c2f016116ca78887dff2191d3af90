@@ -22,6 +22,30 @@
       "revId": "614eb6cf8b2c2f016116ca78887dff2191d3af90",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50abd856_076ccd74",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-03T17:51:06Z",
+      "side": 1,
+      "message": "Neat, I guess I can remove this method.",
+      "parentUuid": "50abd856_e77e51a1",
+      "range": {
+        "startLine": 193,
+        "startChar": 4,
+        "endLine": 193,
+        "endChar": 79
+      },
+      "revId": "614eb6cf8b2c2f016116ca78887dff2191d3af90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
