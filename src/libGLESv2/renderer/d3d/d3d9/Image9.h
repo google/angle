@@ -55,6 +55,8 @@ class Image9 : public ImageD3D
                                          const void *input);
 
     virtual void copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, RenderTarget *source);
+    virtual void copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea,
+                      const gl::ImageIndex &sourceIndex, TextureStorage *source);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Image9);

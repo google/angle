@@ -717,4 +717,10 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectang
     mDirty = true;
 }
 
+void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &area, const gl::ImageIndex &srcIndex, TextureStorage *srcStorage)
+{
+    // Currently unreachable, due to only being used in a D3D11-only workaround
+    UNIMPLEMENTED();
+}
+
 }
