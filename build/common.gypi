@@ -221,7 +221,11 @@
         { # OS != win
             'target_defaults':
             {
-                'cflags': [ '-fPIC' ],
+                'cflags':
+                [
+                    '-fPIC',
+                    '-std=c++0x',
+                ],
             },
         }],
         ['OS != "win" and OS != "mac"',
