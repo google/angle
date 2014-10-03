@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10f88089_0e8feb0b",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-03T21:26:06Z",
+      "side": 1,
+      "message": "this is the big change, to update in setImage as well as subImage.. looks like I forgot to check for uncompressed formats only in this patch.",
+      "range": {
+        "startLine": 126,
+        "startChar": 12,
+        "endLine": 126,
+        "endChar": 23
+      },
+      "revId": "f0f60284f3f7e75f179b442099e1c5ddfcd27648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0026841_e5943e1b",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-03T21:26:06Z",
+      "side": 1,
+      "message": "another change here",
+      "range": {
+        "startLine": 347,
+        "startChar": 87,
+        "endLine": 347,
+        "endChar": 138
+      },
+      "revId": "f0f60284f3f7e75f179b442099e1c5ddfcd27648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f88089_8e9abb46",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-03T21:26:06Z",
+      "side": 1,
+      "message": "moved release to the context where it does the dynamic cast",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 31
+      },
+      "revId": "f0f60284f3f7e75f179b442099e1c5ddfcd27648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f88089_ae9df742",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-03T21:26:06Z",
+      "side": 1,
+      "message": "added this",
+      "range": {
+        "startLine": 445,
+        "startChar": 4,
+        "endLine": 445,
+        "endChar": 18
+      },
+      "revId": "f0f60284f3f7e75f179b442099e1c5ddfcd27648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
