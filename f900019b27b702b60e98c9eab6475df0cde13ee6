@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "50abd856_a48db73e",
+        "filename": "src/libGLESv2/renderer/Workarounds.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-03T15:58:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50abd856_84a51bbf",
+      "range": {
+        "startLine": 34,
+        "startChar": 9,
+        "endLine": 34,
+        "endChar": 29
+      },
+      "revId": "f900019b27b702b60e98c9eab6475df0cde13ee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b052544f_5e06a58c",
         "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 14
@@ -48,6 +72,53 @@
     },
     {
       "key": {
+        "uuid": "d0026841_34483eaa",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-03T15:58:54Z",
+      "side": 1,
+      "message": "Reworked this.. \"color-renderable\" according to GL isn\u0027t quite the  same as D3D9/D3D11 renderable.. so I restored the code to not change our mipmap generation policy.",
+      "parentUuid": "b052544f_5e06a58c",
+      "range": {
+        "startLine": 282,
+        "startChar": 8,
+        "endLine": 282,
+        "endChar": 34
+      },
+      "revId": "f900019b27b702b60e98c9eab6475df0cde13ee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b007b451_33f7b23a",
+        "filename": "tests/angle_tests/TextureTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-03T15:58:54Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 188,
+        "startChar": 35,
+        "endLine": 188,
+        "endChar": 56
+      },
+      "revId": "f900019b27b702b60e98c9eab6475df0cde13ee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b007b451_53b8766d",
         "filename": "tests/angle_tests/TextureTest.cpp",
         "patchSetId": 14
@@ -59,6 +130,30 @@
       "writtenOn": "2014-10-03T14:03:41Z",
       "side": 1,
       "message": "What is the intent here? Drawing the quad very small will probably only be using mip 0.",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 64
+      },
+      "revId": "f900019b27b702b60e98c9eab6475df0cde13ee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0026841_94a3ea0c",
+        "filename": "tests/angle_tests/TextureTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-03T15:58:54Z",
+      "side": 1,
+      "message": "Are you sure about that? Mipmaps are for minification.. and my testing confirmed that I was using the higher mips only with this minification scaling.",
+      "parentUuid": "b007b451_53b8766d",
       "range": {
         "startLine": 194,
         "startChar": 4,
