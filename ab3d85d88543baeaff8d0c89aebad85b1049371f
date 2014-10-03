@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10f88089_6e75cfbd",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-03T20:54:07Z",
+      "side": 1,
+      "message": "The one thing I\u0027m hesitant about here is that I don\u0027t know whether there was a reason we only performed the proactive device lost check on blocking calls before (which changes with this patch), and some of this code was added because of particularly sneaky infinite looping and crash behavior we were seeing on only some drivers. Nicolas was involved in the diagnosis, so I\u0027ll add him in case he can fill in this question.",
+      "range": {
+        "startLine": 515,
+        "startChar": 0,
+        "endLine": 523,
+        "endChar": 9
+      },
+      "revId": "ab3d85d88543baeaff8d0c89aebad85b1049371f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
