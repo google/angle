@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50abd856_84a51bbf",
+        "filename": "src/libGLESv2/renderer/Workarounds.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-03T14:03:41Z",
+      "side": 1,
+      "message": "I\u0027d prefer a more descriptive name of what the workaround is actually doing. Possibly updateSubresourceFasterThanStagingTexture? Yikes that\u0027s a long name.",
+      "range": {
+        "startLine": 34,
+        "startChar": 9,
+        "endLine": 34,
+        "endChar": 29
+      },
+      "revId": "f900019b27b702b60e98c9eab6475df0cde13ee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b052544f_5e06a58c",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-03T14:03:41Z",
+      "side": 1,
+      "message": "I believe that if ensureRenderTarget returns false, it\u0027s considered an error.  Besides, if mipmaps are being generated the format should be renderable.",
+      "range": {
+        "startLine": 282,
+        "startChar": 8,
+        "endLine": 282,
+        "endChar": 34
+      },
+      "revId": "f900019b27b702b60e98c9eab6475df0cde13ee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b007b451_53b8766d",
+        "filename": "tests/angle_tests/TextureTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-03T14:03:41Z",
+      "side": 1,
+      "message": "What is the intent here? Drawing the quad very small will probably only be using mip 0.",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 64
+      },
+      "revId": "f900019b27b702b60e98c9eab6475df0cde13ee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
