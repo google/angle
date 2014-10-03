@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10f88089_4e89f302",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-03T21:25:11Z",
+      "side": 1,
+      "message": "Now that the coding standard\u0027s updated-- can this be a ref?",
+      "range": {
+        "startLine": 91,
+        "startChar": 27,
+        "endLine": 91,
+        "endChar": 68
+      },
+      "revId": "5fcdecd64fd5d8951349338b5252373be83f2584",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
