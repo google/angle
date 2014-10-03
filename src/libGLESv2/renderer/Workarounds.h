@@ -26,12 +26,10 @@ enum D3DWorkaroundType
 struct Workarounds
 {
     Workarounds()
-        : mrtPerfWorkaround(false),
-          setDataFasterThanImageUpload(false)
+        : mrtPerfWorkaround(false)
     {}
 
     bool mrtPerfWorkaround;
-    bool setDataFasterThanImageUpload;
 };
 
 }

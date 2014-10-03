@@ -543,7 +543,6 @@ Workarounds GenerateWorkarounds()
 {
     Workarounds workarounds;
     workarounds.mrtPerfWorkaround = true;
-    workarounds.setDataFasterThanImageUpload = false;
     return workarounds;
 }
 
