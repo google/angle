@@ -1862,6 +1862,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 {
                     for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); sit++)
                     {
+                        if (isSingleStatement(*sit))
+                        {
+                            mUnfoldShortCircuit->traverse(*sit);
+                        }
+
                         if (!mInsideFunction)
                         {
                             out << "static ";
@@ -2501,6 +2506,12 @@ bool OutputHLSL::isSingleStatement(TIntermNode *node)
     {
         if (aggregate->getOp() == EOpSequence)
         {
+            return false;
+        }
+        else if (aggregate->getOp() == EOpDeclaration)
+        {
+            // Declaring multiple comma-separated variables must be considered multiple statements
+            // because each individual declaration has side effects which are visible in the next.
             return false;
         }
         else
