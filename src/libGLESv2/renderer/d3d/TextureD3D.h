@@ -63,7 +63,7 @@ class TextureD3D : public TextureImpl
     Image *getBaseLevelImage() const;
 
   protected:
-    gl::Error setImage(const gl::PixelUnpackState &unpack, GLenum type, const void *pixels, Image *image);
+    gl::Error setImage(const gl::PixelUnpackState &unpack, GLenum type, const void *pixels, const gl::ImageIndex &index);
     gl::Error subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                        GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels, const gl::ImageIndex &index);
     gl::Error setCompressedImage(GLsizei imageSize, const void *pixels, Image *image);
