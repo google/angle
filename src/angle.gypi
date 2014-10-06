@@ -13,6 +13,16 @@
         'angle_id_header_base': 'commit.h',
         'angle_id_header': '<(angle_gen_path)/id/<(angle_id_header_base)',
         'angle_use_commit_id%': '<!(python <(angle_id_script_base) check ..)',
+        'angle_enable_d3d9%': 0,
+        'angle_enable_d3d11%': 0,
+        'conditions':
+        [
+            ['OS=="win"',
+            {
+                'angle_enable_d3d9%': 1,
+                'angle_enable_d3d11%': 1,
+            }],
+        ],
     },
     'includes':
     [

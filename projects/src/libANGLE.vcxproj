@@ -63,7 +63,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;ANGLE_ENABLE_PERF;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;_DEBUG;ANGLE_ENABLE_PERF;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -90,7 +90,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;ANGLE_ENABLE_PERF;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;_DEBUG;ANGLE_ENABLE_PERF;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -256,6 +256,7 @@
     <ClInclude Include="..\..\src\libGLESv2\BinaryStream.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Buffer.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Caps.h"/>
+    <ClInclude Include="..\..\src\libGLESv2\Constants.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Context.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Error.h"/>
     <ClInclude Include="..\..\src\libGLESv2\Fence.h"/>
@@ -277,7 +278,6 @@
     <ClInclude Include="..\..\src\libGLESv2\VertexArray.h"/>
     <ClInclude Include="..\..\src\libGLESv2\VertexAttribute.h"/>
     <ClInclude Include="..\..\src\libGLESv2\angletypes.h"/>
-    <ClInclude Include="..\..\src\libGLESv2\constants.h"/>
     <ClInclude Include="..\..\src\libGLESv2\formatutils.h"/>
     <ClInclude Include="..\..\src\libGLESv2\main.h"/>
     <ClInclude Include="..\..\src\libGLESv2\queryconversions.h"/>
@@ -424,7 +424,6 @@
     <ClCompile Include="..\..\src\common\mathutil.cpp"/>
     <ClCompile Include="..\..\src\common\tls.cpp"/>
     <ClCompile Include="..\..\src\common\utilities.cpp"/>
-    <ClCompile Include="..\..\src\common\win32\NativeWindow.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Buffer.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Caps.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\Context.cpp"/>
@@ -510,6 +509,7 @@
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\SwapChain11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\TextureStorage11.cpp"/>
     <ClCompile Include="..\..\src\libGLESv2\renderer\d3d\d3d11\VertexBuffer11.cpp"/>
+    <ClCompile Include="..\..\src\common\win32\NativeWindow.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="commit_id.vcxproj">

@@ -5,8 +5,6 @@
 {
     'variables':
     {
-        'angle_enable_d3d9%': 1,
-        'angle_enable_d3d11%': 1,
         # This file list is shared with the GN build.
         'angle_libegl_sources':
         [
