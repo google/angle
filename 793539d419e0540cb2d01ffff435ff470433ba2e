@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5017588b_28a3c393",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-06T15:20:36Z",
+      "side": 1,
+      "message": "Should this be checking for mTexStorage too?",
+      "range": {
+        "startLine": 175,
+        "startChar": 12,
+        "endLine": 175,
+        "endChar": 98
+      },
+      "revId": "793539d419e0540cb2d01ffff435ff470433ba2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
