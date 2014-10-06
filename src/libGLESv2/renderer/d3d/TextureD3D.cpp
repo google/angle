@@ -102,7 +102,7 @@ gl::Error TextureD3D::setImage(const gl::PixelUnpackState &unpack, GLenum type, 
 
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
-    const void *pixelData = pixels;
+    const uint8_t *pixelData = NULL;
 
     if (unpack.pixelBuffer.id() != 0)
     {
@@ -112,12 +112,30 @@ gl::Error TextureD3D::setImage(const gl::PixelUnpackState &unpack, GLenum type, 
         // TODO: setImage/subImage is the only place outside of renderer that asks for a buffers raw data.
         // This functionality should be moved into renderer and the getData method of BufferImpl removed.
         const void *bufferData = pixelBuffer->getImplementation()->getData();
-        pixelData = static_cast<const unsigned char *>(bufferData) + offset;
+        pixelData = static_cast<const uint8_t *>(bufferData) + offset;
+    }
+    else
+    {
+        pixelData = static_cast<const uint8_t *>(pixels);
     }
 
     if (pixelData != NULL)
     {
-        gl::Error error = image->loadData(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth(), unpack.alignment, type, pixelData);
+        gl::Error error(GL_NO_ERROR);
+
+        gl::InternalFormat internalFormat = gl::GetInternalFormatInfo(image->getInternalFormat());
+
+        // TODO(jmadill): Handle compressed internal formats
+        if (mTexStorage && mRenderer->getWorkarounds().setDataFasterThanImageUpload && !internalFormat.compressed)
+        {
+            gl::Box sourceBox(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
+            error = mTexStorage->setData(index, sourceBox, image->getInternalFormat(), type, unpack, pixelData);
+        }
+        else
+        {
+            error = image->loadData(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth(), unpack.alignment, type, pixelData);
+        }
+
         if (error.isError())
         {
             return error;
@@ -132,7 +150,7 @@ gl::Error TextureD3D::setImage(const gl::PixelUnpackState &unpack, GLenum type, 
 gl::Error TextureD3D::subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels, const gl::ImageIndex &index)
 {
-    const void *pixelData = pixels;
+    const uint8_t *pixelData = static_cast<const uint8_t *>(pixels);
 
     // CPU readback & copy where direct GPU copy is not supported
     if (unpack.pixelBuffer.id() != 0)
@@ -142,13 +160,23 @@ gl::Error TextureD3D::subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsi
         // TODO: setImage/subImage is the only place outside of renderer that asks for a buffers raw data.
         // This functionality should be moved into renderer and the getData method of BufferImpl removed.
         const void *bufferData = pixelBuffer->getImplementation()->getData();
-        pixelData = static_cast<const unsigned char *>(bufferData) + offset;
+        pixelData = static_cast<const uint8_t *>(bufferData)+offset;
     }
 
     if (pixelData != NULL)
     {
         Image *image = getImage(index);
         ASSERT(image);
+
+        gl::InternalFormat internalFormat = gl::GetInternalFormatInfo(image->getInternalFormat());
+        gl::Box region(xoffset, yoffset, zoffset, width, height, depth);
+
+        // TODO(jmadill): Handle compressed internal formats
+        if (mTexStorage && mRenderer->getWorkarounds().setDataFasterThanImageUpload && !internalFormat.compressed)
+        {
+            return mTexStorage->setData(index, region, image->getInternalFormat(),
+                                        type, unpack, pixelData);
+        }
 
         gl::Error error = image->loadData(xoffset, yoffset, zoffset, width, height, depth, unpack.alignment,
                                           type, pixelData);
@@ -157,7 +185,6 @@ gl::Error TextureD3D::subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsi
             return error;
         }
 
-        gl::Box region(xoffset, yoffset, zoffset, width, height, depth);
         error = commitRegion(index, region);
         if (error.isError())
         {
@@ -263,17 +290,43 @@ Image *TextureD3D::getBaseLevelImage() const
 
 void TextureD3D::generateMipmaps()
 {
-    // Set up proper image sizes.
+    GLint mipCount = mipLevels();
+
+    if (mipCount == 1)
+    {
+        return; // no-op
+    }
+
+    // Set up proper mipmap chain in our Image array.
     initMipmapsImages();
 
     // We know that all layers have the same dimension, for the texture to be complete
     GLint layerCount = static_cast<GLint>(getLayerCount(0));
-    GLint mipCount = mipLevels();
 
-    // The following will create and initialize the storage, or update it if it exists
-    TextureStorage *storage = getNativeTexture();
+    // When making mipmaps with the setData workaround enabled, the texture storage has
+    // the image data already. For non-render-target storage, we have to pull it out into
+    // an image layer.
+    if (mRenderer->getWorkarounds().setDataFasterThanImageUpload && mTexStorage)
+    {
+        if (!mTexStorage->isRenderTarget())
+        {
+            // Copy from the storage mip 0 to Image mip 0
+            for (GLint layer = 0; layer < layerCount; ++layer)
+            {
+                gl::ImageIndex srcIndex = getImageIndex(0, layer);
 
-    bool renderableStorage = (storage && storage->isRenderTarget());
+                Image *image = getImage(srcIndex);
+                gl::Rectangle area(0, 0, image->getWidth(), image->getHeight());
+                image->copy(0, 0, 0, area, srcIndex, mTexStorage);
+            }
+        }
+        else
+        {
+            updateStorage();
+        }
+    }
+
+    bool renderableStorage = (mTexStorage && mTexStorage->isRenderTarget());
 
     for (GLint layer = 0; layer < layerCount; ++layer)
     {
@@ -287,7 +340,7 @@ void TextureD3D::generateMipmaps()
             if (renderableStorage)
             {
                 // GPU-side mipmapping
-                storage->generateMipmap(sourceIndex, destIndex);
+                mTexStorage->generateMipmap(sourceIndex, destIndex);
             }
             else
             {

@@ -40,9 +40,11 @@ protected:
             attribute vec4 position;
             varying vec2 texcoord;
 
+            uniform vec2 textureScale;
+
             void main()
             {
-                gl_Position = position;
+                gl_Position = vec4(position.xy * textureScale, 0.0, 1.0);
                 texcoord = (position.xy * 0.5) + 0.5;
             }
         );
@@ -81,6 +83,15 @@ protected:
         }
 
         mTexture2DUniformLocation = glGetUniformLocation(m2DProgram, "tex");
+        ASSERT_NE(-1, mTexture2DUniformLocation);
+
+        mTextureScaleUniformLocation = glGetUniformLocation(m2DProgram, "textureScale");
+        ASSERT_NE(-1, mTextureScaleUniformLocation);
+
+        glUseProgram(m2DProgram);
+        glUniform2f(mTextureScaleUniformLocation, 1.0f, 1.0f);
+        glUseProgram(0);
+        ASSERT_GL_NO_ERROR();
     }
 
     virtual void TearDown()
@@ -99,6 +110,7 @@ protected:
     GLuint m2DProgram;
     GLuint mCubeProgram;
     GLint mTexture2DUniformLocation;
+    GLint mTextureScaleUniformLocation;
 };
 
 TYPED_TEST(TextureTest, NegativeAPISubImage)
@@ -151,4 +163,65 @@ TYPED_TEST(TextureTest, CubeMapBug)
     glUniform1i(texCubeUniformLocation, 1);
     drawQuad(mCubeProgram, "position", 0.5f);
     EXPECT_GL_NO_ERROR();
+}
+
+// Copy of a test in conformance/textures/texture-mips, to test generate mipmaps
+TYPED_TEST(TextureTest, MipmapsTwice)
+{
+    int px = getWindowWidth() / 2;
+    int py = getWindowHeight() / 2;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    // Fill with red
+    std::vector<GLubyte> pixels(4 * 16 * 16);
+    for (size_t pixelId = 0; pixelId < 16 * 16; ++pixelId)
+    {
+        pixels[pixelId * 4 + 0] = 255;
+        pixels[pixelId * 4 + 1] = 0;
+        pixels[pixelId * 4 + 2] = 0;
+        pixels[pixelId * 4 + 3] = 255;
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    glUseProgram(m2DProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    glUniform2f(mTextureScaleUniformLocation, 0.0625f, 0.0625f);
+    drawQuad(m2DProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(px, py, 255, 0, 0, 255);
+
+    // Fill with blue
+    for (size_t pixelId = 0; pixelId < 16 * 16; ++pixelId)
+    {
+        pixels[pixelId * 4 + 0] = 0;
+        pixels[pixelId * 4 + 1] = 0;
+        pixels[pixelId * 4 + 2] = 255;
+        pixels[pixelId * 4 + 3] = 255;
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Fill with green
+    for (size_t pixelId = 0; pixelId < 16 * 16; ++pixelId)
+    {
+        pixels[pixelId * 4 + 0] = 0;
+        pixels[pixelId * 4 + 1] = 255;
+        pixels[pixelId * 4 + 2] = 0;
+        pixels[pixelId * 4 + 3] = 255;
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    drawQuad(m2DProgram, "position", 0.5f);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(px, py, 0, 255, 0, 255);
 }
