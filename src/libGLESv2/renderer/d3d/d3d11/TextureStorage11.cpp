@@ -189,7 +189,7 @@ UINT TextureStorage11::getSubresourceIndex(int mipLevel, int layerTarget) const
     UINT index = 0;
     if (getResource())
     {
-        index = D3D11CalcSubresource(mipLevel, layerTarget, mMipLevels);
+        index = D3D11CalcSubresource(mipLevel + mTopLevel, layerTarget, mMipLevels);
     }
     return index;
 }
@@ -307,7 +307,7 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, u
                     copyArea.depth  == texSize.depth;
 
     ID3D11Resource *dstTexture = getResource();
-    unsigned int dstSubresource = getSubresourceIndex(level + mTopLevel, layerTarget);
+    unsigned int dstSubresource = getSubresourceIndex(level, layerTarget);
 
     ASSERT(dstTexture);
 
@@ -348,7 +348,7 @@ bool TextureStorage11::copySubresourceLevel(ID3D11Resource* dstTexture, unsigned
     if (dstTexture)
     {
         ID3D11Resource *srcTexture = getResource();
-        unsigned int srcSubresource = getSubresourceIndex(level + mTopLevel, layerTarget);
+        unsigned int srcSubresource = getSubresourceIndex(level, layerTarget);
 
         ASSERT(srcTexture);
 
