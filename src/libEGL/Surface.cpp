@@ -74,20 +74,23 @@ Surface::~Surface()
     release();
 }
 
-bool Surface::initialize()
+Error Surface::initialize()
 {
     if (mNativeWindow.getNativeWindow())
     {
         if (!mNativeWindow.initialize())
         {
-            return false;
+            return Error(EGL_BAD_SURFACE);
         }
     }
 
-    if (!resetSwapChain())
-      return false;
+    Error error = resetSwapChain();
+    if (error.isError())
+    {
+        return error;
+    }
 
-    return true;
+    return Error(EGL_SUCCESS);
 }
 
 void Surface::release()
@@ -102,7 +105,7 @@ void Surface::release()
     }
 }
 
-bool Surface::resetSwapChain()
+Error Surface::resetSwapChain()
 {
     ASSERT(!mSwapChain);
 
@@ -116,8 +119,7 @@ bool Surface::resetSwapChain()
         {
             ASSERT(false);
 
-            ERR("Could not retrieve the window dimensions");
-            return error(EGL_BAD_SURFACE, false);
+            return Error(EGL_BAD_SURFACE, "Could not retrieve the window dimensions");
         }
 
         width = windowRect.right - windowRect.left;
@@ -135,20 +137,20 @@ bool Surface::resetSwapChain()
                                             mConfig->mDepthStencilFormat);
     if (!mSwapChain)
     {
-        return error(EGL_BAD_ALLOC, false);
+        return Error(EGL_BAD_ALLOC);
     }
 
-    if (!resetSwapChain(width, height))
+    Error error = resetSwapChain(width, height);
+    if (error.isError())
     {
-        delete mSwapChain;
-        mSwapChain = NULL;
-        return false;
+        SafeDelete(mSwapChain);
+        return error;
     }
 
-    return true;
+    return Error(EGL_SUCCESS);
 }
 
-bool Surface::resizeSwapChain(int backbufferWidth, int backbufferHeight)
+Error Surface::resizeSwapChain(int backbufferWidth, int backbufferHeight)
 {
     ASSERT(backbufferWidth >= 0 && backbufferHeight >= 0);
     ASSERT(mSwapChain);
@@ -158,20 +160,20 @@ bool Surface::resizeSwapChain(int backbufferWidth, int backbufferHeight)
     if (status == EGL_CONTEXT_LOST)
     {
         mDisplay->notifyDeviceLost();
-        return false;
+        return Error(status);
     }
     else if (status != EGL_SUCCESS)
     {
-        return error(status, false);
+        return Error(status);
     }
 
     mWidth = backbufferWidth;
     mHeight = backbufferHeight;
 
-    return true;
+    return Error(EGL_SUCCESS);
 }
 
-bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
+Error Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 {
     ASSERT(backbufferWidth >= 0 && backbufferHeight >= 0);
     ASSERT(mSwapChain);
@@ -181,25 +183,25 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     if (status == EGL_CONTEXT_LOST)
     {
         mRenderer->notifyDeviceLost();
-        return false;
+        return Error(status);
     }
     else if (status != EGL_SUCCESS)
     {
-        return error(status, false);
+        return Error(status);
     }
 
     mWidth = backbufferWidth;
     mHeight = backbufferHeight;
     mSwapIntervalDirty = false;
 
-    return true;
+    return Error(EGL_SUCCESS);
 }
 
-bool Surface::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
+Error Surface::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 {
     if (!mSwapChain)
     {
-        return true;
+        return Error(EGL_SUCCESS);
     }
 
     if (x + width > mWidth)
@@ -214,7 +216,7 @@ bool Surface::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 
     if (width == 0 || height == 0)
     {
-        return true;
+        return Error(EGL_SUCCESS);
     }
 
     EGLint status = mSwapChain->swapRect(x, y, width, height);
@@ -222,16 +224,16 @@ bool Surface::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     if (status == EGL_CONTEXT_LOST)
     {
         mRenderer->notifyDeviceLost();
-        return false;
+        return Error(status);
     }
     else if (status != EGL_SUCCESS)
     {
-        return error(status, false);
+        return Error(status);
     }
 
     checkForOutOfDateSwapChain();
 
-    return true;
+    return Error(EGL_SUCCESS);
 }
 
 EGLNativeWindowType Surface::getWindowHandle()
@@ -369,17 +371,17 @@ bool Surface::checkForOutOfDateSwapChain()
     return false;
 }
 
-bool Surface::swap()
+Error Surface::swap()
 {
     return swapRect(0, 0, mWidth, mHeight);
 }
 
-bool Surface::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
+Error Surface::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
 {
     if (!mPostSubBufferSupported)
     {
         // Spec is not clear about how this should be handled.
-        return true;
+        return Error(EGL_SUCCESS);
     }
 
     return swapRect(x, y, width, height);

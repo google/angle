@@ -42,6 +42,8 @@
             'libEGL/Config.h',
             'libEGL/Display.cpp',
             'libEGL/Display.h',
+            'libEGL/Error.cpp',
+            'libEGL/Error.h',
             'libEGL/Surface.cpp',
             'libEGL/Surface.h',
             'libEGL/libEGL.cpp',

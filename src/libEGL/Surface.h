@@ -11,6 +11,8 @@
 #ifndef LIBEGL_SURFACE_H_
 #define LIBEGL_SURFACE_H_
 
+#include "libEGL/Error.h"
+
 #include <EGL/egl.h>
 
 #include "common/angleutils.h"
@@ -39,13 +41,13 @@ class Surface
 
     virtual ~Surface();
 
-    bool initialize();
+    Error initialize();
     void release();
-    bool resetSwapChain();
+    Error resetSwapChain();
 
     EGLNativeWindowType getWindowHandle();
-    bool swap();
-    bool postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height);
+    Error swap();
+    Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height);
 
     virtual EGLint isPostSubBufferSupported() const;
 
@@ -80,9 +82,9 @@ private:
 
     void subclassWindow();
     void unsubclassWindow();
-    bool resizeSwapChain(int backbufferWidth, int backbufferHeight);
-    bool resetSwapChain(int backbufferWidth, int backbufferHeight);
-    bool swapRect(EGLint x, EGLint y, EGLint width, EGLint height);
+    Error resizeSwapChain(int backbufferWidth, int backbufferHeight);
+    Error resetSwapChain(int backbufferWidth, int backbufferHeight);
+    Error swapRect(EGLint x, EGLint y, EGLint width, EGLint height);
 
     rx::NativeWindow mNativeWindow;   // Handler for the Window that the surface is created for.
     bool mWindowSubclassed;        // Indicates whether we successfully subclassed mWindow for WM_RESIZE hooking
