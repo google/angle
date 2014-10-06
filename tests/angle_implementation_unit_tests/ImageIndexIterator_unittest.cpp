@@ -23,6 +23,8 @@ TEST(ImageIndexTest, Iterator2D)
 {
     ImageIndexIterator iter = ImageIndexIterator::Make2D(minMip, maxMip);
 
+    ASSERT_GE(0, minMip);
+
     for (GLint mip = minMip; mip < maxMip; mip++)
     {
         EXPECT_TRUE(iter.hasNext());
@@ -42,9 +44,9 @@ TEST(ImageIndexTest, Iterator2D)
 
 TEST(ImageIndexTest, IteratorCube)
 {
-    testing::InSequence seq;
-
     ImageIndexIterator iter = ImageIndexIterator::MakeCube(0, 4);
+
+    ASSERT_GE(0, minMip);
 
     for (GLint mip = minMip; mip < maxMip; mip++)
     {
@@ -65,9 +67,9 @@ TEST(ImageIndexTest, IteratorCube)
 
 TEST(ImageIndexTest, Iterator3D)
 {
-    testing::InSequence seq;
-
     ImageIndexIterator iter = ImageIndexIterator::Make3D(minMip, maxMip, minLayer, maxLayer);
+
+    ASSERT_GE(0, minMip);
 
     for (GLint mip = minMip; mip < maxMip; mip++)
     {
@@ -86,11 +88,12 @@ TEST(ImageIndexTest, Iterator3D)
 
 TEST(ImageIndexTest, Iterator2DArray)
 {
-    testing::InSequence seq;
-
-    GLsizei layerCounts[] = { 1, 3, 5 };
+    GLsizei layerCounts[] = { 1, 3, 5, 2 };
 
     ImageIndexIterator iter = ImageIndexIterator::Make2DArray(minMip, maxMip, layerCounts);
+
+    ASSERT_GE(0, minMip);
+    ASSERT_EQ(ArraySize(layerCounts), static_cast<size_t>(maxMip));
 
     for (GLint mip = minMip; mip < maxMip; mip++)
     {
