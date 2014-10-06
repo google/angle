@@ -46,6 +46,30 @@
       "revId": "ab3d85d88543baeaff8d0c89aebad85b1049371f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90b9d0ac_219a227c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T17:25:03Z",
+      "side": 1,
+      "message": "+1.. seems reasonable to check the return value first before calling CheckDeviceState",
+      "parentUuid": "50c2f81e_87dafa2a",
+      "range": {
+        "startLine": 515,
+        "startChar": 0,
+        "endLine": 523,
+        "endChar": 9
+      },
+      "revId": "ab3d85d88543baeaff8d0c89aebad85b1049371f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
