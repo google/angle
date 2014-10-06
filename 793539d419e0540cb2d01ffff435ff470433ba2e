@@ -22,6 +22,53 @@
       "revId": "793539d419e0540cb2d01ffff435ff470433ba2e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0bfc88a_83be72db",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T15:28:50Z",
+      "side": 1,
+      "message": "It\u0027s not actually wrong, because getNativeTexture() will create the storage if it doesn\u0027t exist. I did that because sometimes the user initializes a mipmap chain with serveral TexImage calls. For multi-level, deferring storage creation is a good thing. We\u0027d do extra copies if the user used TexSubImage in the middle of initializing his mipmap chain, but then they probably deserve it. :p",
+      "parentUuid": "5017588b_28a3c393",
+      "range": {
+        "startLine": 175,
+        "startChar": 12,
+        "endLine": 175,
+        "endChar": 98
+      },
+      "revId": "793539d419e0540cb2d01ffff435ff470433ba2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90b9d0ac_76fc5e1c",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T15:28:50Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 177,
+        "startChar": 19,
+        "endLine": 177,
+        "endChar": 35
+      },
+      "revId": "793539d419e0540cb2d01ffff435ff470433ba2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
