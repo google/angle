@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "3014a487_4dc8d17f",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-06T22:07:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50c2f81e_e7ef3ec2",
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0268cf7_ed31c10e",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 2
@@ -36,6 +54,24 @@
       "writtenOn": "2014-10-03T21:43:20Z",
       "side": 1,
       "message": "Since Uniform::isSameType and Varying::isSameType both take two const references I would suggest you just make them methods of these classes / structs.",
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10116099_f7f3487c",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-06T22:07:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0268cf7_ed31c10e",
       "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -65,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "5017588b_4ec8c77f",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-06T22:07:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "90b9d0ac_01aa7e92",
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50c2f81e_67fcae85",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 2
@@ -82,6 +136,24 @@
         "endLine": 131,
         "endChar": 31
       },
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d0a811_615216dc",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-06T22:07:45Z",
+      "side": 1,
+      "message": "Done.  I go down route 1 so other vendors using ANGLE do not have to re-implement the same logic.",
+      "parentUuid": "50c2f81e_67fcae85",
       "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -111,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "b007b451_aa904357",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-06T22:07:45Z",
+      "side": 1,
+      "message": "Thanks.  Included.",
+      "parentUuid": "90b9d0ac_41515623",
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50c2f81e_a7e936be",
         "filename": "tests/compiler_tests/ShaderVariable_test.cpp",
         "patchSetId": 2
@@ -134,6 +224,24 @@
     },
     {
       "key": {
+        "uuid": "30fbc487_c6094654",
+        "filename": "tests/compiler_tests/ShaderVariable_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-06T22:07:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50c2f81e_a7e936be",
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70f1bca1_d7845669",
         "filename": "tests/compiler_tests/ShaderVariable_test.cpp",
         "patchSetId": 2
@@ -145,6 +253,24 @@
       "writtenOn": "2014-10-03T21:43:20Z",
       "side": 1,
       "message": "Comment looks wrong: should be \"varying float vary\"?",
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b007b451_2a0c532d",
+        "filename": "tests/compiler_tests/ShaderVariable_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-06T22:07:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70f1bca1_d7845669",
       "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
