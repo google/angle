@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d0bfc88a_039a8200",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T19:15:27Z",
+      "side": 1,
+      "message": "Hum... you actually found a bug here. getSubresourceIndex doesn\u0027t account for mTopLevel, which can cause strange interactions with blocked textures. I think this is only true for compressed textures, so it\u0027s not a \"real\" bug, but still. I chose to fix this in a systematic way, with a new dependent patch that defers converting from ImageIndex to D3D\u0027s UINT \"ArraySlice\" as long as possible, and accounts for mTopLevel.",
+      "parentUuid": "3014a487_e721dc3c",
+      "range": {
+        "startLine": 347,
+        "startChar": 87,
+        "endLine": 347,
+        "endChar": 138
+      },
+      "revId": "f0f60284f3f7e75f179b442099e1c5ddfcd27648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10f88089_8e9abb46",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 1
@@ -119,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "90b9d0ac_a13b72be",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T19:15:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5017588b_88b3d7de",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 31
+      },
+      "revId": "f0f60284f3f7e75f179b442099e1c5ddfcd27648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10f88089_ae9df742",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 1
@@ -154,6 +202,30 @@
       "side": 1,
       "message": "Was this a bug from before?",
       "parentUuid": "10f88089_ae9df742",
+      "range": {
+        "startLine": 445,
+        "startChar": 4,
+        "endLine": 445,
+        "endChar": 18
+      },
+      "revId": "f0f60284f3f7e75f179b442099e1c5ddfcd27648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50c2f81e_a76e169c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T19:15:27Z",
+      "side": 1,
+      "message": "Honestly not sure, I didn\u0027t see any issues with or without it, but it could potentially be an internal bug that didn\u0027t have a failure case.",
+      "parentUuid": "3014a487_275bf4d2",
       "range": {
         "startLine": 445,
         "startChar": 4,
