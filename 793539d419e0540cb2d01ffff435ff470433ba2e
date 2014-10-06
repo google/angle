@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "50c2f81e_fc51155b",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-06T15:33:34Z",
+      "side": 1,
+      "message": "Ok, there should be a comment explaining this then.  On the surface it just looks like an inconsistency.",
+      "parentUuid": "d0bfc88a_83be72db",
+      "range": {
+        "startLine": 175,
+        "startChar": 12,
+        "endLine": 175,
+        "endChar": 98
+      },
+      "revId": "793539d419e0540cb2d01ffff435ff470433ba2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90b9d0ac_76fc5e1c",
         "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 2
