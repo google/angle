@@ -221,7 +221,10 @@ if (is_win) {
     ]
 
     if (is_debug) {
-      defines += [ "ANGLE_ENABLE_PERF" ]
+      defines += [
+        "ANGLE_ENABLE_PERF",
+        "ANGLE_GENERATE_SHADER_DEBUG_INFO"
+      ]
     }
 
     include_dirs = [ "src/libGLESv2" ]

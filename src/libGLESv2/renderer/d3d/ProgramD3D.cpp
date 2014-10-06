@@ -534,6 +534,27 @@ gl::LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::S
         }
     }
 
+#ifdef ANGLE_GENERATE_SHADER_DEBUG_INFO
+    if (usesGeometryShader() && mGeometryExecutable)
+    {
+        // Geometry shaders are currently only used internally, so there is no corresponding shader object at the interface level
+        // For now the geometry shader debug info is pre-pended to the vertex shader, this is a bit of a clutch
+        vertexShaderD3D->appendDebugInfo("// GEOMETRY SHADER BEGIN\n\n");
+        vertexShaderD3D->appendDebugInfo(mGeometryExecutable->getDebugInfo());
+        vertexShaderD3D->appendDebugInfo("\nGEOMETRY SHADER END\n\n\n");
+    }
+
+    if (defaultVertexExecutable)
+    {
+        vertexShaderD3D->appendDebugInfo(defaultVertexExecutable->getDebugInfo());
+    }
+
+    if (defaultPixelExecutable)
+    {
+        fragmentShaderD3D->appendDebugInfo(defaultPixelExecutable->getDebugInfo());
+    }
+#endif
+
     bool linkSuccess = (defaultVertexExecutable && defaultPixelExecutable && (!usesGeometryShader() || mGeometryExecutable));
     return gl::LinkResult(linkSuccess, gl::Error(GL_NO_ERROR));
 }

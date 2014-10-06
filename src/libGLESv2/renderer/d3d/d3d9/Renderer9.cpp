@@ -2927,7 +2927,8 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string
     configs.push_back(CompileConfig(flags | D3DCOMPILE_PREFER_FLOW_CONTROL, "prefer flow control"));
 
     ID3DBlob *binary = NULL;
-    gl::Error error = mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs, NULL, &binary);
+    std::string debugInfo;
+    gl::Error error = mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs, NULL, &binary, &debugInfo);
     if (error.isError())
     {
         return error;
@@ -2943,10 +2944,16 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string
 
     error = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type,
                            transformFeedbackVaryings, separatedOutputBuffers, outExectuable);
+
     SafeRelease(binary);
     if (error.isError())
     {
         return error;
+    }
+
+    if (!debugInfo.empty())
+    {
+        (*outExectuable)->appendDebugInfo(debugInfo);
     }
 
     return gl::Error(GL_NO_ERROR);
