@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90b9d0ac_a10a92bb",
+        "filename": "tests/angle_implementation_unit_tests/ImageIndexIterator_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T19:34:53Z",
+      "side": 1,
+      "message": "added the appropriate tests here",
+      "range": {
+        "startLine": 95,
+        "startChar": 4,
+        "endLine": 96,
+        "endChar": 67
+      },
+      "revId": "d92a2e7143fd2be6d0bce8d28a1d7aefccf7b20f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
