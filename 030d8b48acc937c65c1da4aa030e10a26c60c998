@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "50c2f81e_e7ef3ec2",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T17:23:25Z",
+      "side": 1,
+      "message": "I don\u0027t see a body for this method?",
+      "range": {
+        "startLine": 63,
+        "startChar": 16,
+        "endLine": 63,
+        "endChar": 31
+      },
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0268cf7_ed31c10e",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 2
@@ -13,6 +36,98 @@
       "writtenOn": "2014-10-03T21:43:20Z",
       "side": 1,
       "message": "Since Uniform::isSameType and Varying::isSameType both take two const references I would suggest you just make them methods of these classes / structs.",
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90b9d0ac_01aa7e92",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T17:23:25Z",
+      "side": 1,
+      "message": "nit: findInfoFromMappedName?",
+      "range": {
+        "startLine": 58,
+        "startChar": 21,
+        "endLine": 58,
+        "endChar": 37
+      },
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50c2f81e_67fcae85",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T17:23:25Z",
+      "side": 1,
+      "message": "Are these helpers for checking link validation? If so, you might consider\n\na) renaming these helpers to explicitly mention the word link, and adding a few comments, indicating the GLSL spec context,\nb) is there other supporting code in Chromium? because you could move the helpers to Chromium, and also include more meaningful error messages about which members and fields don\u0027t match. (The ANGLE equivalent is \"linkValidateVariablesBase\" et al. in https://chromium.googlesource.com/angle/angle/+/master/src/libGLESv2/ProgramBinary.cpp)",
+      "range": {
+        "startLine": 131,
+        "startChar": 21,
+        "endLine": 131,
+        "endChar": 31
+      },
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90b9d0ac_41515623",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T17:23:25Z",
+      "side": 1,
+      "message": "\"The type and presence of the interpolation qualifiers and storage qualifiers and invariant qualifiers of \nvariables with the same name declared in all linked shaders must match, otherwise the link command will \nfail.\"",
+      "range": {
+        "startLine": 250,
+        "startChar": 4,
+        "endLine": 250,
+        "endChar": 53
+      },
+      "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50c2f81e_a7e936be",
+        "filename": "tests/compiler_tests/ShaderVariable_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T17:23:25Z",
+      "side": 1,
+      "message": "nit: is it good practice to have an empty fixture? You can use TEST() instead of TEST_F() to define tests without a fixture.",
+      "range": {
+        "startLine": 17,
+        "startChar": 6,
+        "endLine": 17,
+        "endChar": 24
+      },
       "revId": "030d8b48acc937c65c1da4aa030e10a26c60c998",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
