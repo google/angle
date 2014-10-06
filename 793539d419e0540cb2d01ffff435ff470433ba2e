@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "90b9d0ac_41f5d6e3",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-06T16:42:01Z",
+      "side": 1,
+      "message": "Made it like setImage.. I don\u0027t think there\u0027s a big downside to skipping setData before we create the storage. (Max one frame) and could save a re-create if we are using this texture as a RT.",
+      "parentUuid": "50c2f81e_fc51155b",
+      "range": {
+        "startLine": 175,
+        "startChar": 12,
+        "endLine": 175,
+        "endChar": 98
+      },
+      "revId": "793539d419e0540cb2d01ffff435ff470433ba2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90b9d0ac_76fc5e1c",
         "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 2
