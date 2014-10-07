@@ -1,0 +1,872 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90b9d0ac_416ab65d",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 221,
+        "startChar": 18,
+        "endLine": 221,
+        "endChar": 19
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0bfc88a_be170d65",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: trailing whitespace",
+      "range": {
+        "startLine": 223,
+        "startChar": 36,
+        "endLine": 223,
+        "endChar": 37
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30fbc487_fb97bb1c",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: should be prefixed with ANGLE_, so ANGLE_GENERATE_SHADER_DEBUG_INFO",
+      "range": {
+        "startLine": 223,
+        "startChar": 9,
+        "endLine": 223,
+        "endChar": 35
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30fbc487_3b714384",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: tabs (should be spaces) and trailing space",
+      "range": {
+        "startLine": 420,
+        "startChar": 0,
+        "endLine": 420,
+        "endChar": 8
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f88089_c06e4c6f",
+        "filename": "src/libGLESv2/renderer/ShaderExecutable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "remove this",
+      "range": {
+        "startLine": 43,
+        "startChar": 7,
+        "endLine": 43,
+        "endChar": 33
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50c2f81e_62449c76",
+        "filename": "src/libGLESv2/renderer/ShaderExecutable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: trailing spaces",
+      "range": {
+        "startLine": 44,
+        "startChar": 37,
+        "endLine": 44,
+        "endChar": 38
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b007b451_b7f6e76d",
+        "filename": "src/libGLESv2/renderer/ShaderExecutable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "std::stringstream \u0026getDebugInfo()",
+      "range": {
+        "startLine": 44,
+        "startChar": 23,
+        "endLine": 44,
+        "endChar": 35
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0b4ccdf_da14a5b4",
+        "filename": "src/libGLESv2/renderer/ShaderExecutable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "and this",
+      "range": {
+        "startLine": 60,
+        "startChar": 7,
+        "endLine": 60,
+        "endChar": 33
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70dffc23_4157d41b",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "ditto as below",
+      "range": {
+        "startLine": 44,
+        "startChar": 20,
+        "endLine": 44,
+        "endChar": 32
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10116099_97065440",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: tab",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 1
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0cbec63_68ad977c",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: we use lower case for member names, and the \u0026 should be right-aligned:\n\n std::stringstream \u0026getDebugInfo()",
+      "range": {
+        "startLine": 45,
+        "startChar": 29,
+        "endLine": 45,
+        "endChar": 41
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0cbec63_e8d2870d",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: tab",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 1
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f88089_c0276c51",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "suggestion: use a std::string here, and only use a stringstream on initialization. will make other comments",
+      "range": {
+        "startLine": 58,
+        "startChar": 19,
+        "endLine": 58,
+        "endChar": 29
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b007b451_d7d28bdf",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "you can leave these in at all times",
+      "range": {
+        "startLine": 34,
+        "startChar": 7,
+        "endLine": 34,
+        "endChar": 33
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70dffc23_61d93086",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 37,
+        "startChar": 6,
+        "endLine": 37,
+        "endChar": 7
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0b4ccdf_ba80d185",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "ditto, and so on in this file",
+      "range": {
+        "startLine": 77,
+        "startChar": 7,
+        "endLine": 77,
+        "endChar": 33
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d0a811_c46210f9",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: tabs",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 2
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70dffc23_c1068441",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "do we currently print anything in the infolog on a first-try success? I think we should preserve that behaviour, if so.",
+      "range": {
+        "startLine": 131,
+        "startChar": 12,
+        "endLine": 131,
+        "endChar": 89
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90b9d0ac_019a7e00",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: * belongs right-sided with shaderBinary:\n\n  ID3DBlob *shaderBinary",
+      "range": {
+        "startLine": 159,
+        "startChar": 52,
+        "endLine": 159,
+        "endChar": 53
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d0a811_64c30465",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: for variable names we don\u0027t use underscore, so asmSrc is good",
+      "range": {
+        "startLine": 161,
+        "startChar": 16,
+        "endLine": 161,
+        "endChar": 23
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0d5f401_e0b0e253",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 164,
+        "startChar": 31,
+        "endLine": 164,
+        "endChar": 32
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d0a811_44be00de",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: in Chromium code, we prefer c++ style casts. you could also break this into some multiple lines to keep the horizontal width within 100 chars or so. (note, some legacy ANGLE code isn\u0027t consistent with the c++ style casts rule. we\u0027d like to fix that eventually.)",
+      "range": {
+        "startLine": 168,
+        "startChar": 43,
+        "endLine": 168,
+        "endChar": 51
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90b9d0ac_e155ea90",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: use SafeRelease() here",
+      "range": {
+        "startLine": 175,
+        "startChar": 7,
+        "endLine": 176,
+        "endChar": 35
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0b4ccdf_7a8f19b9",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "you can leave these in at all times",
+      "range": {
+        "startLine": 43,
+        "startChar": 7,
+        "endLine": 43,
+        "endChar": 33
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0b4ccdf_9a830d92",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 53,
+        "startChar": 7,
+        "endLine": 53,
+        "endChar": 33
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70dffc23_e11aa08e",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "keep the #ifdef here",
+      "range": {
+        "startLine": 537,
+        "startChar": 7,
+        "endLine": 537,
+        "endChar": 33
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d0a811_649a247d",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: we use \"allman\" style braces always, so { on a new line",
+      "range": {
+        "startLine": 545,
+        "startChar": 33,
+        "endLine": 545,
+        "endChar": 34
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0b4ccdf_3afcc11b",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "I think you could generate the debug info in compile, without needing a new worker method. That would avoid having to pass in the gl::Shader as well, which is something a bit hacky.",
+      "range": {
+        "startLine": 434,
+        "startChar": 23,
+        "endLine": 434,
+        "endChar": 55
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b007b451_b7cf0736",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "we already have mType for the shader type",
+      "range": {
+        "startLine": 438,
+        "startChar": 12,
+        "endLine": 438,
+        "endChar": 30
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10116099_d7172c64",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: 2 space indent for case labels",
+      "range": {
+        "startLine": 440,
+        "startChar": 4,
+        "endLine": 440,
+        "endChar": 8
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0bfc88a_fe7b45ae",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: here too",
+      "range": {
+        "startLine": 443,
+        "startChar": 4,
+        "endLine": 443,
+        "endChar": 8
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f88089_2039107c",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "add\n  default:\n     UNREACHABLE();\n     typeName \u003d \"UNKNOWN\";\n     break;\n\nand init typeName \u003d NULL",
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50c2f81e_a2884445",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2369,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 2369,
+        "startChar": 6,
+        "endLine": 2369,
+        "endChar": 7
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10116099_f731880e",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2396,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: brace on new line",
+      "range": {
+        "startLine": 2396,
+        "startChar": 30,
+        "endLine": 2396,
+        "endChar": 31
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f88089_6033189a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2927,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: brace on new line",
+      "range": {
+        "startLine": 2927,
+        "startChar": 30,
+        "endLine": 2927,
+        "endChar": 31
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50c2f81e_8257481b",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "use a std::vector like the above code.",
+      "range": {
+        "startLine": 114,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 35
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0cbec63_4876137d",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "do you feel it\u0027s necessary to have the translated source? running angle_tests, it\u0027s very easy to see the info by setting a breakpoint in the appropriate code.",
+      "range": {
+        "startLine": 126,
+        "startChar": 2,
+        "endLine": 126,
+        "endChar": 69
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50c2f81e_c285502c",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:43:37Z",
+      "side": 1,
+      "message": "nit: style and tabs",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 14
+      },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
