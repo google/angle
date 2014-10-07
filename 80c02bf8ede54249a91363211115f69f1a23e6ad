@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "30e904d0_b0b8e04d",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-07T17:59:02Z",
+      "side": 1,
+      "message": "Thanks for the suggestion and providing a well-worded documentation.  Will take it with joy. :)",
+      "parentUuid": "50dcb82f_514de4b8",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0b4ccdf_9a9cedfe",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 4
@@ -114,6 +132,24 @@
     },
     {
       "key": {
+        "uuid": "d0b988d9_0d950115",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-07T17:59:02Z",
+      "side": 1,
+      "message": "OK, now I understand you.",
+      "parentUuid": "b007b451_7ab2a6de",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0d0a811_30f696f5",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 4
@@ -149,6 +185,24 @@
     },
     {
       "key": {
+        "uuid": "30e904d0_10851463",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-07T17:59:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0d0a811_30f696f5",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50dcb82f_d1801487",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 4
@@ -160,6 +214,24 @@
       "writtenOn": "2014-10-07T02:52:36Z",
       "side": 1,
       "message": "typo: fieldss",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0b988d9_4d49b98c",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-07T17:59:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50dcb82f_d1801487",
       "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -201,6 +273,24 @@
     },
     {
       "key": {
+        "uuid": "d0b988d9_0dd0a103",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-07T17:59:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50dcb82f_11127cc5",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50dcb82f_b131c861",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 4
@@ -212,6 +302,24 @@
       "writtenOn": "2014-10-07T02:52:36Z",
       "side": 1,
       "message": "Could you use a more descriptive name for these variables? The \"tmp\" prefix is confusing.",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c8dc75_162efc83",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-07T17:59:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50dcb82f_b131c861",
       "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
