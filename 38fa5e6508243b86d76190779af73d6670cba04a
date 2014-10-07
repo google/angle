@@ -301,6 +301,24 @@
     },
     {
       "key": {
+        "uuid": "d0bfc88a_15edd7c9",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1117984
+      },
+      "writtenOn": "2014-10-07T20:46:33Z",
+      "side": 1,
+      "message": "Will do, but why ?\nIs a stringstream heavier compared to a string ?",
+      "parentUuid": "10f88089_c0276c51",
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b007b451_d7d28bdf",
         "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
         "patchSetId": 1
@@ -841,6 +859,24 @@
         "endLine": 126,
         "endChar": 69
       },
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0bfc88a_95f1c72c",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1117984
+      },
+      "writtenOn": "2014-10-07T20:46:33Z",
+      "side": 1,
+      "message": "No, I just put it in so it is easy to see the debug output in the console.\nI will remove the streaming to standard out.",
+      "parentUuid": "f0cbec63_4876137d",
       "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
