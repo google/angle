@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b007b451_77575fca",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T12:45:30Z",
+      "side": 1,
+      "message": "might be worth adding a TODO here indicating we\u0027d like to port NativeWindow to other EGL platforms",
+      "range": {
+        "startLine": 143,
+        "startChar": 26,
+        "endLine": 143,
+        "endChar": 38
+      },
+      "revId": "d7fa9b9ae972af7099515be6deff98ffda0fabde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
