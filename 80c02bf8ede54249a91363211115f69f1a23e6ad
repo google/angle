@@ -96,6 +96,24 @@
     },
     {
       "key": {
+        "uuid": "b007b451_7ab2a6de",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T17:41:58Z",
+      "side": 1,
+      "message": "To clarify, the GL API defines queries and various things they can query. In this case, there\u0027s a few queries that return the array size of a shader variable: GetActiveUniform, GetActiveUniformsiv. The value, UNIFORM_SIZE, has a type that depends on the uniform you\u0027re querying, and if it\u0027s an array. I don\u0027t see any language in the spec that defines it to be a signed 32 bit int... in fact it seems ambiguous. (See pg 63 of the ES3 spec). GL has a method for doing implicit conversions (you can query float values with glGetInteger, etc) so I don\u0027t think there\u0027s any spec reason for this to be int.. merely coding convenience. And I think there\u0027s a cost to ANGLE for unsigned int-\u003eint, in terms of hidden warnings and just coding convention in libGLESv2.",
+      "parentUuid": "b0aed491_beb361de",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0d0a811_30f696f5",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 4
