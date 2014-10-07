@@ -70,6 +70,30 @@
       "revId": "ab3d85d88543baeaff8d0c89aebad85b1049371f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b007b451_7733df99",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-07T14:10:10Z",
+      "side": 1,
+      "message": "I rejiggered this a bit to split up the blocking and unblocking logic since we have slightly different behaviour for both.",
+      "parentUuid": "90b9d0ac_219a227c",
+      "range": {
+        "startLine": 515,
+        "startChar": 0,
+        "endLine": 523,
+        "endChar": 9
+      },
+      "revId": "ab3d85d88543baeaff8d0c89aebad85b1049371f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
