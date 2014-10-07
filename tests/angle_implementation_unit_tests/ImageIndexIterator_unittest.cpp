@@ -31,7 +31,7 @@ TEST(ImageIndexTest, Iterator2D)
         ImageIndex current = iter.current();
         ImageIndex nextIndex = iter.next();
 
-        EXPECT_EQ(GL_TEXTURE_2D, nextIndex.type);
+        EXPECT_EQ(static_cast<GLenum>(GL_TEXTURE_2D), nextIndex.type);
         EXPECT_EQ(mip, nextIndex.mipIndex);
         EXPECT_FALSE(nextIndex.hasLayer());
 
@@ -78,7 +78,7 @@ TEST(ImageIndexTest, Iterator3D)
             EXPECT_TRUE(iter.hasNext());
             ImageIndex nextIndex = iter.next();
 
-            EXPECT_EQ(GL_TEXTURE_3D, nextIndex.type);
+            EXPECT_EQ(static_cast<GLenum>(GL_TEXTURE_3D), nextIndex.type);
             EXPECT_EQ(mip, nextIndex.mipIndex);
             EXPECT_EQ(layer, nextIndex.layerIndex);
             EXPECT_TRUE(nextIndex.hasLayer());
@@ -102,7 +102,7 @@ TEST(ImageIndexTest, Iterator2DArray)
             EXPECT_TRUE(iter.hasNext());
             ImageIndex nextIndex = iter.next();
 
-            EXPECT_EQ(GL_TEXTURE_2D_ARRAY, nextIndex.type);
+            EXPECT_EQ(static_cast<GLenum>(GL_TEXTURE_2D_ARRAY), nextIndex.type);
             EXPECT_EQ(mip, nextIndex.mipIndex);
             EXPECT_EQ(layer, nextIndex.layerIndex);
             EXPECT_TRUE(nextIndex.hasLayer());

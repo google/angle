@@ -67,7 +67,7 @@ TEST_F(TransformFeedbackTest, SideEffectsOfStartAndStop)
     EXPECT_CALL(*mImpl, begin(GL_TRIANGLES));
     mFeedback->start(GL_TRIANGLES);
     EXPECT_EQ(GL_TRUE, mFeedback->isStarted());
-    EXPECT_EQ(GL_TRIANGLES, mFeedback->getDrawMode());
+    EXPECT_EQ(static_cast<GLenum>(GL_TRIANGLES), mFeedback->getDrawMode());
     EXPECT_CALL(*mImpl, end());
     mFeedback->stop();
     EXPECT_EQ(GL_FALSE, mFeedback->isStarted());
