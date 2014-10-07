@@ -150,6 +150,24 @@
     },
     {
       "key": {
+        "uuid": "10116099_ef21ac93",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-07T19:28:00Z",
+      "side": 1,
+      "message": "The language on p63 is referring to the units in which the value in size is measured, not the type used to represent size itself. UNIFORM_SIZE is specified in the state tables (table 6.20) to be a non-negative integer. Note that the state tables do not differentiate between numbers represented internally as ints or uints, and doesn\u0027t provide a mechanism to query most values specifically as a uint.\n\nThat said, the only clue we have about the \"intended\" type of the array size is the one place it\u0027s got its own query argument (rather than using a generic param), and there it uses GLint. I haven\u0027t tallied up all the Get* entry points, but from a quick glance, it looks like integer types (either GLint or GLsizei, which is signed) are pretty much always used to contain size/count/length types across all of the query calls in the API.\n\nThe value is required to be non-zero, so that doesn\u0027t pose a problem for storing it internally as unsigned int, but I want to make sure I understand why we need to do so?",
+      "parentUuid": "b007b451_7ab2a6de",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0d0a811_30f696f5",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 4
