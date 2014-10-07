@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10116099_0f224840",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-07T20:12:24Z",
+      "side": 1,
+      "message": "nit: missing space",
+      "revId": "82708dc09c3ccec50c76e20ac4a23ef1d81788f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
