@@ -1860,15 +1860,15 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                 if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
                 {
-                    if (!mInsideFunction)
-                    {
-                        out << "static ";
-                    }
-
-                    out << TypeString(variable->getType()) + " ";
-
                     for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); sit++)
                     {
+                        if (!mInsideFunction)
+                        {
+                            out << "static ";
+                        }
+
+                        out << TypeString(variable->getType()) + " ";
+
                         TIntermSymbol *symbol = (*sit)->getAsSymbolNode();
 
                         if (symbol)
@@ -1884,7 +1884,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                         if (*sit != sequence->back())
                         {
-                            out << ", ";
+                            out << ";\n";
                         }
                     }
                 }
