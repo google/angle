@@ -319,6 +319,24 @@
     },
     {
       "key": {
+        "uuid": "b007b451_4d5baed1",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T21:06:16Z",
+      "side": 1,
+      "message": "Sorry, I think I had meant to delete that comment -- there were a lot of them! Feel free to ignore it for now.",
+      "parentUuid": "d0bfc88a_15edd7c9",
+      "revId": "38fa5e6508243b86d76190779af73d6670cba04a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b007b451_d7d28bdf",
         "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
         "patchSetId": 1
