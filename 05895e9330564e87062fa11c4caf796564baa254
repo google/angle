@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b007b451_97c92337",
+        "filename": "src/libGLESv2/renderer/FenceImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T13:04:57Z",
+      "side": 1,
+      "message": "as a general question, do you think it would be sensible to\na) have two Impl object types for two fence types, and back them both with FenceD3D, in GL back them individually\nb) have one Fence Impl, as above, and in GL, back them both with the same kind of Fence, making the new methods possibly unnecessary\nc) one Fence Impl, as above, and use two GL fence types in the GL implementation",
+      "range": {
+        "startLine": 28,
+        "startChar": 2,
+        "endLine": 32,
+        "endChar": 28
+      },
+      "revId": "05895e9330564e87062fa11c4caf796564baa254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
