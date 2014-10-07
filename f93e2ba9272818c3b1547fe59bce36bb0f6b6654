@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b007b451_cd9cbeff",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-07T21:16:50Z",
+      "side": 1,
+      "message": "just to clarify, this is a reference to a non-STL container which technically not ANGLE-legit ATM.",
+      "range": {
+        "startLine": 95,
+        "startChar": 9,
+        "endLine": 95,
+        "endChar": 19
+      },
+      "revId": "f93e2ba9272818c3b1547fe59bce36bb0f6b6654",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
