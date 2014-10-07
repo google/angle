@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0d0a811_30f696f5",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-07T02:52:36Z",
+      "side": 1,
+      "message": "Also define operator!\u003d in terms of operator\u003d\u003d (returning the negation of operator\u003d\u003d), here and throughout.",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50dcb82f_d1801487",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-07T02:52:36Z",
+      "side": 1,
+      "message": "typo: fieldss",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50dcb82f_11127cc5",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-07T02:52:36Z",
+      "side": 1,
+      "message": "This logic is confusingly structured in order to use operator\u003d\u003d. Could you define operator!\u003d for these types and use it here instead?",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50dcb82f_b131c861",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-07T02:52:36Z",
+      "side": 1,
+      "message": "Could you use a more descriptive name for these variables? The \"tmp\" prefix is confusing.",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
