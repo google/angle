@@ -78,6 +78,24 @@
     },
     {
       "key": {
+        "uuid": "b0aed491_beb361de",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-07T17:35:27Z",
+      "side": 1,
+      "message": "Shannon: Jamie and I would like your input here.",
+      "parentUuid": "b0aed491_3ea591bd",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0d0a811_30f696f5",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 4
