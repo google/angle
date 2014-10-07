@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "50dcb82f_514de4b8",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-07T03:26:58Z",
+      "side": 1,
+      "message": "I hadn\u0027t fully understood how these changes worked until reviewing https://codereview.chromium.org/619723008/ . Is it worth adding a little more documentation here describing why the API works this way? Something like: \"All of the shader\u0027s variables are described using nested data structures. This is needed in order to disambiguate similar looking types, such as two structs containing the same fields, but in different orders. findInfoByMappedName provides an easy query for users to dive into the data structure and fetch the unique variable instance corresponding to a dereferencing chain of the top-level variable.\"\n\nIf this is too much text feel free to ignore my comment.",
+      "revId": "80c02bf8ede54249a91363211115f69f1a23e6ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0d0a811_30f696f5",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 4
