@@ -12,6 +12,14 @@
 #include "common/platform.h"
 
 #ifdef ANGLE_PLATFORM_WINDOWS
+
+// TLS does not exist for Windows Store and needs to be emulated
+#   ifdef ANGLE_ENABLE_WINDOWS_STORE
+#       define TLS_OUT_OF_INDEXES -1
+#       ifndef CREATE_SUSPENDED
+#           define CREATE_SUSPENDED 0x00000004
+#       endif
+#   endif
     typedef DWORD TLSIndex;
 #   define TLS_INVALID_INDEX (TLS_OUT_OF_INDEXES)
 #elif defined(ANGLE_PLATFORM_POSIX)
