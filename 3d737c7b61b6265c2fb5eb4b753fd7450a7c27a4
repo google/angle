@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10116099_9b75d6c0",
+        "filename": "tests/perf_tests/third_party/perf/perf_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-08T13:24:01Z",
+      "side": 1,
+      "message": "Only use of the dmg_fp library is here.",
+      "range": {
+        "startLine": 103,
+        "startChar": 2,
+        "endLine": 103,
+        "endChar": 31
+      },
+      "revId": "3d737c7b61b6265c2fb5eb4b753fd7450a7c27a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10116099_bb7b72af",
+        "filename": "tests/perf_tests/third_party/perf/perf_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-08T13:24:01Z",
+      "side": 1,
+      "message": "I think these can just be replaced with FormatString(\"%[u|i|f]\", value)",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 1
+      },
+      "revId": "3d737c7b61b6265c2fb5eb4b753fd7450a7c27a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
