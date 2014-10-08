@@ -38,7 +38,6 @@
             'common/utilities.cpp',
             'common/utilities.h',
             'common/version.h',
-            'common/win32/NativeWindow.cpp',
             'libEGL/Config.cpp',
             'libEGL/Config.h',
             'libEGL/Display.cpp',
@@ -51,6 +50,17 @@
             'libEGL/main.cpp',
             'libEGL/main.h',
             'libEGL/resource.h',
+        ],
+        'angle_libegl_win32_sources':
+        [
+            'common/win32/NativeWindow.cpp',
+        ],
+        'angle_libegl_winrt_sources':
+        [
+            'common/winrt/CoreWindowNativeWindow.cpp',
+            'common/winrt/CoreWindowNativeWindow.h',
+            'common/winrt/IInspectableNativeWindow.cpp',
+            'common/winrt/IInspectableNativeWindow.h',
         ],
     },
     # Everything below this is duplicated in the GN build. If you change
@@ -97,15 +107,54 @@
                                 'ANGLE_ENABLE_D3D11',
                             ],
                         }],
+                        ['angle_build_winrt==0',
+                        {
+                            'sources':
+                            [
+                                '<@(angle_libegl_win32_sources)',
+                            ],
+                        }],
+
+                        ['angle_build_winrt==1',
+                        {
+                            'defines':
+                            [
+                                'NTDDI_VERSION=NTDDI_WINBLUE',
+                            ],
+                            'sources':
+                            [
+                                '<@(angle_libegl_winrt_sources)',
+                            ],
+                            'msvs_enable_winrt' : '1',
+                            'msvs_requires_importlibrary' : '1',
+                            'msvs_settings':
+                            {
+                                'VCLinkerTool':
+                                {
+                                    'EnableCOMDATFolding': '1',
+                                    'OptimizeReferences': '1',
+                                }
+                            },
+                        }],
+                        ['angle_build_winphone==1',
+                        {
+                            'msvs_enable_winphone' : '1',
+                        }],
                     ],
                     'includes': [ '../build/common_defines.gypi', ],
                     'msvs_settings':
                     {
                         'VCLinkerTool':
                         {
-                            'AdditionalDependencies':
+                            'conditions':
                             [
-                                'd3d9.lib',
+                                ['angle_build_winrt==0',
+                                {
+                                    'AdditionalDependencies':
+                                    [
+                                        'd3d9.lib',
+                                    ],
+                                }],
                             ],
                         },
                     },

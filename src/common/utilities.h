@@ -49,4 +49,8 @@ template <typename outT> outT uiround(GLfloat value) { return static_cast<outT>(
 std::string getTempPath();
 void writeFile(const char* path, const void* data, size_t size);
 
+#if defined(ANGLE_ENABLE_WINDOWS_STORE)
+void Sleep(_In_ unsigned long dwMilliseconds);
+#endif
+
 #endif  // LIBGLESV2_UTILITIES_H
