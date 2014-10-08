@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10bfa0c3_d6a6424c",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-08T14:54:56Z",
+      "side": 1,
+      "message": "in the (unlikely) event there is an error, this will leave mTexStorage as a dangling pointer to deleted storage.",
+      "range": {
+        "startLine": 731,
+        "startChar": 8,
+        "endLine": 731,
+        "endChar": 18
+      },
+      "revId": "11f406f142c531bc0ec10b70da637e6df0b24e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
