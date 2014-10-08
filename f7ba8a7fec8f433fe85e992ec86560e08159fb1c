@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10116099_1bb726fc",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-10-08T13:54:28Z",
+      "side": 1,
+      "message": "nit: Since \u0027block\u0027 won\u0027t change value, you could write this as\n\nif (block) // Loop until the query completes\n{\n    while (result \u003d\u003d S_FALSE)",
+      "range": {
+        "startLine": 522,
+        "startChar": 4,
+        "endLine": 523,
+        "endChar": 38
+      },
+      "revId": "f7ba8a7fec8f433fe85e992ec86560e08159fb1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10116099_3ba5c2bd",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-10-08T13:54:28Z",
+      "side": 1,
+      "message": "if GetData returned S_OK, there\u0027s no need to still test for device loss.",
+      "range": {
+        "startLine": 533,
+        "startChar": 8,
+        "endLine": 533,
+        "endChar": 34
+      },
+      "revId": "f7ba8a7fec8f433fe85e992ec86560e08159fb1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
