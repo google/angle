@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10e6c0ff_0f6c15a3",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 926,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-08T15:30:20Z",
+      "side": 1,
+      "message": "I re-arranged this function so that it only sets the mTexStorage after it is known that there is no error.",
+      "range": {
+        "startLine": 909,
+        "startChar": 4,
+        "endLine": 926,
+        "endChar": 34
+      },
+      "revId": "8e1adb408e97cf80cd66e258c6d7d3efd55dd8f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
