@@ -22,6 +22,30 @@
       "revId": "11f406f142c531bc0ec10b70da637e6df0b24e31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10116099_7b80dace",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-08T15:31:02Z",
+      "side": 1,
+      "message": "Thanks, fixed in the previous patch.",
+      "parentUuid": "10bfa0c3_d6a6424c",
+      "range": {
+        "startLine": 731,
+        "startChar": 8,
+        "endLine": 731,
+        "endChar": 18
+      },
+      "revId": "11f406f142c531bc0ec10b70da637e6df0b24e31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
