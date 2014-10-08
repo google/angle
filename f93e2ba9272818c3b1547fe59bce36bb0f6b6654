@@ -22,6 +22,30 @@
       "revId": "f93e2ba9272818c3b1547fe59bce36bb0f6b6654",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10e6c0ff_215baad2",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-08T14:38:11Z",
+      "side": 1,
+      "message": "It\u0027s not function parameter, so the recently amended rule doesn\u0027t apply here. We\u0027re inheriting C++11 usage from Chromium, which is ok with auto\u0026. Unless you\u0027re talking about the last footnote on the range based for loop item in the Chromium C++11 guide, about pointers?",
+      "parentUuid": "b007b451_cd9cbeff",
+      "range": {
+        "startLine": 95,
+        "startChar": 9,
+        "endLine": 95,
+        "endChar": 19
+      },
+      "revId": "f93e2ba9272818c3b1547fe59bce36bb0f6b6654",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
