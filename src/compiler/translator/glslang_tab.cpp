@@ -2919,6 +2919,7 @@ yyreduce:
                 const char* errorOp = "";
                 switch((yyvsp[(1) - (2)].interm).op) {
                 case EOpNegative:   errorOp = "-"; break;
+                case EOpPositive:   errorOp = "+"; break;
                 case EOpLogicalNot: errorOp = "!"; break;
                 default: break;
                 }
@@ -2933,7 +2934,7 @@ yyreduce:
 
   case 34:
 
-    { (yyval.interm).op = EOpNull; }
+    { (yyval.interm).op = EOpPositive; }
     break;
 
   case 35:

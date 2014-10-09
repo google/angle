@@ -336,6 +336,7 @@ bool TIntermUnary::promote(TInfoSink &)
             return false;
         break;
       case EOpNegative:
+      case EOpPositive:
       case EOpPostIncrement:
       case EOpPostDecrement:
       case EOpPreIncrement:
@@ -1059,6 +1060,27 @@ TIntermTyped *TIntermConstantUnion::fold(
                   case EbtUInt:
                     tempConstArray[i].setUConst(static_cast<unsigned int>(
                         -static_cast<int>(unionArray[i].getUConst())));
+                    break;
+                  default:
+                    infoSink.info.message(
+                        EPrefixInternalError, getLine(),
+                        "Unary operation not folded into constant");
+                    return NULL;
+                }
+                break;
+
+              case EOpPositive:
+                switch (getType().getBasicType())
+                {
+                  case EbtFloat:
+                    tempConstArray[i].setFConst(unionArray[i].getFConst());
+                    break;
+                  case EbtInt:
+                    tempConstArray[i].setIConst(unionArray[i].getIConst());
+                    break;
+                  case EbtUInt:
+                    tempConstArray[i].setUConst(static_cast<unsigned int>(
+                        static_cast<int>(unionArray[i].getUConst())));
                     break;
                   default:
                     infoSink.info.message(

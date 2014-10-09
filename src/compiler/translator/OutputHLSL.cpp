@@ -1747,6 +1747,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
     switch (node->getOp())
     {
       case EOpNegative:         outputTriplet(visit, "(-", "", ")");         break;
+      case EOpPositive:         outputTriplet(visit, "(+", "", ")");         break;
       case EOpVectorLogicalNot: outputTriplet(visit, "(!", "", ")");         break;
       case EOpLogicalNot:       outputTriplet(visit, "(!", "", ")");         break;
       case EOpPostIncrement:    outputTriplet(visit, "(", "", "++)");        break;

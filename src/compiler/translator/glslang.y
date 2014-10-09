@@ -500,6 +500,7 @@ unary_expression
                 const char* errorOp = "";
                 switch($1.op) {
                 case EOpNegative:   errorOp = "-"; break;
+                case EOpPositive:   errorOp = "+"; break;
                 case EOpLogicalNot: errorOp = "!"; break;
                 default: break;
                 }
@@ -514,7 +515,7 @@ unary_expression
 // Grammar Note:  No traditional style type casts.
 
 unary_operator
-    : PLUS  { $$.op = EOpNull; }
+    : PLUS  { $$.op = EOpPositive; }
     | DASH  { $$.op = EOpNegative; }
     | BANG  { $$.op = EOpLogicalNot; }
     ;

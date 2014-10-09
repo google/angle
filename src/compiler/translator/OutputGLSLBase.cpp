@@ -395,6 +395,7 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
     switch (node->getOp())
     {
       case EOpNegative: preString = "(-"; break;
+      case EOpPositive: preString = "(+"; break;
       case EOpVectorLogicalNot: preString = "not("; break;
       case EOpLogicalNot: preString = "(!"; break;
 

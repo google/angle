@@ -45,6 +45,7 @@ enum TOperator
     //
 
     EOpNegative,
+    EOpPositive,
     EOpLogicalNot,
     EOpVectorLogicalNot,
 

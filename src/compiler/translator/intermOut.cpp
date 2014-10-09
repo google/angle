@@ -221,6 +221,7 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
     switch (node->getOp())
     {
       case EOpNegative:       out << "Negate value";         break;
+      case EOpPositive:       out << "Positive sign";        break;
       case EOpVectorLogicalNot:
       case EOpLogicalNot:     out << "Negate conditional";   break;
 
