@@ -22,6 +22,24 @@
       "revId": "05895e9330564e87062fa11c4caf796564baa254",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10116099_7e48c3aa",
+        "filename": "src/libGLESv2/renderer/FenceImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-09T00:08:52Z",
+      "side": 1,
+      "message": "On the whole I think it might be better to have two Impl types because the NV_fence and ARB_sync extensions probably behave slightly differently on real OpenGL drivers. However we\u0027d need to avoid the diamond inheritance pattern. For the moment I\u0027ll stick with a single FenceImpl and we can consider splitting it into two classes later.",
+      "parentUuid": "b007b451_97c92337",
+      "revId": "05895e9330564e87062fa11c4caf796564baa254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
