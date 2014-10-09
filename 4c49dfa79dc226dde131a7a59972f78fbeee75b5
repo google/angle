@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b007b451_684779ea",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-09T21:42:53Z",
+      "side": 1,
+      "message": "Might have to wait for Brandon to finish the Shader refactor. It can probably go in HLSLCompiler.h.",
+      "range": {
+        "startLine": 31,
+        "startChar": 8,
+        "endLine": 31,
+        "endChar": 40
+      },
+      "revId": "4c49dfa79dc226dde131a7a59972f78fbeee75b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b007b451_a84161d4",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-09T21:42:53Z",
+      "side": 1,
+      "message": "I think just calling this an uint32_t is fine. Adapter vendor IDs are cross-platform, and are 32 bit unsigned ints.",
+      "range": {
+        "startLine": 168,
+        "startChar": 12,
+        "endLine": 168,
+        "endChar": 17
+      },
+      "revId": "4c49dfa79dc226dde131a7a59972f78fbeee75b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b007b451_e85249a6",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-09T21:42:53Z",
+      "side": 1,
+      "message": "This might have to wait for Brandon\u0027s refactor. It also is a case for having a RendererD3D class, since it only applies to D3D Renderers.",
+      "range": {
+        "startLine": 173,
+        "startChar": 12,
+        "endLine": 173,
+        "endChar": 16
+      },
+      "revId": "4c49dfa79dc226dde131a7a59972f78fbeee75b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10940050_bf997f0d",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-09T21:42:53Z",
+      "side": 1,
+      "message": "ditto.",
+      "range": {
+        "startLine": 260,
+        "startChar": 17,
+        "endLine": 260,
+        "endChar": 24
+      },
+      "revId": "4c49dfa79dc226dde131a7a59972f78fbeee75b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10bfa0c3_124d1d04",
+        "filename": "src/libGLESv2/renderer/SwapChain.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-09T21:42:53Z",
+      "side": 1,
+      "message": "This is an item from eglQuerySurfacePointerANGLE.\nAs such I think we could store it as a uint32_t? It does exist on EGL and (theoretically, anyway) could be used on other platforms.",
+      "range": {
+        "startLine": 32,
+        "startChar": 45,
+        "endLine": 32,
+        "endChar": 63
+      },
+      "revId": "4c49dfa79dc226dde131a7a59972f78fbeee75b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
