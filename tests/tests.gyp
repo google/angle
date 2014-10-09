@@ -172,7 +172,6 @@
                     [
                         '../src/angle.gyp:libGLESv2',
                         '../src/angle.gyp:libEGL',
-                        'gtest',
                         '../util/util.gyp:angle_util',
                     ],
                     'include_dirs':
