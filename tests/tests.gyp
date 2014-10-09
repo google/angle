@@ -191,6 +191,8 @@
                         'perf_tests/SimpleBenchmarks.cpp',
                         'perf_tests/TexSubImage.cpp',
                         'perf_tests/TexSubImage.h',
+                        'perf_tests/third_party/perf/perf_test.cc',
+                        'perf_tests/third_party/perf/perf_test.h',
                     ],
                 },
 
