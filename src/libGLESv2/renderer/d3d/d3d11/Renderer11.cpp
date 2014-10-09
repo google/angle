@@ -2812,22 +2812,25 @@ gl::Error Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int sub
     SafeRelease(srcTex);
 
     PackPixelsParams packParams(safeArea, format, type, outputPitch, pack, 0);
-    packPixels(stagingTex, packParams, pixels);
+    gl::Error error = packPixels(stagingTex, packParams, pixels);
 
     SafeRelease(stagingTex);
 
-    return gl::Error(GL_NO_ERROR);
+    return error;
 }
 
-void Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams &params, uint8_t *pixelsOut)
+gl::Error Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams &params, uint8_t *pixelsOut)
 {
     D3D11_TEXTURE2D_DESC textureDesc;
     readTexture->GetDesc(&textureDesc);
 
     D3D11_MAPPED_SUBRESOURCE mapping;
     HRESULT hr = mDeviceContext->Map(readTexture, 0, D3D11_MAP_READ, 0, &mapping);
-    UNUSED_ASSERTION_VARIABLE(hr);
-    ASSERT(SUCCEEDED(hr));
+    if (FAILED(hr))
+    {
+        ASSERT(hr == E_OUTOFMEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal texture for reading, result: 0x%X.", hr);
+    }
 
     uint8_t *source;
     int inputPitch;
@@ -2898,6 +2901,8 @@ void Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams
     }
 
     mDeviceContext->Unmap(readTexture, 0);
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
