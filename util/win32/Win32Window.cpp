@@ -380,6 +380,9 @@ bool Win32Window::initialize(const std::string &name, size_t width, size_t heigh
     mParentClassName = name;
     mChildClassName = name + "Child";
 
+    // Work around compile error from not defining "UNICODE" while Chromium does
+    const LPSTR idcArrow = MAKEINTRESOURCEA(32512);
+
     WNDCLASSEXA parentWindowClass = { 0 };
     parentWindowClass.cbSize = sizeof(WNDCLASSEXA);
     parentWindowClass.style = 0;
@@ -388,7 +391,7 @@ bool Win32Window::initialize(const std::string &name, size_t width, size_t heigh
     parentWindowClass.cbWndExtra = 0;
     parentWindowClass.hInstance = GetModuleHandle(NULL);
     parentWindowClass.hIcon = NULL;
-    parentWindowClass.hCursor = LoadCursorA(NULL, IDC_ARROW);
+    parentWindowClass.hCursor = LoadCursorA(NULL, idcArrow);
     parentWindowClass.hbrBackground = 0;
     parentWindowClass.lpszMenuName = NULL;
     parentWindowClass.lpszClassName = mParentClassName.c_str();
@@ -405,7 +408,7 @@ bool Win32Window::initialize(const std::string &name, size_t width, size_t heigh
     childWindowClass.cbWndExtra = 0;
     childWindowClass.hInstance = GetModuleHandle(NULL);
     childWindowClass.hIcon = NULL;
-    childWindowClass.hCursor = LoadCursorA(NULL, IDC_ARROW);
+    childWindowClass.hCursor = LoadCursorA(NULL, idcArrow);
     childWindowClass.hbrBackground = 0;
     childWindowClass.lpszMenuName = NULL;
     childWindowClass.lpszClassName = mChildClassName.c_str();
