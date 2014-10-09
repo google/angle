@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b007b451_850d66dd",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-09T18:31:37Z",
+      "side": 1,
+      "message": "nit: would prefer if you set this variable below, just to reduce 3 ifdefs, to 1 ifdef and a bit of \"if\" statement reduncancy",
+      "range": {
+        "startLine": 406,
+        "startChar": 16,
+        "endLine": 406,
+        "endChar": 24
+      },
+      "revId": "86109cef8ca9409ba6a03a8fda98cf818a781938",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10bfa0c3_bfac32b0",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-09T18:31:37Z",
+      "side": 1,
+      "message": "nit: moved to in here. You could also make a local helper method \"const char *GetShaderTypeString(GLenum)\"",
+      "range": {
+        "startLine": 436,
+        "startChar": 7,
+        "endLine": 436,
+        "endChar": 39
+      },
+      "revId": "86109cef8ca9409ba6a03a8fda98cf818a781938",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10940050_f4e6ceea",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2367,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-09T18:31:37Z",
+      "side": 1,
+      "message": "I have a suggestion here on how to clean up this code. Currently it has two ifdefs, and is duplicated in two places.\n\nI suggest you move your changes to mCompiler::compileToBinary. Add an extra argument to compileToBinary, to take a pointer to a std::string or std::stringstream. Make a local std::string or std::stringstream, without any ifdefs, and, if the resulting string or stream is not empty, append it to the executable debug log. Does this make sense? Let me know what you think.",
+      "range": {
+        "startLine": 2367,
+        "startChar": 7,
+        "endLine": 2367,
+        "endChar": 39
+      },
+      "revId": "86109cef8ca9409ba6a03a8fda98cf818a781938",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
