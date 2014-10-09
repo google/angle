@@ -1,0 +1,10 @@
+{
+  "test": "BufferSubData",
+  "type": "float",
+  "components": 4,
+  "normalized": false,
+  "update_size": 300,
+  "buffer_size": 1048576,
+  "iterations": 10,
+  "update_rate": 1
+}

@@ -28,6 +28,8 @@ public:
     virtual void beginDrawBenchmark();
     virtual void drawBenchmark();
 
+    typedef PointSpritesParams Params;
+
 private:
     DISALLOW_COPY_AND_ASSIGN(PointSpritesBenchmark);
 

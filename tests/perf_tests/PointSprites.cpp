@@ -17,7 +17,8 @@ std::string PointSpritesParams::suffix() const
 {
     std::stringstream strstr;
 
-    strstr << "_" << count << "_" << size << "px"
+    strstr << BenchmarkParams::suffix()
+           << "_" << count << "_" << size << "px"
            << "_" << numVaryings << "vars";
 
     return strstr.str();

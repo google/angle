@@ -13,7 +13,7 @@ struct BufferSubDataParams : public BenchmarkParams
     GLboolean vertexNormalized;
     GLenum vertexType;
     GLint vertexComponentCount;
-    unsigned int updatesEveryNFrames;
+    unsigned int updateRate;
 
     // static parameters
     GLsizeiptr updateSize;
@@ -30,6 +30,8 @@ class BufferSubDataBenchmark : public SimpleBenchmark
     virtual void destroyBenchmark();
     virtual void beginDrawBenchmark();
     virtual void drawBenchmark();
+
+    typedef BufferSubDataParams Params;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(BufferSubDataBenchmark);

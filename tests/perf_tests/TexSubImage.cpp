@@ -13,7 +13,8 @@
 
 std::string TexSubImageParams::suffix() const
 {
-    return "";
+    // TODO(jmadill)
+    return BenchmarkParams::suffix();
 }
 
 TexSubImageBenchmark::TexSubImageBenchmark(const TexSubImageParams &params)

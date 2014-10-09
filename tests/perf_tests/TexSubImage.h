@@ -28,6 +28,8 @@ class TexSubImageBenchmark : public SimpleBenchmark
     virtual void beginDrawBenchmark();
     virtual void drawBenchmark();
 
+    typedef TexSubImageParams Params;
+
   private:
     GLuint createTexture();
 
