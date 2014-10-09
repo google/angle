@@ -8,12 +8,14 @@
 
 struct PointSpritesParams : public BenchmarkParams
 {
-    unsigned int iterations;
+    virtual std::string suffix() const;
+
     unsigned int count;
     float size;
     unsigned int numVaryings;
 
-    virtual std::string name() const;
+    // static parameters
+    unsigned int iterations;
 };
 
 class PointSpritesBenchmark : public SimpleBenchmark

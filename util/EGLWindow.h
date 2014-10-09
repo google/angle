@@ -49,6 +49,7 @@ class EGLWindow
     void swap();
 
     GLuint getClientVersion() const { return mClientVersion; }
+    EGLint getRequestedRenderer() const { return mRequestedRenderer; }
     EGLConfig getConfig() const;
     EGLDisplay getDisplay() const;
     EGLSurface getSurface() const;

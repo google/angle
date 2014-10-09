@@ -11,19 +11,13 @@
 
 #include "shader_utils.h"
 
-std::string TexSubImageParams::name() const
+std::string TexSubImageParams::suffix() const
 {
-    std::stringstream strstr;
-
-    strstr << "TexSubImage - " << BenchmarkParams::name()
-           << " - " << imageWidth << "x" << imageHeight
-           << " - " << subImageWidth << "x" << subImageHeight << " updates";
-
-    return strstr.str();
+    return "";
 }
 
 TexSubImageBenchmark::TexSubImageBenchmark(const TexSubImageParams &params)
-    : SimpleBenchmark(params.name(), 512, 512, 2, params.requestedRenderer),
+    : SimpleBenchmark("TexSubImage", 512, 512, 2, params),
       mParams(params),
       mProgram(0),
       mPositionLoc(-1),
@@ -144,6 +138,13 @@ bool TexSubImageBenchmark::initializeBenchmark()
 
 void TexSubImageBenchmark::destroyBenchmark()
 {
+    // print static parameters
+    printResult("image_width", static_cast<size_t>(mParams.imageWidth), "pix", false);
+    printResult("image_height", static_cast<size_t>(mParams.imageHeight), "pix", false);
+    printResult("subimage_width", static_cast<size_t>(mParams.subImageWidth), "pix", false);
+    printResult("subimage_height", static_cast<size_t>(mParams.subImageHeight), "pix", false);
+    printResult("iterations", static_cast<size_t>(mParams.iterations), "updates", false);
+
     glDeleteProgram(mProgram);
     glDeleteBuffers(1, &mVertexBuffer);
     glDeleteBuffers(1, &mIndexBuffer);

@@ -5,33 +5,59 @@
 //
 
 #include "SimpleBenchmark.h"
-#include <iostream>
 
-SimpleBenchmark::SimpleBenchmark(const std::string &name, size_t width, size_t height, EGLint glesMajorVersion, EGLint requestedRenderer)
+#include "third_party/perf/perf_test.h"
+
+#include <iostream>
+#include <cassert>
+
+std::string BenchmarkParams::suffix() const
+{
+    switch (requestedRenderer)
+    {
+        case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE: return "_d3d11";
+        case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE: return "_d3d9";
+        default: assert(0); return "_unk";
+    }
+}
+
+SimpleBenchmark::SimpleBenchmark(const std::string &name, size_t width, size_t height,
+                                 EGLint glesMajorVersion, const BenchmarkParams &params)
     : mNumFrames(0),
       mName(name),
       mRunning(false),
       mDrawIterations(10),
-      mRunTimeSeconds(5.0)
+      mRunTimeSeconds(5.0),
+      mSuffix(params.suffix())
 {
     mOSWindow.reset(CreateOSWindow());
-    mEGLWindow.reset(new EGLWindow(width, height, glesMajorVersion, requestedRenderer));
+    mEGLWindow.reset(new EGLWindow(width, height, glesMajorVersion, params.requestedRenderer));
     mTimer.reset(CreateTimer());
 }
 
 bool SimpleBenchmark::initialize()
 {
-    std::cout << "========= " << mName << " =========" << std::endl;
     return initializeBenchmark();
+}
+
+void SimpleBenchmark::printResult(const std::string &trace, double value, const std::string &units, bool important) const
+{
+    perf_test::PrintResult(mName, mSuffix, trace, value, units, important);
+}
+
+void SimpleBenchmark::printResult(const std::string &trace, size_t value, const std::string &units, bool important) const
+{
+    perf_test::PrintResult(mName, mSuffix, trace, value, units, important);
 }
 
 void SimpleBenchmark::destroy()
 {
     double totalTime = mTimer->getElapsedTime();
-    std::cout << " - total time: " << totalTime << " sec" << std::endl;
-    std::cout << " - frames: " << mNumFrames << std::endl;
-    std::cout << " - average frame time: " << 1000.0 * totalTime / mNumFrames << " msec" << std::endl;
-    std::cout << "=========" << std::endl << std::endl;
+    double averageTime = 1000.0 * totalTime / static_cast<double>(mNumFrames);
+
+    printResult("total_time", totalTime, "s", true);
+    printResult("frames", static_cast<size_t>(mNumFrames), "frames", true);
+    printResult("average_time", averageTime, "ms", true);
 
     destroyBenchmark();
 }

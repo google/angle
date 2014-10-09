@@ -21,12 +21,19 @@
 
 class Event;
 
+// Base class
+struct BenchmarkParams
+{
+    EGLint requestedRenderer;
+
+    virtual std::string suffix() const;
+};
+
 class SimpleBenchmark
 {
   public:
     SimpleBenchmark(const std::string &name, size_t width, size_t height,
-                    EGLint glesMajorVersion = 2,
-                    EGLint requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+                    EGLint glesMajorVersion, const BenchmarkParams &params);
 
     virtual ~SimpleBenchmark() { };
 
@@ -45,6 +52,9 @@ class SimpleBenchmark
     OSWindow *getWindow();
 
   protected:
+    void printResult(const std::string &trace, double value, const std::string &units, bool important) const;
+    void printResult(const std::string &trace, size_t value, const std::string &units, bool important) const;
+
     unsigned int mDrawIterations;
     double mRunTimeSeconds;
     int mNumFrames;
@@ -60,26 +70,11 @@ class SimpleBenchmark
 
     std::string mName;
     bool mRunning;
+    std::string mSuffix;
 
     std::unique_ptr<EGLWindow> mEGLWindow;
     std::unique_ptr<OSWindow> mOSWindow;
     std::unique_ptr<Timer> mTimer;
-};
-
-// Base class
-struct BenchmarkParams
-{
-    EGLint requestedRenderer;
-
-    virtual std::string name() const
-    {
-        switch (requestedRenderer)
-        {
-          case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE: return "D3D11";
-          case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE: return "D3D9";
-          default: return "Unknown Renderer";
-        }
-    }
 };
 
 template <typename BenchmarkT, typename ParamsT>

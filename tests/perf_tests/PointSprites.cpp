@@ -13,19 +13,18 @@
 #include "shader_utils.h"
 #include "random_utils.h"
 
-std::string PointSpritesParams::name() const
+std::string PointSpritesParams::suffix() const
 {
     std::stringstream strstr;
 
-    strstr << "PointSprites - " << BenchmarkParams::name()
-           << " - " << count << " sprites - size " << size
-           << " - " << numVaryings << " varyings";
+    strstr << "_" << count << "_" << size << "px"
+           << "_" << numVaryings << "vars";
 
     return strstr.str();
 }
 
 PointSpritesBenchmark::PointSpritesBenchmark(const PointSpritesParams &params)
-    : SimpleBenchmark(params.name(), 1280, 720, 2, params.requestedRenderer),
+    : SimpleBenchmark("PointSprites", 1280, 720, 2, params),
       mParams(params)
 {
     mDrawIterations = mParams.iterations;

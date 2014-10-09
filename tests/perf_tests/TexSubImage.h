@@ -8,13 +8,14 @@
 
 struct TexSubImageParams : public BenchmarkParams
 {
+    virtual std::string suffix() const;
+
+    // Static parameters
     int imageWidth;
     int imageHeight;
     int subImageWidth;
     int subImageHeight;
     unsigned int iterations;
-
-    virtual std::string name() const;
 };
 
 class TexSubImageBenchmark : public SimpleBenchmark

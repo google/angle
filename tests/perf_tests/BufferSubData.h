@@ -8,16 +8,17 @@
 
 struct BufferSubDataParams : public BenchmarkParams
 {
-    EGLint requestedRenderer;
+    virtual std::string suffix() const;
+
+    GLboolean vertexNormalized;
     GLenum vertexType;
     GLint vertexComponentCount;
-    GLboolean vertexNormalized;
+    unsigned int updatesEveryNFrames;
+
+    // static parameters
     GLsizeiptr updateSize;
     GLsizeiptr bufferSize;
     unsigned int iterations;
-    unsigned int updatesEveryNFrames;
-
-    virtual std::string name() const;
 };
 
 class BufferSubDataBenchmark : public SimpleBenchmark

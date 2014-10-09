@@ -126,40 +126,35 @@ GLsizeiptr GetVertexData(GLenum type, GLint componentCount, GLboolean normalized
 
 }
 
-std::string BufferSubDataParams::name() const
+std::string BufferSubDataParams::suffix() const
 {
     std::stringstream strstr;
 
-    strstr << "BufferSubData - " << BenchmarkParams::name() << " - ";
-
     if (vertexNormalized)
     {
-        strstr << "Norm";
+        strstr << "_norm";
     }
 
     switch (vertexType)
     {
-      case GL_FLOAT: strstr << "Float"; break;
-      case GL_INT: strstr << "Int"; break;
-      case GL_BYTE: strstr << "Byte"; break;
-      case GL_SHORT: strstr << "Short"; break;
-      case GL_UNSIGNED_INT: strstr << "UInt"; break;
-      case GL_UNSIGNED_BYTE: strstr << "UByte"; break;
-      case GL_UNSIGNED_SHORT: strstr << "UShort"; break;
-      default: strstr << "UNKNOWN FORMAT (" << vertexType << ")"; break;
+      case GL_FLOAT: strstr << "_float"; break;
+      case GL_INT: strstr << "_int"; break;
+      case GL_BYTE: strstr << "_byte"; break;
+      case GL_SHORT: strstr << "_short"; break;
+      case GL_UNSIGNED_INT: strstr << "_uint"; break;
+      case GL_UNSIGNED_BYTE: strstr << "_ubyte"; break;
+      case GL_UNSIGNED_SHORT: strstr << "_ushort"; break;
+      default: strstr << "_vunk_" << vertexType << "_"; break;
     }
 
     strstr << vertexComponentCount;
-
-    strstr << " - " << updateSize << "b updates (per " << updatesEveryNFrames << ") - ";
-    strstr << (bufferSize >> 10) << "k buffer - ";
-    strstr << iterations << " updates";
+    strstr << "_every" << updatesEveryNFrames;
 
     return strstr.str();
 }
 
 BufferSubDataBenchmark::BufferSubDataBenchmark(const BufferSubDataParams &params)
-    : SimpleBenchmark(params.name(), 1280, 720, 2, params.requestedRenderer),
+    : SimpleBenchmark("BufferSubData", 1280, 720, 2, params),
       mProgram(0),
       mBuffer(0),
       mUpdateData(NULL),
@@ -266,6 +261,11 @@ bool BufferSubDataBenchmark::initializeBenchmark()
 
 void BufferSubDataBenchmark::destroyBenchmark()
 {
+    // print static parameters
+    printResult("update_size", static_cast<size_t>(mParams.updateSize), "b", false);
+    printResult("buffer_size", static_cast<size_t>(mParams.bufferSize), "b", false);
+    printResult("iterations", static_cast<size_t>(mParams.iterations), "updates", false);
+
     glDeleteProgram(mProgram);
     glDeleteBuffers(1, &mBuffer);
     delete[] mUpdateData;
