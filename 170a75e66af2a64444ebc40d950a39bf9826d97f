@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10bfa0c3_cd6b0d5d",
+        "filename": "tests/perf_tests/third_party/perf/perf_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-09T13:55:02Z",
+      "side": 1,
+      "message": "Looks better, Can we replace this with a FormatString or sprintf too?  That would remove the dependency on that templated code and the DCHECK macro, simplifying everything even more.",
+      "range": {
+        "startLine": 94,
+        "startChar": 2,
+        "endLine": 95,
+        "endChar": 23
+      },
+      "revId": "170a75e66af2a64444ebc40d950a39bf9826d97f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
