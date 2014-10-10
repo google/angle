@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5044b8e8_b7c2585f",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-10T22:36:29Z",
+      "side": 1,
+      "message": "Very nitty-- the quotes mostly make it obvious, but I\u0027d still probably prepend the comment with \"error X3531\" just to make it abundantly clear that the string is being searched for because it\u0027s the error ID.",
+      "revId": "427d2c7f6ef190614e720356702e50127e00f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
