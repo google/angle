@@ -11,6 +11,8 @@
 
 #include "angle_gl.h"
 
+#include "libGLESv2/Error.h"
+
 #include "common/angleutils.h"
 
 namespace rx
@@ -22,7 +24,7 @@ class RenderbufferImpl
     RenderbufferImpl();
     virtual ~RenderbufferImpl() = 0;
 
-    virtual void setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples) = 0;
+    virtual gl::Error setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples) = 0;
 
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;

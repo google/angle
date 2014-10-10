@@ -28,8 +28,8 @@ class RenderbufferD3D : public RenderbufferImpl
 
     static RenderbufferD3D *makeRenderbufferD3D(RenderbufferImpl *renderbuffer);
 
-    virtual void setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples);
-    void setStorage(SwapChain *swapChain, bool depth);
+    virtual gl::Error setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples) override;
+    gl::Error setStorage(SwapChain *swapChain, bool depth);
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;

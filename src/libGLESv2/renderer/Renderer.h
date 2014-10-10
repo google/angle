@@ -189,8 +189,8 @@ class Renderer
                                  GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels) = 0;
 
     // RenderTarget creation
-    virtual RenderTarget *createRenderTarget(SwapChain *swapChain, bool depth) = 0;
-    virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples) = 0;
+    virtual gl::Error createRenderTarget(SwapChain *swapChain, bool depth, RenderTarget **outRT) = 0;
+    virtual gl::Error createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT) = 0;
 
     // Shader creation
     virtual ShaderImpl *createShader(GLenum type) = 0;

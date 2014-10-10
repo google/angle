@@ -25,6 +25,7 @@ TextureStorage9::TextureStorage9(Renderer *renderer, DWORD usage)
       mMipLevels(0),
       mTextureWidth(0),
       mTextureHeight(0),
+      mInternalFormat(GL_NONE),
       mTextureFormat(D3DFMT_UNKNOWN),
       mRenderer(Renderer9::makeRenderer9(renderer)),
       mD3DUsage(usage),
@@ -105,6 +106,8 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain
     mTexture = surfaceTexture;
     mMipLevels = surfaceTexture->GetLevelCount();
 
+    mInternalFormat = swapchain->GetBackBufferInternalFormat();
+
     D3DSURFACE_DESC surfaceDesc;
     surfaceTexture->GetLevelDesc(0, &surfaceDesc);
     mTextureWidth = surfaceDesc.Width;
@@ -121,6 +124,8 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, GLenum internalformat
 {
     mTexture = NULL;
     mRenderTarget = NULL;
+
+    mInternalFormat = internalformat;
 
     const d3d9::TextureFormat &d3dFormatInfo = d3d9::GetTextureFormatInfo(internalformat);
     mTextureFormat = d3dFormatInfo.texFormat;
@@ -186,7 +191,7 @@ gl::Error TextureStorage9_2D::getRenderTarget(const gl::ImageIndex &/*index*/, R
             return error;
         }
 
-        mRenderTarget = new RenderTarget9(mRenderer, surface);
+        mRenderTarget = new RenderTarget9(surface, mInternalFormat, mTextureWidth, mTextureHeight, 1, 1);
     }
 
     ASSERT(outRT);
@@ -290,6 +295,8 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, GLenum internalfo
         mRenderTarget[i] = NULL;
     }
 
+    mInternalFormat = internalformat;
+
     const d3d9::TextureFormat &d3dFormatInfo = d3d9::GetTextureFormatInfo(internalformat);
     mTextureFormat = d3dFormatInfo.texFormat;
 
@@ -364,7 +371,7 @@ gl::Error TextureStorage9_Cube::getRenderTarget(const gl::ImageIndex &index, Ren
             return error;
         }
 
-        mRenderTarget[index.layerIndex] = new RenderTarget9(mRenderer, surface);
+        mRenderTarget[index.layerIndex] = new RenderTarget9(surface, mInternalFormat, mTextureWidth, mTextureHeight, 1, 1);
     }
 
     *outRT = mRenderTarget[index.layerIndex];

@@ -49,6 +49,7 @@ class TextureStorage9 : public TextureStorage
     size_t mMipLevels;
     size_t mTextureWidth;
     size_t mTextureHeight;
+    GLenum mInternalFormat;
     D3DFORMAT mTextureFormat;
 
     Renderer9 *mRenderer;

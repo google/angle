@@ -39,6 +39,9 @@ class SwapChain
     virtual EGLint swapRect(EGLint x, EGLint y, EGLint width, EGLint height) = 0;
     virtual void recreate() = 0;
 
+    GLenum GetBackBufferInternalFormat() const { return mBackBufferFormat; }
+    GLenum GetDepthBufferInternalFormat() const { return mDepthBufferFormat; }
+
     virtual HANDLE getShareHandle() {return mShareHandle;};
 
   protected:

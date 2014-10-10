@@ -30,7 +30,7 @@ RenderbufferD3D *RenderbufferD3D::makeRenderbufferD3D(RenderbufferImpl *renderbu
     return static_cast<RenderbufferD3D*>(renderbuffer);
 }
 
-void RenderbufferD3D::setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples)
+gl::Error RenderbufferD3D::setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples)
 {
     // If the renderbuffer parameters are queried, the calling function
     // will expect one of the valid renderbuffer formats for use in
@@ -42,16 +42,32 @@ void RenderbufferD3D::setStorage(GLsizei width, GLsizei height, GLenum internalf
         creationFormat = GL_DEPTH24_STENCIL8_OES;
     }
 
-    RenderTarget *newRT = mRenderer->createRenderTarget(width, height, creationFormat, samples);
+    RenderTarget *newRT = NULL;
+    gl::Error error = mRenderer->createRenderTarget(width, height, creationFormat, samples, &newRT);
+    if (error.isError())
+    {
+        return error;
+    }
+
     SafeDelete(mRenderTarget);
     mRenderTarget = newRT;
+
+    return gl::Error(GL_NO_ERROR);
 }
 
-void RenderbufferD3D::setStorage(SwapChain *swapChain, bool depth)
+gl::Error RenderbufferD3D::setStorage(SwapChain *swapChain, bool depth)
 {
-    RenderTarget *newRT = mRenderer->createRenderTarget(swapChain, depth);
+    RenderTarget *newRT = NULL;
+    gl::Error error = mRenderer->createRenderTarget(swapChain, depth, &newRT);
+    if (error.isError())
+    {
+        return error;
+    }
+
     SafeDelete(mRenderTarget);
     mRenderTarget = newRT;
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 GLsizei RenderbufferD3D::getWidth() const

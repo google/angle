@@ -91,6 +91,7 @@ class TextureStorage11 : public TextureStorage
     int mTopLevel;
     unsigned int mMipLevels;
 
+    GLenum mInternalFormat;
     DXGI_FORMAT mTextureFormat;
     DXGI_FORMAT mShaderResourceFormat;
     DXGI_FORMAT mRenderTargetFormat;

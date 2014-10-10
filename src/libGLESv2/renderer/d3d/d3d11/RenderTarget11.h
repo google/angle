@@ -14,16 +14,15 @@
 
 namespace rx
 {
-class Renderer;
-class Renderer11;
 
 class RenderTarget11 : public RenderTarget
 {
   public:
     // RenderTarget11 takes ownership of any D3D11 resources it is given and will AddRef them
-    RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height, GLsizei depth);
-    RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height, GLsizei depth);
-    RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height, GLenum internalFormat, GLsizei samples);
+    RenderTarget11(ID3D11RenderTargetView *rtv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv,
+                   GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLsizei samples);
+    RenderTarget11(ID3D11DepthStencilView *dsv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv,
+                   GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLsizei samples);
     virtual ~RenderTarget11();
 
     static RenderTarget11 *makeRenderTarget11(RenderTarget *renderTarget);
@@ -45,8 +44,6 @@ class RenderTarget11 : public RenderTarget
     ID3D11RenderTargetView *mRenderTarget;
     ID3D11DepthStencilView *mDepthStencil;
     ID3D11ShaderResourceView *mShaderResource;
-
-    Renderer11 *mRenderer;
 };
 
 }

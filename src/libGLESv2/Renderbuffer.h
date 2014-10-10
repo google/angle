@@ -13,6 +13,8 @@
 
 #include "angle_gl.h"
 
+#include "libGLESv2/Error.h"
+
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 
@@ -36,7 +38,7 @@ class Renderbuffer : public RefCountObject
     Renderbuffer(rx::RenderbufferImpl *impl, GLuint id);
     virtual ~Renderbuffer();
 
-    void setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples);
+    Error setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples);
 
     rx::RenderbufferImpl *getImplementation();
 

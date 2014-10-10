@@ -3881,7 +3881,12 @@ void GL_APIENTRY glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei sa
         }
 
         gl::Renderbuffer *renderbuffer = context->getState().getCurrentRenderbuffer();
-        renderbuffer->setStorage(width, height, internalformat, samples);
+        gl::Error error = renderbuffer->setStorage(width, height, internalformat, samples);
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 

@@ -1143,13 +1143,9 @@ bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count)
 }
 
 
-gl::FramebufferAttachment *Renderer9::getNullColorbuffer(gl::FramebufferAttachment *depthbuffer)
+gl::Error Renderer9::getNullColorbuffer(gl::FramebufferAttachment *depthbuffer, gl::FramebufferAttachment **outColorBuffer)
 {
-    if (!depthbuffer)
-    {
-        ERR("Unexpected null depthbuffer for depth-only FBO.");
-        return NULL;
-    }
+    ASSERT(depthbuffer);
 
     GLsizei width  = depthbuffer->getWidth();
     GLsizei height = depthbuffer->getHeight();
@@ -1162,12 +1158,19 @@ gl::FramebufferAttachment *Renderer9::getNullColorbuffer(gl::FramebufferAttachme
             mNullColorbufferCache[i].height == height)
         {
             mNullColorbufferCache[i].lruCount = ++mMaxNullColorbufferLRU;
-            return mNullColorbufferCache[i].buffer;
+            *outColorBuffer = mNullColorbufferCache[i].buffer;
+            return gl::Error(GL_NO_ERROR);
         }
     }
 
     gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(createRenderbuffer(), 0);
-    nullRenderbuffer->setStorage(width, height, GL_NONE, 0);
+    gl::Error error = nullRenderbuffer->setStorage(width, height, GL_NONE, 0);
+    if (error.isError())
+    {
+        SafeDelete(nullRenderbuffer);
+        return error;
+    }
+
     gl::RenderbufferAttachment *nullbuffer = new gl::RenderbufferAttachment(GL_NONE, nullRenderbuffer);
 
     // add nullbuffer to the cache
@@ -1186,7 +1189,8 @@ gl::FramebufferAttachment *Renderer9::getNullColorbuffer(gl::FramebufferAttachme
     oldest->width = width;
     oldest->height = height;
 
-    return nullbuffer;
+    *outColorBuffer = nullbuffer;
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
@@ -1196,7 +1200,11 @@ gl::Error Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
     gl::FramebufferAttachment *attachment = framebuffer->getColorbuffer(0);
     if (!attachment)
     {
-        attachment = getNullColorbuffer(framebuffer->getDepthbuffer());
+        gl::Error error = getNullColorbuffer(framebuffer->getDepthbuffer(), &attachment);
+        if (error.isError())
+        {
+            return error;
+        }
     }
     ASSERT(attachment);
 
@@ -2800,28 +2808,72 @@ gl::Error Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, 
     return gl::Error(GL_NO_ERROR);
 }
 
-RenderTarget *Renderer9::createRenderTarget(SwapChain *swapChain, bool depth)
+gl::Error Renderer9::createRenderTarget(SwapChain *swapChain, bool depth, RenderTarget **outRT)
 {
     SwapChain9 *swapChain9 = SwapChain9::makeSwapChain9(swapChain);
-    IDirect3DSurface9 *surface = NULL;
     if (depth)
     {
-        surface = swapChain9->getDepthStencil();
+        *outRT = new RenderTarget9(swapChain9->getDepthStencil(), swapChain9->GetDepthBufferInternalFormat(),
+                                   swapChain9->getWidth(), swapChain9->getHeight(), 1, 1);
     }
     else
     {
-        surface = swapChain9->getRenderTarget();
+        *outRT = new RenderTarget9(swapChain9->getRenderTarget(), swapChain9->GetBackBufferInternalFormat(),
+                                   swapChain9->getWidth(), swapChain9->getHeight(), 1, 1);
     }
 
-    RenderTarget9 *renderTarget = new RenderTarget9(this, surface);
-
-    return renderTarget;
+    return gl::Error(GL_NO_ERROR);
 }
 
-RenderTarget *Renderer9::createRenderTarget(int width, int height, GLenum format, GLsizei samples)
+gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT)
 {
-    RenderTarget9 *renderTarget = new RenderTarget9(this, width, height, format, samples);
-    return renderTarget;
+    const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(format);
+
+    const gl::TextureCaps &textureCaps = getRendererTextureCaps().get(format);
+    GLuint supportedSamples = textureCaps.getNearestSamples(samples);
+
+    IDirect3DSurface9 *renderTarget = NULL;
+    if (width > 0 && height > 0)
+    {
+        bool requiresInitialization = false;
+        HRESULT result = D3DERR_INVALIDCALL;
+
+        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format);
+        if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0)
+        {
+            result = mDevice->CreateDepthStencilSurface(width, height, d3d9FormatInfo.renderFormat,
+                                                        gl_d3d9::GetMultisampleType(supportedSamples),
+                                                        0, FALSE, &renderTarget, NULL);
+        }
+        else
+        {
+            requiresInitialization = (d3d9FormatInfo.dataInitializerFunction != NULL);
+            result = mDevice->CreateRenderTarget(width, height, d3d9FormatInfo.renderFormat,
+                                                 gl_d3d9::GetMultisampleType(supportedSamples),
+                                                 0, FALSE, &renderTarget, NULL);
+        }
+
+        if (FAILED(result))
+        {
+            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create render target, result: 0x%X.", result);
+        }
+
+        if (requiresInitialization)
+        {
+            // This format requires that the data be initialized before the render target can be used
+            // Unfortunately this requires a Get call on the d3d device but it is far better than having
+            // to mark the render target as lockable and copy data to the gpu.
+            IDirect3DSurface9 *prevRenderTarget = NULL;
+            mDevice->GetRenderTarget(0, &prevRenderTarget);
+            mDevice->SetRenderTarget(0, renderTarget);
+            mDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_RGBA(0, 0, 0, 255), 0.0f, 0);
+            mDevice->SetRenderTarget(0, prevRenderTarget);
+        }
+    }
+
+    *outRT = new RenderTarget9(renderTarget, format, width, height, 1, supportedSamples);
+    return gl::Error(GL_NO_ERROR);
 }
 
 ShaderImpl *Renderer9::createShader(GLenum type)

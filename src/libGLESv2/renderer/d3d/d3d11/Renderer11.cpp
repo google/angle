@@ -2188,34 +2188,164 @@ void Renderer11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView
     }
 }
 
-RenderTarget *Renderer11::createRenderTarget(SwapChain *swapChain, bool depth)
+gl::Error Renderer11::createRenderTarget(SwapChain *swapChain, bool depth, RenderTarget **outRT)
 {
     SwapChain11 *swapChain11 = SwapChain11::makeSwapChain11(swapChain);
-    RenderTarget11 *renderTarget = NULL;
 
     if (depth)
     {
         // Note: depth stencil may be NULL for 0 sized surfaces
-        renderTarget = new RenderTarget11(this, swapChain11->getDepthStencil(),
-                                          swapChain11->getDepthStencilTexture(),
-                                          swapChain11->getDepthStencilShaderResource(),
-                                          swapChain11->getWidth(), swapChain11->getHeight(), 1);
+        *outRT = new RenderTarget11(swapChain11->getDepthStencil(),
+                                    swapChain11->getDepthStencilTexture(),
+                                    swapChain11->getDepthStencilShaderResource(),
+                                    swapChain11->GetDepthBufferInternalFormat(),
+                                    swapChain11->getWidth(), swapChain11->getHeight(), 1, 1);
     }
     else
     {
         // Note: render target may be NULL for 0 sized surfaces
-        renderTarget = new RenderTarget11(this, swapChain11->getRenderTarget(),
-                                          swapChain11->getOffscreenTexture(),
-                                          swapChain11->getRenderTargetShaderResource(),
-                                          swapChain11->getWidth(), swapChain11->getHeight(), 1);
+        *outRT = new RenderTarget11(swapChain11->getRenderTarget(),
+                                    swapChain11->getOffscreenTexture(),
+                                    swapChain11->getRenderTargetShaderResource(),
+                                    swapChain11->GetBackBufferInternalFormat(),
+                                    swapChain11->getWidth(), swapChain11->getHeight(), 1, 1);
     }
-    return renderTarget;
+
+    return gl::Error(GL_NO_ERROR);
 }
 
-RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples)
+gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT)
 {
-    RenderTarget11 *renderTarget = new RenderTarget11(this, width, height, format, samples);
-    return renderTarget;
+    const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(format);
+
+    const gl::TextureCaps &textureCaps = getRendererTextureCaps().get(format);
+    GLuint supportedSamples = textureCaps.getNearestSamples(samples);
+
+    if (width > 0 && height > 0)
+    {
+        // Create texture resource
+        D3D11_TEXTURE2D_DESC desc;
+        desc.Width = width;
+        desc.Height = height;
+        desc.MipLevels = 1;
+        desc.ArraySize = 1;
+        desc.Format = formatInfo.texFormat;
+        desc.SampleDesc.Count = (supportedSamples == 0) ? 1 : supportedSamples;
+        desc.SampleDesc.Quality = 0;
+        desc.Usage = D3D11_USAGE_DEFAULT;
+        desc.CPUAccessFlags = 0;
+        desc.MiscFlags = 0;
+
+        // If a rendertarget or depthstencil format exists for this texture format,
+        // we'll flag it to allow binding that way. Shader resource views are a little
+        // more complicated.
+        bool bindRTV = false, bindDSV = false, bindSRV = false;
+        bindRTV = (formatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN);
+        bindDSV = (formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN);
+        if (formatInfo.srvFormat != DXGI_FORMAT_UNKNOWN)
+        {
+            // Multisample targets flagged for binding as depth stencil cannot also be
+            // flagged for binding as SRV, so make certain not to add the SRV flag for
+            // these targets.
+            bindSRV = !(formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN && desc.SampleDesc.Count > 1);
+        }
+
+        desc.BindFlags = (bindRTV ? D3D11_BIND_RENDER_TARGET   : 0) |
+                         (bindDSV ? D3D11_BIND_DEPTH_STENCIL   : 0) |
+                         (bindSRV ? D3D11_BIND_SHADER_RESOURCE : 0);
+
+        // The format must be either an RTV or a DSV
+        ASSERT(bindRTV != bindDSV);
+
+        ID3D11Texture2D *texture = NULL;
+        HRESULT result = mDevice->CreateTexture2D(&desc, NULL, &texture);
+        if (FAILED(result))
+        {
+            ASSERT(result == E_OUTOFMEMORY);
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create render target texture, result: 0x%X.", result);
+        }
+
+        ID3D11ShaderResourceView *srv = NULL;
+        if (bindSRV)
+        {
+            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+            srvDesc.Format = formatInfo.srvFormat;
+            srvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS;
+            srvDesc.Texture2D.MostDetailedMip = 0;
+            srvDesc.Texture2D.MipLevels = 1;
+
+            result = mDevice->CreateShaderResourceView(texture, &srvDesc, &srv);
+            if (FAILED(result))
+            {
+                ASSERT(result == E_OUTOFMEMORY);
+                SafeRelease(texture);
+                return gl::Error(GL_OUT_OF_MEMORY, "Failed to create render target shader resource view, result: 0x%X.", result);
+            }
+        }
+
+        if (bindDSV)
+        {
+            D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+            dsvDesc.Format = formatInfo.dsvFormat;
+            dsvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_DSV_DIMENSION_TEXTURE2D : D3D11_DSV_DIMENSION_TEXTURE2DMS;
+            dsvDesc.Texture2D.MipSlice = 0;
+            dsvDesc.Flags = 0;
+
+            ID3D11DepthStencilView *dsv = NULL;
+            result = mDevice->CreateDepthStencilView(texture, &dsvDesc, &dsv);
+            if (FAILED(result))
+            {
+                ASSERT(result == E_OUTOFMEMORY);
+                SafeRelease(texture);
+                SafeRelease(srv);
+                return gl::Error(GL_OUT_OF_MEMORY, "Failed to create render target depth stencil view, result: 0x%X.", result);
+            }
+
+            *outRT = new RenderTarget11(dsv, texture, srv, format, width, height, 1, supportedSamples);
+
+            SafeRelease(dsv);
+        }
+        else if (bindRTV)
+        {
+            D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+            rtvDesc.Format = formatInfo.rtvFormat;
+            rtvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_RTV_DIMENSION_TEXTURE2D : D3D11_RTV_DIMENSION_TEXTURE2DMS;
+            rtvDesc.Texture2D.MipSlice = 0;
+
+            ID3D11RenderTargetView *rtv = NULL;
+            result = mDevice->CreateRenderTargetView(texture, &rtvDesc, &rtv);
+            if (FAILED(result))
+            {
+                ASSERT(result == E_OUTOFMEMORY);
+                SafeRelease(texture);
+                SafeRelease(srv);
+                return gl::Error(GL_OUT_OF_MEMORY, "Failed to create render target render target view, result: 0x%X.", result);
+            }
+
+            if (formatInfo.dataInitializerFunction != NULL)
+            {
+                const float clearValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+                mDeviceContext->ClearRenderTargetView(rtv, clearValues);
+            }
+
+            *outRT = new RenderTarget11(rtv, texture, srv, format, width, height, 1, supportedSamples);
+
+            SafeRelease(rtv);
+        }
+        else
+        {
+            UNREACHABLE();
+        }
+
+        SafeRelease(texture);
+        SafeRelease(srv);
+    }
+    else
+    {
+        *outRT = new RenderTarget11(reinterpret_cast<ID3D11RenderTargetView*>(NULL), NULL, NULL, format, width, height, 1, supportedSamples);
+    }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 ShaderImpl *Renderer11::createShader(GLenum type)

@@ -38,15 +38,21 @@ Renderbuffer::~Renderbuffer()
     SafeDelete(mRenderbuffer);
 }
 
-void Renderbuffer::setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples)
+Error Renderbuffer::setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples)
 {
+    Error error = mRenderbuffer->setStorage(width, height, internalformat, samples);
+    if (error.isError())
+    {
+        return error;
+    }
+
     mWidth = width;
     mHeight = height;
     mInternalFormat = internalformat;
     mSamples = samples;
-
-    mRenderbuffer->setStorage(width, height, internalformat, samples);
     mActualFormat = mRenderbuffer->getActualFormat();
+
+    return Error(GL_NO_ERROR);
 }
 
 rx::RenderbufferImpl *Renderbuffer::getImplementation()

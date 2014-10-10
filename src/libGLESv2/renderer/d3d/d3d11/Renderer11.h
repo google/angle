@@ -134,8 +134,8 @@ class Renderer11 : public RendererD3D
                                  GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels);
 
     // RenderTarget creation
-    virtual RenderTarget *createRenderTarget(SwapChain *swapChain, bool depth);
-    virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples);
+    virtual gl::Error createRenderTarget(SwapChain *swapChain, bool depth, RenderTarget **outRT);
+    virtual gl::Error createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT);
 
     // Shader creation
     virtual ShaderImpl *createShader(GLenum type);
