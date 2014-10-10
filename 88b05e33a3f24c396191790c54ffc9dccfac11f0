@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "9042b0da_1f5fa368",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T21:00:36Z",
+      "side": 1,
+      "message": "It seems reasonable to have an ESValidator base, with protected methods. I\u0027ll add that. Or just one ESValidator.",
+      "parentUuid": "50ff58b8_45aa2a94",
+      "range": {
+        "startLine": 73,
+        "startChar": 6,
+        "endLine": 73,
+        "endChar": 18
+      },
+      "revId": "88b05e33a3f24c396191790c54ffc9dccfac11f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f033ec7c_a299be88",
         "filename": "src/libGLESv2/validationES.h",
         "patchSetId": 7
@@ -59,6 +83,30 @@
       "writtenOn": "2014-10-10T20:25:14Z",
       "side": 1,
       "message": "I think it would make more sense to return the Result struct directly from these functions.  They could then be const.  As it stands, the Validator object cannot be reused after it\u0027s had an error and it may be useful to test multiple methods on them or call the same method multiple times.",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 8
+      },
+      "revId": "88b05e33a3f24c396191790c54ffc9dccfac11f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7047fcec_3e5ce970",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T21:00:36Z",
+      "side": 1,
+      "message": "The cannot be const, as they set internal temporary variables. That\u0027s part of the usefulness of having a function object, so sorry I don\u0027t think it\u0027s possible or desirable.\nThey can be reused after they\u0027ve had an error, see the above discussion.\nThe intent of the design was as a function object, which is used once, like a stack call to a function.",
+      "parentUuid": "f033ec7c_a299be88",
       "range": {
         "startLine": 84,
         "startChar": 4,
