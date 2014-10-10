@@ -164,6 +164,30 @@
       "revId": "88b05e33a3f24c396191790c54ffc9dccfac11f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "104ec00c_d5503c23",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-10T21:27:19Z",
+      "side": 1,
+      "message": "There are certainly functors that don\u0027t define operator(), but they\u0027re generally used to represent a single function and/or be invoked indirectly. What I am saying is that it\u0027s a stretch to think of this particular design as a functor, and using \"this is a functor\" to dismiss criticisms of the design is unwise.",
+      "parentUuid": "9042b0da_22edb020",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 8
+      },
+      "revId": "88b05e33a3f24c396191790c54ffc9dccfac11f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
