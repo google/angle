@@ -140,6 +140,30 @@
       "revId": "88b05e33a3f24c396191790c54ffc9dccfac11f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9042b0da_22edb020",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T21:23:14Z",
+      "side": 1,
+      "message": "Shannon, are you saying there is no such thing as a functor which does not define operator()? Anyway that debate is academic. I was originally planning to use one functor per entry point, but at Geoff\u0027s suggestion, he wanted them merged into ES***** stuff. Maybe we should abandon this effort for now? I\u0027m afraid I don\u0027t really understand the issues at play here.",
+      "parentUuid": "305104a9_303c10b6",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 8
+      },
+      "revId": "88b05e33a3f24c396191790c54ffc9dccfac11f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
