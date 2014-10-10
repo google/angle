@@ -116,6 +116,30 @@
       "revId": "88b05e33a3f24c396191790c54ffc9dccfac11f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "305104a9_303c10b6",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-10T21:20:11Z",
+      "side": 1,
+      "message": "This gets back into my prior objection-- one, it\u0027s not a recognizable function object because a) there\u0027s no operator(); it can\u0027t be invoked *as a function*, which is pretty much the raison d\u0027etre of a function object, and b) if persistent state is a key part of a pattern, and issues are raised about the persistent state, saying \"this is an implementation of pattern X\" doesn\u0027t render the issues immaterial, it\u0027s an indication that the pattern is possibly not a good design choice.\n\nPlease note that this does not mean that this design is not correct, it just means that stating \"this is a functor\" doesn\u0027t get rid of concerns about its use. Or make it a functor.",
+      "parentUuid": "7047fcec_3e5ce970",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 8
+      },
+      "revId": "88b05e33a3f24c396191790c54ffc9dccfac11f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
