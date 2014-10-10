@@ -40,6 +40,24 @@
       "revId": "991304c1e7c8f66f021c41f225fb6b30e842e8c1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01348da_a973fd11",
+        "filename": "src/compiler/translator/intermOut.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T16:49:28Z",
+      "side": 1,
+      "message": "Or, possibly, negative unary and positive unary? those seem pretty logical.",
+      "parentUuid": "10f960d6_8315be32",
+      "revId": "991304c1e7c8f66f021c41f225fb6b30e842e8c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
