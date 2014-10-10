@@ -320,13 +320,21 @@ void OutputHLSL::header()
 
     if (mUsesDiscardRewriting)
     {
-        out << "#define ANGLE_USES_DISCARD_REWRITING" << "\n";
+        out << "#define ANGLE_USES_DISCARD_REWRITING\n";
     }
 
     if (mUsesNestedBreak)
     {
-        out << "#define ANGLE_USES_NESTED_BREAK" << "\n";
+        out << "#define ANGLE_USES_NESTED_BREAK\n";
     }
+
+    out << "#ifdef ANGLE_ENABLE_LOOP_FLATTEN\n"
+           "#define LOOP [loop]\n"
+           "#define FLATTEN [flatten]\n"
+           "#else\n"
+           "#define LOOP\n"
+           "#define FLATTEN\n"
+           "#endif\n";
 
     if (mContext.shaderType == GL_FRAGMENT_SHADER)
     {
@@ -2293,7 +2301,7 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
     {
         mUnfoldShortCircuit->traverse(node->getCondition());
 
-        out << "if (";
+        out << "FLATTEN if (";
 
         node->getCondition()->traverse(this);
 
@@ -2373,14 +2381,14 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
     if (node->getType() == ELoopDoWhile)
     {
-        out << "{do\n";
+        out << "{LOOP do\n";
 
         outputLineDirective(node->getLine().first_line);
         out << "{\n";
     }
     else
     {
-        out << "{for(";
+        out << "{LOOP for(";
 
         if (node->getInit())
         {
@@ -2687,7 +2695,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 
                 // for(int index = initial; index < clampedLimit; index += increment)
 
-                out << "for(";
+                out << "LOOP for(";
                 index->traverse(this);
                 out << " = ";
                 out << initial;

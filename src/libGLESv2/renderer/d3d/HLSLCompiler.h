@@ -38,7 +38,8 @@ class HLSLCompiler
     // Attempt to compile a HLSL shader using the supplied configurations, may output a NULL compiled blob
     // even if no GL errors are returned.
     gl::Error compileToBinary(gl::InfoLog &infoLog, const std::string &hlsl, const std::string &profile,
-                              const std::vector<CompileConfig> &configs, ID3DBlob **outCompiledBlob) const;
+                              const std::vector<CompileConfig> &configs, const D3D_SHADER_MACRO *overrideMacros,
+                              ID3DBlob **outCompiledBlob) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(HLSLCompiler);

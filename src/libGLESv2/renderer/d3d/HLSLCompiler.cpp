@@ -83,7 +83,8 @@ void HLSLCompiler::release()
 }
 
 gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string &hlsl, const std::string &profile,
-                                        const std::vector<CompileConfig> &configs, ID3DBlob **outCompiledBlob) const
+                                        const std::vector<CompileConfig> &configs, const D3D_SHADER_MACRO *overrideMacros,
+                                        ID3DBlob **outCompiledBlob) const
 {
     ASSERT(mD3DCompilerModule && mD3DCompileFunc);
 
@@ -94,23 +95,33 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
         writeFile(sourcePath.c_str(), sourceText.c_str(), sourceText.size());
     }
 
+    const D3D_SHADER_MACRO *macros = overrideMacros ? overrideMacros : NULL;
+
     for (size_t i = 0; i < configs.size(); ++i)
     {
         ID3DBlob *errorMessage = NULL;
         ID3DBlob *binary = NULL;
 
-        HRESULT result = mD3DCompileFunc(hlsl.c_str(), hlsl.length(), gl::g_fakepath, NULL, NULL, "main", profile.c_str(),
+        HRESULT result = mD3DCompileFunc(hlsl.c_str(), hlsl.length(), gl::g_fakepath, macros, NULL, "main", profile.c_str(),
                                          configs[i].flags, 0, &binary, &errorMessage);
 
         if (errorMessage)
         {
-            const char *message = (const char*)errorMessage->GetBufferPointer();
+            std::string message = (const char*)errorMessage->GetBufferPointer();
+            SafeRelease(errorMessage);
 
-            infoLog.appendSanitized(message);
+            infoLog.appendSanitized(message.c_str());
             TRACE("\n%s", hlsl);
             TRACE("\n%s", message);
 
-            SafeRelease(errorMessage);
+            if (message.find("error X3531:") != std::string::npos)   // "can't unroll loops marked with loop attribute"
+            {
+                macros = NULL;   // Disable [loop] and [flatten]
+
+                // Retry without changing compiler flags
+                i--;
+                continue;
+            }
         }
 
         if (SUCCEEDED(result))
