@@ -59,6 +59,9 @@
 
 namespace rx
 {
+
+namespace
+{
 static const DXGI_FORMAT RenderTargetFormats[] =
     {
         DXGI_FORMAT_B8G8R8A8_UNORM,
@@ -76,6 +79,34 @@ enum
 {
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM4 = 16
 };
+
+// Does *not* increment the resource ref count!!
+ID3D11Resource *GetSRVResource(ID3D11ShaderResourceView *srv)
+{
+    ID3D11Resource *resource = NULL;
+    ASSERT(srv);
+    srv->GetResource(&resource);
+    resource->Release();
+    return resource;
+}
+
+bool UnsetSRVsWithResource(std::vector<ID3D11ShaderResourceView *> &srvs, const ID3D11Resource *resource)
+{
+    bool foundAny = false;
+
+    for (auto &srv : srvs)
+    {
+        if (srv && GetSRVResource(srv) == resource)
+        {
+            srv = NULL;
+            foundAny = true;
+        }
+    }
+
+    return foundAny;
+}
+
+}
 
 Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, EGLint requestedDisplay)
     : Renderer(display),
@@ -869,8 +900,21 @@ gl::Error Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
                 missingColorRenderTarget = false;
             }
 
-            // TODO: Detect if this color buffer is already bound as a texture and unbind it first to prevent
-            //       D3D11 warnings.
+#if !defined(NDEBUG)
+            // Detect if this color buffer is already bound as a texture and unbind it first to prevent
+            // D3D11 warnings.
+            ID3D11Resource *renderTargetResource = renderTarget->getTexture();
+
+            if (UnsetSRVsWithResource(mCurVertexSRVs, renderTargetResource))
+            {
+                mDeviceContext->VSSetShaderResources(0, static_cast<UINT>(mCurVertexSRVs.size()), mCurVertexSRVs.data());
+            }
+
+            if (UnsetSRVsWithResource(mCurPixelSRVs, renderTargetResource))
+            {
+                mDeviceContext->PSSetShaderResources(0, static_cast<UINT>(mCurPixelSRVs.size()), mCurPixelSRVs.data());
+            }
+#endif
         }
     }
 
