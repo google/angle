@@ -667,6 +667,9 @@ bool Buffer11::NativeBuffer11::copyFromStorage(BufferStorage11 *source, size_t s
         // Offset bounds are validated at the API layer
         ASSERT(sourceOffset + size <= destOffset + mBufferSize);
         memcpy(destPointer, sourcePointer, size);
+
+        context->Unmap(mNativeBuffer, 0);
+        source->unmap();
     }
     else
     {
