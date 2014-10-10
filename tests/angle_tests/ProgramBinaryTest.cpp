@@ -1,4 +1,6 @@
 #include "ANGLETest.h"
+#include <memory>
+#include <stdint.h>
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
@@ -91,5 +93,57 @@ TYPED_TEST(ProgramBinaryTest, FloatDynamicShaderSize)
         glGetProgramiv(mProgram, GL_PROGRAM_BINARY_LENGTH_OES, &newProgramLength);
         EXPECT_GL_NO_ERROR();
         EXPECT_EQ(programLength, newProgramLength);
+    }
+}
+
+// This tests the ability to successfully save and load a program binary.
+TYPED_TEST(ProgramBinaryTest, SaveAndLoadBinary)
+{
+    GLint programLength = 0;
+    GLint writtenLength = 0;
+    GLenum binaryFormat = 0;
+
+    glGetProgramiv(mProgram, GL_PROGRAM_BINARY_LENGTH_OES, &programLength);
+    EXPECT_GL_NO_ERROR();
+
+    std::vector<uint8_t> binary(programLength);
+    glGetProgramBinaryOES(mProgram, programLength, &writtenLength, &binaryFormat, binary.data());
+    EXPECT_GL_NO_ERROR();
+
+    // The lengths reported by glGetProgramiv and glGetProgramBinaryOES should match
+    EXPECT_EQ(programLength, writtenLength);
+
+    if (writtenLength)
+    {
+        GLuint program2 = glCreateProgram();
+        glProgramBinaryOES(program2, binaryFormat, binary.data(), writtenLength);
+
+        EXPECT_GL_NO_ERROR();
+
+        GLint linkStatus;
+        glGetProgramiv(program2, GL_LINK_STATUS, &linkStatus);
+        if (linkStatus == 0)
+        {
+            GLint infoLogLength;
+            glGetProgramiv(program2, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+            std::vector<GLchar> infoLog(infoLogLength);
+            glGetProgramInfoLog(program2, infoLog.size(), NULL, &infoLog[0]);
+
+            FAIL() << "program link failed: " << &infoLog[0];
+        }
+        else
+        {
+            glUseProgram(program2);
+            glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+
+            glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8, NULL);
+            glEnableVertexAttribArray(0);
+            glDrawArrays(GL_POINTS, 0, 1);
+
+            EXPECT_GL_NO_ERROR();
+        }
+
+        glDeleteProgram(program2);
     }
 }
