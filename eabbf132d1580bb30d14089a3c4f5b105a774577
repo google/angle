@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7047fcec_fec9a1e6",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T19:54:13Z",
+      "side": 1,
+      "message": "will leak texture resources!",
+      "range": {
+        "startLine": 87,
+        "startChar": 9,
+        "endLine": 87,
+        "endChar": 20
+      },
+      "revId": "eabbf132d1580bb30d14089a3c4f5b105a774577",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
