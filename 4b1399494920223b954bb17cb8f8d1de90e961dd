@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b00894ac_68118373",
+        "filename": "include/EGL/eglplatform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-10T14:15:56Z",
+      "side": 1,
+      "message": "I think this comment is still accurate, but am unfamiliar enough with the Win32/WinRT/Windows Store distinctions and vocabulary that I wanted to make sure you\u0027d considered it. Windows Store apps still fall under the categorization of Win32, yes?",
+      "range": {
+        "startLine": 70,
+        "startChar": 95,
+        "endLine": 70,
+        "endChar": 116
+      },
+      "revId": "4b1399494920223b954bb17cb8f8d1de90e961dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b00894ac_88f4b7e9",
+        "filename": "include/EGL/eglplatform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-10T14:15:56Z",
+      "side": 1,
+      "message": "Could this get a comment noting what it\u0027s selecting for? Also, does this select for Win 8.1 store apps only, excluding Win 8.0 store apps?",
+      "range": {
+        "startLine": 79,
+        "startChar": 11,
+        "endLine": 79,
+        "endChar": 67
+      },
+      "revId": "4b1399494920223b954bb17cb8f8d1de90e961dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
