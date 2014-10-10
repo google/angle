@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30b584f8_7ca7f91a",
+        "filename": "src/compiler/translator/intermOut.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T13:43:57Z",
+      "side": 1,
+      "message": "nit: I prefer \"Negate value\" for it\u0027s verbiness. \"Positive value\" seems fair for +",
+      "range": {
+        "startLine": 223,
+        "startChar": 38,
+        "endLine": 223,
+        "endChar": 51
+      },
+      "revId": "991304c1e7c8f66f021c41f225fb6b30e842e8c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
