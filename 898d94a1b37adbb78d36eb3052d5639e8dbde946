@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0c04c6a_da65e53d",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T13:53:00Z",
+      "side": 1,
+      "message": "nit: IsMaskFlagSet",
+      "range": {
+        "startLine": 100,
+        "startChar": 12,
+        "endLine": 100,
+        "endChar": 25
+      },
+      "revId": "898d94a1b37adbb78d36eb3052d5639e8dbde946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30b584f8_fc79c9f5",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T13:53:00Z",
+      "side": 1,
+      "message": "nit: place this in the same CPP file that uses this function, at the top of the file, inside an anonymous namespace {} block, and capitalize the first character, \"GetShaderTypeString\". Since this method is very specific to your needs in this patch, it really should be a local helper function rather than something shared across ANGLE.",
+      "range": {
+        "startLine": 440,
+        "startChar": 12,
+        "endLine": 440,
+        "endChar": 31
+      },
+      "revId": "898d94a1b37adbb78d36eb3052d5639e8dbde946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10b24012_bedfb5e2",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T13:53:00Z",
+      "side": 1,
+      "message": "would it be possible to split the addition of the compiler flags into a separate patch? It seems like we could add it on afterwards, and would make reviewing this patch easier for the other reviewers. Is that manageable?",
+      "range": {
+        "startLine": 191,
+        "startChar": 7,
+        "endLine": 191,
+        "endChar": 32
+      },
+      "revId": "898d94a1b37adbb78d36eb3052d5639e8dbde946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10b24012_deea8186",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T13:53:00Z",
+      "side": 1,
+      "message": "this is okay with me (Chromium guide says nullptr is recommended for new code)",
+      "range": {
+        "startLine": 251,
+        "startChar": 19,
+        "endLine": 251,
+        "endChar": 26
+      },
+      "revId": "898d94a1b37adbb78d36eb3052d5639e8dbde946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10b24012_9ee4f9b7",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2386,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T13:53:00Z",
+      "side": 1,
+      "message": "nit: don\u0027t need this ifdef anymore.. if it\u0027s off, the debugInfo stringstream will be empty",
+      "range": {
+        "startLine": 2386,
+        "startChar": 7,
+        "endLine": 2386,
+        "endChar": 39
+      },
+      "revId": "898d94a1b37adbb78d36eb3052d5639e8dbde946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30b584f8_7c8ed98c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2917,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-10T13:53:00Z",
+      "side": 1,
+      "message": "ditto here",
+      "range": {
+        "startLine": 2917,
+        "startChar": 7,
+        "endLine": 2917,
+        "endChar": 39
+      },
+      "revId": "898d94a1b37adbb78d36eb3052d5639e8dbde946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
