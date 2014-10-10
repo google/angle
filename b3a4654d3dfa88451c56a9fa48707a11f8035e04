@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9042b0da_620ad849",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-10-10T21:40:04Z",
+      "side": 1,
+      "message": "reinterpret_cast is not advisable. It doesn\u0027t care at all about what you\u0027re casting into what else, making it the most unsafe of all casts. So I don\u0027t think one should ever replace a C-style cast with reinterpret_cast.\n\nstatic_cast is fine from a semantic point of view, but I find it unnecessarily ugly. To quote Stroustrup: \"An ugly operation should have an ugly syntactic form\". This is useful for casting between base and derived class pointers, but here we\u0027re really not doing anything tricky and so I\u0027d like to keep it pretty and concise.",
+      "parentUuid": "7047fcec_9e173db2",
+      "range": {
+        "startLine": 111,
+        "startChar": 34,
+        "endLine": 111,
+        "endChar": 47
+      },
+      "revId": "b3a4654d3dfa88451c56a9fa48707a11f8035e04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9042b0da_1f2c8303",
         "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2014-10-10T19:50:08Z",
       "side": 1,
       "message": "would this stuff make more sense as a form of CompileConfig?",
+      "range": {
+        "startLine": 118,
+        "startChar": 12,
+        "endLine": 118,
+        "endChar": 112
+      },
+      "revId": "b3a4654d3dfa88451c56a9fa48707a11f8035e04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9042b0da_2204d036",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-10-10T21:40:04Z",
+      "side": 1,
+      "message": "No, this is orthogonal. If a shader fails to compile with [loop] we should disable it, but it can still require additional attempts with different flags, without re-enabling [loop].",
+      "parentUuid": "9042b0da_1f2c8303",
       "range": {
         "startLine": 118,
         "startChar": 12,
