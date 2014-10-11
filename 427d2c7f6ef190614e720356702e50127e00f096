@@ -16,6 +16,24 @@
       "revId": "427d2c7f6ef190614e720356702e50127e00f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "104ec00c_ba647890",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-10-11T05:00:40Z",
+      "side": 1,
+      "message": "Your comment made me realize that there could be other reasons why \"X3531\" could be present in the error message (e.g. a variable named like that but not correctly declared). So I expanded it to \"error X3531:\" and I think this also makes it clearer what the comment is about?",
+      "parentUuid": "5044b8e8_b7c2585f",
+      "revId": "427d2c7f6ef190614e720356702e50127e00f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
