@@ -2478,9 +2478,14 @@ QueryImpl *Renderer11::createQuery(GLenum type)
     return new Query11(this, type);
 }
 
-FenceImpl *Renderer11::createFence()
+FenceNVImpl *Renderer11::createFenceNV()
 {
-    return new Fence11(this);
+    return new FenceNV11(this);
+}
+
+FenceSyncImpl *Renderer11::createFenceSync()
+{
+    return new FenceSync11(this);
 }
 
 TransformFeedbackImpl* Renderer11::createTransformFeedback()

@@ -174,7 +174,8 @@ class Renderer9 : public Renderer
 
     // Query and Fence creation
     virtual QueryImpl *createQuery(GLenum type);
-    virtual FenceImpl *createFence();
+    virtual FenceNVImpl *createFenceNV();
+    virtual FenceSyncImpl *createFenceSync();
 
     // Transform Feedback creation
     virtual TransformFeedbackImpl* createTransformFeedback();

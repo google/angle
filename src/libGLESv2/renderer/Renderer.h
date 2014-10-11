@@ -50,7 +50,8 @@ class TextureStorage;
 class VertexBuffer;
 class IndexBuffer;
 class QueryImpl;
-class FenceImpl;
+class FenceNVImpl;
+class FenceSyncImpl;
 class BufferImpl;
 class VertexArrayImpl;
 class BufferStorage;
@@ -227,7 +228,8 @@ class Renderer
 
     // Query and Fence creation
     virtual QueryImpl *createQuery(GLenum type) = 0;
-    virtual FenceImpl *createFence() = 0;
+    virtual FenceNVImpl *createFenceNV() = 0;
+    virtual FenceSyncImpl *createFenceSync() = 0;
 
     // Transform Feedback creation
     virtual TransformFeedbackImpl* createTransformFeedback() = 0;

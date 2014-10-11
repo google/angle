@@ -2139,19 +2139,35 @@ void GL_APIENTRY glGetFenceivNV(GLuint fence, GLenum pname, GLint *params)
         switch (pname)
         {
           case GL_FENCE_STATUS_NV:
+            {
+                // GL_NV_fence spec:
+                // Once the status of a fence has been finished (via FinishFenceNV) or tested and the returned status is TRUE (via either TestFenceNV
+                // or GetFenceivNV querying the FENCE_STATUS_NV), the status remains TRUE until the next SetFenceNV of the fence.
+                GLboolean status = GL_TRUE;
+                if (fenceObject->getStatus() != GL_TRUE)
+                {
+                    gl::Error error = fenceObject->testFence(&status);
+                    if (error.isError())
+                    {
+                        context->recordError(error);
+                        return;
+                    }
+                }
+                *params = status;
+                break;
+            }
+
           case GL_FENCE_CONDITION_NV:
-            break;
+            {
+                *params = fenceObject->getCondition();
+                break;
+            }
 
           default:
-            context->recordError(gl::Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        gl::Error error = fenceObject->getFencei(pname, params);
-        if (error.isError())
-        {
-            context->recordError(error);
-            return;
+            {
+                context->recordError(gl::Error(GL_INVALID_ENUM));
+                return;
+            }
         }
     }
 }
@@ -7548,7 +7564,7 @@ void GL_APIENTRY glWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
             return;
         }
 
-        gl::Error error = fenceSync->serverWait();
+        gl::Error error = fenceSync->serverWait(flags, timeout);
         if (error.isError())
         {
             context->recordError(error);

@@ -287,7 +287,7 @@ GLuint Context::createFenceNV()
 {
     GLuint handle = mFenceNVHandleAllocator.allocate();
 
-    mFenceNVMap[handle] = new FenceNV(mRenderer);
+    mFenceNVMap[handle] = new FenceNV(mRenderer->createFenceNV());
 
     return handle;
 }

@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Fence9.cpp: Defines the rx::Fence9 class.
+// Fence9.cpp: Defines the rx::FenceNV9 class.
 
 #include "libGLESv2/renderer/d3d/d3d9/Fence9.h"
 #include "libGLESv2/renderer/d3d/d3d9/renderer9_utils.h"
@@ -14,18 +14,19 @@
 namespace rx
 {
 
-Fence9::Fence9(rx::Renderer9 *renderer)
-    : mRenderer(renderer),
+FenceNV9::FenceNV9(Renderer9 *renderer)
+    : FenceNVImpl(),
+      mRenderer(renderer),
       mQuery(NULL)
 {
 }
 
-Fence9::~Fence9()
+FenceNV9::~FenceNV9()
 {
     SafeRelease(mQuery);
 }
 
-gl::Error Fence9::set()
+gl::Error FenceNV9::set()
 {
     if (!mQuery)
     {
@@ -47,7 +48,7 @@ gl::Error Fence9::set()
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Fence9::test(bool flushCommandBuffer, GLboolean *outFinished)
+gl::Error FenceNV9::test(bool flushCommandBuffer, GLboolean *outFinished)
 {
     ASSERT(mQuery);
 
@@ -66,6 +67,24 @@ gl::Error Fence9::test(bool flushCommandBuffer, GLboolean *outFinished)
 
     ASSERT(result == S_OK || result == S_FALSE);
     *outFinished = ((result == S_OK) ? GL_TRUE : GL_FALSE);
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error FenceNV9::finishFence(GLboolean *outFinished)
+{
+    ASSERT(outFinished);
+
+    while (*outFinished != GL_TRUE)
+    {
+        gl::Error error = test(true, outFinished);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        Sleep(0);
+    }
+
     return gl::Error(GL_NO_ERROR);
 }
 

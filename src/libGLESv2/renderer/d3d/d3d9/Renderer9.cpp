@@ -637,9 +637,16 @@ QueryImpl *Renderer9::createQuery(GLenum type)
     return new Query9(this, type);
 }
 
-FenceImpl *Renderer9::createFence()
+FenceNVImpl *Renderer9::createFenceNV()
 {
-    return new Fence9(this);
+    return new FenceNV9(this);
+}
+
+FenceSyncImpl *Renderer9::createFenceSync()
+{
+    // Renderer9 doesn't support ES 3.0 and its sync objects.
+    UNREACHABLE();
+    return NULL;
 }
 
 TransformFeedbackImpl* Renderer9::createTransformFeedback()
