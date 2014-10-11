@@ -24,6 +24,9 @@
 #   error Unsupported platform.
 #endif
 
+// TODO(kbr): for POSIX platforms this will have to be changed to take
+// in a destructor function pointer, to allow the thread-local storage
+// to be properly deallocated upon thread exit.
 TLSIndex CreateTLSIndex();
 bool DestroyTLSIndex(TLSIndex index);
 
