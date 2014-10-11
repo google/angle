@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10f960d6_0c121bc6",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-11T00:03:47Z",
+      "side": 1,
+      "message": "I don\u0027t think this is correct on all non-Windows platforms and compilers. Chromium\u0027s src/build/common.gypi seems to need a bunch of different flags for different toolchains. See for example the setting of CLANG_CXX_LANGUAGE_STANDARD, as well as the setting of \"-std\u003dgnu++11\" elsewhere in the file. What motivates this change and what is the side-effect on the Chromium build?",
+      "revId": "2ea94cb06970e874f371914377ddfad60f4e3fd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
