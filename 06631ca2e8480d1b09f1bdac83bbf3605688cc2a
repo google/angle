@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f033ec7c_425c7271",
+        "filename": "tests/angle_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-12T16:00:58Z",
+      "side": 1,
+      "message": "nit: ANGLE style uses newlines for every brace",
+      "range": {
+        "startLine": 136,
+        "startChar": 13,
+        "endLine": 136,
+        "endChar": 14
+      },
+      "revId": "06631ca2e8480d1b09f1bdac83bbf3605688cc2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
