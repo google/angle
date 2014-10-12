@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f033ec7c_6255f646",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-12T15:56:36Z",
+      "side": 1,
+      "message": "Nicolas, please see the C++ style guide for Chrome:\n\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Casting\n\n\"Use C++ casts like static_cast\u003c\u003e(). Do not use other cast formats like int y \u003d (int)x; or int y \u003d int(x);.\"\n\nWe\u0027ve been enforcing this style across all of ANGLE code.",
+      "parentUuid": "9042b0da_620ad849",
+      "range": {
+        "startLine": 111,
+        "startChar": 34,
+        "endLine": 111,
+        "endChar": 47
+      },
+      "revId": "b3a4654d3dfa88451c56a9fa48707a11f8035e04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9042b0da_1f2c8303",
         "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
         "patchSetId": 6
