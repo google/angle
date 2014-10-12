@@ -16,6 +16,24 @@
       "revId": "2ea94cb06970e874f371914377ddfad60f4e3fd2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f033ec7c_e247c698",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-12T16:03:21Z",
+      "side": 1,
+      "message": "This file is invisible to Chromium, and will not affect its build.\n\nIt\u0027s for ANGLE standalone, outside of the Chromium checkout. You may be right it might not work on all other platforms, I only tested on Linux. It is to fix the standalone build.",
+      "parentUuid": "10f960d6_0c121bc6",
+      "revId": "2ea94cb06970e874f371914377ddfad60f4e3fd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
