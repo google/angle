@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f033ec7c_225fee68",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-12T16:00:21Z",
+      "side": 1,
+      "message": "nit: flush right pointer symbols for ANGLE (FenceClass *fence)",
+      "range": {
+        "startLine": 21,
+        "startChar": 35,
+        "endLine": 21,
+        "endChar": 36
+      },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
