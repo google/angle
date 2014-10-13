@@ -299,14 +299,15 @@ class TSymbolTableLevel
     tLevel level;
 };
 
-enum ESymbolLevel
-{
-    COMMON_BUILTINS = 0,
-    ESSL1_BUILTINS = 1,
-    ESSL3_BUILTINS = 2,
-    LAST_BUILTIN_LEVEL = ESSL3_BUILTINS,
-    GLOBAL_LEVEL = 3
-};
+// Define ESymbolLevel as int rather than an enum since level can go
+// above GLOBAL_LEVEL and cause atBuiltInLevel() to fail if the
+// compiler optimizes the >= of the last element to ==.
+typedef int ESymbolLevel;
+const int COMMON_BUILTINS = 0;
+const int ESSL1_BUILTINS = 1;
+const int ESSL3_BUILTINS = 2;
+const int LAST_BUILTIN_LEVEL = ESSL3_BUILTINS;
+const int GLOBAL_LEVEL = 3;
 
 class TSymbolTable
 {
