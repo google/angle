@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "d01348da_4c25af47",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-13T16:05:00Z",
+      "side": 1,
+      "message": "This is not one we\u0027ve been traditionally stringent about enforcing, FWIW.\n\nhttps://chromium-review.googlesource.com/#/c/199200/2/src/libGLESv2/renderer/d3d11/RenderStateCache.cpp\n\nhttps://chromium-review.googlesource.com/#/c/206836/14/src/libGLESv2/renderer/d3d/d3d11/TextureStorage11.cpp",
+      "parentUuid": "f033ec7c_6255f646",
+      "range": {
+        "startLine": 111,
+        "startChar": 34,
+        "endLine": 111,
+        "endChar": 47
+      },
+      "revId": "b3a4654d3dfa88451c56a9fa48707a11f8035e04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9042b0da_1f2c8303",
         "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
         "patchSetId": 6
