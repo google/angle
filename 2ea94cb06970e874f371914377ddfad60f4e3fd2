@@ -34,6 +34,24 @@
       "revId": "2ea94cb06970e874f371914377ddfad60f4e3fd2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "901b9006_b77908bc",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-13T00:45:37Z",
+      "side": 1,
+      "message": "OK. Sounds fine in that case.",
+      "parentUuid": "f033ec7c_e247c698",
+      "revId": "2ea94cb06970e874f371914377ddfad60f4e3fd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
