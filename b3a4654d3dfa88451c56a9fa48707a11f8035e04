@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "d0218832_4d433908",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-10-14T16:05:20Z",
+      "side": 1,
+      "message": "Jamie, that guide also calls for 80 character line limits, two space indents, putting the open curly brace on the previous line, etc. At the start of the ANGLE project Daniel (and me and Shannon) decided not to rigorously adhere to the Chromium style guide, and Vangelis did not protest this.\n\nAnyhow, unless there are semantic issues I won\u0027t change the patch. We should not hamper its approval over a style dispute. Feel free to submit the style change as a separate patch and I\u0027d be happy to continue the discussion.",
+      "parentUuid": "d01348da_4c25af47",
+      "range": {
+        "startLine": 111,
+        "startChar": 34,
+        "endLine": 111,
+        "endChar": 47
+      },
+      "revId": "b3a4654d3dfa88451c56a9fa48707a11f8035e04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9042b0da_1f2c8303",
         "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
         "patchSetId": 6
