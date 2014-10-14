@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7030dc7e_ca05f37f",
+        "filename": "src/libGLESv2/main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:55:48Z",
+      "side": 1,
+      "message": "nit: brace on newline.",
+      "range": {
+        "startLine": 72,
+        "startChar": 46,
+        "endLine": 72,
+        "endChar": 48
+      },
+      "revId": "665ae571cf3c64f8985c9dd2a5eff5b0f7d09d80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_aa00b770",
+        "filename": "src/libGLESv2/main.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:55:48Z",
+      "side": 1,
+      "message": "I\u0027m all for doing this lazily.  Could have a global std::map in main.cpp that is keyed on a thread id which would ensure that the memory is freed on process exit at least.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 30
+      },
+      "revId": "665ae571cf3c64f8985c9dd2a5eff5b0f7d09d80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b00894ac_02d53efb",
+        "filename": "src/libGLESv2/main.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:55:48Z",
+      "side": 1,
+      "message": "Do these need to be exposed in the header? They\u0027re only used from within the main.cpp file.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 25
+      },
+      "revId": "665ae571cf3c64f8985c9dd2a5eff5b0f7d09d80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
