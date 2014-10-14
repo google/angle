@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7030dc7e_d0328495",
+        "filename": "tests/angle_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T20:51:30Z",
+      "side": 1,
+      "message": "FAIL actually returns a stream, you could do this:\n\n  FAIL() \u003c\u003c \"program link failed: \" \u003c\u003c \u0026infoLog[0];",
+      "range": {
+        "startLine": 134,
+        "startChar": 12,
+        "endLine": 134,
+        "endChar": 18
+      },
+      "revId": "fa04e3fafc965a16196793894abaaecea348da9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
