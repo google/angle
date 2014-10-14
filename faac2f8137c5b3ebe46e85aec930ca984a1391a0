@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d01348da_7235e9f9",
+        "filename": "src/common/tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T19:16:23Z",
+      "side": 1,
+      "message": "Can these implementations be merged in with our others below (in the cpp file)? It loooks like LocalAlloc and localFree arn\u0027t necessary and our previous API should cover the others.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 9
+      },
+      "revId": "faac2f8137c5b3ebe46e85aec930ca984a1391a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
