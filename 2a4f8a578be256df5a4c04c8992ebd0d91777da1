@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "7030dc7e_2a0b47c3",
+        "filename": "src/libGLESv2/Fence.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T13:54:30Z",
+      "side": 1,
+      "message": "Can you move this logic to glGetFenceivNV to match glGetSynciv and then have this method called getStatus?",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 113,
+        "endChar": 5
+      },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01348da_e348ee8b",
+        "filename": "src/libGLESv2/Fence.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T13:54:30Z",
+      "side": 1,
+      "message": "I think serverWait should be part of the Impl class, a desktop GL Impl may want to do something here.",
+      "range": {
+        "startLine": 148,
+        "startChar": 17,
+        "endLine": 148,
+        "endChar": 27
+      },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_8afe1b3f",
+        "filename": "src/libGLESv2/Fence.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T13:54:30Z",
+      "side": 1,
+      "message": "This should be moved to the Impl as well.  The Impl will have getStatus (and remove test) and can do this logic itself since this would just be a passthrough to glGetSynciv on a desktop driver.",
+      "range": {
+        "startLine": 158,
+        "startChar": 0,
+        "endLine": 170,
+        "endChar": 30
+      },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01348da_a342f665",
+        "filename": "src/libGLESv2/Fence.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T13:54:30Z",
+      "side": 1,
+      "message": "Instead of passing a Renderer, let\u0027s pass a FenceNVImpl that the Context can create in Context::createFenceNV.  This will give us some inversion of control for testing.\n\nSame for the FenceSync constructor.",
+      "range": {
+        "startLine": 30,
+        "startChar": 21,
+        "endLine": 30,
+        "endChar": 43
+      },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f033ec7c_225fee68",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
         "patchSetId": 1
@@ -18,6 +110,75 @@
         "startChar": 35,
         "endLine": 21,
         "endChar": 36
+      },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_0a39ab7b",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T13:54:30Z",
+      "side": 1,
+      "message": "nit: formatting",
+      "range": {
+        "startLine": 88,
+        "startChar": 42,
+        "endLine": 88,
+        "endChar": 43
+      },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_8a25bb4a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T13:54:30Z",
+      "side": 1,
+      "message": "I think we may need to track if the fence is finished internally too. Relying on the value of this output parameter to be the parent\u0027s current status could be dangerous.",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 35
+      },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01348da_833812f6",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T13:54:30Z",
+      "side": 1,
+      "message": "nit: formatting.",
+      "range": {
+        "startLine": 138,
+        "startChar": 76,
+        "endLine": 138,
+        "endChar": 77
       },
       "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
