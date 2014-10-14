@@ -1,0 +1,268 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d01348da_e36fceec",
+        "filename": "include/angle_windowsstore.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "nit:whitespace",
+      "range": {
+        "startLine": 11,
+        "startChar": 83,
+        "endLine": 11,
+        "endChar": 84
+      },
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_4a1fa3f6",
+        "filename": "include/angle_windowsstore.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "nit:whitespace",
+      "range": {
+        "startLine": 32,
+        "startChar": 89,
+        "endLine": 32,
+        "endChar": 90
+      },
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01348da_4360daef",
+        "filename": "src/common/NativeWindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "I feel like this file is filling up with implementation details.  Do you think it would be reasonable to turn NativeWindow into an interface now?  It could have a CreateNativeWindow function that is implemented in the various cpp files.",
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b00894ac_4289f647",
+        "filename": "src/common/NativeWindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "nit:whitespace",
+      "range": {
+        "startLine": 55,
+        "startChar": 52,
+        "endLine": 55,
+        "endChar": 53
+      },
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_2a50279d",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "Exception handling is disabled in ANGLE.  It\u0027s ok to let a non-user sized allocation just crash.",
+      "range": {
+        "startLine": 501,
+        "startChar": 12,
+        "endLine": 509,
+        "endChar": 13
+      },
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b00894ac_62187a68",
+        "filename": "src/common/winrt/CoreWindowNativeWindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "This should be typedef\u0027d",
+      "range": {
+        "startLine": 32,
+        "startChar": 11,
+        "endLine": 32,
+        "endChar": 237
+      },
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b00894ac_c2104644",
+        "filename": "src/common/winrt/CoreWindowNativeWindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "An include of \u003cmemory\u003e will be needed for this.",
+      "range": {
+        "startLine": 65,
+        "startChar": 9,
+        "endLine": 65,
+        "endChar": 17
+      },
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b00894ac_c22726a3",
+        "filename": "src/common/winrt/IInspectableNativeWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "Note about exception handling.",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 55,
+        "endChar": 5
+      },
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b00894ac_428e963a",
+        "filename": "src/common/winrt/IInspectableNativeWindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "nit:whitespace",
+      "range": {
+        "startLine": 7,
+        "startChar": 73,
+        "endLine": 7,
+        "endChar": 74
+      },
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b00894ac_e20b4a15",
+        "filename": "src/common/winrt/IInspectableNativeWindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "The pointer should be right-aligned, there are a few other cases of this in this file.",
+      "range": {
+        "startLine": 28,
+        "startChar": 68,
+        "endLine": 28,
+        "endChar": 69
+      },
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01348da_a39e766c",
+        "filename": "src/common/winrt/IInspectableNativeWindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "We generally don\u0027t allow non-const references, either use a pointer for an output parameter or use a const reference.",
+      "range": {
+        "startLine": 32,
+        "startChar": 35,
+        "endLine": 32,
+        "endChar": 48
+      },
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b00894ac_c2c28660",
+        "filename": "src/third_party/threademulation/ThreadEmulation.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-14T14:45:58Z",
+      "side": 1,
+      "message": "Can this be merged into our tls.cpp somehow?",
+      "revId": "3aa6ec46cb436e7e05d6fd5b4fd09816270975d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
