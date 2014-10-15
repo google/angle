@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "901b9006_b1d83084",
+        "filename": "src/libGLESv2/Fence.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done here and in Fence.h.",
+      "parentUuid": "d0218832_876fe56a",
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9090f09a_63faea57",
         "filename": "src/libGLESv2/Fence.cpp",
         "patchSetId": 1
@@ -71,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "d038a85e_5890cedb",
+        "filename": "src/libGLESv2/Fence.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Moved to before Fence11 definition in Fence11.cpp.",
+      "parentUuid": "9090f09a_63faea57",
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7030dc7e_2a0b47c3",
         "filename": "src/libGLESv2/Fence.cpp",
         "patchSetId": 1
@@ -88,6 +124,24 @@
         "endLine": 113,
         "endChar": 5
       },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70753c3d_5128d622",
+        "filename": "src/libGLESv2/Fence.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7030dc7e_2a0b47c3",
       "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -117,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "901b9006_e647d098",
+        "filename": "src/libGLESv2/Fence.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d01348da_e348ee8b",
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7030dc7e_8afe1b3f",
         "filename": "src/libGLESv2/Fence.cpp",
         "patchSetId": 1
@@ -134,6 +206,24 @@
         "endLine": 170,
         "endChar": 30
       },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70753c3d_516f766b",
+        "filename": "src/libGLESv2/Fence.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "OK. Added FenceSyncImpl::getStatus and removed FenceSyncImpl::test.",
+      "parentUuid": "7030dc7e_8afe1b3f",
       "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -163,6 +253,24 @@
     },
     {
       "key": {
+        "uuid": "d038a85e_7823521a",
+        "filename": "src/libGLESv2/Fence.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Thanks for this suggestion. This change allowed the implementation to be unit tested easily. Added some basic tests too.",
+      "parentUuid": "d01348da_a342f665",
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f033ec7c_225fee68",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
         "patchSetId": 1
@@ -180,6 +288,24 @@
         "endLine": 21,
         "endChar": 36
       },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d038a85e_38a2aa0c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f033ec7c_225fee68",
       "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -209,6 +335,24 @@
     },
     {
       "key": {
+        "uuid": "d038a85e_f852025f",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "104ec00c_db2ff4f8",
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7030dc7e_0a39ab7b",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
         "patchSetId": 1
@@ -226,6 +370,24 @@
         "endLine": 88,
         "endChar": 43
       },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d038a85e_3bf5c4e4",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7030dc7e_0a39ab7b",
       "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -255,6 +417,24 @@
     },
     {
       "key": {
+        "uuid": "d038a85e_7b226ccf",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Yes, agree, but I would prefer to do that in another CL. This one is getting large and the behavioral changes are increasing. I\u0027d prefer to get things in a shape where they can be unit tested first.",
+      "parentUuid": "7030dc7e_8a25bb4a",
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9090f09a_63018aa1",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
         "patchSetId": 1
@@ -278,6 +458,24 @@
     },
     {
       "key": {
+        "uuid": "d038a85e_fb0e7c51",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9090f09a_63018aa1",
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d01348da_833812f6",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
         "patchSetId": 1
@@ -295,6 +493,24 @@
         "endLine": 138,
         "endChar": 77
       },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "901b9006_9135ecfc",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d01348da_833812f6",
       "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -347,6 +563,24 @@
     },
     {
       "key": {
+        "uuid": "d038a85e_5b444875",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0218832_a7dd4999",
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9090f09a_431246c7",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.h",
         "patchSetId": 1
@@ -364,6 +598,24 @@
         "endLine": 41,
         "endChar": 29
       },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70753c3d_f1222215",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9090f09a_431246c7",
       "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -393,6 +645,24 @@
     },
     {
       "key": {
+        "uuid": "901b9006_512f54a8",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Fence11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0218832_47da2da1",
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9090f09a_c31cf6d7",
         "filename": "src/libGLESv2/renderer/d3d/d3d9/Fence9.cpp",
         "patchSetId": 1
@@ -416,6 +686,24 @@
     },
     {
       "key": {
+        "uuid": "d038a85e_1b3ec0e3",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Fence9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9090f09a_c31cf6d7",
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0218832_279859db",
         "filename": "src/libGLESv2/renderer/d3d/d3d9/Fence9.h",
         "patchSetId": 1
@@ -433,6 +721,24 @@
         "endLine": 31,
         "endChar": 8
       },
+      "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70753c3d_b11c9ad6",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Fence9.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0218832_279859db",
       "revId": "2a4f8a578be256df5a4c04c8992ebd0d91777da1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
