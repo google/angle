@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0218832_0d41b3d2",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T14:37:53Z",
+      "side": 1,
+      "message": "This can be removed",
+      "range": {
+        "startLine": 191,
+        "startChar": 26,
+        "endLine": 191,
+        "endChar": 37
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0218832_2d4277db",
+        "filename": "src/libGLESv2/Renderbuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T14:37:53Z",
+      "side": 1,
+      "message": "What do you think about having the setStorage function on the Renderbuffer/Impl and having the RenderbufferImpl be mutable?  It would boil down to setting a new RenderTarget in on the RenderbufferD3D.  This would match the GL object more closely where you can call glRenderbufferStorage multiple times on the same object.",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 36
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0218832_4daecb2b",
+        "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T14:37:53Z",
+      "side": 1,
+      "message": "This can be removed.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 19
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "307f4423_523c5408",
+        "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T14:37:53Z",
+      "side": 1,
+      "message": "nit: formatting",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 6
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "307f4423_1236cc26",
+        "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T14:37:53Z",
+      "side": 1,
+      "message": "Can these be pure and move the protected members to the RenderbufferD3D class?",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 39
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "307f4423_3233c837",
+        "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T14:37:53Z",
+      "side": 1,
+      "message": "Are these needed anymore?",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 50
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "505bd8e0_05ea12b2",
+        "filename": "src/libGLESv2/renderer/d3d/RenderbufferD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T14:37:53Z",
+      "side": 1,
+      "message": "Can use SafeDelete here.",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 5
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0218832_0db8d36c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T14:37:53Z",
+      "side": 1,
+      "message": "nit: capitalize the D",
+      "range": {
+        "startLine": 39,
+        "startChar": 47,
+        "endLine": 39,
+        "endChar": 48
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
