@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b064149b_cf05ee7f",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T22:50:39Z",
+      "side": 1,
+      "message": "I think it would be cleaner to avoid calling getImplementation() here, and instead have the Texture call the method against its impl.",
+      "revId": "a8fad538c5e4dd9ea24806f7381798ae86e69d3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b064149b_2f15aaad",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T22:50:39Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "a8fad538c5e4dd9ea24806f7381798ae86e69d3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
