@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7030dc7e_56018925",
+        "filename": "src/libGLESv2/renderer/ShaderExecutable.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T18:20:29Z",
+      "side": 1,
+      "message": "Like the ShaderImpl, can these be changed to a getter and an append function?",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 5
+      },
+      "revId": "ca0bade050c6e4b2bb6c5a7309ea2b32fa202d29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b00894ac_be056680",
+        "filename": "src/libGLESv2/renderer/ShaderImpl.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T18:20:29Z",
+      "side": 1,
+      "message": "Can these be changed to:\n\n  std::string getDebugInfo() const \u003d 0;\n\nAnd then on ShaderD3D we can have:\n\n  std::string getDebugInfo() const { return mDebugInfo.str(); }\n  void appendDebugInfo(const std::string \u0026info) { mDebugInfo \u003c\u003c info; }\n\nmDebugInfo can then be a private member of ShaderD3D.\n\n\nI think it\u0027s cleaner to try to keep members out of the ShaderImpl class and the debug info is only relevent for D3D shaders right now.",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 72
+      },
+      "revId": "ca0bade050c6e4b2bb6c5a7309ea2b32fa202d29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_760a8549",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T18:20:29Z",
+      "side": 1,
+      "message": "It looks like this function isn\u0027t tied to any specific compiler version.  Might as well assert on this succeeding and remove the if statement from HLSLCompiler::disassembleBinary.",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 114
+      },
+      "revId": "ca0bade050c6e4b2bb6c5a7309ea2b32fa202d29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_36040d37",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T18:20:29Z",
+      "side": 1,
+      "message": "Can this be changed to a string instead of stream?  The caller simply converts it to a string right after so it seems cleaner to perform that operation here.",
+      "range": {
+        "startLine": 91,
+        "startChar": 40,
+        "endLine": 91,
+        "endChar": 71
+      },
+      "revId": "ca0bade050c6e4b2bb6c5a7309ea2b32fa202d29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5072f858_819a6aff",
+        "filename": "src/libGLESv2/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T18:20:29Z",
+      "side": 1,
+      "message": "These are available as vertexShaderD3D and fragmentShaderD3D above already cast to ShaderD3D (allowing the appendDebugInfo method to be only on the ShaderD3D class).",
+      "range": {
+        "startLine": 550,
+        "startChar": 8,
+        "endLine": 550,
+        "endChar": 41
+      },
+      "revId": "ca0bade050c6e4b2bb6c5a7309ea2b32fa202d29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b00894ac_dee5ba64",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2443,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T18:20:29Z",
+      "side": 1,
+      "message": "This should be moved after the error check, if there was an error, outExectuable will be null.",
+      "range": {
+        "startLine": 2440,
+        "startChar": 4,
+        "endLine": 2443,
+        "endChar": 5
+      },
+      "revId": "ca0bade050c6e4b2bb6c5a7309ea2b32fa202d29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_960e4151",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2944,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T18:20:29Z",
+      "side": 1,
+      "message": "Same as in Renderer11.cpp.",
+      "range": {
+        "startLine": 2941,
+        "startChar": 4,
+        "endLine": 2944,
+        "endChar": 5
+      },
+      "revId": "ca0bade050c6e4b2bb6c5a7309ea2b32fa202d29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
