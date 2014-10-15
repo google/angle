@@ -183,6 +183,9 @@ int ShFinalize()
 //
 void ShInitBuiltInResources(ShBuiltInResources* resources)
 {
+    // Make comparable.
+    memset(resources, 0, sizeof(*resources));
+
     // Constants.
     resources->MaxVertexAttribs = 8;
     resources->MaxVertexUniformVectors = 128;

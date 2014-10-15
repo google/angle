@@ -280,6 +280,8 @@ typedef struct
 
 //
 // Initialize built-in resources with minimum expected values.
+// Parameters:
+// resources: The object to initialize. Will be comparable with memcmp.
 //
 COMPILER_EXPORT void ShInitBuiltInResources(ShBuiltInResources* resources);
 
