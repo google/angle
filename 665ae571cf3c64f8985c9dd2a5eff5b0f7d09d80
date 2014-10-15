@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "901b9006_5108b4c3",
+        "filename": "src/libGLESv2/main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:40:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7030dc7e_ca05f37f",
+      "revId": "665ae571cf3c64f8985c9dd2a5eff5b0f7d09d80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7030dc7e_aa00b770",
         "filename": "src/libGLESv2/main.h",
         "patchSetId": 1
@@ -48,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "d038a85e_6e95c8c9",
+        "filename": "src/libGLESv2/main.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:40:46Z",
+      "side": 1,
+      "message": "I suspect it\u0027ll be faster to use real thread-locals, because otherwise that global std::map will have to be covered under a big lock.",
+      "parentUuid": "7030dc7e_aa00b770",
+      "revId": "665ae571cf3c64f8985c9dd2a5eff5b0f7d09d80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b00894ac_02d53efb",
         "filename": "src/libGLESv2/main.h",
         "patchSetId": 1
@@ -65,6 +101,24 @@
         "endLine": 51,
         "endChar": 25
       },
+      "revId": "665ae571cf3c64f8985c9dd2a5eff5b0f7d09d80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "901b9006_310bc0c3",
+        "filename": "src/libGLESv2/main.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T02:40:46Z",
+      "side": 1,
+      "message": "You\u0027re right, they don\u0027t. Done.",
+      "parentUuid": "b00894ac_02d53efb",
       "revId": "665ae571cf3c64f8985c9dd2a5eff5b0f7d09d80",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
