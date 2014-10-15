@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "1055e0ac_e648208c",
+        "filename": "tests/angle_implementation_unit_tests/Fence_unittest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T21:30:37Z",
+      "side": 1,
+      "message": "\"_\" is a placeholder to indicate the argument is unused in further assertions.",
+      "parentUuid": "b00894ac_e36a290d",
+      "revId": "057a8c789d5e5ad3079b25e1fd37ca9cd95aea85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7030dc7e_d3e36be6",
         "filename": "tests/angle_implementation_unit_tests/Fence_unittest.cpp",
         "patchSetId": 5
@@ -42,6 +60,24 @@
         "endLine": 145,
         "endChar": 31
       },
+      "revId": "057a8c789d5e5ad3079b25e1fd37ca9cd95aea85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_71d04f05",
+        "filename": "tests/angle_implementation_unit_tests/Fence_unittest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T21:30:37Z",
+      "side": 1,
+      "message": "Yes. It\u0027s certainly possible this could be simplified -- I\u0027m not a gtest expert -- but we have to start somewhere on tests of ANGLE\u0027s internals.",
+      "parentUuid": "7030dc7e_d3e36be6",
       "revId": "057a8c789d5e5ad3079b25e1fd37ca9cd95aea85",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
