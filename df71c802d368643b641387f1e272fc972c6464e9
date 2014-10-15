@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5072f858_a199a688",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1098,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T17:18:32Z",
+      "side": 1,
+      "message": "Done, see next patch.",
+      "parentUuid": "104ec00c_bf369324",
+      "range": {
+        "startLine": 1098,
+        "startChar": 40,
+        "endLine": 1098,
+        "endChar": 42
+      },
+      "revId": "df71c802d368643b641387f1e272fc972c6464e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0218832_c725dc49",
         "filename": "src/libGLESv2/renderer/d3d/d3d9/TextureStorage9.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2014-10-15T00:22:09Z",
       "side": 1,
       "message": "This probably wasn\u0027t meant to get committed.",
+      "range": {
+        "startLine": 169,
+        "startChar": 68,
+        "endLine": 169,
+        "endChar": 77
+      },
+      "revId": "df71c802d368643b641387f1e272fc972c6464e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5072f858_81910a5d",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/TextureStorage9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-15T17:18:32Z",
+      "side": 1,
+      "message": "It was intentional, there is a unused parameter warning without it.",
+      "parentUuid": "d0218832_c725dc49",
       "range": {
         "startLine": 169,
         "startChar": 68,
