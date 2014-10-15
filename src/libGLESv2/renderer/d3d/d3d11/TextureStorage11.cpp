@@ -606,7 +606,6 @@ TextureStorage11_2D::~TextureStorage11_2D()
                 if (error.isError())
                 {
                     // TODO: Find a way to report this back to the context
-                    ERR(error.getMessage().c_str());
                 }
             }
         }
