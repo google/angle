@@ -96,124 +96,6 @@ Framebuffer::~Framebuffer()
     SafeDelete(mStencilbuffer);
 }
 
-FramebufferAttachment *Framebuffer::createAttachment(GLenum binding, GLenum type, GLuint handle, GLint level, GLint layer) const
-{
-    if (handle == 0)
-    {
-        return NULL;
-    }
-
-    gl::Context *context = gl::getContext();
-
-    switch (type)
-    {
-      case GL_NONE:
-        return NULL;
-
-      case GL_RENDERBUFFER:
-        return new RenderbufferAttachment(binding, context->getRenderbuffer(handle));
-
-      case GL_TEXTURE_2D:
-        {
-            Texture *texture = context->getTexture(handle);
-            if (texture && texture->getTarget() == GL_TEXTURE_2D)
-            {
-                return new TextureAttachment(binding, texture, ImageIndex::Make2D(level));
-            }
-            else
-            {
-                return NULL;
-            }
-        }
-
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-        {
-            Texture *texture = context->getTexture(handle);
-            if (texture && texture->getTarget() == GL_TEXTURE_CUBE_MAP)
-            {
-                return new TextureAttachment(binding, texture, ImageIndex::MakeCube(type, level));
-            }
-            else
-            {
-                return NULL;
-            }
-        }
-
-      case GL_TEXTURE_3D:
-        {
-            Texture *texture = context->getTexture(handle);
-            if (texture && texture->getTarget() == GL_TEXTURE_3D)
-            {
-                return new TextureAttachment(binding, texture, ImageIndex::Make3D(level, layer));
-            }
-            else
-            {
-                return NULL;
-            }
-        }
-
-      case GL_TEXTURE_2D_ARRAY:
-        {
-            Texture *texture = context->getTexture(handle);
-            if (texture && texture->getTarget() == GL_TEXTURE_2D_ARRAY)
-            {
-                return new TextureAttachment(binding, texture, ImageIndex::Make2DArray(level, layer));
-            }
-            else
-            {
-                return NULL;
-            }
-        }
-
-      default:
-        UNREACHABLE();
-        return NULL;
-    }
-}
-
-void Framebuffer::setColorbuffer(unsigned int colorAttachment, GLenum type, GLuint colorbuffer, GLint level, GLint layer)
-{
-    ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    SafeDelete(mColorbuffers[colorAttachment]);
-    GLenum binding = colorAttachment + GL_COLOR_ATTACHMENT0;
-    mColorbuffers[colorAttachment] = createAttachment(binding, type, colorbuffer, level, layer);
-}
-
-void Framebuffer::setDepthbuffer(GLenum type, GLuint depthbuffer, GLint level, GLint layer)
-{
-    SafeDelete(mDepthbuffer);
-    mDepthbuffer = createAttachment(GL_DEPTH_ATTACHMENT, type, depthbuffer, level, layer);
-}
-
-void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer, GLint level, GLint layer)
-{
-    SafeDelete(mStencilbuffer);
-    mStencilbuffer = createAttachment(GL_STENCIL_ATTACHMENT, type, stencilbuffer, level, layer);
-}
-
-void Framebuffer::setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer, GLint level, GLint layer)
-{
-    FramebufferAttachment *attachment = createAttachment(GL_DEPTH_STENCIL_ATTACHMENT, type, depthStencilBuffer, level, layer);
-
-    SafeDelete(mDepthbuffer);
-    SafeDelete(mStencilbuffer);
-
-    // ensure this is a legitimate depth+stencil format
-    if (attachment && attachment->getDepthSize() > 0 && attachment->getStencilSize() > 0)
-    {
-        mDepthbuffer = attachment;
-
-        // Make a new attachment object to ensure we do not double-delete
-        // See angle issue 686
-        mStencilbuffer = createAttachment(GL_DEPTH_STENCIL_ATTACHMENT, type, depthStencilBuffer, level, layer);
-    }
-}
-
 void Framebuffer::detachTexture(GLuint textureId)
 {
     for (unsigned int colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
@@ -697,6 +579,68 @@ ColorbufferInfo Framebuffer::getColorbuffersForRender(const rx::Workarounds &wor
     }
 
     return colorbuffersForRender;
+}
+
+void Framebuffer::setTextureAttachment(GLenum attachment, Texture *texture, const ImageIndex &imageIndex)
+{
+    setAttachment(attachment, new TextureAttachment(attachment, texture, imageIndex));
+}
+
+void Framebuffer::setRenderbufferAttachment(GLenum attachment, Renderbuffer *renderbuffer)
+{
+    setAttachment(attachment, new RenderbufferAttachment(attachment, renderbuffer));
+}
+
+void Framebuffer::setNULLAttachment(GLenum attachment)
+{
+    setAttachment(attachment, NULL);
+}
+
+void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attachmentObj)
+{
+    if (attachment >= GL_COLOR_ATTACHMENT0 && attachment < (GL_COLOR_ATTACHMENT0 + IMPLEMENTATION_MAX_DRAW_BUFFERS))
+    {
+        size_t colorAttachment = attachment - GL_COLOR_ATTACHMENT0;
+        SafeDelete(mColorbuffers[colorAttachment]);
+        mColorbuffers[colorAttachment] = attachmentObj;
+    }
+    else if (attachment == GL_DEPTH_ATTACHMENT)
+    {
+        SafeDelete(mDepthbuffer);
+        mDepthbuffer = attachmentObj;
+    }
+    else if (attachment == GL_STENCIL_ATTACHMENT)
+    {
+        SafeDelete(mStencilbuffer);
+        mStencilbuffer = attachmentObj;
+    }
+    else if (attachment == GL_DEPTH_STENCIL_ATTACHMENT)
+    {
+        SafeDelete(mDepthbuffer);
+        SafeDelete(mStencilbuffer);
+
+        // ensure this is a legitimate depth+stencil format
+        if (attachmentObj && attachmentObj->getDepthSize() > 0 && attachmentObj->getStencilSize() > 0)
+        {
+            mDepthbuffer = attachmentObj;
+
+            // Make a new attachment object to ensure we do not double-delete
+            // See angle issue 686
+            if (attachmentObj->isTexture())
+            {
+                mStencilbuffer = new TextureAttachment(GL_DEPTH_STENCIL_ATTACHMENT, attachmentObj->getTexture(),
+                                                       *attachmentObj->getTextureImageIndex());
+            }
+            else
+            {
+                mStencilbuffer = new RenderbufferAttachment(GL_DEPTH_STENCIL_ATTACHMENT, attachmentObj->getRenderbuffer());
+            }
+        }
+    }
+    else
+    {
+        UNREACHABLE();
+    }
 }
 
 GLenum DefaultFramebuffer::completeness(const gl::Data &) const
