@@ -48,6 +48,24 @@
     },
     {
       "key": {
+        "uuid": "901b9006_1448e5a9",
+        "filename": "src/libGLESv2/Renderbuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-15T22:08:52Z",
+      "side": 1,
+      "message": "If that suggestion works, I think it would be cleaner -- in particular, if there were no \"getImpl\" method here. It\u0027s easier to understand the dependencies if the impl objects are encapsulated inside the gl objects (excepting construction).",
+      "parentUuid": "d0218832_2d4277db",
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0218832_4daecb2b",
         "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
         "patchSetId": 3
