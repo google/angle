@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "104ec00c_a2575c1a",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1383,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-15T00:30:10Z",
+      "side": 1,
+      "message": "Is the layerIndex not being checked as a valid face anymore?",
+      "range": {
+        "startLine": 1382,
+        "startChar": 1,
+        "endLine": 1383,
+        "endChar": 82
+      },
+      "revId": "fb16856f8db16222a1d403b7c9802049b6728173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
