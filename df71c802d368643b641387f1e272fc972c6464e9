@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "104ec00c_bf369324",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1098,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-15T00:22:09Z",
+      "side": 1,
+      "message": "Can this get a const representation?",
+      "range": {
+        "startLine": 1098,
+        "startChar": 40,
+        "endLine": 1098,
+        "endChar": 42
+      },
+      "revId": "df71c802d368643b641387f1e272fc972c6464e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0218832_c725dc49",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/TextureStorage9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-15T00:22:09Z",
+      "side": 1,
+      "message": "This probably wasn\u0027t meant to get committed.",
+      "range": {
+        "startLine": 169,
+        "startChar": 68,
+        "endLine": 169,
+        "endChar": 77
+      },
+      "revId": "df71c802d368643b641387f1e272fc972c6464e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "307f4423_ccbe6f8d",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/TextureStorage9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-15T00:22:09Z",
+      "side": 1,
+      "message": "Can this get a const value representation?",
+      "range": {
+        "startLine": 308,
+        "startChar": 55,
+        "endLine": 308,
+        "endChar": 56
+      },
+      "revId": "df71c802d368643b641387f1e272fc972c6464e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
