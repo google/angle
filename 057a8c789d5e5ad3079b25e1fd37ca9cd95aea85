@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b00894ac_e36a290d",
+        "filename": "tests/angle_implementation_unit_tests/Fence_unittest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-15T15:46:49Z",
+      "side": 1,
+      "message": "Forgive my gtest ignorance, but... is this seriously a namespace used in that library? O.o",
+      "range": {
+        "startLine": 12,
+        "startChar": 6,
+        "endLine": 12,
+        "endChar": 19
+      },
+      "revId": "057a8c789d5e5ad3079b25e1fd37ca9cd95aea85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_d3e36be6",
+        "filename": "tests/angle_implementation_unit_tests/Fence_unittest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-15T15:46:49Z",
+      "side": 1,
+      "message": "This makes me itch, but I\u0027m going to assume this is completely normal syntax inside this lovely library.",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 145,
+        "endChar": 31
+      },
+      "revId": "057a8c789d5e5ad3079b25e1fd37ca9cd95aea85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
