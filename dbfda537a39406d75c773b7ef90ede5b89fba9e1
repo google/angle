@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "307f4423_53b453f4",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T19:14:10Z",
+      "side": 1,
+      "message": "Unfortunately we have to use the full path here.  non-visual studio builds (such as ninja) can\u0027t resolve these macros.",
+      "range": {
+        "startLine": 10,
+        "startChar": 30,
+        "endLine": 10,
+        "endChar": 46
+      },
+      "revId": "dbfda537a39406d75c773b7ef90ede5b89fba9e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "505bd8e0_df892308",
+        "filename": "src/common/NativeWindow.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T19:14:10Z",
+      "side": 1,
+      "message": "Lets remove the double definition and move the inline definitions to win32/NativeWindow.cpp.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 6
+      },
+      "revId": "dbfda537a39406d75c773b7ef90ede5b89fba9e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "505bd8e0_9fd88b84",
+        "filename": "src/common/tls.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T19:14:10Z",
+      "side": 1,
+      "message": "This is a non-standard loop, it should be replaced with a range-based for loop.",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 47
+      },
+      "revId": "dbfda537a39406d75c773b7ef90ede5b89fba9e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0218832_7c125fc7",
+        "filename": "src/common/tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T19:14:10Z",
+      "side": 1,
+      "message": "I feel like this should be in utilities.h/cpp instead of here.",
+      "range": {
+        "startLine": 22,
+        "startChar": 8,
+        "endLine": 22,
+        "endChar": 54
+      },
+      "revId": "dbfda537a39406d75c773b7ef90ede5b89fba9e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "307f4423_53da13f8",
+        "filename": "src/common/winrt/CoreWindowNativeWindow.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T19:14:10Z",
+      "side": 1,
+      "message": "nit: indentation (below too)",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 7
+      },
+      "revId": "dbfda537a39406d75c773b7ef90ede5b89fba9e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0218832_3c23871b",
+        "filename": "src/common/winrt/IInspectableNativeWindow.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T19:14:10Z",
+      "side": 1,
+      "message": "nit:Intent two spaces (below too).",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 7
+      },
+      "revId": "dbfda537a39406d75c773b7ef90ede5b89fba9e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "307f4423_5343f307",
+        "filename": "src/common/winrt/IInspectableNativeWindow.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T19:14:10Z",
+      "side": 1,
+      "message": "nit: formatting",
+      "range": {
+        "startLine": 46,
+        "startChar": 27,
+        "endLine": 46,
+        "endChar": 28
+      },
+      "revId": "dbfda537a39406d75c773b7ef90ede5b89fba9e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "505bd8e0_dffb638c",
+        "filename": "src/common/winrt/IInspectableNativeWindow.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T19:14:10Z",
+      "side": 1,
+      "message": "This can be a const reference (and formatting on the \u0026)",
+      "range": {
+        "startLine": 58,
+        "startChar": 26,
+        "endLine": 58,
+        "endChar": 31
+      },
+      "revId": "dbfda537a39406d75c773b7ef90ede5b89fba9e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0218832_5cc3dbc0",
+        "filename": "tests/angle_implementation_unit_tests/CoreWindowNativeWindow_unittest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T19:14:10Z",
+      "side": 1,
+      "message": "nit: brace on new line.",
+      "range": {
+        "startLine": 28,
+        "startChar": 9,
+        "endLine": 28,
+        "endChar": 11
+      },
+      "revId": "dbfda537a39406d75c773b7ef90ede5b89fba9e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "505bd8e0_bfb1c7da",
+        "filename": "tests/angle_implementation_unit_tests/CoreWindowNativeWindow_unittest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T19:14:10Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "range": {
+        "startLine": 60,
+        "startChar": 60,
+        "endLine": 60,
+        "endChar": 61
+      },
+      "revId": "dbfda537a39406d75c773b7ef90ede5b89fba9e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
