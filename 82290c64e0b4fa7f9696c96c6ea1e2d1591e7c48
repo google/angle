@@ -114,6 +114,30 @@
     },
     {
       "key": {
+        "uuid": "d0218832_41ae942b",
+        "filename": "src/libGLESv2/Renderbuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T15:18:24Z",
+      "side": 1,
+      "message": "With this change we would remove the Context::setRenderbufferStorage method.  glRenderbufferStorage would grab the Renderbuffer object from the context and then call setStorage on it directly which would be forwarded to the Impl\u0027s setStorage.  RenderBufferD3D can then handle creating a new internal RenderTarget (using a Renderer member or creating one direclty) to back the requested format/width/height. This is similar to how the Textures do it.",
+      "parentUuid": "7030dc7e_4c7ed808",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 36
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0218832_4daecb2b",
         "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
         "patchSetId": 3
@@ -243,6 +267,30 @@
       "side": 1,
       "message": "I agree these should move, but I\u0027m actually not sure about the direction. These values are inherent to the GL object, not specific to the D3D implementation-- I thought we\u0027d been keeping GL data at the GL/ANGLE engine level? It looks like we\u0027re fairly inconsistent about this in the refactoring that\u0027s been done so far-- Buffer keeps the GL-descriptive members in Buffer rather than the Impl, but Texture has moved it down. We should be consistent about this, and know why we\u0027ve chosen whichever choice we go with.",
       "parentUuid": "307f4423_1236cc26",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 39
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "505bd8e0_b4156e32",
+        "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T15:18:24Z",
+      "side": 1,
+      "message": "My preference is always to store everything at the GL level and replicate it at the D3D level only if required.\n\nFor the Texture stuff, I would like to move it to the GL level at some point.",
+      "parentUuid": "5072f858_f6a2118e",
       "range": {
         "startLine": 27,
         "startChar": 4,
