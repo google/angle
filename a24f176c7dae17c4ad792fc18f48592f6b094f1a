@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "505bd8e0_d4b82af3",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T14:36:12Z",
+      "side": 1,
+      "message": "Since we\u0027re storing mDebugInfo as a std::string now, this can be a const reference.",
+      "range": {
+        "startLine": 37,
+        "startChar": 12,
+        "endLine": 37,
+        "endChar": 23
+      },
+      "revId": "a24f176c7dae17c4ad792fc18f48592f6b094f1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "505bd8e0_94c2b25f",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2449,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T14:36:12Z",
+      "side": 1,
+      "message": "Instead of coupling the debug info with the compilation step, how about just calling\n\n  (*outExectuable)-\u003eappendDebugInfo(mCompiler.disassembleBinary(binary));\n\nand remove the debug info argument from HLSLCompiler::compileToBinary.",
+      "range": {
+        "startLine": 2446,
+        "startChar": 4,
+        "endLine": 2449,
+        "endChar": 5
+      },
+      "revId": "a24f176c7dae17c4ad792fc18f48592f6b094f1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
