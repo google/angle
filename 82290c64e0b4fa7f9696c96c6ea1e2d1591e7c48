@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1055e0ac_c95ad5cd",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-16T02:48:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0218832_0d41b3d2",
+      "range": {
+        "startLine": 191,
+        "startChar": 26,
+        "endLine": 191,
+        "endChar": 37
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0218832_2d4277db",
         "filename": "src/libGLESv2/Renderbuffer.h",
         "patchSetId": 3
@@ -66,6 +90,30 @@
     },
     {
       "key": {
+        "uuid": "7030dc7e_4c7ed808",
+        "filename": "src/libGLESv2/Renderbuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-16T02:48:41Z",
+      "side": 1,
+      "message": "What would the call path from glRenderbufferStorage be, then? Currently Context gets the Renderer to construct a new impl object for the renderbuffer, and sets the Renderbuffer\u0027s impl accordingly. If setStorage() moves to the Impl, then would Renderer need to set the storage directly? I don\u0027t think Context::setRenderbufferStorage should be directly handling RenderTargets directly, since they\u0027re D3D-specific, and Renderer manipulating the objects rather than simply creating them seems counter to the \"Renderer just creates objects and draws things\" goal. I also think that it would be good to mirror the GL object as closely as possible, but I\u0027m not sure that\u0027s a good use of mutable (although I\u0027m not seeing at the moment the places we\u0027d need to manipulate it from const functions).\n\ngetImpl() in particular mirrors the other refactored objects (although I suspect I should have named it getImplementation() to match them, and *usually* it\u0027s only called from within the API-specific Renderer object code, although there are a few exceptions.",
+      "parentUuid": "d0218832_2d4277db",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 36
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0218832_4daecb2b",
         "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
         "patchSetId": 3
@@ -77,6 +125,30 @@
       "writtenOn": "2014-10-15T14:37:53Z",
       "side": 1,
       "message": "This can be removed.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 19
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5072f858_f6e531b6",
+        "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-16T02:48:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0218832_4daecb2b",
       "range": {
         "startLine": 18,
         "startChar": 0,
@@ -112,6 +184,30 @@
     },
     {
       "key": {
+        "uuid": "1055e0ac_49282523",
+        "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-16T02:48:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "307f4423_523c5408",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 6
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "307f4423_1236cc26",
         "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
         "patchSetId": 3
@@ -123,6 +219,30 @@
       "writtenOn": "2014-10-15T14:37:53Z",
       "side": 1,
       "message": "Can these be pure and move the protected members to the RenderbufferD3D class?",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 39
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5072f858_f6a2118e",
+        "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-16T02:48:41Z",
+      "side": 1,
+      "message": "I agree these should move, but I\u0027m actually not sure about the direction. These values are inherent to the GL object, not specific to the D3D implementation-- I thought we\u0027d been keeping GL data at the GL/ANGLE engine level? It looks like we\u0027re fairly inconsistent about this in the refactoring that\u0027s been done so far-- Buffer keeps the GL-descriptive members in Buffer rather than the Impl, but Texture has moved it down. We should be consistent about this, and know why we\u0027ve chosen whichever choice we go with.",
+      "parentUuid": "307f4423_1236cc26",
       "range": {
         "startLine": 27,
         "startChar": 4,
@@ -158,6 +278,30 @@
     },
     {
       "key": {
+        "uuid": "7030dc7e_0cec6051",
+        "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-16T02:48:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "307f4423_3233c837",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 50
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "505bd8e0_05ea12b2",
         "filename": "src/libGLESv2/renderer/d3d/RenderbufferD3D.cpp",
         "patchSetId": 3
@@ -181,6 +325,30 @@
     },
     {
       "key": {
+        "uuid": "5072f858_f6be918c",
+        "filename": "src/libGLESv2/renderer/d3d/RenderbufferD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-16T02:48:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "505bd8e0_05ea12b2",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 5
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0218832_0db8d36c",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -192,6 +360,30 @@
       "writtenOn": "2014-10-15T14:37:53Z",
       "side": 1,
       "message": "nit: capitalize the D",
+      "range": {
+        "startLine": 39,
+        "startChar": 47,
+        "endLine": 39,
+        "endChar": 48
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7030dc7e_6cd71476",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-16T02:48:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0218832_0db8d36c",
       "range": {
         "startLine": 39,
         "startChar": 47,
