@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "9069d076_1b8eeb39",
+        "filename": "src/libGLESv2/renderer/d3d/ShaderD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1117984
+      },
+      "writtenOn": "2014-10-16T19:38:57Z",
+      "side": 1,
+      "message": "No sorry, look at implementation : I need to append the end tag.",
+      "parentUuid": "505bd8e0_d4b82af3",
+      "revId": "a24f176c7dae17c4ad792fc18f48592f6b094f1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "505bd8e0_94c2b25f",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 10
@@ -42,6 +60,24 @@
         "endLine": 2449,
         "endChar": 5
       },
+      "revId": "a24f176c7dae17c4ad792fc18f48592f6b094f1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06fc874_5228ca22",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2449,
+      "author": {
+        "id": 1117984
+      },
+      "writtenOn": "2014-10-16T19:38:57Z",
+      "side": 1,
+      "message": "Inside the compilation step I have access to the exact compilation flags.\nIn this changelist the compiler configuration is added to the report but a next changelist will be the list of exact compiler flags.\nAlso this was done to minimize the replication of code in both Renderer9.cpp and Renderer11.cpp\nOtherwise the report decoration text was replicated in both Renderer9.cpp and Renderer11.cpp \nLook at the diff in patch set 5 against 6 for Renderer11.cpp.\nSo this change would go back in that direction.\nAdding the report decoration text to the return value of HLSLCompiler::disassembleBinary() is\nnot such a clean solution I think.",
+      "parentUuid": "505bd8e0_94c2b25f",
       "revId": "a24f176c7dae17c4ad792fc18f48592f6b094f1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
