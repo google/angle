@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7030dc7e_07619931",
+        "filename": "src/libGLESv2/ProgramBinary.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-16T16:05:01Z",
+      "side": 1,
+      "message": "If you must use macros, please define them directly before their use, and undef them directly afterwards.\n\nUsually I would respond to the use of macros thusly: http://goo.gl/VRVvtQ -- you\u0027ll note that the only other place in the entire library that they\u0027re used is in constructing the vertex format tables in D3D9. I\u0027m potentially willing to stifle my inner Nonono Cat here because a) the macros are well enough named to not completely obfuscate what the underlying code does, b) the underlying code doesn\u0027t actually perform meaningful operations, so it\u0027s unlikely to be the source of irritation for people trying to step through code that doesn\u0027t exist in the debugger, and c) that certainly would be a lot of typing just to pass the functions through to the impl.\n\nThat said, the pre-refactor code also was a lot of typing, but someone had to type it once, and people had to spend time understanding it thousands of times-- so it\u0027s the latter I\u0027m generally in favor of optimizing.\n\nSo basically, this is OK, but with reservations, and no one is getting a functional macro into the codebase without having to suffer paragraphs of text from me. And reaction gifs. http://i.imgur.com/R4hux.gif\n\nAlternatively, could the calling functions just retrieve the Impl themselves, or is that something we\u0027re trying to avoid? I think there\u0027s some inconsistency in how the refactored objects go about passing calls off to their implementations currently. Maybe Geoff should weigh in...",
+      "range": {
+        "startLine": 221,
+        "startChar": 0,
+        "endLine": 246,
+        "endChar": 52
+      },
+      "revId": "cf40c23cef81673538f04256bbbab2372c183de6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
