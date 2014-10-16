@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "505bd8e0_942712a4",
+        "filename": "tests/compiler_tests/API_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-16T15:38:35Z",
+      "side": 1,
+      "message": "nit: Our style uses two-space tabs and opening braces on a new line.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "754efe991c4fcf1da83c98555cf2a35cfaa21f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
