@@ -650,17 +650,18 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
             mDeclaringVariables = false;
         }
         break;
-      case EOpInvariantDeclaration: {
-            // Invariant declaration.
-            ASSERT(visit == PreVisit);
+      case EOpInvariantDeclaration:
+        // Invariant declaration.
+        ASSERT(visit == PreVisit);
+        {
             const TIntermSequence *sequence = node->getSequence();
             ASSERT(sequence && sequence->size() == 1);
             const TIntermSymbol *symbol = sequence->front()->getAsSymbolNode();
             ASSERT(symbol);
-            out << "invariant " << symbol->getSymbol() << ";";
-            visitChildren = false;
-            break;
+            out << "invariant " << hashVariableName(symbol->getSymbol()) << ";";
         }
+        visitChildren = false;
+        break;
       case EOpConstructFloat:
         writeTriplet(visit, "float(", NULL, ")");
         break;

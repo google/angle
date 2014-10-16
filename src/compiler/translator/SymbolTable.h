@@ -31,6 +31,7 @@
 //
 
 #include <assert.h>
+#include <set>
 
 #include "common/angleutils.h"
 #include "compiler/translator/InfoSink.h"
@@ -313,6 +314,7 @@ class TSymbolTable
 {
   public:
     TSymbolTable()
+        : mGlobalInvariant(false)
     {
         // The symbol table cannot be used until push() is called, but
         // the lack of an initial call to push() can be used to detect
@@ -409,6 +411,25 @@ class TSymbolTable
     // for the specified TBasicType
     TPrecision getDefaultPrecision(TBasicType type) const;
 
+    // This records invariant varyings declared through
+    // "invariant varying_name;".
+    void addInvariantVarying(const TString &originalName)
+    {
+        mInvariantVaryings.insert(originalName);
+    }
+    // If this returns false, the varying could still be invariant
+    // if it is set as invariant during the varying variable
+    // declaration - this piece of information is stored in the
+    // variable's type, not here.
+    bool isVaryingInvariant(const TString &originalName) const
+    {
+      return (mGlobalInvariant ||
+              mInvariantVaryings.count(originalName) > 0);
+    }
+
+    void setGlobalInvariant() { mGlobalInvariant = true; }
+    bool getGlobalInvariant() const { return mGlobalInvariant; }
+
     static int nextUniqueId()
     {
         return ++uniqueIdCounter;
@@ -423,6 +444,9 @@ class TSymbolTable
     std::vector<TSymbolTableLevel *> table;
     typedef TMap<TBasicType, TPrecision> PrecisionStackLevel;
     std::vector< PrecisionStackLevel *> precisionStack;
+
+    std::set<TString> mInvariantVaryings;
+    bool mGlobalInvariant;
 
     static int uniqueIdCounter;
 };

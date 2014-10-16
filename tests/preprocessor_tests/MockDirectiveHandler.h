@@ -16,10 +16,11 @@ class MockDirectiveHandler : public pp::DirectiveHandler
     MOCK_METHOD2(handleError,
         void(const pp::SourceLocation& loc, const std::string& msg));
 
-    MOCK_METHOD3(handlePragma,
+    MOCK_METHOD4(handlePragma,
         void(const pp::SourceLocation& loc,
              const std::string& name,
-             const std::string& value));
+             const std::string& value,
+             bool stdgl));
 
     MOCK_METHOD3(handleExtension,
         void(const pp::SourceLocation& loc,

@@ -592,6 +592,11 @@ void DirectiveParser::parsePragma(Token *token)
     int state = PRAGMA_NAME;
 
     mTokenizer->lex(token);
+    bool stdgl = token->text == "STDGL";
+    if (stdgl)
+    {
+        mTokenizer->lex(token);
+    }
     while ((token->type != '\n') && (token->type != Token::LAST))
     {
         switch(state++)
@@ -627,7 +632,7 @@ void DirectiveParser::parsePragma(Token *token)
     }
     else if (state > PRAGMA_NAME)  // Do not notify for empty pragma.
     {
-        mDirectiveHandler->handlePragma(token->location, name, value);
+        mDirectiveHandler->handlePragma(token->location, name, value, stdgl);
     }
 }
 

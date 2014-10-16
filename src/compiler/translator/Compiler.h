@@ -18,6 +18,7 @@
 #include "compiler/translator/ExtensionBehavior.h"
 #include "compiler/translator/HashNames.h"
 #include "compiler/translator/InfoSink.h"
+#include "compiler/translator/Pragma.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/VariableInfo.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
@@ -131,6 +132,8 @@ class TCompiler : public TShHandleBase
     bool limitExpressionComplexity(TIntermNode* root);
     // Get built-in extensions with default behavior.
     const TExtensionBehavior& getExtensionBehavior() const;
+    const TPragma& getPragma() const { return mPragma; }
+    void writePragma();
 
     const ArrayBoundsClamper& getArrayBoundsClamper() const;
     ShArrayIndexClampingStrategy getArrayIndexClampingStrategy() const;
@@ -174,6 +177,8 @@ class TCompiler : public TShHandleBase
     // name hashing.
     ShHashFunction64 hashFunction;
     NameMap nameMap;
+
+    TPragma mPragma;
 };
 
 //

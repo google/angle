@@ -18,7 +18,7 @@ TEST_F(PragmaTest, EmptyName)
 
     using testing::_;
     // No handlePragma calls.
-    EXPECT_CALL(mDirectiveHandler, handlePragma(_, _, _)).Times(0);
+    EXPECT_CALL(mDirectiveHandler, handlePragma(_, _, _, false)).Times(0);
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
@@ -32,7 +32,7 @@ TEST_F(PragmaTest, EmptyValue)
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
-                handlePragma(pp::SourceLocation(0, 1), "foo", ""));
+                handlePragma(pp::SourceLocation(0, 1), "foo", "", false));
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
@@ -46,7 +46,35 @@ TEST_F(PragmaTest, NameValue)
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
-                handlePragma(pp::SourceLocation(0, 1), "foo", "bar"));
+                handlePragma(pp::SourceLocation(0, 1), "foo", "bar", false));
+    // No error or warning.
+    EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
+
+    preprocess(str, expected);
+}
+
+TEST_F(PragmaTest, STDGL)
+{
+    const char* str = "#pragma STDGL\n";
+    const char* expected = "\n";
+
+    using testing::_;
+    EXPECT_CALL(mDirectiveHandler,
+                handlePragma(_, _, _, _)).Times(0);
+    // No error or warning.
+    EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
+
+    preprocess(str, expected);
+}
+
+TEST_F(PragmaTest, STDGLInvariantAll)
+{
+    const char* str = "#pragma STDGL invariant(all)\n";
+    const char* expected = "\n";
+
+    using testing::_;
+    EXPECT_CALL(mDirectiveHandler,
+                handlePragma(pp::SourceLocation(0, 1), "invariant", "all", true));
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
@@ -74,7 +102,7 @@ TEST_F(PragmaTest, Comments)
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
-                handlePragma(pp::SourceLocation(0, 1), "foo", "bar"));
+                handlePragma(pp::SourceLocation(0, 1), "foo", "bar", false));
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
@@ -89,7 +117,7 @@ TEST_F(PragmaTest, MissingNewline)
     using testing::_;
     // Pragma successfully parsed.
     EXPECT_CALL(mDirectiveHandler,
-                handlePragma(pp::SourceLocation(0, 1), "foo", "bar"));
+                handlePragma(pp::SourceLocation(0, 1), "foo", "bar", false));
     // Error reported about EOF.
     EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_EOF_IN_DIRECTIVE, _, _));
 
@@ -108,7 +136,7 @@ TEST_P(InvalidPragmaTest, Identified)
 
     using testing::_;
     // No handlePragma calls.
-    EXPECT_CALL(mDirectiveHandler, handlePragma(_, _, _)).Times(0);
+    EXPECT_CALL(mDirectiveHandler, handlePragma(_, _, _, false)).Times(0);
     // Unrecognized pragma warning.
     EXPECT_CALL(mDiagnostics,
                 print(pp::Diagnostics::PP_UNRECOGNIZED_PRAGMA,

@@ -181,6 +181,12 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
     if (success)
     {
+        mPragma = parseContext.pragma();
+        if (mPragma.stdgl.invariantAll)
+        {
+            symbolTable.setGlobalInvariant();
+        }
+
         TIntermNode* root = parseContext.treeRoot;
         success = intermediate.postProcess(root);
 
@@ -508,7 +514,8 @@ void TCompiler::collectVariables(TIntermNode* root)
                                  &uniforms,
                                  &varyings,
                                  &interfaceBlocks,
-                                 hashFunction);
+                                 hashFunction,
+                                 symbolTable);
     root->traverse(&collect);
 
     // For backwards compatiblity with ShGetVariableInfo, expand struct
@@ -581,4 +588,11 @@ ShArrayIndexClampingStrategy TCompiler::getArrayIndexClampingStrategy() const
 const BuiltInFunctionEmulator& TCompiler::getBuiltInFunctionEmulator() const
 {
     return builtInFunctionEmulator;
+}
+
+void TCompiler::writePragma()
+{
+    TInfoSinkBase &sink = infoSink.obj;
+    if (mPragma.stdgl.invariantAll)
+        sink << "#pragma STDGL invariant(all)\n";
 }
