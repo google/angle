@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "906390c3_1766740e",
+        "filename": "tests/angle_tests/DepthStencilFormatsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-17T16:49:07Z",
+      "side": 1,
+      "message": "This seems like a pretty big error range for byte values, was it required to get the tests to pass?",
+      "range": {
+        "startLine": 179,
+        "startChar": 44,
+        "endLine": 179,
+        "endChar": 48
+      },
+      "revId": "cb86a6443555678ccb03f3d098d05bb9c83a8ebb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
