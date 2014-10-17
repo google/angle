@@ -153,7 +153,6 @@ class ProgramBinary : public RefCountObject
     LinkResult link(InfoLog &infoLog, const AttributeBindings &attributeBindings, Shader *fragmentShader, Shader *vertexShader,
                     const std::vector<std::string>& transformFeedbackVaryings, GLenum transformFeedbackBufferMode,
                     const Caps &caps);
-    void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders);
 
     void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name) const;
     GLint getActiveAttributeCount() const;
