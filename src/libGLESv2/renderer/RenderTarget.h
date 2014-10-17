@@ -18,7 +18,7 @@ namespace rx
 class RenderTarget
 {
   public:
-    RenderTarget()
+    RenderTarget() : mSerial(issueSerials(1))
     {
         mWidth = 0;
         mHeight = 0;
@@ -40,6 +40,9 @@ class RenderTarget
 
     virtual void invalidate(GLint x, GLint y, GLsizei width, GLsizei height) = 0;
 
+    virtual unsigned int getSerial() const;
+    static unsigned int issueSerials(unsigned int count);
+
     struct Desc {
         GLsizei width;
         GLsizei height;
@@ -57,6 +60,9 @@ class RenderTarget
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderTarget);
+
+    const unsigned int mSerial;
+    static unsigned int mCurrentSerial;
 };
 
 }

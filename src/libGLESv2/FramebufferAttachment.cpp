@@ -187,7 +187,7 @@ GLenum RenderbufferAttachment::getActualFormat() const
 
 GLsizei RenderbufferAttachment::getSamples() const
 {
-    return mRenderbuffer->getStorage()->getSamples();
+    return mRenderbuffer->getSamples();
 }
 
 GLuint RenderbufferAttachment::id() const

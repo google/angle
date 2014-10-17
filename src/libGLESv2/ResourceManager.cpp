@@ -403,7 +403,7 @@ void ResourceManager::checkRenderbufferAllocation(GLuint renderbuffer)
 {
     if (renderbuffer != 0 && !getRenderbuffer(renderbuffer))
     {
-        Renderbuffer *renderbufferObject = new Renderbuffer(renderbuffer, new Colorbuffer(mRenderer, 0, 0, GL_RGBA4, 0));
+        Renderbuffer *renderbufferObject = new Renderbuffer(mRenderer->createRenderbuffer(), renderbuffer);
         mRenderbufferMap[renderbuffer] = renderbufferObject;
         renderbufferObject->addRef();
     }

@@ -164,6 +164,10 @@ class Renderer11 : public Renderer
     // Texture creation
     virtual TextureImpl *createTexture(GLenum target);
 
+    // Renderbuffer creation
+    virtual RenderbufferImpl *createRenderbuffer();
+    virtual RenderbufferImpl *createRenderbuffer(SwapChain *swapChain, bool depth);
+
     // Buffer creation
     virtual BufferImpl *createBuffer();
     virtual VertexBuffer *createVertexBuffer();
