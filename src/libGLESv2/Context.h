@@ -50,11 +50,6 @@ class Texture3D;
 class Texture2DArray;
 class Framebuffer;
 class Renderbuffer;
-class RenderbufferStorage;
-class Colorbuffer;
-class Depthbuffer;
-class Stencilbuffer;
-class DepthStencilbuffer;
 class FenceNV;
 class FenceSync;
 class Query;
@@ -138,8 +133,6 @@ class Context
     Error endQuery(GLenum target);
 
     void setFramebufferZero(Framebuffer *framebuffer);
-
-    void setRenderbufferStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples);
 
     void setVertexAttribDivisor(GLuint index, GLuint divisor);
 

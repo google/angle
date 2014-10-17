@@ -402,8 +402,9 @@
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\IndexRangeCache.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\ProgramImpl.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\QueryImpl.h"/>
-    <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\RenderTarget.h"/>
+    <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\RenderbufferImpl.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\Renderer.h"/>
+    <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\RenderTarget.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\ShaderExecutable.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\ShaderImpl.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\SwapChain.h"/>
@@ -431,6 +432,7 @@
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\IndexDataManager.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\MemoryBuffer.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\ProgramD3D.h"/>
+    <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\RenderbufferD3D.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\ShaderD3D.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\TextureD3D.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\TextureStorage.h"/>
@@ -550,6 +552,7 @@
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\Image.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\IndexRangeCache.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\ProgramImpl.cpp"/>
+    <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\RenderbufferImpl.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\Renderer.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\copyimage.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\loadimage.cpp"/>
@@ -567,6 +570,7 @@
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\IndexDataManager.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\MemoryBuffer.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\ProgramD3D.cpp"/>
+    <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\RenderbufferD3D.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\ShaderD3D.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\TextureD3D.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\TextureStorage.cpp"/>
