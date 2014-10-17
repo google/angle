@@ -1,11 +1,9 @@
-Debug/
-Debug_Win32/
-Debug_x64/
-Debug_ARM/
-Release/
-Release_Win32/
-Release_x64/
-Release_ARM/
+Debug
+Debug_Win32
+Debug_x64
+Release
+Release_Win32
+Release_x64
 *.sdf
 *.ncb
 *.suo

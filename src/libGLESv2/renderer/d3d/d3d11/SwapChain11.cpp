@@ -332,10 +332,8 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
     SafeRelease(mBackBufferRTView);
 
     // Resize swap chain
-    DXGI_SWAP_CHAIN_DESC desc;
-    mSwapChain->GetDesc(&desc);
     const d3d11::TextureFormat &backbufferFormatInfo = d3d11::GetTextureFormatInfo(mBackBufferFormat);
-    HRESULT result = mSwapChain->ResizeBuffers(desc.BufferCount, backbufferWidth, backbufferHeight, backbufferFormatInfo.texFormat, 0);
+    HRESULT result = mSwapChain->ResizeBuffers(1, backbufferWidth, backbufferHeight, backbufferFormatInfo.texFormat, 0);
 
     if (FAILED(result))
     {

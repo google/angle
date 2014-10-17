@@ -5,7 +5,9 @@
 {
     'sources':
     [
-        'ImageIndexIterator_unittest.cpp',
-        'TransformFeedback_unittest.cpp'
+        '<!@(python <(angle_path)/enumerate_files.py \
+          -dirs <(angle_path)/tests/angle_implementation_unit_tests \
+          -types *.cpp *.h \
+          -excludes <(angle_path)/tests/angle_implementation_unit_tests/angle_implementation_unit_tests_main.cpp)'
     ],
 }

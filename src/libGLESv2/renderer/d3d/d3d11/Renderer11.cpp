@@ -40,7 +40,6 @@
 #include "libEGL/Display.h"
 
 #include "common/utilities.h"
-#include "common/tls.h"
 
 #include <EGL/eglext.h>
 
@@ -168,7 +167,6 @@ EGLint Renderer11::initialize()
         return EGL_NOT_INITIALIZED;
     }
 
-#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
     mDxgiModule = LoadLibrary(TEXT("dxgi.dll"));
     mD3d11Module = LoadLibrary(TEXT("d3d11.dll"));
 
@@ -187,7 +185,6 @@ EGLint Renderer11::initialize()
         ERR("Could not retrieve D3D11CreateDevice address - aborting!\n");
         return EGL_NOT_INITIALIZED;
     }
-#endif
 
     D3D_FEATURE_LEVEL featureLevels[] =
     {
@@ -242,7 +239,6 @@ EGLint Renderer11::initialize()
         }
     }
 
-#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
 #if !ANGLE_SKIP_DXGI_1_2_CHECK
     // In order to create a swap chain for an HWND owned by another process, DXGI 1.2 is required.
     // The easiest way to check is to query for a IDXGIDevice2.
@@ -271,7 +267,6 @@ EGLint Renderer11::initialize()
         }
         SafeRelease(dxgiDevice2);
     }
-#endif
 #endif
 
     IDXGIDevice *dxgiDevice = NULL;

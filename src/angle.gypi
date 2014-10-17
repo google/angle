@@ -44,18 +44,6 @@
                     'files': [ 'copy_compiler_dll.bat', '<(angle_id_script_base)' ],
                 },
             ],
-            'conditions':
-            [
-                ['angle_build_winrt==1',
-                {
-                    'msvs_enable_winrt' : '1',
-                    'type' : 'shared_library',
-                }],
-                ['angle_build_winphone==1',
-                {
-                    'msvs_enable_winphone' : '1',
-                }],
-            ],
         },
     ],
     'conditions':
@@ -92,18 +80,6 @@
                             '<(angle_gen_path)',
                         ],
                     },
-                    'conditions':
-                    [
-                        ['angle_build_winrt==1',
-                        {
-                            'msvs_enable_winrt' : '1',
-                            'type' : 'shared_library',
-                        }],
-                        ['angle_build_winphone==1',
-                        {
-                            'msvs_enable_winphone' : '1',
-                        }],
-                    ],
                 }
             ]
         },
@@ -128,18 +104,6 @@
                             '<(angle_gen_path)',
                         ],
                     },
-                    'conditions':
-                    [
-                        ['angle_build_winrt==1',
-                        {
-                            'msvs_enable_winrt' : '1',
-                            'type' : 'shared_library',
-                        }],
-                        ['angle_build_winphone==1',
-                        {
-                            'msvs_enable_winphone' : '1',
-                        }],
-                    ],
                 }
             ]
         }],
@@ -152,38 +116,23 @@
                     'type': 'none',
                     'dependencies': [ 'copy_scripts', ],
                     'includes': [ '../build/common_defines.gypi', ],
-                    'conditions':
+                    'actions':
                     [
-                        ['angle_build_winrt==0',
                         {
-                            'actions':
+                            'action_name': 'copy_dll',
+                            'message': 'Copying D3D Compiler DLL...',
+                            'msvs_cygwin_shell': 0,
+                            'inputs': [ 'copy_compiler_dll.bat' ],
+                            'outputs': [ '<(PRODUCT_DIR)/d3dcompiler_46.dll' ],
+                            'action':
                             [
-                                {
-                                    'action_name': 'copy_dll',
-                                    'message': 'Copying D3D Compiler DLL...',
-                                    'msvs_cygwin_shell': 0,
-                                    'inputs': [ 'copy_compiler_dll.bat' ],
-                                    'outputs': [ '<(PRODUCT_DIR)/d3dcompiler_46.dll' ],
-                                    'action':
-                                    [
-                                        "<(angle_gen_path)/copy_compiler_dll.bat",
-                                        "$(PlatformName)",
-                                        "<(windows8_sdk_path)",
-                                        "<(PRODUCT_DIR)"
-                                    ],
-                                },
-                            ], #actions
-                        }],
-                        ['angle_build_winrt==1',
-                        {
-                            'msvs_enable_winrt' : '1',
-                            'type' : 'shared_library',
-                        }],
-                        ['angle_build_winphone==1',
-                        {
-                            'msvs_enable_winphone' : '1',
-                        }],
-                    ]
+                                "<(angle_gen_path)/copy_compiler_dll.bat",
+                                "$(PlatformName)",
+                                "<(windows_sdk_path)",
+                                "<(PRODUCT_DIR)"
+                            ],
+                        },
+                    ], #actions
                 },
             ], # targets
         }],

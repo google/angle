@@ -239,7 +239,7 @@ EGLNativeWindowType Surface::getWindowHandle()
     return mNativeWindow.getNativeWindow();
 }
 
-#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
+
 #define kSurfaceProperty _TEXT("Egl::SurfaceOwner")
 #define kParentWndProc _TEXT("Egl::SurfaceParentWndProc")
 
@@ -256,11 +256,9 @@ static LRESULT CALLBACK SurfaceWindowProc(HWND hwnd, UINT message, WPARAM wparam
   WNDPROC prevWndFunc = reinterpret_cast<WNDPROC >(GetProp(hwnd, kParentWndProc));
   return CallWindowProc(prevWndFunc, hwnd, message, wparam, lparam);
 }
-#endif
 
 void Surface::subclassWindow()
 {
-#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
     HWND window = mNativeWindow.getNativeWindow();
     if (!window)
     {
@@ -285,7 +283,6 @@ void Surface::subclassWindow()
     SetProp(window, kSurfaceProperty, reinterpret_cast<HANDLE>(this));
     SetProp(window, kParentWndProc, reinterpret_cast<HANDLE>(oldWndProc));
     mWindowSubclassed = true;
-#endif
 }
 
 void Surface::unsubclassWindow()
@@ -295,7 +292,6 @@ void Surface::unsubclassWindow()
         return;
     }
 
-#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
     HWND window = mNativeWindow.getNativeWindow();
     if (!window)
     {
@@ -319,7 +315,6 @@ void Surface::unsubclassWindow()
 
     RemoveProp(window, kSurfaceProperty);
     RemoveProp(window, kParentWndProc);
-#endif
     mWindowSubclassed = false;
 }
 
