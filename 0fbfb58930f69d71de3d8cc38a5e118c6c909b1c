@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d00d08eb_3f288f22",
+        "filename": "src/compiler/preprocessor/DirectiveParser.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-17T05:56:12Z",
+      "side": 1,
+      "message": "The STDGL pragmas could be handled more uniformly if we just skipped over the STDGL token and processed the rest of the macro normally. \"invariant(all)\" would have name\u003d\"invariant\", value \"all\".",
+      "revId": "0fbfb58930f69d71de3d8cc38a5e118c6c909b1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "900710cb_1dd033d6",
+        "filename": "src/compiler/preprocessor/DirectiveParser.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-17T05:56:12Z",
+      "side": 1,
+      "message": "The directive handler could take a boolean indicating whether the pragma was scoped with STDGL.",
+      "revId": "0fbfb58930f69d71de3d8cc38a5e118c6c909b1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d00d08eb_5f1f43f6",
+        "filename": "src/compiler/translator/DirectiveHandler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-17T05:56:12Z",
+      "side": 1,
+      "message": "I think it would be cleaner to pass in a separate boolean indicating whether this pragma is for STDGL; then the name would be \"invariant\" and the value would be \"all\".",
+      "revId": "0fbfb58930f69d71de3d8cc38a5e118c6c909b1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90bc7033_cfdd5d73",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-10-17T05:56:12Z",
+      "side": 1,
+      "message": "Here and below, please say something like \"defined by spec\" instead of \"use default precision\". \"default precision\" means something specific and the comments here are confusing.",
+      "revId": "0fbfb58930f69d71de3d8cc38a5e118c6c909b1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
