@@ -138,6 +138,30 @@
     },
     {
       "key": {
+        "uuid": "f0492c4e_f5157231",
+        "filename": "src/libGLESv2/Renderbuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-17T20:32:03Z",
+      "side": 1,
+      "message": "Ok, that\u0027s reasonable enough. Done.",
+      "parentUuid": "d0218832_41ae942b",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 36
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0218832_4daecb2b",
         "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
         "patchSetId": 3
@@ -291,6 +315,30 @@
       "side": 1,
       "message": "My preference is always to store everything at the GL level and replicate it at the D3D level only if required.\n\nFor the Texture stuff, I would like to move it to the GL level at some point.",
       "parentUuid": "5072f858_f6a2118e",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 39
+      },
+      "revId": "82290c64e0b4fa7f9696c96c6ea1e2d1591e7c48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "106fa0ad_93929cbb",
+        "filename": "src/libGLESv2/renderer/RenderbufferImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-17T20:32:03Z",
+      "side": 1,
+      "message": "This ended up moving in both directions-- it\u0027s stored at the GL level, but there are functions to query it from the implementation, which plumb through to the D3D version, which retrieves the information directly from the RenderTarget. When the storage is set, the GL-level Renderbuffer object caches those values.",
+      "parentUuid": "505bd8e0_b4156e32",
       "range": {
         "startLine": 27,
         "startChar": 4,
