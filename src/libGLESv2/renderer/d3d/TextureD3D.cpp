@@ -431,6 +431,13 @@ gl::Error TextureD3D::ensureRenderTarget()
     return gl::Error(GL_NO_ERROR);
 }
 
+bool TextureD3D::canCreateRenderTargetForImage(const gl::ImageIndex &index) const
+{
+    rx::Image *image = getImage(index);
+    bool levelsComplete = (isImageComplete(index) && isImageComplete(getImageIndex(0, 0)));
+    return (image->isRenderableFormat() && levelsComplete);
+}
+
 TextureD3D_2D::TextureD3D_2D(Renderer *renderer)
     : TextureD3D(renderer)
 {
@@ -640,8 +647,9 @@ gl::Error TextureD3D_2D::copyImage(GLenum target, GLint level, GLenum format, GL
     redefineImage(level, sizedInternalFormat, width, height);
 
     gl::Rectangle sourceRect(x, y, width, height);
+    gl::ImageIndex index = gl::ImageIndex::Make2D(level);
 
-    if (!mImageArray[level]->isRenderableFormat())
+    if (!canCreateRenderTargetForImage(index))
     {
         gl::Error error = mImageArray[level]->copy(0, 0, 0, sourceRect, source);
         if (error.isError())
@@ -681,11 +689,11 @@ gl::Error TextureD3D_2D::copySubImage(GLenum target, GLint level, GLint xoffset,
 
     // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
     // the current level we're copying to is defined (with appropriate format, width & height)
-    bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
 
     gl::Rectangle sourceRect(x, y, width, height);
+    gl::ImageIndex index = gl::ImageIndex::Make2D(level);
 
-    if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
+    if (!canCreateRenderTargetForImage(index))
     {
         gl::Error error = mImageArray[level]->copy(xoffset, yoffset, 0, sourceRect, source);
         if (error.isError())
@@ -870,6 +878,11 @@ bool TextureD3D_2D::isLevelComplete(int level) const
     }
 
     return true;
+}
+
+bool TextureD3D_2D::isImageComplete(const gl::ImageIndex &index) const
+{
+    return isLevelComplete(index.mipIndex);
 }
 
 // Constructs a native texture resource from the texture images
@@ -1177,8 +1190,9 @@ gl::Error TextureD3D_Cube::copyImage(GLenum target, GLint level, GLenum format, 
     redefineImage(faceIndex, level, sizedInternalFormat, width, height);
 
     gl::Rectangle sourceRect(x, y, width, height);
+    gl::ImageIndex index = gl::ImageIndex::MakeCube(target, level);
 
-    if (!mImageArray[faceIndex][level]->isRenderableFormat())
+    if (!canCreateRenderTargetForImage(index))
     {
         gl::Error error = mImageArray[faceIndex][level]->copy(0, 0, 0, sourceRect, source);
         if (error.isError())
@@ -1218,14 +1232,10 @@ gl::Error TextureD3D_Cube::copySubImage(GLenum target, GLint level, GLint xoffse
 {
     int faceIndex = gl::TextureCubeMap::targetToLayerIndex(target);
 
-    // We can only make our texture storage to a render target if the level we're copying *to* is complete
-    // and the base level is cube-complete. The base level must be cube complete (common case) because we cannot
-    // rely on the "getBaseLevel*" methods reliably otherwise.
-    bool canCreateRenderTarget = isFaceLevelComplete(faceIndex, level) && isCubeComplete();
-
     gl::Rectangle sourceRect(x, y, width, height);
+    gl::ImageIndex index = gl::ImageIndex::MakeCube(target, level);
 
-    if (!mImageArray[faceIndex][level]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
+    if (!canCreateRenderTargetForImage(index))
     {
         gl::Error error =mImageArray[faceIndex][level]->copy(0, 0, 0, sourceRect, source);
         if (error.isError())
@@ -1524,6 +1534,11 @@ bool TextureD3D_Cube::isFaceLevelComplete(int faceIndex, int level) const
     }
 
     return true;
+}
+
+bool TextureD3D_Cube::isImageComplete(const gl::ImageIndex &index) const
+{
+    return isFaceLevelComplete(index.layerIndex, index.mipIndex);
 }
 
 gl::Error TextureD3D_Cube::updateStorageFaceLevel(int faceIndex, int level)
@@ -1826,13 +1841,10 @@ gl::Error TextureD3D_3D::copySubImage(GLenum target, GLint level, GLint xoffset,
 {
     ASSERT(target == GL_TEXTURE_3D);
 
-    // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
-    // the current level we're copying to is defined (with appropriate format, width & height)
-    bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
-
     gl::Rectangle sourceRect(x, y, width, height);
+    gl::ImageIndex index = gl::ImageIndex::Make3D(level);
 
-    if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
+    if (canCreateRenderTargetForImage(index))
     {
         gl::Error error = mImageArray[level]->copy(xoffset, yoffset, zoffset, sourceRect, source);
         if (error.isError())
@@ -2106,6 +2118,11 @@ bool TextureD3D_3D::isLevelComplete(int level) const
     return true;
 }
 
+bool TextureD3D_3D::isImageComplete(const gl::ImageIndex &index) const
+{
+    return isLevelComplete(index.mipIndex);
+}
+
 gl::Error TextureD3D_3D::updateStorageLevel(int level)
 {
     ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
@@ -2368,13 +2385,10 @@ gl::Error TextureD3D_2DArray::copySubImage(GLenum target, GLint level, GLint xof
 {
     ASSERT(target == GL_TEXTURE_2D_ARRAY);
 
-    // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
-    // the current level we're copying to is defined (with appropriate format, width & height)
-    bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
-
     gl::Rectangle sourceRect(x, y, width, height);
+    gl::ImageIndex index = gl::ImageIndex::Make2DArray(level, zoffset);
 
-    if (!mImageArray[level][0]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
+    if (canCreateRenderTargetForImage(index))
     {
         gl::Error error = mImageArray[level][zoffset]->copy(xoffset, yoffset, 0, sourceRect, source);
         if (error.isError())
@@ -2643,6 +2657,11 @@ bool TextureD3D_2DArray::isLevelComplete(int level) const
     }
 
     return true;
+}
+
+bool TextureD3D_2DArray::isImageComplete(const gl::ImageIndex &index) const
+{
+    return isLevelComplete(index.mipIndex);
 }
 
 gl::Error TextureD3D_2DArray::updateStorageLevel(int level)

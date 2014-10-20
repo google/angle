@@ -77,7 +77,9 @@ class TextureD3D : public TextureImpl
     int mipLevels() const;
     virtual void initMipmapsImages() = 0;
     bool isBaseImageZeroSize() const;
+    virtual bool isImageComplete(const gl::ImageIndex &index) const = 0;
 
+    bool canCreateRenderTargetForImage(const gl::ImageIndex &index) const;
     virtual gl::Error ensureRenderTarget();
 
     virtual gl::Error createCompleteStorage(bool renderTarget, TextureStorage **outTexStorage) const = 0;
@@ -149,6 +151,7 @@ class TextureD3D_2D : public TextureD3D
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
+    virtual bool isImageComplete(const gl::ImageIndex &index) const;
 
     gl::Error updateStorageLevel(int level);
 
@@ -205,6 +208,7 @@ class TextureD3D_Cube : public TextureD3D
     bool isValidFaceLevel(int faceIndex, int level) const;
     bool isFaceLevelComplete(int faceIndex, int level) const;
     bool isCubeComplete() const;
+    virtual bool isImageComplete(const gl::ImageIndex &index) const;
     gl::Error updateStorageFaceLevel(int faceIndex, int level);
 
     void redefineImage(int faceIndex, GLint level, GLenum internalformat, GLsizei width, GLsizei height);
@@ -258,6 +262,7 @@ class TextureD3D_3D : public TextureD3D
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
+    virtual bool isImageComplete(const gl::ImageIndex &index) const;
     gl::Error updateStorageLevel(int level);
 
     void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
@@ -310,6 +315,7 @@ class TextureD3D_2DArray : public TextureD3D
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
+    virtual bool isImageComplete(const gl::ImageIndex &index) const;
     gl::Error updateStorageLevel(int level);
 
     void deleteImages();
