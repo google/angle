@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d06988a3_0e1d77d1",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-20T19:06:20Z",
+      "side": 1,
+      "message": "you\u0027re 100% sure this works out to the same value as what we previously read back from the description? do you know why we read it back previously?",
+      "range": {
+        "startLine": 602,
+        "startChar": 4,
+        "endLine": 602,
+        "endChar": 97
+      },
+      "revId": "b816f5b4e86a0d2cf39534b15731a6cbd0c83c83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
