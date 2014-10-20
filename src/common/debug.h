@@ -20,8 +20,8 @@
 
 namespace gl
 {
-    // Outputs text to the debugging log
-    void trace(bool traceFileDebugOnly, const char *format, ...);
+    // Outputs text to the debugging log, or the debugging window
+    void trace(bool traceInDebugOnly, const char *format, ...);
 
     // Returns whether D3DPERF is active.
     bool perfActive();

@@ -23,7 +23,7 @@ typedef void (WINAPI *PerfOutputFunction)(D3DCOLOR, LPCWSTR);
 typedef void (*PerfOutputFunction)(unsigned int, const wchar_t*);
 #endif
 
-static void output(bool traceFileDebugOnly, PerfOutputFunction perfFunc, const char *format, va_list vararg)
+static void output(bool traceInDebugOnly, PerfOutputFunction perfFunc, const char *format, va_list vararg)
 {
 #if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS) || defined(ANGLE_ENABLE_DEBUG_TRACE)
     std::string formattedMessage = FormatString(format, vararg);
@@ -47,7 +47,7 @@ static void output(bool traceFileDebugOnly, PerfOutputFunction perfFunc, const c
 
 #if defined(ANGLE_ENABLE_DEBUG_TRACE)
 #if defined(NDEBUG)
-    if (traceFileDebugOnly)
+    if (traceInDebugOnly)
     {
         return;
     }
@@ -60,17 +60,21 @@ static void output(bool traceFileDebugOnly, PerfOutputFunction perfFunc, const c
         file.flush();
     }
 
+#if defined(ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER)
+    OutputDebugStringA(formattedMessage.c_str());
+#endif // ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER
+
 #endif // ANGLE_ENABLE_DEBUG_TRACE
 }
 
-void trace(bool traceFileDebugOnly, const char *format, ...)
+void trace(bool traceInDebugOnly, const char *format, ...)
 {
     va_list vararg;
     va_start(vararg, format);
 #if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
-    output(traceFileDebugOnly, D3DPERF_SetMarker, format, vararg);
+    output(traceInDebugOnly, D3DPERF_SetMarker, format, vararg);
 #else
-    output(traceFileDebugOnly, NULL, format, vararg);
+    output(traceInDebugOnly, NULL, format, vararg);
 #endif
     va_end(vararg);
 }
