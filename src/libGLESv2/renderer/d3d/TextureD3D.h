@@ -35,7 +35,7 @@ class TextureD3D : public TextureImpl
 
     static TextureD3D *makeTextureD3D(TextureImpl *texture);
 
-    virtual TextureStorage *getNativeTexture();
+    TextureStorage *getNativeTexture();
 
     virtual void setUsage(GLenum usage) { mUsage = usage; }
     bool hasDirtyImages() const { return mDirtyImages; }

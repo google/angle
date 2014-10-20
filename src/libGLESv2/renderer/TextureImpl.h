@@ -40,11 +40,6 @@ class TextureImpl
   public:
     virtual ~TextureImpl() {};
 
-    // TODO: If this methods could go away that would be ideal;
-    // TextureStorage should only be necessary for the D3D backend, and as such
-    // higher level code should not rely on it.
-    virtual TextureStorage *getNativeTexture() = 0;
-
     // Deprecated in favour of the ImageIndex method
     virtual Image *getImage(int level, int layer) const = 0;
     virtual Image *getImage(const gl::ImageIndex &index) const = 0;

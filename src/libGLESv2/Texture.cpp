@@ -131,11 +131,6 @@ GLenum Texture::getActualFormat(const ImageIndex &index) const
     return image->getActualFormat();
 }
 
-rx::TextureStorage *Texture::getNativeTexture()
-{
-    return getImplementation()->getNativeTexture();
-}
-
 void Texture::generateMipmaps()
 {
     getImplementation()->generateMipmaps();
