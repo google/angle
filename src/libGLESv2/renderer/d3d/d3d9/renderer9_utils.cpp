@@ -461,7 +461,7 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
         extensions->textureNPOT = !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_POW2) &&
                                       !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_CUBEMAP_POW2) &&
                                       !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) &&
-                                      !(isWindowsVistaOrGreater() && adapterId.VendorId == VENDOR_ID_AMD);
+                                      !(!isWindowsVistaOrGreater() && adapterId.VendorId == VENDOR_ID_AMD);
     }
     else
     {
