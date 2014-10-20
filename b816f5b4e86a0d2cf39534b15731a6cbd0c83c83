@@ -22,6 +22,30 @@
       "revId": "b816f5b4e86a0d2cf39534b15731a6cbd0c83c83",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06988a3_a52f49a7",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-20T21:15:55Z",
+      "side": 1,
+      "message": "I debugged a few permutations and didn\u0027t see any issues with it.  The DESC object is passed into CreateTexture as a const pointer so it isn\u0027t modified by the function anyways.  I\u0027m not sure why it was written this way originally.",
+      "parentUuid": "d06988a3_0e1d77d1",
+      "range": {
+        "startLine": 602,
+        "startChar": 4,
+        "endLine": 602,
+        "endChar": 97
+      },
+      "revId": "b816f5b4e86a0d2cf39534b15731a6cbd0c83c83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
