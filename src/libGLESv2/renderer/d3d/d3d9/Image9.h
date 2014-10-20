@@ -44,10 +44,7 @@ class Image9 : public ImageD3D
 
     virtual gl::Error setManagedSurface2D(TextureStorage *storage, int level);
     virtual gl::Error setManagedSurfaceCube(TextureStorage *storage, int face, int level);
-    virtual gl::Error copyToStorage2D(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
-    virtual gl::Error copyToStorageCube(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
-    virtual gl::Error copyToStorage3D(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
-    virtual gl::Error copyToStorage2DArray(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
+    virtual gl::Error copyToStorage(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
 
     virtual gl::Error loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                GLint unpackAlignment, GLenum type, const void *input);

@@ -101,32 +101,10 @@ bool Image11::isDirty() const
     return mDirty;
 }
 
-gl::Error Image11::copyToStorage2D(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
+gl::Error Image11::copyToStorage(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
 {
     TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(storage);
-    return copyToStorageImpl(storage11, index, region);
-}
 
-gl::Error Image11::copyToStorageCube(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
-{
-    TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(storage);
-    return copyToStorageImpl(storage11, index, region);
-}
-
-gl::Error Image11::copyToStorage3D(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
-{
-    TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(storage);
-    return copyToStorageImpl(storage11, index, region);
-}
-
-gl::Error Image11::copyToStorage2DArray(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
-{
-    TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(storage);
-    return copyToStorageImpl(storage11, index, region);
-}
-
-gl::Error Image11::copyToStorageImpl(TextureStorage11 *storage11, const gl::ImageIndex &index, const gl::Box &region)
-{
     // If an app's behavior results in an Image11 copying its data to/from to a TextureStorage multiple times,
     // then we should just keep the staging texture around to prevent the copying from impacting perf.
     // We allow the Image11 to copy its data to/from TextureStorage once.

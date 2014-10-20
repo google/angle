@@ -38,10 +38,7 @@ class Image11 : public ImageD3D
 
     virtual bool isDirty() const;
 
-    virtual gl::Error copyToStorage2D(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
-    virtual gl::Error copyToStorageCube(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
-    virtual gl::Error copyToStorage3D(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
-    virtual gl::Error copyToStorage2DArray(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
+    virtual gl::Error copyToStorage(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
 
     virtual bool redefine(Renderer *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease);
 

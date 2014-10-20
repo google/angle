@@ -17,7 +17,7 @@
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/Renderbuffer.h"
-
+#include "common/utilities.h"
 
 namespace rx
 {
@@ -319,40 +319,27 @@ gl::Error Image9::setManagedSurface(IDirect3DSurface9 *surface)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Image9::copyToStorage2D(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
+gl::Error Image9::copyToStorage(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
 {
     ASSERT(getSurface() != NULL);
-    TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage);
-    IDirect3DSurface9 *destSurface = storage9->getSurfaceLevel(index.mipIndex, true);
+
+    IDirect3DSurface9 *destSurface = NULL;
+
+    if (index.type == GL_TEXTURE_2D)
+    {
+        TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage);
+        destSurface = storage9->getSurfaceLevel(index.mipIndex, true);
+    }
+    else
+    {
+        ASSERT(gl::IsCubemapTextureTarget(index.type));
+        TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage);
+        destSurface = storage9->getCubeMapSurface(index.type, index.mipIndex, true);
+    }
 
     gl::Error error = copyToSurface(destSurface, region.x, region.y, region.width, region.height);
     SafeRelease(destSurface);
     return error;
-}
-
-gl::Error Image9::copyToStorageCube(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
-{
-    ASSERT(getSurface() != NULL);
-    TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage);
-    IDirect3DSurface9 *destSurface = storage9->getCubeMapSurface(index.type, index.mipIndex, true);
-
-    gl::Error error = copyToSurface(destSurface, region.x, region.y, region.width, region.height);
-    SafeRelease(destSurface);
-    return error;
-}
-
-gl::Error Image9::copyToStorage3D(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
-{
-    // 3D textures are not supported by the D3D9 backend.
-    UNREACHABLE();
-    return gl::Error(GL_INVALID_OPERATION);
-}
-
-gl::Error Image9::copyToStorage2DArray(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
-{
-    // 2D array textures are not supported by the D3D9 backend.
-    UNREACHABLE();
-    return gl::Error(GL_INVALID_OPERATION);
 }
 
 gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
