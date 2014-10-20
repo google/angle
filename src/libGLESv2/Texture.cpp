@@ -47,9 +47,12 @@ bool IsPointSampled(const gl::SamplerState &samplerState)
     return (samplerState.magFilter == GL_NEAREST && (samplerState.minFilter == GL_NEAREST || samplerState.minFilter == GL_NEAREST_MIPMAP_NEAREST));
 }
 
+unsigned int Texture::mCurrentTextureSerial = 1;
+
 Texture::Texture(rx::TextureImpl *impl, GLuint id, GLenum target)
     : RefCountObject(id),
       mTexture(impl),
+      mTextureSerial(issueTextureSerial()),
       mUsage(GL_NONE),
       mImmutableLevelCount(0),
       mTarget(target)
@@ -154,10 +157,14 @@ Error Texture::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yof
     return mTexture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, source);
 }
 
-unsigned int Texture::getTextureSerial()
+unsigned int Texture::getTextureSerial() const
 {
-    rx::TextureStorage *texture = getNativeTexture();
-    return texture ? texture->getTextureSerial() : 0;
+    return mTextureSerial;
+}
+
+unsigned int Texture::issueTextureSerial()
+{
+    return mCurrentTextureSerial++;
 }
 
 bool Texture::isImmutable() const

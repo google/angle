@@ -74,7 +74,9 @@ class Texture : public RefCountObject
     virtual void generateMipmaps();
     virtual Error copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
 
-    unsigned int getTextureSerial();
+    // Texture serials provide a unique way of identifying a Texture that isn't a raw pointer.
+    // "id" is not good enough, as Textures can be deleted, then re-allocated with the same id.
+    unsigned int getTextureSerial() const;
 
     bool isImmutable() const;
     GLsizei immutableLevelCount();
@@ -86,6 +88,8 @@ class Texture : public RefCountObject
 
   protected:
     int mipLevels() const;
+    const rx::Image *getBaseLevelImage() const;
+    static unsigned int issueTextureSerial();
 
     rx::TextureImpl *mTexture;
 
@@ -96,7 +100,8 @@ class Texture : public RefCountObject
 
     GLenum mTarget;
 
-    const rx::Image *getBaseLevelImage() const;
+    const unsigned int mTextureSerial;
+    static unsigned int mCurrentTextureSerial;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);

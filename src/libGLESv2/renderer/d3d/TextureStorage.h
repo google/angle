@@ -58,11 +58,6 @@ class TextureStorage
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage);
 
-    const unsigned int mTextureSerial;
-    static unsigned int issueTextureSerial();
-
-    static unsigned int mCurrentTextureSerial;
-
     unsigned int mFirstRenderTargetSerial;
     unsigned int mRenderTargetSerialsLayerStride;
 };
