@@ -25,7 +25,7 @@ typedef void (*PerfOutputFunction)(unsigned int, const wchar_t*);
 
 static void output(bool traceFileDebugOnly, PerfOutputFunction perfFunc, const char *format, va_list vararg)
 {
-#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS) || defined(ANGLE_ENABLE_TRACE)
+#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS) || defined(ANGLE_ENABLE_DEBUG_TRACE)
     std::string formattedMessage = FormatString(format, vararg);
 #endif
 
@@ -45,7 +45,7 @@ static void output(bool traceFileDebugOnly, PerfOutputFunction perfFunc, const c
     }
 #endif // ANGLE_ENABLE_DEBUG_ANNOTATIONS
 
-#if defined(ANGLE_ENABLE_TRACE)
+#if defined(ANGLE_ENABLE_DEBUG_TRACE)
 #if defined(NDEBUG)
     if (traceFileDebugOnly)
     {
@@ -60,7 +60,7 @@ static void output(bool traceFileDebugOnly, PerfOutputFunction perfFunc, const c
         file.flush();
     }
 
-#endif // ANGLE_ENABLE_TRACE
+#endif // ANGLE_ENABLE_DEBUG_TRACE
 }
 
 void trace(bool traceFileDebugOnly, const char *format, ...)
@@ -87,12 +87,12 @@ bool perfActive()
 
 ScopedPerfEventHelper::ScopedPerfEventHelper(const char* format, ...)
 {
-#if !defined(ANGLE_ENABLE_TRACE)
+#if !defined(ANGLE_ENABLE_DEBUG_TRACE)
     if (!perfActive())
     {
         return;
     }
-#endif // !ANGLE_ENABLE_TRACE
+#endif // !ANGLE_ENABLE_DEBUG_TRACE
     va_list vararg;
     va_start(vararg, format);
 #if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
