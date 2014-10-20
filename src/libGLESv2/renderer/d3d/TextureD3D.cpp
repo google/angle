@@ -293,6 +293,7 @@ int TextureD3D::mipLevels() const
 
 TextureStorage *TextureD3D::getStorage()
 {
+    ASSERT(mTexStorage);
     return mTexStorage;
 }
 

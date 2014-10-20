@@ -52,7 +52,6 @@ class Texture : public RefCountObject
 
     const SamplerState &getSamplerState() const { return mSamplerState; }
     SamplerState &getSamplerState() { return mSamplerState; }
-    void getSamplerStateWithNativeOffset(SamplerState *sampler);
 
     void setUsage(GLenum usage);
     GLenum getUsage() const;

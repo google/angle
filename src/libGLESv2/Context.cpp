@@ -1471,9 +1471,8 @@ Error Context::applyTextures(ProgramBinary *programBinary, SamplerType shaderTyp
         GLint textureUnit = programBinary->getSamplerMapping(shaderType, samplerIndex, getCaps());
         if (textureUnit != -1)
         {
-            SamplerState sampler;
-            Texture* texture = getSamplerTexture(textureUnit, textureType);
-            texture->getSamplerStateWithNativeOffset(&sampler);
+            Texture *texture = getSamplerTexture(textureUnit, textureType);
+            SamplerState sampler = texture->getSamplerState();
 
             Sampler *samplerObject = mState.getSampler(textureUnit);
             if (samplerObject)
@@ -1485,7 +1484,7 @@ Error Context::applyTextures(ProgramBinary *programBinary, SamplerType shaderTyp
             if (texture->isSamplerComplete(sampler, mTextureCaps, mExtensions, mClientVersion) &&
                 !std::binary_search(framebufferSerials.begin(), framebufferSerials.begin() + framebufferSerialCount, texture->getTextureSerial()))
             {
-                Error error = mRenderer->setSamplerState(shaderType, samplerIndex, sampler);
+                Error error = mRenderer->setSamplerState(shaderType, samplerIndex, texture, sampler);
                 if (error.isError())
                 {
                     return error;

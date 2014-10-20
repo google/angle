@@ -75,16 +75,6 @@ void Texture::setUsage(GLenum usage)
     getImplementation()->setUsage(usage);
 }
 
-void Texture::getSamplerStateWithNativeOffset(SamplerState *sampler)
-{
-    *sampler = mSamplerState;
-
-    // Offset the effective base level by the texture storage's top level
-    rx::TextureStorage *texture = getNativeTexture();
-    int topLevel = texture ? texture->getTopLevel() : 0;
-    sampler->baseLevel = topLevel + mSamplerState.baseLevel;
-}
-
 GLenum Texture::getUsage() const
 {
     return mUsage;
