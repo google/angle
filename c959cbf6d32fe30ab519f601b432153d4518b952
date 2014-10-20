@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b05ed4fb_4c2f7ffa",
+        "filename": "src/angle.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-20T15:45:21Z",
+      "side": 1,
+      "message": "Just need to add\n  \u0027includes\u0027: [ \u0027../build/common_defines.gypi\u0027, ],\nafter this line.",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 27
+      },
+      "revId": "c959cbf6d32fe30ab519f601b432153d4518b952",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
