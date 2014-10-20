@@ -67,6 +67,52 @@
       "revId": "0fbfb58930f69d71de3d8cc38a5e118c6c909b1c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b05ed4fb_07d4807b",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-20T18:51:53Z",
+      "side": 1,
+      "message": "you can leave these out, as they aren\u0027t reachable code currently.",
+      "range": {
+        "startLine": 290,
+        "startChar": 0,
+        "endLine": 295,
+        "endChar": 70
+      },
+      "revId": "0fbfb58930f69d71de3d8cc38a5e118c6c909b1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b05ed4fb_27b98451",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-20T18:51:53Z",
+      "side": 1,
+      "message": "again this technically is unreachable code currently so isn\u0027t technically testable, might as well leave it out for now.",
+      "range": {
+        "startLine": 359,
+        "startChar": 0,
+        "endLine": 360,
+        "endChar": 108
+      },
+      "revId": "0fbfb58930f69d71de3d8cc38a5e118c6c909b1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
