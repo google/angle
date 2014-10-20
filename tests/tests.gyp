@@ -88,6 +88,7 @@
                 'preprocessor_tests/preprocessor_test_main.cpp',
             ],
         },
+
         {
             'target_name': 'compiler_tests',
             'type': 'executable',
@@ -111,22 +112,6 @@
             [
                 'compiler_tests/compiler_test_main.cpp',
             ],
-            'msvs_settings':
-            {
-                'VCLinkerTool':
-                {
-                    'conditions':
-                    [
-                        ['angle_build_winrt==1',
-                        {
-                            'AdditionalDependencies':
-                            [
-                                'runtimeobject.lib',
-                            ],
-                        }],
-                    ],
-                },
-            },
         },
     ],
 
@@ -234,30 +219,6 @@
                     'sources':
                     [
                         'angle_implementation_unit_tests/angle_implementation_unit_tests_main.cpp',
-                    ],
-                    'conditions':
-                    [
-                        ['angle_build_winrt==1',
-                        {
-                            'sources':
-                            [
-                                'angle_implementation_unit_tests/CoreWindowNativeWindow_unittest.cpp',
-                            ],
-                            'defines':
-                            [
-                                'ANGLE_ENABLE_D3D11',
-                            ],
-                            'msvs_settings':
-                            {
-                                'VCLinkerTool':
-                                {
-                                    'AdditionalDependencies':
-                                    [
-                                        'runtimeobject.lib',
-                                    ],
-                                },
-                            },
-                        }],
                     ],
                 },
             ],

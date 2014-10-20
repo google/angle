@@ -11,7 +11,6 @@
 #include "libGLESv2/renderer/FenceImpl.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/main.h"
-#include "common/utilities.h"
 
 #include "angle_gl.h"
 

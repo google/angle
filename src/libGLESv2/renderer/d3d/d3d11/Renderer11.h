@@ -181,7 +181,7 @@ class Renderer11 : public Renderer
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };
-    DXGIFactory *getDxgiFactory() { return mDxgiFactory; };
+    IDXGIFactory *getDxgiFactory() { return mDxgiFactory; };
 
     Blit11 *getBlitter() { return mBlit; }
 
@@ -343,7 +343,7 @@ class Renderer11 : public Renderer
     IDXGIAdapter *mDxgiAdapter;
     DXGI_ADAPTER_DESC mAdapterDescription;
     char mDescription[128];
-    DXGIFactory *mDxgiFactory;
+    IDXGIFactory *mDxgiFactory;
 };
 
 }
