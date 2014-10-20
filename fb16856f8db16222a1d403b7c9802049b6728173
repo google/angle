@@ -22,6 +22,30 @@
       "revId": "fb16856f8db16222a1d403b7c9802049b6728173",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "906390c3_abe561b7",
+        "filename": "src/libGLESv2/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1383,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-20T15:24:56Z",
+      "side": 1,
+      "message": "Well, for one thing, just checked isValidFaceLevel, and it doesn\u0027t seem to check the faceIndex at all! So that was a previous deficiency. To answer your question, IsCubemapTextureTarget(index.type) ensures the GLenum for the cube map face is correct. index.type is a duplicate of layerIndex for cube maps, one being the GLenum version and the other being the integer version, so we\u0027re properly checking the layer index here.",
+      "parentUuid": "104ec00c_a2575c1a",
+      "range": {
+        "startLine": 1382,
+        "startChar": 1,
+        "endLine": 1383,
+        "endChar": 82
+      },
+      "revId": "fb16856f8db16222a1d403b7c9802049b6728173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
