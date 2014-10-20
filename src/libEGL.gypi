@@ -164,7 +164,7 @@
                         {
                             'defines':
                             [
-                                'ANGLE_ENABLE_PERF',
+                                'ANGLE_ENABLE_DEBUG_ANNOTATIONS',
                             ],
                         },
                     },

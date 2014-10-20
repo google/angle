@@ -17,7 +17,7 @@
 
 namespace gl
 {
-#if defined(ANGLE_ENABLE_PERF)
+#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
 typedef void (WINAPI *PerfOutputFunction)(D3DCOLOR, LPCWSTR);
 #else
 typedef void (*PerfOutputFunction)(unsigned int, const wchar_t*);
@@ -25,11 +25,11 @@ typedef void (*PerfOutputFunction)(unsigned int, const wchar_t*);
 
 static void output(bool traceFileDebugOnly, PerfOutputFunction perfFunc, const char *format, va_list vararg)
 {
-#if defined(ANGLE_ENABLE_PERF) || defined(ANGLE_ENABLE_TRACE)
+#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS) || defined(ANGLE_ENABLE_TRACE)
     std::string formattedMessage = FormatString(format, vararg);
 #endif
 
-#if defined(ANGLE_ENABLE_PERF)
+#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
     if (perfActive())
     {
         // The perf function only accepts wide strings, widen the ascii message
@@ -43,7 +43,7 @@ static void output(bool traceFileDebugOnly, PerfOutputFunction perfFunc, const c
 
         perfFunc(0, wideMessage.c_str());
     }
-#endif // ANGLE_ENABLE_PERF
+#endif // ANGLE_ENABLE_DEBUG_ANNOTATIONS
 
 #if defined(ANGLE_ENABLE_TRACE)
 #if defined(NDEBUG)
@@ -67,7 +67,7 @@ void trace(bool traceFileDebugOnly, const char *format, ...)
 {
     va_list vararg;
     va_start(vararg, format);
-#if defined(ANGLE_ENABLE_PERF)
+#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
     output(traceFileDebugOnly, D3DPERF_SetMarker, format, vararg);
 #else
     output(traceFileDebugOnly, NULL, format, vararg);
@@ -77,7 +77,7 @@ void trace(bool traceFileDebugOnly, const char *format, ...)
 
 bool perfActive()
 {
-#if defined(ANGLE_ENABLE_PERF)
+#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
     static bool active = D3DPERF_GetStatus() != 0;
     return active;
 #else
@@ -95,17 +95,17 @@ ScopedPerfEventHelper::ScopedPerfEventHelper(const char* format, ...)
 #endif // !ANGLE_ENABLE_TRACE
     va_list vararg;
     va_start(vararg, format);
-#if defined(ANGLE_ENABLE_PERF)
+#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
     output(true, reinterpret_cast<PerfOutputFunction>(D3DPERF_BeginEvent), format, vararg);
 #else
     output(true, NULL, format, vararg);
-#endif // ANGLE_ENABLE_PERF
+#endif // ANGLE_ENABLE_DEBUG_ANNOTATIONS
     va_end(vararg);
 }
 
 ScopedPerfEventHelper::~ScopedPerfEventHelper()
 {
-#if defined(ANGLE_ENABLE_PERF)
+#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
     if (perfActive())
     {
         D3DPERF_EndEvent();
