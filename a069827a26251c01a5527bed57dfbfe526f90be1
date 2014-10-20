@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b05ed4fb_e774ecc3",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-20T16:58:33Z",
+      "side": 1,
+      "message": "Looks like the indentation got messed up here.  Should be indented once more.",
+      "range": {
+        "startLine": 491,
+        "startChar": 0,
+        "endLine": 556,
+        "endChar": 2
+      },
+      "revId": "a069827a26251c01a5527bed57dfbfe526f90be1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
