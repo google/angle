@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d06988a3_93861436",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-20T14:20:41Z",
+      "side": 1,
+      "message": "It looks like this is the only use case for having the getWidth/Height/etc methods on the RenderbufferImpl, otherwise we can always assume they are zero-sized at Renderbuffer creation.\n\nIt would be good to remove these once we figure out a good way to handle the resize events on the default framebuffer.",
+      "range": {
+        "startLine": 195,
+        "startChar": 4,
+        "endLine": 196,
+        "endChar": 98
+      },
+      "revId": "6a2e8e5501dfdf40748b65738ed1d68ff947216f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "906390c3_cb8e150e",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-20T14:20:41Z",
+      "side": 1,
+      "message": "This method is no longer used, it can be removed along with the Renderbuffer::setImpl method.",
+      "range": {
+        "startLine": 731,
+        "startChar": 0,
+        "endLine": 738,
+        "endChar": 1
+      },
+      "revId": "6a2e8e5501dfdf40748b65738ed1d68ff947216f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b05ed4fb_cc5c6ff2",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-20T14:20:41Z",
+      "side": 1,
+      "message": "This can probably be removed.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 48
+      },
+      "revId": "6a2e8e5501dfdf40748b65738ed1d68ff947216f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06988a3_d3a40cc3",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-20T14:20:41Z",
+      "side": 1,
+      "message": "These arguments should be removed.  This particular function is only called from the ResourceManager and it expects a zero-sized Renderbuffer so we could just return a RenderbufferD3D with a NULL RenderTarget.",
+      "range": {
+        "startLine": 224,
+        "startChar": 49,
+        "endLine": 224,
+        "endChar": 110
+      },
+      "revId": "6a2e8e5501dfdf40748b65738ed1d68ff947216f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b05ed4fb_ecc85333",
+        "filename": "src/libGLESv2/renderer/d3d/RenderbufferD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-20T14:20:41Z",
+      "side": 1,
+      "message": "The getters should be able to handle a NULL mRenderTarget and return some default values.",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 37
+      },
+      "revId": "6a2e8e5501dfdf40748b65738ed1d68ff947216f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
