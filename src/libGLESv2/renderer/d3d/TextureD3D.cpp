@@ -438,6 +438,25 @@ bool TextureD3D::canCreateRenderTargetForImage(const gl::ImageIndex &index) cons
     return (image->isRenderableFormat() && levelsComplete);
 }
 
+gl::Error TextureD3D::commitRegion(const gl::ImageIndex &index, const gl::Box &region)
+{
+    if (mTexStorage)
+    {
+        ASSERT(isValidIndex(index));
+        Image *image = getImage(index);
+        ImageD3D *imageD3D = ImageD3D::makeImageD3D(image);
+        gl::Error error = imageD3D->copyToStorage(mTexStorage, index, region);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        image->markClean();
+    }
+
+    return gl::Error(GL_NO_ERROR);
+}
+
 TextureD3D_2D::TextureD3D_2D(Renderer *renderer)
     : TextureD3D(renderer)
 {
@@ -1034,26 +1053,6 @@ void TextureD3D_2D::redefineImage(GLint level, GLenum internalformat, GLsizei wi
     }
 }
 
-gl::Error TextureD3D_2D::commitRegion(const gl::ImageIndex &index, const gl::Box &region)
-{
-    ASSERT(!index.hasLayer());
-    GLint level = index.mipIndex;
-
-    if (isValidLevel(level))
-    {
-        ImageD3D *image = mImageArray[level];
-        gl::Error error = image->copyToStorage(mTexStorage, index, region);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        image->markClean();
-    }
-
-    return gl::Error(GL_NO_ERROR);
-}
-
 gl::ImageIndexIterator TextureD3D_2D::imageIterator() const
 {
     return gl::ImageIndexIterator::Make2D(0, mTexStorage->getLevelCount());
@@ -1063,6 +1062,12 @@ gl::ImageIndex TextureD3D_2D::getImageIndex(GLint mip, GLint /*layer*/) const
 {
     // "layer" does not apply to 2D Textures.
     return gl::ImageIndex::Make2D(mip);
+}
+
+bool TextureD3D_2D::isValidIndex(const gl::ImageIndex &index) const
+{
+    return (mTexStorage && index.type == GL_TEXTURE_2D &&
+            index.mipIndex >= 0 && index.mipIndex < mTexStorage->getLevelCount());
 }
 
 TextureD3D_Cube::TextureD3D_Cube(Renderer *renderer)
@@ -1594,28 +1599,6 @@ void TextureD3D_Cube::redefineImage(int faceIndex, GLint level, GLenum internalf
     }
 }
 
-gl::Error TextureD3D_Cube::commitRegion(const gl::ImageIndex &index, const gl::Box &region)
-{
-    ASSERT(index.hasLayer());
-
-    GLint level = index.mipIndex;
-    int faceIndex = static_cast<int>(index.layerIndex);
-
-    if (isValidFaceLevel(faceIndex, level))
-    {
-        ImageD3D *image = mImageArray[faceIndex][level];
-        gl::Error error = image->copyToStorage(mTexStorage, index, region);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        image->markClean();
-    }
-
-    return gl::Error(GL_NO_ERROR);
-}
-
 gl::ImageIndexIterator TextureD3D_Cube::imageIterator() const
 {
     return gl::ImageIndexIterator::MakeCube(0, mTexStorage->getLevelCount());
@@ -1625,6 +1608,12 @@ gl::ImageIndex TextureD3D_Cube::getImageIndex(GLint mip, GLint layer) const
 {
     // The "layer" of the image index corresponds to the cube face
     return gl::ImageIndex::MakeCube(gl::TextureCubeMap::layerIndexToTarget(layer), mip);
+}
+
+bool TextureD3D_Cube::isValidIndex(const gl::ImageIndex &index) const
+{
+    return (mTexStorage && gl::IsCubemapTextureTarget(index.type) &&
+            index.mipIndex >= 0 && index.mipIndex < mTexStorage->getLevelCount());
 }
 
 TextureD3D_3D::TextureD3D_3D(Renderer *renderer)
@@ -2173,26 +2162,6 @@ void TextureD3D_3D::redefineImage(GLint level, GLenum internalformat, GLsizei wi
     }
 }
 
-gl::Error TextureD3D_3D::commitRegion(const gl::ImageIndex &index, const gl::Box &region)
-{
-    ASSERT(!index.hasLayer());
-    GLint level = index.mipIndex;
-
-    if (isValidLevel(level))
-    {
-        ImageD3D *image = mImageArray[level];
-        gl::Error error = image->copyToStorage(mTexStorage, index, region);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        image->markClean();
-    }
-
-    return gl::Error(GL_NO_ERROR);
-}
-
 gl::ImageIndexIterator TextureD3D_3D::imageIterator() const
 {
     return gl::ImageIndexIterator::Make3D(0, mTexStorage->getLevelCount(),
@@ -2203,6 +2172,12 @@ gl::ImageIndex TextureD3D_3D::getImageIndex(GLint mip, GLint /*layer*/) const
 {
     // The "layer" here does not apply to 3D images. We use one Image per mip.
     return gl::ImageIndex::Make3D(mip);
+}
+
+bool TextureD3D_3D::isValidIndex(const gl::ImageIndex &index) const
+{
+    return (mTexStorage && index.type == GL_TEXTURE_3D &&
+            index.mipIndex >= 0 && index.mipIndex < mTexStorage->getLevelCount());
 }
 
 TextureD3D_2DArray::TextureD3D_2DArray(Renderer *renderer)
@@ -2753,27 +2728,6 @@ void TextureD3D_2DArray::redefineImage(GLint level, GLenum internalformat, GLsiz
     }
 }
 
-gl::Error TextureD3D_2DArray::commitRegion(const gl::ImageIndex &index, const gl::Box &region)
-{
-    ASSERT(index.hasLayer());
-    GLint level = index.mipIndex;
-    GLint layerTarget = index.layerIndex;
-
-    if (isValidLevel(level) && layerTarget < getLayerCount(level))
-    {
-        ImageD3D *image = mImageArray[level][layerTarget];
-        gl::Error error = image->copyToStorage(mTexStorage, index, region);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        image->markClean();
-    }
-
-    return gl::Error(GL_NO_ERROR);
-}
-
 gl::ImageIndexIterator TextureD3D_2DArray::imageIterator() const
 {
     return gl::ImageIndexIterator::Make2DArray(0, mTexStorage->getLevelCount(), mLayerCounts);
@@ -2782,6 +2736,24 @@ gl::ImageIndexIterator TextureD3D_2DArray::imageIterator() const
 gl::ImageIndex TextureD3D_2DArray::getImageIndex(GLint mip, GLint layer) const
 {
     return gl::ImageIndex::Make2DArray(mip, layer);
+}
+
+bool TextureD3D_2DArray::isValidIndex(const gl::ImageIndex &index) const
+{
+    // Check for having a storage and the right type of index
+    if (!mTexStorage || index.type != GL_TEXTURE_2D_ARRAY)
+    {
+        return false;
+    }
+
+    // Check the mip index
+    if (index.mipIndex < 0 || index.mipIndex >= mTexStorage->getLevelCount())
+    {
+        return false;
+    }
+
+    // Check the layer index
+    return (!index.hasLayer() || (index.layerIndex >= 0 && index.layerIndex < mLayerCounts[index.mipIndex]));
 }
 
 }
