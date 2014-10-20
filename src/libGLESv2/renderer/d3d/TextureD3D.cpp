@@ -90,9 +90,30 @@ GLenum TextureD3D::getBaseLevelInternalFormat() const
     return (baseImage ? baseImage->getInternalFormat() : GL_NONE);
 }
 
+bool TextureD3D::shouldUseSetData(const Image *image) const
+{
+    if (!mRenderer->getWorkarounds().setDataFasterThanImageUpload)
+    {
+        return false;
+    }
+
+    gl::InternalFormat internalFormat = gl::GetInternalFormatInfo(image->getInternalFormat());
+
+    // We can only handle full updates for depth-stencil textures, so to avoid complications
+    // disable them entirely.
+    if (internalFormat.depthBits > 0 || internalFormat.stencilBits > 0)
+    {
+        return false;
+    }
+
+    // TODO(jmadill): Handle compressed internal formats
+    return (mTexStorage && !internalFormat.compressed);
+}
+
 gl::Error TextureD3D::setImage(const gl::PixelUnpackState &unpack, GLenum type, const void *pixels, const gl::ImageIndex &index)
 {
     Image *image = getImage(index);
+    ASSERT(image);
 
     // No-op
     if (image->getWidth() == 0 || image->getHeight() == 0 || image->getDepth() == 0)
@@ -123,13 +144,9 @@ gl::Error TextureD3D::setImage(const gl::PixelUnpackState &unpack, GLenum type, 
     {
         gl::Error error(GL_NO_ERROR);
 
-        gl::InternalFormat internalFormat = gl::GetInternalFormatInfo(image->getInternalFormat());
-
-        // TODO(jmadill): Handle compressed internal formats
-        if (mTexStorage && mRenderer->getWorkarounds().setDataFasterThanImageUpload && !internalFormat.compressed)
+        if (shouldUseSetData(image))
         {
-            gl::Box sourceBox(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
-            error = mTexStorage->setData(index, sourceBox, image->getInternalFormat(), type, unpack, pixelData);
+            error = mTexStorage->setData(index, image, NULL, type, unpack, pixelData);
         }
         else
         {
@@ -168,14 +185,10 @@ gl::Error TextureD3D::subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsi
         Image *image = getImage(index);
         ASSERT(image);
 
-        gl::InternalFormat internalFormat = gl::GetInternalFormatInfo(image->getInternalFormat());
         gl::Box region(xoffset, yoffset, zoffset, width, height, depth);
-
-        // TODO(jmadill): Handle compressed internal formats
-        if (mTexStorage && mRenderer->getWorkarounds().setDataFasterThanImageUpload && !internalFormat.compressed)
+        if (shouldUseSetData(image))
         {
-            return mTexStorage->setData(index, region, image->getInternalFormat(),
-                                        type, unpack, pixelData);
+            return mTexStorage->setData(index, image, &region, type, unpack, pixelData);
         }
 
         gl::Error error = image->loadData(xoffset, yoffset, zoffset, width, height, depth, unpack.alignment,

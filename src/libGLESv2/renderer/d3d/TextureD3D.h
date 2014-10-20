@@ -99,6 +99,8 @@ class TextureD3D : public TextureImpl
     virtual gl::Error initializeStorage(bool renderTarget) = 0;
 
     virtual gl::Error updateStorage() = 0;
+
+    bool shouldUseSetData(const Image *image) const;
 };
 
 class TextureD3D_2D : public TextureD3D

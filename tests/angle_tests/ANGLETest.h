@@ -36,6 +36,17 @@
     EXPECT_EQ((a), pixel[3]); \
 }
 
+#define EXPECT_PIXEL_NEAR(x, y, r, g, b, a, abs_error) \
+{ \
+    GLubyte pixel[4]; \
+    glReadPixels((x), (y), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel); \
+    EXPECT_GL_NO_ERROR(); \
+    EXPECT_NEAR((r), pixel[0], abs_error); \
+    EXPECT_NEAR((g), pixel[1], abs_error); \
+    EXPECT_NEAR((b), pixel[2], abs_error); \
+    EXPECT_NEAR((a), pixel[3], abs_error); \
+}
+
 class EGLWindow;
 class OSWindow;
 

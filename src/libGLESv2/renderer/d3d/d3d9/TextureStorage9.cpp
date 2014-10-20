@@ -87,7 +87,7 @@ int TextureStorage9::getLevelCount() const
     return getBaseTexture() ? (getBaseTexture()->GetLevelCount() - getTopLevel()) : 0;
 }
 
-gl::Error TextureStorage9::setData(const gl::ImageIndex &index, const gl::Box &sourceBox, GLenum internalFormat, GLenum type,
+gl::Error TextureStorage9::setData(const gl::ImageIndex &index, Image *image, const gl::Box *destBox, GLenum type,
                                    const gl::PixelUnpackState &unpack, const uint8_t *pixelData)
 {
     UNREACHABLE();

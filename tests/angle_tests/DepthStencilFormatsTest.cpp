@@ -4,11 +4,14 @@
 typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
 TYPED_TEST_CASE(DepthStencilFormatsTest, TestFixtureTypes);
 
+typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>> TestFixtureTypesES3;
+TYPED_TEST_CASE(DepthStencilFormatsTestES3, TestFixtureTypesES3);
+
 template<typename T>
-class DepthStencilFormatsTest : public ANGLETest
+class DepthStencilFormatsTestBase : public ANGLETest
 {
-protected:
-    DepthStencilFormatsTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
+  protected:
+    DepthStencilFormatsTestBase() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -60,13 +63,65 @@ protected:
     virtual void SetUp()
     {
         ANGLETest::SetUp();
+
+        const std::string vertexShaderSource = SHADER_SOURCE
+        (
+            precision highp float;
+            attribute vec4 position;
+            varying vec2 texcoord;
+
+            void main()
+            {
+                gl_Position = position;
+                texcoord = (position.xy * 0.5) + 0.5;
+            }
+        );
+
+        const std::string fragmentShaderSource = SHADER_SOURCE
+        (
+            precision highp float;
+            uniform sampler2D tex;
+            varying vec2 texcoord;
+
+            void main()
+            {
+                gl_FragColor = texture2D(tex, texcoord);
+            }
+        );
+
+        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        if (mProgram == 0)
+        {
+            FAIL() << "shader compilation failed.";
+        }
+
+        mTextureUniformLocation = glGetUniformLocation(mProgram, "tex");
+        EXPECT_NE(-1, mTextureUniformLocation);
+
+        glGenTextures(1, &mTexture);
+        ASSERT_GL_NO_ERROR();
     }
 
     virtual void TearDown()
     {
+        glDeleteProgram(mProgram);
+        glDeleteTextures(1, &mTexture);
+
         ANGLETest::TearDown();
     }
+
+    GLuint mProgram;
+    GLuint mTexture;
+    GLint mTextureUniformLocation;
 };
+
+template <typename T>
+class DepthStencilFormatsTest : public DepthStencilFormatsTestBase<T>
+{};
+
+template <typename T>
+class DepthStencilFormatsTestES3 : public DepthStencilFormatsTestBase<T>
+{};
 
 TYPED_TEST(DepthStencilFormatsTest, DepthTexture)
 {
@@ -97,4 +152,29 @@ TYPED_TEST(DepthStencilFormatsTest, PackedDepthStencil)
     {
         EXPECT_EQ(shouldHaveTextureSupport, checkTexStorageFormatSupport(GL_DEPTH24_STENCIL8_OES));
     }
+}
+
+TYPED_TEST(DepthStencilFormatsTestES3, DrawWithDepthStencil)
+{
+    GLushort data[16];
+    for (unsigned int i = 0; i < 16; i++)
+    {
+        data[i] = std::numeric_limits<GLushort>::max();
+    }
+    glBindTexture(GL_TEXTURE_2D, mTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT16, 4, 4);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, data);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glUseProgram(mProgram);
+    glUniform1i(mTextureUniformLocation, 0);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(mProgram, "position", 0.5f);
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_NEAR(0, 0, 255, 0, 0, 255, 2.0);
 }
