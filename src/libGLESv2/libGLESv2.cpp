@@ -6993,7 +6993,7 @@ void GL_APIENTRY glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLin
             return;
         }
 
-        if (!gl::ValidBufferTarget(context, readTarget) || !gl::ValidBufferTarget(context, readTarget))
+        if (!gl::ValidBufferTarget(context, readTarget) || !gl::ValidBufferTarget(context, writeTarget))
         {
             context->recordError(gl::Error(GL_INVALID_ENUM));
             return;
