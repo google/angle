@@ -22,6 +22,30 @@
       "revId": "cb86a6443555678ccb03f3d098d05bb9c83a8ebb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06988a3_73ea60b3",
+        "filename": "tests/angle_tests/DepthStencilFormatsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-20T15:03:09Z",
+      "side": 1,
+      "message": "No, hah, I wasn\u0027t sure exactly what it should be, say, if something had some strange implementation for depth textures. I think it was exactly 255.",
+      "parentUuid": "906390c3_1766740e",
+      "range": {
+        "startLine": 179,
+        "startChar": 44,
+        "endLine": 179,
+        "endChar": 48
+      },
+      "revId": "cb86a6443555678ccb03f3d098d05bb9c83a8ebb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
