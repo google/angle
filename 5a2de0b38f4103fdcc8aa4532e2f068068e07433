@@ -22,6 +22,30 @@
       "revId": "5a2de0b38f4103fdcc8aa4532e2f068068e07433",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5023d88d_a5faded6",
+        "filename": "src/libGLESv2/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-20T21:13:51Z",
+      "side": 1,
+      "message": "Done, I didn\u0027t want to add another local variable but it doesn\u0027t matter either way.",
+      "parentUuid": "d06988a3_6e1513ad",
+      "range": {
+        "startLine": 202,
+        "startChar": 12,
+        "endLine": 202,
+        "endChar": 26
+      },
+      "revId": "5a2de0b38f4103fdcc8aa4532e2f068068e07433",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
