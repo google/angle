@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d06988a3_6e1513ad",
+        "filename": "src/libGLESv2/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-20T18:58:08Z",
+      "side": 1,
+      "message": "tiny nit: could clean up this code using\n\n const uint8_t *dataPointer \u003d indices;\n if (staticBuffer)\n {\n   // check error \u0026 overwrite pointer\n }\n ConvertIndices(...)",
+      "range": {
+        "startLine": 202,
+        "startChar": 12,
+        "endLine": 202,
+        "endChar": 26
+      },
+      "revId": "5a2de0b38f4103fdcc8aa4532e2f068068e07433",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
