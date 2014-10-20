@@ -77,7 +77,7 @@ class Texture : public RefCountObject
     unsigned int getTextureSerial();
 
     bool isImmutable() const;
-    int immutableLevelCount();
+    GLsizei immutableLevelCount();
 
     rx::TextureImpl *getImplementation() { return mTexture; }
     const rx::TextureImpl *getImplementation() const { return mTexture; }
@@ -92,7 +92,7 @@ class Texture : public RefCountObject
     SamplerState mSamplerState;
     GLenum mUsage;
 
-    bool mImmutable;
+    GLsizei mImmutableLevelCount;
 
     GLenum mTarget;
 

@@ -3165,7 +3165,7 @@ void GL_APIENTRY glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 context->recordError(gl::Error(GL_INVALID_ENUM));
                 return;
             }
-            *params = texture->immutableLevelCount();
+            *params = static_cast<GLint>(texture->immutableLevelCount());
             break;
           case GL_TEXTURE_USAGE_ANGLE:
             *params = texture->getUsage();

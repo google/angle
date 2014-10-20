@@ -51,7 +51,7 @@ Texture::Texture(rx::TextureImpl *impl, GLuint id, GLenum target)
     : RefCountObject(id),
       mTexture(impl),
       mUsage(GL_NONE),
-      mImmutable(false),
+      mImmutableLevelCount(0),
       mTarget(target)
 {
 }
@@ -162,12 +162,12 @@ unsigned int Texture::getTextureSerial()
 
 bool Texture::isImmutable() const
 {
-    return mImmutable;
+    return (mImmutableLevelCount > 0);
 }
 
 int Texture::immutableLevelCount()
 {
-    return (mImmutable ? getNativeTexture()->getLevelCount() : 0);
+    return mImmutableLevelCount;
 }
 
 int Texture::mipLevels() const
@@ -290,7 +290,7 @@ Error Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, G
         return error;
     }
 
-    mImmutable = true;
+    mImmutableLevelCount = levels;
 
     return Error(GL_NO_ERROR);
 }
@@ -551,7 +551,7 @@ Error TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei siz
         return error;
     }
 
-    mImmutable = true;
+    mImmutableLevelCount = levels;
 
     return Error(GL_NO_ERROR);
 }
@@ -760,7 +760,7 @@ Error Texture3D::storage(GLsizei levels, GLenum internalformat, GLsizei width, G
         return error;
     }
 
-    mImmutable = true;
+    mImmutableLevelCount = levels;
 
     return Error(GL_NO_ERROR);
 }
@@ -927,7 +927,7 @@ Error Texture2DArray::storage(GLsizei levels, GLenum internalformat, GLsizei wid
         return error;
     }
 
-    mImmutable = true;
+    mImmutableLevelCount = levels;
 
     return Error(GL_NO_ERROR);
 }
