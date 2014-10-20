@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d06988a3_33846899",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-20T16:22:42Z",
+      "side": 1,
+      "message": "This needs to be and\u0027d with the OS\u003d\u003d\"win\" or else the angle_libangle_win_sources will be compiled on mac/linux.",
+      "range": {
+        "startLine": 432,
+        "startChar": 17,
+        "endLine": 432,
+        "endChar": 39
+      },
+      "revId": "756aebfc7afa6d0de14e96637ef396dd7b290c2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
