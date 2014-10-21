@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95f62248_3fac477f",
+        "filename": "src/common/platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-21T14:35:12Z",
+      "side": 0,
+      "message": "Why remove these? I recall having compilation issues with some struct members being named near and far.",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 13
+      },
+      "revId": "f1d67a37180e9142ae1438aab4bf23325dde9c80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

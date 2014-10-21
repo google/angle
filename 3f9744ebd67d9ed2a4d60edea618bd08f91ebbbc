@@ -1,0 +1,153 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95f62248_5fa70b9f",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-21T14:35:12Z",
+      "side": 1,
+      "message": "This can be a reference (we\u0027ve changed our style guide to allow for non-const references to stl objects) and please name it outBuffer.",
+      "range": {
+        "startLine": 12,
+        "startChar": 77,
+        "endLine": 12,
+        "endChar": 79
+      },
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06988a3_d6beb58c",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-21T14:35:12Z",
+      "side": 1,
+      "message": "Let\u0027s change this to a size_t since it always returns positive numbers.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 3
+      },
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95f62248_5f902b2b",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-21T14:35:12Z",
+      "side": 1,
+      "message": "There is some stray whitespace in this file that needs fixing.",
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95f62248_1f8aa3f7",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-21T14:35:12Z",
+      "side": 1,
+      "message": "These can be const references to std::wstring and do the unboxing at the D3D API level.  They could even be std::strings and do the conversion just before calling the SetMarker function to push the use of wchar_t down as low as possible.",
+      "range": {
+        "startLine": 32,
+        "startChar": 28,
+        "endLine": 32,
+        "endChar": 43
+      },
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06988a3_d633159b",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-21T14:35:12Z",
+      "side": 1,
+      "message": "Instead of an elif, this could be a seperate ifdef.  That way we\u0027ll compile both AnnotationWrapper classes and reduce the chance of breaking one by rarely compiling it.",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 33
+      },
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5023d88d_6b6c35a4",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-21T14:35:12Z",
+      "side": 1,
+      "message": "nit: can use SafeDelete here.",
+      "range": {
+        "startLine": 181,
+        "startChar": 4,
+        "endLine": 185,
+        "endChar": 5
+      },
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06988a3_16e02da3",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-21T14:35:12Z",
+      "side": 1,
+      "message": "Could you explain these changes?  Are these functions no longer needed on the windows store path?  If that\u0027s the case, please if-def out the declarations in the header too or have an UNIMPLEMENTED macro inside the definitions.",
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
