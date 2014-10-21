@@ -17,6 +17,7 @@
 #include <set>
 #include <sstream>
 #include <cstdarg>
+#include <vector>
 
 // A macro to disallow the copy constructor and operator= functions
 // This must be used in the private: declarations for a class
@@ -138,6 +139,8 @@ inline std::string Str(int i)
     strstr << i;
     return strstr.str();
 }
+
+size_t FormatStringIntoVector(const char *fmt, va_list vararg, std::vector<char>& buffer);
 
 std::string FormatString(const char *fmt, va_list vararg);
 std::string FormatString(const char *fmt, ...);

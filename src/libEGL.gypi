@@ -155,6 +155,13 @@
                                         'd3d9.lib',
                                     ],
                                 }],
+                                ['angle_build_winrt==1',
+                                {
+                                    'AdditionalDependencies':
+                                    [
+                                        'd3d11.lib',
+                                    ],
+                                }],
                             ],
                         },
                     },

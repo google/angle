@@ -220,12 +220,15 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
 
     int compileOptions = (SH_OBJECT_CODE | SH_VARIABLES);
     std::string sourcePath;
+
+#if !defined (ANGLE_ENABLE_WINDOWS_STORE)
     if (gl::perfActive())
     {
         sourcePath = getTempPath();
         writeFile(sourcePath.c_str(), source.c_str(), source.length());
         compileOptions |= SH_LINE_DIRECTIVES;
     }
+#endif
 
     int result;
     if (sourcePath.empty())

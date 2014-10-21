@@ -183,12 +183,14 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
 #endif
     ASSERT(mD3DCompileFunc);
 
+#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
     if (gl::perfActive())
     {
         std::string sourcePath = getTempPath();
         std::string sourceText = FormatString("#line 2 \"%s\"\n\n%s", sourcePath.c_str(), hlsl.c_str());
         writeFile(sourcePath.c_str(), sourceText.c_str(), sourceText.size());
     }
+#endif
 
     const D3D_SHADER_MACRO *macros = overrideMacros ? overrideMacros : NULL;
 

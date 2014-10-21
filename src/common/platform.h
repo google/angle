@@ -50,7 +50,7 @@
 #   include <windows.h>
 #   include <intrin.h>
 
-#   if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
+#   if defined(ANGLE_ENABLE_D3D9)
 #       include <d3d9.h>
 #       include <d3dcompiler.h>
 #   endif
@@ -58,14 +58,18 @@
 #   if defined(ANGLE_ENABLE_D3D11)
 #       include <d3d10_1.h>
 #       include <d3d11.h>
+#       include <d3d11_1.h>
 #       include <dxgi.h>
 #       include <dxgi1_2.h>
 #       include <d3dcompiler.h>
 #   endif
 
 #   if defined(ANGLE_ENABLE_WINDOWS_STORE)
-#       undef ANGLE_ENABLE_DEBUG_ANNOTATIONS
 #       include <dxgi1_3.h>
+#       if defined(_DEBUG)
+#           include <DXProgrammableCapture.h>
+#           include <dxgidebug.h>
+#       endif
 #   endif
 
 #   undef near
