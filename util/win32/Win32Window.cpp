@@ -6,6 +6,8 @@
 
 #include "win32/Win32Window.h"
 
+#include <sstream>
+
 Key VirtualKeyCodeToKey(WPARAM key, LPARAM flags)
 {
     switch (key)
@@ -377,8 +379,14 @@ bool Win32Window::initialize(const std::string &name, size_t width, size_t heigh
 {
     destroy();
 
-    mParentClassName = name;
-    mChildClassName = name + "Child";
+    // Use a new window class name for ever window to ensure that a new window can be created
+    // even if the last one was not properly destroyed
+    static size_t windowIdx = 0;
+    std::ostringstream nameStream;
+    nameStream << name << "_" << windowIdx++;
+
+    mParentClassName = nameStream.str();
+    mChildClassName = mParentClassName + "_Child";
 
     // Work around compile error from not defining "UNICODE" while Chromium does
     const LPSTR idcArrow = MAKEINTRESOURCEA(32512);
