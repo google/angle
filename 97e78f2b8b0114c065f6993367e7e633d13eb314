@@ -81,6 +81,24 @@
       "revId": "97e78f2b8b0114c065f6993367e7e633d13eb314",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5023d88d_aefabbd6",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-21T17:17:34Z",
+      "side": 1,
+      "message": "Attributes shouldn\u0027t be necessary because they don\u0027t have struct types and we don\u0027t ever call GetVariableTraverser to parse them. (See CollectVariables). Leaving them in is probably harmless. You\u0027re right about IBF actually, sorry about that, those should be in there, and ShaderVariables too.",
+      "parentUuid": "f5e75e92_08438b3c",
+      "revId": "97e78f2b8b0114c065f6993367e7e633d13eb314",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
