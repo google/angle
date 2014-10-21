@@ -48,6 +48,42 @@
     },
     {
       "key": {
+        "uuid": "f5103e40_8e2fab7e",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-21T22:49:44Z",
+      "side": 1,
+      "message": "vsnprintf can return negative values if an error occurs. As a result, I think it\u0027s right for this to return an int.",
+      "parentUuid": "d06988a3_d6beb58c",
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5103e40_0e439b3c",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-21T22:49:44Z",
+      "side": 1,
+      "message": "Sure, done.",
+      "parentUuid": "95f62248_5fa70b9f",
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95f62248_5f902b2b",
         "filename": "src/common/debug.cpp",
         "patchSetId": 1
@@ -88,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "f5103e40_e97aa1aa",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-21T22:49:44Z",
+      "side": 1,
+      "message": "I\u0027ve made them std::wstring. I\u0027d rather not pass them as std::strings and convert them to std::wstring before calling SetMarker, since that extra conversion hurts performance.",
+      "parentUuid": "95f62248_1f8aa3f7",
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d06988a3_d633159b",
         "filename": "src/common/debug.cpp",
         "patchSetId": 1
@@ -105,6 +159,24 @@
         "endLine": 62,
         "endChar": 33
       },
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5103e40_2ea1bf07",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-21T22:49:44Z",
+      "side": 1,
+      "message": "Sure.",
+      "parentUuid": "d06988a3_d633159b",
       "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -145,6 +217,24 @@
       "writtenOn": "2014-10-21T14:35:12Z",
       "side": 1,
       "message": "Could you explain these changes?  Are these functions no longer needed on the windows store path?  If that\u0027s the case, please if-def out the declarations in the header too or have an UNIMPLEMENTED macro inside the definitions.",
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5103e40_2e1e5fce",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-21T22:49:44Z",
+      "side": 1,
+      "message": "No, they\u0027re no longer needed in the Windows Store versions of ANGLE. They\u0027re only used when ANGLE_ENABLE_DEBUG_ANNOTATIONS is enabled, as a way of making PIX display the GLSL instead of the HLSL. That\u0027s not needed in Windows Store.\n\nI #ifdef\u0027ed them out so that we will get build breaks if the Windows Store version needs these functions, rather than runtime errors. I\u0027ve updated my change to add an #ifdef to the header.",
+      "parentUuid": "d06988a3_16e02da3",
       "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false

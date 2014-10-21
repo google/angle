@@ -22,6 +22,24 @@
       "revId": "f1d67a37180e9142ae1438aab4bf23325dde9c80",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "150232f8_643480d4",
+        "filename": "src/common/platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-21T22:49:44Z",
+      "side": 0,
+      "message": "They caused compilation issues when I included DXProgrammableCapture.h and dxgidebug.h in debug.cpp. I wanted to put them in debug.cpp (instead of platform.h) since they shouldn\u0027t really be used anywhere else.\n\nI think the best fix long-term is to solve the compilation issues caused when you don\u0027t undef near/far, so I\u0027ve tried to do that. I fixed the only compilation issue that I hit, in src/compiler/translator/Initialize.cpp. Are there other more subtle problems?",
+      "parentUuid": "95f62248_3fac477f",
+      "revId": "f1d67a37180e9142ae1438aab4bf23325dde9c80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
