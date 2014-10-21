@@ -133,6 +133,14 @@ bool CompareStructure(const TType &leftNodeType,
 //
 ////////////////////////////////////////////////////////////////
 
+void TIntermTyped::setTypePreservePrecision(const TType &t)
+{
+    TPrecision precision = getPrecision();
+    mType = t;
+    ASSERT(mType.getBasicType() != EbtBool || precision == EbpUndefined);
+    mType.setPrecision(precision);
+}
+
 #define REPLACE_IF_IS(node, type, original, replacement) \
     if (node == original) { \
         node = static_cast<type *>(replacement); \
@@ -235,6 +243,52 @@ void TIntermAggregate::enqueueChildren(std::queue<TIntermNode *> *nodeQueue) con
     {
         nodeQueue->push(mSequence[childIndex]);
     }
+}
+
+void TIntermAggregate::setPrecisionFromChildren()
+{
+    if (getBasicType() == EbtBool)
+    {
+        mType.setPrecision(EbpUndefined);
+        return;
+    }
+
+    TPrecision precision = EbpUndefined;
+    TIntermSequence::iterator childIter = mSequence.begin();
+    while (childIter != mSequence.end())
+    {
+        TIntermTyped *typed = (*childIter)->getAsTyped();
+        if (typed)
+            precision = GetHigherPrecision(typed->getPrecision(), precision);
+        ++childIter;
+    }
+    mType.setPrecision(precision);
+}
+
+void TIntermAggregate::setBuiltInFunctionPrecision()
+{
+    // All built-ins returning bool should be handled as ops, not functions.
+    ASSERT(getBasicType() != EbtBool);
+
+    TPrecision precision = EbpUndefined;
+    TIntermSequence::iterator childIter = mSequence.begin();
+    while (childIter != mSequence.end())
+    {
+        TIntermTyped *typed = (*childIter)->getAsTyped();
+        // ESSL spec section 8: texture functions get their precision from the sampler.
+        if (typed && IsSampler(typed->getBasicType()))
+        {
+            precision = typed->getPrecision();
+            break;
+        }
+        ++childIter;
+    }
+    // ESSL 3.0 spec section 8: textureSize always gets highp precision.
+    // All other functions that take a sampler are assumed to be texture functions.
+    if (mName.find("textureSize") == 0)
+        mType.setPrecision(EbpHigh);
+    else
+        mType.setPrecision(precision);
 }
 
 bool TIntermSelection::replaceChildNode(
