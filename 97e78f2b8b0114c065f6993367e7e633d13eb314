@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "30202482_8bbecea4",
+        "filename": "src/compiler/translator/DirectiveHandler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-21T17:06:46Z",
+      "side": 1,
+      "message": "You are right, they are forbidden for class type.  I didn\u0027t think since it\u0027s already there.  Removing them.",
+      "parentUuid": "d06988a3_b685c164",
+      "revId": "97e78f2b8b0114c065f6993367e7e633d13eb314",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95f62248_1fb74380",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 10
@@ -42,6 +60,24 @@
         "endLine": 293,
         "endChar": 75
       },
+      "revId": "97e78f2b8b0114c065f6993367e7e633d13eb314",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5e75e92_08438b3c",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-10-21T17:06:46Z",
+      "side": 1,
+      "message": "OK, I have a question.\n\ntraverse() also call itself when processing struct fields.  For that, the variable.fields is std::vector\u003cShaderVariable\u003e.  So why don\u0027t we need to instantiate the template for ShaderVariable?\n\nAlso, why no need for Attribute and IBF?",
+      "parentUuid": "95f62248_1fb74380",
       "revId": "97e78f2b8b0114c065f6993367e7e633d13eb314",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
