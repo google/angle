@@ -115,6 +115,7 @@
                     'target_name': 'commit_id',
                     'type': 'none',
                     'hard_dependency': 1,
+                    'includes': [ '../build/common_defines.gypi', ],
                     'copies':
                     [
                         {
