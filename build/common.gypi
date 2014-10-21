@@ -108,16 +108,7 @@
                     {
                         'Optimization': '0',    # /Od
                         'BasicRuntimeChecks': '3',
-                        'RuntimeLibrary': '1',    # /MTd (debug static)
-                        'conditions':
-                        [
-                            # winrt compilation requires that this library is
-                            # uses dynamic linked runtime
-                            ['angle_build_winrt==1',
-                            {
-                                'RuntimeLibrary': '3',    # /MDd (debug dynamic)
-                            }],
-                        ],
+                        'RuntimeLibrary': '3',    # /MTd (debug DLL)
                     },
                     'VCLinkerTool':
                     {
@@ -144,16 +135,7 @@
                     'VCCLCompilerTool':
                     {
                         'Optimization': '2',    # /Os
-                        'RuntimeLibrary': '0',    # /MT (static)
-                        'conditions':
-                        [
-                            # winrt compilation requires that this library is
-                            # uses dynamic linked runtime
-                            ['angle_build_winrt==1',
-                            {
-                                'RuntimeLibrary': '2',    # /MDd (debug dynamic)
-                            }],
-                        ],
+                        'RuntimeLibrary': '2',    # /MT (DLL)
                     },
                     'VCLinkerTool':
                     {
