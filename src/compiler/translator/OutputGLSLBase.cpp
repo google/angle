@@ -743,7 +743,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         writeBuiltInFunctionTriplet(visit, "notEqual(", useEmulatedFunction);
         break;
       case EOpComma:
-        writeTriplet(visit, NULL, ", ", NULL);
+        writeTriplet(visit, "(", ", ", ")");
         break;
 
       case EOpMod:
