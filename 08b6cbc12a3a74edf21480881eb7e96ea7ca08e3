@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95f62248_9fd8f3fd",
+        "filename": "src/libEGL/Error.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-21T14:54:52Z",
+      "side": 1,
+      "message": "When the projects are merged, this error class will be merged into the same file as the GL one.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 2
+      },
+      "revId": "08b6cbc12a3a74edf21480881eb7e96ea7ca08e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
