@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d06988a3_b685c164",
+        "filename": "src/compiler/translator/DirectiveHandler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-21T15:33:18Z",
+      "side": 1,
+      "message": "mo, are we allowed to add static data in translator/chromium? or is static const stuff allowed since it\u0027s managed differently by the compiler?",
+      "range": {
+        "startLine": 54,
+        "startChar": 8,
+        "endLine": 54,
+        "endChar": 32
+      },
+      "revId": "97e78f2b8b0114c065f6993367e7e633d13eb314",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95f62248_1fb74380",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-21T15:33:18Z",
+      "side": 1,
+      "message": "I had suggested that the Attribute and IBF specializations, as well as ShaderVariable specializations are unreachable. I\u0027m okay to leave them in (and same below). (templates are funny creatures)",
+      "range": {
+        "startLine": 290,
+        "startChar": 0,
+        "endLine": 293,
+        "endChar": 75
+      },
+      "revId": "97e78f2b8b0114c065f6993367e7e633d13eb314",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
