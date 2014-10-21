@@ -223,14 +223,14 @@
                         'TargetMachine': '3', # ARM
                         'AdditionalLibraryDirectories':
                         [
-                            '<(windows_sdk_path)/Lib/win8/um/arm',
+                            '<(windows_8_1_sdk_path)/Lib/win8/um/arm',
                         ],
                     },
                     'VCLibrarianTool':
                     {
                         'AdditionalLibraryDirectories':
                         [
-                            '<(windows_sdk_path)/Lib/win8/um/arm',
+                            '<(windows_8_1_sdk_path)/Lib/win8/um/arm',
                         ],
                     },
                 },

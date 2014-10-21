@@ -170,7 +170,7 @@
                                     [
                                         "<(angle_gen_path)/copy_compiler_dll.bat",
                                         "$(PlatformName)",
-                                        "<(windows8_sdk_path)",
+                                        "<(windows_sdk_path)",
                                         "<(PRODUCT_DIR)"
                                     ],
                                 },
