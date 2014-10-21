@@ -766,7 +766,7 @@ void GL_APIENTRY glCompressedTexImage2D(GLenum target, GLint level, GLenum inter
           case GL_TEXTURE_2D:
             {
                 gl::Texture2D *texture = context->getTexture2D();
-                gl::Error error = texture->setCompressedImage(level, internalformat, width, height, imageSize, data);
+                gl::Error error = texture->setCompressedImage(level, internalformat, width, height, imageSize, context->getState().getUnpackState(), data);
                 if (error.isError())
                 {
                     context->recordError(error);
@@ -783,7 +783,7 @@ void GL_APIENTRY glCompressedTexImage2D(GLenum target, GLint level, GLenum inter
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                gl::Error error = texture->setCompressedImage(target, level, internalformat, width, height, imageSize, data);
+                gl::Error error = texture->setCompressedImage(target, level, internalformat, width, height, imageSize, context->getState().getUnpackState(), data);
                 if (error.isError())
                 {
                     context->recordError(error);
@@ -836,7 +836,7 @@ void GL_APIENTRY glCompressedTexSubImage2D(GLenum target, GLint level, GLint xof
           case GL_TEXTURE_2D:
             {
                 gl::Texture2D *texture = context->getTexture2D();
-                gl::Error error = texture->subImageCompressed(level, xoffset, yoffset, width, height, format, imageSize, data);
+                gl::Error error = texture->subImageCompressed(level, xoffset, yoffset, width, height, format, imageSize, context->getState().getUnpackState(), data);
                 if (error.isError())
                 {
                     context->recordError(error);
@@ -853,7 +853,7 @@ void GL_APIENTRY glCompressedTexSubImage2D(GLenum target, GLint level, GLint xof
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                gl::Error error = texture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+                gl::Error error = texture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, context->getState().getUnpackState(), data);
                 if (error.isError())
                 {
                     context->recordError(error);
@@ -5285,7 +5285,7 @@ void GL_APIENTRY glCompressedTexImage3D(GLenum target, GLint level, GLenum inter
           case GL_TEXTURE_3D:
             {
                 gl::Texture3D *texture = context->getTexture3D();
-                gl::Error error = texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, data);
+                gl::Error error = texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, context->getState().getUnpackState(), data);
                 if (error.isError())
                 {
                     context->recordError(error);
@@ -5297,7 +5297,7 @@ void GL_APIENTRY glCompressedTexImage3D(GLenum target, GLint level, GLenum inter
           case GL_TEXTURE_2D_ARRAY:
             {
                 gl::Texture2DArray *texture = context->getTexture2DArray();
-                gl::Error error = texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, data);
+                gl::Error error = texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, context->getState().getUnpackState(), data);
                 if (error.isError())
                 {
                     context->recordError(error);
@@ -5361,7 +5361,7 @@ void GL_APIENTRY glCompressedTexSubImage3D(GLenum target, GLint level, GLint xof
             {
                 gl::Texture3D *texture = context->getTexture3D();
                 gl::Error error = texture->subImageCompressed(level, xoffset, yoffset, zoffset, width, height, depth,
-                                                              format, imageSize, data);
+                                                              format, imageSize, context->getState().getUnpackState(), data);
                 if (error.isError())
                 {
                     context->recordError(error);
@@ -5374,7 +5374,7 @@ void GL_APIENTRY glCompressedTexSubImage3D(GLenum target, GLint level, GLint xof
             {
                 gl::Texture2DArray *texture = context->getTexture2DArray();
                 gl::Error error = texture->subImageCompressed(level, xoffset, yoffset, zoffset, width, height, depth,
-                                                              format, imageSize, data);
+                                                              format, imageSize, context->getState().getUnpackState(), data);
                 if (error.isError())
                 {
                     context->recordError(error);
