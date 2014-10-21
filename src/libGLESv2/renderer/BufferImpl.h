@@ -23,7 +23,6 @@ class BufferImpl
     virtual ~BufferImpl() { }
 
     virtual gl::Error setData(const void* data, size_t size, GLenum usage) = 0;
-    virtual gl::Error getData(const uint8_t **outData) = 0;
     virtual gl::Error setSubData(const void* data, size_t size, size_t offset) = 0;
     virtual gl::Error copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size) = 0;
     virtual gl::Error map(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr) = 0;

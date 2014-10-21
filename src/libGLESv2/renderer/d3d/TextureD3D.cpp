@@ -9,7 +9,7 @@
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/TextureStorage.h"
 #include "libGLESv2/renderer/d3d/ImageD3D.h"
-#include "libGLESv2/Buffer.h"
+#include "libGLESv2/renderer/d3d/BufferD3D.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/main.h"
@@ -39,8 +39,10 @@ gl::Error GetUnpackPointer(const gl::PixelUnpackState &unpack, const void *pixel
 
         // TODO: this is the only place outside of renderer that asks for a buffers raw data.
         // This functionality should be moved into renderer and the getData method of BufferImpl removed.
+        BufferD3D *bufferD3D = BufferD3D::makeBufferD3D(pixelBuffer->getImplementation());
+        ASSERT(bufferD3D);
         const uint8_t *bufferData = NULL;
-        gl::Error error = pixelBuffer->getImplementation()->getData(&bufferData);
+        gl::Error error = bufferD3D->getData(&bufferData);
         if (error.isError())
         {
             return error;

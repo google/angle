@@ -91,7 +91,7 @@ gl::Error VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attri
     {
         if (buffer)
         {
-            BufferImpl *storage = buffer->getImplementation();
+            BufferD3D *storage = BufferD3D::makeFromBuffer(buffer);
             gl::Error error = storage->getData(&input);
             if (error.isError())
             {
