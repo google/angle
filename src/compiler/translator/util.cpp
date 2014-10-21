@@ -315,6 +315,8 @@ void GetVariableTraverser::setTypeSpecificInfo(
       default:
         break;
     }
+
+    variable->interpolation = GetInterpolationType(type.getQualifier());
 }
 
 template <typename VarT>

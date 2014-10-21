@@ -336,3 +336,35 @@ TEST_F(CollectVertexVariablesTest, NestedStructRowMajorInterfaceBlock)
     EXPECT_GLENUM_EQ(GL_FLOAT_MAT2, member.type);
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, member.precision);
 }
+
+TEST_F(CollectVertexVariablesTest, VaryingInterpolation)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "centroid out float vary;\n"
+        "void main() {\n"
+        "   gl_Position = vec4(1.0);\n"
+        "   vary = 1.0;\n"
+        "}\n";
+
+    const char *shaderStrings[] = { shaderString.c_str() };
+    ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, SH_VARIABLES));
+
+    const std::vector<sh::Varying> &varyings = mTranslator->getVaryings();
+    ASSERT_EQ(2u, varyings.size());
+
+    const sh::Varying *varying = &varyings[0];
+
+    if (varying->name == "gl_Position")
+    {
+        varying = &varyings[1];
+    }
+
+    EXPECT_EQ(0u, varying->arraySize);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, varying->precision);
+    EXPECT_TRUE(varying->staticUse);
+    EXPECT_GLENUM_EQ(GL_FLOAT, varying->type);
+    EXPECT_EQ("vary", varying->name);
+    EXPECT_EQ(sh::INTERPOLATION_CENTROID, varying->interpolation);
+}
