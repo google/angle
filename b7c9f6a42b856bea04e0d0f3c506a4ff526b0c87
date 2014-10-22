@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "153072e8_11798cb8",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-22T15:43:31Z",
+      "side": 1,
+      "message": "nit: can we call this \"setTypePreservePrecision\"? For some reason I found it confusing with the \"not\" (!) operator",
+      "range": {
+        "startLine": 136,
+        "startChar": 19,
+        "endLine": 136,
+        "endChar": 38
+      },
+      "revId": "b7c9f6a42b856bea04e0d0f3c506a4ff526b0c87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "153072e8_912fbca7",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-22T15:43:31Z",
+      "side": 1,
+      "message": "nit: newline for brace",
+      "range": {
+        "startLine": 19,
+        "startChar": 10,
+        "endLine": 19,
+        "endChar": 11
+      },
+      "revId": "b7c9f6a42b856bea04e0d0f3c506a4ff526b0c87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "153072e8_716a10e0",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-22T15:43:31Z",
+      "side": 1,
+      "message": "nit: GetMaxPrecision ? optional suggestion",
+      "range": {
+        "startLine": 21,
+        "startChar": 14,
+        "endLine": 21,
+        "endChar": 20
+      },
+      "revId": "b7c9f6a42b856bea04e0d0f3c506a4ff526b0c87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "153072e8_d13544fd",
+        "filename": "tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-22T15:43:31Z",
+      "side": 1,
+      "message": "nit: \"compile\" lower case, it\u0027s counter-intuitive because the virtual SetUp and TearDown",
+      "range": {
+        "startLine": 36,
+        "startChar": 9,
+        "endLine": 36,
+        "endChar": 16
+      },
+      "revId": "b7c9f6a42b856bea04e0d0f3c506a4ff526b0c87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "153072e8_f13840f5",
+        "filename": "tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-22T15:43:31Z",
+      "side": 1,
+      "message": "nit: \u0026 should be flush-right",
+      "range": {
+        "startLine": 40,
+        "startChar": 17,
+        "endLine": 40,
+        "endChar": 18
+      },
+      "revId": "b7c9f6a42b856bea04e0d0f3c506a4ff526b0c87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7529ae84_3443588f",
+        "filename": "tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-22T15:43:31Z",
+      "side": 1,
+      "message": "nit: f",
+      "range": {
+        "startLine": 46,
+        "startChar": 9,
+        "endLine": 46,
+        "endChar": 10
+      },
+      "revId": "b7c9f6a42b856bea04e0d0f3c506a4ff526b0c87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
