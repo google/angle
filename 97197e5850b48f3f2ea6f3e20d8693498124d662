@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55210a94_29a095aa",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-10-22T17:21:25Z",
+      "side": 1,
+      "message": "The function name suggests the type isn\u0027t changed, yet it\u0027s potentially changed here. Can this be avoided by fixing the root of the problem?",
+      "range": {
+        "startLine": 136,
+        "startChar": 8,
+        "endLine": 136,
+        "endChar": 41
+      },
+      "revId": "97197e5850b48f3f2ea6f3e20d8693498124d662",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
