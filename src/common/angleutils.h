@@ -95,6 +95,13 @@ inline void StructZero(T *obj)
     memset(obj, 0, sizeof(T));
 }
 
+template <typename T>
+inline bool IsMaskFlagSet(T mask, T flag)
+{
+    // Handles multibit flags as well
+    return (mask & flag) == flag;
+}
+
 inline const char* MakeStaticString(const std::string &str)
 {
     static std::set<std::string> strings;

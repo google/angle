@@ -12,6 +12,84 @@
 
 #include "third_party/trace_event/trace_event.h"
 
+// Definitions local to the translation unit
+namespace
+{
+
+#ifdef CREATE_COMPILER_FLAG_INFO
+    #undef CREATE_COMPILER_FLAG_INFO
+#endif
+
+#define CREATE_COMPILER_FLAG_INFO(flag) { flag, #flag }
+
+struct CompilerFlagInfo
+{
+    UINT mFlag;
+    const char *mName;
+};
+
+CompilerFlagInfo CompilerFlagInfos[] =
+{
+    // NOTE: The data below is copied from d3dcompiler.h
+    // If something changes there it should be changed here as well
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_DEBUG),                          // (1 << 0)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_SKIP_VALIDATION),                // (1 << 1)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_SKIP_OPTIMIZATION),              // (1 << 2)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_PACK_MATRIX_ROW_MAJOR),          // (1 << 3)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR),       // (1 << 4)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_PARTIAL_PRECISION),              // (1 << 5)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_FORCE_VS_SOFTWARE_NO_OPT),       // (1 << 6)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_FORCE_PS_SOFTWARE_NO_OPT),       // (1 << 7)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_NO_PRESHADER),                   // (1 << 8)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_AVOID_FLOW_CONTROL),             // (1 << 9)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_PREFER_FLOW_CONTROL),            // (1 << 10)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_ENABLE_STRICTNESS),              // (1 << 11)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY), // (1 << 12)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_IEEE_STRICTNESS),                // (1 << 13)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_OPTIMIZATION_LEVEL0),            // (1 << 14)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_OPTIMIZATION_LEVEL1),            // 0
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_OPTIMIZATION_LEVEL2),            // ((1 << 14) | (1 << 15))
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_OPTIMIZATION_LEVEL3),            // (1 << 15)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_RESERVED16),                     // (1 << 16)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_RESERVED17),                     // (1 << 17)
+    CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_WARNINGS_ARE_ERRORS)             // (1 << 18)
+};
+
+#undef CREATE_COMPILER_FLAG_INFO
+
+bool IsCompilerFlagSet(UINT mask, UINT flag)
+{
+    bool isFlagSet = IsMaskFlagSet(mask, flag);
+
+    switch(flag)
+    {
+      case D3DCOMPILE_OPTIMIZATION_LEVEL0:
+        return isFlagSet && !IsMaskFlagSet(mask, UINT(D3DCOMPILE_OPTIMIZATION_LEVEL3));
+
+      case D3DCOMPILE_OPTIMIZATION_LEVEL1:
+        return (mask & D3DCOMPILE_OPTIMIZATION_LEVEL2) == UINT(0);
+
+      case D3DCOMPILE_OPTIMIZATION_LEVEL3:
+        return isFlagSet && !IsMaskFlagSet(mask, UINT(D3DCOMPILE_OPTIMIZATION_LEVEL0));
+
+      default:
+        return isFlagSet;
+    }
+}
+
+const char *GetCompilerFlagName(UINT mask, size_t flagIx)
+{
+    const CompilerFlagInfo &flagInfo = CompilerFlagInfos[flagIx];
+    if (IsCompilerFlagSet(mask, flagInfo.mFlag))
+    {
+        return flagInfo.mName;
+    }
+
+    return nullptr;
+}
+
+}
+
 namespace rx
 {
 
@@ -147,6 +225,28 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
             (*outDebugInfo) += "// COMPILER INPUT HLSL BEGIN\n\n" + hlsl + "\n// COMPILER INPUT HLSL END\n";
             (*outDebugInfo) += "\n\n// ASSEMBLY BEGIN\n\n";
             (*outDebugInfo) += "// Compiler configuration: " + configs[i].name + "\n// Flags:\n";
+            for (size_t fIx = 0; fIx < ArraySize(CompilerFlagInfos); ++fIx)
+            {
+                const char *flagName = GetCompilerFlagName(configs[i].flags, fIx);
+                if (flagName != nullptr)
+                {
+                    (*outDebugInfo) += std::string("// ") + flagName + "\n";
+                }
+            }
+
+            (*outDebugInfo) += "// Macros:\n";
+            if (macros == nullptr)
+            {
+                (*outDebugInfo) += "// - : -\n";
+            }
+            else
+            {
+                for (const D3D_SHADER_MACRO *mIt = macros; mIt->Name != nullptr; ++mIt)
+                {
+                    (*outDebugInfo) += std::string("// ") + mIt->Name + " : " + mIt->Definition + "\n";
+                }
+            }
+
             (*outDebugInfo) += "\n" + disassembleBinary(binary) + "\n// ASSEMBLY END\n";
 #endif
 
