@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "351e565a_f7fa7a53",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1117995
+      },
+      "writtenOn": "2014-10-22T16:04:39Z",
+      "side": 1,
+      "message": "Actually, this is a duplicate of a function in IntermNode.cpp. I meant to move it to a header before uploading the patch so there would be no duplication, but forgot. I\u0027ll fix this, keeping the old name.",
+      "parentUuid": "153072e8_716a10e0",
+      "revId": "b7c9f6a42b856bea04e0d0f3c506a4ff526b0c87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "153072e8_d13544fd",
         "filename": "tests/compiler_tests/TypeTracking_test.cpp",
         "patchSetId": 2
