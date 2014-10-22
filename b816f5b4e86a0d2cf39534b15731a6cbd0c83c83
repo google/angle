@@ -46,6 +46,30 @@
       "revId": "b816f5b4e86a0d2cf39534b15731a6cbd0c83c83",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "950f0224_06e14456",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-22T22:41:21Z",
+      "side": 1,
+      "message": "I\u0027m somewhat suspicious of removing the readback, because we specifically eliminated GetDesc calls that we could, and the one from the tail end of this function was added then specifically to cache the miplevels value. If we didn\u0027t need to read back the value, it seems odd that Daniel, Nicolas, and I all missed the chance to remove GetDesc specifically in a ticket to remove GetDesc calls...\n\nBut we didn\u0027t happen to mention in the reviews why we needed to read it back directly after filling it out when creating the texture. \n\nI\u0027d say poke Nicolas to ask if he remembers why we needed to do that readback, and if not, and if it passes all the tests \u0026 samples, and edge cases that you can think of, then I guess it\u0027s removable...",
+      "parentUuid": "d06988a3_a52f49a7",
+      "range": {
+        "startLine": 602,
+        "startChar": 4,
+        "endLine": 602,
+        "endChar": 97
+      },
+      "revId": "b816f5b4e86a0d2cf39534b15731a6cbd0c83c83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
