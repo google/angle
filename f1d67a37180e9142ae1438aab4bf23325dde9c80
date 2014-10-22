@@ -58,6 +58,24 @@
       "revId": "f1d67a37180e9142ae1438aab4bf23325dde9c80",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1549527c_6ced8f4d",
+        "filename": "src/common/platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-22T20:58:37Z",
+      "side": 0,
+      "message": "Okay, done. I don\u0027t feel strongly enough about this to debate it. :-)",
+      "parentUuid": "3533b6f6_cf392118",
+      "revId": "f1d67a37180e9142ae1438aab4bf23325dde9c80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
