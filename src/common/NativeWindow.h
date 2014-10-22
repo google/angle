@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -29,7 +29,10 @@ typedef IDXGIFactory2 DXGIFactory;
 #include <windows.applicationmodel.core.h>
 #include <memory>
 
-class IInspectableNativeWindow;
+namespace rx
+{
+class InspectableNativeWindow;
+}
 
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
@@ -43,7 +46,7 @@ namespace rx
 {
 class NativeWindow
 {
-public:
+  public:
     explicit NativeWindow(EGLNativeWindowType window);
 
     bool initialize();
@@ -56,16 +59,16 @@ public:
 
     inline EGLNativeWindowType getNativeWindow() const { return mWindow; }
 
-private:
+  private:
     EGLNativeWindowType mWindow;
 
 #if defined(ANGLE_ENABLE_WINDOWS_STORE)
-    std::shared_ptr<IInspectableNativeWindow> mImpl;
+    std::shared_ptr<InspectableNativeWindow> mImpl;
 #endif
 
 };
-}
 
-bool isValidEGLNativeWindowType(EGLNativeWindowType window);
+bool IsValidEGLNativeWindowType(EGLNativeWindowType window);
+}
 
 #endif // COMMON_NATIVEWINDOW_H_

@@ -2914,6 +2914,24 @@
     <Filter Include="src">
       <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common\winrt">
+      <UniqueIdentifier>{8C13C927-D4CA-F91A-E2C8-EF73D673852B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common\winrt">
+      <UniqueIdentifier>{8C13C927-D4CA-F91A-E2C8-EF73D673852B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\EGL\egl.h">
@@ -3660,16 +3678,22 @@
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\d3d11\VertexBuffer11.h">
       <Filter>src\libGLESv2\renderer\d3d\d3d11</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\..\..\src\common\winrt\SwapChainPanelNativeWindow.cpp">
+      <Filter>src\common\winrt</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\..\..\src\common\winrt\SwapChainPanelNativeWindow.h">
+      <Filter>src\common\winrt</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\..\..\src\common\winrt\CoreWindowNativeWindow.cpp">
       <Filter>src\common\winrt</Filter>
     </ClCompile>
     <ClInclude Include="..\..\..\..\src\common\winrt\CoreWindowNativeWindow.h">
       <Filter>src\common\winrt</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\..\..\src\common\winrt\IInspectableNativeWindow.cpp">
+    <ClCompile Include="..\..\..\..\src\common\winrt\InspectableNativeWindow.cpp">
       <Filter>src\common\winrt</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\..\..\src\common\winrt\IInspectableNativeWindow.h">
+    <ClInclude Include="..\..\..\..\src\common\winrt\InspectableNativeWindow.h">
       <Filter>src\common\winrt</Filter>
     </ClInclude>
     <None Include="..\..\..\..\src\angle.gyp">

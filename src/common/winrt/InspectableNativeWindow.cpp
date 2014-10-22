@@ -1,12 +1,13 @@
 //
-// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 
-// iinspectablehost.cpp: NativeWindow base class for managing IInspectable native window types.
+// InspectableNativeWindow.cpp: NativeWindow base class for managing IInspectable native window types.
 
 #include "common/winrt/CoreWindowNativeWindow.h"
+#include "common/winrt/SwapChainPanelNativeWindow.h"
 
 namespace rx
 {
@@ -22,7 +23,7 @@ bool NativeWindow::initialize()
     // proper host with this IPropertySet.
     ComPtr<ABI::Windows::Foundation::Collections::IPropertySet> propertySet;
     ComPtr<IInspectable> eglNativeWindow;
-    if (isEGLConfiguredPropertySet(mWindow, &propertySet, &eglNativeWindow))
+    if (IsEGLConfiguredPropertySet(mWindow, &propertySet, &eglNativeWindow))
     {
         // A property set was found and the EGLNativeWindowType was
         // retrieved. The mWindow member of the host to must be updated
@@ -32,9 +33,9 @@ bool NativeWindow::initialize()
         mWindow = eglNativeWindow.Get();
     }
 
-    // If the native window is a ICoreWindow, initialize a CoreWindowNativeWindow
     ComPtr<ABI::Windows::UI::Core::ICoreWindow> coreWindow;
-    if (isCoreWindow(mWindow, &coreWindow))
+    ComPtr<ABI::Windows::UI::Xaml::Controls::ISwapChainPanel> swapChainPanel;
+    if (IsCoreWindow(mWindow, &coreWindow))
     {
         mImpl = std::make_shared<CoreWindowNativeWindow>();
         if (mImpl)
@@ -42,9 +43,17 @@ bool NativeWindow::initialize()
             return mImpl->initialize(mWindow, propertySet.Get());
         }
     }
+    else if (IsSwapChainPanel(mWindow, &swapChainPanel))
+    {
+        mImpl = std::make_shared<SwapChainPanelNativeWindow>();
+        if (mImpl)
+        {
+            return mImpl->initialize(mWindow, propertySet.Get());
+        }
+    }
     else
     {
-        ERR("Invalid IInspectable EGLNativeWindowType detected. Valid IInspectables include ICoreWindow and IPropertySet");
+        ERR("Invalid IInspectable EGLNativeWindowType detected. Valid IInspectables include ICoreWindow, ISwapChainPanel and IPropertySet");
     }
 
     return false;
@@ -75,9 +84,7 @@ HRESULT NativeWindow::createSwapChain(ID3D11Device *device, DXGIFactory *factory
     return E_UNEXPECTED;
 }
 
-}
-
-bool isCoreWindow(EGLNativeWindowType window, ComPtr<ABI::Windows::UI::Core::ICoreWindow> *coreWindow)
+bool IsCoreWindow(EGLNativeWindowType window, ComPtr<ABI::Windows::UI::Core::ICoreWindow> *coreWindow)
 {
     if (!window)
     {
@@ -98,7 +105,28 @@ bool isCoreWindow(EGLNativeWindowType window, ComPtr<ABI::Windows::UI::Core::ICo
     return false;
 }
 
-bool isEGLConfiguredPropertySet(EGLNativeWindowType window, ABI::Windows::Foundation::Collections::IPropertySet **propertySet, IInspectable **eglNativeWindow)
+bool IsSwapChainPanel(EGLNativeWindowType window, ComPtr<ABI::Windows::UI::Xaml::Controls::ISwapChainPanel> *swapChainPanel)
+{
+    if (!window)
+    {
+        return false;
+    }
+
+    ComPtr<IInspectable> win = window;
+    ComPtr<ABI::Windows::UI::Xaml::Controls::ISwapChainPanel> panel;
+    if (SUCCEEDED(win.As(&panel)))
+    {
+        if (swapChainPanel != nullptr)
+        {
+            *swapChainPanel = panel.Detach();
+        }
+        return true;
+    }
+
+    return false;
+}
+
+bool IsEGLConfiguredPropertySet(EGLNativeWindowType window, ABI::Windows::Foundation::Collections::IPropertySet **propertySet, IInspectable **eglNativeWindow)
 {
     if (!window)
     {
@@ -167,9 +195,9 @@ bool isEGLConfiguredPropertySet(EGLNativeWindowType window, ABI::Windows::Founda
 // IPropertySet
 // 
 // Anything else will be rejected as an invalid IInspectable.
-bool isValidEGLNativeWindowType(EGLNativeWindowType window)
+bool IsValidEGLNativeWindowType(EGLNativeWindowType window)
 {
-    return isCoreWindow(window) || isEGLConfiguredPropertySet(window);
+    return IsCoreWindow(window) || IsSwapChainPanel(window) || IsEGLConfiguredPropertySet(window);
 }
 
 // Attempts to read an optional SIZE property value that is assumed to be in the form of
@@ -184,7 +212,7 @@ bool isValidEGLNativeWindowType(EGLNativeWindowType window)
 //    * Invalid property value (width/height must be > 0)
 // Additional errors may be returned from IMap or IPropertyValue
 //
-HRESULT getOptionalSizePropertyValue(const ComPtr<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>>& propertyMap, const wchar_t *propertyName, SIZE *value, bool *valueExists)
+HRESULT GetOptionalSizePropertyValue(const ComPtr<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>>& propertyMap, const wchar_t *propertyName, SIZE *value, bool *valueExists)
 {
     if (!propertyMap || !propertyName || !value || !valueExists)
     {
@@ -242,4 +270,5 @@ HRESULT getOptionalSizePropertyValue(const ComPtr<ABI::Windows::Foundation::Coll
     }
 
     return result;
+}
 }

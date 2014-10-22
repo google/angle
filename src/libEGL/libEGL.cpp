@@ -405,7 +405,7 @@ EGLSurface __stdcall eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, EG
         return EGL_NO_SURFACE;
     }
 
-    if (!isValidEGLNativeWindowType(win))
+    if (!rx::IsValidEGLNativeWindowType(win))
     {
         recordError(egl::Error(EGL_BAD_NATIVE_WINDOW));
         return EGL_NO_SURFACE;

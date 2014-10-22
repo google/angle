@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -10,6 +10,8 @@
 #include "common/winrt/CoreWindowNativeWindow.h"
 using namespace ABI::Windows::Foundation::Collections;
 
+namespace rx
+{
 CoreWindowNativeWindow::~CoreWindowNativeWindow()
 {
     unregisterForSizeChangeEvents();
@@ -23,7 +25,7 @@ bool CoreWindowNativeWindow::initialize(EGLNativeWindowType window, IPropertySet
     bool swapChainSizeSpecified = false;
     HRESULT result = S_OK;
 
-    // IPropertySet is an optional parameter and can null.
+    // IPropertySet is an optional parameter and can be null.
     // If one is specified, cache as an IMap and read the properties
     // used for initial host initialization.
     if (propertySet)
@@ -34,7 +36,7 @@ bool CoreWindowNativeWindow::initialize(EGLNativeWindowType window, IPropertySet
             // The EGLRenderSurfaceSizeProperty is optional and may be missing.  The IPropertySet
             // was prevalidated to contain the EGLNativeWindowType before being passed to
             // this host.
-            result = getOptionalSizePropertyValue(mPropertyMap, EGLRenderSurfaceSizeProperty, &swapChainSize, &swapChainSizeSpecified);
+            result = GetOptionalSizePropertyValue(mPropertyMap, EGLRenderSurfaceSizeProperty, &swapChainSize, &swapChainSizeSpecified);
         }
     }
 
@@ -58,7 +60,7 @@ bool CoreWindowNativeWindow::initialize(EGLNativeWindowType window, IPropertySet
         }
         else
         {
-            result = getCoreWindowSizeInPixels(mCoreWindow, &mClientRect);
+            result = GetCoreWindowSizeInPixels(mCoreWindow, &mClientRect);
         }
     }
 
@@ -150,7 +152,7 @@ HRESULT CoreWindowNativeWindow::createSwapChain(ID3D11Device *device, DXGIFactor
     return result;
 }
 
-HRESULT getCoreWindowSizeInPixels(const ComPtr<ABI::Windows::UI::Core::ICoreWindow>& coreWindow, RECT *windowSize)
+HRESULT GetCoreWindowSizeInPixels(const ComPtr<ABI::Windows::UI::Core::ICoreWindow>& coreWindow, RECT *windowSize)
 {
     ABI::Windows::Foundation::Rect bounds;
     HRESULT result = coreWindow->get_Bounds(&bounds);
@@ -181,4 +183,5 @@ long ConvertDipsToPixels(float dips)
 {
     static const float dipsPerInch = 96.0f;
     return lround((dips * GetLogicalDpi() / dipsPerInch));
+}
 }

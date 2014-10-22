@@ -242,6 +242,7 @@
                             'sources':
                             [
                                 'angle_implementation_unit_tests/CoreWindowNativeWindow_unittest.cpp',
+                                'angle_implementation_unit_tests/SwapChainPanelNativeWindow_unittest.cpp',
                             ],
                             'defines':
                             [

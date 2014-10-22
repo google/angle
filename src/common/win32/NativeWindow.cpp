@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -9,13 +9,13 @@
 #include "common/NativeWindow.h"
 #include "common/debug.h"
 
-bool isValidEGLNativeWindowType(EGLNativeWindowType window)
+namespace rx
+{
+bool IsValidEGLNativeWindowType(EGLNativeWindowType window)
 {
     return (IsWindow(window) == TRUE);
 }
 
-namespace rx
-{
 NativeWindow::NativeWindow(EGLNativeWindowType window) : mWindow(window)
 {
 }
@@ -63,4 +63,4 @@ HRESULT NativeWindow::createSwapChain(ID3D11Device* device, DXGIFactory* factory
 
     return factory->CreateSwapChain(device, &swapChainDesc, swapChain);
 }
-};
+}

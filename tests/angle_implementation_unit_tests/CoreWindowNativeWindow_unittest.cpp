@@ -55,9 +55,9 @@ class GenericIUnknown : public RuntimeClass <
 // Mock ICoreWindow
 class MockCoreWindow : public ABI::Windows::UI::Core::ICoreWindow
 {
-public:
+  public:
     // IUnknown
-    STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject) 
+    STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject)
     {
         *ppvObject = NULL;
 
