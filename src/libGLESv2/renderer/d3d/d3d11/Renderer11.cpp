@@ -91,22 +91,6 @@ ID3D11Resource *GetSRVResource(ID3D11ShaderResourceView *srv)
     return resource;
 }
 
-bool UnsetSRVsWithResource(std::vector<ID3D11ShaderResourceView *> &srvs, const ID3D11Resource *resource)
-{
-    bool foundAny = false;
-
-    for (auto &srv : srvs)
-    {
-        if (srv && GetSRVResource(srv) == resource)
-        {
-            srv = NULL;
-            foundAny = true;
-        }
-    }
-
-    return foundAny;
-}
-
 }
 
 Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, EGLint requestedDisplay)
@@ -542,11 +526,10 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type, int index, gl::Textu
 gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
 {
     ID3D11ShaderResourceView *textureSRV = NULL;
-    bool forceSetTexture = false;
 
     if (texture)
     {
-        TextureD3D* textureImpl = TextureD3D::makeTextureD3D(texture->getImplementation());
+        TextureD3D *textureImpl = TextureD3D::makeTextureD3D(texture->getImplementation());
         TextureStorage *texStorage = textureImpl->getNativeTexture();
         ASSERT(texStorage != NULL);
 
@@ -566,33 +549,13 @@ gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *t
         // missing the shader resource view
         ASSERT(textureSRV != NULL);
 
-        forceSetTexture = textureImpl->hasDirtyImages();
         textureImpl->resetDirty();
     }
 
-    if (type == gl::SAMPLER_PIXEL)
-    {
-        ASSERT(static_cast<unsigned int>(index) < getRendererCaps().maxTextureImageUnits);
+    ASSERT((type == gl::SAMPLER_PIXEL && static_cast<unsigned int>(index) < getRendererCaps().maxTextureImageUnits) ||
+           (type == gl::SAMPLER_VERTEX && static_cast<unsigned int>(index) < getRendererCaps().maxVertexTextureImageUnits));
 
-        if (forceSetTexture || mCurPixelSRVs[index] != textureSRV)
-        {
-            mDeviceContext->PSSetShaderResources(index, 1, &textureSRV);
-        }
-
-        mCurPixelSRVs[index] = textureSRV;
-    }
-    else if (type == gl::SAMPLER_VERTEX)
-    {
-        ASSERT(static_cast<unsigned int>(index) < getRendererCaps().maxVertexTextureImageUnits);
-
-        if (forceSetTexture || mCurVertexSRVs[index] != textureSRV)
-        {
-            mDeviceContext->VSSetShaderResources(index, 1, &textureSRV);
-        }
-
-        mCurVertexSRVs[index] = textureSRV;
-    }
-    else UNREACHABLE();
+    setShaderResource(type, index, textureSRV);
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -867,6 +830,21 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
     return count >= minCount;
 }
 
+void Renderer11::unsetSRVsWithResource(gl::SamplerType samplerType, const ID3D11Resource *resource)
+{
+    auto &currentSRVs = (samplerType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
+
+    for (size_t resourceIndex = 0; resourceIndex < currentSRVs.size(); ++resourceIndex)
+    {
+        ID3D11ShaderResourceView *srv = currentSRVs[resourceIndex];
+
+        if (srv && GetSRVResource(srv) == resource)
+        {
+            setShaderResource(samplerType, static_cast<UINT>(resourceIndex), NULL);
+        }
+    }
+}
+
 gl::Error Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
     // Get the color render buffer and serial
@@ -919,19 +897,10 @@ gl::Error Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
             }
 
 #if !defined(NDEBUG)
-            // Detect if this color buffer is already bound as a texture and unbind it first to prevent
-            // D3D11 warnings.
+            // Unbind render target SRVs from the shader here to prevent D3D11 warnings.
             ID3D11Resource *renderTargetResource = renderTarget->getTexture();
-
-            if (UnsetSRVsWithResource(mCurVertexSRVs, renderTargetResource))
-            {
-                mDeviceContext->VSSetShaderResources(0, static_cast<UINT>(mCurVertexSRVs.size()), mCurVertexSRVs.data());
-            }
-
-            if (UnsetSRVsWithResource(mCurPixelSRVs, renderTargetResource))
-            {
-                mDeviceContext->PSSetShaderResources(0, static_cast<UINT>(mCurPixelSRVs.size()), mCurPixelSRVs.data());
-            }
+            unsetSRVsWithResource(gl::SAMPLER_VERTEX, renderTargetResource);
+            unsetSRVsWithResource(gl::SAMPLER_PIXEL, renderTargetResource);
 #endif
         }
     }
@@ -1691,14 +1660,12 @@ void Renderer11::markAllStateDirty()
     for (size_t vsamplerId = 0; vsamplerId < mForceSetVertexSamplerStates.size(); ++vsamplerId)
     {
         mForceSetVertexSamplerStates[vsamplerId] = true;
-        mCurVertexSRVs[vsamplerId] = NULL;
     }
 
     ASSERT(mForceSetPixelSamplerStates.size() == mCurPixelSRVs.size());
     for (size_t fsamplerId = 0; fsamplerId < mForceSetPixelSamplerStates.size(); ++fsamplerId)
     {
         mForceSetPixelSamplerStates[fsamplerId] = true;
-        mCurPixelSRVs[fsamplerId] = NULL;
     }
 
     mForceSetBlendState = true;
@@ -3223,6 +3190,27 @@ void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureC
 Workarounds Renderer11::generateWorkarounds() const
 {
     return d3d11::GenerateWorkarounds();
+}
+
+void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot, ID3D11ShaderResourceView *srv)
+{
+    auto &currentSRVs = (shaderType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
+
+    ASSERT(static_cast<size_t>(resourceSlot) < currentSRVs.size());
+
+    if (currentSRVs[resourceSlot] != srv)
+    {
+        if (shaderType == gl::SAMPLER_VERTEX)
+        {
+            mDeviceContext->VSSetShaderResources(resourceSlot, 1, &srv);
+        }
+        else
+        {
+            mDeviceContext->PSSetShaderResources(resourceSlot, 1, &srv);
+        }
+
+        currentSRVs[resourceSlot] = srv;
+    }
 }
 
 }

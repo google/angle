@@ -572,7 +572,7 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     deviceContext->RSSetViewports(1, &viewport);
 
     // Apply textures
-    deviceContext->PSSetShaderResources(0, 1, &mOffscreenSRView);
+    mRenderer->setShaderResource(gl::SAMPLER_PIXEL, 0, mOffscreenSRView);
     deviceContext->PSSetSamplers(0, 1, &mPassThroughSampler);
 
     // Draw
@@ -602,8 +602,7 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     }
 
     // Unbind
-    static ID3D11ShaderResourceView *const nullSRV = NULL;
-    deviceContext->PSSetShaderResources(0, 1, &nullSRV);
+    mRenderer->setShaderResource(gl::SAMPLER_PIXEL, 0, NULL);
 
     mRenderer->unapplyRenderTargets();
     mRenderer->markAllStateDirty();

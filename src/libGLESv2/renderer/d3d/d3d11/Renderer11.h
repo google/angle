@@ -203,6 +203,8 @@ class Renderer11 : public Renderer
     gl::Error readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
                               GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels);
 
+    void setShaderResource(gl::SamplerType shaderType, UINT resourceSlot, ID3D11ShaderResourceView *srv);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
 
@@ -216,6 +218,7 @@ class Renderer11 : public Renderer
                                    RenderTarget *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
                                    bool colorBlit, bool depthBlit, bool stencilBlit);
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
+    void unsetSRVsWithResource(gl::SamplerType shaderType, const ID3D11Resource *resource);
 
     static void invalidateFBOAttachmentSwizzles(gl::FramebufferAttachment *attachment, int mipLevel);
     static void invalidateFramebufferSwizzles(gl::Framebuffer *framebuffer);
