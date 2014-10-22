@@ -131,11 +131,12 @@
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/arm;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/arm;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <TargetMachine>MachineARM</TargetMachine>
     </Lib>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);uuid.lib;dxguid.lib;d3d11.lib;d3dcompiler.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/arm;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/arm;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -177,11 +178,12 @@
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <TargetMachine>MachineX64</TargetMachine>
     </Lib>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);uuid.lib;dxguid.lib;d3d11.lib;d3dcompiler.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -268,11 +270,12 @@
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/arm;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/arm;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <TargetMachine>MachineARM</TargetMachine>
     </Lib>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);uuid.lib;dxguid.lib;d3d11.lib;d3dcompiler.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/arm;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/arm;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -313,11 +316,12 @@
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <TargetMachine>MachineX64</TargetMachine>
     </Lib>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);uuid.lib;dxguid.lib;d3d11.lib;d3dcompiler.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>false</GenerateDebugInformation>

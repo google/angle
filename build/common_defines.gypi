@@ -68,9 +68,11 @@
             ],
         },
     },
+
+    # Windows SDK library directories for the configurations
     'configurations':
     {
-        'Debug':
+        'x86_Base':
         {
             'msvs_settings':
             {
@@ -92,7 +94,7 @@
                 },
             },
         },
-        'Release':
+        'x64_Base':
         {
             'msvs_settings':
             {
@@ -100,16 +102,36 @@
                 {
                     'AdditionalLibraryDirectories':
                     [
-                        '<(windows_sdk_path)/Lib/win8/um/x86',
-                        '<(windows_8_1_sdk_path)/Lib/winv6.3/um/x86',
+                        '<(windows_sdk_path)/Lib/win8/um/x64',
+                        '<(windows_8_1_sdk_path)/Lib/winv6.3/um/x64',
                     ],
                 },
                 'VCLibrarianTool':
                 {
                     'AdditionalLibraryDirectories':
                     [
-                        '<(windows_sdk_path)/Lib/win8/um/x86',
-                        '<(windows_8_1_sdk_path)/Lib/winv6.3/um/x86',
+                        '<(windows_sdk_path)/Lib/win8/um/x64',
+                        '<(windows_8_1_sdk_path)/Lib/winv6.3/um/x64',
+                    ],
+                },
+            },
+        },
+        'arm_Base':
+        {
+            'msvs_settings':
+            {
+                'VCLinkerTool':
+                {
+                    'AdditionalLibraryDirectories':
+                    [
+                        '<(windows_8_1_sdk_path)/Lib/winv6.3/um/arm',
+                    ],
+                },
+                'VCLibrarianTool':
+                {
+                    'AdditionalLibraryDirectories':
+                    [
+                        '<(windows_8_1_sdk_path)/Lib/winv6.3/um/arm',
                     ],
                 },
             },

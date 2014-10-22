@@ -160,7 +160,7 @@
                     },
                     'configurations':
                     {
-                        'Debug':
+                        'Debug_Base':
                         {
                             'defines':
                             [

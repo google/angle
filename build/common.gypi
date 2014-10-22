@@ -153,19 +153,11 @@
                 {
                     'VCLinkerTool':
                     {
-                        'TargetMachine': '1',
-                        'AdditionalLibraryDirectories':
-                        [
-                            '<(windows_sdk_path)/Lib/win8/um/x86',
-                        ],
+                        'TargetMachine': '1', # x86
                     },
                     'VCLibrarianTool':
                     {
-                        'TargetMachine': '1',
-                        'AdditionalLibraryDirectories':
-                        [
-                            '<(windows_sdk_path)/Lib/win8/um/x86',
-                        ],
+                        'TargetMachine': '1', # x86
                     },
                 },
             }, # x86_Base
@@ -179,17 +171,10 @@
                     'VCLinkerTool':
                     {
                         'TargetMachine': '17', # x86 - 64
-                        'AdditionalLibraryDirectories':
-                        [
-                            '<(windows_sdk_path)/Lib/win8/um/x64',
-                        ],
                     },
                     'VCLibrarianTool':
                     {
-                        'AdditionalLibraryDirectories':
-                        [
-                            '<(windows_sdk_path)/Lib/win8/um/x64',
-                        ],
+                        'TargetMachine': '17', # x86 - 64
                     },
                 },
             },    # x64_Base
@@ -203,17 +188,10 @@
                     'VCLinkerTool':
                     {
                         'TargetMachine': '3', # ARM
-                        'AdditionalLibraryDirectories':
-                        [
-                            '<(windows_8_1_sdk_path)/Lib/win8/um/arm',
-                        ],
                     },
                     'VCLibrarianTool':
                     {
-                        'AdditionalLibraryDirectories':
-                        [
-                            '<(windows_8_1_sdk_path)/Lib/win8/um/arm',
-                        ],
+                        'TargetMachine': '3', # ARM
                     },
                 },
             }, # arm_Base
