@@ -155,6 +155,23 @@
       "revId": "b7c9f6a42b856bea04e0d0f3c506a4ff526b0c87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d53a5ac4_74f6863f",
+        "filename": "tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1117995
+      },
+      "writtenOn": "2014-10-22T16:12:05Z",
+      "side": 1,
+      "message": "Whoops - there\u0027s actually a huge bug in here, the function is missing \"return\". Some small fixes will be needed.",
+      "revId": "b7c9f6a42b856bea04e0d0f3c506a4ff526b0c87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
