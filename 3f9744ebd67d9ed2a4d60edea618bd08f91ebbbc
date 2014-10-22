@@ -84,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "3533b6f6_0f6f291d",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-22T14:59:10Z",
+      "side": 1,
+      "message": "This function does check for negative return values though and we should probably consider it a programmer error to pass a bad format string here.  The function below will crash if len is negative since it\u0027s converted to a size_t in the std::string constructor.  Can you add an ASSERT that len is positive and cast it to size_t before returning?",
+      "parentUuid": "f5103e40_8e2fab7e",
+      "revId": "3f9744ebd67d9ed2a4d60edea618bd08f91ebbbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95f62248_5f902b2b",
         "filename": "src/common/debug.cpp",
         "patchSetId": 1

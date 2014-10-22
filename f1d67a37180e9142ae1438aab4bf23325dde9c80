@@ -40,6 +40,24 @@
       "revId": "f1d67a37180e9142ae1438aab4bf23325dde9c80",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3533b6f6_cf392118",
+        "filename": "src/common/platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-22T14:59:10Z",
+      "side": 0,
+      "message": "I\u0027d rather keep all platform-specific includes in platform.h even if it is only used from one place.\n\nSince it wont be a problem to undef near and far once all the Windows includes are done, I\u0027d rather keep doing that.  It helps reduce the number of platform specific gotchas, especially since near and far are often used in computer graphics.",
+      "parentUuid": "150232f8_643480d4",
+      "revId": "f1d67a37180e9142ae1438aab4bf23325dde9c80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
