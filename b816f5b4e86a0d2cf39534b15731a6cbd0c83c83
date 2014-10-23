@@ -70,6 +70,30 @@
       "revId": "b816f5b4e86a0d2cf39534b15731a6cbd0c83c83",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3533b6f6_06670e0d",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-23T16:01:27Z",
+      "side": 1,
+      "message": "Talked with Nicolas, he\u0027s pretty sure it was done as a convenience to let D3D11 compute how many mip levels to create for a full mip chain texture (when levels was 0).  I\u0027m going to test a couple more edge cases to make sure this is correct and then land.",
+      "parentUuid": "950f0224_06e14456",
+      "range": {
+        "startLine": 602,
+        "startChar": 4,
+        "endLine": 602,
+        "endChar": 97
+      },
+      "revId": "b816f5b4e86a0d2cf39534b15731a6cbd0c83c83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
