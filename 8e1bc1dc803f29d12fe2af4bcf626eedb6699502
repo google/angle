@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "153072e8_c5db3ef9",
+        "filename": "src/libGLESv2/renderer/d3d/BufferD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-23T18:23:55Z",
+      "side": 1,
+      "message": "I think we would be fine without this function, there isn\u0027t a lot of overhead to the makeBufferD3D(buffer-\u003egetImpl())",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 57
+      },
+      "revId": "8e1bc1dc803f29d12fe2af4bcf626eedb6699502",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
