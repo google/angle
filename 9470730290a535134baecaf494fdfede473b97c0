@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "b58de6f4_ef0acd45",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-23T20:04:28Z",
+      "side": 1,
+      "message": "Should the #define say \u0027MAX\u0027 in it too? e.g. something like EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE\n\nCurrently, if I set EGL_PLATFORM_ANGLE_VERSION_MAJOR_ANGLE to 11 then I could still get a Feature Level 10 device. I think that\u0027s very surprising behavior, since I requested 11!\n\nIt would be far less surprising to get a Feature Level 10 device if I set EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE to 11, though.",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "153072e8_05e26633",
         "filename": "extensions/ANGLE_platform_angle.txt",
         "patchSetId": 3
@@ -19,6 +36,58 @@
         "endLine": 119,
         "endChar": 67
       },
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b58de6f4_94d31468",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-23T20:04:28Z",
+      "side": 1,
+      "message": "Yes I am strongly in favour of that. Is there any scenario in which it is useful to request a minor version, but not a major version?",
+      "parentUuid": "153072e8_05e26633",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9592a210_33e7c06f",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-23T20:04:28Z",
+      "side": 1,
+      "message": "WARP is D3D11-only. I think it should only be valid when EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE is specified.",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f583dec2_82fd0f82",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-23T20:04:28Z",
+      "side": 1,
+      "message": "Should it be 0x320A instead of 0x3210?",
       "revId": "9470730290a535134baecaf494fdfede473b97c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -48,6 +117,58 @@
     },
     {
       "key": {
+        "uuid": "9592a210_6e06bf11",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-23T20:04:28Z",
+      "side": 1,
+      "message": "Out of interest, what is the argument against it?",
+      "parentUuid": "7529ae84_955a03cb",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b58de6f4_09a3710f",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-23T20:04:28Z",
+      "side": 1,
+      "message": "I tried adding D3D_FEATURE_LEVEL_11_1 but ANGLE hit asserts very early on. I think you\u0027ll need to add D3D_FEATURE_LEVEL_11_1 entries to some feature-level-specific helpers before you can add 11_1 here.",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b58de6f4_496f391c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-23T20:04:28Z",
+      "side": 1,
+      "message": "Can we remove 9_2 and 9_1? FYI, we don\u0027t plan to add 9_2 or 9_1 support to ANGLE in the near future. On these devices, we plan to use WARP.\n\nIf 9_2 or 9_1 aren\u0027t really supported then it doesn\u0027t make sense to include them here. ANGLE will fail to do anything meaningful on these feature levels.",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3533b6f6_664a5283",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -71,6 +192,41 @@
     },
     {
       "key": {
+        "uuid": "f583dec2_78ec3e4f",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-23T20:04:28Z",
+      "side": 1,
+      "message": "I think it\u0027s okay like this.",
+      "parentUuid": "3533b6f6_664a5283",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f583dec2_58f13af9",
+        "filename": "tests/angle_tests/RendererTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-23T20:04:28Z",
+      "side": 1,
+      "message": "You might want to pick up my changes to this file, which add tests for PLATFORM_MAJOR and PLATFORM_MINOR.",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3533b6f6_c619069b",
         "filename": "util/testfixturetypes.h",
         "patchSetId": 3
@@ -82,6 +238,41 @@
       "writtenOn": "2014-10-23T15:36:10Z",
       "side": 1,
       "message": "I changed a few names in here an added a helper macro ANGLE_TYPED_TEST_CASE.  I think this makes the test files much more readable.",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9592a210_08a36b0f",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-23T20:04:28Z",
+      "side": 1,
+      "message": "Works for me.",
+      "parentUuid": "3533b6f6_c619069b",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f583dec2_c22c7706",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-23T20:04:28Z",
+      "side": 1,
+      "message": "Jamie asked me to add the \u0027T\u0027 to the end of these types. Is it worth adding it back in?",
       "revId": "9470730290a535134baecaf494fdfede473b97c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
