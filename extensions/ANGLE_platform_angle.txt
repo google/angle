@@ -47,8 +47,8 @@ Dependencies
 
 Overview
 
-    This extension defines how to create EGL resources from resources using
-    the functions defined by EGL_EXT_platform_base.
+    This extension defines how to create EGL resources from native resources
+    using the functions defined by EGL_EXT_platform_base.
 
 New Types
 
@@ -68,10 +68,12 @@ New Tokens
     eglGetPlatformDisplayEXT:
 
         EGL_PLATFORM_ANGLE_TYPE_ANGLE                      0x3202
+        EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE         0x3203
+        EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE         0x3204
 
     Accepted as values for the EGL_PLATFORM_ANGLE_TYPE_ANGLE attribute:
 
-        EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE              0x3203
+        EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE              0x3205
 
 Additions to the EGL Specification
 
@@ -88,44 +90,26 @@ New Behavior
     The <native_display> parameter is of type EGLNativeDisplayType. If
     <native_display> is EGL_DEFAULT_DISPLAY a default display is returned.
     Multiple calls with the same <native_display> will return the same
-    EGLDisplay handle. The value of EGL_PLATFORM_ANGLE_TYPE_ANGLE, if any,
-    is ignored if there was previously a EGLDisplay successfully created for a
-    given value of EGLNativeDisplayType.
+    EGLDisplay handle. If <platform> is set to EGL_PLATFORM_ANGLE_ANGLE and
+    the returned display is in an uninitialized state, its attributes are
+    overwritten by those provided in the <attrib_list>, if any.
 
     If no <attrib_list> is specified, the value of
     EGL_PLATFORM_ANGLE_TYPE_ANGLE is implicitly set to
-    EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE. Otherwise, the value of
-    EGL_PLATFORM_ANGLE_TYPE_ANGLE should be:
-      - EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE for an implementation dependent
-        display, equivalent to using a <native_display> of EGL_DEFAULT_DISPLAY,
-      - EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE for a D3D9 display which translates
-        to OpenGL ES,
-      - EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE for a D3D11 display which
-        translates to OpenGL ES,
-      - EGL_PLATFORM_ANGLE_TYPE_D3D11_WARP_ANGLE a D3D11 WARP display which
-        translates to OpenGL ES,
-      - EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE for an OpenGL display which
-        translates to OpenGL ES,
-      - EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE for a native OpenGL ES display
+    EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE.
+
+    If no <attrib_list> is specified, the values of
+    EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE and
+    EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE are implicitly set to
+    EGL_DONT_CARE.
+
+    If EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE is set to EGL_DONT_CARE and
+    EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE is not set to EGL_DONT_CARE,
+    an EGL_BAD_ATTRIBUTE error is generated and EGL_NO_DISPLAY is returned.
 
     If no display matching the requested <native_display> or of the type
     requested by the value of EGL_PLATFORM_ANGLE_TYPE_ANGLE is available,
     EGL_NO_DISPLAY is returned. No error condition is raised in this case.
-
-Dependencies on ANGLE_platform_angle_d3d
-
-    The EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE,
-    EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE and
-    EGL_PLATFORM_ANGLE_TYPE_D3D11_WARP_ANGLE <native_display> parameters to
-    eglGetPlatformDisplayEXT are only valid if ANGLE_platform_angle_d3d is
-    supported.
-
-Dependencies on ANGLE_platform_angle_opengl
-
-    The EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE and
-    EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE <native_display> parameters to
-    eglGetPlatformDisplayEXT are only valid if ANGLE_platform_angle_opengl is
-    supported.
 
 Issues
 
@@ -134,8 +118,10 @@ Issues
 Revision History
 
     Version 1, 2014-02-04 (Scott Graham)
-        - Initial draft
+      - Initial draft
     Version 2, 2014-06-05 (Geoff Lang)
-        - Rename extension from ANGLE_platform_angle_d3d to
-          ANGLE_platform_angle.
-        - Add sub-extensions for specific platforms.
+      - Rename extension from ANGLE_platform_angle_d3d to ANGLE_platform_angle.
+      - Add sub-extensions for specific platforms.
+    Version 3, 2014-10-20 (Geoff Lang)
+      - Add attributes to request specific feature level and context versions.
+      - Moved descriptions of platforms to child extension specs.

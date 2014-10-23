@@ -12,7 +12,7 @@ SampleApplication::SampleApplication(const std::string& name, size_t width, size
     : mName(name),
       mRunning(false)
 {
-    mEGLWindow.reset(new EGLWindow(width, height, glesMajorVersion, requestedRenderer));
+    mEGLWindow.reset(new EGLWindow(width, height, glesMajorVersion, EGLPlatformParameters(requestedRenderer)));
     mTimer.reset(CreateTimer());
     mOSWindow.reset(CreateOSWindow());
 

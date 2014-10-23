@@ -19,6 +19,8 @@
 #include "libGLESv2/renderer/d3d/d3d11/InputLayoutCache.h"
 #include "libGLESv2/renderer/RenderTarget.h"
 
+#include "libEGL/AttributeMap.h"
+
 namespace gl
 {
 class FramebufferAttachment;
@@ -45,7 +47,7 @@ enum
 class Renderer11 : public Renderer
 {
   public:
-    Renderer11(egl::Display *display, EGLNativeDisplayType hDc, EGLint requestedDisplay);
+    Renderer11(egl::Display *display, EGLNativeDisplayType hDc, const egl::AttributeMap &attributes);
     virtual ~Renderer11();
 
     static Renderer11 *makeRenderer11(Renderer *renderer);
@@ -226,7 +228,8 @@ class Renderer11 : public Renderer
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HDC mDc;
-    EGLint mRequestedDisplay;
+    std::vector<D3D_FEATURE_LEVEL> mAvailableFeatureLevels;
+    D3D_DRIVER_TYPE mDriverType;
 
     HLSLCompiler mCompiler;
 

@@ -16,13 +16,37 @@
 #error unsupported OS.
 #endif
 
-EGLWindow::EGLWindow(size_t width, size_t height,
-                     EGLint glesMajorVersion, EGLint requestedRenderer)
+EGLPlatformParameters::EGLPlatformParameters()
+    : renderer(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
+      majorVersion(EGL_DONT_CARE),
+      minorVersion(EGL_DONT_CARE),
+      useWarp(EGL_FALSE)
+{
+}
+
+EGLPlatformParameters::EGLPlatformParameters(EGLint renderer)
+    : renderer(renderer),
+      majorVersion(EGL_DONT_CARE),
+      minorVersion(EGL_DONT_CARE),
+      useWarp(EGL_FALSE)
+{
+}
+
+EGLPlatformParameters::EGLPlatformParameters(EGLint renderer, EGLint majorVersion, EGLint minorVersion, EGLint useWarp)
+    : renderer(renderer),
+      majorVersion(majorVersion),
+      minorVersion(minorVersion),
+      useWarp(useWarp)
+{
+}
+
+
+EGLWindow::EGLWindow(size_t width, size_t height, EGLint glesMajorVersion, const EGLPlatformParameters &platform)
     : mSurface(EGL_NO_SURFACE),
       mContext(EGL_NO_CONTEXT),
       mDisplay(EGL_NO_DISPLAY),
       mClientVersion(glesMajorVersion),
-      mRequestedRenderer(requestedRenderer),
+      mPlatform(platform),
       mWidth(width),
       mHeight(height),
       mRedBits(-1),
@@ -76,7 +100,10 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
 
     const EGLint displayAttributes[] =
     {
-        EGL_PLATFORM_ANGLE_TYPE_ANGLE, mRequestedRenderer,
+        EGL_PLATFORM_ANGLE_TYPE_ANGLE,              mPlatform.renderer,
+        EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, mPlatform.majorVersion,
+        EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, mPlatform.minorVersion,
+        EGL_PLATFORM_ANGLE_USE_WARP_ANGLE,          mPlatform.useWarp,
         EGL_NONE,
     };
 

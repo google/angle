@@ -1,14 +1,13 @@
 #include "ANGLETest.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>> TestFixtureTypes;
-TYPED_TEST_CASE(ReadPixelsTest, TestFixtureTypes);
+ANGLE_TYPED_TEST_CASE(ReadPixelsTest, ES3_D3D11);
 
 template<typename T>
 class ReadPixelsTest : public ANGLETest
 {
 protected:
-    ReadPixelsTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
+    ReadPixelsTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(32);
         setWindowHeight(32);

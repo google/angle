@@ -93,10 +93,9 @@ ID3D11Resource *GetSRVResource(ID3D11ShaderResourceView *srv)
 
 }
 
-Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, EGLint requestedDisplay)
+Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, const egl::AttributeMap &attributes)
     : Renderer(display),
-      mDc(hDc),
-      mRequestedDisplay(requestedDisplay)
+      mDc(hDc)
 {
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
@@ -128,6 +127,32 @@ Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, EGLint r
     mAppliedGeometryShader = NULL;
     mCurPointGeometryShader = NULL;
     mAppliedPixelShader = NULL;
+
+    EGLint requestedMajorVersion = attributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE);
+    EGLint requestedMinorVersion = attributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE);
+
+    if (requestedMajorVersion == EGL_DONT_CARE || requestedMajorVersion >= 11)
+    {
+        if (requestedMinorVersion == EGL_DONT_CARE || requestedMinorVersion >= 0)
+        {
+            mAvailableFeatureLevels.push_back(D3D_FEATURE_LEVEL_11_0);
+        }
+    }
+
+    if (requestedMajorVersion == EGL_DONT_CARE || requestedMajorVersion >= 10)
+    {
+        if (requestedMinorVersion == EGL_DONT_CARE || requestedMinorVersion >= 1)
+        {
+            mAvailableFeatureLevels.push_back(D3D_FEATURE_LEVEL_10_1);
+        }
+        if (requestedMinorVersion == EGL_DONT_CARE || requestedMinorVersion >= 0)
+        {
+            mAvailableFeatureLevels.push_back(D3D_FEATURE_LEVEL_10_0);
+        }
+    }
+
+    mDriverType = (attributes.get(EGL_PLATFORM_ANGLE_USE_WARP_ANGLE, EGL_FALSE) == EGL_TRUE) ? D3D_DRIVER_TYPE_WARP
+                                                                                             : D3D_DRIVER_TYPE_HARDWARE;
 }
 
 Renderer11::~Renderer11()
@@ -173,28 +198,14 @@ EGLint Renderer11::initialize()
     }
 #endif
 
-    D3D_FEATURE_LEVEL featureLevels[] =
-    {
-        D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_10_1,
-        D3D_FEATURE_LEVEL_10_0,
-    };
-
-    D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
-    if (mRequestedDisplay == EGL_PLATFORM_ANGLE_TYPE_D3D11_WARP_ANGLE)
-    {
-        driverType = D3D_DRIVER_TYPE_WARP;
-    }
-
     HRESULT result = S_OK;
-
 #ifdef _DEBUG
     result = D3D11CreateDevice(NULL,
-                               driverType,
+                               mDriverType,
                                NULL,
                                D3D11_CREATE_DEVICE_DEBUG,
-                               featureLevels,
-                               ArraySize(featureLevels),
+                               mAvailableFeatureLevels.data(),
+                               mAvailableFeatureLevels.size(),
                                D3D11_SDK_VERSION,
                                &mDevice,
                                &mFeatureLevel,
@@ -209,11 +220,11 @@ EGLint Renderer11::initialize()
 #endif
     {
         result = D3D11CreateDevice(NULL,
-                                   driverType,
+                                   mDriverType,
                                    NULL,
                                    0,
-                                   featureLevels,
-                                   ArraySize(featureLevels),
+                                   mAvailableFeatureLevels.data(),
+                                   mAvailableFeatureLevels.size(),
                                    D3D11_SDK_VERSION,
                                    &mDevice,
                                    &mFeatureLevel,
@@ -1776,27 +1787,20 @@ bool Renderer11::testDeviceResettable()
         return false;
     }
 
-    D3D_FEATURE_LEVEL featureLevels[] =
-    {
-        D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_10_1,
-        D3D_FEATURE_LEVEL_10_0,
-    };
-
     ID3D11Device* dummyDevice;
     D3D_FEATURE_LEVEL dummyFeatureLevel;
     ID3D11DeviceContext* dummyContext;
 
     HRESULT result = D3D11CreateDevice(NULL,
-                                       D3D_DRIVER_TYPE_HARDWARE,
+                                       mDriverType,
                                        NULL,
                                        #if defined(_DEBUG)
                                        D3D11_CREATE_DEVICE_DEBUG,
                                        #else
                                        0,
                                        #endif
-                                       featureLevels,
-                                       ArraySize(featureLevels),
+                                       mAvailableFeatureLevels.data(),
+                                       mAvailableFeatureLevels.size(),
                                        D3D11_SDK_VERSION,
                                        &dummyDevice,
                                        &dummyFeatureLevel,

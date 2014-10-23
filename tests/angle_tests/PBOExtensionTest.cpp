@@ -1,14 +1,13 @@
 #include "ANGLETest.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
-TYPED_TEST_CASE(PBOExtensionTest, TestFixtureTypes);
+ANGLE_TYPED_TEST_CASE(PBOExtensionTest, ES2_D3D11, ES3_D3D11);
 
 template<typename T>
 class PBOExtensionTest : public ANGLETest
 {
 protected:
-    PBOExtensionTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
+    PBOExtensionTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(32);
         setWindowHeight(32);

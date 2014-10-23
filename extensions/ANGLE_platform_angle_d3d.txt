@@ -51,13 +51,45 @@ New Tokens
 
     Accepted as values for the EGL_PLATFORM_ANGLE_TYPE_ANGLE attribute:
 
-        EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE                 0x3204
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE                0x3205
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_WARP_ANGLE           0x3206
+        EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE                 0x3206
+        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE                0x3207
+
+    Accepted as an attribute name in the <attrib_list> argument of
+    eglGetPlatformDisplayEXT:
+
+        EGL_PLATFORM_ANGLE_USE_WARP_ANGLE                  0x3208
 
 Additions to the EGL Specification
 
     None.
+
+New Behavior
+
+    To request a display that is backed by Direct3D resources, the value of
+    EGL_PLATFORM_ANGLE_TYPE_ANGLE should be:
+      - EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE for a D3D9 display,
+      - EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE for a D3D11 display.
+
+    To request a specific maximum feature level to be used by the D3D11
+    display, EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE and
+    EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE can be used.  Only feature
+    levels that are capable of supporting all available client APIs will be
+    used unless explicitly requested.
+    EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE and
+    EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE have no effect when requesting
+    a D3D9 display.
+
+    If no <attrib_list> is specified to eglGetPlatformDisplayEXT, the value of
+    EGL_PLATFORM_ANGLE_USE_WARP_ANGLE is implicitly set to
+    EGL_FALSE. Otherwise, the value of EGL_PLATFORM_ANGLE_USE_WARP_ANGLE should
+    be:
+      - EGL_TRUE to request a WARP device.
+      - EGL_FALSE to request a hardware accelerated device.
+
+    If EGL_PLATFORM_ANGLE_USE_WARP_ANGLE is set to EGL_TRUE and
+    EGL_PLATFORM_ANGLE_TYPE_ANGLE is not set to
+    EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE then an EGL_BAD_ATTRIBUTE error is
+    generated and EGL_NO_DISPLAY is returned.
 
 Issues
 
@@ -66,4 +98,8 @@ Issues
 Revision History
 
     Version 1, 2014-06-05 (Geoff Lang)
-        - Initial draft
+      - Initial draft
+    Version 2, 2014-10-27 (Geoff Lang)
+      - Separate WARP devices into a new attribute instead of a platform type.
+      - Moved descriptions of platforms and major/minor versions from
+        EGL_ANGLE_platform_angle spec to EGL_ANGLE_platform_angle_d3d.

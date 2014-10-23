@@ -3,14 +3,13 @@
 #include <array>
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
-TYPED_TEST_CASE(UnpackAlignmentTest, TestFixtureTypes);
+ANGLE_TYPED_TEST_CASE(UnpackAlignmentTest, ES2_D3D9, ES2_D3D11);
 
 template<typename T>
 class UnpackAlignmentTest : public ANGLETest
 {
 protected:
-    UnpackAlignmentTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
+    UnpackAlignmentTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(128);
         setWindowHeight(128);

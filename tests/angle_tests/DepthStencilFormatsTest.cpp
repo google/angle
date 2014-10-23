@@ -1,17 +1,14 @@
 #include "ANGLETest.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
-TYPED_TEST_CASE(DepthStencilFormatsTest, TestFixtureTypes);
-
-typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>> TestFixtureTypesES3;
-TYPED_TEST_CASE(DepthStencilFormatsTestES3, TestFixtureTypesES3);
+ANGLE_TYPED_TEST_CASE(DepthStencilFormatsTest, ES2_D3D9, ES2_D3D11);
+ANGLE_TYPED_TEST_CASE(DepthStencilFormatsTestES3, ES3_D3D11);
 
 template<typename T>
 class DepthStencilFormatsTestBase : public ANGLETest
 {
   protected:
-    DepthStencilFormatsTestBase() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
+    DepthStencilFormatsTestBase() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(128);
         setWindowHeight(128);

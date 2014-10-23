@@ -13,6 +13,8 @@
 #include "third_party/trace_event/trace_event.h"
 #include "libGLESv2/Shader.h"
 
+#include "libEGL/AttributeMap.h"
+
 #if defined (ANGLE_ENABLE_D3D9)
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
 #endif // ANGLE_ENABLE_D3D9
@@ -91,12 +93,12 @@ const Workarounds &Renderer::getWorkarounds() const
     return mWorkarounds;
 }
 
-typedef Renderer *(*CreateRendererFunction)(egl::Display*, EGLNativeDisplayType, EGLint);
+typedef Renderer *(*CreateRendererFunction)(egl::Display*, EGLNativeDisplayType, const egl::AttributeMap &);
 
 template <typename RendererType>
-Renderer *CreateRenderer(egl::Display *display, EGLNativeDisplayType nativeDisplay, EGLint requestedDisplayType)
+Renderer *CreateRenderer(egl::Display *display, EGLNativeDisplayType nativeDisplay, const egl::AttributeMap &attributes)
 {
-    return new RendererType(display, nativeDisplay, requestedDisplayType);
+    return new RendererType(display, nativeDisplay, attributes);
 }
 
 }
@@ -104,15 +106,16 @@ Renderer *CreateRenderer(egl::Display *display, EGLNativeDisplayType nativeDispl
 extern "C"
 {
 
-rx::Renderer *glCreateRenderer(egl::Display *display, EGLNativeDisplayType nativeDisplay, EGLint requestedDisplayType)
+rx::Renderer *glCreateRenderer(egl::Display *display, EGLNativeDisplayType nativeDisplay, const egl::AttributeMap &attribMap)
 {
     std::vector<rx::CreateRendererFunction> rendererCreationFunctions;
+
+    EGLint requestedDisplayType = attribMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
 
 #   if defined(ANGLE_ENABLE_D3D11)
         if (nativeDisplay == EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE ||
             nativeDisplay == EGL_D3D11_ONLY_DISPLAY_ANGLE ||
-            requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE ||
-            requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_D3D11_WARP_ANGLE)
+            requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
         {
             rendererCreationFunctions.push_back(rx::CreateRenderer<rx::Renderer11>);
         }
@@ -151,7 +154,7 @@ rx::Renderer *glCreateRenderer(egl::Display *display, EGLNativeDisplayType nativ
 
     for (size_t i = 0; i < rendererCreationFunctions.size(); i++)
     {
-        rx::Renderer *renderer = rendererCreationFunctions[i](display, nativeDisplay, requestedDisplayType);
+        rx::Renderer *renderer = rendererCreationFunctions[i](display, nativeDisplay, attribMap);
         if (renderer->initialize() == EGL_SUCCESS)
         {
             return renderer;

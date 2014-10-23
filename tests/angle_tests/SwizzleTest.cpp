@@ -3,14 +3,13 @@
 #include <vector>
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>> TestFixtureTypes;
-TYPED_TEST_CASE(SwizzleTest, TestFixtureTypes);
+ANGLE_TYPED_TEST_CASE(SwizzleTest, ES3_D3D11);
 
 template<typename T>
 class SwizzleTest : public ANGLETest
 {
 protected:
-    SwizzleTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
+    SwizzleTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(128);
         setWindowHeight(128);

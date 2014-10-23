@@ -1,11 +1,11 @@
 #include "ANGLETest.h"
 #include <array>
 
-template <typename IndexType, GLenum IndexTypeName>
+template <typename T, typename IndexType, GLenum IndexTypeName>
 class IndexedPointsTest : public ANGLETest
 {
 protected:
-    IndexedPointsTest() : ANGLETest(2, EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    IndexedPointsTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -123,7 +123,7 @@ protected:
     static const GLuint mPointCount = 4;
 };
 
-typedef IndexedPointsTest<GLubyte, GL_UNSIGNED_BYTE> IndexedPointsTestUByte;
+typedef IndexedPointsTest<ES2_D3D11, GLubyte, GL_UNSIGNED_BYTE> IndexedPointsTestUByte;
 
 TEST_F(IndexedPointsTestUByte, UnsignedByteOffset0)
 {
@@ -145,7 +145,7 @@ TEST_F(IndexedPointsTestUByte, UnsignedByteOffset3)
     runTest(3);
 }
 
-typedef IndexedPointsTest<GLushort, GL_UNSIGNED_SHORT> IndexedPointsTestUShort;
+typedef IndexedPointsTest<ES2_D3D11, GLushort, GL_UNSIGNED_SHORT> IndexedPointsTestUShort;
 
 TEST_F(IndexedPointsTestUShort, UnsignedShortOffset0)
 {
@@ -167,7 +167,7 @@ TEST_F(IndexedPointsTestUShort, UnsignedShortOffset3)
     runTest(3);
 }
 
-typedef IndexedPointsTest<GLuint, GL_UNSIGNED_INT> IndexedPointsTestUInt;
+typedef IndexedPointsTest<ES2_D3D11, GLuint, GL_UNSIGNED_INT> IndexedPointsTestUInt;
 
 TEST_F(IndexedPointsTestUInt, UnsignedIntOffset0)
 {

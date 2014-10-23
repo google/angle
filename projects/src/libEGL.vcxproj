@@ -255,6 +255,7 @@
     <ClInclude Include="..\..\src\common\tls.h"/>
     <ClInclude Include="..\..\src\common\utilities.h"/>
     <ClInclude Include="..\..\src\common\version.h"/>
+    <ClInclude Include="..\..\src\libEGL\AttributeMap.h"/>
     <ClInclude Include="..\..\src\libEGL\Config.h"/>
     <ClInclude Include="..\..\src\libEGL\Display.h"/>
     <ClInclude Include="..\..\src\libEGL\Surface.h"/>
@@ -269,6 +270,7 @@
     <ClCompile Include="..\..\src\common\mathutil.cpp"/>
     <ClCompile Include="..\..\src\common\tls.cpp"/>
     <ClCompile Include="..\..\src\common\utilities.cpp"/>
+    <ClCompile Include="..\..\src\libEGL\AttributeMap.cpp"/>
     <ClCompile Include="..\..\src\libEGL\Config.cpp"/>
     <ClCompile Include="..\..\src\libEGL\Display.cpp"/>
     <ClCompile Include="..\..\src\libEGL\Surface.cpp"/>

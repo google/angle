@@ -1,14 +1,13 @@
 #include "ANGLETest.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>, TFT<Gles::Two, Rend::D3D11> > TestFixtureTypes;
-TYPED_TEST_CASE(DrawBuffersTest, TestFixtureTypes);
+ANGLE_TYPED_TEST_CASE(DrawBuffersTest, ES2_D3D11, ES3_D3D11);
 
 template<typename T>
 class DrawBuffersTest : public ANGLETest
 {
   protected:
-    DrawBuffersTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
+    DrawBuffersTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -24,7 +23,7 @@ class DrawBuffersTest : public ANGLETest
         ANGLETest::SetUp();
 
         // This test seems to fail on an nVidia machine when the window is hidden
-        setWindowVisible(true);
+        SetWindowVisible(true);
 
         glGenFramebuffers(1, &mFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, mFBO);

@@ -22,6 +22,11 @@ namespace gl
 class FramebufferAttachment;
 }
 
+namespace egl
+{
+class AttributeMap;
+}
+
 namespace rx
 {
 class VertexDataManager;
@@ -34,7 +39,7 @@ class Blit9;
 class Renderer9 : public Renderer
 {
   public:
-    Renderer9(egl::Display *display, EGLNativeDisplayType hDc, EGLint requestedDisplay);
+    Renderer9(egl::Display *display, EGLNativeDisplayType hDc, const egl::AttributeMap &attributes);
     virtual ~Renderer9();
 
     static Renderer9 *makeRenderer9(Renderer *renderer);

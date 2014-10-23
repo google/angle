@@ -18,6 +18,7 @@ namespace egl
 {
 class Display;
 class Surface;
+class AttributeMap;
 }
 
 namespace gl
@@ -60,7 +61,7 @@ gl::Context *glCreateContext(int clientVersion, const gl::Context *shareContext,
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();
-rx::Renderer *glCreateRenderer(egl::Display *display, EGLNativeDisplayType nativeDisplay, EGLint requestedDisplayType);
+rx::Renderer *glCreateRenderer(egl::Display *display, EGLNativeDisplayType nativeDisplay, const egl::AttributeMap &attribMap);
 void glDestroyRenderer(rx::Renderer *renderer);
 
 __eglMustCastToProperFunctionPointerType EGLAPIENTRY glGetProcAddress(const char *procname);

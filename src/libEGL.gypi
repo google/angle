@@ -38,6 +38,8 @@
             'common/utilities.cpp',
             'common/utilities.h',
             'common/version.h',
+            'libEGL/AttributeMap.cpp',
+            'libEGL/AttributeMap.h',
             'libEGL/Config.cpp',
             'libEGL/Config.h',
             'libEGL/Display.cpp',

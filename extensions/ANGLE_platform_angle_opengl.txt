@@ -51,12 +51,23 @@ New Tokens
 
     Accepted as values for the EGL_PLATFORM_ANGLE_TYPE_ANGLE attribute:
 
-        EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE               0x3207
-        EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE             0x3208
+        EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE               0x3209
+        EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE             0x320A
 
 Additions to the EGL Specification
 
     None.
+
+New Behavior
+
+    To request a display that translates to OpenGL or OpenGL ES, the value of
+    EGL_PLATFORM_ANGLE_TYPE_ANGLE should be:
+      - EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE for an OpenGL display,
+      - EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE for a native OpenGL ES display.
+
+    To request a specific maximum context version to use for the underlying
+    API, EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE and
+    EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE can be used.
 
 Issues
 
@@ -65,4 +76,7 @@ Issues
 Revision History
 
     Version 1, 2014-06-05 (Geoff Lang)
-        - Initial draft
+      - Initial draft
+    Version 2, 2014-10-27 (Geoff Lang)
+      - Moved descriptions of platforms and major/minor versions from
+        EGL_ANGLE_platform_angle spec to EGL_ANGLE_platform_angle_opengl.

@@ -3,14 +3,13 @@
 #include <cstdint>
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-typedef ::testing::Types<TFT<Gles::Two, Rend::D3D11>, TFT<Gles::Two, Rend::D3D9>> TestFixtureTypes;
-TYPED_TEST_CASE(BufferDataTest, TestFixtureTypes);
+ANGLE_TYPED_TEST_CASE(BufferDataTest, ES2_D3D9, ES2_D3D11);
 
 template<typename T>
 class BufferDataTest : public ANGLETest
 {
   protected:
-    BufferDataTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
+      BufferDataTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(16);
         setWindowHeight(16);
@@ -203,14 +202,13 @@ TYPED_TEST(BufferDataTest, HugeSetDataShouldNotCrash)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-typedef ::testing::Types<TFT<Gles::Three, Rend::D3D11>> TestFixtureTypesIndexedBufferCopyTest;
-TYPED_TEST_CASE(IndexedBufferCopyTest, TestFixtureTypesIndexedBufferCopyTest);
+ANGLE_TYPED_TEST_CASE(IndexedBufferCopyTest, ES3_D3D11);
 
 template<typename T>
 class IndexedBufferCopyTest : public ANGLETest
 {
   protected:
-    IndexedBufferCopyTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetRequestedRenderer())
+    IndexedBufferCopyTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(16);
         setWindowHeight(16);

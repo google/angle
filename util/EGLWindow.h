@@ -25,12 +25,22 @@
 
 class OSWindow;
 
+struct EGLPlatformParameters
+{
+    EGLint renderer;
+    EGLint majorVersion;
+    EGLint minorVersion;
+    EGLint useWarp;
+
+    EGLPlatformParameters();
+    explicit EGLPlatformParameters(EGLint renderer);
+    EGLPlatformParameters(EGLint renderer, EGLint majorVersion, EGLint minorVersion, EGLint useWarp);
+};
+
 class EGLWindow
 {
   public:
-    EGLWindow(size_t width, size_t height,
-              EGLint glesMajorVersion,
-              EGLint requestedRenderer);
+    EGLWindow(size_t width, size_t height, EGLint glesMajorVersion, const EGLPlatformParameters &platform);
 
     ~EGLWindow();
 
@@ -49,7 +59,7 @@ class EGLWindow
     void swap();
 
     GLuint getClientVersion() const { return mClientVersion; }
-    EGLint getRequestedRenderer() const { return mRequestedRenderer; }
+    const EGLPlatformParameters &getPlatform() const { return mPlatform; }
     EGLConfig getConfig() const;
     EGLDisplay getDisplay() const;
     EGLSurface getSurface() const;
@@ -77,7 +87,7 @@ class EGLWindow
     EGLContext mContext;
 
     GLuint mClientVersion;
-    EGLint mRequestedRenderer;
+    EGLPlatformParameters mPlatform;
     size_t mWidth;
     size_t mHeight;
     int mRedBits;

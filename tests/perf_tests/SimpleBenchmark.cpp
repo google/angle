@@ -31,7 +31,7 @@ SimpleBenchmark::SimpleBenchmark(const std::string &name, size_t width, size_t h
       mSuffix(params.suffix())
 {
     mOSWindow.reset(CreateOSWindow());
-    mEGLWindow.reset(new EGLWindow(width, height, glesMajorVersion, params.requestedRenderer));
+    mEGLWindow.reset(new EGLWindow(width, height, glesMajorVersion, EGLPlatformParameters(params.requestedRenderer)));
     mTimer.reset(CreateTimer());
 }
 

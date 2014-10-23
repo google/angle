@@ -2,21 +2,21 @@
 #include "EGLWindow.h"
 #include "OSWindow.h"
 
-ANGLETest::ANGLETest(EGLint glesMajorVersion, EGLint requestedRenderer)
-    : mEGLWindow(NULL),
-      mOSWindow(NULL)
+ANGLETest::ANGLETest(EGLint glesMajorVersion, const EGLPlatformParameters &platform)
+    : mEGLWindow(NULL)
 {
-    mEGLWindow = new EGLWindow(1280, 720, glesMajorVersion, requestedRenderer);
+    mEGLWindow = new EGLWindow(1280, 720, glesMajorVersion, platform);
+}
+
+ANGLETest::~ANGLETest()
+{
+    delete mEGLWindow;
+    mEGLWindow = NULL;
 }
 
 void ANGLETest::SetUp()
 {
-    if (!initTestWindow())
-    {
-        FAIL() << "Failed to create ANGLE test window.";
-    }
-
-    if (!resizeWindow(mEGLWindow->getWidth(), mEGLWindow->getHeight()))
+    if (!ResizeWindow(mEGLWindow->getWidth(), mEGLWindow->getHeight()))
     {
         FAIL() << "Failed to resize ANGLE test window.";
     }
@@ -45,11 +45,6 @@ void ANGLETest::TearDown()
         {
             exit(0);
         }
-    }
-
-    if (!destroyTestWindow())
-    {
-        FAIL() << "ANGLE test window destruction failed.";
     }
 }
 
@@ -196,7 +191,7 @@ bool ANGLETest::destroyEGLContext()
     return true;
 }
 
-bool ANGLETest::initTestWindow()
+bool ANGLETest::InitTestWindow()
 {
     mOSWindow = CreateOSWindow();
     if (!mOSWindow->initialize("ANGLE_TEST", 128, 128))
@@ -204,12 +199,12 @@ bool ANGLETest::initTestWindow()
         return false;
     }
 
-    mOSWindow->setVisible(false);
+    mOSWindow->setVisible(true);
 
     return true;
 }
 
-bool ANGLETest::destroyTestWindow()
+bool ANGLETest::DestroyTestWindow()
 {
     if (mOSWindow)
     {
@@ -221,12 +216,27 @@ bool ANGLETest::destroyTestWindow()
     return true;
 }
 
-bool ANGLETest::resizeWindow(int width, int height)
+bool ANGLETest::ResizeWindow(int width, int height)
 {
     return mOSWindow->resize(width, height);
 }
 
-void ANGLETest::setWindowVisible(bool isVisible)
+void ANGLETest::SetWindowVisible(bool isVisible)
 {
     mOSWindow->setVisible(isVisible);
+}
+
+OSWindow *ANGLETest::mOSWindow = NULL;
+
+void ANGLETestEnvironment::SetUp()
+{
+    if (!ANGLETest::InitTestWindow())
+    {
+        FAIL() << "Failed to create ANGLE test window.";
+    }
+}
+
+void ANGLETestEnvironment::TearDown()
+{
+    ANGLETest::DestroyTestWindow();
 }

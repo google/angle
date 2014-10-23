@@ -92,7 +92,7 @@ enum
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 = 4
 };
 
-Renderer9::Renderer9(egl::Display *display, EGLNativeDisplayType hDc, EGLint requestedDisplay)
+Renderer9::Renderer9(egl::Display *display, EGLNativeDisplayType hDc, const egl::AttributeMap &attributes)
     : Renderer(display),
       mDc(hDc)
 {
