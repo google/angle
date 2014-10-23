@@ -83,7 +83,7 @@ Config::Config(rx::ConfigDesc desc, EGLint minInterval, EGLint maxInterval, EGLi
     mColorBufferType = EGL_RGB_BUFFER;
     mConfigCaveat = (desc.fastConfig) ? EGL_NONE : EGL_SLOW_CONFIG;
     mConfigID = 0;
-    mConformant = EGL_OPENGL_ES2_BIT;
+    mConformant = 0;
 
     switch (desc.depthStencilFormat)
     {
@@ -129,6 +129,11 @@ Config::Config(rx::ConfigDesc desc, EGLint minInterval, EGLint maxInterval, EGLi
     mTransparentRedValue = 0;
     mTransparentGreenValue = 0;
     mTransparentBlueValue = 0;
+
+    if (desc.es2Conformant)
+    {
+        mConformant = EGL_OPENGL_ES2_BIT;
+    }
 
     if (desc.es3Capable)
     {
