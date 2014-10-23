@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7529ae84_f58b8777",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-23T16:55:31Z",
+      "side": 1,
+      "message": "nit: could add ASSERT(aggNode !\u003d NULL)? or optionally take an TIntermAggregate as a parameter",
+      "range": {
+        "startLine": 282,
+        "startChar": 22,
+        "endLine": 282,
+        "endChar": 29
+      },
+      "revId": "3d7a2aeb39264b62df708469b8376573c1ebb941",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7529ae84_d5888b7d",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-23T16:55:31Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 305,
+        "startChar": 22,
+        "endLine": 305,
+        "endChar": 29
+      },
+      "revId": "3d7a2aeb39264b62df708469b8376573c1ebb941",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7529ae84_9560c32f",
+        "filename": "tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-23T16:55:31Z",
+      "side": 1,
+      "message": "should we take out this comment? or were you putting this in for posterity?",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 4
+      },
+      "revId": "3d7a2aeb39264b62df708469b8376573c1ebb941",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
