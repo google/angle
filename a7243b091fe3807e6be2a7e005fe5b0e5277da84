@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7529ae84_98911ae3",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-23T18:43:39Z",
+      "side": 1,
+      "message": "I\u0027d like to avoid modifying the function parameters, can this be changed to a for-loop?",
+      "range": {
+        "startLine": 244,
+        "startChar": 16,
+        "endLine": 248,
+        "endChar": 17
+      },
+      "revId": "a7243b091fe3807e6be2a7e005fe5b0e5277da84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
