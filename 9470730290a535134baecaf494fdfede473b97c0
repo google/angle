@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "153072e8_05e26633",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-23T15:36:10Z",
+      "side": 1,
+      "message": "I left this one implementation dependent but we could specify that if a minor version is requested then a major one must be too.",
+      "range": {
+        "startLine": 117,
+        "startChar": 10,
+        "endLine": 119,
+        "endChar": 67
+      },
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7529ae84_955a03cb",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-23T15:36:10Z",
+      "side": 1,
+      "message": "We still haven\u0027t come to a decision about if the mAttributeMap should be updated before returning the display if the display is in an uninitialized state.",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 5
+      },
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3533b6f6_664a5283",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-23T15:36:10Z",
+      "side": 1,
+      "message": "This code essentially allows the user to request version 100.100 and still be given a device.  Do we want to restrict the input to be valid version numbers?",
+      "range": {
+        "startLine": 150,
+        "startChar": 4,
+        "endLine": 188,
+        "endChar": 5
+      },
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3533b6f6_c619069b",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-23T15:36:10Z",
+      "side": 1,
+      "message": "I changed a few names in here an added a helper macro ANGLE_TYPED_TEST_CASE.  I think this makes the test files much more readable.",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
