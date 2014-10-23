@@ -94,6 +94,24 @@
     },
     {
       "key": {
+        "uuid": "55210a94_3254794c",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-23T22:22:37Z",
+      "side": 1,
+      "message": "Yep, fixed.",
+      "parentUuid": "f583dec2_82fd0f82",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7529ae84_955a03cb",
         "filename": "src/libEGL/Display.cpp",
         "patchSetId": 3
@@ -146,6 +164,24 @@
       "writtenOn": "2014-10-23T20:04:28Z",
       "side": 1,
       "message": "I tried adding D3D_FEATURE_LEVEL_11_1 but ANGLE hit asserts very early on. I think you\u0027ll need to add D3D_FEATURE_LEVEL_11_1 entries to some feature-level-specific helpers before you can add 11_1 here.",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55210a94_d25ae574",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-23T22:22:37Z",
+      "side": 1,
+      "message": "You\u0027re right, I forgot to remove some.",
+      "parentUuid": "b58de6f4_09a3710f",
       "revId": "9470730290a535134baecaf494fdfede473b97c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -227,6 +263,24 @@
     },
     {
       "key": {
+        "uuid": "75244ea4_308a38f8",
+        "filename": "tests/angle_tests/RendererTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-23T22:22:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f583dec2_58f13af9",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3533b6f6_c619069b",
         "filename": "util/testfixturetypes.h",
         "patchSetId": 3
@@ -273,6 +327,24 @@
       "writtenOn": "2014-10-23T20:04:28Z",
       "side": 1,
       "message": "Jamie asked me to add the \u0027T\u0027 to the end of these types. Is it worth adding it back in?",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5594aafe_e363c6b5",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-23T22:22:37Z",
+      "side": 1,
+      "message": "I removed the T since it\u0027s no longer a typename but an integer.",
+      "parentUuid": "f583dec2_c22c7706",
       "revId": "9470730290a535134baecaf494fdfede473b97c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
