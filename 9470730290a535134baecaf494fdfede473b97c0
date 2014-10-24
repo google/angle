@@ -96,6 +96,29 @@
     },
     {
       "key": {
+        "uuid": "d5d6dada_14c87a2e",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-24T22:13:20Z",
+      "side": 1,
+      "message": "Do we need to add special text here for Feature Level 9_3?\n\nI believe the behavior we agreed on was that ANGLE won\u0027t expose Feature Level 9_3 by default. To get 9_3, the user will have to specifically request it. Should we explain this here?",
+      "range": {
+        "startLine": 125,
+        "startChar": 8,
+        "endLine": 129,
+        "endChar": 25
+      },
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5594aafe_cc4d9704",
         "filename": "extensions/ANGLE_platform_angle.txt",
         "patchSetId": 3
@@ -148,6 +171,24 @@
       "side": 1,
       "message": "How about stating that EGL_PLATFORM_ANGLE_USE_WARP_ANGLE is only allowed to be EGL_TRUE if using EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE?  It\u0027s useful to always have it as part of the attrib list.",
       "parentUuid": "9592a210_33e7c06f",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7580cec4_a522a83f",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-24T22:13:20Z",
+      "side": 1,
+      "message": "Yep, that works for me.",
+      "parentUuid": "956b82dc_77a690cc",
       "revId": "9470730290a535134baecaf494fdfede473b97c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -447,6 +488,29 @@
     },
     {
       "key": {
+        "uuid": "157792c2_0708464b",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1851,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-24T22:13:20Z",
+      "side": 1,
+      "message": "Should we also use mAvailableFeatureLevels here?",
+      "range": {
+        "startLine": 1846,
+        "startChar": 0,
+        "endLine": 1851,
+        "endChar": 6
+      },
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f583dec2_58f13af9",
         "filename": "tests/angle_tests/RendererTest.cpp",
         "patchSetId": 3
@@ -546,6 +610,24 @@
       "side": 1,
       "message": "I removed the T since it\u0027s no longer a typename but an integer.",
       "parentUuid": "f583dec2_c22c7706",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5d6dada_f425b64a",
+        "filename": "util/testfixturetypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-24T22:13:20Z",
+      "side": 1,
+      "message": "Ah yes. Sorry! :-)",
+      "parentUuid": "5594aafe_e363c6b5",
       "revId": "9470730290a535134baecaf494fdfede473b97c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
