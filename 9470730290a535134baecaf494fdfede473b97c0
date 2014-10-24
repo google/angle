@@ -78,6 +78,47 @@
     },
     {
       "key": {
+        "uuid": "5594aafe_6ca8031e",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-24T21:40:30Z",
+      "side": 1,
+      "message": "Commenting on this version because that\u0027s where the rest of my comments are-- this should probably return an error condition, no? EGL_BAD_ATTRIBUTE, maybe?",
+      "parentUuid": "b58de6f4_94d31468",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5594aafe_cc4d9704",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-24T21:40:30Z",
+      "side": 1,
+      "message": "Wouldn\u0027t this make more sense to specify in the DX/GL/etc specific extensions?",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 135,
+        "endChar": 73
+      },
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9592a210_33e7c06f",
         "filename": "extensions/ANGLE_platform_angle_d3d.txt",
         "patchSetId": 3
@@ -107,6 +148,29 @@
       "side": 1,
       "message": "How about stating that EGL_PLATFORM_ANGLE_USE_WARP_ANGLE is only allowed to be EGL_TRUE if using EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE?  It\u0027s useful to always have it as part of the attrib list.",
       "parentUuid": "9592a210_33e7c06f",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5594aafe_2cb2fb8f",
+        "filename": "extensions/ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-24T21:40:30Z",
+      "side": 1,
+      "message": "I see this has been corrected in the most recent patch, but as a side note-- our current reserved enumerant range only goes to 0x320A, so please be aware of that if more enums are added. We should be conservative about adding additional ones, but if we hit the limit, I\u0027ll need to request a new allocation. (And 0x3210 is already allocated for KHR.)",
+      "range": {
+        "startLine": 55,
+        "startChar": 59,
+        "endLine": 55,
+        "endChar": 65
+      },
       "revId": "9470730290a535134baecaf494fdfede473b97c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -207,6 +271,47 @@
     },
     {
       "key": {
+        "uuid": "75244ea4_207e63a1",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-24T21:40:30Z",
+      "side": 1,
+      "message": "So, after checking around in other specs, the most analogous specs to the proposed major/minor version language would be the behavior of the EGL_CONTEXT_CLIENT_VERSION attrib in eglCreateContext, and the EGL_PLATFORM_X11_SCREEN_KHR attrib from EGL_KHR_platform_x11 (also passed to eglGetPlatformDisplay). Those are both intended as exact matches, and generate errors (EGL_BAD_CONFIG and EGL_BAD_ATTRIBUTE, respectively) if they aren\u0027t supported-- but they have the added benefit of knowing at display creation time whether the attributes are supported, instead of having to chance it and wait until initialization...\n\nI\u0027d say either this is an indication that we need to somehow separate the major/minor version specification from display retrieval (the only other place I can think of, though, is config choosing time, by which time we need to already have initialized the backing renderer), or we should explicitly treat it as a \"MAX\" version, and name it that way in the spec, to differentiate it, so that expectations on its behavior aren\u0027t similar to, e.g., the X11 screen attrib. I don\u0027t think it would be problematic to store that information in the uninitialized display, then...",
+      "parentUuid": "5594aafe_46d3a896",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75244ea4_0008074b",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-24T21:40:30Z",
+      "side": 1,
+      "message": "Fix this tab while you\u0027re in here?",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 4
+      },
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b58de6f4_09a3710f",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -259,6 +364,24 @@
     },
     {
       "key": {
+        "uuid": "956b82dc_40694465",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-24T21:40:30Z",
+      "side": 1,
+      "message": "Geoff: should we consider generating errors in this case? We want to leave ourselves open to supporting increasing major/minor levels without having to repeatedly revise the extension, should they occur, but we probably want to have some mechanism for alerting users that they\u0027ve requested a feature level that we know before even compile-time isn\u0027t supported. (And to document it in the extension text.)",
+      "parentUuid": "b58de6f4_496f391c",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3533b6f6_664a5283",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -294,6 +417,30 @@
       "side": 1,
       "message": "I think it\u0027s okay like this.",
       "parentUuid": "3533b6f6_664a5283",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75244ea4_40c71f71",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-24T21:40:30Z",
+      "side": 1,
+      "message": "I think there\u0027s no need to explicitly specify a ceiling on it.",
+      "parentUuid": "3533b6f6_664a5283",
+      "range": {
+        "startLine": 150,
+        "startChar": 4,
+        "endLine": 188,
+        "endChar": 5
+      },
       "revId": "9470730290a535134baecaf494fdfede473b97c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
