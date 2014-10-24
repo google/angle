@@ -153,7 +153,7 @@ void ShaderD3D::releaseCompiler()
 
 void ShaderD3D::parseVaryings(void *compiler)
 {
-     if (!mHlsl.empty())
+    if (!mHlsl.empty())
     {
         const std::vector<sh::Varying> *varyings = ShGetVaryings(compiler);
         ASSERT(varyings);
