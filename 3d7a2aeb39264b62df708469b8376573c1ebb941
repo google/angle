@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "351e565a_288ad3f7",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1117995
+      },
+      "writtenOn": "2014-10-24T09:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7529ae84_f58b8777",
+      "revId": "3d7a2aeb39264b62df708469b8376573c1ebb941",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7529ae84_d5888b7d",
         "filename": "src/compiler/translator/Intermediate.cpp",
         "patchSetId": 4
@@ -48,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "f5359ed2_663a5671",
+        "filename": "src/compiler/translator/Intermediate.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1117995
+      },
+      "writtenOn": "2014-10-24T09:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7529ae84_d5888b7d",
+      "revId": "3d7a2aeb39264b62df708469b8376573c1ebb941",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7529ae84_9560c32f",
         "filename": "tests/compiler_tests/TypeTracking_test.cpp",
         "patchSetId": 4
@@ -65,6 +101,24 @@
         "endLine": 69,
         "endChar": 4
       },
+      "revId": "3d7a2aeb39264b62df708469b8376573c1ebb941",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "351e565a_089f173a",
+        "filename": "tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1117995
+      },
+      "writtenOn": "2014-10-24T09:25:06Z",
+      "side": 1,
+      "message": "I found that this was not needed, with the current version of ANGLE at least. There are some bugs in accepting ESSL3 shaders, though - see https://github.com/KhronosGroup/WebGL/pull/761 - depending on how that bug is fixed, something like this might be needed. Still, including this was unintentional and I\u0027m going to clean this up.",
+      "parentUuid": "7529ae84_9560c32f",
       "revId": "3d7a2aeb39264b62df708469b8376573c1ebb941",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
