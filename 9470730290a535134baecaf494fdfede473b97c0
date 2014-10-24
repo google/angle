@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "956b82dc_179b947f",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-24T14:32:47Z",
+      "side": 1,
+      "message": "It depends on how verbose we want to be in the enum names, stating this behaviour in the spec may be enough.  What are your thoughts, Shannon?",
+      "parentUuid": "b58de6f4_ef0acd45",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "153072e8_05e26633",
         "filename": "extensions/ANGLE_platform_angle.txt",
         "patchSetId": 3
@@ -71,6 +89,24 @@
       "writtenOn": "2014-10-23T20:04:28Z",
       "side": 1,
       "message": "WARP is D3D11-only. I think it should only be valid when EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE is specified.",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "956b82dc_77a690cc",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-24T14:32:47Z",
+      "side": 1,
+      "message": "How about stating that EGL_PLATFORM_ANGLE_USE_WARP_ANGLE is only allowed to be EGL_TRUE if using EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE?  It\u0027s useful to always have it as part of the attrib list.",
+      "parentUuid": "9592a210_33e7c06f",
       "revId": "9470730290a535134baecaf494fdfede473b97c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -147,6 +183,24 @@
       "side": 1,
       "message": "Out of interest, what is the argument against it?",
       "parentUuid": "7529ae84_955a03cb",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5594aafe_46d3a896",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-24T14:32:47Z",
+      "side": 1,
+      "message": "I think it makes sense but we wanted to look over some specs to see if that behaviour would be consistent with some other extensions.",
+      "parentUuid": "9592a210_6e06bf11",
       "revId": "9470730290a535134baecaf494fdfede473b97c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
