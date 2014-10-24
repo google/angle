@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "956b82dc_2019b0e5",
+        "filename": "tests/angle_tests/ClearTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-24T21:53:35Z",
+      "side": 1,
+      "message": "Why is this the only place that we\u0027re encountering a rounding error, across all the places we\u0027re applying exact expectations? And do we expect the error range to be as big as 5? The only other place we allow a range is in the depth stencil draw test, and there we specify a narrower range. Should we maybe have an angle_tests-wide range defined, so that we aren\u0027t being inconsistent about how permissive we are?",
+      "range": {
+        "startLine": 154,
+        "startChar": 46,
+        "endLine": 154,
+        "endChar": 47
+      },
+      "revId": "5f36c9d71211306b24dd16de2d33df5ca459600d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
