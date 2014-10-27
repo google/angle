@@ -46,6 +46,30 @@
       "revId": "5f36c9d71211306b24dd16de2d33df5ca459600d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3533b6f6_a28b7ffd",
+        "filename": "tests/angle_tests/ClearTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T17:53:00Z",
+      "side": 1,
+      "message": "It would depend on the texture format and could be calculated by querying how many color bits the framebuffer has.\n\nIn general I\u0027m in favor with keeping the epsilon as low as possible so that it passes on all the systems we have and only raising it if we find issues and deem an increased range is within spec.  That or we write an algorithm to calculate an epsilon given a framebuffer (could be merged with the EXPECT_PIXEL macro).",
+      "parentUuid": "5594aafe_525842f8",
+      "range": {
+        "startLine": 154,
+        "startChar": 46,
+        "endLine": 154,
+        "endChar": 47
+      },
+      "revId": "5f36c9d71211306b24dd16de2d33df5ca459600d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
