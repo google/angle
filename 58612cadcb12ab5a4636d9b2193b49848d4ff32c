@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7580cec4_f619356c",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2014-10-27T17:40:32Z",
+      "side": 1,
+      "message": "\u0027win8\u0027 here needs to be changed to \u0027winv6.3\u0027.",
+      "revId": "58612cadcb12ab5a4636d9b2193b49848d4ff32c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
