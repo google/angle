@@ -22,6 +22,30 @@
       "revId": "04f543089fa9957628b81f8f838352e46b5d8099",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3533b6f6_82f2c32e",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T19:00:31Z",
+      "side": 1,
+      "message": "I changed this to an assert too.  It\u0027s a lot harder to show that this is will never be the case since it\u0027s called from a lot more places but they all look safe.  I tested with the WebGL CTS and angle_tests and never hit the assertion.",
+      "parentUuid": "95b9c2ac_0af13bfa",
+      "range": {
+        "startLine": 489,
+        "startChar": 4,
+        "endLine": 489,
+        "endChar": 48
+      },
+      "revId": "04f543089fa9957628b81f8f838352e46b5d8099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
