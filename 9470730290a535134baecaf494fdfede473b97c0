@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "3533b6f6_1d951449",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T20:08:05Z",
+      "side": 1,
+      "message": "Done, I added MAX to the names.",
+      "parentUuid": "956b82dc_179b947f",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "153072e8_05e26633",
         "filename": "extensions/ANGLE_platform_angle.txt",
         "patchSetId": 3
@@ -96,6 +114,24 @@
     },
     {
       "key": {
+        "uuid": "3533b6f6_3da0d0aa",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T20:08:05Z",
+      "side": 1,
+      "message": "Done, I made this an error.",
+      "parentUuid": "5594aafe_6ca8031e",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5d6dada_14c87a2e",
         "filename": "extensions/ANGLE_platform_angle.txt",
         "patchSetId": 3
@@ -119,6 +155,30 @@
     },
     {
       "key": {
+        "uuid": "b5db2605_44ddee6f",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T20:08:05Z",
+      "side": 1,
+      "message": "I added language to the ANGLE_platform_angle_d3d spec that says that unless specifically requested, it wont use feature levels that don\u0027t offer conformant configurations.",
+      "parentUuid": "d5d6dada_14c87a2e",
+      "range": {
+        "startLine": 125,
+        "startChar": 8,
+        "endLine": 129,
+        "endChar": 25
+      },
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5594aafe_cc4d9704",
         "filename": "extensions/ANGLE_platform_angle.txt",
         "patchSetId": 3
@@ -130,6 +190,30 @@
       "writtenOn": "2014-10-24T21:40:30Z",
       "side": 1,
       "message": "Wouldn\u0027t this make more sense to specify in the DX/GL/etc specific extensions?",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 135,
+        "endChar": 73
+      },
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5db2605_64cef2c0",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T20:08:05Z",
+      "side": 1,
+      "message": "Done, I moved a lot of the language from this spec into the child specs.  It was getting too crowded.",
+      "parentUuid": "5594aafe_cc4d9704",
       "range": {
         "startLine": 120,
         "startChar": 0,
@@ -330,6 +414,24 @@
     },
     {
       "key": {
+        "uuid": "b5db2605_44f64ef4",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T20:08:05Z",
+      "side": 1,
+      "message": "Thanks for looking into this! I think I prefer to use MAX instead of requesting specific versions since it would require lots of new mechanisms for checking available feature levels before display creation and may not even be reliable.",
+      "parentUuid": "75244ea4_207e63a1",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75244ea4_0008074b",
         "filename": "src/libEGL/Display.cpp",
         "patchSetId": 3
@@ -423,6 +525,24 @@
     },
     {
       "key": {
+        "uuid": "3533b6f6_1d1ab460",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T20:08:05Z",
+      "side": 1,
+      "message": "I\u0027m not sure.  I\u0027d prefer to just have eglInitialize fail if the user is requesting a low feature level that we can\u0027t support.  If the user is trying to ask for specific feature levels instead of using EGL_DONT_CARE (or not specifying anything) then they probably have an idea of what to expect.",
+      "parentUuid": "956b82dc_40694465",
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3533b6f6_664a5283",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -499,6 +619,30 @@
       "writtenOn": "2014-10-24T22:13:20Z",
       "side": 1,
       "message": "Should we also use mAvailableFeatureLevels here?",
+      "range": {
+        "startLine": 1846,
+        "startChar": 0,
+        "endLine": 1851,
+        "endChar": 6
+      },
+      "revId": "9470730290a535134baecaf494fdfede473b97c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3533b6f6_dd8e6c38",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1851,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T20:08:05Z",
+      "side": 1,
+      "message": "Yep, done.",
+      "parentUuid": "157792c2_0708464b",
       "range": {
         "startLine": 1846,
         "startChar": 0,
