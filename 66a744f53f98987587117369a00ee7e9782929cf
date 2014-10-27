@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3533b6f6_879775ac",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-27T15:51:26Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 367,
+        "startChar": 4,
+        "endLine": 368,
+        "endChar": 34
+      },
+      "revId": "66a744f53f98987587117369a00ee7e9782929cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95b9c2ac_478baefe",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-27T15:51:26Z",
+      "side": 1,
+      "message": "is this intentional? you\u0027re duplicating the above code.",
+      "range": {
+        "startLine": 381,
+        "startChar": 1,
+        "endLine": 382,
+        "endChar": 38
+      },
+      "revId": "66a744f53f98987587117369a00ee7e9782929cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3533b6f6_27a68120",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-27T15:51:26Z",
+      "side": 1,
+      "message": "what happens here if mWidth, mHeight or mDepth are \u003d\u003d 0?",
+      "range": {
+        "startLine": 611,
+        "startChar": 4,
+        "endLine": 611,
+        "endChar": 28
+      },
+      "revId": "66a744f53f98987587117369a00ee7e9782929cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
