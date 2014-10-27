@@ -658,7 +658,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
             ASSERT(sequence && sequence->size() == 1);
             const TIntermSymbol *symbol = sequence->front()->getAsSymbolNode();
             ASSERT(symbol);
-            out << "invariant " << hashVariableName(symbol->getSymbol()) << ";";
+            out << "invariant " << hashVariableName(symbol->getSymbol());
         }
         visitChildren = false;
         break;
