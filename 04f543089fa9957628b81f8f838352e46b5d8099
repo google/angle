@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95b9c2ac_0af13bfa",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-27T17:51:14Z",
+      "side": 1,
+      "message": "is size is ASSERTed to be \u003e0 you should change this line to an ASSERT as well, and verify the behaviour remains the same?",
+      "range": {
+        "startLine": 489,
+        "startChar": 4,
+        "endLine": 489,
+        "endChar": 48
+      },
+      "revId": "04f543089fa9957628b81f8f838352e46b5d8099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
