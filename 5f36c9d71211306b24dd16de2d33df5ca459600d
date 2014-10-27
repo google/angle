@@ -22,6 +22,30 @@
       "revId": "5f36c9d71211306b24dd16de2d33df5ca459600d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5594aafe_525842f8",
+        "filename": "tests/angle_tests/ClearTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-27T13:50:08Z",
+      "side": 1,
+      "message": "Sure, just tell me what you\u0027d like to do and I\u0027ll do it.",
+      "parentUuid": "956b82dc_2019b0e5",
+      "range": {
+        "startLine": 154,
+        "startChar": 46,
+        "endLine": 154,
+        "endChar": 47
+      },
+      "revId": "5f36c9d71211306b24dd16de2d33df5ca459600d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
