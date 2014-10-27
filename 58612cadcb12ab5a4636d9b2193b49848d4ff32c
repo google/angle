@@ -16,6 +16,24 @@
       "revId": "58612cadcb12ab5a4636d9b2193b49848d4ff32c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3533b6f6_62deb720",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T17:45:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7580cec4_f619356c",
+      "revId": "58612cadcb12ab5a4636d9b2193b49848d4ff32c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
