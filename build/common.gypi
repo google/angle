@@ -179,23 +179,6 @@
                 },
             },    # x64_Base
 
-            'arm_Base':
-            {
-                'abstract': 1,
-                'msvs_configuration_platform': 'ARM',
-                'msvs_settings':
-                {
-                    'VCLinkerTool':
-                    {
-                        'TargetMachine': '3', # ARM
-                    },
-                    'VCLibrarianTool':
-                    {
-                        'TargetMachine': '3', # ARM
-                    },
-                },
-            }, # arm_Base
-
             # Concrete configurations
             'Debug':
             {
@@ -217,6 +200,25 @@
                     {
                         'inherit_from': ['Common_Base', 'x64_Base', 'Release_Base'],
                     },
+                }],
+                ['angle_build_winrt==1',
+                {
+                    'arm_Base':
+                    {
+                        'abstract': 1,
+                        'msvs_configuration_platform': 'ARM',
+                        'msvs_settings':
+                        {
+                            'VCLinkerTool':
+                            {
+                                'TargetMachine': '3', # ARM
+                            },
+                            'VCLibrarianTool':
+                            {
+                                'TargetMachine': '3', # ARM
+                            },
+                        },
+                    }, # arm_Base
                 }],
                 ['angle_build_winrt==1 and angle_build_winphone==0',
                 {
