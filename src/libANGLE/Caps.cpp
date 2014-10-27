@@ -512,6 +512,7 @@ DisplayExtensions::DisplayExtensions()
       surfaceD3DTexture2DShareHandle(false),
       querySurfacePointer(false),
       windowFixedSize(false),
+      keyedMutex(false),
       postSubBuffer(false),
       createContext(false),
       deviceQuery(false),
@@ -536,6 +537,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_surface_d3d_texture_2d_share_handle", surfaceD3DTexture2DShareHandle, &extensionStrings);
     InsertExtensionString("EGL_ANGLE_query_surface_pointer",               querySurfacePointer,            &extensionStrings);
     InsertExtensionString("EGL_ANGLE_window_fixed_size",                   windowFixedSize,                &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_keyed_mutex",                         keyedMutex,                     &extensionStrings);
     InsertExtensionString("EGL_NV_post_sub_buffer",                        postSubBuffer,                  &extensionStrings);
     InsertExtensionString("EGL_KHR_create_context",                        createContext,                  &extensionStrings);
     InsertExtensionString("EGL_EXT_device_query",                          deviceQuery,                    &extensionStrings);

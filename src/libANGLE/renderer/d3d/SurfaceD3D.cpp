@@ -297,8 +297,16 @@ EGLint SurfaceD3D::isPostSubBufferSupported() const
 
 egl::Error SurfaceD3D::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
-    ASSERT(attribute == EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE);
-    *value = mSwapChain->getShareHandle();
+    if (attribute == EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE)
+    {
+        *value = mSwapChain->getShareHandle();
+    }
+    else if (attribute == EGL_DXGI_KEYED_MUTEX_ANGLE)
+    {
+        *value = mSwapChain->getKeyedMutex();
+    }
+    else UNREACHABLE();
+
     return egl::Error(EGL_SUCCESS);
 }
 

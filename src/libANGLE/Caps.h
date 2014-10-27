@@ -377,6 +377,9 @@ struct DisplayExtensions
     // EGL_ANGLE_window_fixed_size
     bool windowFixedSize;
 
+    // EGL_ANGLE_keyed_mutex
+    bool keyedMutex;
+
     // EGL_NV_post_sub_buffer
     bool postSubBuffer;
 

@@ -2506,6 +2506,11 @@ bool Renderer9::getShareHandleSupport() const
     return (mD3d9Ex != NULL) && !gl::DebugAnnotationsActive();
 }
 
+bool Renderer9::getKeyedMutexSupport() const
+{
+    return false;
+}
+
 bool Renderer9::getPostSubBufferSupport() const
 {
     return true;

@@ -49,6 +49,7 @@ class SwapChainD3D : angle::NonCopyable
     GLenum GetDepthBufferInternalFormat() const { return mDepthBufferFormat; }
 
     HANDLE getShareHandle() { return mShareHandle; }
+    virtual void *getKeyedMutex() = 0;
 
   protected:
     rx::NativeWindow mNativeWindow;  // Handler for the Window that the surface is created for.

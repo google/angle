@@ -384,6 +384,12 @@ IDirect3DTexture9 *SwapChain9::getOffscreenTexture()
     return mOffscreenTexture;
 }
 
+void *SwapChain9::getKeyedMutex()
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
 void SwapChain9::recreate()
 {
     if (!mSwapChain)

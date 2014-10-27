@@ -42,6 +42,7 @@ class SwapChain11 : public SwapChainD3D
 
     EGLint getWidth() const { return mWidth; }
     EGLint getHeight() const { return mHeight; }
+    void *getKeyedMutex() override { return mKeyedMutex; }
 
   private:
     void release();
@@ -59,6 +60,7 @@ class SwapChain11 : public SwapChainD3D
 
     DXGISwapChain *mSwapChain;
     IDXGISwapChain1 *mSwapChain1;
+    IDXGIKeyedMutex *mKeyedMutex;
 
     ID3D11Texture2D *mBackBufferTexture;
     ID3D11RenderTargetView *mBackBufferRTView;

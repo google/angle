@@ -57,7 +57,13 @@ EGLBoolean EGLAPIENTRY QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surfa
             return EGL_FALSE;
         }
         break;
-
+      case EGL_DXGI_KEYED_MUTEX_ANGLE:
+        if (!display->getExtensions().keyedMutex)
+        {
+            SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
+            return EGL_FALSE;
+        }
+        break;
       default:
         SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
         return EGL_FALSE;

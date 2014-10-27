@@ -321,6 +321,11 @@ void DisplayD3D::generateExtensions(egl::DisplayExtensions *outExtensions) const
         outExtensions->surfaceD3DTexture2DShareHandle = true;
     }
 
+    if (mRenderer->getKeyedMutexSupport())
+    {
+        outExtensions->keyedMutex = true;
+    }
+
     outExtensions->querySurfacePointer = true;
     outExtensions->windowFixedSize = true;
 

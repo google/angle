@@ -149,6 +149,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     virtual unsigned int getReservedVertexUniformBuffers() const = 0;
     virtual unsigned int getReservedFragmentUniformBuffers() const = 0;
     virtual bool getShareHandleSupport() const = 0;
+    virtual bool getKeyedMutexSupport() const = 0;
     virtual bool getPostSubBufferSupport() const = 0;
 
     virtual int getMajorShaderModel() const = 0;

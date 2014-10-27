@@ -161,6 +161,7 @@ class Renderer11 : public RendererD3D
     virtual unsigned int getReservedVertexUniformBuffers() const;
     virtual unsigned int getReservedFragmentUniformBuffers() const;
     virtual bool getShareHandleSupport() const;
+    bool getKeyedMutexSupport() const override;
     virtual bool getPostSubBufferSupport() const;
 
     virtual int getMajorShaderModel() const;
