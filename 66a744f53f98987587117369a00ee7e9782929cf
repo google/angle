@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "3533b6f6_823403d5",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T17:36:07Z",
+      "side": 1,
+      "message": "Whoops, fixed.  Thanks.",
+      "parentUuid": "95b9c2ac_478baefe",
+      "range": {
+        "startLine": 381,
+        "startChar": 1,
+        "endLine": 382,
+        "endChar": 38
+      },
+      "revId": "66a744f53f98987587117369a00ee7e9782929cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3533b6f6_27a68120",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 9
@@ -59,6 +83,30 @@
       "writtenOn": "2014-10-27T15:51:26Z",
       "side": 1,
       "message": "what happens here if mWidth, mHeight or mDepth are \u003d\u003d 0?",
+      "range": {
+        "startLine": 611,
+        "startChar": 4,
+        "endLine": 611,
+        "endChar": 28
+      },
+      "revId": "66a744f53f98987587117369a00ee7e9782929cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5db2605_f68b7877",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-27T17:36:07Z",
+      "side": 1,
+      "message": "This is caught by the callers through assertions that the size is greater than zero or the function not being called on zero-sized images.",
+      "parentUuid": "3533b6f6_27a68120",
       "range": {
         "startLine": 611,
         "startChar": 4,
