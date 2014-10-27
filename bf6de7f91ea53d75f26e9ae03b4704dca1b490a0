@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35cf3649_263d4a56",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-27T20:30:56Z",
+      "side": 1,
+      "message": "Should this say \u0027EGL_PLATFORM_ANGLE_USE_WARP_ANGLE\u0027?",
+      "range": {
+        "startLine": 85,
+        "startChar": 39,
+        "endLine": 85,
+        "endChar": 67
+      },
+      "revId": "bf6de7f91ea53d75f26e9ae03b4704dca1b490a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15a5d282_e3b2d2db",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1798,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-10-27T20:30:56Z",
+      "side": 1,
+      "message": "It should probably use WARP here if the WARP flag was set.",
+      "range": {
+        "startLine": 1798,
+        "startChar": 39,
+        "endLine": 1798,
+        "endChar": 63
+      },
+      "revId": "bf6de7f91ea53d75f26e9ae03b4704dca1b490a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
