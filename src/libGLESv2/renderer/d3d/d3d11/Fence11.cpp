@@ -10,6 +10,8 @@
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/main.h"
 
+#include "common/utilities.h"
+
 namespace rx
 {
 
