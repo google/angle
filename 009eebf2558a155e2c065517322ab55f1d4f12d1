@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b552464f_d82f6da6",
+        "filename": "src/libGLESv2/renderer/d3d/RendererD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-10-28T22:51:06Z",
+      "side": 1,
+      "message": "Abstract virtual functions like these declared in RenderImpl don\u0027t need to be repeated here, or is this an ANGLE style guide thing I\u0027m not familiar with?",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 103
+      },
+      "revId": "009eebf2558a155e2c065517322ab55f1d4f12d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
