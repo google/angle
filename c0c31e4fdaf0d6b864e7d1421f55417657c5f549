@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5bfba8a_b2ac26fc",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-28T00:01:37Z",
+      "side": 1,
+      "message": "There\u0027s no EGL_ANGLE_keyed_mutex extension specified, and 0x3202 is already in use by EGL_platform_angle (in draft).",
+      "range": {
+        "startLine": 418,
+        "startChar": 0,
+        "endLine": 421,
+        "endChar": 34
+      },
+      "revId": "c0c31e4fdaf0d6b864e7d1421f55417657c5f549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "956b82dc_b458994b",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-28T00:01:37Z",
+      "side": 1,
+      "message": "There\u0027s also no EGL_ANGLE_d3d_keyed_mutex_client_buffer extension specified, 0x3209 is in use in pending changes to ANGLE_platform_angle_opengl (https://chromium-review.googlesource.com/#/c/225081/7/extensions/ANGLE_platform_angle_opengl.txt), and there\u0027s a typo on line 473.",
+      "range": {
+        "startLine": 472,
+        "startChar": 0,
+        "endLine": 475,
+        "endChar": 52
+      },
+      "revId": "c0c31e4fdaf0d6b864e7d1421f55417657c5f549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
