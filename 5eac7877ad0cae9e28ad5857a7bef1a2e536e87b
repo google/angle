@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95b9c2ac_9b77bb43",
+        "filename": "src/common/winrt/IInspectableNativeWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-28T15:06:31Z",
+      "side": 1,
+      "message": "nit: I\u0027d prefer not to have newlines and comments between the if and else if, it makes the flow harder to read.",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 56
+      },
+      "revId": "5eac7877ad0cae9e28ad5857a7bef1a2e536e87b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3533b6f6_1ea3cb0f",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-28T15:06:31Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "range": {
+        "startLine": 54,
+        "startChar": 73,
+        "endLine": 54,
+        "endChar": 74
+      },
+      "revId": "5eac7877ad0cae9e28ad5857a7bef1a2e536e87b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3533b6f6_feafdfee",
+        "filename": "src/libGLESv2/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-28T15:06:31Z",
+      "side": 1,
+      "message": "Can this be a separate patch?  Sorry for letting through changes that break the build, we don\u0027t have many win 8.1 machines around to test on.",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 161,
+        "endChar": 6
+      },
+      "revId": "5eac7877ad0cae9e28ad5857a7bef1a2e536e87b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
