@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d55dfa60_8d6ad10a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-10-28T22:36:24Z",
+      "side": 1,
+      "message": "File name didn\u0027t actually change.",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 15
+      },
+      "revId": "dc57bc89cc1526282aef3a11934f707e9749c731",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d55dfa60_ed5a6d74",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-10-28T22:36:24Z",
+      "side": 1,
+      "message": "Should be consistent with include guards at the top of the file.",
+      "range": {
+        "startLine": 340,
+        "startChar": 10,
+        "endLine": 340,
+        "endChar": 44
+      },
+      "revId": "dc57bc89cc1526282aef3a11934f707e9749c731",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
