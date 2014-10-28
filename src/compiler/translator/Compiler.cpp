@@ -384,7 +384,6 @@ void TCompiler::clearResults()
     uniforms.clear();
     expandedUniforms.clear();
     varyings.clear();
-    expandedVaryings.clear();
     interfaceBlocks.clear();
 
     builtInFunctionEmulator.Cleanup();
@@ -518,10 +517,8 @@ void TCompiler::collectVariables(TIntermNode* root)
                                  symbolTable);
     root->traverse(&collect);
 
-    // For backwards compatiblity with ShGetVariableInfo, expand struct
-    // uniforms and varyings into separate variables for each field.
-    sh::ExpandVariables(uniforms, &expandedUniforms);
-    sh::ExpandVariables(varyings, &expandedVaryings);
+    // This is for enforcePackingRestriction().
+    sh::ExpandUniforms(uniforms, &expandedUniforms);
 }
 
 bool TCompiler::enforcePackingRestrictions()

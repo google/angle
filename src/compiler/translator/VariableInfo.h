@@ -59,10 +59,9 @@ class CollectVariables : public TIntermTraverser
     const TSymbolTable &mSymbolTable;
 };
 
-// Expand struct variables to flattened lists of split variables
-template <typename VarT>
-void ExpandVariables(const std::vector<VarT> &compact,
-                     std::vector<ShaderVariable> *expanded);
+// Expand struct uniforms to flattened lists of split variables
+void ExpandUniforms(const std::vector<Uniform> &compact,
+                    std::vector<ShaderVariable> *expanded);
 
 }
 

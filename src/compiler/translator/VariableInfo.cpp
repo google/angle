@@ -466,9 +466,8 @@ bool CollectVariables::visitBinary(Visit, TIntermBinary *binaryNode)
     return true;
 }
 
-template <typename VarT>
-void ExpandVariables(const std::vector<VarT> &compact,
-                     std::vector<ShaderVariable> *expanded)
+void ExpandUniforms(const std::vector<Uniform> &compact,
+                    std::vector<ShaderVariable> *expanded)
 {
     for (size_t variableIndex = 0; variableIndex < compact.size(); variableIndex++)
     {
@@ -476,8 +475,5 @@ void ExpandVariables(const std::vector<VarT> &compact,
         ExpandVariable(variable, variable.name, variable.mappedName, variable.staticUse, expanded);
     }
 }
-
-template void ExpandVariables(const std::vector<Uniform> &, std::vector<ShaderVariable> *);
-template void ExpandVariables(const std::vector<Varying> &, std::vector<ShaderVariable> *);
 
 }

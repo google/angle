@@ -72,9 +72,7 @@ class TCompiler : public TShHandleBase
     const std::vector<sh::Attribute> &getAttributes() const { return attributes; }
     const std::vector<sh::Attribute> &getOutputVariables() const { return outputVariables; }
     const std::vector<sh::Uniform> &getUniforms() const { return uniforms; }
-    const std::vector<sh::ShaderVariable> &getExpandedUniforms() const { return expandedUniforms; }
     const std::vector<sh::Varying> &getVaryings() const { return varyings; }
-    const std::vector<sh::ShaderVariable> &getExpandedVaryings() const { return expandedVaryings; }
     const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const { return interfaceBlocks; }
 
     ShHashFunction64 getHashFunction() const { return hashFunction; }
@@ -144,7 +142,6 @@ class TCompiler : public TShHandleBase
     std::vector<sh::Uniform> uniforms;
     std::vector<sh::ShaderVariable> expandedUniforms;
     std::vector<sh::Varying> varyings;
-    std::vector<sh::ShaderVariable> expandedVaryings;
     std::vector<sh::InterfaceBlock> interfaceBlocks;
 
   private:
