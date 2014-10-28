@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "95b9c2ac_b6a2d636",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-28T19:17:04Z",
+      "side": 1,
+      "message": "I\u0027d +1 this suggestion. It was a little hangnail in the Renderer refactor.",
+      "parentUuid": "906390c3_cb8e150e",
+      "range": {
+        "startLine": 731,
+        "startChar": 0,
+        "endLine": 738,
+        "endChar": 1
+      },
+      "revId": "6a2e8e5501dfdf40748b65738ed1d68ff947216f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b05ed4fb_cc5c6ff2",
         "filename": "src/libGLESv2/FramebufferAttachment.cpp",
         "patchSetId": 5
