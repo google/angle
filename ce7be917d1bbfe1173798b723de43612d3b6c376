@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15631229_792f3f2d",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-29T23:17:57Z",
+      "side": 1,
+      "message": "This wording probably needs to be changed (and is missing a description of the \"from\" resources in any case).",
+      "range": {
+        "startLine": 50,
+        "startChar": 55,
+        "endLine": 50,
+        "endChar": 69
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55690a05_7e29e576",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-29T23:17:57Z",
+      "side": 1,
+      "message": "This probably needs rewording-- I\u0027m not sure displays translating to D3D is the right description. Maybe \"To request a display backed by D3D resources...\"?",
+      "range": {
+        "startLine": 68,
+        "startChar": 30,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55690a05_1ed9d136",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-29T23:17:57Z",
+      "side": 1,
+      "message": "In conjunction with the above-- EGL can be used as the system interaction layer not just for ES, so I\u0027m not sure we should explicitly state that it translates to ES here. It\u0027s just that we don\u0027t support any other client APIs but ES currently.",
+      "range": {
+        "startLine": 70,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 32
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55402a75_9a15dc34",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-29T23:17:57Z",
+      "side": 1,
+      "message": "\"non-conformant feature level\" is not necessarily clear. Either we should specifically state that we won\u0027t fall back below feature level X_Y, or say something like \"Unless a feature level is specifically requested which is not capable of supporting all available client APIs...\"",
+      "range": {
+        "startLine": 77,
+        "startChar": 60,
+        "endLine": 78,
+        "endChar": 32
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55690a05_3efdad80",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-29T23:17:57Z",
+      "side": 1,
+      "message": "Is WARP compatible with D3D9 at all? If not, we should specify what happens when D3D9 is specified as the platform type, and the WARP attrib is true.",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 88,
+        "endChar": 59
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15631229_f977cf41",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-29T23:17:57Z",
+      "side": 1,
+      "message": "Be aware that landing this will require changes to Chromium at the next ANGLE roll, because it currently uses the old method of requesting a WARP device, I believe.",
+      "range": {
+        "startLine": 164,
+        "startChar": 0,
+        "endLine": 165,
+        "endChar": 56
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
