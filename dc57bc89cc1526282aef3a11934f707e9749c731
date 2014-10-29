@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5594aafe_0bb83c4a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-29T15:25:10Z",
+      "side": 1,
+      "message": "Thanks, didn\u0027t notice that when I stole this patch from Mo.",
+      "parentUuid": "d55dfa60_8d6ad10a",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 15
+      },
+      "revId": "dc57bc89cc1526282aef3a11934f707e9749c731",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d55dfa60_ed5a6d74",
         "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.h",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2014-10-28T22:36:24Z",
       "side": 1,
       "message": "Should be consistent with include guards at the top of the file.",
+      "range": {
+        "startLine": 340,
+        "startChar": 10,
+        "endLine": 340,
+        "endChar": 44
+      },
+      "revId": "dc57bc89cc1526282aef3a11934f707e9749c731",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "956b82dc_12963023",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-29T15:25:10Z",
+      "side": 1,
+      "message": "Will fix.",
+      "parentUuid": "d55dfa60_ed5a6d74",
       "range": {
         "startLine": 340,
         "startChar": 10,
