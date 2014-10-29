@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "950c6279_f504f03a",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-10-29T21:41:03Z",
+      "side": 1,
+      "message": "Changed from BAD_ATTRIBUTE to BAD_SURFACE here and below. Intentional?",
+      "range": {
+        "startLine": 802,
+        "startChar": 43,
+        "endLine": 802,
+        "endChar": 58
+      },
+      "revId": "04c025a38e6e16c8952d7d89585d88b0658faea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b507a651_76c80830",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-10-29T21:41:03Z",
+      "side": 1,
+      "message": "Same as above. CONTEXT_LOST-\u003eBAD_MATCH. Intentional?",
+      "range": {
+        "startLine": 928,
+        "startChar": 35,
+        "endLine": 928,
+        "endChar": 48
+      },
+      "revId": "04c025a38e6e16c8952d7d89585d88b0658faea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b507a651_56cd043e",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1054,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-10-29T21:41:03Z",
+      "side": 1,
+      "message": "And here.",
+      "range": {
+        "startLine": 1054,
+        "startChar": 31,
+        "endLine": 1054,
+        "endChar": 47
+      },
+      "revId": "04c025a38e6e16c8952d7d89585d88b0658faea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "956b82dc_18d2cfe1",
         "filename": "src/libEGL/main.h",
         "patchSetId": 7
