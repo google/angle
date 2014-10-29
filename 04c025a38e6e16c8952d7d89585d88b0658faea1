@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "956b82dc_18d2cfe1",
+        "filename": "src/libEGL/main.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-29T18:14:23Z",
+      "side": 1,
+      "message": "I\u0027m not tied to this name.  It\u0027s just to be consistent with Context::recordError but setError or setCurrentError would be fine too.",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 37
+      },
+      "revId": "04c025a38e6e16c8952d7d89585d88b0658faea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
