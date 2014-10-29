@@ -29,24 +29,27 @@
 
 bool IsWebGLBasedSpec(ShShaderSpec spec)
 {
-     return spec == SH_WEBGL_SPEC || spec == SH_CSS_SHADERS_SPEC;
+    return (spec == SH_WEBGL_SPEC ||
+            spec == SH_CSS_SHADERS_SPEC ||
+            spec == SH_WEBGL2_SPEC);
 }
 
 size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
 {
     // WebGL defines a max token legnth of 256, while ES2 leaves max token
     // size undefined. ES3 defines a max size of 1024 characters.
-    if (IsWebGLBasedSpec(spec))
+    switch (spec)
     {
+      case SH_WEBGL_SPEC:
+      case SH_CSS_SHADERS_SPEC:
         return 256;
-    }
-    else
-    {
+      default:
         return 1024;
     }
 }
 
 namespace {
+
 class TScopedPoolAllocator
 {
   public:
@@ -82,6 +85,24 @@ class TScopedSymbolTableLevel
   private:
     TSymbolTable* mTable;
 };
+
+int MapSpecToShaderVersion(ShShaderSpec spec)
+{
+    switch (spec)
+    {
+      case SH_GLES2_SPEC:
+      case SH_WEBGL_SPEC:
+      case SH_CSS_SHADERS_SPEC:
+        return 100;
+      case SH_GLES3_SPEC:
+      case SH_WEBGL2_SPEC:
+        return 300;
+      default:
+        UNREACHABLE();
+        return 0;
+    }
+}
+
 }  // namespace
 
 TShHandleBase::TShHandleBase()
@@ -178,6 +199,12 @@ bool TCompiler::compile(const char* const shaderStrings[],
         (parseContext.treeRoot != NULL);
 
     shaderVersion = parseContext.getShaderVersion();
+    if (success && MapSpecToShaderVersion(shaderSpec) < shaderVersion)
+    {
+        infoSink.info.prefix(EPrefixError);
+        infoSink.info << "unsupported shader version";
+        success = false;
+    }
 
     if (success)
     {

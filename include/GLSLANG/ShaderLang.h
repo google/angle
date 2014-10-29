@@ -54,6 +54,9 @@ typedef enum {
   SH_GLES2_SPEC = 0x8B40,
   SH_WEBGL_SPEC = 0x8B41,
 
+  SH_GLES3_SPEC = 0x8B86,
+  SH_WEBGL2_SPEC = 0x8B87,
+
   // The CSS Shaders spec is a subset of the WebGL spec.
   //
   // In both CSS vertex and fragment shaders, ANGLE:
