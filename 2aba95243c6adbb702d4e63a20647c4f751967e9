@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "956b82dc_582607e3",
+        "filename": "src/libGLESv2/Renderbuffer.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-29T17:48:39Z",
+      "side": 1,
+      "message": "This can be removed, I don\u0027t see any place it\u0027s being used.",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 48
+      },
+      "revId": "2aba95243c6adbb702d4e63a20647c4f751967e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5bfba8a_3e7a3de6",
+        "filename": "src/libGLESv2/renderer/d3d/RenderbufferD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-29T17:48:39Z",
+      "side": 1,
+      "message": "nit: this can be forward declared too.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 44
+      },
+      "revId": "2aba95243c6adbb702d4e63a20647c4f751967e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
