@@ -11,6 +11,7 @@
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/main.h"
 
+#include "common/features.h"
 #include "common/utilities.h"
 
 // Definitions local to the translation unit
@@ -451,7 +452,7 @@ bool ShaderD3D::compile(const std::string &source)
         }
     }
 
-#ifdef ANGLE_GENERATE_SHADER_DEBUG_INFO
+#if ANGLE_SHADER_DEBUG_INFO == ANGLE_ENABLED
     mDebugInfo += std::string("// ") + GetShaderTypeString(mType) + " SHADER BEGIN\n";
     mDebugInfo += "\n// GLSL BEGIN\n\n" + source + "\n\n// GLSL END\n\n\n";
     mDebugInfo += "// INITIAL HLSL BEGIN\n\n" + getTranslatedSource() + "\n// INITIAL HLSL END\n\n\n";

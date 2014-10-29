@@ -31,6 +31,7 @@
             'common/debug.h',
             'common/event_tracer.cpp',
             'common/event_tracer.h',
+            'common/features.h',
             'common/mathutil.cpp',
             'common/mathutil.h',
             'common/platform.h',

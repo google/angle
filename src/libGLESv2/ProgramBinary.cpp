@@ -27,6 +27,7 @@
 #include "libGLESv2/Context.h"
 #include "libGLESv2/Buffer.h"
 #include "common/blocklayout.h"
+#include "common/features.h"
 
 namespace gl
 {
@@ -362,7 +363,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shade
 
 LinkResult ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *binary, GLsizei length)
 {
-#ifdef ANGLE_DISABLE_PROGRAM_BINARY_LOAD
+#if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
     return LinkResult(false, Error(GL_NO_ERROR));
 #else
     ASSERT(binaryFormat == mProgram->getBinaryFormat());
@@ -419,7 +420,7 @@ LinkResult ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void
     }
 
     return LinkResult(true, Error(GL_NO_ERROR));
-#endif // #ifdef ANGLE_DISABLE_PROGRAM_BINARY_LOAD
+#endif // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
 }
 
 Error ProgramBinary::save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GLsizei *length)

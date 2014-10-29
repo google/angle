@@ -39,6 +39,7 @@
 
 #include "libEGL/Display.h"
 
+#include "common/features.h"
 #include "common/utilities.h"
 
 #include "third_party/trace_event/trace_event.h"
@@ -47,14 +48,6 @@
 
 // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
 #define REF_RAST 0
-
-// The "Debug This Pixel..." feature in PIX often fails when using the
-// D3D9Ex interfaces.  In order to get debug pixel to work on a Vista/Win 7
-// machine, define "ANGLE_ENABLE_D3D9EX=0" in your project file.
-#if !defined(ANGLE_ENABLE_D3D9EX)
-// Enables use of the IDirect3D9Ex interface, when available
-#define ANGLE_ENABLE_D3D9EX 1
-#endif // !defined(ANGLE_ENABLE_D3D9EX)
 
 #if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
 #define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
@@ -207,7 +200,7 @@ EGLint Renderer9::initialize()
     // Use Direct3D9Ex if available. Among other things, this version is less
     // inclined to report a lost context, for example when the user switches
     // desktop. Direct3D9Ex is available in Windows Vista and later if suitable drivers are available.
-    if (ANGLE_ENABLE_D3D9EX && Direct3DCreate9ExPtr && SUCCEEDED(Direct3DCreate9ExPtr(D3D_SDK_VERSION, &mD3d9Ex)))
+    if (ANGLE_D3D9EX == ANGLE_ENABLED && Direct3DCreate9ExPtr && SUCCEEDED(Direct3DCreate9ExPtr(D3D_SDK_VERSION, &mD3d9Ex)))
     {
         TRACE_EVENT0("gpu", "D3d9Ex_QueryInterface");
         ASSERT(mD3d9Ex);
@@ -2288,7 +2281,7 @@ bool Renderer9::isRemovedDeviceResettable() const
 {
     bool success = false;
 
-#ifdef ANGLE_ENABLE_D3D9EX
+#if ANGLE_D3D9EX == ANGLE_ENABLED
     IDirect3D9Ex *d3d9Ex = NULL;
     typedef HRESULT (WINAPI *Direct3DCreate9ExFunc)(UINT, IDirect3D9Ex**);
     Direct3DCreate9ExFunc Direct3DCreate9ExPtr = reinterpret_cast<Direct3DCreate9ExFunc>(GetProcAddress(mD3d9Module, "Direct3DCreate9Ex"));

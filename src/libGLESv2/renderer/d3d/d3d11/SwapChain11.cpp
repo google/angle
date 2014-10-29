@@ -15,6 +15,7 @@
 #include "libGLESv2/renderer/d3d/d3d11/shaders/compiled/passthrough2d11vs.h"
 #include "libGLESv2/renderer/d3d/d3d11/shaders/compiled/passthroughrgba2d11ps.h"
 
+#include "common/features.h"
 #include "common/NativeWindow.h"
 
 namespace rx
@@ -578,7 +579,7 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     // Draw
     deviceContext->Draw(4, 0);
 
-#ifdef ANGLE_FORCE_VSYNC_OFF
+#if ANGLE_VSYNC == ANGLE_DISABLED
     result = mSwapChain->Present(0, 0);
 #else
     result = mSwapChain->Present(mSwapInterval, 0);

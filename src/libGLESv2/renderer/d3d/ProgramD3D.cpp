@@ -8,6 +8,7 @@
 
 #include "libGLESv2/renderer/d3d/ProgramD3D.h"
 
+#include "common/features.h"
 #include "common/utilities.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/FramebufferAttachment.h"
@@ -954,7 +955,7 @@ gl::LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::S
         }
     }
 
-#ifdef ANGLE_GENERATE_SHADER_DEBUG_INFO
+#if ANGLE_SHADER_DEBUG_INFO == ANGLE_ENABLED
     if (usesGeometryShader() && mGeometryExecutable)
     {
         // Geometry shaders are currently only used internally, so there is no corresponding shader object at the interface level

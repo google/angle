@@ -8,6 +8,7 @@
 #include "libGLESv2/Program.h"
 #include "libGLESv2/main.h"
 
+#include "common/features.h"
 #include "common/utilities.h"
 
 #include "third_party/trace_event/trace_event.h"
@@ -225,7 +226,7 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
         {
             *outCompiledBlob = binary;
 
-#ifdef ANGLE_GENERATE_SHADER_DEBUG_INFO
+#if ANGLE_SHADER_DEBUG_INFO == ANGLE_ENABLED
             (*outDebugInfo) += "// COMPILER INPUT HLSL BEGIN\n\n" + hlsl + "\n// COMPILER INPUT HLSL END\n";
             (*outDebugInfo) += "\n\n// ASSEMBLY BEGIN\n\n";
             (*outDebugInfo) += "// Compiler configuration: " + configs[i].name + "\n// Flags:\n";

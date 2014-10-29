@@ -249,6 +249,7 @@
     <ClInclude Include="..\..\src\common\blocklayout.h"/>
     <ClInclude Include="..\..\src\common\debug.h"/>
     <ClInclude Include="..\..\src\common\event_tracer.h"/>
+    <ClInclude Include="..\..\src\common\features.h"/>
     <ClInclude Include="..\..\src\common\mathutil.h"/>
     <ClInclude Include="..\..\src\common\platform.h"/>
     <ClInclude Include="..\..\src\common\NativeWindow.h"/>
