@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5594aafe_8bc44cd0",
+        "filename": "src/libGLESv2/State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-29T14:27:57Z",
+      "side": 1,
+      "message": "Yeah, can do that. I originally had a new file, removed it because it was so small and it needed the same includes. will re-add.",
+      "parentUuid": "154a3299_24a758a0",
+      "range": {
+        "startLine": 320,
+        "startChar": 7,
+        "endLine": 320,
+        "endChar": 11
+      },
+      "revId": "6ec470fed36ba547c14cdaebe4778df794994f9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d55dfa60_6d1bfd15",
         "filename": "src/libGLESv2/State.h",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2014-10-28T22:23:21Z",
       "side": 1,
       "message": "Having this one function in what is otherwise a data storage class feels weird. Is there a reason I\u0027m missing for why this logic belongs here instead of in it\u0027s previous location?",
+      "range": {
+        "startLine": 326,
+        "startChar": 13,
+        "endLine": 326,
+        "endChar": 30
+      },
+      "revId": "6ec470fed36ba547c14cdaebe4778df794994f9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5594aafe_abc908e6",
+        "filename": "src/libGLESv2/State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-10-29T14:27:57Z",
+      "side": 1,
+      "message": "RendererD3D and Context both need it.",
+      "parentUuid": "d55dfa60_6d1bfd15",
       "range": {
         "startLine": 326,
         "startChar": 13,
