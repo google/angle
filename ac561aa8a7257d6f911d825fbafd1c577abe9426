@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f5b4bedf_fd95e316",
+        "filename": "src/libGLESv2/renderer/d3d/RenderbufferD3D.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-30T16:59:28Z",
+      "side": 1,
+      "message": "Name could be updated.",
+      "range": {
+        "startLine": 29,
+        "startChar": 66,
+        "endLine": 29,
+        "endChar": 73
+      },
+      "revId": "ac561aa8a7257d6f911d825fbafd1c577abe9426",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15e6b2ff_fe7b1d13",
+        "filename": "src/libGLESv2/renderer/d3d/RenderbufferD3D.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-30T16:59:28Z",
+      "side": 1,
+      "message": "Don\u0027t need this.",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 11
+      },
+      "revId": "ac561aa8a7257d6f911d825fbafd1c577abe9426",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5b97ad9_5f7403c3",
+        "filename": "src/libGLESv2/renderer/d3d/RenderbufferD3D.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-30T16:59:28Z",
+      "side": 1,
+      "message": "Also unneeded.",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 11
+      },
+      "revId": "ac561aa8a7257d6f911d825fbafd1c577abe9426",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5b97ad9_9f7dbba6",
+        "filename": "src/libGLESv2/renderer/d3d/RenderbufferD3D.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-30T16:59:28Z",
+      "side": 1,
+      "message": "And this.",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 11
+      },
+      "revId": "ac561aa8a7257d6f911d825fbafd1c577abe9426",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
