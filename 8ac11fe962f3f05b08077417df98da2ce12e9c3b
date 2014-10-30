@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f5b4bedf_3dc3db17",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-30T17:52:55Z",
+      "side": 1,
+      "message": "nit: I think Shannon prefers to just omit the variable name comment.  I think it looks sliiightly cleaner to not have it too.",
+      "range": {
+        "startLine": 700,
+        "startChar": 56,
+        "endLine": 700,
+        "endChar": 64
+      },
+      "revId": "8ac11fe962f3f05b08077417df98da2ce12e9c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5b97ad9_ffbcf7ae",
+        "filename": "src/libGLESv2/State.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-30T17:52:55Z",
+      "side": 1,
+      "message": "It feels very awkward to have a circular dependency here.  More reason to pull the get* calls out of Context and State (not necessarily in this patch).",
+      "range": {
+        "startLine": 240,
+        "startChar": 21,
+        "endLine": 240,
+        "endChar": 41
+      },
+      "revId": "8ac11fe962f3f05b08077417df98da2ce12e9c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5b97ad9_5f85e3e7",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-30T17:52:55Z",
+      "side": 1,
+      "message": "This will crash if the framebuffer is null now (below too).",
+      "range": {
+        "startLine": 639,
+        "startChar": 8,
+        "endLine": 641,
+        "endChar": 74
+      },
+      "revId": "8ac11fe962f3f05b08077417df98da2ce12e9c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
