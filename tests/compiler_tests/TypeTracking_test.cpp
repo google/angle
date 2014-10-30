@@ -24,7 +24,7 @@ class TypeTrackingTest : public testing::Test
         ShBuiltInResources resources;
         ShInitBuiltInResources(&resources);
 
-        mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES2_SPEC);
+        mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES3_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
     }
 
