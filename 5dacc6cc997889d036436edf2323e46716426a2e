@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f5b4bedf_9d56a79c",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-30T17:52:40Z",
+      "side": 1,
+      "message": "Yep, egl should have it\u0027s own caps type for this (that display will hold, see egl design doc).",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 89,
+        "endChar": 44
+      },
+      "revId": "5dacc6cc997889d036436edf2323e46716426a2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
