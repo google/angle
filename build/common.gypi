@@ -108,7 +108,7 @@
                     {
                         'Optimization': '0',    # /Od
                         'BasicRuntimeChecks': '3',
-                        'RuntimeLibrary': '3',    # /MTd (debug DLL)
+                        'RuntimeLibrary': '3',  # /MDd (Debug Multithreaded DLL)
                     },
                     'VCLinkerTool':
                     {
@@ -145,7 +145,7 @@
                     'VCCLCompilerTool':
                     {
                         'Optimization': '2',    # /Os
-                        'RuntimeLibrary': '2',    # /MT (DLL)
+                        'RuntimeLibrary': '2',  # /MD (Multithreaded DLL)
                     },
                     'VCLinkerTool':
                     {
