@@ -144,19 +144,18 @@ protected:
     // substring in the error log. This way we know the error is specific
     // to the issue we are testing.
     bool CheckShaderCompilation(ShHandle compiler,
-                                const char* source,
+                                const char *source,
                                 int compileOptions,
-                                const char* expected_error) {
+                                const char *expected_error)
+    {
         bool success = ShCompile(compiler, &source, 1, compileOptions) != 0;
-        if (success) {
+        if (success)
+        {
             success = !expected_error;
-        } else {
-            size_t bufferLen = 0;
-            ShGetInfo(compiler, SH_INFO_LOG_LENGTH, &bufferLen);
-            char* buffer(new char [bufferLen]);
-            ShGetInfoLog(compiler, buffer);
-            std::string log(buffer, buffer + bufferLen);
-            delete [] buffer;
+        }
+        else
+        {
+            std::string log = ShGetInfoLog(compiler);
             if (expected_error)
                 success = log.find(expected_error) != std::string::npos;
 

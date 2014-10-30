@@ -102,7 +102,7 @@ void ShaderD3D::initializeCompiler()
 {
     if (!mFragmentCompiler)
     {
-        int result = ShInitialize();
+        bool result = ShInitialize();
 
         if (result)
         {
@@ -252,23 +252,16 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
         result = ShCompile(compiler, sourceStrings, ArraySize(sourceStrings), compileOptions | SH_SOURCE_PATH);
     }
 
-    size_t shaderVersion = 100;
-    ShGetInfo(compiler, SH_SHADER_VERSION, &shaderVersion);
+    mShaderVersion = ShGetShaderVersion(compiler);
 
-    mShaderVersion = static_cast<int>(shaderVersion);
-
-    if (shaderVersion == 300 && mRenderer->getCurrentClientVersion() < 3)
+    if (mShaderVersion == 300 && mRenderer->getCurrentClientVersion() < 3)
     {
         mInfoLog = "GLSL ES 3.00 is not supported by OpenGL ES 2.0 contexts";
         TRACE("\n%s", mInfoLog.c_str());
     }
     else if (result)
     {
-        size_t objCodeLen = 0;
-        ShGetInfo(compiler, SH_OBJECT_CODE_LENGTH, &objCodeLen);
-
-        std::vector<char> outputHLSL(objCodeLen);
-        ShGetObjectCode(compiler, outputHLSL.data());
+        mHlsl = ShGetObjectCode(compiler);
 
 #ifdef _DEBUG
         // Prefix hlsl shader with commented out glsl shader
@@ -288,10 +281,8 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
             curPos = (nextLine == std::string::npos) ? std::string::npos : (nextLine + 1);
         }
         hlslStream << "\n\n";
-        hlslStream << outputHLSL.data();
+        hlslStream << mHlsl;
         mHlsl = hlslStream.str();
-#else
-        mHlsl = outputHLSL.data();
 #endif
 
         mUniforms = *GetShaderVariables(ShGetUniforms(compiler));
@@ -303,7 +294,7 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
             if (uniform.staticUse)
             {
                 unsigned int index = -1;
-                bool result = ShGetUniformRegister(compiler, uniform.name.c_str(), &index);
+                bool result = ShGetUniformRegister(compiler, uniform.name, &index);
                 UNUSED_ASSERTION_VARIABLE(result);
                 ASSERT(result);
 
@@ -320,7 +311,7 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
             if (interfaceBlock.staticUse)
             {
                 unsigned int index = -1;
-                bool result = ShGetInterfaceBlockRegister(compiler, interfaceBlock.name.c_str(), &index);
+                bool result = ShGetInterfaceBlockRegister(compiler, interfaceBlock.name, &index);
                 UNUSED_ASSERTION_VARIABLE(result);
                 ASSERT(result);
 
@@ -330,14 +321,9 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
     }
     else
     {
-        size_t infoLogLen = 0;
-        ShGetInfo(compiler, SH_INFO_LOG_LENGTH, &infoLogLen);
+        mInfoLog = ShGetInfoLog(compiler);
 
-        std::vector<char> infoLog(infoLogLen);
-        ShGetInfoLog(compiler, infoLog.data());
-        mInfoLog = infoLog.data();
-
-        TRACE("\n%s", infoLog.data());
+        TRACE("\n%s", mInfoLog.c_str());
     }
 }
 
@@ -419,10 +405,7 @@ ShShaderOutput ShaderD3D::getCompilerOutputType(GLenum shader)
       default: UNREACHABLE();  return SH_HLSL9_OUTPUT;
     }
 
-    size_t outputType = 0;
-    ShGetInfo(compiler, SH_OUTPUT_TYPE, &outputType);
-
-    return static_cast<ShShaderOutput>(outputType);
+    return ShGetShaderOutputType(compiler);
 }
 
 bool ShaderD3D::compile(const std::string &source)

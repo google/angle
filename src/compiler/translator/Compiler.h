@@ -80,7 +80,7 @@ class TCompiler : public TShHandleBase
     TSymbolTable& getSymbolTable() { return symbolTable; }
     ShShaderSpec getShaderSpec() const { return shaderSpec; }
     ShShaderOutput getOutputType() const { return outputType; }
-    std::string getBuiltInResourcesString() const { return builtInResourcesString; }
+    const std::string &getBuiltInResourcesString() const { return builtInResourcesString; }
 
     // Get the resources set by InitBuiltInSymbolTable
     const ShBuiltInResources& getResources() const;

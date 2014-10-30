@@ -84,32 +84,48 @@ const std::vector<VarT> *GetShaderVariables(const ShHandle handle, ShaderVariabl
     return GetVariableList<VarT>(compiler, variableType);
 }
 
+TCompiler *GetCompilerFromHandle(ShHandle handle)
+{
+    if (!handle)
+        return NULL;
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
+    return base->getAsCompiler();
 }
+
+TranslatorHLSL *GetTranslatorHLSLFromHandle(ShHandle handle)
+{
+    if (!handle)
+        return NULL;
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
+    return base->getAsTranslatorHLSL();
+}
+
+}  // namespace anonymous
 
 //
 // Driver must call this first, once, before doing any other compiler operations.
 // Subsequent calls to this function are no-op.
 //
-int ShInitialize()
+bool ShInitialize()
 {
     if (!isInitialized)
     {
         isInitialized = InitProcess();
     }
-    return isInitialized ? 1 : 0;
+    return isInitialized;
 }
 
 //
 // Cleanup symbol tables
 //
-int ShFinalize()
+bool ShFinalize()
 {
     if (isInitialized)
     {
         DetachProcess();
         isInitialized = false;
     }
-    return 1;
+    return true;
 }
 
 //
@@ -190,23 +206,13 @@ void ShDestruct(ShHandle handle)
         DeleteCompiler(base->getAsCompiler());
 }
 
-void ShGetBuiltInResourcesString(const ShHandle handle, size_t outStringLen, char *outString)
+const std::string &ShGetBuiltInResourcesString(const ShHandle handle)
 {
-    if (!handle || !outString)
-    {
-        return;
-    }
-
-    TShHandleBase *base = static_cast<TShHandleBase*>(handle);
-    TCompiler *compiler = base->getAsCompiler();
-    if (!compiler)
-    {
-        return;
-    }
-
-    strncpy(outString, compiler->getBuiltInResourcesString().c_str(), outStringLen);
-    outString[outStringLen - 1] = '\0';
+    TCompiler *compiler = GetCompilerFromHandle(handle);
+    ASSERT(compiler);
+    return compiler->getBuiltInResourcesString();
 }
+
 //
 // Do an actual compile on the given strings.  The result is left
 // in the given compile object.
@@ -214,149 +220,62 @@ void ShGetBuiltInResourcesString(const ShHandle handle, size_t outStringLen, cha
 // Return:  The return value of ShCompile is really boolean, indicating
 // success or failure.
 //
-int ShCompile(
+bool ShCompile(
     const ShHandle handle,
-    const char* const shaderStrings[],
+    const char *const shaderStrings[],
     size_t numStrings,
     int compileOptions)
 {
-    if (handle == 0)
-        return 0;
+    TCompiler *compiler = GetCompilerFromHandle(handle);
+    ASSERT(compiler);
 
-    TShHandleBase* base = reinterpret_cast<TShHandleBase*>(handle);
-    TCompiler* compiler = base->getAsCompiler();
-    if (compiler == 0)
-        return 0;
-
-    bool success = compiler->compile(shaderStrings, numStrings, compileOptions);
-    return success ? 1 : 0;
+    return compiler->compile(shaderStrings, numStrings, compileOptions);
 }
 
-void ShGetInfo(const ShHandle handle, ShShaderInfo pname, size_t* params)
+int ShGetShaderVersion(const ShHandle handle)
 {
-    if (!handle || !params)
-        return;
+    TCompiler* compiler = GetCompilerFromHandle(handle);
+    ASSERT(compiler);
+    return compiler->getShaderVersion();
+}
 
-    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
-    TCompiler* compiler = base->getAsCompiler();
-    if (!compiler) return;
-
-    switch(pname)
-    {
-    case SH_INFO_LOG_LENGTH:
-        *params = compiler->getInfoSink().info.size() + 1;
-        break;
-    case SH_OBJECT_CODE_LENGTH:
-        *params = compiler->getInfoSink().obj.size() + 1;
-        break;
-    case SH_MAPPED_NAME_MAX_LENGTH:
-        // Use longer length than MAX_SHORTENED_IDENTIFIER_SIZE to
-        // handle array and struct dereferences.
-        *params = 1 + GetGlobalMaxTokenSize(compiler->getShaderSpec());
-        break;
-    case SH_NAME_MAX_LENGTH:
-        *params = 1 + GetGlobalMaxTokenSize(compiler->getShaderSpec());
-        break;
-    case SH_HASHED_NAME_MAX_LENGTH:
-        if (compiler->getHashFunction() == NULL) {
-            *params = 0;
-        } else {
-            // 64 bits hashing output requires 16 bytes for hex 
-            // representation.
-            const char HashedNamePrefix[] = HASHED_NAME_PREFIX;
-            (void)HashedNamePrefix;
-            *params = 16 + sizeof(HashedNamePrefix);
-        }
-        break;
-    case SH_HASHED_NAMES_COUNT:
-        *params = compiler->getNameMap().size();
-        break;
-    case SH_SHADER_VERSION:
-        *params = compiler->getShaderVersion();
-        break;
-    case SH_RESOURCES_STRING_LENGTH:
-        *params = compiler->getBuiltInResourcesString().length() + 1;
-        break;
-    case SH_OUTPUT_TYPE:
-        *params = compiler->getOutputType();
-        break;
-    default: UNREACHABLE();
-    }
+ShShaderOutput ShGetShaderOutputType(const ShHandle handle)
+{
+    TCompiler* compiler = GetCompilerFromHandle(handle);
+    ASSERT(compiler);
+    return compiler->getOutputType();
 }
 
 //
 // Return any compiler log of messages for the application.
 //
-void ShGetInfoLog(const ShHandle handle, char* infoLog)
+const std::string &ShGetInfoLog(const ShHandle handle)
 {
-    if (!handle || !infoLog)
-        return;
+    TCompiler *compiler = GetCompilerFromHandle(handle);
+    ASSERT(compiler);
 
-    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
-    TCompiler* compiler = base->getAsCompiler();
-    if (!compiler) return;
-
-    TInfoSink& infoSink = compiler->getInfoSink();
-    strcpy(infoLog, infoSink.info.c_str());
+    TInfoSink &infoSink = compiler->getInfoSink();
+    return infoSink.info.str();
 }
 
 //
 // Return any object code.
 //
-void ShGetObjectCode(const ShHandle handle, char* objCode)
+const std::string &ShGetObjectCode(const ShHandle handle)
 {
-    if (!handle || !objCode)
-        return;
+    TCompiler *compiler = GetCompilerFromHandle(handle);
+    ASSERT(compiler);
 
-    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
-    TCompiler* compiler = base->getAsCompiler();
-    if (!compiler) return;
-
-    TInfoSink& infoSink = compiler->getInfoSink();
-    strcpy(objCode, infoSink.obj.c_str());
+    TInfoSink &infoSink = compiler->getInfoSink();
+    return infoSink.obj.str();
 }
 
-void ShGetNameHashingEntry(const ShHandle handle,
-                           int index,
-                           char* name,
-                           char* hashedName)
+const std::map<std::string, std::string> *ShGetNameHashingMap(
+    const ShHandle handle)
 {
-    if (!handle || !name || !hashedName || index < 0)
-        return;
-
-    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
-    TCompiler* compiler = base->getAsCompiler();
-    if (!compiler) return;
-
-    const NameMap& nameMap = compiler->getNameMap();
-    if (index >= static_cast<int>(nameMap.size()))
-        return;
-
-    NameMap::const_iterator it = nameMap.begin();
-    for (int i = 0; i < index; ++i)
-        ++it;
-
-    size_t len = it->first.length() + 1;
-    size_t max_len = 0;
-    ShGetInfo(handle, SH_NAME_MAX_LENGTH, &max_len);
-    if (len > max_len) {
-        ASSERT(false);
-        len = max_len;
-    }
-    strncpy(name, it->first.c_str(), len);
-    // To be on the safe side in case the source is longer than expected.
-    name[len - 1] = '\0';
-
-    len = it->second.length() + 1;
-    max_len = 0;
-    ShGetInfo(handle, SH_HASHED_NAME_MAX_LENGTH, &max_len);
-    if (len > max_len) {
-        ASSERT(false);
-        len = max_len;
-    }
-    strncpy(hashedName, it->second.c_str(), len);
-    // To be on the safe side in case the source is longer than expected.
-    hashedName[len - 1] = '\0';
+    TCompiler *compiler = GetCompilerFromHandle(handle);
+    ASSERT(compiler);
+    return &(compiler->getNameMap());
 }
 
 const std::vector<sh::Uniform> *ShGetUniforms(const ShHandle handle)
@@ -384,11 +303,11 @@ const std::vector<sh::InterfaceBlock> *ShGetInterfaceBlocks(const ShHandle handl
     return GetShaderVariables<sh::InterfaceBlock>(handle, SHADERVAR_INTERFACEBLOCK);
 }
 
-int ShCheckVariablesWithinPackingLimits(
-    int maxVectors, ShVariableInfo* varInfoArray, size_t varInfoArraySize)
+bool ShCheckVariablesWithinPackingLimits(
+    int maxVectors, ShVariableInfo *varInfoArray, size_t varInfoArraySize)
 {
     if (varInfoArraySize == 0)
-        return 1;
+        return true;
     ASSERT(varInfoArray);
     std::vector<sh::ShaderVariable> variables;
     for (size_t ii = 0; ii < varInfoArraySize; ++ii)
@@ -397,24 +316,17 @@ int ShCheckVariablesWithinPackingLimits(
         variables.push_back(var);
     }
     VariablePacker packer;
-    return packer.CheckVariablesWithinPackingLimits(maxVectors, variables) ? 1 : 0;
+    return packer.CheckVariablesWithinPackingLimits(maxVectors, variables);
 }
 
 bool ShGetInterfaceBlockRegister(const ShHandle handle,
-                                 const char *interfaceBlockName,
+                                 const std::string &interfaceBlockName,
                                  unsigned int *indexOut)
 {
-    if (!handle || !interfaceBlockName || !indexOut)
-    {
-        return false;
-    }
+    ASSERT(indexOut);
 
-    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
-    TranslatorHLSL* translator = base->getAsTranslatorHLSL();
-    if (!translator)
-    {
-        return false;
-    }
+    TranslatorHLSL *translator = GetTranslatorHLSLFromHandle(handle);
+    ASSERT(translator);
 
     if (!translator->hasInterfaceBlock(interfaceBlockName))
     {
@@ -426,20 +338,12 @@ bool ShGetInterfaceBlockRegister(const ShHandle handle,
 }
 
 bool ShGetUniformRegister(const ShHandle handle,
-                          const char *uniformName,
+                          const std::string &uniformName,
                           unsigned int *indexOut)
 {
-    if (!handle || !uniformName || !indexOut)
-    {
-        return false;
-    }
-
-    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
-    TranslatorHLSL* translator = base->getAsTranslatorHLSL();
-    if (!translator)
-    {
-        return false;
-    }
+    ASSERT(indexOut);
+    TranslatorHLSL *translator = GetTranslatorHLSLFromHandle(handle);
+    ASSERT(translator);
 
     if (!translator->hasUniform(uniformName))
     {
