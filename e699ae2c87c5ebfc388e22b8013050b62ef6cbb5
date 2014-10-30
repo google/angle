@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5b97ad9_bf919f5d",
+        "filename": "src/libGLESv2/Data.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-30T17:52:46Z",
+      "side": 1,
+      "message": "A more descriptive name would be better but I can\u0027t think of one right now, especially with State and Context already taken.",
+      "range": {
+        "startLine": 19,
+        "startChar": 7,
+        "endLine": 19,
+        "endChar": 11
+      },
+      "revId": "e699ae2c87c5ebfc388e22b8013050b62ef6cbb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5b4bedf_7d58f3f8",
+        "filename": "src/libGLESv2/Data.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-30T17:52:46Z",
+      "side": 1,
+      "message": "This can probably be removed, it shouldn\u0027t be visible to the Renderers.",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 37
+      },
+      "revId": "e699ae2c87c5ebfc388e22b8013050b62ef6cbb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5b4bedf_1d59b7ff",
+        "filename": "src/libGLESv2/Data.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-30T17:52:46Z",
+      "side": 1,
+      "message": "I think this (and the above getSamplerTexture) could be removed if we bound the zero textures to the state itself.  I know the zero textures are created dynamically right now but maybe we should treat them like regular textures in the state?",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 28
+      },
+      "revId": "e699ae2c87c5ebfc388e22b8013050b62ef6cbb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
