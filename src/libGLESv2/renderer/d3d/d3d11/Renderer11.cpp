@@ -36,7 +36,6 @@
 #include "libGLESv2/renderer/d3d/d3d11/PixelTransfer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/VertexArray11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Buffer11.h"
-#include "libGLESv2/renderer/d3d/RenderbufferD3D.h"
 
 #include "libEGL/Display.h"
 
@@ -2706,19 +2705,6 @@ TextureImpl *Renderer11::createTexture(GLenum target)
     }
 
     return NULL;
-}
-
-RenderbufferImpl *Renderer11::createRenderbuffer()
-{
-    RenderbufferD3D *renderbuffer = new RenderbufferD3D(this);
-    return renderbuffer;
-}
-
-RenderbufferImpl *Renderer11::createRenderbuffer(SwapChain *swapChain, bool depth)
-{
-    RenderbufferD3D *renderbuffer = new RenderbufferD3D(this);
-    renderbuffer->setStorage(swapChain, depth);
-    return renderbuffer;
 }
 
 gl::Error Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,

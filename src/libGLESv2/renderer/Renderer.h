@@ -66,7 +66,6 @@ class TextureStorage;
 class UniformStorage;
 class TextureImpl;
 class TransformFeedbackImpl;
-class RenderbufferImpl;
 
 struct ConfigDesc
 {
@@ -218,10 +217,6 @@ class Renderer
 
     // Texture creation
     virtual TextureImpl *createTexture(GLenum target) = 0;
-
-    // Renderbuffer creation
-    virtual RenderbufferImpl *createRenderbuffer() = 0;
-    virtual RenderbufferImpl *createRenderbuffer(SwapChain *swapChain, bool depth) = 0;
 
     // Buffer creation
     virtual BufferImpl *createBuffer() = 0;

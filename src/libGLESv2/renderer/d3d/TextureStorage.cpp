@@ -8,7 +8,6 @@
 
 #include "libGLESv2/renderer/d3d/TextureStorage.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
-#include "libGLESv2/renderer/d3d/RenderbufferD3D.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/Texture.h"
@@ -26,7 +25,7 @@ TextureStorage::TextureStorage()
 
 void TextureStorage::initializeSerials(unsigned int rtSerialsToReserve, unsigned int rtSerialsLayerStride)
 {
-    mFirstRenderTargetSerial = RenderbufferD3D::issueSerials(rtSerialsToReserve);
+    mFirstRenderTargetSerial = gl::RenderbufferStorage::issueSerials(rtSerialsToReserve);
     mRenderTargetSerialsLayerStride = rtSerialsLayerStride;
 }
 

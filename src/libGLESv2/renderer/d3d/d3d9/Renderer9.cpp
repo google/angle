@@ -26,7 +26,6 @@
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/TransformFeedbackD3D.h"
-#include "libGLESv2/renderer/d3d/RenderbufferD3D.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Texture.h"
@@ -1166,7 +1165,7 @@ gl::FramebufferAttachment *Renderer9::getNullColorbuffer(gl::FramebufferAttachme
         }
     }
 
-    gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(createRenderbuffer(), 0);
+    gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(0, new gl::Colorbuffer(this, width, height, GL_NONE, 0));
     gl::RenderbufferAttachment *nullbuffer = new gl::RenderbufferAttachment(GL_NONE, nullRenderbuffer);
 
     // add nullbuffer to the cache
@@ -3080,19 +3079,6 @@ TextureImpl *Renderer9::createTexture(GLenum target)
     }
 
     return NULL;
-}
-
-RenderbufferImpl *Renderer9::createRenderbuffer()
-{
-    RenderbufferD3D *renderbuffer = new RenderbufferD3D(this);
-    return renderbuffer;
-}
-
-RenderbufferImpl *Renderer9::createRenderbuffer(SwapChain *swapChain, bool depth)
-{
-    RenderbufferD3D *renderbuffer = new RenderbufferD3D(this);
-    renderbuffer->setStorage(swapChain, depth);
-    return renderbuffer;
 }
 
 bool Renderer9::getLUID(LUID *adapterLuid) const

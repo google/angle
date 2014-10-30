@@ -16,17 +16,13 @@
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/RenderTarget.h"
-#include "libGLESv2/renderer/RenderbufferImpl.h"
 #include "libGLESv2/renderer/Workarounds.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
-#include "libGLESv2/renderer/d3d/RenderbufferD3D.h"
 
 #include "common/utilities.h"
 
 namespace rx
 {
-// TODO: Move these functions, and the D3D-specific header inclusions above,
-//       to FramebufferD3D.
 gl::Error GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment, RenderTarget **outRT)
 {
     if (attachment->isTexture())
@@ -42,8 +38,9 @@ gl::Error GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment, Rende
     {
         gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
         ASSERT(renderbuffer);
-        RenderbufferD3D *renderbufferD3D = RenderbufferD3D::makeRenderbufferD3D(renderbuffer->getImpl());
-        *outRT = renderbufferD3D->getRenderTarget();
+
+        // TODO: cast to RenderbufferD3D
+        *outRT = renderbuffer->getStorage()->getRenderTarget();
         return gl::Error(GL_NO_ERROR);
     }
 }
@@ -63,8 +60,9 @@ unsigned int GetAttachmentSerial(gl::FramebufferAttachment *attachment)
 
     gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
     ASSERT(renderbuffer);
-    RenderbufferD3D *renderbufferD3D = RenderbufferD3D::makeRenderbufferD3D(renderbuffer->getImpl());
-    return renderbufferD3D->getSerial();
+
+    // TODO: cast to RenderbufferD3D
+    return renderbuffer->getStorage()->getSerial();
 }
 
 }
@@ -640,13 +638,13 @@ Error Framebuffer::invalidateSub(GLsizei numAttachments, const GLenum *attachmen
     return Error(GL_NO_ERROR);
 }
 
-DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, rx::RenderbufferImpl *colorbuffer, rx::RenderbufferImpl *depthStencil)
+DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, Colorbuffer *colorbuffer, DepthStencilbuffer *depthStencil)
     : Framebuffer(renderer, 0)
 {
-    Renderbuffer *colorRenderbuffer = new Renderbuffer(colorbuffer, 0);
+    Renderbuffer *colorRenderbuffer = new Renderbuffer(0, colorbuffer);
     mColorbuffers[0] = new RenderbufferAttachment(GL_BACK, colorRenderbuffer);
 
-    Renderbuffer *depthStencilBuffer = new Renderbuffer(depthStencil, 0);
+    Renderbuffer *depthStencilBuffer = new Renderbuffer(0, depthStencil);
 
     // Make a new attachment objects to ensure we do not double-delete
     // See angle issue 686

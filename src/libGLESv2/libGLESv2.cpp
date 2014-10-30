@@ -3876,8 +3876,7 @@ void GL_APIENTRY glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei sa
             return;
         }
 
-        gl::Renderbuffer *renderbuffer = context->getState().getCurrentRenderbuffer();
-        renderbuffer->setStorage(width, height, internalformat, samples);
+        context->setRenderbufferStorage(width, height, internalformat, samples);
     }
 }
 
@@ -5822,8 +5821,7 @@ void GL_APIENTRY glRenderbufferStorageMultisample(GLenum target, GLsizei samples
             return;
         }
 
-        gl::Renderbuffer *renderbuffer = context->getState().getCurrentRenderbuffer();
-        renderbuffer->setStorage(width, height, internalformat, samples);
+        context->setRenderbufferStorage(width, height, internalformat, samples);
     }
 }
 

@@ -21,12 +21,15 @@
 namespace rx
 {
 class Renderer;
-class RenderbufferImpl;
 }
 
 namespace gl
 {
 class FramebufferAttachment;
+class Colorbuffer;
+class Depthbuffer;
+class Stencilbuffer;
+class DepthStencilbuffer;
 struct Caps;
 
 typedef std::vector<FramebufferAttachment *> ColorbufferInfo;
@@ -100,7 +103,7 @@ class Framebuffer
 class DefaultFramebuffer : public Framebuffer
 {
   public:
-    DefaultFramebuffer(rx::Renderer *Renderer, rx::RenderbufferImpl *colorbuffer, rx::RenderbufferImpl *depthStencil);
+    DefaultFramebuffer(rx::Renderer *Renderer, Colorbuffer *colorbuffer, DepthStencilbuffer *depthStencil);
 
     virtual GLenum completeness() const;
     virtual FramebufferAttachment *getAttachment(GLenum attachment) const;

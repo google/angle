@@ -192,8 +192,8 @@ void Context::makeCurrent(egl::Surface *surface)
     // Wrap the existing swapchain resources into GL objects and assign them to the '0' names
     rx::SwapChain *swapchain = surface->getSwapChain();
 
-    rx::RenderbufferImpl *colorbufferZero = mRenderer->createRenderbuffer(swapchain, false);
-    rx::RenderbufferImpl *depthStencilbufferZero = mRenderer->createRenderbuffer(swapchain, true);
+    Colorbuffer *colorbufferZero = new Colorbuffer(mRenderer, swapchain);
+    DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(mRenderer, swapchain);
     Framebuffer *framebufferZero = new DefaultFramebuffer(mRenderer, colorbufferZero, depthStencilbufferZero);
 
     setFramebufferZero(framebufferZero);
@@ -726,6 +726,33 @@ void Context::setFramebufferZero(Framebuffer *buffer)
 
     delete mFramebufferMap[0];
     mFramebufferMap[0] = buffer;
+}
+
+void Context::setRenderbufferStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples)
+{
+    ASSERT(getTextureCaps().get(internalformat).renderable);
+
+    RenderbufferStorage *renderbuffer = NULL;
+
+    const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
+    if (formatInfo.depthBits > 0 && formatInfo.stencilBits > 0)
+    {
+        renderbuffer = new gl::DepthStencilbuffer(mRenderer, width, height, samples);
+    }
+    else if (formatInfo.depthBits > 0)
+    {
+        renderbuffer = new gl::Depthbuffer(mRenderer, width, height, samples);
+    }
+    else if (formatInfo.stencilBits > 0)
+    {
+        renderbuffer = new gl::Stencilbuffer(mRenderer, width, height, samples);
+    }
+    else
+    {
+        renderbuffer = new gl::Colorbuffer(mRenderer, width, height, internalformat, samples);
+    }
+
+    mState.getCurrentRenderbuffer()->setStorage(renderbuffer);
 }
 
 Framebuffer *Context::getFramebuffer(unsigned int handle) const
