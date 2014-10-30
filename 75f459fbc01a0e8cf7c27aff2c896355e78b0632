@@ -1,0 +1,354 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55402a75_3a992852",
+        "filename": "src/common/winrt/IInspectableNativeWindow.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Global functions should get a capital initial letter.",
+      "range": {
+        "startLine": 110,
+        "startChar": 5,
+        "endLine": 110,
+        "endChar": 21
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55402a75_ba7a585c",
+        "filename": "src/common/winrt/IInspectableNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Also missed in a prior patch-- the constructor/destructor should always be first to be defined in a class.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 41
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55402a75_5a75146f",
+        "filename": "src/common/winrt/IInspectableNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Missed in a prior patch-- needs indentation.",
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55690a05_5e1b4915",
+        "filename": "src/common/winrt/IInspectableNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "These guys all should have been CamelCase instead of camelCase.",
+      "range": {
+        "startLine": 82,
+        "startChar": 5,
+        "endLine": 85,
+        "endChar": 42
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15631229_f9134fc9",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Just 2014",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55402a75_1abd4ca9",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Needs updating",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 25
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55690a05_9ef7a16c",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "\"be\" missing, I think?",
+      "range": {
+        "startLine": 27,
+        "startChar": 52,
+        "endLine": 27,
+        "endChar": 53
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55690a05_fedb35f8",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Just 2014 is OK for newly introduced files.",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55690a05_debc79af",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Needs to be updated with current filename (and preferably-but-nittily, the same capitalization).",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 23
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55690a05_5e8a29f8",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Also needs updating to reflect the name of the file. We also try to include the directories in the path as part of the include guard name, although that\u0027s fallen apart a bit with some of the recent code reorganization, but I think it would be a good idea in the case of WinRT-specific files, since platform-dependent compilation allows for identically named files in WinRT/Win32 (and that may be desirable at some point).",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 36
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15631229_79b29f90",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Format nit: Some vertical whitespace would be helpful for reading this. I\u0027d recommend a blank line after the destructor and before the \"private\" label at least.",
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15631229_99533bac",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Format nit: needs indenting",
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55690a05_be4c1d3b",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Does this come from RuntimeClass itself? Generally our member functions are lowercase-initial-character, but I fear there\u0027s likely to be some amount of clashing style where interaction with Windows-specific classes happens...",
+      "range": {
+        "startLine": 35,
+        "startChar": 12,
+        "endLine": 35,
+        "endChar": 34
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55690a05_3ee76dc1",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Would prefer a more descriptive var name here than \"e\"",
+      "range": {
+        "startLine": 47,
+        "startChar": 93,
+        "endLine": 47,
+        "endChar": 94
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15631229_99069b89",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Global functions for us usually start with a capital (it looks like I missed one of these previously with isValidEGLNativeWindowType-- my apologies!)",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 129
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55690a05_3ebe4d8d",
+        "filename": "src/common/winrt/SwapChainPanelNativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-10-30T00:06:03Z",
+      "side": 1,
+      "message": "Needs updating",
+      "range": {
+        "startLine": 75,
+        "startChar": 10,
+        "endLine": 75,
+        "endChar": 38
+      },
+      "revId": "75f459fbc01a0e8cf7c27aff2c896355e78b0632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
