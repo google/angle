@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75760e14_09434de0",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-31T14:51:57Z",
+      "side": 1,
+      "message": "I added this text for changing the display types.",
+      "range": {
+        "startLine": 93,
+        "startChar": 23,
+        "endLine": 95,
+        "endChar": 34
+      },
+      "revId": "abb73225ecf8531cd7afed3e2230ed4554f7ace0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
