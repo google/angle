@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "35701618_87fac852",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-31T14:51:07Z",
+      "side": 1,
+      "message": "I changed it slightly, but I\u0027m not sure I can be more specific if we\u0027re heading in the direction multiple platforms.",
+      "parentUuid": "15631229_792f3f2d",
+      "range": {
+        "startLine": 50,
+        "startChar": 55,
+        "endLine": 50,
+        "endChar": 69
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55690a05_7e29e576",
         "filename": "extensions/ANGLE_platform_angle_d3d.txt",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2014-10-29T23:17:57Z",
       "side": 1,
       "message": "This probably needs rewording-- I\u0027m not sure displays translating to D3D is the right description. Maybe \"To request a display backed by D3D resources...\"?",
+      "range": {
+        "startLine": 68,
+        "startChar": 30,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75760e14_69cda13e",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-31T14:51:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55690a05_7e29e576",
       "range": {
         "startLine": 68,
         "startChar": 30,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "35701618_0770987f",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-31T14:51:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55690a05_1ed9d136",
+      "range": {
+        "startLine": 70,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 32
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55402a75_9a15dc34",
         "filename": "extensions/ANGLE_platform_angle_d3d.txt",
         "patchSetId": 7
@@ -82,6 +154,30 @@
       "writtenOn": "2014-10-29T23:17:57Z",
       "side": 1,
       "message": "\"non-conformant feature level\" is not necessarily clear. Either we should specifically state that we won\u0027t fall back below feature level X_Y, or say something like \"Unless a feature level is specifically requested which is not capable of supporting all available client APIs...\"",
+      "range": {
+        "startLine": 77,
+        "startChar": 60,
+        "endLine": 78,
+        "endChar": 32
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "156dd243_2602f8e2",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-31T14:51:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55402a75_9a15dc34",
       "range": {
         "startLine": 77,
         "startChar": 60,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "156dd243_06fdfc7f",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-31T14:51:07Z",
+      "side": 1,
+      "message": "I think this is covered by the sentence below.",
+      "parentUuid": "55690a05_3efdad80",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 88,
+        "endChar": 59
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "15631229_f977cf41",
         "filename": "src/libEGL/libEGL.cpp",
         "patchSetId": 7
@@ -128,6 +248,30 @@
       "writtenOn": "2014-10-29T23:17:57Z",
       "side": 1,
       "message": "Be aware that landing this will require changes to Chromium at the next ANGLE roll, because it currently uses the old method of requesting a WARP device, I believe.",
+      "range": {
+        "startLine": 164,
+        "startChar": 0,
+        "endLine": 165,
+        "endChar": 56
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75760e14_a96a3957",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-10-31T14:51:07Z",
+      "side": 1,
+      "message": "Yup, I\u0027ll try to have a CL ready for chrome by the time we roll next week.",
+      "parentUuid": "15631229_f977cf41",
       "range": {
         "startLine": 164,
         "startChar": 0,
