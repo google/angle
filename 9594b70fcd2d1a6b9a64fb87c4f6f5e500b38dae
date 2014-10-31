@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35701618_4d9b917e",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119208
+      },
+      "writtenOn": "2014-10-31T20:54:55Z",
+      "side": 1,
+      "message": "There\u0027s a typo here.",
+      "revId": "9594b70fcd2d1a6b9a64fb87c4f6f5e500b38dae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
