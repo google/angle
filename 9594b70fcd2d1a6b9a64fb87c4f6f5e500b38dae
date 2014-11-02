@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "f5c03e6a_da1045f6",
+        "filename": "extensions/EGL_ANGLE_keyed_mutex.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-02T16:24:26Z",
+      "side": 1,
+      "message": "Could this be prefixed with something like ANGLE_surface_d3d_texture_2d_share_handle\u0027s sentence about \"Some EGL implementations generate...(etc)\"? Right now this reads like an IDXGIKeyedMutex is an EGL native concept that all EGL surfaces could reasonably be expected to have.",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 16
+      },
+      "revId": "9594b70fcd2d1a6b9a64fb87c4f6f5e500b38dae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5c03e6a_ba1591e4",
+        "filename": "extensions/EGL_ANGLE_keyed_mutex.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-02T16:24:26Z",
+      "side": 1,
+      "message": "As mentioned previously, this is in use in an extension revision pending review: https://chromium-review.googlesource.com/#/c/225081/9/extensions/ANGLE_platform_angle_opengl.txt\n\n0x320B is the first value in our range with no current claim on it, I believe.",
+      "range": {
+        "startLine": 53,
+        "startChar": 57,
+        "endLine": 53,
+        "endChar": 63
+      },
+      "revId": "9594b70fcd2d1a6b9a64fb87c4f6f5e500b38dae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5c03e6a_9a1acd10",
+        "filename": "extensions/EGL_ANGLE_keyed_mutex.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-02T16:24:26Z",
+      "side": 1,
+      "message": "It\u0027s probably relevant to mention that this is supported only by surfaces backed by D3D11 resources.",
+      "range": {
+        "startLine": 63,
+        "startChar": 8,
+        "endLine": 68,
+        "endChar": 62
+      },
+      "revId": "9594b70fcd2d1a6b9a64fb87c4f6f5e500b38dae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "35701618_4d9b917e",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 5
