@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "b5ba46ec_78c8215e",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-02T15:59:49Z",
+      "side": 1,
+      "message": "\"Native\" works.",
+      "parentUuid": "35701618_87fac852",
+      "range": {
+        "startLine": 50,
+        "startChar": 55,
+        "endLine": 50,
+        "endChar": 69
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55690a05_7e29e576",
         "filename": "extensions/ANGLE_platform_angle_d3d.txt",
         "patchSetId": 7
@@ -225,6 +249,30 @@
       "side": 1,
       "message": "I think this is covered by the sentence below.",
       "parentUuid": "55690a05_3efdad80",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 88,
+        "endChar": 59
+      },
+      "revId": "ce7be917d1bbfe1173798b723de43612d3b6c376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5c03e6a_1af23d7b",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-02T15:59:49Z",
+      "side": 1,
+      "message": "Hah-- yes, I think I spaced on that paragraph.",
+      "parentUuid": "156dd243_06fdfc7f",
       "range": {
         "startLine": 83,
         "startChar": 4,
