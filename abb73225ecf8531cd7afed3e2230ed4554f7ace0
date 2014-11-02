@@ -22,6 +22,30 @@
       "revId": "abb73225ecf8531cd7afed3e2230ed4554f7ace0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5ba46ec_58c55d44",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-02T16:01:09Z",
+      "side": 1,
+      "message": "I would probably change the end of the sentence to \"those provided in the attrib list, if any.\"",
+      "parentUuid": "75760e14_09434de0",
+      "range": {
+        "startLine": 93,
+        "startChar": 23,
+        "endLine": 95,
+        "endChar": 34
+      },
+      "revId": "abb73225ecf8531cd7afed3e2230ed4554f7ace0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
