@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b5ba46ec_d8016ddf",
+        "filename": "src/common/winrt/CoreWindowNativeWindow.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-02T16:45:02Z",
+      "side": 1,
+      "message": "Don\u0027t think this semicolon is necessary.",
+      "range": {
+        "startLine": 154,
+        "startChar": 1,
+        "endLine": 154,
+        "endChar": 2
+      },
+      "revId": "b7e6271eb1523682aa1239ed27166e0e794a0243",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5c03e6a_7a00199f",
+        "filename": "src/common/winrt/CoreWindowNativeWindow.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-02T16:45:02Z",
+      "side": 1,
+      "message": "I missed this function for CamelCase. (ANGLE\u0027s rule of thumb is global functions are CamelCase, and member functions are camelCase.)",
+      "range": {
+        "startLine": 156,
+        "startChar": 8,
+        "endLine": 156,
+        "endChar": 33
+      },
+      "revId": "b7e6271eb1523682aa1239ed27166e0e794a0243",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
