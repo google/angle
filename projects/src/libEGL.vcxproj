@@ -258,6 +258,7 @@
     <ClInclude Include="..\..\src\libEGL\AttributeMap.h"/>
     <ClInclude Include="..\..\src\libEGL\Config.h"/>
     <ClInclude Include="..\..\src\libEGL\Display.h"/>
+    <ClInclude Include="..\..\src\libEGL\Error.h"/>
     <ClInclude Include="..\..\src\libEGL\Surface.h"/>
     <ClInclude Include="..\..\src\libEGL\main.h"/>
     <ClInclude Include="..\..\src\libEGL\resource.h"/>
@@ -273,6 +274,7 @@
     <ClCompile Include="..\..\src\libEGL\AttributeMap.cpp"/>
     <ClCompile Include="..\..\src\libEGL\Config.cpp"/>
     <ClCompile Include="..\..\src\libEGL\Display.cpp"/>
+    <ClCompile Include="..\..\src\libEGL\Error.cpp"/>
     <ClCompile Include="..\..\src\libEGL\Surface.cpp"/>
     <ClCompile Include="..\..\src\libEGL\libEGL.cpp"/>
     <ClCompile Include="..\..\src\libEGL\main.cpp"/>
