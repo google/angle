@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35b576f8_315bd27b",
+        "filename": "src/common/NativeWindow.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-03T17:51:48Z",
+      "side": 1,
+      "message": "Would you mind fixing the indentation on these labels while you\u0027re in this file?",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 8
+      },
+      "revId": "8790df029293ceeec6996087b819b00451beab1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15b23212_2a2a3fe8",
+        "filename": "src/common/NativeWindow.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-03T17:51:48Z",
+      "side": 1,
+      "message": "Can this global func go into the namespace as well?",
+      "range": {
+        "startLine": 72,
+        "startChar": 5,
+        "endLine": 72,
+        "endChar": 60
+      },
+      "revId": "8790df029293ceeec6996087b819b00451beab1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
