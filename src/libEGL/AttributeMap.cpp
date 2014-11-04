@@ -15,7 +15,7 @@ AttributeMap::AttributeMap()
 
 AttributeMap::AttributeMap(const EGLint *attributes)
 {
-    for (const EGLint *curAttrib = attributes; curAttrib[0] != EGL_NONE; curAttrib++)
+    for (const EGLint *curAttrib = attributes; curAttrib[0] != EGL_NONE; curAttrib += 2)
     {
         insert(curAttrib[0], curAttrib[1]);
     }
