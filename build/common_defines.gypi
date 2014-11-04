@@ -12,7 +12,7 @@
         'angle_build_winrt%': '0',
         'angle_build_winphone%': '0',
     },
-    'msvs_disabled_warnings': [ 4100, 4127, 4239, 4244, 4245, 4251, 4512, 4702, 4530, 4718, 4267, 4264, 4447, 4075 ],
+    'msvs_disabled_warnings': [ 4075, 4100, 4127, 4239, 4244, 4245, 4251, 4264, 4267, 4447, 4512, 4530, 4702, 4718 ],
     'conditions':
     [
         ['angle_build_winrt==0',

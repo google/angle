@@ -8,6 +8,9 @@
 // classes TextureStorage11_2D and TextureStorage11_Cube, which act as the interface to the D3D11 texture.
 
 #include "libGLESv2/renderer/d3d/d3d11/TextureStorage11.h"
+
+#include <tuple>
+
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libGLESv2/renderer/d3d/d3d11/SwapChain11.h"
