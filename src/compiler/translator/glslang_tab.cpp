@@ -3304,7 +3304,7 @@ yyreduce:
         
         TIntermAggregate *prototype = new TIntermAggregate;
         prototype->setType(function.getReturnType());
-        prototype->setName(function.getName());
+        prototype->setName(function.getMangledName());
         
         for (size_t i = 0; i < function.getParamCount(); i++)
         {

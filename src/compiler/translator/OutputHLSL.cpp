@@ -1939,7 +1939,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpPrototype:
         if (visit == PreVisit)
         {
-            out << TypeString(node->getType()) << " " << Decorate(node->getName()) << (mOutputLod0Function ? "Lod0(" : "(");
+            out << TypeString(node->getType()) << " " << Decorate(TFunction::unmangleName(node->getName())) << (mOutputLod0Function ? "Lod0(" : "(");
 
             TIntermSequence *arguments = node->getSequence();
 

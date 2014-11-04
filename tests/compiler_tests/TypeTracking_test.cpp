@@ -53,6 +53,24 @@ class TypeTrackingTest : public testing::Test
     std::string mInfoLog;
 };
 
+TEST_F(TypeTrackingTest, FunctionPrototypeMangling)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "float fun(float a);\n"
+        "uniform float f;\n"
+        "void main() {\n"
+        "   float ff = fun(f);\n"
+        "   gl_FragColor = vec4(ff);\n"
+        "}\n"
+        "float fun(float a) {\n"
+        "   return a * 2.0;\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(foundInIntermediateTree("Function Prototype: fun(f1;"));
+    ASSERT_TRUE(foundInIntermediateTree("Function Definition: fun(f1;"));
+};
+
 TEST_F(TypeTrackingTest, BuiltInFunctionResultPrecision)
 {
     const std::string &shaderString =

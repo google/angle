@@ -575,7 +575,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         // Function declaration.
         ASSERT(visit == PreVisit);
         writeVariableType(node->getType());
-        out << " " << hashName(node->getName());
+        out << " " << hashFunctionName(node->getName());
 
         out << "(";
         writeFunctionParameters(*(node->getSequence()));

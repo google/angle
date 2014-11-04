@@ -295,6 +295,7 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpFunction:      out << "Function Definition: " << node->getName(); break;
       case EOpFunctionCall:  out << "Function Call: " << node->getName(); break;
       case EOpParameters:    out << "Function Parameters: ";              break;
+      case EOpPrototype:     out << "Function Prototype: " << node->getName(); break;
 
       case EOpConstructFloat: out << "Construct float"; break;
       case EOpConstructVec2:  out << "Construct vec2";  break;
