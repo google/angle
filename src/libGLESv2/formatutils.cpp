@@ -454,7 +454,7 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT32_OES, DepthStencilFormat(32, 0,  0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT,                   GL_UNSIGNED_NORMALIZED, RequireExt<&Extensions::depthTextures>,        RequireExt<&Extensions::depthTextures>,                                              AlwaysSupported                              )));
     map.insert(InternalFormatInfoPair(GL_DEPTH24_STENCIL8,      DepthStencilFormat(24, 8,  0, GL_DEPTH_STENCIL,   GL_UNSIGNED_INT_24_8,              GL_UNSIGNED_NORMALIZED, RequireESOrExt<3, &Extensions::depthTextures>, RequireESOrExtOrExt<3, &Extensions::depthTextures, &Extensions::packedDepthStencil>, AlwaysSupported                              )));
     map.insert(InternalFormatInfoPair(GL_DEPTH32F_STENCIL8,     DepthStencilFormat(32, 8, 24, GL_DEPTH_STENCIL,   GL_FLOAT_32_UNSIGNED_INT_24_8_REV, GL_FLOAT,               RequireES<3>,                                  RequireES<3>,                                                                        AlwaysSupported                              )));
-    map.insert(InternalFormatInfoPair(GL_STENCIL_INDEX8,        DepthStencilFormat( 0, 8,  0, GL_DEPTH_STENCIL,   GL_UNSIGNED_BYTE,                  GL_UNSIGNED_INT,        RequireES<2>,                                  RequireES<2>,                                                                        NeverSupported                               )));
+    // STENCIL_INDEX8 is special-cased, see around the bottom of the list.
 
     // Luminance alpha formats
     //                               | Internal format          |          | L | A | Format            | Type            | Component type        | Supported                                                                    | Renderable    | Filterable    |
@@ -510,6 +510,13 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
 
     // From GL_ANGLE_texture_compression_dxt5
     map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT5>, NeverSupported, AlwaysSupported)));
+
+    // For STENCIL_INDEX8 we chose a normalized component type for the following reasons:
+    // - Multisampled buffer are disallowed for non-normalized integer component types and we want to support it for STENCIL_INDEX8
+    // - All other stencil formats (all depth-stencil) are either float or normalized
+    // - It affects only validation of internalformat in RenderbufferStorageMultisample.
+    //                               | Internal format  |                  |D |S |X | Format          | Type            | Component type        | Supported   | Renderable  | Filterable   |
+    map.insert(InternalFormatInfoPair(GL_STENCIL_INDEX8, DepthStencilFormat(0, 8, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_BYTE, GL_UNSIGNED_NORMALIZED, RequireES<2>, RequireES<2>, NeverSupported)));
 
     return map;
 }

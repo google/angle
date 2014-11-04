@@ -1,7 +1,7 @@
 #include "ANGLETest.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(FramebufferFormatsTest, ES2_D3D9, ES2_D3D11);
+ANGLE_TYPED_TEST_CASE(FramebufferFormatsTest, ES2_D3D9, ES2_D3D11, ES3_D3D11);
 
 template<typename T>
 class FramebufferFormatsTest : public ANGLETest
@@ -64,6 +64,56 @@ protected:
         glDeleteFramebuffers(1, &fbo);
     }
 
+    void testRenderbufferMultisampleFormat(int minESVersion, GLenum attachmentType, GLenum internalFormat)
+    {
+        if (T::GetGlesMajorVersion() < minESVersion)
+        {
+            return;
+        }
+
+        // Check that multisample is supported with at least two samples (minimum required is 1)
+        bool supports2Samples = false;
+
+        if (T::GetGlesMajorVersion() == 2)
+        {
+            if (extensionEnabled("ANGLE_framebuffer_multisample"))
+            {
+                int maxSamples;
+                glGetIntegerv(GL_MAX_SAMPLES_ANGLE, &maxSamples);
+                supports2Samples = maxSamples >= 2;
+            }
+        }
+        else
+        {
+            assert(T::GetGlesMajorVersion() >= 3);
+            int maxSamples;
+            glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+            supports2Samples = maxSamples >= 2;
+        }
+
+        if (!supports2Samples)
+        {
+            return;
+        }
+
+        GLuint framebufferID;
+        glGenFramebuffers(1, &framebufferID);
+        glBindFramebuffer(GL_FRAMEBUFFER, framebufferID);
+
+        GLuint renderbufferID;
+        glGenRenderbuffers(1, &renderbufferID);
+        glBindRenderbuffer(GL_RENDERBUFFER, renderbufferID);
+
+        EXPECT_GL_NO_ERROR();
+        glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, 2, internalFormat, 128, 128);
+        EXPECT_GL_NO_ERROR();
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachmentType, GL_RENDERBUFFER, renderbufferID);
+        EXPECT_GL_NO_ERROR();
+
+        glDeleteRenderbuffers(1, &renderbufferID);
+        glDeleteFramebuffers(1, &framebufferID);
+    }
+
     virtual void SetUp()
     {
         ANGLETest::SetUp();
@@ -100,3 +150,32 @@ TYPED_TEST(FramebufferFormatsTest, RGBA8)
     testTextureFormat(GL_RGBA8_OES, 8, 8, 8, 8);
 }
 
+TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_DEPTH16)
+{
+    testRenderbufferMultisampleFormat(2, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT16);
+}
+
+TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_DEPTH24)
+{
+    testRenderbufferMultisampleFormat(3, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT24);
+}
+
+TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_DEPTH32F)
+{
+    testRenderbufferMultisampleFormat(3, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT32F);
+}
+
+TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_DEPTH24_STENCIL8)
+{
+    testRenderbufferMultisampleFormat(3, GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH24_STENCIL8);
+}
+
+TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_DEPTH32F_STENCIL8)
+{
+    testRenderbufferMultisampleFormat(3, GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH32F_STENCIL8);
+}
+
+TYPED_TEST(FramebufferFormatsTest, RenderbufferMultisample_STENCIL_INDEX8)
+{
+    testRenderbufferMultisampleFormat(2, GL_STENCIL_ATTACHMENT, GL_STENCIL_INDEX8);
+}

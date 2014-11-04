@@ -32,6 +32,9 @@ bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum att
 
 bool ValidES3ReadFormatType(Context *context, GLenum internalFormat, GLenum format, GLenum type);
 
+bool ValidateES3RenderbufferStorageParameters(Context *context, GLenum target, GLsizei samples,
+                                              GLenum internalformat, GLsizei width, GLsizei height);
+
 bool ValidateInvalidateFramebufferParameters(Context *context, GLenum target, GLsizei numAttachments,
                                              const GLenum* attachments);
 

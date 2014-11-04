@@ -32,9 +32,11 @@ bool ValidQueryType(const Context *context, GLenum queryType);
 bool ValidProgram(Context *context, GLuint id);
 
 bool ValidateAttachmentTarget(Context *context, GLenum attachment);
-bool ValidateRenderbufferStorageParameters(Context *context, GLenum target, GLsizei samples,
-                                           GLenum internalformat, GLsizei width, GLsizei height,
-                                           bool angleExtension);
+bool ValidateRenderbufferStorageParametersBase(Context *context, GLenum target, GLsizei samples,
+                                               GLenum internalformat, GLsizei width, GLsizei height);
+bool ValidateRenderbufferStorageParametersANGLE(Context *context, GLenum target, GLsizei samples,
+                                                GLenum internalformat, GLsizei width, GLsizei height);
+
 bool ValidateFramebufferRenderbufferParameters(Context *context, GLenum target, GLenum attachment,
                                                GLenum renderbuffertarget, GLuint renderbuffer);
 

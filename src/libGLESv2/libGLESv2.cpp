@@ -3851,8 +3851,8 @@ void GL_APIENTRY glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei sa
     gl::Context *context = gl::getNonLostContext();
     if (context)
     {
-        if (!ValidateRenderbufferStorageParameters(context, target, samples, internalformat,
-                                                   width, height, true))
+        if (!ValidateRenderbufferStorageParametersANGLE(context, target, samples, internalformat,
+                                                        width, height))
         {
             return;
         }
@@ -5802,8 +5802,7 @@ void GL_APIENTRY glRenderbufferStorageMultisample(GLenum target, GLsizei samples
             return;
         }
 
-        if (!ValidateRenderbufferStorageParameters(context, target, samples, internalformat,
-                                                   width, height, false))
+        if (!ValidateES3RenderbufferStorageParameters(context, target, samples, internalformat, width, height))
         {
             return;
         }
