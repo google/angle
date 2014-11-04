@@ -18,25 +18,16 @@ namespace rx
 class RenderTarget
 {
   public:
-    RenderTarget() : mSerial(issueSerials(1))
-    {
-        mWidth = 0;
-        mHeight = 0;
-        mDepth = 0;
-        mInternalFormat = GL_NONE;
-        mActualFormat = GL_NONE;
-        mSamples = 0;
-    }
+    RenderTarget();
+    virtual ~RenderTarget();
 
-    virtual ~RenderTarget() {};
-
-    GLsizei getWidth() const { return mWidth; }
-    GLsizei getHeight() const { return mHeight; }
-    GLsizei getDepth() const { return mDepth; }
-    GLenum getInternalFormat() const { return mInternalFormat; }
-    GLenum getActualFormat() const { return mActualFormat; }
-    GLsizei getSamples() const { return mSamples; }
-    gl::Extents getExtents() const { return gl::Extents(mWidth, mHeight, mDepth); }
+    virtual GLsizei getWidth() const = 0;
+    virtual GLsizei getHeight() const = 0;
+    virtual GLsizei getDepth() const = 0;
+    virtual GLenum getInternalFormat() const = 0;
+    virtual GLenum getActualFormat() const = 0;
+    virtual GLsizei getSamples() const = 0;
+    gl::Extents getExtents() const { return gl::Extents(getWidth(), getHeight(), getDepth()); }
 
     virtual void invalidate(GLint x, GLint y, GLsizei width, GLsizei height) = 0;
 
@@ -49,14 +40,6 @@ class RenderTarget
         GLsizei depth;
         GLenum  format;
     };
-
-  protected:
-    GLsizei mWidth;
-    GLsizei mHeight;
-    GLsizei mDepth;
-    GLenum mInternalFormat;
-    GLenum mActualFormat;
-    GLsizei mSamples;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderTarget);

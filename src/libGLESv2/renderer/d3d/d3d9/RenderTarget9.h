@@ -15,24 +15,73 @@
 namespace rx
 {
 class Renderer9;
+class SwapChain9;
 
 class RenderTarget9 : public RenderTarget
 {
   public:
-    RenderTarget9(IDirect3DSurface9 *surface, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth,
-                  GLsizei samples);
-    virtual ~RenderTarget9();
+    RenderTarget9() { }
+    virtual ~RenderTarget9() { }
 
     static RenderTarget9 *makeRenderTarget9(RenderTarget *renderTarget);
 
-    virtual void invalidate(GLint x, GLint y, GLsizei width, GLsizei height);
+    void invalidate(GLint x, GLint y, GLsizei width, GLsizei height) override;
 
-    IDirect3DSurface9 *getSurface();
+    virtual IDirect3DSurface9 *getSurface() = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderTarget9);
+};
+
+class TextureRenderTarget9 : public RenderTarget9
+{
+  public:
+    TextureRenderTarget9(IDirect3DSurface9 *surface, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth,
+                         GLsizei samples);
+    virtual ~TextureRenderTarget9();
+
+    GLsizei getWidth() const override;
+    GLsizei getHeight() const override;
+    GLsizei getDepth() const override;
+    GLenum getInternalFormat() const override;
+    GLenum getActualFormat() const override;
+    GLsizei getSamples() const override;
+
+    IDirect3DSurface9 *getSurface() override;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureRenderTarget9);
+
+    GLsizei mWidth;
+    GLsizei mHeight;
+    GLsizei mDepth;
+    GLenum mInternalFormat;
+    GLenum mActualFormat;
+    GLsizei mSamples;
 
     IDirect3DSurface9 *mRenderTarget;
+};
+
+class SurfaceRenderTarget9 : public RenderTarget9
+{
+  public:
+    SurfaceRenderTarget9(SwapChain9 *swapChain, bool depth);
+    virtual ~SurfaceRenderTarget9();
+
+    GLsizei getWidth() const override;
+    GLsizei getHeight() const override;
+    GLsizei getDepth() const override;
+    GLenum getInternalFormat() const override;
+    GLenum getActualFormat() const override;
+    GLsizei getSamples() const override;
+
+    IDirect3DSurface9 *getSurface() override;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(SurfaceRenderTarget9);
+
+    SwapChain9 *mSwapChain;
+    bool mDepth;
 };
 
 }

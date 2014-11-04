@@ -12,6 +12,15 @@ namespace rx
 {
 unsigned int RenderTarget::mCurrentSerial = 1;
 
+RenderTarget::RenderTarget()
+    : mSerial(issueSerials(1))
+{
+}
+
+RenderTarget::~RenderTarget()
+{
+}
+
 unsigned int RenderTarget::getSerial() const
 {
     return mSerial;
@@ -23,4 +32,5 @@ unsigned int RenderTarget::issueSerials(unsigned int count)
     mCurrentSerial += count;
     return firstSerial;
 }
+
 }

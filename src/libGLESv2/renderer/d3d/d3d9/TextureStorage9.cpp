@@ -191,7 +191,7 @@ gl::Error TextureStorage9_2D::getRenderTarget(const gl::ImageIndex &/*index*/, R
             return error;
         }
 
-        mRenderTarget = new RenderTarget9(surface, mInternalFormat, mTextureWidth, mTextureHeight, 1, 0);
+        mRenderTarget = new TextureRenderTarget9(surface, mInternalFormat, mTextureWidth, mTextureHeight, 1, 0);
     }
 
     ASSERT(outRT);
@@ -371,7 +371,7 @@ gl::Error TextureStorage9_Cube::getRenderTarget(const gl::ImageIndex &index, Ren
             return error;
         }
 
-        mRenderTarget[index.layerIndex] = new RenderTarget9(surface, mInternalFormat, mTextureWidth, mTextureHeight, 1, 0);
+        mRenderTarget[index.layerIndex] = new TextureRenderTarget9(surface, mInternalFormat, mTextureWidth, mTextureHeight, 1, 0);
     }
 
     *outRT = mRenderTarget[index.layerIndex];
