@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3551f6a8_3c4e3100",
+        "filename": "src/libEGL/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T14:42:56Z",
+      "side": 1,
+      "message": "Instead of asking the renderer if it supports ES3 here, could you use the config to see if it has the appropriate conformant flag?",
+      "range": {
+        "startLine": 434,
+        "startChar": 8,
+        "endLine": 434,
+        "endChar": 70
+      },
+      "revId": "7f66722822b256e1c615dec440fe3904f4d4559e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "154eb20c_bb33279a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T14:42:56Z",
+      "side": 1,
+      "message": "I don\u0027t think we need a new method for ES3 support, can the check just be moved here?",
+      "range": {
+        "startLine": 393,
+        "startChar": 43,
+        "endLine": 393,
+        "endChar": 70
+      },
+      "revId": "7f66722822b256e1c615dec440fe3904f4d4559e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
