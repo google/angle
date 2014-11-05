@@ -106,6 +106,7 @@ void ShaderD3D::initializeCompiler()
 
         if (result)
         {
+            ShShaderSpec specVersion = (mRenderer->getCurrentClientVersion() >= 3) ? SH_GLES3_SPEC : SH_GLES2_SPEC;
             ShShaderOutput hlslVersion = (mRenderer->getMajorShaderModel() >= 4) ? SH_HLSL11_OUTPUT : SH_HLSL9_OUTPUT;
 
             ShBuiltInResources resources;
@@ -135,8 +136,8 @@ void ShaderD3D::initializeCompiler()
             resources.MinProgramTexelOffset = caps.minProgramTexelOffset;
             resources.MaxProgramTexelOffset = caps.maxProgramTexelOffset;
 
-            mFragmentCompiler = ShConstructCompiler(GL_FRAGMENT_SHADER, SH_GLES2_SPEC, hlslVersion, &resources);
-            mVertexCompiler = ShConstructCompiler(GL_VERTEX_SHADER, SH_GLES2_SPEC, hlslVersion, &resources);
+            mFragmentCompiler = ShConstructCompiler(GL_FRAGMENT_SHADER, specVersion, hlslVersion, &resources);
+            mVertexCompiler = ShConstructCompiler(GL_VERTEX_SHADER, specVersion, hlslVersion, &resources);
         }
     }
 }
