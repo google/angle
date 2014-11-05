@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5572ea58_5610ca70",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-05T22:06:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5b4bedf_3dc3db17",
+      "range": {
+        "startLine": 700,
+        "startChar": 56,
+        "endLine": 700,
+        "endChar": 64
+      },
+      "revId": "8ac11fe962f3f05b08077417df98da2ce12e9c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5b97ad9_ffbcf7ae",
         "filename": "src/libGLESv2/State.h",
         "patchSetId": 8
@@ -59,6 +83,30 @@
       "writtenOn": "2014-10-30T17:52:55Z",
       "side": 1,
       "message": "This will crash if the framebuffer is null now (below too).",
+      "range": {
+        "startLine": 639,
+        "startChar": 8,
+        "endLine": 641,
+        "endChar": 74
+      },
+      "revId": "8ac11fe962f3f05b08077417df98da2ce12e9c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75752e3d_6285fe95",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-05T22:06:34Z",
+      "side": 1,
+      "message": "AFAIK we don\u0027t support any NULL framebuffers. I changed this to an ASSERT and tried to change the existing code to be consistent with using ASSERTs instead of testing for NULL.",
+      "parentUuid": "d5b97ad9_5f85e3e7",
       "range": {
         "startLine": 639,
         "startChar": 8,
