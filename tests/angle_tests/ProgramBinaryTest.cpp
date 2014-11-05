@@ -126,10 +126,16 @@ TYPED_TEST(ProgramBinaryTest, SaveAndLoadBinary)
             GLint infoLogLength;
             glGetProgramiv(program2, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-            std::vector<GLchar> infoLog(infoLogLength);
-            glGetProgramInfoLog(program2, infoLog.size(), NULL, &infoLog[0]);
-
-            FAIL() << "program link failed: " << &infoLog[0];
+            if (infoLogLength > 0)
+            {
+                std::vector<GLchar> infoLog(infoLogLength);
+                glGetProgramInfoLog(program2, infoLog.size(), NULL, &infoLog[0]);
+                FAIL() << "program link failed: " << &infoLog[0];
+            }
+            else
+            {
+                FAIL() << "program link failed.";
+            }
         }
         else
         {
