@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "9542a2da_a8abdf67",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-11-05T16:45:16Z",
+      "side": 1,
+      "message": "From a purely technical point of view, not an API interpretation: When sampling a stencil buffer as a texture, the only sensible format is UINT. UNORM can have more bits than requested, but stencils have to be bit-accurate. UINT formats can\u0027t sensibly be averaged, so filtering and multi-sample resolve should indeed be invalid. However reading a specific sample (cfr. Texture2DMS.Load) or using the fixed-function stencil operations should be no issue.\n\nProperly discerning between these uses and still complying to the ES spec might be more of a hassle than is worth our time right now. I\u0027ll leave that judgement up to you and Shannon. In any case I suggest adding a comment to document the discrepancy because we might have to deal with it later.",
+      "parentUuid": "3551f6a8_3c1151c2",
+      "range": {
+        "startLine": 457,
+        "startChar": 149,
+        "endLine": 457,
+        "endChar": 171
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "154eb20c_5b29c324",
         "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
         "patchSetId": 1
