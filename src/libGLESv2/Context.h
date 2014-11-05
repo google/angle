@@ -110,7 +110,7 @@ class Context
 
     void bindArrayBuffer(GLuint buffer);
     void bindElementArrayBuffer(GLuint buffer);
-    void bindTexture(GLenum target, GLuint texture);
+    void bindTexture(GLenum target, GLuint handle);
     void bindReadFramebuffer(GLuint framebuffer);
     void bindDrawFramebuffer(GLuint framebuffer);
     void bindRenderbuffer(GLuint renderbuffer);

@@ -613,14 +613,7 @@ void State::setSamplerTexture(GLenum type, Texture *texture)
 
 Texture *State::getSamplerTexture(unsigned int sampler, GLenum type) const
 {
-    const BindingPointer<Texture>& binding = mSamplerTextures.at(type)[sampler];
-
-    if (binding.id() == 0)   // Special case: 0 refers to default textures held by Context
-    {
-        return NULL;
-    }
-
-    return binding.get();
+    return mSamplerTextures.at(type)[sampler].get();
 }
 
 GLuint State::getSamplerTextureId(unsigned int sampler, GLenum type) const

@@ -66,20 +66,26 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    mZeroTextures[GL_TEXTURE_2D].set(new Texture2D(mRenderer->createTexture(GL_TEXTURE_2D), 0));
-    bindTexture(GL_TEXTURE_2D, 0);
+    ASSERT(mState.getActiveSampler() == 0);
 
-    mZeroTextures[GL_TEXTURE_CUBE_MAP].set(new TextureCubeMap(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), 0));
-    bindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    Texture2D *zeroTexture2D = new Texture2D(mRenderer->createTexture(GL_TEXTURE_2D), 0);
+    mZeroTextures[GL_TEXTURE_2D].set(zeroTexture2D);
+    mState.setSamplerTexture(GL_TEXTURE_2D, zeroTexture2D);
+
+    TextureCubeMap *zeroTextureCube = new TextureCubeMap(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), 0);
+    mZeroTextures[GL_TEXTURE_CUBE_MAP].set(zeroTextureCube);
+    mState.setSamplerTexture(GL_TEXTURE_CUBE_MAP, zeroTextureCube);
 
     if (mClientVersion >= 3)
     {
         // TODO: These could also be enabled via extension
-        mZeroTextures[GL_TEXTURE_3D].set(new Texture3D(mRenderer->createTexture(GL_TEXTURE_3D), 0));
-        bindTexture(GL_TEXTURE_3D, 0);
+        Texture3D *zeroTexture3D = new Texture3D(mRenderer->createTexture(GL_TEXTURE_3D), 0);
+        mZeroTextures[GL_TEXTURE_3D].set(zeroTexture3D);
+        mState.setSamplerTexture(GL_TEXTURE_3D, zeroTexture3D);
 
-        mZeroTextures[GL_TEXTURE_2D_ARRAY].set(new Texture2DArray(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), 0));
-        bindTexture(GL_TEXTURE_2D_ARRAY, 0);
+        Texture2DArray *zeroTexture2DArray = new Texture2DArray(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), 0);
+        mZeroTextures[GL_TEXTURE_2D_ARRAY].set(zeroTexture2DArray);
+        mState.setSamplerTexture(GL_TEXTURE_2D_ARRAY, zeroTexture2DArray);
     }
 
     bindVertexArray(0);
@@ -167,9 +173,9 @@ Context::~Context()
     }
     mIncompleteTextures.clear();
 
-    for (TextureMap::iterator i = mZeroTextures.begin(); i != mZeroTextures.end(); i++)
+    for (auto &zeroTexture : mZeroTextures)
     {
-        i->second.set(NULL);
+        zeroTexture.second.set(NULL);
     }
     mZeroTextures.clear();
 
@@ -508,11 +514,23 @@ void Context::bindElementArrayBuffer(unsigned int buffer)
     mState.getVertexArray()->setElementArrayBuffer(getBuffer(buffer));
 }
 
-void Context::bindTexture(GLenum target, GLuint texture)
+void Context::bindTexture(GLenum target, GLuint handle)
 {
-    mResourceManager->checkTextureAllocation(texture, target);
+    Texture *texture = NULL;
 
-    mState.setSamplerTexture(target, getTexture(texture));
+    if (handle == 0)
+    {
+        texture = mZeroTextures[target].get();
+    }
+    else
+    {
+        mResourceManager->checkTextureAllocation(handle, target);
+        texture = getTexture(handle);
+    }
+
+    ASSERT(texture);
+
+    mState.setSamplerTexture(target, texture);
 }
 
 void Context::bindReadFramebuffer(GLuint framebuffer)
@@ -814,14 +832,7 @@ Texture2DArray *Context::getTexture2DArray() const
 
 Texture *Context::getSamplerTexture(unsigned int sampler, GLenum type) const
 {
-    if (mState.getSamplerTextureId(sampler, type) == 0)
-    {
-        return mZeroTextures.at(type).get();
-    }
-    else
-    {
-        return mState.getSamplerTexture(sampler, type);
-    }
+    return mState.getSamplerTexture(sampler, type);
 }
 
 void Context::getBooleanv(GLenum pname, GLboolean *params)
