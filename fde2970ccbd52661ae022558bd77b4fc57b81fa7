@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "3551f6a8_3c1151c2",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T15:09:09Z",
+      "side": 1,
+      "message": "The spec was pretty lacking on it\u0027s description of the format,  Corentin checked NVIDIA\u0027s driver and it returns UNSIGNED_NORMALIZED as the component type for this format.  It would also be more hacky to special case all depth/stencil formats to allow them to multisample despite the the \"no multisampled INT/UNSIGNED_INT formats\" rule in ES3.",
+      "parentUuid": "15e07212_8d85d898",
+      "range": {
+        "startLine": 457,
+        "startChar": 149,
+        "endLine": 457,
+        "endChar": 171
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "154eb20c_5b29c324",
         "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
         "patchSetId": 1
