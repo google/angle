@@ -226,6 +226,10 @@ if (is_win) {
       "//build/config/compiler:no_chromium_code",
     ]
 
+    if (angle_enable_d3d11) {
+      defines += [ "ANGLE_ENABLE_D3D11" ]
+    }
+
     if (is_debug) {
       defines += [
         "ANGLE_ENABLE_PERF",
