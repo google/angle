@@ -33,6 +33,7 @@
 #include "libGLESv2/renderer/d3d/d3d11/Fence11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Blit11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Clear11.h"
+#include "libGLESv2/renderer/d3d/d3d11/Trim11.h"
 #include "libGLESv2/renderer/d3d/d3d11/PixelTransfer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/VertexArray11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Buffer11.h"
@@ -109,6 +110,8 @@ Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, const eg
     mPixelTransfer = NULL;
 
     mClear = NULL;
+
+    mTrim = NULL;
 
     mSyncQuery = NULL;
 
@@ -345,6 +348,9 @@ void Renderer11::initializeDevice()
 
     ASSERT(!mClear);
     mClear = new Clear11(this);
+
+    ASSERT(!mTrim);
+    mTrim = new Trim11(this);
 
     ASSERT(!mPixelTransfer);
     mPixelTransfer = new PixelTransfer11(this);
@@ -1729,6 +1735,7 @@ void Renderer11::releaseDeviceResources()
     SafeDelete(mTriangleFanIB);
     SafeDelete(mBlit);
     SafeDelete(mClear);
+    SafeDelete(mTrim);
     SafeDelete(mPixelTransfer);
 
     SafeRelease(mDriverConstantBufferVS);
@@ -3342,5 +3349,4 @@ void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot
         currentSRVs[resourceSlot] = srv;
     }
 }
-
 }

@@ -36,6 +36,7 @@ class Blit11;
 class Clear11;
 class PixelTransfer11;
 class RenderTarget11;
+class Trim11;
 struct PackPixelsParams;
 
 enum
@@ -344,6 +345,9 @@ class Renderer11 : public RendererD3D
 
     // Masked clear resources
     Clear11 *mClear;
+
+    // Perform trim for D3D resources
+    Trim11 *mTrim;
 
     // Sync query
     ID3D11Query *mSyncQuery;

@@ -321,6 +321,8 @@
             'libGLESv2/renderer/d3d/d3d11/SwapChain11.h',
             'libGLESv2/renderer/d3d/d3d11/TextureStorage11.cpp',
             'libGLESv2/renderer/d3d/d3d11/TextureStorage11.h',
+            'libGLESv2/renderer/d3d/d3d11/Trim11.cpp',
+            'libGLESv2/renderer/d3d/d3d11/Trim11.h',
             'libGLESv2/renderer/d3d/d3d11/VertexArray11.h',
             'libGLESv2/renderer/d3d/d3d11/VertexBuffer11.cpp',
             'libGLESv2/renderer/d3d/d3d11/VertexBuffer11.h',
