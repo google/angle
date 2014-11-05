@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f51cbefc_ba1d71d2",
+        "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T16:01:43Z",
+      "side": 1,
+      "message": "nit: I\u0027d replace this with D24, D16, etc to match the other format tests.",
+      "range": {
+        "startLine": 153,
+        "startChar": 58,
+        "endLine": 153,
+        "endChar": 76
+      },
+      "revId": "103bf8b6cc5bbb528c7736ea2c58b081b8bfd34b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
