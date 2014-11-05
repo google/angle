@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "154eb20c_5b29c324",
+        "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T14:59:47Z",
+      "side": 1,
+      "message": "nit: tab snuck in",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 8
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f51cbefc_5a00d59e",
+        "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T14:59:47Z",
+      "side": 1,
+      "message": "For this we have EXPECT_GL_NO_ERROR",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 45
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "154eb20c_9b63cb89",
+        "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T14:59:47Z",
+      "side": 1,
+      "message": "We can\u0027t count on multisampling being available.  In ES2 when ANGLE_framebuffer_multisample is available, GL_MAX_SAMPLES_ANGLE should be queried and in ES3 glGetInternalformativ has to be used to query GL_NUM_SAMPLE_COUNTS and GL_SAMPLES.",
+      "range": {
+        "startLine": 84,
+        "startChar": 63,
+        "endLine": 84,
+        "endChar": 64
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f51cbefc_ba1a5110",
+        "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T14:59:47Z",
+      "side": 1,
+      "message": "nit: brace on the next line",
+      "range": {
+        "startLine": 130,
+        "startChar": 30,
+        "endLine": 130,
+        "endChar": 31
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3551f6a8_5c9c5dfb",
+        "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T14:59:47Z",
+      "side": 1,
+      "message": "nit: brace",
+      "range": {
+        "startLine": 136,
+        "startChar": 54,
+        "endLine": 136,
+        "endChar": 55
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3551f6a8_dc906ddf",
+        "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T14:59:47Z",
+      "side": 1,
+      "message": "We have an ArraySize function you can use for this.",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 145,
+        "endChar": 99
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "154eb20c_3b207737",
+        "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T14:59:47Z",
+      "side": 1,
+      "message": "Instead of iterating over all the formats here, can they be put in separate test cases (like the above tests)?  It would be more helpful when determining which format failed.\n\nIt would also let you check for some extensions that add support for these formats, like GL_DEPTH24_STENCIL8 being enabled by GL_OES_packed_depth_stencil in ES2.\n\nAlso, multisampled renderbuffers cannot be created in ES2 without ANGLE_framebuffer_multisample so there needs to be a check for ES3 or the extension being available.",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 1
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
