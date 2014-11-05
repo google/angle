@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "75752e3d_02ad1a2c",
+        "filename": "src/libGLESv2/Data.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-05T22:05:26Z",
+      "side": 1,
+      "message": "Recap of offline discussion: it would be nice to get rid of this. I couldn\u0027t do a quick fix, because I needed to access the current gl::Program, which isn\u0027t bound to the State because it isn\u0027t a RefCountObject. It wasn\u0027t trivial to make it a RefCountObject because of a custom ref-counting mechanism needed because you can run queries on deleted programs. :p",
+      "parentUuid": "f5b4bedf_7d58f3f8",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 37
+      },
+      "revId": "e699ae2c87c5ebfc388e22b8013050b62ef6cbb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f5b4bedf_1d59b7ff",
         "filename": "src/libGLESv2/Data.h",
         "patchSetId": 5
@@ -59,6 +83,30 @@
       "writtenOn": "2014-10-30T17:52:46Z",
       "side": 1,
       "message": "I think this (and the above getSamplerTexture) could be removed if we bound the zero textures to the state itself.  I know the zero textures are created dynamically right now but maybe we should treat them like regular textures in the state?",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 28
+      },
+      "revId": "e699ae2c87c5ebfc388e22b8013050b62ef6cbb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "357f3623_009676d8",
+        "filename": "src/libGLESv2/Data.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-05T22:05:26Z",
+      "side": 1,
+      "message": "Redid this a bit in a previous patch.",
+      "parentUuid": "f5b4bedf_1d59b7ff",
       "range": {
         "startLine": 34,
         "startChar": 4,
