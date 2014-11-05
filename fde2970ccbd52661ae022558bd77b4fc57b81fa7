@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "9542a2da_e869e7ea",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-11-05T15:06:26Z",
+      "side": 1,
+      "message": "When you write \"BUG\u003dangle:812\" instead, it automatically becomes a link from Gerrit to the Google Code issues list. Chromium bug ids don\u0027t use the prefix.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 10
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15e07212_8d85d898",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-11-05T15:06:26Z",
+      "side": 1,
+      "message": "I\u0027m a bit wary about this because someone in the future might \u0027fix\u0027 this and make it UINT again, which is the correct type from a semantical point of view. Can we solve this issue in a less hacky way?",
+      "range": {
+        "startLine": 457,
+        "startChar": 149,
+        "endLine": 457,
+        "endChar": 171
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "154eb20c_5b29c324",
         "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
         "patchSetId": 1
