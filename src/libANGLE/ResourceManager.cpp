@@ -94,7 +94,7 @@ GLuint ResourceManager::createShader(const gl::Data &data, GLenum type)
 
     if (type == GL_VERTEX_SHADER || type == GL_FRAGMENT_SHADER)
     {
-        mShaderMap[handle] = new Shader(this, mRenderer->createShader(data, type), type, handle);
+        mShaderMap[handle] = new Shader(this, mRenderer->createShader(type), type, handle);
     }
     else UNREACHABLE();
 

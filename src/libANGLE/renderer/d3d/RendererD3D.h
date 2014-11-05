@@ -134,7 +134,6 @@ class RendererD3D : public Renderer
     virtual gl::Error createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT) = 0;
 
     // Shader operations
-    virtual void releaseShaderCompiler() = 0;
     virtual gl::Error loadExecutable(const void *function, size_t length, ShaderType type,
                                      const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                      bool separatedOutputBuffers, ShaderExecutable **outExecutable) = 0;

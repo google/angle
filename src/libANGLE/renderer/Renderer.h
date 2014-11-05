@@ -49,6 +49,7 @@ class TransformFeedbackImpl;
 class RenderbufferImpl;
 class DefaultAttachmentImpl;
 class FramebufferImpl;
+class CompilerImpl;
 struct TranslatedIndexData;
 struct Workarounds;
 class SwapChain;
@@ -102,11 +103,9 @@ class Renderer
     virtual bool getPostSubBufferSupport() const = 0;
 
     // Shader creation
-    virtual ShaderImpl *createShader(const gl::Data &data, GLenum type) = 0;
+    virtual CompilerImpl *createCompiler(const gl::Data &data) = 0;
+    virtual ShaderImpl *createShader(GLenum type) = 0;
     virtual ProgramImpl *createProgram() = 0;
-
-    // Shader operations
-    virtual void releaseShaderCompiler() = 0;
 
     // Framebuffer creation
     virtual DefaultAttachmentImpl *createDefaultAttachment(GLenum type, egl::Surface *surface) = 0;

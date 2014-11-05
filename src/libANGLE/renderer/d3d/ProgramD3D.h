@@ -176,8 +176,8 @@ class ProgramD3D : public ProgramImpl
         GLenum textureType;
     };
 
-    void defineUniformBase(GLenum shader, const sh::Uniform &uniform, unsigned int uniformRegister);
-    void defineUniform(GLenum shader, const sh::ShaderVariable &uniform, const std::string &fullName,
+    void defineUniformBase(const ShaderD3D *shader, const sh::Uniform &uniform, unsigned int uniformRegister);
+    void defineUniform(const ShaderD3D *shader, const sh::ShaderVariable &uniform, const std::string &fullName,
                        sh::HLSLBlockEncoder *encoder);
     bool indexSamplerUniform(const gl::LinkedUniform &uniform, gl::InfoLog &infoLog, const gl::Caps &caps);
     bool indexUniforms(gl::InfoLog &infoLog, const gl::Caps &caps);

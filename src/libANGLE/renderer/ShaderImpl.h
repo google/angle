@@ -23,7 +23,7 @@ class ShaderImpl
     ShaderImpl() { }
     virtual ~ShaderImpl() { }
 
-    virtual bool compile(const gl::Data &data, const std::string &source) = 0;
+    virtual bool compile(gl::Compiler *compiler, const std::string &source) = 0;
     virtual const std::string &getInfoLog() const = 0;
     virtual const std::string &getTranslatedSource() const = 0;
     virtual std::string getDebugInfo() const = 0;

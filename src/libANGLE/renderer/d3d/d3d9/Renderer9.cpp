@@ -20,6 +20,7 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/features.h"
+#include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
@@ -158,7 +159,6 @@ void Renderer9::release()
 {
     RendererD3D::cleanup();
 
-    releaseShaderCompiler();
     releaseDeviceResources();
 
     SafeRelease(mDevice);
@@ -2899,19 +2899,19 @@ FramebufferImpl *Renderer9::createFramebuffer()
     return new Framebuffer9(this);
 }
 
-ShaderImpl *Renderer9::createShader(const gl::Data &data, GLenum type)
+CompilerImpl *Renderer9::createCompiler(const gl::Data &data)
 {
-    return new ShaderD3D(data, type, this);
+    return new CompilerD3D(data, SH_HLSL9_OUTPUT);
+}
+
+ShaderImpl *Renderer9::createShader(GLenum type)
+{
+    return new ShaderD3D(type);
 }
 
 ProgramImpl *Renderer9::createProgram()
 {
     return new ProgramD3D(this);
-}
-
-void Renderer9::releaseShaderCompiler()
-{
-    ShaderD3D::releaseCompiler();
 }
 
 gl::Error Renderer9::loadExecutable(const void *function, size_t length, ShaderType type,

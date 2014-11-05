@@ -11,6 +11,7 @@
 
 #include "libANGLE/formatutils.h"
 #include "libANGLE/Buffer.h"
+#include "libANGLE/Compiler.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Framebuffer.h"
@@ -705,7 +706,7 @@ void GL_APIENTRY CompileShader(GLuint shader)
             }
         }
 
-        shaderObject->compile(context->getData());
+        shaderObject->compile(context->getCompiler());
     }
 }
 
@@ -3333,7 +3334,13 @@ void GL_APIENTRY ReleaseShaderCompiler(void)
 
     if (context)
     {
-        context->releaseShaderCompiler();
+        Compiler *compiler = context->getCompiler();
+        Error error = compiler->release();
+        if (error.isError())
+        {
+            context->recordError(error);
+            return;
+        }
     }
 }
 

@@ -29,6 +29,7 @@ class ShaderImpl;
 
 namespace gl
 {
+class Compiler;
 class ResourceManager;
 struct Data;
 
@@ -75,7 +76,7 @@ class Shader
     void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
     void getTranslatedSourceWithDebugInfo(GLsizei bufSize, GLsizei *length, char *buffer) const;
 
-    void compile(const gl::Data &data);
+    void compile(Compiler *compiler);
     bool isCompiled() const { return mCompiled; }
 
     void addRef();

@@ -17,6 +17,7 @@
 #include "libANGLE/Program.h"
 #include "libANGLE/State.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
@@ -1924,7 +1925,6 @@ void Renderer11::release()
 {
     RendererD3D::cleanup();
 
-    releaseShaderCompiler();
     releaseDeviceResources();
 
     SafeRelease(mDxgiFactory);
@@ -2483,19 +2483,19 @@ FramebufferImpl *Renderer11::createFramebuffer()
     return new Framebuffer11(this);
 }
 
-ShaderImpl *Renderer11::createShader(const gl::Data &data, GLenum type)
+CompilerImpl *Renderer11::createCompiler(const gl::Data &data)
 {
-    return new ShaderD3D(data, type, this);
+    return new CompilerD3D(data, SH_HLSL11_OUTPUT);
+}
+
+ShaderImpl *Renderer11::createShader(GLenum type)
+{
+    return new ShaderD3D(type);
 }
 
 ProgramImpl *Renderer11::createProgram()
 {
     return new ProgramD3D(this);
-}
-
-void Renderer11::releaseShaderCompiler()
-{
-    ShaderD3D::releaseCompiler();
 }
 
 gl::Error Renderer11::loadExecutable(const void *function, size_t length, ShaderType type,

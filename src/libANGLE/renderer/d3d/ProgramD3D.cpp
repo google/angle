@@ -1352,7 +1352,7 @@ bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShad
 
         if (uniform.staticUse)
         {
-            defineUniformBase(GL_VERTEX_SHADER, uniform, vertexShaderD3D->getUniformRegister(uniform.name));
+            defineUniformBase(vertexShaderD3D, uniform, vertexShaderD3D->getUniformRegister(uniform.name));
         }
     }
 
@@ -1362,7 +1362,7 @@ bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShad
 
         if (uniform.staticUse)
         {
-            defineUniformBase(GL_FRAGMENT_SHADER, uniform, fragmentShaderD3D->getUniformRegister(uniform.name));
+            defineUniformBase(fragmentShaderD3D, uniform, fragmentShaderD3D->getUniformRegister(uniform.name));
         }
     }
 
@@ -1386,17 +1386,17 @@ bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShad
     return true;
 }
 
-void ProgramD3D::defineUniformBase(GLenum shader, const sh::Uniform &uniform, unsigned int uniformRegister)
+void ProgramD3D::defineUniformBase(const ShaderD3D *shader, const sh::Uniform &uniform, unsigned int uniformRegister)
 {
-    ShShaderOutput outputType = ShaderD3D::getCompilerOutputType(shader);
+    ShShaderOutput outputType = shader->getCompilerOutputType();
     sh::HLSLBlockEncoder encoder(sh::HLSLBlockEncoder::GetStrategyFor(outputType));
     encoder.skipRegisters(uniformRegister);
 
     defineUniform(shader, uniform, uniform.name, &encoder);
 }
 
-void ProgramD3D::defineUniform(GLenum shader, const sh::ShaderVariable &uniform,
-                                  const std::string &fullName, sh::HLSLBlockEncoder *encoder)
+void ProgramD3D::defineUniform(const ShaderD3D *shader, const sh::ShaderVariable &uniform,
+                               const std::string &fullName, sh::HLSLBlockEncoder *encoder)
 {
     if (uniform.isStruct())
     {
@@ -1438,11 +1438,11 @@ void ProgramD3D::defineUniform(GLenum shader, const sh::ShaderVariable &uniform,
 
         ASSERT(linkedUniform->registerElement == encoder->getCurrentElement());
 
-        if (shader == GL_FRAGMENT_SHADER)
+        if (shader->getShaderType() == GL_FRAGMENT_SHADER)
         {
             linkedUniform->psRegisterIndex = encoder->getCurrentRegister();
         }
-        else if (shader == GL_VERTEX_SHADER)
+        else if (shader->getShaderType() == GL_VERTEX_SHADER)
         {
             linkedUniform->vsRegisterIndex = encoder->getCurrentRegister();
         }

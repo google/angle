@@ -25,7 +25,7 @@ class ShaderD3D : public ShaderImpl
     friend class DynamicHLSL;
 
   public:
-    ShaderD3D(const gl::Data &data, GLenum type, RendererD3D *renderer);
+    ShaderD3D(GLenum type);
     virtual ~ShaderD3D();
 
     static ShaderD3D *makeShaderD3D(ShaderImpl *impl);
@@ -48,28 +48,22 @@ class ShaderD3D : public ShaderImpl
     bool usesDepthRange() const { return mUsesDepthRange; }
     bool usesPointSize() const { return mUsesPointSize; }
 
-    static void releaseCompiler();
-    static ShShaderOutput getCompilerOutputType(GLenum shader);
+    GLenum getShaderType() const;
+    ShShaderOutput getCompilerOutputType() const;
 
-    virtual bool compile(const gl::Data &data, const std::string &source);
+    virtual bool compile(gl::Compiler *compiler, const std::string &source);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderD3D);
 
-    void compileToHLSL(const gl::Data &data, void *compiler, const std::string &source);
-    void parseVaryings(void *compiler);
+    void compileToHLSL(ShHandle compiler, const std::string &source);
+    void parseVaryings(ShHandle compiler);
 
-    void initializeCompiler(const gl::Data &data);
-    void parseAttributes(void *compiler);
-    void *getCompiler();
+    void parseAttributes(ShHandle compiler);
 
     static bool compareVarying(const gl::PackedVarying &x, const gl::PackedVarying &y);
 
-    static void *mFragmentCompiler;
-    static void *mVertexCompiler;
-
-    GLenum mType;
-    RendererD3D *mRenderer;
+    GLenum mShaderType;
 
     int mShaderVersion;
 
@@ -85,6 +79,7 @@ class ShaderD3D : public ShaderImpl
     bool mUsesDiscardRewriting;
     bool mUsesNestedBreak;
 
+    ShShaderOutput mCompilerOutputType;
     std::string mHlsl;
     std::string mInfoLog;
     std::string mDebugInfo;
