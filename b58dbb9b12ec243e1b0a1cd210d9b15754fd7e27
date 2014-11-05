@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f533de7c_4817b366",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-11-05T00:08:54Z",
+      "side": 1,
+      "message": "Here I add 4481 to suppress the warning of \"nonstandard extension used: override specifier \u0027override\u0027.  Then I sorted the warnings.",
+      "revId": "b58dbb9b12ec243e1b0a1cd210d9b15754fd7e27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35e3b620_461a3690",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-11-05T00:08:54Z",
+      "side": 1,
+      "message": "This is needed for std::tie",
+      "revId": "b58dbb9b12ec243e1b0a1cd210d9b15754fd7e27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
