@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "f51cbefc_7ddef394",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T19:29:59Z",
+      "side": 1,
+      "message": "Agreed on the component type not making logical sense.  Luckily, we\u0027re safe here from an API perspective for a few reasons: 1) Stencil values cannot be sampled and 2) Nothing cares about COMPONENT_TYPE for any kind of logic except validation and queries, it\u0027s not used to determine any kind of renderer behaviour.\n\nAlso agreed that a comment would help.",
+      "parentUuid": "9542a2da_a8abdf67",
+      "range": {
+        "startLine": 457,
+        "startChar": 149,
+        "endLine": 457,
+        "endChar": 171
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "154eb20c_5b29c324",
         "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
         "patchSetId": 1
