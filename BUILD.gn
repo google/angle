@@ -155,6 +155,9 @@ if (is_win) {
       "src/libGLESv2/libGLESv2.rc",
     ]
 
+    ldflags = [ "/DEF:" +
+               rebase_path("src/libGLESv2/libGLESv2.def", root_build_dir) ]
+
     defines = [
       "ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ " +
         "\"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }",
@@ -208,6 +211,9 @@ if (is_win) {
   shared_library("libEGL") {
     sources = rebase_path(egl_gypi.angle_libegl_sources, ".", "src")
 
+    ldflags = [ "/DEF:" +
+               rebase_path("src/libEGL/libEGL.def", root_build_dir) ]
+
     defines = [
       "GL_APICALL=",
       "GL_GLEXT_PROTOTYPES=",
@@ -229,6 +235,9 @@ if (is_win) {
 
     include_dirs = [ "src/libGLESv2" ]
     libs = [ "d3d9.lib" ]
+
+    # Windows-specific sources.
+    sources += rebase_path(gles_gypi.angle_libangle_win_sources, ".", "src")
 
     deps = [
       ":commit_id",
