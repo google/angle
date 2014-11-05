@@ -1054,7 +1054,7 @@ std::string DynamicHLSL::generatePointSpriteHLSL(int registers, rx::ShaderD3D *f
                   "void main(point GS_INPUT input[1], inout TriangleStream<GS_OUTPUT> outStream)\n"
                   "{\n"
                   "    GS_OUTPUT output = (GS_OUTPUT)0;\n"
-                  "    output.gl_Position = input[0].gl_Position;\n";
+                  "    output.gl_Position = input[0].gl_Position;\n"
                   "    output.gl_PointSize = input[0].gl_PointSize;\n";
 
     for (int r = 0; r < registers; r++)
