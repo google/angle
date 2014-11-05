@@ -22,6 +22,30 @@
       "revId": "2eea39e5b397f4e8cdbb1b50f4988cb33ecfe7d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "555bcae0_0599b251",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-05T22:12:53Z",
+      "side": 1,
+      "message": "Thanks for catching this, I wasn\u0027t checking for errors from setStorage.  Fixed.",
+      "parentUuid": "755e0ed1_46101271",
+      "range": {
+        "startLine": 1167,
+        "startChar": 22,
+        "endLine": 1167,
+        "endChar": 32
+      },
+      "revId": "2eea39e5b397f4e8cdbb1b50f4988cb33ecfe7d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
