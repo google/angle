@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "755e0ed1_46101271",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-05T21:12:31Z",
+      "side": 1,
+      "message": "is there a reason for Renderer9:::getNullColorBuffer to return an error? I don\u0027t see it in the Renderer interface so I assume it\u0027s D3D9 only... maybe setStorage will return errors?",
+      "range": {
+        "startLine": 1167,
+        "startChar": 22,
+        "endLine": 1167,
+        "endChar": 32
+      },
+      "revId": "2eea39e5b397f4e8cdbb1b50f4988cb33ecfe7d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
