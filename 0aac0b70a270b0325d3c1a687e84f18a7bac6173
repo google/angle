@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "558caab9_9d59c3da",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3274,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-06T19:04:40Z",
+      "side": 1,
+      "message": "This will be the first use of a lambda in our code, I\u0027m OK with it and since it falls under c++11 it is within our style guide.\n\nOne note; the lambda capture could be more specific: [this] to avoid copying anything accidentally.",
+      "range": {
+        "startLine": 3269,
+        "startChar": 8,
+        "endLine": 3274,
+        "endChar": 11
+      },
+      "revId": "0aac0b70a270b0325d3c1a687e84f18a7bac6173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
