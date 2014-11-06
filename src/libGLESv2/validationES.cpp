@@ -573,8 +573,11 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
 
             if (fromAngleExtension)
             {
-                const GLenum readColorbufferType = readFramebuffer->getReadColorbufferType();
-                if (readColorbufferType != GL_TEXTURE_2D && readColorbufferType != GL_RENDERBUFFER)
+                FramebufferAttachment *readColorAttachment = readFramebuffer->getReadColorbuffer();
+                if (!readColorAttachment ||
+                    (!(readColorAttachment->type() == GL_TEXTURE && readColorAttachment->getTextureImageIndex()->type == GL_TEXTURE_2D) &&
+                    readColorAttachment->type() != GL_RENDERBUFFER &&
+                    readColorAttachment->type() != GL_FRAMEBUFFER_DEFAULT))
                 {
                     context->recordError(Error(GL_INVALID_OPERATION));
                     return false;
@@ -587,7 +590,9 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
                         FramebufferAttachment *attachment = drawFramebuffer->getColorbuffer(colorAttachment);
                         ASSERT(attachment);
 
-                        if (attachment->type() != GL_TEXTURE_2D && attachment->type() != GL_RENDERBUFFER)
+                        if (!(attachment->type() == GL_TEXTURE && attachment->getTextureImageIndex()->type == GL_TEXTURE_2D) &&
+                            attachment->type() != GL_RENDERBUFFER &&
+                            attachment->type() != GL_FRAMEBUFFER_DEFAULT)
                         {
                             context->recordError(Error(GL_INVALID_OPERATION));
                             return false;

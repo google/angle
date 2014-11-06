@@ -22,15 +22,14 @@ namespace gl
 {
 Renderbuffer::Renderbuffer(rx::RenderbufferImpl *impl, GLuint id)
   : RefCountObject(id),
-    mRenderbuffer(impl)
+    mRenderbuffer(impl),
+    mWidth(0),
+    mHeight(0),
+    mInternalFormat(GL_RGBA4),
+    mActualFormat(GL_RGBA4),
+    mSamples(0)
 {
     ASSERT(mRenderbuffer);
-
-    mWidth = mRenderbuffer->getWidth();
-    mHeight = mRenderbuffer->getHeight();
-    mInternalFormat = mRenderbuffer->getInternalFormat();
-    mActualFormat = mRenderbuffer->getActualFormat();
-    mSamples = mRenderbuffer->getSamples();
 }
 
 Renderbuffer::~Renderbuffer()

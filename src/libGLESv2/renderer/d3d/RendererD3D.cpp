@@ -537,7 +537,7 @@ size_t RendererD3D::getBoundFramebufferTextureSerials(const gl::Data &data,
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; i++)
     {
         gl::FramebufferAttachment *attachment = drawFramebuffer->getColorbuffer(i);
-        if (attachment && attachment->isTexture())
+        if (attachment && attachment->type() == GL_TEXTURE)
         {
             gl::Texture *texture = attachment->getTexture();
             (*outSerialArray)[serialCount++] = texture->getTextureSerial();
@@ -545,7 +545,7 @@ size_t RendererD3D::getBoundFramebufferTextureSerials(const gl::Data &data,
     }
 
     gl::FramebufferAttachment *depthStencilAttachment = drawFramebuffer->getDepthOrStencilbuffer();
-    if (depthStencilAttachment && depthStencilAttachment->isTexture())
+    if (depthStencilAttachment && depthStencilAttachment->type() == GL_TEXTURE)
     {
         gl::Texture *depthStencilTexture = depthStencilAttachment->getTexture();
         (*outSerialArray)[serialCount++] = depthStencilTexture->getTextureSerial();

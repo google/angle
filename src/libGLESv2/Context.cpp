@@ -193,12 +193,9 @@ void Context::makeCurrent(egl::Surface *surface)
         mHasBeenCurrent = true;
     }
 
-    // Wrap the existing swapchain resources into GL objects and assign them to the '0' names
-    rx::SwapChain *swapchain = surface->getSwapChain();
-
-    rx::RenderbufferImpl *colorbufferZero = mRenderer->createRenderbuffer(swapchain, false);
-    rx::RenderbufferImpl *depthStencilbufferZero = mRenderer->createRenderbuffer(swapchain, true);
-    Framebuffer *framebufferZero = new DefaultFramebuffer(colorbufferZero, depthStencilbufferZero);
+    Framebuffer *framebufferZero = new DefaultFramebuffer(mRenderer->createDefaultAttachment(GL_BACK, surface),
+                                                          mRenderer->createDefaultAttachment(GL_DEPTH, surface),
+                                                          mRenderer->createDefaultAttachment(GL_STENCIL, surface));
 
     setFramebufferZero(framebufferZero);
 }

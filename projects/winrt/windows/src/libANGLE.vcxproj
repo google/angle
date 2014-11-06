@@ -400,6 +400,7 @@
     <ClInclude Include="..\..\..\..\src\libGLESv2\queryconversions.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\BufferImpl.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\FenceImpl.h"/>
+    <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\FramebufferImpl.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\Image.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\IndexRangeCache.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\ProgramImpl.h"/>
@@ -428,6 +429,7 @@
     <ClInclude Include="..\..\..\..\src\third_party\systeminfo\SystemInfo.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\BufferD3D.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\DynamicHLSL.h"/>
+    <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\FramebufferD3D.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\ImageD3D.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\IndexBuffer.h"/>
@@ -571,6 +573,7 @@
     <ClCompile Include="..\..\..\..\src\third_party\systeminfo\SystemInfo.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\BufferD3D.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\DynamicHLSL.cpp"/>
+    <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\FramebufferD3D.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\HLSLCompiler.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\ImageD3D.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\IndexBuffer.cpp"/>

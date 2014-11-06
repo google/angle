@@ -20,6 +20,7 @@
 #include "libGLESv2/renderer/Workarounds.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/RenderbufferD3D.h"
+#include "libGLESv2/renderer/d3d/FramebufferD3D.h"
 
 #include "common/utilities.h"
 
@@ -29,7 +30,7 @@ namespace rx
 //       to FramebufferD3D.
 gl::Error GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment, RenderTarget **outRT)
 {
-    if (attachment->isTexture())
+    if (attachment->type() == GL_TEXTURE)
     {
         gl::Texture *texture = attachment->getTexture();
         ASSERT(texture);
@@ -38,7 +39,7 @@ gl::Error GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment, Rende
         ASSERT(index);
         return textureD3D->getRenderTarget(*index, outRT);
     }
-    else
+    else if (attachment->type() == GL_RENDERBUFFER)
     {
         gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
         ASSERT(renderbuffer);
@@ -46,12 +47,26 @@ gl::Error GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment, Rende
         *outRT = renderbufferD3D->getRenderTarget();
         return gl::Error(GL_NO_ERROR);
     }
+    else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
+    {
+        gl::DefaultAttachment *defaultAttachment = static_cast<gl::DefaultAttachment *>(attachment);
+        DefaultAttachmentD3D *defaultAttachmentD3D = DefaultAttachmentD3D::makeDefaultAttachmentD3D(defaultAttachment->getImplementation());
+        ASSERT(defaultAttachmentD3D);
+
+        *outRT = defaultAttachmentD3D->getRenderTarget();
+        return gl::Error(GL_NO_ERROR);
+    }
+    else
+    {
+        UNREACHABLE();
+        return gl::Error(GL_INVALID_OPERATION);
+    }
 }
 
 // Note: RenderTarget serials should ideally be in the RenderTargets themselves.
 unsigned int GetAttachmentSerial(gl::FramebufferAttachment *attachment)
 {
-    if (attachment->isTexture())
+    if (attachment->type() == GL_TEXTURE)
     {
         gl::Texture *texture = attachment->getTexture();
         ASSERT(texture);
@@ -60,11 +75,25 @@ unsigned int GetAttachmentSerial(gl::FramebufferAttachment *attachment)
         ASSERT(index);
         return textureD3D->getRenderTargetSerial(*index);
     }
-
-    gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
-    ASSERT(renderbuffer);
-    RenderbufferD3D *renderbufferD3D = RenderbufferD3D::makeRenderbufferD3D(renderbuffer->getImplementation());
-    return renderbufferD3D->getRenderTargetSerial();
+    else if (attachment->type() == GL_RENDERBUFFER)
+    {
+        gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
+        ASSERT(renderbuffer);
+        RenderbufferD3D *renderbufferD3D = RenderbufferD3D::makeRenderbufferD3D(renderbuffer->getImplementation());
+        return renderbufferD3D->getRenderTargetSerial();
+    }
+    else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
+    {
+        gl::DefaultAttachment *defaultAttachment = static_cast<gl::DefaultAttachment *>(attachment);
+        DefaultAttachmentD3D *defaultAttachmentD3D = DefaultAttachmentD3D::makeDefaultAttachmentD3D(defaultAttachment->getImplementation());
+        ASSERT(defaultAttachmentD3D);
+        return defaultAttachmentD3D->getRenderTarget()->getSerial();
+    }
+    else
+    {
+        UNREACHABLE();
+        return 0;
+    }
 }
 
 }
@@ -291,7 +320,7 @@ GLenum Framebuffer::completeness(const gl::Data &data) const
             GLenum internalformat = colorbuffer->getInternalFormat();
             const TextureCaps &formatCaps = data.textureCaps->get(internalformat);
             const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
-            if (colorbuffer->isTexture())
+            if (colorbuffer->type() == GL_TEXTURE)
             {
                 if (!formatCaps.renderable)
                 {
@@ -303,7 +332,7 @@ GLenum Framebuffer::completeness(const gl::Data &data) const
                     return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
                 }
             }
-            else
+            else if (colorbuffer->type() == GL_RENDERBUFFER)
             {
                 if (!formatCaps.renderable || formatInfo.depthBits > 0 || formatInfo.stencilBits > 0)
                 {
@@ -370,7 +399,7 @@ GLenum Framebuffer::completeness(const gl::Data &data) const
         GLenum internalformat = mDepthbuffer->getInternalFormat();
         const TextureCaps &formatCaps = data.textureCaps->get(internalformat);
         const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
-        if (mDepthbuffer->isTexture())
+        if (mDepthbuffer->type() == GL_TEXTURE)
         {
             // depth texture attachments require OES/ANGLE_depth_texture
             if (!data.extensions->depthTextures)
@@ -388,7 +417,7 @@ GLenum Framebuffer::completeness(const gl::Data &data) const
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
         }
-        else
+        else if (mDepthbuffer->type() == GL_RENDERBUFFER)
         {
             if (!formatCaps.renderable || formatInfo.depthBits == 0)
             {
@@ -423,7 +452,7 @@ GLenum Framebuffer::completeness(const gl::Data &data) const
         GLenum internalformat = mStencilbuffer->getInternalFormat();
         const TextureCaps &formatCaps = data.textureCaps->get(internalformat);
         const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
-        if (mStencilbuffer->isTexture())
+        if (mStencilbuffer->type() == GL_TEXTURE)
         {
             // texture stencil attachments come along as part
             // of OES_packed_depth_stencil + OES/ANGLE_depth_texture
@@ -442,7 +471,7 @@ GLenum Framebuffer::completeness(const gl::Data &data) const
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
         }
-        else
+        else if (mStencilbuffer->type() == GL_RENDERBUFFER)
         {
             if (!formatCaps.renderable || formatInfo.stencilBits == 0)
             {
@@ -514,23 +543,20 @@ Error Framebuffer::invalidateSub(GLsizei numAttachments, const GLenum *attachmen
     return Error(GL_NO_ERROR);
 }
 
-DefaultFramebuffer::DefaultFramebuffer(rx::RenderbufferImpl *colorbuffer, rx::RenderbufferImpl *depthStencil)
+DefaultFramebuffer::DefaultFramebuffer(rx::DefaultAttachmentImpl *colorAttachment, rx::DefaultAttachmentImpl *depthAttachment,
+                                       rx::DefaultAttachmentImpl *stencilAttachment)
     : Framebuffer(0)
 {
-    Renderbuffer *colorRenderbuffer = new Renderbuffer(colorbuffer, 0);
-    mColorbuffers[0] = new RenderbufferAttachment(GL_BACK, colorRenderbuffer);
+    ASSERT(colorAttachment);
+    mColorbuffers[0] = new DefaultAttachment(GL_BACK, colorAttachment);
 
-    GLenum depthStencilActualFormat = depthStencil->getActualFormat();
-    const InternalFormat &depthStencilFormatInfo = GetInternalFormatInfo(depthStencilActualFormat);
-
-    if (depthStencilFormatInfo.depthBits != 0 || depthStencilFormatInfo.stencilBits != 0)
+    if (depthAttachment)
     {
-        Renderbuffer *depthStencilBuffer = new Renderbuffer(depthStencil, 0);
-
-        // Make a new attachment objects to ensure we do not double-delete
-        // See angle issue 686
-        mDepthbuffer = (depthStencilFormatInfo.depthBits != 0 ? new RenderbufferAttachment(GL_DEPTH_ATTACHMENT, depthStencilBuffer) : NULL);
-        mStencilbuffer = (depthStencilFormatInfo.stencilBits != 0 ? new RenderbufferAttachment(GL_STENCIL_ATTACHMENT, depthStencilBuffer) : NULL);
+        mDepthbuffer = new DefaultAttachment(GL_DEPTH, depthAttachment);
+    }
+    if (stencilAttachment)
+    {
+        mStencilbuffer = new DefaultAttachment(GL_STENCIL, stencilAttachment);
     }
 
     mDrawBufferStates[0] = GL_BACK;
@@ -632,14 +658,18 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
 
             // Make a new attachment object to ensure we do not double-delete
             // See angle issue 686
-            if (attachmentObj->isTexture())
+            if (attachmentObj->type() == GL_TEXTURE)
             {
                 mStencilbuffer = new TextureAttachment(GL_DEPTH_STENCIL_ATTACHMENT, attachmentObj->getTexture(),
                                                        *attachmentObj->getTextureImageIndex());
             }
-            else
+            else if (attachmentObj->type() == GL_RENDERBUFFER)
             {
                 mStencilbuffer = new RenderbufferAttachment(GL_DEPTH_STENCIL_ATTACHMENT, attachmentObj->getRenderbuffer());
+            }
+            else
+            {
+                UNREACHABLE();
             }
         }
     }

@@ -27,6 +27,7 @@
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/TransformFeedbackD3D.h"
 #include "libGLESv2/renderer/d3d/RenderbufferD3D.h"
+#include "libGLESv2/renderer/d3d/FramebufferD3D.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Texture.h"
@@ -38,6 +39,7 @@
 #include "libGLESv2/angletypes.h"
 
 #include "libEGL/Display.h"
+#include "libEGL/Surface.h"
 
 #include "common/features.h"
 #include "common/utilities.h"
@@ -2811,13 +2813,6 @@ gl::Error Renderer9::readPixels(const gl::Framebuffer *framebuffer, GLint x, GLi
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::createRenderTarget(SwapChain *swapChain, bool depth, RenderTarget **outRT)
-{
-    SwapChain9 *swapChain9 = SwapChain9::makeSwapChain9(swapChain);
-    *outRT = new SurfaceRenderTarget9(swapChain9, depth);
-    return gl::Error(GL_NO_ERROR);
-}
-
 gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT)
 {
     const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(format);
@@ -2867,6 +2862,40 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
 
     *outRT = new TextureRenderTarget9(renderTarget, format, width, height, 1, supportedSamples);
     return gl::Error(GL_NO_ERROR);
+}
+
+DefaultAttachmentImpl *Renderer9::createDefaultAttachment(GLenum type, egl::Surface *surface)
+{
+    SwapChain9 *swapChain = SwapChain9::makeSwapChain9(surface->getSwapChain());
+    switch (type)
+    {
+      case GL_BACK:
+        return new DefaultAttachmentD3D(new SurfaceRenderTarget9(swapChain, false));
+
+      case GL_DEPTH:
+        if (gl::GetInternalFormatInfo(swapChain->GetDepthBufferInternalFormat()).depthBits > 0)
+        {
+            return new DefaultAttachmentD3D(new SurfaceRenderTarget9(swapChain, true));
+        }
+        else
+        {
+            return NULL;
+        }
+
+      case GL_STENCIL:
+        if (gl::GetInternalFormatInfo(swapChain->GetDepthBufferInternalFormat()).stencilBits > 0)
+        {
+            return new DefaultAttachmentD3D(new SurfaceRenderTarget9(swapChain, true));
+        }
+        else
+        {
+            return NULL;
+        }
+
+      default:
+        UNREACHABLE();
+        return NULL;
+    }
 }
 
 ShaderImpl *Renderer9::createShader(const gl::Data &data, GLenum type)
@@ -3131,13 +3160,6 @@ TextureImpl *Renderer9::createTexture(GLenum target)
 RenderbufferImpl *Renderer9::createRenderbuffer()
 {
     RenderbufferD3D *renderbuffer = new RenderbufferD3D(this);
-    return renderbuffer;
-}
-
-RenderbufferImpl *Renderer9::createRenderbuffer(SwapChain *swapChain, bool depth)
-{
-    RenderbufferD3D *renderbuffer = new RenderbufferD3D(this);
-    renderbuffer->setStorage(swapChain, depth);
     return renderbuffer;
 }
 

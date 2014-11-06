@@ -16,6 +16,7 @@
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/renderer/d3d/TransformFeedbackD3D.h"
+#include "libGLESv2/renderer/d3d/FramebufferD3D.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
@@ -40,6 +41,7 @@
 #include "libGLESv2/renderer/d3d/RenderbufferD3D.h"
 
 #include "libEGL/Display.h"
+#include "libEGL/Surface.h"
 
 #include "common/utilities.h"
 #include "common/tls.h"
@@ -977,7 +979,7 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
             }
 
             // Unbind render target SRVs from the shader here to prevent D3D11 warnings.
-            if (colorbuffer->isTexture())
+            if (colorbuffer->type() == GL_TEXTURE)
             {
                 ID3D11Resource *renderTargetResource = renderTarget->getTexture();
                 const gl::ImageIndex *index = colorbuffer->getTextureImageIndex();
@@ -2269,13 +2271,6 @@ void Renderer11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView
     }
 }
 
-gl::Error Renderer11::createRenderTarget(SwapChain *swapChain, bool depth, RenderTarget **outRT)
-{
-    SwapChain11 *swapChain11 = SwapChain11::makeSwapChain11(swapChain);
-    *outRT = new SurfaceRenderTarget11(swapChain11, depth);
-    return gl::Error(GL_NO_ERROR);
-}
-
 gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT)
 {
     const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(format);
@@ -2408,6 +2403,40 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
     }
 
     return gl::Error(GL_NO_ERROR);
+}
+
+DefaultAttachmentImpl *Renderer11::createDefaultAttachment(GLenum type, egl::Surface *surface)
+{
+    SwapChain11 *swapChain = SwapChain11::makeSwapChain11(surface->getSwapChain());
+    switch (type)
+    {
+      case GL_BACK:
+        return new DefaultAttachmentD3D(new SurfaceRenderTarget11(swapChain, false));
+
+      case GL_DEPTH:
+        if (gl::GetInternalFormatInfo(swapChain->GetDepthBufferInternalFormat()).depthBits > 0)
+        {
+            return new DefaultAttachmentD3D(new SurfaceRenderTarget11(swapChain, true));
+        }
+        else
+        {
+            return NULL;
+        }
+
+      case GL_STENCIL:
+        if (gl::GetInternalFormatInfo(swapChain->GetDepthBufferInternalFormat()).stencilBits > 0)
+        {
+            return new DefaultAttachmentD3D(new SurfaceRenderTarget11(swapChain, true));
+        }
+        else
+        {
+            return NULL;
+        }
+
+      default:
+        UNREACHABLE();
+        return NULL;
+    }
 }
 
 ShaderImpl *Renderer11::createShader(const gl::Data &data, GLenum type)
@@ -2913,13 +2942,6 @@ RenderbufferImpl *Renderer11::createRenderbuffer()
     return renderbuffer;
 }
 
-RenderbufferImpl *Renderer11::createRenderbuffer(SwapChain *swapChain, bool depth)
-{
-    RenderbufferD3D *renderbuffer = new RenderbufferD3D(this);
-    renderbuffer->setStorage(swapChain, depth);
-    return renderbuffer;
-}
-
 gl::Error Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
                                       GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels)
 {
@@ -3321,7 +3343,7 @@ ID3D11Texture2D *Renderer11::resolveMultisampledTexture(ID3D11Texture2D *source,
 
 void Renderer11::invalidateFBOAttachmentSwizzles(gl::FramebufferAttachment *attachment, int mipLevel)
 {
-    ASSERT(attachment->isTexture());
+    ASSERT(attachment->type() == GL_TEXTURE);
     gl::Texture *texture = attachment->getTexture();
 
     TextureD3D *textureD3D = TextureD3D::makeTextureD3D(texture->getImplementation());
@@ -3344,20 +3366,20 @@ void Renderer11::invalidateFramebufferSwizzles(const gl::Framebuffer *framebuffe
     for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
         gl::FramebufferAttachment *attachment = framebuffer->getColorbuffer(colorAttachment);
-        if (attachment && attachment->isTexture())
+        if (attachment && attachment->type() == GL_TEXTURE)
         {
             invalidateFBOAttachmentSwizzles(attachment, attachment->mipLevel());
         }
     }
 
     gl::FramebufferAttachment *depthAttachment = framebuffer->getDepthbuffer();
-    if (depthAttachment && depthAttachment->isTexture())
+    if (depthAttachment && depthAttachment->type() == GL_TEXTURE)
     {
         invalidateFBOAttachmentSwizzles(depthAttachment, depthAttachment->mipLevel());
     }
 
     gl::FramebufferAttachment *stencilAttachment = framebuffer->getStencilbuffer();
-    if (stencilAttachment && stencilAttachment->isTexture())
+    if (stencilAttachment && stencilAttachment->type() == GL_TEXTURE)
     {
         invalidateFBOAttachmentSwizzles(stencilAttachment, stencilAttachment->mipLevel());
     }

@@ -22,6 +22,7 @@ namespace rx
 {
 class RenderbufferImpl;
 struct Workarounds;
+class DefaultAttachmentImpl;
 }
 
 namespace gl
@@ -102,7 +103,8 @@ class Framebuffer
 class DefaultFramebuffer : public Framebuffer
 {
   public:
-    DefaultFramebuffer(rx::RenderbufferImpl *colorbuffer, rx::RenderbufferImpl *depthStencil);
+    DefaultFramebuffer(rx::DefaultAttachmentImpl *colorAttachment, rx::DefaultAttachmentImpl *depthAttachment,
+                       rx::DefaultAttachmentImpl *stencilAttachment);
 
     GLenum completeness(const gl::Data &data) const override;
     virtual FramebufferAttachment *getAttachment(GLenum attachment) const;

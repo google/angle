@@ -10,11 +10,17 @@
 #ifndef LIBGLESV2_FRAMEBUFFERATTACHMENT_H_
 #define LIBGLESV2_FRAMEBUFFERATTACHMENT_H_
 
+#include "libGLESv2/Texture.h"
+
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
-#include "Texture.h"
 
 #include "angle_gl.h"
+
+namespace rx
+{
+class DefaultAttachmentImpl;
+}
 
 namespace gl
 {
@@ -41,10 +47,9 @@ class FramebufferAttachment
     GLuint getStencilSize() const;
     GLenum getComponentType() const;
     GLenum getColorEncoding() const;
-    bool isTexture() const;
 
-    bool isTextureWithId(GLuint textureId) const { return isTexture() && id() == textureId; }
-    bool isRenderbufferWithId(GLuint renderbufferId) const { return !isTexture() && id() == renderbufferId; }
+    bool isTextureWithId(GLuint textureId) const { return type() == GL_TEXTURE && id() == textureId; }
+    bool isRenderbufferWithId(GLuint renderbufferId) const { return type() == GL_RENDERBUFFER && id() == renderbufferId; }
 
     GLenum getBinding() const { return mBinding; }
 
@@ -58,6 +63,7 @@ class FramebufferAttachment
     virtual GLuint id() const = 0;
     virtual GLenum type() const = 0;
     virtual GLint mipLevel() const = 0;
+    virtual GLenum cubeMapFace() const = 0;
     virtual GLint layer() const = 0;
 
     virtual Texture *getTexture() = 0;
@@ -86,6 +92,7 @@ class TextureAttachment : public FramebufferAttachment
 
     virtual GLenum type() const;
     virtual GLint mipLevel() const;
+    virtual GLenum cubeMapFace() const;
     virtual GLint layer() const;
 
     virtual Texture *getTexture();
@@ -115,6 +122,7 @@ class RenderbufferAttachment : public FramebufferAttachment
     virtual GLuint id() const;
     virtual GLenum type() const;
     virtual GLint mipLevel() const;
+    virtual GLenum cubeMapFace() const;
     virtual GLint layer() const;
 
     virtual Texture *getTexture();
@@ -125,6 +133,37 @@ class RenderbufferAttachment : public FramebufferAttachment
     DISALLOW_COPY_AND_ASSIGN(RenderbufferAttachment);
 
     BindingPointer<Renderbuffer> mRenderbuffer;
+};
+
+class DefaultAttachment : public FramebufferAttachment
+{
+  public:
+    DefaultAttachment(GLenum binding, rx::DefaultAttachmentImpl *impl);
+
+    virtual ~DefaultAttachment();
+
+    virtual GLsizei getWidth() const;
+    virtual GLsizei getHeight() const;
+    virtual GLenum getInternalFormat() const;
+    virtual GLenum getActualFormat() const;
+    virtual GLsizei getSamples() const;
+
+    virtual GLuint id() const;
+    virtual GLenum type() const;
+    virtual GLint mipLevel() const;
+    virtual GLenum cubeMapFace() const;
+    virtual GLint layer() const;
+
+    virtual Texture *getTexture();
+    virtual const ImageIndex *getTextureImageIndex() const;
+    virtual Renderbuffer *getRenderbuffer();
+
+    rx::DefaultAttachmentImpl *getImplementation() const;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(DefaultAttachment);
+
+    rx::DefaultAttachmentImpl *mImpl;
 };
 
 }

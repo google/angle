@@ -2263,11 +2263,10 @@ void GL_APIENTRY glGetFramebufferAttachmentParameteriv(GLenum target, GLenum att
             break;
         }
 
-        GLuint framebufferHandle = context->getState().getTargetFramebuffer(target)->id();
-        gl::Framebuffer *framebuffer = context->getFramebuffer(framebufferHandle);
+        gl::Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
         ASSERT(framebuffer);
 
-        if (framebufferHandle == 0)
+        if (framebuffer->id() == 0)
         {
             if (clientVersion < 3)
             {
@@ -2316,114 +2315,44 @@ void GL_APIENTRY glGetFramebufferAttachmentParameteriv(GLenum target, GLenum att
             }
         }
 
-        GLenum attachmentType = GL_NONE;
-        GLuint attachmentHandle = 0;
-        GLuint attachmentLevel = 0;
-        GLuint attachmentLayer = 0;
-
         const gl::FramebufferAttachment *attachmentObject = framebuffer->getAttachment(attachment);
-
         if (attachmentObject)
         {
-            attachmentType = attachmentObject->type();
-            attachmentHandle = attachmentObject->id();
-            attachmentLevel = attachmentObject->mipLevel();
-            attachmentLayer = attachmentObject->layer();
-        }
-
-        GLenum attachmentObjectType;   // Type category
-        if (framebufferHandle == 0)
-        {
-            attachmentObjectType = GL_FRAMEBUFFER_DEFAULT;
-        }
-        else if (attachmentType == GL_NONE || attachmentType == GL_RENDERBUFFER)
-        {
-            attachmentObjectType = attachmentType;
-        }
-        else if (gl::ValidTexture2DDestinationTarget(context, attachmentType))
-        {
-            attachmentObjectType = GL_TEXTURE;
-        }
-        else
-        {
-            UNREACHABLE();
-            return;
-        }
-
-        if (attachmentObjectType == GL_NONE)
-        {
-            // ES 2.0.25 spec pg 127 states that if the value of FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE
-            // is NONE, then querying any other pname will generate INVALID_ENUM.
-
-            // ES 3.0.2 spec pg 235 states that if the attachment type is none,
-            // GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME will return zero and be an
-            // INVALID_OPERATION for all other pnames
+            ASSERT(attachmentObject->type() == GL_RENDERBUFFER ||
+                   attachmentObject->type() == GL_TEXTURE ||
+                   attachmentObject->type() == GL_FRAMEBUFFER_DEFAULT);
 
             switch (pname)
             {
               case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE:
-                *params = attachmentObjectType;
+                *params = attachmentObject->type();
                 break;
 
               case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
-                if (clientVersion < 3)
+                if (attachmentObject->type() != GL_RENDERBUFFER && attachmentObject->type() != GL_TEXTURE)
                 {
                     context->recordError(gl::Error(GL_INVALID_ENUM));
                     return;
                 }
-                *params = 0;
-                break;
-
-              default:
-                if (clientVersion < 3)
-                {
-                    context->recordError(gl::Error(GL_INVALID_ENUM));
-                    return;
-                }
-                else
-                {
-                    context->recordError(gl::Error(GL_INVALID_OPERATION));
-                    return;
-                }
-            }
-        }
-        else
-        {
-            ASSERT(attachmentObjectType == GL_RENDERBUFFER || attachmentObjectType == GL_TEXTURE ||
-                   attachmentObjectType == GL_FRAMEBUFFER_DEFAULT);
-            ASSERT(attachmentObject != NULL);
-
-            switch (pname)
-            {
-              case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE:
-                *params = attachmentObjectType;
-                break;
-
-              case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
-                if (attachmentObjectType != GL_RENDERBUFFER && attachmentObjectType != GL_TEXTURE)
-                {
-                    context->recordError(gl::Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = attachmentHandle;
+                *params = attachmentObject->id();
                 break;
 
               case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL:
-                if (attachmentObjectType != GL_TEXTURE)
+                if (attachmentObject->type() != GL_TEXTURE)
                 {
                     context->recordError(gl::Error(GL_INVALID_ENUM));
                     return;
                 }
-                *params = attachmentLevel;
+                *params = attachmentObject->mipLevel();
                 break;
 
               case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE:
-                if (attachmentObjectType != GL_TEXTURE)
+                if (attachmentObject->type() != GL_TEXTURE)
                 {
                     context->recordError(gl::Error(GL_INVALID_ENUM));
                     return;
                 }
-                *params = gl::IsCubemapTextureTarget(attachmentType) ? attachmentType : 0;
+                *params = attachmentObject->cubeMapFace();
                 break;
 
               case GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE:
@@ -2464,17 +2393,54 @@ void GL_APIENTRY glGetFramebufferAttachmentParameteriv(GLenum target, GLenum att
                 break;
 
               case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER:
-                if (attachmentObjectType != GL_TEXTURE)
+                if (attachmentObject->type() != GL_TEXTURE)
                 {
                     context->recordError(gl::Error(GL_INVALID_ENUM));
                     return;
                 }
-                *params = attachmentLayer;
+                *params = attachmentObject->layer();
                 break;
 
               default:
                 UNREACHABLE();
                 break;
+            }
+        }
+        else
+        {
+            // ES 2.0.25 spec pg 127 states that if the value of FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE
+            // is NONE, then querying any other pname will generate INVALID_ENUM.
+
+            // ES 3.0.2 spec pg 235 states that if the attachment type is none,
+            // GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME will return zero and be an
+            // INVALID_OPERATION for all other pnames
+
+            switch (pname)
+            {
+              case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE:
+                *params = GL_NONE;
+                break;
+
+              case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
+                if (clientVersion < 3)
+                {
+                    context->recordError(gl::Error(GL_INVALID_ENUM));
+                    return;
+                }
+                *params = 0;
+                break;
+
+              default:
+                if (clientVersion < 3)
+                {
+                    context->recordError(gl::Error(GL_INVALID_ENUM));
+                    return;
+                }
+                else
+                {
+                    context->recordError(gl::Error(GL_INVALID_OPERATION));
+                    return;
+                }
             }
         }
     }

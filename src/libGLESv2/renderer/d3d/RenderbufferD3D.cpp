@@ -55,44 +55,9 @@ gl::Error RenderbufferD3D::setStorage(GLsizei width, GLsizei height, GLenum inte
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error RenderbufferD3D::setStorage(SwapChain *swapChain, bool depth)
-{
-    RenderTarget *newRT = NULL;
-    gl::Error error = mRenderer->createRenderTarget(swapChain, depth, &newRT);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    SafeDelete(mRenderTarget);
-    mRenderTarget = newRT;
-
-    return gl::Error(GL_NO_ERROR);
-}
-
-GLsizei RenderbufferD3D::getWidth() const
-{
-    return (mRenderTarget ? mRenderTarget->getWidth() : 0);
-}
-
-GLsizei RenderbufferD3D::getHeight() const
-{
-    return (mRenderTarget ? mRenderTarget->getHeight() : 0);
-}
-
-GLenum RenderbufferD3D::getInternalFormat() const
-{
-    return (mRenderTarget ? mRenderTarget->getInternalFormat() : GL_RGBA4);
-}
-
 GLenum RenderbufferD3D::getActualFormat() const
 {
     return (mRenderTarget ? mRenderTarget->getActualFormat() : GL_RGBA4);
-}
-
-GLsizei RenderbufferD3D::getSamples() const
-{
-    return (mRenderTarget ? mRenderTarget->getSamples() : 0);
 }
 
 RenderTarget *RenderbufferD3D::getRenderTarget()

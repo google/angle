@@ -11,6 +11,7 @@
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Renderbuffer.h"
+#include "libGLESv2/renderer/FramebufferImpl.h"
 #include "libGLESv2/renderer/RenderTarget.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/d3d/TextureStorage.h"
@@ -71,11 +72,6 @@ GLenum FramebufferAttachment::getColorEncoding() const
     return GetInternalFormatInfo(getActualFormat()).colorEncoding;
 }
 
-bool FramebufferAttachment::isTexture() const
-{
-    return (type() != GL_RENDERBUFFER);
-}
-
 ///// TextureAttachment Implementation ////////
 
 TextureAttachment::TextureAttachment(GLenum binding, Texture *texture, const ImageIndex &index)
@@ -122,12 +118,17 @@ GLenum TextureAttachment::getActualFormat() const
 
 GLenum TextureAttachment::type() const
 {
-    return mIndex.type;
+    return GL_TEXTURE;
 }
 
 GLint TextureAttachment::mipLevel() const
 {
     return mIndex.mipIndex;
+}
+
+GLenum TextureAttachment::cubeMapFace() const
+{
+    return IsCubemapTextureTarget(mIndex.type) ? mIndex.type : GL_NONE;
 }
 
 GLint TextureAttachment::layer() const
@@ -205,6 +206,11 @@ GLint RenderbufferAttachment::mipLevel() const
     return 0;
 }
 
+GLenum RenderbufferAttachment::cubeMapFace() const
+{
+    return GL_NONE;
+}
+
 GLint RenderbufferAttachment::layer() const
 {
     return 0;
@@ -225,6 +231,92 @@ const ImageIndex *RenderbufferAttachment::getTextureImageIndex() const
 Renderbuffer *RenderbufferAttachment::getRenderbuffer()
 {
     return mRenderbuffer.get();
+}
+
+
+DefaultAttachment::DefaultAttachment(GLenum binding, rx::DefaultAttachmentImpl *impl)
+    : FramebufferAttachment(binding),
+      mImpl(impl)
+{
+    ASSERT(mImpl);
+}
+
+DefaultAttachment::~DefaultAttachment()
+{
+    SafeDelete(mImpl);
+}
+
+GLsizei DefaultAttachment::getWidth() const
+{
+    return mImpl->getWidth();
+}
+
+GLsizei DefaultAttachment::getHeight() const
+{
+    return mImpl->getHeight();
+}
+
+GLenum DefaultAttachment::getInternalFormat() const
+{
+    return mImpl->getInternalFormat();
+}
+
+GLenum DefaultAttachment::getActualFormat() const
+{
+    return mImpl->getActualFormat();
+}
+
+GLsizei DefaultAttachment::getSamples() const
+{
+    return mImpl->getSamples();
+}
+
+GLuint DefaultAttachment::id() const
+{
+    return 0;
+}
+
+GLenum DefaultAttachment::type() const
+{
+    return GL_FRAMEBUFFER_DEFAULT;
+}
+
+GLint DefaultAttachment::mipLevel() const
+{
+    return 0;
+}
+
+GLenum DefaultAttachment::cubeMapFace() const
+{
+    return GL_NONE;
+}
+
+GLint DefaultAttachment::layer() const
+{
+    return 0;
+}
+
+Texture *DefaultAttachment::getTexture()
+{
+    UNREACHABLE();
+    return NULL;
+}
+
+const ImageIndex *DefaultAttachment::getTextureImageIndex() const
+{
+    UNREACHABLE();
+    return NULL;
+}
+
+Renderbuffer *DefaultAttachment::getRenderbuffer()
+{
+    UNREACHABLE();
+    return NULL;
+}
+
+rx::DefaultAttachmentImpl *DefaultAttachment::getImplementation() const
+{
+    return mImpl;
 }
 
 }
