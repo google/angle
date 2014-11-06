@@ -486,7 +486,7 @@ void State::setSampleCoverageParams(GLclampf value, bool invert)
     mSampleCoverageInvert = invert;
 }
 
-void State::getSampleCoverageParams(GLclampf *value, bool *invert)
+void State::getSampleCoverageParams(GLclampf *value, bool *invert) const
 {
     ASSERT(value != NULL && invert != NULL);
 

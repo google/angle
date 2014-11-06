@@ -643,7 +643,7 @@ gl::Error Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
+gl::Error Renderer11::setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
                                     unsigned int sampleMask)
 {
     if (mForceSetBlendState ||
@@ -858,7 +858,7 @@ void Renderer11::unsetSRVsWithResource(gl::SamplerType samplerType, const ID3D11
     }
 }
 
-gl::Error Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
+gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
 {
     // Get the color render buffer and serial
     // Also extract the render target dimensions and view
@@ -3275,7 +3275,7 @@ void Renderer11::invalidateFBOAttachmentSwizzles(gl::FramebufferAttachment *atta
     }
 }
 
-void Renderer11::invalidateFramebufferSwizzles(gl::Framebuffer *framebuffer)
+void Renderer11::invalidateFramebufferSwizzles(const gl::Framebuffer *framebuffer)
 {
     for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {

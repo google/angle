@@ -69,8 +69,8 @@ class Renderer11 : public RendererD3D
     virtual gl::Error setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[]);
 
     virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState);
-    virtual gl::Error setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
-                                    unsigned int sampleMask);
+    gl::Error setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
+                            unsigned int sampleMask) override;
     virtual gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
                                            int stencilBackRef, bool frontFaceCCW);
 
@@ -79,7 +79,7 @@ class Renderer11 : public RendererD3D
                              bool ignoreViewport);
 
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count);
-    virtual gl::Error applyRenderTarget(gl::Framebuffer *frameBuffer);
+    gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) override;
     virtual gl::Error applyShaders(gl::ProgramBinary *programBinary, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
                                    bool rasterizerDiscard, bool transformFeedbackActive);
 
@@ -227,7 +227,7 @@ class Renderer11 : public RendererD3D
     void unsetSRVsWithResource(gl::SamplerType shaderType, const ID3D11Resource *resource);
 
     static void invalidateFBOAttachmentSwizzles(gl::FramebufferAttachment *attachment, int mipLevel);
-    static void invalidateFramebufferSwizzles(gl::Framebuffer *framebuffer);
+    static void invalidateFramebufferSwizzles(const gl::Framebuffer *framebuffer);
 
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;

@@ -10,6 +10,10 @@
 #define LIBGLESV2_RENDERER_RENDERERD3D_H_
 
 #include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/Data.h"
+
+//FIXME(jmadill): std::array is currently prohibited by Chromium style guide
+#include <array>
 
 namespace gl
 {
@@ -38,6 +42,15 @@ class RendererD3D : public Renderer
 
     static RendererD3D *makeRendererD3D(Renderer *renderer);
 
+    gl::Error drawArrays(const gl::Data &data,
+                         GLenum mode, GLint first,
+                         GLsizei count, GLsizei instances) override;
+
+    gl::Error drawElements(const gl::Data &data,
+                           GLenum mode, GLsizei count, GLenum type,
+                           const GLvoid *indices, GLsizei instances,
+                           const RangeUI &indexRange) override;
+
     // Direct3D Specific methods
     virtual SwapChain *createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
 
@@ -48,7 +61,7 @@ class RendererD3D : public Renderer
     virtual gl::Error setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[]) = 0;
 
     virtual gl::Error setRasterizerState(const gl::RasterizerState &rasterState) = 0;
-    virtual gl::Error setBlendState(gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
+    virtual gl::Error setBlendState(const gl::Framebuffer *framebuffer, const gl::BlendState &blendState, const gl::ColorF &blendColor,
                                     unsigned int sampleMask) = 0;
     virtual gl::Error setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
                                            int stencilBackRef, bool frontFaceCCW) = 0;
@@ -57,7 +70,7 @@ class RendererD3D : public Renderer
     virtual void setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
                              bool ignoreViewport) = 0;
 
-    virtual gl::Error applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
+    virtual gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) = 0;
     virtual gl::Error applyShaders(gl::ProgramBinary *programBinary, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
                                    bool rasterizerDiscard, bool transformFeedbackActive) = 0;
     virtual gl::Error applyUniforms(const ProgramImpl &program, const std::vector<gl::LinkedUniform*> &uniformArray) = 0;
@@ -130,13 +143,42 @@ class RendererD3D : public Renderer
     virtual VertexBuffer *createVertexBuffer() = 0;
     virtual IndexBuffer *createIndexBuffer() = 0;
 
+    //TODO(jmadill): Should be private or protected
+    gl::Error applyRenderTarget(const gl::Data &data, GLenum drawMode, bool ignoreViewport);
+
   protected:
+    virtual gl::Error drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive) = 0;
+    virtual gl::Error drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
+                                   gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances) = 0;
+
     egl::Display *mDisplay;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RendererD3D);
 
+    //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
+    typedef std::array<unsigned int, gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS> FramebufferTextureSerialArray;
+
+    gl::Error generateSwizzles(const gl::Data &data, gl::SamplerType type);
+    gl::Error generateSwizzles(const gl::Data &data);
+
+    gl::Error applyState(const gl::Data &data, GLenum drawMode);
+    bool applyTransformFeedbackBuffers(const gl::Data &data);
+    gl::Error applyShaders(const gl::Data &data, bool transformFeedbackActive);
+    gl::Error applyTextures(const gl::Data &data, gl::SamplerType shaderType,
+                            const FramebufferTextureSerialArray &framebufferSerials, size_t framebufferSerialCount);
+    gl::Error applyTextures(const gl::Data &data);
+    gl::Error applyUniformBuffers(const gl::Data &data);
+
+    bool skipDraw(const gl::Data &data, GLenum drawMode);
+    void markTransformFeedbackUsage(const gl::Data &data);
+
+    size_t getBoundFramebufferTextureSerials(const gl::Data &data,
+                                             FramebufferTextureSerialArray *outSerialArray);
+    gl::Texture *getIncompleteTexture(GLenum type);
+
     int mCurrentClientVersion;
+    gl::TextureMap mIncompleteTextures;
 };
 
 }

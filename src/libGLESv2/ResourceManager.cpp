@@ -295,9 +295,9 @@ Texture *ResourceManager::getTexture(unsigned int handle)
     }
 }
 
-Program *ResourceManager::getProgram(unsigned int handle)
+Program *ResourceManager::getProgram(unsigned int handle) const
 {
-    ProgramMap::iterator program = mProgramMap.find(handle);
+    ProgramMap::const_iterator program = mProgramMap.find(handle);
 
     if (program == mProgramMap.end())
     {

@@ -60,7 +60,7 @@ class ResourceManager
 
     Buffer *getBuffer(GLuint handle);
     Shader *getShader(GLuint handle);
-    Program *getProgram(GLuint handle);
+    Program *getProgram(GLuint handle) const;
     Texture *getTexture(GLuint handle);
     Renderbuffer *getRenderbuffer(GLuint handle);
     Sampler *getSampler(GLuint handle);
