@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b50246b9_db040786",
+        "filename": "src/libGLESv2/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-06T15:13:23Z",
+      "side": 1,
+      "message": "Did you hit this case? It seems odd that the resource manager could be null.",
+      "range": {
+        "startLine": 182,
+        "startChar": 4,
+        "endLine": 185,
+        "endChar": 5
+      },
+      "revId": "f24b2bd889ca7ae2f305cc009193ae4693a0ad06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b50246b9_3b0a638f",
+        "filename": "src/libGLESv2/Data.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-06T15:13:23Z",
+      "side": 1,
+      "message": "This can be removed now I think.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 63
+      },
+      "revId": "f24b2bd889ca7ae2f305cc009193ae4693a0ad06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
