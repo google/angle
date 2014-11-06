@@ -435,6 +435,7 @@
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\MemoryBuffer.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\ProgramD3D.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\RenderbufferD3D.h"/>
+    <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\RendererD3D.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\ShaderD3D.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\TextureD3D.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\renderer\d3d\TextureStorage.h"/>
@@ -576,6 +577,7 @@
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\MemoryBuffer.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\ProgramD3D.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\RenderbufferD3D.cpp"/>
+    <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\RendererD3D.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\ShaderD3D.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\TextureD3D.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\renderer\d3d\TextureStorage.cpp"/>

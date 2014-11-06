@@ -11,10 +11,10 @@
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
-#include "libGLESv2/renderer/d3d/HLSLCompiler.h"
 #include "libGLESv2/renderer/d3d/d3d9/ShaderCache.h"
 #include "libGLESv2/renderer/d3d/d3d9/VertexDeclarationCache.h"
-#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/d3d/HLSLCompiler.h"
+#include "libGLESv2/renderer/d3d/RendererD3D.h"
 #include "libGLESv2/renderer/RenderTarget.h"
 
 namespace gl
@@ -36,7 +36,7 @@ class StaticIndexBufferInterface;
 struct TranslatedAttribute;
 class Blit9;
 
-class Renderer9 : public Renderer
+class Renderer9 : public RendererD3D
 {
   public:
     Renderer9(egl::Display *display, EGLNativeDisplayType hDc, const egl::AttributeMap &attributes);

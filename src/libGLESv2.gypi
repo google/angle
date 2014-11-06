@@ -179,6 +179,8 @@
             'libGLESv2/renderer/d3d/ProgramD3D.h',
             'libGLESv2/renderer/d3d/RenderbufferD3D.cpp',
             'libGLESv2/renderer/d3d/RenderbufferD3D.h',
+            'libGLESv2/renderer/d3d/RendererD3D.cpp',
+            'libGLESv2/renderer/d3d/RendererD3D.h',
             'libGLESv2/renderer/d3d/ShaderD3D.cpp',
             'libGLESv2/renderer/d3d/ShaderD3D.h',
             'libGLESv2/renderer/d3d/TextureD3D.cpp',

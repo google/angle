@@ -94,7 +94,7 @@ enum
 };
 
 Renderer9::Renderer9(egl::Display *display, EGLNativeDisplayType hDc, const egl::AttributeMap &attributes)
-    : Renderer(display),
+    : RendererD3D(display),
       mDc(hDc)
 {
     mD3d9Module = NULL;
