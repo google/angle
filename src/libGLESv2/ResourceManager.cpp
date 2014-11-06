@@ -21,9 +21,9 @@
 namespace gl
 {
 ResourceManager::ResourceManager(rx::Renderer *renderer)
+    : mRenderer(renderer),
+      mRefCount(1)
 {
-    mRefCount = 1;
-    mRenderer = renderer;
 }
 
 ResourceManager::~ResourceManager()

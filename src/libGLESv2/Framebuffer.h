@@ -38,7 +38,6 @@ class Framebuffer
 {
   public:
     Framebuffer(GLuint id);
-
     virtual ~Framebuffer();
 
     GLuint id() const { return mId; }

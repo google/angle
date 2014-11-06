@@ -61,7 +61,7 @@ bool TextureStorage11::SRVKey::operator<(const SRVKey &rhs) const
     return std::tie(baseLevel, mipLevels, swizzle) < std::tie(rhs.baseLevel, rhs.mipLevels, rhs.swizzle);
 }
 
-TextureStorage11::TextureStorage11(Renderer *renderer, UINT bindFlags)
+TextureStorage11::TextureStorage11(Renderer11 *renderer, UINT bindFlags)
     : mBindFlags(bindFlags),
       mTopLevel(0),
       mMipLevels(0),
@@ -540,7 +540,7 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index, Image *image, c
     return gl::Error(GL_NO_ERROR);
 }
 
-TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapchain)
+TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swapchain)
     : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
       mTexture(swapchain->getOffscreenTexture()),
       mSwizzleTexture(NULL)
@@ -585,7 +585,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
     initializeSerials(1, 1);
 }
 
-TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels)
+TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels)
     : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderTarget)),
       mTexture(NULL),
       mSwizzleTexture(NULL)
@@ -945,7 +945,7 @@ gl::Error TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel, ID3D11Render
     return gl::Error(GL_NO_ERROR);
 }
 
-TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, GLenum internalformat, bool renderTarget, int size, int levels)
+TextureStorage11_Cube::TextureStorage11_Cube(Renderer11 *renderer, GLenum internalformat, bool renderTarget, int size, int levels)
     : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderTarget))
 {
     mTexture = NULL;
@@ -1367,7 +1367,7 @@ gl::Error TextureStorage11_Cube::getSwizzleRenderTarget(int mipLevel, ID3D11Rend
     return gl::Error(GL_NO_ERROR);
 }
 
-TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, GLenum internalformat, bool renderTarget,
+TextureStorage11_3D::TextureStorage11_3D(Renderer11 *renderer, GLenum internalformat, bool renderTarget,
                                          GLsizei width, GLsizei height, GLsizei depth, int levels)
     : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderTarget))
 {
@@ -1753,7 +1753,7 @@ gl::Error TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel, ID3D11Render
     return gl::Error(GL_NO_ERROR);
 }
 
-TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, GLenum internalformat, bool renderTarget,
+TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer11 *renderer, GLenum internalformat, bool renderTarget,
                                                    GLsizei width, GLsizei height, GLsizei depth, int levels)
     : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderTarget))
 {

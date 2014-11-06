@@ -39,7 +39,6 @@ class HLSLBlockEncoder;
 namespace rx
 {
 class ShaderExecutable;
-class Renderer;
 struct TranslatedAttribute;
 class UniformStorage;
 class ProgramImpl;

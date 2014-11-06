@@ -10,7 +10,7 @@
 #include "libGLESv2/renderer/d3d/IndexDataManager.h"
 #include "libGLESv2/renderer/d3d/BufferD3D.h"
 #include "libGLESv2/renderer/d3d/IndexBuffer.h"
-#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/d3d/RendererD3D.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/formatutils.h"
@@ -57,7 +57,7 @@ static void ConvertIndices(GLenum sourceType, GLenum destinationType, const void
     else UNREACHABLE();
 }
 
-IndexDataManager::IndexDataManager(Renderer *renderer)
+IndexDataManager::IndexDataManager(RendererD3D *renderer)
     : mRenderer(renderer),
       mStreamingBufferShort(NULL),
       mStreamingBufferInt(NULL)

@@ -16,14 +16,14 @@
 
 namespace rx
 {
-class Renderer;
+class RendererD3D;
 class RenderTarget;
 class SwapChain;
 
 class RenderbufferD3D : public RenderbufferImpl
 {
   public:
-    RenderbufferD3D(Renderer *renderer);
+    RenderbufferD3D(RendererD3D *renderer);
     virtual ~RenderbufferD3D();
 
     static RenderbufferD3D *makeRenderbufferD3D(RenderbufferImpl *renderbuffer);
@@ -43,7 +43,7 @@ class RenderbufferD3D : public RenderbufferImpl
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferD3D);
 
-    Renderer *mRenderer;
+    RendererD3D *mRenderer;
     RenderTarget *mRenderTarget;
 };
 }

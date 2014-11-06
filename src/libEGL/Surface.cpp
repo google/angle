@@ -24,13 +24,17 @@
 
 #include "common/NativeWindow.h"
 
+//TODO(jmadill): phase this out
+#include "libGLESv2/renderer/d3d/RendererD3D.h"
+
 namespace egl
 {
 
 Surface::Surface(Display *display, const Config *config, EGLNativeWindowType window, EGLint fixedSize, EGLint width, EGLint height, EGLint postSubBufferSupported) 
     : mDisplay(display), mConfig(config), mNativeWindow(window), mPostSubBufferSupported(postSubBufferSupported)
 {
-    mRenderer = mDisplay->getRenderer();
+    //TODO(jmadill): MANGLE refactor. (note, can't call makeRendererD3D because of dll export issues)
+    mRenderer = static_cast<rx::RendererD3D*>(mDisplay->getRenderer());
     mSwapChain = NULL;
     mShareHandle = NULL;
     mTexture = NULL;
@@ -52,7 +56,8 @@ Surface::Surface(Display *display, const Config *config, EGLNativeWindowType win
 Surface::Surface(Display *display, const Config *config, HANDLE shareHandle, EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureType)
     : mDisplay(display), mNativeWindow(NULL), mConfig(config), mShareHandle(shareHandle), mWidth(width), mHeight(height), mPostSubBufferSupported(EGL_FALSE)
 {
-    mRenderer = mDisplay->getRenderer();
+    //TODO(jmadill): MANGLE refactor. (note, can't call makeRendererD3D because of dll export issues)
+    mRenderer = static_cast<rx::RendererD3D*>(mDisplay->getRenderer());
     mSwapChain = NULL;
     mWindowSubclassed = false;
     mTexture = NULL;

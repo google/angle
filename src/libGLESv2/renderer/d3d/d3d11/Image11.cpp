@@ -201,7 +201,7 @@ void Image11::disassociateStorage()
     }
 }
 
-bool Image11::redefine(Renderer *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
+bool Image11::redefine(RendererD3D *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
 {
     if (mWidth != width ||
         mHeight != height ||

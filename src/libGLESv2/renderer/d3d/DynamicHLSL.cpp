@@ -8,7 +8,7 @@
 
 #include "libGLESv2/renderer/d3d/DynamicHLSL.h"
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
-#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/d3d/RendererD3D.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
@@ -93,7 +93,7 @@ namespace rx
 const std::string VERTEX_ATTRIBUTE_STUB_STRING = "@@ VERTEX ATTRIBUTES @@";
 const std::string PIXEL_OUTPUT_STUB_STRING = "@@ PIXEL OUTPUT @@";
 
-DynamicHLSL::DynamicHLSL(rx::Renderer *const renderer)
+DynamicHLSL::DynamicHLSL(RendererD3D *const renderer)
     : mRenderer(renderer)
 {
 }

@@ -18,14 +18,14 @@
 namespace rx
 {
 class DynamicHLSL;
-class Renderer;
+class RendererD3D;
 
 class ShaderD3D : public ShaderImpl
 {
     friend class DynamicHLSL;
 
   public:
-    ShaderD3D(GLenum type, rx::Renderer *renderer);
+    ShaderD3D(GLenum type, rx::RendererD3D *renderer);
     virtual ~ShaderD3D();
 
     static ShaderD3D *makeShaderD3D(ShaderImpl *impl);
@@ -70,7 +70,7 @@ class ShaderD3D : public ShaderImpl
     static void *mVertexCompiler;
 
     GLenum mType;
-    rx::Renderer *mRenderer;
+    RendererD3D *mRenderer;
 
     int mShaderVersion;
 

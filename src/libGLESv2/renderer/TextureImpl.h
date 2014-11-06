@@ -32,8 +32,6 @@ namespace rx
 {
 
 class Image;
-class Renderer;
-class TextureStorage;
 
 class TextureImpl
 {

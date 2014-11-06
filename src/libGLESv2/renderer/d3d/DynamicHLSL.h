@@ -17,11 +17,6 @@
 #include <vector>
 #include <map>
 
-namespace rx
-{
-class Renderer;
-}
-
 namespace sh
 {
 struct Attribute;
@@ -40,7 +35,7 @@ struct PackedVarying;
 
 namespace rx
 {
-class Renderer;
+class RendererD3D;
 class ShaderD3D;
 
 typedef const gl::PackedVarying *VaryingPacking[gl::IMPLEMENTATION_MAX_VARYING_VECTORS][4];
@@ -56,7 +51,7 @@ struct PixelShaderOutputVariable
 class DynamicHLSL
 {
   public:
-    explicit DynamicHLSL(rx::Renderer *const renderer);
+    explicit DynamicHLSL(rx::RendererD3D *const renderer);
 
     int packVaryings(gl::InfoLog &infoLog, VaryingPacking packing, rx::ShaderD3D *fragmentShader,
                      rx::ShaderD3D *vertexShader, const std::vector<std::string>& transformFeedbackVaryings);
@@ -79,7 +74,7 @@ class DynamicHLSL
   private:
     DISALLOW_COPY_AND_ASSIGN(DynamicHLSL);
 
-    rx::Renderer *const mRenderer;
+    rx::RendererD3D *const mRenderer;
 
     struct SemanticInfo;
 

@@ -14,7 +14,6 @@
 
 namespace rx
 {
-class Renderer;
 class Renderer9;
 
 class RenderTarget9 : public RenderTarget

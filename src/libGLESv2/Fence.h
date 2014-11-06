@@ -17,7 +17,6 @@
 
 namespace rx
 {
-class Renderer;
 class FenceNVImpl;
 class FenceSyncImpl;
 }

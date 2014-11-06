@@ -20,7 +20,7 @@
 
 namespace rx
 {
-TextureStorage9::TextureStorage9(Renderer *renderer, DWORD usage)
+TextureStorage9::TextureStorage9(Renderer9 *renderer, DWORD usage)
     : mTopLevel(0),
       mMipLevels(0),
       mTextureWidth(0),
@@ -99,7 +99,7 @@ gl::Error TextureStorage9::setData(const gl::ImageIndex &index, Image *image, co
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain)
+TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, SwapChain9 *swapchain)
     : TextureStorage9(renderer, D3DUSAGE_RENDERTARGET)
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
@@ -119,7 +119,7 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain
     initializeSerials(1, 1);
 }
 
-TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels)
+TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels)
     : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget))
 {
     mTexture = NULL;
@@ -286,7 +286,7 @@ gl::Error TextureStorage9_2D::copyToStorage(TextureStorage *destStorage)
     return gl::Error(GL_NO_ERROR);
 }
 
-TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, GLenum internalformat, bool renderTarget, int size, int levels)
+TextureStorage9_Cube::TextureStorage9_Cube(Renderer9 *renderer, GLenum internalformat, bool renderTarget, int size, int levels)
     : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget))
 {
     mTexture = NULL;

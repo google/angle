@@ -21,7 +21,6 @@
 
 namespace rx
 {
-class Renderer;
 class VertexArrayImpl;
 }
 

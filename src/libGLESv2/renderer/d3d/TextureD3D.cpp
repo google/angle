@@ -6,17 +6,18 @@
 
 // TextureD3D.cpp: Implementations of the Texture interfaces shared betweeen the D3D backends.
 
-#include "libGLESv2/renderer/d3d/TextureD3D.h"
-#include "libGLESv2/renderer/d3d/TextureStorage.h"
-#include "libGLESv2/renderer/d3d/ImageD3D.h"
-#include "libGLESv2/renderer/d3d/BufferD3D.h"
+#include "libGLESv2/Buffer.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/renderer/BufferImpl.h"
 #include "libGLESv2/renderer/RenderTarget.h"
-#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/d3d/BufferD3D.h"
+#include "libGLESv2/renderer/d3d/TextureD3D.h"
+#include "libGLESv2/renderer/d3d/TextureStorage.h"
+#include "libGLESv2/renderer/d3d/ImageD3D.h"
+#include "libGLESv2/renderer/d3d/RendererD3D.h"
 
 #include "libEGL/Surface.h"
 
@@ -65,7 +66,7 @@ bool IsRenderTargetUsage(GLenum usage)
 
 }
 
-TextureD3D::TextureD3D(Renderer *renderer)
+TextureD3D::TextureD3D(RendererD3D *renderer)
     : mRenderer(renderer),
       mUsage(GL_NONE),
       mDirtyImages(true),
@@ -510,7 +511,7 @@ gl::Error TextureD3D::commitRegion(const gl::ImageIndex &index, const gl::Box &r
     return gl::Error(GL_NO_ERROR);
 }
 
-TextureD3D_2D::TextureD3D_2D(Renderer *renderer)
+TextureD3D_2D::TextureD3D_2D(RendererD3D *renderer)
     : TextureD3D(renderer)
 {
     for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
@@ -1123,7 +1124,7 @@ bool TextureD3D_2D::isValidIndex(const gl::ImageIndex &index) const
             index.mipIndex >= 0 && index.mipIndex < mTexStorage->getLevelCount());
 }
 
-TextureD3D_Cube::TextureD3D_Cube(Renderer *renderer)
+TextureD3D_Cube::TextureD3D_Cube(RendererD3D *renderer)
     : TextureD3D(renderer)
 {
     for (int i = 0; i < 6; i++)
@@ -1669,7 +1670,7 @@ bool TextureD3D_Cube::isValidIndex(const gl::ImageIndex &index) const
             index.mipIndex >= 0 && index.mipIndex < mTexStorage->getLevelCount());
 }
 
-TextureD3D_3D::TextureD3D_3D(Renderer *renderer)
+TextureD3D_3D::TextureD3D_3D(RendererD3D *renderer)
     : TextureD3D(renderer)
 {
     for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
@@ -2233,7 +2234,7 @@ bool TextureD3D_3D::isValidIndex(const gl::ImageIndex &index) const
             index.mipIndex >= 0 && index.mipIndex < mTexStorage->getLevelCount());
 }
 
-TextureD3D_2DArray::TextureD3D_2DArray(Renderer *renderer)
+TextureD3D_2DArray::TextureD3D_2DArray(RendererD3D *renderer)
     : TextureD3D(renderer)
 {
     for (int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++level)

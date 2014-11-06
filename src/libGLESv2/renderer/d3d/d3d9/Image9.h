@@ -20,7 +20,6 @@ class Framebuffer;
 
 namespace rx
 {
-class Renderer;
 class Renderer9;
 
 class Image9 : public ImageD3D
@@ -35,7 +34,7 @@ class Image9 : public ImageD3D
     static gl::Error generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface);
     static gl::Error copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
 
-    virtual bool redefine(Renderer *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease);
+    bool redefine(RendererD3D *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) override;
 
     D3DFORMAT getD3DFormat() const;
 

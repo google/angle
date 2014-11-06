@@ -27,7 +27,7 @@ namespace rx
 class BufferD3D;
 class StreamingVertexBufferInterface;
 class VertexBuffer;
-class Renderer;
+class RendererD3D;
 
 struct TranslatedAttribute
 {
@@ -50,7 +50,7 @@ struct TranslatedAttribute
 class VertexDataManager
 {
   public:
-    VertexDataManager(rx::Renderer *renderer);
+    VertexDataManager(rx::RendererD3D *renderer);
     virtual ~VertexDataManager();
 
     gl::Error prepareVertexData(const gl::State &state, GLint start, GLsizei count,
@@ -81,7 +81,7 @@ class VertexDataManager
                                 size_t *cachedOffset,
                                 StreamingVertexBufferInterface *buffer);
 
-    rx::Renderer *const mRenderer;
+    rx::RendererD3D *const mRenderer;
 
     StreamingVertexBufferInterface *mStreamingBuffer;
 

@@ -33,7 +33,7 @@ class StaticIndexBufferInterface;
 class StreamingIndexBufferInterface;
 class IndexBuffer;
 class BufferD3D;
-class Renderer;
+class RendererD3D;
 
 struct TranslatedIndexData
 {
@@ -50,7 +50,7 @@ struct TranslatedIndexData
 class IndexDataManager
 {
   public:
-    explicit IndexDataManager(Renderer *renderer);
+    explicit IndexDataManager(RendererD3D *renderer);
     virtual ~IndexDataManager();
 
     gl::Error prepareIndexData(GLenum type, GLsizei count, gl::Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
@@ -60,7 +60,7 @@ class IndexDataManager
 
     DISALLOW_COPY_AND_ASSIGN(IndexDataManager);
 
-    Renderer *const mRenderer;
+    RendererD3D *const mRenderer;
 
     StreamingIndexBufferInterface *mStreamingBufferShort;
     StreamingIndexBufferInterface *mStreamingBufferInt;

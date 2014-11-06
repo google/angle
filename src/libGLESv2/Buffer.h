@@ -19,7 +19,6 @@
 
 namespace rx
 {
-class Renderer;
 class BufferImpl;
 };
 

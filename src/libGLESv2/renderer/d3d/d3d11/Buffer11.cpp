@@ -122,7 +122,7 @@ class Buffer11::NativeBuffer11 : public Buffer11::BufferStorage11
   private:
     ID3D11Buffer *mNativeBuffer;
 
-    static void fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Renderer *renderer, BufferUsage usage, unsigned int bufferSize);
+    static void fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Renderer11 *renderer, BufferUsage usage, unsigned int bufferSize);
 };
 
 // Pack storage represents internal storage for pack buffers. We implement pack buffers
@@ -414,7 +414,7 @@ void Buffer11::markBufferUsage()
     }
 }
 
-Renderer* Buffer11::getRenderer()
+RendererD3D* Buffer11::getRenderer()
 {
     return mRenderer;
 }
@@ -736,7 +736,7 @@ gl::Error Buffer11::NativeBuffer11::resize(size_t size, bool preserveData)
     return gl::Error(GL_NO_ERROR);
 }
 
-void Buffer11::NativeBuffer11::fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Renderer *renderer,
+void Buffer11::NativeBuffer11::fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Renderer11 *renderer,
                                                      BufferUsage usage, unsigned int bufferSize)
 {
     bufferDesc->ByteWidth = bufferSize;

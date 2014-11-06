@@ -54,7 +54,7 @@ class TextureStorage9 : public TextureStorage
 
     Renderer9 *mRenderer;
 
-    TextureStorage9(Renderer *renderer, DWORD usage);
+    TextureStorage9(Renderer9 *renderer, DWORD usage);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage9);
@@ -66,8 +66,8 @@ class TextureStorage9 : public TextureStorage
 class TextureStorage9_2D : public TextureStorage9
 {
   public:
-    TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain);
-    TextureStorage9_2D(Renderer *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels);
+    TextureStorage9_2D(Renderer9 *renderer, SwapChain9 *swapchain);
+    TextureStorage9_2D(Renderer9 *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels);
     virtual ~TextureStorage9_2D();
 
     static TextureStorage9_2D *makeTextureStorage9_2D(TextureStorage *storage);
@@ -88,7 +88,7 @@ class TextureStorage9_2D : public TextureStorage9
 class TextureStorage9_Cube : public TextureStorage9
 {
   public:
-    TextureStorage9_Cube(Renderer *renderer, GLenum internalformat, bool renderTarget, int size, int levels);
+    TextureStorage9_Cube(Renderer9 *renderer, GLenum internalformat, bool renderTarget, int size, int levels);
     virtual ~TextureStorage9_Cube();
 
     static TextureStorage9_Cube *makeTextureStorage9_Cube(TextureStorage *storage);

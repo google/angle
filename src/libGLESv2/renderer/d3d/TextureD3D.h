@@ -23,14 +23,14 @@ namespace rx
 
 class Image;
 class ImageD3D;
-class Renderer;
+class RendererD3D;
 class RenderTarget;
 class TextureStorage;
 
 class TextureD3D : public TextureImpl
 {
   public:
-    TextureD3D(Renderer *renderer);
+    TextureD3D(RendererD3D *renderer);
     virtual ~TextureD3D();
 
     static TextureD3D *makeTextureD3D(TextureImpl *texture);
@@ -87,7 +87,7 @@ class TextureD3D : public TextureImpl
     virtual gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage) = 0;
     gl::Error commitRegion(const gl::ImageIndex &index, const gl::Box &region);
 
-    Renderer *mRenderer;
+    RendererD3D *mRenderer;
 
     GLenum mUsage;
 
@@ -109,7 +109,7 @@ class TextureD3D : public TextureImpl
 class TextureD3D_2D : public TextureD3D
 {
   public:
-    TextureD3D_2D(Renderer *renderer);
+    TextureD3D_2D(RendererD3D *renderer);
     virtual ~TextureD3D_2D();
 
     virtual Image *getImage(int level, int layer) const;
@@ -164,7 +164,7 @@ class TextureD3D_2D : public TextureD3D
 class TextureD3D_Cube : public TextureD3D
 {
   public:
-    TextureD3D_Cube(Renderer *renderer);
+    TextureD3D_Cube(RendererD3D *renderer);
     virtual ~TextureD3D_Cube();
 
     virtual Image *getImage(int level, int layer) const;
@@ -220,7 +220,7 @@ class TextureD3D_Cube : public TextureD3D
 class TextureD3D_3D : public TextureD3D
 {
   public:
-    TextureD3D_3D(Renderer *renderer);
+    TextureD3D_3D(RendererD3D *renderer);
     virtual ~TextureD3D_3D();
 
     virtual Image *getImage(int level, int layer) const;
@@ -274,7 +274,7 @@ class TextureD3D_3D : public TextureD3D
 class TextureD3D_2DArray : public TextureD3D
 {
   public:
-    TextureD3D_2DArray(Renderer *renderer);
+    TextureD3D_2DArray(RendererD3D *renderer);
     virtual ~TextureD3D_2DArray();
 
     virtual Image *getImage(int level, int layer) const;

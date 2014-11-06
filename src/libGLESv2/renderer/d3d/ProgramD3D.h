@@ -24,13 +24,13 @@ struct VertexFormat;
 
 namespace rx
 {
-
+class RendererD3D;
 class UniformStorage;
 
 class ProgramD3D : public ProgramImpl
 {
   public:
-    ProgramD3D(rx::Renderer *renderer);
+    ProgramD3D(rx::RendererD3D *renderer);
     virtual ~ProgramD3D();
 
     static ProgramD3D *makeProgramD3D(ProgramImpl *impl);
@@ -181,7 +181,7 @@ class ProgramD3D : public ProgramImpl
                                    sh::BlockLayoutEncoder *encoder, std::vector<unsigned int> *blockUniformIndexes,
                                    bool inRowMajorLayout);
 
-    Renderer *mRenderer;
+    RendererD3D *mRenderer;
     DynamicHLSL *mDynamicHLSL;
 
     std::vector<VertexExecutable *> mVertexExecutables;

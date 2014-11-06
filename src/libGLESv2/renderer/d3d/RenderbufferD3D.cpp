@@ -9,12 +9,12 @@
 
 #include "libGLESv2/renderer/d3d/RenderbufferD3D.h"
 
-#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/d3d/RendererD3D.h"
 #include "libGLESv2/renderer/RenderTarget.h"
 
 namespace rx
 {
-RenderbufferD3D::RenderbufferD3D(Renderer *renderer) : mRenderer(renderer)
+RenderbufferD3D::RenderbufferD3D(RendererD3D *renderer) : mRenderer(renderer)
 {
     mRenderTarget = NULL;
 }

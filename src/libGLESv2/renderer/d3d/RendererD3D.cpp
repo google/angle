@@ -12,7 +12,8 @@ namespace rx
 {
 
 RendererD3D::RendererD3D(egl::Display *display)
-    : Renderer(display)
+    : mDisplay(display),
+      mCurrentClientVersion(2)
 {
 }
 
@@ -20,4 +21,11 @@ RendererD3D::~RendererD3D()
 {
 }
 
-}  // namespace rx
+// static
+RendererD3D *RendererD3D::makeRendererD3D(Renderer *renderer)
+{
+    ASSERT(HAS_DYNAMIC_TYPE(RendererD3D*, renderer));
+    return static_cast<RendererD3D*>(renderer);
+}
+
+}

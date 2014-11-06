@@ -16,13 +16,6 @@
 
 #include "angle_gl.h"
 
-namespace rx
-{
-class Renderer;
-class RenderTarget;
-class TextureStorage;
-}
-
 namespace gl
 {
 class Renderbuffer;

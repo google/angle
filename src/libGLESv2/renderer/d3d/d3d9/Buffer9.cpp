@@ -114,7 +114,7 @@ void Buffer9::markTransformFeedbackUsage()
     UNREACHABLE();
 }
 
-Renderer* Buffer9::getRenderer()
+RendererD3D *Buffer9::getRenderer()
 {
     return mRenderer;
 }

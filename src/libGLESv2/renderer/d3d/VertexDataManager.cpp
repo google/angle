@@ -52,7 +52,7 @@ static int StreamingBufferElementCount(const gl::VertexAttribute &attrib, int ve
     return vertexDrawCount;
 }
 
-VertexDataManager::VertexDataManager(Renderer *renderer) : mRenderer(renderer)
+VertexDataManager::VertexDataManager(RendererD3D *renderer) : mRenderer(renderer)
 {
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {

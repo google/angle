@@ -8,7 +8,7 @@
 // class with derivations, classes that perform graphics API agnostic index buffer operations.
 
 #include "libGLESv2/renderer/d3d/IndexBuffer.h"
-#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/d3d/RendererD3D.h"
 
 namespace rx
 {
@@ -35,7 +35,7 @@ void IndexBuffer::updateSerial()
 }
 
 
-IndexBufferInterface::IndexBufferInterface(Renderer *renderer, bool dynamic) : mRenderer(renderer)
+IndexBufferInterface::IndexBufferInterface(RendererD3D *renderer, bool dynamic) : mRenderer(renderer)
 {
     mIndexBuffer = renderer->createIndexBuffer();
 
@@ -130,7 +130,7 @@ gl::Error IndexBufferInterface::setBufferSize(unsigned int bufferSize, GLenum in
     }
 }
 
-StreamingIndexBufferInterface::StreamingIndexBufferInterface(Renderer *renderer) : IndexBufferInterface(renderer, true)
+StreamingIndexBufferInterface::StreamingIndexBufferInterface(RendererD3D *renderer) : IndexBufferInterface(renderer, true)
 {
 }
 
@@ -165,7 +165,7 @@ gl::Error StreamingIndexBufferInterface::reserveBufferSpace(unsigned int size, G
 }
 
 
-StaticIndexBufferInterface::StaticIndexBufferInterface(Renderer *renderer) : IndexBufferInterface(renderer, false)
+StaticIndexBufferInterface::StaticIndexBufferInterface(RendererD3D *renderer) : IndexBufferInterface(renderer, false)
 {
 }
 

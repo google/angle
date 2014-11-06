@@ -6,10 +6,10 @@
 
 // ShaderD3D.cpp: Defines the rx::ShaderD3D class which implements rx::ShaderImpl.
 
-#include "libGLESv2/renderer/d3d/ShaderD3D.h"
-#include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/main.h"
+#include "libGLESv2/renderer/d3d/RendererD3D.h"
+#include "libGLESv2/renderer/d3d/ShaderD3D.h"
 
 #include "common/features.h"
 #include "common/utilities.h"
@@ -67,7 +67,7 @@ const std::vector<VarT> *GetShaderVariables(const std::vector<VarT> *variableLis
     return variableList;
 }
 
-ShaderD3D::ShaderD3D(GLenum type, rx::Renderer *renderer)
+ShaderD3D::ShaderD3D(GLenum type, RendererD3D *renderer)
     : mType(type),
       mRenderer(renderer),
       mShaderVersion(100)

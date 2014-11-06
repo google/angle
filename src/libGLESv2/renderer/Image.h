@@ -25,7 +25,7 @@ struct ImageIndex;
 
 namespace rx
 {
-class Renderer;
+class RendererD3D;
 class RenderTarget;
 class TextureStorage;
 
@@ -47,7 +47,7 @@ class Image
     void markClean() {mDirty = false;}
     virtual bool isDirty() const = 0;
 
-    virtual bool redefine(Renderer *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) = 0;
+    virtual bool redefine(RendererD3D *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) = 0;
 
     virtual gl::Error loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                GLint unpackAlignment, GLenum type, const void *input) = 0;

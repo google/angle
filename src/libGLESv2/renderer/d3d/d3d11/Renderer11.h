@@ -97,14 +97,14 @@ class Renderer11 : public RendererD3D
     virtual void markAllStateDirty();
 
     // lost device
-    void notifyDeviceLost();
-    virtual bool isDeviceLost();
-    virtual bool testDeviceLost(bool notify);
-    virtual bool testDeviceResettable();
+    void notifyDeviceLost() override;
+    bool isDeviceLost() override;
+    bool testDeviceLost(bool notify) override;
+    bool testDeviceResettable() override;
 
-    virtual DWORD getAdapterVendor() const;
-    virtual std::string getRendererDescription() const;
-    virtual GUID getAdapterIdentifier() const;
+    DWORD getAdapterVendor() const override;
+    std::string getRendererDescription() const override;
+    GUID getAdapterIdentifier() const override;
 
     virtual unsigned int getReservedVertexUniformVectors() const;
     virtual unsigned int getReservedFragmentUniformVectors() const;
@@ -142,7 +142,7 @@ class Renderer11 : public RendererD3D
     virtual ProgramImpl *createProgram();
 
     // Shader operations
-    virtual void releaseShaderCompiler();
+    void releaseShaderCompiler() override;
     virtual gl::Error loadExecutable(const void *function, size_t length, rx::ShaderType type,
                                      const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                      bool separatedOutputBuffers, ShaderExecutable **outExecutable);
@@ -154,7 +154,7 @@ class Renderer11 : public RendererD3D
 
     // Image operations
     virtual Image *createImage();
-    virtual gl::Error generateMipmap(Image *dest, Image *source);
+    gl::Error generateMipmap(Image *dest, Image *source) override;
     virtual TextureStorage *createTextureStorage2D(SwapChain *swapChain);
     virtual TextureStorage *createTextureStorage2D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels);
     virtual TextureStorage *createTextureStorageCube(GLenum internalformat, bool renderTarget, int size, int levels);
@@ -214,8 +214,8 @@ class Renderer11 : public RendererD3D
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
 
-    virtual void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const;
-    virtual Workarounds generateWorkarounds() const;
+    void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const override;
+    Workarounds generateWorkarounds() const override;
 
     gl::Error drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
     gl::Error drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);

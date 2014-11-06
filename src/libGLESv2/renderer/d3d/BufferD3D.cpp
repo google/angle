@@ -9,7 +9,6 @@
 #include "libGLESv2/renderer/d3d/BufferD3D.h"
 #include "libGLESv2/renderer/d3d/VertexBuffer.h"
 #include "libGLESv2/renderer/d3d/IndexBuffer.h"
-#include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/main.h"
 
 namespace rx

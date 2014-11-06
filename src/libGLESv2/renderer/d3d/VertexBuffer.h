@@ -26,7 +26,7 @@ struct VertexAttribCurrentValueData;
 
 namespace rx
 {
-class Renderer;
+class RendererD3D;
 
 class VertexBuffer
 {
@@ -60,7 +60,7 @@ class VertexBuffer
 class VertexBufferInterface
 {
   public:
-    VertexBufferInterface(rx::Renderer *renderer, bool dynamic);
+    VertexBufferInterface(rx::RendererD3D *renderer, bool dynamic);
     virtual ~VertexBufferInterface();
 
     gl::Error reserveVertexSpace(const gl::VertexAttribute &attribute, GLsizei count, GLsizei instances);
@@ -90,7 +90,7 @@ class VertexBufferInterface
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexBufferInterface);
 
-    rx::Renderer *const mRenderer;
+    rx::RendererD3D *const mRenderer;
 
     VertexBuffer* mVertexBuffer;
 
@@ -102,7 +102,7 @@ class VertexBufferInterface
 class StreamingVertexBufferInterface : public VertexBufferInterface
 {
   public:
-    StreamingVertexBufferInterface(rx::Renderer *renderer, std::size_t initialSize);
+    StreamingVertexBufferInterface(rx::RendererD3D *renderer, std::size_t initialSize);
     ~StreamingVertexBufferInterface();
 
   protected:
@@ -112,7 +112,7 @@ class StreamingVertexBufferInterface : public VertexBufferInterface
 class StaticVertexBufferInterface : public VertexBufferInterface
 {
   public:
-    explicit StaticVertexBufferInterface(rx::Renderer *renderer);
+    explicit StaticVertexBufferInterface(rx::RendererD3D *renderer);
     ~StaticVertexBufferInterface();
 
     gl::Error storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,

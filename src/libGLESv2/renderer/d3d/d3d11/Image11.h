@@ -22,7 +22,6 @@ class Framebuffer;
 
 namespace rx
 {
-class Renderer;
 class Renderer11;
 class TextureStorage11;
 
@@ -40,7 +39,7 @@ class Image11 : public ImageD3D
 
     virtual gl::Error copyToStorage(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
 
-    virtual bool redefine(Renderer *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease);
+    bool redefine(RendererD3D *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) override;
 
     DXGI_FORMAT getDXGIFormat() const;
 

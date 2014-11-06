@@ -63,7 +63,7 @@ class TransformFeedback;
 class Context
 {
   public:
-    Context(int clientVersion, const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
+    Context(int clientVersion, const Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
 
     virtual ~Context();
 
