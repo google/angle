@@ -622,6 +622,15 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         else
             out << ")";
         break;
+      case EOpInternalFunctionCall:
+        // Function call to an internal helper function.
+        if (visit == PreVisit)
+            out << node->getName() << "(";
+        else if (visit == InVisit)
+            out << ", ";
+        else
+            out << ")";
+        break;
       case EOpParameters:
         // Function parameters.
         ASSERT(visit == PreVisit);

@@ -33,6 +33,7 @@ enum TOperator
     EOpNull,            // if in a node, should only mean a node is still being built
     EOpSequence,        // denotes a list of statements, or parameters, etc.
     EOpFunctionCall,
+    EOpInternalFunctionCall, // Call to an internal helper function
     EOpFunction,        // For function definition
     EOpParameters,      // an aggregate listing the parameters to a function
 
@@ -741,12 +742,38 @@ class TIntermTraverser
     const bool postVisit;
     const bool rightToLeft;
 
+    // If traversers need to replace nodes, they can add the replacements in
+    // mReplacements during traversal and the user of the traverser should call
+    // this function after traversal to perform them.
+    void updateTree();
+
   protected:
     int mDepth;
     int mMaxDepth;
 
     // All the nodes from root to the current node's parent during traversing.
     TVector<TIntermNode *> mPath;
+
+    struct NodeUpdateEntry
+    {
+        NodeUpdateEntry(TIntermNode *_parent,
+                        TIntermNode *_original,
+                        TIntermNode *_replacement,
+                        bool _originalBecomesChildOfReplacement)
+            : parent(_parent),
+              original(_original),
+              replacement(_replacement),
+              originalBecomesChildOfReplacement(_originalBecomesChildOfReplacement) {}
+
+        TIntermNode *parent;
+        TIntermNode *original;
+        TIntermNode *replacement;
+        bool originalBecomesChildOfReplacement;
+    };
+
+    // During traversing, save all the changes that need to happen into
+    // mReplacements, then do them by calling updateTree().
+    std::vector<NodeUpdateEntry> mReplacements;
 };
 
 //

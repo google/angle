@@ -182,10 +182,12 @@ bool TCompiler::compile(const char* const shaderStrings[],
         ++firstSource;
     }
 
+    bool debugShaderPrecision = getResources().WEBGL_debug_shader_precision == 1;
     TIntermediate intermediate(infoSink);
     TParseContext parseContext(symbolTable, extensionBehavior, intermediate,
                                shaderType, shaderSpec, compileOptions, true,
-                               sourcePath, infoSink);
+                               sourcePath, infoSink, debugShaderPrecision);
+
     parseContext.fragmentPrecisionHigh = fragmentPrecisionHigh;
     SetGlobalParseContext(&parseContext);
 
@@ -394,7 +396,8 @@ void TCompiler::setResourceString()
               << ":MaxFragmentInputVectors:" << compileResources.MaxFragmentInputVectors
               << ":MinProgramTexelOffset:" << compileResources.MinProgramTexelOffset
               << ":MaxProgramTexelOffset:" << compileResources.MaxProgramTexelOffset
-              << ":NV_draw_buffers:" << compileResources.NV_draw_buffers;
+              << ":NV_draw_buffers:" << compileResources.NV_draw_buffers
+              << ":WEBGL_debug_shader_precision:" << compileResources.WEBGL_debug_shader_precision;
 
     builtInResourcesString = strstream.str();
 }

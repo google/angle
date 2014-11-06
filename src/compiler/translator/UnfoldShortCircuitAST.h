@@ -24,27 +24,7 @@ class UnfoldShortCircuitAST : public TIntermTraverser
 
     virtual bool visitBinary(Visit visit, TIntermBinary *);
 
-    void updateTree();
-
   private:
-    struct NodeUpdateEntry
-    {
-        NodeUpdateEntry(TIntermNode *_parent,
-                        TIntermNode *_original,
-                        TIntermNode *_replacement)
-            : parent(_parent),
-              original(_original),
-              replacement(_replacement) {}
-
-        TIntermNode *parent;
-        TIntermNode *original;
-        TIntermNode *replacement;
-    };
-
-    // During traversing, save all the replacements that need to happen;
-    // then replace them by calling updateNodes().
-    std::vector<NodeUpdateEntry> replacements;
-
     DISALLOW_COPY_AND_ASSIGN(UnfoldShortCircuitAST);
 };
 

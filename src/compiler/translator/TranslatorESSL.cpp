@@ -6,6 +6,7 @@
 
 #include "compiler/translator/TranslatorESSL.h"
 
+#include "compiler/translator/EmulatePrecision.h"
 #include "compiler/translator/OutputESSL.h"
 #include "angle_gl.h"
 
@@ -21,6 +22,16 @@ void TranslatorESSL::translate(TIntermNode* root) {
     // Write built-in extension behaviors.
     writeExtensionBehavior();
 
+    bool precisionEmulation = getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;
+
+    if (precisionEmulation)
+    {
+        EmulatePrecision emulatePrecision;
+        root->traverse(&emulatePrecision);
+        emulatePrecision.updateTree();
+        emulatePrecision.writeEmulationHelpers(sink, SH_ESSL_OUTPUT);
+    }
+
     // Write emulated built-in functions if needed.
     getBuiltInFunctionEmulator().OutputEmulatedFunctionDefinition(
         sink, getShaderType() == GL_FRAGMENT_SHADER);
@@ -29,7 +40,7 @@ void TranslatorESSL::translate(TIntermNode* root) {
     getArrayBoundsClamper().OutputClampingFunctionDefinition(sink);
 
     // Write translated shader.
-    TOutputESSL outputESSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(), getSymbolTable(), getShaderVersion());
+    TOutputESSL outputESSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(), getSymbolTable(), getShaderVersion(), precisionEmulation);
     root->traverse(&outputESSL);
 }
 

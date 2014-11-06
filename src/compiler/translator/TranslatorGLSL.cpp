@@ -6,8 +6,10 @@
 
 #include "compiler/translator/TranslatorGLSL.h"
 
+#include "compiler/translator/EmulatePrecision.h"
 #include "compiler/translator/OutputGLSL.h"
 #include "compiler/translator/VersionGLSL.h"
+
 
 TranslatorGLSL::TranslatorGLSL(sh::GLenum type, ShShaderSpec spec)
     : TCompiler(type, spec, SH_GLSL_OUTPUT) {
@@ -23,6 +25,16 @@ void TranslatorGLSL::translate(TIntermNode* root) {
 
     // Write extension behaviour as needed
     writeExtensionBehavior();
+
+    bool precisionEmulation = getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;
+
+    if (precisionEmulation)
+    {
+        EmulatePrecision emulatePrecision;
+        root->traverse(&emulatePrecision);
+        emulatePrecision.updateTree();
+        emulatePrecision.writeEmulationHelpers(sink, SH_GLSL_OUTPUT);
+    }
 
     // Write emulated built-in functions if needed.
     getBuiltInFunctionEmulator().OutputEmulatedFunctionDefinition(

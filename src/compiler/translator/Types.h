@@ -325,6 +325,10 @@ class TType
     {
         return primarySize > 1 && secondarySize > 1;
     }
+    bool isNonSquareMatrix() const
+    {
+        return isMatrix() && primarySize != secondarySize;
+    }
     bool isArray() const
     {
         return array ? true : false;

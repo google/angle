@@ -52,6 +52,8 @@
             'compiler/translator/Diagnostics.h',
             'compiler/translator/DirectiveHandler.cpp',
             'compiler/translator/DirectiveHandler.h',
+            'compiler/translator/EmulatePrecision.cpp',
+            'compiler/translator/EmulatePrecision.h',
             'compiler/translator/ExtensionBehavior.h',
             'compiler/translator/FlagStd140Structs.cpp',
             'compiler/translator/FlagStd140Structs.h',

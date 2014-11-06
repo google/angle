@@ -17,10 +17,13 @@ public:
                 ShHashFunction64 hashFunction,
                 NameMap& nameMap,
                 TSymbolTable& symbolTable,
-                int shaderVersion);
+                int shaderVersion,
+                bool forceHighp);
 
 protected:
     virtual bool writeVariablePrecision(TPrecision precision);
+private:
+    bool mForceHighp;
 };
 
 #endif  // COMPILER_TRANSLATOR_OUTPUTESSL_H_

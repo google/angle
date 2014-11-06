@@ -11,8 +11,10 @@ TOutputESSL::TOutputESSL(TInfoSinkBase& objSink,
                          ShHashFunction64 hashFunction,
                          NameMap& nameMap,
                          TSymbolTable& symbolTable,
-                         int shaderVersion)
-    : TOutputGLSLBase(objSink, clampingStrategy, hashFunction, nameMap, symbolTable, shaderVersion)
+                         int shaderVersion,
+                         bool forceHighp)
+    : TOutputGLSLBase(objSink, clampingStrategy, hashFunction, nameMap, symbolTable, shaderVersion),
+      mForceHighp(forceHighp)
 {
 }
 
@@ -22,6 +24,9 @@ bool TOutputESSL::writeVariablePrecision(TPrecision precision)
         return false;
 
     TInfoSinkBase& out = objSink();
-    out << getPrecisionString(precision);
+    if (mForceHighp)
+        out << getPrecisionString(EbpHigh);
+    else
+        out << getPrecisionString(precision);
     return true;
 }

@@ -25,7 +25,7 @@ struct TMatrixFields {
 // they can be passed to the parser without needing a global.
 //
 struct TParseContext {
-    TParseContext(TSymbolTable& symt, TExtensionBehavior& ext, TIntermediate& interm, sh::GLenum type, ShShaderSpec spec, int options, bool checksPrecErrors, const char* sourcePath, TInfoSink& is) :
+    TParseContext(TSymbolTable& symt, TExtensionBehavior& ext, TIntermediate& interm, sh::GLenum type, ShShaderSpec spec, int options, bool checksPrecErrors, const char* sourcePath, TInfoSink& is, bool debugShaderPrecisionSupported) :
             intermediate(interm),
             symbolTable(symt),
             shaderType(type),
@@ -42,7 +42,7 @@ struct TParseContext {
             defaultBlockStorage(EbsShared),
             diagnostics(is),
             shaderVersion(100),
-            directiveHandler(ext, diagnostics, shaderVersion),
+            directiveHandler(ext, diagnostics, shaderVersion, debugShaderPrecisionSupported),
             preprocessor(&diagnostics, &directiveHandler),
             scanner(NULL) {  }
     TIntermediate& intermediate; // to hold and build a parse tree
