@@ -49,6 +49,8 @@
             'libGLESv2/Constants.h',
             'libGLESv2/Context.cpp',
             'libGLESv2/Context.h',
+            'libGLESv2/Data.cpp',
+            'libGLESv2/Data.h',
             'libGLESv2/Error.cpp',
             'libGLESv2/Error.h',
             'libGLESv2/Fence.cpp',

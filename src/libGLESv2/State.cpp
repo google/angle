@@ -10,12 +10,12 @@
 
 #include "libGLESv2/Context.h"
 #include "libGLESv2/Caps.h"
-#include "libGLESv2/VertexArray.h"
-#include "libGLESv2/Query.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/FramebufferAttachment.h"
-#include "libGLESv2/renderer/RenderTarget.h"
+#include "libGLESv2/Query.h"
+#include "libGLESv2/VertexArray.h"
 #include "libGLESv2/formatutils.h"
+#include "libGLESv2/renderer/RenderTarget.h"
 
 namespace gl
 {

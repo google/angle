@@ -179,7 +179,10 @@ Context::~Context()
     }
     mZeroTextures.clear();
 
-    mResourceManager->release();
+    if (mResourceManager)
+    {
+        mResourceManager->release();
+    }
 }
 
 void Context::makeCurrent(egl::Surface *surface)
@@ -2416,6 +2419,11 @@ void Context::initCaps(GLuint clientVersion)
     }
 
     mExtensions.maxSamples = maxSamples;
+}
+
+Data Context::getData() const
+{
+    return Data(mClientVersion, mState, mCaps, mTextureCaps, mExtensions, mResourceManager);
 }
 
 }

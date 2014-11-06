@@ -13,12 +13,12 @@
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 #include "libGLESv2/Caps.h"
+#include "libGLESv2/Constants.h"
+#include "libGLESv2/Data.h"
 #include "libGLESv2/Error.h"
 #include "libGLESv2/HandleAllocator.h"
-#include "libGLESv2/angletypes.h"
-#include "libGLESv2/Constants.h"
 #include "libGLESv2/VertexAttribute.h"
-#include "libGLESv2/State.h"
+#include "libGLESv2/angletypes.h"
 
 #include "angle_gl.h"
 
@@ -215,6 +215,8 @@ class Context
 
     State &getState() { return mState; }
     const State &getState() const { return mState; }
+
+    Data getData() const;
 
     void releaseShaderCompiler();
 

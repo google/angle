@@ -374,6 +374,7 @@
     <ClInclude Include="..\..\..\..\src\libGLESv2\Caps.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\Constants.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\Context.h"/>
+    <ClInclude Include="..\..\..\..\src\libGLESv2\Data.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\Error.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\Fence.h"/>
     <ClInclude Include="..\..\..\..\src\libGLESv2\Framebuffer.h"/>
@@ -527,6 +528,7 @@
     <ClCompile Include="..\..\..\..\src\libGLESv2\Buffer.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\Caps.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\Context.cpp"/>
+    <ClCompile Include="..\..\..\..\src\libGLESv2\Data.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\Error.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\Fence.cpp"/>
     <ClCompile Include="..\..\..\..\src\libGLESv2\Float16ToFloat32.cpp"/>
