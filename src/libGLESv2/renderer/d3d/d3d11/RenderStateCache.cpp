@@ -38,11 +38,14 @@ const unsigned int RenderStateCache::kMaxRasterizerStates = 4096;
 const unsigned int RenderStateCache::kMaxDepthStencilStates = 4096;
 const unsigned int RenderStateCache::kMaxSamplerStates = 4096;
 
-RenderStateCache::RenderStateCache() : mDevice(NULL), mCounter(0),
-                                       mBlendStateCache(kMaxBlendStates, hashBlendState, compareBlendStates),
-                                       mRasterizerStateCache(kMaxRasterizerStates, hashRasterizerState, compareRasterizerStates),
-                                       mDepthStencilStateCache(kMaxDepthStencilStates, hashDepthStencilState, compareDepthStencilStates),
-                                       mSamplerStateCache(kMaxSamplerStates, hashSamplerState, compareSamplerStates)
+RenderStateCache::RenderStateCache(rx::Renderer11 *renderer)
+    : mRenderer(renderer),
+      mDevice(NULL),
+      mCounter(0),
+      mBlendStateCache(kMaxBlendStates, hashBlendState, compareBlendStates),
+      mRasterizerStateCache(kMaxRasterizerStates, hashRasterizerState, compareRasterizerStates),
+      mDepthStencilStateCache(kMaxDepthStencilStates, hashDepthStencilState, compareDepthStencilStates),
+      mSamplerStateCache(kMaxSamplerStates, hashSamplerState, compareSamplerStates)
 {
 }
 
@@ -89,7 +92,7 @@ gl::Error RenderStateCache::getBlendState(const gl::Framebuffer *framebuffer, co
 
     bool mrt = false;
 
-    const gl::ColorbufferInfo &colorbuffers = framebuffer->getColorbuffersForRender();
+    const gl::ColorbufferInfo &colorbuffers = framebuffer->getColorbuffersForRender(mRenderer->getWorkarounds());
 
     BlendStateKey key = { 0 };
     key.blendState = blendState;

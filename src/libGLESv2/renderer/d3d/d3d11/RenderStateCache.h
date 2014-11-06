@@ -28,7 +28,7 @@ class Renderer11;
 class RenderStateCache
 {
   public:
-    RenderStateCache();
+    RenderStateCache(rx::Renderer11 *renderer);
     virtual ~RenderStateCache();
 
     void initialize(ID3D11Device *device);
@@ -42,6 +42,7 @@ class RenderStateCache
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderStateCache);
 
+    rx::Renderer11 *mRenderer;
     unsigned long long mCounter;
 
     // Blend state cache

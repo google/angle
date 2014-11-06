@@ -20,21 +20,24 @@
 
 namespace rx
 {
-class Renderer;
 class RenderbufferImpl;
+struct Workarounds;
 }
 
 namespace gl
 {
 class FramebufferAttachment;
 struct Caps;
+struct Extensions;
+class TextureCapsMap;
+struct Data;
 
 typedef std::vector<FramebufferAttachment *> ColorbufferInfo;
 
 class Framebuffer
 {
   public:
-    Framebuffer(rx::Renderer *renderer, GLuint id);
+    Framebuffer(GLuint id);
 
     virtual ~Framebuffer();
 
@@ -65,10 +68,10 @@ class Framebuffer
     bool isEnabledColorAttachment(unsigned int colorAttachment) const;
     bool hasEnabledColorAttachment() const;
     bool hasStencil() const;
-    int getSamples() const;
+    int getSamples(const gl::Data &data) const;
     bool usingExtendedDrawBuffers() const;
 
-    virtual GLenum completeness() const;
+    virtual GLenum completeness(const gl::Data &data) const;
     bool hasValidDepthStencil() const;
 
     Error invalidate(const Caps &caps, GLsizei numAttachments, const GLenum *attachments);
@@ -77,11 +80,9 @@ class Framebuffer
     // Use this method to retrieve the color buffer map when doing rendering.
     // It will apply a workaround for poor shader performance on some systems
     // by compacting the list to skip NULL values.
-    ColorbufferInfo getColorbuffersForRender() const;
+    ColorbufferInfo getColorbuffersForRender(const rx::Workarounds &workarounds) const;
 
   protected:
-    rx::Renderer *mRenderer;
-
     GLuint mId;
 
     FramebufferAttachment *mColorbuffers[IMPLEMENTATION_MAX_DRAW_BUFFERS];
@@ -100,9 +101,9 @@ class Framebuffer
 class DefaultFramebuffer : public Framebuffer
 {
   public:
-    DefaultFramebuffer(rx::Renderer *Renderer, rx::RenderbufferImpl *colorbuffer, rx::RenderbufferImpl *depthStencil);
+    DefaultFramebuffer(rx::RenderbufferImpl *colorbuffer, rx::RenderbufferImpl *depthStencil);
 
-    virtual GLenum completeness() const;
+    GLenum completeness(const gl::Data &data) const override;
     virtual FramebufferAttachment *getAttachment(GLenum attachment) const;
 
   private:

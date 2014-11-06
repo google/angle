@@ -72,9 +72,8 @@ unsigned int GetAttachmentSerial(gl::FramebufferAttachment *attachment)
 namespace gl
 {
 
-Framebuffer::Framebuffer(rx::Renderer *renderer, GLuint id)
-    : mRenderer(renderer),
-      mId(id),
+Framebuffer::Framebuffer(GLuint id)
+    : mId(id),
       mReadBufferState(GL_COLOR_ATTACHMENT0_EXT),
       mDepthbuffer(NULL),
       mStencilbuffer(NULL)
@@ -388,14 +387,13 @@ bool Framebuffer::usingExtendedDrawBuffers() const
     return false;
 }
 
-GLenum Framebuffer::completeness() const
+GLenum Framebuffer::completeness(const gl::Data &data) const
 {
     int width = 0;
     int height = 0;
     unsigned int colorbufferSize = 0;
     int samples = -1;
     bool missingAttachment = true;
-    GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
     for (unsigned int colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
@@ -409,8 +407,7 @@ GLenum Framebuffer::completeness() const
             }
 
             GLenum internalformat = colorbuffer->getInternalFormat();
-            // TODO(geofflang): use context's texture caps
-            const TextureCaps &formatCaps = mRenderer->getRendererTextureCaps().get(internalformat);
+            const TextureCaps &formatCaps = data.textureCaps->get(internalformat);
             const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
             if (colorbuffer->isTexture())
             {
@@ -449,7 +446,7 @@ GLenum Framebuffer::completeness() const
 
                 // in GLES 2.0, all color attachments attachments must have the same number of bitplanes
                 // in GLES 3.0, there is no such restriction
-                if (clientVersion < 3)
+                if (data.clientVersion < 3)
                 {
                     if (formatInfo.pixelBytes != colorbufferSize)
                     {
@@ -489,14 +486,12 @@ GLenum Framebuffer::completeness() const
         }
 
         GLenum internalformat = mDepthbuffer->getInternalFormat();
-        // TODO(geofflang): use context's texture caps
-        const TextureCaps &formatCaps = mRenderer->getRendererTextureCaps().get(internalformat);
+        const TextureCaps &formatCaps = data.textureCaps->get(internalformat);
         const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
         if (mDepthbuffer->isTexture())
         {
             // depth texture attachments require OES/ANGLE_depth_texture
-            // TODO(geofflang): use context's extensions
-            if (!mRenderer->getRendererExtensions().depthTextures)
+            if (!data.extensions->depthTextures)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -544,15 +539,13 @@ GLenum Framebuffer::completeness() const
         }
 
         GLenum internalformat = mStencilbuffer->getInternalFormat();
-        // TODO(geofflang): use context's texture caps
-        const TextureCaps &formatCaps = mRenderer->getRendererTextureCaps().get(internalformat);
+        const TextureCaps &formatCaps = data.textureCaps->get(internalformat);
         const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
         if (mStencilbuffer->isTexture())
         {
             // texture stencil attachments come along as part
             // of OES_packed_depth_stencil + OES/ANGLE_depth_texture
-            // TODO(geofflang): use context's extensions
-            if (!mRenderer->getRendererExtensions().depthTextures)
+            if (!data.extensions->depthTextures)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -616,7 +609,6 @@ Error Framebuffer::invalidate(const Caps &caps, GLsizei numAttachments, const GL
 
 Error Framebuffer::invalidateSub(GLsizei numAttachments, const GLenum *attachments, GLint x, GLint y, GLsizei width, GLsizei height)
 {
-    ASSERT(completeness() == GL_FRAMEBUFFER_COMPLETE);
     for (GLsizei attachIndex = 0; attachIndex < numAttachments; ++attachIndex)
     {
         GLenum attachmentTarget = attachments[attachIndex];
@@ -640,8 +632,8 @@ Error Framebuffer::invalidateSub(GLsizei numAttachments, const GLenum *attachmen
     return Error(GL_NO_ERROR);
 }
 
-DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, rx::RenderbufferImpl *colorbuffer, rx::RenderbufferImpl *depthStencil)
-    : Framebuffer(renderer, 0)
+DefaultFramebuffer::DefaultFramebuffer(rx::RenderbufferImpl *colorbuffer, rx::RenderbufferImpl *depthStencil)
+    : Framebuffer(0)
 {
     Renderbuffer *colorRenderbuffer = new Renderbuffer(colorbuffer, 0);
     mColorbuffers[0] = new RenderbufferAttachment(GL_BACK, colorRenderbuffer);
@@ -657,9 +649,9 @@ DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, rx::RenderbufferI
     mReadBufferState = GL_BACK;
 }
 
-int Framebuffer::getSamples() const
+int Framebuffer::getSamples(const gl::Data &data) const
 {
-    if (completeness() == GL_FRAMEBUFFER_COMPLETE)
+    if (completeness(data) == GL_FRAMEBUFFER_COMPLETE)
     {
         // for a complete framebuffer, all attachments must have the same sample count
         // in this case return the first nonzero sample size
@@ -684,7 +676,7 @@ bool Framebuffer::hasValidDepthStencil() const
             mDepthbuffer->id() == mStencilbuffer->id());
 }
 
-ColorbufferInfo Framebuffer::getColorbuffersForRender() const
+ColorbufferInfo Framebuffer::getColorbuffersForRender(const rx::Workarounds &workarounds) const
 {
     ColorbufferInfo colorbuffersForRender;
 
@@ -698,7 +690,7 @@ ColorbufferInfo Framebuffer::getColorbuffersForRender() const
             ASSERT(drawBufferState == GL_BACK || drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + colorAttachment));
             colorbuffersForRender.push_back(colorbuffer);
         }
-        else if (!mRenderer->getWorkarounds().mrtPerfWorkaround)
+        else if (!workarounds.mrtPerfWorkaround)
         {
             colorbuffersForRender.push_back(NULL);
         }
@@ -707,7 +699,7 @@ ColorbufferInfo Framebuffer::getColorbuffersForRender() const
     return colorbuffersForRender;
 }
 
-GLenum DefaultFramebuffer::completeness() const
+GLenum DefaultFramebuffer::completeness(const gl::Data &) const
 {
     // The default framebuffer *must* always be complete, though it may not be
     // subject to the same rules as application FBOs. ie, it could have 0x0 size.

@@ -621,7 +621,8 @@ GLenum GL_APIENTRY glCheckFramebufferStatus(GLenum target)
 
         gl::Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
         ASSERT(framebuffer);
-        return framebuffer->completeness();
+
+        return framebuffer->completeness(context->getData());
     }
 
     return 0;
@@ -635,8 +636,9 @@ void GL_APIENTRY glClear(GLbitfield mask)
     if (context)
     {
         gl::Framebuffer *framebufferObject = context->getState().getDrawFramebuffer();
+        ASSERT(framebufferObject);
 
-        if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
+        if (framebufferObject->completeness(context->getData()) != GL_FRAMEBUFFER_COMPLETE)
         {
             context->recordError(gl::Error(GL_INVALID_FRAMEBUFFER_OPERATION));
             return;
@@ -1638,6 +1640,7 @@ void GL_APIENTRY glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum
         }
 
         gl::Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
+        ASSERT(framebuffer);
 
         if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
         {
@@ -2285,6 +2288,7 @@ void GL_APIENTRY glGetFramebufferAttachmentParameteriv(GLenum target, GLenum att
 
         GLuint framebufferHandle = context->getState().getTargetFramebuffer(target)->id();
         gl::Framebuffer *framebuffer = context->getFramebuffer(framebufferHandle);
+        ASSERT(framebuffer);
 
         if (framebufferHandle == 0)
         {
@@ -8288,7 +8292,9 @@ void GL_APIENTRY glInvalidateFramebuffer(GLenum target, GLsizei numAttachments, 
         }
 
         gl::Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
-        if (framebuffer && framebuffer->completeness() == GL_FRAMEBUFFER_COMPLETE)
+        ASSERT(framebuffer);
+
+        if (framebuffer->completeness(context->getData()) == GL_FRAMEBUFFER_COMPLETE)
         {
             gl::Error error = framebuffer->invalidate(context->getCaps(), numAttachments, attachments);
             if (error.isError())
@@ -8321,7 +8327,9 @@ void GL_APIENTRY glInvalidateSubFramebuffer(GLenum target, GLsizei numAttachment
         }
 
         gl::Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
-        if (framebuffer && framebuffer->completeness() == GL_FRAMEBUFFER_COMPLETE)
+        ASSERT(framebuffer);
+
+        if (framebuffer->completeness(context->getData()) == GL_FRAMEBUFFER_COMPLETE)
         {
             gl::Error error = framebuffer->invalidateSub(numAttachments, attachments, x, y, width, height);
             if (error.isError())
@@ -8611,6 +8619,8 @@ void GL_APIENTRY glDrawBuffersEXT(GLsizei n, const GLenum *bufs)
             return;
         }
 
+        ASSERT(context->getState().getDrawFramebuffer());
+
         if (context->getState().getDrawFramebuffer()->id() == 0)
         {
             if (n != 1)
@@ -8639,6 +8649,7 @@ void GL_APIENTRY glDrawBuffersEXT(GLsizei n, const GLenum *bufs)
         }
 
         gl::Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
+        ASSERT(framebuffer);
 
         for (unsigned int colorAttachment = 0; colorAttachment < static_cast<unsigned int>(n); colorAttachment++)
         {

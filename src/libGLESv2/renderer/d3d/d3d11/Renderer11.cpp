@@ -96,7 +96,8 @@ ID3D11Resource *GetSRVResource(ID3D11ShaderResourceView *srv)
 
 Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, const egl::AttributeMap &attributes)
     : Renderer(display),
-      mDc(hDc)
+      mDc(hDc),
+      mStateCache(this)
 {
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
@@ -868,7 +869,7 @@ gl::Error Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
     ID3D11RenderTargetView* framebufferRTVs[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {NULL};
     bool missingColorRenderTarget = true;
 
-    const gl::ColorbufferInfo &colorbuffers = framebuffer->getColorbuffersForRender();
+    const gl::ColorbufferInfo &colorbuffers = framebuffer->getColorbuffersForRender(getWorkarounds());
 
     for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
     {

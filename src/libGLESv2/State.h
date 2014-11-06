@@ -25,6 +25,7 @@ class Query;
 class VertexArray;
 class Context;
 struct Caps;
+struct Data;
 
 class State
 {
@@ -236,7 +237,7 @@ class State
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params);
     void getFloatv(GLenum pname, GLfloat *params);
-    void getIntegerv(GLenum pname, GLint *params);
+    void getIntegerv(const gl::Data &data, GLenum pname, GLint *params);
     bool getIndexedIntegerv(GLenum target, GLuint index, GLint *data);
     bool getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data);
 
