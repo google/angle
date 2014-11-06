@@ -1307,153 +1307,47 @@ Error Context::clear(GLbitfield mask)
         return Error(GL_NO_ERROR);
     }
 
-    ClearParameters clearParams = mState.getClearParameters(mask);
-
-    //TODO(jmadill): Renderer refactor
-    rx::RendererD3D *rendererD3D = rx::RendererD3D::makeRendererD3D(mRenderer);
-
-    // Clips the clear to the scissor rectangle but not the viewport
-    Error error = rendererD3D->applyRenderTarget(getData(), GL_TRIANGLES, true);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
+    return mRenderer->clear(getData(), mask);
 }
 
-Error Context::clearBufferfv(GLenum buffer, int drawbuffer, const float *values)
+Error Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *values)
 {
     if (mState.isRasterizerDiscardEnabled())
     {
         return Error(GL_NO_ERROR);
     }
 
-    // glClearBufferfv can be called to clear the color buffer or depth buffer
-    ClearParameters clearParams = mState.getClearParameters(0);
-
-    if (buffer == GL_COLOR)
-    {
-        for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
-        {
-            clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
-        }
-        clearParams.colorFClearValue = ColorF(values[0], values[1], values[2], values[3]);
-        clearParams.colorClearType = GL_FLOAT;
-    }
-
-    if (buffer == GL_DEPTH)
-    {
-        clearParams.clearDepth = true;
-        clearParams.depthClearValue = values[0];
-    }
-
-    //TODO(jmadill): Renderer refactor
-    rx::RendererD3D *rendererD3D = rx::RendererD3D::makeRendererD3D(mRenderer);
-
-    // Clips the clear to the scissor rectangle but not the viewport
-    Error error = rendererD3D->applyRenderTarget(getData(), GL_TRIANGLES, true);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
+    return mRenderer->clearBufferfv(getData(), buffer, drawbuffer, values);
 }
 
-Error Context::clearBufferuiv(GLenum buffer, int drawbuffer, const unsigned int *values)
+Error Context::clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *values)
 {
     if (mState.isRasterizerDiscardEnabled())
     {
         return Error(GL_NO_ERROR);
     }
 
-    // glClearBufferuv can only be called to clear a color buffer
-    ClearParameters clearParams = mState.getClearParameters(0);
-    for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
-    {
-        clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
-    }
-    clearParams.colorUIClearValue = ColorUI(values[0], values[1], values[2], values[3]);
-    clearParams.colorClearType = GL_UNSIGNED_INT;
-
-    //TODO(jmadill): Renderer refactor
-    rx::RendererD3D *rendererD3D = rx::RendererD3D::makeRendererD3D(mRenderer);
-
-    // Clips the clear to the scissor rectangle but not the viewport
-    Error error = rendererD3D->applyRenderTarget(getData(), GL_TRIANGLES, true);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
+    return mRenderer->clearBufferuiv(getData(), buffer, drawbuffer, values);
 }
 
-Error Context::clearBufferiv(GLenum buffer, int drawbuffer, const int *values)
+Error Context::clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values)
 {
     if (mState.isRasterizerDiscardEnabled())
     {
         return Error(GL_NO_ERROR);
     }
 
-    // glClearBufferfv can be called to clear the color buffer or stencil buffer
-    ClearParameters clearParams = mState.getClearParameters(0);
-
-    if (buffer == GL_COLOR)
-    {
-        for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
-        {
-            clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
-        }
-        clearParams.colorIClearValue = ColorI(values[0], values[1], values[2], values[3]);
-        clearParams.colorClearType = GL_INT;
-    }
-
-    if (buffer == GL_STENCIL)
-    {
-        clearParams.clearStencil = true;
-        clearParams.stencilClearValue = values[1];
-    }
-
-    //TODO(jmadill): Renderer refactor
-    rx::RendererD3D *rendererD3D = rx::RendererD3D::makeRendererD3D(mRenderer);
-
-    // Clips the clear to the scissor rectangle but not the viewport
-    Error error = rendererD3D->applyRenderTarget(getData(), GL_TRIANGLES, true);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
+    return mRenderer->clearBufferiv(getData(), buffer, drawbuffer, values);
 }
 
-Error Context::clearBufferfi(GLenum buffer, int drawbuffer, float depth, int stencil)
+Error Context::clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
 {
     if (mState.isRasterizerDiscardEnabled())
     {
         return Error(GL_NO_ERROR);
     }
 
-    // glClearBufferfi can only be called to clear a depth stencil buffer
-    ClearParameters clearParams = mState.getClearParameters(0);
-    clearParams.clearDepth = true;
-    clearParams.depthClearValue = depth;
-    clearParams.clearStencil = true;
-    clearParams.stencilClearValue = stencil;
-
-    //TODO(jmadill): Renderer refactor
-    rx::RendererD3D *rendererD3D = rx::RendererD3D::makeRendererD3D(mRenderer);
-
-    // Clips the clear to the scissor rectangle but not the viewport
-    Error error = rendererD3D->applyRenderTarget(getData(), GL_TRIANGLES, true);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    return mRenderer->clear(clearParams, mState.getDrawFramebuffer());
+    return mRenderer->clearBufferfi(getData(), buffer, drawbuffer, depth, stencil);
 }
 
 Error Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,

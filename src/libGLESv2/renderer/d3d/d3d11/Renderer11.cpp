@@ -1643,7 +1643,7 @@ gl::Error Renderer11::applyUniforms(const ProgramImpl &program, const std::vecto
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
+gl::Error Renderer11::clear(const gl::ClearParameters &clearParams, const gl::Framebuffer *frameBuffer)
 {
     gl::Error error = mClear->clearFramebuffer(clearParams, frameBuffer);
     if (error.isError())

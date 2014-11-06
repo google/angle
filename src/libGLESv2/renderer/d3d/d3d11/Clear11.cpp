@@ -148,7 +148,7 @@ Clear11::~Clear11()
     SafeRelease(mRasterizerState);
 }
 
-gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
+gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, const gl::Framebuffer *frameBuffer)
 {
     // First determine if a scissored clear is needed, this will always require drawing a quad.
     //

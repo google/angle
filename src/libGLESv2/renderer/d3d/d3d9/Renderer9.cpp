@@ -1868,7 +1868,7 @@ void Renderer9::applyUniformnbv(gl::LinkedUniform *targetUniform, const GLint *v
     applyUniformnfv(targetUniform, (GLfloat*)vector);
 }
 
-gl::Error Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
+gl::Error Renderer9::clear(const gl::ClearParameters &clearParams, const gl::Framebuffer *frameBuffer)
 {
     if (clearParams.colorClearType != GL_FLOAT)
     {

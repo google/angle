@@ -176,10 +176,10 @@ class Context
     bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
 
     Error clear(GLbitfield mask);
-    Error clearBufferfv(GLenum buffer, int drawbuffer, const float *values);
-    Error clearBufferuiv(GLenum buffer, int drawbuffer, const unsigned int *values);
-    Error clearBufferiv(GLenum buffer, int drawbuffer, const int *values);
-    Error clearBufferfi(GLenum buffer, int drawbuffer, float depth, int stencil);
+    Error clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *values);
+    Error clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *values);
+    Error clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values);
+    Error clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil);
 
     Error readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei *bufSize, void* pixels);
     Error drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances);

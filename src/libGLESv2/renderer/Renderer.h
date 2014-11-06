@@ -85,8 +85,13 @@ class Renderer
                                    const GLvoid *indices, GLsizei instances,
                                    const RangeUI &indexRange) = 0;
 
+    virtual gl::Error clear(const gl::Data &data, GLbitfield mask) = 0;
+    virtual gl::Error clearBufferfv(const gl::Data &data, GLenum buffer, GLint drawbuffer, const GLfloat *values) = 0;
+    virtual gl::Error clearBufferuiv(const gl::Data &data, GLenum buffer, GLint drawbuffer, const GLuint *values) = 0;
+    virtual gl::Error clearBufferiv(const gl::Data &data, GLenum buffer, GLint drawbuffer, const GLint *values) = 0;
+    virtual gl::Error clearBufferfi(const gl::Data &data, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil) = 0;
+
     // TODO(jmadill): pass state and essetial params only
-    virtual gl::Error clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer) = 0;
     virtual gl::Error readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
                                  GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels) = 0;
 
