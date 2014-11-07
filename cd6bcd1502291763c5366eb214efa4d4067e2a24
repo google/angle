@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "558caab9_ecf693a2",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 622,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-07T19:18:13Z",
+      "side": 1,
+      "message": "Agreed, I\u0027ll take a look and add a patch after this.",
+      "parentUuid": "558caab9_7147c015",
+      "revId": "cd6bcd1502291763c5366eb214efa4d4067e2a24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "558caab9_91444c11",
         "filename": "src/libGLESv2/Framebuffer.cpp",
         "patchSetId": 2
@@ -47,6 +65,24 @@
       "writtenOn": "2014-11-07T16:53:26Z",
       "side": 1,
       "message": "This could alo be a NULL attachment.",
+      "revId": "cd6bcd1502291763c5366eb214efa4d4067e2a24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9558e21b_f589f003",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-07T19:18:13Z",
+      "side": 1,
+      "message": "This should be covered by the if-statement above.",
+      "parentUuid": "558caab9_91444c11",
       "revId": "cd6bcd1502291763c5366eb214efa4d4067e2a24",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
