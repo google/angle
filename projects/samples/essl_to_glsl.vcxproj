@@ -57,7 +57,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;4264;4447;4075;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4075;4100;4127;4239;4244;4245;4251;4264;4267;4447;4512;4530;4702;4718;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
@@ -101,7 +101,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;4264;4447;4075;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4075;4100;4127;4239;4244;4245;4251;4264;4267;4447;4512;4530;4702;4718;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
@@ -144,7 +144,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;4264;4447;4075;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4075;4100;4127;4239;4244;4245;4251;4264;4267;4447;4512;4530;4702;4718;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
@@ -187,7 +187,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4100;4127;4239;4244;4245;4251;4512;4702;4530;4718;4267;4264;4447;4075;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4075;4100;4127;4239;4244;4245;4251;4264;4267;4447;4512;4530;4702;4718;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MinimalRebuild>false</MinimalRebuild>
