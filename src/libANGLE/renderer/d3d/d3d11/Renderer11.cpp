@@ -178,6 +178,7 @@ Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, const eg
 
     mDevice = NULL;
     mDeviceContext = NULL;
+    mDeviceContext1 = NULL;
     mDxgiAdapter = NULL;
     mDxgiFactory = NULL;
 
@@ -329,6 +330,11 @@ EGLint Renderer11::initialize()
     }
 #endif
 #endif
+
+    // Cast the DeviceContext to a DeviceContext1.
+    // This could fail on Windows 7 without the Platform Update.
+    // Don't error in this case- just don't use mDeviceContext1.
+    mDeviceContext1 = d3d11::DynamicCastComObject<ID3D11DeviceContext1>(mDeviceContext);
 
     IDXGIDevice *dxgiDevice = NULL;
     result = mDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
@@ -1893,6 +1899,8 @@ void Renderer11::release()
 
     SafeRelease(mDxgiFactory);
     SafeRelease(mDxgiAdapter);
+
+    SafeRelease(mDeviceContext1);
 
     if (mDeviceContext)
     {
