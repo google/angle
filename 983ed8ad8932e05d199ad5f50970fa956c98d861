@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "753d2e9e_f41d70d1",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-07T17:21:21Z",
+      "side": 1,
+      "message": "nit: typos (\"buffers are\")",
+      "range": {
+        "startLine": 515,
+        "startChar": 22,
+        "endLine": 515,
+        "endChar": 31
+      },
+      "revId": "983ed8ad8932e05d199ad5f50970fa956c98d861",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15c152c3_4554a14c",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-07T17:21:21Z",
+      "side": 1,
+      "message": "It\u0027s good to confirm that we\u0027re not performing contrary to extant drivers, but I\u0027d rather not document \"conforms to \u003csingle vendor\u003e\u0027s driver behavior\" as a justification for implementation details in the code, lest it encourage other contributors to do the same. The specification is what we should be ensuring conformance to-- every vendor has an occasional bug.",
+      "range": {
+        "startLine": 517,
+        "startChar": 7,
+        "endLine": 517,
+        "endChar": 73
+      },
+      "revId": "983ed8ad8932e05d199ad5f50970fa956c98d861",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "753d2e9e_f4d2d091",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-07T17:21:21Z",
+      "side": 1,
+      "message": "Typo (\"why\"). I might simplify this entire line to \"It affects only validation of internalformat in RenderbufferStorageMultisample\".",
+      "range": {
+        "startLine": 518,
+        "startChar": 116,
+        "endLine": 518,
+        "endChar": 119
+      },
+      "revId": "983ed8ad8932e05d199ad5f50970fa956c98d861",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "753d2e9e_14b83c4b",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-07T17:21:21Z",
+      "side": 1,
+      "message": "Typo (\"Multisample\").",
+      "range": {
+        "startLine": 518,
+        "startChar": 77,
+        "endLine": 518,
+        "endChar": 106
+      },
+      "revId": "983ed8ad8932e05d199ad5f50970fa956c98d861",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
