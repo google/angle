@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9558e21b_f5049085",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-07T20:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "553aeaa9_cd8aa9a8",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 30
+      },
+      "revId": "4f3866eb9c5250ac63f939168ba36b0ec470a7b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "553aeaa9_ed8f65b5",
         "filename": "src/libGLESv2/renderer/Renderer.cpp",
         "patchSetId": 15
@@ -36,6 +60,30 @@
       "writtenOn": "2014-11-07T15:35:34Z",
       "side": 1,
       "message": "This too",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 48
+      },
+      "revId": "4f3866eb9c5250ac63f939168ba36b0ec470a7b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "558caab9_6cc283bf",
+        "filename": "src/libGLESv2/renderer/Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-07T20:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "553aeaa9_ed8f65b5",
       "range": {
         "startLine": 15,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "558caab9_8cbfcf30",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-07T20:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "553aeaa9_8da7c14e",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 36
+      },
+      "revId": "4f3866eb9c5250ac63f939168ba36b0ec470a7b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "553aeaa9_cdb1c98c",
         "filename": "src/libGLESv2/renderer/Renderer.h",
         "patchSetId": 15
@@ -82,6 +154,30 @@
       "writtenOn": "2014-11-07T15:35:34Z",
       "side": 1,
       "message": "This too, maybe",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 20
+      },
+      "revId": "4f3866eb9c5250ac63f939168ba36b0ec470a7b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "553aeaa9_9090bade",
+        "filename": "src/libGLESv2/renderer/Renderer.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-07T20:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "553aeaa9_cdb1c98c",
       "range": {
         "startLine": 54,
         "startChar": 0,
