@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "558caab9_3139b8f8",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-07T15:08:35Z",
+      "side": 1,
+      "message": "nit: this got miss-aligned",
+      "range": {
+        "startLine": 519,
+        "startChar": 172,
+        "endLine": 519,
+        "endChar": 271
+      },
+      "revId": "daff0770c74c21d439144c61e38551f4ea5efb07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
