@@ -66,27 +66,23 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    ASSERT(mState.getActiveSampler() == 0);
-
     Texture2D *zeroTexture2D = new Texture2D(mRenderer->createTexture(GL_TEXTURE_2D), 0);
     mZeroTextures[GL_TEXTURE_2D].set(zeroTexture2D);
-    mState.setSamplerTexture(GL_TEXTURE_2D, zeroTexture2D);
 
     TextureCubeMap *zeroTextureCube = new TextureCubeMap(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), 0);
     mZeroTextures[GL_TEXTURE_CUBE_MAP].set(zeroTextureCube);
-    mState.setSamplerTexture(GL_TEXTURE_CUBE_MAP, zeroTextureCube);
 
     if (mClientVersion >= 3)
     {
         // TODO: These could also be enabled via extension
         Texture3D *zeroTexture3D = new Texture3D(mRenderer->createTexture(GL_TEXTURE_3D), 0);
         mZeroTextures[GL_TEXTURE_3D].set(zeroTexture3D);
-        mState.setSamplerTexture(GL_TEXTURE_3D, zeroTexture3D);
 
         Texture2DArray *zeroTexture2DArray = new Texture2DArray(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), 0);
         mZeroTextures[GL_TEXTURE_2D_ARRAY].set(zeroTexture2DArray);
-        mState.setSamplerTexture(GL_TEXTURE_2D_ARRAY, zeroTexture2DArray);
     }
+
+    mState.initializeZeroTextures(mZeroTextures);
 
     bindVertexArray(0);
     bindArrayBuffer(0);
@@ -1413,7 +1409,8 @@ Error Context::generateSwizzles(ProgramBinary *programBinary, SamplerType type)
         GLint textureUnit = programBinary->getSamplerMapping(type, i, getCaps());
         if (textureUnit != -1)
         {
-            Texture* texture = getSamplerTexture(textureUnit, textureType);
+            Texture *texture = getSamplerTexture(textureUnit, textureType);
+            ASSERT(texture);
             if (texture->getSamplerState().swizzleRequired())
             {
                 Error error = mRenderer->generateSwizzle(texture);
@@ -1459,6 +1456,7 @@ Error Context::applyTextures(ProgramBinary *programBinary, SamplerType shaderTyp
         if (textureUnit != -1)
         {
             Texture *texture = getSamplerTexture(textureUnit, textureType);
+            ASSERT(texture);
             SamplerState sampler = texture->getSamplerState();
 
             Sampler *samplerObject = mState.getSampler(textureUnit);
@@ -1999,7 +1997,7 @@ void Context::detachTexture(GLuint texture)
     // allocation map management either here or in the resource manager at detach time.
     // Zero textures are held by the Context, and we don't attempt to request them from
     // the State.
-    mState.detachTexture(texture);
+    mState.detachTexture(mZeroTextures, texture);
 }
 
 void Context::detachBuffer(GLuint buffer)

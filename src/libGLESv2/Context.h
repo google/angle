@@ -268,7 +268,6 @@ class Context
 
     int mClientVersion;
 
-    typedef std::map< GLenum, BindingPointer<Texture> > TextureMap;
     TextureMap mZeroTextures;
     TextureMap mIncompleteTextures;
 

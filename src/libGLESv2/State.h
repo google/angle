@@ -27,6 +27,8 @@ class Context;
 struct Caps;
 struct Data;
 
+typedef std::map< GLenum, BindingPointer<Texture> > TextureMap;
+
 class State
 {
   public:
@@ -132,7 +134,8 @@ class State
     void setSamplerTexture(GLenum type, Texture *texture);
     Texture *getSamplerTexture(unsigned int sampler, GLenum type) const;
     GLuint getSamplerTextureId(unsigned int sampler, GLenum type) const;
-    void detachTexture(GLuint texture);
+    void detachTexture(const TextureMap &zeroTextures, GLuint texture);
+    void initializeZeroTextures(const TextureMap &zeroTextures);
 
     // Sampler object binding manipulation
     void setSamplerBinding(GLuint textureUnit, Sampler *sampler);

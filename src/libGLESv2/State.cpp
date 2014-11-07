@@ -621,7 +621,7 @@ GLuint State::getSamplerTextureId(unsigned int sampler, GLenum type) const
     return mSamplerTextures.at(type)[sampler].id();
 }
 
-void State::detachTexture(GLuint texture)
+void State::detachTexture(const TextureMap &zeroTextures, GLuint texture)
 {
     // Textures have a detach method on State rather than a simple
     // removeBinding, because the zero/null texture objects are managed
@@ -634,13 +634,15 @@ void State::detachTexture(GLuint texture)
 
     for (TextureBindingMap::iterator bindingVec = mSamplerTextures.begin(); bindingVec != mSamplerTextures.end(); bindingVec++)
     {
+        GLenum textureType = bindingVec->first;
         TextureBindingVector &textureVector = bindingVec->second;
         for (size_t textureIdx = 0; textureIdx < textureVector.size(); textureIdx++)
         {
             BindingPointer<Texture> &binding = textureVector[textureIdx];
             if (binding.id() == texture)
             {
-                binding.set(NULL);
+                // Zero textures are the "default" textures instead of NULL
+                binding.set(zeroTextures.at(textureType).get());
             }
         }
     }
@@ -658,6 +660,19 @@ void State::detachTexture(GLuint texture)
     if (mDrawFramebuffer)
     {
         mDrawFramebuffer->detachTexture(texture);
+    }
+}
+
+void State::initializeZeroTextures(const TextureMap &zeroTextures)
+{
+    for (const auto &zeroTexture : zeroTextures)
+    {
+        auto &samplerTextureArray = mSamplerTextures[zeroTexture.first];
+
+        for (size_t textureUnit = 0; textureUnit < samplerTextureArray.size(); ++textureUnit)
+        {
+            samplerTextureArray[textureUnit].set(zeroTexture.second.get());
+        }
     }
 }
 
