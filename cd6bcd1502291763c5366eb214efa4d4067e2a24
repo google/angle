@@ -89,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "9558e21b_75442010",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2014-11-07T19:31:14Z",
+      "side": 1,
+      "message": "I was referring to a call to setNULLAttachment(GL_DEPTH_STENCIL_ATTACHMENT) but now I realize that it is covered in the first condition of line 623",
+      "parentUuid": "9558e21b_f589f003",
+      "revId": "cd6bcd1502291763c5366eb214efa4d4067e2a24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9558e21b_d2ffa20c",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 2
