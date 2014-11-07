@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "753d2e9e_745b407a",
+        "filename": "src/libGLESv2/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-07T17:14:09Z",
+      "side": 1,
+      "message": "Given that the spec states that the values of stencil components are represented by unsigned integers, but also implies that they\u0027re not intended to be included when it refers to \"signed and unsigned integer formats\" (because it does discuss their treatment in multisampling, where those formats are disallowed), I\u0027d argue that stencil formats are indeed a special case type (\"index\", probably). That said, I\u0027m okay with the handling of the format in the latest patch, given the comments.",
+      "parentUuid": "f51cbefc_7ddef394",
+      "range": {
+        "startLine": 457,
+        "startChar": 149,
+        "endLine": 457,
+        "endChar": 171
+      },
+      "revId": "fde2970ccbd52661ae022558bd77b4fc57b81fa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "154eb20c_5b29c324",
         "filename": "tests/angle_tests/FramebufferFormatsTest.cpp",
         "patchSetId": 1
