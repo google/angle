@@ -1879,6 +1879,11 @@ bool ValidateGetUniformBase(Context *context, GLuint program, GLint location)
         return false;
     }
 
+    if (!ValidProgram(context, program))
+    {
+        return false;
+    }
+
     gl::Program *programObject = context->getProgram(program);
 
     if (!programObject || !programObject->isLinked())
