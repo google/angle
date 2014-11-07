@@ -2199,7 +2199,7 @@ gl::Error Renderer11::createRenderTarget(SwapChain *swapChain, bool depth, Rende
                                     swapChain11->getDepthStencilTexture(),
                                     swapChain11->getDepthStencilShaderResource(),
                                     swapChain11->GetDepthBufferInternalFormat(),
-                                    swapChain11->getWidth(), swapChain11->getHeight(), 1, 1);
+                                    swapChain11->getWidth(), swapChain11->getHeight(), 1, 0);
     }
     else
     {
@@ -2208,7 +2208,7 @@ gl::Error Renderer11::createRenderTarget(SwapChain *swapChain, bool depth, Rende
                                     swapChain11->getOffscreenTexture(),
                                     swapChain11->getRenderTargetShaderResource(),
                                     swapChain11->GetBackBufferInternalFormat(),
-                                    swapChain11->getWidth(), swapChain11->getHeight(), 1, 1);
+                                    swapChain11->getWidth(), swapChain11->getHeight(), 1, 0);
     }
 
     return gl::Error(GL_NO_ERROR);

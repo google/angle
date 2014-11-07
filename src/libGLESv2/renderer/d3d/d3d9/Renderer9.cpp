@@ -2814,12 +2814,12 @@ gl::Error Renderer9::createRenderTarget(SwapChain *swapChain, bool depth, Render
     if (depth)
     {
         *outRT = new RenderTarget9(swapChain9->getDepthStencil(), swapChain9->GetDepthBufferInternalFormat(),
-                                   swapChain9->getWidth(), swapChain9->getHeight(), 1, 1);
+                                   swapChain9->getWidth(), swapChain9->getHeight(), 1, 0);
     }
     else
     {
         *outRT = new RenderTarget9(swapChain9->getRenderTarget(), swapChain9->GetBackBufferInternalFormat(),
-                                   swapChain9->getWidth(), swapChain9->getHeight(), 1, 1);
+                                   swapChain9->getWidth(), swapChain9->getHeight(), 1, 0);
     }
 
     return gl::Error(GL_NO_ERROR);
