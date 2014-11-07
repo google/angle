@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "558caab9_f152f0da",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2014-11-07T16:53:26Z",
+      "side": 1,
+      "message": "Instead of creating a new dummy attachment for stencil, which allocates memory and might invoke backend commands, wouldn\u0027t it be more efficient to just check for pointer equality in all three branches (depth, stencil, depth+stencil)?",
+      "revId": "cd6bcd1502291763c5366eb214efa4d4067e2a24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "558caab9_7147c015",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 622,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2014-11-07T16:53:26Z",
+      "side": 1,
+      "message": "That condition should have been checked in libGLESv2.cpp instead, or we should return an error without deleting the previous attachments.",
+      "revId": "cd6bcd1502291763c5366eb214efa4d4067e2a24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "558caab9_91444c11",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2014-11-07T16:53:26Z",
+      "side": 1,
+      "message": "This could alo be a NULL attachment.",
+      "revId": "cd6bcd1502291763c5366eb214efa4d4067e2a24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9558e21b_d2ffa20c",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1584,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2014-11-07T16:53:26Z",
+      "side": 1,
+      "message": "The first part of this validation is already in ValidateFramebufferRenderbufferParameters and there is almost the second part too (although it only checks framebufferHandle \u003d\u003d 0).",
+      "revId": "cd6bcd1502291763c5366eb214efa4d4067e2a24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
