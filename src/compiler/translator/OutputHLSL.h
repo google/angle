@@ -144,6 +144,7 @@ class OutputHLSL : public TIntermTraverser
     int mUniqueIndex;   // For creating unique names
 
     bool mContainsLoopDiscontinuity;
+    bool mContainsAnyLoop;
     bool mOutputLod0Function;
     bool mInsideDiscontinuousLoop;
     int mNestedLoopDepth;

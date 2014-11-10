@@ -32,6 +32,25 @@ class DetectLoopDiscontinuity : public TIntermTraverser
 
 bool containsLoopDiscontinuity(TIntermNode *node);
 
+// Checks for the existence of any loop
+class DetectAnyLoop : public TIntermTraverser
+{
+public:
+    bool traverse(TIntermNode *node);
+
+protected:
+    bool visitBinary(Visit, TIntermBinary *);
+    bool visitUnary(Visit, TIntermUnary *);
+    bool visitSelection(Visit, TIntermSelection *);
+    bool visitAggregate(Visit, TIntermAggregate *);
+    bool visitLoop(Visit, TIntermLoop *);
+    bool visitBranch(Visit, TIntermBranch *);
+
+    bool mHasLoop;
+};
+
+bool containsAnyLoop(TIntermNode *node);
+
 // Checks for intrinsic functions which compute gradients
 class DetectGradientOperation : public TIntermTraverser
 {
