@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ba0a3312_5b14b7e4",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-10T16:08:52Z",
+      "side": 1,
+      "message": "Do you mean storing mDepthbuffer and mStencilbuffer as the same pointer? Just watch out for deleting the object twice.. maybe you were meaning to reorganize the code so this wouldn\u0027t be an issue.",
+      "parentUuid": "558caab9_f152f0da",
+      "revId": "cd6bcd1502291763c5366eb214efa4d4067e2a24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "558caab9_7147c015",
         "filename": "src/libGLESv2/Framebuffer.cpp",
         "patchSetId": 2
