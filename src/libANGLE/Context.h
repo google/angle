@@ -43,7 +43,6 @@ namespace gl
 {
 class Shader;
 class Program;
-class ProgramBinary;
 class Texture;
 class Texture2D;
 class TextureCubeMap;
@@ -126,8 +125,6 @@ class ANGLE_EXPORT Context
     void bindPixelPackBuffer(GLuint buffer);
     void bindPixelUnpackBuffer(GLuint buffer);
     void useProgram(GLuint program);
-    Error linkProgram(GLuint program);
-    Error setProgramBinary(GLuint program, GLenum binaryFormat, const void *binary, GLint length);
     void bindTransformFeedback(GLuint transformFeedback);
 
     Error beginQuery(GLenum target, GLuint query);

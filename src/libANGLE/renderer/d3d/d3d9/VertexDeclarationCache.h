@@ -15,6 +15,7 @@
 namespace gl
 {
 class VertexDataManager;
+class Program;
 }
 
 namespace rx
@@ -26,7 +27,7 @@ class VertexDeclarationCache
     VertexDeclarationCache();
     ~VertexDeclarationCache();
 
-    gl::Error applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], gl::ProgramBinary *programBinary, GLsizei instances, GLsizei *repeatDraw);
+    gl::Error applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], gl::Program *program, GLsizei instances, GLsizei *repeatDraw);
 
     void markStateDirty();
 

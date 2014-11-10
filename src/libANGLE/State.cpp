@@ -138,8 +138,7 @@ void State::initialize(const Caps& caps, GLuint clientVersion)
     mActiveQueries[GL_ANY_SAMPLES_PASSED_CONSERVATIVE].set(NULL);
     mActiveQueries[GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN].set(NULL);
 
-    mCurrentProgramId = 0;
-    mCurrentProgramBinary.set(NULL);
+    mProgram = NULL;
 
     mReadFramebuffer = NULL;
     mDrawFramebuffer = NULL;
@@ -162,6 +161,12 @@ void State::reset()
 
     mArrayBuffer.set(NULL);
     mRenderbuffer.set(NULL);
+
+    if (mProgram)
+    {
+        mProgram->release();
+    }
+    mProgram = NULL;
 
     mTransformFeedback.set(NULL);
 
@@ -187,6 +192,8 @@ void State::reset()
 
     mPack.pixelBuffer.set(NULL);
     mUnpack.pixelBuffer.set(NULL);
+
+    mProgram = NULL;
 }
 
 const RasterizerState &State::getRasterizerState() const
@@ -845,31 +852,27 @@ bool State::removeVertexArrayBinding(GLuint vertexArray)
     return false;
 }
 
-void State::setCurrentProgram(GLuint programId, Program *newProgram)
+void State::setProgram(Program *newProgram)
 {
-    mCurrentProgramId = programId; // set new ID before trying to delete program binary; otherwise it will only be flagged for deletion
-    mCurrentProgramBinary.set(NULL);
-
-    if (newProgram)
+    if (mProgram != newProgram)
     {
-        newProgram->addRef();
-        mCurrentProgramBinary.set(newProgram->getProgramBinary());
+        if (mProgram)
+        {
+            mProgram->release();
+        }
+
+        mProgram = newProgram;
+
+        if (mProgram)
+        {
+            newProgram->addRef();
+        }
     }
 }
 
-void State::setCurrentProgramBinary(ProgramBinary *binary)
+Program *State::getProgram() const
 {
-    mCurrentProgramBinary.set(binary);
-}
-
-GLuint State::getCurrentProgramId() const
-{
-    return mCurrentProgramId;
-}
-
-ProgramBinary *State::getCurrentProgramBinary() const
-{
-    return mCurrentProgramBinary.get();
+    return mProgram;
 }
 
 void State::setTransformFeedbackBinding(TransformFeedback *transformFeedback)
@@ -1214,7 +1217,7 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
       case GL_READ_FRAMEBUFFER_BINDING_ANGLE:           *params = mReadFramebuffer->id();                         break;
       case GL_RENDERBUFFER_BINDING:                     *params = mRenderbuffer.id();                             break;
       case GL_VERTEX_ARRAY_BINDING:                     *params = mVertexArray->id();                             break;
-      case GL_CURRENT_PROGRAM:                          *params = mCurrentProgramId;                              break;
+      case GL_CURRENT_PROGRAM:                          *params = mProgram ? mProgram->id() : 0;                  break;
       case GL_PACK_ALIGNMENT:                           *params = mPack.alignment;                                break;
       case GL_PACK_REVERSE_ROW_ORDER_ANGLE:             *params = mPack.reverseRowOrder;                          break;
       case GL_UNPACK_ALIGNMENT:                         *params = mUnpack.alignment;                              break;

@@ -21,7 +21,7 @@
 
 namespace gl
 {
-class ProgramBinary;
+class Program;
 }
 
 namespace rx
@@ -39,7 +39,7 @@ class InputLayoutCache
     void markDirty();
 
     gl::Error applyVertexBuffers(TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
-                                 gl::ProgramBinary *programBinary);
+                                 gl::Program *program);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(InputLayoutCache);

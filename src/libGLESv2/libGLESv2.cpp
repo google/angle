@@ -13,8 +13,8 @@
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Renderbuffer.h"
+#include "libANGLE/Shader.h"
 #include "libANGLE/Program.h"
-#include "libANGLE/ProgramBinary.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/Query.h"
 #include "libANGLE/Context.h"
@@ -1996,14 +1996,13 @@ GLint GL_APIENTRY glGetAttribLocation(GLuint program, const GLchar* name)
             }
         }
 
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        if (!programObject->isLinked() || !programBinary)
+        if (!programObject->isLinked())
         {
             context->recordError(gl::Error(GL_INVALID_OPERATION));
             return -1;
         }
 
-        return programBinary->getAttributeLocation(name);
+        return programObject->getAttributeLocation(name);
     }
 
     return -1;
@@ -2546,7 +2545,7 @@ void GL_APIENTRY glGetProgramiv(GLuint program, GLenum pname, GLint* params)
             *params = programObject->getActiveUniformMaxLength();
             return;
           case GL_PROGRAM_BINARY_LENGTH_OES:
-            *params = programObject->getProgramBinaryLength();
+            *params = programObject->getBinaryLength();
             return;
           case GL_ACTIVE_UNIFORM_BLOCKS:
             *params = programObject->getActiveUniformBlockCount();
@@ -3218,10 +3217,8 @@ void GL_APIENTRY glGetnUniformfvEXT(GLuint program, GLint location, GLsizei bufS
 
         gl::Program *programObject = context->getProgram(program);
         ASSERT(programObject);
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        ASSERT(programBinary);
 
-        programBinary->getUniformfv(location, params);
+        programObject->getUniformfv(location, params);
     }
 }
 
@@ -3239,10 +3236,8 @@ void GL_APIENTRY glGetUniformfv(GLuint program, GLint location, GLfloat* params)
 
         gl::Program *programObject = context->getProgram(program);
         ASSERT(programObject);
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        ASSERT(programBinary);
 
-        programBinary->getUniformfv(location, params);
+        programObject->getUniformfv(location, params);
     }
 }
 
@@ -3261,10 +3256,8 @@ void GL_APIENTRY glGetnUniformivEXT(GLuint program, GLint location, GLsizei bufS
 
         gl::Program *programObject = context->getProgram(program);
         ASSERT(programObject);
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        ASSERT(programBinary);
 
-        programBinary->getUniformiv(location, params);
+        programObject->getUniformiv(location, params);
     }
 }
 
@@ -3282,10 +3275,8 @@ void GL_APIENTRY glGetUniformiv(GLuint program, GLint location, GLint* params)
 
         gl::Program *programObject = context->getProgram(program);
         ASSERT(programObject);
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        ASSERT(programBinary);
 
-        programBinary->getUniformiv(location, params);
+        programObject->getUniformiv(location, params);
     }
 }
 
@@ -3317,14 +3308,13 @@ GLint GL_APIENTRY glGetUniformLocation(GLuint program, const GLchar* name)
             }
         }
 
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        if (!programObject->isLinked() || !programBinary)
+        if (!programObject->isLinked())
         {
             context->recordError(gl::Error(GL_INVALID_OPERATION));
             return -1;
         }
 
-        return programBinary->getUniformLocation(name);
+        return programObject->getUniformLocation(name);
     }
 
     return -1;
@@ -3659,7 +3649,7 @@ void GL_APIENTRY glLinkProgram(GLuint program)
             }
         }
 
-        gl::Error error = context->linkProgram(program);
+        gl::Error error = programObject->link(context->getData());
         if (error.isError())
         {
             context->recordError(error);
@@ -4467,8 +4457,8 @@ void GL_APIENTRY glUniform1fv(GLint location, GLsizei count, const GLfloat* v)
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform1fv(location, count, v);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform1fv(location, count, v);
     }
 }
 
@@ -4489,8 +4479,8 @@ void GL_APIENTRY glUniform1iv(GLint location, GLsizei count, const GLint* v)
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform1iv(location, count, v);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform1iv(location, count, v);
     }
 }
 
@@ -4513,8 +4503,8 @@ void GL_APIENTRY glUniform2fv(GLint location, GLsizei count, const GLfloat* v)
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform2fv(location, count, v);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform2fv(location, count, v);
     }
 }
 
@@ -4537,8 +4527,8 @@ void GL_APIENTRY glUniform2iv(GLint location, GLsizei count, const GLint* v)
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform2iv(location, count, v);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform2iv(location, count, v);
     }
 }
 
@@ -4561,8 +4551,8 @@ void GL_APIENTRY glUniform3fv(GLint location, GLsizei count, const GLfloat* v)
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform3fv(location, count, v);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform3fv(location, count, v);
     }
 }
 
@@ -4585,8 +4575,8 @@ void GL_APIENTRY glUniform3iv(GLint location, GLsizei count, const GLint* v)
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform3iv(location, count, v);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform3iv(location, count, v);
     }
 }
 
@@ -4609,8 +4599,8 @@ void GL_APIENTRY glUniform4fv(GLint location, GLsizei count, const GLfloat* v)
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform4fv(location, count, v);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform4fv(location, count, v);
     }
 }
 
@@ -4633,8 +4623,8 @@ void GL_APIENTRY glUniform4iv(GLint location, GLsizei count, const GLint* v)
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform4iv(location, count, v);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform4iv(location, count, v);
     }
 }
 
@@ -4651,8 +4641,8 @@ void GL_APIENTRY glUniformMatrix2fv(GLint location, GLsizei count, GLboolean tra
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniformMatrix2fv(location, count, transpose, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniformMatrix2fv(location, count, transpose, value);
     }
 }
 
@@ -4669,8 +4659,8 @@ void GL_APIENTRY glUniformMatrix3fv(GLint location, GLsizei count, GLboolean tra
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniformMatrix3fv(location, count, transpose, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniformMatrix3fv(location, count, transpose, value);
     }
 }
 
@@ -4687,8 +4677,8 @@ void GL_APIENTRY glUniformMatrix4fv(GLint location, GLsizei count, GLboolean tra
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniformMatrix4fv(location, count, transpose, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniformMatrix4fv(location, count, transpose, value);
     }
 }
 
@@ -5628,8 +5618,8 @@ void GL_APIENTRY glUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean t
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniformMatrix2x3fv(location, count, transpose, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniformMatrix2x3fv(location, count, transpose, value);
     }
 }
 
@@ -5646,8 +5636,8 @@ void GL_APIENTRY glUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean t
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniformMatrix3x2fv(location, count, transpose, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniformMatrix3x2fv(location, count, transpose, value);
     }
 }
 
@@ -5664,8 +5654,8 @@ void GL_APIENTRY glUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean t
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniformMatrix2x4fv(location, count, transpose, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniformMatrix2x4fv(location, count, transpose, value);
     }
 }
 
@@ -5682,8 +5672,8 @@ void GL_APIENTRY glUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean t
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniformMatrix4x2fv(location, count, transpose, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniformMatrix4x2fv(location, count, transpose, value);
     }
 }
 
@@ -5700,8 +5690,8 @@ void GL_APIENTRY glUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean t
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniformMatrix3x4fv(location, count, transpose, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniformMatrix3x4fv(location, count, transpose, value);
     }
 }
 
@@ -5718,8 +5708,8 @@ void GL_APIENTRY glUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean t
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniformMatrix4x3fv(location, count, transpose, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniformMatrix4x3fv(location, count, transpose, value);
     }
 }
 
@@ -6593,10 +6583,8 @@ void GL_APIENTRY glGetUniformuiv(GLuint program, GLint location, GLuint* params)
 
         gl::Program *programObject = context->getProgram(program);
         ASSERT(programObject);
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        ASSERT(programBinary);
 
-        programBinary->getUniformuiv(location, params);
+        programObject->getUniformuiv(location, params);
     }
 }
 
@@ -6628,14 +6616,7 @@ GLint GL_APIENTRY glGetFragDataLocation(GLuint program, const GLchar *name)
             return -1;
         }
 
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        if (!programBinary)
-        {
-            context->recordError(gl::Error(GL_INVALID_OPERATION));
-            return -1;
-        }
-
-        return programBinary->getFragDataLocation(name);
+        return programObject->getFragDataLocation(name);
     }
 
     return 0;
@@ -6677,8 +6658,8 @@ void GL_APIENTRY glUniform1uiv(GLint location, GLsizei count, const GLuint* valu
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform1uiv(location, count, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform1uiv(location, count, value);
     }
 }
 
@@ -6695,8 +6676,8 @@ void GL_APIENTRY glUniform2uiv(GLint location, GLsizei count, const GLuint* valu
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform2uiv(location, count, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform2uiv(location, count, value);
     }
 }
 
@@ -6713,8 +6694,8 @@ void GL_APIENTRY glUniform3uiv(GLint location, GLsizei count, const GLuint* valu
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform3uiv(location, count, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform3uiv(location, count, value);
     }
 }
 
@@ -6731,8 +6712,8 @@ void GL_APIENTRY glUniform4uiv(GLint location, GLsizei count, const GLuint* valu
             return;
         }
 
-        gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
-        programBinary->setUniform4uiv(location, count, value);
+        gl::Program *program = context->getState().getProgram();
+        program->setUniform4uiv(location, count, value);
     }
 }
 
@@ -7030,8 +7011,7 @@ void GL_APIENTRY glGetUniformIndices(GLuint program, GLsizei uniformCount, const
             }
         }
 
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        if (!programObject->isLinked() || !programBinary)
+        if (!programObject->isLinked())
         {
             for (int uniformId = 0; uniformId < uniformCount; uniformId++)
             {
@@ -7042,7 +7022,7 @@ void GL_APIENTRY glGetUniformIndices(GLuint program, GLsizei uniformCount, const
         {
             for (int uniformId = 0; uniformId < uniformCount; uniformId++)
             {
-                uniformIndices[uniformId] = programBinary->getUniformIndex(uniformNames[uniformId]);
+                uniformIndices[uniformId] = programObject->getUniformIndex(uniformNames[uniformId]);
             }
         }
     }
@@ -7101,9 +7081,7 @@ void GL_APIENTRY glGetActiveUniformsiv(GLuint program, GLsizei uniformCount, con
             return;
         }
 
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-
-        if (!programBinary && uniformCount > 0)
+        if (uniformCount > 0)
         {
             context->recordError(gl::Error(GL_INVALID_VALUE));
             return;
@@ -7113,7 +7091,7 @@ void GL_APIENTRY glGetActiveUniformsiv(GLuint program, GLsizei uniformCount, con
         {
             const GLuint index = uniformIndices[uniformId];
 
-            if (index >= (GLuint)programBinary->getActiveUniformCount())
+            if (index >= static_cast<GLuint>(programObject->getActiveUniformCount()))
             {
                 context->recordError(gl::Error(GL_INVALID_VALUE));
                 return;
@@ -7123,7 +7101,7 @@ void GL_APIENTRY glGetActiveUniformsiv(GLuint program, GLsizei uniformCount, con
         for (int uniformId = 0; uniformId < uniformCount; uniformId++)
         {
             const GLuint index = uniformIndices[uniformId];
-            params[uniformId] = programBinary->getActiveUniformi(index, pname);
+            params[uniformId] = programObject->getActiveUniformi(index, pname);
         }
     }
 }
@@ -7157,13 +7135,7 @@ GLuint GL_APIENTRY glGetUniformBlockIndex(GLuint program, const GLchar* uniformB
             }
         }
 
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-        if (!programBinary)
-        {
-            return GL_INVALID_INDEX;
-        }
-
-        return programBinary->getUniformBlockIndex(uniformBlockName);
+        return programObject->getUniformBlockIndex(uniformBlockName);
     }
 
     return 0;
@@ -7198,9 +7170,7 @@ void GL_APIENTRY glGetActiveUniformBlockiv(GLuint program, GLuint uniformBlockIn
             }
         }
 
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-
-        if (!programBinary || uniformBlockIndex >= programBinary->getActiveUniformBlockCount())
+        if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
         {
             context->recordError(gl::Error(GL_INVALID_VALUE));
             return;
@@ -7218,7 +7188,7 @@ void GL_APIENTRY glGetActiveUniformBlockiv(GLuint program, GLuint uniformBlockIn
           case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
           case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
           case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
-            programBinary->getActiveUniformBlockiv(uniformBlockIndex, pname, params);
+            programObject->getActiveUniformBlockiv(uniformBlockIndex, pname, params);
             break;
 
           default:
@@ -7258,15 +7228,13 @@ void GL_APIENTRY glGetActiveUniformBlockName(GLuint program, GLuint uniformBlock
             }
         }
 
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-
-        if (!programBinary || uniformBlockIndex >= programBinary->getActiveUniformBlockCount())
+        if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
         {
             context->recordError(gl::Error(GL_INVALID_VALUE));
             return;
         }
 
-        programBinary->getActiveUniformBlockName(uniformBlockIndex, bufSize, length, uniformBlockName);
+        programObject->getActiveUniformBlockName(uniformBlockIndex, bufSize, length, uniformBlockName);
     }
 }
 
@@ -7306,10 +7274,8 @@ void GL_APIENTRY glUniformBlockBinding(GLuint program, GLuint uniformBlockIndex,
             }
         }
 
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-
         // if never linked, there won't be any uniform blocks
-        if (!programBinary || uniformBlockIndex >= programBinary->getActiveUniformBlockCount())
+        if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
         {
             context->recordError(gl::Error(GL_INVALID_VALUE));
             return;
@@ -8498,15 +8464,7 @@ void GL_APIENTRY glGetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei 
             return;
         }
 
-        gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-
-        if (!programBinary)
-        {
-            context->recordError(gl::Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        gl::Error error = programBinary->save(binaryFormat, binary, bufSize, length);
+        gl::Error error = programObject->saveBinary(binaryFormat, binary, bufSize, length);
         if (error.isError())
         {
             context->recordError(error);
@@ -8538,7 +8496,7 @@ void GL_APIENTRY glProgramBinaryOES(GLuint program, GLenum binaryFormat,
             return;
         }
 
-        gl::Error error = context->setProgramBinary(program, binaryFormat, binary, length);
+        gl::Error error = programObject->loadBinary(binaryFormat, binary, length);
         if (error.isError())
         {
             context->recordError(error);

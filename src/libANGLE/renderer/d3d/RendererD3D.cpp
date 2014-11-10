@@ -53,10 +53,10 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
                                     const GLvoid *indices, GLsizei instances,
                                     const RangeUI &indexRange)
 {
-    ASSERT(data.state->getCurrentProgramId() != 0);
+    gl::Program *program = data.state->getProgram();
+    ASSERT(program != NULL);
 
-    gl::ProgramBinary *programBinary = data.state->getCurrentProgramBinary();
-    programBinary->updateSamplerMapping();
+    program->updateSamplerMapping();
 
     gl::Error error = generateSwizzles(data);
     if (error.isError())
@@ -136,10 +136,10 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
                                   GLenum mode, GLint first,
                                   GLsizei count, GLsizei instances)
 {
-    ASSERT(data.state->getCurrentProgramId() != 0);
+    gl::Program *program = data.state->getProgram();
+    ASSERT(program != NULL);
 
-    gl::ProgramBinary *programBinary = data.state->getCurrentProgramBinary();
-    programBinary->updateSamplerMapping();
+    program->updateSamplerMapping();
 
     gl::Error error = generateSwizzles(data);
     if (error.isError())
@@ -209,14 +209,14 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
 
 gl::Error RendererD3D::generateSwizzles(const gl::Data &data, gl::SamplerType type)
 {
-    gl::ProgramBinary *programBinary = data.state->getCurrentProgramBinary();
+    gl::Program *program = data.state->getProgram();
 
-    size_t samplerRange = programBinary->getUsedSamplerRange(type);
+    size_t samplerRange = program->getUsedSamplerRange(type);
 
     for (size_t i = 0; i < samplerRange; i++)
     {
-        GLenum textureType = programBinary->getSamplerTextureType(type, i);
-        GLint textureUnit = programBinary->getSamplerMapping(type, i, *data.caps);
+        GLenum textureType = program->getSamplerTextureType(type, i);
+        GLint textureUnit = program->getSamplerMapping(type, i, *data.caps);
         if (textureUnit != -1)
         {
             gl::Texture *texture = data.state->getSamplerTexture(textureUnit, textureType);
@@ -355,20 +355,20 @@ bool RendererD3D::applyTransformFeedbackBuffers(const gl::Data &data)
 // Applies the shaders and shader constants to the Direct3D device
 gl::Error RendererD3D::applyShaders(const gl::Data &data, bool transformFeedbackActive)
 {
-    gl::ProgramBinary *programBinary = data.state->getCurrentProgramBinary();
+    gl::Program *program = data.state->getProgram();
 
     gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS];
-    gl::VertexFormat::GetInputLayout(inputLayout, programBinary, *data.state);
+    gl::VertexFormat::GetInputLayout(inputLayout, program, *data.state);
 
     const gl::Framebuffer *fbo = data.state->getDrawFramebuffer();
 
-    gl::Error error = applyShaders(programBinary, inputLayout, fbo, data.state->getRasterizerState().rasterizerDiscard, transformFeedbackActive);
+    gl::Error error = applyShaders(program, inputLayout, fbo, data.state->getRasterizerState().rasterizerDiscard, transformFeedbackActive);
     if (error.isError())
     {
         return error;
     }
 
-    return programBinary->applyUniforms();
+    return program->applyUniforms();
 }
 
 // For each Direct3D sampler of either the pixel or vertex stage,
@@ -377,13 +377,13 @@ gl::Error RendererD3D::applyShaders(const gl::Data &data, bool transformFeedback
 gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shaderType,
                                      const FramebufferTextureSerialArray &framebufferSerials, size_t framebufferSerialCount)
 {
-    gl::ProgramBinary *programBinary = data.state->getCurrentProgramBinary();
+    gl::Program *program = data.state->getProgram();
 
-    size_t samplerRange = programBinary->getUsedSamplerRange(shaderType);
+    size_t samplerRange = program->getUsedSamplerRange(shaderType);
     for (size_t samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
-        GLenum textureType = programBinary->getSamplerTextureType(shaderType, samplerIndex);
-        GLint textureUnit = programBinary->getSamplerMapping(shaderType, samplerIndex, *data.caps);
+        GLenum textureType = program->getSamplerTextureType(shaderType, samplerIndex);
+        GLint textureUnit = program->getSamplerMapping(shaderType, samplerIndex, *data.caps);
         if (textureUnit != -1)
         {
             gl::Texture *texture = data.state->getSamplerTexture(textureUnit, textureType);
@@ -471,14 +471,13 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data)
 
 gl::Error RendererD3D::applyUniformBuffers(const gl::Data &data)
 {
-    gl::Program *programObject = data.resourceManager->getProgram(data.state->getCurrentProgramId());
-    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+    gl::Program *program = data.state->getProgram();
 
     std::vector<gl::Buffer*> boundBuffers;
 
-    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < programBinary->getActiveUniformBlockCount(); uniformBlockIndex++)
+    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < program->getActiveUniformBlockCount(); uniformBlockIndex++)
     {
-        GLuint blockBinding = programObject->getUniformBlockBinding(uniformBlockIndex);
+        GLuint blockBinding = program->getUniformBlockBinding(uniformBlockIndex);
 
         if (data.state->getIndexedUniformBuffer(blockBinding)->id() == 0)
         {
@@ -493,7 +492,7 @@ gl::Error RendererD3D::applyUniformBuffers(const gl::Data &data)
         }
     }
 
-    return programBinary->applyUniformBuffers(boundBuffers, *data.caps);
+    return program->applyUniformBuffers(boundBuffers, *data.caps);
 }
 
 bool RendererD3D::skipDraw(const gl::Data &data, GLenum drawMode)
@@ -503,7 +502,7 @@ bool RendererD3D::skipDraw(const gl::Data &data, GLenum drawMode)
         // ProgramBinary assumes non-point rendering if gl_PointSize isn't written,
         // which affects varying interpolation. Since the value of gl_PointSize is
         // undefined when not written, just skip drawing to avoid unexpected results.
-        if (!data.state->getCurrentProgramBinary()->usesPointSize())
+        if (!data.state->getProgram()->usesPointSize())
         {
             // This is stictly speaking not an error, but developers should be
             // notified of risking undefined behavior.

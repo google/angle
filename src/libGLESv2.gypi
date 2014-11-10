@@ -74,8 +74,6 @@
             'libANGLE/ImageIndex.cpp',
             'libANGLE/Program.cpp',
             'libANGLE/Program.h',
-            'libANGLE/ProgramBinary.cpp',
-            'libANGLE/ProgramBinary.h',
             'libANGLE/Query.cpp',
             'libANGLE/Query.h',
             'libANGLE/RefCountObject.cpp',

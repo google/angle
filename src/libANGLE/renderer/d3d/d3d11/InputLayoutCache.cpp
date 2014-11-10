@@ -14,7 +14,7 @@
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
-#include "libANGLE/ProgramBinary.h"
+#include "libANGLE/Program.h"
 #include "libANGLE/VertexAttribute.h"
 
 #include "third_party/murmurhash/MurmurHash3.h"
@@ -87,10 +87,10 @@ void InputLayoutCache::markDirty()
 }
 
 gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
-                                               gl::ProgramBinary *programBinary)
+                                               gl::Program *program)
 {
     int sortedSemanticIndices[gl::MAX_VERTEX_ATTRIBS];
-    programBinary->sortAttributesByLayout(attributes, sortedSemanticIndices);
+    program->sortAttributesByLayout(attributes, sortedSemanticIndices);
 
     if (!mDevice || !mDeviceContext)
     {
@@ -113,7 +113,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
             // Record the type of the associated vertex shader vector in our key
             // This will prevent mismatched vertex shaders from using the same input layout
             GLint attributeSize;
-            programBinary->getActiveAttribute(ilKey.elementCount, 0, NULL, &attributeSize, &ilKey.elements[ilKey.elementCount].glslElementType, NULL);
+            program->getActiveAttribute(ilKey.elementCount, 0, NULL, &attributeSize, &ilKey.elements[ilKey.elementCount].glslElementType, NULL);
 
             ilKey.elements[ilKey.elementCount].desc.SemanticName = semanticName;
             ilKey.elements[ilKey.elementCount].desc.SemanticIndex = sortedSemanticIndices[i];
@@ -138,7 +138,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
     {
         gl::VertexFormat shaderInputLayout[gl::MAX_VERTEX_ATTRIBS];
         GetInputLayout(attributes, shaderInputLayout);
-        ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(programBinary->getImplementation());
+        ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(program->getImplementation());
 
         ShaderExecutable *shader = NULL;
         gl::Error error = programD3D->getVertexExecutableForInputLayout(shaderInputLayout, &shader);
