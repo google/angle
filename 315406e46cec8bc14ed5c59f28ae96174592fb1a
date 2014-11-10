@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5af85738_43c73a23",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-10T15:36:50Z",
+      "side": 1,
+      "message": "We have a helper function called DynamicCastComObject for this.",
+      "range": {
+        "startLine": 275,
+        "startChar": 0,
+        "endLine": 284,
+        "endChar": 5
+      },
+      "revId": "315406e46cec8bc14ed5c59f28ae96174592fb1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
