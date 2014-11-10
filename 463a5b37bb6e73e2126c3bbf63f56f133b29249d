@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a497f7c_ddab0b97",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/RenderTarget11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-10T23:42:01Z",
+      "side": 1,
+      "message": "Any reason not to omit the constructor, and define the destructor as {} in the header?",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 186,
+        "endChar": 1
+      },
+      "revId": "463a5b37bb6e73e2126c3bbf63f56f133b29249d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a497f7c_58c0495a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/RenderTarget11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-10T23:42:01Z",
+      "side": 1,
+      "message": "I don\u0027t remember why we don\u0027t do multisample swapchains... can this get commented to refresh my memory?",
+      "range": {
+        "startLine": 353,
+        "startChar": 0,
+        "endLine": 353,
+        "endChar": 13
+      },
+      "revId": "463a5b37bb6e73e2126c3bbf63f56f133b29249d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a4f777e_7fcd2fc4",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/RenderTarget11.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-10T23:42:01Z",
+      "side": 1,
+      "message": "Part of me kind of wants these to get defined the the .cpp file, since the SurfaceRenderTarget11 equivalents are, and they look missing in TextureRenderTarget11 if you\u0027re just looking there. But... ehhhh, not a huge part of me.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 60
+      },
+      "revId": "463a5b37bb6e73e2126c3bbf63f56f133b29249d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a4c838a_9934871c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/RenderTarget9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-10T23:42:01Z",
+      "side": 1,
+      "message": "Ditto question from RenderTarget11",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 1
+      },
+      "revId": "463a5b37bb6e73e2126c3bbf63f56f133b29249d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
