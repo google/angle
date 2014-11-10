@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a97db02_1eee4d1c",
+        "filename": "src/compiler/translator/DetectDiscontinuity.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-11-10T20:25:31Z",
+      "side": 1,
+      "message": "Having a universal way to stop traversal would indeed be useful, but let\u0027s make that a separate issue.",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 57
+      },
+      "revId": "f9315791150d1e953b834805a2c930153ed2873c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
