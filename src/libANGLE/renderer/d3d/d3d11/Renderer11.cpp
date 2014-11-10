@@ -14,7 +14,7 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/ProgramBinary.h"
+#include "libANGLE/Program.h"
 #include "libANGLE/State.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
@@ -1073,7 +1073,7 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state, GLint first, GLs
         return error;
     }
 
-    return mInputLayoutCache.applyVertexBuffers(attributes, state.getCurrentProgramBinary());
+    return mInputLayoutCache.applyVertexBuffers(attributes, state.getProgram());
 }
 
 gl::Error Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
@@ -1478,10 +1478,10 @@ gl::Error Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::applyShaders(gl::ProgramBinary *programBinary, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
+gl::Error Renderer11::applyShaders(gl::Program *program, const gl::VertexFormat inputLayout[], const gl::Framebuffer *framebuffer,
                                    bool rasterizerDiscard, bool transformFeedbackActive)
 {
-    ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(programBinary->getImplementation());
+    ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(program->getImplementation());
 
     ShaderExecutable *vertexExe = NULL;
     gl::Error error = programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe);
