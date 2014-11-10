@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fa6cabf2_9a86ed39",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/RenderTarget11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-10T20:53:47Z",
+      "side": 1,
+      "message": "Done, I was on the fence about the names and your suggestion is more precise.",
+      "parentUuid": "f51cbefc_9d4c278d",
+      "range": {
+        "startLine": 38,
+        "startChar": 6,
+        "endLine": 38,
+        "endChar": 28
+      },
+      "revId": "d81ad4d3243976ebb879885542ac05d618a9d3c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5af85738_231e6e05",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/RenderTarget11.h",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2014-11-10T16:04:15Z",
       "side": 1,
       "message": "nit: maybe don\u0027t pass this argument, or use it to init mDepth below and ASSERT it\u0027s \"1\" (currently unused)",
+      "range": {
+        "startLine": 35,
+        "startChar": 133,
+        "endLine": 35,
+        "endChar": 138
+      },
+      "revId": "d81ad4d3243976ebb879885542ac05d618a9d3c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a97db02_bed15908",
+        "filename": "src/libGLESv2/renderer/d3d/d3d9/RenderTarget9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-10T20:53:47Z",
+      "side": 1,
+      "message": "Done, changed to an ASSERT.  I prefer the ASSERT because it verifies the correct depth has been piped down.",
+      "parentUuid": "fa102b40_3d821be3",
       "range": {
         "startLine": 35,
         "startChar": 133,
