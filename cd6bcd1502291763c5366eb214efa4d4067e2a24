@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "5af85738_c34d8a08",
+        "filename": "src/libGLESv2/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2014-11-10T16:29:39Z",
+      "side": 1,
+      "message": "Yes, that\u0027s what I meant, checking the pointers equality avoiding a double free.",
+      "parentUuid": "ba0a3312_5b14b7e4",
+      "revId": "cd6bcd1502291763c5366eb214efa4d4067e2a24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "558caab9_7147c015",
         "filename": "src/libGLESv2/Framebuffer.cpp",
         "patchSetId": 2
