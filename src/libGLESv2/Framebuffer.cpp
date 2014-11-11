@@ -520,12 +520,18 @@ DefaultFramebuffer::DefaultFramebuffer(rx::RenderbufferImpl *colorbuffer, rx::Re
     Renderbuffer *colorRenderbuffer = new Renderbuffer(colorbuffer, 0);
     mColorbuffers[0] = new RenderbufferAttachment(GL_BACK, colorRenderbuffer);
 
-    Renderbuffer *depthStencilBuffer = new Renderbuffer(depthStencil, 0);
+    GLenum depthStencilActualFormat = depthStencil->getActualFormat();
+    const InternalFormat &depthStencilFormatInfo = GetInternalFormatInfo(depthStencilActualFormat);
 
-    // Make a new attachment objects to ensure we do not double-delete
-    // See angle issue 686
-    mDepthbuffer = (depthStencilBuffer->getDepthSize() != 0 ? new RenderbufferAttachment(GL_DEPTH_ATTACHMENT, depthStencilBuffer) : NULL);
-    mStencilbuffer = (depthStencilBuffer->getStencilSize() != 0 ? new RenderbufferAttachment(GL_STENCIL_ATTACHMENT, depthStencilBuffer) : NULL);
+    if (depthStencilFormatInfo.depthBits != 0 || depthStencilFormatInfo.stencilBits != 0)
+    {
+        Renderbuffer *depthStencilBuffer = new Renderbuffer(depthStencil, 0);
+
+        // Make a new attachment objects to ensure we do not double-delete
+        // See angle issue 686
+        mDepthbuffer = (depthStencilFormatInfo.depthBits != 0 ? new RenderbufferAttachment(GL_DEPTH_ATTACHMENT, depthStencilBuffer) : NULL);
+        mStencilbuffer = (depthStencilFormatInfo.stencilBits != 0 ? new RenderbufferAttachment(GL_STENCIL_ATTACHMENT, depthStencilBuffer) : NULL);
+    }
 
     mDrawBufferStates[0] = GL_BACK;
     mReadBufferState = GL_BACK;
