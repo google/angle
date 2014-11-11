@@ -2642,8 +2642,10 @@ gl::Error Renderer11::getRenderTargetResource(gl::FramebufferAttachment *colorbu
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
-                               const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter)
+gl::Error Renderer11::blitRect(const gl::Framebuffer *readTarget, const gl::Rectangle &readRect,
+                               const gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
+                               const gl::Rectangle *scissor, bool blitRenderTarget,
+                               bool blitDepth, bool blitStencil, GLenum filter)
 {
     if (blitRenderTarget)
     {

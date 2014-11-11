@@ -57,6 +57,11 @@ class RendererD3D : public Renderer
     gl::Error clearBufferiv(const gl::Data &data, GLenum buffer, int drawbuffer, const GLint *values) override;
     gl::Error clearBufferfi(const gl::Data &data, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil) override;
 
+    gl::Error blitFramebuffer(const gl::Data &data,
+                              GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
+                              GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
+                              GLbitfield mask, GLenum filter) override;
+
     // Direct3D Specific methods
     virtual SwapChain *createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
 
@@ -103,9 +108,6 @@ class RendererD3D : public Renderer
                                   GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level) = 0;
     virtual gl::Error copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                                        GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level) = 0;
-
-    virtual gl::Error blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
-                               const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter) = 0;
 
     virtual gl::Error readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
                                  GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels) = 0;
@@ -154,6 +156,10 @@ class RendererD3D : public Renderer
     virtual gl::Error drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
                                    gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances) = 0;
     virtual gl::Error clear(const gl::ClearParameters &clearParams, const gl::Framebuffer *frameBuffer) = 0;
+    virtual gl::Error blitRect(const gl::Framebuffer *readTarget, const gl::Rectangle &readRect,
+                               const gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
+                               const gl::Rectangle *scissor, bool blitRenderTarget,
+                               bool blitDepth, bool blitStencil, GLenum filter) = 0;
 
     egl::Display *mDisplay;
 

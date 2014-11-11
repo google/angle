@@ -1681,44 +1681,12 @@ size_t Context::getExtensionStringCount() const
     return mExtensionStrings.size();
 }
 
-Error Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
+Error Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
+                               GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
                                GLbitfield mask, GLenum filter)
 {
-    Framebuffer *readFramebuffer = mState.getReadFramebuffer();
-    Framebuffer *drawFramebuffer = mState.getDrawFramebuffer();
-
-    bool blitRenderTarget = false;
-    bool blitDepth = false;
-    bool blitStencil = false;
-    if ((mask & GL_COLOR_BUFFER_BIT) && readFramebuffer->getReadColorbuffer() && drawFramebuffer->getFirstColorbuffer())
-    {
-        blitRenderTarget = true;
-    }
-    if ((mask & GL_STENCIL_BUFFER_BIT) && readFramebuffer->getStencilbuffer() && drawFramebuffer->getStencilbuffer())
-    {
-        blitStencil = true;
-    }
-    if ((mask & GL_DEPTH_BUFFER_BIT) && readFramebuffer->getDepthbuffer() && drawFramebuffer->getDepthbuffer())
-    {
-        blitDepth = true;
-    }
-
-    Rectangle srcRect(srcX0, srcY0, srcX1 - srcX0, srcY1 - srcY0);
-    Rectangle dstRect(dstX0, dstY0, dstX1 - dstX0, dstY1 - dstY0);
-    if (blitRenderTarget || blitDepth || blitStencil)
-    {
-        const gl::Rectangle *scissor = mState.isScissorTestEnabled() ? &mState.getScissor() : NULL;
-        //TODO(jmadill): MANGLE refactor
-        rx::RendererD3D *rendererD3D = rx::RendererD3D::makeRendererD3D(mRenderer);
-        gl::Error error = rendererD3D->blitRect(readFramebuffer, srcRect, drawFramebuffer, dstRect, scissor,
-                                                blitRenderTarget, blitDepth, blitStencil, filter);
-        if (error.isError())
-        {
-            return error;
-        }
-    }
-
-    return gl::Error(GL_NO_ERROR);
+    return mRenderer->blitFramebuffer(getData(), srcX0, srcY0, srcX1, srcY1,
+                                      dstX0, dstY0, dstX1, dstY1, mask, filter);
 }
 
 void Context::releaseShaderCompiler()

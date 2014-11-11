@@ -2458,8 +2458,10 @@ gl::Error Renderer9::copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Re
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &readRect, gl::Framebuffer *drawFramebuffer, const gl::Rectangle &drawRect,
-                              const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter)
+gl::Error Renderer9::blitRect(const gl::Framebuffer *readFramebuffer, const gl::Rectangle &readRect,
+                              const gl::Framebuffer *drawFramebuffer, const gl::Rectangle &drawRect,
+                              const gl::Rectangle *scissor, bool blitRenderTarget,
+                              bool blitDepth, bool blitStencil, GLenum filter)
 {
     ASSERT(filter == GL_NEAREST);
 
