@@ -6,8 +6,6 @@
     'includes': [ 'common_defines.gypi', ],
     'variables':
     {
-        'angle_build_tests%': '1',
-        'angle_build_samples%': '1',
         'angle_build_winrt%': '0',
         'angle_build_winphone%': '0',
         # angle_code is set to 1 for the core ANGLE targets defined in src/build_angle.gyp.

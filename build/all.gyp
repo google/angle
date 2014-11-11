@@ -8,17 +8,11 @@
         {
             'target_name': 'All',
             'type': 'none',
-            'dependencies': [ '../src/angle.gyp:*', ],
-            'conditions':
+            'dependencies':
             [
-                ['angle_build_samples==1',
-                {
-                    'dependencies': [ '../samples/samples.gyp:*', ],
-                }],
-                ['angle_build_tests==1',
-                {
-                    'dependencies': [ '../tests/tests.gyp:*', ],
-                }],
+                '../src/angle.gyp:*',
+                '../samples/samples.gyp:*',
+                '../tests/tests.gyp:*',
             ],
         },
     ],
