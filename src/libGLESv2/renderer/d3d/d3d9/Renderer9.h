@@ -138,7 +138,7 @@ class Renderer9 : public RendererD3D
                        const gl::Rectangle *scissor, bool blitRenderTarget,
                        bool blitDepth, bool blitStencil, GLenum filter) override;
 
-    virtual gl::Error readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
+    virtual gl::Error readPixels(const gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
                                  GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels);
 
     // RenderTarget creation

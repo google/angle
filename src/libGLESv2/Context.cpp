@@ -1353,14 +1353,7 @@ Error Context::clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLi
 Error Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
                           GLenum format, GLenum type, GLsizei *bufSize, void* pixels)
 {
-    Framebuffer *framebuffer = mState.getReadFramebuffer();
-
-    GLenum sizedInternalFormat = GetSizedInternalFormat(format, type);
-    const InternalFormat &sizedFormatInfo = GetInternalFormatInfo(sizedInternalFormat);
-    GLuint outputPitch = sizedFormatInfo.computeRowPitch(type, width, mState.getPackAlignment());
-
-    return mRenderer->readPixels(framebuffer, x, y, width, height, format, type, outputPitch, mState.getPackState(),
-                                 reinterpret_cast<uint8_t*>(pixels));
+    return mRenderer->readPixels(getData(), x, y, width, height, format, type, bufSize, pixels);
 }
 
 Error Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances)

@@ -2722,7 +2722,7 @@ gl::Error Renderer11::blitRect(const gl::Framebuffer *readTarget, const gl::Rect
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
+gl::Error Renderer11::readPixels(const gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
                                  GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels)
 {
     ID3D11Texture2D *colorBufferTexture = NULL;
