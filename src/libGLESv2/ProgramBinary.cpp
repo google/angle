@@ -363,7 +363,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shade
 
 LinkResult ProgramBinary::load(InfoLog &infoLog, GLenum binaryFormat, const void *binary, GLsizei length)
 {
-#if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
+#if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_DISABLED
     return LinkResult(false, Error(GL_NO_ERROR));
 #else
     ASSERT(binaryFormat == mProgram->getBinaryFormat());
