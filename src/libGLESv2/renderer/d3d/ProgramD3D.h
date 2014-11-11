@@ -62,10 +62,12 @@ class ProgramD3D : public ProgramImpl
     gl::LinkResult compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
                                              int registers);
 
-    gl::LinkResult link(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                        const std::vector<std::string> &transformFeedbackVaryings, GLenum transformFeedbackBufferMode,
+    gl::LinkResult link(const gl::Data &data, gl::InfoLog &infoLog,
+                        gl::Shader *fragmentShader, gl::Shader *vertexShader,
+                        const std::vector<std::string> &transformFeedbackVaryings,
+                        GLenum transformFeedbackBufferMode,
                         int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
-                        std::map<int, gl::VariableLocation> *outputVariables, const gl::Caps &caps);
+                        std::map<int, gl::VariableLocation> *outputVariables);
 
     void getInputLayoutSignature(const gl::VertexFormat inputLayout[], GLenum signature[]) const;
 

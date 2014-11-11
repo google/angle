@@ -52,6 +52,7 @@ class InfoLog;
 class AttributeBindings;
 class Buffer;
 class Framebuffer;
+struct Data;
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct VariableLocation
@@ -147,9 +148,10 @@ class ProgramBinary : public RefCountObject
     Error save(GLenum *binaryFormat, void *binary, GLsizei bufSize, GLsizei *length);
     GLint getLength();
 
-    LinkResult link(InfoLog &infoLog, const AttributeBindings &attributeBindings, Shader *fragmentShader, Shader *vertexShader,
-                    const std::vector<std::string>& transformFeedbackVaryings, GLenum transformFeedbackBufferMode,
-                    const Caps &caps);
+    LinkResult link(const Data &data, InfoLog &infoLog, const AttributeBindings &attributeBindings,
+                    Shader *fragmentShader, Shader *vertexShader,
+                    const std::vector<std::string> &transformFeedbackVaryings,
+                    GLenum transformFeedbackBufferMode);
 
     void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name) const;
     GLint getActiveAttributeCount() const;

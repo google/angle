@@ -658,7 +658,7 @@ Error Context::linkProgram(GLuint program)
 {
     Program *programObject = mResourceManager->getProgram(program);
 
-    Error error = programObject->link(getCaps());
+    Error error = programObject->link(getData());
     if (error.isError())
     {
         return error;

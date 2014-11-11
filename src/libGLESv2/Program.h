@@ -29,6 +29,7 @@ class Renderer;
 namespace gl
 {
 struct Caps;
+struct Data;
 class ResourceManager;
 class Shader;
 
@@ -77,7 +78,7 @@ class Program
 
     void bindAttributeLocation(GLuint index, const char *name);
 
-    Error link(const Caps &caps);
+    Error link(const Data &data);
     bool isLinked();
     Error setProgramBinary(GLenum binaryFormat, const void *binary, GLsizei length);
     ProgramBinary *getProgramBinary() const;

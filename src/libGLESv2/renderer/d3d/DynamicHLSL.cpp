@@ -9,9 +9,9 @@
 #include "libGLESv2/renderer/d3d/DynamicHLSL.h"
 #include "libGLESv2/renderer/d3d/ShaderD3D.h"
 #include "libGLESv2/renderer/d3d/RendererD3D.h"
-#include "libGLESv2/Shader.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
+#include "libGLESv2/Shader.h"
 #include "libGLESv2/formatutils.h"
 
 #include "common/utilities.h"
@@ -226,7 +226,7 @@ static bool packVarying(PackedVarying *varying, const int maxVaryingVectors, Var
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
 // Returns the number of used varying registers, or -1 if unsuccesful
 int DynamicHLSL::packVaryings(InfoLog &infoLog, VaryingPacking packing, rx::ShaderD3D *fragmentShader,
-                              rx::ShaderD3D *vertexShader, const std::vector<std::string>& transformFeedbackVaryings)
+                              rx::ShaderD3D *vertexShader, const std::vector<std::string> &transformFeedbackVaryings)
 {
     // TODO (geofflang):  Use context's caps
     const int maxVaryingVectors = mRenderer->getRendererCaps().maxVaryingVectors;
@@ -669,10 +669,11 @@ void DynamicHLSL::storeUserLinkedVaryings(const rx::ShaderD3D *vertexShader,
     }
 }
 
-bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const VaryingPacking packing,
-                                         std::string& pixelHLSL, std::string& vertexHLSL,
+bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog, int registers,
+                                         const VaryingPacking packing,
+                                         std::string &pixelHLSL, std::string &vertexHLSL,
                                          rx::ShaderD3D *fragmentShader, rx::ShaderD3D *vertexShader,
-                                         const std::vector<std::string>& transformFeedbackVaryings,
+                                         const std::vector<std::string> &transformFeedbackVaryings,
                                          std::vector<LinkedVarying> *linkedVaryings,
                                          std::map<int, VariableLocation> *programOutputVars,
                                          std::vector<PixelShaderOutputVariable> *outPixelShaderKey,
@@ -698,21 +699,17 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
 
     // Write the HLSL input/output declarations
     const int shaderModel = mRenderer->getMajorShaderModel();
-
-    // TODO (geofflang):  Use context's caps
-    const int maxVaryingVectors = mRenderer->getRendererCaps().maxVaryingVectors;
-
     const int registersNeeded = registers + (usesFragCoord ? 1 : 0) + (usesPointCoord ? 1 : 0);
 
     // Two cases when writing to gl_FragColor and using ESSL 1.0:
     // - with a 3.0 context, the output color is copied to channel 0
     // - with a 2.0 context, the output color is broadcast to all channels
-    const bool broadcast = (fragmentShader->mUsesFragColor && mRenderer->getCurrentClientVersion() < 3);
-    const unsigned int numRenderTargets = (broadcast || usesMRT ? mRenderer->getRendererCaps().maxDrawBuffers : 1);
+    const bool broadcast = (fragmentShader->mUsesFragColor && data.clientVersion < 3);
+    const unsigned int numRenderTargets = (broadcast || usesMRT ? data.caps->maxDrawBuffers : 1);
 
     int shaderVersion = vertexShader->getShaderVersion();
 
-    if (registersNeeded > maxVaryingVectors)
+    if (static_cast<GLuint>(registersNeeded) > data.caps->maxVaryingVectors)
     {
         infoLog.append("No varying registers left to support gl_FragCoord/gl_PointCoord");
         return false;
@@ -779,7 +776,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
 
                 for (int row = 0; row < variableRows; row++)
                 {
-                    int r = varying.registerIndex + varying.columnIndex * mRenderer->getRendererCaps().maxVaryingVectors + elementIndex * variableRows + row;
+                    int r = varying.registerIndex + varying.columnIndex * data.caps->maxVaryingVectors + elementIndex * variableRows + row;
                     vertexHLSL += "    output.v" + Str(r);
 
                     vertexHLSL += " = _" + varying.name;
@@ -927,7 +924,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(InfoLog &infoLog, int registers, const 
                 int variableRows = (varying.isStruct() ? 1 : VariableRowCount(transposedType));
                 for (int row = 0; row < variableRows; row++)
                 {
-                    std::string n = Str(varying.registerIndex + varying.columnIndex * mRenderer->getRendererCaps().maxVaryingVectors + elementIndex * variableRows + row);
+                    std::string n = Str(varying.registerIndex + varying.columnIndex * data.caps->maxVaryingVectors + elementIndex * variableRows + row);
                     pixelHLSL += "    _" + varying.name;
 
                     if (varying.isArray())

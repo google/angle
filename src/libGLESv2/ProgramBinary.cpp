@@ -495,8 +495,10 @@ GLint ProgramBinary::getLength()
     return length;
 }
 
-LinkResult ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBindings, Shader *fragmentShader, Shader *vertexShader,
-                               const std::vector<std::string>& transformFeedbackVaryings, GLenum transformFeedbackBufferMode, const Caps &caps)
+LinkResult ProgramBinary::link(const Data &data, InfoLog &infoLog, const AttributeBindings &attributeBindings,
+                               Shader *fragmentShader, Shader *vertexShader,
+                               const std::vector<std::string> &transformFeedbackVaryings,
+                               GLenum transformFeedbackBufferMode)
 {
     if (!fragmentShader || !fragmentShader->isCompiled())
     {
@@ -514,8 +516,8 @@ LinkResult ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attrib
 
     int registers;
     std::vector<LinkedVarying> linkedVaryings;
-    LinkResult result = mProgram->link(infoLog, fragmentShader, vertexShader, transformFeedbackVaryings, transformFeedbackBufferMode,
-                                       &registers, &linkedVaryings, &mOutputVariables, caps);
+    LinkResult result = mProgram->link(data, infoLog, fragmentShader, vertexShader, transformFeedbackVaryings, transformFeedbackBufferMode,
+                                       &registers, &linkedVaryings, &mOutputVariables);
     if (result.error.isError() || !result.linkSuccess)
     {
         return result;
@@ -526,18 +528,18 @@ LinkResult ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attrib
         return LinkResult(false, Error(GL_NO_ERROR));
     }
 
-    if (!mProgram->linkUniforms(infoLog, *vertexShader, *fragmentShader, caps))
+    if (!mProgram->linkUniforms(infoLog, *vertexShader, *fragmentShader, *data.caps))
     {
         return LinkResult(false, Error(GL_NO_ERROR));
     }
 
-    if (!linkUniformBlocks(infoLog, *vertexShader, *fragmentShader, caps))
+    if (!linkUniformBlocks(infoLog, *vertexShader, *fragmentShader, *data.caps))
     {
         return LinkResult(false, Error(GL_NO_ERROR));
     }
 
     if (!gatherTransformFeedbackLinkedVaryings(infoLog, linkedVaryings, transformFeedbackVaryings,
-                                               transformFeedbackBufferMode, &mProgram->getTransformFeedbackLinkedVaryings(), caps))
+                                               transformFeedbackBufferMode, &mProgram->getTransformFeedbackLinkedVaryings(), *data.caps))
     {
         return LinkResult(false, Error(GL_NO_ERROR));
     }

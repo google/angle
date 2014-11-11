@@ -980,16 +980,18 @@ gl::LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::S
     return gl::LinkResult(linkSuccess, gl::Error(GL_NO_ERROR));
 }
 
-gl::LinkResult ProgramD3D::link(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                                const std::vector<std::string> &transformFeedbackVaryings, GLenum transformFeedbackBufferMode,
+gl::LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
+                                gl::Shader *fragmentShader, gl::Shader *vertexShader,
+                                const std::vector<std::string> &transformFeedbackVaryings,
+                                GLenum transformFeedbackBufferMode,
                                 int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
-                                std::map<int, gl::VariableLocation> *outputVariables, const gl::Caps &caps)
+                                std::map<int, gl::VariableLocation> *outputVariables)
 {
     ShaderD3D *vertexShaderD3D = ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
     ShaderD3D *fragmentShaderD3D = ShaderD3D::makeShaderD3D(fragmentShader->getImplementation());
 
-    mSamplersPS.resize(caps.maxTextureImageUnits);
-    mSamplersVS.resize(caps.maxVertexTextureImageUnits);
+    mSamplersPS.resize(data.caps->maxTextureImageUnits);
+    mSamplersVS.resize(data.caps->maxVertexTextureImageUnits);
 
     mTransformFeedbackBufferMode = transformFeedbackBufferMode;
 
@@ -1014,7 +1016,7 @@ gl::LinkResult ProgramD3D::link(gl::InfoLog &infoLog, gl::Shader *fragmentShader
         return gl::LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
-    if (!mDynamicHLSL->generateShaderLinkHLSL(infoLog, *registers, packing, mPixelHLSL, mVertexHLSL,
+    if (!mDynamicHLSL->generateShaderLinkHLSL(data, infoLog, *registers, packing, mPixelHLSL, mVertexHLSL,
                                               fragmentShaderD3D, vertexShaderD3D, transformFeedbackVaryings,
                                               linkedVaryings, outputVariables, &mPixelShaderKey, &mUsesFragDepth))
     {

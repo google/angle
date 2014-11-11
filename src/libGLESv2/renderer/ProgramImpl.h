@@ -55,10 +55,12 @@ class ProgramImpl
     virtual gl::LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream) = 0;
     virtual gl::Error save(gl::BinaryOutputStream *stream) = 0;
 
-    virtual gl::LinkResult link(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                                const std::vector<std::string> &transformFeedbackVaryings, GLenum transformFeedbackBufferMode,
+    virtual gl::LinkResult link(const gl::Data &data, gl::InfoLog &infoLog,
+                                gl::Shader *fragmentShader, gl::Shader *vertexShader,
+                                const std::vector<std::string> &transformFeedbackVaryings,
+                                GLenum transformFeedbackBufferMode,
                                 int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
-                                std::map<int, gl::VariableLocation> *outputVariables, const gl::Caps &caps) = 0;
+                                std::map<int, gl::VariableLocation> *outputVariables) = 0;
 
     virtual void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) = 0;
     virtual void setUniform2fv(GLint location, GLsizei count, const GLfloat *v) = 0;
