@@ -147,6 +147,12 @@ if (is_win) {
   angle_enable_d3d9 = true
   angle_enable_d3d11 = true
 
+  import("//build/config/win/visual_studio_version.gni")
+  copy("copy_compiler_dll") {
+    sources = [ "$windows_sdk_path/Redist/D3D/$cpu_arch/d3dcompiler_47.dll" ]
+    outputs = [ "$root_build_dir/d3dcompiler_47.dll" ]
+  }
+
   shared_library("libGLESv2") {
     sources = rebase_path(gles_gypi.angle_libangle_sources, ".", "src")
     sources += [
@@ -204,7 +210,7 @@ if (is_win) {
       ":commit_id",
       ":includes",
       ":translator",
-      #":copy_compiler_dll",  TODO(GYP)
+      ":copy_compiler_dll",
     ]
   }
 
