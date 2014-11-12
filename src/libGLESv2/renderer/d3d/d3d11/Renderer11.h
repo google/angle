@@ -24,6 +24,7 @@
 namespace gl
 {
 class FramebufferAttachment;
+struct ImageIndex;
 }
 
 namespace rx
@@ -225,7 +226,7 @@ class Renderer11 : public RendererD3D
                                    RenderTarget *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
                                    bool colorBlit, bool depthBlit, bool stencilBlit);
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
-    void unsetSRVsWithResource(gl::SamplerType shaderType, const ID3D11Resource *resource);
+    void unsetConflictingSRVs(gl::SamplerType shaderType, const ID3D11Resource *resource, const gl::ImageIndex *index);
 
     static void invalidateFBOAttachmentSwizzles(gl::FramebufferAttachment *attachment, int mipLevel);
     static void invalidateFramebufferSwizzles(const gl::Framebuffer *framebuffer);
@@ -263,8 +264,14 @@ class Renderer11 : public RendererD3D
     std::vector<gl::SamplerState> mCurPixelSamplerStates;
 
     // Currently applied textures
-    std::vector<ID3D11ShaderResourceView*> mCurVertexSRVs;
-    std::vector<ID3D11ShaderResourceView*> mCurPixelSRVs;
+    struct SRVRecord
+    {
+        ID3D11ShaderResourceView *srv;
+        ID3D11Resource *resource;
+        D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+    };
+    std::vector<SRVRecord> mCurVertexSRVs;
+    std::vector<SRVRecord> mCurPixelSRVs;
 
     // Currently applied blend state
     bool mForceSetBlendState;

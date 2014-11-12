@@ -83,6 +83,63 @@ enum
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM4 = 16
 };
 
+static bool ImageIndexConflictsWithSRV(const gl::ImageIndex *index, D3D11_SHADER_RESOURCE_VIEW_DESC desc)
+{
+    unsigned mipLevel = index->mipIndex;
+    unsigned layerIndex = index->layerIndex;
+    GLenum type = index->type;
+
+    switch (desc.ViewDimension)
+    {
+      case D3D11_SRV_DIMENSION_TEXTURE2D:
+        {
+            unsigned maxSrvMip = desc.Texture2D.MipLevels + desc.Texture2D.MostDetailedMip;
+            maxSrvMip = (desc.Texture2D.MipLevels == -1) ? INT_MAX : maxSrvMip;
+
+            unsigned mipMin = index->mipIndex;
+            unsigned mipMax = (layerIndex == -1) ? INT_MAX : layerIndex;
+
+            return type == GL_TEXTURE_2D && RangeUI(mipMin, mipMax).intersects(RangeUI(desc.Texture2D.MostDetailedMip, maxSrvMip));
+        }
+
+      case D3D11_SRV_DIMENSION_TEXTURE2DARRAY:
+        {
+            unsigned maxSrvMip = desc.Texture2DArray.MipLevels + desc.Texture2DArray.MostDetailedMip;
+            maxSrvMip = (desc.Texture2DArray.MipLevels == -1) ? INT_MAX : maxSrvMip;
+
+            unsigned maxSlice = desc.Texture2DArray.FirstArraySlice + desc.Texture2DArray.ArraySize;
+
+            // Cube maps can be mapped to Texture2DArray SRVs
+            return (type == GL_TEXTURE_2D_ARRAY || gl::IsCubemapTextureTarget(type)) &&
+                   desc.Texture2DArray.MostDetailedMip <= mipLevel && mipLevel < maxSrvMip &&
+                   desc.Texture2DArray.FirstArraySlice <= layerIndex && layerIndex < maxSlice;
+        }
+
+      case D3D11_SRV_DIMENSION_TEXTURECUBE:
+        {
+            unsigned maxSrvMip = desc.TextureCube.MipLevels + desc.TextureCube.MostDetailedMip;
+            maxSrvMip = (desc.TextureCube.MipLevels == -1) ? INT_MAX : maxSrvMip;
+
+            return gl::IsCubemapTextureTarget(type) &&
+                   desc.TextureCube.MostDetailedMip <= mipLevel && mipLevel < maxSrvMip;
+        }
+
+      case D3D11_SRV_DIMENSION_TEXTURE3D:
+        {
+            unsigned maxSrvMip = desc.Texture3D.MipLevels + desc.Texture3D.MostDetailedMip;
+            maxSrvMip = (desc.Texture3D.MipLevels == -1) ? INT_MAX : maxSrvMip;
+
+            return type == GL_TEXTURE_3D &&
+                   desc.Texture3D.MostDetailedMip <= mipLevel && mipLevel < maxSrvMip;
+        }
+      default:
+        // We only handle the cases corresponding to valid image indexes
+        UNIMPLEMENTED();
+    }
+
+    return false;
+}
+
 // Does *not* increment the resource ref count!!
 ID3D11Resource *GetSRVResource(ID3D11ShaderResourceView *srv)
 {
@@ -849,15 +906,15 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
     return count >= minCount;
 }
 
-void Renderer11::unsetSRVsWithResource(gl::SamplerType samplerType, const ID3D11Resource *resource)
+void Renderer11::unsetConflictingSRVs(gl::SamplerType samplerType, const ID3D11Resource *resource, const gl::ImageIndex* index)
 {
     auto &currentSRVs = (samplerType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
 
     for (size_t resourceIndex = 0; resourceIndex < currentSRVs.size(); ++resourceIndex)
     {
-        ID3D11ShaderResourceView *srv = currentSRVs[resourceIndex];
+        auto &record = currentSRVs[resourceIndex];
 
-        if (srv && GetSRVResource(srv) == resource)
+        if (record.srv && record.resource == resource && ImageIndexConflictsWithSRV(index, record.desc))
         {
             setShaderResource(samplerType, static_cast<UINT>(resourceIndex), NULL);
         }
@@ -915,12 +972,18 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
                 missingColorRenderTarget = false;
             }
 
-#if !defined(NDEBUG)
             // Unbind render target SRVs from the shader here to prevent D3D11 warnings.
-            ID3D11Resource *renderTargetResource = renderTarget->getTexture();
-            unsetSRVsWithResource(gl::SAMPLER_VERTEX, renderTargetResource);
-            unsetSRVsWithResource(gl::SAMPLER_PIXEL, renderTargetResource);
-#endif
+            if (colorbuffer->isTexture())
+            {
+                ID3D11Resource *renderTargetResource = renderTarget->getTexture();
+                const gl::ImageIndex *index = colorbuffer->getTextureImageIndex();
+                ASSERT(index);
+                // The index doesn't need to be corrected for the small compressed texture workaround
+                // because a rendertarget is never compressed.
+                unsetConflictingSRVs(gl::SAMPLER_VERTEX, renderTargetResource, index);
+                unsetConflictingSRVs(gl::SAMPLER_PIXEL, renderTargetResource, index);
+            }
+
         }
     }
 
@@ -1673,6 +1736,12 @@ void Renderer11::markAllStateDirty()
     mDepthStencilInitialized = false;
     mRenderTargetDescInitialized = false;
 
+    // We reset the current SRV data because it might not be in sync with D3D's state
+    // anymore. For example when a currently used SRV is used as an RTV, D3D silently
+    // remove it from its state.
+    memset(mCurVertexSRVs.data(), 0, sizeof(SRVRecord) * mCurVertexSRVs.size());
+    memset(mCurPixelSRVs.data(), 0, sizeof(SRVRecord) * mCurPixelSRVs.size());
+
     ASSERT(mForceSetVertexSamplerStates.size() == mCurVertexSRVs.size());
     for (size_t vsamplerId = 0; vsamplerId < mForceSetVertexSamplerStates.size(); ++vsamplerId)
     {
@@ -2180,6 +2249,7 @@ void Renderer11::unapplyRenderTargets()
     setOneTimeRenderTarget(NULL);
 }
 
+// When finished with this rendertarget, markAllStateDirty must be called.
 void Renderer11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView)
 {
     ID3D11RenderTargetView *rtvArray[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {NULL};
@@ -3334,8 +3404,9 @@ void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot
     auto &currentSRVs = (shaderType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
 
     ASSERT(static_cast<size_t>(resourceSlot) < currentSRVs.size());
+    auto &record = currentSRVs[resourceSlot];
 
-    if (currentSRVs[resourceSlot] != srv)
+    if (record.srv != srv)
     {
         if (shaderType == gl::SAMPLER_VERTEX)
         {
@@ -3346,7 +3417,12 @@ void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot
             mDeviceContext->PSSetShaderResources(resourceSlot, 1, &srv);
         }
 
-        currentSRVs[resourceSlot] = srv;
+        record.srv = srv;
+        if (srv)
+        {
+            srv->GetResource(&record.resource);
+            srv->GetDesc(&record.desc);
+        }
     }
 }
 }

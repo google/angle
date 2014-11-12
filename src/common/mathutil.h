@@ -503,6 +503,7 @@ inline unsigned int averageFloat10(unsigned int a, unsigned int b)
 namespace rx
 {
 
+// Represents intervals of the type [a, b)
 template <typename T>
 struct Range
 {
@@ -513,6 +514,18 @@ struct Range
     T end;
 
     T length() const { return end - start; }
+
+    bool intersects(Range<T> other)
+    {
+        if (start <= other.start)
+        {
+            return other.start < end;
+        }
+        else
+        {
+            return start < other.end;
+        }
+    }
 };
 
 typedef Range<int> RangeI;
