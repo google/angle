@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3aa8035b_2dd69584",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Trim11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-12T17:40:13Z",
+      "side": 1,
+      "message": "It\u0027s probably a programmer error if the device is ever null, can this be an ASSERT instead?",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 50
+      },
+      "revId": "8f9f5f3cfa7bddc04fc4a22993d1a7dd133cf9ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a405775_bd025fa6",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Trim11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-12T17:40:13Z",
+      "side": 1,
+      "message": "Can use our DynamicCastComObject for this.",
+      "range": {
+        "startLine": 46,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 86
+      },
+      "revId": "8f9f5f3cfa7bddc04fc4a22993d1a7dd133cf9ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a405775_7d3a975e",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Trim11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-12T17:40:13Z",
+      "side": 1,
+      "message": "This can probably just be an empty struct or typedef\u0027d as void*.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 27
+      },
+      "revId": "8f9f5f3cfa7bddc04fc4a22993d1a7dd133cf9ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
