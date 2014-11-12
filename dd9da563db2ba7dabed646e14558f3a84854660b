@@ -48,6 +48,52 @@
     },
     {
       "key": {
+        "uuid": "3aa8035b_eaa14307",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-12T16:10:10Z",
+      "side": 1,
+      "message": "Let\u0027s rename this to ValidateRenderbufferStorageParametersBase and add a ValidateES2RenderbufferStorageParameters to ValidationES2 which just calls this.",
+      "range": {
+        "startLine": 291,
+        "startChar": 5,
+        "endLine": 291,
+        "endChar": 42
+      },
+      "revId": "dd9da563db2ba7dabed646e14558f3a84854660b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa5ff82_8c86ab39",
+        "filename": "src/libGLESv2/validationES3.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1191,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-12T16:10:10Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 1191,
+        "startChar": 3,
+        "endLine": 1191,
+        "endChar": 57
+      },
+      "revId": "dd9da563db2ba7dabed646e14558f3a84854660b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5aabf756_fa058d7f",
         "filename": "src/libGLESv2/validationES3.h",
         "patchSetId": 10
@@ -59,6 +105,29 @@
       "writtenOn": "2014-11-12T15:53:04Z",
       "side": 1,
       "message": "Nit: this needs to get indented to the open paren on the previous line",
+      "revId": "dd9da563db2ba7dabed646e14558f3a84854660b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aa8035b_6acc73f8",
+        "filename": "src/libGLESv2/validationES3.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-12T16:10:10Z",
+      "side": 1,
+      "message": "nit: indent this so the parameters line up.",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 56
+      },
       "revId": "dd9da563db2ba7dabed646e14558f3a84854660b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
