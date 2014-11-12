@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aa5ff82_6c556f10",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 5807,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-12T15:53:04Z",
+      "side": 1,
+      "message": "This will never be hit, because the clause above returns if the ES context is \u003c 3. The extension entry point invokes ValidateRenderbufferStorageParameters independently of this function, so this can be omitted.",
+      "range": {
+        "startLine": 5805,
+        "startChar": 8,
+        "endLine": 5807,
+        "endChar": 73
+      },
+      "revId": "dd9da563db2ba7dabed646e14558f3a84854660b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5aabf756_3a1b25de",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 5812,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-12T15:53:04Z",
+      "side": 1,
+      "message": "This is guaranteed by this point in the function, for the same reason as above.",
+      "range": {
+        "startLine": 5812,
+        "startChar": 12,
+        "endLine": 5812,
+        "endChar": 44
+      },
+      "revId": "dd9da563db2ba7dabed646e14558f3a84854660b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5aabf756_fa058d7f",
+        "filename": "src/libGLESv2/validationES3.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-12T15:53:04Z",
+      "side": 1,
+      "message": "Nit: this needs to get indented to the open paren on the previous line",
+      "revId": "dd9da563db2ba7dabed646e14558f3a84854660b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
