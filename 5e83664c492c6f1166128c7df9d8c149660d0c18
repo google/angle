@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa582b71_9added70",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-12T19:23:45Z",
+      "side": 1,
+      "message": "I\u0027m not familiar with this notation, can you explain what it is?",
+      "range": {
+        "startLine": 846,
+        "startChar": 11,
+        "endLine": 846,
+        "endChar": 58
+      },
+      "revId": "5e83664c492c6f1166128c7df9d8c149660d0c18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a3e4fe9_5f918bd9",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-12T19:23:45Z",
+      "side": 1,
+      "message": "suggestion: is it possible to use the Range2 template type and make this a method or helper?",
+      "range": {
+        "startLine": 847,
+        "startChar": 12,
+        "endLine": 847,
+        "endChar": 28
+      },
+      "revId": "5e83664c492c6f1166128c7df9d8c149660d0c18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa582b71_dae76540",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 849,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-12T19:23:45Z",
+      "side": 1,
+      "message": "nit: we use allman style braces (always a newline)",
+      "range": {
+        "startLine": 849,
+        "startChar": 26,
+        "endLine": 849,
+        "endChar": 27
+      },
+      "revId": "5e83664c492c6f1166128c7df9d8c149660d0c18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa6cabf2_8146797f",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 858,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-12T19:23:45Z",
+      "side": 1,
+      "message": "nit: our style is to put all local static helper functions at the top of each cpp file, in a namespace {} block usually, and the function name starts capitalized",
+      "range": {
+        "startLine": 858,
+        "startChar": 12,
+        "endLine": 858,
+        "endChar": 38
+      },
+      "revId": "5e83664c492c6f1166128c7df9d8c149660d0c18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa6cabf2_a14b7d87",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 858,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-12T19:23:45Z",
+      "side": 1,
+      "message": "nit: ANGLE uses right-aligned pointer and ref symbols:\n\n  gl::ImageIndex *index",
+      "range": {
+        "startLine": 858,
+        "startChar": 59,
+        "endLine": 858,
+        "endChar": 60
+      },
+      "revId": "5e83664c492c6f1166128c7df9d8c149660d0c18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa582b71_7aee191d",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-12T19:23:45Z",
+      "side": 1,
+      "message": "nit: I think this is GLenum? suggest leaving it as so",
+      "range": {
+        "startLine": 862,
+        "startChar": 4,
+        "endLine": 862,
+        "endChar": 7
+      },
+      "revId": "5e83664c492c6f1166128c7df9d8c149660d0c18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a3e4fe9_3ff5a72e",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 867,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-12T19:23:45Z",
+      "side": 1,
+      "message": "nit: switch style is to use two spaces indent for case labels and then two spaces more for the body:\n\n  switch ()\n  {\n    case :\n      // stuff\n  }",
+      "range": {
+        "startLine": 867,
+        "startChar": 12,
+        "endLine": 867,
+        "endChar": 13
+      },
+      "revId": "5e83664c492c6f1166128c7df9d8c149660d0c18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa582b71_fa1ce98a",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 874,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-12T19:23:45Z",
+      "side": 1,
+      "message": "there\u0027s one potential gotcha here. You can ask Geoff or me  about it in person. Sometimes when we use D3D11 Textures to back very small compressed GL textures, we use an extra 1 or 2 mips just as padding -- for 1x1 DXT textures, we can\u0027t create D3D textures smaller than 4x4 so we create a 4x4 texture and offset the whole mip chain. so we need be wary of this edge case when comparing the gl ImageIndex to the D3D SRV.",
+      "range": {
+        "startLine": 874,
+        "startChar": 22,
+        "endLine": 874,
+        "endChar": 123
+      },
+      "revId": "5e83664c492c6f1166128c7df9d8c149660d0c18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa6cabf2_61456570",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1747,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-12T19:23:45Z",
+      "side": 1,
+      "message": "are these necessary? I was also wondering if these clears fix the bug without the extra other tracking.",
+      "range": {
+        "startLine": 1747,
+        "startChar": 8,
+        "endLine": 1747,
+        "endChar": 41
+      },
+      "revId": "5e83664c492c6f1166128c7df9d8c149660d0c18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa6cabf2_21376d03",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3420,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-12T19:23:45Z",
+      "side": 1,
+      "message": "nit: newline",
+      "range": {
+        "startLine": 3420,
+        "startChar": 17,
+        "endLine": 3420,
+        "endChar": 18
+      },
+      "revId": "5e83664c492c6f1166128c7df9d8c149660d0c18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a3e4fe9_5fd6ab84",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-12T19:23:45Z",
+      "side": 1,
+      "message": "would it make sense to store a Range2 of active mips instead of full Desc?",
+      "range": {
+        "startLine": 270,
+        "startChar": 8,
+        "endLine": 270,
+        "endChar": 45
+      },
+      "revId": "5e83664c492c6f1166128c7df9d8c149660d0c18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
