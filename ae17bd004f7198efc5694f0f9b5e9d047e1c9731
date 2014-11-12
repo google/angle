@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a693705_f8606d2b",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-12T21:04:55Z",
+      "side": 1,
+      "message": "This changes the error returned when glRenderbufferStorageMultisampleANGLE is called with samples \u003e formatCaps.getMaxSamples. We were previously returning GL_OUT_OF_MEMORY in the case that samples exceeded the max samples supported for the format, but not the value of GL_MAX_SAMPLES_ANGLE, because INVALID_VALUE isn\u0027t specified by ANGLE_framebuffer_multisample for those cases. This does the checks in the other order, and returns the wrong error.",
+      "range": {
+        "startLine": 333,
+        "startChar": 4,
+        "endLine": 337,
+        "endChar": 5
+      },
+      "revId": "ae17bd004f7198efc5694f0f9b5e9d047e1c9731",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a6c3b15_791623b6",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-12T21:04:55Z",
+      "side": 1,
+      "message": "Upon checking, this function actually no longer exists. The value is now accessible via Context::getExtensions().maxSamples.",
+      "range": {
+        "startLine": 360,
+        "startChar": 38,
+        "endLine": 360,
+        "endChar": 60
+      },
+      "revId": "ae17bd004f7198efc5694f0f9b5e9d047e1c9731",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
