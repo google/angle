@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a4d63af_bc8b817c",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-12T18:00:29Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 292,
+        "startChar": 42,
+        "endLine": 292,
+        "endChar": 96
+      },
+      "revId": "b9fcdc6b6b1511cefd68495e5417a01b7437f671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aa8035b_f87919b6",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-12T18:00:29Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 350,
+        "startChar": 40,
+        "endLine": 350,
+        "endChar": 50
+      },
+      "revId": "b9fcdc6b6b1511cefd68495e5417a01b7437f671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a405775_40f410ea",
+        "filename": "src/libGLESv2/validationES.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-12T18:00:29Z",
+      "side": 1,
+      "message": "nit:indentation",
+      "range": {
+        "startLine": 36,
+        "startChar": 27,
+        "endLine": 36,
+        "endChar": 97
+      },
+      "revId": "b9fcdc6b6b1511cefd68495e5417a01b7437f671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a405775_80ee181a",
+        "filename": "src/libGLESv2/validationES3.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-12T18:00:29Z",
+      "side": 1,
+      "message": "nit:indentation",
+      "range": {
+        "startLine": 36,
+        "startChar": 3,
+        "endLine": 36,
+        "endChar": 58
+      },
+      "revId": "b9fcdc6b6b1511cefd68495e5417a01b7437f671",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
