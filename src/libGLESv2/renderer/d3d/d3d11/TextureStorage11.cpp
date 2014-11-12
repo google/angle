@@ -1790,13 +1790,16 @@ TextureStorage11_2DArray::~TextureStorage11_2DArray()
 {
     for (ImageMap::iterator i = mAssociatedImages.begin(); i != mAssociatedImages.end(); i++)
     {
-        bool imageAssociationCorrect = i->second->isAssociatedStorageValid(this);
-        ASSERT(imageAssociationCorrect);
-
-        if (imageAssociationCorrect)
+        if (i->second)
         {
-            // We must let the Images recover their data before we delete it from the TextureStorage.
-            i->second->recoverFromAssociatedStorage();
+            bool imageAssociationCorrect = i->second->isAssociatedStorageValid(this);
+            ASSERT(imageAssociationCorrect);
+
+            if (imageAssociationCorrect)
+            {
+                // We must let the Images recover their data before we delete it from the TextureStorage.
+                i->second->recoverFromAssociatedStorage();
+            }
         }
     }
     mAssociatedImages.clear();
@@ -1873,8 +1876,6 @@ gl::Error TextureStorage11_2DArray::releaseAssociatedImage(const gl::ImageIndex 
     GLint layerTarget = index.layerIndex;
 
     LevelLayerKey key(level, layerTarget);
-
-    ASSERT(mAssociatedImages.find(key) != mAssociatedImages.end());
 
     if (mAssociatedImages.find(key) != mAssociatedImages.end())
     {

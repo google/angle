@@ -2362,7 +2362,7 @@ gl::Error TextureD3D_2DArray::subImage(GLenum target, GLint level, GLint xoffset
         const void *layerPixels = pixels ? (reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i)) : NULL;
 
         gl::ImageIndex index = gl::ImageIndex::Make2DArray(level, layer);
-        gl::Error error = TextureD3D::subImage(xoffset, yoffset, zoffset, width, height, 1, format, type,
+        gl::Error error = TextureD3D::subImage(xoffset, yoffset, 0, width, height, 1, format, type,
                                                unpack, layerPixels, index);
         if (error.isError())
         {
@@ -2513,7 +2513,7 @@ void TextureD3D_2DArray::initMipmapsImages()
 {
     int baseWidth = getBaseLevelWidth();
     int baseHeight = getBaseLevelHeight();
-    int baseDepth = getBaseLevelDepth();
+    int baseDepth = getLayerCount(0);
     GLenum baseFormat = getBaseLevelInternalFormat();
 
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
