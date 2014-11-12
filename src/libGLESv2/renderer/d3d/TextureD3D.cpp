@@ -2255,16 +2255,18 @@ TextureD3D_2DArray::~TextureD3D_2DArray()
 Image *TextureD3D_2DArray::getImage(int level, int layer) const
 {
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(layer < mLayerCounts[level]);
-    return mImageArray[level][layer];
+    ASSERT((layer == 0 && mLayerCounts[level] == 0) ||
+           layer < mLayerCounts[level]);
+    return (mImageArray[level] ? mImageArray[level][layer] : NULL);
 }
 
 Image *TextureD3D_2DArray::getImage(const gl::ImageIndex &index) const
 {
     ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(index.layerIndex < mLayerCounts[index.mipIndex]);
+    ASSERT((index.layerIndex == 0 && mLayerCounts[index.mipIndex] == 0) ||
+           index.layerIndex < mLayerCounts[index.mipIndex]);
     ASSERT(index.type == GL_TEXTURE_2D_ARRAY);
-    return mImageArray[index.mipIndex][index.layerIndex];
+    return (mImageArray[index.mipIndex] ? mImageArray[index.mipIndex][index.layerIndex] : NULL);
 }
 
 GLsizei TextureD3D_2DArray::getLayerCount(int level) const
