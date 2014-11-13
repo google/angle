@@ -17,7 +17,7 @@
 namespace rx
 {
 
-VertexBuffer9::VertexBuffer9(rx::Renderer9 *renderer) : mRenderer(renderer)
+VertexBuffer9::VertexBuffer9(Renderer9 *renderer) : mRenderer(renderer)
 {
     mVertexBuffer = NULL;
     mBufferSize = 0;
@@ -209,7 +209,7 @@ gl::Error VertexBuffer9::spaceRequired(const gl::VertexAttribute &attrib, std::s
         else
         {
             // Round up to divisor, if possible
-            elementCount = rx::UnsignedCeilDivide(static_cast<unsigned int>(instances), attrib.divisor);
+            elementCount = UnsignedCeilDivide(static_cast<unsigned int>(instances), attrib.divisor);
         }
 
         if (d3d9VertexInfo.outputElementSize <= std::numeric_limits<unsigned int>::max() / elementCount)

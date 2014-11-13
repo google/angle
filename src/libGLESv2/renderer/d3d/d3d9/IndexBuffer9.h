@@ -40,7 +40,7 @@ class IndexBuffer9 : public IndexBuffer
   private:
     DISALLOW_COPY_AND_ASSIGN(IndexBuffer9);
 
-    rx::Renderer9 *const mRenderer;
+    Renderer9 *const mRenderer;
 
     IDirect3DIndexBuffer9 *mIndexBuffer;
     unsigned int mBufferSize;

@@ -179,8 +179,8 @@ static unsigned int getDSVSubresourceIndex(ID3D11Resource *resource, ID3D11Depth
 
 RenderTarget11 *RenderTarget11::makeRenderTarget11(RenderTarget *target)
 {
-    ASSERT(HAS_DYNAMIC_TYPE(rx::RenderTarget11*, target));
-    return static_cast<rx::RenderTarget11*>(target);
+    ASSERT(HAS_DYNAMIC_TYPE(RenderTarget11*, target));
+    return static_cast<RenderTarget11*>(target);
 }
 
 void RenderTarget11::invalidate(GLint x, GLint y, GLsizei width, GLsizei height)

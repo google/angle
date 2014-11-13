@@ -13,7 +13,7 @@
 namespace rx
 {
 
-Buffer9::Buffer9(rx::Renderer9 *renderer)
+Buffer9::Buffer9(Renderer9 *renderer)
     : BufferD3D(),
       mRenderer(renderer),
       mSize(0)

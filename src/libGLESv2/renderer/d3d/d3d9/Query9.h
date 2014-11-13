@@ -18,7 +18,7 @@ class Renderer9;
 class Query9 : public QueryImpl
 {
   public:
-    Query9(rx::Renderer9 *renderer, GLenum type);
+    Query9(Renderer9 *renderer, GLenum type);
     virtual ~Query9();
 
     virtual gl::Error begin();
@@ -34,7 +34,7 @@ class Query9 : public QueryImpl
     GLuint mResult;
     bool mQueryFinished;
 
-    rx::Renderer9 *mRenderer;
+    Renderer9 *mRenderer;
     IDirect3DQuery9 *mQuery;
 };
 

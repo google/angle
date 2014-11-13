@@ -487,7 +487,7 @@ gl::Error TextureD3D::ensureRenderTarget()
 
 bool TextureD3D::canCreateRenderTargetForImage(const gl::ImageIndex &index) const
 {
-    rx::Image *image = getImage(index);
+    Image *image = getImage(index);
     bool levelsComplete = (isImageComplete(index) && isImageComplete(getImageIndex(0, 0)));
     return (image->isRenderableFormat() && levelsComplete);
 }
@@ -2033,7 +2033,7 @@ gl::Error TextureD3D_3D::initializeStorage(bool renderTarget)
 
     bool createRenderTarget = (renderTarget || mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
 
-    rx::TextureStorage *storage = NULL;
+    TextureStorage *storage = NULL;
     gl::Error error = createCompleteStorage(createRenderTarget, &storage);
     if (error.isError())
     {

@@ -75,7 +75,7 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
     }
 
     gl::VertexArray *vao = data.state->getVertexArray();
-    rx::TranslatedIndexData indexInfo;
+    TranslatedIndexData indexInfo;
     indexInfo.indexRange = indexRange;
     error = applyIndexBuffer(indices, vao->getElementArrayBuffer(), count, mode, type, &indexInfo);
     if (error.isError())

@@ -76,7 +76,7 @@ class IndexBufferInterface
   private:
     DISALLOW_COPY_AND_ASSIGN(IndexBufferInterface);
 
-    rx::RendererD3D *const mRenderer;
+    RendererD3D *const mRenderer;
 
     IndexBuffer* mIndexBuffer;
 

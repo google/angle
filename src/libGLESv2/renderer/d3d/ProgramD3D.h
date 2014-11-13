@@ -30,13 +30,13 @@ class UniformStorage;
 class ProgramD3D : public ProgramImpl
 {
   public:
-    ProgramD3D(rx::RendererD3D *renderer);
+    ProgramD3D(RendererD3D *renderer);
     virtual ~ProgramD3D();
 
     static ProgramD3D *makeProgramD3D(ProgramImpl *impl);
     static const ProgramD3D *makeProgramD3D(const ProgramImpl *impl);
 
-    const std::vector<rx::PixelShaderOutputVariable> &getPixelShaderKey() { return mPixelShaderKey; }
+    const std::vector<PixelShaderOutputVariable> &getPixelShaderKey() { return mPixelShaderKey; }
     int getShaderVersion() const { return mShaderVersion; }
     GLenum getTransformFeedbackBufferMode() const { return mTransformFeedbackBufferMode; }
 
@@ -121,35 +121,35 @@ class ProgramD3D : public ProgramImpl
       public:
         VertexExecutable(const gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS],
                          const GLenum signature[gl::MAX_VERTEX_ATTRIBS],
-                         rx::ShaderExecutable *shaderExecutable);
+                         ShaderExecutable *shaderExecutable);
         ~VertexExecutable();
 
         bool matchesSignature(const GLenum convertedLayout[gl::MAX_VERTEX_ATTRIBS]) const;
 
         const gl::VertexFormat *inputs() const { return mInputs; }
         const GLenum *signature() const { return mSignature; }
-        rx::ShaderExecutable *shaderExecutable() const { return mShaderExecutable; }
+        ShaderExecutable *shaderExecutable() const { return mShaderExecutable; }
 
       private:
         gl::VertexFormat mInputs[gl::MAX_VERTEX_ATTRIBS];
         GLenum mSignature[gl::MAX_VERTEX_ATTRIBS];
-        rx::ShaderExecutable *mShaderExecutable;
+        ShaderExecutable *mShaderExecutable;
     };
 
     class PixelExecutable
     {
       public:
-        PixelExecutable(const std::vector<GLenum> &outputSignature, rx::ShaderExecutable *shaderExecutable);
+        PixelExecutable(const std::vector<GLenum> &outputSignature, ShaderExecutable *shaderExecutable);
         ~PixelExecutable();
 
         bool matchesSignature(const std::vector<GLenum> &signature) const { return mOutputSignature == signature; }
 
         const std::vector<GLenum> &outputSignature() const { return mOutputSignature; }
-        rx::ShaderExecutable *shaderExecutable() const { return mShaderExecutable; }
+        ShaderExecutable *shaderExecutable() const { return mShaderExecutable; }
 
       private:
         std::vector<GLenum> mOutputSignature;
-        rx::ShaderExecutable *mShaderExecutable;
+        ShaderExecutable *mShaderExecutable;
     };
 
     struct Sampler
@@ -188,15 +188,15 @@ class ProgramD3D : public ProgramImpl
 
     std::vector<VertexExecutable *> mVertexExecutables;
     std::vector<PixelExecutable *> mPixelExecutables;
-    rx::ShaderExecutable *mGeometryExecutable;
+    ShaderExecutable *mGeometryExecutable;
 
     std::string mVertexHLSL;
-    rx::D3DWorkaroundType mVertexWorkarounds;
+    D3DWorkaroundType mVertexWorkarounds;
 
     std::string mPixelHLSL;
-    rx::D3DWorkaroundType mPixelWorkarounds;
+    D3DWorkaroundType mPixelWorkarounds;
     bool mUsesFragDepth;
-    std::vector<rx::PixelShaderOutputVariable> mPixelShaderKey;
+    std::vector<PixelShaderOutputVariable> mPixelShaderKey;
 
     bool mUsesPointSize;
 

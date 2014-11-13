@@ -1284,8 +1284,8 @@ void ProgramD3D::getUniformuiv(GLint location, GLuint *params)
 bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShader, const gl::Shader &fragmentShader,
                               const gl::Caps &caps)
 {
-    const rx::ShaderD3D *vertexShaderD3D = rx::ShaderD3D::makeShaderD3D(vertexShader.getImplementation());
-    const rx::ShaderD3D *fragmentShaderD3D = rx::ShaderD3D::makeShaderD3D(fragmentShader.getImplementation());
+    const ShaderD3D *vertexShaderD3D = ShaderD3D::makeShaderD3D(vertexShader.getImplementation());
+    const ShaderD3D *fragmentShaderD3D = ShaderD3D::makeShaderD3D(fragmentShader.getImplementation());
 
     const std::vector<sh::Uniform> &vertexUniforms = vertexShader.getUniforms();
     const std::vector<sh::Uniform> &fragmentUniforms = fragmentShader.getUniforms();
@@ -1357,7 +1357,7 @@ bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShad
 
 void ProgramD3D::defineUniformBase(GLenum shader, const sh::Uniform &uniform, unsigned int uniformRegister)
 {
-    ShShaderOutput outputType = rx::ShaderD3D::getCompilerOutputType(shader);
+    ShShaderOutput outputType = ShaderD3D::getCompilerOutputType(shader);
     sh::HLSLBlockEncoder encoder(sh::HLSLBlockEncoder::GetStrategyFor(outputType));
     encoder.skipRegisters(uniformRegister);
 
@@ -1724,7 +1724,7 @@ void ProgramD3D::defineUniformBlockMembers(const std::vector<VarT> &fields, cons
 bool ProgramD3D::defineUniformBlock(gl::InfoLog &infoLog, const gl::Shader &shader, const sh::InterfaceBlock &interfaceBlock,
                                     const gl::Caps &caps)
 {
-    const rx::ShaderD3D* shaderD3D = rx::ShaderD3D::makeShaderD3D(shader.getImplementation());
+    const ShaderD3D* shaderD3D = ShaderD3D::makeShaderD3D(shader.getImplementation());
 
     // create uniform block entries if they do not exist
     if (getUniformBlockIndex(interfaceBlock.name) == GL_INVALID_INDEX)

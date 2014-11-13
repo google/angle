@@ -47,7 +47,7 @@ class Blit9
     gl::Error boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
 
   private:
-    rx::Renderer9 *mRenderer;
+    Renderer9 *mRenderer;
 
     bool mGeometryLoaded;
     IDirect3DVertexBuffer9 *mQuadVertexBuffer;

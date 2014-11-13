@@ -60,7 +60,7 @@ class Renderer11 : public RendererD3D
 
     virtual gl::Error sync(bool block);
 
-    virtual SwapChain *createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
+    virtual SwapChain *createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
 
     virtual gl::Error generateSwizzle(gl::Texture *texture);
     virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler);
@@ -143,10 +143,10 @@ class Renderer11 : public RendererD3D
 
     // Shader operations
     void releaseShaderCompiler() override;
-    virtual gl::Error loadExecutable(const void *function, size_t length, rx::ShaderType type,
+    virtual gl::Error loadExecutable(const void *function, size_t length, ShaderType type,
                                      const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                      bool separatedOutputBuffers, ShaderExecutable **outExecutable);
-    virtual gl::Error compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, rx::ShaderType type,
+    virtual gl::Error compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, ShaderType type,
                                           const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                           bool separatedOutputBuffers, D3DWorkaroundType workaround,
                                           ShaderExecutable **outExectuable);
@@ -203,7 +203,7 @@ class Renderer11 : public RendererD3D
     gl::Error packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams &params, uint8_t *pixelsOut);
 
     virtual bool getLUID(LUID *adapterLuid) const;
-    virtual rx::VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const;
+    virtual VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const;
     virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const;
 
     gl::Error readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area, GLenum format,
@@ -252,7 +252,7 @@ class Renderer11 : public RendererD3D
     unsigned int mAppliedStencilbufferSerial;
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
-    rx::RenderTarget::Desc mRenderTargetDesc;
+    RenderTarget::Desc mRenderTargetDesc;
 
     // Currently applied sampler states
     std::vector<bool> mForceSetVertexSamplerStates;

@@ -36,8 +36,8 @@ class BufferD3D : public BufferImpl
     virtual bool supportsDirectBinding() const = 0;
     virtual RendererD3D *getRenderer() = 0;
 
-    rx::StaticVertexBufferInterface *getStaticVertexBuffer() { return mStaticVertexBuffer; }
-    rx::StaticIndexBufferInterface *getStaticIndexBuffer() { return mStaticIndexBuffer; }
+    StaticVertexBufferInterface *getStaticVertexBuffer() { return mStaticVertexBuffer; }
+    StaticIndexBufferInterface *getStaticIndexBuffer() { return mStaticIndexBuffer; }
 
     void initializeStaticData();
     void invalidateStaticData();
@@ -49,8 +49,8 @@ class BufferD3D : public BufferImpl
 
     void updateSerial();
 
-    rx::StaticVertexBufferInterface *mStaticVertexBuffer;
-    rx::StaticIndexBufferInterface *mStaticIndexBuffer;
+    StaticVertexBufferInterface *mStaticVertexBuffer;
+    StaticIndexBufferInterface *mStaticIndexBuffer;
     unsigned int mUnmodifiedDataUse;
 };
 

@@ -174,8 +174,8 @@ void Renderer9::release()
 
 Renderer9 *Renderer9::makeRenderer9(Renderer *renderer)
 {
-    ASSERT(HAS_DYNAMIC_TYPE(rx::Renderer9*, renderer));
-    return static_cast<rx::Renderer9*>(renderer);
+    ASSERT(HAS_DYNAMIC_TYPE(Renderer9*, renderer));
+    return static_cast<Renderer9*>(renderer);
 }
 
 EGLint Renderer9::initialize()
@@ -394,8 +394,8 @@ void Renderer9::initializeDevice()
     mBlit->initialize();
 
     ASSERT(!mVertexDataManager && !mIndexDataManager);
-    mVertexDataManager = new rx::VertexDataManager(this);
-    mIndexDataManager = new rx::IndexDataManager(this);
+    mVertexDataManager = new VertexDataManager(this);
+    mIndexDataManager = new IndexDataManager(this);
 }
 
 D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
@@ -550,9 +550,9 @@ gl::Error Renderer9::sync(bool block)
     return gl::Error(GL_NO_ERROR);
 }
 
-SwapChain *Renderer9::createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
+SwapChain *Renderer9::createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
 {
-    return new rx::SwapChain9(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat);
+    return new SwapChain9(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat);
 }
 
 gl::Error Renderer9::allocateEventQuery(IDirect3DQuery9 **outQuery)
@@ -2883,7 +2883,7 @@ void Renderer9::releaseShaderCompiler()
     ShaderD3D::releaseCompiler();
 }
 
-gl::Error Renderer9::loadExecutable(const void *function, size_t length, rx::ShaderType type,
+gl::Error Renderer9::loadExecutable(const void *function, size_t length, ShaderType type,
                                     const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                     bool separatedOutputBuffers, ShaderExecutable **outExecutable)
 {
@@ -2892,7 +2892,7 @@ gl::Error Renderer9::loadExecutable(const void *function, size_t length, rx::Sha
 
     switch (type)
     {
-      case rx::SHADER_VERTEX:
+      case SHADER_VERTEX:
         {
             IDirect3DVertexShader9 *vshader = NULL;
             gl::Error error = createVertexShader((DWORD*)function, length, &vshader);
@@ -2903,7 +2903,7 @@ gl::Error Renderer9::loadExecutable(const void *function, size_t length, rx::Sha
             *outExecutable = new ShaderExecutable9(function, length, vshader);
         }
         break;
-      case rx::SHADER_PIXEL:
+      case SHADER_PIXEL:
         {
             IDirect3DPixelShader9 *pshader = NULL;
             gl::Error error = createPixelShader((DWORD*)function, length, &pshader);
@@ -2922,7 +2922,7 @@ gl::Error Renderer9::loadExecutable(const void *function, size_t length, rx::Sha
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, rx::ShaderType type,
+gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, ShaderType type,
                                          const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                          bool separatedOutputBuffers, D3DWorkaroundType workaround,
                                          ShaderExecutable **outExectuable)
@@ -2933,10 +2933,10 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string
     const char *profileType = NULL;
     switch (type)
     {
-      case rx::SHADER_VERTEX:
+      case SHADER_VERTEX:
         profileType = "vs";
         break;
-      case rx::SHADER_PIXEL:
+      case SHADER_PIXEL:
         profileType = "ps";
         break;
       default:
@@ -3008,7 +3008,7 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string
     return gl::Error(GL_NO_ERROR);
 }
 
-rx::UniformStorage *Renderer9::createUniformStorage(size_t storageSize)
+UniformStorage *Renderer9::createUniformStorage(size_t storageSize)
 {
     return new UniformStorage(storageSize);
 }
@@ -3154,7 +3154,7 @@ bool Renderer9::getLUID(LUID *adapterLuid) const
     return false;
 }
 
-rx::VertexConversionType Renderer9::getVertexConversionType(const gl::VertexFormat &vertexFormat) const
+VertexConversionType Renderer9::getVertexConversionType(const gl::VertexFormat &vertexFormat) const
 {
     return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormat).conversionType;
 }

@@ -164,8 +164,8 @@ Renderer11::~Renderer11()
 
 Renderer11 *Renderer11::makeRenderer11(Renderer *renderer)
 {
-    ASSERT(HAS_DYNAMIC_TYPE(rx::Renderer11*, renderer));
-    return static_cast<rx::Renderer11*>(renderer);
+    ASSERT(HAS_DYNAMIC_TYPE(Renderer11*, renderer));
+    return static_cast<Renderer11*>(renderer);
 }
 
 #ifndef __d3d11_1_h__
@@ -452,9 +452,9 @@ gl::Error Renderer11::sync(bool block)
     return gl::Error(GL_NO_ERROR);
 }
 
-SwapChain *Renderer11::createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
+SwapChain *Renderer11::createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
 {
-    return new rx::SwapChain11(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat);
+    return new SwapChain11(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat);
 }
 
 gl::Error Renderer11::generateSwizzle(gl::Texture *texture)
@@ -2344,13 +2344,13 @@ void Renderer11::releaseShaderCompiler()
     ShaderD3D::releaseCompiler();
 }
 
-gl::Error Renderer11::loadExecutable(const void *function, size_t length, rx::ShaderType type,
+gl::Error Renderer11::loadExecutable(const void *function, size_t length, ShaderType type,
                                      const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                      bool separatedOutputBuffers, ShaderExecutable **outExecutable)
 {
     switch (type)
     {
-      case rx::SHADER_VERTEX:
+      case SHADER_VERTEX:
         {
             ID3D11VertexShader *vertexShader = NULL;
             ID3D11GeometryShader *streamOutShader = NULL;
@@ -2395,7 +2395,7 @@ gl::Error Renderer11::loadExecutable(const void *function, size_t length, rx::Sh
             *outExecutable = new ShaderExecutable11(function, length, vertexShader, streamOutShader);
         }
         break;
-      case rx::SHADER_PIXEL:
+      case SHADER_PIXEL:
         {
             ID3D11PixelShader *pixelShader = NULL;
 
@@ -2409,7 +2409,7 @@ gl::Error Renderer11::loadExecutable(const void *function, size_t length, rx::Sh
             *outExecutable = new ShaderExecutable11(function, length, pixelShader);
         }
         break;
-      case rx::SHADER_GEOMETRY:
+      case SHADER_GEOMETRY:
         {
             ID3D11GeometryShader *geometryShader = NULL;
 
@@ -2431,7 +2431,7 @@ gl::Error Renderer11::loadExecutable(const void *function, size_t length, rx::Sh
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, rx::ShaderType type,
+gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, ShaderType type,
                                           const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                           bool separatedOutputBuffers, D3DWorkaroundType workaround,
                                           ShaderExecutable **outExectuable)
@@ -2439,13 +2439,13 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog, const std::strin
     const char *profileType = NULL;
     switch (type)
     {
-      case rx::SHADER_VERTEX:
+      case SHADER_VERTEX:
         profileType = "vs";
         break;
-      case rx::SHADER_PIXEL:
+      case SHADER_PIXEL:
         profileType = "ps";
         break;
-      case rx::SHADER_GEOMETRY:
+      case SHADER_GEOMETRY:
         profileType = "gs";
         break;
       default:
@@ -2529,7 +2529,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog, const std::strin
     return gl::Error(GL_NO_ERROR);
 }
 
-rx::UniformStorage *Renderer11::createUniformStorage(size_t storageSize)
+UniformStorage *Renderer11::createUniformStorage(size_t storageSize)
 {
     return new UniformStorage11(this, storageSize);
 }
@@ -2746,7 +2746,7 @@ gl::Error Renderer11::readPixels(const gl::Framebuffer *framebuffer, GLint x, GL
     gl::Buffer *packBuffer = pack.pixelBuffer.get();
     if (packBuffer != NULL)
     {
-        rx::Buffer11 *packBufferStorage = Buffer11::makeBuffer11(packBuffer->getImplementation());
+        Buffer11 *packBufferStorage = Buffer11::makeBuffer11(packBuffer->getImplementation());
         PackPixelsParams packParams(area, format, type, outputPitch, pack, reinterpret_cast<ptrdiff_t>(pixels));
 
         error = packBufferStorage->packPixels(colorBufferTexture, subresourceIndex, packParams);
@@ -3302,7 +3302,7 @@ bool Renderer11::getLUID(LUID *adapterLuid) const
     return true;
 }
 
-rx::VertexConversionType Renderer11::getVertexConversionType(const gl::VertexFormat &vertexFormat) const
+VertexConversionType Renderer11::getVertexConversionType(const gl::VertexFormat &vertexFormat) const
 {
     return d3d11::GetVertexFormatInfo(vertexFormat).conversionType;
 }

@@ -25,7 +25,7 @@ class ShaderD3D : public ShaderImpl
     friend class DynamicHLSL;
 
   public:
-    ShaderD3D(const gl::Data &data, GLenum type, rx::RendererD3D *renderer);
+    ShaderD3D(const gl::Data &data, GLenum type, RendererD3D *renderer);
     virtual ~ShaderD3D();
 
     static ShaderD3D *makeShaderD3D(ShaderImpl *impl);
@@ -44,7 +44,7 @@ class ShaderD3D : public ShaderImpl
     int getSemanticIndex(const std::string &attributeName) const;
     void appendDebugInfo(const std::string &info) { mDebugInfo += info; }
 
-    rx::D3DWorkaroundType getD3DWorkarounds() const;
+    D3DWorkaroundType getD3DWorkarounds() const;
     int getShaderVersion() const { return mShaderVersion; }
     bool usesDepthRange() const { return mUsesDepthRange; }
     bool usesPointSize() const { return mUsesPointSize; }

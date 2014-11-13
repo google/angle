@@ -16,7 +16,7 @@
 namespace rx
 {
 
-VertexBuffer11::VertexBuffer11(rx::Renderer11 *const renderer) : mRenderer(renderer)
+VertexBuffer11::VertexBuffer11(Renderer11 *const renderer) : mRenderer(renderer)
 {
     mBuffer = NULL;
     mBufferSize = 0;
@@ -137,7 +137,7 @@ gl::Error VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib, GL
         else
         {
             // Round up to divisor, if possible
-            elementCount = rx::UnsignedCeilDivide(static_cast<unsigned int>(instances), attrib.divisor);
+            elementCount = UnsignedCeilDivide(static_cast<unsigned int>(instances), attrib.divisor);
         }
 
         gl::VertexFormat vertexFormat(attrib);

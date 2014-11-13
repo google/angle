@@ -47,7 +47,7 @@ typedef size_t DataRevision;
 class Buffer11 : public BufferD3D
 {
   public:
-    Buffer11(rx::Renderer11 *renderer);
+    Buffer11(Renderer11 *renderer);
     virtual ~Buffer11();
 
     static Buffer11 *makeBuffer11(BufferImpl *buffer);
@@ -78,7 +78,7 @@ class Buffer11 : public BufferD3D
     class NativeBuffer11;
     class PackStorage11;
 
-    rx::Renderer11 *mRenderer;
+    Renderer11 *mRenderer;
     size_t mSize;
 
     BufferStorage11 *mMappedStorage;

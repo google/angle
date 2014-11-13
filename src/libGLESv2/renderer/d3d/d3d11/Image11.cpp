@@ -43,8 +43,8 @@ Image11::~Image11()
 
 Image11 *Image11::makeImage11(Image *img)
 {
-    ASSERT(HAS_DYNAMIC_TYPE(rx::Image11*, img));
-    return static_cast<rx::Image11*>(img);
+    ASSERT(HAS_DYNAMIC_TYPE(Image11*, img));
+    return static_cast<Image11*>(img);
 }
 
 gl::Error Image11::generateMipmap(Image11 *dest, Image11 *src)

@@ -18,7 +18,7 @@ class Renderer9;
 class VertexBuffer9 : public VertexBuffer
 {
   public:
-    explicit VertexBuffer9(rx::Renderer9 *renderer);
+    explicit VertexBuffer9(Renderer9 *renderer);
     virtual ~VertexBuffer9();
 
     virtual gl::Error initialize(unsigned int size, bool dynamicUsage);
@@ -39,7 +39,7 @@ class VertexBuffer9 : public VertexBuffer
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexBuffer9);
 
-    rx::Renderer9 *mRenderer;
+    Renderer9 *mRenderer;
 
     IDirect3DVertexBuffer9 *mVertexBuffer;
     unsigned int mBufferSize;

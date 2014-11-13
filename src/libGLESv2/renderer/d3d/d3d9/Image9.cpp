@@ -94,8 +94,8 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
 
 Image9 *Image9::makeImage9(Image *img)
 {
-    ASSERT(HAS_DYNAMIC_TYPE(rx::Image9*, img));
-    return static_cast<rx::Image9*>(img);
+    ASSERT(HAS_DYNAMIC_TYPE(Image9*, img));
+    return static_cast<Image9*>(img);
 }
 
 gl::Error Image9::generateMipmap(Image9 *dest, Image9 *source)

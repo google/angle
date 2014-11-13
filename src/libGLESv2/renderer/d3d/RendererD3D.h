@@ -66,7 +66,7 @@ class RendererD3D : public Renderer
                               GLbitfield mask, GLenum filter) override;
 
     // Direct3D Specific methods
-    virtual SwapChain *createSwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
+    virtual SwapChain *createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
 
     virtual gl::Error generateSwizzle(gl::Texture *texture) = 0;
     virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler) = 0;
@@ -121,10 +121,10 @@ class RendererD3D : public Renderer
 
     // Shader operations
     virtual void releaseShaderCompiler() = 0;
-    virtual gl::Error loadExecutable(const void *function, size_t length, rx::ShaderType type,
+    virtual gl::Error loadExecutable(const void *function, size_t length, ShaderType type,
                                      const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                      bool separatedOutputBuffers, ShaderExecutable **outExecutable) = 0;
-    virtual gl::Error compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, rx::ShaderType type,
+    virtual gl::Error compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, ShaderType type,
                                           const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                           bool separatedOutputBuffers, D3DWorkaroundType workaround,
                                           ShaderExecutable **outExectuable) = 0;
@@ -144,7 +144,7 @@ class RendererD3D : public Renderer
     virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
 
-    virtual rx::VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const = 0;
+    virtual VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const = 0;
     virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const = 0;
 
     virtual VertexBuffer *createVertexBuffer() = 0;

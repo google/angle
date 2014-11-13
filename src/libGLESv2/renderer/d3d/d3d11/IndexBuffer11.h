@@ -40,7 +40,7 @@ class IndexBuffer11 : public IndexBuffer
   private:
     DISALLOW_COPY_AND_ASSIGN(IndexBuffer11);
 
-    rx::Renderer11 *const mRenderer;
+    Renderer11 *const mRenderer;
 
     ID3D11Buffer *mBuffer;
     unsigned int mBufferSize;

@@ -52,11 +52,11 @@ void BufferD3D::initializeStaticData()
 {
     if (!mStaticVertexBuffer)
     {
-        mStaticVertexBuffer = new rx::StaticVertexBufferInterface(getRenderer());
+        mStaticVertexBuffer = new StaticVertexBufferInterface(getRenderer());
     }
     if (!mStaticIndexBuffer)
     {
-        mStaticIndexBuffer = new rx::StaticIndexBufferInterface(getRenderer());
+        mStaticIndexBuffer = new StaticIndexBufferInterface(getRenderer());
     }
 }
 

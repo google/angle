@@ -50,7 +50,7 @@ struct TranslatedAttribute
 class VertexDataManager
 {
   public:
-    VertexDataManager(rx::RendererD3D *renderer);
+    VertexDataManager(RendererD3D *renderer);
     virtual ~VertexDataManager();
 
     gl::Error prepareVertexData(const gl::State &state, GLint start, GLsizei count,
@@ -81,7 +81,7 @@ class VertexDataManager
                                 size_t *cachedOffset,
                                 StreamingVertexBufferInterface *buffer);
 
-    rx::RendererD3D *const mRenderer;
+    RendererD3D *const mRenderer;
 
     StreamingVertexBufferInterface *mStreamingBuffer;
 

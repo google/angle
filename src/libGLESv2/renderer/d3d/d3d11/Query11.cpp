@@ -17,7 +17,7 @@
 namespace rx
 {
 
-Query11::Query11(rx::Renderer11 *renderer, GLenum type)
+Query11::Query11(Renderer11 *renderer, GLenum type)
     : QueryImpl(type),
       mResult(0),
       mQueryFinished(false),

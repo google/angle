@@ -111,7 +111,7 @@ gl::Error PixelTransfer11::loadResources()
     }
 
     D3D11_BUFFER_DESC constantBufferDesc = { 0 };
-    constantBufferDesc.ByteWidth = rx::roundUp<UINT>(sizeof(CopyShaderParams), 32u);
+    constantBufferDesc.ByteWidth = roundUp<UINT>(sizeof(CopyShaderParams), 32u);
     constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

@@ -47,7 +47,7 @@ const size_t g_shaderSize[] =
 namespace rx
 {
 
-Blit9::Blit9(rx::Renderer9 *renderer)
+Blit9::Blit9(Renderer9 *renderer)
     : mRenderer(renderer),
       mGeometryLoaded(false),
       mQuadVertexBuffer(NULL),
@@ -166,12 +166,12 @@ gl::Error Blit9::setShader(ShaderId source, const char *profile,
 
 gl::Error Blit9::setVertexShader(ShaderId shader)
 {
-    return setShader<IDirect3DVertexShader9>(shader, "vs_2_0", &rx::Renderer9::createVertexShader, &IDirect3DDevice9::SetVertexShader);
+    return setShader<IDirect3DVertexShader9>(shader, "vs_2_0", &Renderer9::createVertexShader, &IDirect3DDevice9::SetVertexShader);
 }
 
 gl::Error Blit9::setPixelShader(ShaderId shader)
 {
-    return setShader<IDirect3DPixelShader9>(shader, "ps_2_0", &rx::Renderer9::createPixelShader, &IDirect3DDevice9::SetPixelShader);
+    return setShader<IDirect3DPixelShader9>(shader, "ps_2_0", &Renderer9::createPixelShader, &IDirect3DDevice9::SetPixelShader);
 }
 
 RECT Blit9::getSurfaceRect(IDirect3DSurface9 *surface) const

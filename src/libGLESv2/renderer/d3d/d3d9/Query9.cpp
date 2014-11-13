@@ -15,7 +15,7 @@
 
 namespace rx
 {
-Query9::Query9(rx::Renderer9 *renderer, GLenum type)
+Query9::Query9(Renderer9 *renderer, GLenum type)
     : QueryImpl(type),
       mResult(GL_FALSE),
       mQueryFinished(false),

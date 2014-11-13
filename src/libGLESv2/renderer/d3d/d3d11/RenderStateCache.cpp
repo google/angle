@@ -38,7 +38,7 @@ const unsigned int RenderStateCache::kMaxRasterizerStates = 4096;
 const unsigned int RenderStateCache::kMaxDepthStencilStates = 4096;
 const unsigned int RenderStateCache::kMaxSamplerStates = 4096;
 
-RenderStateCache::RenderStateCache(rx::Renderer11 *renderer)
+RenderStateCache::RenderStateCache(Renderer11 *renderer)
     : mRenderer(renderer),
       mDevice(NULL),
       mCounter(0),

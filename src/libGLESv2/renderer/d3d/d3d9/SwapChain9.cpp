@@ -16,7 +16,7 @@
 namespace rx
 {
 
-SwapChain9::SwapChain9(Renderer9 *renderer, rx::NativeWindow nativeWindow, HANDLE shareHandle,
+SwapChain9::SwapChain9(Renderer9 *renderer, NativeWindow nativeWindow, HANDLE shareHandle,
                        GLenum backBufferFormat, GLenum depthBufferFormat)
     : mRenderer(renderer),
       SwapChain(nativeWindow, shareHandle, backBufferFormat, depthBufferFormat)
@@ -383,8 +383,8 @@ IDirect3DTexture9 *SwapChain9::getOffscreenTexture()
 
 SwapChain9 *SwapChain9::makeSwapChain9(SwapChain *swapChain)
 {
-    ASSERT(HAS_DYNAMIC_TYPE(rx::SwapChain9*, swapChain));
-    return static_cast<rx::SwapChain9*>(swapChain);
+    ASSERT(HAS_DYNAMIC_TYPE(SwapChain9*, swapChain));
+    return static_cast<SwapChain9*>(swapChain);
 }
 
 void SwapChain9::recreate()

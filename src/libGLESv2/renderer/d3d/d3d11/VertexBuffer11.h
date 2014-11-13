@@ -18,7 +18,7 @@ class Renderer11;
 class VertexBuffer11 : public VertexBuffer
 {
   public:
-    explicit VertexBuffer11(rx::Renderer11 *const renderer);
+    explicit VertexBuffer11(Renderer11 *const renderer);
     virtual ~VertexBuffer11();
 
     virtual gl::Error initialize(unsigned int size, bool dynamicUsage);
@@ -40,7 +40,7 @@ class VertexBuffer11 : public VertexBuffer
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexBuffer11);
 
-    rx::Renderer11 *const mRenderer;
+    Renderer11 *const mRenderer;
 
     ID3D11Buffer *mBuffer;
     unsigned int mBufferSize;

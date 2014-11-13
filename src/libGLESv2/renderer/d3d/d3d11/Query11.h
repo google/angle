@@ -18,7 +18,7 @@ class Renderer11;
 class Query11 : public QueryImpl
 {
   public:
-    Query11(rx::Renderer11 *renderer, GLenum type);
+    Query11(Renderer11 *renderer, GLenum type);
     virtual ~Query11();
 
     virtual gl::Error begin();
@@ -35,7 +35,7 @@ class Query11 : public QueryImpl
 
     bool mQueryFinished;
 
-    rx::Renderer11 *mRenderer;
+    Renderer11 *mRenderer;
     ID3D11Query *mQuery;
 };
 

@@ -45,7 +45,7 @@ class Blit11
                                const gl::Rectangle *scissor);
 
   private:
-    rx::Renderer11 *mRenderer;
+    Renderer11 *mRenderer;
 
     struct BlitParameters
     {

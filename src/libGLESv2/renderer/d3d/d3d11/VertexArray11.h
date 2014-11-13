@@ -19,7 +19,7 @@ class Renderer11;
 class VertexArray11 : public VertexArrayImpl
 {
   public:
-    VertexArray11(rx::Renderer11 *renderer)
+    VertexArray11(Renderer11 *renderer)
         : VertexArrayImpl(),
           mRenderer(renderer)
     {
@@ -34,7 +34,7 @@ class VertexArray11 : public VertexArrayImpl
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexArray11);
 
-    rx::Renderer11 *mRenderer;
+    Renderer11 *mRenderer;
 };
 
 }

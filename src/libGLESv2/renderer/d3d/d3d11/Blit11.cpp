@@ -172,7 +172,7 @@ static void Write3DVertices(const gl::Box &sourceArea, const gl::Extents &source
     *outTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 }
 
-Blit11::Blit11(rx::Renderer11 *renderer)
+Blit11::Blit11(Renderer11 *renderer)
     : mRenderer(renderer), mBlitShaderMap(compareBlitParameters), mSwizzleShaderMap(compareSwizzleParameters),
       mVertexBuffer(NULL), mPointSampler(NULL), mLinearSampler(NULL), mScissorEnabledRasterizerState(NULL),
       mScissorDisabledRasterizerState(NULL), mDepthStencilState(NULL),

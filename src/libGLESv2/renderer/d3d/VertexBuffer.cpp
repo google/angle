@@ -127,7 +127,7 @@ gl::Error VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute
     mWritePosition += spaceRequired;
 
     // Align to 16-byte boundary
-    mWritePosition = rx::roundUp(mWritePosition, 16u);
+    mWritePosition = roundUp(mWritePosition, 16u);
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -153,7 +153,7 @@ gl::Error VertexBufferInterface::reserveVertexSpace(const gl::VertexAttribute &a
     mReservedSpace += requiredSpace;
 
     // Align to 16-byte boundary
-    mReservedSpace = rx::roundUp(mReservedSpace, 16u);
+    mReservedSpace = roundUp(mReservedSpace, 16u);
 
     return gl::Error(GL_NO_ERROR);
 }

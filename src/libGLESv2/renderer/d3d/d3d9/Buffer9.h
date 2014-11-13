@@ -20,7 +20,7 @@ class Renderer9;
 class Buffer9 : public BufferD3D
 {
   public:
-    Buffer9(rx::Renderer9 *renderer);
+    Buffer9(Renderer9 *renderer);
     virtual ~Buffer9();
 
     static Buffer9 *makeBuffer9(BufferImpl *buffer);
@@ -42,7 +42,7 @@ class Buffer9 : public BufferD3D
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer9);
 
-    rx::Renderer9 *mRenderer;
+    Renderer9 *mRenderer;
     MemoryBuffer mMemory;
     size_t mSize;
 };
