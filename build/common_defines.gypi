@@ -7,32 +7,18 @@
     {
         'component%': 'static_library',
         'angle_path%': '..',
-        'windows_sdk_path%': 'C:/Program Files (x86)/Windows Kits/8.0',
-        'windows_8_1_sdk_path%': 'C:/Program Files (x86)/Windows Kits/8.1',
+        'windows_sdk_path%': 'C:/Program Files (x86)/Windows Kits/8.1',
         'angle_build_winrt%': '0',
         'angle_build_winphone%': '0',
     },
     'msvs_disabled_warnings': [ 4075, 4100, 4127, 4239, 4244, 4245, 4251, 4264, 4267, 4447, 4512, 4530, 4702, 4718 ],
+    'msvs_system_include_dirs':
+    [
+        '<(windows_sdk_path)/Include/shared',
+        '<(windows_sdk_path)/Include/um',
+    ],
     'conditions':
     [
-        ['angle_build_winrt==0',
-        {
-             # Desktop windows, use windows 8.0 SDK
-            'msvs_system_include_dirs':
-            [
-                '<(windows_sdk_path)/Include/shared',
-                '<(windows_sdk_path)/Include/um',
-            ],
-        }],
-        ['angle_build_winrt==1',
-        {
-            # WinRT, use windows 8.1 sdk
-            'msvs_system_include_dirs':
-            [
-                '<(windows_8_1_sdk_path)/Include/shared',
-                '<(windows_8_1_sdk_path)/Include/um',
-            ],
-        }],
         ['component=="shared_library"',
         {
             'defines': [ 'COMPONENT_BUILD' ],
@@ -94,86 +80,40 @@
         {
             'msvs_settings':
             {
-                'conditions':
-                [
-                    ['angle_build_winrt==0',
-                    {
-                        'VCLinkerTool':
-                        {
-                            'AdditionalLibraryDirectories':
-                            [
-                                '<(windows_sdk_path)/Lib/win8/um/x86',
-                            ],
-                        },
-                        'VCLibrarianTool':
-                        {
-                            'AdditionalLibraryDirectories':
-                            [
-                                '<(windows_sdk_path)/Lib/win8/um/x86',
-                            ],
-                        },
-                    }],
-                    ['angle_build_winrt==1',
-                    {
-                        'VCLinkerTool':
-                        {
-                            'AdditionalLibraryDirectories':
-                            [
-                                '<(windows_8_1_sdk_path)/Lib/winv6.3/um/x86',
-                            ],
-                        },
-                        'VCLibrarianTool':
-                        {
-                            'AdditionalLibraryDirectories':
-                            [
-                                '<(windows_8_1_sdk_path)/Lib/winv6.3/um/x86',
-                            ],
-                        },
-                    }],
-                ],
+                'VCLinkerTool':
+                {
+                    'AdditionalLibraryDirectories':
+                    [
+                        '<(windows_sdk_path)/Lib/winv6.3/um/x86',
+                    ],
+                },
+                'VCLibrarianTool':
+                {
+                    'AdditionalLibraryDirectories':
+                    [
+                        '<(windows_sdk_path)/Lib/winv6.3/um/x86',
+                    ],
+                },
             },
         },
         'x64_Base':
         {
             'msvs_settings':
             {
-                'conditions':
-                [
-                    ['angle_build_winrt==0',
-                    {
-                        'VCLinkerTool':
-                        {
-                            'AdditionalLibraryDirectories':
-                            [
-                                '<(windows_sdk_path)/Lib/win8/um/x64',
-                            ],
-                        },
-                        'VCLibrarianTool':
-                        {
-                            'AdditionalLibraryDirectories':
-                            [
-                                '<(windows_sdk_path)/Lib/win8/um/x64',
-                            ],
-                        },
-                    }],
-                    ['angle_build_winrt==1',
-                    {
-                        'VCLinkerTool':
-                        {
-                            'AdditionalLibraryDirectories':
-                            [
-                                '<(windows_8_1_sdk_path)/Lib/winv6.3/um/x64',
-                            ],
-                        },
-                        'VCLibrarianTool':
-                        {
-                            'AdditionalLibraryDirectories':
-                            [
-                                '<(windows_8_1_sdk_path)/Lib/winv6.3/um/x64',
-                            ],
-                        },
-                    }],
-                ],
+                'VCLinkerTool':
+                {
+                    'AdditionalLibraryDirectories':
+                    [
+                        '<(windows_sdk_path)/Lib/winv6.3/um/x64',
+                    ],
+                },
+                'VCLibrarianTool':
+                {
+                    'AdditionalLibraryDirectories':
+                    [
+                        '<(windows_sdk_path)/Lib/winv6.3/um/x64',
+                    ],
+                },
             },
         },
         'conditions':
@@ -188,14 +128,14 @@
                         {
                             'AdditionalLibraryDirectories':
                             [
-                                '<(windows_8_1_sdk_path)/Lib/winv6.3/um/arm',
+                                '<(windows_sdk_path)/Lib/winv6.3/um/arm',
                             ],
                         },
                         'VCLibrarianTool':
                         {
                             'AdditionalLibraryDirectories':
                             [
-                                '<(windows_8_1_sdk_path)/Lib/winv6.3/um/arm',
+                                '<(windows_sdk_path)/Lib/winv6.3/um/arm',
                             ],
                         },
                     },

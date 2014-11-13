@@ -5,7 +5,7 @@ REM Use of this source code is governed by a BSD-style license that can be
 REM found in the LICENSE file.
 REM
 
-PATH %PATH%;%ProgramFiles(x86)%\Windows Kits\8.0\bin\x86;%DXSDK_DIR%\Utilities\bin\x86
+PATH %PATH%;%ProgramFiles(x86)%\Windows Kits\8.1\bin\x86;%DXSDK_DIR%\Utilities\bin\x86
 
 setlocal
 set errorCount=0
