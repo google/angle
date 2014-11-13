@@ -215,3 +215,34 @@ TEST_F(TypeTrackingTest, TextureSizeResultTypeAndPrecision)
     compile(shaderString);
     ASSERT_TRUE(foundInIntermediateTree("textureSize(s21;i1; (highp 2-component vector of int)"));
 };
+
+TEST_F(TypeTrackingTest, BuiltInConstructorResultTypeAndPrecision)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform float u1;\n"
+        "uniform float u2;\n"
+        "uniform float u3;\n"
+        "uniform float u4;\n"
+        "void main() {\n"
+        "   vec4 a = vec4(u1, u2, u3, u4);\n"
+        "   gl_FragColor = a;\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(foundInIntermediateTree("Construct vec4 (mediump 4-component vector of float)"));
+};
+
+TEST_F(TypeTrackingTest, StructConstructorResultNoPrecision)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform vec4 u1;\n"
+        "uniform vec4 u2;\n"
+        "struct S { highp vec4 a; highp vec4 b; };\n"
+        "void main() {\n"
+        "   S s = S(u1, u2);\n"
+        "   gl_FragColor = s.a;\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(foundInIntermediateTree("Construct structure (structure)"));
+};

@@ -1605,7 +1605,7 @@ TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
 //
 // Returns 0 for an error or the constructed node (aggregate or typed) for no error.
 //
-TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments, const TType *type, TOperator op, TFunction *fnCall, const TSourceLoc &line)
+TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments, TType *type, TOperator op, TFunction *fnCall, const TSourceLoc &line)
 {
     TIntermAggregate *aggregateArguments = arguments->getAsAggregate();
 
@@ -1633,11 +1633,19 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments, const TType 
     }
 
     // Turn the argument list itself into a constructor
-    TIntermTyped *constructor = intermediate.setAggregateOperator(aggregateArguments, op, line);
-    TIntermTyped *constConstructor = foldConstConstructor(constructor->getAsAggregate(), *type);
+    TIntermAggregate *constructor = intermediate.setAggregateOperator(aggregateArguments, op, line);
+    TIntermTyped *constConstructor = foldConstConstructor(constructor, *type);
     if (constConstructor)
     {
         return constConstructor;
+    }
+
+    // Structs should not be precision qualified, the individual members may be.
+    // Built-in types on the other hand should be precision qualified.
+    if (op != EOpConstructStruct)
+    {
+        constructor->setPrecisionFromChildren();
+        type->setPrecision(constructor->getPrecision());
     }
 
     return constructor;
