@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ab3aff9_5a19711b",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-13T17:56:36Z",
+      "side": 0,
+      "message": "nit: I still like the function, seeing as we use the pattern type() \u003d\u003d GL_TEXTURE everwhere, can we keep it around?",
+      "range": {
+        "startLine": 74,
+        "startChar": 5,
+        "endLine": 74,
+        "endChar": 39
+      },
+      "revId": "80bacde5e628ab1e64cdb22e10e4eb64e9ac09ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
