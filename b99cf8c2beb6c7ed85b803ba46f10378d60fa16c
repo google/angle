@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ac2c357_b73c62b7",
+        "filename": "tests/angle_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-13T18:25:45Z",
+      "side": 1,
+      "message": "Not sure if this is intended to go in commented out?",
+      "range": {
+        "startLine": 356,
+        "startChar": 4,
+        "endLine": 356,
+        "endChar": 77
+      },
+      "revId": "b99cf8c2beb6c7ed85b803ba46f10378d60fa16c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
