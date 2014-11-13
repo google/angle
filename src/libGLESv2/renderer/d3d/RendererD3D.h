@@ -139,10 +139,6 @@ class RendererD3D : public Renderer
     virtual TextureStorage *createTextureStorage3D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels) = 0;
     virtual TextureStorage *createTextureStorage2DArray(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels) = 0;
 
-    // Current GLES client version
-    void setCurrentClientVersion(int clientVersion) { mCurrentClientVersion = clientVersion; }
-    int getCurrentClientVersion() const { return mCurrentClientVersion; }
-
     // Buffer-to-texture and Texture-to-buffer copies
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const = 0;
     virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
@@ -191,7 +187,6 @@ class RendererD3D : public Renderer
                                              FramebufferTextureSerialArray *outSerialArray);
     gl::Texture *getIncompleteTexture(GLenum type);
 
-    int mCurrentClientVersion;
     gl::TextureMap mIncompleteTextures;
 };
 

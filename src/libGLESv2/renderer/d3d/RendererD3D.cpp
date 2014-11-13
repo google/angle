@@ -21,8 +21,7 @@ namespace rx
 {
 
 RendererD3D::RendererD3D(egl::Display *display)
-    : mDisplay(display),
-      mCurrentClientVersion(2)
+    : mDisplay(display)
 {
 }
 

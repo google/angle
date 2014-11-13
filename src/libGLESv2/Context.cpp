@@ -34,9 +34,6 @@
 #include <sstream>
 #include <iterator>
 
-// TODO(jmadill): phase these out
-#include "libGLESv2/renderer/d3d/RendererD3D.h"
-
 namespace gl
 {
 
@@ -204,11 +201,6 @@ void Context::makeCurrent(egl::Surface *surface)
     Framebuffer *framebufferZero = new DefaultFramebuffer(colorbufferZero, depthStencilbufferZero);
 
     setFramebufferZero(framebufferZero);
-
-    // Store the current client version in the renderer
-    // TODO(jmadill): Renderer Refactor
-    rx::RendererD3D *rendererD3D = rx::RendererD3D::makeRendererD3D(mRenderer);
-    rendererD3D->setCurrentClientVersion(mClientVersion);
 }
 
 // NOTE: this function should not assume that this context is current!
