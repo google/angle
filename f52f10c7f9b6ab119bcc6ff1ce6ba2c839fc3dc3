@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ac5b75b_55d78c50",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-13T16:54:22Z",
+      "side": 1,
+      "message": "Nit: typo",
+      "range": {
+        "startLine": 7,
+        "startChar": 47,
+        "endLine": 7,
+        "endChar": 55
+      },
+      "revId": "f52f10c7f9b6ab119bcc6ff1ce6ba2c839fc3dc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab9a7d9_ff92372a",
+        "filename": "src/libGLESv2/validationES.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-13T16:54:22Z",
+      "side": 1,
+      "message": "This will still return INVALID_VALUE when:\nformatCaps.getMaxSamples() \u003c samples \u003c\u003d GL_MAX_SAMPLES_ANGLE\n\nIt should return OUT_OF_MEMORY from the extension. ANGLE_framebuffer_multisample specifies INVALID_VALUE only when: \n\n  * width or height \u003e MAX_RENDERBUFFER_SIZE\n  * samples \u003c 0 || samples \u003e MAX_SAMPLES_ANGLE\n\nOUT_OF_MEMORY is explicitly specified by ANGLE_framebuffer_multisample when the requested storage cannot be created, which includes cases where the number of samples requested is greater than the number supported for this format, but less than the maximum number of samples supported amongst all the supported formats.",
+      "range": {
+        "startLine": 362,
+        "startChar": 11,
+        "endLine": 362,
+        "endChar": 110
+      },
+      "revId": "f52f10c7f9b6ab119bcc6ff1ce6ba2c839fc3dc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
