@@ -67,13 +67,13 @@ const std::vector<VarT> *GetShaderVariables(const std::vector<VarT> *variableLis
     return variableList;
 }
 
-ShaderD3D::ShaderD3D(GLenum type, RendererD3D *renderer)
+ShaderD3D::ShaderD3D(const gl::Data &data, GLenum type, RendererD3D *renderer)
     : mType(type),
       mRenderer(renderer),
       mShaderVersion(100)
 {
     uncompile();
-    initializeCompiler();
+    initializeCompiler(data);
 }
 
 ShaderD3D::~ShaderD3D()
@@ -98,7 +98,7 @@ std::string ShaderD3D::getDebugInfo() const
 }
 
 // Perform a one-time initialization of the shader compiler (or after being destructed by releaseCompiler)
-void ShaderD3D::initializeCompiler()
+void ShaderD3D::initializeCompiler(const gl::Data &data)
 {
     if (!mFragmentCompiler)
     {
@@ -106,15 +106,14 @@ void ShaderD3D::initializeCompiler()
 
         if (result)
         {
-            ShShaderSpec specVersion = (mRenderer->getCurrentClientVersion() >= 3) ? SH_GLES3_SPEC : SH_GLES2_SPEC;
+            ShShaderSpec specVersion = (data.clientVersion >= 3) ? SH_GLES3_SPEC : SH_GLES2_SPEC;
             ShShaderOutput hlslVersion = (mRenderer->getMajorShaderModel() >= 4) ? SH_HLSL11_OUTPUT : SH_HLSL9_OUTPUT;
 
             ShBuiltInResources resources;
             ShInitBuiltInResources(&resources);
 
-            // TODO(geofflang): use context's caps
-            const gl::Caps &caps = mRenderer->getRendererCaps();
-            const gl::Extensions &extensions = mRenderer->getRendererExtensions();
+            const gl::Caps &caps = *data.caps;
+            const gl::Extensions &extensions = *data.extensions;
 
             resources.MaxVertexAttribs = caps.maxVertexAttributes;
             resources.MaxVertexUniformVectors = caps.maxVertexUniformVectors;
@@ -215,10 +214,10 @@ void ShaderD3D::uncompile()
     mDebugInfo.clear();
 }
 
-void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
+void ShaderD3D::compileToHLSL(const gl::Data &data, void *compiler, const std::string &source)
 {
     // ensure the compiler is loaded
-    initializeCompiler();
+    initializeCompiler(data);
 
     int compileOptions = (SH_OBJECT_CODE | SH_VARIABLES);
     std::string sourcePath;
@@ -255,7 +254,7 @@ void ShaderD3D::compileToHLSL(void *compiler, const std::string &source)
 
     mShaderVersion = ShGetShaderVersion(compiler);
 
-    if (mShaderVersion == 300 && mRenderer->getCurrentClientVersion() < 3)
+    if (mShaderVersion == 300 && data.clientVersion < 3)
     {
         mInfoLog = "GLSL ES 3.00 is not supported by OpenGL ES 2.0 contexts";
         TRACE("\n%s", mInfoLog.c_str());
@@ -409,13 +408,13 @@ ShShaderOutput ShaderD3D::getCompilerOutputType(GLenum shader)
     return ShGetShaderOutputType(compiler);
 }
 
-bool ShaderD3D::compile(const std::string &source)
+bool ShaderD3D::compile(const gl::Data &data, const std::string &source)
 {
     uncompile();
 
     void *compiler = getCompiler();
 
-    compileToHLSL(compiler, source);
+    compileToHLSL(data, compiler, source);
 
     if (mType == GL_VERTEX_SHADER)
     {

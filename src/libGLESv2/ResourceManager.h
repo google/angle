@@ -32,6 +32,7 @@ class Texture;
 class Renderbuffer;
 class Sampler;
 class FenceSync;
+struct Data;
 
 class ResourceManager
 {
@@ -43,7 +44,7 @@ class ResourceManager
     void release();
 
     GLuint createBuffer();
-    GLuint createShader(GLenum type);
+    GLuint createShader(const gl::Data &data, GLenum type);
     GLuint createProgram();
     GLuint createTexture();
     GLuint createRenderbuffer();

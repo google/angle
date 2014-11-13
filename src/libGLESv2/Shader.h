@@ -31,6 +31,7 @@ class ShaderImpl;
 namespace gl
 {
 class ResourceManager;
+struct Data;
 
 struct PackedVarying : public sh::Varying
 {
@@ -75,7 +76,7 @@ class Shader
     void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
     void getTranslatedSourceWithDebugInfo(GLsizei bufSize, GLsizei *length, char *buffer) const;
 
-    void compile();
+    void compile(const gl::Data &data);
     bool isCompiled() const { return mCompiled; }
 
     void addRef();

@@ -104,7 +104,7 @@ class Renderer
     virtual bool getPostSubBufferSupport() const = 0;
 
     // Shader creation
-    virtual ShaderImpl *createShader(GLenum type) = 0;
+    virtual ShaderImpl *createShader(const gl::Data &data, GLenum type) = 0;
     virtual ProgramImpl *createProgram() = 0;
 
     // Shader operations

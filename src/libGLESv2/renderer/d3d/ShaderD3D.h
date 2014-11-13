@@ -25,7 +25,7 @@ class ShaderD3D : public ShaderImpl
     friend class DynamicHLSL;
 
   public:
-    ShaderD3D(GLenum type, rx::RendererD3D *renderer);
+    ShaderD3D(const gl::Data &data, GLenum type, rx::RendererD3D *renderer);
     virtual ~ShaderD3D();
 
     static ShaderD3D *makeShaderD3D(ShaderImpl *impl);
@@ -52,15 +52,15 @@ class ShaderD3D : public ShaderImpl
     static void releaseCompiler();
     static ShShaderOutput getCompilerOutputType(GLenum shader);
 
-    virtual bool compile(const std::string &source);
+    virtual bool compile(const gl::Data &data, const std::string &source);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderD3D);
 
-    void compileToHLSL(void *compiler, const std::string &source);
+    void compileToHLSL(const gl::Data &data, void *compiler, const std::string &source);
     void parseVaryings(void *compiler);
 
-    void initializeCompiler();
+    void initializeCompiler(const gl::Data &data);
     void parseAttributes(void *compiler);
     void *getCompiler();
 
