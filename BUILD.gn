@@ -160,7 +160,7 @@ if (is_win) {
 
     defines = [
       "ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ " +
-        "\"d3dcompiler_47.dll\", \"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }",
+        "\"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }",
       "GL_APICALL=",
       "GL_GLEXT_PROTOTYPES=",
       "EGLAPI=",
