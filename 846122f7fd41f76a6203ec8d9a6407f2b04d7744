@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "7a8d1b44_dd60172c",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1740,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-14T21:15:47Z",
+      "side": 1,
+      "message": "And so you did. Disregard this, then!",
+      "parentUuid": "5a73f723_e519b698",
+      "range": {
+        "startLine": 1740,
+        "startChar": 37,
+        "endLine": 1740,
+        "endChar": 41
+      },
+      "revId": "846122f7fd41f76a6203ec8d9a6407f2b04d7744",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ab3aff9_86f3b4fe",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
