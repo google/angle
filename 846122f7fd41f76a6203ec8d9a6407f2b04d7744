@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "dab9a7d9_2e78fbed",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1740,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2014-11-14T16:02:39Z",
+      "side": 1,
+      "message": "This syntax is plain old C, see for example http://www.ex-parrot.com/~chris/random/initialise.html\n\nBut it does look like uniform initialization http://en.wikipedia.org/wiki/C%2B%2B11#Uniform_initialization",
+      "parentUuid": "baaeb391_b2e0f02c",
+      "range": {
+        "startLine": 1740,
+        "startChar": 37,
+        "endLine": 1740,
+        "endChar": 41
+      },
+      "revId": "846122f7fd41f76a6203ec8d9a6407f2b04d7744",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ab3aff9_86f3b4fe",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
