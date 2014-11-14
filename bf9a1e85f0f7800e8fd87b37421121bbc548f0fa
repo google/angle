@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a972356_ecd8cba5",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-14T17:48:11Z",
+      "side": 1,
+      "message": "nit: indent these lines to match the above line (below too).",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 114,
+        "endChar": 91
+      },
+      "revId": "bf9a1e85f0f7800e8fd87b37421121bbc548f0fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
