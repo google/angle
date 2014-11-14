@@ -22,6 +22,30 @@
       "revId": "80bacde5e628ab1e64cdb22e10e4eb64e9ac09ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a972356_72a03005",
+        "filename": "src/libGLESv2/FramebufferAttachment.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-14T19:45:00Z",
+      "side": 0,
+      "message": "The problem was that it was essentially being used in statements like\n\n  if (foo.isTexture()) { } else { //assume renderbuffer }\n\nand I wanted to avoid that issue in the future.",
+      "parentUuid": "9ab3aff9_5a19711b",
+      "range": {
+        "startLine": 74,
+        "startChar": 5,
+        "endLine": 74,
+        "endChar": 39
+      },
+      "revId": "80bacde5e628ab1e64cdb22e10e4eb64e9ac09ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
