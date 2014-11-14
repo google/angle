@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a8d1b44_832e2cb9",
+        "filename": "extensions/EGL_ANGLE_keyed_mutex.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-14T22:10:11Z",
+      "side": 1,
+      "message": "Nit: spaces have been replaced by tabs here.",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 1
+      },
+      "revId": "28c10125a49db4e71e8f68d55de390b40801c213",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba7cf3f1_6ba03d05",
+        "filename": "extensions/EGL_ANGLE_keyed_mutex.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-11-14T22:10:11Z",
+      "side": 1,
+      "message": "I think this would be better phrased as \"Keyed mutexes are only available from EGL surfaces backed by Direct3D 11 surfaces.\"",
+      "range": {
+        "startLine": 67,
+        "startChar": 19,
+        "endLine": 67,
+        "endChar": 42
+      },
+      "revId": "28c10125a49db4e71e8f68d55de390b40801c213",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
