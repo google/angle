@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -63,20 +63,20 @@
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <Link>
       <AdditionalDependencies>kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;d3d9.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
@@ -85,17 +85,17 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </Midl>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -107,20 +107,20 @@
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
       <TargetMachine>MachineX64</TargetMachine>
     </Lib>
     <Link>
       <AdditionalDependencies>kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;d3d9.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
@@ -129,17 +129,17 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </Midl>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -150,20 +150,20 @@
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <Link>
       <AdditionalDependencies>kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
@@ -172,17 +172,17 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </Midl>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -193,20 +193,20 @@
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
       <TargetMachine>MachineX64</TargetMachine>
     </Lib>
     <Link>
       <AdditionalDependencies>kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <FixedBaseAddress>false</FixedBaseAddress>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
@@ -215,12 +215,12 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </Midl>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.0\Include\shared;C:\Program Files (x86)\Windows Kits\8.0\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D9;ANGLE_ENABLE_D3D11;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

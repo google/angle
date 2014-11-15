@@ -77,7 +77,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -106,7 +106,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\..\..\src;..\..\..\..\include;..\..\..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
@@ -123,7 +123,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -152,7 +152,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\..\..\src;..\..\..\..\include;..\..\..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -169,7 +169,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -198,7 +198,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\..\..\src;..\..\..\..\include;..\..\..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;_DEBUG;ANGLE_ENABLE_DEBUG_ANNOTATIONS;ANGLE_GENERATE_SHADER_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -214,7 +214,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -243,7 +243,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\..\..\src;..\..\..\..\include;..\..\..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -259,7 +259,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -288,7 +288,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\..\..\src;..\..\..\..\include;..\..\..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -304,7 +304,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;NOMINMAX;GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -333,7 +333,7 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\..\..\src;..\..\..\..\include;..\..\..\..\src\libGLESv2;$(OutDir)obj\global_intermediate\angle;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_APICALL=;GL_GLEXT_PROTOTYPES=;EGLAPI=;ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ &quot;d3dcompiler_47.dll&quot;, &quot;d3dcompiler_46.dll&quot;, &quot;d3dcompiler_43.dll&quot; };ANGLE_ENABLE_D3D11;NTDDI_VERSION=NTDDI_WINBLUE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
