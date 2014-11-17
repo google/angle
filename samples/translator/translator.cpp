@@ -140,6 +140,9 @@ int main(int argc, char *argv[])
                       case 'd': resources.OES_standard_derivatives = 1; break;
                       case 'r': resources.ARB_texture_rectangle = 1; break;
                       case 'l': resources.EXT_shader_texture_lod = 1; break;
+                      case 'f': resources.EXT_shader_framebuffer_fetch = 1; break;
+                      case 'n': resources.NV_shader_framebuffer_fetch = 1; break;
+                      case 'a': resources.ARM_shader_framebuffer_fetch = 1; break;
                       default: failCode = EFailUsage;
                     }
                 }
@@ -248,7 +251,10 @@ void usage()
         "       -x=i     : enable GL_OES_EGL_image_external\n"
         "       -x=d     : enable GL_OES_EGL_standard_derivatives\n"
         "       -x=r     : enable ARB_texture_rectangle\n"
-        "       -x=l     : enable EXT_shader_texture_lod\n");
+        "       -x=l     : enable EXT_shader_texture_lod\n"
+        "       -x=f     : enable EXT_shader_framebuffer_fetch\n"
+        "       -x=n     : enable NV_shader_framebuffer_fetch\n"
+        "       -x=a     : enable ARM_shader_framebuffer_fetch\n");
 }
 
 //

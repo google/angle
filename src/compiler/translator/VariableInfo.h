@@ -53,6 +53,7 @@ class CollectVariables : public TIntermTraverser
 
     bool mPositionAdded;
     bool mPointSizeAdded;
+    bool mLastFragDataAdded;
 
     ShHashFunction64 mHashFunction;
 

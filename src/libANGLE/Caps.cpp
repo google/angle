@@ -119,6 +119,9 @@ Extensions::Extensions()
       packReverseRowOrder(false),
       standardDerivatives(false),
       shaderTextureLOD(false),
+      shaderFramebufferFetch(false),
+      ARMshaderFramebufferFetch(false),
+      NVshaderFramebufferFetch(false),
       fragDepth(false),
       textureUsage(false),
       translatedShaderSource(false),
@@ -173,6 +176,9 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_ANGLE_pack_reverse_row_order",   packReverseRowOrder,      &extensionStrings);
     InsertExtensionString("GL_OES_standard_derivatives",       standardDerivatives,      &extensionStrings);
     InsertExtensionString("GL_EXT_shader_texture_lod",         shaderTextureLOD,         &extensionStrings);
+    InsertExtensionString("GL_NV_shader_framebuffer_fetch",    NVshaderFramebufferFetch, &extensionStrings);
+    InsertExtensionString("GL_ARM_shader_framebuffer_fetch",   ARMshaderFramebufferFetch,&extensionStrings);
+    InsertExtensionString("GL_EXT_shader_framebuffer_fetch",   shaderFramebufferFetch,   &extensionStrings);
     InsertExtensionString("GL_EXT_frag_depth",                 fragDepth,                &extensionStrings);
     InsertExtensionString("GL_ANGLE_texture_usage",            textureUsage,             &extensionStrings);
     InsertExtensionString("GL_ANGLE_translated_shader_source", translatedShaderSource,   &extensionStrings);

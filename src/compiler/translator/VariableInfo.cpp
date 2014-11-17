@@ -144,6 +144,7 @@ CollectVariables::CollectVariables(std::vector<sh::Attribute> *attribs,
       mFragCoordAdded(false),
       mPositionAdded(false),
       mPointSizeAdded(false),
+      mLastFragDataAdded(false),
       mHashFunction(hashFunction),
       mSymbolTable(symbolTable)
 {
@@ -279,6 +280,22 @@ void CollectVariables::visitSymbol(TIntermSymbol *symbol)
                 info.isInvariant = mSymbolTable.isVaryingInvariant(kName);
                 mVaryings->push_back(info);
                 mPointSizeAdded = true;
+            }
+            return;
+          case EvqLastFragData:
+            if (!mLastFragDataAdded)
+            {
+                Varying info;
+                const char kName[] = "gl_LastFragData";
+                info.name = kName;
+                info.mappedName = kName;
+                info.type = GL_FLOAT_VEC4;
+                info.arraySize = static_cast<const TVariable*>(mSymbolTable.findBuiltIn("gl_MaxDrawBuffers", 100))->getConstPointer()->getIConst();
+                info.precision = GL_MEDIUM_FLOAT;  // Defined by spec.
+                info.staticUse = true;
+                info.isInvariant = mSymbolTable.isVaryingInvariant(kName);
+                mVaryings->push_back(info);
+                mLastFragDataAdded = true;
             }
             return;
           default:

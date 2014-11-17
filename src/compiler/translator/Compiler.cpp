@@ -392,6 +392,9 @@ void TCompiler::setResourceString()
               << ":MaxCallStackDepth:" << compileResources.MaxCallStackDepth
               << ":EXT_frag_depth:" << compileResources.EXT_frag_depth
               << ":EXT_shader_texture_lod:" << compileResources.EXT_shader_texture_lod
+              << ":EXT_shader_framebuffer_fetch:" << compileResources.EXT_shader_framebuffer_fetch
+              << ":NV_shader_framebuffer_fetch:" << compileResources.NV_shader_framebuffer_fetch
+              << ":ARM_shader_framebuffer_fetch:" << compileResources.ARM_shader_framebuffer_fetch
               << ":MaxVertexOutputVectors:" << compileResources.MaxVertexOutputVectors
               << ":MaxFragmentInputVectors:" << compileResources.MaxFragmentInputVectors
               << ":MinProgramTexelOffset:" << compileResources.MinProgramTexelOffset

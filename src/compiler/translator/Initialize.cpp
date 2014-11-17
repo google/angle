@@ -620,6 +620,19 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
                 symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragDepthEXT"), TType(EbtFloat, resources.FragmentPrecisionHigh ? EbpHigh : EbpMedium, EvqFragDepth, 1)));
                 symbolTable.relateToExtension(ESSL1_BUILTINS, "gl_FragDepthEXT", "GL_EXT_frag_depth");
             }
+            if (resources.EXT_shader_framebuffer_fetch)
+            {
+                symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqLastFragData,   4)));
+            }
+            else if (resources.NV_shader_framebuffer_fetch)
+            {
+                symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_LastFragColor"), TType(EbtFloat, EbpMedium, EvqLastFragColor,   4)));
+                symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_LastFragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqLastFragData,   4)));
+            }
+            else if (resources.ARM_shader_framebuffer_fetch)
+            {
+                symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_LastFragColorARM"), TType(EbtFloat, EbpMedium, EvqLastFragColor,   4)));
+            }
         } else {
             symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("css_MixColor"), TType(EbtFloat, EbpMedium, EvqGlobal,      4)));
             symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("css_ColorMatrix"), TType(EbtFloat, EbpMedium, EvqGlobal,      4, 4)));
@@ -714,6 +727,14 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
             symbolTable.relateToExtension(ESSL1_BUILTINS, "texture2DProjLodEXT", "GL_EXT_shader_texture_lod");
             symbolTable.relateToExtension(ESSL1_BUILTINS, "textureCubeLodEXT", "GL_EXT_shader_texture_lod");
         }
+        if (resources.NV_shader_framebuffer_fetch)
+        {
+            symbolTable.relateToExtension(ESSL1_BUILTINS, "gl_LastFragColor", "GL_NV_shader_framebuffer_fetch");
+        }
+        else if (resources.ARM_shader_framebuffer_fetch)
+        {
+            symbolTable.relateToExtension(ESSL1_BUILTINS, "gl_LastFragColorARM", "GL_ARM_shader_framebuffer_fetch");
+        }
         break;
     default: break;
     }
@@ -737,6 +758,22 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
             TType fragData(EbtFloat, EbpMedium, EvqFragData, 4, 1, true);
             fragData.setArraySize(resources.MaxDrawBuffers);
             symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_FragData"), fragData));
+
+            if (resources.EXT_shader_framebuffer_fetch || resources.NV_shader_framebuffer_fetch) {
+                // Set up gl_LastFragData.  The array size.
+                TType lastFragData(EbtFloat, EbpMedium, EvqLastFragData, 4, 1, true);
+                lastFragData.setArraySize(resources.MaxDrawBuffers);
+                symbolTable.insert(ESSL1_BUILTINS, new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
+
+                if (resources.EXT_shader_framebuffer_fetch)
+                {
+                    symbolTable.relateToExtension(ESSL1_BUILTINS, "gl_LastFragData", "GL_EXT_shader_framebuffer_fetch");
+                }
+                else if (resources.NV_shader_framebuffer_fetch)
+                {
+                    symbolTable.relateToExtension(ESSL1_BUILTINS, "gl_LastFragData", "GL_NV_shader_framebuffer_fetch");
+                }
+            }
         }
         break;
     default: break;
@@ -758,4 +795,10 @@ void InitExtensionBehavior(const ShBuiltInResources& resources,
         extBehavior["GL_EXT_frag_depth"] = EBhUndefined;
     if (resources.EXT_shader_texture_lod)
         extBehavior["GL_EXT_shader_texture_lod"] = EBhUndefined;
+    if (resources.EXT_shader_framebuffer_fetch)
+        extBehavior["GL_EXT_shader_framebuffer_fetch"] = EBhUndefined;
+    if (resources.NV_shader_framebuffer_fetch)
+        extBehavior["GL_NV_shader_framebuffer_fetch"] = EBhUndefined;
+    if (resources.ARM_shader_framebuffer_fetch)
+        extBehavior["GL_ARM_shader_framebuffer_fetch"] = EBhUndefined;
 }

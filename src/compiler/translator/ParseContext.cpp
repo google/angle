@@ -796,9 +796,24 @@ bool TParseContext::arrayErrorCheck(const TSourceLoc& line, const TString& ident
     bool sameScope = false;
     TSymbol* symbol = symbolTable.find(identifier, 0, &builtIn, &sameScope);
     if (symbol == 0 || !sameScope) {
-        if (reservedErrorCheck(line, identifier))
-            return true;
-        
+        bool needsReservedErrorCheck = true;
+
+        // gl_LastFragData may be redeclared with a new precision qualifier
+        if (identifier.compare(0, 15, "gl_LastFragData") == 0) {
+            if (type.arraySize == static_cast<const TVariable*>(symbolTable.findBuiltIn("gl_MaxDrawBuffers", shaderVersion))->getConstPointer()->getIConst()) {
+                if (TSymbol* builtInSymbol = symbolTable.findBuiltIn(identifier, shaderVersion)) {
+                    needsReservedErrorCheck = extensionErrorCheck(line, builtInSymbol->getExtension());
+                }
+            } else {
+                error(line, "redeclaration of array with size != gl_MaxDrawBuffers", identifier.c_str());
+                return true;
+            }
+        }
+
+        if (needsReservedErrorCheck)
+            if (reservedErrorCheck(line, identifier))
+                return true;
+
         variable = new TVariable(&identifier, TType(type));
 
         if (type.arraySize)

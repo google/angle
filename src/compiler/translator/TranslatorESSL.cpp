@@ -50,7 +50,10 @@ void TranslatorESSL::writeExtensionBehavior() {
     for (TExtensionBehavior::const_iterator iter = extensionBehavior.begin();
          iter != extensionBehavior.end(); ++iter) {
         if (iter->second != EBhUndefined) {
-            if (getResources().NV_draw_buffers && iter->first == "GL_EXT_draw_buffers") {
+            if (getResources().NV_shader_framebuffer_fetch && iter->first == "GL_EXT_shader_framebuffer_fetch") {
+                sink << "#extension GL_NV_shader_framebuffer_fetch : "
+                     << getBehaviorString(iter->second) << "\n";
+            } else if (getResources().NV_draw_buffers && iter->first == "GL_EXT_draw_buffers") {
                 sink << "#extension GL_NV_draw_buffers : "
                      << getBehaviorString(iter->second) << "\n";
             } else {
