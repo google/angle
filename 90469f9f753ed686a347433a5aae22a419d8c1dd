@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a55ffac_dd4feb83",
+        "filename": "src/compiler/translator/EmulateCompoundAssignment.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-18T23:21:23Z",
+      "side": 1,
+      "message": "Could you find a name for this new file more clearly associated with lower precision emulation?",
+      "revId": "90469f9f753ed686a347433a5aae22a419d8c1dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fadf4b7d_ab9579a2",
+        "filename": "src/compiler/translator/OutputESSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-18T23:21:23Z",
+      "side": 1,
+      "message": "\"false\"? Could you define an enum so that the meaning of this argument is clearer at the call site?",
+      "revId": "90469f9f753ed686a347433a5aae22a419d8c1dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba0233b9_98af3528",
+        "filename": "src/compiler/translator/OutputGLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-18T23:21:23Z",
+      "side": 1,
+      "message": "Please define an enum for this so usage at call sites is clearer.",
+      "revId": "90469f9f753ed686a347433a5aae22a419d8c1dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
