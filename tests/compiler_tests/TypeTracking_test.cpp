@@ -43,7 +43,12 @@ class TypeTrackingTest : public testing::Test
             FAIL() << "Shader compilation failed " << mInfoLog;
     }
 
-    bool foundInIntermediateTree(const char* stringToFind)
+    bool foundErrorInIntermediateTree() const
+    {
+        return foundInIntermediateTree("ERROR:");
+    }
+
+    bool foundInIntermediateTree(const char* stringToFind) const
     {
         return mInfoLog.find(stringToFind) != std::string::npos;
     }
@@ -67,6 +72,7 @@ TEST_F(TypeTrackingTest, FunctionPrototypeMangling)
         "   return a * 2.0;\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Function Prototype: fun(f1;"));
     ASSERT_TRUE(foundInIntermediateTree("Function Definition: fun(f1;"));
 };
@@ -81,6 +87,7 @@ TEST_F(TypeTrackingTest, BuiltInFunctionResultPrecision)
         "   gl_FragColor = vec4(ff);\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("sine (mediump float)"));
 };
 
@@ -94,6 +101,7 @@ TEST_F(TypeTrackingTest, BinaryMathResultPrecision)
         "   gl_FragColor = vec4(ff);\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("multiply (mediump float)"));
 };
 
@@ -109,6 +117,7 @@ TEST_F(TypeTrackingTest, BuiltInVecFunctionResultTypeAndPrecision)
         "   gl_FragColor = vec4(b, c, d, 1.0);\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("length (mediump float)"));
     ASSERT_TRUE(foundInIntermediateTree("dot-product (mediump float)"));
     ASSERT_TRUE(foundInIntermediateTree("distance (mediump float)"));
@@ -126,6 +135,7 @@ TEST_F(TypeTrackingTest, BuiltInFunctionChoosesHigherPrecision)
         "   gl_FragColor = vec4(c, d, 0.0, 1.0);\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("dot-product (mediump float)"));
     ASSERT_TRUE(foundInIntermediateTree("distance (mediump float)"));
 };
@@ -141,6 +151,7 @@ TEST_F(TypeTrackingTest, BuiltInBoolFunctionResultType)
         "   gl_FragColor = vec4(b ? 1.0 : 0.0, c ? 1.0 : 0.0, d.x ? 1.0 : 0.0, 1.0);\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("any (bool)"));
     ASSERT_TRUE(foundInIntermediateTree("all (bool)"));
     ASSERT_TRUE(foundInIntermediateTree("Negate conditional (4-component vector of bool)"));
@@ -160,6 +171,7 @@ TEST_F(TypeTrackingTest, BuiltInVecToBoolFunctionResultType)
         "   gl_FragColor = vec4(any(a) ? 1.0 : 0.0, any(b) ? 1.0 : 0.0, 0.0, 1.0);\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Less Than (2-component vector of bool)"));
     ASSERT_TRUE(foundInIntermediateTree("Greater Than (2-component vector of bool)"));
 };
@@ -177,6 +189,7 @@ TEST_F(TypeTrackingTest, Texture2DResultTypeAndPrecision)
         "   gl_FragColor = c;\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("texture2D(s21;vf2; (lowp 4-component vector of float)"));
 };
 
@@ -193,6 +206,7 @@ TEST_F(TypeTrackingTest, TextureCubeResultTypeAndPrecision)
         "   gl_FragColor = c;\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("textureCube(sC1;vf3; (lowp 4-component vector of float)"));
 };
 
@@ -213,6 +227,7 @@ TEST_F(TypeTrackingTest, TextureSizeResultTypeAndPrecision)
         "   }\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("textureSize(s21;i1; (highp 2-component vector of int)"));
 };
 
@@ -229,6 +244,7 @@ TEST_F(TypeTrackingTest, BuiltInConstructorResultTypeAndPrecision)
         "   gl_FragColor = a;\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Construct vec4 (mediump 4-component vector of float)"));
 };
 
@@ -244,5 +260,6 @@ TEST_F(TypeTrackingTest, StructConstructorResultNoPrecision)
         "   gl_FragColor = s.a;\n"
         "}\n";
     compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Construct structure (structure)"));
 };

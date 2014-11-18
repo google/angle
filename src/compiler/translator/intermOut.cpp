@@ -211,6 +211,36 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
 
     out << "\n";
 
+    // Special handling for direct indexes. Because constant
+    // unions are not aware they are struct indexes, treat them
+    // here where we have that contextual knowledge.
+    if (node->getOp() == EOpIndexDirectStruct ||
+        node->getOp() == EOpIndexDirectInterfaceBlock)
+    {
+        mDepth++;
+        node->getLeft()->traverse(this);
+        mDepth--;
+
+        TIntermConstantUnion *intermConstantUnion = node->getRight()->getAsConstantUnion();
+        ASSERT(intermConstantUnion);
+
+        OutputTreeText(out, intermConstantUnion, mDepth + 1);
+
+        // The following code finds the field name from the constant union
+        const ConstantUnion *constantUnion = intermConstantUnion->getUnionArrayPointer();
+        const TStructure *structure = node->getLeft()->getType().getStruct();
+        const TInterfaceBlock *interfaceBlock = node->getLeft()->getType().getInterfaceBlock();
+        ASSERT(structure || interfaceBlock);
+
+        const TFieldList &fields = structure ? structure->fields() : interfaceBlock->fields();
+
+        const TField *field = fields[constantUnion->getIConst()];
+
+        out << constantUnion->getIConst() << " (field '" << field->name() << "')";
+
+        return false;
+    }
+
     return true;
 }
 
