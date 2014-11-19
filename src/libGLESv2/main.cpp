@@ -7,7 +7,8 @@
 // main.cpp: DLL entry point and management of thread-local data.
 
 #include "libGLESv2/main.h"
-#include "libGLESv2/Context.h"
+
+#include "libANGLE/Context.h"
 
 #include "common/tls.h"
 
@@ -15,6 +16,12 @@ static TLSIndex currentTLS = TLS_INVALID_INDEX;
 
 namespace gl
 {
+
+struct Current
+{
+    Context *context;
+    egl::Display *display;
+};
 
 // TODO(kbr): figure out how these are going to be managed on
 // non-Windows platforms. These routines would need to be exported
@@ -175,6 +182,21 @@ egl::Display *getDisplay()
     Current *current = GetCurrentData();
 
     return current->display;
+}
+
+}
+
+extern "C"
+{
+
+void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface)
+{
+    gl::makeCurrent(context, display, surface);
+}
+
+gl::Context *glGetCurrentContext()
+{
+    return gl::getContext();
 }
 
 }

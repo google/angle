@@ -6,29 +6,30 @@
 
 // libGLESv2.cpp: Implements the exported OpenGL ES 2.0 functions.
 
+#include "libGLESv2/main.h"
+
+#include "libANGLE/formatutils.h"
+#include "libANGLE/Buffer.h"
+#include "libANGLE/Fence.h"
+#include "libANGLE/Framebuffer.h"
+#include "libANGLE/Renderbuffer.h"
+#include "libANGLE/Program.h"
+#include "libANGLE/ProgramBinary.h"
+#include "libANGLE/Texture.h"
+#include "libANGLE/Query.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/VertexArray.h"
+#include "libANGLE/VertexAttribute.h"
+#include "libANGLE/TransformFeedback.h"
+#include "libANGLE/FramebufferAttachment.h"
+
+#include "libANGLE/validationES.h"
+#include "libANGLE/validationES2.h"
+#include "libANGLE/validationES3.h"
+#include "libANGLE/queryconversions.h"
+
 #include "common/version.h"
 #include "common/utilities.h"
-
-#include "libGLESv2/main.h"
-#include "libGLESv2/formatutils.h"
-#include "libGLESv2/Buffer.h"
-#include "libGLESv2/Fence.h"
-#include "libGLESv2/Framebuffer.h"
-#include "libGLESv2/Renderbuffer.h"
-#include "libGLESv2/Program.h"
-#include "libGLESv2/ProgramBinary.h"
-#include "libGLESv2/Texture.h"
-#include "libGLESv2/Query.h"
-#include "libGLESv2/Context.h"
-#include "libGLESv2/VertexArray.h"
-#include "libGLESv2/VertexAttribute.h"
-#include "libGLESv2/TransformFeedback.h"
-#include "libGLESv2/FramebufferAttachment.h"
-
-#include "libGLESv2/validationES.h"
-#include "libGLESv2/validationES2.h"
-#include "libGLESv2/validationES3.h"
-#include "libGLESv2/queryconversions.h"
 
 extern "C"
 {
@@ -8858,86 +8859,6 @@ void GL_APIENTRY glFlushMappedBufferRangeEXT (GLenum target, GLintptr offset, GL
 
         // We do not currently support a non-trivial implementation of FlushMappedBufferRange
     }
-}
-
-__eglMustCastToProperFunctionPointerType EGLAPIENTRY glGetProcAddress(const char *procname)
-{
-    struct Extension
-    {
-        const char *name;
-        __eglMustCastToProperFunctionPointerType address;
-    };
-
-    static const Extension glExtensions[] =
-    {
-        {"glTexImage3DOES", (__eglMustCastToProperFunctionPointerType)glTexImage3DOES},
-        {"glBlitFramebufferANGLE", (__eglMustCastToProperFunctionPointerType)glBlitFramebufferANGLE},
-        {"glRenderbufferStorageMultisampleANGLE", (__eglMustCastToProperFunctionPointerType)glRenderbufferStorageMultisampleANGLE},
-        {"glDeleteFencesNV", (__eglMustCastToProperFunctionPointerType)glDeleteFencesNV},
-        {"glGenFencesNV", (__eglMustCastToProperFunctionPointerType)glGenFencesNV},
-        {"glIsFenceNV", (__eglMustCastToProperFunctionPointerType)glIsFenceNV},
-        {"glTestFenceNV", (__eglMustCastToProperFunctionPointerType)glTestFenceNV},
-        {"glGetFenceivNV", (__eglMustCastToProperFunctionPointerType)glGetFenceivNV},
-        {"glFinishFenceNV", (__eglMustCastToProperFunctionPointerType)glFinishFenceNV},
-        {"glSetFenceNV", (__eglMustCastToProperFunctionPointerType)glSetFenceNV},
-        {"glGetTranslatedShaderSourceANGLE", (__eglMustCastToProperFunctionPointerType)glGetTranslatedShaderSourceANGLE},
-        {"glTexStorage2DEXT", (__eglMustCastToProperFunctionPointerType)glTexStorage2DEXT},
-        {"glGetGraphicsResetStatusEXT", (__eglMustCastToProperFunctionPointerType)glGetGraphicsResetStatusEXT},
-        {"glReadnPixelsEXT", (__eglMustCastToProperFunctionPointerType)glReadnPixelsEXT},
-        {"glGetnUniformfvEXT", (__eglMustCastToProperFunctionPointerType)glGetnUniformfvEXT},
-        {"glGetnUniformivEXT", (__eglMustCastToProperFunctionPointerType)glGetnUniformivEXT},
-        {"glGenQueriesEXT", (__eglMustCastToProperFunctionPointerType)glGenQueriesEXT},
-        {"glDeleteQueriesEXT", (__eglMustCastToProperFunctionPointerType)glDeleteQueriesEXT},
-        {"glIsQueryEXT", (__eglMustCastToProperFunctionPointerType)glIsQueryEXT},
-        {"glBeginQueryEXT", (__eglMustCastToProperFunctionPointerType)glBeginQueryEXT},
-        {"glEndQueryEXT", (__eglMustCastToProperFunctionPointerType)glEndQueryEXT},
-        {"glGetQueryivEXT", (__eglMustCastToProperFunctionPointerType)glGetQueryivEXT},
-        {"glGetQueryObjectuivEXT", (__eglMustCastToProperFunctionPointerType)glGetQueryObjectuivEXT},
-        {"glDrawBuffersEXT", (__eglMustCastToProperFunctionPointerType)glDrawBuffersEXT},
-        {"glVertexAttribDivisorANGLE", (__eglMustCastToProperFunctionPointerType)glVertexAttribDivisorANGLE},
-        {"glDrawArraysInstancedANGLE", (__eglMustCastToProperFunctionPointerType)glDrawArraysInstancedANGLE},
-        {"glDrawElementsInstancedANGLE", (__eglMustCastToProperFunctionPointerType)glDrawElementsInstancedANGLE},
-        {"glGetProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glGetProgramBinaryOES},
-        {"glProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glProgramBinaryOES},
-        {"glGetBufferPointervOES", (__eglMustCastToProperFunctionPointerType)glGetBufferPointervOES},
-        {"glMapBufferOES", (__eglMustCastToProperFunctionPointerType)glMapBufferOES},
-        {"glUnmapBufferOES", (__eglMustCastToProperFunctionPointerType)glUnmapBufferOES},
-        {"glMapBufferRangeEXT", (__eglMustCastToProperFunctionPointerType)glMapBufferRangeEXT},
-        {"glFlushMappedBufferRangeEXT", (__eglMustCastToProperFunctionPointerType)glFlushMappedBufferRangeEXT},    };
-
-    for (unsigned int ext = 0; ext < ArraySize(glExtensions); ext++)
-    {
-        if (strcmp(procname, glExtensions[ext].name) == 0)
-        {
-            return (__eglMustCastToProperFunctionPointerType)glExtensions[ext].address;
-        }
-    }
-
-    return NULL;
-}
-
-// Non-public functions used by EGL
-
-bool EGLAPIENTRY glBindTexImage(egl::Surface *surface)
-{
-    EVENT("(egl::Surface* surface = 0x%0.8p)",
-          surface);
-
-    gl::Context *context = gl::getNonLostContext();
-    if (context)
-    {
-        gl::Texture2D *textureObject = context->getTexture2D();
-        ASSERT(textureObject != NULL);
-
-        if (textureObject->isImmutable())
-        {
-            return false;
-        }
-
-        textureObject->bindTexImage(surface);
-    }
-
-    return true;
 }
 
 }

@@ -16,6 +16,15 @@ static TLSIndex currentTLS = TLS_OUT_OF_INDEXES;
 namespace egl
 {
 
+struct Current
+{
+    EGLint error;
+    EGLenum API;
+    EGLDisplay display;
+    EGLSurface drawSurface;
+    EGLSurface readSurface;
+};
+
 Current *AllocateCurrent()
 {
     ASSERT(currentTLS != TLS_OUT_OF_INDEXES);

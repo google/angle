@@ -6,8 +6,8 @@
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "libGLESv2/ImageIndex.h"
-#include "libGLESv2/Texture.h"
+#include "libANGLE/ImageIndex.h"
+#include "libANGLE/Texture.h"
 
 using namespace gl;
 

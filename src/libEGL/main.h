@@ -9,21 +9,13 @@
 #ifndef LIBEGL_MAIN_H_
 #define LIBEGL_MAIN_H_
 
-#include "libEGL/Error.h"
+#include "libANGLE/Error.h"
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
 namespace egl
 {
-struct Current
-{
-    EGLint error;
-    EGLenum API;
-    EGLDisplay display;
-    EGLSurface drawSurface;
-    EGLSurface readSurface;
-};
 
 void recordError(const Error &error);
 EGLint getCurrentError();

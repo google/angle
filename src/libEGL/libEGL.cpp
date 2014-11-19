@@ -8,16 +8,18 @@
 
 #include <exception>
 
+#include "libEGL/main.h"
+
+#include "libGLESv2/main.h"
+
+#include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
+#include "libANGLE/Texture.h"
+#include "libANGLE/Surface.h"
+#include "libANGLE/renderer/SwapChain.h"
+
 #include "common/debug.h"
 #include "common/version.h"
-#include "libGLESv2/Context.h"
-#include "libGLESv2/Texture.h"
-#include "libGLESv2/main.h"
-#include "libGLESv2/renderer/SwapChain.h"
-
-#include "libEGL/main.h"
-#include "libEGL/Display.h"
-#include "libEGL/Surface.h"
 
 #include "common/NativeWindow.h"
 
@@ -267,6 +269,11 @@ EGLBoolean __stdcall eglTerminate(EGLDisplay dpy)
     }
 
     egl::Display *display = static_cast<egl::Display*>(dpy);
+
+    if (display->isValidContext(glGetCurrentContext()))
+    {
+        glMakeCurrent(NULL, NULL, NULL);
+    }
 
     display->terminate();
 
@@ -745,10 +752,19 @@ EGLBoolean __stdcall eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint 
         return EGL_FALSE;
     }
 
-    if (!glBindTexImage(eglSurface))
+    gl::Context *context = glGetCurrentContext();
+    if (context)
     {
-        recordError(egl::Error(EGL_BAD_MATCH));
-        return EGL_FALSE;
+        gl::Texture2D *textureObject = context->getTexture2D();
+        ASSERT(textureObject != NULL);
+
+        if (textureObject->isImmutable())
+        {
+            recordError(egl::Error(EGL_BAD_MATCH));
+            return EGL_FALSE;
+        }
+
+        textureObject->bindTexImage(eglSurface);
     }
 
     recordError(egl::Error(EGL_SUCCESS));
@@ -936,6 +952,11 @@ EGLBoolean __stdcall eglDestroyContext(EGLDisplay dpy, EGLContext ctx)
     {
         recordError(egl::Error(EGL_BAD_CONTEXT));
         return EGL_FALSE;
+    }
+
+    if (context == glGetCurrentContext())
+    {
+        glMakeCurrent(NULL, NULL, NULL);
     }
 
     display->destroyContext(context);
@@ -1196,6 +1217,40 @@ __eglMustCastToProperFunctionPointerType __stdcall eglGetProcAddress(const char 
         { "eglQuerySurfacePointerANGLE", (__eglMustCastToProperFunctionPointerType)eglQuerySurfacePointerANGLE },
         { "eglPostSubBufferNV", (__eglMustCastToProperFunctionPointerType)eglPostSubBufferNV },
         { "eglGetPlatformDisplayEXT", (__eglMustCastToProperFunctionPointerType)eglGetPlatformDisplayEXT },
+        { "glTexImage3DOES", (__eglMustCastToProperFunctionPointerType)glTexImage3DOES },
+        { "glBlitFramebufferANGLE", (__eglMustCastToProperFunctionPointerType)glBlitFramebufferANGLE },
+        { "glRenderbufferStorageMultisampleANGLE", (__eglMustCastToProperFunctionPointerType)glRenderbufferStorageMultisampleANGLE },
+        { "glDeleteFencesNV", (__eglMustCastToProperFunctionPointerType)glDeleteFencesNV },
+        { "glGenFencesNV", (__eglMustCastToProperFunctionPointerType)glGenFencesNV },
+        { "glIsFenceNV", (__eglMustCastToProperFunctionPointerType)glIsFenceNV },
+        { "glTestFenceNV", (__eglMustCastToProperFunctionPointerType)glTestFenceNV },
+        { "glGetFenceivNV", (__eglMustCastToProperFunctionPointerType)glGetFenceivNV },
+        { "glFinishFenceNV", (__eglMustCastToProperFunctionPointerType)glFinishFenceNV },
+        { "glSetFenceNV", (__eglMustCastToProperFunctionPointerType)glSetFenceNV },
+        { "glGetTranslatedShaderSourceANGLE", (__eglMustCastToProperFunctionPointerType)glGetTranslatedShaderSourceANGLE },
+        { "glTexStorage2DEXT", (__eglMustCastToProperFunctionPointerType)glTexStorage2DEXT },
+        { "glGetGraphicsResetStatusEXT", (__eglMustCastToProperFunctionPointerType)glGetGraphicsResetStatusEXT },
+        { "glReadnPixelsEXT", (__eglMustCastToProperFunctionPointerType)glReadnPixelsEXT },
+        { "glGetnUniformfvEXT", (__eglMustCastToProperFunctionPointerType)glGetnUniformfvEXT },
+        { "glGetnUniformivEXT", (__eglMustCastToProperFunctionPointerType)glGetnUniformivEXT },
+        { "glGenQueriesEXT", (__eglMustCastToProperFunctionPointerType)glGenQueriesEXT },
+        { "glDeleteQueriesEXT", (__eglMustCastToProperFunctionPointerType)glDeleteQueriesEXT },
+        { "glIsQueryEXT", (__eglMustCastToProperFunctionPointerType)glIsQueryEXT },
+        { "glBeginQueryEXT", (__eglMustCastToProperFunctionPointerType)glBeginQueryEXT },
+        { "glEndQueryEXT", (__eglMustCastToProperFunctionPointerType)glEndQueryEXT },
+        { "glGetQueryivEXT", (__eglMustCastToProperFunctionPointerType)glGetQueryivEXT },
+        { "glGetQueryObjectuivEXT", (__eglMustCastToProperFunctionPointerType)glGetQueryObjectuivEXT },
+        { "glDrawBuffersEXT", (__eglMustCastToProperFunctionPointerType)glDrawBuffersEXT },
+        { "glVertexAttribDivisorANGLE", (__eglMustCastToProperFunctionPointerType)glVertexAttribDivisorANGLE },
+        { "glDrawArraysInstancedANGLE", (__eglMustCastToProperFunctionPointerType)glDrawArraysInstancedANGLE },
+        { "glDrawElementsInstancedANGLE", (__eglMustCastToProperFunctionPointerType)glDrawElementsInstancedANGLE },
+        { "glGetProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glGetProgramBinaryOES },
+        { "glProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glProgramBinaryOES },
+        { "glGetBufferPointervOES", (__eglMustCastToProperFunctionPointerType)glGetBufferPointervOES },
+        { "glMapBufferOES", (__eglMustCastToProperFunctionPointerType)glMapBufferOES },
+        { "glUnmapBufferOES", (__eglMustCastToProperFunctionPointerType)glUnmapBufferOES },
+        { "glMapBufferRangeEXT", (__eglMustCastToProperFunctionPointerType)glMapBufferRangeEXT },
+        { "glFlushMappedBufferRangeEXT", (__eglMustCastToProperFunctionPointerType)glFlushMappedBufferRangeEXT },
         { "", NULL },
     };
 
@@ -1207,6 +1262,6 @@ __eglMustCastToProperFunctionPointerType __stdcall eglGetProcAddress(const char 
         }
     }
 
-    return glGetProcAddress(procname);
+    return NULL;
 }
 }

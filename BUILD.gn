@@ -9,12 +9,6 @@ if (is_win) {
       [ rebase_path("src/libGLESv2.gypi") ],
       "scope",
       [ "src/libGLESv2.gypi" ])
-
-  egl_gypi = exec_script(
-      "//build/gypi_to_gn.py",
-      [ rebase_path("src/libEGL.gypi") ],
-      "scope",
-      [ "src/libEGL.gypi" ])
 }
 
 compiler_gypi = exec_script(
@@ -153,25 +147,29 @@ if (is_win) {
     outputs = [ "$root_build_dir/d3dcompiler_47.dll" ]
   }
 
-  shared_library("libGLESv2") {
-    sources = rebase_path(gles_gypi.angle_libangle_sources, ".", "src")
-    sources += [
-      "src/libGLESv2/libGLESv2.cpp",
-      "src/libGLESv2/libGLESv2.def",
-      "src/libGLESv2/libGLESv2.rc",
-    ]
-
-    ldflags = [ "/DEF:" +
-               rebase_path("src/libGLESv2/libGLESv2.def", root_build_dir) ]
-
-    defines = [
-      "ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ " +
-        "\"d3dcompiler_47.dll\", \"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }",
+  config("libANGLE_config") {
+    defines = []
+    if (angle_enable_d3d9) {
+      defines += [ "ANGLE_ENABLE_D3D9" ]
+    }
+    if (angle_enable_d3d11) {
+      defines += [ "ANGLE_ENABLE_D3D11" ]
+    }
+    if (is_debug) {
+      defines += [ "ANGLE_ENABLE_DEBUG_ANNOTATIONS" ]
+    }
+    defines += [
       "GL_APICALL=",
       "GL_GLEXT_PROTOTYPES=",
       "EGLAPI=",
     ]
+  }
+
+  static_library("libANGLE") {
+    sources = rebase_path(gles_gypi.angle_libangle_sources, ".", "src")
+
     libs = []
+    defines = []
 
     # Windows-specific sources.
     sources += rebase_path(gles_gypi.angle_libangle_win_sources, ".", "src")
@@ -183,28 +181,38 @@ if (is_win) {
 
     if (angle_enable_d3d9) {
       sources += rebase_path(gles_gypi.angle_d3d9_sources, ".", "src")
-      defines += [ "ANGLE_ENABLE_D3D9" ]
       libs += [ "d3d9.lib" ]
     }
 
     if (angle_enable_d3d11) {
       sources += rebase_path(gles_gypi.angle_d3d11_sources, ".", "src")
-      defines += [ "ANGLE_ENABLE_D3D11" ]
       libs += [ "dxguid.lib" ]
     }
 
     if (is_debug) {
-      defines += [ "ANGLE_ENABLE_PERF" ]
+      defines += [
+        "ANGLE_GENERATE_SHADER_DEBUG_INFO",
+      ]
       libs += [ "d3d9.lib" ]
     }
 
+    defines += [
+      "ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ " +
+        "\"d3dcompiler_47.dll\", \"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }",
+    ]
+
     configs -= [ "//build/config/compiler:chromium_code" ]
     configs += [
+      ":commit_id_config",
+      ":libANGLE_config",
       ":internal_config",
       "//build/config/compiler:no_chromium_code",
     ]
 
-    include_dirs = [ "src/libGLESv2" ]
+    direct_dependent_configs = [
+      ":commit_id_config",
+      ":libANGLE_config",
+    ]
 
     deps = [
       ":commit_id",
@@ -214,17 +222,18 @@ if (is_win) {
     ]
   }
 
-  shared_library("libEGL") {
-    sources = rebase_path(egl_gypi.angle_libegl_sources, ".", "src")
+  shared_library("libGLESv2") {
+    sources = [
+      "src/libGLESv2/libGLESv2.cpp",
+      "src/libGLESv2/libGLESv2.def",
+      "src/libGLESv2/libGLESv2.rc",
+      "src/libGLESv2/main.cpp",
+      "src/libGLESv2/main.h",
+      "src/libGLESv2/resource.h",
+    ]
 
     ldflags = [ "/DEF:" +
-               rebase_path("src/libEGL/libEGL.def", root_build_dir) ]
-
-    defines = [
-      "GL_APICALL=",
-      "GL_GLEXT_PROTOTYPES=",
-      "EGLAPI=",
-    ]
+               rebase_path("src/libGLESv2/libGLESv2.def", root_build_dir) ]
 
     configs -= [ "//build/config/compiler:chromium_code" ]
     configs += [
@@ -232,26 +241,34 @@ if (is_win) {
       "//build/config/compiler:no_chromium_code",
     ]
 
-    if (angle_enable_d3d11) {
-      defines += [ "ANGLE_ENABLE_D3D11" ]
-    }
+    deps = [
+      ":includes",
+      ":libANGLE",
+    ]
+  }
 
-    if (is_debug) {
-      defines += [
-        "ANGLE_ENABLE_PERF",
-        "ANGLE_GENERATE_SHADER_DEBUG_INFO"
-      ]
-    }
+  shared_library("libEGL") {
+    sources = [
+      "src/libEGL/libEGL.cpp",
+      "src/libEGL/libEGL.def",
+      "src/libEGL/libEGL.rc",
+      "src/libEGL/main.cpp",
+      "src/libEGL/main.h",
+      "src/libEGL/resource.h",
+    ]
 
-    include_dirs = [ "src/libGLESv2" ]
-    libs = [ "d3d9.lib" ]
+    ldflags = [ "/DEF:" +
+               rebase_path("src/libEGL/libEGL.def", root_build_dir) ]
 
-    # Windows-specific sources.
-    sources += rebase_path(gles_gypi.angle_libangle_win_sources, ".", "src")
+    configs -= [ "//build/config/compiler:chromium_code" ]
+    configs += [
+      ":internal_config",
+      "//build/config/compiler:no_chromium_code",
+    ]
 
     deps = [
-      ":commit_id",
       ":includes",
+      ":libANGLE",
       ":libGLESv2",
     ]
   }

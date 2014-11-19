@@ -6,8 +6,8 @@
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "libGLESv2/TransformFeedback.h"
-#include "libGLESv2/renderer/TransformFeedbackImpl.h"
+#include "libANGLE/TransformFeedback.h"
+#include "libANGLE/renderer/TransformFeedbackImpl.h"
 
 namespace {
 

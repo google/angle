@@ -24,12 +24,6 @@ class AttributeMap;
 namespace gl
 {
 class Context;
-    
-struct Current
-{
-    Context *context;
-    egl::Display *display;
-};
 
 void makeCurrent(Context *context, egl::Display *display, egl::Surface *surface);
 
@@ -39,23 +33,12 @@ egl::Display *getDisplay();
 
 }
 
-namespace rx
-{
-class Renderer;
-}
-
 extern "C"
 {
 // Exported functions for use by EGL
-gl::Context *glCreateContext(int clientVersion, const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
-void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();
-rx::Renderer *glCreateRenderer(egl::Display *display, EGLNativeDisplayType nativeDisplay, const egl::AttributeMap &attribMap);
-void glDestroyRenderer(rx::Renderer *renderer);
 
-__eglMustCastToProperFunctionPointerType EGLAPIENTRY glGetProcAddress(const char *procname);
-bool EGLAPIENTRY glBindTexImage(egl::Surface *surface);
 }
 
 #endif   // LIBGLESV2_MAIN_H_
