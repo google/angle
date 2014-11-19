@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bab7934b_f3392a6a",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2014-11-19T21:22:01Z",
+      "side": 1,
+      "message": "It seems like we only need the TField here, or even just the name?",
+      "range": {
+        "startLine": 472,
+        "startChar": 4,
+        "endLine": 472,
+        "endChar": 34
+      },
+      "revId": "34fc8bfe4d2366d754fab1cea73eb900bfe9908f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
