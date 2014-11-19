@@ -19,7 +19,6 @@
 #include "libGLESv2/renderer/SwapChain.h"
 #include "libGLESv2/main.h"
 
-#include "libEGL/main.h"
 #include "libEGL/Display.h"
 
 #include "common/NativeWindow.h"
