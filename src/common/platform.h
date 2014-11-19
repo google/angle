@@ -14,7 +14,7 @@
 #elif defined(__APPLE__)
 #   define ANGLE_PLATFORM_APPLE 1
 #   define ANGLE_PLATFORM_POSIX 1
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(EMSCRIPTEN)
 #   define ANGLE_PLATFORM_LINUX 1
 #   define ANGLE_PLATFORM_POSIX 1
 #elif defined(ANDROID)
