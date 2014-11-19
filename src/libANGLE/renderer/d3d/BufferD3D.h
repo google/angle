@@ -4,10 +4,10 @@
 // found in the LICENSE file.
 //
 
-// BufferImpl.h: Defines the abstract rx::BufferImpl class.
+// BufferD3D.h: Defines the rx::BufferD3D class, an implementation of BufferImpl.
 
-#ifndef LIBGLESV2_RENDERER_BUFFERD3D_H_
-#define LIBGLESV2_RENDERER_BUFFERD3D_H_
+#ifndef LIBANGLE_RENDERER_D3D_BUFFERD3D_H_
+#define LIBANGLE_RENDERER_D3D_BUFFERD3D_H_
 
 #include "libANGLE/renderer/BufferImpl.h"
 #include "libANGLE/angletypes.h"
@@ -56,4 +56,4 @@ class BufferD3D : public BufferImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_BUFFERIMPLD3D_H_
+#endif // LIBANGLE_RENDERER_D3D_BUFFERD3D_H_

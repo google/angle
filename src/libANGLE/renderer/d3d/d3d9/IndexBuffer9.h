@@ -6,8 +6,8 @@
 
 // Indexffer9.h: Defines the D3D9 IndexBuffer implementation.
 
-#ifndef LIBGLESV2_RENDERER_INDEXBUFFER9_H_
-#define LIBGLESV2_RENDERER_INDEXBUFFER9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_INDEXBUFFER9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_INDEXBUFFER9_H_
 
 #include "libANGLE/renderer/d3d/IndexBuffer.h"
 
@@ -50,4 +50,4 @@ class IndexBuffer9 : public IndexBuffer
 
 }
 
-#endif // LIBGLESV2_RENDERER_INDEXBUFFER9_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_INDEXBUFFER9_H_

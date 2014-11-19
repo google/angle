@@ -7,8 +7,8 @@
 // IndexRangeCache.h: Defines the rx::IndexRangeCache class which stores information about
 // ranges of indices.
 
-#ifndef LIBGLESV2_RENDERER_INDEXRANGECACHE_H_
-#define LIBGLESV2_RENDERER_INDEXRANGECACHE_H_
+#ifndef LIBANGLE_RENDERER_INDEXRANGECACHE_H_
+#define LIBANGLE_RENDERER_INDEXRANGECACHE_H_
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
@@ -61,4 +61,4 @@ class IndexRangeCache
 
 }
 
-#endif // LIBGLESV2_RENDERER_INDEXRANGECACHE_H
+#endif // LIBANGLE_RENDERER_INDEXRANGECACHE_H_

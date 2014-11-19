@@ -8,8 +8,8 @@
 // index data. Implements GL buffer objects and related functionality.
 // [OpenGL ES 2.0.24] section 2.9 page 21.
 
-#ifndef LIBGLESV2_BUFFER_H_
-#define LIBGLESV2_BUFFER_H_
+#ifndef LIBANGLE_BUFFER_H_
+#define LIBANGLE_BUFFER_H_
 
 #include "libANGLE/Error.h"
 
@@ -71,4 +71,4 @@ class Buffer : public RefCountObject
 
 }
 
-#endif   // LIBGLESV2_BUFFER_H_
+#endif   // LIBANGLE_BUFFER_H_

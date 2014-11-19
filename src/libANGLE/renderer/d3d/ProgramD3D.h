@@ -6,8 +6,8 @@
 
 // ProgramD3D.h: Defines the rx::ProgramD3D class which implements rx::ProgramImpl.
 
-#ifndef LIBGLESV2_RENDERER_PROGRAMD3D_H_
-#define LIBGLESV2_RENDERER_PROGRAMD3D_H_
+#ifndef LIBANGLE_RENDERER_D3D_PROGRAMD3D_H_
+#define LIBANGLE_RENDERER_D3D_PROGRAMD3D_H_
 
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/Workarounds.h"
@@ -216,4 +216,4 @@ class ProgramD3D : public ProgramImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_PROGRAMD3D_H_
+#endif // LIBANGLE_RENDERER_D3D_PROGRAMD3D_H_

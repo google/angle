@@ -6,8 +6,8 @@
 
 // TextureImpl.h: Defines the abstract rx::TextureImpl classes.
 
-#ifndef LIBGLESV2_RENDERER_TEXTUREIMPL_H_
-#define LIBGLESV2_RENDERER_TEXTUREIMPL_H_
+#ifndef LIBANGLE_RENDERER_TEXTUREIMPL_H_
+#define LIBANGLE_RENDERER_TEXTUREIMPL_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
@@ -61,4 +61,4 @@ class TextureImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_TEXTUREIMPL_H_
+#endif // LIBANGLE_RENDERER_TEXTUREIMPL_H_

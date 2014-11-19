@@ -6,8 +6,8 @@
 
 // Buffer11.h: Defines the rx::Buffer11 class which implements rx::BufferImpl via rx::BufferD3D.
 
-#ifndef LIBGLESV2_RENDERER_BUFFER11_H_
-#define LIBGLESV2_RENDERER_BUFFER11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_BUFFER11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_BUFFER11_H_
 
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/MemoryBuffer.h"
@@ -102,4 +102,4 @@ class Buffer11 : public BufferD3D
 
 }
 
-#endif // LIBGLESV2_RENDERER_BUFFER11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_BUFFER11_H_

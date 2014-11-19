@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_TRANSLATORESSL_H_
-#define COMPILER_TRANSLATORESSL_H_
+#ifndef COMPILER_TRANSLATOR_TRANSLATORESSL_H_
+#define COMPILER_TRANSLATOR_TRANSLATORESSL_H_
 
 #include "compiler/translator/Compiler.h"
 
@@ -20,4 +20,4 @@ private:
     void writeExtensionBehavior();
 };
 
-#endif  // COMPILER_TRANSLATORESSL_H_
+#endif  // COMPILER_TRANSLATOR_TRANSLATORESSL_H_

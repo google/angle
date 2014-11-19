@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef _SYMBOL_TABLE_INCLUDED_
-#define _SYMBOL_TABLE_INCLUDED_
+#ifndef COMPILER_TRANSLATOR_SYMBOLTABLE_H_
+#define COMPILER_TRANSLATOR_SYMBOLTABLE_H_
 
 //
 // Symbol table for parsing.  Has these design characteristics:
@@ -451,4 +451,4 @@ class TSymbolTable
     static int uniqueIdCounter;
 };
 
-#endif // _SYMBOL_TABLE_INCLUDED_
+#endif // COMPILER_TRANSLATOR_SYMBOLTABLE_H_

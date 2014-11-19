@@ -6,8 +6,8 @@
 
 // VertexDeclarationCache.h: Defines a helper class to construct and cache vertex declarations.
 
-#ifndef LIBGLESV2_RENDERER_VERTEXDECLARATIONCACHE_H_
-#define LIBGLESV2_RENDERER_VERTEXDECLARATIONCACHE_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_VERTEXDECLARATIONCACHE_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_VERTEXDECLARATIONCACHE_H_
 
 #include "libANGLE/Error.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
@@ -56,4 +56,4 @@ class VertexDeclarationCache
 
 }
 
-#endif // LIBGLESV2_RENDERER_VERTEXDECLARATIONCACHE_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_VERTEXDECLARATIONCACHE_H_

@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_TRANSLATORHLSL_H_
-#define COMPILER_TRANSLATORHLSL_H_
+#ifndef COMPILER_TRANSLATOR_TRANSLATORHLSL_H_
+#define COMPILER_TRANSLATOR_TRANSLATORHLSL_H_
 
 #include "compiler/translator/Compiler.h"
 
@@ -28,4 +28,4 @@ class TranslatorHLSL : public TCompiler
     std::map<std::string, unsigned int> mUniformRegisterMap;
 };
 
-#endif  // COMPILER_TRANSLATORHLSL_H_
+#endif  // COMPILER_TRANSLATOR_TRANSLATORHLSL_H_

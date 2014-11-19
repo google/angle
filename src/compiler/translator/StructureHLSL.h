@@ -7,8 +7,8 @@
 //   Interfaces of methods for HLSL translation of GLSL structures.
 //
 
-#ifndef TRANSLATOR_STRUCTUREHLSL_H_
-#define TRANSLATOR_STRUCTUREHLSL_H_
+#ifndef COMPILER_TRANSLATOR_STRUCTUREHLSL_H_
+#define COMPILER_TRANSLATOR_STRUCTUREHLSL_H_
 
 #include "compiler/translator/Common.h"
 #include "compiler/translator/IntermNode.h"
@@ -76,4 +76,4 @@ class StructureHLSL
 
 }
 
-#endif // COMPILER_STRUCTUREHLSL_H_
+#endif // COMPILER_TRANSLATOR_STRUCTUREHLSL_H_

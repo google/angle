@@ -6,8 +6,8 @@
 // Error.h: Defines the egl::Error and gl::Error classes which encapsulate API errors
 // and optional error messages.
 
-#ifndef LIBEGL_ERROR_H_
-#define LIBEGL_ERROR_H_
+#ifndef LIBANGLE_ERROR_H_
+#define LIBANGLE_ERROR_H_
 
 #include "angle_gl.h"
 #include <EGL/egl.h>
@@ -60,4 +60,4 @@ class Error
 
 }
 
-#endif // LIBEGL_ERROR_H_
+#endif // LIBANGLE_ERROR_H_

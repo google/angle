@@ -6,8 +6,8 @@
 
 // Data.h: Container class for all GL relevant state, caps and objects
 
-#ifndef LIBGLESV2_DATA_H_
-#define LIBGLESV2_DATA_H_
+#ifndef LIBANGLE_DATA_H_
+#define LIBANGLE_DATA_H_
 
 #include "libANGLE/State.h"
 
@@ -35,4 +35,4 @@ struct Data final
 
 }
 
-#endif // LIBGLESV2_DATA_H_
+#endif // LIBANGLE_DATA_H_

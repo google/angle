@@ -8,8 +8,8 @@
 // classes TextureStorage9_2D and TextureStorage9_Cube, which act as the interface to the
 // D3D9 texture.
 
-#ifndef LIBGLESV2_RENDERER_TEXTURESTORAGE9_H_
-#define LIBGLESV2_RENDERER_TEXTURESTORAGE9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_TEXTURESTORAGE9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_TEXTURESTORAGE9_H_
 
 #include "libANGLE/renderer/d3d/TextureStorage.h"
 #include "common/debug.h"
@@ -110,5 +110,5 @@ class TextureStorage9_Cube : public TextureStorage9
 
 }
 
-#endif // LIBGLESV2_RENDERER_TEXTURESTORAGE9_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_TEXTURESTORAGE9_H_
 

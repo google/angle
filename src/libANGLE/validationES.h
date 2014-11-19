@@ -6,8 +6,8 @@
 
 // validationES.h: Validation functions for generic OpenGL ES entry point parameters
 
-#ifndef LIBGLESV2_VALIDATION_ES_H
-#define LIBGLESV2_VALIDATION_ES_H
+#ifndef LIBANGLE_VALIDATION_ES_H_
+#define LIBANGLE_VALIDATION_ES_H_
 
 #include "common/mathutil.h"
 
@@ -91,4 +91,4 @@ bool ValidateGetnUniformivEXT(Context *context, GLuint program, GLint location, 
 
 }
 
-#endif // LIBGLESV2_VALIDATION_ES_H
+#endif // LIBANGLE_VALIDATION_ES_H_

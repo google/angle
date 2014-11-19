@@ -6,8 +6,8 @@
 
 // RenderbufferImpl.h: Defines the abstract class gl::RenderbufferImpl
 
-#ifndef LIBGLESV2_RENDERER_RENDERBUFFERIMPL_H_
-#define LIBGLESV2_RENDERER_RENDERBUFFERIMPL_H_
+#ifndef LIBANGLE_RENDERER_RENDERBUFFERIMPL_H_
+#define LIBANGLE_RENDERER_RENDERBUFFERIMPL_H_
 
 #include "angle_gl.h"
 
@@ -34,4 +34,4 @@ class RenderbufferImpl
 
 }
 
-#endif   // LIBGLESV2_RENDERER_RENDERBUFFERIMPL_H_
+#endif   // LIBANGLE_RENDERER_RENDERBUFFERIMPL_H_

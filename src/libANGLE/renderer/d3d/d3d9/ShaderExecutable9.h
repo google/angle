@@ -7,8 +7,8 @@
 // ShaderExecutable9.h: Defines a D3D9-specific class to contain shader
 // executable implementation details.
 
-#ifndef LIBGLESV2_RENDERER_SHADEREXECUTABLE9_H_
-#define LIBGLESV2_RENDERER_SHADEREXECUTABLE9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_SHADEREXECUTABLE9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_SHADEREXECUTABLE9_H_
 
 #include "libANGLE/renderer/ShaderExecutable.h"
 
@@ -36,4 +36,4 @@ class ShaderExecutable9 : public ShaderExecutable
 
 }
 
-#endif // LIBGLESV2_RENDERER_SHADEREXECUTABLE9_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_SHADEREXECUTABLE9_H_

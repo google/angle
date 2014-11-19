@@ -7,8 +7,8 @@
 // Image11.h: Defines the rx::Image11 class, which acts as the interface to
 // the actual underlying resources of a Texture
 
-#ifndef LIBGLESV2_RENDERER_IMAGE11_H_
-#define LIBGLESV2_RENDERER_IMAGE11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_IMAGE11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_IMAGE11_H_
 
 #include "libANGLE/renderer/d3d/ImageD3D.h"
 #include "libANGLE/ImageIndex.h"
@@ -84,4 +84,4 @@ class Image11 : public ImageD3D
 
 }
 
-#endif // LIBGLESV2_RENDERER_IMAGE11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_IMAGE11_H_

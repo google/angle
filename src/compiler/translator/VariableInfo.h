@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_VARIABLE_INFO_H_
-#define COMPILER_VARIABLE_INFO_H_
+#ifndef COMPILER_TRANSLATOR_VARIABLEINFO_H_
+#define COMPILER_TRANSLATOR_VARIABLEINFO_H_
 
 #include <GLSLANG/ShaderLang.h>
 
@@ -65,4 +65,4 @@ void ExpandUniforms(const std::vector<Uniform> &compact,
 
 }
 
-#endif  // COMPILER_VARIABLE_INFO_H_
+#endif  // COMPILER_TRANSLATOR_VARIABLEINFO_H_

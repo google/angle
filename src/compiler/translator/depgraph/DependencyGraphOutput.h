@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_DEPGRAPH_DEPENDENCY_GRAPH_OUTPUT_H
-#define COMPILER_DEPGRAPH_DEPENDENCY_GRAPH_OUTPUT_H
+#ifndef COMPILER_TRANSLATOR_DEPGRAPH_DEPENDENCYGRAPHOUTPUT_H_
+#define COMPILER_TRANSLATOR_DEPGRAPH_DEPENDENCYGRAPHOUTPUT_H_
 
 #include "compiler/translator/depgraph/DependencyGraph.h"
 #include "compiler/translator/InfoSink.h"
@@ -27,4 +27,4 @@ private:
     TInfoSinkBase& mSink;
 };
 
-#endif  // COMPILER_DEPGRAPH_DEPENDENCY_GRAPH_OUTPUT_H
+#endif  // COMPILER_TRANSLATOR_DEPGRAPH_DEPENDENCYGRAPHOUTPUT_H_

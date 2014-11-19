@@ -6,8 +6,8 @@
 
 // Buffer9.h: Defines the rx::Buffer9 class which implements rx::BufferImpl via rx::BufferD3D.
 
-#ifndef LIBGLESV2_RENDERER_BUFFER9_H_
-#define LIBGLESV2_RENDERER_BUFFER9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_BUFFER9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_BUFFER9_H_
 
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/MemoryBuffer.h"
@@ -49,4 +49,4 @@ class Buffer9 : public BufferD3D
 
 }
 
-#endif // LIBGLESV2_RENDERER_BUFFER9_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_BUFFER9_H_

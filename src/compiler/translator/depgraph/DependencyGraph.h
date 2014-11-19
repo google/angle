@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_DEPGRAPH_DEPENDENCY_GRAPH_H
-#define COMPILER_DEPGRAPH_DEPENDENCY_GRAPH_H
+#ifndef COMPILER_TRANSLATOR_DEPGRAPH_DEPENDENCYGRAPH_H_
+#define COMPILER_TRANSLATOR_DEPGRAPH_DEPENDENCYGRAPH_H_
 
 #include "compiler/translator/IntermNode.h"
 
@@ -209,4 +209,4 @@ private:
     TGraphNodeSet mVisited;
 };
 
-#endif
+#endif // COMPILER_TRANSLATOR_DEPGRAPH_DEPENDENCYGRAPH_H_

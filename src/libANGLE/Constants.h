@@ -6,8 +6,8 @@
 
 // Contants.h: Defines some implementation specific and gl constants
 
-#ifndef LIBGLESV2_CONSTANTS_H_
-#define LIBGLESV2_CONSTANTS_H_
+#ifndef LIBANGLE_CONSTANTS_H_
+#define LIBANGLE_CONSTANTS_H_
 
 namespace gl
 {
@@ -41,4 +41,4 @@ enum
 
 }
 
-#endif // LIBGLESV2_CONSTANTS_H_
+#endif // LIBANGLE_CONSTANTS_H_

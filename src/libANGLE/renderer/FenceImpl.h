@@ -6,8 +6,8 @@
 
 // FenceImpl.h: Defines the rx::FenceNVImpl and rx::FenceSyncImpl classes.
 
-#ifndef LIBGLESV2_RENDERER_FENCEIMPL_H_
-#define LIBGLESV2_RENDERER_FENCEIMPL_H_
+#ifndef LIBANGLE_RENDERER_FENCEIMPL_H_
+#define LIBANGLE_RENDERER_FENCEIMPL_H_
 
 #include "libANGLE/Error.h"
 
@@ -49,4 +49,4 @@ class FenceSyncImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_FENCEIMPL_H_
+#endif // LIBANGLE_RENDERER_FENCEIMPL_H_

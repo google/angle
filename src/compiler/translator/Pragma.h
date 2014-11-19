@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_PRAGMA_H_
-#define COMPILER_PRAGMA_H_
+#ifndef COMPILER_TRANSLATOR_PRAGMA_H_
+#define COMPILER_TRANSLATOR_PRAGMA_H_
 
 struct TPragma
 {
@@ -26,4 +26,4 @@ struct TPragma
     STDGL stdgl;
 };
 
-#endif // COMPILER_PRAGMA_H_
+#endif // COMPILER_TRANSLATOR_PRAGMA_H_

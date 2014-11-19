@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_UTIL_H
-#define COMPILER_UTIL_H
+#ifndef COMPILER_TRANSLATOR_UTIL_H_
+#define COMPILER_TRANSLATOR_UTIL_H_
 
 #include <stack>
 
@@ -63,4 +63,4 @@ class GetVariableTraverser
 
 }
 
-#endif // COMPILER_UTIL_H
+#endif // COMPILER_TRANSLATOR_UTIL_H_

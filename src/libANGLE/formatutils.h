@@ -6,8 +6,8 @@
 
 // formatutils.h: Queries for GL image formats.
 
-#ifndef LIBGLESV2_FORMATUTILS_H_
-#define LIBGLESV2_FORMATUTILS_H_
+#ifndef LIBANGLE_FORMATUTILS_H_
+#define LIBANGLE_FORMATUTILS_H_
 
 #include "libANGLE/Caps.h"
 #include "libANGLE/angletypes.h"
@@ -103,4 +103,4 @@ const FormatSet &GetAllSizedInternalFormats();
 
 }
 
-#endif // LIBGLESV2_FORMATUTILS_H_
+#endif // LIBANGLE_FORMATUTILS_H_

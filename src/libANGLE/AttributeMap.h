@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef LIBEGL_ATTRIBUTEMAP_H_
-#define LIBEGL_ATTRIBUTEMAP_H_
+#ifndef LIBANGLE_ATTRIBUTEMAP_H_
+#define LIBANGLE_ATTRIBUTEMAP_H_
 
 #include <EGL/egl.h>
 
@@ -30,4 +30,4 @@ class AttributeMap
 
 }
 
-#endif   // LIBEGL_ATTRIBUTEMAP_H_
+#endif   // LIBANGLE_ATTRIBUTEMAP_H_

@@ -7,8 +7,8 @@
 // Program.h: Defines the gl::Program class. Implements GL program objects
 // and related functionality. [OpenGL ES 2.0.24] section 2.10.3 page 28.
 
-#ifndef LIBGLESV2_PROGRAM_H_
-#define LIBGLESV2_PROGRAM_H_
+#ifndef LIBANGLE_PROGRAM_H_
+#define LIBANGLE_PROGRAM_H_
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
@@ -148,4 +148,4 @@ class Program
 };
 }
 
-#endif   // LIBGLESV2_PROGRAM_H_
+#endif   // LIBANGLE_PROGRAM_H_

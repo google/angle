@@ -6,8 +6,8 @@
 
 // FramebufferD3D.h: Defines the DefaultAttachmentD3D class.
 
-#ifndef LIBGLESV2_RENDERER_FRAMBUFFERD3D_H_
-#define LIBGLESV2_RENDERER_FRAMBUFFERD3D_H_
+#ifndef LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_
+#define LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_
 
 #include "libANGLE/renderer/FramebufferImpl.h"
 
@@ -37,4 +37,4 @@ class DefaultAttachmentD3D : public DefaultAttachmentImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_FRAMBUFFERD3D_H_
+#endif // LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_

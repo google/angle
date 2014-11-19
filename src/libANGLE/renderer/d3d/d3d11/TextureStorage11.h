@@ -7,8 +7,8 @@
 // TextureStorage11.h: Defines the abstract rx::TextureStorage11 class and its concrete derived
 // classes TextureStorage11_2D and TextureStorage11_Cube, which act as the interface to the D3D11 texture.
 
-#ifndef LIBGLESV2_RENDERER_TEXTURESTORAGE11_H_
-#define LIBGLESV2_RENDERER_TEXTURESTORAGE11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_TEXTURESTORAGE11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_TEXTURESTORAGE11_H_
 
 #include "libANGLE/Texture.h"
 #include "libANGLE/Error.h"
@@ -295,4 +295,4 @@ class TextureStorage11_2DArray : public TextureStorage11
 
 }
 
-#endif // LIBGLESV2_RENDERER_TEXTURESTORAGE11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_TEXTURESTORAGE11_H_

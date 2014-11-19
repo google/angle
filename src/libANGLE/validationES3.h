@@ -6,8 +6,8 @@
 
 // validationES3.h: Validation functions for OpenGL ES 3.0 entry point parameters
 
-#ifndef LIBGLESV2_VALIDATION_ES3_H
-#define LIBGLESV2_VALIDATION_ES3_H
+#ifndef LIBANGLE_VALIDATION_ES3_H_
+#define LIBANGLE_VALIDATION_ES3_H_
 
 #include <GLES3/gl3.h>
 
@@ -44,4 +44,4 @@ bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLu
 
 }
 
-#endif // LIBGLESV2_VALIDATION_ES3_H
+#endif // LIBANGLE_VALIDATION_ES3_H_

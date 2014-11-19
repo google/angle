@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef CROSSCOMPILERGLSL_OUTPUTGLSLBASE_H_
-#define CROSSCOMPILERGLSL_OUTPUTGLSLBASE_H_
+#ifndef COMPILER_TRANSLATOR_OUTPUTGLSLBASE_H_
+#define COMPILER_TRANSLATOR_OUTPUTGLSLBASE_H_
 
 #include <set>
 
@@ -80,4 +80,4 @@ class TOutputGLSLBase : public TIntermTraverser
     const int mShaderVersion;
 };
 
-#endif  // CROSSCOMPILERGLSL_OUTPUTGLSLBASE_H_
+#endif  // COMPILER_TRANSLATOR_OUTPUTGLSLBASE_H_

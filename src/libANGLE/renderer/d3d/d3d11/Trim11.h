@@ -6,8 +6,8 @@
 
 // Trim11.h: Trim support utility class.
 
-#ifndef LIBGLESV2_TRIM11_H_
-#define LIBGLESV2_TRIM11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_TRIM11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_TRIM11_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
@@ -42,4 +42,4 @@ class Trim11
 
 }
 
-#endif   // LIBGLESV2_TRIM11_H_
+#endif   // LIBANGLE_RENDERER_D3D_D3D11_TRIM11_H_

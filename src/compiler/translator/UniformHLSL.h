@@ -7,8 +7,8 @@
 //   Methods for GLSL to HLSL translation for uniforms and interface blocks.
 //
 
-#ifndef TRANSLATOR_UNIFORMHLSL_H_
-#define TRANSLATOR_UNIFORMHLSL_H_
+#ifndef COMPILER_TRANSLATOR_UNIFORMHLSL_H_
+#define COMPILER_TRANSLATOR_UNIFORMHLSL_H_
 
 #include "compiler/translator/Types.h"
 
@@ -60,4 +60,4 @@ class UniformHLSL
 
 }
 
-#endif // TRANSLATOR_UNIFORMHLSL_H_
+#endif // COMPILER_TRANSLATOR_UNIFORMHLSL_H_

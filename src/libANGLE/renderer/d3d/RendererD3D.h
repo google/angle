@@ -6,8 +6,8 @@
 
 // RendererD3D.h: Defines a back-end specific class for the DirectX renderer.
 
-#ifndef LIBGLESV2_RENDERER_RENDERERD3D_H_
-#define LIBGLESV2_RENDERER_RENDERERD3D_H_
+#ifndef LIBANGLE_RENDERER_D3D_RENDERERD3D_H_
+#define LIBANGLE_RENDERER_D3D_RENDERERD3D_H_
 
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/Data.h"
@@ -198,4 +198,4 @@ class RendererD3D : public Renderer
 
 }
 
-#endif // LIBGLESV2_RENDERER_RENDERERD3D_H_
+#endif // LIBANGLE_RENDERER_D3D_RENDERERD3D_H_

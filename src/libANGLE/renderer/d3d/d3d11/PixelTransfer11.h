@@ -8,8 +8,8 @@
 //   Buffer-to-Texture and Texture-to-Buffer data transfers.
 //   Used to implement pixel unpack and pixel pack buffers in ES3.
 
-#ifndef LIBGLESV2_PIXELTRANSFER11_H_
-#define LIBGLESV2_PIXELTRANSFER11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_PIXELTRANSFER11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_PIXELTRANSFER11_H_
 
 #include "libANGLE/Error.h"
 
@@ -85,4 +85,4 @@ class PixelTransfer11
 
 }
 
-#endif // LIBGLESV2_PIXELTRANSFER11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_PIXELTRANSFER11_H_

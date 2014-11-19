@@ -6,8 +6,8 @@
 
 // Query9.h: Defines the rx::Query9 class which implements rx::QueryImpl.
 
-#ifndef LIBGLESV2_RENDERER_QUERY9_H_
-#define LIBGLESV2_RENDERER_QUERY9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_QUERY9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_QUERY9_H_
 
 #include "libANGLE/renderer/QueryImpl.h"
 
@@ -40,4 +40,4 @@ class Query9 : public QueryImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_QUERY9_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_QUERY9_H_

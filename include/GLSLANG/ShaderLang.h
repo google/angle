@@ -3,8 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-#ifndef _COMPILER_INTERFACE_INCLUDED_
-#define _COMPILER_INTERFACE_INCLUDED_
+#ifndef GLSLANG_SHADERLANG_H_
+#define GLSLANG_SHADERLANG_H_
 
 #if defined(COMPONENT_BUILD) && !defined(ANGLE_TRANSLATOR_STATIC)
 #if defined(_WIN32) || defined(_WIN64)
@@ -408,4 +408,4 @@ COMPILER_EXPORT bool ShGetUniformRegister(const ShHandle handle,
                                           const std::string &uniformName,
                                           unsigned int *indexOut);
 
-#endif // _COMPILER_INTERFACE_INCLUDED_
+#endif // GLSLANG_SHADERLANG_H_

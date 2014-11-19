@@ -8,8 +8,8 @@
 // Implements GL renderbuffer objects and related functionality.
 // [OpenGL ES 2.0.24] section 4.4.3 page 108.
 
-#ifndef LIBGLESV2_RENDERBUFFER_H_
-#define LIBGLESV2_RENDERBUFFER_H_
+#ifndef LIBANGLE_RENDERBUFFER_H_
+#define LIBANGLE_RENDERBUFFER_H_
 
 #include "angle_gl.h"
 
@@ -68,4 +68,4 @@ class Renderbuffer : public RefCountObject
 
 }
 
-#endif   // LIBGLESV2_RENDERBUFFER_H_
+#endif   // LIBANGLE_RENDERBUFFER_H_

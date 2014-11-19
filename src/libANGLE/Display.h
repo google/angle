@@ -8,8 +8,8 @@
 // display on which graphics are drawn. Implements EGLDisplay.
 // [EGL 1.4] section 2.1.2 page 3.
 
-#ifndef LIBEGL_DISPLAY_H_
-#define LIBEGL_DISPLAY_H_
+#ifndef LIBANGLE_DISPLAY_H_
+#define LIBANGLE_DISPLAY_H_
 
 #include <set>
 #include <vector>
@@ -100,4 +100,4 @@ class Display
 };
 }
 
-#endif   // LIBEGL_DISPLAY_H_
+#endif   // LIBANGLE_DISPLAY_H_

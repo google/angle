@@ -7,8 +7,8 @@
 // ShaderExecutable11.h: Defines a D3D11-specific class to contain shader
 // executable implementation details.
 
-#ifndef LIBGLESV2_RENDERER_SHADEREXECUTABLE11_H_
-#define LIBGLESV2_RENDERER_SHADEREXECUTABLE11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_SHADEREXECUTABLE11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_SHADEREXECUTABLE11_H_
 
 #include "libANGLE/renderer/ShaderExecutable.h"
 
@@ -58,4 +58,4 @@ class UniformStorage11 : public UniformStorage
 
 }
 
-#endif // LIBGLESV2_RENDERER_SHADEREXECUTABLE11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_SHADEREXECUTABLE11_H_

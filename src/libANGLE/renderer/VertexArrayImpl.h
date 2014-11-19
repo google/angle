@@ -6,8 +6,8 @@
 
 // VertexAttribImpl.h: Defines the abstract rx::VertexAttribImpl class.
 
-#ifndef LIBGLESV2_RENDERER_VERTEXARRAYIMPL_H_
-#define LIBGLESV2_RENDERER_VERTEXARRAYIMPL_H_
+#ifndef LIBANGLE_RENDERER_VERTEXARRAYIMPL_H_
+#define LIBANGLE_RENDERER_VERTEXARRAYIMPL_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/Buffer.h"
@@ -29,4 +29,4 @@ class VertexArrayImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_VERTEXARRAYIMPL_H_
+#endif // LIBANGLE_RENDERER_VERTEXARRAYIMPL_H_

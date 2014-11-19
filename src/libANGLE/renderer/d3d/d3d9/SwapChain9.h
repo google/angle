@@ -6,8 +6,8 @@
 
 // SwapChain9.h: Defines a back-end specific class for the D3D9 swap chain.
 
-#ifndef LIBGLESV2_RENDERER_SWAPCHAIN9_H_
-#define LIBGLESV2_RENDERER_SWAPCHAIN9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_SWAPCHAIN9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_SWAPCHAIN9_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/renderer/SwapChain.h"
@@ -55,4 +55,4 @@ class SwapChain9 : public SwapChain
 };
 
 }
-#endif // LIBGLESV2_RENDERER_SWAPCHAIN9_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_SWAPCHAIN9_H_

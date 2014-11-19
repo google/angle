@@ -7,8 +7,8 @@
 // Sampler.h : Defines the Sampler class, which represents a GLES 3
 // sampler object. Sampler objects store some state needed to sample textures.
 
-#ifndef LIBGLESV2_SAMPLER_H_
-#define LIBGLESV2_SAMPLER_H_
+#ifndef LIBANGLE_SAMPLER_H_
+#define LIBANGLE_SAMPLER_H_
 
 #include "common/RefCountObject.h"
 
@@ -57,4 +57,4 @@ class Sampler : public RefCountObject
 
 }
 
-#endif // LIBGLESV2_SAMPLER_H_
+#endif // LIBANGLE_SAMPLER_H_

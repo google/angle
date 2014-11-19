@@ -7,8 +7,8 @@
 // VertexBuffer.h: Defines the abstract VertexBuffer class and VertexBufferInterface
 // class with derivations, classes that perform graphics API agnostic vertex buffer operations.
 
-#ifndef LIBGLESV2_RENDERER_VERTEXBUFFER_H_
-#define LIBGLESV2_RENDERER_VERTEXBUFFER_H_
+#ifndef LIBANGLE_RENDERER_D3D_VERTEXBUFFER_H_
+#define LIBANGLE_RENDERER_D3D_VERTEXBUFFER_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
@@ -141,4 +141,4 @@ class StaticVertexBufferInterface : public VertexBufferInterface
 
 }
 
-#endif // LIBGLESV2_RENDERER_VERTEXBUFFER_H_
+#endif // LIBANGLE_RENDERER_D3D_VERTEXBUFFER_H_

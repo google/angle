@@ -6,8 +6,8 @@
 
 // mathutil.h: Math and bit manipulation functions.
 
-#ifndef LIBGLESV2_MATHUTIL_H_
-#define LIBGLESV2_MATHUTIL_H_
+#ifndef COMMON_MATHUTIL_H_
+#define COMMON_MATHUTIL_H_
 
 #include "common/debug.h"
 #include "common/platform.h"
@@ -565,4 +565,4 @@ inline bool IsIntegerCastSafe(BigIntT bigValue)
 
 }
 
-#endif   // LIBGLESV2_MATHUTIL_H_
+#endif   // COMMON_MATHUTIL_H_

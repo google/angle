@@ -6,8 +6,8 @@
 
 // TextureD3D.h: Implementations of the Texture interfaces shared betweeen the D3D backends.
 
-#ifndef LIBGLESV2_RENDERER_TEXTURED3D_H_
-#define LIBGLESV2_RENDERER_TEXTURED3D_H_
+#ifndef LIBANGLE_RENDERER_D3D_TEXTURED3D_H_
+#define LIBANGLE_RENDERER_D3D_TEXTURED3D_H_
 
 #include "libANGLE/renderer/TextureImpl.h"
 #include "libANGLE/angletypes.h"
@@ -332,4 +332,4 @@ class TextureD3D_2DArray : public TextureD3D
 
 }
 
-#endif // LIBGLESV2_RENDERER_TEXTURED3D_H_
+#endif // LIBANGLE_RENDERER_D3D_TEXTURED3D_H_

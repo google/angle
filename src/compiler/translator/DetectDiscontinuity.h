@@ -8,8 +8,8 @@
 // gradients of functions with discontinuities. 
 //
 
-#ifndef COMPILER_DETECTDISCONTINUITY_H_
-#define COMPILER_DETECTDISCONTINUITY_H_
+#ifndef COMPILER_TRANSLATOR_DETECTDISCONTINUITY_H_
+#define COMPILER_TRANSLATOR_DETECTDISCONTINUITY_H_
 
 #include "compiler/translator/IntermNode.h"
 
@@ -68,4 +68,4 @@ bool containsGradientOperation(TIntermNode *node);
 
 }
 
-#endif   // COMPILER_DETECTDISCONTINUITY_H_
+#endif   // COMPILER_TRANSLATOR_DETECTDISCONTINUITY_H_

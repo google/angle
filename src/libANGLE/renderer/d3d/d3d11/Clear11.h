@@ -6,8 +6,8 @@
 
 // Clear11.h: Framebuffer clear utility class.
 
-#ifndef LIBGLESV2_RENDERER_CLEAR11_H_
-#define LIBGLESV2_RENDERER_CLEAR11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_CLEAR11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_CLEAR11_H_
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
@@ -84,4 +84,4 @@ class Clear11
 
 }
 
-#endif // LIBGLESV2_RENDERER_CLEAR11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_CLEAR11_H_

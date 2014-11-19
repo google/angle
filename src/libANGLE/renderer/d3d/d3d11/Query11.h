@@ -6,8 +6,8 @@
 
 // Query11.h: Defines the rx::Query11 class which implements rx::QueryImpl.
 
-#ifndef LIBGLESV2_RENDERER_QUERY11_H_
-#define LIBGLESV2_RENDERER_QUERY11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_QUERY11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_QUERY11_H_
 
 #include "libANGLE/renderer/QueryImpl.h"
 
@@ -41,4 +41,4 @@ class Query11 : public QueryImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_QUERY11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_QUERY11_H_

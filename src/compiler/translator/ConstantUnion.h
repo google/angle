@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef _CONSTANT_UNION_INCLUDED_
-#define _CONSTANT_UNION_INCLUDED_
+#ifndef COMPILER_TRANSLATOR_CONSTANTUNION_H_
+#define COMPILER_TRANSLATOR_CONSTANTUNION_H_
 
 #include <assert.h>
 
@@ -340,4 +340,4 @@ private:
     TBasicType type;
 };
 
-#endif // _CONSTANT_UNION_INCLUDED_
+#endif // COMPILER_TRANSLATOR_CONSTANTUNION_H_

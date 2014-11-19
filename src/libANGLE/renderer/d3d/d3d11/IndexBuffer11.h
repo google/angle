@@ -6,8 +6,8 @@
 
 // IndexBuffer11.h: Defines the D3D11 IndexBuffer implementation.
 
-#ifndef LIBGLESV2_RENDERER_INDEXBUFFER11_H_
-#define LIBGLESV2_RENDERER_INDEXBUFFER11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_INDEXBUFFER11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_INDEXBUFFER11_H_
 
 #include "libANGLE/renderer/d3d/IndexBuffer.h"
 
@@ -50,4 +50,4 @@ class IndexBuffer11 : public IndexBuffer
 
 }
 
-#endif // LIBGLESV2_RENDERER_INDEXBUFFER11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_INDEXBUFFER11_H_

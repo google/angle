@@ -7,8 +7,8 @@
 // Image9.h: Defines the rx::Image9 class, which acts as the interface to
 // the actual underlying surfaces of a Texture.
 
-#ifndef LIBGLESV2_RENDERER_IMAGE9_H_
-#define LIBGLESV2_RENDERER_IMAGE9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_IMAGE9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_IMAGE9_H_
 
 #include "libANGLE/renderer/d3d/ImageD3D.h"
 #include "common/debug.h"
@@ -74,4 +74,4 @@ class Image9 : public ImageD3D
 };
 }
 
-#endif   // LIBGLESV2_RENDERER_IMAGE9_H_
+#endif   // LIBANGLE_RENDERER_D3D_D3D9_IMAGE9_H_

@@ -6,8 +6,8 @@
 
 // FramebufferImpl.h: Defines the abstract rx::DefaultAttachmentImpl class.
 
-#ifndef LIBGLESV2_RENDERER_FRAMBUFFERIMPL_H_
-#define LIBGLESV2_RENDERER_FRAMBUFFERIMPL_H_
+#ifndef LIBANGLE_RENDERER_FRAMBUFFERIMPL_H_
+#define LIBANGLE_RENDERER_FRAMBUFFERIMPL_H_
 
 #include "angle_gl.h"
 
@@ -28,4 +28,4 @@ class DefaultAttachmentImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_FRAMBUFFERIMPL_H_
+#endif // LIBANGLE_RENDERER_FRAMBUFFERIMPL_H_

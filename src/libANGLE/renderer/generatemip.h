@@ -7,8 +7,8 @@
 // generatemip.h: Defines the GenerateMip function, templated on the format
 // type of the image for which mip levels are being generated.
 
-#ifndef LIBGLESV2_RENDERER_GENERATEMIP_H_
-#define LIBGLESV2_RENDERER_GENERATEMIP_H_
+#ifndef LIBANGLE_RENDERER_GENERATEMIP_H_
+#define LIBANGLE_RENDERER_GENERATEMIP_H_
 
 #include "libANGLE/renderer/imageformats.h"
 #include "libANGLE/angletypes.h"
@@ -25,4 +25,4 @@ inline void GenerateMip(size_t sourceWidth, size_t sourceHeight, size_t sourceDe
 
 #include "generatemip.inl"
 
-#endif // LIBGLESV2_RENDERER_GENERATEMIP_H_
+#endif // LIBANGLE_RENDERER_GENERATEMIP_H_

@@ -7,8 +7,8 @@
 // Renderer.h: Defines a back-end specific class that hides the details of the
 // implementation-specific renderer.
 
-#ifndef LIBGLESV2_RENDERER_RENDERER_H_
-#define LIBGLESV2_RENDERER_RENDERER_H_
+#ifndef LIBANGLE_RENDERER_RENDERER_H_
+#define LIBANGLE_RENDERER_RENDERER_H_
 
 #include "libANGLE/Caps.h"
 #include "libANGLE/Error.h"
@@ -196,4 +196,4 @@ enum ShaderType
 };
 
 }
-#endif // LIBGLESV2_RENDERER_RENDERER_H_
+#endif // LIBANGLE_RENDERER_RENDERER_H_

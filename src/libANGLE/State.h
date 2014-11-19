@@ -6,8 +6,8 @@
 
 // State.h: Defines the State class, encapsulating raw GL state
 
-#ifndef LIBGLESV2_STATE_H_
-#define LIBGLESV2_STATE_H_
+#ifndef LIBANGLE_STATE_H_
+#define LIBANGLE_STATE_H_
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
@@ -321,5 +321,5 @@ class State
 
 }
 
-#endif // LIBGLESV2_STATE_H_
+#endif // LIBANGLE_STATE_H_
 

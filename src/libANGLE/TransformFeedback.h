@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef LIBGLESV2_TRANSFORM_FEEDBACK_H_
-#define LIBGLESV2_TRANSFORM_FEEDBACK_H_
+#ifndef LIBANGLE_TRANSFORM_FEEDBACK_H_
+#define LIBANGLE_TRANSFORM_FEEDBACK_H_
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
@@ -48,4 +48,4 @@ class TransformFeedback : public RefCountObject
 
 }
 
-#endif // LIBGLESV2_TRANSFORM_FEEDBACK_H_
+#endif // LIBANGLE_TRANSFORM_FEEDBACK_H_

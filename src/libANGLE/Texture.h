@@ -8,8 +8,8 @@
 // classes Texture2D and TextureCubeMap. Implements GL texture objects and
 // related functionality. [OpenGL ES 2.0.24] section 3.7 page 63.
 
-#ifndef LIBGLESV2_TEXTURE_H_
-#define LIBGLESV2_TEXTURE_H_
+#ifndef LIBANGLE_TEXTURE_H_
+#define LIBANGLE_TEXTURE_H_
 
 #include "common/debug.h"
 #include "common/RefCountObject.h"
@@ -238,4 +238,4 @@ class Texture2DArray : public Texture
 
 }
 
-#endif   // LIBGLESV2_TEXTURE_H_
+#endif   // LIBANGLE_TEXTURE_H_

@@ -8,8 +8,8 @@
 // renderer-specific classes which will define the interface to the underlying
 // surfaces or resources.
 
-#ifndef LIBGLESV2_RENDERER_IMAGED3D_H_
-#define LIBGLESV2_RENDERER_IMAGED3D_H_
+#ifndef LIBANGLE_RENDERER_D3D_IMAGED3D_H_
+#define LIBANGLE_RENDERER_D3D_IMAGED3D_H_
 
 #include "common/debug.h"
 #include "libANGLE/renderer/Image.h"
@@ -47,4 +47,4 @@ class ImageD3D : public Image
 
 }
 
-#endif // LIBGLESV2_RENDERER_IMAGED3D_H_
+#endif // LIBANGLE_RENDERER_D3D_IMAGED3D_H_

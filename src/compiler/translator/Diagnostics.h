@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_DIAGNOSTICS_H_
-#define COMPILER_DIAGNOSTICS_H_
+#ifndef COMPILER_TRANSLATOR_DIAGNOSTICS_H_
+#define COMPILER_TRANSLATOR_DIAGNOSTICS_H_
 
 #include "compiler/preprocessor/DiagnosticsBase.h"
 
@@ -41,4 +41,4 @@ class TDiagnostics : public pp::Diagnostics
     int mNumWarnings;
 };
 
-#endif  // COMPILER_DIAGNOSTICS_H_
+#endif  // COMPILER_TRANSLATOR_DIAGNOSTICS_H_

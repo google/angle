@@ -6,8 +6,8 @@
 
 // ShaderD3D.h: Defines the rx::ShaderD3D class which implements rx::ShaderImpl.
 
-#ifndef LIBGLESV2_RENDERER_SHADERD3D_H_
-#define LIBGLESV2_RENDERER_SHADERD3D_H_
+#ifndef LIBANGLE_RENDERER_D3D_SHADERD3D_H_
+#define LIBANGLE_RENDERER_D3D_SHADERD3D_H_
 
 #include "libANGLE/renderer/ShaderImpl.h"
 #include "libANGLE/renderer/Workarounds.h"
@@ -95,4 +95,4 @@ class ShaderD3D : public ShaderImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_SHADERD3D_H_
+#endif // LIBANGLE_RENDERER_D3D_SHADERD3D_H_

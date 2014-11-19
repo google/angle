@@ -6,8 +6,8 @@
 
 // ShaderImpl.h: Defines the abstract rx::ShaderImpl class.
 
-#ifndef LIBGLESV2_RENDERER_SHADERIMPL_H_
-#define LIBGLESV2_RENDERER_SHADERIMPL_H_
+#ifndef LIBANGLE_RENDERER_SHADERIMPL_H_
+#define LIBANGLE_RENDERER_SHADERIMPL_H_
 
 #include <vector>
 
@@ -52,4 +52,4 @@ class ShaderImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_SHADERIMPL_H_
+#endif // LIBANGLE_RENDERER_SHADERIMPL_H_

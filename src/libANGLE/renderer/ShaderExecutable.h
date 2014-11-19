@@ -7,8 +7,8 @@
 // ShaderExecutable.h: Defines a renderer-agnostic class to contain shader
 // executable implementation details.
 
-#ifndef LIBGLESV2_RENDERER_SHADEREXECUTABLE_H_
-#define LIBGLESV2_RENDERER_SHADEREXECUTABLE_H_
+#ifndef LIBANGLE_RENDERER_SHADEREXECUTABLE_H_
+#define LIBANGLE_RENDERER_SHADEREXECUTABLE_H_
 
 #include "common/angleutils.h"
 #include "common/debug.h"
@@ -75,4 +75,4 @@ class UniformStorage
 
 }
 
-#endif // LIBGLESV2_RENDERER_SHADEREXECUTABLE_H_
+#endif // LIBANGLE_RENDERER_SHADEREXECUTABLE_H_

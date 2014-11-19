@@ -6,8 +6,8 @@
 
 // copyvertex.h: Defines vertex buffer copying and conversion functions
 
-#ifndef LIBGLESV2_RENDERER_COPYVERTEX_H_
-#define LIBGLESV2_RENDERER_COPYVERTEX_H_
+#ifndef LIBANGLE_RENDERER_COPYVERTEX_H_
+#define LIBANGLE_RENDERER_COPYVERTEX_H_
 
 #include "common/mathutil.h"
 
@@ -32,4 +32,4 @@ inline void CopyXYZ10W2ToXYZW32FVertexData(const uint8_t *input, size_t stride, 
 
 #include "copyvertex.inl"
 
-#endif // LIBGLESV2_RENDERER_COPYVERTEX_H_
+#endif // LIBANGLE_RENDERER_COPYVERTEX_H_

@@ -7,8 +7,8 @@
 // renderer11_utils.h: Conversion functions and other utility routines
 // specific to the D3D11 renderer.
 
-#ifndef LIBGLESV2_RENDERER_RENDERER11_UTILS_H
-#define LIBGLESV2_RENDERER_RENDERER11_UTILS_H
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_UTILS_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_UTILS_H_
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Caps.h"
@@ -186,4 +186,4 @@ Workarounds GenerateWorkarounds();
 
 }
 
-#endif // LIBGLESV2_RENDERER_RENDERER11_UTILS_H
+#endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_UTILS_H_

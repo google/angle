@@ -7,8 +7,8 @@
 //   all if-else blocks to if-if blocks.
 //
 
-#ifndef COMPILER_REWRITE_ELSE_BLOCKS_H_
-#define COMPILER_REWRITE_ELSE_BLOCKS_H_
+#ifndef COMPILER_TRANSLATOR_REWRITEELSEBLOCKS_H_
+#define COMPILER_TRANSLATOR_REWRITEELSEBLOCKS_H_
 
 #include "compiler/translator/IntermNode.h"
 
@@ -19,4 +19,4 @@ void RewriteElseBlocks(TIntermNode *node);
 
 }
 
-#endif // COMPILER_REWRITE_ELSE_BLOCKS_H_
+#endif // COMPILER_TRANSLATOR_REWRITEELSEBLOCKS_H_

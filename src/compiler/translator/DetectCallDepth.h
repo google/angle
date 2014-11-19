@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_DETECT_RECURSION_H_
-#define COMPILER_DETECT_RECURSION_H_
+#ifndef COMPILER_TRANSLATOR_DETECTCALLDEPTH_H_
+#define COMPILER_TRANSLATOR_DETECTCALLDEPTH_H_
 
 #include <limits.h>
 #include "compiler/translator/IntermNode.h"
@@ -75,4 +75,4 @@ private:
     void operator=(const DetectCallDepth&);
 };
 
-#endif  // COMPILER_DETECT_RECURSION_H_
+#endif  // COMPILER_TRANSLATOR_DETECTCALLDEPTH_H_

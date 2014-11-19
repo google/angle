@@ -7,8 +7,8 @@
 // HandleAllocator.h: Defines the gl::HandleAllocator class, which is used to
 // allocate GL handles.
 
-#ifndef LIBGLESV2_HANDLEALLOCATOR_H_
-#define LIBGLESV2_HANDLEALLOCATOR_H_
+#ifndef LIBANGLE_HANDLEALLOCATOR_H_
+#define LIBANGLE_HANDLEALLOCATOR_H_
 
 #include "common/angleutils.h"
 
@@ -41,4 +41,4 @@ class HandleAllocator
 
 }
 
-#endif   // LIBGLESV2_HANDLEALLOCATOR_H_
+#endif   // LIBANGLE_HANDLEALLOCATOR_H_

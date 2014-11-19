@@ -6,8 +6,8 @@
 
 // Fence9.h: Defines the rx::FenceNV9 class which implements rx::FenceNVImpl.
 
-#ifndef LIBGLESV2_RENDERER_FENCE9_H_
-#define LIBGLESV2_RENDERER_FENCE9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_FENCE9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_FENCE9_H_
 
 #include "libANGLE/renderer/FenceImpl.h"
 
@@ -34,4 +34,4 @@ class FenceNV9 : public FenceNVImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_FENCE9_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_FENCE9_H_

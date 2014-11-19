@@ -8,8 +8,8 @@
 // renderer-specific classes which will define the interface to the underlying
 // surfaces or resources.
 
-#ifndef LIBGLESV2_RENDERER_IMAGE_H_
-#define LIBGLESV2_RENDERER_IMAGE_H_
+#ifndef LIBANGLE_RENDERER_IMAGE_H_
+#define LIBANGLE_RENDERER_IMAGE_H_
 
 #include "common/debug.h"
 #include "libANGLE/Error.h"
@@ -76,4 +76,4 @@ class Image
 
 }
 
-#endif // LIBGLESV2_RENDERER_IMAGE_H_
+#endif // LIBANGLE_RENDERER_IMAGE_H_

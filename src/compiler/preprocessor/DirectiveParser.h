@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_PREPROCESSOR_DIRECTIVE_PARSER_H_
-#define COMPILER_PREPROCESSOR_DIRECTIVE_PARSER_H_
+#ifndef COMPILER_PREPROCESSOR_DIRECTIVEPARSER_H_
+#define COMPILER_PREPROCESSOR_DIRECTIVEPARSER_H_
 
 #include "Lexer.h"
 #include "Macro.h"
@@ -78,5 +78,5 @@ class DirectiveParser : public Lexer
 };
 
 }  // namespace pp
-#endif  // COMPILER_PREPROCESSOR_DIRECTIVE_PARSER_H_
 
+#endif  // COMPILER_PREPROCESSOR_DIRECTIVEPARSER_H_

@@ -6,8 +6,8 @@
 
 // debug.h: Debugging utilities.
 
-#ifndef COMPILER_DEBUG_H_
-#define COMPILER_DEBUG_H_
+#ifndef COMPILER_TRANSLATOR_COMPILERDEBUG_H_
+#define COMPILER_TRANSLATOR_COMPILERDEBUG_H_
 
 #include <assert.h>
 
@@ -49,5 +49,5 @@ void Trace(const char* format, ...);
     assert(false); \
 } while(0)
 
-#endif   // COMPILER_DEBUG_H_
+#endif   // COMPILER_TRANSLATOR_COMPILERDEBUG_H_
 

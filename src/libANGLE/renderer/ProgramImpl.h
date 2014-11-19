@@ -6,8 +6,8 @@
 
 // ProgramImpl.h: Defines the abstract rx::ProgramImpl class.
 
-#ifndef LIBGLESV2_RENDERER_PROGRAMIMPL_H_
-#define LIBGLESV2_RENDERER_PROGRAMIMPL_H_
+#ifndef LIBANGLE_RENDERER_PROGRAMIMPL_H_
+#define LIBANGLE_RENDERER_PROGRAMIMPL_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/BinaryStream.h"
@@ -124,4 +124,4 @@ class ProgramImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_PROGRAMIMPL_H_
+#endif // LIBANGLE_RENDERER_PROGRAMIMPL_H_

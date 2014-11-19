@@ -7,8 +7,8 @@
 // RenderTarget.h: Defines an abstract wrapper class to manage IDirect3DSurface9
 // and ID3D11View objects belonging to renderbuffers.
 
-#ifndef LIBGLESV2_RENDERER_RENDERTARGET_H_
-#define LIBGLESV2_RENDERER_RENDERTARGET_H_
+#ifndef LIBANGLE_RENDERER_RENDERTARGET_H_
+#define LIBANGLE_RENDERER_RENDERTARGET_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
@@ -50,4 +50,4 @@ class RenderTarget
 
 }
 
-#endif // LIBGLESV2_RENDERTARGET_H_
+#endif // LIBANGLE_RENDERTARGET_H_

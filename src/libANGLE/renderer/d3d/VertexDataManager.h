@@ -7,8 +7,8 @@
 // VertexDataManager.h: Defines the VertexDataManager, a class that
 // runs the Buffer translation process.
 
-#ifndef LIBGLESV2_RENDERER_VERTEXDATAMANAGER_H_
-#define LIBGLESV2_RENDERER_VERTEXDATAMANAGER_H_
+#ifndef LIBANGLE_RENDERER_D3D_VERTEXDATAMANAGER_H_
+#define LIBANGLE_RENDERER_D3D_VERTEXDATAMANAGER_H_
 
 #include "libANGLE/Constants.h"
 #include "libANGLE/VertexAttribute.h"
@@ -93,4 +93,4 @@ class VertexDataManager
 
 }
 
-#endif   // LIBGLESV2_RENDERER_VERTEXDATAMANAGER_H_
+#endif   // LIBANGLE_RENDERER_D3D_VERTEXDATAMANAGER_H_

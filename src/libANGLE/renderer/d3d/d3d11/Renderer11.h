@@ -6,8 +6,8 @@
 
 // Renderer11.h: Defines a back-end specific class for the D3D11 renderer.
 
-#ifndef LIBGLESV2_RENDERER_RENDERER11_H_
-#define LIBGLESV2_RENDERER_RENDERER11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
@@ -368,4 +368,4 @@ class Renderer11 : public RendererD3D
 };
 
 }
-#endif // LIBGLESV2_RENDERER_RENDERER11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_H_

@@ -6,8 +6,8 @@
 
 // Blit11.cpp: Texture copy utility class.
 
-#ifndef LIBGLESV2_BLIT11_H_
-#define LIBGLESV2_BLIT11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_BLIT11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_BLIT11_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
@@ -120,4 +120,4 @@ class Blit11
 
 }
 
-#endif   // LIBGLESV2_BLIT11_H_
+#endif   // LIBANGLE_RENDERER_D3D_D3D11_BLIT11_H_

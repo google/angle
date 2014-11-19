@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef _SHHANDLE_INCLUDED_
-#define _SHHANDLE_INCLUDED_
+#ifndef COMPILER_TRANSLATOR_COMPILER_H_
+#define COMPILER_TRANSLATOR_COMPILER_H_
 
 //
 // Machine independent part of the compiler private objects
@@ -191,4 +191,4 @@ TCompiler* ConstructCompiler(
     sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
 void DeleteCompiler(TCompiler*);
 
-#endif // _SHHANDLE_INCLUDED_
+#endif // COMPILER_TRANSLATOR_COMPILER_H_

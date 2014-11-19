@@ -7,8 +7,8 @@
 // RenderStateCache.h: Defines rx::RenderStateCache, a cache of Direct3D render
 // state objects.
 
-#ifndef LIBGLESV2_RENDERER_RENDERSTATECACHE_H_
-#define LIBGLESV2_RENDERER_RENDERSTATECACHE_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_RENDERSTATECACHE_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_RENDERSTATECACHE_H_
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
@@ -110,4 +110,4 @@ class RenderStateCache
 
 }
 
-#endif // LIBGLESV2_RENDERER_RENDERSTATECACHE_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERSTATECACHE_H_

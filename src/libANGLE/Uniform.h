@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef LIBGLESV2_UNIFORM_H_
-#define LIBGLESV2_UNIFORM_H_
+#ifndef LIBANGLE_UNIFORM_H_
+#define LIBANGLE_UNIFORM_H_
 
 #include "common/debug.h"
 #include "common/blocklayout.h"
@@ -76,4 +76,4 @@ struct UniformBlock
 
 }
 
-#endif   // LIBGLESV2_UNIFORM_H_
+#endif   // LIBANGLE_UNIFORM_H_

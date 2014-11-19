@@ -6,8 +6,8 @@
 
 // TransformFeedbackImpl.h: Defines the abstract rx::TransformFeedbackImpl class.
 
-#ifndef LIBGLESV2_RENDERER_TRANSFORMFEEDBACKIMPL_H_
-#define LIBGLESV2_RENDERER_TRANSFORMFEEDBACKIMPL_H_
+#ifndef LIBANGLE_RENDERER_TRANSFORMFEEDBACKIMPL_H_
+#define LIBANGLE_RENDERER_TRANSFORMFEEDBACKIMPL_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/TransformFeedback.h"
@@ -28,4 +28,4 @@ class TransformFeedbackImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_TRANSFORMFEEDBACKIMPL_H_
+#endif // LIBANGLE_RENDERER_TRANSFORMFEEDBACKIMPL_H_

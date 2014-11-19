@@ -4,6 +4,9 @@
 // found in the LICENSE file.
 //
 
+#ifndef COMMON_FEATURES_H_
+#define COMMON_FEATURES_H_
+
 #define ANGLE_DISABLED 0
 #define ANGLE_ENABLED 1
 
@@ -33,3 +36,5 @@
 #if !defined(ANGLE_SHADER_DEBUG_INFO)
 #define ANGLE_SHADER_DEBUG_INFO ANGLE_DISABLED
 #endif
+
+#endif // COMMON_FEATURES_H_

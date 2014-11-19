@@ -6,8 +6,8 @@
 
 // Fence11.h: Defines the rx::FenceNV11 and rx::FenceSync11 classes which implement rx::FenceNVImpl and rx::FenceSyncImpl.
 
-#ifndef LIBGLESV2_RENDERER_FENCE11_H_
-#define LIBGLESV2_RENDERER_FENCE11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_FENCE11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_FENCE11_H_
 
 #include "libANGLE/renderer/FenceImpl.h"
 
@@ -59,4 +59,4 @@ class FenceSync11 : public FenceSyncImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_FENCE11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_FENCE11_H_

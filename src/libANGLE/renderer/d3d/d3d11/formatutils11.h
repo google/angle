@@ -7,8 +7,8 @@
 // formatutils11.h: Queries for GL image formats and their translations to D3D11
 // formats.
 
-#ifndef LIBGLESV2_RENDERER_FORMATUTILS11_H_
-#define LIBGLESV2_RENDERER_FORMATUTILS11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_FORMATUTILS11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_FORMATUTILS11_H_
 
 #include "libANGLE/formatutils.h"
 
@@ -81,4 +81,4 @@ const VertexFormat &GetVertexFormatInfo(const gl::VertexFormat &vertexFormat);
 
 }
 
-#endif // LIBGLESV2_RENDERER_FORMATUTILS11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_FORMATUTILS11_H_

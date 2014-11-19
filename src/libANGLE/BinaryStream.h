@@ -6,8 +6,8 @@
 
 // BinaryStream.h: Provides binary serialization of simple types.
 
-#ifndef LIBGLESV2_BINARYSTREAM_H_
-#define LIBGLESV2_BINARYSTREAM_H_
+#ifndef LIBANGLE_BINARYSTREAM_H_
+#define LIBANGLE_BINARYSTREAM_H_
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
@@ -205,4 +205,4 @@ class BinaryOutputStream
 };
 }
 
-#endif  // LIBGLESV2_BINARYSTREAM_H_
+#endif  // LIBANGLE_BINARYSTREAM_H_

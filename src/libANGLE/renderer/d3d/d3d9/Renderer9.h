@@ -6,8 +6,8 @@
 
 // Renderer9.h: Defines a back-end specific class for the D3D9 renderer.
 
-#ifndef LIBGLESV2_RENDERER_RENDERER9_H_
-#define LIBGLESV2_RENDERER_RENDERER9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_RENDERER9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_RENDERER9_H_
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
@@ -348,4 +348,4 @@ class Renderer9 : public RendererD3D
 };
 
 }
-#endif // LIBGLESV2_RENDERER_RENDERER9_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_RENDERER9_H_

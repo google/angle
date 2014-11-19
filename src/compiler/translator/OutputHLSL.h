@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_OUTPUTHLSL_H_
-#define COMPILER_OUTPUTHLSL_H_
+#ifndef COMPILER_TRANSLATOR_OUTPUTHLSL_H_
+#define COMPILER_TRANSLATOR_OUTPUTHLSL_H_
 
 #include <list>
 #include <set>
@@ -161,4 +161,4 @@ class OutputHLSL : public TIntermTraverser
 
 }
 
-#endif   // COMPILER_OUTPUTHLSL_H_
+#endif   // COMPILER_TRANSLATOR_OUTPUTHLSL_H_

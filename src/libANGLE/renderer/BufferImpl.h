@@ -6,8 +6,8 @@
 
 // BufferImpl.h: Defines the abstract rx::BufferImpl class.
 
-#ifndef LIBGLESV2_RENDERER_BUFFERIMPL_H_
-#define LIBGLESV2_RENDERER_BUFFERIMPL_H_
+#ifndef LIBANGLE_RENDERER_BUFFERIMPL_H_
+#define LIBANGLE_RENDERER_BUFFERIMPL_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/Buffer.h"
@@ -32,4 +32,4 @@ class BufferImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_BUFFERIMPL_H_
+#endif // LIBANGLE_RENDERER_BUFFERIMPL_H_

@@ -7,8 +7,8 @@
 // Framebuffer.h: Defines the gl::Framebuffer class. Implements GL framebuffer
 // objects and related functionality. [OpenGL ES 2.0.24] section 4.4 page 105.
 
-#ifndef LIBGLESV2_FRAMEBUFFER_H_
-#define LIBGLESV2_FRAMEBUFFER_H_
+#ifndef LIBANGLE_FRAMEBUFFER_H_
+#define LIBANGLE_FRAMEBUFFER_H_
 
 #include "libANGLE/Error.h"
 
@@ -125,4 +125,4 @@ unsigned int GetAttachmentSerial(gl::FramebufferAttachment *attachment);
 
 }
 
-#endif   // LIBGLESV2_FRAMEBUFFER_H_
+#endif   // LIBANGLE_FRAMEBUFFER_H_

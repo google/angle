@@ -7,8 +7,8 @@
 // formatutils9.h: Queries for GL image formats and their translations to D3D9
 // formats.
 
-#ifndef LIBGLESV2_RENDERER_FORMATUTILS9_H_
-#define LIBGLESV2_RENDERER_FORMATUTILS9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_FORMATUTILS9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_FORMATUTILS9_H_
 
 #include "libANGLE/formatutils.h"
 
@@ -71,4 +71,4 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat);
 
 }
 
-#endif // LIBGLESV2_RENDERER_FORMATUTILS9_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_FORMATUTILS9_H_

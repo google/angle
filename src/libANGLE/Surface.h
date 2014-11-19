@@ -8,8 +8,8 @@
 // such as the client area of a window, including any back buffers.
 // Implements EGLSurface and related functionality. [EGL 1.4] section 2.2 page 3.
 
-#ifndef LIBEGL_SURFACE_H_
-#define LIBEGL_SURFACE_H_
+#ifndef LIBANGLE_SURFACE_H_
+#define LIBANGLE_SURFACE_H_
 
 #include "libANGLE/Error.h"
 
@@ -113,4 +113,4 @@ class Surface
 };
 }
 
-#endif   // LIBEGL_SURFACE_H_
+#endif   // LIBANGLE_SURFACE_H_

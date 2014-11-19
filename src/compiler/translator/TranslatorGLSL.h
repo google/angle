@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_TRANSLATORGLSL_H_
-#define COMPILER_TRANSLATORGLSL_H_
+#ifndef COMPILER_TRANSLATOR_TRANSLATORGLSL_H_
+#define COMPILER_TRANSLATOR_TRANSLATORGLSL_H_
 
 #include "compiler/translator/Compiler.h"
 
@@ -22,4 +22,4 @@ class TranslatorGLSL : public TCompiler
     void writeExtensionBehavior();
 };
 
-#endif  // COMPILER_TRANSLATORGLSL_H_
+#endif  // COMPILER_TRANSLATOR_TRANSLATORGLSL_H_

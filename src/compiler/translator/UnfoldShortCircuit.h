@@ -6,8 +6,8 @@
 // UnfoldShortCircuit is an AST traverser to output short-circuiting operators as if-else statements
 //
 
-#ifndef COMPILER_UNFOLDSHORTCIRCUIT_H_
-#define COMPILER_UNFOLDSHORTCIRCUIT_H_
+#ifndef COMPILER_TRANSLATOR_UNFOLDSHORTCIRCUIT_H_
+#define COMPILER_TRANSLATOR_UNFOLDSHORTCIRCUIT_H_
 
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/ParseContext.h"
@@ -36,4 +36,4 @@ class UnfoldShortCircuit : public TIntermTraverser
 };
 }
 
-#endif   // COMPILER_UNFOLDSHORTCIRCUIT_H_
+#endif   // COMPILER_TRANSLATOR_UNFOLDSHORTCIRCUIT_H_

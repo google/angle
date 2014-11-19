@@ -6,8 +6,8 @@
 
 // angletypes.h : Defines a variety of structures and enum types that are used throughout libGLESv2
 
-#ifndef LIBGLESV2_ANGLETYPES_H_
-#define LIBGLESV2_ANGLETYPES_H_
+#ifndef LIBANGLE_ANGLETYPES_H_
+#define LIBANGLE_ANGLETYPES_H_
 
 #include "libANGLE/Constants.h"
 #include "common/RefCountObject.h"
@@ -254,4 +254,4 @@ enum VertexConversionType
 
 }
 
-#endif // LIBGLESV2_ANGLETYPES_H_
+#endif // LIBANGLE_ANGLETYPES_H_

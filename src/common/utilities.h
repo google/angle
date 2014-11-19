@@ -6,8 +6,8 @@
 
 // utilities.h: Conversion functions and other utility routines.
 
-#ifndef LIBGLESV2_UTILITIES_H
-#define LIBGLESV2_UTILITIES_H
+#ifndef COMMON_UTILITIES_H_
+#define COMMON_UTILITIES_H_
 
 #include "angle_gl.h"
 #include <string>
@@ -55,4 +55,4 @@ void writeFile(const char* path, const void* data, size_t size);
 void ScheduleYield();
 #endif
 
-#endif  // LIBGLESV2_UTILITIES_H
+#endif  // COMMON_UTILITIES_H_

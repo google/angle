@@ -7,8 +7,8 @@
 // Context.h: Defines the gl::Context class, managing all GL state and performing
 // rendering operations. It is the GLES2 specific implementation of EGLContext.
 
-#ifndef LIBGLESV2_CONTEXT_H_
-#define LIBGLESV2_CONTEXT_H_
+#ifndef LIBANGLE_CONTEXT_H_
+#define LIBANGLE_CONTEXT_H_
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
@@ -288,4 +288,4 @@ class Context
 };
 }
 
-#endif   // INCLUDE_CONTEXT_H_
+#endif   // LIBANGLE_CONTEXT_H_

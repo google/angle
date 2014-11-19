@@ -7,8 +7,8 @@
 // operations with ternary operations.
 //
 
-#ifndef COMPILER_UNFOLD_SHORT_CIRCUIT_AST_H_
-#define COMPILER_UNFOLD_SHORT_CIRCUIT_AST_H_
+#ifndef COMPILER_TRANSLATOR_UNFOLDSHORTCIRCUITAST_H_
+#define COMPILER_TRANSLATOR_UNFOLDSHORTCIRCUITAST_H_
 
 #include "common/angleutils.h"
 #include "compiler/translator/IntermNode.h"
@@ -48,4 +48,4 @@ class UnfoldShortCircuitAST : public TIntermTraverser
     DISALLOW_COPY_AND_ASSIGN(UnfoldShortCircuitAST);
 };
 
-#endif  // COMPILER_UNFOLD_SHORT_CIRCUIT_AST_H_
+#endif  // COMPILER_TRANSLATOR_UNFOLDSHORTCIRCUITAST_H_

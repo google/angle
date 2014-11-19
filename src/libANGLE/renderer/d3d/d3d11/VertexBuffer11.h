@@ -6,8 +6,8 @@
 
 // VertexBuffer11.h: Defines the D3D11 VertexBuffer implementation.
 
-#ifndef LIBGLESV2_RENDERER_VERTEXBUFFER11_H_
-#define LIBGLESV2_RENDERER_VERTEXBUFFER11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_VERTEXBUFFER11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_VERTEXBUFFER11_H_
 
 #include "libANGLE/renderer/d3d/VertexBuffer.h"
 
@@ -49,4 +49,4 @@ class VertexBuffer11 : public VertexBuffer
 
 }
 
-#endif // LIBGLESV2_RENDERER_VERTEXBUFFER11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_VERTEXBUFFER11_H_

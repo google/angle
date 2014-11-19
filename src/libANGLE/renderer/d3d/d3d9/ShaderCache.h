@@ -7,8 +7,8 @@
 // ShaderCache: Defines rx::ShaderCache, a cache of Direct3D shader objects
 // keyed by their byte code.
 
-#ifndef LIBGLESV2_RENDERER_SHADER_CACHE_H_
-#define LIBGLESV2_RENDERER_SHADER_CACHE_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_SHADERCACHE_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_SHADERCACHE_H_
 
 #include "libANGLE/Error.h"
 
@@ -107,4 +107,4 @@ typedef ShaderCache<IDirect3DPixelShader9> PixelShaderCache;
 
 }
 
-#endif   // LIBGLESV2_RENDERER_SHADER_CACHE_H_
+#endif   // LIBANGLE_RENDERER_D3D_D3D9_SHADERCACHE_H_

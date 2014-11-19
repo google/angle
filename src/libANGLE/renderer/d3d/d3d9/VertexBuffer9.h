@@ -6,8 +6,8 @@
 
 // VertexBuffer9.h: Defines the D3D9 VertexBuffer implementation.
 
-#ifndef LIBGLESV2_RENDERER_VERTEXBUFFER9_H_
-#define LIBGLESV2_RENDERER_VERTEXBUFFER9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_VERTEXBUFFER9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_VERTEXBUFFER9_H_
 
 #include "libANGLE/renderer/d3d/VertexBuffer.h"
 
@@ -51,4 +51,4 @@ class VertexBuffer9 : public VertexBuffer
 
 }
 
-#endif // LIBGLESV2_RENDERER_VERTEXBUFFER9_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_VERTEXBUFFER9_H_

@@ -6,8 +6,8 @@
 
 // TextureStorage.h: Defines the abstract rx::TextureStorage class.
 
-#ifndef LIBGLESV2_RENDERER_TEXTURESTORAGE_H_
-#define LIBGLESV2_RENDERER_TEXTURESTORAGE_H_
+#ifndef LIBANGLE_RENDERER_D3D_TEXTURESTORAGE_H_
+#define LIBANGLE_RENDERER_D3D_TEXTURESTORAGE_H_
 
 #include "libANGLE/Error.h"
 
@@ -63,4 +63,4 @@ class TextureStorage
 
 }
 
-#endif // LIBGLESV2_RENDERER_TEXTURESTORAGE_H_
+#endif // LIBANGLE_RENDERER_D3D_TEXTURESTORAGE_H_

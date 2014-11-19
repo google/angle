@@ -7,8 +7,8 @@
 // Fence.h: Defines the gl::FenceNV and gl::FenceSync classes, which support the GL_NV_fence
 // extension and GLES3 sync objects.
 
-#ifndef LIBGLESV2_FENCE_H_
-#define LIBGLESV2_FENCE_H_
+#ifndef LIBANGLE_FENCE_H_
+#define LIBANGLE_FENCE_H_
 
 #include "libANGLE/Error.h"
 
@@ -72,4 +72,4 @@ class FenceSync : public RefCountObject
 
 }
 
-#endif   // LIBGLESV2_FENCE_H_
+#endif   // LIBANGLE_FENCE_H_

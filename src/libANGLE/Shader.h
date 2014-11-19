@@ -9,8 +9,8 @@
 // related functionality. [OpenGL ES 2.0.24] section 2.10 page 24 and section
 // 3.8 page 84.
 
-#ifndef LIBGLESV2_SHADER_H_
-#define LIBGLESV2_SHADER_H_
+#ifndef LIBANGLE_SHADER_H_
+#define LIBANGLE_SHADER_H_
 
 
 #include <string>
@@ -115,4 +115,4 @@ class Shader
 
 }
 
-#endif   // LIBGLESV2_SHADER_H_
+#endif   // LIBANGLE_SHADER_H_

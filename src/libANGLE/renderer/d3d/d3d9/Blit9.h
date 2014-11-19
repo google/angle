@@ -6,8 +6,8 @@
 
 // Blit9.cpp: Surface copy utility class.
 
-#ifndef LIBGLESV2_BLIT9_H_
-#define LIBGLESV2_BLIT9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_BLIT9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_BLIT9_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
@@ -94,4 +94,4 @@ class Blit9
 };
 }
 
-#endif   // LIBGLESV2_BLIT9_H_
+#endif   // LIBANGLE_RENDERER_D3D_D3D9_BLIT9_H_

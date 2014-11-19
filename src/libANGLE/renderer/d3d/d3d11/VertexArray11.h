@@ -6,8 +6,8 @@
 
 // VertexArray11.h: Defines the rx::VertexArray11 class which implements rx::VertexArrayImpl.
 
-#ifndef LIBGLESV2_RENDERER_VERTEXARRAY11_H_
-#define LIBGLESV2_RENDERER_VERTEXARRAY11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_VERTEXARRAY11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_VERTEXARRAY11_H_
 
 #include "libANGLE/renderer/VertexArrayImpl.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
@@ -39,4 +39,4 @@ class VertexArray11 : public VertexArrayImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_VERTEXARRAY11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_VERTEXARRAY11_H_

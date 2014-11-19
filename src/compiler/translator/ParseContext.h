@@ -3,8 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-#ifndef _PARSER_HELPER_INCLUDED_
-#define _PARSER_HELPER_INCLUDED_
+#ifndef COMPILER_TRANSLATOR_PARSECONTEXT_H_
+#define COMPILER_TRANSLATOR_PARSECONTEXT_H_
 
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/Diagnostics.h"
@@ -169,4 +169,4 @@ struct TParseContext {
 int PaParseStrings(size_t count, const char* const string[], const int length[],
                    TParseContext* context);
 
-#endif // _PARSER_HELPER_INCLUDED_
+#endif // COMPILER_TRANSLATOR_PARSECONTEXT_H_

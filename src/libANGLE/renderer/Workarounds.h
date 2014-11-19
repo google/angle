@@ -6,8 +6,8 @@
 
 // angletypes.h: Workarounds for driver bugs and other issues.
 
-#ifndef LIBGLESV2_RENDERER_WORKAROUNDS_H_
-#define LIBGLESV2_RENDERER_WORKAROUNDS_H_
+#ifndef LIBANGLE_RENDERER_WORKAROUNDS_H_
+#define LIBANGLE_RENDERER_WORKAROUNDS_H_
 
 // TODO(jmadill,zmo,geofflang): make a workarounds library that can operate
 // independent of ANGLE's renderer. Workarounds should also be accessible
@@ -36,4 +36,4 @@ struct Workarounds
 
 }
 
-#endif // LIBGLESV2_RENDERER_WORKAROUNDS_H_
+#endif // LIBANGLE_RENDERER_WORKAROUNDS_H_

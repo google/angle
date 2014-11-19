@@ -6,8 +6,8 @@
 
 // TransformFeedbackD3D.h: Implements the abstract rx::TransformFeedbackImpl class.
 
-#ifndef LIBGLESV2_RENDERER_D3D_TRANSFORMFEEDBACKD3D_H_
-#define LIBGLESV2_RENDERER_D3D_TRANSFORMFEEDBACKD3D_H_
+#ifndef LIBANGLE_RENDERER_D3D_TRANSFORMFEEDBACKD3D_H_
+#define LIBANGLE_RENDERER_D3D_TRANSFORMFEEDBACKD3D_H_
 
 #include "libANGLE/renderer/TransformFeedbackImpl.h"
 #include "libANGLE/angletypes.h"
@@ -29,4 +29,4 @@ class TransformFeedbackD3D : public TransformFeedbackImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_D3D_TRANSFORMFEEDBACKD3D_H_
+#endif // LIBANGLE_RENDERER_D3D_TRANSFORMFEEDBACKD3D_H_

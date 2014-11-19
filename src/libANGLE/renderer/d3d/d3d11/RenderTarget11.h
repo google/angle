@@ -7,8 +7,8 @@
 // RenderTarget11.h: Defines a DX11-specific wrapper for ID3D11View pointers
 // retained by Renderbuffers.
 
-#ifndef LIBGLESV2_RENDERER_RENDERTARGET11_H_
-#define LIBGLESV2_RENDERER_RENDERTARGET11_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_RENDERTARGET11_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_RENDERTARGET11_H_
 
 #include "libANGLE/renderer/RenderTarget.h"
 
@@ -107,4 +107,4 @@ class SurfaceRenderTarget11 : public RenderTarget11
 
 }
 
-#endif // LIBGLESV2_RENDERER_RENDERTARGET11_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERTARGET11_H_

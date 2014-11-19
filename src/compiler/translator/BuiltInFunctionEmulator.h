@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILIER_BUILT_IN_FUNCTION_EMULATOR_H_
-#define COMPILIER_BUILT_IN_FUNCTION_EMULATOR_H_
+#ifndef COMPILIER_TRANSLATOR_BUILTINFUNCTIONEMULATOR_H_
+#define COMPILIER_TRANSLATOR_BUILTINFUNCTIONEMULATOR_H_
 
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
@@ -88,4 +88,4 @@ private:
     const char** mFunctionSource;
 };
 
-#endif  // COMPILIER_BUILT_IN_FUNCTION_EMULATOR_H_
+#endif  // COMPILIER_TRANSLATOR_BUILTINFUNCTIONEMULATOR_H_

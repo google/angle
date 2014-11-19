@@ -6,8 +6,8 @@
 // Helper structure describing a single vertex attribute
 //
 
-#ifndef LIBGLESV2_VERTEXATTRIBUTE_H_
-#define LIBGLESV2_VERTEXATTRIBUTE_H_
+#ifndef LIBANGLE_VERTEXATTRIBUTE_H_
+#define LIBANGLE_VERTEXATTRIBUTE_H_
 
 #include "libANGLE/Buffer.h"
 
@@ -116,4 +116,4 @@ struct VertexAttribCurrentValueData
 
 }
 
-#endif // LIBGLESV2_VERTEXATTRIBUTE_H_
+#endif // LIBANGLE_VERTEXATTRIBUTE_H_

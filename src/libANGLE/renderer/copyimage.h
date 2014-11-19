@@ -6,8 +6,8 @@
 
 // copyimage.h: Defines image copying functions
 
-#ifndef LIBGLESV2_RENDERER_COPYIMAGE_H_
-#define LIBGLESV2_RENDERER_COPYIMAGE_H_
+#ifndef LIBANGLE_RENDERER_COPYIMAGE_H_
+#define LIBANGLE_RENDERER_COPYIMAGE_H_
 
 #include "common/mathutil.h"
 #include "libANGLE/angletypes.h"
@@ -32,4 +32,4 @@ void CopyBGRA8ToRGBA8(const uint8_t *source, uint8_t *dest);
 
 #include "copyimage.inl"
 
-#endif // LIBGLESV2_RENDERER_COPYIMAGE_H_
+#endif // LIBANGLE_RENDERER_COPYIMAGE_H_

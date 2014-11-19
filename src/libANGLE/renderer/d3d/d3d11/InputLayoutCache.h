@@ -7,8 +7,8 @@
 // InputLayoutCache.h: Defines InputLayoutCache, a class that builds and caches
 // D3D11 input layouts.
 
-#ifndef LIBGLESV2_RENDERER_INPUTLAYOUTCACHE_H_
-#define LIBGLESV2_RENDERER_INPUTLAYOUTCACHE_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_INPUTLAYOUTCACHE_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_INPUTLAYOUTCACHE_H_
 
 #include "libANGLE/Constants.h"
 #include "libANGLE/Error.h"
@@ -98,4 +98,4 @@ class InputLayoutCache
 
 }
 
-#endif // LIBGLESV2_RENDERER_INPUTLAYOUTCACHE_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_INPUTLAYOUTCACHE_H_

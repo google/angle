@@ -6,8 +6,8 @@
 // DynamicHLSL.h: Interface for link and run-time HLSL generation
 //
 
-#ifndef LIBGLESV2_RENDERER_DYNAMIC_HLSL_H_
-#define LIBGLESV2_RENDERER_DYNAMIC_HLSL_H_
+#ifndef LIBANGLE_RENDERER_D3D_DYNAMICHLSL_H_
+#define LIBANGLE_RENDERER_D3D_DYNAMICHLSL_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/Constants.h"
@@ -98,4 +98,4 @@ class DynamicHLSL
 
 }
 
-#endif // LIBGLESV2_RENDERER_DYNAMIC_HLSL_H_
+#endif // LIBANGLE_RENDERER_D3D_DYNAMICHLSL_H_

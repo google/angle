@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef _BASICTYPES_INCLUDED_
-#define _BASICTYPES_INCLUDED_
+#ifndef COMPILER_TRANSLATOR_BASETYPES_H_
+#define COMPILER_TRANSLATOR_BASETYPES_H_
 
 #include <assert.h>
 
@@ -437,4 +437,4 @@ inline const char* getInterpolationString(TQualifier q)
     }
 }
 
-#endif // _BASICTYPES_INCLUDED_
+#endif // COMPILER_TRANSLATOR_BASETYPES_H_

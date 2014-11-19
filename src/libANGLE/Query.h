@@ -6,8 +6,8 @@
 
 // Query.h: Defines the gl::Query class
 
-#ifndef LIBGLESV2_QUERY_H_
-#define LIBGLESV2_QUERY_H_
+#ifndef LIBANGLE_QUERY_H_
+#define LIBANGLE_QUERY_H_
 
 #include "libANGLE/Error.h"
 #include "common/angleutils.h"
@@ -45,4 +45,4 @@ class Query : public RefCountObject
 
 }
 
-#endif   // LIBGLESV2_QUERY_H_
+#endif   // LIBANGLE_QUERY_H_

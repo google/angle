@@ -6,8 +6,8 @@
 
 // ImageIndex.h: A helper struct for indexing into an Image array
 
-#ifndef LIBGLESV2_IMAGE_INDEX_H_
-#define LIBGLESV2_IMAGE_INDEX_H_
+#ifndef LIBANGLE_IMAGE_INDEX_H_
+#define LIBANGLE_IMAGE_INDEX_H_
 
 #include "angle_gl.h"
 #include "common/mathutil.h"
@@ -65,4 +65,4 @@ class ImageIndexIterator
 
 }
 
-#endif // LIBGLESV2_IMAGE_INDEX_H_
+#endif // LIBANGLE_IMAGE_INDEX_H_

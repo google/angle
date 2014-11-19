@@ -4,4 +4,9 @@
 // found in the LICENSE file.
 //
 
+#ifndef COMPILER_TRANSLATOR_REMOVETREE_H_
+#define COMPILER_TRANSLATOR_REMOVETREE_H_
+
 void RemoveAllTreeNodes(TIntermNode*);
+
+#endif // COMPILER_TRANSLATOR_REMOVETREE_H_

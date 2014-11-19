@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef CROSSCOMPILERGLSL_OUTPUTGLSL_H_
-#define CROSSCOMPILERGLSL_OUTPUTGLSL_H_
+#ifndef COMPILER_TRANSLATOR_OUTPUTGLSL_H_
+#define COMPILER_TRANSLATOR_OUTPUTGLSL_H_
 
 #include "compiler/translator/OutputGLSLBase.h"
 
@@ -25,4 +25,4 @@ protected:
     virtual TString translateTextureFunction(TString& name);
 };
 
-#endif  // CROSSCOMPILERGLSL_OUTPUTGLSL_H_
+#endif  // COMPILER_TRANSLATOR_OUTPUTGLSL_H_

@@ -7,8 +7,8 @@
 // IndexBuffer.h: Defines the abstract IndexBuffer class and IndexBufferInterface
 // class with derivations, classes that perform graphics API agnostic index buffer operations.
 
-#ifndef LIBGLESV2_RENDERER_INDEXBUFFER_H_
-#define LIBGLESV2_RENDERER_INDEXBUFFER_H_
+#ifndef LIBANGLE_RENDERER_D3D_INDEXBUFFER_H_
+#define LIBANGLE_RENDERER_D3D_INDEXBUFFER_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
@@ -109,4 +109,4 @@ class StaticIndexBufferInterface : public IndexBufferInterface
 
 }
 
-#endif // LIBGLESV2_RENDERER_INDEXBUFFER_H_
+#endif // LIBANGLE_RENDERER_D3D_INDEXBUFFER_H_

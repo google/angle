@@ -6,8 +6,8 @@
 
 // RenderbufferD3d.h: Defines the RenderbufferD3D class which implements RenderbufferImpl.
 
-#ifndef LIBGLESV2_RENDERER_RENDERBUFFERD3D_H_
-#define LIBGLESV2_RENDERER_RENDERBUFFERD3D_H_
+#ifndef LIBANGLE_RENDERER_D3D_RENDERBUFFERD3D_H_
+#define LIBANGLE_RENDERER_D3D_RENDERBUFFERD3D_H_
 
 #include "angle_gl.h"
 
@@ -43,4 +43,4 @@ class RenderbufferD3D : public RenderbufferImpl
 };
 }
 
-#endif // LIBGLESV2_RENDERER_RENDERBUFFERD3D_H_
+#endif // LIBANGLE_RENDERER_D3D_RENDERBUFFERD3D_H_

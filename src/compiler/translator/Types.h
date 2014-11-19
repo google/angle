@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef _TYPES_INCLUDED
-#define _TYPES_INCLUDED
+#ifndef COMPILER_TRANSLATOR_TYPES_H_
+#define COMPILER_TRANSLATOR_TYPES_H_
 
 #include "common/angleutils.h"
 
@@ -584,4 +584,4 @@ struct TPublicType
     }
 };
 
-#endif // _TYPES_INCLUDED_
+#endif // COMPILER_TRANSLATOR_TYPES_H_

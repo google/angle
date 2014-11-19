@@ -7,8 +7,8 @@
 // FramebufferAttachment.h: Defines the wrapper class gl::FramebufferAttachment, as well as the
 // objects and related functionality. [OpenGL ES 2.0.24] section 4.4.3 page 108.
 
-#ifndef LIBGLESV2_FRAMEBUFFERATTACHMENT_H_
-#define LIBGLESV2_FRAMEBUFFERATTACHMENT_H_
+#ifndef LIBANGLE_FRAMEBUFFERATTACHMENT_H_
+#define LIBANGLE_FRAMEBUFFERATTACHMENT_H_
 
 #include "libANGLE/Texture.h"
 
@@ -168,4 +168,4 @@ class DefaultAttachment : public FramebufferAttachment
 
 }
 
-#endif // LIBGLESV2_FRAMEBUFFERATTACHMENT_H_
+#endif // LIBANGLE_FRAMEBUFFERATTACHMENT_H_

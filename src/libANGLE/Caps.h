@@ -1,11 +1,11 @@
-#ifndef LIBGLESV2_CAPS_H
-#define LIBGLESV2_CAPS_H
-
 //
 // Copyright (c) 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+
+#ifndef LIBANGLE_CAPS_H_
+#define LIBANGLE_CAPS_H_
 
 #include "angle_gl.h"
 
@@ -270,4 +270,4 @@ struct Caps
 
 }
 
-#endif // LIBGLESV2_CAPS_H
+#endif // LIBANGLE_CAPS_H_

@@ -7,8 +7,8 @@
 // RenderTarget9.h: Defines a D3D9-specific wrapper for IDirect3DSurface9 pointers
 // retained by Renderbuffers.
 
-#ifndef LIBGLESV2_RENDERER_RENDERTARGET9_H_
-#define LIBGLESV2_RENDERER_RENDERTARGET9_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_RENDERTARGET9_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_RENDERTARGET9_H_
 
 #include "libANGLE/renderer/RenderTarget.h"
 
@@ -86,4 +86,4 @@ class SurfaceRenderTarget9 : public RenderTarget9
 
 }
 
-#endif // LIBGLESV2_RENDERER_RENDERTARGET9_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D9_RENDERTARGET9_H_

@@ -13,8 +13,8 @@
 // each node can have it's own type of list of children.
 //
 
-#ifndef COMPILER_TRANSLATOR_INTERMEDIATE_H_
-#define COMPILER_TRANSLATOR_INTERMEDIATE_H_
+#ifndef COMPILER_TRANSLATOR_INTERMNODE_H_
+#define COMPILER_TRANSLATOR_INTERMNODE_H_
 
 #include "GLSLANG/ShaderLang.h"
 
@@ -774,4 +774,4 @@ protected:
     int mDepthLimit;
 };
 
-#endif  // COMPILER_TRANSLATOR_INTERMEDIATE_H_
+#endif  // COMPILER_TRANSLATOR_INTERMNODE_H_

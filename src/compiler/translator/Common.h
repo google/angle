@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef _COMMON_INCLUDED_
-#define _COMMON_INCLUDED_
+#ifndef COMPILER_TRANSLATOR_COMMON_H_
+#define COMPILER_TRANSLATOR_COMMON_H_
 
 #include <map>
 #include <sstream>
@@ -89,4 +89,4 @@ inline TString str(T i)
     return buffer;
 }
 
-#endif // _COMMON_INCLUDED_
+#endif // COMPILER_TRANSLATOR_COMMON_H_

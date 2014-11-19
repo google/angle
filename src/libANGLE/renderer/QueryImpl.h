@@ -6,8 +6,8 @@
 
 // QueryImpl.h: Defines the abstract rx::QueryImpl class.
 
-#ifndef LIBGLESV2_RENDERER_QUERYIMPL_H_
-#define LIBGLESV2_RENDERER_QUERYIMPL_H_
+#ifndef LIBANGLE_RENDERER_QUERYIMPL_H_
+#define LIBANGLE_RENDERER_QUERYIMPL_H_
 
 #include "libANGLE/Error.h"
 
@@ -39,4 +39,4 @@ class QueryImpl
 
 }
 
-#endif // LIBGLESV2_RENDERER_QUERYIMPL_H_
+#endif // LIBANGLE_RENDERER_QUERYIMPL_H_

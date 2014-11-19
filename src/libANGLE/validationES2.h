@@ -6,8 +6,8 @@
 
 // validationES2.h: Validation functions for OpenGL ES 2.0 entry point parameters
 
-#ifndef LIBGLESV2_VALIDATION_ES2_H
-#define LIBGLESV2_VALIDATION_ES2_H
+#ifndef LIBANGLE_VALIDATION_ES2_H_
+#define LIBANGLE_VALIDATION_ES2_H_
 
 #include <GLES2/gl2.h>
 
@@ -31,4 +31,4 @@ bool ValidES2ReadFormatType(Context *context, GLenum format, GLenum type);
 
 }
 
-#endif // LIBGLESV2_VALIDATION_ES2_H
+#endif // LIBANGLE_VALIDATION_ES2_H_

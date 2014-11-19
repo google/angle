@@ -7,8 +7,8 @@
 // IndexDataManager.h: Defines the IndexDataManager, a class that
 // runs the Buffer translation process for index buffers.
 
-#ifndef LIBGLESV2_INDEXDATAMANAGER_H_
-#define LIBGLESV2_INDEXDATAMANAGER_H_
+#ifndef LIBANGLE_INDEXDATAMANAGER_H_
+#define LIBANGLE_INDEXDATAMANAGER_H_
 
 #include "common/angleutils.h"
 #include "common/mathutil.h"
@@ -68,4 +68,4 @@ class IndexDataManager
 
 }
 
-#endif   // LIBGLESV2_INDEXDATAMANAGER_H_
+#endif   // LIBANGLE_INDEXDATAMANAGER_H_

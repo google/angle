@@ -7,8 +7,8 @@
 // imageformats.h: Defines image format types with functions for mip generation
 // and copying.
 
-#ifndef LIBGLESV2_RENDERER_IMAGEFORMATS_H_
-#define LIBGLESV2_RENDERER_IMAGEFORMATS_H_
+#ifndef LIBANGLE_RENDERER_IMAGEFORMATS_H_
+#define LIBANGLE_RENDERER_IMAGEFORMATS_H_
 
 #include "common/mathutil.h"
 
@@ -2026,4 +2026,4 @@ struct R11G11B10F
 
 }
 
-#endif // LIBGLESV2_RENDERER_IMAGEFORMATS_H_
+#endif // LIBANGLE_RENDERER_IMAGEFORMATS_H_

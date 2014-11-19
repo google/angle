@@ -10,8 +10,8 @@
 //   by the vertex processor is encapsulated in a vertex array object.
 //
 
-#ifndef LIBGLESV2_VERTEXARRAY_H_
-#define LIBGLESV2_VERTEXARRAY_H_
+#ifndef LIBANGLE_VERTEXARRAY_H_
+#define LIBANGLE_VERTEXARRAY_H_
 
 #include "common/RefCountObject.h"
 #include "libANGLE/Constants.h"
@@ -59,4 +59,4 @@ class VertexArray
 
 }
 
-#endif // LIBGLESV2_VERTEXARRAY_H_
+#endif // LIBANGLE_VERTEXARRAY_H_

@@ -7,8 +7,8 @@
 // ResourceManager.h : Defines the ResourceManager class, which tracks objects
 // shared by multiple GL contexts.
 
-#ifndef LIBGLESV2_RESOURCEMANAGER_H_
-#define LIBGLESV2_RESOURCEMANAGER_H_
+#ifndef LIBANGLE_RESOURCEMANAGER_H_
+#define LIBANGLE_RESOURCEMANAGER_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
@@ -112,4 +112,4 @@ class ResourceManager
 
 }
 
-#endif // LIBGLESV2_RESOURCEMANAGER_H_
+#endif // LIBANGLE_RESOURCEMANAGER_H_
