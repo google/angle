@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bae9532d_00f8c68b",
+        "filename": "src/compiler/translator/EmulateCompoundAssignment.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1117995
+      },
+      "writtenOn": "2014-11-19T13:05:39Z",
+      "side": 1,
+      "message": "Maybe just \"EmulateCompoundAssignmentPrecision\" or if the whole thing is redone, this could be folded into the main precision emulation AST traverser.",
+      "parentUuid": "1a55ffac_dd4feb83",
+      "revId": "90469f9f753ed686a347433a5aae22a419d8c1dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fadf4b7d_ab9579a2",
         "filename": "src/compiler/translator/OutputESSL.cpp",
         "patchSetId": 5
