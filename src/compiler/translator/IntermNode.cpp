@@ -157,39 +157,11 @@ bool TIntermLoop::replaceChildNode(
     return false;
 }
 
-void TIntermLoop::enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const
-{
-    if (mInit)
-    {
-        nodeQueue->push(mInit);
-    }
-    if (mCond)
-    {
-        nodeQueue->push(mCond);
-    }
-    if (mExpr)
-    {
-        nodeQueue->push(mExpr);
-    }
-    if (mBody)
-    {
-        nodeQueue->push(mBody);
-    }
-}
-
 bool TIntermBranch::replaceChildNode(
     TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mExpression, TIntermTyped, original, replacement);
     return false;
-}
-
-void TIntermBranch::enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const
-{
-    if (mExpression)
-    {
-        nodeQueue->push(mExpression);
-    }
 }
 
 bool TIntermBinary::replaceChildNode(
@@ -200,31 +172,11 @@ bool TIntermBinary::replaceChildNode(
     return false;
 }
 
-void TIntermBinary::enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const
-{
-    if (mLeft)
-    {
-        nodeQueue->push(mLeft);
-    }
-    if (mRight)
-    {
-        nodeQueue->push(mRight);
-    }
-}
-
 bool TIntermUnary::replaceChildNode(
     TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mOperand, TIntermTyped, original, replacement);
     return false;
-}
-
-void TIntermUnary::enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const
-{
-    if (mOperand)
-    {
-        nodeQueue->push(mOperand);
-    }
 }
 
 bool TIntermAggregate::replaceChildNode(
@@ -235,14 +187,6 @@ bool TIntermAggregate::replaceChildNode(
         REPLACE_IF_IS(mSequence[ii], TIntermNode, original, replacement);
     }
     return false;
-}
-
-void TIntermAggregate::enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const
-{
-    for (size_t childIndex = 0; childIndex < mSequence.size(); childIndex++)
-    {
-        nodeQueue->push(mSequence[childIndex]);
-    }
 }
 
 void TIntermAggregate::setPrecisionFromChildren()
@@ -298,22 +242,6 @@ bool TIntermSelection::replaceChildNode(
     REPLACE_IF_IS(mTrueBlock, TIntermNode, original, replacement);
     REPLACE_IF_IS(mFalseBlock, TIntermNode, original, replacement);
     return false;
-}
-
-void TIntermSelection::enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const
-{
-    if (mCondition)
-    {
-        nodeQueue->push(mCondition);
-    }
-    if (mTrueBlock)
-    {
-        nodeQueue->push(mTrueBlock);
-    }
-    if (mFalseBlock)
-    {
-        nodeQueue->push(mFalseBlock);
-    }
 }
 
 //

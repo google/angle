@@ -311,8 +311,8 @@ bool TCompiler::compile(const char* const shaderStrings[],
             translate(root);
     }
 
-    // Cleanup memory.
-    intermediate.remove(parseContext.treeRoot);
+    // Cleanup. The IntermNode tree doesn't need to be deleted here, since the
+    // memory will be freed in a big chunk by the PoolAllocator.
     SetGlobalParseContext(NULL);
     return success;
 }

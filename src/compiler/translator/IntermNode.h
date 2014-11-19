@@ -238,10 +238,6 @@ class TIntermNode
     virtual bool replaceChildNode(
         TIntermNode *original, TIntermNode *replacement) = 0;
 
-    // For traversing a tree in no particular order, but using
-    // heap memory.
-    virtual void enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const = 0;
-
   protected:
     TSourceLoc mLine;
 };
@@ -332,8 +328,6 @@ class TIntermLoop : public TIntermNode
     void setUnrollFlag(bool flag) { mUnrollFlag = flag; }
     bool getUnrollFlag() const { return mUnrollFlag; }
 
-    virtual void enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const;
-
   protected:
     TLoopType mType;
     TIntermNode *mInit;  // for-loop initialization
@@ -360,8 +354,6 @@ class TIntermBranch : public TIntermNode
 
     TOperator getFlowOp() { return mFlowOp; }
     TIntermTyped* getExpression() { return mExpression; }
-
-    virtual void enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const;
 
 protected:
     TOperator mFlowOp;
@@ -395,8 +387,6 @@ class TIntermSymbol : public TIntermTyped
     virtual TIntermSymbol *getAsSymbolNode() { return this; }
     virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
 
-    virtual void enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const {}
-
   protected:
     int mId;
     TString mSymbol;
@@ -420,7 +410,6 @@ class TIntermRaw : public TIntermTyped
 
     virtual TIntermRaw *getAsRawNode() { return this; }
     virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
-    virtual void enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const {}
 
   protected:
     TString mRawText;
@@ -459,8 +448,6 @@ class TIntermConstantUnion : public TIntermTyped
     virtual bool replaceChildNode(TIntermNode *, TIntermNode *) { return false; }
 
     TIntermTyped *fold(TOperator, TIntermTyped *, TInfoSink &);
-
-    virtual void enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const {}
 
   protected:
     ConstantUnion *mUnionArrayPointer;
@@ -520,8 +507,6 @@ class TIntermBinary : public TIntermOperator
     void setAddIndexClamp() { mAddIndexClamp = true; }
     bool getAddIndexClamp() { return mAddIndexClamp; }
 
-    virtual void enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const;
-
   protected:
     TIntermTyped* mLeft;
     TIntermTyped* mRight;
@@ -561,8 +546,6 @@ class TIntermUnary : public TIntermOperator
 
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
-
-    virtual void enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const;
 
   protected:
     TIntermTyped *mOperand;
@@ -614,8 +597,6 @@ class TIntermAggregate : public TIntermOperator
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
 
-    virtual void enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const;
-
     void setPrecisionFromChildren();
     void setBuiltInFunctionPrecision();
 
@@ -664,8 +645,6 @@ class TIntermSelection : public TIntermTyped
     TIntermNode *getTrueBlock() const { return mTrueBlock; }
     TIntermNode *getFalseBlock() const { return mFalseBlock; }
     TIntermSelection *getAsSelectionNode() { return this; }
-
-    virtual void enqueueChildren(std::queue<TIntermNode *> *nodeQueue) const;
 
 protected:
     TIntermTyped *mCondition;

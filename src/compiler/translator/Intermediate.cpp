@@ -13,7 +13,6 @@
 #include <algorithm>
 
 #include "compiler/translator/Intermediate.h"
-#include "compiler/translator/RemoveTree.h"
 #include "compiler/translator/SymbolTable.h"
 
 ////////////////////////////////////////////////////////////////////////////
@@ -509,13 +508,4 @@ bool TIntermediate::postProcess(TIntermNode *root)
         aggRoot->setOp(EOpSequence);
 
     return true;
-}
-
-//
-// This deletes the tree.
-//
-void TIntermediate::remove(TIntermNode *root)
-{
-    if (root)
-        RemoveAllTreeNodes(root);
 }
