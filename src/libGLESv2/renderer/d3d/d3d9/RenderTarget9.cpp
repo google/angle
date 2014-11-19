@@ -12,7 +12,6 @@
 #include "libGLESv2/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libGLESv2/renderer/d3d/d3d9/SwapChain9.h"
 #include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
-#include "libGLESv2/main.h"
 
 namespace rx
 {

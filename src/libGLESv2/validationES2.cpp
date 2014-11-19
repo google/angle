@@ -13,7 +13,6 @@
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/formatutils.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/FramebufferAttachment.h"
 
 #include "common/mathutil.h"

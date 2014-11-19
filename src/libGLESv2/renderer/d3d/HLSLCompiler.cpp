@@ -6,7 +6,6 @@
 
 #include "libGLESv2/renderer/d3d/HLSLCompiler.h"
 #include "libGLESv2/Program.h"
-#include "libGLESv2/main.h"
 
 #include "common/features.h"
 #include "common/utilities.h"

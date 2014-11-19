@@ -9,7 +9,6 @@
 #include "libGLESv2/renderer/d3d/d3d9/Query9.h"
 #include "libGLESv2/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
-#include "libGLESv2/main.h"
 
 #include <GLES2/gl2ext.h>
 

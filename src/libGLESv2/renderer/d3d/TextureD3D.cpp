@@ -9,7 +9,6 @@
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/Texture.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/renderer/BufferImpl.h"
 #include "libGLESv2/renderer/RenderTarget.h"

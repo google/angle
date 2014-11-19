@@ -9,7 +9,7 @@
 
 #include "libGLESv2/HandleAllocator.h"
 
-#include "libGLESv2/main.h"
+#include "common/debug.h"
 
 namespace gl
 {

@@ -20,7 +20,6 @@
 #include "libGLESv2/renderer/d3d/d3d11/Image11.h"
 #include "libGLESv2/renderer/d3d/MemoryBuffer.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/ImageIndex.h"
 
 #include "common/utilities.h"

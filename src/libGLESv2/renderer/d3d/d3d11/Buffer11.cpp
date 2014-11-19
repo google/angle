@@ -9,7 +9,6 @@
 #include "libGLESv2/renderer/d3d/d3d11/Buffer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
-#include "libGLESv2/main.h"
 
 namespace rx
 {

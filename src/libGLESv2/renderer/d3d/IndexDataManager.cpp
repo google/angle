@@ -12,7 +12,6 @@
 #include "libGLESv2/renderer/d3d/IndexBuffer.h"
 #include "libGLESv2/renderer/d3d/RendererD3D.h"
 #include "libGLESv2/Buffer.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/formatutils.h"
 
 namespace rx

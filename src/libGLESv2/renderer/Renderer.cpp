@@ -8,7 +8,6 @@
 
 #include "common/utilities.h"
 #include "libEGL/AttributeMap.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/renderer/Renderer.h"
 
 #include <EGL/eglext.h>

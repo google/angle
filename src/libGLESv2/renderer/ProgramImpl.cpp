@@ -9,7 +9,6 @@
 #include "libGLESv2/renderer/ProgramImpl.h"
 
 #include "common/utilities.h"
-#include "libGLESv2/main.h"
 
 namespace rx
 {

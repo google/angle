@@ -6,7 +6,6 @@
 
 // Renderer11.cpp: Implements a back-end specific class for the D3D11 renderer.
 
-#include "libGLESv2/main.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/ProgramBinary.h"

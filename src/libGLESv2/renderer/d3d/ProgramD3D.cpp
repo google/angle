@@ -14,7 +14,6 @@
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/renderer/ShaderExecutable.h"
 #include "libGLESv2/renderer/d3d/DynamicHLSL.h"
 #include "libGLESv2/renderer/d3d/RendererD3D.h"

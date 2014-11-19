@@ -8,7 +8,6 @@
 // objects and related functionality. [OpenGL ES 2.0.24] section 4.4 page 105.
 
 #include "libGLESv2/Framebuffer.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/Context.h"

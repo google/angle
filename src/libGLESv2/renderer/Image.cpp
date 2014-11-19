@@ -10,7 +10,6 @@
 
 #include "libGLESv2/renderer/Image.h"
 #include "libGLESv2/Framebuffer.h"
-#include "libGLESv2/main.h"
 
 namespace rx
 {

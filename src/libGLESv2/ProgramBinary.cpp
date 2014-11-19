@@ -19,7 +19,6 @@
 #include "common/utilities.h"
 #include "common/platform.h"
 
-#include "libGLESv2/main.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/ProgramImpl.h"

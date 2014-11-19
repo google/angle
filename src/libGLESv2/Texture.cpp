@@ -9,7 +9,6 @@
 // functionality. [OpenGL ES 2.0.24] section 3.7 page 63.
 
 #include "libGLESv2/Texture.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/Context.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/ImageIndex.h"

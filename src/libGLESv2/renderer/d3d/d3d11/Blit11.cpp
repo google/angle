@@ -10,7 +10,6 @@
 #include "libGLESv2/renderer/d3d/d3d11/Renderer11.h"
 #include "libGLESv2/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libGLESv2/renderer/d3d/d3d11/formatutils11.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/formatutils.h"
 
 #include "libGLESv2/renderer/d3d/d3d11/shaders/compiled/passthrough2d11vs.h"

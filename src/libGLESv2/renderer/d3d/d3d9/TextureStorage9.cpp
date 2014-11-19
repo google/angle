@@ -16,7 +16,6 @@
 #include "libGLESv2/renderer/d3d/d3d9/formatutils9.h"
 #include "libGLESv2/renderer/d3d/TextureD3D.h"
 #include "libGLESv2/Texture.h"
-#include "libGLESv2/main.h"
 
 namespace rx
 {

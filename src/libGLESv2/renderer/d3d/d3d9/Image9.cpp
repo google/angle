@@ -13,7 +13,6 @@
 #include "libGLESv2/renderer/d3d/d3d9/Renderer9.h"
 #include "libGLESv2/renderer/d3d/d3d9/RenderTarget9.h"
 #include "libGLESv2/renderer/d3d/d3d9/TextureStorage9.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/FramebufferAttachment.h"
 #include "libGLESv2/Renderbuffer.h"
