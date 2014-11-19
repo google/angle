@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aa89ff3_6b2a61ed",
+        "filename": "src/libGLESv2/main.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-19T19:58:24Z",
+      "side": 0,
+      "message": "These functions no longer need to be exported because libEGL can now directly create them.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 47
+      },
+      "revId": "0c219b81d41e8b3f13c92582ade267a748deb2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bab7934b_93237ed3",
+        "filename": "src/libGLESv2/main.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-19T19:58:24Z",
+      "side": 0,
+      "message": "These functions have been merged into libEGL.cpp\u0027s eglGetProcAddress and eglBindTexImage.",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 55
+      },
+      "revId": "0c219b81d41e8b3f13c92582ade267a748deb2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

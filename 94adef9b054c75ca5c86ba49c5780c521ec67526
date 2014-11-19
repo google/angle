@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a9e97d1_ed43058d",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-19T19:58:24Z",
+      "side": 1,
+      "message": "This moved here from Renderer.cpp.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 118,
+        "endChar": 1
+      },
+      "revId": "94adef9b054c75ca5c86ba49c5780c521ec67526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a9e97d1_cd48c9ac",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-19T19:58:24Z",
+      "side": 1,
+      "message": "This is the result of merging the egl and gl Error files.",
+      "revId": "94adef9b054c75ca5c86ba49c5780c521ec67526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
