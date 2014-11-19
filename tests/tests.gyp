@@ -228,7 +228,7 @@
                     'type': 'executable',
                     'dependencies':
                     [
-                        '../src/angle.gyp:libGLESv2_static',
+                        '../src/angle.gyp:libANGLE',
                         'angle_test_support',
                     ],
                     'include_dirs':

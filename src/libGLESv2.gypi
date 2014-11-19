@@ -589,38 +589,5 @@
                 }],
             ],
         },
-        {
-            'target_name': 'libGLESv2_static',
-            'type': 'static_library',
-            # make sure we depend on commit_id as a hard dependency, otherwise
-            # we will try to build the static_lib in parallel
-            'dependencies': [ 'libANGLE', ],
-            'includes': [ '../build/common_defines.gypi', ],
-            'sources':
-            [
-                'libGLESv2/libGLESv2.cpp',
-                'libGLESv2/libGLESv2.rc',
-            ],
-            'conditions':
-            [
-                ['angle_build_winrt==1',
-                {
-                    'msvs_enable_winrt' : '1',
-                    'msvs_requires_importlibrary' : 'true',
-                    'msvs_settings':
-                    {
-                        'VCLinkerTool':
-                        {
-                            'EnableCOMDATFolding': '1',
-                            'OptimizeReferences': '1',
-                        }
-                    },
-                }],
-                ['angle_build_winphone==1',
-                {
-                    'msvs_enable_winphone' : '1',
-                }],
-            ],
-        },
     ],
 }
