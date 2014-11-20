@@ -14,9 +14,9 @@
 #include "angle_gl.h"
 
 #include "libANGLE/Error.h"
+#include "libANGLE/RefCountObject.h"
 
 #include "common/angleutils.h"
-#include "common/RefCountObject.h"
 
 namespace rx
 {

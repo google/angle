@@ -10,7 +10,7 @@
 #define LIBANGLE_STATE_H_
 
 #include "common/angleutils.h"
-#include "common/RefCountObject.h"
+#include "libANGLE/RefCountObject.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/Renderbuffer.h"

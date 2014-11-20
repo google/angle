@@ -12,7 +12,7 @@
 #define LIBANGLE_TEXTURE_H_
 
 #include "common/debug.h"
-#include "common/RefCountObject.h"
+#include "libANGLE/RefCountObject.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/renderer/TextureImpl.h"

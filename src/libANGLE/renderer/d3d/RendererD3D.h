@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_D3D_RENDERERD3D_H_
 
 #include "libANGLE/renderer/Renderer.h"
+#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
 #include "libANGLE/Data.h"
 
 //FIXME(jmadill): std::array is currently prohibited by Chromium style guide

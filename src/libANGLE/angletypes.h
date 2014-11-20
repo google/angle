@@ -10,7 +10,7 @@
 #define LIBANGLE_ANGLETYPES_H_
 
 #include "libANGLE/Constants.h"
-#include "common/RefCountObject.h"
+#include "libANGLE/RefCountObject.h"
 
 namespace gl
 {

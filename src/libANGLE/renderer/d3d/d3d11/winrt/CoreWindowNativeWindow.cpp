@@ -6,8 +6,10 @@
 
 // CoreWindowNativeWindow.cpp: NativeWindow for managing ICoreWindow native window types.
 
+#include "libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.h"
+
 #include <windows.graphics.display.h>
-#include "common/winrt/CoreWindowNativeWindow.h"
+
 using namespace ABI::Windows::Foundation::Collections;
 
 namespace rx

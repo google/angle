@@ -10,9 +10,9 @@
 #ifndef LIBANGLE_PROGRAM_BINARY_H_
 #define LIBANGLE_PROGRAM_BINARY_H_
 
-#include "common/RefCountObject.h"
-#include "angletypes.h"
 #include "common/mathutil.h"
+#include "libANGLE/angletypes.h"
+#include "libANGLE/RefCountObject.h"
 #include "libANGLE/Uniform.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/Constants.h"
