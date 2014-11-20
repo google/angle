@@ -26,12 +26,24 @@
                     ],
                     'sources':
                     [
+                        'common/angleutils.cpp',
+                        'common/angleutils.h',
+                        'common/debug.cpp',
+                        'common/debug.h',
+                        'common/event_tracer.cpp',
+                        'common/event_tracer.h',
+                        'common/tls.cpp',
+                        'common/tls.h',
                         'libEGL/libEGL.cpp',
                         'libEGL/libEGL.def',
                         'libEGL/libEGL.rc',
                         'libEGL/main.cpp',
                         'libEGL/main.h',
                         'libEGL/resource.h',
+                    ],
+                    'defines':
+                    [
+                        'LIBEGL_IMPLEMENTATION',
                     ],
                     'conditions':
                     [

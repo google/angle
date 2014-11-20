@@ -11,6 +11,7 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/export.h"
 
 namespace egl
 {
@@ -26,7 +27,8 @@ class Texture2D;
 namespace rx
 {
 
-class SurfaceImpl
+// TODO: don't export this class, make it a pure interface if possible
+class ANGLE_EXPORT SurfaceImpl
 {
   public:
     SurfaceImpl(egl::Display *display, const egl::Config *config, EGLint width, EGLint height,

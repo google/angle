@@ -12,7 +12,6 @@
 #ifndef LIBANGLE_SHADER_H_
 #define LIBANGLE_SHADER_H_
 
-
 #include <string>
 #include <list>
 #include <vector>
@@ -22,6 +21,7 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/export.h"
 
 namespace rx
 {
@@ -53,7 +53,7 @@ struct PackedVarying : public sh::Varying
     }
 };
 
-class Shader
+class ANGLE_EXPORT Shader
 {
   public:
     Shader(ResourceManager *manager, rx::ShaderImpl *impl, GLenum type, GLuint handle);

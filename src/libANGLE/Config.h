@@ -11,18 +11,20 @@
 #ifndef INCLUDE_CONFIG_H_
 #define INCLUDE_CONFIG_H_
 
+#include "libANGLE/renderer/Renderer.h"
+#include "libANGLE/export.h"
+
+#include "common/angleutils.h"
+
 #include <EGL/egl.h>
 
 #include <set>
-
-#include "libANGLE/renderer/Renderer.h"
-#include "common/angleutils.h"
 
 namespace egl
 {
 class Display;
 
-class Config
+class ANGLE_EXPORT Config
 {
   public:
     Config(rx::ConfigDesc desc, EGLint minSwapInterval, EGLint maxSwapInterval, EGLint texWidth, EGLint texHeight);

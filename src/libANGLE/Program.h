@@ -14,6 +14,7 @@
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/ProgramBinary.h"
+#include "libANGLE/export.h"
 
 #include <GLES2/gl2.h>
 
@@ -48,7 +49,7 @@ class AttributeBindings
     std::set<std::string> mAttributeBinding[MAX_VERTEX_ATTRIBS];
 };
 
-class InfoLog
+class ANGLE_EXPORT InfoLog
 {
   public:
     InfoLog();
@@ -65,7 +66,7 @@ class InfoLog
     char *mInfoLog;
 };
 
-class Program
+class ANGLE_EXPORT Program
 {
   public:
     Program(rx::Renderer *renderer, ResourceManager *manager, GLuint handle);

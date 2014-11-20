@@ -64,30 +64,11 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved
     {
       case DLL_PROCESS_ATTACH:
         {
-#if defined(ANGLE_ENABLE_DEBUG_TRACE)
-            FILE *debug = fopen(TRACE_OUTPUT_FILE, "rt");
-
-            if (debug)
-            {
-                fclose(debug);
-                debug = fopen(TRACE_OUTPUT_FILE, "wt");   // Erase
-                
-                if (debug)
-                {
-                    fclose(debug);
-                }
-            }
-#endif
-
             currentTLS = CreateTLSIndex();
             if (currentTLS == TLS_OUT_OF_INDEXES)
             {
                 return FALSE;
             }
-
-#ifdef ANGLE_ENABLE_DEBUG_ANNOTATIONS
-            gl::InitializeDebugAnnotations();
-#endif
         }
         // Fall through to initialize index
       case DLL_THREAD_ATTACH:
@@ -104,10 +85,6 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved
         {
             egl::DeallocateCurrent();
             DestroyTLSIndex(currentTLS);
-
-#ifdef ANGLE_ENABLE_DEBUG_ANNOTATIONS
-            gl::UninitializeDebugAnnotations();
-#endif
         }
         break;
       default:

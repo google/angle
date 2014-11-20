@@ -61,7 +61,6 @@
             'libANGLE/Display.h',
             'libANGLE/Error.cpp',
             'libANGLE/Error.h',
-            'libANGLE/features.h',
             'libANGLE/Fence.cpp',
             'libANGLE/Fence.h',
             'libANGLE/Float16ToFloat32.cpp',
@@ -105,6 +104,8 @@
             'libANGLE/VertexAttribute.h',
             'libANGLE/angletypes.cpp',
             'libANGLE/angletypes.h',
+            'libANGLE/export.h',
+            'libANGLE/features.h',
             'libANGLE/formatutils.cpp',
             'libANGLE/formatutils.h',
             'libANGLE/queryconversions.cpp',
@@ -345,6 +346,7 @@
             'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp',
             'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h',
         ],
+        'libangle_static%': 1,
     },
     # Everything below this is duplicated in the GN build. If you change
     # anything also change angle/BUILD.gn
@@ -352,11 +354,8 @@
     [
         {
             'target_name': 'libANGLE',
-            #TODO(jamdill/geofflang): support shared
-            'type': 'static_library',
             'dependencies': [ 'translator', 'commit_id', ],
             'includes': [ '../build/common_defines.gypi', ],
-
             'include_dirs':
             [
                 '.',
@@ -375,6 +374,7 @@
                 'GL_GLEXT_PROTOTYPES=',
                 'EGLAPI=',
                 'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ "d3dcompiler_47.dll", "d3dcompiler_46.dll", "d3dcompiler_43.dll" }',
+                'LIBANGLE_IMPLEMENTATION',
             ],
             'direct_dependent_settings':
             {
@@ -382,7 +382,6 @@
                 [
                     '.',
                     '../include',
-                    'libANGLE',
                 ],
                 'defines':
                 [
@@ -391,16 +390,6 @@
                     'EGLAPI=',
                     'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ "d3dcompiler_47.dll", "d3dcompiler_46.dll", "d3dcompiler_43.dll" }',
                 ],
-                'configurations':
-                {
-                    'Debug_Base':
-                    {
-                        'defines':
-                        [
-                            'ANGLE_ENABLE_DEBUG_ANNOTATIONS',
-                        ],
-                    },
-                },
                 'conditions':
                 [
                     ['angle_enable_d3d9==1',
@@ -421,6 +410,24 @@
             },
             'conditions':
             [
+                ['libangle_static==1',
+                {
+                    'defines':
+                    [
+                        'LIBANGLE_STATIC',
+                    ],
+                    'direct_dependent_settings':
+                    {
+                        'defines':
+                        [
+                            'LIBANGLE_STATIC',
+                        ],
+                    },
+                    'type': 'static_library',
+                },
+                { # 'libangle_static==0'
+                    'type': 'shared_library',
+                }],
                 ['angle_enable_d3d9==1 or angle_enable_d3d11==1',
                 {
                     'sources':
@@ -565,12 +572,24 @@
             'includes': [ '../build/common_defines.gypi', ],
             'sources':
             [
+                'common/angleutils.cpp',
+                'common/angleutils.h',
+                'common/debug.cpp',
+                'common/debug.h',
+                'common/event_tracer.cpp',
+                'common/event_tracer.h',
+                'common/tls.cpp',
+                'common/tls.h',
                 'libGLESv2/libGLESv2.cpp',
                 'libGLESv2/libGLESv2.def',
                 'libGLESv2/libGLESv2.rc',
                 'libGLESv2/main.cpp',
                 'libGLESv2/main.h',
                 'libGLESv2/resource.h',
+            ],
+            'defines':
+            [
+                'LIBGLESV2_IMPLEMENTATION',
             ],
             'conditions':
             [

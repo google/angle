@@ -18,6 +18,7 @@
 #include "libANGLE/Constants.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
+#include "libANGLE/export.h"
 
 #include "angle_gl.h"
 
@@ -95,7 +96,7 @@ struct LinkResult
 };
 
 // This is the result of linking a program. It is the state that would be passed to ProgramBinary.
-class ProgramBinary : public RefCountObject
+class ANGLE_EXPORT ProgramBinary : public RefCountObject
 {
   public:
     explicit ProgramBinary(rx::ProgramImpl *impl);

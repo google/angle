@@ -11,6 +11,8 @@
 
 #include "libANGLE/Error.h"
 #include "libANGLE/RefCountObject.h"
+#include "libANGLE/export.h"
+
 #include "common/angleutils.h"
 
 #include "angle_gl.h"
@@ -23,7 +25,7 @@ class QueryImpl;
 namespace gl
 {
 
-class Query : public RefCountObject
+class ANGLE_EXPORT Query : public RefCountObject
 {
   public:
     Query(rx::QueryImpl *impl, GLuint id);

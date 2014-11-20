@@ -16,6 +16,7 @@
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/VertexAttribute.h"
+#include "libANGLE/export.h"
 
 #include <vector>
 
@@ -28,7 +29,7 @@ namespace gl
 {
 class Buffer;
 
-class VertexArray
+class ANGLE_EXPORT VertexArray
 {
   public:
     VertexArray(rx::VertexArrayImpl *impl, GLuint id, size_t maxAttribs);

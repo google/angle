@@ -155,9 +155,6 @@ if (is_win) {
     if (angle_enable_d3d11) {
       defines += [ "ANGLE_ENABLE_D3D11" ]
     }
-    if (is_debug) {
-      defines += [ "ANGLE_ENABLE_DEBUG_ANNOTATIONS" ]
-    }
     defines += [
       "GL_APICALL=",
       "GL_GLEXT_PROTOTYPES=",
@@ -165,7 +162,7 @@ if (is_win) {
     ]
   }
 
-  static_library("libANGLE") {
+  shared_library("libANGLE") {
     sources = rebase_path(gles_gypi.libangle_sources, ".", "src")
     sources += rebase_path(gles_gypi.libangle_common_sources, ".", "src")
 
@@ -191,11 +188,13 @@ if (is_win) {
     if (is_debug) {
       defines += [
         "ANGLE_GENERATE_SHADER_DEBUG_INFO",
+        "ANGLE_ENABLE_DEBUG_ANNOTATIONS",
       ]
       libs += [ "d3d9.lib" ]
     }
 
     defines += [
+      "LIBANGLE_IMPLEMENTATION",
       "ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ " +
         "\"d3dcompiler_47.dll\", \"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }",
     ]
@@ -223,6 +222,14 @@ if (is_win) {
 
   shared_library("libGLESv2") {
     sources = [
+      "src/common/angleutils.cpp",
+      "src/common/angleutils.h",
+      "src/common/debug.cpp",
+      "src/common/debug.h",
+      "src/common/event_tracer.cpp",
+      "src/common/event_tracer.h",
+      "src/common/tls.cpp",
+      "src/common/tls.h",
       "src/libGLESv2/libGLESv2.cpp",
       "src/libGLESv2/libGLESv2.def",
       "src/libGLESv2/libGLESv2.rc",
@@ -240,6 +247,10 @@ if (is_win) {
       "//build/config/compiler:no_chromium_code",
     ]
 
+    defines = [
+      "LIBGLESV2_IMPLEMENTATION",
+    ]
+
     deps = [
       ":includes",
       ":libANGLE",
@@ -248,6 +259,14 @@ if (is_win) {
 
   shared_library("libEGL") {
     sources = [
+      "src/common/angleutils.cpp",
+      "src/common/angleutils.h",
+      "src/common/debug.cpp",
+      "src/common/debug.h",
+      "src/common/event_tracer.cpp",
+      "src/common/event_tracer.h",
+      "src/common/tls.cpp",
+      "src/common/tls.h",
       "src/libEGL/libEGL.cpp",
       "src/libEGL/libEGL.def",
       "src/libEGL/libEGL.rc",
@@ -263,6 +282,10 @@ if (is_win) {
     configs += [
       ":internal_config",
       "//build/config/compiler:no_chromium_code",
+    ]
+
+    defines = [
+      "LIBEGL_IMPLEMENTATION",
     ]
 
     deps = [

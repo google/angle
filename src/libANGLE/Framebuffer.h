@@ -13,6 +13,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/Constants.h"
+#include "libANGLE/export.h"
 
 #include "common/angleutils.h"
 
@@ -38,7 +39,7 @@ struct Data;
 
 typedef std::vector<FramebufferAttachment *> ColorbufferInfo;
 
-class Framebuffer
+class ANGLE_EXPORT Framebuffer
 {
   public:
     Framebuffer(GLuint id);

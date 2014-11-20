@@ -12,6 +12,7 @@
 
 #include "libANGLE/Error.h"
 #include "libANGLE/RefCountObject.h"
+#include "libANGLE/export.h"
 
 #include "common/angleutils.h"
 
@@ -24,7 +25,7 @@ class FenceSyncImpl;
 namespace gl
 {
 
-class FenceNV
+class ANGLE_EXPORT FenceNV
 {
   public:
     explicit FenceNV(rx::FenceNVImpl *impl);
@@ -49,7 +50,7 @@ class FenceNV
     GLenum mCondition;
 };
 
-class FenceSync : public RefCountObject
+class ANGLE_EXPORT FenceSync : public RefCountObject
 {
   public:
     explicit FenceSync(rx::FenceSyncImpl *impl, GLuint id);

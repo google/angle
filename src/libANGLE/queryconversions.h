@@ -6,12 +6,14 @@
 
 // queryconversions.h: Declaration of state query cast conversions
 
+#include "libANGLE/export.h"
+
 namespace gl
 {
 
 // The GL state query API types are: bool, int, uint, float, int64
 template <typename QueryT>
-void CastStateValues(Context *context, GLenum nativeType, GLenum pname,
-                     unsigned int numParams, QueryT *outParams);
+ANGLE_EXPORT void CastStateValues(Context *context, GLenum nativeType, GLenum pname,
+                                  unsigned int numParams, QueryT *outParams);
 
 }

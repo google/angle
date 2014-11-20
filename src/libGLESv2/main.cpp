@@ -92,10 +92,6 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved
             {
                 return FALSE;
             }
-
-#ifdef ANGLE_ENABLE_DEBUG_ANNOTATIONS
-            gl::InitializeDebugAnnotations();
-#endif
         }
         // Fall through to initialize index
       case DLL_THREAD_ATTACH:
@@ -112,10 +108,6 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved
         {
             gl::DeallocateCurrent();
             gl::DestroyThreadLocalIndex();
-
-#ifdef ANGLE_ENABLE_DEBUG_ANNOTATIONS
-            gl::UninitializeDebugAnnotations();
-#endif
         }
         break;
       default:

@@ -13,6 +13,7 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/export.h"
 
 #include <EGL/egl.h>
 
@@ -31,7 +32,7 @@ namespace egl
 class Display;
 class Config;
 
-class Surface final
+class ANGLE_EXPORT Surface final
 {
   public:
     Surface(rx::SurfaceImpl *impl);

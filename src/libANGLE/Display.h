@@ -17,6 +17,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/AttributeMap.h"
+#include "libANGLE/export.h"
 
 namespace gl
 {
@@ -27,7 +28,7 @@ namespace egl
 {
 class Surface;
 
-class Display
+class ANGLE_EXPORT Display
 {
   public:
     ~Display();

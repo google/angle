@@ -17,7 +17,6 @@
 
 namespace gl
 {
-#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
 // Wraps the D3D9/D3D11 debug annotation functions.
 class DebugAnnotationWrapper
 {
@@ -158,30 +157,23 @@ class D3D11DebugAnnotationWrapper : public DebugAnnotationWrapper
 };
 #endif // ANGLE_ENABLE_D3D11
 
-static DebugAnnotationWrapper* g_DebugAnnotationWrapper = NULL;
-
-void InitializeDebugAnnotations()
+static DebugAnnotationWrapper *GetDebugAnnotationWrapper()
 {
-#if defined(ANGLE_ENABLE_D3D9)
-    g_DebugAnnotationWrapper = new D3D9DebugAnnotationWrapper();
-#elif defined(ANGLE_ENABLE_D3D11)
+#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
+#   if defined(ANGLE_ENABLE_D3D9)
+    static D3D9DebugAnnotationWrapper wrapper;
+#   elif defined(ANGLE_ENABLE_D3D11)
     // If the project uses D3D9 then we can use the D3D9 debug annotations, even with the D3D11 renderer.
     // However, if D3D9 is unavailable (e.g. in Windows Store), then we use D3D11 debug annotations.
     // The D3D11 debug annotations are methods on ID3DUserDefinedAnnotation, which is implemented by the DeviceContext.
     // This doesn't have to be the same DeviceContext that the renderer uses, though.
-    g_DebugAnnotationWrapper = new D3D11DebugAnnotationWrapper();
+    static D3D11DebugAnnotationWrapper wrapper;
+#   endif
+    return &wrapper;
+#else
+    return nullptr;
 #endif
 }
-
-void UninitializeDebugAnnotations()
-{
-    if (g_DebugAnnotationWrapper != NULL)
-    {
-        SafeDelete(g_DebugAnnotationWrapper);
-    }
-}
-
-#endif // ANGLE_ENABLE_DEBUG_ANNOTATIONS
 
 enum DebugTraceOutputType
 {
@@ -192,27 +184,25 @@ enum DebugTraceOutputType
 
 static void output(bool traceInDebugOnly, DebugTraceOutputType outputType, const char *format, va_list vararg)
 {
-#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
-    static std::vector<char> buffer(512);
-
     if (perfActive())
     {
+        static std::vector<char> buffer(512);
         size_t len = FormatStringIntoVector(format, vararg, buffer);
         std::wstring formattedWideMessage(buffer.begin(), buffer.begin() + len);
 
+        DebugAnnotationWrapper *annotationWrapper = GetDebugAnnotationWrapper();
         switch (outputType)
         {
-            case DebugTraceOutputTypeNone:
-                break;
-            case DebugTraceOutputTypeBeginEvent:
-                g_DebugAnnotationWrapper->beginEvent(formattedWideMessage);
-                break;
-            case DebugTraceOutputTypeSetMarker:
-                g_DebugAnnotationWrapper->setMarker(formattedWideMessage);
-                break;
+          case DebugTraceOutputTypeNone:
+            break;
+          case DebugTraceOutputTypeBeginEvent:
+            annotationWrapper->beginEvent(formattedWideMessage);
+            break;
+          case DebugTraceOutputTypeSetMarker:
+            annotationWrapper->setMarker(formattedWideMessage);
+            break;
         }
     }
-#endif // ANGLE_ENABLE_DEBUG_ANNOTATIONS
 
 #if defined(ANGLE_ENABLE_DEBUG_TRACE)
 #if defined(NDEBUG)
@@ -252,7 +242,7 @@ void trace(bool traceInDebugOnly, const char *format, ...)
 bool perfActive()
 {
 #if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
-    static bool active = g_DebugAnnotationWrapper->getStatus();
+    static bool active = GetDebugAnnotationWrapper()->getStatus();
     return active;
 #else
     return false;
@@ -282,7 +272,7 @@ ScopedPerfEventHelper::~ScopedPerfEventHelper()
 #if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
     if (perfActive())
     {
-        g_DebugAnnotationWrapper->endEvent();
+        GetDebugAnnotationWrapper()->endEvent();
     }
 #endif
 }
