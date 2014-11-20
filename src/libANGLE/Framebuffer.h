@@ -11,10 +11,10 @@
 #define LIBANGLE_FRAMEBUFFER_H_
 
 #include "libANGLE/Error.h"
+#include "libANGLE/RefCountObject.h"
+#include "libANGLE/Constants.h"
 
 #include "common/angleutils.h"
-#include "common/RefCountObject.h"
-#include "Constants.h"
 
 #include <vector>
 

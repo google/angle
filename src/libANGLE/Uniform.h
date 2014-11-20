@@ -8,9 +8,9 @@
 #define LIBANGLE_UNIFORM_H_
 
 #include "common/debug.h"
-#include "common/blocklayout.h"
-
 #include "libANGLE/angletypes.h"
+
+#include "common/blocklayout.h"
 
 #include "angle_gl.h"
 

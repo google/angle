@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMMON_FEATURES_H_
-#define COMMON_FEATURES_H_
+#ifndef LIBANGLE_FEATURES_H_
+#define LIBANGLE_FEATURES_H_
 
 #define ANGLE_DISABLED 0
 #define ANGLE_ENABLED 1
@@ -37,4 +37,4 @@
 #define ANGLE_SHADER_DEBUG_INFO ANGLE_DISABLED
 #endif
 
-#endif // COMMON_FEATURES_H_
+#endif // LIBANGLE_FEATURES_H_

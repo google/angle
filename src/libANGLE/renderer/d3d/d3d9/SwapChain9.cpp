@@ -10,8 +10,7 @@
 #include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
-
-#include "common/features.h"
+#include "libANGLE/features.h"
 
 namespace rx
 {

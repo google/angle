@@ -18,10 +18,11 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/SwapChain.h"
 
+// TODO: don't reference this from here, use a method on DisplayImpl to validate windows
+#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
+
 #include "common/debug.h"
 #include "common/version.h"
-
-#include "common/NativeWindow.h"
 
 bool validateDisplay(egl::Display *display)
 {

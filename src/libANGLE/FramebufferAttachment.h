@@ -11,9 +11,9 @@
 #define LIBANGLE_FRAMEBUFFERATTACHMENT_H_
 
 #include "libANGLE/Texture.h"
+#include "libANGLE/RefCountObject.h"
 
 #include "common/angleutils.h"
-#include "common/RefCountObject.h"
 
 #include "angle_gl.h"
 

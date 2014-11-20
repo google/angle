@@ -13,7 +13,7 @@
 #ifndef LIBANGLE_VERTEXARRAY_H_
 #define LIBANGLE_VERTEXARRAY_H_
 
-#include "common/RefCountObject.h"
+#include "libANGLE/RefCountObject.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/VertexAttribute.h"
 

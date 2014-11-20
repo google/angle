@@ -28,8 +28,8 @@
 #include "libANGLE/validationES3.h"
 #include "libANGLE/queryconversions.h"
 
-#include "common/version.h"
 #include "common/utilities.h"
+#include "common/version.h"
 
 extern "C"
 {
