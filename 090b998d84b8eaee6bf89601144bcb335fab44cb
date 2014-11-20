@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ff64148_626d98f6",
+        "filename": "tests/tests.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-20T18:32:26Z",
+      "side": 1,
+      "message": "nit: the formatting here seems to clash with the file",
+      "range": {
+        "startLine": 88,
+        "startChar": 15,
+        "endLine": 89,
+        "endChar": 20
+      },
+      "revId": "090b998d84b8eaee6bf89601144bcb335fab44cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
