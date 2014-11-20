@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ba2cf37b_0803c7ad",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-20T14:59:46Z",
+      "side": 1,
+      "message": "I\u0027m going to change it to a shared library in a later change because it involves adding dllexport macros to many of the classes in libANGLE.",
+      "parentUuid": "da69a7a3_3313887c",
+      "revId": "5ed0237394364a9702a706330ee82852b9c5af8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ad56f7b_bc45b575",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-20T00:02:13Z",
       "side": 1,
       "message": "If libGLESv2_static\u0027s dependency on libANGLE prevents libANGLE from being a DLL, we should reconsider whether libGLESv2_static should be a static library. Since it\u0027s only used by non-essential tests at this point, it would be OK to break those tests, or comment them out temporarily, in order to enable this refactoring.",
+      "revId": "5ed0237394364a9702a706330ee82852b9c5af8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a31efd3_8787a6f3",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-20T14:59:46Z",
+      "side": 1,
+      "message": "The need for this target will disappear with this change, angle_implementation_unit_tests can now link against libANGLE.  It will be removed soon.",
+      "parentUuid": "9ad56f7b_bc45b575",
       "revId": "5ed0237394364a9702a706330ee82852b9c5af8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
