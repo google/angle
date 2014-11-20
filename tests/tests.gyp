@@ -7,11 +7,13 @@
     {
         'angle_build_conformance_tests%': '0',
         'angle_build_deqp_tests%': '0',
+        # build/gyp_angle sets this to 1.
+        'angle_standalone%': 0,
     },
     'targets':
     [
         {
-            'target_name': 'gtest',
+            'target_name': 'angle_internal_gtest',
             'type': 'static_library',
             'includes': [ '../build/common_defines.gypi', ],
             'include_dirs':
@@ -27,17 +29,22 @@
             [
                 '_VARIADIC_MAX=10',
             ],
-            'direct_dependent_settings':
+            'all_dependent_settings':
             {
                 'defines':
                 [
                     '_VARIADIC_MAX=10',
                 ],
+                'include_dirs':
+                [
+                    'third_party/googletest',
+                    'third_party/googletest/include',
+                ],
             },
         },
 
         {
-            'target_name': 'gmock',
+            'target_name': 'angle_internal_gmock',
             'type': 'static_library',
             'includes': [ '../build/common_defines.gypi', ],
             'include_dirs':
@@ -54,29 +61,59 @@
             [
                 '_VARIADIC_MAX=10',
             ],
-            'direct_dependent_settings':
+            'all_dependent_settings':
             {
                 'defines':
                 [
                     '_VARIADIC_MAX=10',
                 ],
+                'include_dirs':
+                [
+                    'third_party/googlemock',
+                    'third_party/googlemock/include',
+                    'third_party/googletest/include',
+                ],
             },
         },
-
+        {
+            'target_name': 'test_support',
+            'type': 'none',
+            'conditions':
+            [
+                ['angle_standalone==1',
+                {
+                    'dependencies': [
+                        'angle_internal_gmock',
+                        'angle_internal_gtest',
+                    ],
+                },
+                {
+                    'dependencies': [
+                        '<(DEPTH)/testing/gmock.gyp:gmock',
+                        '<(DEPTH)/testing/gtest.gyp:gtest',
+                    ],
+                    'all_dependent_settings':
+                    {
+                        'include_dirs':
+                        [
+                            '<(DEPTH)/testing/gmock/include',
+                            '<(DEPTH)/testing/gtest/include',
+                        ],
+                    },
+                }],
+            ],
+        },
         {
             'target_name': 'preprocessor_tests',
             'type': 'executable',
             'dependencies':
             [
                 '../src/angle.gyp:preprocessor',
-                'gtest',
-                'gmock',
+                'test_support',
             ],
             'include_dirs':
             [
                 '../src/compiler/preprocessor',
-                'third_party/googletest/include',
-                'third_party/googlemock/include',
             ],
             'includes':
             [
@@ -94,13 +131,12 @@
             'dependencies':
             [
                 '../src/angle.gyp:translator_static',
-                'gtest',
+                'test_support',
             ],
             'include_dirs':
             [
                 '../include',
                 '../src',
-                'third_party/googletest/include',
             ],
             'includes':
             [
@@ -144,14 +180,13 @@
                     [
                         '../src/angle.gyp:libGLESv2',
                         '../src/angle.gyp:libEGL',
-                        'gtest',
                         '../util/util.gyp:angle_util',
+                        'test_support',
                     ],
                     'include_dirs':
                     [
                         '../include',
                         'angle_tests',
-                        'third_party/googletest/include',
                     ],
                     'sources':
                     [
@@ -164,15 +199,12 @@
                     'includes': [ '../build/common_defines.gypi', ],
                     'dependencies':
                     [
-                        'gtest',
-                        'gmock',
+                        'test_support',
                     ],
                     'include_dirs':
                     [
                         '../include',
                         'angle_tests',
-                        'third_party/googletest/include',
-                        'third_party/googlemock/include',
                     ],
                     'sources':
                     [
@@ -188,11 +220,11 @@
                         '../src/angle.gyp:libGLESv2',
                         '../src/angle.gyp:libEGL',
                         '../util/util.gyp:angle_util',
+                        'test_support',
                     ],
                     'include_dirs':
                     [
                         '../include',
-                        'third_party/googletest/include',
                     ],
                     'sources':
                     [
@@ -216,15 +248,12 @@
                     'dependencies':
                     [
                         '../src/angle.gyp:libGLESv2_static',
-                        'gtest',
-                        'gmock',
+                        'test_support',
                     ],
                     'include_dirs':
                     [
                         '../include',
                         '../src',
-                        'third_party/googletest/include',
-                        'third_party/googlemock/include',
                     ],
                     'includes':
                     [
@@ -282,9 +311,9 @@
                             [
                                 '../src/angle.gyp:libGLESv2',
                                 '../src/angle.gyp:libEGL',
-                                'gtest',
                                 'third_party/gles_conformance_tests/conform/GTF_ES/glsl/GTF/es_cts.gyp:es_cts_test_data',
                                 'third_party/gles_conformance_tests/conform/GTF_ES/glsl/GTF/es_cts.gyp:es2_cts',
+                                'test_support',
                             ],
                             'variables':
                             {
@@ -300,7 +329,6 @@
                             [
                                 '../include',
                                 'gles_conformance_tests',
-                                'third_party/googletest/include',
                             ],
                             'defines':
                             [
@@ -340,9 +368,9 @@
                             [
                                 '../src/angle.gyp:libGLESv2',
                                 '../src/angle.gyp:libEGL',
-                                'gtest',
                                 'third_party/gles_conformance_tests/conform/GTF_ES/glsl/GTF/es_cts.gyp:es_cts_test_data',
                                 'third_party/gles_conformance_tests/conform/GTF_ES/glsl/GTF/es_cts.gyp:es3_cts',
+                                'test_support',
                             ],
                             'variables':
                             {
@@ -358,7 +386,6 @@
                             [
                                 '../include',
                                 'gles_conformance_tests',
-                                'third_party/googletest/include',
                             ],
                             'defines':
                             [
@@ -412,14 +439,13 @@
                             [
                                 '../src/angle.gyp:libGLESv2',
                                 '../src/angle.gyp:libEGL',
-                                'gtest',
                                 'third_party/deqp/src/deqp/modules/gles3/gles3.gyp:deqp-gles3',
                                 'third_party/deqp/src/deqp/framework/platform/platform.gyp:tcutil-platform',
+                                'test_support',
                             ],
                             'include_dirs':
                             [
                                 '../include',
-                                'third_party/googletest/include',
                                 'deqp_tests',
                             ],
                             'variables':

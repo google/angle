@@ -29,6 +29,9 @@ if __name__ == '__main__':
     # Add common.gypi to the include path.
     args.append('-I' + os.path.join(script_dir, 'common.gypi'))
     args.append('--no-parallel')
+    # Indicate ANGLE is being built standalone (as opposed to within
+    # a Chromium workspace).
+    args.append('-Dangle_standalone=1')
     # Add all.gyp as the main gyp file to be generated.
     args.append(os.path.join(script_dir, 'all.gyp'))
     sys.exit(gyp.main(args))

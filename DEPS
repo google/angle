@@ -2,6 +2,8 @@ deps = {
   "third_party/gyp":
       "http://gyp.googlecode.com/svn/trunk@1987",
 
+  # TODO(kbr): figure out how to better stay in sync with Chromium's
+  # versions of googletest and googlemock.
   "tests/third_party/googletest":
       "http://googletest.googlecode.com/svn/trunk@629",
 
