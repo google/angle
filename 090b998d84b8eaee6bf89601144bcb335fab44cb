@@ -22,6 +22,24 @@
       "revId": "090b998d84b8eaee6bf89601144bcb335fab44cb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ffb4d34_8472ea85",
+        "filename": "tests/tests.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-20T21:21:38Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "9ff64148_626d98f6",
+      "revId": "090b998d84b8eaee6bf89601144bcb335fab44cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
