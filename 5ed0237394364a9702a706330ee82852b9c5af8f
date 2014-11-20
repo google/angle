@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "ba2cf37b_48805f86",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-20T15:21:16Z",
+      "side": 1,
+      "message": "Could do that.  The change isn\u0027t that large, libGLESv2.dll goes down about 1mb and libEGL.dll goes up about 1.2mb.",
+      "parentUuid": "ffe73d92_c23462ff",
+      "revId": "5ed0237394364a9702a706330ee82852b9c5af8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ad56f7b_bc45b575",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 5
