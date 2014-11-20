@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfec397c_418df2c0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-20T16:49:27Z",
+      "side": 1,
+      "message": "nit: please add BUG\u003dangle:834 to associate the CL with the issue tracker",
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe73d92_c2bd82a9",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-20T16:49:27Z",
+      "side": 1,
+      "message": "increment the header version here",
+      "range": {
+        "startLine": 51,
+        "startChar": 25,
+        "endLine": 51,
+        "endChar": 28
+      },
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1dff4d_2327ca54",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-20T16:49:27Z",
+      "side": 1,
+      "message": "add the new Evq types cases to getQualifierString?",
+      "range": {
+        "startLine": 369,
+        "startChar": 19,
+        "endLine": 369,
+        "endChar": 37
+      },
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfec397c_e19ac6fc",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-20T16:49:27Z",
+      "side": 1,
+      "message": "apologies, I haven\u0027t looked at the spec, but do these not apply to ESSL 3?",
+      "range": {
+        "startLine": 625,
+        "startChar": 35,
+        "endLine": 625,
+        "endChar": 49
+      },
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1dff4d_63d8e2fc",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-20T16:49:27Z",
+      "side": 1,
+      "message": "nit: tabs (should be spaces)",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 5
+      },
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfec397c_413bb260",
+        "filename": "src/libGLESv2/Caps.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-20T16:49:27Z",
+      "side": 1,
+      "message": "should add initial values for the new vars to the constructor here I think",
+      "range": {
+        "startLine": 87,
+        "startChar": 12,
+        "endLine": 87,
+        "endChar": 22
+      },
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
