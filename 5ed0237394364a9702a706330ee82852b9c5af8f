@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "ffe73d92_c23462ff",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-20T15:02:13Z",
+      "side": 1,
+      "message": "Maybe we should line up your dllexport change so it\u0027s ready for commit at the same time as this patch, so there\u0027s no downtime where we can\u0027t roll.",
+      "parentUuid": "ba2cf37b_0803c7ad",
+      "revId": "5ed0237394364a9702a706330ee82852b9c5af8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ad56f7b_bc45b575",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 5
