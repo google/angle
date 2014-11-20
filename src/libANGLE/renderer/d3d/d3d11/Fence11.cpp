@@ -98,7 +98,7 @@ gl::Error FenceNV11::finishFence(GLboolean *outFinished)
             return error;
         }
 
-        Sleep(0);
+        ScheduleYield();
     }
 
     return gl::Error(GL_NO_ERROR);
@@ -178,7 +178,7 @@ gl::Error FenceSync11::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *ou
 
     while (currentCounter.QuadPart < endCounter && !result)
     {
-        Sleep(0);
+        ScheduleYield();
         BOOL success = QueryPerformanceCounter(&currentCounter);
         UNUSED_ASSERTION_VARIABLE(success);
         ASSERT(success);

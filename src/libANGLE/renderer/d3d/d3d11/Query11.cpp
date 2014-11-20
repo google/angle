@@ -72,7 +72,7 @@ gl::Error Query11::getResult(GLuint *params)
 
         if (!mQueryFinished)
         {
-            Sleep(0);
+            ScheduleYield();
         }
     }
 

@@ -15,7 +15,9 @@
 
 // TLS does not exist for Windows Store and needs to be emulated
 #   ifdef ANGLE_ENABLE_WINDOWS_STORE
-#       define TLS_OUT_OF_INDEXES -1
+#       ifndef TLS_OUT_OF_INDEXES
+#           define TLS_OUT_OF_INDEXES -1
+#       endif
 #       ifndef CREATE_SUSPENDED
 #           define CREATE_SUSPENDED 0x00000004
 #       endif

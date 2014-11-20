@@ -503,7 +503,7 @@ gl::Error Renderer11::sync(bool block)
             }
 
             // Keep polling, but allow other threads to do something useful first
-            Sleep(0);
+            ScheduleYield();
 
             if (testDeviceLost(true))
             {

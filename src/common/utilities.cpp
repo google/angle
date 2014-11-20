@@ -486,10 +486,15 @@ void writeFile(const char* path, const void* content, size_t size)
 }
 #endif // !ANGLE_ENABLE_WINDOWS_STORE
 
-#if defined(ANGLE_ENABLE_WINDOWS_STORE)
+#if defined (ANGLE_PLATFORM_WINDOWS)
 
-void Sleep(unsigned long dwMilliseconds)
+// Causes the thread to relinquish the remainder of its time slice to any
+// other thread that is ready to run.If there are no other threads ready
+// to run, the function returns immediately, and the thread continues execution.
+void ScheduleYield()
 {
+#if defined(ANGLE_ENABLE_WINDOWS_STORE)
+    // This implementation of Sleep exists because it is not available prior to Update 4.
     static HANDLE singletonEvent = nullptr;
     HANDLE sleepEvent = singletonEvent;
     if (!sleepEvent)
@@ -510,7 +515,10 @@ void Sleep(unsigned long dwMilliseconds)
     }
 
     // Emulate sleep by waiting with timeout on an event that is never signalled.
-    WaitForSingleObjectEx(sleepEvent, dwMilliseconds, false);
+    WaitForSingleObjectEx(sleepEvent, 0, false);
+#else
+    Sleep(0);
+#endif
 }
 
-#endif // ANGLE_ENABLE_WINDOWS_STORE
+#endif
