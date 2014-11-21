@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9f448158_af02592d",
+        "filename": "src/compiler/translator/EmulatePrecision.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1117995
+      },
+      "writtenOn": "2014-11-21T08:15:34Z",
+      "side": 1,
+      "message": "I added the originalBecomesChildOfReplacement field for this version, but I suppose there\u0027s no reason why UnfoldShortCircuitAST couldn\u0027t have that as well. This could be made into a separate class as well, but maybe sticking it to TIntermTraverser would work.",
+      "parentUuid": "9f0f2124_57136cfe",
+      "revId": "2abd5f550b69b40c13d2c16a833f451126067242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f0251f8_a47de808",
         "filename": "src/compiler/translator/Pragma.h",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-21T01:27:08Z",
       "side": 1,
       "message": "...and shader precision emulation is turned on if the extension is enabled.",
+      "revId": "2abd5f550b69b40c13d2c16a833f451126067242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f448158_8fff95bf",
+        "filename": "src/compiler/translator/Pragma.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1117995
+      },
+      "writtenOn": "2014-11-21T08:15:34Z",
+      "side": 1,
+      "message": "I\u0027ll add the comment.",
+      "parentUuid": "1f0251f8_a47de808",
       "revId": "2abd5f550b69b40c13d2c16a833f451126067242",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "df3a79c4_31d6d056",
+        "filename": "tests/compiler_tests/DebugShaderPrecision_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1117995
+      },
+      "writtenOn": "2014-11-21T08:15:34Z",
+      "side": 1,
+      "message": "The no-pragma case is handled implicitly by the other tests. I\u0027ll add a test with multiple pragmas.",
+      "parentUuid": "9f0f2124_57afec27",
+      "revId": "2abd5f550b69b40c13d2c16a833f451126067242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f0f2124_f79de0f6",
         "filename": "tests/compiler_tests/DebugShaderPrecision_test.cpp",
         "patchSetId": 7
@@ -64,6 +118,24 @@
       "writtenOn": "2014-11-21T01:27:08Z",
       "side": 1,
       "message": "What about a test ensuring that if the extension isn\u0027t enabled, that the #pragma webgl_debug_shader_precision(on) does nothing?",
+      "revId": "2abd5f550b69b40c13d2c16a833f451126067242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f526d24_661ece88",
+        "filename": "tests/compiler_tests/DebugShaderPrecision_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1117995
+      },
+      "writtenOn": "2014-11-21T08:15:34Z",
+      "side": 1,
+      "message": "I\u0027ll add that, thanks for the suggestion!",
+      "parentUuid": "9f0f2124_f79de0f6",
       "revId": "2abd5f550b69b40c13d2c16a833f451126067242",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
