@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f1e355a_770e6ada",
+        "filename": "tests/tests.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-21T15:12:27Z",
+      "side": 1,
+      "message": "should we call this angle_end2end_tests?",
+      "range": {
+        "startLine": 157,
+        "startChar": 36,
+        "endLine": 157,
+        "endChar": 47
+      },
+      "revId": "73b3368df364e8c7309d82435d0bb4009a688d00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
