@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f0251f8_cf348dff",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2014-11-21T00:34:59Z",
+      "side": 1,
+      "message": "This is going to introduce a static initializer which is not allowed in Chromium code:\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.html?showone\u003dForward_Declarations#Static_and_Global_Variables\n\nCould we lazily allocate this or, even better maybe tack it on to the context object so that the memory will be freed when the context goes away (otherwise a big texture update will allocate memory that will live on for the duration of the process).",
+      "revId": "b5e5bf85e4065c5e2db742539a73beead7c170fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
