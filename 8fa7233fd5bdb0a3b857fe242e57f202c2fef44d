@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df3a79c4_51db942d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1115575
+      },
+      "writtenOn": "2014-11-21T13:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfec397c_418df2c0",
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffe73d92_c2bd82a9",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 3
@@ -36,6 +54,24 @@
         "endLine": 51,
         "endChar": 28
       },
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f448158_ef9ce143",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1115575
+      },
+      "writtenOn": "2014-11-21T13:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffe73d92_c2bd82a9",
       "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -65,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "9f448158_6f5b51f7",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1115575
+      },
+      "writtenOn": "2014-11-21T13:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a1dff4d_2327ca54",
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfec397c_e19ac6fc",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 3
@@ -82,6 +136,24 @@
         "endLine": 625,
         "endChar": 49
       },
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f448158_8f6c35a6",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1115575
+      },
+      "writtenOn": "2014-11-21T13:03:36Z",
+      "side": 1,
+      "message": "No, these don\u0027t apply in ESSL3. There the user shader needs to declare an inout variable instead.",
+      "parentUuid": "dfec397c_e19ac6fc",
       "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -111,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "9f448158_cf991d52",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1115575
+      },
+      "writtenOn": "2014-11-21T13:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a1dff4d_63d8e2fc",
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfec397c_413bb260",
         "filename": "src/libGLESv2/Caps.cpp",
         "patchSetId": 3
@@ -128,6 +218,24 @@
         "endLine": 87,
         "endChar": 22
       },
+      "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f526d24_26dfb6e2",
+        "filename": "src/libGLESv2/Caps.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1115575
+      },
+      "writtenOn": "2014-11-21T13:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfec397c_413bb260",
       "revId": "8fa7233fd5bdb0a3b857fe242e57f202c2fef44d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
