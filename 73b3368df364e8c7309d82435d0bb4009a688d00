@@ -22,6 +22,24 @@
       "revId": "73b3368df364e8c7309d82435d0bb4009a688d00",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff5e5d2a_ff0123a5",
+        "filename": "tests/tests.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-21T22:41:15Z",
+      "side": 1,
+      "message": "Good suggestion. That will make the step description clearer on Chromium\u0027s waterfalls. Done.",
+      "parentUuid": "3f1e355a_770e6ada",
+      "revId": "73b3368df364e8c7309d82435d0bb4009a688d00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
