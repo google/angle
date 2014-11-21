@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f97cd02_a76f089a",
+        "filename": "src/common/features.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-21T21:38:00Z",
+      "side": 1,
+      "message": "Some of the files in this CL have a trailing \"_\" in the include guards and the rest don\u0027t. They should probably be made consistent.",
+      "revId": "14e2a1df13bd96427fc195bd488938b9b17ea263",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f97cd02_07b11cd5",
+        "filename": "src/libANGLE/renderer/d3d/TransformFeedbackD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-21T21:38:00Z",
+      "side": 1,
+      "message": "Duplicated \"D3D\" in this file.",
+      "revId": "14e2a1df13bd96427fc195bd488938b9b17ea263",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
