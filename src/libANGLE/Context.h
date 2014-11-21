@@ -247,7 +247,6 @@ class Context
     int mClientVersion;
 
     TextureMap mZeroTextures;
-    TextureMap mIncompleteTextures;
 
     typedef std::unordered_map<GLuint, Framebuffer*> FramebufferMap;
     FramebufferMap mFramebufferMap;

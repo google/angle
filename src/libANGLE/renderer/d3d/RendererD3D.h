@@ -159,6 +159,8 @@ class RendererD3D : public Renderer
                                const gl::Rectangle *scissor, bool blitRenderTarget,
                                bool blitDepth, bool blitStencil, GLenum filter) = 0;
 
+    void cleanup();
+
     egl::Display *mDisplay;
 
   private:

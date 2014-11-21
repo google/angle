@@ -154,6 +154,8 @@ Renderer9::~Renderer9()
 
 void Renderer9::release()
 {
+    RendererD3D::cleanup();
+
     releaseShaderCompiler();
     releaseDeviceResources();
 

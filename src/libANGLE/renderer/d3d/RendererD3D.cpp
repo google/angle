@@ -27,6 +27,11 @@ RendererD3D::RendererD3D(egl::Display *display)
 
 RendererD3D::~RendererD3D()
 {
+    cleanup();
+}
+
+void RendererD3D::cleanup()
+{
     for (auto &incompleteTexture : mIncompleteTextures)
     {
         incompleteTexture.second.set(NULL);

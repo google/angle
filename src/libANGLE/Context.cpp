@@ -161,12 +161,6 @@ Context::~Context()
         deleteTransformFeedback(mTransformFeedbackMap.begin()->first);
     }
 
-    for (TextureMap::iterator i = mIncompleteTextures.begin(); i != mIncompleteTextures.end(); i++)
-    {
-        i->second.set(NULL);
-    }
-    mIncompleteTextures.clear();
-
     for (auto &zeroTexture : mZeroTextures)
     {
         zeroTexture.second.set(NULL);
