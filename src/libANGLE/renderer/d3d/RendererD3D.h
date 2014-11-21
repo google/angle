@@ -69,6 +69,8 @@ class RendererD3D : public Renderer
     bool isDeviceLost() const override;
 
     // Direct3D Specific methods
+    virtual GUID getAdapterIdentifier() const = 0;
+
     virtual SwapChain *createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat) = 0;
 
     virtual gl::Error generateSwizzle(gl::Texture *texture) = 0;
