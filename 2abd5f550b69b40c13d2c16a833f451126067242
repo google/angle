@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f0f2124_57136cfe",
+        "filename": "src/compiler/translator/EmulatePrecision.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-21T01:27:08Z",
+      "side": 1,
+      "message": "NodeUpdateEntry and updateTree look like they\u0027re copied wholesale from UnfoldShortCircuitAST. Could you refactor these into TIntermTraverser (including mReplacements)?",
+      "revId": "2abd5f550b69b40c13d2c16a833f451126067242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f0251f8_a47de808",
+        "filename": "src/compiler/translator/Pragma.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-21T01:27:08Z",
+      "side": 1,
+      "message": "...and shader precision emulation is turned on if the extension is enabled.",
+      "revId": "2abd5f550b69b40c13d2c16a833f451126067242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f0f2124_57afec27",
+        "filename": "tests/compiler_tests/DebugShaderPrecision_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-21T01:27:08Z",
+      "side": 1,
+      "message": "Should there be another test verifying the default behavior (extension enabled, no pragmas)? What about back-to-back pragmas disabling and then enabling it?",
+      "revId": "2abd5f550b69b40c13d2c16a833f451126067242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f0f2124_f79de0f6",
+        "filename": "tests/compiler_tests/DebugShaderPrecision_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-21T01:27:08Z",
+      "side": 1,
+      "message": "What about a test ensuring that if the extension isn\u0027t enabled, that the #pragma webgl_debug_shader_precision(on) does nothing?",
+      "revId": "2abd5f550b69b40c13d2c16a833f451126067242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
