@@ -3445,7 +3445,7 @@ void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot
         record.srv = srv;
         if (srv)
         {
-            srv->GetResource(&record.resource);
+            record.resource = GetSRVResource(srv);
             srv->GetDesc(&record.desc);
         }
     }
