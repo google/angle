@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f1e355a_9d0ec7a0",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-21T20:36:34Z",
+      "side": 1,
+      "message": "Sleep is not defined on Linux, can you fix that by putting #if defined(ANGLE_WINDOWS) in appropriate places?",
+      "range": {
+        "startLine": 518,
+        "startChar": 4,
+        "endLine": 518,
+        "endChar": 9
+      },
+      "revId": "6390c4f4ab5fde0e2e23210dc91d7bed3cf86132",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f1e355a_5d226f19",
+        "filename": "src/common/utilities.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-21T20:36:34Z",
+      "side": 1,
+      "message": "again, this should probably be Windows-only?",
+      "range": {
+        "startLine": 54,
+        "startChar": 5,
+        "endLine": 54,
+        "endChar": 18
+      },
+      "revId": "6390c4f4ab5fde0e2e23210dc91d7bed3cf86132",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
