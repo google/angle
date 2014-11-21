@@ -92,12 +92,6 @@ void TSymbolTableLevel::relateToExtension(const char *name, const TString &ext)
     }
 }
 
-TSymbol::TSymbol(const TSymbol &copyOf)
-{
-    name = NewPoolTString(copyOf.name->c_str());
-    uniqueId = copyOf.uniqueId;
-}
-
 TSymbol *TSymbolTable::find(const TString &name, int shaderVersion,
                             bool *builtIn, bool *sameScope) const
 {
