@@ -7,6 +7,8 @@
 #ifndef LIBGLESV2_RENDERER_D3D_MEMORYBUFFER_H_
 #define LIBGLESV2_RENDERER_D3D_MEMORYBUFFER_H_
 
+#include "common/angleutils.h"
+
 #include <cstddef>
 #include <cstdint>
 
@@ -27,6 +29,8 @@ class MemoryBuffer
     uint8_t *data();
 
   private:
+    DISALLOW_COPY_AND_ASSIGN(MemoryBuffer);
+
     size_t mSize;
     uint8_t *mData;
 };
