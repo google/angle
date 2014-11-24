@@ -505,7 +505,7 @@ gl::Error Renderer11::sync(bool block)
             // Keep polling, but allow other threads to do something useful first
             ScheduleYield();
 
-            if (testDeviceLost(false))
+            if (testDeviceLost())
             {
                 mDisplay->notifyDeviceLost();
                 return gl::Error(GL_OUT_OF_MEMORY, "Device was lost while waiting for sync.");
@@ -1830,7 +1830,7 @@ bool Renderer11::isDeviceLost()
 }
 
 // set notify to true to broadcast a message to all contexts of the device loss
-bool Renderer11::testDeviceLost(bool notify)
+bool Renderer11::testDeviceLost()
 {
     bool isLost = false;
 
@@ -1852,10 +1852,6 @@ bool Renderer11::testDeviceLost(bool notify)
         // Note that we don't want to clear the device loss status here
         // -- this needs to be done by resetDevice
         mDeviceLost = true;
-        if (notify)
-        {
-            notifyDeviceLost();
-        }
     }
 
     return isLost;

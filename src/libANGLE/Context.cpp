@@ -1387,7 +1387,7 @@ GLenum Context::getResetStatus()
     {
         // mResetStatus will be set by the markContextLost callback
         // in the case a notification is sent
-        if (mRenderer->testDeviceLost(false))
+        if (mRenderer->testDeviceLost())
         {
             mRenderer->notifyDeviceLost();
         }

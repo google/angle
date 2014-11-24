@@ -144,7 +144,7 @@ gl::Error Query11::testQuery()
             break;
         }
 
-        if (!mQueryFinished && mRenderer->testDeviceLost(false))
+        if (!mQueryFinished && mRenderer->testDeviceLost())
         {
             mRenderer->notifyDeviceLost();
             return gl::Error(GL_OUT_OF_MEMORY, "Failed to test get query result, device is lost.");
