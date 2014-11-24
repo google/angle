@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1f77b1c2_d6a3e20f",
+        "filename": "src/libGLESv2/renderer/SwapChain.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-24T19:34:15Z",
+      "side": 1,
+      "message": "nit: * should be right aligned (and technically don\u0027t need the trailing ;, although the line above has it)",
+      "range": {
+        "startLine": 43,
+        "startChar": 16,
+        "endLine": 43,
+        "endChar": 17
+      },
+      "revId": "c37e831a0c803270925dde1459f3d291f8a26f94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffd1fde2_d83a25ea",
         "filename": "src/libGLESv2/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 7
@@ -18,6 +41,29 @@
         "startChar": 17,
         "endLine": 217,
         "endChar": 99
+      },
+      "revId": "c37e831a0c803270925dde1459f3d291f8a26f94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f77b1c2_f6a05e05",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/SwapChain11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-24T19:34:15Z",
+      "side": 1,
+      "message": "same nit here as before, also use \"override\" instead of a repeated virtual (we\u0027re in the process of migrating to C++11 syntax)",
+      "range": {
+        "startLine": 41,
+        "startChar": 57,
+        "endLine": 41,
+        "endChar": 58
       },
       "revId": "c37e831a0c803270925dde1459f3d291f8a26f94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
