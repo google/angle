@@ -729,3 +729,105 @@ TYPED_TEST(GLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
     GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
     EXPECT_EQ(0u, program);
 }
+
+// Verify shader source with a fixed length that is less than the null-terminated length will compile.
+TYPED_TEST(GLSLTest, FixedShaderLength)
+{
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const std::string appendGarbage = "abcasdfasdfasdfasdfasdf";
+    const std::string source = "void main() { gl_FragColor = vec4(0, 0, 0, 0); }" + appendGarbage;
+    const char *sourceArray[1] = { source.c_str() };
+    GLint lengths[1] = { source.length() - appendGarbage.length() };
+    glShaderSource(shader, ArraySize(sourceArray), sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
+// Verify that a negative shader source length is treated as a null-terminated length.
+TYPED_TEST(GLSLTest, NegativeShaderLength)
+{
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = { "void main() { gl_FragColor = vec4(0, 0, 0, 0); }" };
+    GLint lengths[1] = { -10 };
+    glShaderSource(shader, ArraySize(sourceArray), sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
+// Verify that a length array with mixed positive and negative values compiles.
+TYPED_TEST(GLSLTest, MixedShaderLengths)
+{
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[] =
+    {
+        "void main()",
+        "{",
+        "    gl_FragColor = vec4(0, 0, 0, 0);",
+        "}",
+    };
+    GLint lengths[] =
+    {
+        -10,
+        1,
+        std::strlen(sourceArray[2]),
+        -1,
+    };
+    ASSERT_EQ(ArraySize(sourceArray), ArraySize(lengths));
+
+    glShaderSource(shader, ArraySize(sourceArray), sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
+// Verify that zero-length shader source does not affect shader compilation.
+TYPED_TEST(GLSLTest, ZeroShaderLength)
+{
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[] =
+    {
+        "adfasdf",
+        "34534",
+        "void main() { gl_FragColor = vec4(0, 0, 0, 0); }",
+        "",
+        "asdfasdfsdsdf",
+    };
+    GLint lengths[] =
+    {
+        0,
+        0,
+        -1,
+        0,
+        0,
+    };
+    ASSERT_EQ(ArraySize(sourceArray), ArraySize(lengths));
+
+    glShaderSource(shader, ArraySize(sourceArray), sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
+// Verify that a length value much larger than the source length will crash.
+TYPED_TEST(GLSLTest, InvalidShaderLength)
+{
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = { "" };
+    GLint lengths[1] = { std::numeric_limits<GLint>::max() };
+    EXPECT_ANY_THROW(glShaderSource(shader, ArraySize(sourceArray), sourceArray, lengths));
+}

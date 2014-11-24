@@ -51,7 +51,14 @@ void Shader::setSource(GLsizei count, const char *const *string, const GLint *le
 
     for (int i = 0; i < count; i++)
     {
-        stream << string[i];
+        if (length == nullptr || length[i] < 0)
+        {
+            stream.write(string[i], std::strlen(string[i]));
+        }
+        else
+        {
+            stream.write(string[i], length[i]);
+        }
     }
 
     mSource = stream.str();
