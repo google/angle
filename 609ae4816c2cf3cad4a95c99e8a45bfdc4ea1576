@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fcf1549_5b04ef08",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-24T23:06:59Z",
+      "side": 1,
+      "message": "Mis-ordered #includes in this file now. In others in this review too.",
+      "revId": "609ae4816c2cf3cad4a95c99e8a45bfdc4ea1576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fc50d23_fd9a73fc",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-24T23:06:59Z",
+      "side": 1,
+      "message": "This introduces an abstraction violation. Is it possible to at least make this #include conditional to Windows only?",
+      "revId": "609ae4816c2cf3cad4a95c99e8a45bfdc4ea1576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc2091f_87d19a5f",
+        "filename": "src/libANGLE/renderer/SwapChain.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-24T23:06:59Z",
+      "side": 1,
+      "message": "Abstraction violation here too.",
+      "revId": "609ae4816c2cf3cad4a95c99e8a45bfdc4ea1576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc2091f_27d6a656",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-24T23:06:59Z",
+      "side": 1,
+      "message": "Will this break the D3D9 backend?",
+      "revId": "609ae4816c2cf3cad4a95c99e8a45bfdc4ea1576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf3f85b4_e50e3c53",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/NativeWindow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-24T23:06:59Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this file and the .cpp go into libANGLE/renderer/d3d instead? Doesn\u0027t this work with both the D3D9 and D3D11 backends?",
+      "revId": "609ae4816c2cf3cad4a95c99e8a45bfdc4ea1576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f77b1c2_1c72d9d5",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-24T23:06:59Z",
+      "side": 1,
+      "message": "Abstraction violation.",
+      "revId": "609ae4816c2cf3cad4a95c99e8a45bfdc4ea1576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f77b1c2_fc783db2",
+        "filename": "tests/angle_implementation_unit_tests/CoreWindowNativeWindow_unittest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-24T23:06:59Z",
+      "side": 1,
+      "message": "Needs a TODO here to clean this up.",
+      "revId": "609ae4816c2cf3cad4a95c99e8a45bfdc4ea1576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f77b1c2_9c858931",
+        "filename": "tests/angle_implementation_unit_tests/SwapChainPanelNativeWindow_unittest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-24T23:06:59Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "609ae4816c2cf3cad4a95c99e8a45bfdc4ea1576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
