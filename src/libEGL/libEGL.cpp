@@ -687,7 +687,7 @@ EGLSurface __stdcall eglCreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum bu
     }
 
     EGLSurface surface = EGL_NO_SURFACE;
-    egl::Error error = display->createOffscreenSurface(config, (HANDLE)buffer, attrib_list, &surface);
+    egl::Error error = display->createOffscreenSurface(config, buffer, attrib_list, &surface);
     if (error.isError())
     {
         recordError(error);

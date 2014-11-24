@@ -46,7 +46,7 @@ class Display
     bool getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value);
 
     Error createWindowSurface(EGLNativeWindowType window, EGLConfig config, const EGLint *attribList, EGLSurface *outSurface);
-    Error createOffscreenSurface(EGLConfig config, HANDLE shareHandle, const EGLint *attribList, EGLSurface *outSurface);
+    Error createOffscreenSurface(EGLConfig config, EGLClientBuffer shareHandle, const EGLint *attribList, EGLSurface *outSurface);
     Error createContext(EGLConfig configHandle, EGLint clientVersion, const gl::Context *shareContext, bool notifyResets,
                         bool robustAccess, EGLContext *outContext);
 

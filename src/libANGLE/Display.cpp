@@ -386,7 +386,7 @@ Error Display::createWindowSurface(EGLNativeWindowType window, EGLConfig config,
     return Error(EGL_SUCCESS);
 }
 
-Error Display::createOffscreenSurface(EGLConfig config, HANDLE shareHandle, const EGLint *attribList, EGLSurface *outSurface)
+Error Display::createOffscreenSurface(EGLConfig config, EGLClientBuffer shareHandle, const EGLint *attribList, EGLSurface *outSurface)
 {
     EGLint width = 0, height = 0;
     EGLenum textureFormat = EGL_NO_TEXTURE;

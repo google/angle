@@ -51,7 +51,7 @@ Surface::Surface(Display *display, const Config *config, EGLNativeWindowType win
     subclassWindow();
 }
 
-Surface::Surface(Display *display, const Config *config, HANDLE shareHandle, EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureType)
+Surface::Surface(Display *display, const Config *config, EGLClientBuffer shareHandle, EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureType)
     : mDisplay(display), mNativeWindow(NULL), mConfig(config), mShareHandle(shareHandle), mWidth(width), mHeight(height), mPostSubBufferSupported(EGL_FALSE)
 {
     //TODO(jmadill): MANGLE refactor. (note, can't call makeRendererD3D because of dll export issues)
@@ -135,7 +135,7 @@ Error Surface::resetSwapChain()
         height = mHeight;
     }
 
-    mSwapChain = mRenderer->createSwapChain(mNativeWindow, mShareHandle,
+    mSwapChain = mRenderer->createSwapChain(mNativeWindow, static_cast<HANDLE>(mShareHandle),
                                             mConfig->mRenderTargetFormat,
                                             mConfig->mDepthStencilFormat);
     if (!mSwapChain)
