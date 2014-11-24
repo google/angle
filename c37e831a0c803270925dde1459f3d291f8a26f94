@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffd1fde2_d83a25ea",
+        "filename": "src/libGLESv2/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-24T19:14:53Z",
+      "side": 1,
+      "message": "We have d3d11::DynamicCastComObject for this",
+      "range": {
+        "startLine": 217,
+        "startChar": 17,
+        "endLine": 217,
+        "endChar": 99
+      },
+      "revId": "c37e831a0c803270925dde1459f3d291f8a26f94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
