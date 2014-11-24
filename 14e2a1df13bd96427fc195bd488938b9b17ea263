@@ -19,6 +19,52 @@
     },
     {
       "key": {
+        "uuid": "1f77b1c2_539044b2",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-24T16:05:43Z",
+      "side": 1,
+      "message": "nit: put below comment for consistency",
+      "range": {
+        "startLine": 2,
+        "startChar": 1,
+        "endLine": 2,
+        "endChar": 7
+      },
+      "revId": "14e2a1df13bd96427fc195bd488938b9b17ea263",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf3f85b4_df142734",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-24T16:05:43Z",
+      "side": 1,
+      "message": "nit: can you fix this at the same time?",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "14e2a1df13bd96427fc195bd488938b9b17ea263",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f97cd02_07b11cd5",
         "filename": "src/libANGLE/renderer/d3d/TransformFeedbackD3D.h",
         "patchSetId": 2
