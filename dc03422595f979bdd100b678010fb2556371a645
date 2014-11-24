@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf3f85b4_ff55ab47",
+        "filename": "src/libANGLE/renderer/Renderer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-24T18:58:35Z",
+      "side": 1,
+      "message": "How about typedefing uint32_t as AdapterVendor?",
+      "range": {
+        "startLine": 147,
+        "startChar": 12,
+        "endLine": 147,
+        "endChar": 20
+      },
+      "revId": "dc03422595f979bdd100b678010fb2556371a645",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
