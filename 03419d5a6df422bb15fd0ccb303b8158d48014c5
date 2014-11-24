@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f77b1c2_567912f0",
+        "filename": "BUILD.gn",
+        "patchSetId": 6
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-24T20:02:10Z",
+      "side": 1,
+      "message": "suggestion: we\u0027re already in a gles_gypi namespace here, maybe make these shorter? ie, just use libangle_ instead of angle_libangle...",
+      "range": {
+        "startLine": 177,
+        "startChar": 39,
+        "endLine": 177,
+        "endChar": 53
+      },
+      "revId": "03419d5a6df422bb15fd0ccb303b8158d48014c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
