@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1f77b1c2_76044ef0",
+        "filename": "src/common/features.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-24T17:39:51Z",
+      "side": 1,
+      "message": "Fixed, added a trailing \"_\" to all the guards.",
+      "parentUuid": "7f97cd02_a76f089a",
+      "revId": "14e2a1df13bd96427fc195bd488938b9b17ea263",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f77b1c2_539044b2",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2014-11-24T16:05:43Z",
       "side": 1,
       "message": "nit: put below comment for consistency",
+      "range": {
+        "startLine": 2,
+        "startChar": 1,
+        "endLine": 2,
+        "endChar": 7
+      },
+      "revId": "14e2a1df13bd96427fc195bd488938b9b17ea263",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffd1fde2_b5d64acf",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-24T17:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f77b1c2_539044b2",
       "range": {
         "startLine": 2,
         "startChar": 1,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "bf3f85b4_9f08dfc5",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-24T17:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf3f85b4_df142734",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "14e2a1df13bd96427fc195bd488938b9b17ea263",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f97cd02_07b11cd5",
         "filename": "src/libANGLE/renderer/d3d/TransformFeedbackD3D.h",
         "patchSetId": 2
@@ -76,6 +142,24 @@
       "writtenOn": "2014-11-21T21:38:00Z",
       "side": 1,
       "message": "Duplicated \"D3D\" in this file.",
+      "revId": "14e2a1df13bd96427fc195bd488938b9b17ea263",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf3f85b4_bf0ba3c1",
+        "filename": "src/libANGLE/renderer/d3d/TransformFeedbackD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-24T17:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f97cd02_07b11cd5",
       "revId": "14e2a1df13bd96427fc195bd488938b9b17ea263",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
