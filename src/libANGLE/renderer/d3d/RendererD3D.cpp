@@ -8,20 +8,22 @@
 
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 
-#include "libANGLE/renderer/d3d/IndexDataManager.h"
+#include "common/utilities.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/State.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
-#include "common/utilities.h"
+#include "libANGLE/renderer/d3d/IndexDataManager.h"
 
 namespace rx
 {
 
 RendererD3D::RendererD3D(egl::Display *display)
-    : mDisplay(display)
+    : mDisplay(display),
+      mDeviceLost(false)
 {
 }
 
@@ -796,6 +798,17 @@ gl::Error RendererD3D::readPixels(const gl::Data &data, GLint x, GLint y, GLsize
 
     return readPixels(framebuffer, x, y, width, height, format, type, outputPitch, data.state->getPackState(),
                       reinterpret_cast<uint8_t*>(pixels));
+}
+
+bool RendererD3D::isDeviceLost() const
+{
+    return mDeviceLost;
+}
+
+void RendererD3D::notifyDeviceLost()
+{
+    mDeviceLost = true;
+    mDisplay->notifyDeviceLost();
 }
 
 }

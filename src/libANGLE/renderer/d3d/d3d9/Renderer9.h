@@ -100,8 +100,6 @@ class Renderer9 : public RendererD3D
     virtual void markAllStateDirty();
 
     // lost device
-    void notifyDeviceLost() override;
-    bool isDeviceLost() override;
     bool testDeviceLost() override;
     bool testDeviceResettable() override;
 
