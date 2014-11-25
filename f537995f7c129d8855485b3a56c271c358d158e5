@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1fcc1153_b40e46a0",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-25T16:49:53Z",
+      "side": 1,
+      "message": "Done. Moved to angletypes.h to keep cstdint out of angleutils.h.",
+      "parentUuid": "ff2f3db3_c2082252",
+      "revId": "f537995f7c129d8855485b3a56c271c358d158e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df343909_2123ced5",
         "filename": "src/common/angleutils.h",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-25T15:33:02Z",
       "side": 1,
       "message": "nit: commma after last entry.",
+      "revId": "f537995f7c129d8855485b3a56c271c358d158e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffbadd9a_dee2055d",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-25T16:49:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df343909_2123ced5",
       "revId": "f537995f7c129d8855485b3a56c271c358d158e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
