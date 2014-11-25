@@ -7,7 +7,9 @@
 // ProgramD3D.cpp: Defines the rx::ProgramD3D class which implements rx::ProgramImpl.
 
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
-#include "libANGLE/features.h"
+
+#include "common/features.h"
+#include "common/utilities.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Program.h"
@@ -16,8 +18,6 @@
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
-
-#include "common/utilities.h"
 
 namespace rx
 {

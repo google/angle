@@ -6,25 +6,7 @@
     'variables':
     {
         # These file lists are shared with the GN build.
-        'libangle_common_sources':
-        [
-            'common/angleutils.cpp',
-            'common/angleutils.h',
-            'common/blocklayout.cpp',
-            'common/blocklayout.h',
-            'common/debug.cpp',
-            'common/debug.h',
-            'common/event_tracer.cpp',
-            'common/event_tracer.h',
-            'common/mathutil.cpp',
-            'common/mathutil.h',
-            'common/platform.h',
-            'common/tls.cpp',
-            'common/tls.h',
-            'common/utilities.cpp',
-            'common/utilities.h',
-        ],
-        'libangle_includes':
+        'angle_libangle_sources':
         [
             '../include/EGL/egl.h',
             '../include/EGL/eglext.h',
@@ -39,9 +21,26 @@
             '../include/GLSLANG/ShaderVars.h',
             '../include/KHR/khrplatform.h',
             '../include/angle_gl.h',
-        ],
-        'libangle_sources':
-        [
+            'common/RefCountObject.cpp',
+            'common/RefCountObject.h',
+            'common/angleutils.cpp',
+            'common/angleutils.h',
+            'common/blocklayout.cpp',
+            'common/blocklayout.h',
+            'common/debug.cpp',
+            'common/debug.h',
+            'common/event_tracer.cpp',
+            'common/event_tracer.h',
+            'common/features.h',
+            'common/mathutil.cpp',
+            'common/mathutil.h',
+            'common/platform.h',
+            'common/NativeWindow.h',
+            'common/tls.cpp',
+            'common/tls.h',
+            'common/utilities.cpp',
+            'common/utilities.h',
+            'common/version.h',
             'libANGLE/AttributeMap.cpp',
             'libANGLE/AttributeMap.h',
             'libANGLE/BinaryStream.h',
@@ -60,7 +59,6 @@
             'libANGLE/Display.h',
             'libANGLE/Error.cpp',
             'libANGLE/Error.h',
-            'libANGLE/features.h',
             'libANGLE/Fence.cpp',
             'libANGLE/Fence.h',
             'libANGLE/Float16ToFloat32.cpp',
@@ -78,8 +76,6 @@
             'libANGLE/ProgramBinary.h',
             'libANGLE/Query.cpp',
             'libANGLE/Query.h',
-            'libANGLE/RefCountObject.cpp',
-            'libANGLE/RefCountObject.h',
             'libANGLE/Renderbuffer.cpp',
             'libANGLE/Renderbuffer.h',
             'libANGLE/ResourceManager.cpp',
@@ -98,7 +94,6 @@
             'libANGLE/TransformFeedback.h',
             'libANGLE/Uniform.cpp',
             'libANGLE/Uniform.h',
-            'libANGLE/version.h',
             'libANGLE/VertexArray.cpp',
             'libANGLE/VertexArray.h',
             'libANGLE/VertexAttribute.cpp',
@@ -156,7 +151,21 @@
             'third_party/systeminfo/SystemInfo.cpp',
             'third_party/systeminfo/SystemInfo.h',
         ],
-        'libangle_d3d_shared_sources':
+        'angle_libangle_win_sources':
+        [
+            # TODO(kbr): port NativeWindow to other EGL platforms.
+            'common/win32/NativeWindow.cpp',
+        ],
+        'angle_libangle_winrt_sources':
+        [
+            'common/winrt/SwapChainPanelNativeWindow.cpp',
+            'common/winrt/SwapChainPanelNativeWindow.h',
+            'common/winrt/CoreWindowNativeWindow.cpp',
+            'common/winrt/CoreWindowNativeWindow.h',
+            'common/winrt/InspectableNativeWindow.cpp',
+            'common/winrt/InspectableNativeWindow.h',
+        ],
+        'angle_d3d_shared_sources':
         [
             'libANGLE/renderer/d3d/BufferD3D.cpp',
             'libANGLE/renderer/d3d/BufferD3D.h',
@@ -193,7 +202,7 @@
             'libANGLE/renderer/d3d/VertexDataManager.cpp',
             'libANGLE/renderer/d3d/VertexDataManager.h',
         ],
-        'libangle_d3d9_sources':
+        'angle_d3d9_sources':
         [
             'libANGLE/renderer/d3d/d3d9/Blit9.cpp',
             'libANGLE/renderer/d3d/d3d9/Blit9.h',
@@ -233,7 +242,7 @@
             'libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.cpp',
             'libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.h',
         ],
-        'libangle_d3d11_sources':
+        'angle_d3d11_sources':
         [
             'libANGLE/renderer/d3d/d3d11/Blit11.cpp',
             'libANGLE/renderer/d3d/d3d11/Blit11.h',
@@ -251,7 +260,6 @@
             'libANGLE/renderer/d3d/d3d11/IndexBuffer11.h',
             'libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp',
             'libANGLE/renderer/d3d/d3d11/InputLayoutCache.h',
-            'libANGLE/renderer/d3d/d3d11/NativeWindow.h',
             'libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp',
             'libANGLE/renderer/d3d/d3d11/PixelTransfer11.h',
             'libANGLE/renderer/d3d/d3d11/Query11.cpp',
@@ -327,20 +335,7 @@
             'libANGLE/renderer/d3d/d3d11/VertexArray11.h',
             'libANGLE/renderer/d3d/d3d11/VertexBuffer11.cpp',
             'libANGLE/renderer/d3d/d3d11/VertexBuffer11.h',
-        ],
-        'libangle_d3d11_win32_sources':
-        [
-            'libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp',
-        ],
-        'libangle_d3d11_winrt_sources':
-        [
-            'libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp',
-            'libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.h',
-            'libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp',
-            'libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.h',
-            'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp',
-            'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h',
-        ],
+        ]
     },
     # Everything below this is duplicated in the GN build. If you change
     # anything also change angle/BUILD.gn
@@ -361,9 +356,7 @@
             ],
             'sources':
             [
-                '<@(libangle_sources)',
-                '<@(libangle_common_sources)',
-                '<@(libangle_includes)',
+                '<@(angle_libangle_sources)',
             ],
             'defines':
             [
@@ -421,14 +414,14 @@
                 {
                     'sources':
                     [
-                        '<@(libangle_d3d_shared_sources)',
+                        '<@(angle_d3d_shared_sources)',
                     ],
                 }],
                 ['angle_enable_d3d9==1',
                 {
                     'sources':
                     [
-                        '<@(libangle_d3d9_sources)',
+                        '<@(angle_d3d9_sources)',
                     ],
                     'defines':
                     [
@@ -452,7 +445,7 @@
                 {
                     'sources':
                     [
-                        '<@(libangle_d3d11_sources)',
+                        '<@(angle_d3d11_sources)',
                     ],
                     'defines':
                     [
@@ -486,25 +479,13 @@
                             }
                         },
                     },
-                    'conditions':
-                    [
-                        ['angle_build_winrt==1',
-                        {
-                            'sources':
-                            [
-                                '<@(libangle_d3d11_winrt_sources)',
-                            ],
-                        },
-                        { # win32
-                            'sources':
-                            [
-                                '<@(libangle_d3d11_win32_sources)',
-                            ],
-                        }],
-                    ],
                 }],
                 ['angle_build_winrt==0 and OS=="win"',
                 {
+                    'sources':
+                    [
+                        '<@(angle_libangle_win_sources)',
+                    ],
                     'dependencies':
                     [
                         'copy_compiler_dll'
@@ -512,6 +493,10 @@
                 }],
                 ['angle_build_winrt==1',
                 {
+                    'sources':
+                    [
+                        '<@(angle_libangle_winrt_sources)',
+                    ],
                     'defines':
                     [
                         'NTDDI_VERSION=NTDDI_WINBLUE',

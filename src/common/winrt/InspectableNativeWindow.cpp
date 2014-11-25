@@ -6,8 +6,8 @@
 
 // InspectableNativeWindow.cpp: NativeWindow base class for managing IInspectable native window types.
 
-#include "libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.h"
-#include "libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.h"
+#include "common/winrt/CoreWindowNativeWindow.h"
+#include "common/winrt/SwapChainPanelNativeWindow.h"
 
 namespace rx
 {

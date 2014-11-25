@@ -27,8 +27,8 @@
 #include "libANGLE/validationES2.h"
 #include "libANGLE/validationES3.h"
 #include "libANGLE/queryconversions.h"
-#include "libANGLE/version.h"
 
+#include "common/version.h"
 #include "common/utilities.h"
 
 extern "C"

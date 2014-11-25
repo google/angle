@@ -14,19 +14,19 @@
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/renderer/ShaderExecutable.h"
 
+#include "common/debug.h"
+#include "common/version.h"
+#include "common/utilities.h"
+#include "common/platform.h"
+
 #include "libANGLE/Shader.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Buffer.h"
-#include "libANGLE/features.h"
-#include "libANGLE/version.h"
-
 #include "common/blocklayout.h"
-#include "common/debug.h"
-#include "common/utilities.h"
-#include "common/platform.h"
+#include "common/features.h"
 
 namespace gl
 {

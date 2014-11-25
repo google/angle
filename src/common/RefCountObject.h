@@ -9,8 +9,8 @@
 // that need to be reference counted for correct cross-context deletion.
 // (Concretely, textures, buffers and renderbuffers.)
 
-#ifndef LIBANGLE_REFCOUNTOBJECT_H_
-#define LIBANGLE_REFCOUNTOBJECT_H_
+#ifndef COMMON_REFCOUNTOBJECT_H_
+#define COMMON_REFCOUNTOBJECT_H_
 
 #include "common/debug.h"
 
@@ -92,4 +92,4 @@ class OffsetBindingPointer : public RefCountObjectBindingPointer
     GLsizeiptr mSize;
 };
 
-#endif   // LIBANGLE_REFCOUNTOBJECT_H_
+#endif   // COMMON_REFCOUNTOBJECT_H_

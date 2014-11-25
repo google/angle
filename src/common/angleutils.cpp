@@ -5,8 +5,7 @@
 //
 
 #include "common/angleutils.h"
-#include "common/debug.h"
-
+#include "debug.h"
 #include <stdio.h>
 #include <vector>
 

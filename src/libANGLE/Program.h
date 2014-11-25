@@ -11,7 +11,7 @@
 #define LIBANGLE_PROGRAM_H_
 
 #include "common/angleutils.h"
-#include "libANGLE/RefCountObject.h"
+#include "common/RefCountObject.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/ProgramBinary.h"
 

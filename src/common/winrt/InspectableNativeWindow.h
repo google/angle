@@ -7,13 +7,11 @@
 // InspectableNativeWindow.h: Host specific implementation interface for
 // managing IInspectable native window types.
 
-#ifndef LIBANGLE_RENDERER_D3D_D3D11_WINRT_INSPECTABLENATIVEWINDOW_H_
-#define LIBANGLE_RENDERER_D3D_D3D11_WINRT_INSPECTABLENATIVEWINDOW_H_
-
-#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
+#ifndef COMMON_WINRT_INSPECTABLENATIVEWINDOW_H_
+#define COMMON_WINRT_INSPECTABLENATIVEWINDOW_H_
 
 #include "common/platform.h"
-
+#include "common/NativeWindow.h"
 #include "angle_windowsstore.h"
 
 #include <windows.ui.xaml.h>
@@ -86,7 +84,5 @@ bool IsCoreWindow(EGLNativeWindowType window, ComPtr<ABI::Windows::UI::Core::ICo
 bool IsSwapChainPanel(EGLNativeWindowType window, ComPtr<ABI::Windows::UI::Xaml::Controls::ISwapChainPanel> *swapChainPanel = nullptr);
 bool IsEGLConfiguredPropertySet(EGLNativeWindowType window, ABI::Windows::Foundation::Collections::IPropertySet **propertySet = nullptr, IInspectable **inspectable = nullptr);
 HRESULT GetOptionalSizePropertyValue(const ComPtr<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>>& propertyMap, const wchar_t *propertyName, SIZE *value, bool *valueExists);
-
 }
-
-#endif // LIBANGLE_RENDERER_D3D_D3D11_WINRT_INSPECTABLENATIVEWINDOW_H_
+#endif // COMMON_WINRT_INSPECTABLENATIVEWINDOW_H_

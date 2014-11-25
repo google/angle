@@ -6,10 +6,10 @@
 
 // SwapChainPanelNativeWindow.h: NativeWindow for managing ISwapChainPanel native window types.
 
-#ifndef LIBANGLE_RENDERER_D3D_D3D11_WINRT_SWAPCHAINPANELNATIVEWINDOW_H_
-#define LIBANGLE_RENDERER_D3D_D3D11_WINRT_SWAPCHAINPANELNATIVEWINDOW_H_
+#ifndef COMMON_WINRT_SWAPCHAINPANELNATIVEWINDOW_H_
+#define COMMON_WINRT_SWAPCHAINPANELNATIVEWINDOW_H_
 
-#include "libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h"
+#include "common/winrt/InspectableNativeWindow.h"
 
 namespace rx
 {
@@ -76,4 +76,4 @@ class SwapChainPanelSizeChangedHandler :
 
 HRESULT GetSwapChainPanelSize(const ComPtr<ABI::Windows::UI::Xaml::Controls::ISwapChainPanel> &swapChainPanel, RECT *windowSize);
 }
-#endif // LIBANGLE_RENDERER_D3D_D3D11_WINRT_SWAPCHAINPANELNATIVEWINDOW_H_
+#endif // COMMON_WINRT_SWAPCHAINPANELNATIVEWINDOW_H_

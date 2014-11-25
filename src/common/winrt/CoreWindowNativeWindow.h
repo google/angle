@@ -6,11 +6,10 @@
 
 // CoreWindowNativeWindow.h: NativeWindow for managing ICoreWindow native window types.
 
-#ifndef LIBANGLE_RENDERER_D3D_D3D11_WINRT_COREWINDOWNATIVEWINDOW_H_
-#define LIBANGLE_RENDERER_D3D_D3D11_WINRT_COREWINDOWNATIVEWINDOW_H_
+#ifndef COMMON_WINRT_COREWINDOWNATIVEWINDOW_H_
+#define COMMON_WINRT_COREWINDOWNATIVEWINDOW_H_
 
-#include "libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h"
-
+#include "common/winrt/InspectableNativeWindow.h"
 #include <memory>
 
 typedef ABI::Windows::Foundation::__FITypedEventHandler_2_Windows__CUI__CCore__CCoreWindow_Windows__CUI__CCore__CWindowSizeChangedEventArgs_t IWindowSizeChangedEventHandler;
@@ -75,4 +74,4 @@ class CoreWindowSizeChangedHandler :
 HRESULT GetCoreWindowSizeInPixels(const ComPtr<ABI::Windows::UI::Core::ICoreWindow>& coreWindow, RECT *windowSize);
 }
 
-#endif // LIBANGLE_RENDERER_D3D_D3D11_WINRT_COREWINDOWNATIVEWINDOW_H_
+#endif // COMMON_WINRT_COREWINDOWNATIVEWINDOW_H_

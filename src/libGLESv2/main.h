@@ -9,6 +9,8 @@
 #ifndef LIBGLESV2_MAIN_H_
 #define LIBGLESV2_MAIN_H_
 
+#include "common/debug.h"
+
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 

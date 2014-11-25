@@ -20,6 +20,8 @@
 
 #include "libANGLE/Display.h"
 
+#include "common/NativeWindow.h"
+
 //TODO(jmadill): phase this out
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 

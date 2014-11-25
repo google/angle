@@ -7,9 +7,8 @@
 #ifndef LIBANGLE_TRANSFORM_FEEDBACK_H_
 #define LIBANGLE_TRANSFORM_FEEDBACK_H_
 
-#include "libANGLE/RefCountObject.h"
-
 #include "common/angleutils.h"
+#include "common/RefCountObject.h"
 
 #include "angle_gl.h"
 

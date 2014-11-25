@@ -13,12 +13,10 @@
 
 #include "libANGLE/Error.h"
 
-// TODO: don't expose this to egl::Surface
-#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
-
 #include <EGL/egl.h>
 
 #include "common/angleutils.h"
+#include "common/NativeWindow.h"
 
 namespace gl
 {

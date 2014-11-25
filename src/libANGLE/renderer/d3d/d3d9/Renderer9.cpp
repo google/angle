@@ -36,10 +36,11 @@
 #include "libANGLE/ProgramBinary.h"
 #include "libANGLE/State.h"
 #include "libANGLE/angletypes.h"
+
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
-#include "libANGLE/features.h"
 
+#include "common/features.h"
 #include "common/utilities.h"
 
 #include "third_party/trace_event/trace_event.h"

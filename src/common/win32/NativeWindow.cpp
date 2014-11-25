@@ -6,8 +6,7 @@
 
 // NativeWindow.cpp: Handler for managing HWND native window types.
 
-#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
-
+#include "common/NativeWindow.h"
 #include "common/debug.h"
 
 namespace rx

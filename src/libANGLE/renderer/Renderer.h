@@ -15,6 +15,7 @@
 #include "libANGLE/Uniform.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/Workarounds.h"
+#include "common/NativeWindow.h"
 #include "common/mathutil.h"
 
 #include <cstdint>

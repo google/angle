@@ -9,8 +9,8 @@
 #include "libANGLE/Shader.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
-#include "libANGLE/features.h"
 
+#include "common/features.h"
 #include "common/utilities.h"
 
 // Definitions local to the translation unit

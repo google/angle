@@ -10,7 +10,7 @@
 #ifndef LIBANGLE_SAMPLER_H_
 #define LIBANGLE_SAMPLER_H_
 
-#include "libANGLE/RefCountObject.h"
+#include "common/RefCountObject.h"
 
 namespace gl
 {
