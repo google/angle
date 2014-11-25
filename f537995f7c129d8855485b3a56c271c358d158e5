@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff2f3db3_c2082252",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-25T15:33:02Z",
+      "side": 1,
+      "message": "This is a good opportunity to use\n\n   enum AdapterVendor : uint32_t\n\nto make sure it\u0027s always big enough.",
+      "revId": "f537995f7c129d8855485b3a56c271c358d158e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df343909_2123ced5",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-25T15:33:02Z",
+      "side": 1,
+      "message": "nit: commma after last entry.",
+      "revId": "f537995f7c129d8855485b3a56c271c358d158e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
