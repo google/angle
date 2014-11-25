@@ -103,7 +103,7 @@ class Renderer9 : public RendererD3D
     bool testDeviceLost() override;
     bool testDeviceResettable() override;
 
-    DWORD getAdapterVendor() const override;
+    VendorID getVendorId() const override;
     std::string getRendererDescription() const override;
     GUID getAdapterIdentifier() const override;
 

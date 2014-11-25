@@ -857,7 +857,7 @@ gl::Error Renderer9::setBlendState(const gl::Framebuffer *framebuffer, const gl:
         GLenum internalFormat = attachment ? attachment->getInternalFormat() : GL_NONE;
 
         // Set the color mask
-        bool zeroColorMaskAllowed = getAdapterVendor() != VENDOR_ID_AMD;
+        bool zeroColorMaskAllowed = getVendorId() != VENDOR_ID_AMD;
         // Apparently some ATI cards have a bug where a draw with a zero color
         // write mask can cause later draws to have incorrect results. Instead,
         // set a nonzero color write mask but modify the blend state so that no
@@ -2306,9 +2306,9 @@ bool Renderer9::resetRemovedDevice()
     return (initialize() == EGL_SUCCESS);
 }
 
-DWORD Renderer9::getAdapterVendor() const
+VendorID Renderer9::getVendorId() const
 {
-    return mAdapterIdentifier.VendorId;
+    return static_cast<VendorID>(mAdapterIdentifier.VendorId);
 }
 
 std::string Renderer9::getRendererDescription() const

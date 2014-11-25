@@ -12,6 +12,8 @@
 #include "libANGLE/Constants.h"
 #include "libANGLE/RefCountObject.h"
 
+#include <cstdint>
+
 namespace gl
 {
 class Buffer;
@@ -250,6 +252,13 @@ enum VertexConversionType
     VERTEX_CONVERT_CPU  = 1,
     VERTEX_CONVERT_GPU  = 2,
     VERTEX_CONVERT_BOTH = 3
+};
+
+enum VendorID : uint32_t
+{
+    VENDOR_ID_AMD = 0x1002,
+    VENDOR_ID_INTEL = 0x8086,
+    VENDOR_ID_NVIDIA = 0x10DE,
 };
 
 }

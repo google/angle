@@ -11,12 +11,12 @@
 
 #include "common/platform.h"
 
-#include <stddef.h>
-#include <limits.h>
+#include <climits>
+#include <cstdarg>
+#include <cstddef>
 #include <string>
 #include <set>
 #include <sstream>
-#include <cstdarg>
 #include <vector>
 
 // A macro to disallow the copy constructor and operator= functions
@@ -151,10 +151,6 @@ std::string FormatString(const char *fmt, ...);
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
 #endif
-
-#define VENDOR_ID_AMD 0x1002
-#define VENDOR_ID_INTEL 0x8086
-#define VENDOR_ID_NVIDIA 0x10DE
 
 #define GL_BGRA4_ANGLEX 0x6ABC
 #define GL_BGR5_A1_ANGLEX 0x6ABD
