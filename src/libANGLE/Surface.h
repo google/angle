@@ -50,6 +50,7 @@ class Surface
     EGLNativeWindowType getWindowHandle();
     Error swap();
     Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height);
+    Error querySurfacePointerANGLE(EGLint attribute, void **value);
 
     virtual EGLint isPostSubBufferSupported() const;
 

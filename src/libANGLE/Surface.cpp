@@ -8,17 +8,16 @@
 // such as the client area of a window, including any back buffers.
 // Implements EGLSurface and related functionality. [EGL 1.4] section 2.2 page 3.
 
-#include <tchar.h>
-
-#include <algorithm>
-
 #include "libANGLE/Surface.h"
 
 #include "common/debug.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/renderer/SwapChain.h"
 
-#include "libANGLE/Display.h"
+#include <algorithm>
+#include <tchar.h>
+#include <EGL/eglext.h>
 
 //TODO(jmadill): phase this out
 #include "libANGLE/renderer/d3d/RendererD3D.h"
@@ -380,6 +379,14 @@ Error Surface::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
     }
 
     return swapRect(x, y, width, height);
+}
+
+Error Surface::querySurfacePointerANGLE(EGLint attribute, void **value)
+{
+    // TODO(jmadill): MANGLE refactor
+    ASSERT(attribute == EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE);
+    *value = mSwapChain->getShareHandle();
+    return Error(EGL_SUCCESS);
 }
 
 EGLint Surface::isPostSubBufferSupported() const
