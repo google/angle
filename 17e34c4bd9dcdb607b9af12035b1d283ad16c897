@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fc50d23_ce4ee334",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-26T15:42:52Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be in the state destructor?",
+      "range": {
+        "startLine": 125,
+        "startChar": 4,
+        "endLine": 130,
+        "endChar": 28
+      },
+      "revId": "17e34c4bd9dcdb607b9af12035b1d283ad16c897",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf52254f_014fb0ff",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-26T15:42:52Z",
+      "side": 1,
+      "message": "can you add a TODO around this stuff to move it into the impl?",
+      "range": {
+        "startLine": 445,
+        "startChar": 0,
+        "endLine": 450,
+        "endChar": 5
+      },
+      "revId": "17e34c4bd9dcdb607b9af12035b1d283ad16c897",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f663537_f7751a3a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-26T15:42:52Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 487,
+        "startChar": 4,
+        "endLine": 487,
+        "endChar": 54
+      },
+      "revId": "17e34c4bd9dcdb607b9af12035b1d283ad16c897",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffd1fde2_e7550048",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-26T15:42:52Z",
+      "side": 1,
+      "message": "is this necessary?",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 29
+      },
+      "revId": "17e34c4bd9dcdb607b9af12035b1d283ad16c897",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff2f3db3_e53730cf",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-26T15:42:52Z",
+      "side": 1,
+      "message": "nit: dupe",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 29
+      },
+      "revId": "17e34c4bd9dcdb607b9af12035b1d283ad16c897",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdb0505_1045e492",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 7094,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-26T15:42:52Z",
+      "side": 1,
+      "message": "I know it\u0027s not mandatory to fix legacy style errors, but if you feel inclined you can update this to static_cast",
+      "range": {
+        "startLine": 7094,
+        "startChar": 26,
+        "endLine": 7094,
+        "endChar": 32
+      },
+      "revId": "17e34c4bd9dcdb607b9af12035b1d283ad16c897",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
