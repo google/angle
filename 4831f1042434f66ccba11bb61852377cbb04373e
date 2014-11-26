@@ -16,6 +16,24 @@
       "revId": "4831f1042434f66ccba11bb61852377cbb04373e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_8c2da705",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-26T20:59:55Z",
+      "side": 1,
+      "message": "Sorry, I didn\u0027t realize that was being handled in a separate patch.",
+      "parentUuid": "3ffb9587_0c0417ef",
+      "revId": "4831f1042434f66ccba11bb61852377cbb04373e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
