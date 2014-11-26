@@ -67,6 +67,8 @@ struct TextureFormat
 };
 const TextureFormat &GetTextureFormatInfo(GLenum internalFormat);
 
+extern const D3DFORMAT D3DFMT_NULL;
+
 }
 
 }
