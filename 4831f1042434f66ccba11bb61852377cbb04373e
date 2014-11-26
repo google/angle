@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ffb9587_0c0417ef",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-26T20:29:17Z",
+      "side": 1,
+      "message": "Doesn\u0027t EXT_sRGB need to be disabled on these cards too? Please double-check the bug report. Thanks.",
+      "revId": "4831f1042434f66ccba11bb61852377cbb04373e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
