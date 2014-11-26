@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff581d71_4fc6edda",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2014-11-26T20:03:22Z",
+      "side": 1,
+      "message": "Should this take the required size as an argument and handle the resizing of the buffer here, rather than the call site?",
+      "revId": "55ff7e9e28f310f0659634ff2fb01ef8fa318f96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f692905_2f9575a2",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2014-11-26T20:03:22Z",
+      "side": 1,
+      "message": "If you do pass the requested size as an argument maybe you could decrement the counter only if the requested size \u003c allocated size.  That way, we won\u0027t delete the buffer unless it\u0027s larger than what was needed the last 1000 calls.",
+      "revId": "55ff7e9e28f310f0659634ff2fb01ef8fa318f96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
