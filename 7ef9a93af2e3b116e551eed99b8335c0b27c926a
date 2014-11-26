@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff581d71_2ff9f928",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-11-26T19:53:38Z",
+      "side": 1,
+      "message": "Should these unimplemented attributes move over to SurfaceImpl as well?",
+      "range": {
+        "startLine": 78,
+        "startChar": 11,
+        "endLine": 78,
+        "endChar": 31
+      },
+      "revId": "7ef9a93af2e3b116e551eed99b8335c0b27c926a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
