@@ -157,4 +157,7 @@ std::string FormatString(const char *fmt, ...);
 #define GL_INT_64_ANGLEX 0x6ABE
 #define GL_STRUCT_ANGLEX 0x6ABF
 
+// Hidden enum for the NULL D3D device type.
+#define EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE 0x6AC0
+
 #endif // COMMON_ANGLEUTILS_H_

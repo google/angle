@@ -21,7 +21,7 @@ Status
 
 Version
 
-    Version 1, 2014-06-05
+    Version 3, 2014-11-26
 
 Number
 
@@ -51,8 +51,8 @@ New Tokens
 
     Accepted as values for the EGL_PLATFORM_ANGLE_TYPE_ANGLE attribute:
 
-        EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE               0x3209
-        EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE             0x320A
+        EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE               0x320D
+        EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE             0x320E
 
 Additions to the EGL Specification
 
@@ -80,3 +80,5 @@ Revision History
     Version 2, 2014-10-27 (Geoff Lang)
       - Moved descriptions of platforms and major/minor versions from
         EGL_ANGLE_platform_angle spec to EGL_ANGLE_platform_angle_opengl.
+    Version 3, 2014-11-26 (Geoff Lang)
+      - Updated enum values.

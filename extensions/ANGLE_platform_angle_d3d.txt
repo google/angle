@@ -21,7 +21,7 @@ Status
 
 Version
 
-    Version 1, 2014-06-05
+    Version 3, 2014-11-26
 
 Number
 
@@ -51,13 +51,19 @@ New Tokens
 
     Accepted as values for the EGL_PLATFORM_ANGLE_TYPE_ANGLE attribute:
 
-        EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE                 0x3206
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE                0x3207
+        EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE                 0x3207
+        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE                0x3208
 
     Accepted as an attribute name in the <attrib_list> argument of
     eglGetPlatformDisplayEXT:
 
-        EGL_PLATFORM_ANGLE_USE_WARP_ANGLE                  0x3208
+        EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE               0x3209
+
+    Accepted as values for the EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE attribute:
+
+        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE      0x320A
+        EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE          0x320B
+        EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE     0x320C
 
 Additions to the EGL Specification
 
@@ -80,16 +86,20 @@ New Behavior
     a D3D9 display.
 
     If no <attrib_list> is specified to eglGetPlatformDisplayEXT, the value of
-    EGL_PLATFORM_ANGLE_USE_WARP_ANGLE is implicitly set to
-    EGL_FALSE. Otherwise, the value of EGL_PLATFORM_ANGLE_USE_WARP_ANGLE should
-    be:
-      - EGL_TRUE to request a WARP device.
-      - EGL_FALSE to request a hardware accelerated device.
+    EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE is implicitly set to
+    EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE. Otherwise, the value of
+    EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE should be:
+      - EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE to request a hardware
+        accelerated device.
+      - EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE to request an
+        optimized software rasterizer.
+      - EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE to request a
+        reference rasterizer.
 
-    If EGL_PLATFORM_ANGLE_USE_WARP_ANGLE is set to EGL_TRUE and
-    EGL_PLATFORM_ANGLE_TYPE_ANGLE is not set to
-    EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE then an EGL_BAD_ATTRIBUTE error is
-    generated and EGL_NO_DISPLAY is returned.
+    If EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE is set to
+    EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE and EGL_PLATFORM_ANGLE_TYPE_ANGLE
+    is not set to EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, an EGL_BAD_ATTRIBUTE
+    error is generated and EGL_NO_DISPLAY is returned.
 
 Issues
 
@@ -103,3 +113,5 @@ Revision History
       - Separate WARP devices into a new attribute instead of a platform type.
       - Moved descriptions of platforms and major/minor versions from
         EGL_ANGLE_platform_angle spec to EGL_ANGLE_platform_angle_d3d.
+    Version 3, 2014-11-26 (Geoff Lang)
+      - Remove the USE_WARP bool and replace it with a DEVICE_TYPE enum.

@@ -30,11 +30,11 @@ struct EGLPlatformParameters
     EGLint renderer;
     EGLint majorVersion;
     EGLint minorVersion;
-    EGLint useWarp;
+    EGLint deviceType;
 
     EGLPlatformParameters();
     explicit EGLPlatformParameters(EGLint renderer);
-    EGLPlatformParameters(EGLint renderer, EGLint majorVersion, EGLint minorVersion, EGLint useWarp);
+    EGLPlatformParameters(EGLint renderer, EGLint majorVersion, EGLint minorVersion, EGLint deviceType);
 };
 
 class EGLWindow

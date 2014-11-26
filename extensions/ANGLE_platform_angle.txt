@@ -22,7 +22,7 @@ Status
 
 Version
 
-    Version 2, 2014-06-05
+    Version 3, 2014-10-20
 
 Number
 
@@ -62,18 +62,18 @@ New Tokens
 
     Accepted as the <platform> argument of eglGetPlatformDisplayEXT:
 
-        EGL_PLATFORM_ANGLE_ANGLE                           0x3201
+        EGL_PLATFORM_ANGLE_ANGLE                           0x3202
 
     Accepted as an attribute name in the <attrib_list> argument of
     eglGetPlatformDisplayEXT:
 
-        EGL_PLATFORM_ANGLE_TYPE_ANGLE                      0x3202
-        EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE         0x3203
-        EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE         0x3204
+        EGL_PLATFORM_ANGLE_TYPE_ANGLE                      0x3203
+        EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE         0x3204
+        EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE         0x3205
 
     Accepted as values for the EGL_PLATFORM_ANGLE_TYPE_ANGLE attribute:
 
-        EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE              0x3205
+        EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE              0x3206
 
 Additions to the EGL Specification
 

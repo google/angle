@@ -50,8 +50,7 @@
 
 #include <sstream>
 
-// Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
-#define REF_RAST 0
+#include <EGL/eglext.h>
 
 #if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
 #define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
@@ -91,11 +90,26 @@ Renderer9::Renderer9(egl::Display *display)
 
     mAdapter = D3DADAPTER_DEFAULT;
 
-    #if REF_RAST == 1 || defined(FORCE_REF_RAST)
-        mDeviceType = D3DDEVTYPE_REF;
-    #else
+    const egl::AttributeMap &attributes = display->getAttributeMap();
+    EGLint requestedDeviceType = attributes.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
+                                                EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+    switch (requestedDeviceType)
+    {
+      case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
         mDeviceType = D3DDEVTYPE_HAL;
-    #endif
+        break;
+
+      case EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE:
+        mDeviceType = D3DDEVTYPE_REF;
+        break;
+
+      case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
+        mDeviceType = D3DDEVTYPE_NULLREF;
+        break;
+
+      default:
+        UNREACHABLE();
+    }
 
     mMaskedClearSavedState = NULL;
 

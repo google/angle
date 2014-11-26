@@ -5,11 +5,12 @@
 // For example, they might be using the D3D11 renderer when the test is meant to be using the D3D9 renderer.
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(RendererTest, ES2_D3D9, ES2_D3D11,        ES2_D3D11_WARP,        ES3_D3D11,        ES3_D3D11_WARP,
-                                              ES2_D3D11_FL11_0, ES2_D3D11_FL11_0_WARP, ES3_D3D11_FL11_0, ES3_D3D11_FL11_0_WARP,
-                                              ES2_D3D11_FL10_1, ES2_D3D11_FL10_1_WARP, ES3_D3D11_FL10_1, ES3_D3D11_FL10_1_WARP,
-                                              ES2_D3D11_FL10_0, ES2_D3D11_FL10_0_WARP, ES3_D3D11_FL10_0, ES3_D3D11_FL10_0_WARP,
-                                              ES2_D3D11_FL9_3,  ES2_D3D11_FL9_3_WARP);
+
+ANGLE_TYPED_TEST_CASE(RendererTest, ES2_D3D9,           ES2_D3D11,        ES2_D3D11_WARP,        ES2_D3D11_REFERENCE,        ES3_D3D11,        ES3_D3D11_WARP,        ES3_D3D11_REFERENCE,
+                                    ES2_D3D9_REFERENCE, ES2_D3D11_FL11_0, ES2_D3D11_FL11_0_WARP, ES2_D3D11_FL11_0_REFERENCE, ES3_D3D11_FL11_0, ES3_D3D11_FL11_0_WARP, ES3_D3D11_FL11_0_REFERENCE,
+                                                        ES2_D3D11_FL10_1, ES2_D3D11_FL10_1_WARP, ES2_D3D11_FL10_1_REFERENCE, ES3_D3D11_FL10_1, ES3_D3D11_FL10_1_WARP, ES3_D3D11_FL10_1_REFERENCE,
+                                                        ES2_D3D11_FL10_0, ES2_D3D11_FL10_0_WARP, ES2_D3D11_FL10_0_REFERENCE, ES3_D3D11_FL10_0, ES3_D3D11_FL10_0_WARP, ES3_D3D11_FL10_0_REFERENCE,
+                                                        ES2_D3D11_FL9_3,  ES2_D3D11_FL9_3_WARP,  ES2_D3D11_FL9_3_REFERENCE);
 
 template<typename T>
 class RendererTest : public ANGLETest
@@ -46,17 +47,17 @@ TYPED_TEST(RendererTest, RequestedRendererCreated)
         ASSERT_NE(rendererString.find(std::string("direct3d9")), std::string::npos);
     }
 
-    // Ensure that the renderer uses WARP, if we requested it.
-    if (platform.useWarp == EGL_TRUE)
-    {
-        auto basicRenderPos = rendererString.find(std::string("microsoft basic render"));
-        auto softwareAdapterPos = rendererString.find(std::string("software adapter"));
-        ASSERT_TRUE(basicRenderPos != std::string::npos || softwareAdapterPos != std::string::npos);
-    }
-
     // Ensure that the major and minor versions trigger expected behavior in D3D11
     if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
     {
+        // Ensure that the renderer uses WARP, if we requested it.
+        if (platform.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE)
+        {
+            auto basicRenderPos = rendererString.find(std::string("microsoft basic render"));
+            auto softwareAdapterPos = rendererString.find(std::string("software adapter"));
+            ASSERT_TRUE(basicRenderPos != std::string::npos || softwareAdapterPos != std::string::npos);
+        }
+
         std::vector<std::string> acceptableShaderModels;
 
         // When no specific major/minor version is requested, then ANGLE should return the highest possible feature level by default.
@@ -113,4 +114,12 @@ TYPED_TEST(RendererTest, RequestedRendererCreated)
     {
         ASSERT_NE(versionString.find(std::string("es 2.0")), std::string::npos);
     }
+}
+
+// Perform a simple operation (clear and read pixels) to verify the device is working
+TYPED_TEST(RendererTest, SimpleOperation)
+{
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
 }
