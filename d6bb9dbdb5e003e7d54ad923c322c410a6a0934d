@@ -33,6 +33,23 @@
       "revId": "d6bb9dbdb5e003e7d54ad923c322c410a6a0934d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_d38d8c3e",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1118395
+      },
+      "writtenOn": "2014-11-26T21:50:15Z",
+      "side": 1,
+      "message": "Can this use scoped_ptr\u003c\u003e or some equivalent instead of a raw pointer?\n\nAlso, is there any naming convention we could use to indicate that this is a pointer, like mpScratchMemoryBuffer?",
+      "revId": "d6bb9dbdb5e003e7d54ad923c322c410a6a0934d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
