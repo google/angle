@@ -55,6 +55,12 @@
 #define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
 #endif
 
+// Enable ANGLE_SUPPORT_SHADER_MODEL_2 if you wish devices with only shader model 2.
+// Such a device would not be conformant.
+#ifndef ANGLE_SUPPORT_SHADER_MODEL_2
+#define ANGLE_SUPPORT_SHADER_MODEL_2 0
+#endif
+
 const D3DFORMAT D3DFMT_INTZ = ((D3DFORMAT)(MAKEFOURCC('I','N','T','Z')));
 const D3DFORMAT D3DFMT_NULL = ((D3DFORMAT)(MAKEFOURCC('N','U','L','L')));
 
@@ -250,9 +256,15 @@ EGLint Renderer9::initialize()
         }
     }
 
-    if (mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(2, 0))
+#if ANGLE_SUPPORT_SHADER_MODEL_2
+    size_t minShaderModel = 2;
+#else
+    size_t minShaderModel = 3;
+#endif
+
+    if (mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(minShaderModel, 0))
     {
-        ERR("Renderer does not support PS 2.0. aborting!\n");
+        ERR("Renderer does not support PS %u.%u. aborting!\n", minShaderModel, 0);
         return EGL_NOT_INITIALIZED;
     }
 
