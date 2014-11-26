@@ -22,6 +22,30 @@
       "revId": "7ef9a93af2e3b116e551eed99b8335c0b27c926a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f0c8179_ef2a61e9",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-26T19:55:35Z",
+      "side": 1,
+      "message": "I\u0027m not sure really... some of the attributes had to be in Impl because the Impl needs to refer to them. Surface itself needed others.. I didn\u0027t have a consistent rule here.",
+      "parentUuid": "ff581d71_2ff9f928",
+      "range": {
+        "startLine": 78,
+        "startChar": 11,
+        "endLine": 78,
+        "endChar": 31
+      },
+      "revId": "7ef9a93af2e3b116e551eed99b8335c0b27c926a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
