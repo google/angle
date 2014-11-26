@@ -50,6 +50,24 @@
       "revId": "d6bb9dbdb5e003e7d54ad923c322c410a6a0934d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_335850d1",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2014-11-26T22:01:59Z",
+      "side": 1,
+      "message": "This could be a MemoryBuffer object instead of a pointer to one?",
+      "parentUuid": "5fee89c7_d38d8c3e",
+      "revId": "d6bb9dbdb5e003e7d54ad923c322c410a6a0934d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
