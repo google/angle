@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ff89189_0b5d1dc1",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 827,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2014-11-26T21:32:55Z",
+      "side": 1,
+      "message": "mScratchMemoryBuffer-\u003eresize(0) ?",
+      "revId": "d6bb9dbdb5e003e7d54ad923c322c410a6a0934d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ffb9587_0f8ec90f",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 837,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2014-11-26T21:32:55Z",
+      "side": 1,
+      "message": "The problem with resize() is that it also copies the old data back to the new array which isn\u0027t necessary for the scratch buffer.  Adding a resize(0) before the actual resize would fix that.",
+      "revId": "d6bb9dbdb5e003e7d54ad923c322c410a6a0934d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
