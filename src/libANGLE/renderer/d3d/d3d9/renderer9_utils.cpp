@@ -454,14 +454,20 @@ void GenerateCaps(IDirect3D9 *d3d9, IDirect3DDevice9 *device, D3DDEVTYPE deviceT
     extensions->mapBuffer = false;
     extensions->mapBufferRange = false;
 
-    // ATI cards on XP have problems with non-power-of-two textures.
     D3DADAPTER_IDENTIFIER9 adapterId = { 0 };
     if (SUCCEEDED(d3d9->GetAdapterIdentifier(adapter, 0, &adapterId)))
     {
+        // ATI cards on XP have problems with non-power-of-two textures.
         extensions->textureNPOT = !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_POW2) &&
                                       !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_CUBEMAP_POW2) &&
                                       !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) &&
                                       !(!isWindowsVistaOrGreater() && adapterId.VendorId == VENDOR_ID_AMD);
+
+        // Disable depth texture support on AMD cards (See ANGLE issue 839)
+        if (adapterId.VendorId == VENDOR_ID_AMD)
+        {
+            extensions->depthTextures = false;
+        }
     }
     else
     {
