@@ -22,6 +22,30 @@
       "revId": "a08d6e4cc610ad985a5ecf65624e6e2d637a93f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df027941_b7171037",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/formatutils9.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-26T19:06:58Z",
+      "side": 1,
+      "message": "Let\u0027s keep it in the C++... C++11 static const in headers makes me uneasy as I\u0027ve had problems with them in gcc / clang.",
+      "parentUuid": "5f692905_e472844f",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 35
+      },
+      "revId": "a08d6e4cc610ad985a5ecf65624e6e2d637a93f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
