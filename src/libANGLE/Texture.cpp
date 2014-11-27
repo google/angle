@@ -181,7 +181,7 @@ Texture2D::~Texture2D()
 {
     if (mSurface)
     {
-        mSurface->setBoundTexture(NULL);
+        mSurface->releaseTexImage(EGL_BACK_BUFFER);
         mSurface = NULL;
     }
 }
@@ -228,20 +228,15 @@ Error Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum int
 void Texture2D::bindTexImage(egl::Surface *surface)
 {
     releaseTexImage();
-
     mTexture->bindTexImage(surface);
-
     mSurface = surface;
-    mSurface->setBoundTexture(this);
 }
 
 void Texture2D::releaseTexImage()
 {
     if (mSurface)
     {
-        mSurface->setBoundTexture(NULL);
         mSurface = NULL;
-
         mTexture->releaseTexImage();
     }
 }

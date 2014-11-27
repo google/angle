@@ -7,6 +7,7 @@
     [
         'Fence_unittest.cpp',
         'ImageIndexIterator_unittest.cpp',
+        'Surface_unittest.cpp',
         'TransformFeedback_unittest.cpp'
     ],
 }

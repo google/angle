@@ -7,40 +7,41 @@
 // Renderer9.cpp: Implements a back-end specific class for the D3D9 renderer.
 
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
-#include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
-#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
+
+#include "common/utilities.h"
+#include "libANGLE/Buffer.h"
+#include "libANGLE/Display.h"
+#include "libANGLE/Framebuffer.h"
+#include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/ProgramBinary.h"
+#include "libANGLE/Renderbuffer.h"
+#include "libANGLE/State.h"
+#include "libANGLE/Surface.h"
+#include "libANGLE/Texture.h"
+#include "libANGLE/angletypes.h"
+#include "libANGLE/features.h"
+#include "libANGLE/renderer/d3d/FramebufferD3D.h"
+#include "libANGLE/renderer/d3d/IndexDataManager.h"
+#include "libANGLE/renderer/d3d/ProgramD3D.h"
+#include "libANGLE/renderer/d3d/RenderbufferD3D.h"
+#include "libANGLE/renderer/d3d/ShaderD3D.h"
+#include "libANGLE/renderer/d3d/SurfaceD3D.h"
+#include "libANGLE/renderer/d3d/TextureD3D.h"
+#include "libANGLE/renderer/d3d/TransformFeedbackD3D.h"
+#include "libANGLE/renderer/d3d/d3d9/Blit9.h"
+#include "libANGLE/renderer/d3d/d3d9/Buffer9.h"
+#include "libANGLE/renderer/d3d/d3d9/Fence9.h"
+#include "libANGLE/renderer/d3d/d3d9/Image9.h"
+#include "libANGLE/renderer/d3d/d3d9/IndexBuffer9.h"
+#include "libANGLE/renderer/d3d/d3d9/Query9.h"
+#include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
 #include "libANGLE/renderer/d3d/d3d9/ShaderExecutable9.h"
 #include "libANGLE/renderer/d3d/d3d9/SwapChain9.h"
 #include "libANGLE/renderer/d3d/d3d9/TextureStorage9.h"
-#include "libANGLE/renderer/d3d/d3d9/Image9.h"
-#include "libANGLE/renderer/d3d/d3d9/Blit9.h"
-#include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
-#include "libANGLE/renderer/d3d/d3d9/VertexBuffer9.h"
-#include "libANGLE/renderer/d3d/d3d9/IndexBuffer9.h"
-#include "libANGLE/renderer/d3d/d3d9/Buffer9.h"
-#include "libANGLE/renderer/d3d/d3d9/Query9.h"
-#include "libANGLE/renderer/d3d/d3d9/Fence9.h"
 #include "libANGLE/renderer/d3d/d3d9/VertexArray9.h"
-#include "libANGLE/renderer/d3d/IndexDataManager.h"
-#include "libANGLE/renderer/d3d/ProgramD3D.h"
-#include "libANGLE/renderer/d3d/ShaderD3D.h"
-#include "libANGLE/renderer/d3d/TextureD3D.h"
-#include "libANGLE/renderer/d3d/TransformFeedbackD3D.h"
-#include "libANGLE/renderer/d3d/RenderbufferD3D.h"
-#include "libANGLE/renderer/d3d/FramebufferD3D.h"
-#include "libANGLE/Buffer.h"
-#include "libANGLE/Texture.h"
-#include "libANGLE/Framebuffer.h"
-#include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/Renderbuffer.h"
-#include "libANGLE/ProgramBinary.h"
-#include "libANGLE/State.h"
-#include "libANGLE/angletypes.h"
-#include "libANGLE/Display.h"
-#include "libANGLE/Surface.h"
-#include "libANGLE/features.h"
-
-#include "common/utilities.h"
+#include "libANGLE/renderer/d3d/d3d9/VertexBuffer9.h"
+#include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
+#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 
 #include "third_party/trace_event/trace_event.h"
 
@@ -2849,7 +2850,9 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
 
 DefaultAttachmentImpl *Renderer9::createDefaultAttachment(GLenum type, egl::Surface *surface)
 {
-    SwapChain9 *swapChain = SwapChain9::makeSwapChain9(surface->getSwapChain());
+    SurfaceD3D *surfaceD3D = SurfaceD3D::makeSurfaceD3D(surface);
+    SwapChain9 *swapChain = SwapChain9::makeSwapChain9(surfaceD3D->getSwapChain());
+
     switch (type)
     {
       case GL_BACK:

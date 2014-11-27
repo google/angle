@@ -6,22 +6,22 @@
 
 // TextureD3D.cpp: Implementations of the Texture interfaces shared betweeen the D3D backends.
 
+#include "libANGLE/renderer/d3d/TextureD3D.h"
+
+#include "common/mathutil.h"
+#include "common/utilities.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Framebuffer.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/BufferImpl.h"
 #include "libANGLE/renderer/RenderTarget.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
-#include "libANGLE/renderer/d3d/TextureD3D.h"
-#include "libANGLE/renderer/d3d/TextureStorage.h"
 #include "libANGLE/renderer/d3d/ImageD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
-
-#include "libANGLE/Surface.h"
-
-#include "common/mathutil.h"
-#include "common/utilities.h"
+#include "libANGLE/renderer/d3d/SurfaceD3D.h"
+#include "libANGLE/renderer/d3d/TextureStorage.h"
 
 namespace rx
 {
@@ -847,7 +847,10 @@ void TextureD3D_2D::bindTexImage(egl::Surface *surface)
         SafeDelete(mTexStorage);
     }
 
-    mTexStorage = mRenderer->createTextureStorage2D(surface->getSwapChain());
+    SurfaceD3D *surfaceD3D = SurfaceD3D::makeSurfaceD3D(surface);
+    ASSERT(surfaceD3D);
+
+    mTexStorage = mRenderer->createTextureStorage2D(surfaceD3D->getSwapChain());
 
     mDirtyImages = true;
 }

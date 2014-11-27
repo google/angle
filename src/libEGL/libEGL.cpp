@@ -18,9 +18,6 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/SwapChain.h"
 
-// TODO: don't reference this from here, use a method on DisplayImpl to validate windows
-#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
-
 #include "common/debug.h"
 #include "common/version.h"
 
@@ -763,7 +760,7 @@ EGLBoolean __stdcall eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint 
             return EGL_FALSE;
         }
 
-        textureObject->bindTexImage(eglSurface);
+        eglSurface->bindTexImage(textureObject, buffer);
     }
 
     recordError(egl::Error(EGL_SUCCESS));
@@ -804,7 +801,7 @@ EGLBoolean __stdcall eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLi
 
     if (texture)
     {
-        texture->releaseTexImage();
+        eglSurface->releaseTexImage(buffer);
     }
 
     recordError(egl::Error(EGL_SUCCESS));

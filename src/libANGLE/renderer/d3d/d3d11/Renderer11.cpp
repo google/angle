@@ -6,48 +6,46 @@
 
 // Renderer11.cpp: Implements a back-end specific class for the D3D11 renderer.
 
-#include "libANGLE/Buffer.h"
-#include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/ProgramBinary.h"
-#include "libANGLE/Framebuffer.h"
-#include "libANGLE/State.h"
-#include "libANGLE/renderer/d3d/ProgramD3D.h"
-#include "libANGLE/renderer/d3d/ShaderD3D.h"
-#include "libANGLE/renderer/d3d/TextureD3D.h"
-#include "libANGLE/renderer/d3d/TransformFeedbackD3D.h"
-#include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
-#include "libANGLE/renderer/d3d/d3d11/SwapChain11.h"
-#include "libANGLE/renderer/d3d/d3d11/Image11.h"
-#include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
-#include "libANGLE/renderer/d3d/d3d11/IndexBuffer11.h"
-#include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
-#include "libANGLE/renderer/d3d/VertexDataManager.h"
-#include "libANGLE/renderer/d3d/IndexDataManager.h"
-#include "libANGLE/renderer/d3d/d3d11/TextureStorage11.h"
-#include "libANGLE/renderer/d3d/d3d11/Query11.h"
-#include "libANGLE/renderer/d3d/d3d11/Fence11.h"
-#include "libANGLE/renderer/d3d/d3d11/Blit11.h"
-#include "libANGLE/renderer/d3d/d3d11/Clear11.h"
-#include "libANGLE/renderer/d3d/d3d11/Trim11.h"
-#include "libANGLE/renderer/d3d/d3d11/PixelTransfer11.h"
-#include "libANGLE/renderer/d3d/d3d11/VertexArray11.h"
-#include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
-#include "libANGLE/renderer/d3d/RenderbufferD3D.h"
-
-#include "libANGLE/Display.h"
-#include "libANGLE/Surface.h"
 
 #include "common/utilities.h"
 #include "common/tls.h"
-
-#include <EGL/eglext.h>
+#include "libANGLE/Buffer.h"
+#include "libANGLE/Display.h"
+#include "libANGLE/Framebuffer.h"
+#include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/ProgramBinary.h"
+#include "libANGLE/State.h"
+#include "libANGLE/Surface.h"
+#include "libANGLE/renderer/d3d/FramebufferD3D.h"
+#include "libANGLE/renderer/d3d/IndexDataManager.h"
+#include "libANGLE/renderer/d3d/ProgramD3D.h"
+#include "libANGLE/renderer/d3d/RenderbufferD3D.h"
+#include "libANGLE/renderer/d3d/ShaderD3D.h"
+#include "libANGLE/renderer/d3d/SurfaceD3D.h"
+#include "libANGLE/renderer/d3d/TextureD3D.h"
+#include "libANGLE/renderer/d3d/TransformFeedbackD3D.h"
+#include "libANGLE/renderer/d3d/VertexDataManager.h"
+#include "libANGLE/renderer/d3d/d3d11/Blit11.h"
+#include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/Clear11.h"
+#include "libANGLE/renderer/d3d/d3d11/Fence11.h"
+#include "libANGLE/renderer/d3d/d3d11/Image11.h"
+#include "libANGLE/renderer/d3d/d3d11/IndexBuffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/PixelTransfer11.h"
+#include "libANGLE/renderer/d3d/d3d11/Query11.h"
+#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
+#include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
+#include "libANGLE/renderer/d3d/d3d11/SwapChain11.h"
+#include "libANGLE/renderer/d3d/d3d11/TextureStorage11.h"
+#include "libANGLE/renderer/d3d/d3d11/Trim11.h"
+#include "libANGLE/renderer/d3d/d3d11/VertexArray11.h"
+#include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 #include <sstream>
+#include <EGL/eglext.h>
 
 // Enable ANGLE_SKIP_DXGI_1_2_CHECK if there is not a possibility of using cross-process
 // HWNDs or the Windows 7 Platform Update (KB2670838) is expected to be installed.
@@ -2392,7 +2390,9 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
 
 DefaultAttachmentImpl *Renderer11::createDefaultAttachment(GLenum type, egl::Surface *surface)
 {
-    SwapChain11 *swapChain = SwapChain11::makeSwapChain11(surface->getSwapChain());
+    SurfaceD3D *surfaceD3D = SurfaceD3D::makeSurfaceD3D(surface);
+    SwapChain11 *swapChain = SwapChain11::makeSwapChain11(surfaceD3D->getSwapChain());
+
     switch (type)
     {
       case GL_BACK:
