@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f1a6db5_06db5a2e",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 827,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-27T16:11:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ff89189_0b5d1dc1",
+      "revId": "d6bb9dbdb5e003e7d54ad923c322c410a6a0934d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ffb9587_0f8ec90f",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-26T21:32:55Z",
       "side": 1,
       "message": "The problem with resize() is that it also copies the old data back to the new array which isn\u0027t necessary for the scratch buffer.  Adding a resize(0) before the actual resize would fix that.",
+      "revId": "d6bb9dbdb5e003e7d54ad923c322c410a6a0934d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf52254f_62bae7e7",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 837,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-27T16:11:37Z",
+      "side": 1,
+      "message": "Good point. Added that.",
+      "parentUuid": "3ffb9587_0f8ec90f",
       "revId": "d6bb9dbdb5e003e7d54ad923c322c410a6a0934d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -65,6 +101,24 @@
       "side": 1,
       "message": "This could be a MemoryBuffer object instead of a pointer to one?",
       "parentUuid": "5fee89c7_d38d8c3e",
+      "revId": "d6bb9dbdb5e003e7d54ad923c322c410a6a0934d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f1a6db5_26d65608",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-27T16:11:37Z",
+      "side": 1,
+      "message": "Bruce, we don\u0027t use naming convention style aside from the \"m\" prefix. Also ANGLE doesn\u0027t currently have access to a scoped_ptr implementation.\nI updated to use an object instead of a pointer. I agree the cleanliness of not having to delete it outweighs the potential compile time cost on incremental builds from including the MemoryBuffer header in RendererD3D.h.",
+      "parentUuid": "5fee89c7_335850d1",
       "revId": "d6bb9dbdb5e003e7d54ad923c322c410a6a0934d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
