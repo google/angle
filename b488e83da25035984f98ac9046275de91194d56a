@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f1a6db5_06ea3a87",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-27T19:01:52Z",
+      "side": 1,
+      "message": "Good points. I changed the method to follow these rules.",
+      "parentUuid": "df2b59c1_6f4b0577",
+      "revId": "b488e83da25035984f98ac9046275de91194d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f2561f1_e790c256",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-27T18:19:11Z",
       "side": 1,
       "message": "This forward declaration isn\u0027t needed anymore.",
+      "revId": "b488e83da25035984f98ac9046275de91194d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf52254f_62a02789",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-27T19:01:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f2561f1_e790c256",
       "revId": "b488e83da25035984f98ac9046275de91194d56a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
