@@ -91,9 +91,10 @@ void LoadL8ToRGBA8(size_t width, size_t height, size_t depth,
             uint8_t *dest = OffsetDataPointer<uint8_t>(output, y, z, outputRowPitch, outputDepthPitch);
             for (size_t x = 0; x < width; x++)
             {
-                dest[4 * x + 0] = source[x];
-                dest[4 * x + 1] = source[x];
-                dest[4 * x + 2] = source[x];
+                uint8_t sourceVal = source[x];
+                dest[4 * x + 0] = sourceVal;
+                dest[4 * x + 1] = sourceVal;
+                dest[4 * x + 2] = sourceVal;
                 dest[4 * x + 3] = 0xFF;
             }
         }
