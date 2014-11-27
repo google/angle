@@ -2,6 +2,69 @@
   "comments": [
     {
       "key": {
+        "uuid": "9f2561f1_c7ff7ebe",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-27T15:34:55Z",
+      "side": 1,
+      "message": "Can you remove virtual from Surface\u0027s methods too? It can be a \"final\" class.",
+      "revId": "7ef9a93af2e3b116e551eed99b8335c0b27c926a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f1a6db5_86146a33",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-27T15:34:55Z",
+      "side": 1,
+      "message": "This can be removed.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 14
+      },
+      "revId": "7ef9a93af2e3b116e551eed99b8335c0b27c926a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_42042009",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-27T15:34:55Z",
+      "side": 1,
+      "message": "These should take a gl::Texture object since the Surface won\u0027t be able to resolve the object from ID.  Can the set/getBoundTexture below be merged into this?",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 41
+      },
+      "revId": "7ef9a93af2e3b116e551eed99b8335c0b27c926a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff581d71_2ff9f928",
         "filename": "src/libANGLE/Surface.h",
         "patchSetId": 5
