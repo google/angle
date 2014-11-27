@@ -46,6 +46,24 @@
       "revId": "7ef9a93af2e3b116e551eed99b8335c0b27c926a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fee89c7_67d5ee77",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-11-27T02:44:54Z",
+      "side": 1,
+      "message": "Probably, as much as can be shared, should be shared.",
+      "parentUuid": "9f0c8179_ef2a61e9",
+      "revId": "7ef9a93af2e3b116e551eed99b8335c0b27c926a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
