@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df2b59c1_6cd03389",
+        "filename": "tests/WebGL-CTS-known-failures.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-27T15:40:50Z",
+      "side": 1,
+      "message": "Can this be a separate CL?",
+      "revId": "8e01be102fd57d222db5501a9d733fbf187f9cd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
