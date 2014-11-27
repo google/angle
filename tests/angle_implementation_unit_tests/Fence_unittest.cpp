@@ -6,8 +6,8 @@
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "libGLESv2/Fence.h"
-#include "libGLESv2/renderer/FenceImpl.h"
+#include "libANGLE/Fence.h"
+#include "libANGLE/renderer/FenceImpl.h"
 
 using ::testing::_;
 using ::testing::Return;

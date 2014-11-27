@@ -5,6 +5,7 @@
 {
     'sources':
     [
+        'Fence_unittest.cpp',
         'ImageIndexIterator_unittest.cpp',
         'TransformFeedback_unittest.cpp'
     ],
