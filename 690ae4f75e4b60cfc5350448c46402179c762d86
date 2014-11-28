@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fee89c7_e2270c21",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-28T16:30:43Z",
+      "side": 1,
+      "message": "nit: we aren\u0027t supposed to use local static objects.. it\u0027s okay to leave in if you can\u0027t think of an easy solution, but if you can fix it easily go for it (since it\u0027s in legacy code)",
+      "range": {
+        "startLine": 189,
+        "startChar": 8,
+        "endLine": 189,
+        "endChar": 45
+      },
+      "revId": "690ae4f75e4b60cfc5350448c46402179c762d86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd0b911_e1854630",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/NativeWindow.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-28T16:30:43Z",
+      "side": 1,
+      "message": "maybe double check if this is still necessary. I did some cleanups to libEGL.cpp, might have fixed it",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 33
+      },
+      "revId": "690ae4f75e4b60cfc5350448c46402179c762d86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd0b911_a17b3ead",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 10
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-28T16:30:43Z",
+      "side": 1,
+      "message": "nit: these two lower case headers are out of alphabetical order, should be below with the rest of the lower case I think",
+      "range": {
+        "startLine": 64,
+        "startChar": 11,
+        "endLine": 65,
+        "endChar": 34
+      },
+      "revId": "690ae4f75e4b60cfc5350448c46402179c762d86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd0b911_81771ac4",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 10
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-11-28T16:30:43Z",
+      "side": 1,
+      "message": "is it possible to define this cluster of sources as a common variable, accessible from libGLESv2.gypi, libEGL.gypi, and BUILD.gn?",
+      "range": {
+        "startLine": 571,
+        "startChar": 16,
+        "endLine": 578,
+        "endChar": 31
+      },
+      "revId": "690ae4f75e4b60cfc5350448c46402179c762d86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
