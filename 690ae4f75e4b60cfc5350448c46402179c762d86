@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3f663537_c3078088",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-28T21:11:16Z",
+      "side": 1,
+      "message": "It\u0027s not an easy fix yet, will defer.",
+      "parentUuid": "5fee89c7_e2270c21",
+      "range": {
+        "startLine": 189,
+        "startChar": 8,
+        "endLine": 189,
+        "endChar": 45
+      },
+      "revId": "690ae4f75e4b60cfc5350448c46402179c762d86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfd0b911_e1854630",
         "filename": "src/libANGLE/renderer/d3d/d3d11/NativeWindow.h",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2014-11-28T16:30:43Z",
       "side": 1,
       "message": "maybe double check if this is still necessary. I did some cleanups to libEGL.cpp, might have fixed it",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 33
+      },
+      "revId": "690ae4f75e4b60cfc5350448c46402179c762d86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f1a6db5_e638be11",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/NativeWindow.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-28T21:11:16Z",
+      "side": 1,
+      "message": "Done, the function below can\u0027t be removed yet though.",
+      "parentUuid": "dfd0b911_e1854630",
       "range": {
         "startLine": 50,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7f1a6db5_c635c219",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 10
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-28T21:11:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfd0b911_a17b3ead",
+      "range": {
+        "startLine": 64,
+        "startChar": 11,
+        "endLine": 65,
+        "endChar": 34
+      },
+      "revId": "690ae4f75e4b60cfc5350448c46402179c762d86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfd0b911_81771ac4",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 10
@@ -82,6 +154,30 @@
       "writtenOn": "2014-11-28T16:30:43Z",
       "side": 1,
       "message": "is it possible to define this cluster of sources as a common variable, accessible from libGLESv2.gypi, libEGL.gypi, and BUILD.gn?",
+      "range": {
+        "startLine": 571,
+        "startChar": 16,
+        "endLine": 578,
+        "endChar": 31
+      },
+      "revId": "690ae4f75e4b60cfc5350448c46402179c762d86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f1a6db5_29cc69c7",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 10
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-11-28T21:11:16Z",
+      "side": 1,
+      "message": "Yea, I hope to move the common stuff into a static lib soon.",
+      "parentUuid": "dfd0b911_81771ac4",
       "range": {
         "startLine": 571,
         "startChar": 16,
