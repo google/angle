@@ -203,7 +203,7 @@ class Renderer11 : public RendererD3D
     void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);
     gl::Error packPixels(ID3D11Texture2D *readTexture, const PackPixelsParams &params, uint8_t *pixelsOut);
 
-    virtual bool getLUID(LUID *adapterLuid) const;
+    bool getLUID(LUID *adapterLuid) const override;
     virtual VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const;
     virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const;
 

@@ -739,15 +739,10 @@ void Display::initVendorString()
 {
     mVendorString = "Google Inc.";
 
-    LUID adapterLuid = {0};
-
-    //TODO(jmadill): LUID is not cross-platform
-    if (mRenderer && mRenderer->getLUID(&adapterLuid))
+    // TODO(jmadill): clean this up
+    if (mRenderer)
     {
-        char adapterLuidString[64];
-        sprintf_s(adapterLuidString, sizeof(adapterLuidString), " (adapter LUID: %08x%08x)", adapterLuid.HighPart, adapterLuid.LowPart);
-
-        mVendorString += adapterLuidString;
+        mVendorString += " " + mRenderer->getVendorString();
     }
 }
 

@@ -152,11 +152,12 @@ class Renderer
     virtual const gl::Extensions &getRendererExtensions() const;
     const Workarounds &getWorkarounds() const;
 
+    virtual std::string getVendorString() const = 0;
+
     // TODO(jmadill): needed by egl::Display, probably should be removed
     virtual int getMajorShaderModel() const = 0;
     virtual int getMinSwapInterval() const = 0;
     virtual int getMaxSwapInterval() const = 0;
-    virtual bool getLUID(LUID *adapterLuid) const = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer);

@@ -67,6 +67,7 @@ class RendererD3D : public Renderer
                               GLbitfield mask, GLenum filter) override;
 
     bool isDeviceLost() const override;
+    std::string getVendorString() const override;
 
     // Direct3D Specific methods
     virtual GUID getAdapterIdentifier() const = 0;
@@ -165,6 +166,8 @@ class RendererD3D : public Renderer
                                const gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                                const gl::Rectangle *scissor, bool blitRenderTarget,
                                bool blitDepth, bool blitStencil, GLenum filter) = 0;
+
+    virtual bool getLUID(LUID *adapterLuid) const = 0;
 
     void cleanup();
 
