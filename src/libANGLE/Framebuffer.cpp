@@ -503,6 +503,12 @@ Error Framebuffer::readPixels(const gl::State &state, const gl::Rectangle &area,
     return mImpl->readPixels(state, area, format, type, pixels);
 }
 
+Error Framebuffer::blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,
+                        GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer)
+{
+    return mImpl->blit(state, sourceArea, destArea, mask, filter, sourceFramebuffer);
+}
+
 int Framebuffer::getSamples(const gl::Data &data) const
 {
     if (checkStatus(data) == GL_FRAMEBUFFER_COMPLETE)

@@ -73,6 +73,9 @@ class FramebufferD3D : public FramebufferImpl
     GLenum getImplementationColorReadType() const override;
     gl::Error readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const override;
 
+    gl::Error blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,
+                   GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer) override;
+
     GLenum checkStatus() const override;
 
   protected:
@@ -90,6 +93,10 @@ class FramebufferD3D : public FramebufferImpl
 
     virtual gl::Error readPixels(const gl::Rectangle &area, GLenum format, GLenum type, size_t outputPitch,
                                  const gl::PixelPackState &pack, uint8_t *pixels) const = 0;
+
+    virtual gl::Error blit(const gl::Rectangle &sourceArea, const gl::Rectangle &destArea, const gl::Rectangle *scissor,
+                           bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter,
+                           const gl::Framebuffer *sourceFramebuffer) = 0;
 };
 
 gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget **outRT);

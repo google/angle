@@ -84,11 +84,6 @@ class Renderer
                                    const GLvoid *indices, GLsizei instances,
                                    const RangeUI &indexRange) = 0;
 
-    virtual gl::Error blitFramebuffer(const gl::Data &data,
-                                      GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
-                                      GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
-                                      GLbitfield mask, GLenum filter) = 0;
-
     // TODO(jmadill): caps? and virtual for egl::Display
     virtual bool getShareHandleSupport() const = 0;
     virtual bool getPostSubBufferSupport() const = 0;

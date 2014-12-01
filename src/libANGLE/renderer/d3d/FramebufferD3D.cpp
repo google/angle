@@ -12,6 +12,7 @@
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"
 #include "libANGLE/renderer/RenderTarget.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 
 namespace rx
@@ -250,6 +251,47 @@ gl::Error FramebufferD3D::readPixels(const gl::State &state, const gl::Rectangle
     GLuint outputPitch = sizedFormatInfo.computeRowPitch(type, area.width, state.getPackAlignment());
 
     return readPixels(area, format, type, outputPitch, state.getPackState(), reinterpret_cast<uint8_t*>(pixels));
+}
+
+gl::Error FramebufferD3D::blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,
+                               GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer)
+{
+    bool blitRenderTarget = false;
+    if ((mask & GL_COLOR_BUFFER_BIT) &&
+        sourceFramebuffer->getReadColorbuffer() != nullptr &&
+        std::any_of(mColorBuffers.begin(), mColorBuffers.end(), [](const gl::FramebufferAttachment* attachment){ return attachment != nullptr; }))
+    {
+        blitRenderTarget = true;
+    }
+
+    bool blitStencil = false;
+    if ((mask & GL_STENCIL_BUFFER_BIT) &&
+        sourceFramebuffer->getStencilbuffer() != nullptr &&
+        mStencilbuffer != nullptr)
+    {
+        blitStencil = true;
+    }
+
+    bool blitDepth = false;
+    if ((mask & GL_DEPTH_BUFFER_BIT) &&
+        sourceFramebuffer->getDepthbuffer() != nullptr &&
+        mDepthbuffer != nullptr)
+    {
+        blitDepth = true;
+    }
+
+    if (blitRenderTarget || blitDepth || blitStencil)
+    {
+        const gl::Rectangle *scissor = state.isScissorTestEnabled() ? &state.getScissor() : NULL;
+        gl::Error error = blit(sourceArea, destArea, scissor, blitRenderTarget, blitDepth, blitStencil,
+                               filter, sourceFramebuffer);
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 GLenum FramebufferD3D::checkStatus() const

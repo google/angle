@@ -27,6 +27,10 @@ class Framebuffer9 : public FramebufferD3D
     gl::Error readPixels(const gl::Rectangle &area, GLenum format, GLenum type, size_t outputPitch,
                          const gl::PixelPackState &pack, uint8_t *pixels) const override;
 
+    gl::Error blit(const gl::Rectangle &sourceArea, const gl::Rectangle &destArea, const gl::Rectangle *scissor,
+                   bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter,
+                   const gl::Framebuffer *sourceFramebuffer) override;
+
     Renderer9 *const mRenderer;
 };
 

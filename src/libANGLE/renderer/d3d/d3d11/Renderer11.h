@@ -127,9 +127,6 @@ class Renderer11 : public RendererD3D
     virtual gl::Error copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                                        GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level);
 
-    gl::Error blitRect(const gl::Framebuffer *readTarget, const gl::Rectangle &readRect, const gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
-                       const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter) override;
-
     // RenderTarget creation
     virtual gl::Error createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT);
 
@@ -210,6 +207,10 @@ class Renderer11 : public RendererD3D
 
     void setShaderResource(gl::SamplerType shaderType, UINT resourceSlot, ID3D11ShaderResourceView *srv);
 
+    gl::Error blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
+                                   RenderTarget *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
+                                   bool colorBlit, bool depthBlit, bool stencilBlit);
+
     bool isES3Capable() const { return mFeatureLevel >= D3D_FEATURE_LEVEL_10_0; };
     D3D_FEATURE_LEVEL getFeatureLevel() const { return mFeatureLevel; };
 
@@ -222,9 +223,6 @@ class Renderer11 : public RendererD3D
     gl::Error drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
     gl::Error drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);
 
-    gl::Error blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
-                                   RenderTarget *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
-                                   bool colorBlit, bool depthBlit, bool stencilBlit);
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
     void unsetConflictingSRVs(gl::SamplerType shaderType, const ID3D11Resource *resource, const gl::ImageIndex *index);
 

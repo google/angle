@@ -636,46 +636,6 @@ gl::Texture *RendererD3D::getIncompleteTexture(GLenum type)
     return mIncompleteTextures[type].get();
 }
 
-gl::Error RendererD3D::blitFramebuffer(const gl::Data &data,
-                                       GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
-                                       GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
-                                       GLbitfield mask, GLenum filter)
-{
-    const gl::Framebuffer *readFramebuffer = data.state->getReadFramebuffer();
-    const gl::Framebuffer *drawFramebuffer = data.state->getDrawFramebuffer();
-
-    bool blitRenderTarget = false;
-    bool blitDepth = false;
-    bool blitStencil = false;
-    if ((mask & GL_COLOR_BUFFER_BIT) && readFramebuffer->getReadColorbuffer() && drawFramebuffer->getFirstColorbuffer())
-    {
-        blitRenderTarget = true;
-    }
-    if ((mask & GL_STENCIL_BUFFER_BIT) && readFramebuffer->getStencilbuffer() && drawFramebuffer->getStencilbuffer())
-    {
-        blitStencil = true;
-    }
-    if ((mask & GL_DEPTH_BUFFER_BIT) && readFramebuffer->getDepthbuffer() && drawFramebuffer->getDepthbuffer())
-    {
-        blitDepth = true;
-    }
-
-    gl::Rectangle srcRect(srcX0, srcY0, srcX1 - srcX0, srcY1 - srcY0);
-    gl::Rectangle dstRect(dstX0, dstY0, dstX1 - dstX0, dstY1 - dstY0);
-    if (blitRenderTarget || blitDepth || blitStencil)
-    {
-        const gl::Rectangle *scissor = data.state->isScissorTestEnabled() ? &data.state->getScissor() : NULL;
-        gl::Error error = blitRect(readFramebuffer, srcRect, drawFramebuffer, dstRect, scissor,
-                                   blitRenderTarget, blitDepth, blitStencil, filter);
-        if (error.isError())
-        {
-            return error;
-        }
-    }
-
-    return gl::Error(GL_NO_ERROR);
-}
-
 bool RendererD3D::isDeviceLost() const
 {
     return mDeviceLost;

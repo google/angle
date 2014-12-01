@@ -767,8 +767,16 @@ void GL_APIENTRY BlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint sr
             return;
         }
 
-        Error error = context->blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1,
-                                                   mask, filter);
+        Framebuffer *readFramebuffer = context->getState().getReadFramebuffer();
+        ASSERT(readFramebuffer);
+
+        Framebuffer *drawFramebuffer = context->getState().getDrawFramebuffer();
+        ASSERT(drawFramebuffer);
+
+        Rectangle srcArea(srcX0, srcY0, srcX1 - srcX0, srcY1 - srcY0);
+        Rectangle dstArea(dstX0, dstY0, dstX1 - dstX0, dstY1 - dstY0);
+
+        Error error = drawFramebuffer->blit(context->getState(), srcArea, dstArea, mask, filter, readFramebuffer);
         if (error.isError())
         {
             context->recordError(error);

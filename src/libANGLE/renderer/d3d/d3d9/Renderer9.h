@@ -136,11 +136,6 @@ class Renderer9 : public RendererD3D
     virtual gl::Error copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                                        GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level);
 
-    gl::Error blitRect(const gl::Framebuffer *readTarget, const gl::Rectangle &readRect,
-                       const gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
-                       const gl::Rectangle *scissor, bool blitRenderTarget,
-                       bool blitDepth, bool blitStencil, GLenum filter) override;
-
     // RenderTarget creation
     virtual gl::Error createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT);
 

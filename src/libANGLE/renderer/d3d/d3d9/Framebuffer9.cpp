@@ -227,4 +227,187 @@ gl::Error Framebuffer9::readPixels(const gl::Rectangle &area, GLenum format, GLe
     return gl::Error(GL_NO_ERROR);
 }
 
+gl::Error Framebuffer9::blit(const gl::Rectangle &sourceArea, const gl::Rectangle &destArea, const gl::Rectangle *scissor,
+                             bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter,
+                             const gl::Framebuffer *sourceFramebuffer)
+{
+    ASSERT(filter == GL_NEAREST);
+
+    IDirect3DDevice9 *device = mRenderer->getDevice();
+    ASSERT(device);
+
+    mRenderer->endScene();
+
+    if (blitRenderTarget)
+    {
+        const gl::FramebufferAttachment *readBuffer = sourceFramebuffer->getColorbuffer(0);
+        ASSERT(readBuffer);
+
+        RenderTarget9 *readRenderTarget = NULL;
+        gl::Error error = d3d9::GetAttachmentRenderTarget(readBuffer, &readRenderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(readRenderTarget);
+
+        const gl::FramebufferAttachment *drawBuffer = mColorBuffers[0];
+        ASSERT(drawBuffer);
+
+        RenderTarget9 *drawRenderTarget = NULL;
+        error = d3d9::GetAttachmentRenderTarget(drawBuffer, &drawRenderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(drawRenderTarget);
+
+        // The getSurface calls do an AddRef so save them until after no errors are possible
+        IDirect3DSurface9* readSurface = readRenderTarget->getSurface();
+        ASSERT(readSurface);
+
+        IDirect3DSurface9* drawSurface = drawRenderTarget->getSurface();
+        ASSERT(drawSurface);
+
+        gl::Extents srcSize(readRenderTarget->getWidth(), readRenderTarget->getHeight(), 1);
+        gl::Extents dstSize(drawRenderTarget->getWidth(), drawRenderTarget->getHeight(), 1);
+
+        RECT srcRect;
+        srcRect.left = sourceArea.x;
+        srcRect.right = sourceArea.x + sourceArea.width;
+        srcRect.top = sourceArea.y;
+        srcRect.bottom = sourceArea.y + sourceArea.height;
+
+        RECT dstRect;
+        dstRect.left = destArea.x;
+        dstRect.right = destArea.x + destArea.width;
+        dstRect.top = destArea.y;
+        dstRect.bottom = destArea.y + destArea.height;
+
+        // Clip the rectangles to the scissor rectangle
+        if (scissor)
+        {
+            if (dstRect.left < scissor->x)
+            {
+                srcRect.left += (scissor->x - dstRect.left);
+                dstRect.left = scissor->x;
+            }
+            if (dstRect.top < scissor->y)
+            {
+                srcRect.top += (scissor->y - dstRect.top);
+                dstRect.top = scissor->y;
+            }
+            if (dstRect.right > scissor->x + scissor->width)
+            {
+                srcRect.right -= (dstRect.right - (scissor->x + scissor->width));
+                dstRect.right = scissor->x + scissor->width;
+            }
+            if (dstRect.bottom > scissor->y + scissor->height)
+            {
+                srcRect.bottom -= (dstRect.bottom - (scissor->y + scissor->height));
+                dstRect.bottom = scissor->y + scissor->height;
+            }
+        }
+
+        // Clip the rectangles to the destination size
+        if (dstRect.left < 0)
+        {
+            srcRect.left += -dstRect.left;
+            dstRect.left = 0;
+        }
+        if (dstRect.right > dstSize.width)
+        {
+            srcRect.right -= (dstRect.right - dstSize.width);
+            dstRect.right = dstSize.width;
+        }
+        if (dstRect.top < 0)
+        {
+            srcRect.top += -dstRect.top;
+            dstRect.top = 0;
+        }
+        if (dstRect.bottom > dstSize.height)
+        {
+            srcRect.bottom -= (dstRect.bottom - dstSize.height);
+            dstRect.bottom = dstSize.height;
+        }
+
+        // Clip the rectangles to the source size
+        if (srcRect.left < 0)
+        {
+            dstRect.left += -srcRect.left;
+            srcRect.left = 0;
+        }
+        if (srcRect.right > srcSize.width)
+        {
+            dstRect.right -= (srcRect.right - srcSize.width);
+            srcRect.right = srcSize.width;
+        }
+        if (srcRect.top < 0)
+        {
+            dstRect.top += -srcRect.top;
+            srcRect.top = 0;
+        }
+        if (srcRect.bottom > srcSize.height)
+        {
+            dstRect.bottom -= (srcRect.bottom - srcSize.height);
+            srcRect.bottom = srcSize.height;
+        }
+
+        HRESULT result = device->StretchRect(readSurface, &srcRect, drawSurface, &dstRect, D3DTEXF_NONE);
+
+        SafeRelease(readSurface);
+        SafeRelease(drawSurface);
+
+        if (FAILED(result))
+        {
+            return gl::Error(GL_OUT_OF_MEMORY, "Internal blit failed, StretchRect returned 0x%X.", result);
+        }
+    }
+
+    if (blitDepth || blitStencil)
+    {
+        const gl::FramebufferAttachment *readBuffer = sourceFramebuffer->getDepthOrStencilbuffer();
+        ASSERT(readBuffer);
+
+        RenderTarget9 *readDepthStencil = NULL;
+        gl::Error error = d3d9::GetAttachmentRenderTarget(readBuffer, &readDepthStencil);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(readDepthStencil);
+
+        const gl::FramebufferAttachment *drawBuffer = (mDepthbuffer != nullptr) ? mDepthbuffer
+                                                                                : mStencilbuffer;
+        ASSERT(drawBuffer);
+
+        RenderTarget9 *drawDepthStencil = NULL;
+        error = d3d9::GetAttachmentRenderTarget(drawBuffer, &drawDepthStencil);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(drawDepthStencil);
+
+        // The getSurface calls do an AddRef so save them until after no errors are possible
+        IDirect3DSurface9* readSurface = readDepthStencil->getSurface();
+        ASSERT(readDepthStencil);
+
+        IDirect3DSurface9* drawSurface = drawDepthStencil->getSurface();
+        ASSERT(drawDepthStencil);
+
+        HRESULT result = device->StretchRect(readSurface, NULL, drawSurface, NULL, D3DTEXF_NONE);
+
+        SafeRelease(readSurface);
+        SafeRelease(drawSurface);
+
+        if (FAILED(result))
+        {
+            return gl::Error(GL_OUT_OF_MEMORY, "Internal blit failed, StretchRect returned 0x%X.", result);
+        }
+    }
+
+    return gl::Error(GL_NO_ERROR);
+}
+
 }

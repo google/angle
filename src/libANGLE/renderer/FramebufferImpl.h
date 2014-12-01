@@ -16,6 +16,7 @@
 namespace gl
 {
 class State;
+class Framebuffer;
 class FramebufferAttachment;
 struct Rectangle;
 }
@@ -60,6 +61,9 @@ class FramebufferImpl
     virtual GLenum getImplementationColorReadFormat() const = 0;
     virtual GLenum getImplementationColorReadType() const = 0;
     virtual gl::Error readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const = 0;
+
+    virtual gl::Error blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,
+                           GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer) = 0;
 
     virtual GLenum checkStatus() const = 0;
 };

@@ -146,4 +146,83 @@ gl::Error Framebuffer11::readPixels(const gl::Rectangle &area, GLenum format, GL
     return gl::Error(GL_NO_ERROR);
 }
 
+gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectangle &destArea, const gl::Rectangle *scissor,
+                              bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter,
+                              const gl::Framebuffer *sourceFramebuffer)
+{
+    if (blitRenderTarget)
+    {
+        const gl::FramebufferAttachment *readBuffer = sourceFramebuffer->getReadColorbuffer();
+        ASSERT(readBuffer);
+
+        RenderTarget *readRenderTarget = NULL;
+        gl::Error error = GetAttachmentRenderTarget(readBuffer, &readRenderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(readRenderTarget);
+
+        for (size_t colorAttachment = 0; colorAttachment < mDrawBuffers.size(); colorAttachment++)
+        {
+            if (mColorBuffers[colorAttachment] != nullptr && mDrawBuffers[colorAttachment] != GL_NONE)
+            {
+                const gl::FramebufferAttachment *drawBuffer = mColorBuffers[colorAttachment];
+
+                RenderTarget *drawRenderTarget = NULL;
+                error = GetAttachmentRenderTarget(drawBuffer, &drawRenderTarget);
+                if (error.isError())
+                {
+                    return error;
+                }
+                ASSERT(drawRenderTarget);
+
+                error = mRenderer->blitRenderbufferRect(sourceArea, destArea, readRenderTarget, drawRenderTarget,
+                                                        filter, scissor, blitRenderTarget, false, false);
+                if (error.isError())
+                {
+                    return error;
+                }
+            }
+        }
+    }
+
+    if (blitDepth || blitStencil)
+    {
+        gl::FramebufferAttachment *readBuffer = sourceFramebuffer->getDepthOrStencilbuffer();
+        ASSERT(readBuffer);
+
+        RenderTarget *readRenderTarget = NULL;
+        gl::Error error = GetAttachmentRenderTarget(readBuffer, &readRenderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(readRenderTarget);
+
+        const gl::FramebufferAttachment *drawBuffer = (mDepthbuffer != nullptr) ? mDepthbuffer
+                                                                                : mStencilbuffer;
+        ASSERT(drawBuffer);
+
+        RenderTarget *drawRenderTarget = NULL;
+        error = GetAttachmentRenderTarget(drawBuffer, &drawRenderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
+        ASSERT(drawRenderTarget);
+
+        error = mRenderer->blitRenderbufferRect(sourceArea, destArea, readRenderTarget, drawRenderTarget, filter, scissor,
+                                                false, blitDepth, blitStencil);
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
+    invalidateSwizzles();
+
+    return gl::Error(GL_NO_ERROR);
+}
+
 }
