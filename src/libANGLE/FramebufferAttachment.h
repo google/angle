@@ -66,9 +66,9 @@ class FramebufferAttachment
     virtual GLenum cubeMapFace() const = 0;
     virtual GLint layer() const = 0;
 
-    virtual Texture *getTexture() = 0;
+    virtual Texture *getTexture() const = 0;
     virtual const ImageIndex *getTextureImageIndex() const = 0;
-    virtual Renderbuffer *getRenderbuffer() = 0;
+    virtual Renderbuffer *getRenderbuffer() const = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(FramebufferAttachment);
@@ -95,9 +95,9 @@ class TextureAttachment : public FramebufferAttachment
     virtual GLenum cubeMapFace() const;
     virtual GLint layer() const;
 
-    virtual Texture *getTexture();
+    virtual Texture *getTexture() const;
     virtual const ImageIndex *getTextureImageIndex() const;
-    virtual Renderbuffer *getRenderbuffer();
+    virtual Renderbuffer *getRenderbuffer() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureAttachment);
@@ -125,9 +125,9 @@ class RenderbufferAttachment : public FramebufferAttachment
     virtual GLenum cubeMapFace() const;
     virtual GLint layer() const;
 
-    virtual Texture *getTexture();
+    virtual Texture *getTexture() const;
     virtual const ImageIndex *getTextureImageIndex() const;
-    virtual Renderbuffer *getRenderbuffer();
+    virtual Renderbuffer *getRenderbuffer() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferAttachment);
@@ -154,9 +154,9 @@ class DefaultAttachment : public FramebufferAttachment
     virtual GLenum cubeMapFace() const;
     virtual GLint layer() const;
 
-    virtual Texture *getTexture();
+    virtual Texture *getTexture() const;
     virtual const ImageIndex *getTextureImageIndex() const;
-    virtual Renderbuffer *getRenderbuffer();
+    virtual Renderbuffer *getRenderbuffer() const;
 
     rx::DefaultAttachmentImpl *getImplementation() const;
 

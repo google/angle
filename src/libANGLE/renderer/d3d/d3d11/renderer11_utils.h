@@ -178,7 +178,7 @@ inline void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBu
     context->Unmap(constantBuffer, 0);
 }
 
-gl::Error GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment, RenderTarget11 **outRT);
+gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget11 **outRT);
 
 Workarounds GenerateWorkarounds();
 

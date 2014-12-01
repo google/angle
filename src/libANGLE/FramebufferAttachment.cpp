@@ -136,7 +136,7 @@ GLint TextureAttachment::layer() const
     return mIndex.layerIndex;
 }
 
-Texture *TextureAttachment::getTexture()
+Texture *TextureAttachment::getTexture() const
 {
     return mTexture.get();
 }
@@ -146,7 +146,7 @@ const ImageIndex *TextureAttachment::getTextureImageIndex() const
     return &mIndex;
 }
 
-Renderbuffer *TextureAttachment::getRenderbuffer()
+Renderbuffer *TextureAttachment::getRenderbuffer() const
 {
     UNREACHABLE();
     return NULL;
@@ -216,7 +216,7 @@ GLint RenderbufferAttachment::layer() const
     return 0;
 }
 
-Texture *RenderbufferAttachment::getTexture()
+Texture *RenderbufferAttachment::getTexture() const
 {
     UNREACHABLE();
     return NULL;
@@ -228,7 +228,7 @@ const ImageIndex *RenderbufferAttachment::getTextureImageIndex() const
     return NULL;
 }
 
-Renderbuffer *RenderbufferAttachment::getRenderbuffer()
+Renderbuffer *RenderbufferAttachment::getRenderbuffer() const
 {
     return mRenderbuffer.get();
 }
@@ -296,7 +296,7 @@ GLint DefaultAttachment::layer() const
     return 0;
 }
 
-Texture *DefaultAttachment::getTexture()
+Texture *DefaultAttachment::getTexture() const
 {
     UNREACHABLE();
     return NULL;
@@ -308,7 +308,7 @@ const ImageIndex *DefaultAttachment::getTextureImageIndex() const
     return NULL;
 }
 
-Renderbuffer *DefaultAttachment::getRenderbuffer()
+Renderbuffer *DefaultAttachment::getRenderbuffer() const
 {
     UNREACHABLE();
     return NULL;

@@ -120,8 +120,8 @@ namespace rx
 class RenderTarget;
 
 // TODO: place this in FramebufferD3D.h
-gl::Error GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment, RenderTarget **outRT);
-unsigned int GetAttachmentSerial(gl::FramebufferAttachment *attachment);
+gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget **outRT);
+unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment);
 
 }
 

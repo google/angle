@@ -27,7 +27,7 @@ namespace rx
 {
 // TODO: Move these functions, and the D3D-specific header inclusions above,
 //       to FramebufferD3D.
-gl::Error GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment, RenderTarget **outRT)
+gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget **outRT)
 {
     if (attachment->type() == GL_TEXTURE)
     {
@@ -48,7 +48,7 @@ gl::Error GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment, Rende
     }
     else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
     {
-        gl::DefaultAttachment *defaultAttachment = static_cast<gl::DefaultAttachment *>(attachment);
+        const gl::DefaultAttachment *defaultAttachment = static_cast<const gl::DefaultAttachment *>(attachment);
         DefaultAttachmentD3D *defaultAttachmentD3D = DefaultAttachmentD3D::makeDefaultAttachmentD3D(defaultAttachment->getImplementation());
         ASSERT(defaultAttachmentD3D);
 
@@ -63,7 +63,7 @@ gl::Error GetAttachmentRenderTarget(gl::FramebufferAttachment *attachment, Rende
 }
 
 // Note: RenderTarget serials should ideally be in the RenderTargets themselves.
-unsigned int GetAttachmentSerial(gl::FramebufferAttachment *attachment)
+unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment)
 {
     if (attachment->type() == GL_TEXTURE)
     {
@@ -83,7 +83,7 @@ unsigned int GetAttachmentSerial(gl::FramebufferAttachment *attachment)
     }
     else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
     {
-        gl::DefaultAttachment *defaultAttachment = static_cast<gl::DefaultAttachment *>(attachment);
+        const gl::DefaultAttachment *defaultAttachment = static_cast<const gl::DefaultAttachment *>(attachment);
         DefaultAttachmentD3D *defaultAttachmentD3D = DefaultAttachmentD3D::makeDefaultAttachmentD3D(defaultAttachment->getImplementation());
         ASSERT(defaultAttachmentD3D);
         return defaultAttachmentD3D->getRenderTarget()->getSerial();
