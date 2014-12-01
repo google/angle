@@ -22,11 +22,6 @@ RenderTarget9 *RenderTarget9::makeRenderTarget9(RenderTarget *target)
     return static_cast<RenderTarget9*>(target);
 }
 
-void RenderTarget9::invalidate(GLint x, GLint y, GLsizei width, GLsizei height)
-{
-        // Currently a no-op
-}
-
 // TODO: AddRef the incoming surface to take ownership instead of expecting that its ref is being given.
 TextureRenderTarget9::TextureRenderTarget9(IDirect3DSurface9 *surface, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth,
                                            GLsizei samples)

@@ -530,35 +530,14 @@ GLenum Framebuffer::completeness(const gl::Data &data) const
     return GL_FRAMEBUFFER_COMPLETE;
 }
 
-Error Framebuffer::invalidate(const Caps &caps, GLsizei numAttachments, const GLenum *attachments)
+Error Framebuffer::invalidate(size_t count, const GLenum *attachments)
 {
-    GLuint maxDimension = caps.maxRenderbufferSize;
-    return invalidateSub(numAttachments, attachments, 0, 0, maxDimension, maxDimension);
+    return mImpl->invalidate(count, attachments);
 }
 
-Error Framebuffer::invalidateSub(GLsizei numAttachments, const GLenum *attachments, GLint x, GLint y, GLsizei width, GLsizei height)
+Error Framebuffer::invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area)
 {
-    for (GLsizei attachIndex = 0; attachIndex < numAttachments; ++attachIndex)
-    {
-        GLenum attachmentTarget = attachments[attachIndex];
-
-        FramebufferAttachment *attachment = (attachmentTarget == GL_DEPTH_STENCIL_ATTACHMENT) ? getDepthOrStencilbuffer()
-                                                                                              : getAttachment(attachmentTarget);
-
-        if (attachment)
-        {
-            rx::RenderTarget *renderTarget = NULL;
-            Error error = rx::GetAttachmentRenderTarget(attachment, &renderTarget);
-            if (error.isError())
-            {
-                return error;
-            }
-
-            renderTarget->invalidate(x, y, width, height);
-        }
-    }
-
-    return Error(GL_NO_ERROR);
+    return mImpl->invalidateSub(count, attachments, area);
 }
 
 int Framebuffer::getSamples(const gl::Data &data) const

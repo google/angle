@@ -9,7 +9,14 @@
 #ifndef LIBANGLE_RENDERER_FRAMBUFFERIMPL_H_
 #define LIBANGLE_RENDERER_FRAMBUFFERIMPL_H_
 
+#include "libANGLE/Error.h"
+
 #include "angle_gl.h"
+
+namespace gl
+{
+struct Rectangle;
+}
 
 namespace rx
 {
@@ -30,6 +37,9 @@ class FramebufferImpl
 {
   public:
     virtual ~FramebufferImpl() {};
+
+    virtual gl::Error invalidate(size_t count, const GLenum *attachments) = 0;
+    virtual gl::Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area) = 0;
 };
 
 }

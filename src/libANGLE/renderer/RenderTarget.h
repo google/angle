@@ -29,8 +29,6 @@ class RenderTarget
     virtual GLsizei getSamples() const = 0;
     gl::Extents getExtents() const { return gl::Extents(getWidth(), getHeight(), getDepth()); }
 
-    virtual void invalidate(GLint x, GLint y, GLsizei width, GLsizei height) = 0;
-
     virtual unsigned int getSerial() const;
     static unsigned int issueSerials(unsigned int count);
 

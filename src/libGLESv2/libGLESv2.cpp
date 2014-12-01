@@ -8204,7 +8204,7 @@ void GL_APIENTRY glInvalidateFramebuffer(GLenum target, GLsizei numAttachments, 
 
         if (framebuffer->completeness(context->getData()) == GL_FRAMEBUFFER_COMPLETE)
         {
-            gl::Error error = framebuffer->invalidate(context->getCaps(), numAttachments, attachments);
+            gl::Error error = framebuffer->invalidate(numAttachments, attachments);
             if (error.isError())
             {
                 context->recordError(error);
@@ -8239,7 +8239,8 @@ void GL_APIENTRY glInvalidateSubFramebuffer(GLenum target, GLsizei numAttachment
 
         if (framebuffer->completeness(context->getData()) == GL_FRAMEBUFFER_COMPLETE)
         {
-            gl::Error error = framebuffer->invalidateSub(numAttachments, attachments, x, y, width, height);
+            gl::Rectangle area(x, y, width, height);
+            gl::Error error = framebuffer->invalidateSub(numAttachments, attachments, area);
             if (error.isError())
             {
                 context->recordError(error);

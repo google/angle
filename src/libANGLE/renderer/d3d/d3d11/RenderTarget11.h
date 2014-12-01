@@ -24,8 +24,6 @@ class RenderTarget11 : public RenderTarget
 
     static RenderTarget11 *makeRenderTarget11(RenderTarget *renderTarget);
 
-    void invalidate(GLint x, GLint y, GLsizei width, GLsizei height) override;
-
     virtual ID3D11Resource *getTexture() const = 0;
     virtual ID3D11RenderTargetView *getRenderTargetView() const = 0;
     virtual ID3D11DepthStencilView *getDepthStencilView() const = 0;

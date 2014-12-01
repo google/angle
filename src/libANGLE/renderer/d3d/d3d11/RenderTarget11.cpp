@@ -182,11 +182,6 @@ RenderTarget11 *RenderTarget11::makeRenderTarget11(RenderTarget *target)
     return static_cast<RenderTarget11*>(target);
 }
 
-void RenderTarget11::invalidate(GLint x, GLint y, GLsizei width, GLsizei height)
-{
-    // Currently a no-op
-}
-
 TextureRenderTarget11::TextureRenderTarget11(ID3D11RenderTargetView *rtv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv,
                                              GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLsizei samples)
     : mWidth(width),

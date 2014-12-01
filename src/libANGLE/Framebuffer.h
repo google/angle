@@ -36,6 +36,7 @@ struct Caps;
 struct Extensions;
 class TextureCapsMap;
 struct Data;
+struct Rectangle;
 
 typedef std::vector<FramebufferAttachment *> ColorbufferInfo;
 
@@ -80,8 +81,8 @@ class Framebuffer
     GLenum completeness(const gl::Data &data) const;
     bool hasValidDepthStencil() const;
 
-    Error invalidate(const Caps &caps, GLsizei numAttachments, const GLenum *attachments);
-    Error invalidateSub(GLsizei numAttachments, const GLenum *attachments, GLint x, GLint y, GLsizei width, GLsizei height);
+    Error invalidate(size_t count, const GLenum *attachments);
+    Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area);
 
     // Use this method to retrieve the color buffer map when doing rendering.
     // It will apply a workaround for poor shader performance on some systems

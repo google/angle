@@ -42,6 +42,9 @@ class FramebufferD3D : public FramebufferImpl
     FramebufferD3D(RendererD3D *renderer);
     virtual ~FramebufferD3D();
 
+    gl::Error invalidate(size_t count, const GLenum *attachments) override;
+    gl::Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area) override;
+
   private:
     RendererD3D *const mRenderer;
 };
