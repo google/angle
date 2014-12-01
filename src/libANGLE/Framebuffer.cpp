@@ -195,6 +195,18 @@ void Framebuffer::setDrawBuffers(size_t count, const GLenum *buffers)
     ASSERT(count <= ArraySize(mDrawBufferStates));
     std::copy(buffers, buffers + count, mDrawBufferStates);
     std::fill(mDrawBufferStates + count, mDrawBufferStates + ArraySize(mDrawBufferStates), GL_NONE);
+    mImpl->setDrawBuffers(count, buffers);
+}
+
+GLenum Framebuffer::getReadBufferState() const
+{
+    return mReadBufferState;
+}
+
+void Framebuffer::setReadBuffer(GLenum buffer)
+{
+    mReadBufferState = buffer;
+    mImpl->setReadBuffer(buffer);
 }
 
 bool Framebuffer::isEnabledColorAttachment(unsigned int colorAttachment) const
@@ -536,21 +548,25 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
         size_t colorAttachment = attachment - GL_COLOR_ATTACHMENT0;
         SafeDelete(mColorbuffers[colorAttachment]);
         mColorbuffers[colorAttachment] = attachmentObj;
+        mImpl->setColorAttachment(colorAttachment, attachmentObj);
     }
     else if (attachment == GL_BACK)
     {
         SafeDelete(mColorbuffers[0]);
         mColorbuffers[0] = attachmentObj;
+        mImpl->setColorAttachment(0, attachmentObj);
     }
     else if (attachment == GL_DEPTH_ATTACHMENT || attachment == GL_DEPTH)
     {
         SafeDelete(mDepthbuffer);
         mDepthbuffer = attachmentObj;
+        mImpl->setDepthttachment(attachmentObj);
     }
     else if (attachment == GL_STENCIL_ATTACHMENT || attachment == GL_STENCIL)
     {
         SafeDelete(mStencilbuffer);
         mStencilbuffer = attachmentObj;
+        mImpl->setStencilAttachment(attachmentObj);
     }
     else if (attachment == GL_DEPTH_STENCIL_ATTACHMENT || attachment == GL_DEPTH_STENCIL)
     {
@@ -561,6 +577,7 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
         if (attachmentObj && attachmentObj->getDepthSize() > 0 && attachmentObj->getStencilSize() > 0)
         {
             mDepthbuffer = attachmentObj;
+            mImpl->setDepthttachment(attachmentObj);
 
             // Make a new attachment object to ensure we do not double-delete
             // See angle issue 686
@@ -568,10 +585,12 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
             {
                 mStencilbuffer = new TextureAttachment(GL_DEPTH_STENCIL_ATTACHMENT, attachmentObj->getTexture(),
                                                        *attachmentObj->getTextureImageIndex());
+                mImpl->setStencilAttachment(mStencilbuffer);
             }
             else if (attachmentObj->type() == GL_RENDERBUFFER)
             {
                 mStencilbuffer = new RenderbufferAttachment(GL_DEPTH_STENCIL_ATTACHMENT, attachmentObj->getRenderbuffer());
+                mImpl->setStencilAttachment(mStencilbuffer);
             }
             else
             {
@@ -601,8 +620,10 @@ DefaultFramebuffer::DefaultFramebuffer(rx::FramebufferImpl *impl, rx::DefaultAtt
         setAttachment(GL_STENCIL, new DefaultAttachment(GL_STENCIL, stencilAttachment));
     }
 
-    mDrawBufferStates[0] = GL_BACK;
-    mReadBufferState = GL_BACK;
+    GLenum drawBufferState = GL_BACK;
+    setDrawBuffers(1, &drawBufferState);
+
+    setReadBuffer(GL_BACK);
 }
 
 }

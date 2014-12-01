@@ -15,6 +15,7 @@
 
 namespace gl
 {
+class FramebufferAttachment;
 struct Rectangle;
 }
 
@@ -37,6 +38,14 @@ class FramebufferImpl
 {
   public:
     virtual ~FramebufferImpl() {};
+
+    virtual void setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment) = 0;
+    virtual void setDepthttachment(const gl::FramebufferAttachment *attachment) = 0;
+    virtual void setStencilAttachment(const gl::FramebufferAttachment *attachment) = 0;
+    virtual void setDepthStencilAttachment(const gl::FramebufferAttachment *attachment) = 0;
+
+    virtual void setDrawBuffers(size_t count, const GLenum *buffers) = 0;
+    virtual void setReadBuffer(GLenum buffer) = 0;
 
     virtual gl::Error invalidate(size_t count, const GLenum *attachments) = 0;
     virtual gl::Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area) = 0;
