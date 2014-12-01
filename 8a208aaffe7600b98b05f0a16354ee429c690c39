@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff99fd83_d538ee11",
+        "filename": "src/libANGLE/renderer/d3d/MemoryBuffer.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1118395
+      },
+      "writtenOn": "2014-12-01T17:57:21Z",
+      "side": 1,
+      "message": "The \u0027else\u0027 on this line isn\u0027t needed anymore. It feels clearer to me without it, but I don\u0027t feel strongly either way.",
+      "revId": "8a208aaffe7600b98b05f0a16354ee429c690c39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
