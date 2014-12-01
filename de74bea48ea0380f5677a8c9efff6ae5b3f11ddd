@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfaea591_d81bcd8e",
+        "filename": "src/libANGLE/renderer/d3d/MemoryBuffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2014-12-01T05:51:41Z",
+      "side": 1,
+      "message": "nit : This could be a bit cleaner if it was structured as:\n\nif (size \u003d\u003d mSize)\n  return true;\n\nif (size \u003d\u003d 0) {  \n...\nreturn true;\n}\n\nand then the actual re-allocation logic.  At least that would be the recommended structure in Chromium.",
+      "revId": "de74bea48ea0380f5677a8c9efff6ae5b3f11ddd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f8d0d44_ae05d739",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2014-12-01T05:51:41Z",
+      "side": 1,
+      "message": "Add a comment maybe about what this counter is about?\n\nAlso, not sure if there\u0027s a convention in ANGLE on how to name constants (I couldn\u0027t find any other ones in files) but in Chromium it would be kScratchMemoryBufferLifetime (http://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Constant_Names)",
+      "revId": "de74bea48ea0380f5677a8c9efff6ae5b3f11ddd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfaea591_1847057f",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2014-12-01T05:51:41Z",
+      "side": 1,
+      "message": "nit: you can avoid the else clause if you add a return statement here.",
+      "revId": "de74bea48ea0380f5677a8c9efff6ae5b3f11ddd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfb999d9_3923efd5",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2014-12-01T05:51:41Z",
+      "side": 1,
+      "message": "nit: I think I\u0027d be more clear if you combine this with the next clause:\n\nif (mScratchMemoryBufferResetCounter \u003d\u003d 0 || mSMB.size() \u003c requestedSize) {\n  resize(0);\n  allocate correct size\n}\n\nThat way you also don\u0027t end up calling resize(0) twice .",
+      "revId": "de74bea48ea0380f5677a8c9efff6ae5b3f11ddd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
