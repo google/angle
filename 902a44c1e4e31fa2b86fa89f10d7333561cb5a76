@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87d927_2c6d7bf7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-01T18:55:23Z",
+      "side": 1,
+      "message": "Is it worth making the same change to Renderer9.h?",
+      "revId": "902a44c1e4e31fa2b86fa89f10d7333561cb5a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
