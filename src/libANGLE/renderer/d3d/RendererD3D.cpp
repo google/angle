@@ -269,7 +269,7 @@ gl::Error RendererD3D::generateSwizzles(const gl::Data &data)
 gl::Error RendererD3D::applyRenderTarget(const gl::Data &data, GLenum drawMode, bool ignoreViewport)
 {
     const gl::Framebuffer *framebufferObject = data.state->getDrawFramebuffer();
-    ASSERT(framebufferObject && framebufferObject->completeness(data) == GL_FRAMEBUFFER_COMPLETE);
+    ASSERT(framebufferObject && framebufferObject->checkStatus(data) == GL_FRAMEBUFFER_COMPLETE);
 
     gl::Error error = applyRenderTarget(framebufferObject);
     if (error.isError())

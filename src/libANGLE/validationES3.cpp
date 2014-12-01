@@ -875,7 +875,7 @@ bool ValidateES3CopyTexImageParameters(Context *context, GLenum target, GLint le
 
     gl::Framebuffer *framebuffer = context->getState().getReadFramebuffer();
 
-    if (framebuffer->completeness(context->getData()) != GL_FRAMEBUFFER_COMPLETE)
+    if (framebuffer->checkStatus(context->getData()) != GL_FRAMEBUFFER_COMPLETE)
     {
         context->recordError(Error(GL_INVALID_FRAMEBUFFER_OPERATION));
         return false;
@@ -1289,7 +1289,7 @@ bool ValidateClearBuffer(Context *context)
     }
 
     const gl::Framebuffer *fbo = context->getState().getDrawFramebuffer();
-    if (!fbo || fbo->completeness(context->getData()) != GL_FRAMEBUFFER_COMPLETE)
+    if (!fbo || fbo->checkStatus(context->getData()) != GL_FRAMEBUFFER_COMPLETE)
     {
         context->recordError(Error(GL_INVALID_FRAMEBUFFER_OPERATION));
         return false;

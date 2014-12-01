@@ -11,6 +11,8 @@
 
 #include "libANGLE/renderer/FramebufferImpl.h"
 
+#include <vector>
+
 namespace gl
 {
 class FramebufferAttachment;
@@ -57,6 +59,11 @@ class FramebufferD3D : public FramebufferImpl
 
     gl::Error invalidate(size_t count, const GLenum *attachments) override;
     gl::Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area) override;
+
+    GLenum checkStatus() const override;
+
+  protected:
+    std::vector<const gl::FramebufferAttachment*> mColorBuffers;
 
   private:
     RendererD3D *const mRenderer;

@@ -599,7 +599,7 @@ GLenum GL_APIENTRY CheckFramebufferStatus(GLenum target)
         Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
         ASSERT(framebuffer);
 
-        return framebuffer->completeness(context->getData());
+        return framebuffer->checkStatus(context->getData());
     }
 
     return 0;
@@ -615,7 +615,7 @@ void GL_APIENTRY Clear(GLbitfield mask)
         Framebuffer *framebufferObject = context->getState().getDrawFramebuffer();
         ASSERT(framebufferObject);
 
-        if (framebufferObject->completeness(context->getData()) != GL_FRAMEBUFFER_COMPLETE)
+        if (framebufferObject->checkStatus(context->getData()) != GL_FRAMEBUFFER_COMPLETE)
         {
             context->recordError(Error(GL_INVALID_FRAMEBUFFER_OPERATION));
             return;

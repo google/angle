@@ -245,7 +245,7 @@ bool Framebuffer::usingExtendedDrawBuffers() const
     return false;
 }
 
-GLenum Framebuffer::completeness(const gl::Data &data) const
+GLenum Framebuffer::checkStatus(const gl::Data &data) const
 {
     // The default framebuffer *must* always be complete, though it may not be
     // subject to the same rules as application FBOs. ie, it could have 0x0 size.
@@ -314,19 +314,6 @@ GLenum Framebuffer::completeness(const gl::Data &data) const
                 if (data.clientVersion < 3)
                 {
                     if (formatInfo.pixelBytes != colorbufferSize)
-                    {
-                        return GL_FRAMEBUFFER_UNSUPPORTED;
-                    }
-                }
-
-                // D3D11 does not allow for overlapping RenderTargetViews, so ensure uniqueness
-                for (unsigned int previousColorAttachment = 0; previousColorAttachment < colorAttachment; previousColorAttachment++)
-                {
-                    const FramebufferAttachment *previousAttachment = mColorbuffers[previousColorAttachment];
-
-                    if (previousAttachment &&
-                        (colorbuffer->id() == previousAttachment->id() &&
-                         colorbuffer->type() == previousAttachment->type()))
                     {
                         return GL_FRAMEBUFFER_UNSUPPORTED;
                     }
@@ -463,7 +450,7 @@ GLenum Framebuffer::completeness(const gl::Data &data) const
         return GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT;
     }
 
-    return GL_FRAMEBUFFER_COMPLETE;
+    return mImpl->checkStatus();
 }
 
 Error Framebuffer::invalidate(size_t count, const GLenum *attachments)
@@ -478,7 +465,7 @@ Error Framebuffer::invalidateSub(size_t count, const GLenum *attachments, const 
 
 int Framebuffer::getSamples(const gl::Data &data) const
 {
-    if (completeness(data) == GL_FRAMEBUFFER_COMPLETE)
+    if (checkStatus(data) == GL_FRAMEBUFFER_COMPLETE)
     {
         // for a complete framebuffer, all attachments must have the same sample count
         // in this case return the first nonzero sample size

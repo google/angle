@@ -65,9 +65,12 @@ RenderTarget *DefaultAttachmentD3D::getRenderTarget() const
 
 
 FramebufferD3D::FramebufferD3D(RendererD3D *renderer)
-    : mRenderer(renderer)
+    : mRenderer(renderer),
+      mColorBuffers(renderer->getRendererCaps().maxColorAttachments)
 {
     ASSERT(mRenderer != nullptr);
+
+    std::fill(mColorBuffers.begin(), mColorBuffers.end(), nullptr);
 }
 
 FramebufferD3D::~FramebufferD3D()
@@ -76,6 +79,8 @@ FramebufferD3D::~FramebufferD3D()
 
 void FramebufferD3D::setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment)
 {
+    ASSERT(index < mColorBuffers.size());
+    mColorBuffers[index] = attachment;
 }
 
 void FramebufferD3D::setDepthttachment(const gl::FramebufferAttachment *attachment)
@@ -108,6 +113,30 @@ gl::Error FramebufferD3D::invalidateSub(size_t, const GLenum *, const gl::Rectan
 {
     // No-op in D3D
     return gl::Error(GL_NO_ERROR);
+}
+
+GLenum FramebufferD3D::checkStatus() const
+{
+    // D3D11 does not allow for overlapping RenderTargetViews, so ensure uniqueness
+    for (size_t colorAttachment = 0; colorAttachment < mColorBuffers.size(); colorAttachment++)
+    {
+        const gl::FramebufferAttachment *attachment = mColorBuffers[colorAttachment];
+        if (attachment != nullptr)
+        {
+            for (size_t prevColorAttachment = 0; prevColorAttachment < colorAttachment; prevColorAttachment++)
+            {
+                const gl::FramebufferAttachment *prevAttachment = mColorBuffers[prevColorAttachment];
+                if (prevAttachment != nullptr &&
+                    (attachment->id() == prevAttachment->id() &&
+                     attachment->type() == prevAttachment->type()))
+                {
+                    return GL_FRAMEBUFFER_UNSUPPORTED;
+                }
+            }
+        }
+    }
+
+    return GL_FRAMEBUFFER_COMPLETE;
 }
 
 gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget **outRT)

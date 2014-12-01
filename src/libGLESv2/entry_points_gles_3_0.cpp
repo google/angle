@@ -3233,7 +3233,7 @@ void GL_APIENTRY InvalidateFramebuffer(GLenum target, GLsizei numAttachments, co
         Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
         ASSERT(framebuffer);
 
-        if (framebuffer->completeness(context->getData()) == GL_FRAMEBUFFER_COMPLETE)
+        if (framebuffer->checkStatus(context->getData()) == GL_FRAMEBUFFER_COMPLETE)
         {
             Error error = framebuffer->invalidate(numAttachments, attachments);
             if (error.isError())
@@ -3268,7 +3268,7 @@ void GL_APIENTRY InvalidateSubFramebuffer(GLenum target, GLsizei numAttachments,
         Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
         ASSERT(framebuffer);
 
-        if (framebuffer->completeness(context->getData()) == GL_FRAMEBUFFER_COMPLETE)
+        if (framebuffer->checkStatus(context->getData()) == GL_FRAMEBUFFER_COMPLETE)
         {
             Rectangle area(x, y, width, height);
             Error error = framebuffer->invalidateSub(numAttachments, attachments, area);

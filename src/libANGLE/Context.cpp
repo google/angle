@@ -1375,7 +1375,7 @@ const Extensions &Context::getExtensions() const
 void Context::getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type)
 {
     Framebuffer *framebuffer = mState.getReadFramebuffer();
-    ASSERT(framebuffer && framebuffer->completeness(getData()) == GL_FRAMEBUFFER_COMPLETE);
+    ASSERT(framebuffer && framebuffer->checkStatus(getData()) == GL_FRAMEBUFFER_COMPLETE);
 
     FramebufferAttachment *attachment = framebuffer->getReadColorbuffer();
     ASSERT(attachment);
