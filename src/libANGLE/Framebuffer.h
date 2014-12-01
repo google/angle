@@ -69,7 +69,7 @@ class Framebuffer
     FramebufferAttachment *getAttachment(GLenum attachment) const;
 
     GLenum getDrawBufferState(unsigned int colorAttachment) const;
-    void setDrawBufferState(unsigned int colorAttachment, GLenum drawBuffer);
+    void setDrawBuffers(size_t count, const GLenum *buffers);
 
     bool isEnabledColorAttachment(unsigned int colorAttachment) const;
     bool hasEnabledColorAttachment() const;

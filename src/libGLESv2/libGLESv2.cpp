@@ -8551,15 +8551,7 @@ void GL_APIENTRY glDrawBuffersEXT(GLsizei n, const GLenum *bufs)
         gl::Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
         ASSERT(framebuffer);
 
-        for (unsigned int colorAttachment = 0; colorAttachment < static_cast<unsigned int>(n); colorAttachment++)
-        {
-            framebuffer->setDrawBufferState(colorAttachment, bufs[colorAttachment]);
-        }
-
-        for (unsigned int colorAttachment = n; colorAttachment < context->getCaps().maxDrawBuffers; colorAttachment++)
-        {
-            framebuffer->setDrawBufferState(colorAttachment, GL_NONE);
-        }
+        framebuffer->setDrawBuffers(n, bufs);
     }
 }
 
