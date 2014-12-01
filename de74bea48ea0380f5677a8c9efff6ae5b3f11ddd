@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df87d927_e945150f",
+        "filename": "src/libANGLE/renderer/d3d/MemoryBuffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-01T15:47:11Z",
+      "side": 1,
+      "message": "Done. (Note: We have a more comfortable 100 character horizontal limit in ANGLE so things are a bit more flexible with horizontal space use, if that\u0027s why Chromium prefers that structure.)",
+      "parentUuid": "bfaea591_d81bcd8e",
+      "revId": "de74bea48ea0380f5677a8c9efff6ae5b3f11ddd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f8d0d44_ae05d739",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-01T05:51:41Z",
       "side": 1,
       "message": "Add a comment maybe about what this counter is about?\n\nAlso, not sure if there\u0027s a convention in ANGLE on how to name constants (I couldn\u0027t find any other ones in files) but in Chromium it would be kScratchMemoryBufferLifetime (http://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Constant_Names)",
+      "revId": "de74bea48ea0380f5677a8c9efff6ae5b3f11ddd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f971556_ece9abbd",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-01T15:47:11Z",
+      "side": 1,
+      "message": "We don\u0027t have such a naming convention in ANGLE, in our current code. We use an upper-case capital letter to indicate it\u0027s a locally scoped variable. I added an anonymous namespace block.",
+      "parentUuid": "7f8d0d44_ae05d739",
       "revId": "de74bea48ea0380f5677a8c9efff6ae5b3f11ddd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "df87d927_a94b1d22",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-01T15:47:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfaea591_1847057f",
+      "revId": "de74bea48ea0380f5677a8c9efff6ae5b3f11ddd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfb999d9_3923efd5",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
         "patchSetId": 7
@@ -64,6 +118,24 @@
       "writtenOn": "2014-12-01T05:51:41Z",
       "side": 1,
       "message": "nit: I think I\u0027d be more clear if you combine this with the next clause:\n\nif (mScratchMemoryBufferResetCounter \u003d\u003d 0 || mSMB.size() \u003c requestedSize) {\n  resize(0);\n  allocate correct size\n}\n\nThat way you also don\u0027t end up calling resize(0) twice .",
+      "revId": "de74bea48ea0380f5677a8c9efff6ae5b3f11ddd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87d927_c9485128",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-01T15:47:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfb999d9_3923efd5",
       "revId": "de74bea48ea0380f5677a8c9efff6ae5b3f11ddd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
