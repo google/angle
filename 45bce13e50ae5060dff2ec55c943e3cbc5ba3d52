@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fa849a2_9d2c03c2",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2014-12-01T22:54:13Z",
+      "side": 1,
+      "message": "Really minor style point: In every other MANGLEd class we use a name like mDisplay. I\u0027d prefer to continue that convention for consistency, but I won\u0027t block the review because of it.",
+      "range": {
+        "startLine": 89,
+        "startChar": 21,
+        "endLine": 89,
+        "endChar": 36
+      },
+      "revId": "45bce13e50ae5060dff2ec55c943e3cbc5ba3d52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
