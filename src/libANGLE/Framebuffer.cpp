@@ -463,6 +463,31 @@ Error Framebuffer::invalidateSub(size_t count, const GLenum *attachments, const 
     return mImpl->invalidateSub(count, attachments, area);
 }
 
+Error Framebuffer::clear(const State &state, GLbitfield mask)
+{
+    return mImpl->clear(state, mask);
+}
+
+Error Framebuffer::clearBufferfv(const State &state, GLenum buffer, GLint drawbuffer, const GLfloat *values)
+{
+    return mImpl->clearBufferfv(state, buffer, drawbuffer, values);
+}
+
+Error Framebuffer::clearBufferuiv(const State &state, GLenum buffer, GLint drawbuffer, const GLuint *values)
+{
+    return mImpl->clearBufferuiv(state, buffer, drawbuffer, values);
+}
+
+Error Framebuffer::clearBufferiv(const State &state, GLenum buffer, GLint drawbuffer, const GLint *values)
+{
+    return mImpl->clearBufferiv(state, buffer, drawbuffer, values);
+}
+
+Error Framebuffer::clearBufferfi(const State &state, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
+{
+    return mImpl->clearBufferfi(state, buffer, drawbuffer, depth, stencil);
+}
+
 int Framebuffer::getSamples(const gl::Data &data) const
 {
     if (checkStatus(data) == GL_FRAMEBUFFER_COMPLETE)

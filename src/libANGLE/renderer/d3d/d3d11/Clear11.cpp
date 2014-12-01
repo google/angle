@@ -14,6 +14,8 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 
+#include <algorithm>
+
 // Precompiled shaders
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11vs.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps.h"
@@ -170,8 +172,12 @@ Clear11::~Clear11()
     SafeRelease(mRasterizerState);
 }
 
-gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, const gl::Framebuffer *frameBuffer)
+gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, const std::vector<const gl::FramebufferAttachment*> &colorAttachments,
+                                    const std::vector<GLenum> &drawBufferStates, const gl::FramebufferAttachment *depthAttachment,
+                                    const gl::FramebufferAttachment *stencilAttachment)
 {
+    ASSERT(colorAttachments.size() == drawBufferStates.size());
+
     // Iterate over the color buffers which require clearing and determine if they can be
     // cleared with ID3D11DeviceContext::ClearRenderTargetView or ID3D11DeviceContext1::ClearView.
     // This requires:
@@ -192,18 +198,24 @@ gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, cons
     // attribute.
 
     gl::Extents framebufferSize;
-    if (frameBuffer->getFirstColorbuffer() != NULL)
+
+    auto iter = std::find_if(colorAttachments.begin(), colorAttachments.end(), [](const gl::FramebufferAttachment *attachment) { return attachment != nullptr; });
+    if (iter != colorAttachments.end())
     {
-        gl::FramebufferAttachment *attachment = frameBuffer->getFirstColorbuffer();
-        framebufferSize.width = attachment->getWidth();
-        framebufferSize.height = attachment->getHeight();
+        framebufferSize.width = (*iter)->getWidth();
+        framebufferSize.height = (*iter)->getHeight();
         framebufferSize.depth = 1;
     }
-    else if (frameBuffer->getDepthOrStencilbuffer() != NULL)
+    else if (depthAttachment != nullptr)
     {
-        gl::FramebufferAttachment *attachment = frameBuffer->getDepthOrStencilbuffer();
-        framebufferSize.width = attachment->getWidth();
-        framebufferSize.height = attachment->getHeight();
+        framebufferSize.width = depthAttachment->getWidth();
+        framebufferSize.height = depthAttachment->getHeight();
+        framebufferSize.depth = 1;
+    }
+    else if (stencilAttachment != nullptr)
+    {
+        framebufferSize.width = stencilAttachment->getWidth();
+        framebufferSize.height = stencilAttachment->getHeight();
         framebufferSize.depth = 1;
     }
     else
@@ -231,103 +243,14 @@ gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, cons
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
     ID3D11DeviceContext1 *deviceContext1 = mRenderer->getDeviceContext1IfSupported();
 
-    for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
+    for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size(); colorAttachment++)
     {
-        if (clearParams.clearColor[colorAttachment] && frameBuffer->isEnabledColorAttachment(colorAttachment))
+        if (clearParams.clearColor[colorAttachment] &&
+            colorAttachments[colorAttachment] != nullptr &&
+            drawBufferStates[colorAttachment] != GL_NONE)
         {
-            gl::FramebufferAttachment *attachment = frameBuffer->getColorbuffer(colorAttachment);
-            if (attachment)
-            {
-                RenderTarget11 *renderTarget = NULL;
-                gl::Error error = d3d11::GetAttachmentRenderTarget(attachment, &renderTarget);
-                if (error.isError())
-                {
-                    return error;
-                }
+            const gl::FramebufferAttachment *attachment = colorAttachments[colorAttachment];
 
-                const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(attachment->getInternalFormat());
-
-                if (clearParams.colorClearType == GL_FLOAT &&
-                    !(formatInfo.componentType == GL_FLOAT || formatInfo.componentType == GL_UNSIGNED_NORMALIZED || formatInfo.componentType == GL_SIGNED_NORMALIZED))
-                {
-                    ERR("It is undefined behaviour to clear a render buffer which is not normalized fixed point or floating-"
-                        "point to floating point values (color attachment %u has internal format 0x%X).", colorAttachment,
-                        attachment->getInternalFormat());
-                }
-
-                if ((formatInfo.redBits == 0 || !clearParams.colorMaskRed) &&
-                    (formatInfo.greenBits == 0 || !clearParams.colorMaskGreen) &&
-                    (formatInfo.blueBits == 0 || !clearParams.colorMaskBlue) &&
-                    (formatInfo.alphaBits == 0 || !clearParams.colorMaskAlpha))
-                {
-                    // Every channel either does not exist in the render target or is masked out
-                    continue;
-                }
-                else if ((!mSupportsClearView && needScissoredClear) || clearParams.colorClearType != GL_FLOAT ||
-                         (formatInfo.redBits   > 0 && !clearParams.colorMaskRed)   ||
-                         (formatInfo.greenBits > 0 && !clearParams.colorMaskGreen) ||
-                         (formatInfo.blueBits  > 0 && !clearParams.colorMaskBlue) ||
-                         (formatInfo.alphaBits > 0 && !clearParams.colorMaskAlpha))
-                {
-                    // A masked clear is required, or a scissored clear is required and ID3D11DeviceContext1::ClearView is unavailable
-                    MaskedRenderTarget maskAndRt;
-                    bool clearColor = clearParams.clearColor[colorAttachment];
-                    maskAndRt.colorMask[0] = (clearColor && clearParams.colorMaskRed);
-                    maskAndRt.colorMask[1] = (clearColor && clearParams.colorMaskGreen);
-                    maskAndRt.colorMask[2] = (clearColor && clearParams.colorMaskBlue);
-                    maskAndRt.colorMask[3] = (clearColor && clearParams.colorMaskAlpha);
-                    maskAndRt.renderTarget = renderTarget;
-                    maskedClearRenderTargets.push_back(maskAndRt);
-                }
-                else
-                {
-                    // ID3D11DeviceContext::ClearRenderTargetView or ID3D11DeviceContext1::ClearView is possible
-
-                    ID3D11RenderTargetView *framebufferRTV = renderTarget->getRenderTargetView();
-                    if (!framebufferRTV)
-                    {
-                        return gl::Error(GL_OUT_OF_MEMORY, "Internal render target view pointer unexpectedly null.");
-                    }
-
-                    const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(attachment->getActualFormat());
-
-                    // Check if the actual format has a channel that the internal format does not and set them to the
-                    // default values
-                    const float clearValues[4] =
-                    {
-                        ((formatInfo.redBits == 0 && actualFormatInfo.redBits   > 0) ? 0.0f : clearParams.colorFClearValue.red),
-                        ((formatInfo.greenBits == 0 && actualFormatInfo.greenBits > 0) ? 0.0f : clearParams.colorFClearValue.green),
-                        ((formatInfo.blueBits == 0 && actualFormatInfo.blueBits  > 0) ? 0.0f : clearParams.colorFClearValue.blue),
-                        ((formatInfo.alphaBits == 0 && actualFormatInfo.alphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
-                    };
-
-                    if (needScissoredClear)
-                    {
-                        // We shouldn't reach here if deviceContext1 is unavailable.
-                        ASSERT(deviceContext1);
-
-                        D3D11_RECT rect;
-                        rect.left = clearParams.scissor.x;
-                        rect.right = clearParams.scissor.x + clearParams.scissor.width;
-                        rect.top = clearParams.scissor.y;
-                        rect.bottom = clearParams.scissor.y + clearParams.scissor.height;
-
-                        deviceContext1->ClearView(framebufferRTV, clearValues, &rect, 1);
-                    }
-                    else
-                    {
-                        deviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
-                    }
-                }
-            }
-        }
-    }
-
-    if (clearParams.clearDepth || clearParams.clearStencil)
-    {
-        gl::FramebufferAttachment *attachment = frameBuffer->getDepthOrStencilbuffer();
-        if (attachment)
-        {
             RenderTarget11 *renderTarget = NULL;
             gl::Error error = d3d11::GetAttachmentRenderTarget(attachment, &renderTarget);
             if (error.isError())
@@ -335,30 +258,118 @@ gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, cons
                 return error;
             }
 
-            const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(attachment->getActualFormat());
+            const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(attachment->getInternalFormat());
 
-            unsigned int stencilUnmasked = frameBuffer->hasStencil() ? (1 << actualFormatInfo.stencilBits) - 1 : 0;
-            bool needMaskedStencilClear = clearParams.clearStencil && (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
-
-            if (needScissoredClear || needMaskedStencilClear)
+            if (clearParams.colorClearType == GL_FLOAT &&
+                !(formatInfo.componentType == GL_FLOAT || formatInfo.componentType == GL_UNSIGNED_NORMALIZED || formatInfo.componentType == GL_SIGNED_NORMALIZED))
             {
-                maskedClearDepthStencil = renderTarget;
+                ERR("It is undefined behaviour to clear a render buffer which is not normalized fixed point or floating-"
+                    "point to floating point values (color attachment %u has internal format 0x%X).", colorAttachment,
+                    attachment->getInternalFormat());
+            }
+
+            if ((formatInfo.redBits == 0 || !clearParams.colorMaskRed) &&
+                (formatInfo.greenBits == 0 || !clearParams.colorMaskGreen) &&
+                (formatInfo.blueBits == 0 || !clearParams.colorMaskBlue) &&
+                (formatInfo.alphaBits == 0 || !clearParams.colorMaskAlpha))
+            {
+                // Every channel either does not exist in the render target or is masked out
+                continue;
+            }
+            else if ((!mSupportsClearView && needScissoredClear) || clearParams.colorClearType != GL_FLOAT ||
+                     (formatInfo.redBits   > 0 && !clearParams.colorMaskRed)   ||
+                     (formatInfo.greenBits > 0 && !clearParams.colorMaskGreen) ||
+                     (formatInfo.blueBits  > 0 && !clearParams.colorMaskBlue) ||
+                     (formatInfo.alphaBits > 0 && !clearParams.colorMaskAlpha))
+            {
+                // A masked clear is required, or a scissored clear is required and ID3D11DeviceContext1::ClearView is unavailable
+                MaskedRenderTarget maskAndRt;
+                bool clearColor = clearParams.clearColor[colorAttachment];
+                maskAndRt.colorMask[0] = (clearColor && clearParams.colorMaskRed);
+                maskAndRt.colorMask[1] = (clearColor && clearParams.colorMaskGreen);
+                maskAndRt.colorMask[2] = (clearColor && clearParams.colorMaskBlue);
+                maskAndRt.colorMask[3] = (clearColor && clearParams.colorMaskAlpha);
+                maskAndRt.renderTarget = renderTarget;
+                maskedClearRenderTargets.push_back(maskAndRt);
             }
             else
             {
-                ID3D11DepthStencilView *framebufferDSV = renderTarget->getDepthStencilView();
-                if (!framebufferDSV)
+                 // ID3D11DeviceContext::ClearRenderTargetView or ID3D11DeviceContext1::ClearView is possible
+
+                ID3D11RenderTargetView *framebufferRTV = renderTarget->getRenderTargetView();
+                if (!framebufferRTV)
                 {
-                    return gl::Error(GL_OUT_OF_MEMORY, "Internal depth stencil view pointer unexpectedly null.");
+                    return gl::Error(GL_OUT_OF_MEMORY, "Internal render target view pointer unexpectedly null.");
                 }
 
-                UINT clearFlags = (clearParams.clearDepth   ? D3D11_CLEAR_DEPTH   : 0) |
-                                  (clearParams.clearStencil ? D3D11_CLEAR_STENCIL : 0);
-                FLOAT depthClear = gl::clamp01(clearParams.depthClearValue);
-                UINT8 stencilClear = clearParams.stencilClearValue & 0xFF;
+                const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(attachment->getActualFormat());
 
-                deviceContext->ClearDepthStencilView(framebufferDSV, clearFlags, depthClear, stencilClear);
+                // Check if the actual format has a channel that the internal format does not and set them to the
+                // default values
+                const float clearValues[4] =
+                {
+                    ((formatInfo.redBits == 0 && actualFormatInfo.redBits   > 0) ? 0.0f : clearParams.colorFClearValue.red),
+                    ((formatInfo.greenBits == 0 && actualFormatInfo.greenBits > 0) ? 0.0f : clearParams.colorFClearValue.green),
+                    ((formatInfo.blueBits == 0 && actualFormatInfo.blueBits  > 0) ? 0.0f : clearParams.colorFClearValue.blue),
+                    ((formatInfo.alphaBits == 0 && actualFormatInfo.alphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
+                };
+
+                if (needScissoredClear)
+                {
+                    // We shouldn't reach here if deviceContext1 is unavailable.
+                    ASSERT(deviceContext1);
+
+                    D3D11_RECT rect;
+                    rect.left = clearParams.scissor.x;
+                    rect.right = clearParams.scissor.x + clearParams.scissor.width;
+                    rect.top = clearParams.scissor.y;
+                    rect.bottom = clearParams.scissor.y + clearParams.scissor.height;
+
+                    deviceContext1->ClearView(framebufferRTV, clearValues, &rect, 1);
+                }
+                else
+                {
+                    deviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
+                }
             }
+        }
+    }
+
+    if (clearParams.clearDepth || clearParams.clearStencil)
+    {
+        const gl::FramebufferAttachment *attachment = (depthAttachment != nullptr) ? depthAttachment : stencilAttachment;
+        ASSERT(attachment != nullptr);
+
+        RenderTarget11 *renderTarget = NULL;
+        gl::Error error = d3d11::GetAttachmentRenderTarget(attachment, &renderTarget);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(attachment->getActualFormat());
+
+        unsigned int stencilUnmasked = (stencilAttachment != nullptr) ? (1 << actualFormatInfo.stencilBits) - 1 : 0;
+        bool needMaskedStencilClear = clearParams.clearStencil && (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
+
+        if (needScissoredClear || needMaskedStencilClear)
+        {
+            maskedClearDepthStencil = renderTarget;
+        }
+        else
+        {
+            ID3D11DepthStencilView *framebufferDSV = renderTarget->getDepthStencilView();
+            if (!framebufferDSV)
+            {
+                return gl::Error(GL_OUT_OF_MEMORY, "Internal depth stencil view pointer unexpectedly null.");
+            }
+
+            UINT clearFlags = (clearParams.clearDepth   ? D3D11_CLEAR_DEPTH   : 0) |
+                                (clearParams.clearStencil ? D3D11_CLEAR_STENCIL : 0);
+            FLOAT depthClear = gl::clamp01(clearParams.depthClearValue);
+            UINT8 stencilClear = clearParams.stencilClearValue & 0xFF;
+
+            deviceContext->ClearDepthStencilView(framebufferDSV, clearFlags, depthClear, stencilClear);
         }
     }
 

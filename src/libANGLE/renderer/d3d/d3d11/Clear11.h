@@ -17,7 +17,7 @@
 
 namespace gl
 {
-class Framebuffer;
+class FramebufferAttachment;
 }
 
 namespace rx
@@ -32,7 +32,9 @@ class Clear11
     ~Clear11();
 
     // Clears the framebuffer with the supplied clear parameters, assumes that the framebuffer is currently applied.
-    gl::Error clearFramebuffer(const gl::ClearParameters &clearParams, const gl::Framebuffer *frameBuffer);
+    gl::Error clearFramebuffer(const gl::ClearParameters &clearParams, const std::vector<const gl::FramebufferAttachment*> &colorAttachments,
+                               const std::vector<GLenum> &drawBufferStates, const gl::FramebufferAttachment *depthAttachment,
+                               const gl::FramebufferAttachment *stencilAttachment);
 
   private:
     Renderer11 *mRenderer;

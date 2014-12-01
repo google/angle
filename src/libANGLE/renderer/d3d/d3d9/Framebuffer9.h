@@ -22,6 +22,8 @@ class Framebuffer9 : public FramebufferD3D
     virtual ~Framebuffer9();
 
   private:
+    gl::Error clear(const gl::State &state, const gl::ClearParameters &clearParams) override;
+
     Renderer9 *const mRenderer;
 };
 

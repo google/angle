@@ -59,12 +59,6 @@ class RendererD3D : public Renderer
                            const GLvoid *indices, GLsizei instances,
                            const RangeUI &indexRange) override;
 
-    gl::Error clear(const gl::Data &data, GLbitfield mask) override;
-    gl::Error clearBufferfv(const gl::Data &data, GLenum buffer, int drawbuffer, const GLfloat *values) override;
-    gl::Error clearBufferuiv(const gl::Data &data, GLenum buffer, int drawbuffer, const GLuint *values) override;
-    gl::Error clearBufferiv(const gl::Data &data, GLenum buffer, int drawbuffer, const GLint *values) override;
-    gl::Error clearBufferfi(const gl::Data &data, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil) override;
-
     gl::Error readPixels(const gl::Data &data, GLint x, GLint y, GLsizei width, GLsizei height,
                          GLenum format, GLenum type, GLsizei *bufSize, void* pixels) override;
 
@@ -176,7 +170,6 @@ class RendererD3D : public Renderer
     virtual gl::Error drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive) = 0;
     virtual gl::Error drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
                                    gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances) = 0;
-    virtual gl::Error clear(const gl::ClearParameters &clearParams, const gl::Framebuffer *frameBuffer) = 0;
     virtual gl::Error blitRect(const gl::Framebuffer *readTarget, const gl::Rectangle &readRect,
                                const gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                                const gl::Rectangle *scissor, bool blitRenderTarget,

@@ -94,8 +94,6 @@ class Renderer11 : public RendererD3D
     virtual gl::Error drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
                                    gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances);
 
-    gl::Error clear(const gl::ClearParameters &clearParams, const gl::Framebuffer *frameBuffer) override;
-
     virtual void markAllStateDirty();
 
     // lost device
@@ -195,6 +193,7 @@ class Renderer11 : public RendererD3D
     DXGIFactory *getDxgiFactory() { return mDxgiFactory; };
 
     Blit11 *getBlitter() { return mBlit; }
+    Clear11 *getClearer() { return mClear; }
 
     // Buffer-to-texture and Texture-to-buffer copies
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const;

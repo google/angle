@@ -1753,19 +1753,6 @@ gl::Error Renderer11::applyUniforms(const ProgramImpl &program, const std::vecto
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::clear(const gl::ClearParameters &clearParams, const gl::Framebuffer *frameBuffer)
-{
-    gl::Error error = mClear->clearFramebuffer(clearParams, frameBuffer);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    invalidateFramebufferSwizzles(frameBuffer);
-
-    return gl::Error(GL_NO_ERROR);
-}
-
 void Renderer11::markAllStateDirty()
 {
     for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)

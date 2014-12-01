@@ -84,12 +84,6 @@ class Renderer
                                    const GLvoid *indices, GLsizei instances,
                                    const RangeUI &indexRange) = 0;
 
-    virtual gl::Error clear(const gl::Data &data, GLbitfield mask) = 0;
-    virtual gl::Error clearBufferfv(const gl::Data &data, GLenum buffer, GLint drawbuffer, const GLfloat *values) = 0;
-    virtual gl::Error clearBufferuiv(const gl::Data &data, GLenum buffer, GLint drawbuffer, const GLuint *values) = 0;
-    virtual gl::Error clearBufferiv(const gl::Data &data, GLenum buffer, GLint drawbuffer, const GLint *values) = 0;
-    virtual gl::Error clearBufferfi(const gl::Data &data, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil) = 0;
-
     virtual gl::Error readPixels(const gl::Data &data, GLint x, GLint y, GLsizei width, GLsizei height,
                                  GLenum format, GLenum type, GLsizei *bufSize, void* pixels) = 0;
 

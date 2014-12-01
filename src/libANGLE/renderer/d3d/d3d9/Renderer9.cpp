@@ -1155,7 +1155,7 @@ bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count)
 }
 
 
-gl::Error Renderer9::getNullColorbuffer(gl::FramebufferAttachment *depthbuffer, gl::FramebufferAttachment **outColorBuffer)
+gl::Error Renderer9::getNullColorbuffer(const gl::FramebufferAttachment *depthbuffer, const gl::FramebufferAttachment **outColorBuffer)
 {
     ASSERT(depthbuffer);
 
@@ -1205,28 +1205,27 @@ gl::Error Renderer9::getNullColorbuffer(gl::FramebufferAttachment *depthbuffer, 
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::applyRenderTarget(const gl::Framebuffer *framebuffer)
+gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorBuffer, const gl::FramebufferAttachment *depthStencilBuffer)
 {
     // if there is no color attachment we must synthesize a NULL colorattachment
     // to keep the D3D runtime happy.  This should only be possible if depth texturing.
-    gl::FramebufferAttachment *attachment = framebuffer->getColorbuffer(0);
-    if (!attachment)
+    if (!colorBuffer)
     {
-        gl::Error error = getNullColorbuffer(framebuffer->getDepthbuffer(), &attachment);
+        gl::Error error = getNullColorbuffer(depthStencilBuffer, &colorBuffer);
         if (error.isError())
         {
             return error;
         }
     }
-    ASSERT(attachment);
+    ASSERT(colorBuffer);
 
     bool renderTargetChanged = false;
-    unsigned int renderTargetSerial = GetAttachmentSerial(attachment);
+    unsigned int renderTargetSerial = GetAttachmentSerial(colorBuffer);
     if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
         // Apply the render target on the device
         RenderTarget9 *renderTarget = NULL;
-        gl::Error error = d3d9::GetAttachmentRenderTarget(attachment, &renderTarget);
+        gl::Error error = d3d9::GetAttachmentRenderTarget(colorBuffer, &renderTarget);
         if (error.isError())
         {
             return error;
@@ -1243,31 +1242,17 @@ gl::Error Renderer9::applyRenderTarget(const gl::Framebuffer *framebuffer)
         renderTargetChanged = true;
     }
 
-    gl::FramebufferAttachment *depthStencil = framebuffer->getDepthbuffer();
-    unsigned int depthbufferSerial = 0;
-    unsigned int stencilbufferSerial = 0;
-    if (depthStencil)
-    {
-        depthbufferSerial = GetAttachmentSerial(depthStencil);
-    }
-    else if (framebuffer->getStencilbuffer())
-    {
-        depthStencil = framebuffer->getStencilbuffer();
-        stencilbufferSerial = GetAttachmentSerial(depthStencil);
-    }
-
-    if (depthbufferSerial != mAppliedDepthbufferSerial ||
-        stencilbufferSerial != mAppliedStencilbufferSerial ||
-        !mDepthStencilInitialized)
+    unsigned int depthStencilSerial = (depthStencilBuffer != nullptr) ? GetAttachmentSerial(depthStencilBuffer) : 0;
+    if (depthStencilSerial != mAppliedDepthStencilSerial || !mDepthStencilInitialized)
     {
         unsigned int depthSize = 0;
         unsigned int stencilSize = 0;
 
         // Apply the depth stencil on the device
-        if (depthStencil)
+        if (depthStencilBuffer)
         {
             RenderTarget9 *depthStencilRenderTarget = NULL;
-            gl::Error error = d3d9::GetAttachmentRenderTarget(depthStencil, &depthStencilRenderTarget);
+            gl::Error error = d3d9::GetAttachmentRenderTarget(depthStencilBuffer, &depthStencilRenderTarget);
             if (error.isError())
             {
                 return error;
@@ -1280,8 +1265,8 @@ gl::Error Renderer9::applyRenderTarget(const gl::Framebuffer *framebuffer)
             mDevice->SetDepthStencilSurface(depthStencilSurface);
             SafeRelease(depthStencilSurface);
 
-            depthSize = depthStencil->getDepthSize();
-            stencilSize = depthStencil->getStencilSize();
+            depthSize = depthStencilBuffer->getDepthSize();
+            stencilSize = depthStencilBuffer->getStencilSize();
         }
         else
         {
@@ -1300,8 +1285,7 @@ gl::Error Renderer9::applyRenderTarget(const gl::Framebuffer *framebuffer)
             mForceSetDepthStencilState = true;
         }
 
-        mAppliedDepthbufferSerial = depthbufferSerial;
-        mAppliedStencilbufferSerial = stencilbufferSerial;
+        mAppliedDepthStencilSerial = depthStencilSerial;
         mDepthStencilInitialized = true;
     }
 
@@ -1311,13 +1295,18 @@ gl::Error Renderer9::applyRenderTarget(const gl::Framebuffer *framebuffer)
         mForceSetViewport = true;
         mForceSetBlendState = true;
 
-        mRenderTargetDesc.width = attachment->getWidth();
-        mRenderTargetDesc.height = attachment->getHeight();
-        mRenderTargetDesc.format = attachment->getActualFormat();
+        mRenderTargetDesc.width = colorBuffer->getWidth();
+        mRenderTargetDesc.height = colorBuffer->getHeight();
+        mRenderTargetDesc.format = colorBuffer->getActualFormat();
         mRenderTargetDescInitialized = true;
     }
 
     return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error Renderer9::applyRenderTarget(const gl::Framebuffer *framebuffer)
+{
+    return applyRenderTarget(framebuffer->getColorbuffer(0), framebuffer->getDepthOrStencilbuffer());
 }
 
 gl::Error Renderer9::applyVertexBuffer(const gl::State &state, GLint first, GLsizei count, GLsizei instances)
@@ -1880,7 +1869,8 @@ void Renderer9::applyUniformnbv(gl::LinkedUniform *targetUniform, const GLint *v
     applyUniformnfv(targetUniform, (GLfloat*)vector);
 }
 
-gl::Error Renderer9::clear(const gl::ClearParameters &clearParams, const gl::Framebuffer *frameBuffer)
+gl::Error Renderer9::clear(const gl::ClearParameters &clearParams, const gl::FramebufferAttachment *colorBuffer,
+                           const gl::FramebufferAttachment *depthStencilBuffer)
 {
     if (clearParams.colorClearType != GL_FLOAT)
     {
@@ -1904,9 +1894,9 @@ gl::Error Renderer9::clear(const gl::ClearParameters &clearParams, const gl::Fra
     DWORD stencil = clearParams.stencilClearValue & 0x000000FF;
 
     unsigned int stencilUnmasked = 0x0;
-    if (clearParams.clearStencil && frameBuffer->hasStencil())
+    if (clearParams.clearStencil && depthStencilBuffer->getStencilSize() > 0)
     {
-        unsigned int stencilSize = gl::GetInternalFormatInfo((frameBuffer->getStencilbuffer()->getActualFormat())).stencilBits;
+        unsigned int stencilSize = gl::GetInternalFormatInfo((depthStencilBuffer->getActualFormat())).stencilBits;
         stencilUnmasked = (0x1 << stencilSize) - 1;
     }
 
@@ -1917,9 +1907,8 @@ gl::Error Renderer9::clear(const gl::ClearParameters &clearParams, const gl::Fra
     D3DCOLOR color = D3DCOLOR_ARGB(255, 0, 0, 0);
     if (clearColor)
     {
-        const gl::FramebufferAttachment *attachment = frameBuffer->getFirstColorbuffer();
-        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(attachment->getInternalFormat());
-        const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(attachment->getActualFormat());
+        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(colorBuffer->getInternalFormat());
+        const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(colorBuffer->getActualFormat());
 
         color = D3DCOLOR_ARGB(gl::unorm<8>((formatInfo.alphaBits == 0 && actualFormatInfo.alphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
                               gl::unorm<8>((formatInfo.redBits   == 0 && actualFormatInfo.redBits   > 0) ? 0.0f : clearParams.colorFClearValue.red),
@@ -2100,8 +2089,7 @@ gl::Error Renderer9::clear(const gl::ClearParameters &clearParams, const gl::Fra
 void Renderer9::markAllStateDirty()
 {
     mAppliedRenderTargetSerial = 0;
-    mAppliedDepthbufferSerial = 0;
-    mAppliedStencilbufferSerial = 0;
+    mAppliedDepthStencilSerial = 0;
     mDepthStencilInitialized = false;
     mRenderTargetDescInitialized = false;
 
