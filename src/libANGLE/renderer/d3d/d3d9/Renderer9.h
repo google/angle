@@ -201,7 +201,7 @@ class Renderer9 : public RendererD3D
 
     D3DPOOL getTexturePool(DWORD usage) const;
 
-    virtual bool getLUID(LUID *adapterLuid) const;
+    bool getLUID(LUID *adapterLuid) const override;
     virtual VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const;
     virtual GLenum getVertexComponentType(const gl::VertexFormat &vertexFormat) const;
 
