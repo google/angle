@@ -610,16 +610,6 @@ void Display::notifyDeviceLost()
     }
 }
 
-void Display::recreateSwapChains()
-{
-    for (const auto &surface : mSurfaceSet)
-    {
-        //TODO(jmadill): MANGLE refactor
-        rx::SurfaceD3D *surfaceD3D = rx::SurfaceD3D::makeSurfaceD3D(surface);
-        surfaceD3D->getSwapChain()->recreate();
-    }
-}
-
 bool Display::isInitialized() const
 {
     return mRenderer != NULL && mConfigSet.size() > 0;

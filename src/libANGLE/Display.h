@@ -64,7 +64,6 @@ class ANGLE_EXPORT Display
 
     // exported methods must be virtual
     virtual void notifyDeviceLost();
-    virtual void recreateSwapChains();
 
     const char *getExtensionString() const;
     const char *getVendorString() const;
