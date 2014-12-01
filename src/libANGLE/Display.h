@@ -24,6 +24,11 @@ namespace gl
 class Context;
 }
 
+namespace rx
+{
+class DisplayImpl;
+}
+
 namespace egl
 {
 class Surface;
@@ -77,11 +82,15 @@ class ANGLE_EXPORT Display
 
     Error restoreLostDevice();
 
+    static std::string generateClientExtensionString();
+
+    void initDisplayExtensionString();
+    void initVendorString();
+
+    rx::DisplayImpl *mImplementation;
+
     EGLNativeDisplayType mDisplayId;
     AttributeMap mAttributeMap;
-
-    typedef std::set<Surface*> SurfaceSet;
-    SurfaceSet mSurfaceSet;
 
     ConfigSet mConfigSet;
 
@@ -90,14 +99,11 @@ class ANGLE_EXPORT Display
 
     rx::Renderer *mRenderer;
 
-    static std::string generateClientExtensionString();
-
-    void initDisplayExtensionString();
     std::string mDisplayExtensionString;
 
-    void initVendorString();
     std::string mVendorString;
 };
+
 }
 
 #endif   // LIBANGLE_DISPLAY_H_

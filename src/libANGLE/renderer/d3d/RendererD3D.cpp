@@ -16,6 +16,7 @@
 #include "libANGLE/State.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 
 namespace rx
@@ -822,6 +823,11 @@ std::string RendererD3D::getVendorString() const
     }
 
     return std::string("");
+}
+
+DisplayImpl *RendererD3D::createDisplay()
+{
+    return new DisplayD3D(this);
 }
 
 }

@@ -58,6 +58,7 @@ class FramebufferImpl;
 struct TranslatedIndexData;
 struct Workarounds;
 class SwapChain;
+class DisplayImpl;
 
 struct ConfigDesc
 {
@@ -76,7 +77,6 @@ class Renderer
     virtual ~Renderer();
 
     virtual EGLint initialize() = 0;
-    virtual bool resetDevice() = 0;
 
     virtual int generateConfigs(ConfigDesc **configDescList) = 0;
     virtual void deleteConfigs(ConfigDesc *configDescList) = 0;
@@ -160,6 +160,8 @@ class Renderer
     virtual int getMajorShaderModel() const = 0;
     virtual int getMinSwapInterval() const = 0;
     virtual int getMaxSwapInterval() const = 0;
+
+    virtual DisplayImpl *createDisplay() = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer);

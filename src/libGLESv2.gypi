@@ -109,6 +109,8 @@
             'libANGLE/queryconversions.cpp',
             'libANGLE/queryconversions.h',
             'libANGLE/renderer/BufferImpl.h',
+            'libANGLE/renderer/DisplayImpl.cpp',
+            'libANGLE/renderer/DisplayImpl.h',
             'libANGLE/renderer/FenceImpl.h',
             'libANGLE/renderer/FramebufferImpl.h',
             'libANGLE/renderer/Image.cpp',
@@ -161,6 +163,8 @@
         [
             'libANGLE/renderer/d3d/BufferD3D.cpp',
             'libANGLE/renderer/d3d/BufferD3D.h',
+            'libANGLE/renderer/d3d/DisplayD3D.cpp',
+            'libANGLE/renderer/d3d/DisplayD3D.h',
             'libANGLE/renderer/d3d/DynamicHLSL.cpp',
             'libANGLE/renderer/d3d/DynamicHLSL.h',
             'libANGLE/renderer/d3d/FramebufferD3D.cpp',
