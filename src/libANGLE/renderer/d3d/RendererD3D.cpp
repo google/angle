@@ -18,13 +18,23 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
+#include "libANGLE/renderer/d3d/MemoryBuffer.h"
 
 namespace rx
 {
 
+namespace
+{
+// If we request a scratch buffer requesting a smaller size this many times,
+// release and recreate the scratch buffer. This ensures we don't have a
+// degenerate case where we are stuck hogging memory.
+const int ScratchMemoryBufferLifetime = 1000;
+}
+
 RendererD3D::RendererD3D(egl::Display *display)
     : mDisplay(display),
-      mDeviceLost(false)
+      mDeviceLost(false),
+      mScratchMemoryBufferResetCounter(0)
 {
 }
 
@@ -35,6 +45,7 @@ RendererD3D::~RendererD3D()
 
 void RendererD3D::cleanup()
 {
+    mScratchMemoryBuffer.resize(0);
     for (auto &incompleteTexture : mIncompleteTextures)
     {
         incompleteTexture.second.set(NULL);
@@ -828,6 +839,36 @@ std::string RendererD3D::getVendorString() const
 DisplayImpl *RendererD3D::createDisplay()
 {
     return new DisplayD3D(this);
+}
+
+gl::Error RendererD3D::getScratchMemoryBuffer(size_t requestedSize, MemoryBuffer **bufferOut)
+{
+    if (mScratchMemoryBuffer.size() == requestedSize)
+    {
+        mScratchMemoryBufferResetCounter = ScratchMemoryBufferLifetime;
+        *bufferOut = &mScratchMemoryBuffer;
+        return gl::Error(GL_NO_ERROR);
+    }
+
+    if (mScratchMemoryBuffer.size() > requestedSize)
+    {
+        mScratchMemoryBufferResetCounter--;
+    }
+
+    if (mScratchMemoryBufferResetCounter <= 0 || mScratchMemoryBuffer.size() < requestedSize)
+    {
+        mScratchMemoryBuffer.resize(0);
+        if (!mScratchMemoryBuffer.resize(requestedSize))
+        {
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal buffer.");
+        }
+        mScratchMemoryBufferResetCounter = ScratchMemoryBufferLifetime;
+    }
+
+    ASSERT(mScratchMemoryBuffer.size() >= requestedSize);
+
+    *bufferOut = &mScratchMemoryBuffer;
+    return gl::Error(GL_NO_ERROR);
 }
 
 }

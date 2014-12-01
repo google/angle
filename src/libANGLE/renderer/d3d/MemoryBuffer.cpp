@@ -32,25 +32,30 @@ bool MemoryBuffer::resize(size_t size)
         free(mData);
         mData = NULL;
         mSize = 0;
+        return true;
     }
-    else
+
+    if (size == mSize)
     {
-        uint8_t *newMemory = reinterpret_cast<uint8_t*>(malloc(sizeof(uint8_t) * size));
-        if (newMemory == NULL)
-        {
-            return false;
-        }
-
-        if (mData)
-        {
-            // Copy the intersection of the old data and the new data
-            std::copy(mData, mData + std::min(mSize, size), newMemory);
-            free(mData);
-        }
-
-        mData = newMemory;
-        mSize = size;
+        return true;
     }
+
+    // Only reallocate if the size has changed.
+    uint8_t *newMemory = reinterpret_cast<uint8_t*>(malloc(sizeof(uint8_t) * size));
+    if (newMemory == NULL)
+    {
+        return false;
+    }
+
+    if (mData)
+    {
+        // Copy the intersection of the old data and the new data
+        std::copy(mData, mData + std::min(mSize, size), newMemory);
+        free(mData);
+    }
+
+    mData = newMemory;
+    mSize = size;
 
     return true;
 }
