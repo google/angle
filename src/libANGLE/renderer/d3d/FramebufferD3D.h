@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// FramebufferD3D.h: Defines the DefaultAttachmentD3D class.
+// FramebufferD3D.h: Defines the DefaultAttachmentD3D and FramebufferD3D classes.
 
 #ifndef LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_
 #define LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_
@@ -14,6 +14,7 @@
 namespace rx
 {
 class RenderTarget;
+class RendererD3D;
 
 class DefaultAttachmentD3D : public DefaultAttachmentImpl
 {
@@ -33,6 +34,16 @@ class DefaultAttachmentD3D : public DefaultAttachmentImpl
 
   private:
     RenderTarget *mRenderTarget;
+};
+
+class FramebufferD3D : public FramebufferImpl
+{
+  public:
+    FramebufferD3D(RendererD3D *renderer);
+    virtual ~FramebufferD3D();
+
+  private:
+    RendererD3D *const mRenderer;
 };
 
 }

@@ -100,12 +100,15 @@ unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment)
 namespace gl
 {
 
-Framebuffer::Framebuffer(GLuint id)
-    : mId(id),
+Framebuffer::Framebuffer(rx::FramebufferImpl *impl, GLuint id)
+    : mImpl(impl),
+      mId(id),
       mReadBufferState(GL_COLOR_ATTACHMENT0_EXT),
       mDepthbuffer(NULL),
       mStencilbuffer(NULL)
 {
+    ASSERT(mImpl != nullptr);
+
     for (unsigned int colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
         mColorbuffers[colorAttachment] = NULL;
@@ -116,6 +119,7 @@ Framebuffer::Framebuffer(GLuint id)
 
 Framebuffer::~Framebuffer()
 {
+    SafeDelete(mImpl);
     for (unsigned int colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
         SafeDelete(mColorbuffers[colorAttachment]);
@@ -542,9 +546,9 @@ Error Framebuffer::invalidateSub(GLsizei numAttachments, const GLenum *attachmen
     return Error(GL_NO_ERROR);
 }
 
-DefaultFramebuffer::DefaultFramebuffer(rx::DefaultAttachmentImpl *colorAttachment, rx::DefaultAttachmentImpl *depthAttachment,
-                                       rx::DefaultAttachmentImpl *stencilAttachment)
-    : Framebuffer(0)
+DefaultFramebuffer::DefaultFramebuffer(rx::FramebufferImpl *impl, rx::DefaultAttachmentImpl *colorAttachment,
+                                       rx::DefaultAttachmentImpl *depthAttachment, rx::DefaultAttachmentImpl *stencilAttachment)
+    : Framebuffer(impl, 0)
 {
     ASSERT(colorAttachment);
     mColorbuffers[0] = new DefaultAttachment(GL_BACK, colorAttachment);

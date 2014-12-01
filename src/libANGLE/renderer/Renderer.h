@@ -54,6 +54,7 @@ class TextureImpl;
 class TransformFeedbackImpl;
 class RenderbufferImpl;
 class DefaultAttachmentImpl;
+class FramebufferImpl;
 struct TranslatedIndexData;
 struct Workarounds;
 class SwapChain;
@@ -115,6 +116,7 @@ class Renderer
 
     // Framebuffer creation
     virtual DefaultAttachmentImpl *createDefaultAttachment(GLenum type, egl::Surface *surface) = 0;
+    virtual FramebufferImpl *createFramebuffer() = 0;
 
     // Texture creation
     virtual TextureImpl *createTexture(GLenum target) = 0;

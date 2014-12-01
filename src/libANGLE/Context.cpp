@@ -186,7 +186,8 @@ void Context::makeCurrent(egl::Surface *surface)
         mHasBeenCurrent = true;
     }
 
-    Framebuffer *framebufferZero = new DefaultFramebuffer(mRenderer->createDefaultAttachment(GL_BACK, surface),
+    Framebuffer *framebufferZero = new DefaultFramebuffer(mRenderer->createFramebuffer(),
+                                                          mRenderer->createDefaultAttachment(GL_BACK, surface),
                                                           mRenderer->createDefaultAttachment(GL_DEPTH, surface),
                                                           mRenderer->createDefaultAttachment(GL_STENCIL, surface));
 
@@ -522,7 +523,7 @@ void Context::bindReadFramebuffer(GLuint framebuffer)
 {
     if (!getFramebuffer(framebuffer))
     {
-        mFramebufferMap[framebuffer] = new Framebuffer(framebuffer);
+        mFramebufferMap[framebuffer] = new Framebuffer(mRenderer->createFramebuffer(), framebuffer);
     }
 
     mState.setReadFramebufferBinding(getFramebuffer(framebuffer));
@@ -532,7 +533,7 @@ void Context::bindDrawFramebuffer(GLuint framebuffer)
 {
     if (!getFramebuffer(framebuffer))
     {
-        mFramebufferMap[framebuffer] = new Framebuffer(framebuffer);
+        mFramebufferMap[framebuffer] = new Framebuffer(mRenderer->createFramebuffer(), framebuffer);
     }
 
     mState.setDrawFramebufferBinding(getFramebuffer(framebuffer));

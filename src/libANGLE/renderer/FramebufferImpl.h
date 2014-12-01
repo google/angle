@@ -26,6 +26,12 @@ class DefaultAttachmentImpl
     virtual GLsizei getSamples() const = 0;
 };
 
+class FramebufferImpl
+{
+  public:
+    virtual ~FramebufferImpl() {};
+};
+
 }
 
 #endif // LIBANGLE_RENDERER_FRAMBUFFERIMPL_H_

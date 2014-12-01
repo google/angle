@@ -4,9 +4,10 @@
 // found in the LICENSE file.
 //
 
-// Framebuffer11.h: Implements the DefaultAttachment11 class.
+// FramebufferD3D.cpp: Implements the DefaultAttachmentD3D and FramebufferD3D classes.
 
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/RenderTarget.h"
 
 namespace rx
@@ -57,6 +58,17 @@ GLsizei DefaultAttachmentD3D::getSamples() const
 RenderTarget *DefaultAttachmentD3D::getRenderTarget() const
 {
     return mRenderTarget;
+}
+
+
+FramebufferD3D::FramebufferD3D(RendererD3D *renderer)
+    : mRenderer(renderer)
+{
+    ASSERT(mRenderer != nullptr);
+}
+
+FramebufferD3D::~FramebufferD3D()
+{
 }
 
 }

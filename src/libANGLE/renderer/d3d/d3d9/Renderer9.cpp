@@ -31,6 +31,7 @@
 #include "libANGLE/renderer/d3d/d3d9/Blit9.h"
 #include "libANGLE/renderer/d3d/d3d9/Buffer9.h"
 #include "libANGLE/renderer/d3d/d3d9/Fence9.h"
+#include "libANGLE/renderer/d3d/d3d9/Framebuffer9.h"
 #include "libANGLE/renderer/d3d/d3d9/Image9.h"
 #include "libANGLE/renderer/d3d/d3d9/IndexBuffer9.h"
 #include "libANGLE/renderer/d3d/d3d9/Query9.h"
@@ -2882,6 +2883,11 @@ DefaultAttachmentImpl *Renderer9::createDefaultAttachment(GLenum type, egl::Surf
         UNREACHABLE();
         return NULL;
     }
+}
+
+FramebufferImpl *Renderer9::createFramebuffer()
+{
+    return new Framebuffer9(this);
 }
 
 ShaderImpl *Renderer9::createShader(const gl::Data &data, GLenum type)

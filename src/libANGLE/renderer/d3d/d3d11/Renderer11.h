@@ -138,6 +138,7 @@ class Renderer11 : public RendererD3D
 
     // Framebuffer creation
     virtual DefaultAttachmentImpl *createDefaultAttachment(GLenum type, egl::Surface *surface) override;
+    virtual FramebufferImpl *createFramebuffer() override;
 
     // Shader creation
     virtual ShaderImpl *createShader(const gl::Data &data, GLenum type);

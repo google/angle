@@ -30,6 +30,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Clear11.h"
 #include "libANGLE/renderer/d3d/d3d11/Fence11.h"
+#include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Image11.h"
 #include "libANGLE/renderer/d3d/d3d11/IndexBuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/PixelTransfer11.h"
@@ -2422,6 +2423,11 @@ DefaultAttachmentImpl *Renderer11::createDefaultAttachment(GLenum type, egl::Sur
         UNREACHABLE();
         return NULL;
     }
+}
+
+FramebufferImpl *Renderer11::createFramebuffer()
+{
+    return new Framebuffer11(this);
 }
 
 ShaderImpl *Renderer11::createShader(const gl::Data &data, GLenum type)
