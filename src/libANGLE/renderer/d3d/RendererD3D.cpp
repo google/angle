@@ -676,19 +676,6 @@ gl::Error RendererD3D::blitFramebuffer(const gl::Data &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error RendererD3D::readPixels(const gl::Data &data, GLint x, GLint y, GLsizei width, GLsizei height,
-                                  GLenum format, GLenum type, GLsizei *bufSize, void* pixels)
-{
-    const gl::Framebuffer *framebuffer = data.state->getReadFramebuffer();
-
-    GLenum sizedInternalFormat = gl::GetSizedInternalFormat(format, type);
-    const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(sizedInternalFormat);
-    GLuint outputPitch = sizedFormatInfo.computeRowPitch(type, width, data.state->getPackAlignment());
-
-    return readPixels(framebuffer, x, y, width, height, format, type, outputPitch, data.state->getPackState(),
-                      reinterpret_cast<uint8_t*>(pixels));
-}
-
 bool RendererD3D::isDeviceLost() const
 {
     return mDeviceLost;

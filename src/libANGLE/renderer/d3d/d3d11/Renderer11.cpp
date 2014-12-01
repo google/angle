@@ -2736,32 +2736,6 @@ gl::Error Renderer11::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack
     return mPixelTransfer->copyBufferToTexture(unpack, offset, destRenderTarget, destinationFormat, sourcePixelsType, destArea);
 }
 
-gl::Error Renderer11::getRenderTargetResource(gl::FramebufferAttachment *colorbuffer, unsigned int *subresourceIndexOut, ID3D11Texture2D **texture2DOut)
-
-{
-    ASSERT(colorbuffer);
-
-    RenderTarget11 *renderTarget = NULL;
-    gl::Error error = d3d11::GetAttachmentRenderTarget(colorbuffer, &renderTarget);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    ID3D11Resource *renderTargetResource = renderTarget->getTexture();
-    ASSERT(renderTargetResource);
-
-    *subresourceIndexOut = renderTarget->getSubresourceIndex();
-    *texture2DOut = d3d11::DynamicCastComObject<ID3D11Texture2D>(renderTargetResource);
-
-    if (!(*texture2DOut))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to query the ID3D11Texture2D from a RenderTarget");
-    }
-
-    return gl::Error(GL_NO_ERROR);
-}
-
 gl::Error Renderer11::blitRect(const gl::Framebuffer *readTarget, const gl::Rectangle &readRect,
                                const gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                                const gl::Rectangle *scissor, bool blitRenderTarget,
@@ -2838,57 +2812,6 @@ gl::Error Renderer11::blitRect(const gl::Framebuffer *readTarget, const gl::Rect
     }
 
     invalidateFramebufferSwizzles(drawTarget);
-
-    return gl::Error(GL_NO_ERROR);
-}
-
-gl::Error Renderer11::readPixels(const gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
-                                 GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels)
-{
-    ID3D11Texture2D *colorBufferTexture = NULL;
-    unsigned int subresourceIndex = 0;
-
-    gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
-    ASSERT(colorbuffer);
-
-    gl::Error error = getRenderTargetResource(colorbuffer, &subresourceIndex, &colorBufferTexture);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    gl::Rectangle area;
-    area.x = x;
-    area.y = y;
-    area.width = width;
-    area.height = height;
-
-    gl::Buffer *packBuffer = pack.pixelBuffer.get();
-    if (packBuffer != NULL)
-    {
-        Buffer11 *packBufferStorage = Buffer11::makeBuffer11(packBuffer->getImplementation());
-        PackPixelsParams packParams(area, format, type, outputPitch, pack, reinterpret_cast<ptrdiff_t>(pixels));
-
-        error = packBufferStorage->packPixels(colorBufferTexture, subresourceIndex, packParams);
-        if (error.isError())
-        {
-            SafeRelease(colorBufferTexture);
-            return error;
-        }
-
-        packBuffer->getIndexRangeCache()->clear();
-    }
-    else
-    {
-        error = readTextureData(colorBufferTexture, subresourceIndex, area, format, type, outputPitch, pack, pixels);
-        if (error.isError())
-        {
-            SafeRelease(colorBufferTexture);
-            return error;
-        }
-    }
-
-    SafeRelease(colorBufferTexture);
 
     return gl::Error(GL_NO_ERROR);
 }

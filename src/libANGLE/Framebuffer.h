@@ -94,6 +94,10 @@ class Framebuffer
     Error clearBufferiv(const State &state, GLenum buffer, GLint drawbuffer, const GLint *values);
     Error clearBufferfi(const State &state, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil);
 
+    GLenum getImplementationColorReadFormat() const;
+    GLenum getImplementationColorReadType() const;
+    Error readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const;
+
     // Use this method to retrieve the color buffer map when doing rendering.
     // It will apply a workaround for poor shader performance on some systems
     // by compacting the list to skip NULL values.

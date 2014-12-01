@@ -130,9 +130,6 @@ class Renderer11 : public RendererD3D
     gl::Error blitRect(const gl::Framebuffer *readTarget, const gl::Rectangle &readRect, const gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                        const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter) override;
 
-    virtual gl::Error readPixels(const gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
-                                 GLenum type, GLuint outputPitch, const gl::PixelPackState &pack, uint8_t *pixels);
-
     // RenderTarget creation
     virtual gl::Error createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT);
 
@@ -199,8 +196,6 @@ class Renderer11 : public RendererD3D
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const;
     virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
-
-    gl::Error getRenderTargetResource(gl::FramebufferAttachment *colorbuffer, unsigned int *subresourceIndexOut, ID3D11Texture2D **texture2DOut);
 
     void unapplyRenderTargets();
     void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);

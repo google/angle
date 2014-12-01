@@ -11,6 +11,7 @@
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"
 #include "libANGLE/renderer/RenderTarget.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/FramebufferAttachment.h"
 
 namespace rx
@@ -69,7 +70,8 @@ FramebufferD3D::FramebufferD3D(RendererD3D *renderer)
       mColorBuffers(renderer->getRendererCaps().maxColorAttachments),
       mDepthbuffer(nullptr),
       mStencilbuffer(nullptr),
-      mDrawBuffers(renderer->getRendererCaps().maxDrawBuffers)
+      mDrawBuffers(renderer->getRendererCaps().maxDrawBuffers),
+      mReadBuffer(GL_COLOR_ATTACHMENT0)
 {
     ASSERT(mRenderer != nullptr);
 
@@ -114,6 +116,7 @@ void FramebufferD3D::setDrawBuffers(size_t count, const GLenum *buffers)
 
 void FramebufferD3D::setReadBuffer(GLenum buffer)
 {
+    mReadBuffer = buffer;
 }
 
 gl::Error FramebufferD3D::invalidate(size_t, const GLenum *)
@@ -206,6 +209,47 @@ gl::Error FramebufferD3D::clearBufferfi(const gl::State &state, GLenum buffer, G
     clearParams.stencilClearValue = stencil;
 
     return clear(state, clearParams);
+}
+
+GLenum FramebufferD3D::getImplementationColorReadFormat() const
+{
+    // Will require more logic if glReadBuffers is supported
+    ASSERT(mReadBuffer == GL_COLOR_ATTACHMENT0 || mReadBuffer == GL_BACK);
+
+    if (mColorBuffers[0] == nullptr)
+    {
+        return GL_NONE;
+    }
+
+    GLenum actualFormat = mColorBuffers[0]->getActualFormat();
+    const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(actualFormat);
+
+    return actualFormatInfo.format;
+}
+
+GLenum FramebufferD3D::getImplementationColorReadType() const
+{
+    // Will require more logic if glReadBuffers is supported
+    ASSERT(mReadBuffer == GL_COLOR_ATTACHMENT0 || mReadBuffer == GL_BACK);
+
+    if (mColorBuffers[0] == nullptr)
+    {
+        return GL_NONE;
+    }
+
+    GLenum actualFormat = mColorBuffers[0]->getActualFormat();
+    const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(actualFormat);
+
+    return actualFormatInfo.type;
+}
+
+gl::Error FramebufferD3D::readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const
+{
+    GLenum sizedInternalFormat = gl::GetSizedInternalFormat(format, type);
+    const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(sizedInternalFormat);
+    GLuint outputPitch = sizedFormatInfo.computeRowPitch(type, area.width, state.getPackAlignment());
+
+    return readPixels(area, format, type, outputPitch, state.getPackState(), reinterpret_cast<uint8_t*>(pixels));
 }
 
 GLenum FramebufferD3D::checkStatus() const

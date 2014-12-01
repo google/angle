@@ -3317,7 +3317,11 @@ void GL_APIENTRY ReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
             return;
         }
 
-        Error error = context->readPixels(x, y, width, height, format, type, NULL, pixels);
+        Framebuffer *framebufferObject = context->getState().getReadFramebuffer();
+        ASSERT(framebufferObject);
+
+        Rectangle area(x, y, width, height);
+        Error error = framebufferObject->readPixels(context->getState(), area, format, type, pixels);
         if (error.isError())
         {
             context->recordError(error);

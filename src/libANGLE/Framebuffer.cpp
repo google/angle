@@ -488,6 +488,21 @@ Error Framebuffer::clearBufferfi(const State &state, GLenum buffer, GLint drawbu
     return mImpl->clearBufferfi(state, buffer, drawbuffer, depth, stencil);
 }
 
+GLenum Framebuffer::getImplementationColorReadFormat() const
+{
+    return mImpl->getImplementationColorReadFormat();
+}
+
+GLenum Framebuffer::getImplementationColorReadType() const
+{
+    return mImpl->getImplementationColorReadType();
+}
+
+Error Framebuffer::readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const
+{
+    return mImpl->readPixels(state, area, format, type, pixels);
+}
+
 int Framebuffer::getSamples(const gl::Data &data) const
 {
     if (checkStatus(data) == GL_FRAMEBUFFER_COMPLETE)

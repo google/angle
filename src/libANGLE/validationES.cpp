@@ -906,16 +906,17 @@ bool ValidateReadPixelsParameters(gl::Context *context, GLint x, GLint y, GLsize
         return false;
     }
 
-    if (!framebuffer->getReadColorbuffer())
+    const FramebufferAttachment *readBuffer = framebuffer->getReadColorbuffer();
+    if (!readBuffer)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;
     }
 
-    GLenum currentInternalFormat, currentFormat, currentType;
+    GLenum currentFormat = framebuffer->getImplementationColorReadFormat();
+    GLenum currentType = framebuffer->getImplementationColorReadType();
+    GLenum currentInternalFormat = readBuffer->getActualFormat();
     GLuint clientVersion = context->getClientVersion();
-
-    context->getCurrentReadFormatType(&currentInternalFormat, &currentFormat, &currentType);
 
     bool validReadFormat = (clientVersion < 3) ? ValidES2ReadFormatType(context, format, type) :
                                                  ValidES3ReadFormatType(context, currentInternalFormat, format, type);

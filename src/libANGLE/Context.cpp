@@ -845,17 +845,6 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS:    *params = mCaps.maxTransformFeedbackSeparateComponents;    break;
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:           *params = mCaps.compressedTextureFormats.size();                break;
       case GL_MAX_SAMPLES_ANGLE:                        *params = mExtensions.maxSamples;                               break;
-      case GL_IMPLEMENTATION_COLOR_READ_TYPE:
-      case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
-        {
-            GLenum internalFormat, format, type;
-            getCurrentReadFormatType(&internalFormat, &format, &type);
-            if (pname == GL_IMPLEMENTATION_COLOR_READ_FORMAT)
-                *params = format;
-            else
-                *params = type;
-        }
-        break;
       case GL_MAX_VIEWPORT_DIMS:
         {
             params[0] = mCaps.maxViewportWidth;
@@ -1231,12 +1220,6 @@ bool Context::getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned
     return false;
 }
 
-Error Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
-                          GLenum format, GLenum type, GLsizei *bufSize, void* pixels)
-{
-    return mRenderer->readPixels(getData(), x, y, width, height, format, type, bufSize, pixels);
-}
-
 Error Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances)
 {
     return mRenderer->drawArrays(getData(), mode, first, count, instances);
@@ -1330,22 +1313,6 @@ const TextureCapsMap &Context::getTextureCaps() const
 const Extensions &Context::getExtensions() const
 {
     return mExtensions;
-}
-
-void Context::getCurrentReadFormatType(GLenum *internalFormat, GLenum *format, GLenum *type)
-{
-    Framebuffer *framebuffer = mState.getReadFramebuffer();
-    ASSERT(framebuffer && framebuffer->checkStatus(getData()) == GL_FRAMEBUFFER_COMPLETE);
-
-    FramebufferAttachment *attachment = framebuffer->getReadColorbuffer();
-    ASSERT(attachment);
-
-    GLenum actualFormat = attachment->getActualFormat();
-    const InternalFormat &actualFormatInfo = GetInternalFormatInfo(actualFormat);
-
-    *internalFormat = actualFormat;
-    *format = actualFormatInfo.format;
-    *type = actualFormatInfo.type;
 }
 
 void Context::detachTexture(GLuint texture)

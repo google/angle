@@ -57,6 +57,10 @@ class FramebufferImpl
     virtual gl::Error clearBufferiv(const gl::State &state, GLenum buffer, GLint drawbuffer, const GLint *values) = 0;
     virtual gl::Error clearBufferfi(const gl::State &state, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil) = 0;
 
+    virtual GLenum getImplementationColorReadFormat() const = 0;
+    virtual GLenum getImplementationColorReadType() const = 0;
+    virtual gl::Error readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const = 0;
+
     virtual GLenum checkStatus() const = 0;
 };
 
