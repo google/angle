@@ -16,6 +16,24 @@
       "revId": "8a208aaffe7600b98b05f0a16354ee429c690c39",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87d927_697125ff",
+        "filename": "src/libANGLE/renderer/d3d/MemoryBuffer.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-01T18:00:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff99fd83_d538ee11",
+      "revId": "8a208aaffe7600b98b05f0a16354ee429c690c39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
