@@ -67,7 +67,7 @@ class ANGLE_EXPORT Framebuffer
     GLenum getReadColorbufferType() const;
     FramebufferAttachment *getFirstColorbuffer() const;
 
-    virtual FramebufferAttachment *getAttachment(GLenum attachment) const;
+    FramebufferAttachment *getAttachment(GLenum attachment) const;
 
     GLenum getDrawBufferState(unsigned int colorAttachment) const;
     void setDrawBufferState(unsigned int colorAttachment, GLenum drawBuffer);
@@ -78,7 +78,7 @@ class ANGLE_EXPORT Framebuffer
     int getSamples(const gl::Data &data) const;
     bool usingExtendedDrawBuffers() const;
 
-    virtual GLenum completeness(const gl::Data &data) const;
+    GLenum completeness(const gl::Data &data) const;
     bool hasValidDepthStencil() const;
 
     Error invalidate(const Caps &caps, GLsizei numAttachments, const GLenum *attachments);
@@ -90,6 +90,8 @@ class ANGLE_EXPORT Framebuffer
     ColorbufferInfo getColorbuffersForRender(const rx::Workarounds &workarounds) const;
 
   protected:
+    void setAttachment(GLenum attachment, FramebufferAttachment *attachmentObj);
+
     rx::FramebufferImpl *mImpl;
     GLuint mId;
 
@@ -102,8 +104,6 @@ class ANGLE_EXPORT Framebuffer
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Framebuffer);
-
-    void setAttachment(GLenum attachment, FramebufferAttachment *attachmentObj);
 };
 
 class DefaultFramebuffer : public Framebuffer
@@ -111,9 +111,6 @@ class DefaultFramebuffer : public Framebuffer
   public:
     DefaultFramebuffer(rx::FramebufferImpl *impl, rx::DefaultAttachmentImpl *colorAttachment,
                        rx::DefaultAttachmentImpl *depthAttachment, rx::DefaultAttachmentImpl *stencilAttachment);
-
-    GLenum completeness(const gl::Data &data) const override;
-    virtual FramebufferAttachment *getAttachment(GLenum attachment) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(DefaultFramebuffer);

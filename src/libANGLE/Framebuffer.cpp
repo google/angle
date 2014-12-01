@@ -242,10 +242,16 @@ FramebufferAttachment *Framebuffer::getAttachment(GLenum attachment) const
     {
         switch (attachment)
         {
+          case GL_COLOR:
+          case GL_BACK:
+            return getColorbuffer(0);
+          case GL_DEPTH:
           case GL_DEPTH_ATTACHMENT:
             return getDepthbuffer();
+          case GL_STENCIL:
           case GL_STENCIL_ATTACHMENT:
             return getStencilbuffer();
+          case GL_DEPTH_STENCIL:
           case GL_DEPTH_STENCIL_ATTACHMENT:
             return getDepthStencilBuffer();
           default:
@@ -303,6 +309,13 @@ bool Framebuffer::usingExtendedDrawBuffers() const
 
 GLenum Framebuffer::completeness(const gl::Data &data) const
 {
+    // The default framebuffer *must* always be complete, though it may not be
+    // subject to the same rules as application FBOs. ie, it could have 0x0 size.
+    if (mId == 0)
+    {
+        return GL_FRAMEBUFFER_COMPLETE;
+    }
+
     int width = 0;
     int height = 0;
     unsigned int colorbufferSize = 0;
@@ -546,26 +559,6 @@ Error Framebuffer::invalidateSub(GLsizei numAttachments, const GLenum *attachmen
     return Error(GL_NO_ERROR);
 }
 
-DefaultFramebuffer::DefaultFramebuffer(rx::FramebufferImpl *impl, rx::DefaultAttachmentImpl *colorAttachment,
-                                       rx::DefaultAttachmentImpl *depthAttachment, rx::DefaultAttachmentImpl *stencilAttachment)
-    : Framebuffer(impl, 0)
-{
-    ASSERT(colorAttachment);
-    mColorbuffers[0] = new DefaultAttachment(GL_BACK, colorAttachment);
-
-    if (depthAttachment)
-    {
-        mDepthbuffer = new DefaultAttachment(GL_DEPTH, depthAttachment);
-    }
-    if (stencilAttachment)
-    {
-        mStencilbuffer = new DefaultAttachment(GL_STENCIL, stencilAttachment);
-    }
-
-    mDrawBufferStates[0] = GL_BACK;
-    mReadBufferState = GL_BACK;
-}
-
 int Framebuffer::getSamples(const gl::Data &data) const
 {
     if (completeness(data) == GL_FRAMEBUFFER_COMPLETE)
@@ -639,17 +632,22 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
         SafeDelete(mColorbuffers[colorAttachment]);
         mColorbuffers[colorAttachment] = attachmentObj;
     }
-    else if (attachment == GL_DEPTH_ATTACHMENT)
+    else if (attachment == GL_BACK)
+    {
+        SafeDelete(mColorbuffers[0]);
+        mColorbuffers[0] = attachmentObj;
+    }
+    else if (attachment == GL_DEPTH_ATTACHMENT || attachment == GL_DEPTH)
     {
         SafeDelete(mDepthbuffer);
         mDepthbuffer = attachmentObj;
     }
-    else if (attachment == GL_STENCIL_ATTACHMENT)
+    else if (attachment == GL_STENCIL_ATTACHMENT || attachment == GL_STENCIL)
     {
         SafeDelete(mStencilbuffer);
         mStencilbuffer = attachmentObj;
     }
-    else if (attachment == GL_DEPTH_STENCIL_ATTACHMENT)
+    else if (attachment == GL_DEPTH_STENCIL_ATTACHMENT || attachment == GL_DEPTH_STENCIL)
     {
         SafeDelete(mDepthbuffer);
         SafeDelete(mStencilbuffer);
@@ -682,30 +680,24 @@ void Framebuffer::setAttachment(GLenum attachment, FramebufferAttachment *attach
     }
 }
 
-GLenum DefaultFramebuffer::completeness(const gl::Data &) const
+DefaultFramebuffer::DefaultFramebuffer(rx::FramebufferImpl *impl, rx::DefaultAttachmentImpl *colorAttachment,
+                                       rx::DefaultAttachmentImpl *depthAttachment, rx::DefaultAttachmentImpl *stencilAttachment)
+    : Framebuffer(impl, 0)
 {
-    // The default framebuffer *must* always be complete, though it may not be
-    // subject to the same rules as application FBOs. ie, it could have 0x0 size.
-    return GL_FRAMEBUFFER_COMPLETE;
-}
+    ASSERT(colorAttachment);
+    setAttachment(GL_BACK, new DefaultAttachment(GL_BACK, colorAttachment));
 
-FramebufferAttachment *DefaultFramebuffer::getAttachment(GLenum attachment) const
-{
-    switch (attachment)
+    if (depthAttachment)
     {
-      case GL_COLOR:
-      case GL_BACK:
-        return getColorbuffer(0);
-      case GL_DEPTH:
-        return getDepthbuffer();
-      case GL_STENCIL:
-        return getStencilbuffer();
-      case GL_DEPTH_STENCIL:
-        return getDepthStencilBuffer();
-      default:
-        UNREACHABLE();
-        return NULL;
+        setAttachment(GL_DEPTH, new DefaultAttachment(GL_DEPTH, depthAttachment));
     }
+    if (stencilAttachment)
+    {
+        setAttachment(GL_STENCIL, new DefaultAttachment(GL_STENCIL, stencilAttachment));
+    }
+
+    mDrawBufferStates[0] = GL_BACK;
+    mReadBufferState = GL_BACK;
 }
 
 }
