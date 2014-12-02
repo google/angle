@@ -16,6 +16,24 @@
       "revId": "877ac95d3acc3af996a731b234a26d963725aab8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f971556_95b3c6de",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-02T22:13:18Z",
+      "side": 1,
+      "message": "Done. The Implementation has ended up as the location to store common data (eg Shader vars)",
+      "parentUuid": "3f971556_b2aa9891",
+      "revId": "877ac95d3acc3af996a731b234a26d963725aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
