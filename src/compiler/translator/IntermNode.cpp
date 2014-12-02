@@ -569,9 +569,17 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
         if (mLeft->getNominalSize() != mRight->getNominalSize() ||
             mLeft->getSecondarySize() != mRight->getSecondarySize())
         {
-            // If the nominal size of operands do not match:
-            // One of them must be scalar.
+            // If the nominal sizes of operands do not match:
+            // One of them must be a scalar.
             if (!mLeft->isScalar() && !mRight->isScalar())
+                return false;
+
+            // In the case of compound assignment, the right side needs to be a
+            // scalar. Otherwise a vector/matrix would be assigned to a scalar.
+            if (!mRight->isScalar() &&
+                (mOp == EOpAddAssign ||
+                mOp == EOpSubAssign ||
+                mOp == EOpDivAssign))
                 return false;
 
             // Operator cannot be of type pure assignment.
