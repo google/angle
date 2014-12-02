@@ -15,8 +15,7 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/Query.h"
-#include "libANGLE/Program.h"
-#include "libANGLE/Uniform.h"
+#include "libANGLE/ProgramBinary.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/renderer/BufferImpl.h"
@@ -1059,8 +1058,8 @@ static bool ValidateUniformCommonBase(gl::Context *context, GLenum targetUniform
         return false;
     }
 
-    gl::Program *program = context->getState().getProgram();
-    if (!program)
+    gl::ProgramBinary *programBinary = context->getState().getCurrentProgramBinary();
+    if (!programBinary)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1072,13 +1071,13 @@ static bool ValidateUniformCommonBase(gl::Context *context, GLenum targetUniform
         return false;
     }
 
-    if (!program->isValidUniformLocation(location))
+    if (!programBinary->isValidUniformLocation(location))
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;
     }
 
-    LinkedUniform *uniform = program->getUniformByLocation(location);
+    LinkedUniform *uniform = programBinary->getUniformByLocation(location);
 
     // attempting to write an array to a non-array uniform is an INVALID_OPERATION
     if (uniform->elementCount() == 1 && count > 1)
@@ -1462,14 +1461,14 @@ static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsiz
         return false;
     }
 
-    gl::Program *program = state.getProgram();
-    if (!program)
+    if (state.getCurrentProgramId() == 0)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;
     }
 
-    if (!program->validateSamplers(NULL, context->getCaps()))
+    gl::ProgramBinary *programBinary = state.getCurrentProgramBinary();
+    if (!programBinary->validateSamplers(NULL, context->getCaps()))
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1480,7 +1479,7 @@ static bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count, GLsiz
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
         const VertexAttribute &attrib = vao->getVertexAttribute(attributeIndex);
-        bool attribActive = (program->getSemanticIndex(attributeIndex) != -1);
+        bool attribActive = (programBinary->getSemanticIndex(attributeIndex) != -1);
         if (attribActive && attrib.enabled)
         {
             gl::Buffer *buffer = attrib.buffer.get();
@@ -1574,13 +1573,13 @@ static bool ValidateDrawInstancedANGLE(Context *context)
     // Verify there is at least one active attribute with a divisor of zero
     const gl::State& state = context->getState();
 
-    gl::Program *program = state.getProgram();
+    gl::ProgramBinary *programBinary = state.getCurrentProgramBinary();
 
     const VertexArray *vao = state.getVertexArray();
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
         const VertexAttribute &attrib = vao->getVertexAttribute(attributeIndex);
-        bool active = (program->getSemanticIndex(attributeIndex) != -1);
+        bool active = (programBinary->getSemanticIndex(attributeIndex) != -1);
         if (active && attrib.divisor == 0)
         {
             return true;
@@ -1887,7 +1886,14 @@ bool ValidateGetUniformBase(Context *context, GLuint program, GLint location)
         return false;
     }
 
-    if (!programObject->isValidUniformLocation(location))
+    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+    if (!programBinary)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    if (!programBinary->isValidUniformLocation(location))
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1915,9 +1921,10 @@ static bool ValidateSizedGetUniform(Context *context, GLuint program, GLint loca
 
     gl::Program *programObject = context->getProgram(program);
     ASSERT(programObject);
+    gl::ProgramBinary *programBinary = programObject->getProgramBinary();
 
     // sized queries -- ensure the provided buffer is large enough
-    LinkedUniform *uniform = programObject->getUniformByLocation(location);
+    LinkedUniform *uniform = programBinary->getUniformByLocation(location);
     size_t requiredBytes = VariableExternalSize(uniform->type);
     if (static_cast<size_t>(bufSize) < requiredBytes)
     {

@@ -7,7 +7,7 @@
 // angletypes.h : Defines a variety of structures and enum types that are used throughout libGLESv2
 
 #include "libANGLE/angletypes.h"
-#include "libANGLE/Program.h"
+#include "libANGLE/ProgramBinary.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/State.h"
 #include "libANGLE/VertexArray.h"
@@ -149,13 +149,13 @@ VertexFormat::VertexFormat(const VertexAttribute &attrib, GLenum currentValueTyp
 }
 
 void VertexFormat::GetInputLayout(VertexFormat *inputLayout,
-                                  Program *program,
+                                  ProgramBinary *programBinary,
                                   const State &state)
 {
     const VertexAttribute *vertexAttributes = state.getVertexArray()->getVertexAttributes();
     for (unsigned int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        int semanticIndex = program->getSemanticIndex(attributeIndex);
+        int semanticIndex = programBinary->getSemanticIndex(attributeIndex);
 
         if (semanticIndex != -1)
         {

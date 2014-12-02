@@ -168,8 +168,10 @@ class ANGLE_EXPORT State
     bool removeVertexArrayBinding(GLuint vertexArray);
 
     // Program binding manipulation
-    void setProgram(Program *newProgram);
-    Program *getProgram() const;
+    void setCurrentProgram(GLuint programId, Program *newProgram);
+    void setCurrentProgramBinary(ProgramBinary *binary);
+    GLuint getCurrentProgramId() const;
+    ProgramBinary *getCurrentProgramBinary() const;
 
     // Transform feedback object (not buffer) binding manipulation
     void setTransformFeedbackBinding(TransformFeedback *transformFeedback);
@@ -283,7 +285,8 @@ class ANGLE_EXPORT State
     Framebuffer *mReadFramebuffer;
     Framebuffer *mDrawFramebuffer;
     BindingPointer<Renderbuffer> mRenderbuffer;
-    Program *mProgram;
+    GLuint mCurrentProgramId;
+    BindingPointer<ProgramBinary> mCurrentProgramBinary;
 
     typedef std::vector<VertexAttribCurrentValueData> VertexAttribVector;
     VertexAttribVector mVertexAttribCurrentValues; // From glVertexAttrib

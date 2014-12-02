@@ -16,6 +16,7 @@
 
 namespace gl
 {
+class ProgramBinary;
 class State;
 struct VertexAttribute;
 struct VertexAttribCurrentValueData;

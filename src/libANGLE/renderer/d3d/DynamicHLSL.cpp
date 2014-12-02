@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/ProgramBinary.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/formatutils.h"
 

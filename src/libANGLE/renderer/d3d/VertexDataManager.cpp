@@ -12,7 +12,7 @@
 #include "libANGLE/renderer/d3d/VertexBuffer.h"
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/Buffer.h"
-#include "libANGLE/Program.h"
+#include "libANGLE/ProgramBinary.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/State.h"
 
@@ -94,7 +94,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
     // Invalidate static buffers that don't contain matching attributes
     for (int attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        translated[attributeIndex].active = (state.getProgram()->getSemanticIndex(attributeIndex) != -1);
+        translated[attributeIndex].active = (state.getCurrentProgramBinary()->getSemanticIndex(attributeIndex) != -1);
         const gl::VertexAttribute &curAttrib = state.getVertexAttribState(attributeIndex);
 
         if (translated[attributeIndex].active && curAttrib.enabled)

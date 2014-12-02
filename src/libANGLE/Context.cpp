@@ -18,6 +18,7 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/ProgramBinary.h"
 #include "libANGLE/Query.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/Sampler.h"
@@ -122,6 +123,18 @@ Context::Context(int clientVersion, const Context *shareContext, rx::Renderer *r
 
 Context::~Context()
 {
+    GLuint currentProgram = mState.getCurrentProgramId();
+    if (currentProgram != 0)
+    {
+        Program *programObject = mResourceManager->getProgram(currentProgram);
+        if (programObject)
+        {
+            programObject->release();
+        }
+        currentProgram = 0;
+    }
+    mState.setCurrentProgram(0, NULL);
+
     while (!mFramebufferMap.empty())
     {
         deleteFramebuffer(mFramebufferMap.begin()->first);
@@ -610,7 +623,58 @@ void Context::bindPixelUnpackBuffer(GLuint buffer)
 
 void Context::useProgram(GLuint program)
 {
-    mState.setProgram(getProgram(program));
+    GLuint priorProgramId = mState.getCurrentProgramId();
+    Program *priorProgram = mResourceManager->getProgram(priorProgramId);
+
+    if (priorProgramId != program)
+    {
+        mState.setCurrentProgram(program, mResourceManager->getProgram(program));
+
+        if (priorProgram)
+        {
+            priorProgram->release();
+        }
+    }
+}
+
+Error Context::linkProgram(GLuint program)
+{
+    Program *programObject = mResourceManager->getProgram(program);
+
+    Error error = programObject->link(getData());
+    if (error.isError())
+    {
+        return error;
+    }
+
+    // if the current program was relinked successfully we
+    // need to install the new executables
+    if (programObject->isLinked() && program == mState.getCurrentProgramId())
+    {
+        mState.setCurrentProgramBinary(programObject->getProgramBinary());
+    }
+
+    return Error(GL_NO_ERROR);
+}
+
+Error Context::setProgramBinary(GLuint program, GLenum binaryFormat, const void *binary, GLint length)
+{
+    Program *programObject = mResourceManager->getProgram(program);
+
+    Error error = programObject->setProgramBinary(binaryFormat, binary, length);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    // if the current program was reloaded successfully we
+    // need to install the new executables
+    if (programObject->isLinked() && program == mState.getCurrentProgramId())
+    {
+        mState.setCurrentProgramBinary(programObject->getProgramBinary());
+    }
+
+    return Error(GL_NO_ERROR);
 }
 
 void Context::bindTransformFeedback(GLuint transformFeedback)

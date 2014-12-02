@@ -34,12 +34,6 @@ unsigned int ParseAndStripArrayIndex(std::string* name)
 
 }
 
-LinkResult::LinkResult(bool linkSuccess, const gl::Error &error)
-    : linkSuccess(linkSuccess),
-      error(error)
-{
-}
-
 ProgramImpl::~ProgramImpl()
 {
     // Ensure that reset was called by the inherited class during destruction

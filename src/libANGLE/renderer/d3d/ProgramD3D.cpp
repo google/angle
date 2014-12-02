@@ -11,6 +11,7 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/ProgramBinary.h"
 #include "libANGLE/renderer/ShaderExecutable.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
@@ -147,8 +148,6 @@ ProgramD3D::Sampler::Sampler() : active(false), logicalTextureUnit(0), textureTy
 {
 }
 
-unsigned int ProgramD3D::mCurrentSerial = 1;
-
 ProgramD3D::ProgramD3D(RendererD3D *renderer)
     : ProgramImpl(),
       mRenderer(renderer),
@@ -162,8 +161,7 @@ ProgramD3D::ProgramD3D(RendererD3D *renderer)
       mUsedVertexSamplerRange(0),
       mUsedPixelSamplerRange(0),
       mDirtySamplerMapping(true),
-      mShaderVersion(100),
-      mSerial(issueSerial())
+      mShaderVersion(100)
 {
     mDynamicHLSL = new DynamicHLSL(renderer);
 }
@@ -400,7 +398,7 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
     return true;
 }
 
-LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
+gl::LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 {
     stream->readInt(&mShaderVersion);
 
@@ -430,7 +428,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     if (stream->error())
     {
         infoLog.append("Invalid program binary.");
-        return LinkResult(false, gl::Error(GL_NO_ERROR));
+        return gl::LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
     mUniforms.resize(uniformCount);
@@ -463,7 +461,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     if (stream->error())
     {
         infoLog.append("Invalid program binary.");
-        return LinkResult(false, gl::Error(GL_NO_ERROR));
+        return gl::LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
     mUniformIndex.resize(uniformIndexCount);
@@ -478,7 +476,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     if (stream->error())
     {
         infoLog.append("Invalid program binary.");
-        return LinkResult(false, gl::Error(GL_NO_ERROR));
+        return gl::LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
     mUniformBlocks.resize(uniformBlockCount);
@@ -562,13 +560,13 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
                                                     &shaderExecutable);
         if (error.isError())
         {
-            return LinkResult(false, error);
+            return gl::LinkResult(false, error);
         }
 
         if (!shaderExecutable)
         {
             infoLog.append("Could not create vertex shader.");
-            return LinkResult(false, gl::Error(GL_NO_ERROR));
+            return gl::LinkResult(false, gl::Error(GL_NO_ERROR));
         }
 
         // generated converted input layout
@@ -600,13 +598,13 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
                                                     &shaderExecutable);
         if (error.isError())
         {
-            return LinkResult(false, error);
+            return gl::LinkResult(false, error);
         }
 
         if (!shaderExecutable)
         {
             infoLog.append("Could not create pixel shader.");
-            return LinkResult(false, gl::Error(GL_NO_ERROR));
+            return gl::LinkResult(false, gl::Error(GL_NO_ERROR));
         }
 
         // add new binary
@@ -626,13 +624,13 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
                                                     &mGeometryExecutable);
         if (error.isError())
         {
-            return LinkResult(false, error);
+            return gl::LinkResult(false, error);
         }
 
         if (!mGeometryExecutable)
         {
             infoLog.append("Could not create geometry shader.");
-            return LinkResult(false, gl::Error(GL_NO_ERROR));
+            return gl::LinkResult(false, gl::Error(GL_NO_ERROR));
         }
         stream->skip(geometryShaderSize);
     }
@@ -644,12 +642,12 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     if (memcmp(&identifier, &binaryIdentifier, sizeof(GUID)) != 0)
     {
         infoLog.append("Invalid program binary.");
-        return LinkResult(false, gl::Error(GL_NO_ERROR));
+        return gl::LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
     initializeUniformStorage();
 
-    return LinkResult(true, gl::Error(GL_NO_ERROR));
+    return gl::LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
 gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
@@ -919,8 +917,8 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::VertexFormat i
     return gl::Error(GL_NO_ERROR);
 }
 
-LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                                                 int registers)
+gl::LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
+                                                     int registers)
 {
     ShaderD3D *vertexShaderD3D = ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
     ShaderD3D *fragmentShaderD3D = ShaderD3D::makeShaderD3D(fragmentShader->getImplementation());
@@ -931,7 +929,7 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shade
     gl::Error error = getVertexExecutableForInputLayout(defaultInputLayout, &defaultVertexExecutable);
     if (error.isError())
     {
-        return LinkResult(false, error);
+        return gl::LinkResult(false, error);
     }
 
     std::vector<GLenum> defaultPixelOutput = GetDefaultOutputLayoutFromShader(getPixelShaderKey());
@@ -939,7 +937,7 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shade
     error = getPixelExecutableForOutputLayout(defaultPixelOutput, &defaultPixelExecutable);
     if (error.isError())
     {
-        return LinkResult(false, error);
+        return gl::LinkResult(false, error);
     }
 
     if (usesGeometryShader())
@@ -952,7 +950,7 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shade
                                                ANGLE_D3D_WORKAROUND_NONE, &mGeometryExecutable);
         if (error.isError())
         {
-            return LinkResult(false, error);
+            return gl::LinkResult(false, error);
         }
     }
 
@@ -978,15 +976,15 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shade
 #endif
 
     bool linkSuccess = (defaultVertexExecutable && defaultPixelExecutable && (!usesGeometryShader() || mGeometryExecutable));
-    return LinkResult(linkSuccess, gl::Error(GL_NO_ERROR));
+    return gl::LinkResult(linkSuccess, gl::Error(GL_NO_ERROR));
 }
 
-LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
-                            gl::Shader *fragmentShader, gl::Shader *vertexShader,
-                            const std::vector<std::string> &transformFeedbackVaryings,
-                            GLenum transformFeedbackBufferMode,
-                            int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
-                            std::map<int, gl::VariableLocation> *outputVariables)
+gl::LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
+                                gl::Shader *fragmentShader, gl::Shader *vertexShader,
+                                const std::vector<std::string> &transformFeedbackVaryings,
+                                GLenum transformFeedbackBufferMode,
+                                int *registers, std::vector<gl::LinkedVarying> *linkedVaryings,
+                                std::map<int, gl::VariableLocation> *outputVariables)
 {
     ShaderD3D *vertexShaderD3D = ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
     ShaderD3D *fragmentShaderD3D = ShaderD3D::makeShaderD3D(fragmentShader->getImplementation());
@@ -1009,24 +1007,24 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
 
     if (*registers < 0)
     {
-        return LinkResult(false, gl::Error(GL_NO_ERROR));
+        return gl::LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
-    if (!gl::Program::linkVaryings(infoLog, fragmentShader, vertexShader))
+    if (!gl::ProgramBinary::linkVaryings(infoLog, fragmentShader, vertexShader))
     {
-        return LinkResult(false, gl::Error(GL_NO_ERROR));
+        return gl::LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
     if (!mDynamicHLSL->generateShaderLinkHLSL(data, infoLog, *registers, packing, mPixelHLSL, mVertexHLSL,
                                               fragmentShaderD3D, vertexShaderD3D, transformFeedbackVaryings,
                                               linkedVaryings, outputVariables, &mPixelShaderKey, &mUsesFragDepth))
     {
-        return LinkResult(false, gl::Error(GL_NO_ERROR));
+        return gl::LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
     mUsesPointSize = vertexShaderD3D->usesPointSize();
 
-    return LinkResult(true, gl::Error(GL_NO_ERROR));
+    return gl::LinkResult(true, gl::Error(GL_NO_ERROR));
 }
 
 void ProgramD3D::getInputLayoutSignature(const gl::VertexFormat inputLayout[], GLenum signature[]) const
@@ -1309,7 +1307,7 @@ bool ProgramD3D::linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShad
         {
             const sh::Uniform &vertexUniform = *entry->second;
             const std::string &uniformName = "uniform '" + vertexUniform.name + "'";
-            if (!gl::Program::linkValidateUniforms(infoLog, uniformName, vertexUniform, fragmentUniform))
+            if (!gl::ProgramBinary::linkValidateUniforms(infoLog, uniformName, vertexUniform, fragmentUniform))
             {
                 return false;
             }
@@ -1921,16 +1919,6 @@ void ProgramD3D::reset()
     mUsedVertexSamplerRange = 0;
     mUsedPixelSamplerRange = 0;
     mDirtySamplerMapping = true;
-}
-
-unsigned int ProgramD3D::getSerial() const
-{
-    return mSerial;
-}
-
-unsigned int ProgramD3D::issueSerial()
-{
-    return mCurrentSerial++;
 }
 
 }

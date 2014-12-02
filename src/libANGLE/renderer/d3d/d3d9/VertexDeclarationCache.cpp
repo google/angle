@@ -9,7 +9,7 @@
 #include "libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.h"
 #include "libANGLE/renderer/d3d/d3d9/VertexBuffer9.h"
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
-#include "libANGLE/Program.h"
+#include "libANGLE/ProgramBinary.h"
 #include "libANGLE/VertexAttribute.h"
 
 namespace rx
@@ -40,7 +40,7 @@ VertexDeclarationCache::~VertexDeclarationCache()
     }
 }
 
-gl::Error VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], gl::Program *program, GLsizei instances, GLsizei *repeatDraw)
+gl::Error VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], gl::ProgramBinary *programBinary, GLsizei instances, GLsizei *repeatDraw)
 {
     *repeatDraw = 1;
 
@@ -155,7 +155,7 @@ gl::Error VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Tra
             element->Type = d3d9VertexInfo.nativeFormat;
             element->Method = D3DDECLMETHOD_DEFAULT;
             element->Usage = D3DDECLUSAGE_TEXCOORD;
-            element->UsageIndex = program->getSemanticIndex(i);
+            element->UsageIndex = programBinary->getSemanticIndex(i);
             element++;
         }
     }
