@@ -22,6 +22,30 @@
       "revId": "45bce13e50ae5060dff2ec55c943e3cbc5ba3d52",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fa641d2_886cbb78",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-02T22:12:46Z",
+      "side": 1,
+      "message": "Good observation, we are inconsistent, see Surface and FramebufferAttachment. If you like, and people are OK, I\u0027ll make a follow up to rectify to \"mImpl\" or \"mImplementation\" since my feeling is it\u0027s better to have symmetry with \"getImplementation\" (and parameter names). Minor stuff as you said.",
+      "parentUuid": "5fa849a2_9d2c03c2",
+      "range": {
+        "startLine": 89,
+        "startChar": 21,
+        "endLine": 89,
+        "endChar": 36
+      },
+      "revId": "45bce13e50ae5060dff2ec55c943e3cbc5ba3d52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
