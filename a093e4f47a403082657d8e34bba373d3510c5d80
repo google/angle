@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f70f517_2aa55b98",
+        "filename": "src/libGLESv2/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1112153
+      },
+      "writtenOn": "2014-12-02T14:40:12Z",
+      "side": 1,
+      "message": "There is the same logic, which was changed by Shannon\u0027s patch.",
+      "revId": "a093e4f47a403082657d8e34bba373d3510c5d80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
