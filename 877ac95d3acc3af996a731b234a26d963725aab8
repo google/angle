@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f971556_b2aa9891",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-02T00:36:06Z",
+      "side": 1,
+      "message": "Could you add a comment indicating that the reason the SurfaceSet needs to be in the DisplayImpl is to handle lost contexts? A couple of things seem a little strange about this set\u0027s placement here rather than in the Display. First, it holds pointers to objects that don\u0027t live within the renderer/ layer; and second, this is essentially common code.",
+      "revId": "877ac95d3acc3af996a731b234a26d963725aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
