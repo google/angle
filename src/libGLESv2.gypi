@@ -547,28 +547,31 @@
                 {
                     'msvs_enable_winphone' : '1',
                 }],
-            ],
-            'configurations':
-            {
-                'Debug_Base':
+                ['OS=="win"',
                 {
-                    'defines':
-                    [
-                        'ANGLE_ENABLE_DEBUG_ANNOTATIONS',
-                        'ANGLE_GENERATE_SHADER_DEBUG_INFO'
-                    ],
-                    'msvs_settings':
+                    'configurations':
                     {
-                        'VCLinkerTool':
+                        'Debug_Base':
                         {
-                            'AdditionalDependencies':
+                            'defines':
                             [
-                                'd3d9.lib',
-                            ]
-                        }
+                                'ANGLE_ENABLE_DEBUG_ANNOTATIONS',
+                                'ANGLE_GENERATE_SHADER_DEBUG_INFO'
+                            ],
+                            'msvs_settings':
+                            {
+                                'VCLinkerTool':
+                                {
+                                    'AdditionalDependencies':
+                                    [
+                                        'd3d9.lib',
+                                    ]
+                                }
+                            },
+                        },
                     },
-                },
-            },
+                }],
+            ],
         },
         {
             'target_name': 'libGLESv2',
