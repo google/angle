@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df38b95e_e4711484",
+        "filename": "tests/angle_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-03T21:46:44Z",
+      "side": 1,
+      "message": "This can be replaced with T::GetPlatform().renderer \u003d\u003d EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE",
+      "range": {
+        "startLine": 696,
+        "startChar": 61,
+        "endLine": 696,
+        "endChar": 111
+      },
+      "revId": "b392c4e135e74630adce81016896804fd228dc70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
