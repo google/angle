@@ -21,7 +21,6 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
-#include "libANGLE/export.h"
 
 namespace rx
 {
@@ -53,7 +52,7 @@ struct PackedVarying : public sh::Varying
     }
 };
 
-class ANGLE_EXPORT Shader
+class Shader
 {
   public:
     Shader(ResourceManager *manager, rx::ShaderImpl *impl, GLenum type, GLuint handle);

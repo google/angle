@@ -18,7 +18,6 @@
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Sampler.h"
-#include "libANGLE/export.h"
 
 namespace gl
 {
@@ -30,7 +29,7 @@ struct Data;
 
 typedef std::map< GLenum, BindingPointer<Texture> > TextureMap;
 
-class ANGLE_EXPORT State
+class State
 {
   public:
     State();

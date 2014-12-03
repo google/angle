@@ -102,7 +102,6 @@
             'libANGLE/VertexAttribute.h',
             'libANGLE/angletypes.cpp',
             'libANGLE/angletypes.h',
-            'libANGLE/export.h',
             'libANGLE/features.h',
             'libANGLE/formatutils.cpp',
             'libANGLE/formatutils.h',
@@ -352,7 +351,6 @@
             'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp',
             'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h',
         ],
-        'libangle_static%': 1,
     },
     # Everything below this is duplicated in the GN build. If you change
     # anything also change angle/BUILD.gn
@@ -360,6 +358,7 @@
     [
         {
             'target_name': 'libANGLE',
+            'type': 'static_library',
             'dependencies': [ 'translator', 'commit_id', ],
             'includes': [ '../build/common_defines.gypi', ],
             'include_dirs':
@@ -415,24 +414,6 @@
             },
             'conditions':
             [
-                ['libangle_static==1',
-                {
-                    'defines':
-                    [
-                        'LIBANGLE_STATIC',
-                    ],
-                    'direct_dependent_settings':
-                    {
-                        'defines':
-                        [
-                            'LIBANGLE_STATIC',
-                        ],
-                    },
-                    'type': 'static_library',
-                },
-                { # 'libangle_static==0'
-                    'type': 'shared_library',
-                }],
                 ['angle_enable_d3d9==1 or angle_enable_d3d11==1',
                 {
                     'sources':

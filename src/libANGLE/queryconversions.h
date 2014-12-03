@@ -6,7 +6,6 @@
 
 // queryconversions.h: Declaration of state query cast conversions
 
-#include "libANGLE/export.h"
 
 namespace gl
 {

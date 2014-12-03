@@ -9,8 +9,6 @@
 #ifndef LIBANGLE_IMAGE_INDEX_H_
 #define LIBANGLE_IMAGE_INDEX_H_
 
-#include "libANGLE/export.h"
-
 #include "common/mathutil.h"
 
 #include "angle_gl.h"
@@ -18,7 +16,7 @@
 namespace gl
 {
 
-struct ANGLE_EXPORT ImageIndex
+struct ImageIndex
 {
     GLenum type;
     GLint mipIndex;
@@ -39,7 +37,7 @@ struct ANGLE_EXPORT ImageIndex
     static const GLint ENTIRE_LEVEL = static_cast<GLint>(-1);
 };
 
-class ANGLE_EXPORT ImageIndexIterator
+class ImageIndexIterator
 {
   public:
     static ImageIndexIterator Make2D(GLint minMip, GLint maxMip);

@@ -13,7 +13,6 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/export.h"
 #include "libANGLE/RefCountObject.h"
 
 #include "common/angleutils.h"
@@ -62,7 +61,7 @@ class AttributeBindings
     std::set<std::string> mAttributeBinding[MAX_VERTEX_ATTRIBS];
 };
 
-class ANGLE_EXPORT InfoLog
+class InfoLog
 {
   public:
     InfoLog();
@@ -108,7 +107,7 @@ struct LinkedVarying
     unsigned int semanticIndexCount;
 };
 
-class ANGLE_EXPORT Program
+class Program
 {
   public:
     Program(rx::ProgramImpl *impl, ResourceManager *manager, GLuint handle);

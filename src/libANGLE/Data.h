@@ -10,12 +10,11 @@
 #define LIBANGLE_DATA_H_
 
 #include "libANGLE/State.h"
-#include "libANGLE/export.h"
 
 namespace gl
 {
 
-struct ANGLE_EXPORT Data final
+struct Data final
 {
   public:
     Data(GLint clientVersion, const State &state, const Caps &caps,

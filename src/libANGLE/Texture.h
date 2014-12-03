@@ -17,7 +17,6 @@
 #include "libANGLE/Constants.h"
 #include "libANGLE/renderer/TextureImpl.h"
 #include "libANGLE/Caps.h"
-#include "libANGLE/export.h"
 
 #include "angle_gl.h"
 
@@ -42,7 +41,7 @@ struct ImageIndex;
 
 bool IsMipmapFiltered(const gl::SamplerState &samplerState);
 
-class ANGLE_EXPORT Texture : public RefCountObject
+class Texture : public RefCountObject
 {
   public:
     Texture(rx::TextureImpl *impl, GLuint id, GLenum target);
@@ -106,7 +105,7 @@ class ANGLE_EXPORT Texture : public RefCountObject
     DISALLOW_COPY_AND_ASSIGN(Texture);
 };
 
-class ANGLE_EXPORT Texture2D : public Texture
+class Texture2D : public Texture
 {
   public:
     Texture2D(rx::TextureImpl *impl, GLuint id);
@@ -142,7 +141,7 @@ class ANGLE_EXPORT Texture2D : public Texture
     egl::Surface *mSurface;
 };
 
-class ANGLE_EXPORT TextureCubeMap : public Texture
+class TextureCubeMap : public Texture
 {
   public:
     TextureCubeMap(rx::TextureImpl *impl, GLuint id);
@@ -177,7 +176,7 @@ class ANGLE_EXPORT TextureCubeMap : public Texture
     bool isFaceLevelComplete(int faceIndex, int level) const;
 };
 
-class ANGLE_EXPORT Texture3D : public Texture
+class Texture3D : public Texture
 {
   public:
     Texture3D(rx::TextureImpl *impl, GLuint id);
@@ -207,7 +206,7 @@ class ANGLE_EXPORT Texture3D : public Texture
     bool isLevelComplete(int level) const;
 };
 
-class ANGLE_EXPORT Texture2DArray : public Texture
+class Texture2DArray : public Texture
 {
   public:
     Texture2DArray(rx::TextureImpl *impl, GLuint id);

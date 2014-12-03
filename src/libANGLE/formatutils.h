@@ -11,7 +11,6 @@
 
 #include "libANGLE/Caps.h"
 #include "libANGLE/angletypes.h"
-#include "libANGLE/export.h"
 
 #include "angle_gl.h"
 
@@ -38,25 +37,25 @@ typedef void (*VertexCopyFunction)(const uint8_t *input, size_t stride, size_t c
 namespace gl
 {
 
-struct ANGLE_EXPORT FormatType
+struct FormatType
 {
     FormatType();
 
     GLenum internalFormat;
     ColorWriteFunction colorWriteFunction;
 };
-ANGLE_EXPORT const FormatType &GetFormatTypeInfo(GLenum format, GLenum type);
+const FormatType &GetFormatTypeInfo(GLenum format, GLenum type);
 
-struct ANGLE_EXPORT Type
+struct Type
 {
     Type();
 
     GLuint bytes;
     bool specialInterpretation;
 };
-ANGLE_EXPORT const Type &GetTypeInfo(GLenum type);
+const Type &GetTypeInfo(GLenum type);
 
-struct ANGLE_EXPORT InternalFormat
+struct InternalFormat
 {
     InternalFormat();
 
@@ -95,9 +94,9 @@ struct ANGLE_EXPORT InternalFormat
     GLuint computeDepthPitch(GLenum type, GLsizei width, GLsizei height, GLint alignment) const;
     GLuint computeBlockSize(GLenum type, GLsizei width, GLsizei height) const;
 };
-ANGLE_EXPORT const InternalFormat &GetInternalFormatInfo(GLenum internalFormat);
+const InternalFormat &GetInternalFormatInfo(GLenum internalFormat);
 
-ANGLE_EXPORT GLenum GetSizedInternalFormat(GLenum internalFormat, GLenum type);
+GLenum GetSizedInternalFormat(GLenum internalFormat, GLenum type);
 
 typedef std::set<GLenum> FormatSet;
 const FormatSet &GetAllSizedInternalFormats();

@@ -7,7 +7,6 @@
 #ifndef LIBANGLE_ATTRIBUTEMAP_H_
 #define LIBANGLE_ATTRIBUTEMAP_H_
 
-#include "libANGLE/export.h"
 
 #include <EGL/egl.h>
 
@@ -16,7 +15,7 @@
 namespace egl
 {
 
-class ANGLE_EXPORT AttributeMap
+class AttributeMap
 {
   public:
     AttributeMap();

@@ -12,8 +12,6 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_NATIVEWINDOW_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_NATIVEWINDOW_H_
 
-#include "libANGLE/export.h"
-
 #include "common/debug.h"
 #include "common/platform.h"
 
@@ -72,8 +70,7 @@ class NativeWindow
 
 };
 
-// TODO: don't export this function.
-ANGLE_EXPORT bool IsValidEGLNativeWindowType(EGLNativeWindowType window);
+bool IsValidEGLNativeWindowType(EGLNativeWindowType window);
 }
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_NATIVEWINDOW_H_

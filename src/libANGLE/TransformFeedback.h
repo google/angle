@@ -8,7 +8,6 @@
 #define LIBANGLE_TRANSFORM_FEEDBACK_H_
 
 #include "libANGLE/RefCountObject.h"
-#include "libANGLE/export.h"
 
 #include "common/angleutils.h"
 
@@ -22,7 +21,7 @@ class TransformFeedbackImpl;
 namespace gl
 {
 
-class ANGLE_EXPORT TransformFeedback : public RefCountObject
+class TransformFeedback : public RefCountObject
 {
   public:
     TransformFeedback(rx::TransformFeedbackImpl* impl, GLuint id);

@@ -12,15 +12,13 @@
 #ifndef LIBANGLE_REFCOUNTOBJECT_H_
 #define LIBANGLE_REFCOUNTOBJECT_H_
 
-#include "libANGLE/export.h"
-
 #include "common/debug.h"
 
 #include "angle_gl.h"
 
 #include <cstddef>
 
-class ANGLE_EXPORT RefCountObject
+class RefCountObject
 {
   public:
     explicit RefCountObject(GLuint id);

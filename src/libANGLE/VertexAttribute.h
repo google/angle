@@ -10,12 +10,11 @@
 #define LIBANGLE_VERTEXATTRIBUTE_H_
 
 #include "libANGLE/Buffer.h"
-#include "libANGLE/export.h"
 
 namespace gl
 {
 
-struct ANGLE_EXPORT VertexAttribute
+struct VertexAttribute
 {
     bool enabled; // From glEnable/DisableVertexAttribArray
 

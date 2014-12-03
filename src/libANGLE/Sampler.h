@@ -11,13 +11,12 @@
 #define LIBANGLE_SAMPLER_H_
 
 #include "libANGLE/RefCountObject.h"
-#include "libANGLE/export.h"
 
 namespace gl
 {
 struct SamplerState;
 
-class ANGLE_EXPORT Sampler : public RefCountObject
+class Sampler : public RefCountObject
 {
   public:
     Sampler(GLuint id);

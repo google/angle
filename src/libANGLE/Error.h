@@ -9,8 +9,6 @@
 #ifndef LIBANGLE_ERROR_H_
 #define LIBANGLE_ERROR_H_
 
-#include "libANGLE/export.h"
-
 #include "angle_gl.h"
 #include <EGL/egl.h>
 
@@ -19,7 +17,7 @@
 namespace gl
 {
 
-class ANGLE_EXPORT Error
+class Error
 {
   public:
     explicit Error(GLenum errorCode);
@@ -42,7 +40,7 @@ class ANGLE_EXPORT Error
 namespace egl
 {
 
-class ANGLE_EXPORT Error
+class Error
 {
   public:
     explicit Error(EGLint errorCode);

@@ -12,7 +12,6 @@
 
 #include "libANGLE/Texture.h"
 #include "libANGLE/RefCountObject.h"
-#include "libANGLE/export.h"
 
 #include "common/angleutils.h"
 
@@ -33,7 +32,7 @@ class Renderbuffer;
 // Note: Our old naming scheme used the term "Renderbuffer" for both GL renderbuffers and for
 // framebuffer attachments, which confused their usage.
 
-class ANGLE_EXPORT FramebufferAttachment
+class FramebufferAttachment
 {
   public:
     explicit FramebufferAttachment(GLenum binding);
@@ -77,7 +76,7 @@ class ANGLE_EXPORT FramebufferAttachment
     GLenum mBinding;
 };
 
-class ANGLE_EXPORT TextureAttachment : public FramebufferAttachment
+class TextureAttachment : public FramebufferAttachment
 {
   public:
     TextureAttachment(GLenum binding, Texture *texture, const ImageIndex &index);
@@ -107,7 +106,7 @@ class ANGLE_EXPORT TextureAttachment : public FramebufferAttachment
     ImageIndex mIndex;
 };
 
-class ANGLE_EXPORT RenderbufferAttachment : public FramebufferAttachment
+class RenderbufferAttachment : public FramebufferAttachment
 {
   public:
     RenderbufferAttachment(GLenum binding, Renderbuffer *renderbuffer);
@@ -136,7 +135,7 @@ class ANGLE_EXPORT RenderbufferAttachment : public FramebufferAttachment
     BindingPointer<Renderbuffer> mRenderbuffer;
 };
 
-class ANGLE_EXPORT DefaultAttachment : public FramebufferAttachment
+class DefaultAttachment : public FramebufferAttachment
 {
   public:
     DefaultAttachment(GLenum binding, rx::DefaultAttachmentImpl *impl);

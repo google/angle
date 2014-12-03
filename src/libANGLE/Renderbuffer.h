@@ -15,7 +15,6 @@
 
 #include "libANGLE/Error.h"
 #include "libANGLE/RefCountObject.h"
-#include "libANGLE/export.h"
 
 #include "common/angleutils.h"
 
@@ -33,7 +32,7 @@ class FramebufferAttachment;
 // FramebufferAttachment and Framebuffer for how they are applied to an FBO via an
 // attachment point.
 
-class ANGLE_EXPORT Renderbuffer : public RefCountObject
+class Renderbuffer : public RefCountObject
 {
   public:
     Renderbuffer(rx::RenderbufferImpl *impl, GLuint id);

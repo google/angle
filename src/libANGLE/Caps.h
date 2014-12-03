@@ -7,8 +7,6 @@
 #ifndef LIBANGLE_CAPS_H_
 #define LIBANGLE_CAPS_H_
 
-#include "libANGLE/export.h"
-
 #include "angle_gl.h"
 
 #include <set>
@@ -21,7 +19,7 @@ namespace gl
 
 typedef std::set<GLuint> SupportedSampleSet;
 
-struct ANGLE_EXPORT TextureCaps
+struct TextureCaps
 {
     TextureCaps();
 
@@ -44,7 +42,7 @@ struct ANGLE_EXPORT TextureCaps
     GLuint getNearestSamples(GLuint requestedSamples) const;
 };
 
-class ANGLE_EXPORT TextureCapsMap
+class TextureCapsMap
 {
   public:
     typedef std::unordered_map<GLenum, TextureCaps>::const_iterator const_iterator;
@@ -64,7 +62,7 @@ class ANGLE_EXPORT TextureCapsMap
     InternalFormatToCapsMap mCapsMap;
 };
 
-struct ANGLE_EXPORT Extensions
+struct Extensions
 {
     Extensions();
 
@@ -216,7 +214,7 @@ struct ANGLE_EXPORT Extensions
     bool colorBufferFloat;
 };
 
-struct ANGLE_EXPORT Caps
+struct Caps
 {
     Caps();
 

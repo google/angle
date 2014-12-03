@@ -19,7 +19,6 @@
 #include "libANGLE/HandleAllocator.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/angletypes.h"
-#include "libANGLE/export.h"
 
 #include "angle_gl.h"
 
@@ -60,7 +59,7 @@ class VertexArray;
 class Sampler;
 class TransformFeedback;
 
-class ANGLE_EXPORT Context
+class Context
 {
   public:
     Context(int clientVersion, const Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);

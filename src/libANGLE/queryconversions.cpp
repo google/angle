@@ -138,10 +138,10 @@ void CastStateValues(Context *context, GLenum nativeType, GLenum pname,
 // The calls below will make CastStateValues successfully link with the GL state query types
 // The GL state query API types are: bool, int, uint, float, int64
 
-template ANGLE_EXPORT void CastStateValues<GLboolean>(Context *, GLenum, GLenum, unsigned int, GLboolean *);
-template ANGLE_EXPORT void CastStateValues<GLint>(Context *, GLenum, GLenum, unsigned int, GLint *);
-template ANGLE_EXPORT void CastStateValues<GLuint>(Context *, GLenum, GLenum, unsigned int, GLuint *);
-template ANGLE_EXPORT void CastStateValues<GLfloat>(Context *, GLenum, GLenum, unsigned int, GLfloat *);
-template ANGLE_EXPORT void CastStateValues<GLint64>(Context *, GLenum, GLenum, unsigned int, GLint64 *);
+template void CastStateValues<GLboolean>(Context *, GLenum, GLenum, unsigned int, GLboolean *);
+template void CastStateValues<GLint>(Context *, GLenum, GLenum, unsigned int, GLint *);
+template void CastStateValues<GLuint>(Context *, GLenum, GLenum, unsigned int, GLuint *);
+template void CastStateValues<GLfloat>(Context *, GLenum, GLenum, unsigned int, GLfloat *);
+template void CastStateValues<GLint64>(Context *, GLenum, GLenum, unsigned int, GLint64 *);
 
 }
