@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f47cdec_726ce077",
+        "filename": "src/libGLESv2/entry_points.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-03T22:16:23Z",
+      "side": 1,
+      "message": "This file is so large it will be difficult to maintain. Could you split it up, perhaps into egl_entry_points.cpp, gles2_entry_points.cpp, and either gles3_entry_points.cpp or  gles3_0_entry_points.cpp? (Thinking ahead to a potential gles3_1_entry_points.cpp.)",
+      "revId": "ec6b654293e7cbe99d5673d84084d23ab10c4555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f44c9e8_11131c00",
+        "filename": "src/libGLESv2/entry_points.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-03T22:16:23Z",
+      "side": 1,
+      "message": "Same comment as in entry_points.cpp. Would be better to split this into egl_entry_points.h, gles2_entry_points.h, and gles3_0_entry_points.h or similar.",
+      "revId": "ec6b654293e7cbe99d5673d84084d23ab10c4555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
