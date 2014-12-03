@@ -53,7 +53,7 @@ void Shader::setSource(GLsizei count, const char *const *string, const GLint *le
     {
         if (length == nullptr || length[i] < 0)
         {
-            stream.write(string[i], std::strlen(string[i]));
+            stream.write(string[i], strlen(string[i]));
         }
         else
         {
