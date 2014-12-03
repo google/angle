@@ -366,7 +366,6 @@
             [
                 '.',
                 '../include',
-                'libANGLE',
             ],
             'sources':
             [

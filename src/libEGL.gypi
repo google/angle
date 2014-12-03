@@ -20,9 +20,6 @@
                     [
                         '.',
                         '../include',
-                        'libANGLE',
-                        'libEGL',
-                        'libGLESv2',
                     ],
                     'sources':
                     [
