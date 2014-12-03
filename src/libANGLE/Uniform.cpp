@@ -8,6 +8,8 @@
 
 #include "common/utilities.h"
 
+#include <cstring>
+
 namespace gl
 {
 
