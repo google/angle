@@ -448,14 +448,6 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
         return Error(GL_NO_ERROR);
     }
 
-    // TODO: move to ProgramImpl
-    int compileFlags = stream.readInt<int>();
-    if (compileFlags != ANGLE_COMPILE_OPTIMIZATION_LEVEL)
-    {
-        mInfoLog.append("Mismatched compilation flags.");
-        return Error(GL_NO_ERROR);
-    }
-
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
         stream.readInt(&mLinkedAttribute[i].type);
@@ -491,9 +483,6 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
     stream.writeInt(ANGLE_MAJOR_VERSION);
     stream.writeInt(ANGLE_MINOR_VERSION);
     stream.writeBytes(reinterpret_cast<const unsigned char*>(ANGLE_COMMIT_HASH), ANGLE_COMMIT_HASH_SIZE);
-
-    // TODO: move to ProgramImpl
-    stream.writeInt(ANGLE_COMPILE_OPTIMIZATION_LEVEL);
 
     for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {

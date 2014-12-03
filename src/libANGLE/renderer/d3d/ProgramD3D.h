@@ -29,6 +29,12 @@ class RendererD3D;
 class UniformStorage;
 class ShaderExecutable;
 
+#if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
+// WARNING: D3DCOMPILE_OPTIMIZATION_LEVEL3 may lead to a DX9 shader compiler hang.
+// It should only be used selectively to work around specific bugs.
+#define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL1
+#endif
+
 class ProgramD3D : public ProgramImpl
 {
   public:

@@ -402,6 +402,13 @@ bool ProgramD3D::validateSamplers(gl::InfoLog *infoLog, const gl::Caps &caps)
 
 LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 {
+    int compileFlags = stream->readInt<int>();
+    if (compileFlags != ANGLE_COMPILE_OPTIMIZATION_LEVEL)
+    {
+        infoLog.append("Mismatched compilation flags.");
+        return LinkResult(false, gl::Error(GL_NO_ERROR));
+    }
+
     stream->readInt(&mShaderVersion);
 
     const unsigned int psSamplerCount = stream->readInt<unsigned int>();
@@ -654,6 +661,8 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 
 gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
 {
+    stream->writeInt(ANGLE_COMPILE_OPTIMIZATION_LEVEL);
+
     stream->writeInt(mShaderVersion);
 
     stream->writeInt(mSamplersPS.size());
