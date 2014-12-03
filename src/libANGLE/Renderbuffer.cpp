@@ -9,14 +9,13 @@
 // [OpenGL ES 2.0.24] section 4.4.3 page 108.
 
 #include "libANGLE/Renderbuffer.h"
-#include "libANGLE/Texture.h"
-#include "libANGLE/formatutils.h"
-#include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/renderer/d3d/RendererD3D.h"
-#include "libANGLE/renderer/RenderTarget.h"
-#include "libANGLE/renderer/RenderbufferImpl.h"
 
 #include "common/utilities.h"
+#include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/Texture.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/RenderTarget.h"
+#include "libANGLE/renderer/RenderbufferImpl.h"
 
 namespace gl
 {
