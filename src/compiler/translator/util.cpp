@@ -307,7 +307,7 @@ void GetVariableTraverser::setTypeSpecificInfo(
         break;
       case EvqVaryingIn:
       case EvqVaryingOut:
-        if (mSymbolTable.isVaryingInvariant(name))
+        if (mSymbolTable.isVaryingInvariant(std::string(name.c_str())))
         {
             variable->isInvariant = true;
         }

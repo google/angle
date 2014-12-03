@@ -218,4 +218,29 @@ TEST(ShaderVariableTest, IsSameVaryingWithDifferentInvariance)
     EXPECT_TRUE(vx.isSameVaryingAtLinkTime(fx));
 }
 
+// Test that using invariant varyings doesn't trigger a double delete.
+TEST(ShaderVariableTest, InvariantDoubleDeleteBug)
+{
+    ShBuiltInResources resources;
+    ShInitBuiltInResources(&resources);
+
+    ShHandle compiler = ShConstructCompiler(GL_VERTEX_SHADER, SH_GLES2_SPEC, SH_GLSL_OUTPUT, &resources);
+    EXPECT_NE(static_cast<ShHandle>(0), compiler);
+
+    const char *program[] =
+    {
+        "attribute vec4 position;\n"
+        "varying float v;\n"
+        "invariant v;\n"
+        "void main() {\n"
+        "  v = 1.0;\n"
+        "  gl_Position = position;\n"
+        "}"
+    };
+
+    EXPECT_TRUE(ShCompile(compiler, program, 1, SH_OBJECT_CODE));
+    EXPECT_TRUE(ShCompile(compiler, program, 1, SH_OBJECT_CODE));
+    ShDestruct(compiler);
+}
+
 }  // namespace sh
