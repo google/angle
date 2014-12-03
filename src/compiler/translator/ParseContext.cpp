@@ -1390,7 +1390,7 @@ TIntermAggregate* TParseContext::parseInvariantDeclaration(const TSourceLoc &inv
             recover();
             return NULL;
         }
-        symbolTable.addInvariantVarying(*identifier);
+        symbolTable.addInvariantVarying(std::string(identifier->c_str()));
         const TVariable *variable = getNamedVariable(identifierLoc, identifier, symbol);
         ASSERT(variable);
         const TType &type = variable->getType();
