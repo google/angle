@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f44c9e8_510f649d",
+        "filename": "BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-03T22:22:41Z",
+      "side": 1,
+      "message": "Is it worth a comment pointing out that the main reason this has to be a static library is that Chromium doesn\u0027t ship the multithreaded DLL C runtime?",
+      "revId": "7a4419798d39d7505e484722ae0a31b31f35a000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f44c9e8_f1c550cd",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-03T22:22:41Z",
+      "side": 1,
+      "message": "Similar comment here; is it worth pointing out that in Chromium\u0027s build it\u0027s not possible for this to be a shared library?",
+      "revId": "7a4419798d39d7505e484722ae0a31b31f35a000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
