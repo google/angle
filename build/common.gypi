@@ -106,7 +106,10 @@
                     {
                         'Optimization': '0',    # /Od
                         'BasicRuntimeChecks': '3',
-                        'RuntimeLibrary': '3',  # /MDd (Debug Multithreaded DLL)
+
+                        # Use the static C runtime to match chromium and make sure we don't depend on
+                        # the dynamic runtime's shared heaps
+                        'RuntimeLibrary': '1',  # /MTd (debug static)
                     },
                     'VCLinkerTool':
                     {
@@ -143,7 +146,10 @@
                     'VCCLCompilerTool':
                     {
                         'Optimization': '2',    # /Os
-                        'RuntimeLibrary': '2',  # /MD (Multithreaded DLL)
+
+                        # Use the static C runtime to match chromium and make sure we don't depend on
+                        # the dynamic runtime's shared heaps
+                        'RuntimeLibrary': '0', #  /MT (nondebug static)
                     },
                     'VCLinkerTool':
                     {

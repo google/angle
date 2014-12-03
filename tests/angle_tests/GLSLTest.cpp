@@ -821,13 +821,3 @@ TYPED_TEST(GLSLTest, ZeroShaderLength)
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
     EXPECT_NE(compileResult, 0);
 }
-
-// Verify that a length value much larger than the source length will crash.
-TYPED_TEST(GLSLTest, InvalidShaderLength)
-{
-    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
-
-    const char *sourceArray[1] = { "" };
-    GLint lengths[1] = { std::numeric_limits<GLint>::max() };
-    EXPECT_ANY_THROW(glShaderSource(shader, ArraySize(sourceArray), sourceArray, lengths));
-}
