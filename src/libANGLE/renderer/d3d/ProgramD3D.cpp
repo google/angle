@@ -277,7 +277,7 @@ void ProgramD3D::updateSamplerMapping()
 
         if (targetUniform->dirty)
         {
-            if (gl::IsSampler(targetUniform->type))
+            if (gl::IsSamplerType(targetUniform->type))
             {
                 int count = targetUniform->elementCount();
                 GLint (*v)[4] = reinterpret_cast<GLint(*)[4]>(targetUniform->data);
@@ -1052,7 +1052,7 @@ void ProgramD3D::initializeUniformStorage()
     {
         const gl::LinkedUniform &uniform = *mUniforms[uniformIndex];
 
-        if (!gl::IsSampler(uniform.type))
+        if (!gl::IsSamplerType(uniform.type))
         {
             if (uniform.isReferencedByVertexShader())
             {
@@ -1498,7 +1498,7 @@ void ProgramD3D::setUniform(GLint location, GLsizei count, const T* v, GLenum ta
             }
         }
     }
-    else if (gl::IsSampler(targetUniform->type))
+    else if (gl::IsSamplerType(targetUniform->type))
     {
         ASSERT(targetUniformType == GL_INT);
 
@@ -1834,7 +1834,7 @@ bool ProgramD3D::assignSamplers(unsigned int startSamplerIndex,
 
 bool ProgramD3D::indexSamplerUniform(const gl::LinkedUniform &uniform, gl::InfoLog &infoLog, const gl::Caps &caps)
 {
-    ASSERT(gl::IsSampler(uniform.type));
+    ASSERT(gl::IsSamplerType(uniform.type));
     ASSERT(uniform.vsRegisterIndex != GL_INVALID_INDEX || uniform.psRegisterIndex != GL_INVALID_INDEX);
 
     if (uniform.vsRegisterIndex != GL_INVALID_INDEX)
@@ -1884,7 +1884,7 @@ bool ProgramD3D::indexUniforms(gl::InfoLog &infoLog, const gl::Caps &caps)
     {
         const gl::LinkedUniform &uniform = *mUniforms[uniformIndex];
 
-        if (gl::IsSampler(uniform.type))
+        if (gl::IsSamplerType(uniform.type))
         {
             if (!indexSamplerUniform(uniform, infoLog, caps))
             {

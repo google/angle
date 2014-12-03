@@ -77,7 +77,7 @@ size_t LinkedUniform::dataSize() const
 
 bool LinkedUniform::isSampler() const
 {
-    return IsSampler(type);
+    return IsSamplerType(type);
 }
 
 UniformBlock::UniformBlock(const std::string &name, unsigned int elementIndex, unsigned int dataSize)

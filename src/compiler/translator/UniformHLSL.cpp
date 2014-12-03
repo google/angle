@@ -105,7 +105,7 @@ unsigned int UniformHLSL::declareUniformAndAssignRegister(const TType &type, con
 
     unsigned int registerCount = HLSLVariableRegisterCount(*uniform, mOutputType);
 
-    if (gl::IsSampler(uniform->type))
+    if (gl::IsSamplerType(uniform->type))
     {
         mSamplerRegister += registerCount;
     }

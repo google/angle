@@ -24,7 +24,7 @@ size_t VariableExternalSize(GLenum type);
 GLenum VariableBoolVectorType(GLenum type);
 int VariableRowCount(GLenum type);
 int VariableColumnCount(GLenum type);
-bool IsSampler(GLenum type);
+bool IsSamplerType(GLenum type);
 bool IsMatrixType(GLenum type);
 GLenum TransposeMatrixType(GLenum type);
 int VariableRegisterCount(GLenum type);

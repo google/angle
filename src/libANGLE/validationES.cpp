@@ -1107,7 +1107,7 @@ bool ValidateUniform(gl::Context *context, GLenum uniformType, GLint location, G
     }
 
     GLenum targetBoolType = VariableBoolVectorType(uniformType);
-    bool samplerUniformCheck = (IsSampler(uniform->type) && uniformType == GL_INT);
+    bool samplerUniformCheck = (IsSamplerType(uniform->type) && uniformType == GL_INT);
     if (!samplerUniformCheck && uniformType != uniform->type && targetBoolType != uniform->type)
     {
         context->recordError(Error(GL_INVALID_OPERATION));

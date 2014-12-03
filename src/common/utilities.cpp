@@ -254,7 +254,7 @@ int VariableColumnCount(GLenum type)
     return 0;
 }
 
-bool IsSampler(GLenum type)
+bool IsSamplerType(GLenum type)
 {
     switch (type)
     {
