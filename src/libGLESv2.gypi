@@ -17,8 +17,6 @@
             'common/mathutil.cpp',
             'common/mathutil.h',
             'common/platform.h',
-            'common/tls.cpp',
-            'common/tls.h',
             'common/utilities.cpp',
             'common/utilities.h',
             'common/version.h',
@@ -351,6 +349,38 @@
             'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp',
             'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h',
         ],
+        'libglesv2_sources':
+        [
+            'common/angleutils.h',
+            'common/debug.h',
+            'common/tls.h',
+            'libGLESv2/entry_points_egl.cpp',
+            'libGLESv2/entry_points_egl.h',
+            'libGLESv2/entry_points_egl_ext.cpp',
+            'libGLESv2/entry_points_egl_ext.h',
+            'libGLESv2/entry_points_gles_2_0.cpp',
+            'libGLESv2/entry_points_gles_2_0.h',
+            'libGLESv2/entry_points_gles_2_0_ext.cpp',
+            'libGLESv2/entry_points_gles_2_0_ext.h',
+            'libGLESv2/entry_points_gles_3_0.cpp',
+            'libGLESv2/entry_points_gles_3_0.h',
+            'libGLESv2/entry_points_gles_3_0_ext.cpp',
+            'libGLESv2/entry_points_gles_3_0_ext.h',
+            'libGLESv2/export.h',
+            'libGLESv2/global_state.cpp',
+            'libGLESv2/global_state.h',
+            'libGLESv2/libGLESv2.cpp',
+            'libGLESv2/libGLESv2.def',
+            'libGLESv2/libGLESv2.rc',
+            'libGLESv2/resource.h',
+        ],
+        'libegl_sources':
+        [
+            'libEGL/libEGL.cpp',
+            'libEGL/libEGL.def',
+            'libEGL/libEGL.rc',
+            'libEGL/resource.h',
+        ],
     },
     # Everything below this is duplicated in the GN build. If you change
     # anything also change angle/BUILD.gn
@@ -561,18 +591,13 @@
             'includes': [ '../build/common_defines.gypi', ],
             'sources':
             [
-                'common/angleutils.h',
-                'common/debug.h',
-                'common/tls.h',
-                'libGLESv2/libGLESv2.cpp',
-                'libGLESv2/libGLESv2.def',
-                'libGLESv2/libGLESv2.rc',
-                'libGLESv2/main.cpp',
-                'libGLESv2/main.h',
-                'libGLESv2/resource.h',
+                '<@(libglesv2_sources)',
             ],
             'defines':
             [
+                'GL_APICALL=',
+                'GL_GLEXT_PROTOTYPES=',
+                'EGLAPI=',
                 'LIBGLESV2_IMPLEMENTATION',
             ],
             'conditions':

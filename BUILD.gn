@@ -207,11 +207,6 @@ if (is_win) {
       "//build/config/compiler:no_chromium_code",
     ]
 
-    direct_dependent_configs = [
-      ":commit_id_config",
-      ":libANGLE_config",
-    ]
-
     deps = [
       ":commit_id",
       ":includes",
@@ -221,22 +216,7 @@ if (is_win) {
   }
 
   shared_library("libGLESv2") {
-    sources = [
-      "src/common/angleutils.cpp",
-      "src/common/angleutils.h",
-      "src/common/debug.cpp",
-      "src/common/debug.h",
-      "src/common/event_tracer.cpp",
-      "src/common/event_tracer.h",
-      "src/common/tls.cpp",
-      "src/common/tls.h",
-      "src/libGLESv2/libGLESv2.cpp",
-      "src/libGLESv2/libGLESv2.def",
-      "src/libGLESv2/libGLESv2.rc",
-      "src/libGLESv2/main.cpp",
-      "src/libGLESv2/main.h",
-      "src/libGLESv2/resource.h",
-    ]
+    sources = rebase_path(gles_gypi.libglesv2_sources, ".", "src")
 
     ldflags = [ "/DEF:" +
                rebase_path("src/libGLESv2/libGLESv2.def", root_build_dir) ]
@@ -244,6 +224,8 @@ if (is_win) {
     configs -= [ "//build/config/compiler:chromium_code" ]
     configs += [
       ":internal_config",
+      ":commit_id_config",
+      ":libANGLE_config",
       "//build/config/compiler:no_chromium_code",
     ]
 
@@ -258,22 +240,7 @@ if (is_win) {
   }
 
   shared_library("libEGL") {
-    sources = [
-      "src/common/angleutils.cpp",
-      "src/common/angleutils.h",
-      "src/common/debug.cpp",
-      "src/common/debug.h",
-      "src/common/event_tracer.cpp",
-      "src/common/event_tracer.h",
-      "src/common/tls.cpp",
-      "src/common/tls.h",
-      "src/libEGL/libEGL.cpp",
-      "src/libEGL/libEGL.def",
-      "src/libEGL/libEGL.rc",
-      "src/libEGL/main.cpp",
-      "src/libEGL/main.h",
-      "src/libEGL/resource.h",
-    ]
+    sources = rebase_path(gles_gypi.libegl_sources, ".", "src")
 
     ldflags = [ "/DEF:" +
                rebase_path("src/libEGL/libEGL.def", root_build_dir) ]
@@ -281,6 +248,8 @@ if (is_win) {
     configs -= [ "//build/config/compiler:chromium_code" ]
     configs += [
       ":internal_config",
+      ":commit_id_config",
+      ":libANGLE_config",
       "//build/config/compiler:no_chromium_code",
     ]
 
@@ -290,7 +259,6 @@ if (is_win) {
 
     deps = [
       ":includes",
-      ":libANGLE",
       ":libGLESv2",
     ]
   }
