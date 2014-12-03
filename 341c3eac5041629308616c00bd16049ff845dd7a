@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f44c9e8_1156bc1e",
+        "filename": "build/common.gypi",
+        "patchSetId": 7
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-03T22:04:20Z",
+      "side": 1,
+      "message": "Could you please add a comment here and reference it below saying that the choice of the static C runtime is deliberate, because Chromium doesn\u0027t use the multithreaded DLL C runtime? Otherwise I think people are going to be confused coming back to these settings later.",
+      "revId": "341c3eac5041629308616c00bd16049ff845dd7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
