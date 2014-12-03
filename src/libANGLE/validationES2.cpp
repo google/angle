@@ -144,10 +144,7 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
     const gl::Caps &caps = context->getCaps();
 
     gl::Texture *texture = NULL;
-    bool textureCompressed = false;
     GLenum textureInternalFormat = GL_NONE;
-    GLint textureLevelWidth = 0;
-    GLint textureLevelHeight = 0;
     switch (target)
     {
       case GL_TEXTURE_2D:
@@ -162,10 +159,7 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
             gl::Texture2D *tex2d = context->getTexture2D();
             if (tex2d)
             {
-                textureCompressed = tex2d->isCompressed(level);
                 textureInternalFormat = tex2d->getInternalFormat(level);
-                textureLevelWidth = tex2d->getWidth(level);
-                textureLevelHeight = tex2d->getHeight(level);
                 texture = tex2d;
             }
 
@@ -202,10 +196,7 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
             gl::TextureCubeMap *texCube = context->getTextureCubeMap();
             if (texCube)
             {
-                textureCompressed = texCube->isCompressed(target, level);
                 textureInternalFormat = texCube->getInternalFormat(target, level);
-                textureLevelWidth = texCube->getWidth(target, level);
-                textureLevelHeight = texCube->getHeight(target, level);
                 texture = texCube;
             }
 
