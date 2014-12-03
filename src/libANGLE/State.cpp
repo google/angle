@@ -231,7 +231,8 @@ void State::setClearStencil(int stencil)
 
 ClearParameters State::getClearParameters(GLbitfield mask) const
 {
-    ClearParameters clearParams = { 0 };
+    ClearParameters clearParams;
+    memset(&clearParams, 0, sizeof(ClearParameters));
     for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
     {
         clearParams.clearColor[i] = false;
