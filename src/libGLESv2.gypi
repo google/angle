@@ -156,8 +156,6 @@
             'libANGLE/validationES3.h',
             'third_party/murmurhash/MurmurHash3.cpp',
             'third_party/murmurhash/MurmurHash3.h',
-            'third_party/systeminfo/SystemInfo.cpp',
-            'third_party/systeminfo/SystemInfo.h',
         ],
         'libangle_d3d_shared_sources':
         [
@@ -342,6 +340,8 @@
         'libangle_d3d11_win32_sources':
         [
             'libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp',
+            'third_party/systeminfo/SystemInfo.cpp',
+            'third_party/systeminfo/SystemInfo.h',
         ],
         'libangle_d3d11_winrt_sources':
         [
