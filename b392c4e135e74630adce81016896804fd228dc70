@@ -22,6 +22,30 @@
       "revId": "b392c4e135e74630adce81016896804fd228dc70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf3dc54e_a9d5254a",
+        "filename": "tests/angle_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-04T15:57:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df38b95e_e4711484",
+      "range": {
+        "startLine": 696,
+        "startChar": 61,
+        "endLine": 696,
+        "endChar": 111
+      },
+      "revId": "b392c4e135e74630adce81016896804fd228dc70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
