@@ -16,6 +16,24 @@
       "revId": "ec6b654293e7cbe99d5673d84084d23ab10c4555",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff33bd7c_d64924ae",
+        "filename": "tests/angle_tests/GLSLTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 832,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-04T15:51:04Z",
+      "side": 0,
+      "message": "+1, would be worth figuring out, you can also mark this test as DISABLED_ with a //TODO checking as to why.",
+      "parentUuid": "7f47cdec_b20d882b",
+      "revId": "ec6b654293e7cbe99d5673d84084d23ab10c4555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
