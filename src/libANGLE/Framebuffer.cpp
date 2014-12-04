@@ -268,7 +268,7 @@ GLenum Framebuffer::getDrawBufferState(unsigned int colorAttachment) const
 
 void Framebuffer::setDrawBuffers(size_t count, const GLenum *buffers)
 {
-    ASSERT(count < ArraySize(mDrawBufferStates));
+    ASSERT(count <= ArraySize(mDrawBufferStates));
     std::copy(buffers, buffers + count, mDrawBufferStates);
     std::fill(mDrawBufferStates + count, mDrawBufferStates + ArraySize(mDrawBufferStates), GL_NONE);
 }
