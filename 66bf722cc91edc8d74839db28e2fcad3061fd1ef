@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf3dc54e_0998d1ff",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-04T19:07:39Z",
+      "side": 1,
+      "message": "nit:typo",
+      "range": {
+        "startLine": 96,
+        "startChar": 68,
+        "endLine": 96,
+        "endChar": 78
+      },
+      "revId": "66bf722cc91edc8d74839db28e2fcad3061fd1ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff33bd7c_5c945517",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-04T19:07:39Z",
+      "side": 1,
+      "message": "todo: validate null device.",
+      "range": {
+        "startLine": 198,
+        "startChar": 18,
+        "endLine": 200,
+        "endChar": 70
+      },
+      "revId": "66bf722cc91edc8d74839db28e2fcad3061fd1ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
