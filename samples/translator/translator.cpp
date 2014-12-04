@@ -90,13 +90,32 @@ int main(int argc, char *argv[])
               case 'e': compileOptions |= SH_EMULATE_BUILT_IN_FUNCTIONS; break;
               case 'd': compileOptions |= SH_DEPENDENCY_GRAPH; break;
               case 't': compileOptions |= SH_TIMING_RESTRICTIONS; break;
+              case 'p': resources.WEBGL_debug_shader_precision = 1; break;
               case 's':
                 if (argv[0][2] == '=')
                 {
                     switch (argv[0][3])
                     {
-                      case 'e': spec = SH_GLES2_SPEC; break;
-                      case 'w': spec = SH_WEBGL_SPEC; break;
+                      case 'e':
+                        if (argv[0][4] == '3')
+                        {
+                            spec = SH_GLES3_SPEC;
+                        }
+                        else
+                        {
+                            spec = SH_GLES2_SPEC;
+                        }
+                        break;
+                      case 'w':
+                        if (argv[0][4] == '2')
+                        {
+                            spec = SH_WEBGL2_SPEC;
+                        }
+                        else
+                        {
+                            spec = SH_WEBGL_SPEC;
+                        }
+                        break;
                       case 'c': spec = SH_CSS_SHADERS_SPEC; break;
                       default: failCode = EFailUsage;
                     }
@@ -232,7 +251,7 @@ int main(int argc, char *argv[])
 //
 void usage()
 {
-    printf("Usage: translate [-i -m -o -u -l -e -b=e -b=g -b=h -x=i -x=d] file1 file2 ...\n"
+    printf("Usage: translate [-i -o -u -l -e -t -d -p -b=e -b=g -b=h9 -x=i -x=d] file1 file2 ...\n"
         "Where: filename : filename ending in .frag or .vert\n"
         "       -i       : print intermediate tree\n"
         "       -o       : print translated code\n"
@@ -241,8 +260,11 @@ void usage()
         "       -e       : emulate certain built-in functions (workaround for driver bugs)\n"
         "       -t       : enforce experimental timing restrictions\n"
         "       -d       : print dependency graph used to enforce timing restrictions\n"
-        "       -s=e     : use GLES2 spec (this is by default)\n"
+        "       -p       : use precision emulation\n"
+        "       -s=e2    : use GLES2 spec (this is by default)\n"
+        "       -s=e3    : use GLES3 spec (in development)\n"
         "       -s=w     : use WebGL spec\n"
+        "       -s=w2    : use WebGL 2 spec (in development)\n"
         "       -s=c     : use CSS Shaders spec\n"
         "       -b=e     : output GLSL ES code (this is by default)\n"
         "       -b=g     : output GLSL code\n"
