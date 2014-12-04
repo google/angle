@@ -30,6 +30,7 @@
 
 #include "common/utilities.h"
 #include "common/version.h"
+#include "common/event_tracer.h"
 
 extern "C"
 {
@@ -8817,6 +8818,13 @@ void GL_APIENTRY glFlushMappedBufferRangeEXT (GLenum target, GLintptr offset, GL
 
         // We do not currently support a non-trivial implementation of FlushMappedBufferRange
     }
+}
+
+void GL_APIENTRY SetTraceFunctionPointers(GetCategoryEnabledFlagFunc getCategoryEnabledFlag,
+                                          AddTraceEventFunc addTraceEvent)
+{
+    gl::g_getCategoryEnabledFlag = getCategoryEnabledFlag;
+    gl::g_addTraceEvent = addTraceEvent;
 }
 
 }

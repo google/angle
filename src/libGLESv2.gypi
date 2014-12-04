@@ -14,8 +14,6 @@
             'common/blocklayout.h',
             'common/debug.cpp',
             'common/debug.h',
-            'common/event_tracer.cpp',
-            'common/event_tracer.h',
             'common/mathutil.cpp',
             'common/mathutil.h',
             'common/platform.h',
@@ -43,6 +41,8 @@
         ],
         'libangle_sources':
         [
+            'common/event_tracer.cpp',
+            'common/event_tracer.h',
             'libANGLE/AttributeMap.cpp',
             'libANGLE/AttributeMap.h',
             'libANGLE/BinaryStream.h',
@@ -565,8 +565,6 @@
                 'common/angleutils.h',
                 'common/debug.cpp',
                 'common/debug.h',
-                'common/event_tracer.cpp',
-                'common/event_tracer.h',
                 'common/tls.cpp',
                 'common/tls.h',
                 'libGLESv2/libGLESv2.cpp',

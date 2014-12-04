@@ -7,14 +7,6 @@
 
 #include "common/platform.h"
 
-#if !defined(TRACE_ENTRY)
-#   ifdef ANGLE_PLATFORM_WINDOWS
-#       define TRACE_ENTRY __stdcall
-#   else
-#       define TRACE_ENTRY
-#   endif // ANGLE_PLATFORM_WINDOWS
-#endif //TRACE_ENTRY
-
 extern "C" {
 
 typedef const unsigned char* (*GetCategoryEnabledFlagFunc)(const char* name);
@@ -23,14 +15,13 @@ typedef void (*AddTraceEventFunc)(char phase, const unsigned char* categoryGroup
                                   const unsigned char* argTypes, const unsigned long long* argValues,
                                   unsigned char flags);
 
-// extern "C" so that it has a reasonable name for GetProcAddress.
-void TRACE_ENTRY SetTraceFunctionPointers(GetCategoryEnabledFlagFunc get_category_enabled_flag,
-                                          AddTraceEventFunc add_trace_event_func);
-
 }
 
 namespace gl
 {
+
+extern GetCategoryEnabledFlagFunc g_getCategoryEnabledFlag;
+extern AddTraceEventFunc g_addTraceEvent;
 
 const unsigned char* TraceGetTraceCategoryEnabledFlag(const char* name);
 

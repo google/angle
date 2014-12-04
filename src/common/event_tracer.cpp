@@ -12,17 +12,6 @@ AddTraceEventFunc g_addTraceEvent;
 
 }  // namespace gl
 
-extern "C" {
-
-void TRACE_ENTRY SetTraceFunctionPointers(GetCategoryEnabledFlagFunc getCategoryEnabledFlag,
-                                          AddTraceEventFunc addTraceEvent)
-{
-    gl::g_getCategoryEnabledFlag = getCategoryEnabledFlag;
-    gl::g_addTraceEvent = addTraceEvent;
-}
-
-}  // extern "C"
-
 namespace gl
 {
 
