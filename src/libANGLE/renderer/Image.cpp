@@ -9,7 +9,9 @@
 // surfaces or resources.
 
 #include "libANGLE/renderer/Image.h"
+#include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/Framebuffer.h"
+#include "libANGLE/FramebufferAttachment.h"
 
 namespace rx
 {

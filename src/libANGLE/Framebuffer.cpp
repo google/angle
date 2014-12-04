@@ -13,89 +13,13 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/renderer/RenderTarget.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
 #include "libANGLE/renderer/Workarounds.h"
-#include "libANGLE/renderer/d3d/TextureD3D.h"
-#include "libANGLE/renderer/d3d/RenderbufferD3D.h"
-#include "libANGLE/renderer/d3d/FramebufferD3D.h"
 
 #include "common/utilities.h"
-
-namespace rx
-{
-// TODO: Move these functions, and the D3D-specific header inclusions above,
-//       to FramebufferD3D.
-gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget **outRT)
-{
-    if (attachment->type() == GL_TEXTURE)
-    {
-        gl::Texture *texture = attachment->getTexture();
-        ASSERT(texture);
-        TextureD3D *textureD3D = TextureD3D::makeTextureD3D(texture->getImplementation());
-        const gl::ImageIndex *index = attachment->getTextureImageIndex();
-        ASSERT(index);
-        return textureD3D->getRenderTarget(*index, outRT);
-    }
-    else if (attachment->type() == GL_RENDERBUFFER)
-    {
-        gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
-        ASSERT(renderbuffer);
-        RenderbufferD3D *renderbufferD3D = RenderbufferD3D::makeRenderbufferD3D(renderbuffer->getImplementation());
-        *outRT = renderbufferD3D->getRenderTarget();
-        return gl::Error(GL_NO_ERROR);
-    }
-    else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
-    {
-        const gl::DefaultAttachment *defaultAttachment = static_cast<const gl::DefaultAttachment *>(attachment);
-        DefaultAttachmentD3D *defaultAttachmentD3D = DefaultAttachmentD3D::makeDefaultAttachmentD3D(defaultAttachment->getImplementation());
-        ASSERT(defaultAttachmentD3D);
-
-        *outRT = defaultAttachmentD3D->getRenderTarget();
-        return gl::Error(GL_NO_ERROR);
-    }
-    else
-    {
-        UNREACHABLE();
-        return gl::Error(GL_INVALID_OPERATION);
-    }
-}
-
-// Note: RenderTarget serials should ideally be in the RenderTargets themselves.
-unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment)
-{
-    if (attachment->type() == GL_TEXTURE)
-    {
-        gl::Texture *texture = attachment->getTexture();
-        ASSERT(texture);
-        TextureD3D *textureD3D = TextureD3D::makeTextureD3D(texture->getImplementation());
-        const gl::ImageIndex *index = attachment->getTextureImageIndex();
-        ASSERT(index);
-        return textureD3D->getRenderTargetSerial(*index);
-    }
-    else if (attachment->type() == GL_RENDERBUFFER)
-    {
-        gl::Renderbuffer *renderbuffer = attachment->getRenderbuffer();
-        ASSERT(renderbuffer);
-        RenderbufferD3D *renderbufferD3D = RenderbufferD3D::makeRenderbufferD3D(renderbuffer->getImplementation());
-        return renderbufferD3D->getRenderTargetSerial();
-    }
-    else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
-    {
-        const gl::DefaultAttachment *defaultAttachment = static_cast<const gl::DefaultAttachment *>(attachment);
-        DefaultAttachmentD3D *defaultAttachmentD3D = DefaultAttachmentD3D::makeDefaultAttachmentD3D(defaultAttachment->getImplementation());
-        ASSERT(defaultAttachmentD3D);
-        return defaultAttachmentD3D->getRenderTarget()->getSerial();
-    }
-    else
-    {
-        UNREACHABLE();
-        return 0;
-    }
-}
-
-}
 
 namespace gl
 {

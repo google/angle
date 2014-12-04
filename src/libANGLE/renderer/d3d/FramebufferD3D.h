@@ -11,6 +11,11 @@
 
 #include "libANGLE/renderer/FramebufferImpl.h"
 
+namespace gl
+{
+class FramebufferAttachment;
+}
+
 namespace rx
 {
 class RenderTarget;
@@ -48,6 +53,9 @@ class FramebufferD3D : public FramebufferImpl
   private:
     RendererD3D *const mRenderer;
 };
+
+gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget **outRT);
+unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment);
 
 }
 

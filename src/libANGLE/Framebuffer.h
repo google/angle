@@ -118,14 +118,4 @@ class DefaultFramebuffer : public Framebuffer
 
 }
 
-namespace rx
-{
-class RenderTarget;
-
-// TODO: place this in FramebufferD3D.h
-gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget **outRT);
-unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment);
-
-}
-
 #endif   // LIBANGLE_FRAMEBUFFER_H_
