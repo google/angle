@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "ff33bd7c_51d19e06",
+        "filename": "src/libGLESv2/entry_points.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-04T16:43:28Z",
+      "side": 1,
+      "message": "just checked on Linux.. please use TLS_INVALID_INDEX to be cross-platform. our libEGL was using the old Windows-specific value, and our libGLESv2 was up-to-date, so you might have grabbed the values from libEGL.",
+      "range": {
+        "startLine": 55,
+        "startChar": 29,
+        "endLine": 55,
+        "endChar": 47
+      },
+      "revId": "ec6b654293e7cbe99d5673d84084d23ab10c4555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f44c9e8_11131c00",
         "filename": "src/libGLESv2/entry_points.h",
         "patchSetId": 6
