@@ -32,7 +32,7 @@ namespace egl
 {
 class Surface;
 
-class Display
+class Display final
 {
   public:
     ~Display();
@@ -67,8 +67,7 @@ class Display
 
     rx::Renderer *getRenderer() { return mRenderer; };
 
-    // exported methods must be virtual
-    virtual void notifyDeviceLost();
+    void notifyDeviceLost();
 
     const char *getExtensionString() const;
     const char *getVendorString() const;
