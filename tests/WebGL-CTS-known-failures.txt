@@ -1,19 +1,11 @@
 Known failures in the WebGL CTS, top of tree, using Chromium
 https://www.khronos.org/registry/webgl/sdk/tests/webgl-conformance-tests.html
 
-conformance/extensions/oes-texture-float-with-video.html: 8 tests failed
-conformance/extensions/oes-texture-half-float-with-video.html: 8 tests failed
 conformance/glsl/bugs/compound-assignment-type-combination.html: 54 tests failed
 conformance/glsl/misc/struct-equals.html: 3 tests failed
 conformance/glsl/misc/struct-specifiers-in-uniforms.html: 12 tests failed
 conformance/glsl/misc/ternary-operators-in-global-initializers.html: 12 tests failed
-conformance/textures/tex-image-and-sub-image-2d-with-video.html: 7 tests failed
-conformance/textures/tex-image-and-sub-image-2d-with-video-rgb565.html: 8 tests failed
-conformance/textures/tex-image-and-sub-image-2d-with-video-rgba4444.html: 8 tests failed
-conformance/textures/tex-image-and-sub-image-2d-with-video-rgba5551.html: 8 tests failed
 conformance/textures/tex-image-and-sub-image-2d-with-webgl-canvas.html: 32 tests failed
 conformance/textures/tex-image-and-sub-image-2d-with-webgl-canvas-rgb565.html: 64 tests failed
 conformance/textures/tex-image-and-sub-image-2d-with-webgl-canvas-rgba4444.html: 64 tests failed
 conformance/textures/tex-image-and-sub-image-2d-with-webgl-canvas-rgba5551.html: 64 tests failed
-conformance/textures/texture-npot-video.html: 7 tests failed
-conformance/textures/texture-upload-size.html: 2 tests failed
