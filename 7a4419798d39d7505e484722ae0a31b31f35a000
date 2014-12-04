@@ -33,6 +33,24 @@
       "revId": "7a4419798d39d7505e484722ae0a31b31f35a000",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff33bd7c_f6c548cd",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-04T15:04:18Z",
+      "side": 1,
+      "message": "It actually doesn\u0027t need to be shared any more with the new design but it makes more sense as static because libANGLE is only included by one other project.  It also makes writing implementation unit tests easier since the classes they test don\u0027t need to be exported.",
+      "parentUuid": "5f44c9e8_f1c550cd",
+      "revId": "7a4419798d39d7505e484722ae0a31b31f35a000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
