@@ -561,11 +561,8 @@
             'includes': [ '../build/common_defines.gypi', ],
             'sources':
             [
-                'common/angleutils.cpp',
                 'common/angleutils.h',
-                'common/debug.cpp',
                 'common/debug.h',
-                'common/tls.cpp',
                 'common/tls.h',
                 'libGLESv2/libGLESv2.cpp',
                 'libGLESv2/libGLESv2.def',
