@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df38b95e_b5c5781c",
+        "filename": "src/libGLESv2/entry_points.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-04T18:44:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f47cdec_726ce077",
+      "revId": "ec6b654293e7cbe99d5673d84084d23ab10c4555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff33bd7c_51d19e06",
         "filename": "src/libGLESv2/entry_points.cpp",
         "patchSetId": 6
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "df38b95e_15c1c40f",
+        "filename": "src/libGLESv2/entry_points.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-04T18:44:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff33bd7c_51d19e06",
+      "range": {
+        "startLine": 55,
+        "startChar": 29,
+        "endLine": 55,
+        "endChar": 47
+      },
+      "revId": "ec6b654293e7cbe99d5673d84084d23ab10c4555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f44c9e8_11131c00",
         "filename": "src/libGLESv2/entry_points.h",
         "patchSetId": 6
@@ -53,6 +95,24 @@
       "writtenOn": "2014-12-03T22:16:23Z",
       "side": 1,
       "message": "Same comment as in entry_points.cpp. Would be better to split this into egl_entry_points.h, gles2_entry_points.h, and gles3_0_entry_points.h or similar.",
+      "revId": "ec6b654293e7cbe99d5673d84084d23ab10c4555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf3dc54e_a91765e8",
+        "filename": "src/libGLESv2/entry_points.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-04T18:44:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f44c9e8_11131c00",
       "revId": "ec6b654293e7cbe99d5673d84084d23ab10c4555",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
