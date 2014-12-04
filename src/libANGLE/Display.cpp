@@ -135,6 +135,15 @@ Display *Display::getDisplay(EGLNativeDisplayType displayId, const AttributeMap 
     else
     {
         display = new Display(displayId);
+
+        // Validate the native display
+        if (!display->isValidNativeDisplay(displayId))
+        {
+            // Still returns success
+            SafeDelete(display);
+            return NULL;
+        }
+
         displays->insert(std::make_pair(displayId, display));
     }
 
@@ -676,6 +685,27 @@ const char *Display::getExtensionString(egl::Display *display)
 bool Display::isValidNativeWindow(EGLNativeWindowType window) const
 {
     return mImplementation->isValidNativeWindow(window);
+}
+
+bool Display::isValidNativeDisplay(EGLNativeDisplayType display) const
+{
+    // TODO(jmadill): handle this properly
+    if (display == EGL_DEFAULT_DISPLAY)
+    {
+        return true;
+    }
+
+#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(ANGLE_ENABLE_WINDOWS_STORE)
+    if (display == EGL_SOFTWARE_DISPLAY_ANGLE ||
+        display == EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE ||
+        display == EGL_D3D11_ONLY_DISPLAY_ANGLE)
+    {
+        return true;
+    }
+    return (WindowFromDC(display) != NULL);
+#else
+    return true;
+#endif
 }
 
 bool Display::supportsPlatformD3D()

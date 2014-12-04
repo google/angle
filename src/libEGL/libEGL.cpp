@@ -118,17 +118,6 @@ EGLDisplay __stdcall eglGetPlatformDisplayEXT(EGLenum platform, void *native_dis
         return EGL_NO_DISPLAY;
     }
 
-    EGLNativeDisplayType displayId = static_cast<EGLNativeDisplayType>(native_display);
-
-#if !defined(ANGLE_ENABLE_WINDOWS_STORE)
-    // Validate the display device context
-    if (WindowFromDC(displayId) == NULL)
-    {
-        recordError(egl::Error(EGL_SUCCESS));
-        return EGL_NO_DISPLAY;
-    }
-#endif
-
     EGLint platformType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
     bool majorVersionSpecified = false;
     bool minorVersionSpecified = false;
@@ -225,6 +214,8 @@ EGLDisplay __stdcall eglGetPlatformDisplayEXT(EGLenum platform, void *native_dis
     }
 
     recordError(egl::Error(EGL_SUCCESS));
+
+    EGLNativeDisplayType displayId = static_cast<EGLNativeDisplayType>(native_display);
     return egl::Display::getDisplay(displayId, egl::AttributeMap(attrib_list));
 }
 

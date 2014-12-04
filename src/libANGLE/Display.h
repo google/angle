@@ -64,6 +64,7 @@ class Display final
     bool isValidSurface(egl::Surface *surface);
     bool hasExistingWindowSurface(EGLNativeWindowType window);
     bool isValidNativeWindow(EGLNativeWindowType window) const;
+    bool isValidNativeDisplay(EGLNativeDisplayType display) const;
 
     rx::Renderer *getRenderer() { return mRenderer; };
 
