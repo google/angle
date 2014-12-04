@@ -39,6 +39,8 @@ class DisplayImpl
                                                 EGLenum textureFormat, EGLenum textureTarget) = 0;
     virtual egl::Error restoreLostDevice() = 0;
 
+    virtual bool isValidNativeWindow(EGLNativeWindowType window) const = 0;
+
     typedef std::set<egl::Surface*> SurfaceSet;
     const SurfaceSet &getSurfaceSet() const { return mSurfaceSet; }
     SurfaceSet &getSurfaceSet() { return mSurfaceSet; }

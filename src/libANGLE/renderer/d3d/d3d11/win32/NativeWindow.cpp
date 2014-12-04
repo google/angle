@@ -12,10 +12,6 @@
 
 namespace rx
 {
-bool IsValidEGLNativeWindowType(EGLNativeWindowType window)
-{
-    return (IsWindow(window) == TRUE);
-}
 
 NativeWindow::NativeWindow(EGLNativeWindowType window) : mWindow(window)
 {

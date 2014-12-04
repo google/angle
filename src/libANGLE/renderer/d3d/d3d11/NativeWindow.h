@@ -70,7 +70,6 @@ class NativeWindow
 
 };
 
-bool IsValidEGLNativeWindowType(EGLNativeWindowType window);
 }
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_NATIVEWINDOW_H_

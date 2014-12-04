@@ -63,6 +63,7 @@ class Display
     bool isValidContext(gl::Context *context);
     bool isValidSurface(egl::Surface *surface);
     bool hasExistingWindowSurface(EGLNativeWindowType window);
+    bool isValidNativeWindow(EGLNativeWindowType window) const;
 
     rx::Renderer *getRenderer() { return mRenderer; };
 

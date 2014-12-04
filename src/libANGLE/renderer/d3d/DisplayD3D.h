@@ -27,6 +27,8 @@ class DisplayD3D : public DisplayImpl
                                         EGLenum textureFormat, EGLenum textureTarget) override;
     egl::Error restoreLostDevice() override;
 
+    bool isValidNativeWindow(EGLNativeWindowType window) const override;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(DisplayD3D);
 

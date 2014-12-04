@@ -673,6 +673,11 @@ const char *Display::getExtensionString(egl::Display *display)
     }
 }
 
+bool Display::isValidNativeWindow(EGLNativeWindowType window) const
+{
+    return mImplementation->isValidNativeWindow(window);
+}
+
 bool Display::supportsPlatformD3D()
 {
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)

@@ -16,7 +16,6 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/Surface.h"
-#include "libANGLE/renderer/SwapChain.h"
 
 #include "common/debug.h"
 #include "common/version.h"
@@ -410,7 +409,7 @@ EGLSurface __stdcall eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, EG
         return EGL_NO_SURFACE;
     }
 
-    if (!rx::IsValidEGLNativeWindowType(win))
+    if (!display->isValidNativeWindow(win))
     {
         recordError(egl::Error(EGL_BAD_NATIVE_WINDOW));
         return EGL_NO_SURFACE;
