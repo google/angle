@@ -61,9 +61,6 @@
 #define ANGLE_SUPPORT_SHADER_MODEL_2 0
 #endif
 
-const D3DFORMAT D3DFMT_INTZ = ((D3DFORMAT)(MAKEFOURCC('I','N','T','Z')));
-const D3DFORMAT D3DFMT_NULL = ((D3DFORMAT)(MAKEFOURCC('N','U','L','L')));
-
 namespace rx
 {
 static const D3DFORMAT RenderTargetFormats[] =

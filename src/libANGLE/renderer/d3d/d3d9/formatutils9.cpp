@@ -192,8 +192,8 @@ typedef std::pair<GLenum, TextureFormat> D3D9FormatPair;
 typedef std::map<GLenum, TextureFormat> D3D9FormatMap;
 
 TextureFormat::TextureFormat()
-    : texFormat(D3DFMT_NULL),
-      renderFormat(D3DFMT_NULL),
+    : texFormat(D3DFMT_UNKNOWN),
+      renderFormat(D3DFMT_UNKNOWN),
       dataInitializerFunction(NULL),
       loadFunction(UnreachableLoad)
 {
