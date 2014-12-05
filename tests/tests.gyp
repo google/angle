@@ -145,6 +145,54 @@
                 },
             },
         },
+        {
+            'target_name': 'angle_implementation_unit_tests',
+            'type': 'executable',
+            'dependencies':
+            [
+                '../src/angle.gyp:libANGLE',
+                'angle_test_support',
+            ],
+            'include_dirs':
+            [
+                '../include',
+                '../src',
+            ],
+            'includes':
+            [
+                '../build/common_defines.gypi',
+                'angle_implementation_unit_tests/angle_implementation_unit_tests.gypi',
+            ],
+            'sources':
+            [
+                'angle_implementation_unit_tests/angle_implementation_unit_tests_main.cpp',
+            ],
+            'conditions':
+            [
+                ['angle_build_winrt==1',
+                {
+                    'sources':
+                    [
+                        'angle_implementation_unit_tests/CoreWindowNativeWindow_unittest.cpp',
+                        'angle_implementation_unit_tests/SwapChainPanelNativeWindow_unittest.cpp',
+                    ],
+                    'defines':
+                    [
+                        'ANGLE_ENABLE_D3D11',
+                    ],
+                    'msvs_settings':
+                    {
+                        'VCLinkerTool':
+                        {
+                            'AdditionalDependencies':
+                            [
+                                'runtimeobject.lib',
+                            ],
+                        },
+                    },
+                }],
+            ],
+        },
     ],
 
     'conditions':
@@ -223,54 +271,6 @@
                     ],
                 },
 
-                {
-                    'target_name': 'angle_implementation_unit_tests',
-                    'type': 'executable',
-                    'dependencies':
-                    [
-                        '../src/angle.gyp:libANGLE',
-                        'angle_test_support',
-                    ],
-                    'include_dirs':
-                    [
-                        '../include',
-                        '../src',
-                    ],
-                    'includes':
-                    [
-                        '../build/common_defines.gypi',
-                        'angle_implementation_unit_tests/angle_implementation_unit_tests.gypi',
-                    ],
-                    'sources':
-                    [
-                        'angle_implementation_unit_tests/angle_implementation_unit_tests_main.cpp',
-                    ],
-                    'conditions':
-                    [
-                        ['angle_build_winrt==1',
-                        {
-                            'sources':
-                            [
-                                'angle_implementation_unit_tests/CoreWindowNativeWindow_unittest.cpp',
-                                'angle_implementation_unit_tests/SwapChainPanelNativeWindow_unittest.cpp',
-                            ],
-                            'defines':
-                            [
-                                'ANGLE_ENABLE_D3D11',
-                            ],
-                            'msvs_settings':
-                            {
-                                'VCLinkerTool':
-                                {
-                                    'AdditionalDependencies':
-                                    [
-                                        'runtimeobject.lib',
-                                    ],
-                                },
-                            },
-                        }],
-                    ],
-                },
             ],
             'conditions':
             [
