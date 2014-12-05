@@ -28,7 +28,7 @@
 namespace gl
 {
 
-void ReadBuffer(GLenum mode)
+void GL_APIENTRY ReadBuffer(GLenum mode)
 {
     EVENT("(GLenum mode = 0x%X)", mode);
 
@@ -46,7 +46,7 @@ void ReadBuffer(GLenum mode)
     }
 }
 
-void DrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid* indices)
+void GL_APIENTRY DrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid* indices)
 {
     EVENT("(GLenum mode = 0x%X, GLuint start = %u, GLuint end = %u, GLsizei count = %d, GLenum type = 0x%X, "
           "const GLvoid* indices = 0x%0.8p)", mode, start, end, count, type, indices);
@@ -65,7 +65,7 @@ void DrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLe
     }
 }
 
-void TexImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid* pixels)
+void GL_APIENTRY TexImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid* pixels)
 {
     EVENT("(GLenum target = 0x%X, GLint level = %d, GLint internalformat = %d, GLsizei width = %d, "
           "GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLenum format = 0x%X, "
@@ -121,7 +121,7 @@ void TexImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width,
     }
 }
 
-void TexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const GLvoid* pixels)
+void GL_APIENTRY TexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const GLvoid* pixels)
 {
     EVENT("(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, "
           "GLint zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, "
@@ -184,7 +184,7 @@ void TexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLi
     }
 }
 
-void CopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height)
+void GL_APIENTRY CopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height)
 {
     EVENT("(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, "
           "GLint zoffset = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
@@ -231,7 +231,7 @@ void CopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset,
     }
 }
 
-void CompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const GLvoid* data)
+void GL_APIENTRY CompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const GLvoid* data)
 {
     EVENT("(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLsizei width = %d, "
           "GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLsizei imageSize = %d, "
@@ -294,7 +294,7 @@ void CompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLs
     }
 }
 
-void CompressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const GLvoid* data)
+void GL_APIENTRY CompressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const GLvoid* data)
 {
     EVENT("(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, "
         "GLint zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, "
@@ -371,7 +371,7 @@ void CompressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yo
     }
 }
 
-void GenQueries(GLsizei n, GLuint* ids)
+void GL_APIENTRY GenQueries(GLsizei n, GLuint* ids)
 {
     EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
 
@@ -397,7 +397,7 @@ void GenQueries(GLsizei n, GLuint* ids)
     }
 }
 
-void DeleteQueries(GLsizei n, const GLuint* ids)
+void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint* ids)
 {
     EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
 
@@ -423,7 +423,7 @@ void DeleteQueries(GLsizei n, const GLuint* ids)
     }
 }
 
-GLboolean IsQuery(GLuint id)
+GLboolean GL_APIENTRY IsQuery(GLuint id)
 {
     EVENT("(GLuint id = %u)", id);
 
@@ -442,7 +442,7 @@ GLboolean IsQuery(GLuint id)
     return GL_FALSE;
 }
 
-void BeginQuery(GLenum target, GLuint id)
+void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
 {
     EVENT("(GLenum target = 0x%X, GLuint id = %u)", target, id);
 
@@ -469,7 +469,7 @@ void BeginQuery(GLenum target, GLuint id)
     }
 }
 
-void EndQuery(GLenum target)
+void GL_APIENTRY EndQuery(GLenum target)
 {
     EVENT("(GLenum target = 0x%X)", target);
 
@@ -496,7 +496,7 @@ void EndQuery(GLenum target)
     }
 }
 
-void GetQueryiv(GLenum target, GLenum pname, GLint* params)
+void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint* params)
 {
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", target, pname, params);
 
@@ -528,7 +528,7 @@ void GetQueryiv(GLenum target, GLenum pname, GLint* params)
     }
 }
 
-void GetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
+void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
 {
     EVENT("(GLuint id = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", id, pname, params);
 
@@ -586,7 +586,7 @@ void GetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
     }
 }
 
-GLboolean UnmapBuffer(GLenum target)
+GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
 {
     EVENT("(GLenum target = 0x%X)", target);
 
@@ -605,7 +605,7 @@ GLboolean UnmapBuffer(GLenum target)
     return GL_FALSE;
 }
 
-void GetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
+void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
 {
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLvoid** params = 0x%0.8p)", target, pname, params);
 
@@ -622,7 +622,7 @@ void GetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
     }
 }
 
-void DrawBuffers(GLsizei n, const GLenum* bufs)
+void GL_APIENTRY DrawBuffers(GLsizei n, const GLenum* bufs)
 {
     Context *context = GetValidGlobalContext();
     if (context)
@@ -637,7 +637,7 @@ void DrawBuffers(GLsizei n, const GLenum* bufs)
     }
 }
 
-void UniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+void GL_APIENTRY UniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
     EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
           location, count, transpose, value);
@@ -655,7 +655,7 @@ void UniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, cons
     }
 }
 
-void UniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+void GL_APIENTRY UniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
     EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
           location, count, transpose, value);
@@ -673,7 +673,7 @@ void UniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, cons
     }
 }
 
-void UniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+void GL_APIENTRY UniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
     EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
           location, count, transpose, value);
@@ -691,7 +691,7 @@ void UniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, cons
     }
 }
 
-void UniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+void GL_APIENTRY UniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
     EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
           location, count, transpose, value);
@@ -709,7 +709,7 @@ void UniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, cons
     }
 }
 
-void UniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+void GL_APIENTRY UniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
     EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
           location, count, transpose, value);
@@ -727,7 +727,7 @@ void UniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, cons
     }
 }
 
-void UniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+void GL_APIENTRY UniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
     EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
           location, count, transpose, value);
@@ -745,7 +745,7 @@ void UniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, cons
     }
 }
 
-void BlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter)
+void GL_APIENTRY BlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter)
 {
     EVENT("(GLint srcX0 = %d, GLint srcY0 = %d, GLint srcX1 = %d, GLint srcY1 = %d, GLint dstX0 = %d, "
           "GLint dstY0 = %d, GLint dstX1 = %d, GLint dstY1 = %d, GLbitfield mask = 0x%X, GLenum filter = 0x%X)",
@@ -777,7 +777,7 @@ void BlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint d
     }
 }
 
-void RenderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
+void GL_APIENTRY RenderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
 {
     EVENT("(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
         target, samples, internalformat, width, height);
@@ -801,7 +801,7 @@ void RenderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum inter
     }
 }
 
-void FramebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer)
+void GL_APIENTRY FramebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer)
 {
     EVENT("(GLenum target = 0x%X, GLenum attachment = 0x%X, GLuint texture = %u, GLint level = %d, GLint layer = %d)",
         target, attachment, texture, level, layer);
@@ -831,7 +831,7 @@ void FramebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, G
     }
 }
 
-GLvoid* MapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access)
+GLvoid *GL_APIENTRY MapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access)
 {
     EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d, GLbitfield access = 0x%X)",
           target, offset, length, access);
@@ -851,7 +851,7 @@ GLvoid* MapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitf
     return NULL;
 }
 
-void FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length)
+void GL_APIENTRY FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length)
 {
     EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d)", target, offset, length);
 
@@ -868,7 +868,7 @@ void FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length)
     }
 }
 
-void BindVertexArray(GLuint array)
+void GL_APIENTRY BindVertexArray(GLuint array)
 {
     EVENT("(GLuint array = %u)", array);
 
@@ -895,7 +895,7 @@ void BindVertexArray(GLuint array)
     }
 }
 
-void DeleteVertexArrays(GLsizei n, const GLuint* arrays)
+void GL_APIENTRY DeleteVertexArrays(GLsizei n, const GLuint* arrays)
 {
     EVENT("(GLsizei n = %d, const GLuint* arrays = 0x%0.8p)", n, arrays);
 
@@ -924,7 +924,7 @@ void DeleteVertexArrays(GLsizei n, const GLuint* arrays)
     }
 }
 
-void GenVertexArrays(GLsizei n, GLuint* arrays)
+void GL_APIENTRY GenVertexArrays(GLsizei n, GLuint* arrays)
 {
     EVENT("(GLsizei n = %d, GLuint* arrays = 0x%0.8p)", n, arrays);
 
@@ -950,7 +950,7 @@ void GenVertexArrays(GLsizei n, GLuint* arrays)
     }
 }
 
-GLboolean IsVertexArray(GLuint array)
+GLboolean GL_APIENTRY IsVertexArray(GLuint array)
 {
     EVENT("(GLuint array = %u)", array);
 
@@ -976,7 +976,7 @@ GLboolean IsVertexArray(GLuint array)
     return GL_FALSE;
 }
 
-void GetIntegeri_v(GLenum target, GLuint index, GLint* data)
+void GL_APIENTRY GetIntegeri_v(GLenum target, GLuint index, GLint* data)
 {
     EVENT("(GLenum target = 0x%X, GLuint index = %u, GLint* data = 0x%0.8p)",
           target, index, data);
@@ -1057,7 +1057,7 @@ void GetIntegeri_v(GLenum target, GLuint index, GLint* data)
     }
 }
 
-void BeginTransformFeedback(GLenum primitiveMode)
+void GL_APIENTRY BeginTransformFeedback(GLenum primitiveMode)
 {
     EVENT("(GLenum primitiveMode = 0x%X)", primitiveMode);
 
@@ -1102,7 +1102,7 @@ void BeginTransformFeedback(GLenum primitiveMode)
     }
 }
 
-void EndTransformFeedback(void)
+void GL_APIENTRY EndTransformFeedback(void)
 {
     EVENT("(void)");
 
@@ -1128,7 +1128,7 @@ void EndTransformFeedback(void)
     }
 }
 
-void BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size)
+void GL_APIENTRY BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size)
 {
     EVENT("(GLenum target = 0x%X, GLuint index = %u, GLuint buffer = %u, GLintptr offset = %d, GLsizeiptr size = %d)",
           target, index, buffer, offset, size);
@@ -1206,7 +1206,7 @@ void BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset
     }
 }
 
-void BindBufferBase(GLenum target, GLuint index, GLuint buffer)
+void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer)
 {
     EVENT("(GLenum target = 0x%X, GLuint index = %u, GLuint buffer = %u)",
           target, index, buffer);
@@ -1262,7 +1262,7 @@ void BindBufferBase(GLenum target, GLuint index, GLuint buffer)
     }
 }
 
-void TransformFeedbackVaryings(GLuint program, GLsizei count, const GLchar* const* varyings, GLenum bufferMode)
+void GL_APIENTRY TransformFeedbackVaryings(GLuint program, GLsizei count, const GLchar* const* varyings, GLenum bufferMode)
 {
     EVENT("(GLuint program = %u, GLsizei count = %d, const GLchar* const* varyings = 0x%0.8p, GLenum bufferMode = 0x%X)",
           program, count, varyings, bufferMode);
@@ -1311,7 +1311,7 @@ void TransformFeedbackVaryings(GLuint program, GLsizei count, const GLchar* cons
     }
 }
 
-void GetTransformFeedbackVarying(GLuint program, GLuint index, GLsizei bufSize, GLsizei* length, GLsizei* size, GLenum* type, GLchar* name)
+void GL_APIENTRY GetTransformFeedbackVarying(GLuint program, GLuint index, GLsizei bufSize, GLsizei* length, GLsizei* size, GLenum* type, GLchar* name)
 {
     EVENT("(GLuint program = %u, GLuint index = %u, GLsizei bufSize = %d, GLsizei* length = 0x%0.8p, "
           "GLsizei* size = 0x%0.8p, GLenum* type = 0x%0.8p, GLchar* name = 0x%0.8p)",
@@ -1350,7 +1350,7 @@ void GetTransformFeedbackVarying(GLuint program, GLuint index, GLsizei bufSize, 
     }
 }
 
-void VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid* pointer)
+void GL_APIENTRY VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid* pointer)
 {
     EVENT("(GLuint index = %u, GLint size = %d, GLenum type = 0x%X, GLsizei stride = %d, const GLvoid* pointer = 0x%0.8p)",
           index, size, type, stride, pointer);
@@ -1420,7 +1420,7 @@ void VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride,
     }
 }
 
-void GetVertexAttribIiv(GLuint index, GLenum pname, GLint* params)
+void GL_APIENTRY GetVertexAttribIiv(GLuint index, GLenum pname, GLint* params)
 {
     EVENT("(GLuint index = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)",
           index, pname, params);
@@ -1462,7 +1462,7 @@ void GetVertexAttribIiv(GLuint index, GLenum pname, GLint* params)
     }
 }
 
-void GetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params)
+void GL_APIENTRY GetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params)
 {
     EVENT("(GLuint index = %u, GLenum pname = 0x%X, GLuint* params = 0x%0.8p)",
           index, pname, params);
@@ -1504,7 +1504,7 @@ void GetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params)
     }
 }
 
-void VertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w)
+void GL_APIENTRY VertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w)
 {
     EVENT("(GLuint index = %u, GLint x = %d, GLint y = %d, GLint z = %d, GLint w = %d)",
           index, x, y, z, w);
@@ -1529,7 +1529,7 @@ void VertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w)
     }
 }
 
-void VertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w)
+void GL_APIENTRY VertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w)
 {
     EVENT("(GLuint index = %u, GLuint x = %u, GLuint y = %u, GLuint z = %u, GLuint w = %u)",
           index, x, y, z, w);
@@ -1554,7 +1554,7 @@ void VertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w)
     }
 }
 
-void VertexAttribI4iv(GLuint index, const GLint* v)
+void GL_APIENTRY VertexAttribI4iv(GLuint index, const GLint* v)
 {
     EVENT("(GLuint index = %u, const GLint* v = 0x%0.8p)", index, v);
 
@@ -1577,7 +1577,7 @@ void VertexAttribI4iv(GLuint index, const GLint* v)
     }
 }
 
-void VertexAttribI4uiv(GLuint index, const GLuint* v)
+void GL_APIENTRY VertexAttribI4uiv(GLuint index, const GLuint* v)
 {
     EVENT("(GLuint index = %u, const GLuint* v = 0x%0.8p)", index, v);
 
@@ -1600,7 +1600,7 @@ void VertexAttribI4uiv(GLuint index, const GLuint* v)
     }
 }
 
-void GetUniformuiv(GLuint program, GLint location, GLuint* params)
+void GL_APIENTRY GetUniformuiv(GLuint program, GLint location, GLuint* params)
 {
     EVENT("(GLuint program = %u, GLint location = %d, GLuint* params = 0x%0.8p)",
           program, location, params);
@@ -1620,7 +1620,7 @@ void GetUniformuiv(GLuint program, GLint location, GLuint* params)
     }
 }
 
-GLint GetFragDataLocation(GLuint program, const GLchar *name)
+GLint GL_APIENTRY GetFragDataLocation(GLuint program, const GLchar *name)
 {
     EVENT("(GLuint program = %u, const GLchar *name = 0x%0.8p)",
           program, name);
@@ -1654,30 +1654,30 @@ GLint GetFragDataLocation(GLuint program, const GLchar *name)
     return 0;
 }
 
-void Uniform1ui(GLint location, GLuint v0)
+void GL_APIENTRY Uniform1ui(GLint location, GLuint v0)
 {
     Uniform1uiv(location, 1, &v0);
 }
 
-void Uniform2ui(GLint location, GLuint v0, GLuint v1)
+void GL_APIENTRY Uniform2ui(GLint location, GLuint v0, GLuint v1)
 {
     const GLuint xy[] = { v0, v1 };
     Uniform2uiv(location, 1, xy);
 }
 
-void Uniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2)
+void GL_APIENTRY Uniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2)
 {
     const GLuint xyz[] = { v0, v1, v2 };
     Uniform3uiv(location, 1, xyz);
 }
 
-void Uniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
+void GL_APIENTRY Uniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
 {
     const GLuint xyzw[] = { v0, v1, v2, v3 };
     Uniform4uiv(location, 1, xyzw);
 }
 
-void Uniform1uiv(GLint location, GLsizei count, const GLuint* value)
+void GL_APIENTRY Uniform1uiv(GLint location, GLsizei count, const GLuint* value)
 {
     EVENT("(GLint location = %d, GLsizei count = %d, const GLuint* value = 0x%0.8p)",
           location, count, value);
@@ -1695,7 +1695,7 @@ void Uniform1uiv(GLint location, GLsizei count, const GLuint* value)
     }
 }
 
-void Uniform2uiv(GLint location, GLsizei count, const GLuint* value)
+void GL_APIENTRY Uniform2uiv(GLint location, GLsizei count, const GLuint* value)
 {
     EVENT("(GLint location = %d, GLsizei count = %d, const GLuint* value = 0x%0.8p)",
           location, count, value);
@@ -1713,7 +1713,7 @@ void Uniform2uiv(GLint location, GLsizei count, const GLuint* value)
     }
 }
 
-void Uniform3uiv(GLint location, GLsizei count, const GLuint* value)
+void GL_APIENTRY Uniform3uiv(GLint location, GLsizei count, const GLuint* value)
 {
     EVENT("(GLint location = %d, GLsizei count = %d, const GLuint* value)",
           location, count, value);
@@ -1731,7 +1731,7 @@ void Uniform3uiv(GLint location, GLsizei count, const GLuint* value)
     }
 }
 
-void Uniform4uiv(GLint location, GLsizei count, const GLuint* value)
+void GL_APIENTRY Uniform4uiv(GLint location, GLsizei count, const GLuint* value)
 {
     EVENT("(GLint location = %d, GLsizei count = %d, const GLuint* value = 0x%0.8p)",
           location, count, value);
@@ -1749,7 +1749,7 @@ void Uniform4uiv(GLint location, GLsizei count, const GLuint* value)
     }
 }
 
-void ClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* value)
+void GL_APIENTRY ClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* value)
 {
     EVENT("(GLenum buffer = 0x%X, GLint drawbuffer = %d, const GLint* value = 0x%0.8p)",
           buffer, drawbuffer, value);
@@ -1794,7 +1794,7 @@ void ClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* value)
     }
 }
 
-void ClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint* value)
+void GL_APIENTRY ClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint* value)
 {
     EVENT("(GLenum buffer = 0x%X, GLint drawbuffer = %d, const GLuint* value = 0x%0.8p)",
           buffer, drawbuffer, value);
@@ -1831,7 +1831,7 @@ void ClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint* value)
     }
 }
 
-void ClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* value)
+void GL_APIENTRY ClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* value)
 {
     EVENT("(GLenum buffer = 0x%X, GLint drawbuffer = %d, const GLfloat* value = 0x%0.8p)",
           buffer, drawbuffer, value);
@@ -1876,7 +1876,7 @@ void ClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* value)
     }
 }
 
-void ClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
+void GL_APIENTRY ClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
 {
     EVENT("(GLenum buffer = 0x%X, GLint drawbuffer = %d, GLfloat depth, GLint stencil = %d)",
           buffer, drawbuffer, depth, stencil);
@@ -1913,7 +1913,7 @@ void ClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil
     }
 }
 
-const GLubyte* GetStringi(GLenum name, GLuint index)
+const GLubyte *GL_APIENTRY GetStringi(GLenum name, GLuint index)
 {
     EVENT("(GLenum name = 0x%X, GLuint index = %u)", name, index);
 
@@ -1944,7 +1944,7 @@ const GLubyte* GetStringi(GLenum name, GLuint index)
     return NULL;
 }
 
-void CopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size)
+void GL_APIENTRY CopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size)
 {
     EVENT("(GLenum readTarget = 0x%X, GLenum writeTarget = 0x%X, GLintptr readOffset = %d, GLintptr writeOffset = %d, GLsizeiptr size = %d)",
           readTarget, writeTarget, readOffset, writeOffset, size);
@@ -2007,7 +2007,7 @@ void CopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffse
     }
 }
 
-void GetUniformIndices(GLuint program, GLsizei uniformCount, const GLchar* const* uniformNames, GLuint* uniformIndices)
+void GL_APIENTRY GetUniformIndices(GLuint program, GLsizei uniformCount, const GLchar* const* uniformNames, GLuint* uniformIndices)
 {
     EVENT("(GLuint program = %u, GLsizei uniformCount = %d, const GLchar* const* uniformNames = 0x%0.8p, GLuint* uniformIndices = 0x%0.8p)",
           program, uniformCount, uniformNames, uniformIndices);
@@ -2060,7 +2060,7 @@ void GetUniformIndices(GLuint program, GLsizei uniformCount, const GLchar* const
     }
 }
 
-void GetActiveUniformsiv(GLuint program, GLsizei uniformCount, const GLuint* uniformIndices, GLenum pname, GLint* params)
+void GL_APIENTRY GetActiveUniformsiv(GLuint program, GLsizei uniformCount, const GLuint* uniformIndices, GLenum pname, GLint* params)
 {
     EVENT("(GLuint program = %u, GLsizei uniformCount = %d, const GLuint* uniformIndices = 0x%0.8p, GLenum pname = 0x%X, GLint* params = 0x%0.8p)",
           program, uniformCount, uniformIndices, pname, params);
@@ -2138,7 +2138,7 @@ void GetActiveUniformsiv(GLuint program, GLsizei uniformCount, const GLuint* uni
     }
 }
 
-GLuint GetUniformBlockIndex(GLuint program, const GLchar* uniformBlockName)
+GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar* uniformBlockName)
 {
     EVENT("(GLuint program = %u, const GLchar* uniformBlockName = 0x%0.8p)", program, uniformBlockName);
 
@@ -2173,7 +2173,7 @@ GLuint GetUniformBlockIndex(GLuint program, const GLchar* uniformBlockName)
     return 0;
 }
 
-void GetActiveUniformBlockiv(GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint* params)
+void GL_APIENTRY GetActiveUniformBlockiv(GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint* params)
 {
     EVENT("(GLuint program = %u, GLuint uniformBlockIndex = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)",
           program, uniformBlockIndex, pname, params);
@@ -2230,7 +2230,7 @@ void GetActiveUniformBlockiv(GLuint program, GLuint uniformBlockIndex, GLenum pn
     }
 }
 
-void GetActiveUniformBlockName(GLuint program, GLuint uniformBlockIndex, GLsizei bufSize, GLsizei* length, GLchar* uniformBlockName)
+void GL_APIENTRY GetActiveUniformBlockName(GLuint program, GLuint uniformBlockIndex, GLsizei bufSize, GLsizei* length, GLchar* uniformBlockName)
 {
     EVENT("(GLuint program = %u, GLuint uniformBlockIndex = %u, GLsizei bufSize = %d, GLsizei* length = 0x%0.8p, GLchar* uniformBlockName = 0x%0.8p)",
           program, uniformBlockIndex, bufSize, length, uniformBlockName);
@@ -2270,7 +2270,7 @@ void GetActiveUniformBlockName(GLuint program, GLuint uniformBlockIndex, GLsizei
     }
 }
 
-void UniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding)
+void GL_APIENTRY UniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding)
 {
     EVENT("(GLuint program = %u, GLuint uniformBlockIndex = %u, GLuint uniformBlockBinding = %u)",
           program, uniformBlockIndex, uniformBlockBinding);
@@ -2317,7 +2317,7 @@ void UniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint unifor
     }
 }
 
-void DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount)
+void GL_APIENTRY DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount)
 {
     EVENT("(GLenum mode = 0x%X, GLint first = %d, GLsizei count = %d, GLsizei instanceCount = %d)",
           mode, first, count, instanceCount);
@@ -2336,7 +2336,7 @@ void DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instan
     }
 }
 
-void DrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices, GLsizei instanceCount)
+void GL_APIENTRY DrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices, GLsizei instanceCount)
 {
     EVENT("(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const GLvoid* indices = 0x%0.8p, GLsizei instanceCount = %d)",
           mode, count, type, indices, instanceCount);
@@ -2355,7 +2355,7 @@ void DrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const GLvoid
     }
 }
 
-GLsync FenceSync_(GLenum condition, GLbitfield flags)
+GLsync GL_APIENTRY FenceSync_(GLenum condition, GLbitfield flags)
 {
     EVENT("(GLenum condition = 0x%X, GLbitfield flags = 0x%X)", condition, flags);
 
@@ -2397,7 +2397,7 @@ GLsync FenceSync_(GLenum condition, GLbitfield flags)
     return NULL;
 }
 
-GLboolean IsSync(GLsync sync)
+GLboolean GL_APIENTRY IsSync(GLsync sync)
 {
     EVENT("(GLsync sync = 0x%0.8p)", sync);
 
@@ -2416,7 +2416,7 @@ GLboolean IsSync(GLsync sync)
     return GL_FALSE;
 }
 
-void DeleteSync(GLsync sync)
+void GL_APIENTRY DeleteSync(GLsync sync)
 {
     EVENT("(GLsync sync = 0x%0.8p)", sync);
 
@@ -2439,7 +2439,7 @@ void DeleteSync(GLsync sync)
     }
 }
 
-GLenum ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
+GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
     EVENT("(GLsync sync = 0x%0.8p, GLbitfield flags = 0x%X, GLuint64 timeout = %llu)",
           sync, flags, timeout);
@@ -2481,7 +2481,7 @@ GLenum ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
     return GL_FALSE;
 }
 
-void WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
+void GL_APIENTRY WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
     EVENT("(GLsync sync = 0x%0.8p, GLbitfield flags = 0x%X, GLuint64 timeout = %llu)",
           sync, flags, timeout);
@@ -2523,7 +2523,7 @@ void WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
     }
 }
 
-void GetInteger64v(GLenum pname, GLint64* params)
+void GL_APIENTRY GetInteger64v(GLenum pname, GLint64* params)
 {
     EVENT("(GLenum pname = 0x%X, GLint64* params = 0x%0.8p)",
           pname, params);
@@ -2555,7 +2555,7 @@ void GetInteger64v(GLenum pname, GLint64* params)
     }
 }
 
-void GetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* length, GLint* values)
+void GL_APIENTRY GetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* length, GLint* values)
 {
     EVENT("(GLsync sync = 0x%0.8p, GLenum pname = 0x%X, GLsizei bufSize = %d, GLsizei* length = 0x%0.8p, GLint* values = 0x%0.8p)",
           sync, pname, bufSize, length, values);
@@ -2607,7 +2607,7 @@ void GetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* length, GLin
     }
 }
 
-void GetInteger64i_v(GLenum target, GLuint index, GLint64* data)
+void GL_APIENTRY GetInteger64i_v(GLenum target, GLuint index, GLint64* data)
 {
     EVENT("(GLenum target = 0x%X, GLuint index = %u, GLint64* data = 0x%0.8p)",
           target, index, data);
@@ -2683,7 +2683,7 @@ void GetInteger64i_v(GLenum target, GLuint index, GLint64* data)
     }
 }
 
-void GetBufferParameteri64v(GLenum target, GLenum pname, GLint64* params)
+void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64* params)
 {
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint64* params = 0x%0.8p)",
           target, pname, params);
@@ -2743,7 +2743,7 @@ void GetBufferParameteri64v(GLenum target, GLenum pname, GLint64* params)
     }
 }
 
-void GenSamplers(GLsizei count, GLuint* samplers)
+void GL_APIENTRY GenSamplers(GLsizei count, GLuint* samplers)
 {
     EVENT("(GLsizei count = %d, GLuint* samplers = 0x%0.8p)", count, samplers);
 
@@ -2769,7 +2769,7 @@ void GenSamplers(GLsizei count, GLuint* samplers)
     }
 }
 
-void DeleteSamplers(GLsizei count, const GLuint* samplers)
+void GL_APIENTRY DeleteSamplers(GLsizei count, const GLuint* samplers)
 {
     EVENT("(GLsizei count = %d, const GLuint* samplers = 0x%0.8p)", count, samplers);
 
@@ -2795,7 +2795,7 @@ void DeleteSamplers(GLsizei count, const GLuint* samplers)
     }
 }
 
-GLboolean IsSampler(GLuint sampler)
+GLboolean GL_APIENTRY IsSampler(GLuint sampler)
 {
     EVENT("(GLuint sampler = %u)", sampler);
 
@@ -2814,7 +2814,7 @@ GLboolean IsSampler(GLuint sampler)
     return GL_FALSE;
 }
 
-void BindSampler(GLuint unit, GLuint sampler)
+void GL_APIENTRY BindSampler(GLuint unit, GLuint sampler)
 {
     EVENT("(GLuint unit = %u, GLuint sampler = %u)", unit, sampler);
 
@@ -2843,7 +2843,7 @@ void BindSampler(GLuint unit, GLuint sampler)
     }
 }
 
-void SamplerParameteri(GLuint sampler, GLenum pname, GLint param)
+void GL_APIENTRY SamplerParameteri(GLuint sampler, GLenum pname, GLint param)
 {
     EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint param = %d)", sampler, pname, param);
 
@@ -2876,12 +2876,12 @@ void SamplerParameteri(GLuint sampler, GLenum pname, GLint param)
     }
 }
 
-void SamplerParameteriv(GLuint sampler, GLenum pname, const GLint* param)
+void GL_APIENTRY SamplerParameteriv(GLuint sampler, GLenum pname, const GLint* param)
 {
     SamplerParameteri(sampler, pname, *param);
 }
 
-void SamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
+void GL_APIENTRY SamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
 {
     EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLfloat param = %g)", sampler, pname, param);
 
@@ -2914,12 +2914,12 @@ void SamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
     }
 }
 
-void SamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat* param)
+void GL_APIENTRY SamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat* param)
 {
     SamplerParameterf(sampler, pname, *param);
 }
 
-void GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint* params)
+void GL_APIENTRY GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint* params)
 {
     EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", sampler, pname, params);
 
@@ -2947,7 +2947,7 @@ void GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint* params)
     }
 }
 
-void GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat* params)
+void GL_APIENTRY GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat* params)
 {
     EVENT("(GLuint sample = %ur, GLenum pname = 0x%X, GLfloat* params = 0x%0.8p)", sampler, pname, params);
 
@@ -2975,7 +2975,7 @@ void GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat* params)
     }
 }
 
-void VertexAttribDivisor(GLuint index, GLuint divisor)
+void GL_APIENTRY VertexAttribDivisor(GLuint index, GLuint divisor)
 {
     EVENT("(GLuint index = %u, GLuint divisor = %u)", index, divisor);
 
@@ -2998,7 +2998,7 @@ void VertexAttribDivisor(GLuint index, GLuint divisor)
     }
 }
 
-void BindTransformFeedback(GLenum target, GLuint id)
+void GL_APIENTRY BindTransformFeedback(GLenum target, GLuint id)
 {
     EVENT("(GLenum target = 0x%X, GLuint id = %u)", target, id);
 
@@ -3041,7 +3041,7 @@ void BindTransformFeedback(GLenum target, GLuint id)
     }
 }
 
-void DeleteTransformFeedbacks(GLsizei n, const GLuint* ids)
+void GL_APIENTRY DeleteTransformFeedbacks(GLsizei n, const GLuint* ids)
 {
     EVENT("(GLsizei n = %d, const GLuint* ids = 0x%0.8p)", n, ids);
 
@@ -3061,7 +3061,7 @@ void DeleteTransformFeedbacks(GLsizei n, const GLuint* ids)
     }
 }
 
-void GenTransformFeedbacks(GLsizei n, GLuint* ids)
+void GL_APIENTRY GenTransformFeedbacks(GLsizei n, GLuint* ids)
 {
     EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
 
@@ -3081,7 +3081,7 @@ void GenTransformFeedbacks(GLsizei n, GLuint* ids)
     }
 }
 
-GLboolean IsTransformFeedback(GLuint id)
+GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
 {
     EVENT("(GLuint id = %u)", id);
 
@@ -3100,7 +3100,7 @@ GLboolean IsTransformFeedback(GLuint id)
     return GL_FALSE;
 }
 
-void PauseTransformFeedback(void)
+void GL_APIENTRY PauseTransformFeedback(void)
 {
     EVENT("(void)");
 
@@ -3127,7 +3127,7 @@ void PauseTransformFeedback(void)
     }
 }
 
-void ResumeTransformFeedback(void)
+void GL_APIENTRY ResumeTransformFeedback(void)
 {
     EVENT("(void)");
 
@@ -3154,7 +3154,7 @@ void ResumeTransformFeedback(void)
     }
 }
 
-void GetProgramBinary(GLuint program, GLsizei bufSize, GLsizei* length, GLenum* binaryFormat, GLvoid* binary)
+void GL_APIENTRY GetProgramBinary(GLuint program, GLsizei bufSize, GLsizei* length, GLenum* binaryFormat, GLvoid* binary)
 {
     EVENT("(GLuint program = %u, GLsizei bufSize = %d, GLsizei* length = 0x%0.8p, GLenum* binaryFormat = 0x%0.8p, GLvoid* binary = 0x%0.8p)",
           program, bufSize, length, binaryFormat, binary);
@@ -3173,7 +3173,7 @@ void GetProgramBinary(GLuint program, GLsizei bufSize, GLsizei* length, GLenum* 
     }
 }
 
-void ProgramBinary(GLuint program, GLenum binaryFormat, const GLvoid* binary, GLsizei length)
+void GL_APIENTRY ProgramBinary(GLuint program, GLenum binaryFormat, const GLvoid* binary, GLsizei length)
 {
     EVENT("(GLuint program = %u, GLenum binaryFormat = 0x%X, const GLvoid* binary = 0x%0.8p, GLsizei length = %d)",
           program, binaryFormat, binary, length);
@@ -3192,7 +3192,7 @@ void ProgramBinary(GLuint program, GLenum binaryFormat, const GLvoid* binary, GL
     }
 }
 
-void ProgramParameteri(GLuint program, GLenum pname, GLint value)
+void GL_APIENTRY ProgramParameteri(GLuint program, GLenum pname, GLint value)
 {
     EVENT("(GLuint program = %u, GLenum pname = 0x%X, GLint value = %d)",
           program, pname, value);
@@ -3211,7 +3211,7 @@ void ProgramParameteri(GLuint program, GLenum pname, GLint value)
     }
 }
 
-void InvalidateFramebuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments)
+void GL_APIENTRY InvalidateFramebuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments)
 {
     EVENT("(GLenum target = 0x%X, GLsizei numAttachments = %d, const GLenum* attachments = 0x%0.8p)",
           target, numAttachments, attachments);
@@ -3245,7 +3245,7 @@ void InvalidateFramebuffer(GLenum target, GLsizei numAttachments, const GLenum* 
     }
 }
 
-void InvalidateSubFramebuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments, GLint x, GLint y, GLsizei width, GLsizei height)
+void GL_APIENTRY InvalidateSubFramebuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments, GLint x, GLint y, GLsizei width, GLsizei height)
 {
     EVENT("(GLenum target = 0x%X, GLsizei numAttachments = %d, const GLenum* attachments = 0x%0.8p, GLint x = %d, "
           "GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
@@ -3281,7 +3281,7 @@ void InvalidateSubFramebuffer(GLenum target, GLsizei numAttachments, const GLenu
     }
 }
 
-void TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
+void GL_APIENTRY TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
     EVENT("(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
           target, levels, internalformat, width, height);
@@ -3333,7 +3333,7 @@ void TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei 
     }
 }
 
-void TexStorage3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
+void GL_APIENTRY TexStorage3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
 {
     EVENT("(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalformat = 0x%X, GLsizei width = %d, "
           "GLsizei height = %d, GLsizei depth = %d)",
@@ -3385,7 +3385,7 @@ void TexStorage3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei 
     }
 }
 
-void GetInternalformativ(GLenum target, GLenum internalformat, GLenum pname, GLsizei bufSize, GLint* params)
+void GL_APIENTRY GetInternalformativ(GLenum target, GLenum internalformat, GLenum pname, GLsizei bufSize, GLint* params)
 {
     EVENT("(GLenum target = 0x%X, GLenum internalformat = 0x%X, GLenum pname = 0x%X, GLsizei bufSize = %d, "
           "GLint* params = 0x%0.8p)",

@@ -52,7 +52,7 @@ static bool ValidateSurface(Display *display, Surface *surface)
 }
 
 // EGL_ANGLE_query_surface_pointer
-EGLBoolean QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surface, EGLint attribute, void **value)
+EGLBoolean EGLAPIENTRY QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surface, EGLint attribute, void **value)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint attribute = %d, void **value = 0x%0.8p)",
           dpy, surface, attribute, value);
@@ -88,7 +88,7 @@ EGLBoolean QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surface, EGLint a
 
 
 // EGL_NV_post_sub_buffer
-EGLBoolean PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLint x, EGLint y, EGLint width, EGLint height)
+EGLBoolean EGLAPIENTRY PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLint x, EGLint y, EGLint width, EGLint height)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint x = %d, EGLint y = %d, EGLint width = %d, EGLint height = %d)", dpy, surface, x, y, width, height);
 
@@ -130,7 +130,7 @@ EGLBoolean PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLint x, EGLint 
 }
 
 // EGL_EXT_platform_base
-EGLDisplay GetPlatformDisplayEXT(EGLenum platform, void *native_display, const EGLint *attrib_list)
+EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_display, const EGLint *attrib_list)
 {
     EVENT("(EGLenum platform = %d, void* native_display = 0x%0.8p, const EGLint* attrib_list = 0x%0.8p)",
           platform, native_display, attrib_list);

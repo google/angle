@@ -27,7 +27,7 @@
 namespace gl
 {
 
-void BeginQueryEXT(GLenum target, GLuint id)
+void GL_APIENTRY BeginQueryEXT(GLenum target, GLuint id)
 {
     EVENT("(GLenum target = 0x%X, GLuint %d)", target, id);
 
@@ -48,7 +48,7 @@ void BeginQueryEXT(GLenum target, GLuint id)
     }
 }
 
-void DeleteFencesNV(GLsizei n, const GLuint* fences)
+void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint* fences)
 {
     EVENT("(GLsizei n = %d, const GLuint* fences = 0x%0.8p)", n, fences);
 
@@ -68,7 +68,7 @@ void DeleteFencesNV(GLsizei n, const GLuint* fences)
     }
 }
 
-void DeleteQueriesEXT(GLsizei n, const GLuint *ids)
+void GL_APIENTRY DeleteQueriesEXT(GLsizei n, const GLuint *ids)
 {
     EVENT("(GLsizei n = %d, const GLuint *ids = 0x%0.8p)", n, ids);
 
@@ -88,7 +88,7 @@ void DeleteQueriesEXT(GLsizei n, const GLuint *ids)
     }
 }
 
-void DrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei count, GLsizei primcount)
+void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei count, GLsizei primcount)
 {
     EVENT("(GLenum mode = 0x%X, GLint first = %d, GLsizei count = %d, GLsizei primcount = %d)", mode, first, count, primcount);
 
@@ -109,7 +109,7 @@ void DrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei count, GLsizei p
     }
 }
 
-void DrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount)
+void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount)
 {
     EVENT("(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const GLvoid* indices = 0x%0.8p, GLsizei primcount = %d)",
           mode, count, type, indices, primcount);
@@ -132,7 +132,7 @@ void DrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum type, const G
     }
 }
 
-void EndQueryEXT(GLenum target)
+void GL_APIENTRY EndQueryEXT(GLenum target)
 {
     EVENT("GLenum target = 0x%X)", target);
 
@@ -153,7 +153,7 @@ void EndQueryEXT(GLenum target)
     }
 }
 
-void FinishFenceNV(GLuint fence)
+void GL_APIENTRY FinishFenceNV(GLuint fence)
 {
     EVENT("(GLuint fence = %d)", fence);
 
@@ -178,7 +178,7 @@ void FinishFenceNV(GLuint fence)
     }
 }
 
-void GenFencesNV(GLsizei n, GLuint* fences)
+void GL_APIENTRY GenFencesNV(GLsizei n, GLuint* fences)
 {
     EVENT("(GLsizei n = %d, GLuint* fences = 0x%0.8p)", n, fences);
 
@@ -198,7 +198,7 @@ void GenFencesNV(GLsizei n, GLuint* fences)
     }
 }
 
-void GenQueriesEXT(GLsizei n, GLuint* ids)
+void GL_APIENTRY GenQueriesEXT(GLsizei n, GLuint* ids)
 {
     EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
 
@@ -218,7 +218,7 @@ void GenQueriesEXT(GLsizei n, GLuint* ids)
     }
 }
 
-void GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
+void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
 {
     EVENT("(GLuint fence = %d, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", fence, pname, params);
 
@@ -275,7 +275,7 @@ void GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
     }
 }
 
-GLenum GetGraphicsResetStatusEXT(void)
+GLenum GL_APIENTRY GetGraphicsResetStatusEXT(void)
 {
     EVENT("()");
 
@@ -289,7 +289,7 @@ GLenum GetGraphicsResetStatusEXT(void)
     return GL_NO_ERROR;
 }
 
-void GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
+void GL_APIENTRY GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
 {
     EVENT("GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname, params);
 
@@ -315,7 +315,7 @@ void GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
     }
 }
 
-void GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
+void GL_APIENTRY GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
 {
     EVENT("(GLuint id = %d, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", id, pname, params);
 
@@ -367,7 +367,7 @@ void GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
     }
 }
 
-void GetTranslatedShaderSourceANGLE(GLuint shader, GLsizei bufsize, GLsizei* length, GLchar* source)
+void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader, GLsizei bufsize, GLsizei* length, GLchar* source)
 {
     EVENT("(GLuint shader = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLchar* source = 0x%0.8p)",
           shader, bufsize, length, source);
@@ -394,7 +394,7 @@ void GetTranslatedShaderSourceANGLE(GLuint shader, GLsizei bufsize, GLsizei* len
     }
 }
 
-void GetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSize, GLfloat* params)
+void GL_APIENTRY GetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSize, GLfloat* params)
 {
     EVENT("(GLuint program = %d, GLint location = %d, GLsizei bufSize = %d, GLfloat* params = 0x%0.8p)",
           program, location, bufSize, params);
@@ -414,7 +414,7 @@ void GetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSize, GLfloat* 
     }
 }
 
-void GetnUniformivEXT(GLuint program, GLint location, GLsizei bufSize, GLint* params)
+void GL_APIENTRY GetnUniformivEXT(GLuint program, GLint location, GLsizei bufSize, GLint* params)
 {
     EVENT("(GLuint program = %d, GLint location = %d, GLsizei bufSize = %d, GLint* params = 0x%0.8p)",
           program, location, bufSize, params);
@@ -434,7 +434,7 @@ void GetnUniformivEXT(GLuint program, GLint location, GLsizei bufSize, GLint* pa
     }
 }
 
-GLboolean IsFenceNV(GLuint fence)
+GLboolean GL_APIENTRY IsFenceNV(GLuint fence)
 {
     EVENT("(GLuint fence = %d)", fence);
 
@@ -454,7 +454,7 @@ GLboolean IsFenceNV(GLuint fence)
     return GL_FALSE;
 }
 
-GLboolean IsQueryEXT(GLuint id)
+GLboolean GL_APIENTRY IsQueryEXT(GLuint id)
 {
     EVENT("(GLuint id = %d)", id);
 
@@ -467,7 +467,7 @@ GLboolean IsQueryEXT(GLuint id)
     return GL_FALSE;
 }
 
-void ReadnPixelsEXT(GLint x, GLint y, GLsizei width, GLsizei height,
+void GL_APIENTRY ReadnPixelsEXT(GLint x, GLint y, GLsizei width, GLsizei height,
                                 GLenum format, GLenum type, GLsizei bufSize,
                                 GLvoid *data)
 {
@@ -499,7 +499,7 @@ void ReadnPixelsEXT(GLint x, GLint y, GLsizei width, GLsizei height,
     }
 }
 
-void RenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
+void GL_APIENTRY RenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
 {
     EVENT("(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
         target, samples, internalformat, width, height);
@@ -523,7 +523,7 @@ void RenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samples, GLenum 
     }
 }
 
-void SetFenceNV(GLuint fence, GLenum condition)
+void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition)
 {
     EVENT("(GLuint fence = %d, GLenum condition = 0x%X)", fence, condition);
 
@@ -553,7 +553,7 @@ void SetFenceNV(GLuint fence, GLenum condition)
     }
 }
 
-GLboolean TestFenceNV(GLuint fence)
+GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
 {
     EVENT("(GLuint fence = %d)", fence);
 
@@ -588,7 +588,7 @@ GLboolean TestFenceNV(GLuint fence)
     return GL_TRUE;
 }
 
-void TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
+void GL_APIENTRY TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
     EVENT("(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
            target, levels, internalformat, width, height);
@@ -647,7 +647,7 @@ void TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsiz
     }
 }
 
-void VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
+void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
 {
     EVENT("(GLuint index = %d, GLuint divisor = %d)", index, divisor);
 
@@ -664,7 +664,7 @@ void VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
     }
 }
 
-void BlitFramebufferANGLE(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
+void GL_APIENTRY BlitFramebufferANGLE(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
                           GLbitfield mask, GLenum filter)
 {
     EVENT("(GLint srcX0 = %d, GLint srcY0 = %d, GLint srcX1 = %d, GLint srcY1 = %d, "
@@ -692,7 +692,7 @@ void BlitFramebufferANGLE(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GL
     }
 }
 
-void TexImage3DOES(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth,
+void GL_APIENTRY TexImage3DOES(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth,
                    GLint border, GLenum format, GLenum type, const GLvoid* pixels)
 {
     EVENT("(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, "
@@ -703,8 +703,7 @@ void TexImage3DOES(GLenum target, GLint level, GLenum internalformat, GLsizei wi
     UNIMPLEMENTED();   // FIXME
 }
 
-void GetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *length,
-                                     GLenum *binaryFormat, void *binary)
+void GL_APIENTRY GetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *length, GLenum *binaryFormat, void *binary)
 {
     EVENT("(GLenum program = 0x%X, bufSize = %d, length = 0x%0.8p, binaryFormat = 0x%0.8p, binary = 0x%0.8p)",
           program, bufSize, length, binaryFormat, binary);
@@ -729,8 +728,7 @@ void GetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *length,
     }
 }
 
-void ProgramBinaryOES(GLuint program, GLenum binaryFormat,
-                                  const void *binary, GLint length)
+void GL_APIENTRY ProgramBinaryOES(GLuint program, GLenum binaryFormat, const void *binary, GLint length)
 {
     EVENT("(GLenum program = 0x%X, binaryFormat = 0x%x, binary = 0x%0.8p, length = %d)",
           program, binaryFormat, binary, length);
@@ -761,7 +759,7 @@ void ProgramBinaryOES(GLuint program, GLenum binaryFormat,
     }
 }
 
-void DrawBuffersEXT(GLsizei n, const GLenum *bufs)
+void GL_APIENTRY DrawBuffersEXT(GLsizei n, const GLenum *bufs)
 {
     EVENT("(GLenum n = %d, bufs = 0x%0.8p)", n, bufs);
 
@@ -810,7 +808,7 @@ void DrawBuffersEXT(GLsizei n, const GLenum *bufs)
     }
 }
 
-void GetBufferPointervOES(GLenum target, GLenum pname, void** params)
+void GL_APIENTRY GetBufferPointervOES(GLenum target, GLenum pname, void** params)
 {
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLvoid** params = 0x%0.8p)", target, pname, params);
 
@@ -842,7 +840,7 @@ void GetBufferPointervOES(GLenum target, GLenum pname, void** params)
     }
 }
 
-void * MapBufferOES(GLenum target, GLenum access)
+void *GL_APIENTRY MapBufferOES(GLenum target, GLenum access)
 {
     EVENT("(GLenum target = 0x%X, GLbitfield access = 0x%X)", target, access);
 
@@ -888,7 +886,7 @@ void * MapBufferOES(GLenum target, GLenum access)
     return NULL;
 }
 
-GLboolean UnmapBufferOES(GLenum target)
+GLboolean GL_APIENTRY UnmapBufferOES(GLenum target)
 {
     EVENT("(GLenum target = 0x%X)", target);
 
@@ -924,7 +922,7 @@ GLboolean UnmapBufferOES(GLenum target)
     return GL_FALSE;
 }
 
-void *MapBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access)
+void *GL_APIENTRY MapBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access)
 {
     EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d, GLbitfield access = 0x%X)",
           target, offset, length, access);
@@ -1019,7 +1017,7 @@ void *MapBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length, GLbit
     return NULL;
 }
 
-void FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length)
+void GL_APIENTRY FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length)
 {
     EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d)", target, offset, length);
 

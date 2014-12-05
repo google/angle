@@ -18,13 +18,13 @@ namespace egl
 {
 
 // EGL_ANGLE_query_surface_pointer
-ANGLE_EXPORT EGLBoolean QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surface, EGLint attribute, void **value);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surface, EGLint attribute, void **value);
 
 // EGL_NV_post_sub_buffer
-ANGLE_EXPORT EGLBoolean PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLint x, EGLint y, EGLint width, EGLint height);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLint x, EGLint y, EGLint width, EGLint height);
 
 // EGL_EXT_platform_base
-ANGLE_EXPORT EGLDisplay GetPlatformDisplayEXT(EGLenum platform, void *native_display, const EGLint *attrib_list);
+ANGLE_EXPORT EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_display, const EGLint *attrib_list);
 
 }
 
