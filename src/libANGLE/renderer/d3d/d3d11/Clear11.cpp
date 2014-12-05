@@ -81,7 +81,7 @@ Clear11::ClearShader Clear11::CreateClearShader(ID3D11Device *device, DXGI_FORMA
 
 Clear11::Clear11(Renderer11 *renderer)
     : mRenderer(renderer), mClearBlendStates(StructLessThan<ClearBlendInfo>), mClearDepthStencilStates(StructLessThan<ClearDepthStencilInfo>),
-      mVertexBuffer(NULL), mRasterizerState(NULL)
+      mVertexBuffer(NULL), mRasterizerState(NULL), mSupportsClearView(false)
 {
     HRESULT result;
     ID3D11Device *device = renderer->getDevice();
@@ -128,6 +128,13 @@ Clear11::Clear11(Renderer11 *renderer)
         mUintClearShader  = CreateClearShader(device, DXGI_FORMAT_R32G32B32A32_UINT,  g_VS_ClearUint,  g_PS_ClearUint );
         mIntClearShader   = CreateClearShader(device, DXGI_FORMAT_R32G32B32A32_SINT,  g_VS_ClearSint,  g_PS_ClearSint );
     }
+
+    if (renderer->getDeviceContext1IfSupported())
+    {
+        D3D11_FEATURE_DATA_D3D11_OPTIONS d3d11Options;
+        device->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &d3d11Options, sizeof(D3D11_FEATURE_DATA_D3D11_OPTIONS));
+        mSupportsClearView = (d3d11Options.ClearView != FALSE);
+    }
 }
 
 Clear11::~Clear11()
@@ -165,14 +172,18 @@ Clear11::~Clear11()
 
 gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, const gl::Framebuffer *frameBuffer)
 {
-    // First determine if a scissored clear is needed, this will always require drawing a quad.
-    //
-    // Otherwise, iterate over the color buffers which require clearing and determine if they can be
-    // cleared with ID3D11DeviceContext::ClearRenderTargetView... This requires:
+    // Iterate over the color buffers which require clearing and determine if they can be
+    // cleared with ID3D11DeviceContext::ClearRenderTargetView or ID3D11DeviceContext1::ClearView.
+    // This requires:
     // 1) The render target is being cleared to a float value (will be cast to integer when clearing integer
     //    render targets as expected but does not work the other way around)
     // 2) The format of the render target has no color channels that are currently masked out.
     // Clear the easy-to-clear buffers on the spot and accumulate the ones that require special work.
+    //
+    // If these conditions are met, and:
+    // - No scissored clear is needed, then clear using ID3D11DeviceContext::ClearRenderTargetView.
+    // - A scissored clear is needed then clear using ID3D11DeviceContext1::ClearView if available.
+    //   Otherwise draw a quad.
     //
     // Also determine if the depth stencil can be cleared with ID3D11DeviceContext::ClearDepthStencilView
     // by checking if the stencil write mask covers the entire stencil.
@@ -218,6 +229,7 @@ gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, cons
     RenderTarget11* maskedClearDepthStencil = NULL;
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+    ID3D11DeviceContext1 *deviceContext1 = mRenderer->getDeviceContext1IfSupported();
 
     for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
@@ -251,13 +263,13 @@ gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, cons
                     // Every channel either does not exist in the render target or is masked out
                     continue;
                 }
-                else if (needScissoredClear || clearParams.colorClearType != GL_FLOAT ||
+                else if ((!mSupportsClearView && needScissoredClear) || clearParams.colorClearType != GL_FLOAT ||
                          (formatInfo.redBits   > 0 && !clearParams.colorMaskRed)   ||
                          (formatInfo.greenBits > 0 && !clearParams.colorMaskGreen) ||
                          (formatInfo.blueBits  > 0 && !clearParams.colorMaskBlue) ||
                          (formatInfo.alphaBits > 0 && !clearParams.colorMaskAlpha))
                 {
-                    // A scissored or masked clear is required
+                    // A masked clear is required, or a scissored clear is required and ID3D11DeviceContext1::ClearView is unavailable
                     MaskedRenderTarget maskAndRt;
                     bool clearColor = clearParams.clearColor[colorAttachment];
                     maskAndRt.colorMask[0] = (clearColor && clearParams.colorMaskRed);
@@ -269,7 +281,7 @@ gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, cons
                 }
                 else
                 {
-                    // ID3D11DeviceContext::ClearRenderTargetView is possible
+                    // ID3D11DeviceContext::ClearRenderTargetView or ID3D11DeviceContext1::ClearView is possible
 
                     ID3D11RenderTargetView *framebufferRTV = renderTarget->getRenderTargetView();
                     if (!framebufferRTV)
@@ -289,7 +301,23 @@ gl::Error Clear11::clearFramebuffer(const gl::ClearParameters &clearParams, cons
                         ((formatInfo.alphaBits == 0 && actualFormatInfo.alphaBits > 0) ? 1.0f : clearParams.colorFClearValue.alpha),
                     };
 
-                    deviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
+                    if (needScissoredClear)
+                    {
+                        // We shouldn't reach here if deviceContext1 is unavailable.
+                        ASSERT(deviceContext1);
+
+                        D3D11_RECT rect;
+                        rect.left = clearParams.scissor.x;
+                        rect.right = clearParams.scissor.x + clearParams.scissor.width;
+                        rect.top = clearParams.scissor.y;
+                        rect.bottom = clearParams.scissor.y + clearParams.scissor.height;
+
+                        deviceContext1->ClearView(framebufferRTV, clearValues, &rect, 1);
+                    }
+                    else
+                    {
+                        deviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
+                    }
                 }
             }
         }
