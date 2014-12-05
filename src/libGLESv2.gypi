@@ -353,6 +353,7 @@
         [
             'common/angleutils.h',
             'common/debug.h',
+            'common/tls.cpp',
             'common/tls.h',
             'libGLESv2/entry_points_egl.cpp',
             'libGLESv2/entry_points_egl.h',
