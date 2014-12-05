@@ -8,7 +8,8 @@
 ANGLE_TYPED_TEST_CASE(RendererTest, ES2_D3D9, ES2_D3D11,        ES2_D3D11_WARP,        ES3_D3D11,        ES3_D3D11_WARP,
                                               ES2_D3D11_FL11_0, ES2_D3D11_FL11_0_WARP, ES3_D3D11_FL11_0, ES3_D3D11_FL11_0_WARP,
                                               ES2_D3D11_FL10_1, ES2_D3D11_FL10_1_WARP, ES3_D3D11_FL10_1, ES3_D3D11_FL10_1_WARP,
-                                              ES2_D3D11_FL10_0, ES2_D3D11_FL10_0_WARP, ES3_D3D11_FL10_0, ES3_D3D11_FL10_0_WARP);
+                                              ES2_D3D11_FL10_0, ES2_D3D11_FL10_0_WARP, ES3_D3D11_FL10_0, ES3_D3D11_FL10_0_WARP,
+                                              ES2_D3D11_FL9_3,  ES2_D3D11_FL9_3_WARP);
 
 template<typename T>
 class RendererTest : public ANGLETest
@@ -80,6 +81,11 @@ TYPED_TEST(RendererTest, RequestedRendererCreated)
                 // Feature Level 10_0 corresponds to shader model 4_0
                 acceptableShaderModels.push_back("ps_4_0");
             }
+        }
+
+        if (platform.majorVersion == 9 && platform.minorVersion == 3)
+        {
+            acceptableShaderModels.push_back("ps_4_0_level_9_3");
         }
 
         bool found = false;

@@ -208,7 +208,7 @@ Blit11::Blit11(Renderer11 *renderer)
     pointSamplerDesc.BorderColor[2] = 0.0f;
     pointSamplerDesc.BorderColor[3] = 0.0f;
     pointSamplerDesc.MinLOD = 0.0f;
-    pointSamplerDesc.MaxLOD = 0.0f;
+    pointSamplerDesc.MaxLOD = FLT_MAX;
 
     result = device->CreateSamplerState(&pointSamplerDesc, &mPointSampler);
     ASSERT(SUCCEEDED(result));
@@ -227,7 +227,7 @@ Blit11::Blit11(Renderer11 *renderer)
     linearSamplerDesc.BorderColor[2] = 0.0f;
     linearSamplerDesc.BorderColor[3] = 0.0f;
     linearSamplerDesc.MinLOD = 0.0f;
-    linearSamplerDesc.MaxLOD = 0.0f;
+    linearSamplerDesc.MaxLOD = FLT_MAX;
 
     result = device->CreateSamplerState(&linearSamplerDesc, &mLinearSampler);
     ASSERT(SUCCEEDED(result));
@@ -289,28 +289,31 @@ Blit11::Blit11(Renderer11 *renderer)
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mQuad2DVS, "Blit11 2D vertex shader");
 
-    result = device->CreatePixelShader(g_PS_PassthroughDepth2D, ArraySize(g_PS_PassthroughDepth2D), NULL, &mDepthPS);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mDepthPS, "Blit11 2D depth pixel shader");
-
-    D3D11_INPUT_ELEMENT_DESC quad3DLayout[] =
+    if (renderer->isES3Capable())
     {
-        { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "LAYER",    0, DXGI_FORMAT_R32_UINT,        0,  8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
+        result = device->CreatePixelShader(g_PS_PassthroughDepth2D, ArraySize(g_PS_PassthroughDepth2D), NULL, &mDepthPS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mDepthPS, "Blit11 2D depth pixel shader");
 
-    result = device->CreateInputLayout(quad3DLayout, ArraySize(quad3DLayout), g_VS_Passthrough3D, ArraySize(g_VS_Passthrough3D), &mQuad3DIL);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mQuad3DIL, "Blit11 3D input layout");
+        D3D11_INPUT_ELEMENT_DESC quad3DLayout[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "LAYER",    0, DXGI_FORMAT_R32_UINT,        0,  8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        };
 
-    result = device->CreateVertexShader(g_VS_Passthrough3D, ArraySize(g_VS_Passthrough3D), NULL, &mQuad3DVS);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mQuad3DVS, "Blit11 3D vertex shader");
+        result = device->CreateInputLayout(quad3DLayout, ArraySize(quad3DLayout), g_VS_Passthrough3D, ArraySize(g_VS_Passthrough3D), &mQuad3DIL);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mQuad3DIL, "Blit11 3D input layout");
 
-    result = device->CreateGeometryShader(g_GS_Passthrough3D, ArraySize(g_GS_Passthrough3D), NULL, &mQuad3DGS);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mQuad3DGS, "Renderer11 copy 3D texture geometry shader");
+        result = device->CreateVertexShader(g_VS_Passthrough3D, ArraySize(g_VS_Passthrough3D), NULL, &mQuad3DVS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mQuad3DVS, "Blit11 3D vertex shader");
+
+        result = device->CreateGeometryShader(g_GS_Passthrough3D, ArraySize(g_GS_Passthrough3D), NULL, &mQuad3DGS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mQuad3DGS, "Renderer11 copy 3D texture geometry shader");
+    }
 
     buildShaderMap();
 
@@ -968,55 +971,69 @@ void Blit11::buildShaderMap()
 {
     ID3D11Device *device = mRenderer->getDevice();
 
+    // 2D shaders (OpenGL ES 2+)
     add2DBlitShaderToMap(GL_RGBA,            false, d3d11::CompilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D RGBA pixel shader"           ));
-    add2DBlitShaderToMap(GL_RGBA_INTEGER,    false, d3d11::CompilePS(device, g_PS_PassthroughRGBA2DUI,   "Blit11 2D RGBA UI pixel shader"        ));
-    add2DBlitShaderToMap(GL_RGBA_INTEGER,    true,  d3d11::CompilePS(device, g_PS_PassthroughRGBA2DI,    "Blit11 2D RGBA I pixel shader"         ));
     add2DBlitShaderToMap(GL_BGRA_EXT,        false, d3d11::CompilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D BGRA pixel shader"           ));
     add2DBlitShaderToMap(GL_RGB,             false, d3d11::CompilePS(device, g_PS_PassthroughRGB2D,      "Blit11 2D RGB pixel shader"            ));
-    add2DBlitShaderToMap(GL_RGB_INTEGER,     false, d3d11::CompilePS(device, g_PS_PassthroughRGB2DUI,    "Blit11 2D RGB UI pixel shader"         ));
-    add2DBlitShaderToMap(GL_RGB_INTEGER,     true,  d3d11::CompilePS(device, g_PS_PassthroughRGB2DI,     "Blit11 2D RGB I pixel shader"          ));
     add2DBlitShaderToMap(GL_RG,              false, d3d11::CompilePS(device, g_PS_PassthroughRG2D,       "Blit11 2D RG pixel shader"             ));
-    add2DBlitShaderToMap(GL_RG_INTEGER,      false, d3d11::CompilePS(device, g_PS_PassthroughRG2DUI,     "Blit11 2D RG UI pixel shader"          ));
-    add2DBlitShaderToMap(GL_RG_INTEGER,      true,  d3d11::CompilePS(device, g_PS_PassthroughRG2DI,      "Blit11 2D RG I pixel shader"           ));
     add2DBlitShaderToMap(GL_RED,             false, d3d11::CompilePS(device, g_PS_PassthroughR2D,        "Blit11 2D R pixel shader"              ));
-    add2DBlitShaderToMap(GL_RED_INTEGER,     false, d3d11::CompilePS(device, g_PS_PassthroughR2DUI,      "Blit11 2D R UI pixel shader"           ));
-    add2DBlitShaderToMap(GL_RED_INTEGER,     true,  d3d11::CompilePS(device, g_PS_PassthroughR2DI,       "Blit11 2D R I pixel shader"            ));
     add2DBlitShaderToMap(GL_ALPHA,           false, d3d11::CompilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D alpha pixel shader"          ));
     add2DBlitShaderToMap(GL_LUMINANCE,       false, d3d11::CompilePS(device, g_PS_PassthroughLum2D,      "Blit11 2D lum pixel shader"            ));
     add2DBlitShaderToMap(GL_LUMINANCE_ALPHA, false, d3d11::CompilePS(device, g_PS_PassthroughLumAlpha2D, "Blit11 2D luminance alpha pixel shader"));
 
-    add3DBlitShaderToMap(GL_RGBA,            false, d3d11::CompilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D RGBA pixel shader"           ));
-    add3DBlitShaderToMap(GL_RGBA_INTEGER,    false, d3d11::CompilePS(device, g_PS_PassthroughRGBA3DUI,   "Blit11 3D UI RGBA pixel shader"        ));
-    add3DBlitShaderToMap(GL_RGBA_INTEGER,    true,  d3d11::CompilePS(device, g_PS_PassthroughRGBA3DI,    "Blit11 3D I RGBA pixel shader"         ));
-    add3DBlitShaderToMap(GL_BGRA_EXT,        false, d3d11::CompilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D BGRA pixel shader"           ));
-    add3DBlitShaderToMap(GL_RGB,             false, d3d11::CompilePS(device, g_PS_PassthroughRGB3D,      "Blit11 3D RGB pixel shader"            ));
-    add3DBlitShaderToMap(GL_RGB_INTEGER,     false, d3d11::CompilePS(device, g_PS_PassthroughRGB3DUI,    "Blit11 3D RGB UI pixel shader"         ));
-    add3DBlitShaderToMap(GL_RGB_INTEGER,     true,  d3d11::CompilePS(device, g_PS_PassthroughRGB3DI,     "Blit11 3D RGB I pixel shader"          ));
-    add3DBlitShaderToMap(GL_RG,              false, d3d11::CompilePS(device, g_PS_PassthroughRG3D,       "Blit11 3D RG pixel shader"             ));
-    add3DBlitShaderToMap(GL_RG_INTEGER,      false, d3d11::CompilePS(device, g_PS_PassthroughRG3DUI,     "Blit11 3D RG UI pixel shader"          ));
-    add3DBlitShaderToMap(GL_RG_INTEGER,      true,  d3d11::CompilePS(device, g_PS_PassthroughRG3DI,      "Blit11 3D RG I pixel shader"           ));
-    add3DBlitShaderToMap(GL_RED,             false, d3d11::CompilePS(device, g_PS_PassthroughR3D,        "Blit11 3D R pixel shader"              ));
-    add3DBlitShaderToMap(GL_RED_INTEGER,     false, d3d11::CompilePS(device, g_PS_PassthroughR3DUI,      "Blit11 3D R UI pixel shader"           ));
-    add3DBlitShaderToMap(GL_RED_INTEGER,     true,  d3d11::CompilePS(device, g_PS_PassthroughR3DI,       "Blit11 3D R I pixel shader"            ));
-    add3DBlitShaderToMap(GL_ALPHA,           false, d3d11::CompilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D alpha pixel shader"          ));
-    add3DBlitShaderToMap(GL_LUMINANCE,       false, d3d11::CompilePS(device, g_PS_PassthroughLum3D,      "Blit11 3D luminance pixel shader"      ));
-    add3DBlitShaderToMap(GL_LUMINANCE_ALPHA, false, d3d11::CompilePS(device, g_PS_PassthroughLumAlpha3D, "Blit11 3D luminance alpha pixel shader"));
+    // 2D shaders (OpenGL ES 3+)
+    if (mRenderer->isES3Capable())
+    {
+        add2DBlitShaderToMap(GL_RGBA_INTEGER,    false, d3d11::CompilePS(device, g_PS_PassthroughRGBA2DUI,   "Blit11 2D RGBA UI pixel shader"        ));
+        add2DBlitShaderToMap(GL_RGBA_INTEGER,    true,  d3d11::CompilePS(device, g_PS_PassthroughRGBA2DI,    "Blit11 2D RGBA I pixel shader"         ));
+        add2DBlitShaderToMap(GL_RGB_INTEGER,     false, d3d11::CompilePS(device, g_PS_PassthroughRGB2DUI,    "Blit11 2D RGB UI pixel shader"         ));
+        add2DBlitShaderToMap(GL_RGB_INTEGER,     true,  d3d11::CompilePS(device, g_PS_PassthroughRGB2DI,     "Blit11 2D RGB I pixel shader"          ));
+        add2DBlitShaderToMap(GL_RG_INTEGER,      false, d3d11::CompilePS(device, g_PS_PassthroughRG2DUI,     "Blit11 2D RG UI pixel shader"          ));
+        add2DBlitShaderToMap(GL_RG_INTEGER,      true,  d3d11::CompilePS(device, g_PS_PassthroughRG2DI,      "Blit11 2D RG I pixel shader"           ));
+        add2DBlitShaderToMap(GL_RED_INTEGER,     false, d3d11::CompilePS(device, g_PS_PassthroughR2DUI,      "Blit11 2D R UI pixel shader"           ));
+        add2DBlitShaderToMap(GL_RED_INTEGER,     true,  d3d11::CompilePS(device, g_PS_PassthroughR2DI,       "Blit11 2D R I pixel shader"            ));
+    }
 
-    addSwizzleShaderToMap(GL_FLOAT,        D3D_SRV_DIMENSION_TEXTURE2D,      d3d11::CompilePS(device, g_PS_SwizzleF2D,       "Blit11 2D F swizzle pixel shader" ));
-    addSwizzleShaderToMap(GL_UNSIGNED_INT, D3D_SRV_DIMENSION_TEXTURE2D,      d3d11::CompilePS(device, g_PS_SwizzleUI2D,      "Blit11 2D UI swizzle pixel shader"));
-    addSwizzleShaderToMap(GL_INT,          D3D_SRV_DIMENSION_TEXTURE2D,      d3d11::CompilePS(device, g_PS_SwizzleI2D,       "Blit11 2D I swizzle pixel shader" ));
+    // 3D shaders (OpenGL ES 3+)
+    if (mRenderer->isES3Capable())
+    {
+        add3DBlitShaderToMap(GL_RGBA,            false, d3d11::CompilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D RGBA pixel shader"           ));
+        add3DBlitShaderToMap(GL_RGBA_INTEGER,    false, d3d11::CompilePS(device, g_PS_PassthroughRGBA3DUI,   "Blit11 3D UI RGBA pixel shader"        ));
+        add3DBlitShaderToMap(GL_RGBA_INTEGER,    true,  d3d11::CompilePS(device, g_PS_PassthroughRGBA3DI,    "Blit11 3D I RGBA pixel shader"         ));
+        add3DBlitShaderToMap(GL_BGRA_EXT,        false, d3d11::CompilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D BGRA pixel shader"           ));
+        add3DBlitShaderToMap(GL_RGB,             false, d3d11::CompilePS(device, g_PS_PassthroughRGB3D,      "Blit11 3D RGB pixel shader"            ));
+        add3DBlitShaderToMap(GL_RGB_INTEGER,     false, d3d11::CompilePS(device, g_PS_PassthroughRGB3DUI,    "Blit11 3D RGB UI pixel shader"         ));
+        add3DBlitShaderToMap(GL_RGB_INTEGER,     true,  d3d11::CompilePS(device, g_PS_PassthroughRGB3DI,     "Blit11 3D RGB I pixel shader"          ));
+        add3DBlitShaderToMap(GL_RG,              false, d3d11::CompilePS(device, g_PS_PassthroughRG3D,       "Blit11 3D RG pixel shader"             ));
+        add3DBlitShaderToMap(GL_RG_INTEGER,      false, d3d11::CompilePS(device, g_PS_PassthroughRG3DUI,     "Blit11 3D RG UI pixel shader"          ));
+        add3DBlitShaderToMap(GL_RG_INTEGER,      true,  d3d11::CompilePS(device, g_PS_PassthroughRG3DI,      "Blit11 3D RG I pixel shader"           ));
+        add3DBlitShaderToMap(GL_RED,             false, d3d11::CompilePS(device, g_PS_PassthroughR3D,        "Blit11 3D R pixel shader"              ));
+        add3DBlitShaderToMap(GL_RED_INTEGER,     false, d3d11::CompilePS(device, g_PS_PassthroughR3DUI,      "Blit11 3D R UI pixel shader"           ));
+        add3DBlitShaderToMap(GL_RED_INTEGER,     true,  d3d11::CompilePS(device, g_PS_PassthroughR3DI,       "Blit11 3D R I pixel shader"            ));
+        add3DBlitShaderToMap(GL_ALPHA,           false, d3d11::CompilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D alpha pixel shader"          ));
+        add3DBlitShaderToMap(GL_LUMINANCE,       false, d3d11::CompilePS(device, g_PS_PassthroughLum3D,      "Blit11 3D luminance pixel shader"      ));
+        add3DBlitShaderToMap(GL_LUMINANCE_ALPHA, false, d3d11::CompilePS(device, g_PS_PassthroughLumAlpha3D, "Blit11 3D luminance alpha pixel shader"));
+    }
 
-    addSwizzleShaderToMap(GL_FLOAT,        D3D_SRV_DIMENSION_TEXTURECUBE,    d3d11::CompilePS(device, g_PS_SwizzleF2DArray,  "Blit11 2D Cube F swizzle pixel shader" ));
-    addSwizzleShaderToMap(GL_UNSIGNED_INT, D3D_SRV_DIMENSION_TEXTURECUBE,    d3d11::CompilePS(device, g_PS_SwizzleUI2DArray, "Blit11 2D Cube UI swizzle pixel shader"));
-    addSwizzleShaderToMap(GL_INT,          D3D_SRV_DIMENSION_TEXTURECUBE,    d3d11::CompilePS(device, g_PS_SwizzleI2DArray,  "Blit11 2D Cube I swizzle pixel shader" ));
+    // Swizzling shaders (OpenGL ES 3+)
+    if (mRenderer->isES3Capable())
+    {
+        addSwizzleShaderToMap(GL_FLOAT,        D3D_SRV_DIMENSION_TEXTURE2D,      d3d11::CompilePS(device, g_PS_SwizzleF2D,       "Blit11 2D F swizzle pixel shader" ));
+        addSwizzleShaderToMap(GL_UNSIGNED_INT, D3D_SRV_DIMENSION_TEXTURE2D,      d3d11::CompilePS(device, g_PS_SwizzleUI2D,      "Blit11 2D UI swizzle pixel shader"));
+        addSwizzleShaderToMap(GL_INT,          D3D_SRV_DIMENSION_TEXTURE2D,      d3d11::CompilePS(device, g_PS_SwizzleI2D,       "Blit11 2D I swizzle pixel shader" ));
 
-    addSwizzleShaderToMap(GL_FLOAT,        D3D_SRV_DIMENSION_TEXTURE3D,      d3d11::CompilePS(device, g_PS_SwizzleF3D,       "Blit11 3D F swizzle pixel shader" ));
-    addSwizzleShaderToMap(GL_UNSIGNED_INT, D3D_SRV_DIMENSION_TEXTURE3D,      d3d11::CompilePS(device, g_PS_SwizzleUI3D,      "Blit11 3D UI swizzle pixel shader"));
-    addSwizzleShaderToMap(GL_INT,          D3D_SRV_DIMENSION_TEXTURE3D,      d3d11::CompilePS(device, g_PS_SwizzleI3D,       "Blit11 3D I swizzle pixel shader" ));
+        addSwizzleShaderToMap(GL_FLOAT,        D3D_SRV_DIMENSION_TEXTURECUBE,    d3d11::CompilePS(device, g_PS_SwizzleF2DArray,  "Blit11 2D Cube F swizzle pixel shader" ));
+        addSwizzleShaderToMap(GL_UNSIGNED_INT, D3D_SRV_DIMENSION_TEXTURECUBE,    d3d11::CompilePS(device, g_PS_SwizzleUI2DArray, "Blit11 2D Cube UI swizzle pixel shader"));
+        addSwizzleShaderToMap(GL_INT,          D3D_SRV_DIMENSION_TEXTURECUBE,    d3d11::CompilePS(device, g_PS_SwizzleI2DArray,  "Blit11 2D Cube I swizzle pixel shader" ));
 
-    addSwizzleShaderToMap(GL_FLOAT,        D3D_SRV_DIMENSION_TEXTURE2DARRAY, d3d11::CompilePS(device, g_PS_SwizzleF2DArray,  "Blit11 2D Array F swizzle pixel shader" ));
-    addSwizzleShaderToMap(GL_UNSIGNED_INT, D3D_SRV_DIMENSION_TEXTURE2DARRAY, d3d11::CompilePS(device, g_PS_SwizzleUI2DArray, "Blit11 2D Array UI swizzle pixel shader"));
-    addSwizzleShaderToMap(GL_INT,          D3D_SRV_DIMENSION_TEXTURE2DARRAY, d3d11::CompilePS(device, g_PS_SwizzleI2DArray,  "Blit11 2D Array I swizzle pixel shader" ));
+        addSwizzleShaderToMap(GL_FLOAT,        D3D_SRV_DIMENSION_TEXTURE3D,      d3d11::CompilePS(device, g_PS_SwizzleF3D,       "Blit11 3D F swizzle pixel shader" ));
+        addSwizzleShaderToMap(GL_UNSIGNED_INT, D3D_SRV_DIMENSION_TEXTURE3D,      d3d11::CompilePS(device, g_PS_SwizzleUI3D,      "Blit11 3D UI swizzle pixel shader"));
+        addSwizzleShaderToMap(GL_INT,          D3D_SRV_DIMENSION_TEXTURE3D,      d3d11::CompilePS(device, g_PS_SwizzleI3D,       "Blit11 3D I swizzle pixel shader" ));
+
+        addSwizzleShaderToMap(GL_FLOAT,        D3D_SRV_DIMENSION_TEXTURE2DARRAY, d3d11::CompilePS(device, g_PS_SwizzleF2DArray,  "Blit11 2D Array F swizzle pixel shader" ));
+        addSwizzleShaderToMap(GL_UNSIGNED_INT, D3D_SRV_DIMENSION_TEXTURE2DARRAY, d3d11::CompilePS(device, g_PS_SwizzleUI2DArray, "Blit11 2D Array UI swizzle pixel shader"));
+        addSwizzleShaderToMap(GL_INT,          D3D_SRV_DIMENSION_TEXTURE2DARRAY, d3d11::CompilePS(device, g_PS_SwizzleI2DArray,  "Blit11 2D Array I swizzle pixel shader" ));
+    }
 }
 
 void Blit11::clearShaderMap()

@@ -211,6 +211,11 @@ Renderer11::Renderer11(egl::Display *display, EGLNativeDisplayType hDc, const eg
         }
     }
 
+    if (requestedMajorVersion == 9 && requestedMinorVersion == 3)
+    {
+        mAvailableFeatureLevels.push_back(D3D_FEATURE_LEVEL_9_3);
+    }
+
     mDriverType = (attributes.get(EGL_PLATFORM_ANGLE_USE_WARP_ANGLE, EGL_FALSE) == EGL_TRUE) ? D3D_DRIVER_TYPE_WARP
                                                                                              : D3D_DRIVER_TYPE_HARDWARE;
 }
@@ -452,7 +457,7 @@ int Renderer11::generateConfigs(ConfigDesc **configDescList)
                     // Before we check mFeatureLevel, we need to ensure that the D3D device has been created.
                     ASSERT(mDevice != NULL);
                     newConfig.es2Conformant = (mFeatureLevel >= D3D_FEATURE_LEVEL_10_0);
-                    newConfig.es3Capable = (mFeatureLevel >= D3D_FEATURE_LEVEL_10_0);
+                    newConfig.es3Capable = isES3Capable();
 
                     (*configDescList)[numConfigs++] = newConfig;
                 }
@@ -1946,8 +1951,8 @@ std::string Renderer11::getRendererDescription() const
     rendererString << mDescription;
     rendererString << " Direct3D11";
 
-    rendererString << " vs_" << getMajorShaderModel() << "_" << getMinorShaderModel();
-    rendererString << " ps_" << getMajorShaderModel() << "_" << getMinorShaderModel();
+    rendererString << " vs_" << getMajorShaderModel() << "_" << getMinorShaderModel() << getShaderModelSuffix();
+    rendererString << " ps_" << getMajorShaderModel() << "_" << getMinorShaderModel() << getShaderModelSuffix();
 
     return rendererString.str();
 }
@@ -2005,6 +2010,7 @@ int Renderer11::getMajorShaderModel() const
       case D3D_FEATURE_LEVEL_11_0: return D3D11_SHADER_MAJOR_VERSION;   // 5
       case D3D_FEATURE_LEVEL_10_1: return D3D10_1_SHADER_MAJOR_VERSION; // 4
       case D3D_FEATURE_LEVEL_10_0: return D3D10_SHADER_MAJOR_VERSION;   // 4
+      case D3D_FEATURE_LEVEL_9_3:  return D3D10_SHADER_MAJOR_VERSION;   // 4
       default: UNREACHABLE();      return 0;
     }
 }
@@ -2016,7 +2022,20 @@ int Renderer11::getMinorShaderModel() const
       case D3D_FEATURE_LEVEL_11_0: return D3D11_SHADER_MINOR_VERSION;   // 0
       case D3D_FEATURE_LEVEL_10_1: return D3D10_1_SHADER_MINOR_VERSION; // 1
       case D3D_FEATURE_LEVEL_10_0: return D3D10_SHADER_MINOR_VERSION;   // 0
+      case D3D_FEATURE_LEVEL_9_3:  return D3D10_SHADER_MINOR_VERSION;   // 0
       default: UNREACHABLE();      return 0;
+    }
+}
+
+std::string Renderer11::getShaderModelSuffix() const
+{
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0: return "";
+      case D3D_FEATURE_LEVEL_10_1: return "";
+      case D3D_FEATURE_LEVEL_10_0: return "";
+      case D3D_FEATURE_LEVEL_9_3:  return "_level_9_3";
+      default: UNREACHABLE();      return "";
     }
 }
 
@@ -2554,28 +2573,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog, const std::strin
         return gl::Error(GL_INVALID_OPERATION);
     }
 
-    unsigned int profileMajorVersion = 0;
-    unsigned int profileMinorVersion = 0;
-    switch (mFeatureLevel)
-    {
-      case D3D_FEATURE_LEVEL_11_0:
-        profileMajorVersion = 5;
-        profileMinorVersion = 0;
-        break;
-      case D3D_FEATURE_LEVEL_10_1:
-        profileMajorVersion = 4;
-        profileMinorVersion = 1;
-        break;
-      case D3D_FEATURE_LEVEL_10_0:
-        profileMajorVersion = 4;
-        profileMinorVersion = 0;
-        break;
-      default:
-        UNREACHABLE();
-        return gl::Error(GL_INVALID_OPERATION);
-    }
-
-    std::string profile = FormatString("%s_%u_%u", profileType, profileMajorVersion, profileMinorVersion);
+    std::string profile = FormatString("%s_%d_%d%s", profileType, getMajorShaderModel(), getMinorShaderModel(), getShaderModelSuffix().c_str());
 
     UINT flags = D3DCOMPILE_OPTIMIZATION_LEVEL2;
 

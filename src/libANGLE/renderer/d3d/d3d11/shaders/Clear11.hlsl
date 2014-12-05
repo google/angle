@@ -33,6 +33,23 @@ PS_OutputFloat PS_ClearFloat(in float4 inPosition : SV_POSITION, in float4 inCol
     return outColor;
 }
 
+struct PS_OutputFloat_FL9
+{
+    float4 color0 : SV_TARGET0;
+    float4 color1 : SV_TARGET1;
+    float4 color2 : SV_TARGET2;
+    float4 color3 : SV_TARGET3;
+};
+
+PS_OutputFloat_FL9 PS_ClearFloat_FL9(in float4 inPosition : SV_POSITION, in float4 inColor : COLOR)
+{
+    PS_OutputFloat_FL9 outColor;
+    outColor.color0 = inColor;
+    outColor.color1 = inColor;
+    outColor.color2 = inColor;
+    outColor.color3 = inColor;
+    return outColor;
+}
 
 void VS_ClearUint( in float3  inPosition :    POSITION,   in uint4  inColor : COLOR,
                    out float4 outPosition : SV_POSITION, out uint4 outColor : COLOR)

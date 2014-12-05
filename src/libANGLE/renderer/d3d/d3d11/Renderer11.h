@@ -213,6 +213,9 @@ class Renderer11 : public RendererD3D
 
     void setShaderResource(gl::SamplerType shaderType, UINT resourceSlot, ID3D11ShaderResourceView *srv);
 
+    bool isES3Capable() const { return mFeatureLevel >= D3D_FEATURE_LEVEL_10_0; };
+    D3D_FEATURE_LEVEL getFeatureLevel() const { return mFeatureLevel; };
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
 
@@ -244,6 +247,7 @@ class Renderer11 : public RendererD3D
     void initializeDevice();
     void releaseDeviceResources();
     int getMinorShaderModel() const;
+    std::string getShaderModelSuffix() const;
     void release();
 
     RenderStateCache mStateCache;
