@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fa18d0b_aeb9f7f3",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-05T03:35:52Z",
+      "side": 1,
+      "message": "A typedef for this array type would go a long way toward making this code readable. See http://stackoverflow.com/questions/5398930/general-rules-of-passing-returning-reference-of-array-not-pointer-to-from-a-fu .",
+      "revId": "6cfe3d7da10b62c29f795f4745ea93f0a1f4f9bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
