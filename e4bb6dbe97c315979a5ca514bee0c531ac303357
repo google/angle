@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff081ddb_ee2b0770",
+        "filename": "src/libGLESv2/entry_points_egl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-05T02:48:23Z",
+      "side": 1,
+      "message": "Looks like the extension entry points could or should be removed given that they\u0027re in entry_points_egl_ext.h.",
+      "revId": "e4bb6dbe97c315979a5ca514bee0c531ac303357",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf0225b9_4cbaff43",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-05T02:48:23Z",
+      "side": 1,
+      "message": "Is it worth mentioning that the order of these entry points is the same as in Khronos\u0027 header?",
+      "revId": "e4bb6dbe97c315979a5ca514bee0c531ac303357",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
