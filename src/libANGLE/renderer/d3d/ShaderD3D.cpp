@@ -459,25 +459,4 @@ void ShaderD3D::parseAttributes(void *compiler)
     }
 }
 
-int ShaderD3D::getSemanticIndex(const std::string &attributeName) const
-{
-    if (!attributeName.empty())
-    {
-        int semanticIndex = 0;
-        for (size_t attributeIndex = 0; attributeIndex < mActiveAttributes.size(); attributeIndex++)
-        {
-            const sh::ShaderVariable &attribute = mActiveAttributes[attributeIndex];
-
-            if (attribute.name == attributeName)
-            {
-                return semanticIndex;
-            }
-
-            semanticIndex += gl::VariableRegisterCount(attribute.type);
-        }
-    }
-
-    return -1;
-}
-
 }

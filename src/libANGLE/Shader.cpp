@@ -216,4 +216,28 @@ std::vector<sh::Attribute> &Shader::getActiveOutputVariables()
     return mShader->getActiveOutputVariables();
 }
 
+
+int Shader::getSemanticIndex(const std::string &attributeName) const
+{
+    if (!attributeName.empty())
+    {
+        const auto &activeAttributes = mShader->getActiveAttributes();
+
+        int semanticIndex = 0;
+        for (size_t attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
+        {
+            const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
+
+            if (attribute.name == attributeName)
+            {
+                return semanticIndex;
+            }
+
+            semanticIndex += gl::VariableRegisterCount(attribute.type);
+        }
+    }
+
+    return -1;
+}
+
 }

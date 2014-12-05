@@ -31,6 +31,8 @@ struct LinkResult
 class ProgramImpl
 {
   public:
+    typedef int SemanticIndexArray[gl::MAX_VERTEX_ATTRIBS];
+
     ProgramImpl() { }
     virtual ~ProgramImpl();
 
@@ -39,12 +41,14 @@ class ProgramImpl
     const std::vector<gl::UniformBlock*> &getUniformBlocks() const { return mUniformBlocks; }
     const std::vector<gl::LinkedVarying> &getTransformFeedbackLinkedVaryings() const { return mTransformFeedbackLinkedVaryings; }
     const sh::Attribute *getShaderAttributes() const { return mShaderAttributes; }
+    const SemanticIndexArray &getSemanticIndexes() const { return mSemanticIndex; }
 
     std::vector<gl::LinkedUniform*> &getUniforms() { return mUniforms; }
     std::vector<gl::VariableLocation> &getUniformIndices() { return mUniformIndex; }
     std::vector<gl::UniformBlock*> &getUniformBlocks() { return mUniformBlocks; }
     std::vector<gl::LinkedVarying> &getTransformFeedbackLinkedVaryings() { return mTransformFeedbackLinkedVaryings; }
     sh::Attribute *getShaderAttributes() { return mShaderAttributes; }
+    SemanticIndexArray &getSemanticIndexes() { return mSemanticIndex; }
 
     gl::LinkedUniform *getUniformByLocation(GLint location) const;
     gl::LinkedUniform *getUniformByName(const std::string &name) const;
@@ -126,6 +130,7 @@ class ProgramImpl
     std::vector<gl::UniformBlock*> mUniformBlocks;
     std::vector<gl::LinkedVarying> mTransformFeedbackLinkedVaryings;
 
+    SemanticIndexArray mSemanticIndex;
     sh::Attribute mShaderAttributes[gl::MAX_VERTEX_ATTRIBS];
 };
 

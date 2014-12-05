@@ -96,6 +96,8 @@ class Shader
     std::vector<sh::Attribute> &getActiveAttributes();
     std::vector<sh::Attribute> &getActiveOutputVariables();
 
+    int getSemanticIndex(const std::string &attributeName) const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Shader);
 

@@ -89,8 +89,10 @@ void InputLayoutCache::markDirty()
 gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
                                                gl::Program *program)
 {
+    ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(program->getImplementation());
+
     int sortedSemanticIndices[gl::MAX_VERTEX_ATTRIBS];
-    program->sortAttributesByLayout(attributes, sortedSemanticIndices);
+    programD3D->sortAttributesByLayout(attributes, sortedSemanticIndices);
 
     if (!mDevice || !mDeviceContext)
     {

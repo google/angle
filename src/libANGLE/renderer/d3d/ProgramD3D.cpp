@@ -7,16 +7,17 @@
 // ProgramD3D.cpp: Defines the rx::ProgramD3D class which implements rx::ProgramImpl.
 
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
-#include "libANGLE/features.h"
+
+#include "common/utilities.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/features.h"
 #include "libANGLE/renderer/ShaderExecutable.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
-
-#include "common/utilities.h"
+#include "libANGLE/renderer/d3d/VertexDataManager.h"
 
 namespace rx
 {
@@ -99,6 +100,23 @@ bool IsRowMajorLayout(const sh::ShaderVariable &var)
 {
     return false;
 }
+
+struct AttributeSorter
+{
+    AttributeSorter(const ProgramImpl::SemanticIndexArray &semanticIndices)
+        : originalIndices(semanticIndices)
+    {
+    }
+
+    bool operator()(int a, int b)
+    {
+        if (originalIndices[a] == -1) return false;
+        if (originalIndices[b] == -1) return true;
+        return (originalIndices[a] < originalIndices[b]);
+    }
+
+    const ProgramImpl::SemanticIndexArray &originalIndices;
+};
 
 }
 
@@ -655,6 +673,7 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     }
 
     initializeUniformStorage();
+    initAttributesByLayout();
 
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
@@ -1034,6 +1053,8 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog,
     }
 
     mUsesPointSize = vertexShaderD3D->usesPointSize();
+
+    initAttributesByLayout();
 
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
@@ -1930,6 +1951,8 @@ void ProgramD3D::reset()
     mUsedVertexSamplerRange = 0;
     mUsedPixelSamplerRange = 0;
     mDirtySamplerMapping = true;
+
+    std::fill(mAttributesByLayout, mAttributesByLayout + ArraySize(mAttributesByLayout), -1);
 }
 
 unsigned int ProgramD3D::getSerial() const
@@ -1940,6 +1963,34 @@ unsigned int ProgramD3D::getSerial() const
 unsigned int ProgramD3D::issueSerial()
 {
     return mCurrentSerial++;
+}
+
+void ProgramD3D::initAttributesByLayout()
+{
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    {
+        mAttributesByLayout[i] = i;
+    }
+
+    std::sort(&mAttributesByLayout[0], &mAttributesByLayout[gl::MAX_VERTEX_ATTRIBS], AttributeSorter(mSemanticIndex));
+}
+
+void ProgramD3D::sortAttributesByLayout(rx::TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
+                                        int sortedSemanticIndices[gl::MAX_VERTEX_ATTRIBS]) const
+{
+    rx::TranslatedAttribute oldTranslatedAttributes[gl::MAX_VERTEX_ATTRIBS];
+
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    {
+        oldTranslatedAttributes[i] = attributes[i];
+    }
+
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    {
+        int oldIndex = mAttributesByLayout[i];
+        sortedSemanticIndices[i] = mSemanticIndex[oldIndex];
+        attributes[i] = oldTranslatedAttributes[oldIndex];
+    }
 }
 
 }

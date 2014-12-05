@@ -142,6 +142,7 @@ GLuint ProgramImpl::getUniformBlockIndex(std::string name) const
 
 void ProgramImpl::reset()
 {
+    std::fill(mSemanticIndex, mSemanticIndex + ArraySize(mSemanticIndex), -1);
     SafeDeleteContainer(mUniforms);
     mUniformIndex.clear();
     SafeDeleteContainer(mUniformBlocks);

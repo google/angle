@@ -41,7 +41,6 @@ class ShaderD3D : public ShaderImpl
     void resetVaryingsRegisterAssignment();
     unsigned int getUniformRegister(const std::string &uniformName) const;
     unsigned int getInterfaceBlockRegister(const std::string &blockName) const;
-    int getSemanticIndex(const std::string &attributeName) const;
     void appendDebugInfo(const std::string &info) { mDebugInfo += info; }
 
     D3DWorkaroundType getD3DWorkarounds() const;

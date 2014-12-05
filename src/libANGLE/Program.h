@@ -204,9 +204,6 @@ class Program
     GLsizei getTransformFeedbackVaryingMaxLength() const;
     GLenum getTransformFeedbackBufferMode() const;
 
-    void initAttributesByLayout();
-    void sortAttributesByLayout(rx::TranslatedAttribute attributes[MAX_VERTEX_ATTRIBS], int sortedSemanticIndices[MAX_VERTEX_ATTRIBS]) const;
-
     static bool linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *vertexShader);
     static bool linkValidateUniforms(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform);
     static bool linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
@@ -251,8 +248,6 @@ class Program
     rx::ProgramImpl *mProgram;
 
     sh::Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
-    int mSemanticIndex[MAX_VERTEX_ATTRIBS];
-    int mAttributesByLayout[MAX_VERTEX_ATTRIBS];
 
     std::map<int, VariableLocation> mOutputVariables;
 

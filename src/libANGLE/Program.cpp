@@ -8,13 +8,12 @@
 // and related functionality. [OpenGL ES 2.0.24] section 2.10.3 page 28.
 
 #include "libANGLE/Program.h"
-#include "libANGLE/ResourceManager.h"
+
 #include "libANGLE/Data.h"
+#include "libANGLE/ResourceManager.h"
 #include "libANGLE/features.h"
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/renderer/ProgramImpl.h"
-#include "libANGLE/renderer/d3d/ShaderD3D.h"
-#include "libANGLE/renderer/d3d/VertexDataManager.h"
 
 #include "common/debug.h"
 #include "common/version.h"
@@ -322,6 +321,11 @@ Error Program::link(const Data &data)
     }
     ASSERT(mVertexShader->getType() == GL_VERTEX_SHADER);
 
+    if (!linkAttributes(mInfoLog, mAttributeBindings, mVertexShader))
+    {
+        return Error(GL_NO_ERROR);
+    }
+
     int registers;
     std::vector<LinkedVarying> linkedVaryings;
     rx::LinkResult result = mProgram->link(data, mInfoLog, mFragmentShader, mVertexShader, mTransformFeedbackVaryings, mTransformFeedbackBufferMode,
@@ -329,11 +333,6 @@ Error Program::link(const Data &data)
     if (result.error.isError() || !result.linkSuccess)
     {
         return result.error;
-    }
-
-    if (!linkAttributes(mInfoLog, mAttributeBindings, mVertexShader))
-    {
-        return Error(GL_NO_ERROR);
     }
 
     if (!mProgram->linkUniforms(mInfoLog, *mVertexShader, *mFragmentShader, *data.caps))
@@ -398,8 +397,6 @@ void Program::unlink(bool destroy)
     }
 
     std::fill(mLinkedAttribute, mLinkedAttribute + ArraySize(mLinkedAttribute), sh::Attribute());
-    std::fill(mSemanticIndex, mSemanticIndex + ArraySize(mSemanticIndex), -1);
-    std::fill(mAttributesByLayout, mAttributesByLayout + ArraySize(mAttributesByLayout), -1);
     mOutputVariables.clear();
 
     mProgram->reset();
@@ -454,10 +451,8 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
         stream.readString(&mLinkedAttribute[i].name);
         stream.readInt(&mProgram->getShaderAttributes()[i].type);
         stream.readString(&mProgram->getShaderAttributes()[i].name);
-        stream.readInt(&mSemanticIndex[i]);
+        stream.readInt(&mProgram->getSemanticIndexes()[i]);
     }
-
-    initAttributesByLayout();
 
     rx::LinkResult result = mProgram->load(mInfoLog, &stream);
     if (result.error.isError() || !result.linkSuccess)
@@ -490,7 +485,7 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
         stream.writeString(mLinkedAttribute[i].name);
         stream.writeInt(mProgram->getShaderAttributes()[i].type);
         stream.writeString(mProgram->getShaderAttributes()[i].name);
-        stream.writeInt(mSemanticIndex[i]);
+        stream.writeInt(mProgram->getSemanticIndexes()[i]);
     }
 
     gl::Error error = mProgram->save(&stream);
@@ -622,7 +617,7 @@ int Program::getSemanticIndex(int attributeIndex)
 {
     ASSERT(attributeIndex >= 0 && attributeIndex < MAX_VERTEX_ATTRIBS);
 
-    return mSemanticIndex[attributeIndex];
+    return mProgram->getSemanticIndexes()[attributeIndex];
 }
 
 void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
@@ -1238,50 +1233,6 @@ GLenum Program::getTransformFeedbackBufferMode() const
     return mTransformFeedbackBufferMode;
 }
 
-struct AttributeSorter
-{
-    AttributeSorter(const int(&semanticIndices)[MAX_VERTEX_ATTRIBS])
-        : originalIndices(semanticIndices)
-    {
-    }
-
-    bool operator()(int a, int b)
-    {
-        if (originalIndices[a] == -1) return false;
-        if (originalIndices[b] == -1) return true;
-        return (originalIndices[a] < originalIndices[b]);
-    }
-
-    const int(&originalIndices)[MAX_VERTEX_ATTRIBS];
-};
-
-void Program::initAttributesByLayout()
-{
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-    {
-        mAttributesByLayout[i] = i;
-    }
-
-    std::sort(&mAttributesByLayout[0], &mAttributesByLayout[MAX_VERTEX_ATTRIBS], AttributeSorter(mSemanticIndex));
-}
-
-void Program::sortAttributesByLayout(rx::TranslatedAttribute attributes[MAX_VERTEX_ATTRIBS], int sortedSemanticIndices[MAX_VERTEX_ATTRIBS]) const
-{
-    rx::TranslatedAttribute oldTranslatedAttributes[MAX_VERTEX_ATTRIBS];
-
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-    {
-        oldTranslatedAttributes[i] = attributes[i];
-    }
-
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-    {
-        int oldIndex = mAttributesByLayout[i];
-        sortedSemanticIndices[i] = mSemanticIndex[oldIndex];
-        attributes[i] = oldTranslatedAttributes[oldIndex];
-    }
-}
-
 bool Program::linkVaryings(InfoLog &infoLog, Shader *fragmentShader, Shader *vertexShader)
 {
     std::vector<PackedVarying> &fragmentVaryings = fragmentShader->getVaryings();
@@ -1346,8 +1297,6 @@ bool Program::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::stri
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
 bool Program::linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, const Shader *vertexShader)
 {
-    const rx::ShaderD3D *vertexShaderD3D = rx::ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
-
     unsigned int usedLocations = 0;
     const std::vector<sh::Attribute> &shaderAttributes = vertexShader->getActiveAttributes();
 
@@ -1422,16 +1371,14 @@ bool Program::linkAttributes(InfoLog &infoLog, const AttributeBindings &attribut
 
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; )
     {
-        int index = vertexShaderD3D->getSemanticIndex(mLinkedAttribute[attributeIndex].name);
+        int index = vertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].name);
         int rows = VariableRegisterCount(mLinkedAttribute[attributeIndex].type);
 
         for (int r = 0; r < rows; r++)
         {
-            mSemanticIndex[attributeIndex++] = index++;
+            mProgram->getSemanticIndexes()[attributeIndex++] = index++;
         }
     }
-
-    initAttributesByLayout();
 
     return true;
 }

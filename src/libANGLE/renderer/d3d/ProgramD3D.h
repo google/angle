@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_PROGRAMD3D_H_
 #define LIBANGLE_RENDERER_D3D_PROGRAMD3D_H_
 
+#include "libANGLE/Constants.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/Workarounds.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
@@ -123,6 +124,10 @@ class ProgramD3D : public ProgramImpl
 
     unsigned int getSerial() const;
 
+    void initAttributesByLayout();
+    void sortAttributesByLayout(rx::TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
+                                int sortedSemanticIndices[gl::MAX_VERTEX_ATTRIBS]) const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(ProgramD3D);
 
@@ -222,6 +227,8 @@ class ProgramD3D : public ProgramImpl
     bool mDirtySamplerMapping;
 
     int mShaderVersion;
+
+    int mAttributesByLayout[gl::MAX_VERTEX_ATTRIBS];
 
     unsigned int mSerial;
 
