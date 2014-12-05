@@ -22,6 +22,30 @@
       "revId": "dae55f649e854df527534191e15ffb12229cf802",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fa18d0b_1162eefc",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1203,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-05T16:03:29Z",
+      "side": 0,
+      "message": "I ended up just moving this function to entry_points_egl.",
+      "parentUuid": "5f9e89d1_10ddca6c",
+      "range": {
+        "startLine": 1203,
+        "startChar": 4,
+        "endLine": 1203,
+        "endChar": 55
+      },
+      "revId": "dae55f649e854df527534191e15ffb12229cf802",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

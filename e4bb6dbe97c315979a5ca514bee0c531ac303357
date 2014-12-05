@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7fa18d0b_7186d23c",
+        "filename": "src/libGLESv2/entry_points_egl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-05T16:03:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff081ddb_ee2b0770",
+      "revId": "e4bb6dbe97c315979a5ca514bee0c531ac303357",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f9e89d1_90f9bae3",
         "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
         "patchSetId": 10
@@ -30,6 +48,30 @@
       "writtenOn": "2014-12-05T15:46:35Z",
       "side": 1,
       "message": "should this be EVENT as well?",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 9
+      },
+      "revId": "e4bb6dbe97c315979a5ca514bee0c531ac303357",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fa18d0b_91beded7",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-05T16:03:29Z",
+      "side": 1,
+      "message": "Yep, looks like a bug, fixed.",
+      "parentUuid": "5f9e89d1_90f9bae3",
       "range": {
         "startLine": 57,
         "startChar": 4,
