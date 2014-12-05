@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f9e89d1_10ddca6c",
+        "filename": "src/libEGL/libEGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1203,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-05T15:46:35Z",
+      "side": 0,
+      "message": "was nuking this event intentional? Is EVENT unusable from this file or something?",
+      "range": {
+        "startLine": 1203,
+        "startChar": 4,
+        "endLine": 1203,
+        "endChar": 55
+      },
+      "revId": "dae55f649e854df527534191e15ffb12229cf802",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
