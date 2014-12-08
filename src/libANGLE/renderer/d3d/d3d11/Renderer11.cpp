@@ -353,7 +353,33 @@ EGLint Renderer11::initialize()
 
     SafeRelease(dxgiDevice);
 
-    mDxgiAdapter->GetDesc(&mAdapterDescription);
+    IDXGIAdapter2 *dxgiAdapter2 = d3d11::DynamicCastComObject<IDXGIAdapter2>(mDxgiAdapter);
+
+    // On D3D_FEATURE_LEVEL_9_*, IDXGIAdapter::GetDesc returns "Software Adapter" for the description string.
+    // If DXGI1.2 is available then IDXGIAdapter2::GetDesc2 can be used to get the actual hardware values.
+    if (mFeatureLevel <= D3D_FEATURE_LEVEL_9_3 && dxgiAdapter2 != NULL)
+    {
+        DXGI_ADAPTER_DESC2 adapterDesc2 = {0};
+        dxgiAdapter2->GetDesc2(&adapterDesc2);
+
+        // Copy the contents of the DXGI_ADAPTER_DESC2 into mAdapterDescription (a DXGI_ADAPTER_DESC).
+        memcpy(mAdapterDescription.Description, adapterDesc2.Description, sizeof(mAdapterDescription.Description));
+        mAdapterDescription.VendorId = adapterDesc2.VendorId;
+        mAdapterDescription.DeviceId = adapterDesc2.DeviceId;
+        mAdapterDescription.SubSysId = adapterDesc2.SubSysId;
+        mAdapterDescription.Revision = adapterDesc2.Revision;
+        mAdapterDescription.DedicatedVideoMemory = adapterDesc2.DedicatedVideoMemory;
+        mAdapterDescription.DedicatedSystemMemory = adapterDesc2.DedicatedSystemMemory;
+        mAdapterDescription.SharedSystemMemory = adapterDesc2.SharedSystemMemory;
+        mAdapterDescription.AdapterLuid = adapterDesc2.AdapterLuid;
+    }
+    else
+    {
+        mDxgiAdapter->GetDesc(&mAdapterDescription);
+    }
+
+    SafeRelease(dxgiAdapter2);
+
     memset(mDescription, 0, sizeof(mDescription));
     wcstombs(mDescription, mAdapterDescription.Description, sizeof(mDescription) - 1);
 
