@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e48332c3_0531140a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-08T14:57:28Z",
+      "side": 1,
+      "message": "Can this check be moved to the Clear11 constructor? I think that is the only place ClearView will be used.",
+      "range": {
+        "startLine": 392,
+        "startChar": 4,
+        "endLine": 397,
+        "endChar": 5
+      },
+      "revId": "8d9054b5582cfe78beaff07146adc73b4716eaf9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
