@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e48332c3_a8e83f0d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-08T19:23:05Z",
+      "side": 1,
+      "message": "nit: trivial point, can you use d3d11Options.ClearView !\u003d FALSE to be consistent with our existing code?",
+      "range": {
+        "startLine": 124,
+        "startChar": 28,
+        "endLine": 124,
+        "endChar": 56
+      },
+      "revId": "b2da659704ffcd25a04c893caa9d50740dc07134",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
