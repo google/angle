@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "24cf0a49_0080361f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2014-12-09T18:16:33Z",
+      "side": 1,
+      "message": "Allman-style braces (brace on new line), please.",
+      "range": {
+        "startLine": 625,
+        "startChar": 35,
+        "endLine": 625,
+        "endChar": 36
+      },
+      "revId": "bbf9eab4006d4bbab3c08ad4951666b6ea01cc93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04ccc652_6bc0010d",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 1
