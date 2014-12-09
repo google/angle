@@ -620,77 +620,44 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
         }
     }
 
-    if (mask & GL_DEPTH_BUFFER_BIT)
+    GLenum masks[] = {GL_DEPTH_BUFFER_BIT, GL_STENCIL_BUFFER_BIT};
+    GLenum attachments[] = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};
+    for (size_t i = 0; i < 2; i++)
     {
-        gl::FramebufferAttachment *readDepthBuffer = readFramebuffer->getDepthbuffer();
-        gl::FramebufferAttachment *drawDepthBuffer = drawFramebuffer->getDepthbuffer();
-
-        if (readDepthBuffer && drawDepthBuffer)
+        if (mask & masks[i])
         {
-            if (readDepthBuffer->getActualFormat() != drawDepthBuffer->getActualFormat())
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return false;
-            }
+            gl::FramebufferAttachment *readBuffer = readFramebuffer->getAttachment(attachments[i]);
+            gl::FramebufferAttachment *drawBuffer = drawFramebuffer->getAttachment(attachments[i]);
 
-            if (readDepthBuffer->getSamples() > 0 && !sameBounds)
+            if (readBuffer && drawBuffer)
             {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return false;
-            }
-
-            if (fromAngleExtension)
-            {
-                if (IsPartialBlit(context, readDepthBuffer, drawDepthBuffer,
-                                  srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1))
-                {
-                    ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
-                    context->recordError(Error(GL_INVALID_OPERATION)); // only whole-buffer copies are permitted
-                    return false;
-                }
-
-                if (readDepthBuffer->getSamples() != 0 || drawDepthBuffer->getSamples() != 0)
+                if (readBuffer->getActualFormat() != drawBuffer->getActualFormat())
                 {
                     context->recordError(Error(GL_INVALID_OPERATION));
                     return false;
                 }
-            }
-        }
-    }
 
-    if (mask & GL_STENCIL_BUFFER_BIT)
-    {
-        gl::FramebufferAttachment *readStencilBuffer = readFramebuffer->getStencilbuffer();
-        gl::FramebufferAttachment *drawStencilBuffer = drawFramebuffer->getStencilbuffer();
-
-        if (readStencilBuffer && drawStencilBuffer)
-        {
-            if (readStencilBuffer->getActualFormat() != drawStencilBuffer->getActualFormat())
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return false;
-            }
-
-            if (readStencilBuffer->getSamples() > 0 && !sameBounds)
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return false;
-            }
-
-            if (fromAngleExtension)
-            {
-                if (IsPartialBlit(context, readStencilBuffer, drawStencilBuffer,
-                                  srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1))
-                {
-                    ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
-                    context->recordError(Error(GL_INVALID_OPERATION)); // only whole-buffer copies are permitted
-                    return false;
-                }
-
-                if (readStencilBuffer->getSamples() != 0 || drawStencilBuffer->getSamples() != 0)
+                if (readBuffer->getSamples() > 0 && !sameBounds)
                 {
                     context->recordError(Error(GL_INVALID_OPERATION));
                     return false;
+                }
+
+                if (fromAngleExtension)
+                {
+                    if (IsPartialBlit(context, readBuffer, drawBuffer,
+                                      srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1))
+                    {
+                        ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
+                        context->recordError(Error(GL_INVALID_OPERATION)); // only whole-buffer copies are permitted
+                        return false;
+                    }
+
+                    if (readBuffer->getSamples() != 0 || drawBuffer->getSamples() != 0)
+                    {
+                        context->recordError(Error(GL_INVALID_OPERATION));
+                        return false;
+                    }
                 }
             }
         }
