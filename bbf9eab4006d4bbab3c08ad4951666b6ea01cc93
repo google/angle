@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04ccc652_6bc0010d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1112153
+      },
+      "writtenOn": "2014-12-09T13:49:35Z",
+      "side": 1,
+      "message": "this condition is change from \u0026\u0026 to ||\nFYI, color buffer code has already ||\n  if (readColorBuffer-\u003egetSamples() \u003e 0 \u0026\u0026 (readInternalFormat !\u003d drawInternalFormat || !sameBounds))\n  {\n      context-\u003erecordError(Error(GL_INVALID_OPERATION));\n      return false;\n  }",
+      "revId": "bbf9eab4006d4bbab3c08ad4951666b6ea01cc93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
