@@ -2383,6 +2383,16 @@ int Renderer9::getMajorShaderModel() const
     return D3DSHADER_VERSION_MAJOR(mDeviceCaps.PixelShaderVersion);
 }
 
+int Renderer9::getMinorShaderModel() const
+{
+    return D3DSHADER_VERSION_MINOR(mDeviceCaps.PixelShaderVersion);
+}
+
+std::string Renderer9::getShaderModelSuffix() const
+{
+    return "";
+}
+
 DWORD Renderer9::getCapsDeclTypes() const
 {
     return mDeviceCaps.DeclTypes;

@@ -114,6 +114,8 @@ class Renderer11 : public RendererD3D
     virtual bool getPostSubBufferSupport() const;
 
     virtual int getMajorShaderModel() const;
+    int getMinorShaderModel() const override;
+    std::string getShaderModelSuffix() const override;
     virtual int getMinSwapInterval() const;
     virtual int getMaxSwapInterval() const;
 
@@ -247,8 +249,6 @@ class Renderer11 : public RendererD3D
 
     void initializeDevice();
     void releaseDeviceResources();
-    int getMinorShaderModel() const;
-    std::string getShaderModelSuffix() const;
     void release();
 
     RenderStateCache mStateCache;

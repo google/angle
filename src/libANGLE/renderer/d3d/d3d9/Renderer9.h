@@ -117,6 +117,9 @@ class Renderer9 : public RendererD3D
     virtual bool getPostSubBufferSupport() const;
 
     virtual int getMajorShaderModel() const;
+    int getMinorShaderModel() const override;
+    std::string getShaderModelSuffix() const override;
+
     DWORD getCapsDeclTypes() const;
     virtual int getMinSwapInterval() const;
     virtual int getMaxSwapInterval() const;
