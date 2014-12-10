@@ -752,7 +752,13 @@ void Buffer11::NativeBuffer11::fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, Ren
 
       case BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK:
         bufferDesc->Usage = D3D11_USAGE_DEFAULT;
-        bufferDesc->BindFlags = D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_STREAM_OUTPUT;
+        bufferDesc->BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+        if (renderer->isES3Capable())
+        {
+            bufferDesc->BindFlags |= D3D11_BIND_STREAM_OUTPUT;
+        }
+
         bufferDesc->CPUAccessFlags = 0;
         break;
 
