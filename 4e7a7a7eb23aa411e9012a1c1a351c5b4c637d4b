@@ -16,6 +16,24 @@
       "revId": "4e7a7a7eb23aa411e9012a1c1a351c5b4c637d4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "646ca215_7fc5631b",
+        "filename": "tests/angle_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-10T19:32:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "842516f1_7b9e2775",
+      "revId": "4e7a7a7eb23aa411e9012a1c1a351c5b4c637d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
