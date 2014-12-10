@@ -16,13 +16,14 @@
 namespace gl
 {
 
+class ImageIndexIterator;
+
 struct ImageIndex
 {
     GLenum type;
     GLint mipIndex;
     GLint layerIndex;
 
-    ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn);
     ImageIndex(const ImageIndex &other);
     ImageIndex &operator=(const ImageIndex &other);
 
@@ -35,6 +36,11 @@ struct ImageIndex
     static ImageIndex MakeInvalid();
 
     static const GLint ENTIRE_LEVEL = static_cast<GLint>(-1);
+
+  private:
+    friend class ImageIndexIterator;
+
+    ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn);
 };
 
 class ImageIndexIterator

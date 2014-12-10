@@ -1157,14 +1157,14 @@ TextureD3D_Cube::~TextureD3D_Cube()
 Image *TextureD3D_Cube::getImage(int level, int layer) const
 {
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(layer < 6);
+    ASSERT(layer >= 0 && layer < 6);
     return mImageArray[layer][level];
 }
 
 Image *TextureD3D_Cube::getImage(const gl::ImageIndex &index) const
 {
     ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(index.layerIndex < 6);
+    ASSERT(index.layerIndex >= 0 && index.layerIndex < 6);
     return mImageArray[index.layerIndex][index.mipIndex];
 }
 

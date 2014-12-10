@@ -821,7 +821,19 @@ void GL_APIENTRY FramebufferTextureLayer(GLenum target, GLenum attachment, GLuin
         if (texture != 0)
         {
             Texture *textureObject = context->getTexture(texture);
-            ImageIndex index(textureObject->getTarget(), level, layer);
+
+            ImageIndex index = ImageIndex::MakeInvalid();
+
+            if (textureObject->getTarget() == GL_TEXTURE_3D)
+            {
+                index = ImageIndex::Make3D(level, layer);
+            }
+            else
+            {
+                ASSERT(textureObject->getTarget() == GL_TEXTURE_2D_ARRAY);
+                index = ImageIndex::Make2DArray(level, layer);
+            }
+
             framebuffer->setTextureAttachment(attachment, textureObject, index);
         }
         else

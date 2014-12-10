@@ -1473,7 +1473,19 @@ void GL_APIENTRY FramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
         if (texture != 0)
         {
             Texture *textureObj = context->getTexture(texture);
-            ImageIndex index(textarget, level, ImageIndex::ENTIRE_LEVEL);
+
+            ImageIndex index = ImageIndex::MakeInvalid();
+
+            if (textarget == GL_TEXTURE_2D)
+            {
+                index = ImageIndex::Make2D(level);
+            }
+            else
+            {
+                ASSERT(IsCubemapTextureTarget(textarget));
+                index = ImageIndex::MakeCube(textarget, level);
+            }
+
             framebuffer->setTextureAttachment(attachment, textureObj, index);
         }
         else

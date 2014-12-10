@@ -390,3 +390,21 @@ TYPED_TEST(TextureTestES3, MipmapsForTextureArray)
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(px, py, 0, 0, 255, 255);
 }
+
+// Test creating a FBO with a cube map render target, to test an ANGLE bug
+// https://code.google.com/p/angleproject/issues/detail?id=849
+TYPED_TEST(TextureTest, CubeMapFBO)
+{
+    GLuint fbo;
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, mTextureCube, 0);
+
+    EXPECT_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    glDeleteFramebuffers(1, &fbo);
+
+    EXPECT_GL_NO_ERROR();
+}
