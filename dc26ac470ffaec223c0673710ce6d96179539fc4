@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c49c6e86_c4dbd0fa",
+        "filename": "src/libANGLE/renderer/Renderer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-11T15:09:59Z",
+      "side": 1,
+      "message": "These should go into RendererD3D, we\u0027re trying to keep all D3D related things out of Renderer now.",
+      "range": {
+        "startLine": 155,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 57
+      },
+      "revId": "dc26ac470ffaec223c0673710ce6d96179539fc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
