@@ -233,7 +233,7 @@ Error Display::initialize()
         return Error(EGL_NOT_INITIALIZED);
     }
 
-    initDisplayExtensionString();
+    initDisplayExtensions();
     initVendorString();
 
     return Error(EGL_SUCCESS);
@@ -614,70 +614,69 @@ bool Display::hasExistingWindowSurface(EGLNativeWindowType window)
     return false;
 }
 
-std::string Display::generateClientExtensionString()
+static ClientExtensions GenerateClientExtensions()
 {
-    std::vector<std::string> extensions;
+    ClientExtensions extensions;
 
-    extensions.push_back("EGL_EXT_client_extensions");
+    extensions.clientExtensions = true;
+    extensions.platformBase = true;
+    extensions.platformANGLE = true;
 
-    extensions.push_back("EGL_EXT_platform_base");
-    extensions.push_back("ANGLE_platform_angle");
+#if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+    extensions.platformANGLED3D = true;
+#endif
 
-    if (supportsPlatformD3D())
-    {
-        extensions.push_back("ANGLE_platform_angle_d3d");
-    }
+#if defined(ANGLE_ENABLE_OPENGL)
+    extensions.platformANGLEOpenGL = true;
+#endif
 
-    if (supportsPlatformOpenGL())
-    {
-        extensions.push_back("ANGLE_platform_angle_opengl");
-    }
+    return extensions;
+}
+
+template <typename T>
+static std::string GenerateExtensionsString(const T &extensions)
+{
+    std::vector<std::string> extensionsVector = extensions.getStrings();
 
     std::ostringstream stream;
-    std::copy(extensions.begin(), extensions.end(), std::ostream_iterator<std::string>(stream, " "));
+    std::copy(extensionsVector.begin(), extensionsVector.end(), std::ostream_iterator<std::string>(stream, " "));
     return stream.str();
 }
 
-void Display::initDisplayExtensionString()
+const ClientExtensions &Display::getClientExtensions()
 {
-    std::vector<std::string> extensions;
+    static const ClientExtensions clientExtensions = GenerateClientExtensions();
+    return clientExtensions;
+}
 
-    // Multi-vendor (EXT) extensions
-    extensions.push_back("EGL_EXT_create_context_robustness");
+const std::string &Display::getClientExtensionString()
+{
+    static const std::string clientExtensionsString = GenerateExtensionsString(getClientExtensions());
+    return clientExtensionsString;
+}
+
+void Display::initDisplayExtensions()
+{
+    mDisplayExtensions.createContextRobustness = true;
 
     // ANGLE-specific extensions
     if (mRenderer->getShareHandleSupport())
     {
-        extensions.push_back("EGL_ANGLE_d3d_share_handle_client_buffer");
-        extensions.push_back("EGL_ANGLE_surface_d3d_texture_2d_share_handle");
+        mDisplayExtensions.d3dShareHandleClientBuffer = true;
+        mDisplayExtensions.surfaceD3DTexture2DShareHandle = true;
     }
 
-    extensions.push_back("EGL_ANGLE_query_surface_pointer");
-    extensions.push_back("EGL_ANGLE_window_fixed_size");
+    mDisplayExtensions.querySurfacePointer = true;
+    mDisplayExtensions.windowFixedSize = true;
 
     if (mRenderer->getPostSubBufferSupport())
     {
-        extensions.push_back("EGL_NV_post_sub_buffer");
+        mDisplayExtensions.postSubBuffer = true;
     }
 
-    extensions.push_back("EGL_KHR_create_context");
+    mDisplayExtensions.createContext = true;
 
-    std::ostringstream stream;
-    std::copy(extensions.begin(), extensions.end(), std::ostream_iterator<std::string>(stream, " "));
-    mDisplayExtensionString = stream.str();
-}
-
-const char *Display::getExtensionString(egl::Display *display)
-{
-    if (display != EGL_NO_DISPLAY)
-    {
-        return display->mDisplayExtensionString.c_str();
-    }
-    else
-    {
-        static std::string clientExtensions = generateClientExtensionString();
-        return clientExtensions.c_str();
-    }
+    mDisplayExtensionString = GenerateExtensionsString(mDisplayExtensions);
 }
 
 bool Display::isValidNativeWindow(EGLNativeWindowType window) const
@@ -706,20 +705,6 @@ bool Display::isValidNativeDisplay(EGLNativeDisplayType display) const
 #endif
 }
 
-bool Display::supportsPlatformD3D()
-{
-#if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
-    return true;
-#else
-    return false;
-#endif
-}
-
-bool Display::supportsPlatformOpenGL()
-{
-    return false;
-}
-
 void Display::initVendorString()
 {
     mVendorString = "Google Inc.";
@@ -731,9 +716,19 @@ void Display::initVendorString()
     }
 }
 
-const char *Display::getVendorString() const
+const DisplayExtensions &Display::getExtensions() const
 {
-    return mVendorString.c_str();
+    return mDisplayExtensions;
+}
+
+const std::string &Display::getExtensionString() const
+{
+    return mDisplayExtensionString;
+}
+
+const std::string &Display::getVendorString() const
+{
+    return mVendorString;
 }
 
 }

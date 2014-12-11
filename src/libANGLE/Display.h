@@ -42,10 +42,8 @@ class Display final
 
     static egl::Display *getDisplay(EGLNativeDisplayType displayId, const AttributeMap &attribMap);
 
-    static const char *getExtensionString(egl::Display *display);
-
-    static bool supportsPlatformD3D();
-    static bool supportsPlatformOpenGL();
+    static const ClientExtensions &getClientExtensions();
+    static const std::string &getClientExtensionString();
 
     bool getConfigs(EGLConfig *configs, const EGLint *attribList, EGLint configSize, EGLint *numConfig);
     bool getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value);
@@ -70,8 +68,9 @@ class Display final
 
     void notifyDeviceLost();
 
-    const char *getExtensionString() const;
-    const char *getVendorString() const;
+    const DisplayExtensions &getExtensions() const;
+    const std::string &getExtensionString() const;
+    const std::string &getVendorString() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
@@ -82,9 +81,7 @@ class Display final
 
     Error restoreLostDevice();
 
-    static std::string generateClientExtensionString();
-
-    void initDisplayExtensionString();
+    void initDisplayExtensions();
     void initVendorString();
 
     rx::DisplayImpl *mImplementation;
@@ -99,6 +96,7 @@ class Display final
 
     rx::Renderer *mRenderer;
 
+    DisplayExtensions mDisplayExtensions;
     std::string mDisplayExtensionString;
 
     std::string mVendorString;

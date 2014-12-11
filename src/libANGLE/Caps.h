@@ -280,4 +280,61 @@ struct Caps
 
 }
 
+namespace egl
+{
+
+struct DisplayExtensions
+{
+    DisplayExtensions();
+
+    // Generate a vector of supported extension strings
+    std::vector<std::string> getStrings() const;
+
+    // EGL_EXT_create_context_robustness
+    bool createContextRobustness;
+
+    // EGL_ANGLE_d3d_share_handle_client_buffer
+    bool d3dShareHandleClientBuffer;
+
+    // EGL_ANGLE_surface_d3d_texture_2d_share_handle
+    bool surfaceD3DTexture2DShareHandle;
+
+    // EGL_ANGLE_query_surface_pointer
+    bool querySurfacePointer;
+
+    // EGL_ANGLE_window_fixed_size
+    bool windowFixedSize;
+
+    // EGL_NV_post_sub_buffer
+    bool postSubBuffer;
+
+    // EGL_KHR_create_context
+    bool createContext;
+};
+
+struct ClientExtensions
+{
+    ClientExtensions();
+
+    // Generate a vector of supported extension strings
+    std::vector<std::string> getStrings() const;
+
+    // EGL_EXT_client_extensions
+    bool clientExtensions;
+
+    // EGL_EXT_platform_base
+    bool platformBase;
+
+    // EGL_ANGLE_platform_angle
+    bool platformANGLE;
+
+    // EGL_ANGLE_platform_angle_d3d
+    bool platformANGLED3D;
+
+    // EGL_ANGLE_platform_angle_opengl
+    bool platformANGLEOpenGL;
+};
+
+}
+
 #endif // LIBANGLE_CAPS_H_

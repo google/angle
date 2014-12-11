@@ -145,6 +145,8 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
         return EGL_NO_DISPLAY;
     }
 
+    const ClientExtensions &clientExtensions = Display::getClientExtensions();
+
     EGLint platformType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
     bool majorVersionSpecified = false;
     bool minorVersionSpecified = false;
@@ -164,7 +166,7 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
 
                   case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
                   case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
-                    if (!Display::supportsPlatformD3D())
+                    if (!clientExtensions.platformANGLED3D)
                     {
                         SetGlobalError(Error(EGL_SUCCESS));
                         return EGL_NO_DISPLAY;
@@ -173,7 +175,7 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
 
                   case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
                   case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
-                    if (!Display::supportsPlatformOpenGL())
+                    if (!clientExtensions.platformANGLEOpenGL)
                     {
                         SetGlobalError(Error(EGL_SUCCESS));
                         return EGL_NO_DISPLAY;
@@ -202,7 +204,7 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
                 break;
 
               case EGL_PLATFORM_ANGLE_USE_WARP_ANGLE:
-                if (!Display::supportsPlatformD3D())
+                if (!clientExtensions.platformANGLED3D)
                 {
                     SetGlobalError(Error(EGL_SUCCESS));
                     return EGL_NO_DISPLAY;

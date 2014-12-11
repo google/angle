@@ -13,6 +13,14 @@
 #include <algorithm>
 #include <sstream>
 
+static void InsertExtensionString(const std::string &extension, bool supported, std::vector<std::string> *extensionVector)
+{
+    if (supported)
+    {
+        extensionVector->push_back(extension);
+    }
+}
+
 namespace gl
 {
 
@@ -127,14 +135,6 @@ Extensions::Extensions()
       translatedShaderSource(false),
       colorBufferFloat(false)
 {
-}
-
-static void InsertExtensionString(const std::string &extension, bool supported, std::vector<std::string> *extensionVector)
-{
-    if (supported)
-    {
-        extensionVector->push_back(extension);
-    }
 }
 
 std::vector<std::string> Extensions::getStrings() const
@@ -426,6 +426,62 @@ Caps::Caps()
       maxTransformFeedbackSeparateAttributes(0),
       maxTransformFeedbackSeparateComponents(0)
 {
+}
+
+}
+
+namespace egl
+{
+
+DisplayExtensions::DisplayExtensions()
+    : createContextRobustness(false),
+      d3dShareHandleClientBuffer(false),
+      surfaceD3DTexture2DShareHandle(false),
+      querySurfacePointer(false),
+      windowFixedSize(false),
+      postSubBuffer(false),
+      createContext(false)
+{
+}
+
+std::vector<std::string> DisplayExtensions::getStrings() const
+{
+    std::vector<std::string> extensionStrings;
+
+    //                   | Extension name                                 | Supported flag                | Output vector   |
+    InsertExtensionString("EGL_EXT_create_context_robustness",             createContextRobustness,        &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_d3d_share_handle_client_buffer",      d3dShareHandleClientBuffer,     &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_surface_d3d_texture_2d_share_handle", surfaceD3DTexture2DShareHandle, &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_query_surface_pointer",               querySurfacePointer,            &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_window_fixed_size",                   windowFixedSize,                &extensionStrings);
+    InsertExtensionString("EGL_NV_post_sub_buffer",                        postSubBuffer,                  &extensionStrings);
+    InsertExtensionString("EGL_KHR_create_context",                        createContext,                  &extensionStrings);
+
+    return extensionStrings;
+}
+
+
+ClientExtensions::ClientExtensions()
+    : clientExtensions(false),
+      platformBase(false),
+      platformANGLE(false),
+      platformANGLED3D(false),
+      platformANGLEOpenGL(false)
+{
+}
+
+std::vector<std::string> ClientExtensions::getStrings() const
+{
+    std::vector<std::string> extensionStrings;
+
+    //                   | Extension name                   | Supported flag     | Output vector   |
+    InsertExtensionString("EGL_EXT_client_extensions",       clientExtensions,    &extensionStrings);
+    InsertExtensionString("EGL_EXT_platform_base",           platformBase,        &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_platform_angle",        platformANGLE,       &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_platform_angle_d3d",    platformANGLED3D,    &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_platform_angle_opengl", platformANGLEOpenGL, &extensionStrings);
+
+    return extensionStrings;
 }
 
 }

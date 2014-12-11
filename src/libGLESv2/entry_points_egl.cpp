@@ -177,10 +177,17 @@ const char *EGLAPIENTRY QueryString(EGLDisplay dpy, EGLint name)
         result = "OpenGL_ES";
         break;
       case EGL_EXTENSIONS:
-        result = Display::getExtensionString(display);
+        if (display == EGL_NO_DISPLAY)
+        {
+            result = Display::getClientExtensionString().c_str();
+        }
+        else
+        {
+            result = display->getExtensionString().c_str();
+        }
         break;
       case EGL_VENDOR:
-        result = display->getVendorString();
+        result = display->getVendorString().c_str();
         break;
       case EGL_VERSION:
         result = "1.4 (ANGLE " ANGLE_VERSION_STRING ")";
