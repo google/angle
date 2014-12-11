@@ -75,4 +75,26 @@ bool DisplayD3D::isValidNativeWindow(EGLNativeWindowType window) const
     return NativeWindow::isValidNativeWindow(window);
 }
 
+void DisplayD3D::generateExtensions(egl::DisplayExtensions *outExtensions) const
+{
+    outExtensions->createContextRobustness = true;
+
+    // ANGLE-specific extensions
+    if (mRenderer->getShareHandleSupport())
+    {
+        outExtensions->d3dShareHandleClientBuffer = true;
+        outExtensions->surfaceD3DTexture2DShareHandle = true;
+    }
+
+    outExtensions->querySurfacePointer = true;
+    outExtensions->windowFixedSize = true;
+
+    if (mRenderer->getPostSubBufferSupport())
+    {
+        outExtensions->postSubBuffer = true;
+    }
+
+    outExtensions->createContext = true;
+}
+
 }

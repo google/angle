@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_DISPLAYIMPL_H_
 
 #include "common/angleutils.h"
+#include "libANGLE/Caps.h"
 #include "libANGLE/Error.h"
 
 #include <set>
@@ -28,7 +29,7 @@ class SurfaceImpl;
 class DisplayImpl
 {
   public:
-    DisplayImpl() {}
+    DisplayImpl();
     virtual ~DisplayImpl();
 
     virtual SurfaceImpl *createWindowSurface(egl::Display *display, const egl::Config *config,
@@ -47,6 +48,8 @@ class DisplayImpl
 
     void destroySurface(egl::Surface *surface);
 
+    const egl::DisplayExtensions &getExtensions() const;
+
   protected:
     // Place the surface set here so it can be accessible for handling
     // context loss events. (It is shared between the Display and Impl.)
@@ -54,6 +57,11 @@ class DisplayImpl
 
   private:
     DISALLOW_COPY_AND_ASSIGN(DisplayImpl);
+
+    virtual void generateExtensions(egl::DisplayExtensions *outExtensions) const = 0;
+
+    mutable bool mExtensionsInitialized;
+    mutable egl::DisplayExtensions mExtensions;
 };
 
 }

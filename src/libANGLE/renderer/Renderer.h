@@ -84,10 +84,6 @@ class Renderer
                                    const GLvoid *indices, GLsizei instances,
                                    const RangeUI &indexRange) = 0;
 
-    // TODO(jmadill): caps? and virtual for egl::Display
-    virtual bool getShareHandleSupport() const = 0;
-    virtual bool getPostSubBufferSupport() const = 0;
-
     // Shader creation
     virtual CompilerImpl *createCompiler(const gl::Data &data) = 0;
     virtual ShaderImpl *createShader(GLenum type) = 0;

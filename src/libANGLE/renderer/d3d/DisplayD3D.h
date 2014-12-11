@@ -32,6 +32,8 @@ class DisplayD3D : public DisplayImpl
   private:
     DISALLOW_COPY_AND_ASSIGN(DisplayD3D);
 
+    void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
+
     rx::RendererD3D *mRenderer;
 };
 
