@@ -35,6 +35,13 @@ class TextureStorage;
 class UniformStorage;
 class VertexBuffer;
 
+enum ShaderType
+{
+    SHADER_VERTEX,
+    SHADER_PIXEL,
+    SHADER_GEOMETRY
+};
+
 class RendererD3D : public Renderer
 {
   public:
@@ -208,6 +215,19 @@ class RendererD3D : public Renderer
     gl::TextureMap mIncompleteTextures;
     MemoryBuffer mScratchMemoryBuffer;
     unsigned int mScratchMemoryBufferResetCounter;
+};
+
+struct dx_VertexConstants
+{
+    float depthRange[4];
+    float viewAdjust[4];
+};
+
+struct dx_PixelConstants
+{
+    float depthRange[4];
+    float viewCoords[4];
+    float depthFront[4];
 };
 
 }

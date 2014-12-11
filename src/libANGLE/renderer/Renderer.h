@@ -172,25 +172,5 @@ class Renderer
     mutable Workarounds mWorkarounds;
 };
 
-struct dx_VertexConstants
-{
-    float depthRange[4];
-    float viewAdjust[4];
-};
-
-struct dx_PixelConstants
-{
-    float depthRange[4];
-    float viewCoords[4];
-    float depthFront[4];
-};
-
-enum ShaderType
-{
-    SHADER_VERTEX,
-    SHADER_PIXEL,
-    SHADER_GEOMETRY
-};
-
 }
 #endif // LIBANGLE_RENDERER_RENDERER_H_
