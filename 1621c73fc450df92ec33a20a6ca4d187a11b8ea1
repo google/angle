@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4870e28_923f62f9",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-11T19:25:59Z",
+      "side": 1,
+      "message": "nit: use getData() -- it\u0027s forseeable that workarounds might be involved, and 3 parameters is already begging to be replaced with the Data object.",
+      "range": {
+        "startLine": 123,
+        "startChar": 55,
+        "endLine": 123,
+        "endChar": 89
+      },
+      "revId": "1621c73fc450df92ec33a20a6ca4d187a11b8ea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04e04612_6b83c12f",
+        "filename": "src/libANGLE/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-11T19:25:59Z",
+      "side": 1,
+      "message": "nit: call this mShaderType for clarity?",
+      "range": {
+        "startLine": 321,
+        "startChar": 11,
+        "endLine": 321,
+        "endChar": 16
+      },
+      "revId": "1621c73fc450df92ec33a20a6ca4d187a11b8ea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4870e28_f236de20",
+        "filename": "src/libANGLE/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-11T19:25:59Z",
+      "side": 1,
+      "message": "nit: call this mCompilerOutputType to match the function -- language is ambiguous especially since what you are calling a \"Compiler\" is often (currently, always) a \"Translator\"",
+      "range": {
+        "startLine": 326,
+        "startChar": 11,
+        "endLine": 326,
+        "endChar": 20
+      },
+      "revId": "1621c73fc450df92ec33a20a6ca4d187a11b8ea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
