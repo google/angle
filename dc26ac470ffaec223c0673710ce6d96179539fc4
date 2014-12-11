@@ -22,6 +22,30 @@
       "revId": "dc26ac470ffaec223c0673710ce6d96179539fc4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44a87ea2_6014ec36",
+        "filename": "src/libANGLE/renderer/Renderer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-12-11T17:55:11Z",
+      "side": 1,
+      "message": "Done. I thought I should put it alongside getMajorShaderModel() in Renderer.h, but RendererD3D.h is fine too.",
+      "parentUuid": "c49c6e86_c4dbd0fa",
+      "range": {
+        "startLine": 155,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 57
+      },
+      "revId": "dc26ac470ffaec223c0673710ce6d96179539fc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
