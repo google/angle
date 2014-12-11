@@ -60,12 +60,6 @@ Error Surface::swap()
 
 Error Surface::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
 {
-    if (!isPostSubBufferSupported())
-    {
-        // Spec is not clear about how this should be handled.
-        return Error(EGL_SUCCESS);
-    }
-
     return mImplementation->postSubBuffer(x, y, width, height);
 }
 

@@ -65,6 +65,12 @@ EGLBoolean EGLAPIENTRY QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surfa
         return EGL_FALSE;
     }
 
+    if (!display->getExtensions().querySurfacePointer)
+    {
+        SetGlobalError(Error(EGL_SUCCESS));
+        return EGL_FALSE;
+    }
+
     if (surface == EGL_NO_SURFACE)
     {
         SetGlobalError(Error(EGL_BAD_SURFACE));
@@ -75,7 +81,13 @@ EGLBoolean EGLAPIENTRY QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surfa
     switch (attribute)
     {
       case EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE:
+        if (!display->getExtensions().surfaceD3DTexture2DShareHandle)
+        {
+            SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
+            return EGL_FALSE;
+        }
         break;
+
       default:
         SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
         return EGL_FALSE;
@@ -118,6 +130,13 @@ EGLBoolean EGLAPIENTRY PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLin
         return EGL_FALSE;
     }
 
+    if (!display->getExtensions().postSubBuffer)
+    {
+        // Spec is not clear about how this should be handled.
+        SetGlobalError(Error(EGL_SUCCESS));
+        return EGL_TRUE;
+    }
+
     Error error = eglSurface->postSubBuffer(x, y, width, height);
     if (error.isError())
     {
@@ -135,17 +154,22 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
     EVENT("(EGLenum platform = %d, void* native_display = 0x%0.8p, const EGLint* attrib_list = 0x%0.8p)",
           platform, native_display, attrib_list);
 
+    const ClientExtensions &clientExtensions = Display::getClientExtensions();
+
     switch (platform)
     {
       case EGL_PLATFORM_ANGLE_ANGLE:
+        if (!clientExtensions.platformANGLE)
+        {
+            SetGlobalError(Error(EGL_SUCCESS));
+            return EGL_NO_DISPLAY;
+        }
         break;
 
       default:
         SetGlobalError(Error(EGL_BAD_CONFIG));
         return EGL_NO_DISPLAY;
     }
-
-    const ClientExtensions &clientExtensions = Display::getClientExtensions();
 
     EGLint platformType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
     bool majorVersionSpecified = false;
