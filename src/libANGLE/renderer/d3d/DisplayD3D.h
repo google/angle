@@ -18,7 +18,7 @@ class RendererD3D;
 class DisplayD3D : public DisplayImpl
 {
   public:
-    DisplayD3D(rx::RendererD3D *renderer) {}
+    DisplayD3D(rx::RendererD3D *renderer);
     SurfaceImpl *createWindowSurface(egl::Display *display, const egl::Config *config,
                                      EGLNativeWindowType window, EGLint fixedSize,
                                      EGLint width, EGLint height, EGLint postSubBufferSupported) override;

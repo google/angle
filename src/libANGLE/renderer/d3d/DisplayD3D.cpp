@@ -32,6 +32,11 @@ SurfaceImpl *DisplayD3D::createOffscreenSurface(egl::Display *display, const egl
                                        width, height, textureFormat, textureTarget);
 }
 
+DisplayD3D::DisplayD3D(rx::RendererD3D *renderer)
+    : mRenderer(renderer)
+{
+}
+
 egl::Error DisplayD3D::restoreLostDevice()
 {
     // Release surface resources to make the Reset() succeed
