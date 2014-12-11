@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c49c6e86_c77e324f",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-11T19:30:43Z",
+      "side": 1,
+      "message": "nit: we use allman-style braces (\"{\", \"{\" and \"else\", etc on newlines always)",
+      "range": {
+        "startLine": 389,
+        "startChar": 60,
+        "endLine": 389,
+        "endChar": 61
+      },
+      "revId": "71bc4ac21b4fcff8359347e66cc017453dcbd493",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04e04612_eb557118",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-11T19:30:43Z",
+      "side": 1,
+      "message": "nit: use else UNREACHABLE();",
+      "range": {
+        "startLine": 394,
+        "startChar": 8,
+        "endLine": 394,
+        "endChar": 14
+      },
+      "revId": "71bc4ac21b4fcff8359347e66cc017453dcbd493",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
