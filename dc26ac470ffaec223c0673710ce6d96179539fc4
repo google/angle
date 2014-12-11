@@ -46,6 +46,30 @@
       "revId": "dc26ac470ffaec223c0673710ce6d96179539fc4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c49c6e86_67808621",
+        "filename": "src/libANGLE/renderer/Renderer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-11T18:37:11Z",
+      "side": 1,
+      "message": "Yea, these the others are slated to be removed.",
+      "parentUuid": "44a87ea2_6014ec36",
+      "range": {
+        "startLine": 155,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 57
+      },
+      "revId": "dc26ac470ffaec223c0673710ce6d96179539fc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
