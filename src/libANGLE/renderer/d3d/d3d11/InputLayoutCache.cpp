@@ -63,6 +63,7 @@ void InputLayoutCache::initialize(ID3D11Device *device, ID3D11DeviceContext *con
     clear();
     mDevice = device;
     mDeviceContext = context;
+    mFeatureLevel = device->GetFeatureLevel();
 }
 
 void InputLayoutCache::clear()
@@ -110,7 +111,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
             D3D11_INPUT_CLASSIFICATION inputClass = attributes[i].divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
 
             gl::VertexFormat vertexFormat(*attributes[i].attribute, attributes[i].currentValueType);
-            const d3d11::VertexFormat &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormat);
+            const d3d11::VertexFormat &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormat, mFeatureLevel);
 
             // Record the type of the associated vertex shader vector in our key
             // This will prevent mismatched vertex shaders from using the same input layout

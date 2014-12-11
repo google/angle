@@ -897,6 +897,24 @@ static void AddIntegerVertexFormatInfo(D3D11VertexFormatInfoMap *map, GLenum inp
     map->insert(D3D11VertexFormatPair(inputFormat, info));
 }
 
+static D3D11VertexFormatInfoMap BuildD3D11_FL9_3VertexFormatInfoOverrideMap()
+{
+    // D3D11 Feature Level 9_3 doesn't support as many formats for vertex buffer resource as Feature Level 10_0+.
+    // http://msdn.microsoft.com/en-us/library/windows/desktop/ff471324(v=vs.85).aspx
+    // In particular, it doesn't support:
+    //      - Any 8-bit _SNORM format
+
+    D3D11VertexFormatInfoMap map;
+
+    // GL_BYTE -- normalized
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,   1,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R16G16_SNORM,        &Copy8SnormTo16SnormVertexData<1, 2>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,   2,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R16G16_SNORM,        &Copy8SnormTo16SnormVertexData<2, 2>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,   3,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R16G16B16A16_SNORM,  &Copy8SnormTo16SnormVertexData<3, 4>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,   4,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R16G16B16A16_SNORM,  &Copy8SnormTo16SnormVertexData<4, 4>);
+
+    return map;
+}
+
 static D3D11VertexFormatInfoMap BuildD3D11VertexFormatInfoMap()
 {
     D3D11VertexFormatInfoMap map;
@@ -1054,9 +1072,20 @@ static D3D11VertexFormatInfoMap BuildD3D11VertexFormatInfoMap()
     return map;
 }
 
-const VertexFormat &GetVertexFormatInfo(const gl::VertexFormat &vertexFormat)
+const VertexFormat &GetVertexFormatInfo(const gl::VertexFormat &vertexFormat, D3D_FEATURE_LEVEL featureLevel)
 {
     static const D3D11VertexFormatInfoMap vertexFormatMap = BuildD3D11VertexFormatInfoMap();
+    static const D3D11VertexFormatInfoMap vertexFormatMapFL9_3Override = BuildD3D11_FL9_3VertexFormatInfoOverrideMap();
+
+    if (featureLevel == D3D_FEATURE_LEVEL_9_3)
+    {
+        // First see if the format has a special mapping for FL9_3
+        D3D11VertexFormatInfoMap::const_iterator iter = vertexFormatMapFL9_3Override.find(vertexFormat);
+        if (iter != vertexFormatMapFL9_3Override.end())
+        {
+            return iter->second;
+        }
+    }
 
     D3D11VertexFormatInfoMap::const_iterator iter = vertexFormatMap.find(vertexFormat);
     if (iter != vertexFormatMap.end())

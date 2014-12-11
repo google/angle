@@ -94,6 +94,7 @@ class InputLayoutCache
 
     ID3D11Device *mDevice;
     ID3D11DeviceContext *mDeviceContext;
+    D3D_FEATURE_LEVEL mFeatureLevel;
 };
 
 }

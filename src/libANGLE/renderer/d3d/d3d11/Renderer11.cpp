@@ -3430,12 +3430,12 @@ bool Renderer11::getLUID(LUID *adapterLuid) const
 
 VertexConversionType Renderer11::getVertexConversionType(const gl::VertexFormat &vertexFormat) const
 {
-    return d3d11::GetVertexFormatInfo(vertexFormat).conversionType;
+    return d3d11::GetVertexFormatInfo(vertexFormat, mFeatureLevel).conversionType;
 }
 
 GLenum Renderer11::getVertexComponentType(const gl::VertexFormat &vertexFormat) const
 {
-    return d3d11::GetDXGIFormatInfo(d3d11::GetVertexFormatInfo(vertexFormat).nativeFormat).componentType;
+    return d3d11::GetDXGIFormatInfo(d3d11::GetVertexFormatInfo(vertexFormat, mFeatureLevel).nativeFormat).componentType;
 }
 
 void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps, gl::Extensions *outExtensions) const
