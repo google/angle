@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6430227f_f65a2048",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-12T17:53:10Z",
+      "side": 1,
+      "message": "nit: tiny request, can you wrap your longer git description paragraphs to 70 chars horizontally? thanks.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 8
+      },
+      "revId": "7195d96974b5d40ee52f66d92a3978a2c7d85176",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "442dde28_358f303a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-12T17:53:10Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "range": {
+        "startLine": 906,
+        "startChar": 0,
+        "endLine": 906,
+        "endChar": 4
+      },
+      "revId": "7195d96974b5d40ee52f66d92a3978a2c7d85176",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
