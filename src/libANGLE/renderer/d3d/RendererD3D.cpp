@@ -409,7 +409,7 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shade
             }
 
             // TODO: std::binary_search may become unavailable using older versions of GCC
-            if (texture->isSamplerComplete(sampler, *data.textureCaps, *data.extensions, data.clientVersion) &&
+            if (texture->isSamplerComplete(sampler, data) &&
                 !std::binary_search(framebufferSerials.begin(), framebufferSerials.begin() + framebufferSerialCount, texture->getTextureSerial()))
             {
                 gl::Error error = setSamplerState(shaderType, samplerIndex, texture, sampler);
