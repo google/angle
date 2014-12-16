@@ -16,6 +16,24 @@
       "revId": "4e4da171c585bcff75eb6005789597a0ccd81037",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e1ba449b_b37f4afd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-16T22:36:48Z",
+      "side": 1,
+      "message": "Yea, they only became available to chromium about a month ago, this is the first time I\u0027ve used them in ANGLE.",
+      "parentUuid": "816b48dc_3abb1d67",
+      "revId": "4e4da171c585bcff75eb6005789597a0ccd81037",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
