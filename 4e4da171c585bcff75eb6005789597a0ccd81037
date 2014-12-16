@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "816b48dc_3abb1d67",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-16T22:26:46Z",
+      "side": 1,
+      "message": "You probably knew this already, but I had to check http://chromium-cpp.appspot.com/ to make sure lambda expressions were allowed in Chromium (it would have been a problem if ANGLE started using C++11 features disallowed by the Chromium rules).",
+      "revId": "4e4da171c585bcff75eb6005789597a0ccd81037",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
