@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61c57423_2ed9a788",
+        "filename": "tests/angle_tests/ViewportTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-12-16T19:18:12Z",
+      "side": 1,
+      "message": "Bah, I\u0027ll fix these up.",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 8
+      },
+      "revId": "472e9046368b87e34ea574970323c8ba9a19d240",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
