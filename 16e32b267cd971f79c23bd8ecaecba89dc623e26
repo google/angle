@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "01ccb852_11b64c80",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-16T23:04:22Z",
+      "side": 1,
+      "message": "Is there any semantic difference between this std::any_of filter and the tests that used to be in RendererD3D::blitFramebuffer? I\u0027m assuming no. Only just realized this question applied to the other reviews too.",
+      "revId": "16e32b267cd971f79c23bd8ecaecba89dc623e26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01ccb852_b1bad83b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-16T23:04:22Z",
+      "side": 1,
+      "message": "This won\u0027t crash if drawBuffer is NULL, will it? Noticed the ASSERT was removed.",
+      "revId": "16e32b267cd971f79c23bd8ecaecba89dc623e26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
