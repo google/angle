@@ -1743,11 +1743,15 @@ gl::Error Renderer11::applyUniforms(const ProgramImpl &program, const std::vecto
         memcpy(&mAppliedPixelConstants, &mPixelConstants, sizeof(dx_PixelConstants));
     }
 
-    // needed for the point sprite geometry shader
-    if (mCurrentGeometryConstantBuffer != mDriverConstantBufferPS)
+    // GSSetConstantBuffers triggers device removal on 9_3, so we should only call it if necessary
+    if (programD3D->usesGeometryShader())
     {
-        mDeviceContext->GSSetConstantBuffers(0, 1, &mDriverConstantBufferPS);
-        mCurrentGeometryConstantBuffer = mDriverConstantBufferPS;
+        // needed for the point sprite geometry shader
+        if (mCurrentGeometryConstantBuffer != mDriverConstantBufferPS)
+        {
+            mDeviceContext->GSSetConstantBuffers(0, 1, &mDriverConstantBufferPS);
+            mCurrentGeometryConstantBuffer = mDriverConstantBufferPS;
+        }
     }
 
     return gl::Error(GL_NO_ERROR);
