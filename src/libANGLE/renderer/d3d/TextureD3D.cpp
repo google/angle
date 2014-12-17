@@ -577,14 +577,6 @@ GLenum TextureD3D_2D::getInternalFormat(GLint level) const
         return GL_NONE;
 }
 
-GLenum TextureD3D_2D::getActualFormat(GLint level) const
-{
-    if (level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[level]->getActualFormat();
-    else
-        return GL_NONE;
-}
-
 bool TextureD3D_2D::isDepth(GLint level) const
 {
     return gl::GetInternalFormatInfo(getInternalFormat(level)).depthBits > 0;

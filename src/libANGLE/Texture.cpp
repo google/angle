@@ -124,12 +124,6 @@ GLenum Texture::getInternalFormat(const ImageIndex &index) const
     return image->getInternalFormat();
 }
 
-GLenum Texture::getActualFormat(const ImageIndex &index) const
-{
-    rx::Image *image = mTexture->getImage(index);
-    return image->getActualFormat();
-}
-
 Error Texture::generateMipmaps()
 {
     return getImplementation()->generateMipmaps();
@@ -206,14 +200,6 @@ GLenum Texture2D::getInternalFormat(GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
         return mTexture->getImage(level, 0)->getInternalFormat();
-    else
-        return GL_NONE;
-}
-
-GLenum Texture2D::getActualFormat(GLint level) const
-{
-    if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mTexture->getImage(level, 0)->getActualFormat();
     else
         return GL_NONE;
 }
@@ -455,14 +441,6 @@ GLenum TextureCubeMap::getInternalFormat(GLenum target, GLint level) const
         return GL_NONE;
 }
 
-GLenum TextureCubeMap::getActualFormat(GLenum target, GLint level) const
-{
-    if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mTexture->getImage(level, targetToLayerIndex(target))->getActualFormat();
-    else
-        return GL_NONE;
-}
-
 Error TextureCubeMap::setImage(GLenum target, GLint level, GLsizei width, GLsizei height, GLenum internalFormat, GLenum format, GLenum type, const PixelUnpackState &unpack, const void *pixels)
 {
     return mTexture->setImage(target, level, width, height, 1, internalFormat, format, type, unpack, pixels);
@@ -700,11 +678,6 @@ GLenum Texture3D::getInternalFormat(GLint level) const
     return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mTexture->getImage(level, 0)->getInternalFormat() : GL_NONE;
 }
 
-GLenum Texture3D::getActualFormat(GLint level) const
-{
-    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mTexture->getImage(level, 0)->getActualFormat() : GL_NONE;
-}
-
 bool Texture3D::isCompressed(GLint level) const
 {
     return GetInternalFormatInfo(getInternalFormat(level)).compressed;
@@ -865,11 +838,6 @@ GLsizei Texture2DArray::getLayers(GLint level) const
 GLenum Texture2DArray::getInternalFormat(GLint level) const
 {
     return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS && mTexture->getLayerCount(level) > 0) ? mTexture->getImage(level, 0)->getInternalFormat() : GL_NONE;
-}
-
-GLenum Texture2DArray::getActualFormat(GLint level) const
-{
-    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS && mTexture->getLayerCount(level) > 0) ? mTexture->getImage(level, 0)->getActualFormat() : GL_NONE;
 }
 
 bool Texture2DArray::isCompressed(GLint level) const

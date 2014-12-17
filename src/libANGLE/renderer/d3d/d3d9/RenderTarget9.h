@@ -27,6 +27,8 @@ class RenderTarget9 : public RenderTarget
 
     virtual IDirect3DSurface9 *getSurface() = 0;
 
+    virtual D3DFORMAT getD3DFormat() const = 0;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderTarget9);
 };
@@ -42,10 +44,11 @@ class TextureRenderTarget9 : public RenderTarget9
     GLsizei getHeight() const override;
     GLsizei getDepth() const override;
     GLenum getInternalFormat() const override;
-    GLenum getActualFormat() const override;
     GLsizei getSamples() const override;
 
     IDirect3DSurface9 *getSurface() override;
+
+    D3DFORMAT getD3DFormat() const override;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureRenderTarget9);
@@ -54,7 +57,7 @@ class TextureRenderTarget9 : public RenderTarget9
     GLsizei mHeight;
     GLsizei mDepth;
     GLenum mInternalFormat;
-    GLenum mActualFormat;
+    D3DFORMAT mD3DFormat;
     GLsizei mSamples;
 
     IDirect3DSurface9 *mRenderTarget;
@@ -70,10 +73,11 @@ class SurfaceRenderTarget9 : public RenderTarget9
     GLsizei getHeight() const override;
     GLsizei getDepth() const override;
     GLenum getInternalFormat() const override;
-    GLenum getActualFormat() const override;
     GLsizei getSamples() const override;
 
     IDirect3DSurface9 *getSurface() override;
+
+    D3DFORMAT getD3DFormat() const override;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(SurfaceRenderTarget9);

@@ -13,6 +13,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
+#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
@@ -223,6 +224,13 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
     invalidateSwizzles();
 
     return gl::Error(GL_NO_ERROR);
+}
+
+GLenum Framebuffer11::getRenderTargetImplementationFormat(RenderTarget *renderTarget) const
+{
+    RenderTarget11 *renderTarget11 = RenderTarget11::makeRenderTarget11(renderTarget);
+    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(renderTarget11->getDXGIFormat());
+    return dxgiFormatInfo.internalFormat;
 }
 
 }

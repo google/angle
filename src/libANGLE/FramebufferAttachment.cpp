@@ -34,42 +34,42 @@ FramebufferAttachment::~FramebufferAttachment()
 
 GLuint FramebufferAttachment::getRedSize() const
 {
-    return (GetInternalFormatInfo(getInternalFormat()).redBits > 0) ? GetInternalFormatInfo(getActualFormat()).redBits : 0;
+    return GetInternalFormatInfo(getInternalFormat()).redBits;
 }
 
 GLuint FramebufferAttachment::getGreenSize() const
 {
-    return (GetInternalFormatInfo(getInternalFormat()).greenBits > 0) ? GetInternalFormatInfo(getActualFormat()).greenBits : 0;
+    return GetInternalFormatInfo(getInternalFormat()).greenBits;
 }
 
 GLuint FramebufferAttachment::getBlueSize() const
 {
-    return (GetInternalFormatInfo(getInternalFormat()).blueBits > 0) ? GetInternalFormatInfo(getActualFormat()).blueBits : 0;
+    return GetInternalFormatInfo(getInternalFormat()).blueBits;
 }
 
 GLuint FramebufferAttachment::getAlphaSize() const
 {
-    return (GetInternalFormatInfo(getInternalFormat()).alphaBits > 0) ? GetInternalFormatInfo(getActualFormat()).alphaBits : 0;
+    return GetInternalFormatInfo(getInternalFormat()).alphaBits;
 }
 
 GLuint FramebufferAttachment::getDepthSize() const
 {
-    return (GetInternalFormatInfo(getInternalFormat()).depthBits > 0) ? GetInternalFormatInfo(getActualFormat()).depthBits : 0;
+    return GetInternalFormatInfo(getInternalFormat()).depthBits;
 }
 
 GLuint FramebufferAttachment::getStencilSize() const
 {
-    return (GetInternalFormatInfo(getInternalFormat()).stencilBits > 0) ? GetInternalFormatInfo(getActualFormat()).stencilBits : 0;
+    return GetInternalFormatInfo(getInternalFormat()).stencilBits;
 }
 
 GLenum FramebufferAttachment::getComponentType() const
 {
-    return GetInternalFormatInfo(getActualFormat()).componentType;
+    return GetInternalFormatInfo(getInternalFormat()).componentType;
 }
 
 GLenum FramebufferAttachment::getColorEncoding() const
 {
-    return GetInternalFormatInfo(getActualFormat()).colorEncoding;
+    return GetInternalFormatInfo(getInternalFormat()).colorEncoding;
 }
 
 ///// TextureAttachment Implementation ////////
@@ -109,11 +109,6 @@ GLsizei TextureAttachment::getHeight() const
 GLenum TextureAttachment::getInternalFormat() const
 {
     return mTexture->getInternalFormat(mIndex);
-}
-
-GLenum TextureAttachment::getActualFormat() const
-{
-    return mTexture->getActualFormat(mIndex);
 }
 
 GLenum TextureAttachment::type() const
@@ -179,11 +174,6 @@ GLsizei RenderbufferAttachment::getHeight() const
 GLenum RenderbufferAttachment::getInternalFormat() const
 {
     return mRenderbuffer->getInternalFormat();
-}
-
-GLenum RenderbufferAttachment::getActualFormat() const
-{
-    return mRenderbuffer->getActualFormat();
 }
 
 GLsizei RenderbufferAttachment::getSamples() const
@@ -259,11 +249,6 @@ GLsizei DefaultAttachment::getHeight() const
 GLenum DefaultAttachment::getInternalFormat() const
 {
     return mImpl->getInternalFormat();
-}
-
-GLenum DefaultAttachment::getActualFormat() const
-{
-    return mImpl->getActualFormat();
 }
 
 GLsizei DefaultAttachment::getSamples() const

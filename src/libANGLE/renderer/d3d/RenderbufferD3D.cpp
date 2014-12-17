@@ -55,11 +55,6 @@ gl::Error RenderbufferD3D::setStorage(GLsizei width, GLsizei height, GLenum inte
     return gl::Error(GL_NO_ERROR);
 }
 
-GLenum RenderbufferD3D::getActualFormat() const
-{
-    return (mRenderTarget ? mRenderTarget->getActualFormat() : GL_RGBA4);
-}
-
 RenderTarget *RenderbufferD3D::getRenderTarget()
 {
     return mRenderTarget;

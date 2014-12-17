@@ -19,7 +19,6 @@ Image::Image()
     mHeight = 0;
     mDepth = 0;
     mInternalFormat = GL_NONE;
-    mActualFormat = GL_NONE;
     mTarget = GL_NONE;
     mRenderable = false;
     mDirty = false;

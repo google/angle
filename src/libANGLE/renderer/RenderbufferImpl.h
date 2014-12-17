@@ -26,8 +26,6 @@ class RenderbufferImpl
 
     virtual gl::Error setStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples) = 0;
 
-    virtual GLenum getActualFormat() const = 0;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferImpl);
 };

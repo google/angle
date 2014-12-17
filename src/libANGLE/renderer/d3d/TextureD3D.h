@@ -119,7 +119,6 @@ class TextureD3D_2D : public TextureD3D
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
     GLenum getInternalFormat(GLint level) const;
-    GLenum getActualFormat(GLint level) const;
     bool isDepth(GLint level) const;
 
     virtual gl::Error setImage(GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);

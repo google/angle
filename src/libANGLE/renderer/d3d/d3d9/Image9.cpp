@@ -190,9 +190,7 @@ bool Image9::redefine(GLenum target, GLenum internalformat, GLsizei width, GLsiz
 
         // compute the d3d format that will be used
         const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(internalformat);
-        const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(d3d9FormatInfo.texFormat);
         mD3DFormat = d3d9FormatInfo.texFormat;
-        mActualFormat = d3dFormatInfo.internalFormat;
         mRenderable = (d3d9FormatInfo.renderFormat != D3DFMT_UNKNOWN);
 
         SafeRelease(mSurface);

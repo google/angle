@@ -249,7 +249,14 @@ class Renderer11 : public RendererD3D
     unsigned int mAppliedStencilbufferSerial;
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
-    RenderTarget::Desc mRenderTargetDesc;
+
+    struct RenderTargetDesc
+    {
+        size_t width;
+        size_t height;
+        DXGI_FORMAT format;
+    };
+    RenderTargetDesc mRenderTargetDesc;
 
     // Currently applied sampler states
     std::vector<bool> mForceSetVertexSamplerStates;

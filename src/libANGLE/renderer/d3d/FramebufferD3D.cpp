@@ -50,11 +50,6 @@ GLenum DefaultAttachmentD3D::getInternalFormat() const
     return mRenderTarget->getInternalFormat();
 }
 
-GLenum DefaultAttachmentD3D::getActualFormat() const
-{
-    return mRenderTarget->getActualFormat();
-}
-
 GLsizei DefaultAttachmentD3D::getSamples() const
 {
     return mRenderTarget->getSamples();
@@ -222,10 +217,17 @@ GLenum FramebufferD3D::getImplementationColorReadFormat() const
         return GL_NONE;
     }
 
-    GLenum actualFormat = mColorBuffers[0]->getActualFormat();
-    const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(actualFormat);
+    RenderTarget *attachmentRenderTarget = NULL;
+    gl::Error error = GetAttachmentRenderTarget(mColorBuffers[0], &attachmentRenderTarget);
+    if (error.isError())
+    {
+        return GL_NONE;
+    }
 
-    return actualFormatInfo.format;
+    GLenum implementationFormat = getRenderTargetImplementationFormat(attachmentRenderTarget);
+    const gl::InternalFormat &implementationFormatInfo = gl::GetInternalFormatInfo(implementationFormat);
+
+    return implementationFormatInfo.format;
 }
 
 GLenum FramebufferD3D::getImplementationColorReadType() const
@@ -238,10 +240,17 @@ GLenum FramebufferD3D::getImplementationColorReadType() const
         return GL_NONE;
     }
 
-    GLenum actualFormat = mColorBuffers[0]->getActualFormat();
-    const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(actualFormat);
+    RenderTarget *attachmentRenderTarget = NULL;
+    gl::Error error = GetAttachmentRenderTarget(mColorBuffers[0], &attachmentRenderTarget);
+    if (error.isError())
+    {
+        return GL_NONE;
+    }
 
-    return actualFormatInfo.type;
+    GLenum implementationFormat = getRenderTargetImplementationFormat(attachmentRenderTarget);
+    const gl::InternalFormat &implementationFormatInfo = gl::GetInternalFormatInfo(implementationFormat);
+
+    return implementationFormatInfo.type;
 }
 
 gl::Error FramebufferD3D::readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const

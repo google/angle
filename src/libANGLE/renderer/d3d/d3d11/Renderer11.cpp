@@ -995,7 +995,7 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
     // Also extract the render target dimensions and view
     unsigned int renderTargetWidth = 0;
     unsigned int renderTargetHeight = 0;
-    GLenum renderTargetFormat = 0;
+    DXGI_FORMAT renderTargetFormat = DXGI_FORMAT_UNKNOWN;
     unsigned int renderTargetSerials[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {0};
     ID3D11RenderTargetView* framebufferRTVs[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {NULL};
     bool missingColorRenderTarget = true;
@@ -1034,9 +1034,9 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
 
             if (missingColorRenderTarget)
             {
-                renderTargetWidth = colorbuffer->getWidth();
-                renderTargetHeight = colorbuffer->getHeight();
-                renderTargetFormat = colorbuffer->getActualFormat();
+                renderTargetWidth = renderTarget->getWidth();
+                renderTargetHeight = renderTarget->getHeight();
+                renderTargetFormat = renderTarget->getDXGIFormat();
                 missingColorRenderTarget = false;
             }
 
@@ -1088,9 +1088,9 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
         // the depth stencil
         if (missingColorRenderTarget)
         {
-            renderTargetWidth = depthStencil->getWidth();
-            renderTargetHeight = depthStencil->getHeight();
-            renderTargetFormat = depthStencil->getActualFormat();
+            renderTargetWidth = depthStencilRenderTarget->getWidth();
+            renderTargetHeight = depthStencilRenderTarget->getHeight();
+            renderTargetFormat = depthStencilRenderTarget->getDXGIFormat();
         }
     }
 
@@ -3098,12 +3098,12 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const 
                        drawRect.x < 0 || drawRect.x + drawRect.width > drawSize.width ||
                        drawRect.y < 0 || drawRect.y + drawRect.height > drawSize.height;
 
-    const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(drawRenderTarget->getActualFormat());
-    bool partialDSBlit = (actualFormatInfo.depthBits > 0 && depthBlit) != (actualFormatInfo.stencilBits > 0 && stencilBlit);
+    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(drawRenderTarget11->getDXGIFormat());
+    bool partialDSBlit = (dxgiFormatInfo.depthBits > 0 && depthBlit) != (dxgiFormatInfo.stencilBits > 0 && stencilBlit);
 
     gl::Error result(GL_NO_ERROR);
 
-    if (readRenderTarget11->getActualFormat() == drawRenderTarget->getActualFormat() &&
+    if (readRenderTarget11->getDXGIFormat() == drawRenderTarget11->getDXGIFormat() &&
         !stretchRequired && !outOfBounds && !flipRequired && !partialDSBlit &&
         (!(depthBlit || stencilBlit) || wholeBufferCopy))
     {

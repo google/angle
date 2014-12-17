@@ -222,9 +222,7 @@ bool Image11::redefine(GLenum target, GLenum internalformat, GLsizei width, GLsi
 
         // compute the d3d format that will be used
         const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(internalformat, mFeatureLevel);
-        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(formatInfo.texFormat);
         mDXGIFormat = formatInfo.texFormat;
-        mActualFormat = dxgiFormatInfo.internalFormat;
         mRenderable = (formatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN);
 
         releaseStagingTexture();
@@ -438,7 +436,8 @@ gl::Error Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::R
         }
 
         // determine the offset coordinate into the destination buffer
-        GLsizei rowOffset = gl::GetInternalFormatInfo(mActualFormat).pixelBytes * xoffset;
+        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mDXGIFormat);
+        GLsizei rowOffset = dxgiFormatInfo.pixelBytes * xoffset;
         uint8_t *dataOffset = static_cast<uint8_t*>(mappedImage.pData) + mappedImage.RowPitch * yoffset + rowOffset + zoffset * mappedImage.DepthPitch;
 
         const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);

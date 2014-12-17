@@ -25,19 +25,11 @@ class RenderTarget
     virtual GLsizei getHeight() const = 0;
     virtual GLsizei getDepth() const = 0;
     virtual GLenum getInternalFormat() const = 0;
-    virtual GLenum getActualFormat() const = 0;
     virtual GLsizei getSamples() const = 0;
     gl::Extents getExtents() const { return gl::Extents(getWidth(), getHeight(), getDepth()); }
 
     virtual unsigned int getSerial() const;
     static unsigned int issueSerials(unsigned int count);
-
-    struct Desc {
-        GLsizei width;
-        GLsizei height;
-        GLsizei depth;
-        GLenum  format;
-    };
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderTarget);

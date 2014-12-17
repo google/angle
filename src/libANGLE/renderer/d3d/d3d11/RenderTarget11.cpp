@@ -188,7 +188,7 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11RenderTargetView *rtv, ID3D11
       mHeight(height),
       mDepth(depth),
       mInternalFormat(internalFormat),
-      mActualFormat(internalFormat),
+      mDXGIFormat(DXGI_FORMAT_UNKNOWN),
       mSamples(samples),
       mSubresourceIndex(0),
       mTexture(resource),
@@ -217,9 +217,7 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11RenderTargetView *rtv, ID3D11
 
         D3D11_RENDER_TARGET_VIEW_DESC desc;
         mRenderTarget->GetDesc(&desc);
-
-        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(desc.Format);
-        mActualFormat = dxgiFormatInfo.internalFormat;
+        mDXGIFormat = desc.Format;
     }
 }
 
@@ -229,7 +227,7 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11DepthStencilView *dsv, ID3D11
       mHeight(height),
       mDepth(depth),
       mInternalFormat(internalFormat),
-      mActualFormat(internalFormat),
+      mDXGIFormat(DXGI_FORMAT_UNKNOWN),
       mSamples(samples),
       mSubresourceIndex(0),
       mTexture(resource),
@@ -258,9 +256,7 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11DepthStencilView *dsv, ID3D11
 
         D3D11_DEPTH_STENCIL_VIEW_DESC desc;
         mDepthStencil->GetDesc(&desc);
-
-        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(desc.Format);
-        mActualFormat = dxgiFormatInfo.internalFormat;
+        mDXGIFormat = desc.Format;
     }
 }
 
@@ -312,11 +308,6 @@ GLenum TextureRenderTarget11::getInternalFormat() const
     return mInternalFormat;
 }
 
-GLenum TextureRenderTarget11::getActualFormat() const
-{
-    return mActualFormat;
-}
-
 GLsizei TextureRenderTarget11::getSamples() const
 {
     return mSamples;
@@ -327,6 +318,10 @@ unsigned int TextureRenderTarget11::getSubresourceIndex() const
     return mSubresourceIndex;
 }
 
+DXGI_FORMAT TextureRenderTarget11::getDXGIFormat() const
+{
+    return mDXGIFormat;
+}
 
 SurfaceRenderTarget11::SurfaceRenderTarget11(SwapChain11 *swapChain, Renderer11 *renderer, bool depth)
     : mSwapChain(swapChain),
@@ -360,11 +355,6 @@ GLenum SurfaceRenderTarget11::getInternalFormat() const
     return (mDepth ? mSwapChain->GetDepthBufferInternalFormat() : mSwapChain->GetBackBufferInternalFormat());
 }
 
-GLenum SurfaceRenderTarget11::getActualFormat() const
-{
-    return d3d11::GetDXGIFormatInfo(d3d11::GetTextureFormatInfo(getInternalFormat(), mRenderer->getFeatureLevel()).texFormat).internalFormat;
-}
-
 GLsizei SurfaceRenderTarget11::getSamples() const
 {
     // Our EGL surfaces do not support multisampling.
@@ -394,6 +384,11 @@ ID3D11ShaderResourceView *SurfaceRenderTarget11::getShaderResourceView() const
 unsigned int SurfaceRenderTarget11::getSubresourceIndex() const
 {
     return 0;
+}
+
+DXGI_FORMAT SurfaceRenderTarget11::getDXGIFormat() const
+{
+    return d3d11::GetTextureFormatInfo(getInternalFormat(), mRenderer->getFeatureLevel()).texFormat;
 }
 
 }

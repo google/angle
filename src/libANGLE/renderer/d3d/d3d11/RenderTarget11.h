@@ -32,6 +32,8 @@ class RenderTarget11 : public RenderTarget
 
     virtual unsigned int getSubresourceIndex() const = 0;
 
+    virtual DXGI_FORMAT getDXGIFormat() const = 0;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderTarget11);
     D3D_FEATURE_LEVEL mFeatureLevel;
@@ -51,7 +53,6 @@ class TextureRenderTarget11 : public RenderTarget11
     GLsizei getHeight() const override;
     GLsizei getDepth() const override;
     GLenum getInternalFormat() const override;
-    GLenum getActualFormat() const override;
     GLsizei getSamples() const override;
 
     ID3D11Resource *getTexture() const override;
@@ -61,6 +62,8 @@ class TextureRenderTarget11 : public RenderTarget11
 
     unsigned int getSubresourceIndex() const override;
 
+    DXGI_FORMAT getDXGIFormat() const override;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureRenderTarget11);
 
@@ -68,7 +71,7 @@ class TextureRenderTarget11 : public RenderTarget11
     GLsizei mHeight;
     GLsizei mDepth;
     GLenum mInternalFormat;
-    GLenum mActualFormat;
+    DXGI_FORMAT mDXGIFormat;
     GLsizei mSamples;
 
     unsigned int mSubresourceIndex;
@@ -88,7 +91,6 @@ class SurfaceRenderTarget11 : public RenderTarget11
     GLsizei getHeight() const override;
     GLsizei getDepth() const override;
     GLenum getInternalFormat() const override;
-    GLenum getActualFormat() const override;
     GLsizei getSamples() const override;
 
     ID3D11Resource *getTexture() const override;
@@ -97,6 +99,8 @@ class SurfaceRenderTarget11 : public RenderTarget11
     ID3D11ShaderResourceView *getShaderResourceView() const override;
 
     unsigned int getSubresourceIndex() const override;
+
+    DXGI_FORMAT getDXGIFormat() const override;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(SurfaceRenderTarget11);

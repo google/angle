@@ -29,7 +29,7 @@ TextureRenderTarget9::TextureRenderTarget9(IDirect3DSurface9 *surface, GLenum in
       mHeight(height),
       mDepth(depth),
       mInternalFormat(internalFormat),
-      mActualFormat(internalFormat),
+      mD3DFormat(D3DFMT_UNKNOWN),
       mSamples(samples),
       mRenderTarget(surface)
 {
@@ -39,9 +39,7 @@ TextureRenderTarget9::TextureRenderTarget9(IDirect3DSurface9 *surface, GLenum in
     {
         D3DSURFACE_DESC description;
         mRenderTarget->GetDesc(&description);
-
-        const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(description.Format);
-        mActualFormat = d3dFormatInfo.internalFormat;
+        mD3DFormat = description.Format;
     }
 }
 
@@ -70,11 +68,6 @@ GLenum TextureRenderTarget9::getInternalFormat() const
     return mInternalFormat;
 }
 
-GLenum TextureRenderTarget9::getActualFormat() const
-{
-    return mActualFormat;
-}
-
 GLsizei TextureRenderTarget9::getSamples() const
 {
     return mSamples;
@@ -92,6 +85,10 @@ IDirect3DSurface9 *TextureRenderTarget9::getSurface()
     return mRenderTarget;
 }
 
+D3DFORMAT TextureRenderTarget9::getD3DFormat() const
+{
+    return mD3DFormat;
+}
 
 SurfaceRenderTarget9::SurfaceRenderTarget9(SwapChain9 *swapChain, bool depth)
     : mSwapChain(swapChain),
@@ -123,11 +120,6 @@ GLenum SurfaceRenderTarget9::getInternalFormat() const
     return (mDepth ? mSwapChain->GetDepthBufferInternalFormat() : mSwapChain->GetBackBufferInternalFormat());
 }
 
-GLenum SurfaceRenderTarget9::getActualFormat() const
-{
-    return d3d9::GetD3DFormatInfo(d3d9::GetTextureFormatInfo(getInternalFormat()).texFormat).internalFormat;
-}
-
 GLsizei SurfaceRenderTarget9::getSamples() const
 {
     // Our EGL surfaces do not support multisampling.
@@ -137,6 +129,11 @@ GLsizei SurfaceRenderTarget9::getSamples() const
 IDirect3DSurface9 *SurfaceRenderTarget9::getSurface()
 {
     return (mDepth ? mSwapChain->getDepthStencil() : mSwapChain->getRenderTarget());
+}
+
+D3DFORMAT SurfaceRenderTarget9::getD3DFormat() const
+{
+    return d3d9::GetTextureFormatInfo(getInternalFormat()).texFormat;
 }
 
 }

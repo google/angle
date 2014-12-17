@@ -34,6 +34,9 @@ class Framebuffer11 : public FramebufferD3D
                    bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter,
                    const gl::Framebuffer *sourceFramebuffer) override;
 
+
+    GLenum getRenderTargetImplementationFormat(RenderTarget *renderTarget) const override;
+
     Renderer11 *const mRenderer;
 };
 

@@ -45,7 +45,6 @@ class Renderbuffer : public RefCountObject
     GLsizei getWidth() const;
     GLsizei getHeight() const;
     GLenum getInternalFormat() const;
-    GLenum getActualFormat() const;
     GLsizei getSamples() const;
     GLuint getRedSize() const;
     GLuint getGreenSize() const;
@@ -62,7 +61,6 @@ class Renderbuffer : public RefCountObject
     GLsizei mWidth;
     GLsizei mHeight;
     GLenum mInternalFormat;
-    GLenum mActualFormat;
     GLsizei mSamples;
 };
 

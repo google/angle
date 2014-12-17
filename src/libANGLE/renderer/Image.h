@@ -39,7 +39,6 @@ class Image
     GLsizei getHeight() const { return mHeight; }
     GLsizei getDepth() const { return mDepth; }
     GLenum getInternalFormat() const { return mInternalFormat; }
-    GLenum getActualFormat() const { return mActualFormat; }
     GLenum getTarget() const { return mTarget; }
     bool isRenderableFormat() const { return mRenderable; }
 
@@ -63,7 +62,6 @@ class Image
     GLsizei mHeight;
     GLsizei mDepth;
     GLenum mInternalFormat;
-    GLenum mActualFormat;
     bool mRenderable;
     GLenum mTarget;
 

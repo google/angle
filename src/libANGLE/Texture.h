@@ -64,7 +64,6 @@ class Texture : public RefCountObject
     GLsizei getWidth(const ImageIndex &index) const;
     GLsizei getHeight(const ImageIndex &index) const;
     GLenum getInternalFormat(const ImageIndex &index) const;
-    GLenum getActualFormat(const ImageIndex &index) const;
 
     virtual bool isSamplerComplete(const SamplerState &samplerState, const TextureCapsMap &textureCaps, const Extensions &extensions, int clientVersion) const = 0;
 
@@ -115,7 +114,6 @@ class Texture2D : public Texture
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
     GLenum getInternalFormat(GLint level) const;
-    GLenum getActualFormat(GLint level) const;
     bool isCompressed(GLint level) const;
     bool isDepth(GLint level) const;
 
@@ -151,7 +149,6 @@ class TextureCubeMap : public Texture
     GLsizei getWidth(GLenum target, GLint level) const;
     GLsizei getHeight(GLenum target, GLint level) const;
     GLenum getInternalFormat(GLenum target, GLint level) const;
-    GLenum getActualFormat(GLenum target, GLint level) const;
     bool isCompressed(GLenum target, GLint level) const;
     bool isDepth(GLenum target, GLint level) const;
 
@@ -187,7 +184,6 @@ class Texture3D : public Texture
     GLsizei getHeight(GLint level) const;
     GLsizei getDepth(GLint level) const;
     GLenum getInternalFormat(GLint level) const;
-    GLenum getActualFormat(GLint level) const;
     bool isCompressed(GLint level) const;
     bool isDepth(GLint level) const;
 
@@ -217,7 +213,6 @@ class Texture2DArray : public Texture
     GLsizei getHeight(GLint level) const;
     GLsizei getLayers(GLint level) const;
     GLenum getInternalFormat(GLint level) const;
-    GLenum getActualFormat(GLint level) const;
     bool isCompressed(GLint level) const;
     bool isDepth(GLint level) const;
 

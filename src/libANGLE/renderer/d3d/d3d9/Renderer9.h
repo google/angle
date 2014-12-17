@@ -268,9 +268,16 @@ class Renderer9 : public RendererD3D
     unsigned int mAppliedDepthStencilSerial;
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
-    RenderTarget::Desc mRenderTargetDesc;
     unsigned int mCurStencilSize;
     unsigned int mCurDepthSize;
+
+    struct RenderTargetDesc
+    {
+        size_t width;
+        size_t height;
+        D3DFORMAT format;
+    };
+    RenderTargetDesc mRenderTargetDesc;
 
     IDirect3DStateBlock9 *mMaskedClearSavedState;
 

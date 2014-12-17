@@ -37,7 +37,6 @@ class DefaultAttachmentD3D : public DefaultAttachmentImpl
     virtual GLsizei getWidth() const override;
     virtual GLsizei getHeight() const override;
     virtual GLenum getInternalFormat() const override;
-    virtual GLenum getActualFormat() const override;
     virtual GLsizei getSamples() const override;
 
     RenderTarget *getRenderTarget() const;
@@ -97,6 +96,8 @@ class FramebufferD3D : public FramebufferImpl
     virtual gl::Error blit(const gl::Rectangle &sourceArea, const gl::Rectangle &destArea, const gl::Rectangle *scissor,
                            bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter,
                            const gl::Framebuffer *sourceFramebuffer) = 0;
+
+    virtual GLenum getRenderTargetImplementationFormat(RenderTarget *renderTarget) const = 0;
 };
 
 gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget **outRT);

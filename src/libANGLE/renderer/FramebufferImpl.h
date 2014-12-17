@@ -32,7 +32,6 @@ class DefaultAttachmentImpl
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;
     virtual GLenum getInternalFormat() const = 0;
-    virtual GLenum getActualFormat() const = 0;
     virtual GLsizei getSamples() const = 0;
 };
 

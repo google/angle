@@ -25,7 +25,6 @@ Renderbuffer::Renderbuffer(rx::RenderbufferImpl *impl, GLuint id)
     mWidth(0),
     mHeight(0),
     mInternalFormat(GL_RGBA4),
-    mActualFormat(GL_RGBA4),
     mSamples(0)
 {
     ASSERT(mRenderbuffer);
@@ -48,7 +47,6 @@ Error Renderbuffer::setStorage(GLsizei width, GLsizei height, GLenum internalfor
     mHeight = height;
     mInternalFormat = internalformat;
     mSamples = samples;
-    mActualFormat = mRenderbuffer->getActualFormat();
 
     return Error(GL_NO_ERROR);
 }
@@ -74,11 +72,6 @@ GLenum Renderbuffer::getInternalFormat() const
     return mInternalFormat;
 }
 
-GLenum Renderbuffer::getActualFormat() const
-{
-    return mActualFormat;
-}
-
 GLsizei Renderbuffer::getSamples() const
 {
     return mSamples;
@@ -86,32 +79,32 @@ GLsizei Renderbuffer::getSamples() const
 
 GLuint Renderbuffer::getRedSize() const
 {
-    return GetInternalFormatInfo(getActualFormat()).redBits;
+    return GetInternalFormatInfo(mInternalFormat).redBits;
 }
 
 GLuint Renderbuffer::getGreenSize() const
 {
-    return GetInternalFormatInfo(getActualFormat()).greenBits;
+    return GetInternalFormatInfo(mInternalFormat).greenBits;
 }
 
 GLuint Renderbuffer::getBlueSize() const
 {
-    return GetInternalFormatInfo(getActualFormat()).blueBits;
+    return GetInternalFormatInfo(mInternalFormat).blueBits;
 }
 
 GLuint Renderbuffer::getAlphaSize() const
 {
-    return GetInternalFormatInfo(getActualFormat()).alphaBits;
+    return GetInternalFormatInfo(mInternalFormat).alphaBits;
 }
 
 GLuint Renderbuffer::getDepthSize() const
 {
-    return GetInternalFormatInfo(getActualFormat()).depthBits;
+    return GetInternalFormatInfo(mInternalFormat).depthBits;
 }
 
 GLuint Renderbuffer::getStencilSize() const
 {
-    return GetInternalFormatInfo(getActualFormat()).stencilBits;
+    return GetInternalFormatInfo(mInternalFormat).stencilBits;
 }
 
 }

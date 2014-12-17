@@ -57,7 +57,6 @@ class FramebufferAttachment
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;
     virtual GLenum getInternalFormat() const = 0;
-    virtual GLenum getActualFormat() const = 0;
     virtual GLsizei getSamples() const = 0;
 
     virtual GLuint id() const = 0;
@@ -88,7 +87,6 @@ class TextureAttachment : public FramebufferAttachment
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
-    virtual GLenum getActualFormat() const;
 
     virtual GLenum type() const;
     virtual GLint mipLevel() const;
@@ -116,7 +114,6 @@ class RenderbufferAttachment : public FramebufferAttachment
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
-    virtual GLenum getActualFormat() const;
     virtual GLsizei getSamples() const;
 
     virtual GLuint id() const;
@@ -145,7 +142,6 @@ class DefaultAttachment : public FramebufferAttachment
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
-    virtual GLenum getActualFormat() const;
     virtual GLsizei getSamples() const;
 
     virtual GLuint id() const;
