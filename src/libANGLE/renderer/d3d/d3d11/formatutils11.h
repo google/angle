@@ -30,6 +30,12 @@ struct DXGIFormat
     GLuint blockWidth;
     GLuint blockHeight;
 
+    GLuint redBits;
+    GLuint greenBits;
+    GLuint blueBits;
+    GLuint alphaBits;
+    GLuint sharedBits;
+
     GLuint depthBits;
     GLuint depthOffset;
     GLuint stencilBits;

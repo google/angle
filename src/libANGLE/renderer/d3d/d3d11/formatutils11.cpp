@@ -127,6 +127,90 @@ static D3D11FastCopyMap BuildFastCopyMap()
     return map;
 }
 
+struct DXGIColorFormatInfo
+{
+    size_t redBits;
+    size_t greenBits;
+    size_t blueBits;
+
+    size_t luminanceBits;
+
+    size_t alphaBits;
+    size_t sharedBits;
+};
+
+typedef std::map<DXGI_FORMAT, DXGIColorFormatInfo> ColorFormatInfoMap;
+typedef std::pair<DXGI_FORMAT, DXGIColorFormatInfo> ColorFormatInfoPair;
+
+static inline void InsertDXGIColorFormatInfo(ColorFormatInfoMap *map, DXGI_FORMAT format, size_t redBits, size_t greenBits,
+                                             size_t blueBits, size_t alphaBits, size_t sharedBits)
+{
+    DXGIColorFormatInfo info;
+    info.redBits = redBits;
+    info.greenBits = greenBits;
+    info.blueBits = blueBits;
+    info.alphaBits = alphaBits;
+    info.sharedBits = sharedBits;
+
+    map->insert(std::make_pair(format, info));
+}
+
+static ColorFormatInfoMap BuildColorFormatInfoMap()
+{
+    ColorFormatInfoMap map;
+
+    //                             | DXGI format                         | R | G | B | A | S |
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_A8_UNORM,                  0,  0,  0,  8,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8_UNORM,                  8,  0,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8_UNORM,                8,  8,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8B8A8_UNORM,            8,  8,  8,  8,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,       8,  8,  8,  8,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_B8G8R8A8_UNORM,            8,  8,  8,  8,  0);
+
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8_SNORM,                  8,  0,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8_SNORM,                8,  8,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8B8A8_SNORM,            8,  8,  8,  8,  0);
+
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8_UINT,                   8,  0,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16_UINT,                 16,  0,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32_UINT,                 32,  0,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8_UINT,                 8,  8,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16_UINT,              16, 16,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32_UINT,              32, 32,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32_UINT,           32, 32, 32,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8B8A8_UINT,             8,  8,  8,  8,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16B16A16_UINT,        16, 16, 16, 16,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32A32_UINT,        32, 32, 32, 32,  0);
+
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8_SINT,                   8,  0,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16_SINT,                 16,  0,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32_SINT,                 32,  0,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8_SINT,                 8,  8,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16_SINT,              16, 16,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32_SINT,              32, 32,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32_SINT,           32, 32, 32,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8B8A8_SINT,             8,  8,  8,  8,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16B16A16_SINT,        16, 16, 16, 16,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32A32_SINT,        32, 32, 32, 32,  0);
+
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R10G10B10A2_UNORM,        10, 10, 10,  2,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R10G10B10A2_UINT,         10, 10, 10,  2,  0);
+
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16_FLOAT,                16,  0,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16_FLOAT,             16, 16,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16B16A16_FLOAT,       16, 16, 16, 16,  0);
+
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32_FLOAT,                32,  0,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32_FLOAT,             32, 32,  0,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32_FLOAT,          32, 32, 32,  0,  0);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32A32_FLOAT,       32, 32, 32, 32,  0);
+
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R9G9B9E5_SHAREDEXP,        9,  9,  9,  0,  5);
+    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R11G11B10_FLOAT,          11, 11, 10,  0,  0);
+
+    return map;
+}
+
 struct DXGIDepthStencilInfo
 {
     unsigned int depthBits;
@@ -179,6 +263,11 @@ DXGIFormat::DXGIFormat()
     : pixelBytes(0),
       blockWidth(0),
       blockHeight(0),
+      redBits(0),
+      greenBits(0),
+      blueBits(0),
+      alphaBits(0),
+      sharedBits(0),
       depthBits(0),
       depthOffset(0),
       stencilBits(0),
@@ -205,21 +294,27 @@ void AddDXGIFormat(DXGIFormatInfoMap *map, DXGI_FORMAT dxgiFormat, GLuint pixelB
     info.blockWidth = blockWidth;
     info.blockHeight = blockHeight;
 
+    static const ColorFormatInfoMap colorInfoMap = BuildColorFormatInfoMap();
+    ColorFormatInfoMap::const_iterator colorInfoIter = colorInfoMap.find(dxgiFormat);
+    if (colorInfoIter != colorInfoMap.end())
+    {
+        const DXGIColorFormatInfo &colorInfo = colorInfoIter->second;
+        info.redBits = colorInfo.redBits;
+        info.greenBits = colorInfo.greenBits;
+        info.blueBits = colorInfo.blueBits;
+        info.alphaBits = colorInfo.alphaBits;
+        info.sharedBits = colorInfo.sharedBits;
+    }
+
     static const DepthStencilInfoMap dsInfoMap = BuildDepthStencilInfoMap();
     DepthStencilInfoMap::const_iterator dsInfoIter = dsInfoMap.find(dxgiFormat);
     if (dsInfoIter != dsInfoMap.end())
     {
-        info.depthBits = dsInfoIter->second.depthBits;
-        info.depthOffset = dsInfoIter->second.depthOffset;
-        info.stencilBits = dsInfoIter->second.stencilBits;
-        info.stencilOffset = dsInfoIter->second.stencilOffset;
-    }
-    else
-    {
-        info.depthBits = 0;
-        info.depthOffset = 0;
-        info.stencilBits = 0;
-        info.stencilOffset = 0;
+        const DXGIDepthStencilInfo &dsInfo = dsInfoIter->second;
+        info.depthBits = dsInfo.depthBits;
+        info.depthOffset = dsInfo.depthOffset;
+        info.stencilBits = dsInfo.stencilBits;
+        info.stencilOffset = dsInfo.stencilOffset;
     }
 
     static const DXGIToESFormatMap dxgiToESMap = BuildDXGIToESFormatMap();
