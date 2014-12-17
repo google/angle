@@ -202,10 +202,10 @@ void Image11::disassociateStorage()
     }
 }
 
-bool Image11::redefine(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
+bool Image11::redefine(GLenum target, GLenum internalformat, const gl::Extents &size, bool forceRelease)
 {
-    if (mWidth != width ||
-        mHeight != height ||
+    if (mWidth != size.width ||
+        mHeight != size.height ||
         mInternalFormat != internalformat ||
         forceRelease)
     {
@@ -214,9 +214,9 @@ bool Image11::redefine(GLenum target, GLenum internalformat, GLsizei width, GLsi
         disassociateStorage();
         mRecoveredFromStorageCount = 0;
 
-        mWidth = width;
-        mHeight = height;
-        mDepth = depth;
+        mWidth = size.width;
+        mHeight = size.height;
+        mDepth = size.depth;
         mInternalFormat = internalformat;
         mTarget = target;
 
@@ -245,12 +245,11 @@ DXGI_FORMAT Image11::getDXGIFormat() const
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle.
-gl::Error Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                            GLint unpackAlignment, GLenum type, const void *input)
+gl::Error Image11::loadData(const gl::Box &area, GLint unpackAlignment, GLenum type, const void *input)
 {
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
-    GLsizei inputRowPitch = formatInfo.computeRowPitch(type, width, unpackAlignment);
-    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(type, width, height, unpackAlignment);
+    GLsizei inputRowPitch = formatInfo.computeRowPitch(type, area.width, unpackAlignment);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(type, area.width, area.height, unpackAlignment);
 
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mDXGIFormat);
     GLuint outputPixelSize = dxgiFormatInfo.pixelBytes;
@@ -265,8 +264,8 @@ gl::Error Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei
         return error;
     }
 
-    uint8_t* offsetMappedData = (reinterpret_cast<uint8_t*>(mappedImage.pData) + (yoffset * mappedImage.RowPitch + xoffset * outputPixelSize + zoffset * mappedImage.DepthPitch));
-    loadFunction(width, height, depth,
+    uint8_t *offsetMappedData = (reinterpret_cast<uint8_t*>(mappedImage.pData) + (area.y * mappedImage.RowPitch + area.x * outputPixelSize + area.z * mappedImage.DepthPitch));
+    loadFunction(area.width, area.height, area.depth,
                  reinterpret_cast<const uint8_t*>(input), inputRowPitch, inputDepthPitch,
                  offsetMappedData, mappedImage.RowPitch, mappedImage.DepthPitch);
 
@@ -275,20 +274,19 @@ gl::Error Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                                      const void *input)
+gl::Error Image11::loadCompressedData(const gl::Box &area, const void *input)
 {
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
-    GLsizei inputRowPitch = formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, width, 1);
-    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, width, height, 1);
+    GLsizei inputRowPitch = formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, area.width, area.height, 1);
 
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mDXGIFormat);
     GLuint outputPixelSize = dxgiFormatInfo.pixelBytes;
     GLuint outputBlockWidth = dxgiFormatInfo.blockWidth;
     GLuint outputBlockHeight = dxgiFormatInfo.blockHeight;
 
-    ASSERT(xoffset % outputBlockWidth == 0);
-    ASSERT(yoffset % outputBlockHeight == 0);
+    ASSERT(area.x % outputBlockWidth == 0);
+    ASSERT(area.y % outputBlockHeight == 0);
 
     const d3d11::TextureFormat &d3dFormatInfo = d3d11::GetTextureFormatInfo(mInternalFormat, mFeatureLevel);
     LoadImageFunction loadFunction = d3dFormatInfo.loadFunctions.at(GL_UNSIGNED_BYTE);
@@ -300,11 +298,11 @@ gl::Error Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffse
         return error;
     }
 
-    uint8_t* offsetMappedData = reinterpret_cast<uint8_t*>(mappedImage.pData) + ((yoffset / outputBlockHeight) * mappedImage.RowPitch +
-                                                                           (xoffset / outputBlockWidth) * outputPixelSize +
-                                                                           zoffset * mappedImage.DepthPitch);
+    uint8_t* offsetMappedData = reinterpret_cast<uint8_t*>(mappedImage.pData) + ((area.y / outputBlockHeight) * mappedImage.RowPitch +
+                                                                           (area.x / outputBlockWidth) * outputPixelSize +
+                                                                           area.z * mappedImage.DepthPitch);
 
-    loadFunction(width, height, depth,
+    loadFunction(area.width, area.height, area.depth,
                  reinterpret_cast<const uint8_t*>(input), inputRowPitch, inputDepthPitch,
                  offsetMappedData, mappedImage.RowPitch, mappedImage.DepthPitch);
 
@@ -313,7 +311,7 @@ gl::Error Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffse
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, RenderTarget *source)
+gl::Error Image11::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTarget *source)
 {
     RenderTarget11 *sourceRenderTarget = RenderTarget11::makeRenderTarget11(source);
     ASSERT(sourceRenderTarget->getTexture());
@@ -326,14 +324,14 @@ gl::Error Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::R
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to retrieve the ID3D11Texture2D from the source RenderTarget.");
     }
 
-    gl::Error error = copy(xoffset, yoffset, zoffset, sourceArea, sourceTexture2D, subresourceIndex);
+    gl::Error error = copy(destOffset, sourceArea, sourceTexture2D, subresourceIndex);
 
     SafeRelease(sourceTexture2D);
 
     return error;
 }
 
-gl::Error Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, const gl::ImageIndex &sourceIndex, TextureStorage *source)
+gl::Error Image11::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, const gl::ImageIndex &sourceIndex, TextureStorage *source)
 {
     TextureStorage11 *sourceStorage11 = TextureStorage11::makeTextureStorage11(source);
 
@@ -352,14 +350,14 @@ gl::Error Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::R
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to retrieve the ID3D11Texture2D from the source TextureStorage.");
     }
 
-    error = copy(xoffset, yoffset, zoffset, sourceArea, sourceTexture2D, subresourceIndex);
+    error = copy(destOffset, sourceArea, sourceTexture2D, subresourceIndex);
 
     SafeRelease(sourceTexture2D);
 
     return error;
 }
 
-gl::Error Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, ID3D11Texture2D *source, UINT sourceSubResource)
+gl::Error Image11::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, ID3D11Texture2D *source, UINT sourceSubResource)
 {
     D3D11_TEXTURE2D_DESC textureDesc;
     source->GetDesc(&textureDesc);
@@ -418,7 +416,8 @@ gl::Error Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::R
         srcBox.front = 0;
         srcBox.back = 1;
 
-        deviceContext->CopySubresourceRegion(stagingTexture, stagingSubresourceIndex, xoffset, yoffset, zoffset, srcTex, subresourceAfterResolve, &srcBox);
+        deviceContext->CopySubresourceRegion(stagingTexture, stagingSubresourceIndex, destOffset.x, destOffset.y,
+                                             destOffset.z, srcTex, subresourceAfterResolve, &srcBox);
 
         if (textureDesc.SampleDesc.Count > 1)
         {
@@ -437,8 +436,8 @@ gl::Error Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::R
 
         // determine the offset coordinate into the destination buffer
         const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mDXGIFormat);
-        GLsizei rowOffset = dxgiFormatInfo.pixelBytes * xoffset;
-        uint8_t *dataOffset = static_cast<uint8_t*>(mappedImage.pData) + mappedImage.RowPitch * yoffset + rowOffset + zoffset * mappedImage.DepthPitch;
+        GLsizei rowOffset = dxgiFormatInfo.pixelBytes * destOffset.x;
+        uint8_t *dataOffset = static_cast<uint8_t*>(mappedImage.pData) + mappedImage.RowPitch * destOffset.y + rowOffset + destOffset.z * mappedImage.DepthPitch;
 
         const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
 

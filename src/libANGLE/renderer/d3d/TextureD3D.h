@@ -64,14 +64,14 @@ class TextureD3D : public TextureImpl
     Image *getBaseLevelImage() const;
 
   protected:
-    gl::Error setImage(const gl::PixelUnpackState &unpack, GLenum type, const void *pixels, const gl::ImageIndex &index);
-    gl::Error subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                       GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels, const gl::ImageIndex &index);
-    gl::Error setCompressedImage(const gl::PixelUnpackState &unpack, GLsizei imageSize, const void *pixels, Image *image);
-    gl::Error subImageCompressed(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                                 GLenum format, GLsizei imageSize, const gl::PixelUnpackState &unpack, const void *pixels, Image *image);
+    gl::Error setImage(const gl::ImageIndex &index, GLenum type, const gl::PixelUnpackState &unpack, const uint8_t *pixels);
+    gl::Error subImage(const gl::ImageIndex &index, const gl::Box &area, GLenum format, GLenum type,
+                       const gl::PixelUnpackState &unpack, const uint8_t *pixels);
+    gl::Error setCompressedImage(const gl::ImageIndex &index, const gl::PixelUnpackState &unpack, const uint8_t *pixels);
+    gl::Error subImageCompressed(const gl::ImageIndex &index, const gl::Box &area, GLenum format,
+                                 const gl::PixelUnpackState &unpack, const uint8_t *pixels);
     bool isFastUnpackable(const gl::PixelUnpackState &unpack, GLenum sizedInternalFormat);
-    gl::Error fastUnpackPixels(const gl::PixelUnpackState &unpack, const void *pixels, const gl::Box &destArea,
+    gl::Error fastUnpackPixels(const gl::PixelUnpackState &unpack, const uint8_t *pixels, const gl::Box &destArea,
                                GLenum sizedInternalFormat, GLenum type, RenderTarget *destRenderTarget);
 
     GLint creationLevels(GLsizei width, GLsizei height, GLsizei depth) const;
@@ -121,13 +121,22 @@ class TextureD3D_2D : public TextureD3D
     GLenum getInternalFormat(GLint level) const;
     bool isDepth(GLint level) const;
 
-    virtual gl::Error setImage(GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual gl::Error copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual gl::Error storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+    gl::Error setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
+                       const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+    gl::Error setSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format, GLenum type,
+                          const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+
+    gl::Error setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
+                                 const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+    gl::Error setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
+                                    const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+
+    gl::Error copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
+                        const gl::Framebuffer *source) override;
+    gl::Error copySubImage(GLenum target, size_t level, const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
+                           const gl::Framebuffer *source) override;
+
+    gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) override;
 
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
@@ -155,7 +164,7 @@ class TextureD3D_2D : public TextureD3D
 
     gl::Error updateStorageLevel(int level);
 
-    void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height);
+    void redefineImage(GLint level, GLenum internalformat, const gl::Extents &size);
 
     ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
@@ -177,13 +186,22 @@ class TextureD3D_Cube : public TextureD3D
     GLenum getInternalFormat(GLint level, GLint layer) const;
     bool isDepth(GLint level, GLint layer) const;
 
-    virtual gl::Error setImage(GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual gl::Error copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual gl::Error storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+    gl::Error setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
+                       const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+    gl::Error setSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format, GLenum type,
+                          const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+
+    gl::Error setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
+                                 const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+    gl::Error setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
+                                    const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+
+    gl::Error copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
+                        const gl::Framebuffer *source) override;
+    gl::Error copySubImage(GLenum target, size_t level, const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
+                           const gl::Framebuffer *source) override;
+
+    gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) override;
 
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
@@ -211,7 +229,7 @@ class TextureD3D_Cube : public TextureD3D
     virtual bool isImageComplete(const gl::ImageIndex &index) const;
     gl::Error updateStorageFaceLevel(int faceIndex, int level);
 
-    void redefineImage(int faceIndex, GLint level, GLenum internalformat, GLsizei width, GLsizei height);
+    void redefineImage(int faceIndex, GLint level, GLenum internalformat, const gl::Extents &size);
 
     ImageD3D *mImageArray[6][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
@@ -232,13 +250,22 @@ class TextureD3D_3D : public TextureD3D
     GLenum getInternalFormat(GLint level) const;
     bool isDepth(GLint level) const;
 
-    virtual gl::Error setImage(GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual gl::Error copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual gl::Error storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+    gl::Error setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
+                       const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+    gl::Error setSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format, GLenum type,
+                          const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+
+    gl::Error setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
+                                 const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+    gl::Error setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
+                                    const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+
+    gl::Error copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
+                        const gl::Framebuffer *source) override;
+    gl::Error copySubImage(GLenum target, size_t level, const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
+                           const gl::Framebuffer *source) override;
+
+    gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) override;
 
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
@@ -265,7 +292,7 @@ class TextureD3D_3D : public TextureD3D
     virtual bool isImageComplete(const gl::ImageIndex &index) const;
     gl::Error updateStorageLevel(int level);
 
-    void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+    void redefineImage(GLint level, GLenum internalformat, const gl::Extents &size);
 
     ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
@@ -285,13 +312,22 @@ class TextureD3D_2DArray : public TextureD3D
     GLenum getInternalFormat(GLint level) const;
     bool isDepth(GLint level) const;
 
-    virtual gl::Error setImage(GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const gl::PixelUnpackState &unpack, const void *pixels);
-    virtual gl::Error copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual gl::Error copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
-    virtual gl::Error storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+    gl::Error setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
+                       const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+    gl::Error setSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format, GLenum type,
+                          const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+
+    gl::Error setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
+                                 const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+    gl::Error setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
+                                    const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+
+    gl::Error copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
+                        const gl::Framebuffer *source) override;
+    gl::Error copySubImage(GLenum target, size_t level, const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
+                           const gl::Framebuffer *source) override;
+
+    gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) override;
 
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
@@ -319,7 +355,7 @@ class TextureD3D_2DArray : public TextureD3D
     gl::Error updateStorageLevel(int level);
 
     void deleteImages();
-    void redefineImage(GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+    void redefineImage(GLint level, GLenum internalformat, const gl::Extents &size);
 
     // Storing images as an array of single depth textures since D3D11 treats each array level of a
     // Texture2D object as a separate subresource.  Each layer would have to be looped over

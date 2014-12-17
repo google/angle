@@ -579,55 +579,29 @@ gl::Texture *RendererD3D::getIncompleteTexture(GLenum type)
     if (mIncompleteTextures.find(type) == mIncompleteTextures.end())
     {
         const GLubyte color[] = { 0, 0, 0, 255 };
+        const gl::Extents colorSize(1, 1, 1);
         const gl::PixelUnpackState incompleteUnpackState(1);
 
         gl::Texture* t = NULL;
         switch (type)
         {
-          default:
-            UNREACHABLE();
-            // default falls through to TEXTURE_2D
+          default: UNREACHABLE(); // default falls through to TEXTURE_2D
+          case GL_TEXTURE_2D:       t = new gl::Texture2D(createTexture(type), gl::Texture::INCOMPLETE_TEXTURE_ID);      break;
+          case GL_TEXTURE_CUBE_MAP: t = new gl::TextureCubeMap(createTexture(type), gl::Texture::INCOMPLETE_TEXTURE_ID); break;
+          case GL_TEXTURE_3D:       t = new gl::Texture3D(createTexture(type), gl::Texture::INCOMPLETE_TEXTURE_ID);      break;
+          case GL_TEXTURE_2D_ARRAY: t = new gl::Texture2DArray(createTexture(type), gl::Texture::INCOMPLETE_TEXTURE_ID); break;
+        }
 
-          case GL_TEXTURE_2D:
+        if (type == GL_TEXTURE_CUBE_MAP)
+        {
+            for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z; face++)
             {
-                gl::Texture2D *incomplete2d = new gl::Texture2D(createTexture(GL_TEXTURE_2D), gl::Texture::INCOMPLETE_TEXTURE_ID);
-                incomplete2d->setImage(0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
-                t = incomplete2d;
+                t->setImage(face, 0, GL_RGBA, colorSize, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
             }
-            break;
-
-          case GL_TEXTURE_CUBE_MAP:
-            {
-              gl::TextureCubeMap *incompleteCube = new gl::TextureCubeMap(createTexture(GL_TEXTURE_CUBE_MAP), gl::Texture::INCOMPLETE_TEXTURE_ID);
-
-              incompleteCube->setImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
-              incompleteCube->setImage(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
-              incompleteCube->setImage(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
-              incompleteCube->setImage(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
-              incompleteCube->setImage(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
-              incompleteCube->setImage(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
-
-              t = incompleteCube;
-            }
-            break;
-
-          case GL_TEXTURE_3D:
-            {
-                gl::Texture3D *incomplete3d = new gl::Texture3D(createTexture(GL_TEXTURE_3D), gl::Texture::INCOMPLETE_TEXTURE_ID);
-                incomplete3d->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
-
-                t = incomplete3d;
-            }
-            break;
-
-          case GL_TEXTURE_2D_ARRAY:
-            {
-                gl::Texture2DArray *incomplete2darray = new gl::Texture2DArray(createTexture(GL_TEXTURE_2D_ARRAY), gl::Texture::INCOMPLETE_TEXTURE_ID);
-                incomplete2darray->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
-
-                t = incomplete2darray;
-            }
-            break;
+        }
+        else
+        {
+            t->setImage(type, 0, GL_RGBA, colorSize, GL_RGBA, GL_UNSIGNED_BYTE, incompleteUnpackState, color);
         }
 
         mIncompleteTextures[type].set(t);

@@ -20,6 +20,9 @@ namespace gl
 {
 class Framebuffer;
 struct Rectangle;
+struct Extents;
+struct Box;
+struct Offset;
 struct ImageIndex;
 }
 
@@ -46,15 +49,13 @@ class Image
     void markClean() {mDirty = false;}
     virtual bool isDirty() const = 0;
 
-    virtual bool redefine(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) = 0;
+    virtual bool redefine(GLenum target, GLenum internalformat, const gl::Extents &size, bool forceRelease) = 0;
 
-    virtual gl::Error loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                               GLint unpackAlignment, GLenum type, const void *input) = 0;
-    virtual gl::Error loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                                         const void *input) = 0;
+    virtual gl::Error loadData(const gl::Box &area, GLint unpackAlignment, GLenum type, const void *input) = 0;
+    virtual gl::Error loadCompressedData(const gl::Box &area, const void *input) = 0;
 
-    virtual gl::Error copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, gl::Framebuffer *source) = 0;
-    virtual gl::Error copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea,
+    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, const gl::Framebuffer *source) = 0;
+    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
                            const gl::ImageIndex &sourceIndex, TextureStorage *source) = 0;
 
   protected:

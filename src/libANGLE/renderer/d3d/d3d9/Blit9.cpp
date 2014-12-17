@@ -12,6 +12,7 @@
 #include "libANGLE/renderer/d3d/d3d9/TextureStorage9.h"
 #include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 
@@ -216,7 +217,7 @@ gl::Error Blit9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
     device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
-    setViewport(getSurfaceRect(dest), 0, 0);
+    setViewport(getSurfaceRect(dest), gl::Offset(0, 0, 0));
 
     render();
 
@@ -227,7 +228,7 @@ gl::Error Blit9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Blit9::copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level)
+gl::Error Blit9::copy2D(const gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, const gl::Offset &destOffset, TextureStorage *storage, GLint level)
 {
     gl::Error error = initialize();
     if (error.isError())
@@ -258,7 +259,7 @@ gl::Error Blit9::copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GL
     }
     ASSERT(destSurface);
 
-    gl::Error result = copy(source, sourceRect, destFormat, xoffset, yoffset, destSurface);
+    gl::Error result = copy(source, sourceRect, destFormat, destOffset, destSurface);
 
     SafeRelease(destSurface);
     SafeRelease(source);
@@ -266,7 +267,7 @@ gl::Error Blit9::copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GL
     return result;
 }
 
-gl::Error Blit9::copyCube(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level)
+gl::Error Blit9::copyCube(const gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, const gl::Offset &destOffset, TextureStorage *storage, GLenum target, GLint level)
 {
     gl::Error error = initialize();
     if (error.isError())
@@ -297,7 +298,7 @@ gl::Error Blit9::copyCube(gl::Framebuffer *framebuffer, const RECT &sourceRect, 
     }
     ASSERT(destSurface);
 
-    gl::Error result = copy(source, sourceRect, destFormat, xoffset, yoffset, destSurface);
+    gl::Error result = copy(source, sourceRect, destFormat, destOffset, destSurface);
 
     SafeRelease(destSurface);
     SafeRelease(source);
@@ -305,7 +306,7 @@ gl::Error Blit9::copyCube(gl::Framebuffer *framebuffer, const RECT &sourceRect, 
     return result;
 }
 
-gl::Error Blit9::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
+gl::Error Blit9::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, const gl::Offset &destOffset, IDirect3DSurface9 *dest)
 {
     ASSERT(source != NULL && dest != NULL);
 
@@ -319,7 +320,7 @@ gl::Error Blit9::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum 
     if (sourceDesc.Format == destDesc.Format && destDesc.Usage & D3DUSAGE_RENDERTARGET &&
         d3d9_gl::IsFormatChannelEquivalent(destDesc.Format, destFormat))   // Can use StretchRect
     {
-        RECT destRect = {xoffset, yoffset, xoffset + (sourceRect.right - sourceRect.left), yoffset + (sourceRect.bottom - sourceRect.top)};
+        RECT destRect = { destOffset.x, destOffset.y, destOffset.x + (sourceRect.right - sourceRect.left), destOffset.y + (sourceRect.bottom - sourceRect.top)};
         HRESULT result = device->StretchRect(source, &sourceRect, dest, &destRect, D3DTEXF_POINT);
 
         if (FAILED(result))
@@ -332,11 +333,11 @@ gl::Error Blit9::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum 
     }
     else
     {
-        return formatConvert(source, sourceRect, destFormat, xoffset, yoffset, dest);
+        return formatConvert(source, sourceRect, destFormat, destOffset, dest);
     }
 }
 
-gl::Error Blit9::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
+gl::Error Blit9::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, const gl::Offset &destOffset, IDirect3DSurface9 *dest)
 {
     gl::Error error = initialize();
     if (error.isError())
@@ -358,7 +359,7 @@ gl::Error Blit9::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect
     device->SetTexture(0, texture);
     device->SetRenderTarget(0, dest);
 
-    setViewport(sourceRect, xoffset, yoffset);
+    setViewport(sourceRect, destOffset);
 
     setCommonBlitState();
 
@@ -547,13 +548,13 @@ gl::Error Blit9::copySurfaceToTexture(IDirect3DSurface9 *surface, const RECT &so
     return gl::Error(GL_NO_ERROR);
 }
 
-void Blit9::setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset)
+void Blit9::setViewport(const RECT &sourceRect, const gl::Offset &offset)
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
     D3DVIEWPORT9 vp;
-    vp.X      = xoffset;
-    vp.Y      = yoffset;
+    vp.X      = offset.x;
+    vp.Y      = offset.y;
     vp.Width  = sourceRect.right - sourceRect.left;
     vp.Height = sourceRect.bottom - sourceRect.top;
     vp.MinZ   = 0.0f;

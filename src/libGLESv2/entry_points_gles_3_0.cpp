@@ -88,34 +88,13 @@ void GL_APIENTRY TexImage3D(GLenum target, GLint level, GLint internalformat, GL
             return;
         }
 
-        switch(target)
+        Extents size(width, height, depth);
+        Texture *texture = context->getTargetTexture(target);
+        Error error = texture->setImage(target, level, internalformat, size, format, type, context->getState().getUnpackState(),
+                                        reinterpret_cast<const uint8_t *>(pixels));
+        if (error.isError())
         {
-          case GL_TEXTURE_3D:
-            {
-                Texture3D *texture = context->getTexture3D();
-                Error error = texture->setImage(level, width, height, depth, internalformat, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_2D_ARRAY:
-            {
-                Texture2DArray *texture = context->getTexture2DArray();
-                Error error = texture->setImage(level, width, height, depth, internalformat, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->recordError(error);
             return;
         }
     }
@@ -151,34 +130,13 @@ void GL_APIENTRY TexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint 
             return;
         }
 
-        switch(target)
+        Box area(xoffset, yoffset, zoffset, width, height, depth);
+        Texture *texture = context->getTargetTexture(target);
+        Error error = texture->setSubImage(target, level, area, format, type, context->getState().getUnpackState(),
+                                           reinterpret_cast<const uint8_t *>(pixels));
+        if (error.isError())
         {
-          case GL_TEXTURE_3D:
-            {
-                Texture3D *texture = context->getTexture3D();
-                Error error = texture->subImage(level, xoffset, yoffset, zoffset, width, height, depth, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_2D_ARRAY:
-            {
-                Texture2DArray *texture = context->getTexture2DArray();
-                Error error = texture->subImage(level, xoffset, yoffset, zoffset, width, height, depth, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->recordError(error);
             return;
         }
     }
@@ -205,24 +163,12 @@ void GL_APIENTRY CopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
             return;
         }
 
-        Framebuffer *framebuffer = context->getState().getReadFramebuffer();
-        Texture *texture = NULL;
-        switch (target)
-        {
-          case GL_TEXTURE_3D:
-            texture = context->getTexture3D();
-            break;
+        Offset destOffset(xoffset, yoffset, zoffset);
+        Rectangle sourceArea(x, y, width, height);
 
-          case GL_TEXTURE_2D_ARRAY:
-            texture = context->getTexture2DArray();
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        Error error = texture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, framebuffer);
+        const Framebuffer *framebuffer = context->getState().getReadFramebuffer();
+        Texture *texture = context->getTargetTexture(target);
+        Error error = texture->copySubImage(target, level, destOffset, sourceArea, framebuffer);
         if (error.isError())
         {
             context->recordError(error);
@@ -261,34 +207,13 @@ void GL_APIENTRY CompressedTexImage3D(GLenum target, GLint level, GLenum interna
             return;
         }
 
-        switch(target)
+        Extents size(width, height, depth);
+        Texture *texture = context->getTargetTexture(target);
+        Error error = texture->setCompressedImage(target, level, internalformat, size, context->getState().getUnpackState(),
+                                                  reinterpret_cast<const uint8_t *>(data));
+        if (error.isError())
         {
-          case GL_TEXTURE_3D:
-            {
-                Texture3D *texture = context->getTexture3D();
-                Error error = texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, context->getState().getUnpackState(), data);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_2D_ARRAY:
-            {
-                Texture2DArray *texture = context->getTexture2DArray();
-                Error error = texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, context->getState().getUnpackState(), data);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->recordError(error);
             return;
         }
     }
@@ -336,36 +261,13 @@ void GL_APIENTRY CompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
             return;
         }
 
-        switch(target)
+        Box area(xoffset, yoffset, zoffset, width, height, depth);
+        Texture *texture = context->getTargetTexture(target);
+        Error error = texture->setCompressedSubImage(target, level, area, format, context->getState().getUnpackState(),
+                                                     reinterpret_cast<const uint8_t *>(data));
+        if (error.isError())
         {
-          case GL_TEXTURE_3D:
-            {
-                Texture3D *texture = context->getTexture3D();
-                Error error = texture->subImageCompressed(level, xoffset, yoffset, zoffset, width, height, depth,
-                                                              format, imageSize, context->getState().getUnpackState(), data);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_2D_ARRAY:
-            {
-                Texture2DArray *texture = context->getTexture2DArray();
-                Error error = texture->subImageCompressed(level, xoffset, yoffset, zoffset, width, height, depth,
-                                                              format, imageSize, context->getState().getUnpackState(), data);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->recordError(error);
             return;
         }
     }
@@ -3332,34 +3234,12 @@ void GL_APIENTRY TexStorage2D(GLenum target, GLsizei levels, GLenum internalform
             return;
         }
 
-        switch (target)
+        Extents size(width, height, 1);
+        Texture *texture = context->getTargetTexture(target);
+        Error error = texture->setStorage(target, levels, internalformat, size);
+        if (error.isError())
         {
-          case GL_TEXTURE_2D:
-            {
-                Texture2D *texture2d = context->getTexture2D();
-                Error error = texture2d->storage(levels, internalformat, width, height);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_CUBE_MAP:
-            {
-                TextureCubeMap *textureCube = context->getTextureCubeMap();
-                Error error = textureCube->storage(levels, internalformat, width);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->recordError(error);
             return;
         }
     }
@@ -3385,34 +3265,13 @@ void GL_APIENTRY TexStorage3D(GLenum target, GLsizei levels, GLenum internalform
             return;
         }
 
-        switch (target)
+        Extents size(width, height, depth);
+        Texture *texture = context->getTargetTexture(target);
+        Error error = texture->setStorage(target, levels, internalformat, size);
+        if (error.isError())
         {
-          case GL_TEXTURE_3D:
-            {
-                Texture3D *texture3d = context->getTexture3D();
-                Error error = texture3d->storage(levels, internalformat, width, height, depth);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_2D_ARRAY:
-            {
-                Texture2DArray *texture2darray = context->getTexture2DArray();
-                Error error = texture2darray->storage(levels, internalformat, width, height, depth);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            UNREACHABLE();
+            context->recordError(error);
+            return;
         }
     }
 }

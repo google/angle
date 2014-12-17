@@ -2102,8 +2102,8 @@ int Renderer11::getMaxSwapInterval() const
     return 4;
 }
 
-gl::Error Renderer11::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                  GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level)
+gl::Error Renderer11::copyImage2D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                  const gl::Offset &destOffset, TextureStorage *storage, GLint level)
 {
     gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     ASSERT(colorbuffer);
@@ -2137,7 +2137,7 @@ gl::Error Renderer11::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectan
     gl::Box sourceArea(sourceRect.x, sourceRect.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents sourceSize(sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(), 1);
 
-    gl::Box destArea(xoffset, yoffset, 0, sourceRect.width, sourceRect.height, 1);
+    gl::Box destArea(destOffset.x, destOffset.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents destSize(destRenderTarget->getWidth(), destRenderTarget->getHeight(), 1);
 
     // Use nearest filtering because source and destination are the same size for the direct
@@ -2153,8 +2153,8 @@ gl::Error Renderer11::copyImage2D(gl::Framebuffer *framebuffer, const gl::Rectan
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::copyImageCube(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                    GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level)
+gl::Error Renderer11::copyImageCube(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                    const gl::Offset &destOffset, TextureStorage *storage, GLenum target, GLint level)
 {
     gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     ASSERT(colorbuffer);
@@ -2188,7 +2188,7 @@ gl::Error Renderer11::copyImageCube(gl::Framebuffer *framebuffer, const gl::Rect
     gl::Box sourceArea(sourceRect.x, sourceRect.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents sourceSize(sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(), 1);
 
-    gl::Box destArea(xoffset, yoffset, 0, sourceRect.width, sourceRect.height, 1);
+    gl::Box destArea(destOffset.x, destOffset.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents destSize(destRenderTarget->getWidth(), destRenderTarget->getHeight(), 1);
 
     // Use nearest filtering because source and destination are the same size for the direct
@@ -2204,8 +2204,8 @@ gl::Error Renderer11::copyImageCube(gl::Framebuffer *framebuffer, const gl::Rect
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                  GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level)
+gl::Error Renderer11::copyImage3D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                  const gl::Offset &destOffset, TextureStorage *storage, GLint level)
 {
     gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     ASSERT(colorbuffer);
@@ -2224,7 +2224,7 @@ gl::Error Renderer11::copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectan
     TextureStorage11_3D *storage11 = TextureStorage11_3D::makeTextureStorage11_3D(storage);
     ASSERT(storage11);
 
-    gl::ImageIndex index = gl::ImageIndex::Make3D(level, zOffset);
+    gl::ImageIndex index = gl::ImageIndex::Make3D(level, destOffset.z);
     RenderTarget *destRenderTarget = NULL;
     error = storage11->getRenderTarget(index, &destRenderTarget);
     if (error.isError())
@@ -2239,7 +2239,7 @@ gl::Error Renderer11::copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectan
     gl::Box sourceArea(sourceRect.x, sourceRect.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents sourceSize(sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(), 1);
 
-    gl::Box destArea(xoffset, yoffset, 0, sourceRect.width, sourceRect.height, 1);
+    gl::Box destArea(destOffset.x, destOffset.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents destSize(destRenderTarget->getWidth(), destRenderTarget->getHeight(), 1);
 
     // Use nearest filtering because source and destination are the same size for the direct
@@ -2255,8 +2255,8 @@ gl::Error Renderer11::copyImage3D(gl::Framebuffer *framebuffer, const gl::Rectan
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::copyImage2DArray(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                       GLint xoffset, GLint yoffset, GLint zOffset, TextureStorage *storage, GLint level)
+gl::Error Renderer11::copyImage2DArray(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                                       const gl::Offset &destOffset, TextureStorage *storage, GLint level)
 {
     gl::FramebufferAttachment *colorbuffer = framebuffer->getReadColorbuffer();
     ASSERT(colorbuffer);
@@ -2275,7 +2275,7 @@ gl::Error Renderer11::copyImage2DArray(gl::Framebuffer *framebuffer, const gl::R
     TextureStorage11_2DArray *storage11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(storage);
     ASSERT(storage11);
 
-    gl::ImageIndex index = gl::ImageIndex::Make2DArray(level, zOffset);
+    gl::ImageIndex index = gl::ImageIndex::Make2DArray(level, destOffset.z);
     RenderTarget *destRenderTarget = NULL;
     error = storage11->getRenderTarget(index, &destRenderTarget);
     if (error.isError())
@@ -2290,7 +2290,7 @@ gl::Error Renderer11::copyImage2DArray(gl::Framebuffer *framebuffer, const gl::R
     gl::Box sourceArea(sourceRect.x, sourceRect.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents sourceSize(sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(), 1);
 
-    gl::Box destArea(xoffset, yoffset, 0, sourceRect.width, sourceRect.height, 1);
+    gl::Box destArea(destOffset.x, destOffset.y, 0, sourceRect.width, sourceRect.height, 1);
     gl::Extents destSize(destRenderTarget->getWidth(), destRenderTarget->getHeight(), 1);
 
     // Use nearest filtering because source and destination are the same size for the direct

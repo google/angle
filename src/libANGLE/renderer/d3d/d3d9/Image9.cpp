@@ -169,23 +169,23 @@ gl::Error Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface
     return gl::Error(GL_NO_ERROR);
 }
 
-bool Image9::redefine(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
+bool Image9::redefine(GLenum target, GLenum internalformat, const gl::Extents &size, bool forceRelease)
 {
     // 3D textures are not supported by the D3D9 backend.
-    ASSERT(depth <= 1);
+    ASSERT(size.depth <= 1);
 
     // Only 2D and cube texture are supported by the D3D9 backend.
     ASSERT(target == GL_TEXTURE_2D || target == GL_TEXTURE_CUBE_MAP);
 
-    if (mWidth != width ||
-        mHeight != height ||
-        mDepth != depth ||
+    if (mWidth != size.width ||
+        mHeight != size.height ||
+        mDepth != size.depth ||
         mInternalFormat != internalformat ||
         forceRelease)
     {
-        mWidth = width;
-        mHeight = height;
-        mDepth = depth;
+        mWidth = size.width;
+        mHeight = size.height;
+        mDepth = size.depth;
         mInternalFormat = internalformat;
 
         // compute the d3d format that will be used
@@ -411,14 +411,14 @@ gl::Error Image9::copyToStorage(TextureStorage *storage, const gl::ImageIndex &i
         }
     }
 
-    error = copyToSurface(destSurface, region.x, region.y, region.width, region.height);
+    error = copyToSurface(destSurface, region);
     SafeRelease(destSurface);
     return error;
 }
 
-gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, const gl::Box &area)
 {
-    ASSERT(width > 0 && height > 0);
+    ASSERT(area.width > 0 && area.height > 0 && area.depth == 1);
     ASSERT(destSurface);
 
     IDirect3DSurface9 *sourceSurface = NULL;
@@ -431,10 +431,10 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, GLint xoffset, G
     ASSERT(sourceSurface && sourceSurface != destSurface);
 
     RECT rect;
-    rect.left = xoffset;
-    rect.top = yoffset;
-    rect.right = xoffset + width;
-    rect.bottom = yoffset + height;
+    rect.left = area.x;
+    rect.top = area.y;
+    rect.right = area.x + area.width;
+    rect.bottom = area.y + area.height;
 
     POINT point = {rect.left, rect.top};
 
@@ -477,22 +477,21 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, GLint xoffset, G
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle.
-gl::Error Image9::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                           GLint unpackAlignment, GLenum type, const void *input)
+gl::Error Image9::loadData(const gl::Box &area, GLint unpackAlignment, GLenum type, const void *input)
 {
     // 3D textures are not supported by the D3D9 backend.
-    ASSERT(zoffset == 0 && depth == 1);
+    ASSERT(area.z == 0 && area.depth == 1);
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
-    GLsizei inputRowPitch = formatInfo.computeRowPitch(type, width, unpackAlignment);
+    GLsizei inputRowPitch = formatInfo.computeRowPitch(type, area.width, unpackAlignment);
 
     const d3d9::TextureFormat &d3dFormatInfo = d3d9::GetTextureFormatInfo(mInternalFormat);
     ASSERT(d3dFormatInfo.loadFunction != NULL);
 
     RECT lockRect =
     {
-        xoffset, yoffset,
-        xoffset + width, yoffset + height
+        area.x, area.y,
+        area.x + area.width, area.y + area.height
     };
 
     D3DLOCKED_RECT locked;
@@ -502,7 +501,7 @@ gl::Error Image9::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei 
         return error;
     }
 
-    d3dFormatInfo.loadFunction(width, height, depth,
+    d3dFormatInfo.loadFunction(area.width, area.height, area.depth,
                                reinterpret_cast<const uint8_t*>(input), inputRowPitch, 0,
                                reinterpret_cast<uint8_t*>(locked.pBits), locked.Pitch, 0);
 
@@ -511,27 +510,26 @@ gl::Error Image9::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei 
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                                     const void *input)
+gl::Error Image9::loadCompressedData(const gl::Box &area, const void *input)
 {
     // 3D textures are not supported by the D3D9 backend.
-    ASSERT(zoffset == 0 && depth == 1);
+    ASSERT(area.z == 0 && area.depth == 1);
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
-    GLsizei inputRowPitch = formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, width, 1);
-    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, width, height, 1);
+    GLsizei inputRowPitch = formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, area.width, area.height, 1);
 
     const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(mInternalFormat);
 
-    ASSERT(xoffset % d3d9::GetD3DFormatInfo(d3d9FormatInfo.texFormat).blockWidth == 0);
-    ASSERT(yoffset % d3d9::GetD3DFormatInfo(d3d9FormatInfo.texFormat).blockHeight == 0);
+    ASSERT(area.x % d3d9::GetD3DFormatInfo(d3d9FormatInfo.texFormat).blockWidth == 0);
+    ASSERT(area.y % d3d9::GetD3DFormatInfo(d3d9FormatInfo.texFormat).blockHeight == 0);
 
     ASSERT(d3d9FormatInfo.loadFunction != NULL);
 
     RECT lockRect =
     {
-        xoffset, yoffset,
-        xoffset + width, yoffset + height
+        area.x, area.y,
+        area.x + area.width, area.y + area.height
     };
 
     D3DLOCKED_RECT locked;
@@ -541,7 +539,7 @@ gl::Error Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset
         return error;
     }
 
-    d3d9FormatInfo.loadFunction(width, height, depth,
+    d3d9FormatInfo.loadFunction(area.width, area.height, area.depth,
                                 reinterpret_cast<const uint8_t*>(input), inputRowPitch, inputDepthPitch,
                                 reinterpret_cast<uint8_t*>(locked.pBits), locked.Pitch, 0);
 
@@ -551,12 +549,12 @@ gl::Error Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset
 }
 
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
-gl::Error Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, RenderTarget *source)
+gl::Error Image9::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTarget *source)
 {
     ASSERT(source);
 
     // ES3.0 only behaviour to copy into a 3d texture
-    ASSERT(zoffset == 0);
+    ASSERT(destOffset.z == 0);
 
     RenderTarget9 *renderTarget = RenderTarget9::makeRenderTarget9(source);
 
@@ -590,7 +588,7 @@ gl::Error Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Re
     int height = sourceArea.height;
 
     RECT sourceRect = { sourceArea.x, sourceArea.y, sourceArea.x + width, sourceArea.y + height };
-    RECT destRect = { xoffset, yoffset, xoffset + width, yoffset + height };
+    RECT destRect = { destOffset.x, destOffset.y, destOffset.x + width, destOffset.y + height };
 
     D3DLOCKED_RECT sourceLock = {0};
     result = renderTargetData->LockRect(&sourceLock, &sourceRect, 0);
@@ -779,7 +777,7 @@ gl::Error Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Re
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &area, const gl::ImageIndex &srcIndex, TextureStorage *srcStorage)
+gl::Error Image9::copy(const gl::Offset &destOffset, const gl::Rectangle &area, const gl::ImageIndex &srcIndex, TextureStorage *srcStorage)
 {
     // Currently unreachable, due to only being used in a D3D11-only workaround
     UNIMPLEMENTED();

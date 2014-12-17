@@ -741,39 +741,13 @@ void GL_APIENTRY CompressedTexImage2D(GLenum target, GLint level, GLenum interna
             return;
         }
 
-        switch (target)
+        Extents size(width, height, 1);
+        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Error error = texture->setCompressedImage(target, level, internalformat, size, context->getState().getUnpackState(), 
+                                                  reinterpret_cast<const uint8_t *>(data));
+        if (error.isError())
         {
-          case GL_TEXTURE_2D:
-            {
-                Texture2D *texture = context->getTexture2D();
-                Error error = texture->setCompressedImage(level, internalformat, width, height, imageSize, context->getState().getUnpackState(), data);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            {
-                TextureCubeMap *texture = context->getTextureCubeMap();
-                Error error = texture->setCompressedImage(target, level, internalformat, width, height, imageSize, context->getState().getUnpackState(), data);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->recordError(error);
             return;
         }
     }
@@ -811,39 +785,14 @@ void GL_APIENTRY CompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             return;
         }
 
-        switch (target)
+
+        Box area(xoffset, yoffset, 0, width, height, 1);
+        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Error error = texture->setCompressedSubImage(target, level, area, format, context->getState().getUnpackState(),
+                                                     reinterpret_cast<const uint8_t *>(data));
+        if (error.isError())
         {
-          case GL_TEXTURE_2D:
-            {
-                Texture2D *texture = context->getTexture2D();
-                Error error = texture->subImageCompressed(level, xoffset, yoffset, width, height, format, imageSize, context->getState().getUnpackState(), data);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            {
-                TextureCubeMap *texture = context->getTextureCubeMap();
-                Error error = texture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, context->getState().getUnpackState(), data);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->recordError(error);
             return;
         }
     }
@@ -872,41 +821,14 @@ void GL_APIENTRY CopyTexImage2D(GLenum target, GLint level, GLenum internalforma
             return;
         }
 
-        Framebuffer *framebuffer = context->getState().getReadFramebuffer();
+        Rectangle sourceArea(x, y, width, height);
 
-        switch (target)
+        const Framebuffer *framebuffer = context->getState().getReadFramebuffer();
+        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Error error = texture->copyImage(target, level, sourceArea, internalformat, framebuffer);
+        if (error.isError())
         {
-          case GL_TEXTURE_2D:
-            {
-                Texture2D *texture = context->getTexture2D();
-                Error error = texture->copyImage(level, internalformat, x, y, width, height, framebuffer);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            {
-                TextureCubeMap *texture = context->getTextureCubeMap();
-                Error error = texture->copyImage(target, level, internalformat, x, y, width, height, framebuffer);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->recordError(error);
             return;
         }
     }
@@ -935,41 +857,15 @@ void GL_APIENTRY CopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
             return;
         }
 
-        Framebuffer *framebuffer = context->getState().getReadFramebuffer();
+        Offset destOffset(xoffset, yoffset, 0);
+        Rectangle sourceArea(x, y, width, height);
 
-        switch (target)
+        const Framebuffer *framebuffer = context->getState().getReadFramebuffer();
+        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Error error = texture->copySubImage(target, level, destOffset, sourceArea, framebuffer);
+        if (error.isError())
         {
-          case GL_TEXTURE_2D:
-            {
-                Texture2D *texture = context->getTexture2D();
-                Error error = texture->copySubImage(target, level, xoffset, yoffset, 0, x, y, width, height, framebuffer);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            {
-                TextureCubeMap *texture = context->getTextureCubeMap();
-                Error error = texture->copySubImage(target, level, xoffset, yoffset, 0, x, y, width, height, framebuffer);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->recordError(error);
             return;
         }
     }
@@ -3657,38 +3553,14 @@ void GL_APIENTRY TexImage2D(GLenum target, GLint level, GLint internalformat, GL
             return;
         }
 
-        switch (target)
+        Extents size(width, height, 1);
+        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Error error = texture->setImage(target, level, internalformat, size, format, type, context->getState().getUnpackState(),
+                                        reinterpret_cast<const uint8_t *>(pixels));
+        if (error.isError())
         {
-          case GL_TEXTURE_2D:
-            {
-                Texture2D *texture = context->getTexture2D();
-                Error error = texture->setImage(level, width, height, internalformat, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            {
-                TextureCubeMap *texture = context->getTextureCubeMap();
-                Error error = texture->setImage(target, level, width, height, internalformat, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default: UNREACHABLE();
+            context->recordError(error);
+            return;
         }
     }
 }
@@ -3822,39 +3694,14 @@ void GL_APIENTRY TexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
             return;
         }
 
-        switch (target)
+        Box area(xoffset, yoffset, 0, width, height, 1);
+        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Error error = texture->setSubImage(target, level, area, format, type, context->getState().getUnpackState(),
+                                           reinterpret_cast<const uint8_t *>(pixels));
+        if (error.isError())
         {
-          case GL_TEXTURE_2D:
-            {
-                Texture2D *texture = context->getTexture2D();
-                Error error = texture->subImage(level, xoffset, yoffset, width, height, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            {
-                TextureCubeMap *texture = context->getTextureCubeMap();
-                Error error = texture->subImage(target, level, xoffset, yoffset, width, height, format, type, context->getState().getUnpackState(), pixels);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            UNREACHABLE();
+            context->recordError(error);
+            return;
         }
     }
 }

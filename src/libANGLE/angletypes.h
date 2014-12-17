@@ -57,19 +57,14 @@ struct Rectangle
 
 bool ClipRectangle(const Rectangle &source, const Rectangle &clip, Rectangle *intersection);
 
-struct Box
+struct Offset
 {
     int x;
     int y;
     int z;
-    int width;
-    int height;
-    int depth;
 
-    Box() : x(0), y(0), z(0), width(0), height(0), depth(0) { }
-    Box(int x_in, int y_in, int z_in, int width_in, int height_in, int depth_in) : x(x_in), y(y_in), z(z_in), width(width_in), height(height_in), depth(depth_in) { }
-    bool operator==(const Box &other) const;
-    bool operator!=(const Box &other) const;
+    Offset() : x(0), y(0), z(0) { }
+    Offset(int x_in, int y_in, int z_in) : x(x_in), y(y_in), z(z_in) { }
 };
 
 struct Extents
@@ -81,6 +76,23 @@ struct Extents
     Extents() : width(0), height(0), depth(0) { }
     Extents(int width_, int height_, int depth_) : width(width_), height(height_), depth(depth_) { }
 };
+
+struct Box
+{
+    int x;
+    int y;
+    int z;
+    int width;
+    int height;
+    int depth;
+
+    Box() : x(0), y(0), z(0), width(0), height(0), depth(0) { }
+    Box(int x_in, int y_in, int z_in, int width_in, int height_in, int depth_in) : x(x_in), y(y_in), z(z_in), width(width_in), height(height_in), depth(depth_in) { }
+    Box(const Offset &offset, const Extents &size) : x(offset.x), y(offset.y), z(offset.z), width(size.width), height(size.height), depth(size.depth) { }
+    bool operator==(const Box &other) const;
+    bool operator!=(const Box &other) const;
+};
+
 
 struct RasterizerState
 {

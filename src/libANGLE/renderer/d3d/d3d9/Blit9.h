@@ -17,6 +17,7 @@
 namespace gl
 {
 class Framebuffer;
+struct Offset;
 }
 
 namespace rx
@@ -34,13 +35,13 @@ class Blit9
 
     // Copy from source surface to dest surface.
     // sourceRect, xoffset, yoffset are in D3D coordinates (0,0 in upper-left)
-    gl::Error copy2D(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage *storage, GLint level);
-    gl::Error copyCube(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage *storage, GLenum target, GLint level);
+    gl::Error copy2D(const gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, const gl::Offset &destOffset, TextureStorage *storage, GLint level);
+    gl::Error copyCube(const gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, const gl::Offset &destOffset, TextureStorage *storage, GLenum target, GLint level);
 
     // Copy from source surface to dest surface.
     // sourceRect, xoffset, yoffset are in D3D coordinates (0,0 in upper-left)
     // source is interpreted as RGBA and destFormat specifies the desired result format. For example, if destFormat = GL_RGB, the alpha channel will be forced to 0.
-    gl::Error formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest);
+    gl::Error formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, const gl::Offset &destOffset, IDirect3DSurface9 *dest);
 
     // 2x2 box filter sample from source to dest.
     // Requires that source is RGB(A) and dest has the same format as source.
@@ -55,9 +56,9 @@ class Blit9
 
     gl::Error setFormatConvertShaders(GLenum destFormat);
 
-    gl::Error copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest);
+    gl::Error copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, const gl::Offset &destOffset, IDirect3DSurface9 *dest);
     gl::Error copySurfaceToTexture(IDirect3DSurface9 *surface, const RECT &sourceRect, IDirect3DTexture9 **outTexture);
-    void setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset);
+    void setViewport(const RECT &sourceRect, const gl::Offset &offset);
     void setCommonBlitState();
     RECT getSurfaceRect(IDirect3DSurface9 *surface) const;
 

@@ -27,7 +27,7 @@ ImageD3D *ImageD3D::makeImageD3D(Image *img)
     return static_cast<ImageD3D*>(img);
 }
 
-gl::Error ImageD3D::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &area, gl::Framebuffer *source)
+gl::Error ImageD3D::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, const gl::Framebuffer *source)
 {
     gl::FramebufferAttachment *colorbuffer = source->getReadColorbuffer();
     ASSERT(colorbuffer);
@@ -40,7 +40,7 @@ gl::Error ImageD3D::copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::
     }
 
     ASSERT(renderTarget);
-    return copy(xoffset, yoffset, zoffset, area, renderTarget);
+    return copy(destOffset, sourceArea, renderTarget);
 }
 
 }

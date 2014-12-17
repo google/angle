@@ -39,17 +39,15 @@ class Image11 : public ImageD3D
 
     virtual gl::Error copyToStorage(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
 
-    bool redefine(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) override;
+    bool redefine(GLenum target, GLenum internalformat, const gl::Extents &size, bool forceRelease) override;
 
     DXGI_FORMAT getDXGIFormat() const;
 
-    virtual gl::Error loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                               GLint unpackAlignment, GLenum type, const void *input);
-    virtual gl::Error loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                                         const void *input);
+    virtual gl::Error loadData(const gl::Box &area, GLint unpackAlignment, GLenum type, const void *input);
+    virtual gl::Error loadCompressedData(const gl::Box &area, const void *input);
 
-    virtual gl::Error copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, RenderTarget *source);
-    virtual gl::Error copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea,
+    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTarget *source);
+    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
                            const gl::ImageIndex &sourceIndex, TextureStorage *source);
 
     gl::Error recoverFromAssociatedStorage();
@@ -64,7 +62,7 @@ class Image11 : public ImageD3D
     DISALLOW_COPY_AND_ASSIGN(Image11);
 
     gl::Error copyToStorageImpl(TextureStorage11 *storage11, const gl::ImageIndex &index, const gl::Box &region);
-    gl::Error copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, ID3D11Texture2D *source, UINT sourceSubResource);
+    gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, ID3D11Texture2D *source, UINT sourceSubResource);
 
     gl::Error getStagingTexture(ID3D11Resource **outStagingTexture, unsigned int *outSubresourceIndex);
     gl::Error createStagingTexture();

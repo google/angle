@@ -618,34 +618,12 @@ void GL_APIENTRY TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
             return;
         }
 
-        switch (target)
+        Extents size(width, height, 1);
+        Texture *texture = context->getTargetTexture(target);
+        Error error = texture->setStorage(target, levels, internalformat, size);
+        if (error.isError())
         {
-          case GL_TEXTURE_2D:
-            {
-                Texture2D *texture2d = context->getTexture2D();
-                Error error = texture2d->storage(levels, internalformat, width, height);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          case GL_TEXTURE_CUBE_MAP:
-            {
-                TextureCubeMap *textureCube = context->getTextureCubeMap();
-                Error error = textureCube->storage(levels, internalformat, width);
-                if (error.isError())
-                {
-                    context->recordError(error);
-                    return;
-                }
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->recordError(error);
             return;
         }
     }

@@ -34,7 +34,7 @@ class Image9 : public ImageD3D
     static gl::Error generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface);
     static gl::Error copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
 
-    bool redefine(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) override;
+    bool redefine(GLenum target, GLenum internalformat, const gl::Extents &size, bool forceRelease) override;
 
     D3DFORMAT getD3DFormat() const;
 
@@ -44,13 +44,11 @@ class Image9 : public ImageD3D
     virtual gl::Error setManagedSurfaceCube(TextureStorage *storage, int face, int level);
     virtual gl::Error copyToStorage(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
 
-    virtual gl::Error loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                               GLint unpackAlignment, GLenum type, const void *input);
-    virtual gl::Error loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                                         const void *input);
+    virtual gl::Error loadData(const gl::Box &area, GLint unpackAlignment, GLenum type, const void *input);
+    virtual gl::Error loadCompressedData(const gl::Box &area, const void *input);
 
-    virtual gl::Error copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea, RenderTarget *source);
-    virtual gl::Error copy(GLint xoffset, GLint yoffset, GLint zoffset, const gl::Rectangle &sourceArea,
+    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTarget *source);
+    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
                            const gl::ImageIndex &sourceIndex, TextureStorage *source);
 
   private:
@@ -60,7 +58,7 @@ class Image9 : public ImageD3D
 
     gl::Error createSurface();
     gl::Error setManagedSurface(IDirect3DSurface9 *surface);
-    gl::Error copyToSurface(IDirect3DSurface9 *dest, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    gl::Error copyToSurface(IDirect3DSurface9 *dest, const gl::Box &area);
 
     gl::Error lock(D3DLOCKED_RECT *lockedRect, const RECT &rect);
     void unlock();

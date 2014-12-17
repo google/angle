@@ -9,12 +9,14 @@
 #ifndef LIBANGLE_RENDERER_TEXTUREIMPL_H_
 #define LIBANGLE_RENDERER_TEXTUREIMPL_H_
 
-#include "common/angleutils.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/ImageIndex.h"
+
+#include "common/angleutils.h"
 
 #include "angle_gl.h"
 
-#include "libANGLE/ImageIndex.h"
+#include <stdint.h>
 
 namespace egl
 {
@@ -23,6 +25,10 @@ class Surface;
 
 namespace gl
 {
+struct Box;
+struct Extents;
+struct Offset;
+struct Rectangle;
 class Framebuffer;
 struct PixelUnpackState;
 struct SamplerState;
@@ -45,13 +51,22 @@ class TextureImpl
 
     virtual void setUsage(GLenum usage) = 0;
 
-    virtual gl::Error setImage(GLenum target, GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum internalFormat, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels) = 0;
-    virtual gl::Error setCompressedImage(GLenum target, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const gl::PixelUnpackState &unpack, const void *pixels) = 0;
-    virtual gl::Error subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const gl::PixelUnpackState &unpack, const void *pixels) = 0;
-    virtual gl::Error subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const gl::PixelUnpackState &unpack, const void *pixels) = 0;
-    virtual gl::Error copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source) = 0;
-    virtual gl::Error copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source) = 0;
-    virtual gl::Error storage(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth) = 0;
+    virtual gl::Error setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
+                               const gl::PixelUnpackState &unpack, const uint8_t *pixels) = 0;
+    virtual gl::Error setSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format, GLenum type,
+                                  const gl::PixelUnpackState &unpack, const uint8_t *pixels) = 0;
+
+    virtual gl::Error setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
+                                         const gl::PixelUnpackState &unpack, const uint8_t *pixels) = 0;
+    virtual gl::Error setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
+                                            const gl::PixelUnpackState &unpack, const uint8_t *pixels) = 0;
+
+    virtual gl::Error copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
+                                const gl::Framebuffer *source) = 0;
+    virtual gl::Error copySubImage(GLenum target, size_t level, const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
+                                   const gl::Framebuffer *source) = 0;
+
+    virtual gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) = 0;
 
     virtual gl::Error generateMipmaps() = 0;
 
