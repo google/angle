@@ -21,96 +21,6 @@
 namespace gl
 {
 
-static bool ValidateSubImageParams2D(Context *context, bool compressed, GLsizei width, GLsizei height,
-                                     GLint xoffset, GLint yoffset, GLint level, GLenum format, GLenum type,
-                                     gl::Texture2D *texture)
-{
-    if (!texture)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    if (compressed != texture->isCompressed(level))
-    {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    if (format != GL_NONE)
-    {
-        if (gl::GetFormatTypeInfo(format, type).internalFormat != texture->getInternalFormat(level))
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return false;
-        }
-    }
-
-    if (compressed)
-    {
-        if ((width % 4 != 0 && width != texture->getWidth(level)) ||
-            (height % 4 != 0 && height != texture->getHeight(level)))
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return false;
-        }
-    }
-
-    if (xoffset + width > texture->getWidth(level) ||
-        yoffset + height > texture->getHeight(level))
-    {
-        context->recordError(Error(GL_INVALID_VALUE));
-        return false;
-    }
-
-    return true;
-}
-
-static bool ValidateSubImageParamsCube(Context *context, bool compressed, GLsizei width, GLsizei height,
-                                       GLint xoffset, GLint yoffset, GLenum target, GLint level, GLenum format, GLenum type,
-                                       gl::TextureCubeMap *texture)
-{
-    if (!texture)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    if (compressed != texture->isCompressed(target, level))
-    {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    if (format != GL_NONE)
-    {
-        if (gl::GetFormatTypeInfo(format, type).internalFormat != texture->getInternalFormat(target, level))
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return false;
-        }
-    }
-
-    if (compressed)
-    {
-        if ((width % 4 != 0 && width != texture->getWidth(target, 0)) ||
-            (height % 4 != 0 && height != texture->getHeight(target, 0)))
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return false;
-        }
-    }
-
-    if (xoffset + width > texture->getWidth(target, level) ||
-        yoffset + height > texture->getHeight(target, level))
-    {
-        context->recordError(Error(GL_INVALID_VALUE));
-        return false;
-    }
-
-    return true;
-}
-
 bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level, GLenum internalformat, bool isCompressed, bool isSubImage,
                                    GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                    GLint border, GLenum format, GLenum type, const GLvoid *pixels)
@@ -143,86 +53,68 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
 
     const gl::Caps &caps = context->getCaps();
 
-    gl::Texture *texture = NULL;
-    GLenum textureInternalFormat = GL_NONE;
-    switch (target)
+    if (target == GL_TEXTURE_2D)
     {
-      case GL_TEXTURE_2D:
+        if (static_cast<GLuint>(width) > (caps.max2DTextureSize >> level) ||
+            static_cast<GLuint>(height) > (caps.max2DTextureSize >> level))
         {
-            if (static_cast<GLuint>(width) > (caps.max2DTextureSize >> level) ||
-                static_cast<GLuint>(height) > (caps.max2DTextureSize >> level))
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return false;
-            }
-
-            gl::Texture2D *tex2d = context->getTexture2D();
-            if (tex2d)
-            {
-                textureInternalFormat = tex2d->getInternalFormat(level);
-                texture = tex2d;
-            }
-
-            if (isSubImage && !ValidateSubImageParams2D(context, isCompressed, width, height, xoffset, yoffset,
-                                                        level, format, type, tex2d))
-            {
-                return false;
-            }
-
-            texture = tex2d;
+            context->recordError(Error(GL_INVALID_VALUE));
+            return false;
         }
-        break;
-
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+    }
+    else if (IsCubemapTextureTarget(target))
+    {
+        if (!isSubImage && width != height)
         {
-            if (!isSubImage && width != height)
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return false;
-            }
-
-            if (static_cast<GLuint>(width) > (caps.maxCubeMapTextureSize >> level) ||
-                static_cast<GLuint>(height) > (caps.maxCubeMapTextureSize >> level))
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return false;
-            }
-
-            gl::TextureCubeMap *texCube = context->getTextureCubeMap();
-            if (texCube)
-            {
-                textureInternalFormat = texCube->getInternalFormat(target, level);
-                texture = texCube;
-            }
-
-            if (isSubImage && !ValidateSubImageParamsCube(context, isCompressed, width, height, xoffset, yoffset,
-                                                          target, level, format, type, texCube))
-            {
-                return false;
-            }
+            context->recordError(Error(GL_INVALID_VALUE));
+            return false;
         }
-        break;
 
-      default:
+        if (static_cast<GLuint>(width) > (caps.maxCubeMapTextureSize >> level) ||
+            static_cast<GLuint>(height) > (caps.maxCubeMapTextureSize >> level))
+        {
+            context->recordError(Error(GL_INVALID_VALUE));
+            return false;
+        }
+    }
+    else
+    {
         context->recordError(Error(GL_INVALID_ENUM));
         return false;
     }
 
+    gl::Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
     if (!texture)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
         return false;
     }
 
-    if (!isSubImage && texture->isImmutable())
+    if (isSubImage)
     {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
+        if (format != GL_NONE)
+        {
+            if (gl::GetFormatTypeInfo(format, type).internalFormat != texture->getInternalFormat(target, level))
+            {
+                context->recordError(Error(GL_INVALID_OPERATION));
+                return false;
+            }
+        }
+
+        if (static_cast<size_t>(xoffset + width) > texture->getWidth(target, level) ||
+            static_cast<size_t>(yoffset + height) > texture->getHeight(target, level))
+        {
+            context->recordError(Error(GL_INVALID_VALUE));
+            return false;
+        }
+    }
+    else
+    {
+        if (texture->isImmutable())
+        {
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
+        }
     }
 
     // Verify zero border
@@ -232,7 +124,15 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
         return false;
     }
 
-    GLenum actualInternalFormat = isSubImage ? textureInternalFormat : internalformat;
+    GLenum actualInternalFormat = isSubImage ? texture->getInternalFormat(target, level) : internalformat;
+    const InternalFormat &actualFormatInfo = GetInternalFormatInfo(actualInternalFormat);
+
+    if (isCompressed != actualFormatInfo.compressed)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
     if (isCompressed)
     {
         if (!ValidCompressedImageSize(context, actualInternalFormat, width, height))

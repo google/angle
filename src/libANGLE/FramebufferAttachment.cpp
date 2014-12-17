@@ -98,17 +98,17 @@ GLuint TextureAttachment::id() const
 
 GLsizei TextureAttachment::getWidth() const
 {
-    return mTexture->getWidth(mIndex);
+    return mTexture->getWidth(mIndex.type, mIndex.mipIndex);
 }
 
 GLsizei TextureAttachment::getHeight() const
 {
-    return mTexture->getHeight(mIndex);
+    return mTexture->getHeight(mIndex.type, mIndex.mipIndex);
 }
 
 GLenum TextureAttachment::getInternalFormat() const
 {
-    return mTexture->getInternalFormat(mIndex);
+    return mTexture->getInternalFormat(mIndex.type, mIndex.mipIndex);
 }
 
 GLenum TextureAttachment::type() const

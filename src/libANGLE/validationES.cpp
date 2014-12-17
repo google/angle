@@ -1230,28 +1230,11 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
 
     const gl::Caps &caps = context->getCaps();
 
-    gl::Texture *texture = NULL;
-    GLenum textureInternalFormat = GL_NONE;
-    GLint textureLevelWidth = 0;
-    GLint textureLevelHeight = 0;
-    GLint textureLevelDepth = 0;
     GLuint maxDimension = 0;
-
     switch (target)
     {
       case GL_TEXTURE_2D:
-        {
-            gl::Texture2D *texture2d = context->getTexture2D();
-            if (texture2d)
-            {
-                textureInternalFormat = texture2d->getInternalFormat(level);
-                textureLevelWidth = texture2d->getWidth(level);
-                textureLevelHeight = texture2d->getHeight(level);
-                textureLevelDepth = 1;
-                texture = texture2d;
-                maxDimension = caps.max2DTextureSize;
-            }
-        }
+        maxDimension = caps.max2DTextureSize;
         break;
 
       case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
@@ -1260,48 +1243,15 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
       case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
       case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
       case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-        {
-            gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
-            if (textureCube)
-            {
-                textureInternalFormat = textureCube->getInternalFormat(target, level);
-                textureLevelWidth = textureCube->getWidth(target, level);
-                textureLevelHeight = textureCube->getHeight(target, level);
-                textureLevelDepth = 1;
-                texture = textureCube;
-                maxDimension = caps.maxCubeMapTextureSize;
-            }
-        }
+        maxDimension = caps.maxCubeMapTextureSize;
         break;
 
       case GL_TEXTURE_2D_ARRAY:
-        {
-            gl::Texture2DArray *texture2dArray = context->getTexture2DArray();
-            if (texture2dArray)
-            {
-                textureInternalFormat = texture2dArray->getInternalFormat(level);
-                textureLevelWidth = texture2dArray->getWidth(level);
-                textureLevelHeight = texture2dArray->getHeight(level);
-                textureLevelDepth = texture2dArray->getLayers(level);
-                texture = texture2dArray;
-                maxDimension = caps.max2DTextureSize;
-            }
-        }
+        maxDimension = caps.max2DTextureSize;
         break;
 
       case GL_TEXTURE_3D:
-        {
-            gl::Texture3D *texture3d = context->getTexture3D();
-            if (texture3d)
-            {
-                textureInternalFormat = texture3d->getInternalFormat(level);
-                textureLevelWidth = texture3d->getWidth(level);
-                textureLevelHeight = texture3d->getHeight(level);
-                textureLevelDepth = texture3d->getDepth(level);
-                texture = texture3d;
-                maxDimension = caps.max3DTextureSize;
-            }
-        }
+        maxDimension = caps.max3DTextureSize;
         break;
 
       default:
@@ -1309,6 +1259,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
         return false;
     }
 
+    gl::Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
     if (!texture)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
@@ -1329,21 +1280,17 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
         return false;
     }
 
-    if (formatInfo.compressed)
+    if (formatInfo.compressed && !ValidCompressedImageSize(context, internalformat, width, height))
     {
-        if (((width % formatInfo.compressedBlockWidth) != 0 && width != textureLevelWidth) ||
-            ((height % formatInfo.compressedBlockHeight) != 0 && height != textureLevelHeight))
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return false;
-        }
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
     }
 
     if (isSubImage)
     {
-        if (xoffset + width > textureLevelWidth ||
-            yoffset + height > textureLevelHeight ||
-            zoffset >= textureLevelDepth)
+        if (static_cast<size_t>(xoffset + width) > texture->getWidth(target, level) ||
+            static_cast<size_t>(yoffset + height) > texture->getHeight(target, level) ||
+            static_cast<size_t>(zoffset) >= texture->getDepth(target, level))
         {
             context->recordError(Error(GL_INVALID_VALUE));
             return false;
@@ -1371,7 +1318,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
         }
     }
 
-    *textureFormatOut = textureInternalFormat;
+    *textureFormatOut = texture->getInternalFormat(target, level);
     return true;
 }
 
@@ -1786,12 +1733,6 @@ bool ValidateFramebufferTexture2D(Context *context, GLenum target, GLenum attach
                     context->recordError(Error(GL_INVALID_OPERATION));
                     return false;
                 }
-                gl::Texture2D *tex2d = static_cast<gl::Texture2D *>(tex);
-                if (tex2d->isCompressed(level))
-                {
-                    context->recordError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
             }
             break;
 
@@ -1812,17 +1753,18 @@ bool ValidateFramebufferTexture2D(Context *context, GLenum target, GLenum attach
                     context->recordError(Error(GL_INVALID_OPERATION));
                     return false;
                 }
-                gl::TextureCubeMap *texcube = static_cast<gl::TextureCubeMap *>(tex);
-                if (texcube->isCompressed(textarget, level))
-                {
-                    context->recordError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
             }
             break;
 
           default:
             context->recordError(Error(GL_INVALID_ENUM));
+            return false;
+        }
+
+        const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(tex->getInternalFormat(textarget, level));
+        if (internalFormatInfo.compressed)
+        {
+            context->recordError(Error(GL_INVALID_OPERATION));
             return false;
         }
     }

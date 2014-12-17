@@ -1453,7 +1453,8 @@ void GL_APIENTRY GenerateMipmap(GLenum target)
             return;
         }
 
-        GLenum internalFormat = texture->getBaseLevelInternalFormat();
+        GLenum baseTarget = (target == GL_TEXTURE_CUBE_MAP) ? GL_TEXTURE_CUBE_MAP_POSITIVE_X : target;
+        GLenum internalFormat = texture->getInternalFormat(baseTarget, 0);
         const TextureCaps &formatCaps = context->getTextureCaps().get(internalFormat);
         const InternalFormat &formatInfo = GetInternalFormatInfo(internalFormat);
 
@@ -1484,7 +1485,7 @@ void GL_APIENTRY GenerateMipmap(GLenum target)
         }
 
         // Non-power of 2 ES2 check
-        if (!context->getExtensions().textureNPOT && (!isPow2(texture->getBaseLevelWidth()) || !isPow2(texture->getBaseLevelHeight())))
+        if (!context->getExtensions().textureNPOT && (!isPow2(texture->getWidth(baseTarget, 0)) || !isPow2(texture->getHeight(baseTarget, 0))))
         {
             ASSERT(context->getClientVersion() <= 2 && (target == GL_TEXTURE_2D || target == GL_TEXTURE_CUBE_MAP));
             context->recordError(Error(GL_INVALID_OPERATION));
