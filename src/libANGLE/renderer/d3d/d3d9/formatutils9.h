@@ -32,6 +32,15 @@ struct D3DFormat
     GLuint blockWidth;
     GLuint blockHeight;
 
+    GLuint redBits;
+    GLuint greenBits;
+    GLuint blueBits;
+    GLuint alphaBits;
+    GLuint luminanceBits;
+
+    GLuint depthBits;
+    GLuint stencilBits;
+
     GLenum internalFormat;
 
     MipGenerationFunction mipGenerationFunction;
