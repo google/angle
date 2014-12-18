@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "81a8a891_f2998655",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 902,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-12-18T19:26:09Z",
+      "side": 1,
+      "message": "Yes, I deliberately decoupled this. GetMaximumViewportSize represents the maximum width/height of the GL viewport. I don\u0027t think it\u0027s correct to use this as the maximum left/top/width/height of the underlying D3D viewport since they\u0027re not quite the same thing (particularly on 9.3).\n\nIn fact, shouldn\u0027t GetMaximumViewportSize return \"D3D11_VIEWPORT_BOUNDS_MAX - D3D11_VIEWPORT_BOUNDS_MIN\" on Feature Level 11, and \"D3D10_VIEWPORT_BOUNDS_MAX - D3D10_VIEWPORT_BOUNDS_MIN\" for Feature Level 10?",
+      "parentUuid": "41c5d05b_9806b946",
+      "range": {
+        "startLine": 890,
+        "startChar": 12,
+        "endLine": 902,
+        "endChar": 58
+      },
+      "revId": "472e9046368b87e34ea574970323c8ba9a19d240",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61c57423_2ed9a788",
         "filename": "tests/angle_tests/ViewportTest.cpp",
         "patchSetId": 1
