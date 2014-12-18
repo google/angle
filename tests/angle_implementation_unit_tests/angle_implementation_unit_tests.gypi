@@ -10,4 +10,29 @@
         'Surface_unittest.cpp',
         'TransformFeedback_unittest.cpp'
     ],
+    'conditions':
+    [
+        ['angle_build_winrt==1',
+        {
+            'sources':
+            [
+                'CoreWindowNativeWindow_unittest.cpp',
+                'SwapChainPanelNativeWindow_unittest.cpp',
+            ],
+            'defines':
+            [
+                'ANGLE_ENABLE_D3D11',
+            ],
+            'msvs_settings':
+            {
+                'VCLinkerTool':
+                {
+                    'AdditionalDependencies':
+                    [
+                        'runtimeobject.lib',
+                    ],
+                },
+            },
+        }],
+    ],
 }
