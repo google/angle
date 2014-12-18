@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a1ae8c91_7b563b24",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T16:28:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01ccb852_91e6bce8",
+      "revId": "0b2ec9a81560a0b06adde22defcc09814b69a1b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01ccb852_b1e3b8d7",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-16T22:46:21Z",
       "side": 1,
       "message": "Same here.",
+      "revId": "0b2ec9a81560a0b06adde22defcc09814b69a1b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41c5d05b_d8159164",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T16:28:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01ccb852_b1e3b8d7",
       "revId": "0b2ec9a81560a0b06adde22defcc09814b69a1b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "a1ae8c91_fb616bf0",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Framebuffer9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T16:28:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41c2301f_164162d8",
+      "revId": "0b2ec9a81560a0b06adde22defcc09814b69a1b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "41c2301f_d65afac3",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Framebuffer9.cpp",
         "patchSetId": 6
@@ -64,6 +118,24 @@
       "writtenOn": "2014-12-16T22:46:21Z",
       "side": 1,
       "message": "This looks like it should be an \"else\" instead of a separate \"if\" statement, but this format does look closer to the original code.",
+      "revId": "0b2ec9a81560a0b06adde22defcc09814b69a1b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61c81476_39f84bda",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Framebuffer9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T16:28:51Z",
+      "side": 1,
+      "message": "It can\u0027t in this case because the if statement above can set directToPixels to false.",
+      "parentUuid": "41c2301f_d65afac3",
       "revId": "0b2ec9a81560a0b06adde22defcc09814b69a1b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
