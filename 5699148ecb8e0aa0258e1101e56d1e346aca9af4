@@ -22,6 +22,30 @@
       "revId": "5699148ecb8e0aa0258e1101e56d1e346aca9af4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e1996484_55edde16",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1747,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-12-18T18:45:24Z",
+      "side": 1,
+      "message": "This was deliberate. It means we can search for \"\u003c\u003d D3D_FEATURE_LEVEL_9_3\" to find our 9_3-specific codepaths.\n\nI\u0027d quite like to leave it like this, but I\u0027ll change it if you want.",
+      "parentUuid": "a1ae8c91_fb124b79",
+      "range": {
+        "startLine": 1747,
+        "startChar": 8,
+        "endLine": 1747,
+        "endChar": 49
+      },
+      "revId": "5699148ecb8e0aa0258e1101e56d1e346aca9af4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
