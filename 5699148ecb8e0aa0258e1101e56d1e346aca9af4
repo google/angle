@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a1ae8c91_fb124b79",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1747,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T15:44:52Z",
+      "side": 1,
+      "message": "Could this be changed to\n\n  mFeatureLevel \u003e\u003d D3D_FEATURE_LEVEL_10_0\n\nI find that more readable.",
+      "range": {
+        "startLine": 1747,
+        "startChar": 8,
+        "endLine": 1747,
+        "endChar": 49
+      },
+      "revId": "5699148ecb8e0aa0258e1101e56d1e346aca9af4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
