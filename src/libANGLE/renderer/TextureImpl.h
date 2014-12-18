@@ -37,17 +37,10 @@ struct SamplerState;
 namespace rx
 {
 
-class Image;
-
 class TextureImpl
 {
   public:
     virtual ~TextureImpl() {};
-
-    // Deprecated in favour of the ImageIndex method
-    virtual Image *getImage(int level, int layer) const = 0;
-    virtual Image *getImage(const gl::ImageIndex &index) const = 0;
-    virtual GLsizei getLayerCount(int level) const = 0;
 
     virtual void setUsage(GLenum usage) = 0;
 

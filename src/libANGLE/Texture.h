@@ -28,17 +28,9 @@ namespace egl
 class Surface;
 }
 
-namespace rx
-{
-class TextureStorageInterface;
-class Image;
-}
-
 namespace gl
 {
 class Framebuffer;
-class FramebufferAttachment;
-struct ImageIndex;
 struct Data;
 
 bool IsMipmapFiltered(const gl::SamplerState &samplerState);

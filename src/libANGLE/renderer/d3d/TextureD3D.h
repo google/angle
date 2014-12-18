@@ -41,6 +41,9 @@ class TextureD3D : public TextureImpl
     bool hasDirtyImages() const { return mDirtyImages; }
     void resetDirty() { mDirtyImages = false; }
 
+    virtual Image *getImage(const gl::ImageIndex &index) const = 0;
+    virtual GLsizei getLayerCount(int level) const = 0;
+
     GLint getBaseLevelWidth() const;
     GLint getBaseLevelHeight() const;
     GLint getBaseLevelDepth() const;
