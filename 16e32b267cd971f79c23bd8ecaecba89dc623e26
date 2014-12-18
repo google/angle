@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a1ae8c91_7bcb9b7f",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T16:29:01Z",
+      "side": 1,
+      "message": "No, they should be equivalent.  It used to be a for loop that found the first non-null entry but this one-liner cleaner IMO.",
+      "parentUuid": "01ccb852_11b64c80",
+      "revId": "16e32b267cd971f79c23bd8ecaecba89dc623e26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01ccb852_b1bad83b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-16T23:04:22Z",
       "side": 1,
       "message": "This won\u0027t crash if drawBuffer is NULL, will it? Noticed the ASSERT was removed.",
+      "revId": "16e32b267cd971f79c23bd8ecaecba89dc623e26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41c5d05b_7840fd63",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T16:29:01Z",
+      "side": 1,
+      "message": "No, the if-statement above checks that mColorBuffers[colorAttachment] is not null.",
+      "parentUuid": "01ccb852_b1bad83b",
       "revId": "16e32b267cd971f79c23bd8ecaecba89dc623e26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
