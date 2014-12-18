@@ -277,6 +277,13 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
       case EOpAcos:           out << "arc cosine";           break;
       case EOpAtan:           out << "arc tangent";          break;
 
+      case EOpSinh:           out << "hyperbolic sine";      break;
+      case EOpCosh:           out << "hyperbolic cosine";    break;
+      case EOpTanh:           out << "hyperbolic tangent";   break;
+      case EOpAsinh:          out << "arc hyperbolic sine";  break;
+      case EOpAcosh:          out << "arc hyperbolic cosine"; break;
+      case EOpAtanh:          out << "arc hyperbolic tangent"; break;
+
       case EOpExp:            out << "exp";                  break;
       case EOpLog:            out << "log";                  break;
       case EOpExp2:           out << "exp2";                 break;

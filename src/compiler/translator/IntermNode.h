@@ -102,6 +102,13 @@ enum TOperator
     EOpAcos,
     EOpAtan,
 
+    EOpSinh,
+    EOpCosh,
+    EOpTanh,
+    EOpAsinh,
+    EOpAcosh,
+    EOpAtanh,
+
     EOpPow,
     EOpExp,
     EOpLog,

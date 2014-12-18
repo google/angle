@@ -64,6 +64,8 @@ class OutputHLSL : public TIntermTraverser
     void outputConstructor(Visit visit, const TType &type, const TString &name, const TIntermSequence *parameters);
     const ConstantUnion *writeConstantUnion(const TType &type, const ConstantUnion *constUnion);
 
+    void writeEmulatedFunctionTriplet(Visit visit, const char *preStr);
+
     TParseContext &mContext;
     const ShShaderOutput mOutputType;
     UnfoldShortCircuit *mUnfoldShortCircuit;

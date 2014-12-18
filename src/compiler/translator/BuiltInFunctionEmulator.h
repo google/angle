@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILIER_TRANSLATOR_BUILTINFUNCTIONEMULATOR_H_
-#define COMPILIER_TRANSLATOR_BUILTINFUNCTIONEMULATOR_H_
+#ifndef COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATOR_H_
+#define COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATOR_H_
 
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
@@ -13,21 +13,21 @@
 //
 // This class decides which built-in functions need to be replaced with the
 // emulated ones.
-// It's only a workaround for OpenGL driver bugs, and isn't needed in general.
+// It can be used to work around driver bugs or implement functions that are
+// not natively implemented on a specific platform.
 //
-class BuiltInFunctionEmulator {
-public:
-    BuiltInFunctionEmulator(sh::GLenum shaderType);
-    // Records that a function is called by the shader and might needs to be
-    // emulated.  If the function's group is not in mFunctionGroupFilter, this
-    // becomes an no-op.
+class BuiltInFunctionEmulator
+{
+  public:
+    // Records that a function is called by the shader and might need to be
+    // emulated. If the function is not in mFunctionMask, this becomes an no-op.
     // Returns true if the function call needs to be replaced with an emulated
     // one.
     bool SetFunctionCalled(TOperator op, const TType& param);
     bool SetFunctionCalled(
         TOperator op, const TType& param1, const TType& param2);
 
-    // Output function emulation definition.  This should be before any other
+    // Output function emulation definition. This should be before any other
     // shader source.
     void OutputEmulatedFunctionDefinition(TInfoSinkBase& out, bool withPrecision) const;
 
@@ -38,7 +38,9 @@ public:
     // "name(" becomes "webgl_name_emu(".
     static TString GetEmulatedFunctionName(const TString& name);
 
-private:
+  protected:
+    BuiltInFunctionEmulator();
+
     //
     // Built-in functions.
     //
@@ -73,19 +75,38 @@ private:
         TFunctionReflect3_3,  // vec3 reflect(vec3, vec3);
         TFunctionReflect4_4,  // vec4 reflect(vec4, vec4);
 
+        TFunctionAsinh1,  // float asinh(float);
+        TFunctionAsinh2,  // vec2 asinh(vec2);
+        TFunctionAsinh3,  // vec3 asinh(vec3);
+        TFunctionAsinh4,  // vec4 asinh(vec4);
+
+        TFunctionAcosh1,  // float acosh(float);
+        TFunctionAcosh2,  // vec2 acosh(vec2);
+        TFunctionAcosh3,  // vec3 acosh(vec3);
+        TFunctionAcosh4,  // vec4 acosh(vec4);
+
+        TFunctionAtanh1,  // float atanh(float);
+        TFunctionAtanh2,  // vec2 atanh(vec2);
+        TFunctionAtanh3,  // vec3 atanh(vec3);
+        TFunctionAtanh4,  // vec4 atanh(vec4);
+
         TFunctionUnknown
     };
-
-    TBuiltInFunction IdentifyFunction(TOperator op, const TType& param);
-    TBuiltInFunction IdentifyFunction(
-        TOperator op, const TType& param1, const TType& param2);
-
-    bool SetFunctionCalled(TBuiltInFunction function);
 
     std::vector<TBuiltInFunction> mFunctions;
 
     const bool* mFunctionMask;  // a boolean flag for each function.
     const char** mFunctionSource;
+
+    // Override this to add source before emulated function definitions.
+    virtual void OutputEmulatedFunctionHeader(TInfoSinkBase& out, bool withPrecision) const {}
+
+  private:
+    TBuiltInFunction IdentifyFunction(TOperator op, const TType& param);
+    TBuiltInFunction IdentifyFunction(
+        TOperator op, const TType& param1, const TType& param2);
+
+    bool SetFunctionCalled(TBuiltInFunction function);
 };
 
-#endif  // COMPILIER_TRANSLATOR_BUILTINFUNCTIONEMULATOR_H_
+#endif  // COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATOR_H_

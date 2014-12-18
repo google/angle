@@ -75,6 +75,36 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "atan", float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float4, "atan", float4);
 
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "sinh", float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "sinh", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float3, "sinh", float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "sinh", float4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "cosh", float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "cosh", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float3, "cosh", float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "cosh", float4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "tanh", float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "tanh", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float3, "tanh", float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "tanh", float4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "asinh", float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "asinh", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float3, "asinh", float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "asinh", float4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "acosh", float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "acosh", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float3, "acosh", float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "acosh", float4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "atanh", float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "atanh", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float3, "atanh", float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "atanh", float4);
+
     //
     // Exponential Functions.
     //
@@ -696,6 +726,13 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     symbolTable.relateToOperator(COMMON_BUILTINS, "asin",         EOpAsin);
     symbolTable.relateToOperator(COMMON_BUILTINS, "acos",         EOpAcos);
     symbolTable.relateToOperator(COMMON_BUILTINS, "atan",         EOpAtan);
+
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "sinh",          EOpSinh);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "cosh",          EOpCosh);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "tanh",          EOpTanh);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "asinh",         EOpAsinh);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "acosh",         EOpAcosh);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "atanh",         EOpAtanh);
 
     symbolTable.relateToOperator(COMMON_BUILTINS, "pow",          EOpPow);
     symbolTable.relateToOperator(COMMON_BUILTINS, "exp2",         EOpExp2);

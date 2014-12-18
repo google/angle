@@ -111,6 +111,14 @@ const char *GetOperatorString(TOperator op)
       case EOpAsin: return "asin";
       case EOpAcos: return "acos";
       case EOpAtan: return "atan";
+
+      case EOpSinh: return "sinh";
+      case EOpCosh: return "cosh";
+      case EOpTanh: return "tanh";
+      case EOpAsinh: return "asinh";
+      case EOpAcosh: return "acosh";
+      case EOpAtanh: return "atanh";
+
       case EOpExp: return "exp";
       case EOpLog: return "log";
       case EOpExp2: return "exp2";

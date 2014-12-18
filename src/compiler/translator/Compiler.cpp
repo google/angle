@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/DetectCallDepth.h"
 #include "compiler/translator/ForLoopUnroll.h"
@@ -615,7 +614,7 @@ ShArrayIndexClampingStrategy TCompiler::getArrayIndexClampingStrategy() const
     return clampingStrategy;
 }
 
-const BuiltInFunctionEmulator& TCompiler::getBuiltInFunctionEmulator() const
+const BuiltInFunctionEmulatorGLSL& TCompiler::getBuiltInFunctionEmulator() const
 {
     return builtInFunctionEmulator;
 }
