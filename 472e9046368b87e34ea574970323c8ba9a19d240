@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "41c5d05b_9806b946",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 902,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T16:03:47Z",
+      "side": 1,
+      "message": "The viewport bounds in the caps are generated from the feature level (GetMaximumViewportSize in renderer11_utils.cpp).  I think only a special case for feature level 9.3 is needed.",
+      "range": {
+        "startLine": 890,
+        "startChar": 12,
+        "endLine": 902,
+        "endChar": 58
+      },
+      "revId": "472e9046368b87e34ea574970323c8ba9a19d240",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61c57423_2ed9a788",
         "filename": "tests/angle_tests/ViewportTest.cpp",
         "patchSetId": 1
