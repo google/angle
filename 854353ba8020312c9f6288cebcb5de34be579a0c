@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a1ae8c91_5b3b37ee",
+        "filename": "src/libANGLE/renderer/copyvertex.inl",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T15:54:49Z",
+      "side": 1,
+      "message": "This could be pre-computed outside the loop.",
+      "range": {
+        "startLine": 32,
+        "startChar": 53,
+        "endLine": 32,
+        "endChar": 94
+      },
+      "revId": "854353ba8020312c9f6288cebcb5de34be579a0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61c81476_d661e429",
+        "filename": "src/libANGLE/renderer/copyvertex.inl",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T15:54:49Z",
+      "side": 1,
+      "message": "Move this outside the loop too.",
+      "range": {
+        "startLine": 60,
+        "startChar": 49,
+        "endLine": 60,
+        "endChar": 90
+      },
+      "revId": "854353ba8020312c9f6288cebcb5de34be579a0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1ae8c91_7b40fb63",
+        "filename": "src/libANGLE/renderer/copyvertex.inl",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T15:54:49Z",
+      "side": 1,
+      "message": "This can be a META_ASSERT.  Also, why can\u0027t this case be handled? It looks like it is in the functions above.",
+      "range": {
+        "startLine": 126,
+        "startChar": 8,
+        "endLine": 126,
+        "endChar": 72
+      },
+      "revId": "854353ba8020312c9f6288cebcb5de34be579a0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61c81476_f65ee06c",
+        "filename": "src/libANGLE/renderer/copyvertex.inl",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2014-12-18T15:54:49Z",
+      "side": 1,
+      "message": "META_ASSERT here too.",
+      "range": {
+        "startLine": 166,
+        "startChar": 8,
+        "endLine": 166,
+        "endChar": 72
+      },
+      "revId": "854353ba8020312c9f6288cebcb5de34be579a0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
