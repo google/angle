@@ -18,7 +18,7 @@
 
 namespace gl
 {
-class Texture2D;
+class Texture;
 }
 
 namespace rx
@@ -43,7 +43,7 @@ class Surface final
     Error swap();
     Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height);
     Error querySurfacePointerANGLE(EGLint attribute, void **value);
-    Error bindTexImage(gl::Texture2D *texture, EGLint buffer);
+    Error bindTexImage(gl::Texture *texture, EGLint buffer);
     Error releaseTexImage(EGLint buffer);
 
     EGLNativeWindowType getWindowHandle() const;
@@ -64,7 +64,7 @@ class Surface final
     EGLenum getTextureTarget() const;
     EGLenum getFormat() const;
 
-    gl::Texture2D *getBoundTexture() const { return mTexture; }
+    gl::Texture *getBoundTexture() const { return mTexture; }
 
     EGLint isFixedSize() const;
 
@@ -77,7 +77,7 @@ class Surface final
     EGLenum mRenderBuffer;         // Render buffer
     EGLenum mSwapBehavior;         // Buffer swap behavior
 
-    gl::Texture2D *mTexture;
+    gl::Texture *mTexture;
 };
 
 }

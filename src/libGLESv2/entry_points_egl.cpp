@@ -864,7 +864,7 @@ EGLBoolean EGLAPIENTRY BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint b
     gl::Context *context = GetGlobalContext();
     if (context)
     {
-        gl::Texture2D *textureObject = context->getTexture2D();
+        gl::Texture *textureObject = context->getTargetTexture(GL_TEXTURE_2D);
         ASSERT(textureObject != NULL);
 
         if (textureObject->isImmutable())
@@ -929,7 +929,7 @@ EGLBoolean EGLAPIENTRY ReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLin
         return EGL_FALSE;
     }
 
-    gl::Texture2D *texture = eglSurface->getBoundTexture();
+    gl::Texture *texture = eglSurface->getBoundTexture();
 
     if (texture)
     {

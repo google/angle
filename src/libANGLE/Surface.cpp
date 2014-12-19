@@ -134,7 +134,7 @@ EGLint Surface::getHeight() const
     return mImplementation->getHeight();
 }
 
-Error Surface::bindTexImage(gl::Texture2D *texture, EGLint buffer)
+Error Surface::bindTexImage(gl::Texture *texture, EGLint buffer)
 {
     ASSERT(!mTexture);
 
@@ -146,7 +146,7 @@ Error Surface::bindTexImage(gl::Texture2D *texture, EGLint buffer)
 Error Surface::releaseTexImage(EGLint buffer)
 {
     ASSERT(mTexture);
-    gl::Texture2D *boundTexture = mTexture;
+    gl::Texture *boundTexture = mTexture;
     mTexture = NULL;
 
     boundTexture->releaseTexImage();
