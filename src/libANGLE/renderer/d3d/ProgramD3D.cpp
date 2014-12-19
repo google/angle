@@ -83,10 +83,12 @@ void GetDefaultInputLayoutFromShader(const std::vector<sh::Attribute> &shaderAtt
 
 std::vector<GLenum> GetDefaultOutputLayoutFromShader(const std::vector<PixelShaderOutputVariable> &shaderOutputVars)
 {
-    std::vector<GLenum> defaultPixelOutput(1);
+    std::vector<GLenum> defaultPixelOutput;
 
-    ASSERT(!shaderOutputVars.empty());
-    defaultPixelOutput[0] = GL_COLOR_ATTACHMENT0 + shaderOutputVars[0].outputIndex;
+    if (!shaderOutputVars.empty())
+    {
+        defaultPixelOutput.push_back(GL_COLOR_ATTACHMENT0 + shaderOutputVars[0].outputIndex);
+    }
 
     return defaultPixelOutput;
 }
