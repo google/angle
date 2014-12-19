@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "41ff90b8_8e3f1fd9",
+        "filename": "src/compiler/preprocessor/64bit-tokenizer-safety.patch",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-19T22:01:55Z",
+      "side": 0,
+      "message": "i removed the bits that didn\u0027t apply from this file.",
+      "revId": "54bd5a4613f33d9cb230a876f8040cba9eb623f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c138e05e_877fea96",
+        "filename": "src/compiler/translator/64bit-lexer-safety.patch",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-19T22:01:55Z",
+      "side": 0,
+      "message": "i removed the bits that didn\u0027t apply from this file.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 1
+      },
+      "revId": "54bd5a4613f33d9cb230a876f8040cba9eb623f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c138e05e_075c3a41",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-19T22:01:55Z",
+      "side": 0,
+      "message": "this apparently is a function designed to silence linter warnings. #define YYID(X) X",
+      "range": {
+        "startLine": 95,
+        "startChar": 10,
+        "endLine": 95,
+        "endChar": 14
+      },
+      "revId": "54bd5a4613f33d9cb230a876f8040cba9eb623f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
