@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1eaa0ee_778968b5",
+        "filename": "tests/tests.gyp",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-19T00:18:17Z",
+      "side": 0,
+      "message": "All of this moved to the various .gypi files, so that angle_unittests.gypi and angle_end2end_tests.gypi contain everything needed.",
+      "revId": "54bd5a4613f33d9cb230a876f8040cba9eb623f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

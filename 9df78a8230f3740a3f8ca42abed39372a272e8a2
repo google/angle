@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "01cbd895_3c7cd520",
+        "filename": "tests/angle_implementation_unit_tests/angle_implementation_unit_tests.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-19T00:18:17Z",
+      "side": 1,
+      "message": "Moved this block here from tests.gyp.",
+      "revId": "9df78a8230f3740a3f8ca42abed39372a272e8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1eaa0ee_579d44f9",
+        "filename": "tests/preprocessor_tests/preprocessor_tests.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-19T00:18:17Z",
+      "side": 1,
+      "message": "Moved this here from tests.gyp.",
+      "revId": "9df78a8230f3740a3f8ca42abed39372a272e8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
