@@ -46,6 +46,30 @@
       "revId": "5699148ecb8e0aa0258e1101e56d1e346aca9af4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41ff90b8_88e157a6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1747,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-19T16:46:18Z",
+      "side": 1,
+      "message": "How about using the test:\n\n if (programD3D-\u003eusesPointSpriteEmulation() \u0026\u0026 ...\n\nThat would save some work on other feature levels as well, and wouldn\u0027t need a special case for 9_3.",
+      "parentUuid": "e1996484_55edde16",
+      "range": {
+        "startLine": 1747,
+        "startChar": 8,
+        "endLine": 1747,
+        "endChar": 49
+      },
+      "revId": "5699148ecb8e0aa0258e1101e56d1e346aca9af4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
