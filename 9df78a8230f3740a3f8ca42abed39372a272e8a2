@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "810d08be_8ae70b68",
+        "filename": "tests/angle_end2end_tests.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-19T16:34:58Z",
+      "side": 1,
+      "message": "we should probably take the opportunity to move to listing files explicitly if we\u0027re moving so Chromium can include these gypi\u0027s. We\u0027ve had complaints from other parties, I forget who exactly.",
+      "range": {
+        "startLine": 32,
+        "startChar": 34,
+        "endLine": 32,
+        "endChar": 49
+      },
+      "revId": "9df78a8230f3740a3f8ca42abed39372a272e8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01cbd895_3c7cd520",
         "filename": "tests/angle_implementation_unit_tests/angle_implementation_unit_tests.gypi",
         "patchSetId": 4
