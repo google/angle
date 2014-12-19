@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "6102d48e_afdc19f2",
+        "filename": "tests/angle_end2end_tests.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2014-12-19T18:19:45Z",
+      "side": 1,
+      "message": "Chromium can already include these .gypi\u0027s - see https://codereview.chromium.org/807753002 . I\u0027d also be happy to explicitly enumerate the files.",
+      "parentUuid": "810d08be_8ae70b68",
+      "revId": "9df78a8230f3740a3f8ca42abed39372a272e8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01cbd895_3c7cd520",
         "filename": "tests/angle_implementation_unit_tests/angle_implementation_unit_tests.gypi",
         "patchSetId": 4
