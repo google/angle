@@ -64,19 +64,19 @@ Context::Context(int clientVersion, const Context *shareContext, rx::Renderer *r
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    Texture2D *zeroTexture2D = new Texture2D(mRenderer->createTexture(GL_TEXTURE_2D), 0);
+    Texture *zeroTexture2D = new Texture(mRenderer->createTexture(GL_TEXTURE_2D), 0, GL_TEXTURE_2D);
     mZeroTextures[GL_TEXTURE_2D].set(zeroTexture2D);
 
-    TextureCubeMap *zeroTextureCube = new TextureCubeMap(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), 0);
+    Texture *zeroTextureCube = new Texture(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), 0, GL_TEXTURE_CUBE_MAP);
     mZeroTextures[GL_TEXTURE_CUBE_MAP].set(zeroTextureCube);
 
     if (mClientVersion >= 3)
     {
         // TODO: These could also be enabled via extension
-        Texture3D *zeroTexture3D = new Texture3D(mRenderer->createTexture(GL_TEXTURE_3D), 0);
+        Texture *zeroTexture3D = new Texture(mRenderer->createTexture(GL_TEXTURE_3D), 0, GL_TEXTURE_3D);
         mZeroTextures[GL_TEXTURE_3D].set(zeroTexture3D);
 
-        Texture2DArray *zeroTexture2DArray = new Texture2DArray(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), 0);
+        Texture *zeroTexture2DArray = new Texture(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), 0, GL_TEXTURE_2D_ARRAY);
         mZeroTextures[GL_TEXTURE_2D_ARRAY].set(zeroTexture2DArray);
     }
 
@@ -724,39 +724,9 @@ Query *Context::getQuery(unsigned int handle, bool create, GLenum type)
 
 Texture *Context::getTargetTexture(GLenum target) const
 {
-    if (!ValidTextureTarget(this, target))
-    {
-        return NULL;
-    }
+    ASSERT(ValidTextureTarget(this, target));
 
-    switch (target)
-    {
-      case GL_TEXTURE_2D:       return getTexture2D();
-      case GL_TEXTURE_CUBE_MAP: return getTextureCubeMap();
-      case GL_TEXTURE_3D:       return getTexture3D();
-      case GL_TEXTURE_2D_ARRAY: return getTexture2DArray();
-      default:                  return NULL;
-    }
-}
-
-Texture2D *Context::getTexture2D() const
-{
-    return static_cast<Texture2D*>(getSamplerTexture(mState.getActiveSampler(), GL_TEXTURE_2D));
-}
-
-TextureCubeMap *Context::getTextureCubeMap() const
-{
-    return static_cast<TextureCubeMap*>(getSamplerTexture(mState.getActiveSampler(), GL_TEXTURE_CUBE_MAP));
-}
-
-Texture3D *Context::getTexture3D() const
-{
-    return static_cast<Texture3D*>(getSamplerTexture(mState.getActiveSampler(), GL_TEXTURE_3D));
-}
-
-Texture2DArray *Context::getTexture2DArray() const
-{
-    return static_cast<Texture2DArray*>(getSamplerTexture(mState.getActiveSampler(), GL_TEXTURE_2D_ARRAY));
+    return getSamplerTexture(mState.getActiveSampler(), target);
 }
 
 Texture *Context::getSamplerTexture(unsigned int sampler, GLenum type) const

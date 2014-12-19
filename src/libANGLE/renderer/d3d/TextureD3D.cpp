@@ -434,7 +434,7 @@ bool TextureD3D::isBaseImageZeroSize() const
         return true;
     }
 
-    if (!gl::IsCubemapTextureTarget(baseImage->getTarget()) && baseImage->getHeight() <= 0)
+    if (!gl::IsCubeMapTextureTarget(baseImage->getTarget()) && baseImage->getHeight() <= 0)
     {
         return true;
     }
@@ -1213,7 +1213,7 @@ gl::Error TextureD3D_Cube::setCompressedImage(GLenum target, size_t level, GLenu
     ASSERT(size.depth == 1);
 
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    int faceIndex = gl::TextureCubeMap::targetToLayerIndex(target);
+    size_t faceIndex = gl::CubeMapTextureTargetToLayerIndex(target);
 
     redefineImage(faceIndex, level, internalFormat, size);
 
@@ -1240,7 +1240,7 @@ gl::Error TextureD3D_Cube::setCompressedSubImage(GLenum target, size_t level, co
 gl::Error TextureD3D_Cube::copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
                                      const gl::Framebuffer *source)
 {
-    int faceIndex = gl::TextureCubeMap::targetToLayerIndex(target);
+    size_t faceIndex = gl::CubeMapTextureTargetToLayerIndex(target);
     GLenum sizedInternalFormat = gl::GetSizedInternalFormat(internalFormat, GL_UNSIGNED_BYTE);
 
     gl::Extents size(sourceArea.width, sourceArea.height, 1);
@@ -1287,7 +1287,7 @@ gl::Error TextureD3D_Cube::copyImage(GLenum target, size_t level, const gl::Rect
 gl::Error TextureD3D_Cube::copySubImage(GLenum target, size_t level, const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
                                         const gl::Framebuffer *source)
 {
-    int faceIndex = gl::TextureCubeMap::targetToLayerIndex(target);
+    size_t faceIndex = gl::CubeMapTextureTargetToLayerIndex(target);
 
     gl::ImageIndex index = gl::ImageIndex::MakeCube(target, level);
 
@@ -1427,7 +1427,7 @@ unsigned int TextureD3D_Cube::getRenderTargetSerial(const gl::ImageIndex &index)
 
 gl::Error TextureD3D_Cube::getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT)
 {
-    ASSERT(gl::IsCubemapTextureTarget(index.type));
+    ASSERT(gl::IsCubeMapTextureTarget(index.type));
 
     // ensure the underlying texture is created
     gl::Error error = ensureRenderTarget();
@@ -1605,7 +1605,7 @@ gl::Error TextureD3D_Cube::updateStorageFaceLevel(int faceIndex, int level)
 
     if (image->isDirty())
     {
-        GLenum faceTarget = gl::TextureCubeMap::layerIndexToTarget(faceIndex);
+        GLenum faceTarget = gl::LayerIndexToCubeMapTextureTarget(faceIndex);
         gl::ImageIndex index = gl::ImageIndex::MakeCube(faceTarget, level);
         gl::Box region(0, 0, 0, image->getWidth(), image->getHeight(), 1);
         gl::Error error = commitRegion(index, region);
@@ -1659,12 +1659,12 @@ gl::ImageIndexIterator TextureD3D_Cube::imageIterator() const
 gl::ImageIndex TextureD3D_Cube::getImageIndex(GLint mip, GLint layer) const
 {
     // The "layer" of the image index corresponds to the cube face
-    return gl::ImageIndex::MakeCube(gl::TextureCubeMap::layerIndexToTarget(layer), mip);
+    return gl::ImageIndex::MakeCube(gl::LayerIndexToCubeMapTextureTarget(layer), mip);
 }
 
 bool TextureD3D_Cube::isValidIndex(const gl::ImageIndex &index) const
 {
-    return (mTexStorage && gl::IsCubemapTextureTarget(index.type) &&
+    return (mTexStorage && gl::IsCubeMapTextureTarget(index.type) &&
             index.mipIndex >= 0 && index.mipIndex < mTexStorage->getLevelCount());
 }
 

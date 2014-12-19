@@ -402,7 +402,7 @@ gl::Error Image9::copyToStorage(TextureStorage *storage, const gl::ImageIndex &i
     }
     else
     {
-        ASSERT(gl::IsCubemapTextureTarget(index.type));
+        ASSERT(gl::IsCubeMapTextureTarget(index.type));
         TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage);
         gl::Error error = storage9->getCubeMapSurface(index.type, index.mipIndex, true, &destSurface);
         if (error.isError())

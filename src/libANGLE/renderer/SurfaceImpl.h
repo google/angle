@@ -18,11 +18,6 @@ class Display;
 class Config;
 }
 
-namespace gl
-{
-class Texture2D;
-}
-
 namespace rx
 {
 

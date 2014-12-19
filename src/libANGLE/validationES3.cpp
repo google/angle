@@ -366,7 +366,7 @@ bool ValidateES3TexImageParameters(Context *context, GLenum target, GLint level,
         return false;
     }
 
-    gl::Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    gl::Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
     if (!texture)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
@@ -865,13 +865,10 @@ bool ValidateES3TexStorageParameters(Context *context, GLenum target, GLsizei le
 
     const gl::Caps &caps = context->getCaps();
 
-    gl::Texture *texture = NULL;
     switch (target)
     {
       case GL_TEXTURE_2D:
         {
-            texture = context->getTexture2D();
-
             if (static_cast<GLuint>(width) > caps.max2DTextureSize ||
                 static_cast<GLuint>(height) > caps.max2DTextureSize)
             {
@@ -883,8 +880,6 @@ bool ValidateES3TexStorageParameters(Context *context, GLenum target, GLsizei le
 
       case GL_TEXTURE_CUBE_MAP:
         {
-            texture = context->getTextureCubeMap();
-
             if (width != height)
             {
                 context->recordError(Error(GL_INVALID_VALUE));
@@ -901,8 +896,6 @@ bool ValidateES3TexStorageParameters(Context *context, GLenum target, GLsizei le
 
       case GL_TEXTURE_3D:
         {
-            texture = context->getTexture3D();
-
             if (static_cast<GLuint>(width) > caps.max3DTextureSize ||
                 static_cast<GLuint>(height) > caps.max3DTextureSize ||
                 static_cast<GLuint>(depth) > caps.max3DTextureSize)
@@ -915,8 +908,6 @@ bool ValidateES3TexStorageParameters(Context *context, GLenum target, GLsizei le
 
       case GL_TEXTURE_2D_ARRAY:
         {
-            texture = context->getTexture2DArray();
-
             if (static_cast<GLuint>(width) > caps.max2DTextureSize ||
                 static_cast<GLuint>(height) > caps.max2DTextureSize ||
                 static_cast<GLuint>(depth) > caps.maxArrayTextureLayers)
@@ -932,6 +923,7 @@ bool ValidateES3TexStorageParameters(Context *context, GLenum target, GLsizei le
         return false;
     }
 
+    gl::Texture *texture = context->getTargetTexture(target);
     if (!texture || texture->id() == 0)
     {
         context->recordError(Error(GL_INVALID_OPERATION));

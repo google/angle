@@ -62,7 +62,7 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
             return false;
         }
     }
-    else if (IsCubemapTextureTarget(target))
+    else if (IsCubeMapTextureTarget(target))
     {
         if (!isSubImage && width != height)
         {
@@ -83,7 +83,7 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
         return false;
     }
 
-    gl::Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    gl::Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
     if (!texture)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
@@ -799,19 +799,7 @@ bool ValidateES2TexStorageParameters(Context *context, GLenum target, GLsizei le
         break;
     }
 
-    gl::Texture *texture = NULL;
-    switch(target)
-    {
-      case GL_TEXTURE_2D:
-        texture = context->getTexture2D();
-        break;
-      case GL_TEXTURE_CUBE_MAP:
-        texture = context->getTextureCubeMap();
-        break;
-      default:
-        UNREACHABLE();
-    }
-
+    gl::Texture *texture = context->getTargetTexture(target);
     if (!texture || texture->id() == 0)
     {
         context->recordError(Error(GL_INVALID_OPERATION));

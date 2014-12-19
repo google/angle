@@ -1259,7 +1259,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
         return false;
     }
 
-    gl::Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    gl::Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
     if (!texture)
     {
         context->recordError(Error(GL_INVALID_OPERATION));
@@ -1298,7 +1298,7 @@ bool ValidateCopyTexImageParametersBase(gl::Context* context, GLenum target, GLi
     }
     else
     {
-        if (IsCubemapTextureTarget(target) && width != height)
+        if (IsCubeMapTextureTarget(target) && width != height)
         {
             context->recordError(Error(GL_INVALID_VALUE));
             return false;

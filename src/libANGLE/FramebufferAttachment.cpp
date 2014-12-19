@@ -123,7 +123,7 @@ GLint TextureAttachment::mipLevel() const
 
 GLenum TextureAttachment::cubeMapFace() const
 {
-    return IsCubemapTextureTarget(mIndex.type) ? mIndex.type : GL_NONE;
+    return IsCubeMapTextureTarget(mIndex.type) ? mIndex.type : GL_NONE;
 }
 
 GLint TextureAttachment::layer() const

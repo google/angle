@@ -4,9 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Texture.h: Defines the abstract gl::Texture class and its concrete derived
-// classes Texture2D and TextureCubeMap. Implements GL texture objects and
-// related functionality. [OpenGL ES 2.0.24] section 3.7 page 63.
+// Texture.h: Defines the gl::Texture class [OpenGL ES 2.0.24] section 3.7 page 63.
 
 #ifndef LIBANGLE_TEXTURE_H_
 #define LIBANGLE_TEXTURE_H_
@@ -35,7 +33,7 @@ struct Data;
 
 bool IsMipmapFiltered(const gl::SamplerState &samplerState);
 
-class Texture : public RefCountObject
+class Texture final : public RefCountObject
 {
   public:
     Texture(rx::TextureImpl *impl, GLuint id, GLenum target);
@@ -55,7 +53,8 @@ class Texture : public RefCountObject
     size_t getDepth(GLenum target, size_t level) const;
     GLenum getInternalFormat(GLenum target, size_t level) const;
 
-    virtual bool isSamplerComplete(const SamplerState &samplerState, const Data &data) const = 0;
+    bool isSamplerComplete(const SamplerState &samplerState, const Data &data) const;
+    bool isCubeComplete() const;
 
     virtual Error setImage(GLenum target, size_t level, GLenum internalFormat, const Extents &size, GLenum format, GLenum type,
                            const PixelUnpackState &unpack, const uint8_t *pixels);
@@ -91,7 +90,9 @@ class Texture : public RefCountObject
 
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
-  protected:
+  private:
+    DISALLOW_COPY_AND_ASSIGN(Texture);
+
     static unsigned int issueTextureSerial();
 
     rx::TextureImpl *mTexture;
@@ -126,8 +127,11 @@ class Texture : public RefCountObject
     const unsigned int mTextureSerial;
     static unsigned int mCurrentTextureSerial;
 
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Texture);
+    GLenum getBaseImageTarget() const;
+    size_t getExpectedMipLevels() const;
+
+    bool isMipmapComplete() const;
+    bool isLevelComplete(GLenum target, size_t level) const;
 
     const ImageDesc &getImageDesc(const ImageIdentifier& index) const;
     void setImageDesc(const ImageIdentifier& index, const ImageDesc &desc);
@@ -138,75 +142,6 @@ class Texture : public RefCountObject
     ImageDescMap mImageDescs;
 
     egl::Surface *mBoundSurface;
-};
-
-class Texture2D : public Texture
-{
-  public:
-    Texture2D(rx::TextureImpl *impl, GLuint id);
-
-    virtual ~Texture2D();
-
-    virtual bool isSamplerComplete(const SamplerState &samplerState, const Data &data) const;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Texture2D);
-
-    bool isMipmapComplete() const;
-    bool isLevelComplete(size_t level) const;
-};
-
-class TextureCubeMap : public Texture
-{
-  public:
-    TextureCubeMap(rx::TextureImpl *impl, GLuint id);
-
-    virtual ~TextureCubeMap();
-
-    virtual bool isSamplerComplete(const SamplerState &samplerState, const Data &data) const;
-
-    bool isCubeComplete() const;
-
-    static int targetToLayerIndex(GLenum target);
-    static GLenum layerIndexToTarget(GLint layer);
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
-
-    bool isMipmapComplete() const;
-    bool isFaceLevelComplete(GLenum target, size_t level) const;
-};
-
-class Texture3D : public Texture
-{
-  public:
-    Texture3D(rx::TextureImpl *impl, GLuint id);
-
-    virtual ~Texture3D();
-
-    virtual bool isSamplerComplete(const SamplerState &samplerState, const Data &data) const;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Texture3D);
-
-    bool isMipmapComplete() const;
-    bool isLevelComplete(size_t level) const;
-};
-
-class Texture2DArray : public Texture
-{
-  public:
-    Texture2DArray(rx::TextureImpl *impl, GLuint id);
-
-    virtual ~Texture2DArray();
-
-    virtual bool isSamplerComplete(const SamplerState &samplerState, const Data &data) const;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Texture2DArray);
-
-    bool isMipmapComplete() const;
-    bool isLevelComplete(size_t level) const;
 };
 
 }

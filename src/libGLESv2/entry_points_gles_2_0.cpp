@@ -742,7 +742,7 @@ void GL_APIENTRY CompressedTexImage2D(GLenum target, GLint level, GLenum interna
         }
 
         Extents size(width, height, 1);
-        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
         Error error = texture->setCompressedImage(target, level, internalformat, size, context->getState().getUnpackState(), 
                                                   reinterpret_cast<const uint8_t *>(data));
         if (error.isError())
@@ -787,7 +787,7 @@ void GL_APIENTRY CompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
 
 
         Box area(xoffset, yoffset, 0, width, height, 1);
-        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
         Error error = texture->setCompressedSubImage(target, level, area, format, context->getState().getUnpackState(),
                                                      reinterpret_cast<const uint8_t *>(data));
         if (error.isError())
@@ -824,7 +824,7 @@ void GL_APIENTRY CopyTexImage2D(GLenum target, GLint level, GLenum internalforma
         Rectangle sourceArea(x, y, width, height);
 
         const Framebuffer *framebuffer = context->getState().getReadFramebuffer();
-        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
         Error error = texture->copyImage(target, level, sourceArea, internalformat, framebuffer);
         if (error.isError())
         {
@@ -861,7 +861,7 @@ void GL_APIENTRY CopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
         Rectangle sourceArea(x, y, width, height);
 
         const Framebuffer *framebuffer = context->getState().getReadFramebuffer();
-        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
         Error error = texture->copySubImage(target, level, destOffset, sourceArea, framebuffer);
         if (error.isError())
         {
@@ -1379,7 +1379,7 @@ void GL_APIENTRY FramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
             }
             else
             {
-                ASSERT(IsCubemapTextureTarget(textarget));
+                ASSERT(IsCubeMapTextureTarget(textarget));
                 index = ImageIndex::MakeCube(textarget, level);
             }
 
@@ -1493,14 +1493,10 @@ void GL_APIENTRY GenerateMipmap(GLenum target)
         }
 
         // Cube completeness check
-        if (target == GL_TEXTURE_CUBE_MAP)
+        if (target == GL_TEXTURE_CUBE_MAP && !texture->isCubeComplete())
         {
-            TextureCubeMap *textureCube = static_cast<TextureCubeMap *>(texture);
-            if (!textureCube->isCubeComplete())
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return;
         }
 
         Error error = texture->generateMipmaps();
@@ -3555,7 +3551,7 @@ void GL_APIENTRY TexImage2D(GLenum target, GLint level, GLint internalformat, GL
         }
 
         Extents size(width, height, 1);
-        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
         Error error = texture->setImage(target, level, internalformat, size, format, type, context->getState().getUnpackState(),
                                         reinterpret_cast<const uint8_t *>(pixels));
         if (error.isError())
@@ -3696,7 +3692,7 @@ void GL_APIENTRY TexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
         }
 
         Box area(xoffset, yoffset, 0, width, height, 1);
-        Texture *texture = context->getTargetTexture(IsCubemapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+        Texture *texture = context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
         Error error = texture->setSubImage(target, level, area, format, type, context->getState().getUnpackState(),
                                            reinterpret_cast<const uint8_t *>(pixels));
         if (error.isError())

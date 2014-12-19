@@ -370,30 +370,7 @@ void ResourceManager::checkTextureAllocation(GLuint texture, GLenum type)
 {
     if (!getTexture(texture) && texture != 0)
     {
-        Texture *textureObject;
-
-        if (type == GL_TEXTURE_2D)
-        {
-            textureObject = new Texture2D(mRenderer->createTexture(GL_TEXTURE_2D), texture);
-        }
-        else if (type == GL_TEXTURE_CUBE_MAP)
-        {
-            textureObject = new TextureCubeMap(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), texture);
-        }
-        else if (type == GL_TEXTURE_3D)
-        {
-            textureObject = new Texture3D(mRenderer->createTexture(GL_TEXTURE_3D), texture);
-        }
-        else if (type == GL_TEXTURE_2D_ARRAY)
-        {
-            textureObject = new Texture2DArray(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), texture);
-        }
-        else
-        {
-            UNREACHABLE();
-            return;
-        }
-
+        Texture *textureObject = new Texture(mRenderer->createTexture(type), texture, type);
         mTextureMap[texture] = textureObject;
         textureObject->addRef();
     }

@@ -582,15 +582,7 @@ gl::Texture *RendererD3D::getIncompleteTexture(GLenum type)
         const gl::Extents colorSize(1, 1, 1);
         const gl::PixelUnpackState incompleteUnpackState(1);
 
-        gl::Texture* t = NULL;
-        switch (type)
-        {
-          default: UNREACHABLE(); // default falls through to TEXTURE_2D
-          case GL_TEXTURE_2D:       t = new gl::Texture2D(createTexture(type), gl::Texture::INCOMPLETE_TEXTURE_ID);      break;
-          case GL_TEXTURE_CUBE_MAP: t = new gl::TextureCubeMap(createTexture(type), gl::Texture::INCOMPLETE_TEXTURE_ID); break;
-          case GL_TEXTURE_3D:       t = new gl::Texture3D(createTexture(type), gl::Texture::INCOMPLETE_TEXTURE_ID);      break;
-          case GL_TEXTURE_2D_ARRAY: t = new gl::Texture2DArray(createTexture(type), gl::Texture::INCOMPLETE_TEXTURE_ID); break;
-        }
+        gl::Texture* t = new gl::Texture(createTexture(type), gl::Texture::INCOMPLETE_TEXTURE_ID, type);
 
         if (type == GL_TEXTURE_CUBE_MAP)
         {
