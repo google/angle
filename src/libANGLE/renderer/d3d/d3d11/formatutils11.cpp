@@ -901,16 +901,60 @@ static D3D11VertexFormatInfoMap BuildD3D11_FL9_3VertexFormatInfoOverrideMap()
 {
     // D3D11 Feature Level 9_3 doesn't support as many formats for vertex buffer resource as Feature Level 10_0+.
     // http://msdn.microsoft.com/en-us/library/windows/desktop/ff471324(v=vs.85).aspx
-    // In particular, it doesn't support:
-    //      - Any 8-bit _SNORM format
 
     D3D11VertexFormatInfoMap map;
+
+    // GL_BYTE -- unnormalized
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE,  1,  VERTEX_CONVERT_BOTH,    DXGI_FORMAT_R16G16_SINT,         &Copy8SintTo16SintVertexData<1, 2>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE,  2,  VERTEX_CONVERT_BOTH,    DXGI_FORMAT_R16G16_SINT,         &Copy8SintTo16SintVertexData<2, 2>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE,  3,  VERTEX_CONVERT_BOTH,    DXGI_FORMAT_R16G16B16A16_SINT,   &Copy8SintTo16SintVertexData<3, 4>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE,  4,  VERTEX_CONVERT_BOTH,    DXGI_FORMAT_R16G16B16A16_SINT,   &Copy8SintTo16SintVertexData<4, 4>);
 
     // GL_BYTE -- normalized
     AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,   1,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R16G16_SNORM,        &Copy8SnormTo16SnormVertexData<1, 2>);
     AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,   2,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R16G16_SNORM,        &Copy8SnormTo16SnormVertexData<2, 2>);
     AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,   3,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R16G16B16A16_SNORM,  &Copy8SnormTo16SnormVertexData<3, 4>);
     AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,   4,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R16G16B16A16_SNORM,  &Copy8SnormTo16SnormVertexData<4, 4>);
+
+    // GL_UNSIGNED_BYTE -- unnormalized
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_FALSE,  1,  VERTEX_CONVERT_BOTH,    DXGI_FORMAT_R8G8B8A8_UINT,       &CopyNativeVertexData<GLubyte, 1, 4, 1>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_FALSE,  2,  VERTEX_CONVERT_BOTH,    DXGI_FORMAT_R8G8B8A8_UINT,       &CopyNativeVertexData<GLubyte, 2, 4, 1>);
+    // NOTE: 3 and 4 component unnormalized GL_UNSIGNED_BYTE should use the default format table.
+
+    // GL_UNSIGNED_BYTE -- normalized
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_TRUE,   1,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R8G8B8A8_UNORM,      &CopyNativeVertexData<GLubyte, 1, 4, UINT8_MAX>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_TRUE,   2,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R8G8B8A8_UNORM,      &CopyNativeVertexData<GLubyte, 2, 4, UINT8_MAX>);
+    // NOTE: 3 and 4 component normalized GL_UNSIGNED_BYTE should use the default format table.
+
+    // GL_SHORT -- unnormalized
+    AddVertexFormatInfo(&map, GL_SHORT,          GL_FALSE,  1,  VERTEX_CONVERT_BOTH,     DXGI_FORMAT_R16G16_SINT,        &CopyNativeVertexData<GLshort, 1, 2, 0>);
+    // NOTE: 2, 3 and 4 component unnormalized GL_SHORT should use the default format table.
+
+    // GL_SHORT -- normalized
+    AddVertexFormatInfo(&map, GL_SHORT,          GL_TRUE,   1,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R16G16_SNORM,        &CopyNativeVertexData<GLshort, 1, 2, 0>);
+    // NOTE: 2, 3 and 4 component normalized GL_SHORT should use the default format table.
+
+    // GL_UNSIGNED_SHORT -- unnormalized
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE,  1,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R32G32_FLOAT,        &CopyTo32FVertexData<GLushort, 1, 2, false>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE,  2,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R32G32_FLOAT,        &CopyTo32FVertexData<GLushort, 2, 2, false>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE,  3,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R32G32B32_FLOAT,     &CopyTo32FVertexData<GLushort, 3, 3, false>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE,  4,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R32G32B32A32_FLOAT,  &CopyTo32FVertexData<GLushort, 4, 4, false>);
+
+    // GL_UNSIGNED_SHORT -- normalized
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,   1,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R32G32_FLOAT,        &CopyTo32FVertexData<GLushort, 1, 2, true>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,   2,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R32G32_FLOAT,        &CopyTo32FVertexData<GLushort, 2, 2, true>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,   3,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R32G32B32_FLOAT,     &CopyTo32FVertexData<GLushort, 3, 3, true>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,   4,  VERTEX_CONVERT_CPU,     DXGI_FORMAT_R32G32B32A32_FLOAT,  &CopyTo32FVertexData<GLushort, 4, 4, true>);
+
+    // GL_FIXED
+    // TODO: Add test to verify that this works correctly.
+    AddVertexFormatInfo(&map, GL_FIXED,          GL_FALSE,  1, VERTEX_CONVERT_CPU,      DXGI_FORMAT_R32G32_FLOAT,        &Copy32FixedTo32FVertexData<1, 2>);
+    // NOTE: 2, 3 and 4 component GL_FIXED should use the default format table.
+
+    // GL_FLOAT
+    // TODO: Add test to verify that this works correctly.
+    AddVertexFormatInfo(&map, GL_FLOAT,          GL_FALSE,  1, VERTEX_CONVERT_CPU,      DXGI_FORMAT_R32G32_FLOAT,        &CopyNativeVertexData<GLfloat, 1, 2, 0>);
+    // NOTE: 2, 3 and 4 component GL_FLOAT should use the default format table.
 
     return map;
 }
@@ -926,94 +970,94 @@ static D3D11VertexFormatInfoMap BuildD3D11VertexFormatInfoMap()
     //
 
     // GL_BYTE -- un-normalized
-    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8_SINT,            &CopyNativeVertexData<GLbyte, 1, 0>);
-    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8G8_SINT,          &CopyNativeVertexData<GLbyte, 2, 0>);
-    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE, 3, VERTEX_CONVERT_BOTH, DXGI_FORMAT_R8G8B8A8_SINT,      &CopyNativeVertexData<GLbyte, 3, 1>);
-    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8G8B8A8_SINT,      &CopyNativeVertexData<GLbyte, 4, 0>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8_SINT,            &CopyNativeVertexData<GLbyte, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8G8_SINT,          &CopyNativeVertexData<GLbyte, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE, 3, VERTEX_CONVERT_BOTH, DXGI_FORMAT_R8G8B8A8_SINT,      &CopyNativeVertexData<GLbyte, 3, 4, 1>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8G8B8A8_SINT,      &CopyNativeVertexData<GLbyte, 4, 4, 0>);
 
     // GL_BYTE -- normalized
-    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,  1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8_SNORM,           &CopyNativeVertexData<GLbyte, 1, 0>);
-    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,  2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8G8_SNORM,         &CopyNativeVertexData<GLbyte, 2, 0>);
-    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R8G8B8A8_SNORM,     &CopyNativeVertexData<GLbyte, 3, INT8_MAX>);
-    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,  4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8G8B8A8_SNORM,     &CopyNativeVertexData<GLbyte, 4, 0>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,  1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8_SNORM,           &CopyNativeVertexData<GLbyte, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,  2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8G8_SNORM,         &CopyNativeVertexData<GLbyte, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R8G8B8A8_SNORM,     &CopyNativeVertexData<GLbyte, 3, 4, INT8_MAX>);
+    AddVertexFormatInfo(&map, GL_BYTE,           GL_TRUE,  4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8G8B8A8_SNORM,     &CopyNativeVertexData<GLbyte, 4, 4, 0>);
 
     // GL_UNSIGNED_BYTE -- un-normalized
-    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8_UINT,            &CopyNativeVertexData<GLubyte, 1, 0>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8G8_UINT,          &CopyNativeVertexData<GLubyte, 2, 0>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_FALSE, 3, VERTEX_CONVERT_BOTH, DXGI_FORMAT_R8G8B8A8_UINT,      &CopyNativeVertexData<GLubyte, 3, 1>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8G8B8A8_UINT,      &CopyNativeVertexData<GLubyte, 4, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8_UINT,            &CopyNativeVertexData<GLubyte, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8G8_UINT,          &CopyNativeVertexData<GLubyte, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_FALSE, 3, VERTEX_CONVERT_BOTH, DXGI_FORMAT_R8G8B8A8_UINT,      &CopyNativeVertexData<GLubyte, 3, 4, 1>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R8G8B8A8_UINT,      &CopyNativeVertexData<GLubyte, 4, 4, 0>);
 
     // GL_UNSIGNED_BYTE -- normalized
-    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_TRUE,  1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8_UNORM,           &CopyNativeVertexData<GLubyte, 1, 0>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_TRUE,  2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8G8_UNORM,         &CopyNativeVertexData<GLubyte, 2, 0>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R8G8B8A8_UNORM,     &CopyNativeVertexData<GLubyte, 3, UINT8_MAX>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_TRUE,  4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8G8B8A8_UNORM,     &CopyNativeVertexData<GLubyte, 4, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_TRUE,  1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8_UNORM,           &CopyNativeVertexData<GLubyte, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_TRUE,  2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8G8_UNORM,         &CopyNativeVertexData<GLubyte, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R8G8B8A8_UNORM,     &CopyNativeVertexData<GLubyte, 3, 4, UINT8_MAX>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  GL_TRUE,  4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R8G8B8A8_UNORM,     &CopyNativeVertexData<GLubyte, 4, 4, 0>);
 
     // GL_SHORT -- un-normalized
-    AddVertexFormatInfo(&map, GL_SHORT,          GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16_SINT,           &CopyNativeVertexData<GLshort, 1, 0>);
-    AddVertexFormatInfo(&map, GL_SHORT,          GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16G16_SINT,        &CopyNativeVertexData<GLshort, 2, 0>);
-    AddVertexFormatInfo(&map, GL_SHORT,          GL_FALSE, 3, VERTEX_CONVERT_BOTH, DXGI_FORMAT_R16G16B16A16_SINT,  &CopyNativeVertexData<GLshort, 4, 1>);
-    AddVertexFormatInfo(&map, GL_SHORT,          GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16G16B16A16_SINT,  &CopyNativeVertexData<GLshort, 4, 0>);
+    AddVertexFormatInfo(&map, GL_SHORT,          GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16_SINT,           &CopyNativeVertexData<GLshort, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_SHORT,          GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16G16_SINT,        &CopyNativeVertexData<GLshort, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_SHORT,          GL_FALSE, 3, VERTEX_CONVERT_BOTH, DXGI_FORMAT_R16G16B16A16_SINT,  &CopyNativeVertexData<GLshort, 3, 4, 1>);
+    AddVertexFormatInfo(&map, GL_SHORT,          GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16G16B16A16_SINT,  &CopyNativeVertexData<GLshort, 4, 4, 0>);
 
     // GL_SHORT -- normalized
-    AddVertexFormatInfo(&map, GL_SHORT,          GL_TRUE,  1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16_SNORM,          &CopyNativeVertexData<GLshort, 1, 0>);
-    AddVertexFormatInfo(&map, GL_SHORT,          GL_TRUE,  2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16_SNORM,       &CopyNativeVertexData<GLshort, 2, 0>);
-    AddVertexFormatInfo(&map, GL_SHORT,          GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R16G16B16A16_SNORM, &CopyNativeVertexData<GLshort, 3, INT16_MAX>);
-    AddVertexFormatInfo(&map, GL_SHORT,          GL_TRUE,  4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16B16A16_SNORM, &CopyNativeVertexData<GLshort, 4, 0>);
+    AddVertexFormatInfo(&map, GL_SHORT,          GL_TRUE,  1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16_SNORM,          &CopyNativeVertexData<GLshort, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_SHORT,          GL_TRUE,  2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16_SNORM,       &CopyNativeVertexData<GLshort, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_SHORT,          GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R16G16B16A16_SNORM, &CopyNativeVertexData<GLshort, 3, 4, INT16_MAX>);
+    AddVertexFormatInfo(&map, GL_SHORT,          GL_TRUE,  4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16B16A16_SNORM, &CopyNativeVertexData<GLshort, 4, 4, 0>);
 
     // GL_UNSIGNED_SHORT -- un-normalized
-    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16_UINT,           &CopyNativeVertexData<GLushort, 1, 0>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16G16_UINT,        &CopyNativeVertexData<GLushort, 2, 0>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE, 3, VERTEX_CONVERT_BOTH, DXGI_FORMAT_R16G16B16A16_UINT,  &CopyNativeVertexData<GLushort, 3, 1>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16G16B16A16_UINT,  &CopyNativeVertexData<GLushort, 4, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16_UINT,           &CopyNativeVertexData<GLushort, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16G16_UINT,        &CopyNativeVertexData<GLushort, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE, 3, VERTEX_CONVERT_BOTH, DXGI_FORMAT_R16G16B16A16_UINT,  &CopyNativeVertexData<GLushort, 3, 4, 1>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R16G16B16A16_UINT,  &CopyNativeVertexData<GLushort, 4, 4, 0>);
 
     // GL_UNSIGNED_SHORT -- normalized
-    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,  1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16_UNORM,          &CopyNativeVertexData<GLushort, 1, 0>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,  2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16_UNORM,       &CopyNativeVertexData<GLushort, 2, 0>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R16G16B16A16_UNORM, &CopyNativeVertexData<GLushort, 3, UINT16_MAX>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,  4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16B16A16_UNORM, &CopyNativeVertexData<GLushort, 4, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,  1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16_UNORM,          &CopyNativeVertexData<GLushort, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,  2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16_UNORM,       &CopyNativeVertexData<GLushort, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R16G16B16A16_UNORM, &CopyNativeVertexData<GLushort, 3, 4, UINT16_MAX>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_SHORT, GL_TRUE,  4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16B16A16_UNORM, &CopyNativeVertexData<GLushort, 4, 4, 0>);
 
     // GL_INT -- un-normalized
-    AddVertexFormatInfo(&map, GL_INT,            GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32_SINT,           &CopyNativeVertexData<GLint, 1, 0>);
-    AddVertexFormatInfo(&map, GL_INT,            GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32_SINT,        &CopyNativeVertexData<GLint, 2, 0>);
-    AddVertexFormatInfo(&map, GL_INT,            GL_FALSE, 3, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32B32_SINT,     &CopyNativeVertexData<GLint, 3, 0>);
-    AddVertexFormatInfo(&map, GL_INT,            GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32B32A32_SINT,  &CopyNativeVertexData<GLint, 4, 0>);
+    AddVertexFormatInfo(&map, GL_INT,            GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32_SINT,           &CopyNativeVertexData<GLint, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_INT,            GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32_SINT,        &CopyNativeVertexData<GLint, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_INT,            GL_FALSE, 3, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32B32_SINT,     &CopyNativeVertexData<GLint, 3, 3, 0>);
+    AddVertexFormatInfo(&map, GL_INT,            GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32B32A32_SINT,  &CopyNativeVertexData<GLint, 4, 4, 0>);
 
     // GL_INT -- normalized
-    AddVertexFormatInfo(&map, GL_INT,            GL_TRUE,  1, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32_FLOAT,          &CopyTo32FVertexData<GLint, 1, true>);
-    AddVertexFormatInfo(&map, GL_INT,            GL_TRUE,  2, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32_FLOAT,       &CopyTo32FVertexData<GLint, 2, true>);
-    AddVertexFormatInfo(&map, GL_INT,            GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32_FLOAT,    &CopyTo32FVertexData<GLint, 3, true>);
-    AddVertexFormatInfo(&map, GL_INT,            GL_TRUE,  4, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32A32_FLOAT, &CopyTo32FVertexData<GLint, 4, true>);
+    AddVertexFormatInfo(&map, GL_INT,            GL_TRUE,  1, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32_FLOAT,          &CopyTo32FVertexData<GLint, 1, 1, true>);
+    AddVertexFormatInfo(&map, GL_INT,            GL_TRUE,  2, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32_FLOAT,       &CopyTo32FVertexData<GLint, 2, 2, true>);
+    AddVertexFormatInfo(&map, GL_INT,            GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32_FLOAT,    &CopyTo32FVertexData<GLint, 3, 3, true>);
+    AddVertexFormatInfo(&map, GL_INT,            GL_TRUE,  4, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32A32_FLOAT, &CopyTo32FVertexData<GLint, 4, 4, true>);
 
     // GL_UNSIGNED_INT -- un-normalized
-    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32_UINT,           &CopyNativeVertexData<GLuint, 1, 0>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32_UINT,        &CopyNativeVertexData<GLuint, 2, 0>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_FALSE, 3, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32B32_UINT,     &CopyNativeVertexData<GLuint, 3, 0>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32B32A32_UINT,  &CopyNativeVertexData<GLuint, 4, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_FALSE, 1, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32_UINT,           &CopyNativeVertexData<GLuint, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_FALSE, 2, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32_UINT,        &CopyNativeVertexData<GLuint, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_FALSE, 3, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32B32_UINT,     &CopyNativeVertexData<GLuint, 3, 3, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_FALSE, 4, VERTEX_CONVERT_GPU,  DXGI_FORMAT_R32G32B32A32_UINT,  &CopyNativeVertexData<GLuint, 4, 4, 0>);
 
     // GL_UNSIGNED_INT -- normalized
-    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_TRUE,  1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32_FLOAT,          &CopyTo32FVertexData<GLuint, 1, true>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_TRUE,  2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32_FLOAT,       &CopyTo32FVertexData<GLuint, 2, true>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32_FLOAT,    &CopyTo32FVertexData<GLuint, 3, true>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_TRUE,  4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32B32A32_FLOAT, &CopyTo32FVertexData<GLuint, 4, true>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_TRUE,  1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32_FLOAT,          &CopyTo32FVertexData<GLuint, 1, 1, true>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_TRUE,  2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32_FLOAT,       &CopyTo32FVertexData<GLuint, 2, 2, true>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_TRUE,  3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32_FLOAT,    &CopyTo32FVertexData<GLuint, 3, 3, true>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_INT,   GL_TRUE,  4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32B32A32_FLOAT, &CopyTo32FVertexData<GLuint, 4, 4, true>);
 
     // GL_FIXED
-    AddVertexFormatInfo(&map, GL_FIXED,          GL_FALSE, 1, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32_FLOAT,          &Copy32FixedTo32FVertexData<1>);
-    AddVertexFormatInfo(&map, GL_FIXED,          GL_FALSE, 2, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32_FLOAT,       &Copy32FixedTo32FVertexData<2>);
-    AddVertexFormatInfo(&map, GL_FIXED,          GL_FALSE, 3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32_FLOAT,    &Copy32FixedTo32FVertexData<3>);
-    AddVertexFormatInfo(&map, GL_FIXED,          GL_FALSE, 4, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32A32_FLOAT, &Copy32FixedTo32FVertexData<4>);
+    AddVertexFormatInfo(&map, GL_FIXED,          GL_FALSE, 1, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32_FLOAT,          &Copy32FixedTo32FVertexData<1, 1>);
+    AddVertexFormatInfo(&map, GL_FIXED,          GL_FALSE, 2, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32_FLOAT,       &Copy32FixedTo32FVertexData<2, 2>);
+    AddVertexFormatInfo(&map, GL_FIXED,          GL_FALSE, 3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32_FLOAT,    &Copy32FixedTo32FVertexData<3, 3>);
+    AddVertexFormatInfo(&map, GL_FIXED,          GL_FALSE, 4, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32A32_FLOAT, &Copy32FixedTo32FVertexData<4, 4>);
 
     // GL_HALF_FLOAT
-    AddVertexFormatInfo(&map, GL_HALF_FLOAT,     GL_FALSE, 1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16_FLOAT,          &CopyNativeVertexData<GLhalf, 1, 0>);
-    AddVertexFormatInfo(&map, GL_HALF_FLOAT,     GL_FALSE, 2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16_FLOAT,       &CopyNativeVertexData<GLhalf, 2, 0>);
-    AddVertexFormatInfo(&map, GL_HALF_FLOAT,     GL_FALSE, 3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R16G16B16A16_FLOAT, &CopyNativeVertexData<GLhalf, 3, gl::Float16One>);
-    AddVertexFormatInfo(&map, GL_HALF_FLOAT,     GL_FALSE, 4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16B16A16_FLOAT, &CopyNativeVertexData<GLhalf, 4, 0>);
+    AddVertexFormatInfo(&map, GL_HALF_FLOAT,     GL_FALSE, 1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16_FLOAT,          &CopyNativeVertexData<GLhalf, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_HALF_FLOAT,     GL_FALSE, 2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16_FLOAT,       &CopyNativeVertexData<GLhalf, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_HALF_FLOAT,     GL_FALSE, 3, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R16G16B16A16_FLOAT, &CopyNativeVertexData<GLhalf, 3, 4, gl::Float16One>);
+    AddVertexFormatInfo(&map, GL_HALF_FLOAT,     GL_FALSE, 4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R16G16B16A16_FLOAT, &CopyNativeVertexData<GLhalf, 4, 4, 0>);
 
     // GL_FLOAT
-    AddVertexFormatInfo(&map, GL_FLOAT,          GL_FALSE, 1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32_FLOAT,          &CopyNativeVertexData<GLfloat, 1, 0>);
-    AddVertexFormatInfo(&map, GL_FLOAT,          GL_FALSE, 2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32_FLOAT,       &CopyNativeVertexData<GLfloat, 2, 0>);
-    AddVertexFormatInfo(&map, GL_FLOAT,          GL_FALSE, 3, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32B32_FLOAT,    &CopyNativeVertexData<GLfloat, 3, 0>);
-    AddVertexFormatInfo(&map, GL_FLOAT,          GL_FALSE, 4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32B32A32_FLOAT, &CopyNativeVertexData<GLfloat, 4, 0>);
+    AddVertexFormatInfo(&map, GL_FLOAT,          GL_FALSE, 1, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32_FLOAT,          &CopyNativeVertexData<GLfloat, 1, 1, 0>);
+    AddVertexFormatInfo(&map, GL_FLOAT,          GL_FALSE, 2, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32_FLOAT,       &CopyNativeVertexData<GLfloat, 2, 2, 0>);
+    AddVertexFormatInfo(&map, GL_FLOAT,          GL_FALSE, 3, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32B32_FLOAT,    &CopyNativeVertexData<GLfloat, 3, 3, 0>);
+    AddVertexFormatInfo(&map, GL_FLOAT,          GL_FALSE, 4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32B32A32_FLOAT, &CopyNativeVertexData<GLfloat, 4, 4, 0>);
 
     // GL_INT_2_10_10_10_REV
     AddVertexFormatInfo(&map, GL_INT_2_10_10_10_REV,          GL_FALSE,  4, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32A32_FLOAT, &CopyXYZ10W2ToXYZW32FVertexData<true, false, true>);
@@ -1021,53 +1065,53 @@ static D3D11VertexFormatInfoMap BuildD3D11VertexFormatInfoMap()
 
     // GL_UNSIGNED_INT_2_10_10_10_REV
     AddVertexFormatInfo(&map, GL_UNSIGNED_INT_2_10_10_10_REV, GL_FALSE,  4, VERTEX_CONVERT_CPU,  DXGI_FORMAT_R32G32B32A32_FLOAT, &CopyXYZ10W2ToXYZW32FVertexData<false, false, true>);
-    AddVertexFormatInfo(&map, GL_UNSIGNED_INT_2_10_10_10_REV, GL_TRUE,   4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R10G10B10A2_UNORM,  &CopyNativeVertexData<GLuint, 1, 0>);
+    AddVertexFormatInfo(&map, GL_UNSIGNED_INT_2_10_10_10_REV, GL_TRUE,   4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R10G10B10A2_UNORM,  &CopyNativeVertexData<GLuint, 1, 1, 0>);
 
     //
     // Integer Formats
     //
 
     // GL_BYTE
-    AddIntegerVertexFormatInfo(&map, GL_BYTE,           1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8_SINT,           &CopyNativeVertexData<GLbyte, 1, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_BYTE,           2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8G8_SINT,         &CopyNativeVertexData<GLbyte, 2, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_BYTE,           3, VERTEX_CONVERT_CPU,   DXGI_FORMAT_R8G8B8A8_SINT,     &CopyNativeVertexData<GLbyte, 3, 1>);
-    AddIntegerVertexFormatInfo(&map, GL_BYTE,           4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8G8B8A8_SINT,     &CopyNativeVertexData<GLbyte, 4, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_BYTE,           1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8_SINT,           &CopyNativeVertexData<GLbyte, 1, 1, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_BYTE,           2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8G8_SINT,         &CopyNativeVertexData<GLbyte, 2, 2, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_BYTE,           3, VERTEX_CONVERT_CPU,   DXGI_FORMAT_R8G8B8A8_SINT,     &CopyNativeVertexData<GLbyte, 3, 4, 1>);
+    AddIntegerVertexFormatInfo(&map, GL_BYTE,           4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8G8B8A8_SINT,     &CopyNativeVertexData<GLbyte, 4, 4, 0>);
 
     // GL_UNSIGNED_BYTE
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8_UINT,           &CopyNativeVertexData<GLubyte, 1, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8G8_UINT,         &CopyNativeVertexData<GLubyte, 2, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  3, VERTEX_CONVERT_CPU,   DXGI_FORMAT_R8G8B8A8_UINT,     &CopyNativeVertexData<GLubyte, 3, 1>);
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8G8B8A8_UINT,     &CopyNativeVertexData<GLubyte, 4, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8_UINT,           &CopyNativeVertexData<GLubyte, 1, 1, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8G8_UINT,         &CopyNativeVertexData<GLubyte, 2, 2, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  3, VERTEX_CONVERT_CPU,   DXGI_FORMAT_R8G8B8A8_UINT,     &CopyNativeVertexData<GLubyte, 3, 4, 1>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_BYTE,  4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R8G8B8A8_UINT,     &CopyNativeVertexData<GLubyte, 4, 4, 0>);
 
     // GL_SHORT
-    AddIntegerVertexFormatInfo(&map, GL_SHORT,          1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16_SINT,          &CopyNativeVertexData<GLshort, 1, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_SHORT,          2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16G16_SINT,       &CopyNativeVertexData<GLshort, 2, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_SHORT,          3, VERTEX_CONVERT_CPU,   DXGI_FORMAT_R16G16B16A16_SINT, &CopyNativeVertexData<GLshort, 3, 1>);
-    AddIntegerVertexFormatInfo(&map, GL_SHORT,          4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16G16B16A16_SINT, &CopyNativeVertexData<GLshort, 4, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_SHORT,          1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16_SINT,          &CopyNativeVertexData<GLshort, 1, 1, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_SHORT,          2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16G16_SINT,       &CopyNativeVertexData<GLshort, 2, 2, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_SHORT,          3, VERTEX_CONVERT_CPU,   DXGI_FORMAT_R16G16B16A16_SINT, &CopyNativeVertexData<GLshort, 3, 4, 1>);
+    AddIntegerVertexFormatInfo(&map, GL_SHORT,          4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16G16B16A16_SINT, &CopyNativeVertexData<GLshort, 4, 4, 0>);
 
     // GL_UNSIGNED_SHORT
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_SHORT, 1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16_UINT,          &CopyNativeVertexData<GLushort, 1, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_SHORT, 2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16G16_UINT,       &CopyNativeVertexData<GLushort, 2, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_SHORT, 3, VERTEX_CONVERT_CPU,   DXGI_FORMAT_R16G16B16A16_UINT, &CopyNativeVertexData<GLushort, 3, 1>);
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_SHORT, 4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16G16B16A16_UINT, &CopyNativeVertexData<GLushort, 4, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_SHORT, 1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16_UINT,          &CopyNativeVertexData<GLushort, 1, 1, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_SHORT, 2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16G16_UINT,       &CopyNativeVertexData<GLushort, 2, 2, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_SHORT, 3, VERTEX_CONVERT_CPU,   DXGI_FORMAT_R16G16B16A16_UINT, &CopyNativeVertexData<GLushort, 3, 4, 1>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_SHORT, 4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R16G16B16A16_UINT, &CopyNativeVertexData<GLushort, 4, 4, 0>);
 
     // GL_INT
-    AddIntegerVertexFormatInfo(&map, GL_INT,            1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32_SINT,          &CopyNativeVertexData<GLint, 1, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_INT,            2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32_SINT,       &CopyNativeVertexData<GLint, 2, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_INT,            3, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32B32_SINT,    &CopyNativeVertexData<GLint, 3, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_INT,            4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32B32A32_SINT, &CopyNativeVertexData<GLint, 4, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_INT,            1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32_SINT,          &CopyNativeVertexData<GLint, 1, 1, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_INT,            2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32_SINT,       &CopyNativeVertexData<GLint, 2, 2, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_INT,            3, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32B32_SINT,    &CopyNativeVertexData<GLint, 3, 3, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_INT,            4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32B32A32_SINT, &CopyNativeVertexData<GLint, 4, 4, 0>);
 
     // GL_UNSIGNED_INT
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_INT,   1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32_SINT,          &CopyNativeVertexData<GLuint, 1, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_INT,   2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32_SINT,       &CopyNativeVertexData<GLuint, 2, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_INT,   3, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32B32_SINT,    &CopyNativeVertexData<GLuint, 3, 0>);
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_INT,   4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32B32A32_SINT, &CopyNativeVertexData<GLuint, 4, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_INT,   1, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32_SINT,          &CopyNativeVertexData<GLuint, 1, 1, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_INT,   2, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32_SINT,       &CopyNativeVertexData<GLuint, 2, 2, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_INT,   3, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32B32_SINT,    &CopyNativeVertexData<GLuint, 3, 3, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_INT,   4, VERTEX_CONVERT_NONE,  DXGI_FORMAT_R32G32B32A32_SINT, &CopyNativeVertexData<GLuint, 4, 4, 0>);
 
     // GL_INT_2_10_10_10_REV
     AddIntegerVertexFormatInfo(&map, GL_INT_2_10_10_10_REV, 4, VERTEX_CONVERT_CPU, DXGI_FORMAT_R16G16B16A16_SINT, &CopyXYZ10W2ToXYZW32FVertexData<true, true, false>);
 
     // GL_UNSIGNED_INT_2_10_10_10_REV
-    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_INT_2_10_10_10_REV, 4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R10G10B10A2_UINT, &CopyNativeVertexData<GLuint, 1, 0>);
+    AddIntegerVertexFormatInfo(&map, GL_UNSIGNED_INT_2_10_10_10_REV, 4, VERTEX_CONVERT_NONE, DXGI_FORMAT_R10G10B10A2_UINT, &CopyNativeVertexData<GLuint, 1, 1, 0>);
 
     return map;
 }

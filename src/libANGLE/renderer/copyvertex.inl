@@ -7,35 +7,70 @@
 namespace rx
 {
 
-template <typename T, size_t componentCount, uint32_t widenDefaultValueBits>
+template <typename T, size_t inputComponentCount, size_t outputComponentCount, uint32_t alphaDefaultValueBits>
 inline void CopyNativeVertexData(const uint8_t *input, size_t stride, size_t count, uint8_t *output)
 {
-    const size_t attribSize = sizeof(T)* componentCount;
-    const T defaultValue = gl::bitCast<T>(widenDefaultValueBits);
-    const bool widen = (widenDefaultValueBits != 0);
+    const size_t attribSize = sizeof(T)* inputComponentCount;
 
-    if (attribSize == stride && !widen)
+    if (attribSize == stride && inputComponentCount == outputComponentCount)
     {
         memcpy(output, input, count * attribSize);
     }
     else
     {
-        size_t outputStride = widen ? 4 : componentCount;
+        const T defaultAlphaValue = gl::bitCast<T>(alphaDefaultValueBits);
+        const size_t lastNonAlphaOutputComponent = std::min<size_t>(outputComponentCount, 3);
 
         for (size_t i = 0; i < count; i++)
         {
             const T *offsetInput = reinterpret_cast<const T*>(input + (i * stride));
-            T *offsetOutput = reinterpret_cast<T*>(output) + i * outputStride;
+            T *offsetOutput = reinterpret_cast<T*>(output) + i * outputComponentCount;
 
-            for (size_t j = 0; j < componentCount; j++)
+            for (size_t j = 0; j < inputComponentCount; j++)
             {
                 offsetOutput[j] = offsetInput[j];
             }
 
-            if (widen)
+            for (size_t j = inputComponentCount; j < lastNonAlphaOutputComponent; j++)
             {
-                offsetOutput[3] = defaultValue;
+                // Set the remaining G/B channels to 0.
+                offsetOutput[j] = 0;
             }
+
+            if (inputComponentCount < outputComponentCount && outputComponentCount == 4)
+            {
+                // Set the remaining alpha channel to the defaultAlphaValue.
+                offsetOutput[3] = defaultAlphaValue;
+            }
+        }
+    }
+}
+
+template <size_t inputComponentCount, size_t outputComponentCount>
+inline void Copy8SintTo16SintVertexData(const uint8_t *input, size_t stride, size_t count, uint8_t *output)
+{
+    const size_t lastNonAlphaOutputComponent = std::min<size_t>(outputComponentCount, 3);
+
+    for (size_t i = 0; i < count; i++)
+    {
+        const GLbyte *offsetInput = reinterpret_cast<const GLbyte*>(input + i * stride);
+        GLshort *offsetOutput = reinterpret_cast<GLshort*>(output)+i * outputComponentCount;
+
+        for (size_t j = 0; j < inputComponentCount; j++)
+        {
+            offsetOutput[j] = static_cast<GLshort>(offsetInput[j]);
+        }
+
+        for (size_t j = inputComponentCount; j < lastNonAlphaOutputComponent; j++)
+        {
+            // Set remaining G/B channels to 0.
+            offsetOutput[j] = 0;
+        }
+
+        if (inputComponentCount < outputComponentCount && outputComponentCount == 4)
+        {
+            // On integer formats, we must set the Alpha channel to 1 if it's unused.
+            offsetOutput[3] = 1;
         }
     }
 }
@@ -76,7 +111,7 @@ inline void Copy8SnormTo16SnormVertexData(const uint8_t *input, size_t stride, s
     }
 }
 
-template <size_t componentCount>
+template <size_t inputComponentCount, size_t outputComponentCount>
 inline void Copy32FixedTo32FVertexData(const uint8_t *input, size_t stride, size_t count, uint8_t *output)
 {
     static const float divisor = 1.0f / (1 << 16);
@@ -84,16 +119,24 @@ inline void Copy32FixedTo32FVertexData(const uint8_t *input, size_t stride, size
     for (size_t i = 0; i < count; i++)
     {
         const GLfixed* offsetInput = reinterpret_cast<const GLfixed*>(input + (stride * i));
-        float* offsetOutput = reinterpret_cast<float*>(output) + i * componentCount;
+        float* offsetOutput = reinterpret_cast<float*>(output) + i * outputComponentCount;
 
-        for (size_t j = 0; j < componentCount; j++)
+        for (size_t j = 0; j < inputComponentCount; j++)
         {
             offsetOutput[j] = static_cast<float>(offsetInput[j]) * divisor;
+        }
+
+        // 4-component output formats would need special padding in the alpha channel.
+        META_ASSERT(!(inputComponentCount < 4 && outputComponentCount == 4));
+
+        for (size_t j = inputComponentCount; j < outputComponentCount; j++)
+        {
+            offsetOutput[j] = 0.0f;
         }
     }
 }
 
-template <typename T, size_t componentCount, bool normalized>
+template <typename T, size_t inputComponentCount, size_t outputComponentCount, bool normalized>
 inline void CopyTo32FVertexData(const uint8_t *input, size_t stride, size_t count, uint8_t *output)
 {
     typedef std::numeric_limits<T> NL;
@@ -101,9 +144,9 @@ inline void CopyTo32FVertexData(const uint8_t *input, size_t stride, size_t coun
     for (size_t i = 0; i < count; i++)
     {
         const T *offsetInput = reinterpret_cast<const T*>(input + (stride * i));
-        float *offsetOutput = reinterpret_cast<float*>(output) + i * componentCount;
+        float *offsetOutput = reinterpret_cast<float*>(output) + i * outputComponentCount;
 
-        for (size_t j = 0; j < componentCount; j++)
+        for (size_t j = 0; j < inputComponentCount; j++)
         {
             if (normalized)
             {
@@ -121,6 +164,14 @@ inline void CopyTo32FVertexData(const uint8_t *input, size_t stride, size_t coun
             {
                 offsetOutput[j] =  static_cast<float>(offsetInput[j]);
             }
+        }
+
+        // This would require special padding.
+        META_ASSERT(!(inputComponentCount < 4 && outputComponentCount == 4));
+
+        for (size_t j = inputComponentCount; j < outputComponentCount; j++)
+        {
+            offsetOutput[j] = 0.0f;
         }
     }
 }
