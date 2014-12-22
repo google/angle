@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "41f0700f_bd077fbe",
+        "filename": "src/compiler/preprocessor/Tokenizer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2321,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-22T17:57:09Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 2321,
+        "startChar": 6,
+        "endLine": 2321,
+        "endChar": 19
+      },
+      "revId": "d526f9895c0aa867adb74a78e53832a9240c6ad6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "81eee832_7fd7af7b",
+        "filename": "src/compiler/preprocessor/Tokenizer.l",
+        "patchSetId": 2
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-22T17:57:09Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 270,
+        "startChar": 40,
+        "endLine": 270,
+        "endChar": 59
+      },
+      "revId": "d526f9895c0aa867adb74a78e53832a9240c6ad6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
