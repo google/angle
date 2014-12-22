@@ -355,6 +355,16 @@ gl::Error TextureD3D::generateMipmaps()
     // Set up proper mipmap chain in our Image array.
     initMipmapsImages();
 
+    if (mTexStorage && mRenderer->getWorkarounds().zeroMaxLodWorkaround)
+    {
+        // Switch to using the mipmapped texture.
+        gl::Error error = getNativeTexture()->useLevelZeroWorkaroundTexture(false);
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
     // We know that all layers have the same dimension, for the texture to be complete
     GLint layerCount = static_cast<GLint>(getLayerCount(0));
 
@@ -390,7 +400,12 @@ gl::Error TextureD3D::generateMipmaps()
         }
     }
 
-    bool renderableStorage = (mTexStorage && mTexStorage->isRenderTarget());
+    // TODO: Decouple this from zeroMaxLodWorkaround. This is a 9_3 restriction, unrelated to zeroMaxLodWorkaround.
+    // The restriction is because Feature Level 9_3 can't create SRVs on individual levels of the texture.
+    // As a result, even if the storage is a rendertarget, we can't use the GPU to generate the mipmaps without further work.
+    // The D3D9 renderer works around this by copying each level of the texture into its own single-layer GPU texture (in Blit9::boxFilter).
+    // Feature Level 9_3 could do something similar, or it could continue to use CPU-side mipmap generation, or something else.
+    bool renderableStorage = (mTexStorage && mTexStorage->isRenderTarget() && !(mRenderer->getWorkarounds().zeroMaxLodWorkaround));
 
     for (GLint layer = 0; layer < layerCount; ++layer)
     {
@@ -815,7 +830,7 @@ gl::Error TextureD3D_2D::setStorage(GLenum target, size_t levels, GLenum interna
 
     // TODO(geofflang): Verify storage creation had no errors
     bool renderTarget = IsRenderTargetUsage(mUsage);
-    TextureStorage *storage = mRenderer->createTextureStorage2D(internalFormat, renderTarget, size.width, size.height, levels);
+    TextureStorage *storage = mRenderer->createTextureStorage2D(internalFormat, renderTarget, size.width, size.height, levels, false);
 
     gl::Error error = setCompleteTexStorage(storage);
     if (error.isError())
@@ -1010,8 +1025,22 @@ gl::Error TextureD3D_2D::createCompleteStorage(bool renderTarget, TextureStorage
     // use existing storage level count, when previously specified by TexStorage*D
     GLint levels = (mTexStorage ? mTexStorage->getLevelCount() : creationLevels(width, height, 1));
 
+    bool hintLevelZeroOnly = false;
+    if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
+    {
+        // If any of the CPU images (levels >= 1) are dirty, then the textureStorage2D should use the mipped texture to begin with.
+        // Otherwise, it should use the level-zero-only texture.
+        hintLevelZeroOnly = true;
+        int level = 1;
+        while (hintLevelZeroOnly && level < levels)
+        {
+            hintLevelZeroOnly = !(mImageArray[level]->isDirty() && isLevelComplete(level));
+            level += 1;
+        }
+    }
+
     // TODO(geofflang): Determine if the texture creation succeeded
-    *outTexStorage = mRenderer->createTextureStorage2D(internalFormat, renderTarget, width, height, levels);
+    *outTexStorage = mRenderer->createTextureStorage2D(internalFormat, renderTarget, width, height, levels, hintLevelZeroOnly);
 
     return gl::Error(GL_NO_ERROR);
 }

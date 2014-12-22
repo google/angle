@@ -180,7 +180,7 @@ inline void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBu
 
 gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget11 **outRT);
 
-Workarounds GenerateWorkarounds();
+Workarounds GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel);
 
 }
 

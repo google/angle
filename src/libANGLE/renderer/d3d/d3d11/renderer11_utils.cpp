@@ -1136,11 +1136,12 @@ gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment,
     return gl::Error(GL_NO_ERROR);
 }
 
-Workarounds GenerateWorkarounds()
+Workarounds GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel)
 {
     Workarounds workarounds;
     workarounds.mrtPerfWorkaround = true;
     workarounds.setDataFasterThanImageUpload = true;
+    workarounds.zeroMaxLodWorkaround = (featureLevel <= D3D_FEATURE_LEVEL_9_3);
     return workarounds;
 }
 

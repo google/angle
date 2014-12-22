@@ -31,6 +31,7 @@
             '<(angle_path)/tests/angle_tests/InstancingTest.cpp',
             '<(angle_path)/tests/angle_tests/LineLoopTest.cpp',
             '<(angle_path)/tests/angle_tests/MaxTextureSizeTest.cpp',
+            '<(angle_path)/tests/angle_tests/MipmapTest.cpp',
             '<(angle_path)/tests/angle_tests/media/pixel.inl',
             '<(angle_path)/tests/angle_tests/OcclusionQueriesTest.cpp',
             '<(angle_path)/tests/angle_tests/PBOExtensionTest.cpp',

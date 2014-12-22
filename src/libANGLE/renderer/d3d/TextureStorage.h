@@ -51,6 +51,9 @@ class TextureStorage
     unsigned int getRenderTargetSerial(const gl::ImageIndex &index) const;
     unsigned int getTextureSerial() const;
 
+    // This is a no-op for most implementations of TextureStorage. Some (e.g. TextureStorage11_2D) might override it.
+    virtual gl::Error useLevelZeroWorkaroundTexture(bool useLevelZeroTexture) { return gl::Error(GL_NO_ERROR); }
+
   protected:
     void initializeSerials(unsigned int rtSerialsToReserve, unsigned int rtSerialsLayerStride);
 

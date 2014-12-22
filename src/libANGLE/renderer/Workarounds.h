@@ -27,11 +27,19 @@ struct Workarounds
 {
     Workarounds()
         : mrtPerfWorkaround(false),
-          setDataFasterThanImageUpload(false)
+          setDataFasterThanImageUpload(false),
+          zeroMaxLodWorkaround(false)
     {}
 
     bool mrtPerfWorkaround;
     bool setDataFasterThanImageUpload;
+
+    // Some renderers can't disable mipmaps on a mipmapped texture (i.e. solely sample from level zero, and ignore the other levels).
+    // D3D11 Feature Level 10+ does this by setting MaxLOD to 0.0f in the Sampler state. D3D9 sets D3DSAMP_MIPFILTER to D3DTEXF_NONE.
+    // There is no equivalent to this in D3D11 Feature Level 9_3.
+    // This causes problems when (for example) an application creates a mipmapped texture2D, but sets GL_TEXTURE_MIN_FILTER to GL_NEAREST (i.e disables mipmaps).
+    // To work around this, D3D11 FL9_3 has to create two copies of the texture. The textures' level zeros are identical, but only one texture has mips.
+    bool zeroMaxLodWorkaround;
 };
 
 }
