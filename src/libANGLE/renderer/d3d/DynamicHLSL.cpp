@@ -728,7 +728,8 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog,
                   "{\n"
                   "    initAttributes(input);\n";
 
-    if (shaderModel >= 4)
+    // On D3D9 or D3D11 Feature Level 9, we need to emulate large viewports using dx_ViewAdjust.
+    if (shaderModel >= 4  && mRenderer->getShaderModelSuffix() == "")
     {
         vertexHLSL += "\n"
                       "    gl_main();\n"

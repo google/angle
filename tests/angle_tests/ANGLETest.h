@@ -68,7 +68,7 @@ class ANGLETest : public testing::Test
 
     virtual void swapBuffers();
 
-    static void drawQuad(GLuint program, const std::string& positionAttribName, GLfloat quadDepth);
+    static void drawQuad(GLuint program, const std::string& positionAttribName, GLfloat quadDepth, GLfloat quadScale = 1.0f);
     static GLuint compileShader(GLenum type, const std::string &source);
     static bool extensionEnabled(const std::string &extName);
 
