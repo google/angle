@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "e10884db_3ddedb70",
+        "filename": "src/compiler/preprocessor/Tokenizer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2321,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-12-22T17:55:30Z",
+      "side": 0,
+      "message": "I understand the mechanism, just the CL you pointed to is the wrong CL, as that CL doesn\u0027t have the change in the .l file that could removed the mMaxTokenSize.",
+      "parentUuid": "8107c8ca_1765b4b5",
+      "revId": "54bd5a4613f33d9cb230a876f8040cba9eb623f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c138e05e_877fea96",
         "filename": "src/compiler/translator/64bit-lexer-safety.patch",
         "patchSetId": 1
