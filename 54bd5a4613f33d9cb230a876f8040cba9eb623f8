@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "8107c8ca_d7de9c20",
+        "filename": "src/compiler/preprocessor/Tokenizer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2321,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-22T17:34:48Z",
+      "side": 0,
+      "message": "Good catch. it looks like this snuck in from https://chromium-review.googlesource.com/199591, where we committed a change to Tokenizer.l, but didn\u0027t update Tokenizer.cpp to the latest. Does the code look correct to you?",
+      "parentUuid": "6175743d_42b7a2f6",
+      "revId": "54bd5a4613f33d9cb230a876f8040cba9eb623f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c138e05e_877fea96",
         "filename": "src/compiler/translator/64bit-lexer-safety.patch",
         "patchSetId": 1
