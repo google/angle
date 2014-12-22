@@ -45,6 +45,24 @@
       "revId": "d526f9895c0aa867adb74a78e53832a9240c6ad6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4119502f_75b4e842",
+        "filename": "src/compiler/preprocessor/Tokenizer.l",
+        "patchSetId": 2
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2014-12-22T17:59:58Z",
+      "side": 1,
+      "message": "Here is only a style change, moving the * closer to the variable name.  It didn\u0027t remove the mMax... variable in this CL.\n\nAm I totally missing something?",
+      "parentUuid": "81eee832_7fd7af7b",
+      "revId": "d526f9895c0aa867adb74a78e53832a9240c6ad6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
