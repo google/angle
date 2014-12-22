@@ -267,7 +267,9 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 namespace pp {
 
-Tokenizer::Tokenizer(Diagnostics *diagnostics) : mHandle(0)
+Tokenizer::Tokenizer(Diagnostics *diagnostics)
+    : mHandle(0),
+      mMaxTokenSize(256)
 {
     mContext.diagnostics = diagnostics;
 }

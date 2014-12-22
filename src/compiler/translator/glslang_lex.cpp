@@ -30,7 +30,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 37
+#define YY_FLEX_SUBMINOR_VERSION 39
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -219,6 +219,13 @@ typedef size_t yy_size_t;
                 yy_size_t yyl;\
                 for ( yyl = n; yyl < yyleng; ++yyl )\
                     if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
+    #define YY_LINENO_REWIND_TO(dst) \
+            do {\
+                const char *p;\
+                for ( p = yy_cp-1; p >= (dst); --p)\
+                    if ( *p == '\n' )\
                         --yylineno;\
             }while(0)
     
@@ -1256,8 +1263,6 @@ YY_DECL
 	register int yy_act;
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-    TParseContext* context = yyextra;
-
     yylval = yylval_param;
 
     yylloc = yylloc_param;
@@ -1288,6 +1293,10 @@ YY_DECL
 		yy_load_buffer_state(yyscanner );
 		}
 
+	{
+
+    TParseContext* context = yyextra;
+
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
 		yy_cp = yyg->yy_c_buf_p;
@@ -1304,7 +1313,7 @@ YY_DECL
 yy_match:
 		do
 			{
-			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
+			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)] ;
 			if ( yy_accept[yy_current_state] )
 				{
 				yyg->yy_last_accepting_state = yy_current_state;
@@ -2167,6 +2176,7 @@ ECHO;
 			"fatal flex scanner internal error--no action found" );
 	} /* end of action switch */
 		} /* end of scanning one token */
+	} /* end of user's declarations */
 } /* end of yylex */
 
 /* yy_get_next_buffer - try to read in a new buffer
@@ -3294,8 +3304,8 @@ int floatsuffix_check(TParseContext* context)
     return(FLOATCONSTANT);
 }
 
-void yyerror(YYLTYPE* lloc, TParseContext* context, const char* reason) {
-    context->error(*lloc, reason, yyget_text(context->scanner));
+void yyerror(YYLTYPE* lloc, TParseContext* context, void *scanner, const char* reason) {
+    context->error(*lloc, reason, yyget_text(scanner));
     context->recover();
 }
 

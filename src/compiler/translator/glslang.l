@@ -492,8 +492,8 @@ int floatsuffix_check(TParseContext* context)
     return(FLOATCONSTANT);
 }
 
-void yyerror(YYLTYPE* lloc, TParseContext* context, const char* reason) {
-    context->error(*lloc, reason, yyget_text(context->scanner));
+void yyerror(YYLTYPE* lloc, TParseContext* context, void *scanner, const char* reason) {
+    context->error(*lloc, reason, yyget_text(scanner));
     context->recover();
 }
 
