@@ -2,12 +2,14 @@
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // D3D11 Feature Level 9_3 uses different D3D formats for vertex attribs compared to Feature Levels 10_0+, so we should test them separately.
-ANGLE_TYPED_TEST_CASE(VertexAttributeTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3);
+// TODO(jmadill): Re-enable on FL9_3 once we fix support on Windows 7
+// See: https://code.google.com/p/angleproject/issues/detail?id=856
+ANGLE_TYPED_TEST_CASE(VertexAttributeTest, ES2_D3D9, ES2_D3D11);
 
 template<typename T>
 class VertexAttributeTest : public ANGLETest
 {
-protected:
+  protected:
     VertexAttributeTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(128);
