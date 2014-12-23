@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c14e2056_11892cb6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-23T20:36:29Z",
+      "side": 1,
+      "message": "style nit: could you make a bool \u003csomething\u003e \u003d (mFeatureLevel \u003c\u003d 9_3 \u0026\u0026 firstInstanced \u003d\u003d 0 \u0026\u0026 firstIndexed !\u003d invalid), and use this as the condition for our workaround?",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 147,
+        "endChar": 47
+      },
+      "revId": "bc198a9aebab90812acd3d5de3b7ddda337f7354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1db80ab_4f8a0179",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-23T20:36:29Z",
+      "side": 1,
+      "message": "do you know if this restriction exists in ES3? a quick not to remind us that we don\u0027t support the ES3 entry points in 9_3 wouldn\u0027t hurt, if so.",
+      "range": {
+        "startLine": 151,
+        "startChar": 10,
+        "endLine": 151,
+        "endChar": 11
+      },
+      "revId": "bc198a9aebab90812acd3d5de3b7ddda337f7354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1db80ab_af63bd36",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-23T20:36:29Z",
+      "side": 1,
+      "message": "nit: could use std::swap?",
+      "range": {
+        "startLine": 154,
+        "startChar": 12,
+        "endLine": 154,
+        "endChar": 64
+      },
+      "revId": "bc198a9aebab90812acd3d5de3b7ddda337f7354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c14e2056_5183b495",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-23T20:36:29Z",
+      "side": 1,
+      "message": "nit: the above bool would simplify these two tests into a bool test",
+      "range": {
+        "startLine": 256,
+        "startChar": 4,
+        "endLine": 256,
+        "endChar": 47
+      },
+      "revId": "bc198a9aebab90812acd3d5de3b7ddda337f7354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1db80ab_8f687912",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-23T20:36:29Z",
+      "side": 1,
+      "message": "nit: more std::swap?",
+      "range": {
+        "startLine": 263,
+        "startChar": 12,
+        "endLine": 263,
+        "endChar": 24
+      },
+      "revId": "bc198a9aebab90812acd3d5de3b7ddda337f7354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c14e2056_7180b888",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-23T20:36:29Z",
+      "side": 1,
+      "message": "nit: trailing space. also a note we only support the extension couldn\u0027t hurt.",
+      "range": {
+        "startLine": 363,
+        "startChar": 93,
+        "endLine": 363,
+        "endChar": 94
+      },
+      "revId": "bc198a9aebab90812acd3d5de3b7ddda337f7354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "81d5087b_6d20b18d",
+        "filename": "tests/angle_tests/InstancingTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-23T20:36:29Z",
+      "side": 1,
+      "message": "nit: indent 2 spaces",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 9
+      },
+      "revId": "bc198a9aebab90812acd3d5de3b7ddda337f7354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1db80ab_0f55a94b",
+        "filename": "tests/angle_tests/InstancingTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-23T20:36:29Z",
+      "side": 1,
+      "message": "nit: tabs",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 2
+      },
+      "revId": "bc198a9aebab90812acd3d5de3b7ddda337f7354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1db80ab_6f62652f",
+        "filename": "tests/angle_tests/InstancingTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2014-12-23T20:36:29Z",
+      "side": 1,
+      "message": "nit: trailing spaces",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 8
+      },
+      "revId": "bc198a9aebab90812acd3d5de3b7ddda337f7354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
