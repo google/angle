@@ -56,6 +56,7 @@ const char *GetOperatorString(TOperator op)
       case EOpAddAssign: return "+=";
       case EOpSubAssign: return "-=";
       case EOpDivAssign: return "/=";
+      case EOpModAssign: return "%=";
 
       // Fall-through.
       case EOpMulAssign:
@@ -75,7 +76,7 @@ const char *GetOperatorString(TOperator op)
       case EOpSub: return "-";
       case EOpMul: return "*";
       case EOpDiv: return "/";
-      case EOpMod: UNIMPLEMENTED(); break;
+      case EOpMod: return "%";
       case EOpEqual: return "==";
       case EOpNotEqual: return "!=";
       case EOpLessThan: return "<";

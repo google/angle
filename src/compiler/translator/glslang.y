@@ -555,6 +555,14 @@ multiplicative_expression
             $$ = $1;
         }
     }
+    | multiplicative_expression PERCENT unary_expression {
+        $$ = context->intermediate.addBinaryMath(EOpMod, $1, $3, @2);
+        if ($$ == 0) {
+            context->binaryOpError(@2, "%", $1->getCompleteString(), $3->getCompleteString());
+            context->recover();
+            $$ = $1;
+        }
+    }
     ;
 
 additive_expression
@@ -739,6 +747,7 @@ assignment_operator
     : EQUAL        { $$.op = EOpAssign; }
     | MUL_ASSIGN   { $$.op = EOpMulAssign; }
     | DIV_ASSIGN   { $$.op = EOpDivAssign; }
+    | MOD_ASSIGN   { $$.op = EOpModAssign; }
     | ADD_ASSIGN   { $$.op = EOpAddAssign; }
     | SUB_ASSIGN   { $$.op = EOpSubAssign; }
     ;

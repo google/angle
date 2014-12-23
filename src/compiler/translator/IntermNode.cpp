@@ -264,6 +264,7 @@ bool TIntermOperator::isAssignment() const
       case EOpMatrixTimesScalarAssign:
       case EOpMatrixTimesMatrixAssign:
       case EOpDivAssign:
+      case EOpModAssign:
         return true;
       default:
         return false;
@@ -556,9 +557,11 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
       case EOpAdd:
       case EOpSub:
       case EOpDiv:
+      case EOpMod:
       case EOpAddAssign:
       case EOpSubAssign:
       case EOpDivAssign:
+      case EOpModAssign:
         if ((mLeft->isMatrix() && mRight->isVector()) ||
             (mLeft->isVector() && mRight->isMatrix()))
         {
@@ -729,6 +732,7 @@ TIntermTyped *TIntermConstantUnion::fold(
             break;
 
           case EOpDiv:
+          case EOpMod:
             {
                 tempConstArray = new ConstantUnion[objectSize];
                 for (size_t i = 0; i < objectSize; i++)

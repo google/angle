@@ -188,7 +188,8 @@ enum TOperator
     EOpVectorTimesScalarAssign,
     EOpMatrixTimesScalarAssign,
     EOpMatrixTimesMatrixAssign,
-    EOpDivAssign
+    EOpDivAssign,
+    EOpModAssign
 };
 
 class TIntermTraverser;

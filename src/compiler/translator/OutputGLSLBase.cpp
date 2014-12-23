@@ -223,6 +223,9 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
       case EOpDivAssign:
         writeTriplet(visit, "(", " /= ", ")");
         break;
+      case EOpModAssign:
+        writeTriplet(visit, "(", " %= ", ")");
+        break;
       // Notice the fall-through.
       case EOpMulAssign:
       case EOpVectorTimesMatrixAssign:
@@ -341,7 +344,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
         writeTriplet(visit, "(", " / ", ")");
         break;
       case EOpMod:
-        UNIMPLEMENTED();
+        writeTriplet(visit, "(", " % ", ")");
         break;
       case EOpEqual:
         writeTriplet(visit, "(", " == ", ")");

@@ -1564,6 +1564,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         }
         break;
       case EOpDivAssign:               outputTriplet(visit, "(", " /= ", ")");          break;
+      case EOpModAssign:               outputTriplet(visit, "(", " %= ", ")");          break;
       case EOpIndexDirect:
         {
             const TType& leftType = node->getLeft()->getType();
@@ -1651,6 +1652,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpSub:               outputTriplet(visit, "(", " - ", ")"); break;
       case EOpMul:               outputTriplet(visit, "(", " * ", ")"); break;
       case EOpDiv:               outputTriplet(visit, "(", " / ", ")"); break;
+      case EOpMod:               outputTriplet(visit, "(", " % ", ")"); break;
       case EOpEqual:
       case EOpNotEqual:
         if (node->getLeft()->isScalar())

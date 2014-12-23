@@ -76,7 +76,16 @@ TIntermTyped *TIntermediate::addBinaryMath(
       case EOpDiv:
       case EOpMul:
         if (left->getBasicType() == EbtStruct || left->getBasicType() == EbtBool)
+        {
             return NULL;
+        }
+        break;
+      case EOpMod:
+        if (left->getBasicType() == EbtStruct || left->getBasicType() == EbtBool || left->getBasicType() == EbtFloat)
+        {
+            return NULL;
+        }
+        break;
       default:
         break;
     }
