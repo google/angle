@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "818a689b_3f55074c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2014-12-23T21:46:59Z",
+      "side": 1,
+      "message": "std::swap seemed unnecessary here- I think it\u0027s cheaper just to directly set the first indexed element\u0027s slot to 0.",
+      "parentUuid": "c1db80ab_af63bd36",
+      "range": {
+        "startLine": 154,
+        "startChar": 12,
+        "endLine": 154,
+        "endChar": 64
+      },
+      "revId": "bc198a9aebab90812acd3d5de3b7ddda337f7354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c14e2056_5183b495",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
         "patchSetId": 1
