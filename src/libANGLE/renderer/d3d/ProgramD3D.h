@@ -64,8 +64,8 @@ class ProgramD3D : public ProgramImpl
     gl::Error save(gl::BinaryOutputStream *stream);
 
     gl::Error getPixelExecutableForFramebuffer(const gl::Framebuffer *fbo, ShaderExecutable **outExectuable);
-    gl::Error getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputLayout, ShaderExecutable **outExectuable);
-    gl::Error getVertexExecutableForInputLayout(const gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS], ShaderExecutable **outExectuable);
+    gl::Error getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputLayout, ShaderExecutable **outExectuable, gl::InfoLog *infoLog);
+    gl::Error getVertexExecutableForInputLayout(const gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS], ShaderExecutable **outExectuable, gl::InfoLog *infoLog);
     ShaderExecutable *getGeometryExecutable() const { return mGeometryExecutable; }
 
     LinkResult compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,

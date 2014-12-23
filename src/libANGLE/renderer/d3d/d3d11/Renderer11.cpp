@@ -1522,7 +1522,7 @@ gl::Error Renderer11::applyShaders(gl::Program *program, const gl::VertexFormat 
     ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(program->getImplementation());
 
     ShaderExecutable *vertexExe = NULL;
-    gl::Error error = programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe);
+    gl::Error error = programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr);
     if (error.isError())
     {
         return error;
