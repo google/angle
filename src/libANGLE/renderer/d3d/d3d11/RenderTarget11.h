@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_D3D_D3D11_RENDERTARGET11_H_
 
 #include "libANGLE/renderer/RenderTarget.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 
 namespace rx
 {
@@ -33,6 +34,7 @@ class RenderTarget11 : public RenderTarget
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderTarget11);
+    D3D_FEATURE_LEVEL mFeatureLevel;
 };
 
 class TextureRenderTarget11 : public RenderTarget11
@@ -79,7 +81,7 @@ class TextureRenderTarget11 : public RenderTarget11
 class SurfaceRenderTarget11 : public RenderTarget11
 {
   public:
-    SurfaceRenderTarget11(SwapChain11 *swapChain, bool depth);
+    SurfaceRenderTarget11(SwapChain11 *swapChain, Renderer11 *renderer, bool depth);
     virtual ~SurfaceRenderTarget11();
 
     GLsizei getWidth() const override;
@@ -100,6 +102,7 @@ class SurfaceRenderTarget11 : public RenderTarget11
     DISALLOW_COPY_AND_ASSIGN(SurfaceRenderTarget11);
 
     SwapChain11 *mSwapChain;
+    Renderer11 *mRenderer;
     bool mDepth;
 };
 

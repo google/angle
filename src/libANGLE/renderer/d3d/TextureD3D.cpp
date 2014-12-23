@@ -812,12 +812,12 @@ gl::Error TextureD3D_2D::storage(GLenum target, GLsizei levels, GLenum internalf
     {
         GLsizei levelWidth = std::max(1, width >> level);
         GLsizei levelHeight = std::max(1, height >> level);
-        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_2D, internalformat, levelWidth, levelHeight, 1, true);
+        mImageArray[level]->redefine(GL_TEXTURE_2D, internalformat, levelWidth, levelHeight, 1, true);
     }
 
     for (int level = levels; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_2D, GL_NONE, 0, 0, 0, true);
+        mImageArray[level]->redefine(GL_TEXTURE_2D, GL_NONE, 0, 0, 0, true);
     }
 
     // TODO(geofflang): Verify storage creation had no errors
@@ -840,7 +840,7 @@ void TextureD3D_2D::bindTexImage(egl::Surface *surface)
 {
     GLenum internalformat = surface->getFormat();
 
-    mImageArray[0]->redefine(mRenderer, GL_TEXTURE_2D, internalformat, surface->getWidth(), surface->getHeight(), 1, true);
+    mImageArray[0]->redefine(GL_TEXTURE_2D, internalformat, surface->getWidth(), surface->getHeight(), 1, true);
 
     if (mTexStorage)
     {
@@ -864,7 +864,7 @@ void TextureD3D_2D::releaseTexImage()
 
     for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
-        mImageArray[i]->redefine(mRenderer, GL_TEXTURE_2D, GL_NONE, 0, 0, 0, true);
+        mImageArray[i]->redefine(GL_TEXTURE_2D, GL_NONE, 0, 0, 0, true);
     }
 }
 
@@ -1087,7 +1087,7 @@ void TextureD3D_2D::redefineImage(GLint level, GLenum internalformat, GLsizei wi
     const int storageHeight = std::max(1, getBaseLevelHeight() >> level);
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
-    mImageArray[level]->redefine(mRenderer, GL_TEXTURE_2D, internalformat, width, height, 1, false);
+    mImageArray[level]->redefine(GL_TEXTURE_2D, internalformat, width, height, 1, false);
 
     if (mTexStorage)
     {
@@ -1344,7 +1344,7 @@ gl::Error TextureD3D_Cube::storage(GLenum target, GLsizei levels, GLenum interna
         GLsizei mipSize = std::max(1, width >> level);
         for (int faceIndex = 0; faceIndex < 6; faceIndex++)
         {
-            mImageArray[faceIndex][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, internalformat, mipSize, mipSize, 1, true);
+            mImageArray[faceIndex][level]->redefine(GL_TEXTURE_CUBE_MAP, internalformat, mipSize, mipSize, 1, true);
         }
     }
 
@@ -1352,7 +1352,7 @@ gl::Error TextureD3D_Cube::storage(GLenum target, GLsizei levels, GLenum interna
     {
         for (int faceIndex = 0; faceIndex < 6; faceIndex++)
         {
-            mImageArray[faceIndex][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, GL_NONE, 0, 0, 0, true);
+            mImageArray[faceIndex][level]->redefine(GL_TEXTURE_CUBE_MAP, GL_NONE, 0, 0, 0, true);
         }
     }
 
@@ -1629,7 +1629,7 @@ void TextureD3D_Cube::redefineImage(int faceIndex, GLint level, GLenum internalf
     const int storageHeight = std::max(1, getBaseLevelHeight() >> level);
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
-    mImageArray[faceIndex][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, internalformat, width, height, 1, false);
+    mImageArray[faceIndex][level]->redefine(GL_TEXTURE_CUBE_MAP, internalformat, width, height, 1, false);
 
     if (mTexStorage)
     {
@@ -1937,12 +1937,12 @@ gl::Error TextureD3D_3D::storage(GLenum target, GLsizei levels, GLenum internalf
         GLsizei levelWidth = std::max(1, width >> level);
         GLsizei levelHeight = std::max(1, height >> level);
         GLsizei levelDepth = std::max(1, depth >> level);
-        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_3D, internalformat, levelWidth, levelHeight, levelDepth, true);
+        mImageArray[level]->redefine(GL_TEXTURE_3D, internalformat, levelWidth, levelHeight, levelDepth, true);
     }
 
     for (int level = levels; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_3D, GL_NONE, 0, 0, 0, true);
+        mImageArray[level]->redefine(GL_TEXTURE_3D, GL_NONE, 0, 0, 0, true);
     }
 
     // TODO(geofflang): Verify storage creation had no errors
@@ -2195,7 +2195,7 @@ void TextureD3D_3D::redefineImage(GLint level, GLenum internalformat, GLsizei wi
     const int storageDepth = std::max(1, getBaseLevelDepth() >> level);
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
-    mImageArray[level]->redefine(mRenderer, GL_TEXTURE_3D, internalformat, width, height, depth, false);
+    mImageArray[level]->redefine(GL_TEXTURE_3D, internalformat, width, height, depth, false);
 
     if (mTexStorage)
     {
@@ -2479,7 +2479,7 @@ gl::Error TextureD3D_2DArray::storage(GLenum target, GLsizei levels, GLenum inte
             for (int layer = 0; layer < mLayerCounts[level]; layer++)
             {
                 mImageArray[level][layer] = ImageD3D::makeImageD3D(mRenderer->createImage());
-                mImageArray[level][layer]->redefine(mRenderer, GL_TEXTURE_2D_ARRAY, internalformat, levelWidth,
+                mImageArray[level][layer]->redefine(GL_TEXTURE_2D_ARRAY, internalformat, levelWidth,
                                                     levelHeight, 1, true);
             }
         }
@@ -2757,7 +2757,7 @@ void TextureD3D_2DArray::redefineImage(GLint level, GLenum internalformat, GLsiz
         for (int layer = 0; layer < mLayerCounts[level]; layer++)
         {
             mImageArray[level][layer] = ImageD3D::makeImageD3D(mRenderer->createImage());
-            mImageArray[level][layer]->redefine(mRenderer, GL_TEXTURE_2D_ARRAY, internalformat, width, height, 1, false);
+            mImageArray[level][layer]->redefine(GL_TEXTURE_2D_ARRAY, internalformat, width, height, 1, false);
         }
     }
 

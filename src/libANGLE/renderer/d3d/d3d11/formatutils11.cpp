@@ -824,6 +824,26 @@ static inline void InsertD3D11FormatInfo(D3D11ES3FormatMap *map, GLenum internal
     map->insert(std::make_pair(internalFormat, info));
 }
 
+static D3D11ES3FormatMap BuildD3D11_FL9_3FormatOverrideMap()
+{
+    // D3D11 Feature Level 9_3 doesn't support as many texture formats as Feature Level 10_0+.
+    // In particular, it doesn't support:
+    //      - *_TYPELESS formats
+    //      - DXGI_FORMAT_D32_FLOAT_S8X24_UINT or DXGI_FORMAT_D32_FLOAT
+
+    D3D11ES3FormatMap map;
+
+    //                         | GL internal format   | D3D11 texture format            | D3D11 SRV format     | D3D11 RTV format      | D3D11 DSV format
+    InsertD3D11FormatInfo(&map, GL_DEPTH_COMPONENT16,  DXGI_FORMAT_D16_UNORM,            DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_D16_UNORM);
+    InsertD3D11FormatInfo(&map, GL_DEPTH_COMPONENT24,  DXGI_FORMAT_D24_UNORM_S8_UINT,    DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_D24_UNORM_S8_UINT);
+    InsertD3D11FormatInfo(&map, GL_DEPTH_COMPONENT32F, DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_UNKNOWN);
+    InsertD3D11FormatInfo(&map, GL_DEPTH24_STENCIL8,   DXGI_FORMAT_D24_UNORM_S8_UINT,    DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_D24_UNORM_S8_UINT);
+    InsertD3D11FormatInfo(&map, GL_DEPTH32F_STENCIL8,  DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_UNKNOWN);
+    InsertD3D11FormatInfo(&map, GL_STENCIL_INDEX8,     DXGI_FORMAT_D24_UNORM_S8_UINT,    DXGI_FORMAT_UNKNOWN,   DXGI_FORMAT_UNKNOWN,    DXGI_FORMAT_D24_UNORM_S8_UINT);
+
+    return map;
+}
+
 static D3D11ES3FormatMap BuildD3D11FormatMap()
 {
     D3D11ES3FormatMap map;
@@ -941,9 +961,21 @@ static D3D11ES3FormatMap BuildD3D11FormatMap()
     return map;
 }
 
-const TextureFormat &GetTextureFormatInfo(GLenum internalFormat)
+const TextureFormat &GetTextureFormatInfo(GLenum internalFormat, D3D_FEATURE_LEVEL featureLevel)
 {
     static const D3D11ES3FormatMap formatMap = BuildD3D11FormatMap();
+    static const D3D11ES3FormatMap formatMapFL9_3Override = BuildD3D11_FL9_3FormatOverrideMap();
+
+    if (featureLevel == D3D_FEATURE_LEVEL_9_3)
+    {
+        // First see if the internalFormat has a special map for FL9_3
+        D3D11ES3FormatMap::const_iterator fl9_3Iter = formatMapFL9_3Override.find(internalFormat);
+        if (fl9_3Iter != formatMapFL9_3Override.end())
+        {
+            return fl9_3Iter->second;
+        }
+    }
+
     D3D11ES3FormatMap::const_iterator iter = formatMap.find(internalFormat);
     if (iter != formatMap.end())
     {

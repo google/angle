@@ -106,7 +106,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
 
     releaseOffscreenTexture();
 
-    const d3d11::TextureFormat &backbufferFormatInfo = d3d11::GetTextureFormatInfo(mBackBufferFormat);
+    const d3d11::TextureFormat &backbufferFormatInfo = d3d11::GetTextureFormatInfo(mBackBufferFormat, mRenderer->getFeatureLevel());
 
     // If the app passed in a share handle, open the resource
     // See EGL_ANGLE_d3d_share_handle_client_buffer
@@ -228,7 +228,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mOffscreenSRView, "Offscreen back buffer shader resource");
 
-    const d3d11::TextureFormat &depthBufferFormatInfo = d3d11::GetTextureFormatInfo(mDepthBufferFormat);
+    const d3d11::TextureFormat &depthBufferFormatInfo = d3d11::GetTextureFormatInfo(mDepthBufferFormat, mRenderer->getFeatureLevel());
 
     if (mDepthBufferFormat != GL_NONE)
     {
@@ -241,7 +241,13 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
         depthStencilTextureDesc.SampleDesc.Count = 1;
         depthStencilTextureDesc.SampleDesc.Quality = 0;
         depthStencilTextureDesc.Usage = D3D11_USAGE_DEFAULT;
-        depthStencilTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+        depthStencilTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+        if (depthBufferFormatInfo.srvFormat != DXGI_FORMAT_UNKNOWN)
+        {
+            depthStencilTextureDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
+        }
+
         depthStencilTextureDesc.CPUAccessFlags = 0;
         depthStencilTextureDesc.MiscFlags = 0;
 
@@ -272,15 +278,18 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
         ASSERT(SUCCEEDED(result));
         d3d11::SetDebugName(mDepthStencilDSView, "Offscreen depth stencil view");
 
-        D3D11_SHADER_RESOURCE_VIEW_DESC depthStencilSRVDesc;
-        depthStencilSRVDesc.Format = depthBufferFormatInfo.srvFormat;
-        depthStencilSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-        depthStencilSRVDesc.Texture2D.MostDetailedMip = 0;
-        depthStencilSRVDesc.Texture2D.MipLevels = -1;
+        if (depthBufferFormatInfo.srvFormat != DXGI_FORMAT_UNKNOWN)
+        {
+            D3D11_SHADER_RESOURCE_VIEW_DESC depthStencilSRVDesc;
+            depthStencilSRVDesc.Format = depthBufferFormatInfo.srvFormat;
+            depthStencilSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+            depthStencilSRVDesc.Texture2D.MostDetailedMip = 0;
+            depthStencilSRVDesc.Texture2D.MipLevels = -1;
 
-        result = device->CreateShaderResourceView(mDepthStencilTexture, &depthStencilSRVDesc, &mDepthStencilSRView);
-        ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mDepthStencilSRView, "Offscreen depth stencil shader resource");
+            result = device->CreateShaderResourceView(mDepthStencilTexture, &depthStencilSRVDesc, &mDepthStencilSRView);
+            ASSERT(SUCCEEDED(result));
+            d3d11::SetDebugName(mDepthStencilSRView, "Offscreen depth stencil shader resource");
+        }
     }
 
     mWidth = backbufferWidth;
@@ -335,7 +344,7 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
     // Resize swap chain
     DXGI_SWAP_CHAIN_DESC desc;
     mSwapChain->GetDesc(&desc);
-    const d3d11::TextureFormat &backbufferFormatInfo = d3d11::GetTextureFormatInfo(mBackBufferFormat);
+    const d3d11::TextureFormat &backbufferFormatInfo = d3d11::GetTextureFormatInfo(mBackBufferFormat, mRenderer->getFeatureLevel());
     HRESULT result = mSwapChain->ResizeBuffers(desc.BufferCount, backbufferWidth, backbufferHeight, backbufferFormatInfo.texFormat, 0);
 
     if (FAILED(result))
@@ -401,7 +410,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
 
     if (mNativeWindow.getNativeWindow())
     {
-        const d3d11::TextureFormat &backbufferFormatInfo = d3d11::GetTextureFormatInfo(mBackBufferFormat);
+        const d3d11::TextureFormat &backbufferFormatInfo = d3d11::GetTextureFormatInfo(mBackBufferFormat, mRenderer->getFeatureLevel());
 
         HRESULT result = mNativeWindow.createSwapChain(device, mRenderer->getDxgiFactory(),
                                                backbufferFormatInfo.texFormat,

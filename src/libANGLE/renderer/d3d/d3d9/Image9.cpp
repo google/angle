@@ -21,13 +21,15 @@
 namespace rx
 {
 
-Image9::Image9()
+Image9::Image9(Renderer9 *renderer)
 {
     mSurface = NULL;
     mRenderer = NULL;
 
     mD3DPool = D3DPOOL_SYSTEMMEM;
     mD3DFormat = D3DFMT_UNKNOWN;
+
+    mRenderer = renderer;
 }
 
 Image9::~Image9()
@@ -167,7 +169,7 @@ gl::Error Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface
     return gl::Error(GL_NO_ERROR);
 }
 
-bool Image9::redefine(RendererD3D *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
+bool Image9::redefine(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
 {
     // 3D textures are not supported by the D3D9 backend.
     ASSERT(depth <= 1);
@@ -181,8 +183,6 @@ bool Image9::redefine(RendererD3D *renderer, GLenum target, GLenum internalforma
         mInternalFormat != internalformat ||
         forceRelease)
     {
-        mRenderer = Renderer9::makeRenderer9(renderer);
-
         mWidth = width;
         mHeight = height;
         mDepth = depth;

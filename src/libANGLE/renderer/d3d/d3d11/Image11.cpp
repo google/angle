@@ -21,8 +21,8 @@
 namespace rx
 {
 
-Image11::Image11()
-    : mRenderer(NULL),
+Image11::Image11(Renderer11 *renderer)
+    : mRenderer(renderer),
       mDXGIFormat(DXGI_FORMAT_UNKNOWN),
       mStagingTexture(NULL),
       mStagingSubresource(0),
@@ -30,8 +30,10 @@ Image11::Image11()
       mAssociatedStorage(NULL),
       mAssociatedImageIndex(gl::ImageIndex::MakeInvalid()),
       mRecoveredFromStorageCount(0)
-
 {
+    // mRenderer should remain unchanged during the lifetime of the Image11 object.
+    // This lets us safely use mRenderer (and its Feature Level) in Image11's methods.
+    mFeatureLevel = renderer->getFeatureLevel();
 }
 
 Image11::~Image11()
@@ -91,7 +93,7 @@ bool Image11::isDirty() const
     // AND mStagingTexture doesn't exist AND mStagingTexture doesn't need to be recovered from TextureStorage
     // AND the texture doesn't require init data (i.e. a blank new texture will suffice)
     // then isDirty should still return false.
-    if (mDirty && !mStagingTexture && !mRecoverFromStorage && !(d3d11::GetTextureFormatInfo(mInternalFormat).dataInitializerFunction != NULL))
+    if (mDirty && !mStagingTexture && !mRecoverFromStorage && !(d3d11::GetTextureFormatInfo(mInternalFormat, mFeatureLevel).dataInitializerFunction != NULL))
     {
         return false;
     }
@@ -200,7 +202,7 @@ void Image11::disassociateStorage()
     }
 }
 
-bool Image11::redefine(RendererD3D *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
+bool Image11::redefine(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
 {
     if (mWidth != width ||
         mHeight != height ||
@@ -212,8 +214,6 @@ bool Image11::redefine(RendererD3D *renderer, GLenum target, GLenum internalform
         disassociateStorage();
         mRecoveredFromStorageCount = 0;
 
-        mRenderer = Renderer11::makeRenderer11(renderer);
-
         mWidth = width;
         mHeight = height;
         mDepth = depth;
@@ -221,7 +221,7 @@ bool Image11::redefine(RendererD3D *renderer, GLenum target, GLenum internalform
         mTarget = target;
 
         // compute the d3d format that will be used
-        const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(internalformat);
+        const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(internalformat, mFeatureLevel);
         const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(formatInfo.texFormat);
         mDXGIFormat = formatInfo.texFormat;
         mActualFormat = dxgiFormatInfo.internalFormat;
@@ -257,7 +257,7 @@ gl::Error Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mDXGIFormat);
     GLuint outputPixelSize = dxgiFormatInfo.pixelBytes;
 
-    const d3d11::TextureFormat &d3dFormatInfo = d3d11::GetTextureFormatInfo(mInternalFormat);
+    const d3d11::TextureFormat &d3dFormatInfo = d3d11::GetTextureFormatInfo(mInternalFormat, mFeatureLevel);
     LoadImageFunction loadFunction = d3dFormatInfo.loadFunctions.at(type);
 
     D3D11_MAPPED_SUBRESOURCE mappedImage;
@@ -292,7 +292,7 @@ gl::Error Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffse
     ASSERT(xoffset % outputBlockWidth == 0);
     ASSERT(yoffset % outputBlockHeight == 0);
 
-    const d3d11::TextureFormat &d3dFormatInfo = d3d11::GetTextureFormatInfo(mInternalFormat);
+    const d3d11::TextureFormat &d3dFormatInfo = d3d11::GetTextureFormatInfo(mInternalFormat, mFeatureLevel);
     LoadImageFunction loadFunction = d3dFormatInfo.loadFunctions.at(GL_UNSIGNED_BYTE);
 
     D3D11_MAPPED_SUBRESOURCE mappedImage;
@@ -512,11 +512,11 @@ gl::Error Image11::createStagingTexture()
         desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
         desc.MiscFlags = 0;
 
-        if (d3d11::GetTextureFormatInfo(mInternalFormat).dataInitializerFunction != NULL)
+        if (d3d11::GetTextureFormatInfo(mInternalFormat, mFeatureLevel).dataInitializerFunction != NULL)
         {
             std::vector<D3D11_SUBRESOURCE_DATA> initialData;
             std::vector< std::vector<BYTE> > textureData;
-            d3d11::GenerateInitialTextureData(mInternalFormat, width, height, mDepth,
+            d3d11::GenerateInitialTextureData(mInternalFormat, mFeatureLevel, width, height, mDepth,
                                               lodOffset + 1, &initialData, &textureData);
 
             result = device->CreateTexture3D(&desc, initialData.data(), &newTexture);
@@ -552,11 +552,11 @@ gl::Error Image11::createStagingTexture()
         desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
         desc.MiscFlags = 0;
 
-        if (d3d11::GetTextureFormatInfo(mInternalFormat).dataInitializerFunction != NULL)
+        if (d3d11::GetTextureFormatInfo(mInternalFormat, mFeatureLevel).dataInitializerFunction != NULL)
         {
             std::vector<D3D11_SUBRESOURCE_DATA> initialData;
             std::vector< std::vector<BYTE> > textureData;
-            d3d11::GenerateInitialTextureData(mInternalFormat, width, height, 1,
+            d3d11::GenerateInitialTextureData(mInternalFormat, mFeatureLevel, width, height, 1,
                                               lodOffset + 1, &initialData, &textureData);
 
             result = device->CreateTexture2D(&desc, initialData.data(), &newTexture);

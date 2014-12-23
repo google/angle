@@ -25,7 +25,7 @@ class Renderer9;
 class Image9 : public ImageD3D
 {
   public:
-    Image9();
+    Image9(Renderer9 *renderer);
     ~Image9();
 
     static Image9 *makeImage9(Image *img);
@@ -34,7 +34,7 @@ class Image9 : public ImageD3D
     static gl::Error generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface);
     static gl::Error copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
 
-    bool redefine(RendererD3D *renderer, GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) override;
+    bool redefine(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) override;
 
     D3DFORMAT getD3DFormat() const;
 

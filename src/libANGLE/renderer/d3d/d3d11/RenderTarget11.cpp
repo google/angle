@@ -328,8 +328,9 @@ unsigned int TextureRenderTarget11::getSubresourceIndex() const
 }
 
 
-SurfaceRenderTarget11::SurfaceRenderTarget11(SwapChain11 *swapChain, bool depth)
+SurfaceRenderTarget11::SurfaceRenderTarget11(SwapChain11 *swapChain, Renderer11 *renderer, bool depth)
     : mSwapChain(swapChain),
+      mRenderer(renderer),
       mDepth(depth)
 {
     ASSERT(mSwapChain);
@@ -361,7 +362,7 @@ GLenum SurfaceRenderTarget11::getInternalFormat() const
 
 GLenum SurfaceRenderTarget11::getActualFormat() const
 {
-    return d3d11::GetDXGIFormatInfo(d3d11::GetTextureFormatInfo(getInternalFormat()).texFormat).internalFormat;
+    return d3d11::GetDXGIFormatInfo(d3d11::GetTextureFormatInfo(getInternalFormat(), mRenderer->getFeatureLevel()).texFormat).internalFormat;
 }
 
 GLsizei SurfaceRenderTarget11::getSamples() const

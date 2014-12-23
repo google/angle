@@ -2750,7 +2750,7 @@ gl::Error Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurfac
 
 Image *Renderer9::createImage()
 {
-    return new Image9();
+    return new Image9(this);
 }
 
 gl::Error Renderer9::generateMipmap(Image *dest, Image *src)
