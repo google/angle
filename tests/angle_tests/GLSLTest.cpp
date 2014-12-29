@@ -821,3 +821,56 @@ TYPED_TEST(GLSLTest, ZeroShaderLength)
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
     EXPECT_NE(compileResult, 0);
 }
+
+// Tests that bad index expressions don't crash ANGLE's translator.
+// https://code.google.com/p/angleproject/issues/detail?id=857
+TYPED_TEST(GLSLTest, BadIndexBug)
+{
+    const std::string &fragmentShaderSourceVec =
+        "precision mediump float;\n"
+        "uniform vec4 uniformVec;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(uniformVec[int()]);\n"
+        "}";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSourceVec);
+    EXPECT_EQ(0u, shader);
+
+    if (shader != 0)
+    {
+        glDeleteShader(shader);
+    }
+
+    const std::string &fragmentShaderSourceMat =
+        "precision mediump float;\n"
+        "uniform mat4 uniformMat;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(uniformMat[int()]);\n"
+        "}";
+
+    shader = CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSourceMat);
+    EXPECT_EQ(0u, shader);
+
+    if (shader != 0)
+    {
+        glDeleteShader(shader);
+    }
+
+    const std::string &fragmentShaderSourceArray =
+        "precision mediump float;\n"
+        "uniform vec4 uniformArray;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(uniformArray[int()]);\n"
+        "}";
+
+    shader = CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSourceArray);
+    EXPECT_EQ(0u, shader);
+
+    if (shader != 0)
+    {
+        glDeleteShader(shader);
+    }
+}
