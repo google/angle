@@ -620,6 +620,7 @@ std::string Display::generateClientExtensionString()
 
     extensions.push_back("EGL_EXT_client_extensions");
 
+    extensions.push_back("EGL_EXT_platform_base");
     extensions.push_back("ANGLE_platform_angle");
 
     if (supportsPlatformD3D())
