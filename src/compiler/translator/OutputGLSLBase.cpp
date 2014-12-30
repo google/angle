@@ -516,6 +516,13 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
         preString = "fwidth(";
         break;
 
+      case EOpTranspose:
+        preString = "transpose(";
+        break;
+      case EOpDeterminant:
+        preString = "determinant(";
+        break;
+
       case EOpAny:
         preString = "any(";
         break;
@@ -766,6 +773,10 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             out << ")";
         }
+        break;
+
+      case EOpOuterProduct:
+        writeBuiltInFunctionTriplet(visit, "outerProduct(", useEmulatedFunction);
         break;
 
       case EOpLessThan:

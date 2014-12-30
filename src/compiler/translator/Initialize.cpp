@@ -294,6 +294,12 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     TType *mat2 = new TType(EbtFloat, 2, 2);
     TType *mat3 = new TType(EbtFloat, 3, 3);
     TType *mat4 = new TType(EbtFloat, 4, 4);
+    TType *mat2x3 = new TType(EbtFloat, 2, 3);
+    TType *mat3x2 = new TType(EbtFloat, 3, 2);
+    TType *mat2x4 = new TType(EbtFloat, 2, 4);
+    TType *mat4x2 = new TType(EbtFloat, 4, 2);
+    TType *mat3x4 = new TType(EbtFloat, 3, 4);
+    TType *mat4x3 = new TType(EbtFloat, 4, 3);
 
     //
     // Matrix Functions.
@@ -301,6 +307,36 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, mat2, "matrixCompMult", mat2, mat2);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, mat3, "matrixCompMult", mat3, mat3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, mat4, "matrixCompMult", mat4, mat4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat2x3, "matrixCompMult", mat2x3, mat2x3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat3x2, "matrixCompMult", mat3x2, mat3x2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat2x4, "matrixCompMult", mat2x4, mat2x4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat4x2, "matrixCompMult", mat4x2, mat4x2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat3x4, "matrixCompMult", mat3x4, mat3x4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat4x3, "matrixCompMult", mat4x3, mat4x3);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat2, "outerProduct", float2, float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat3, "outerProduct", float3, float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat4, "outerProduct", float4, float4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat2x3, "outerProduct", float3, float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat3x2, "outerProduct", float2, float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat2x4, "outerProduct", float4, float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat4x2, "outerProduct", float2, float4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat3x4, "outerProduct", float4, float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat4x3, "outerProduct", float3, float4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat2, "transpose", mat2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat3, "transpose", mat3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat4, "transpose", mat4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat2x3, "transpose", mat3x2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat3x2, "transpose", mat2x3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat2x4, "transpose", mat4x2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat4x2, "transpose", mat2x4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat3x4, "transpose", mat4x3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat4x3, "transpose", mat3x4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "determinant", mat2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "determinant", mat3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "determinant", mat4);
 
     TType *bool1 = new TType(EbtBool);
     TType *bool2 = new TType(EbtBool, 2);
@@ -710,6 +746,7 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     // operations.
     //
     symbolTable.relateToOperator(COMMON_BUILTINS, "matrixCompMult",   EOpMul);
+    symbolTable.relateToOperator(ESSL3_BUILTINS,  "matrixCompMult",   EOpMul);
 
     symbolTable.relateToOperator(COMMON_BUILTINS, "equal",            EOpVectorEqual);
     symbolTable.relateToOperator(COMMON_BUILTINS, "notEqual",         EOpVectorNotEqual);
@@ -768,6 +805,10 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     symbolTable.relateToOperator(COMMON_BUILTINS, "faceforward",  EOpFaceForward);
     symbolTable.relateToOperator(COMMON_BUILTINS, "reflect",      EOpReflect);
     symbolTable.relateToOperator(COMMON_BUILTINS, "refract",      EOpRefract);
+
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "outerProduct",  EOpOuterProduct);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "transpose",     EOpTranspose);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "determinant",   EOpDeterminant);
 
     symbolTable.relateToOperator(COMMON_BUILTINS, "any",          EOpAny);
     symbolTable.relateToOperator(COMMON_BUILTINS, "all",          EOpAll);

@@ -308,6 +308,9 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
       // case EOpDPdy:           out << "dPdy";                 break;
       // case EOpFwidth:         out << "fwidth";               break;
 
+      case EOpDeterminant:    out << "determinant";          break;
+      case EOpTranspose:      out << "transpose";            break;
+
       case EOpAny:            out << "any";                  break;
       case EOpAll:            out << "all";                  break;
 
@@ -392,6 +395,8 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpReflect:       out << "reflect";                 break;
       case EOpRefract:       out << "refract";                 break;
       case EOpMul:           out << "component-wise multiply"; break;
+
+      case EOpOuterProduct:  out << "outer product";   break;
 
       case EOpDeclaration:   out << "Declaration: ";   break;
       case EOpInvariantDeclaration: out << "Invariant Declaration: "; break;

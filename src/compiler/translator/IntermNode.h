@@ -150,6 +150,10 @@ enum TOperator
 
     EOpMatrixTimesMatrix,
 
+    EOpOuterProduct,
+    EOpTranspose,
+    EOpDeterminant,
+
     EOpAny,
     EOpAll,
 

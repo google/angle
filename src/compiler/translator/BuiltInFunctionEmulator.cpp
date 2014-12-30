@@ -56,6 +56,7 @@ public:
                 case EOpFaceForward:
                 case EOpReflect:
                 case EOpRefract:
+                case EOpOuterProduct:
                 case EOpMul:
                     break;
                 default:

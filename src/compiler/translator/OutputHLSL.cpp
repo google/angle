@@ -1667,6 +1667,9 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
             outputTriplet(visit, "fwidth(", "", ")");
         }
         break;
+      case EOpTranspose:        outputTriplet(visit, "transpose(", "", ")");   break;
+      case EOpDeterminant:      outputTriplet(visit, "determinant(transpose(", "", "))"); break;
+
       case EOpAny:              outputTriplet(visit, "any(", "", ")");       break;
       case EOpAll:              outputTriplet(visit, "all(", "", ")");       break;
       default: UNREACHABLE();
@@ -2103,6 +2106,10 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         break;
       case EOpReflect:       outputTriplet(visit, "reflect(", ", ", ")");       break;
       case EOpRefract:       outputTriplet(visit, "refract(", ", ", ")");       break;
+      case EOpOuterProduct:
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "outerProduct(");
+        break;
       case EOpMul:           outputTriplet(visit, "(", " * ", ")");             break;
       default: UNREACHABLE();
     }
