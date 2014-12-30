@@ -463,9 +463,11 @@ EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy, EGLConfig config, EGLContex
           "const EGLint *attrib_list = 0x%0.8p)", dpy, config, share_context, attrib_list);
 
     // Get the requested client version (default is 1) and check it is 2 or 3.
-    EGLint client_version = 1;
-    bool reset_notification = false;
-    bool robust_access = false;
+    EGLint clientMajorVersion = 1;
+    EGLint clientMinorVersion = 0;
+    EGLint contextFlags = 0;
+    bool resetNotification = false;
+    bool robustAccess = false;
 
     if (attrib_list)
     {
@@ -474,25 +476,39 @@ EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy, EGLConfig config, EGLContex
             switch (attribute[0])
             {
               case EGL_CONTEXT_CLIENT_VERSION:
-                client_version = attribute[1];
+                clientMajorVersion = attribute[1];
                 break;
+              case EGL_CONTEXT_MINOR_VERSION:
+                clientMinorVersion = attribute[1];
+                break;
+
+              case EGL_CONTEXT_FLAGS_KHR:
+                contextFlags = attribute[1];
+                break;
+
+              case EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR:
+                // Only valid for OpenGL (non-ES) contexts
+                SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
+                return EGL_NO_CONTEXT;
+
               case EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT:
-                if (attribute[1] == EGL_TRUE)
-                {
-                    SetGlobalError(Error(EGL_BAD_CONFIG));   // Unimplemented
-                    return EGL_NO_CONTEXT;
-                    // robust_access = true;
-                }
-                else if (attribute[1] != EGL_FALSE)
+                if (attribute[1] != EGL_TRUE && attribute[1] != EGL_FALSE)
                 {
                     SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
                     return EGL_NO_CONTEXT;
                 }
+
+                robustAccess = (attribute[1] == EGL_TRUE);
                 break;
+
+              case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR:
+                META_ASSERT(EGL_LOSE_CONTEXT_ON_RESET_EXT == EGL_LOSE_CONTEXT_ON_RESET_KHR);
+                META_ASSERT(EGL_NO_RESET_NOTIFICATION_EXT == EGL_NO_RESET_NOTIFICATION_KHR);
+                // same as EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT, fall through
               case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT:
                 if (attribute[1] == EGL_LOSE_CONTEXT_ON_RESET_EXT)
                 {
-                    reset_notification = true;
+                    resetNotification = true;
                 }
                 else if (attribute[1] != EGL_NO_RESET_NOTIFICATION_EXT)
                 {
@@ -507,8 +523,29 @@ EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy, EGLConfig config, EGLContex
         }
     }
 
-    if (client_version != 2 && client_version != 3)
+    if ((clientMajorVersion != 2 && clientMajorVersion != 3) || clientMinorVersion != 0)
     {
+        SetGlobalError(Error(EGL_BAD_CONFIG));
+        return EGL_NO_CONTEXT;
+    }
+
+    // Note: EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR does not apply to ES
+    const EGLint validContextFlags = (EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR |
+                                      EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR);
+    if ((contextFlags & ~validContextFlags) != 0)
+    {
+        SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
+        return EGL_NO_CONTEXT;
+    }
+
+    if ((contextFlags & EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR) > 0)
+    {
+        robustAccess = true;
+    }
+
+    if (robustAccess)
+    {
+        // Unimplemented
         SetGlobalError(Error(EGL_BAD_CONFIG));
         return EGL_NO_CONTEXT;
     }
@@ -519,13 +556,13 @@ EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy, EGLConfig config, EGLContex
     {
         gl::Context* sharedGLContext = static_cast<gl::Context*>(share_context);
 
-        if (sharedGLContext->isResetNotificationEnabled() != reset_notification)
+        if (sharedGLContext->isResetNotificationEnabled() != resetNotification)
         {
             SetGlobalError(Error(EGL_BAD_MATCH));
             return EGL_NO_CONTEXT;
         }
 
-        if (sharedGLContext->getClientVersion() != client_version)
+        if (sharedGLContext->getClientVersion() != clientMajorVersion)
         {
             SetGlobalError(Error(EGL_BAD_CONTEXT));
             return EGL_NO_CONTEXT;
@@ -545,8 +582,8 @@ EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy, EGLConfig config, EGLContex
     }
 
     EGLContext context = EGL_NO_CONTEXT;
-    Error error =  display->createContext(config, client_version, static_cast<gl::Context*>(share_context),
-                                               reset_notification, robust_access, &context);
+    Error error = display->createContext(config, clientMajorVersion, static_cast<gl::Context*>(share_context),
+                                         resetNotification, robustAccess, &context);
     if (error.isError())
     {
         SetGlobalError(error);

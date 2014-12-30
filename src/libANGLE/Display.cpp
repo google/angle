@@ -660,10 +660,7 @@ void Display::initDisplayExtensionString()
         extensions.push_back("EGL_NV_post_sub_buffer");
     }
 
-#if defined (ANGLE_TEST_CONFIG)
-    // TODO: complete support for the EGL_KHR_create_context extension
     extensions.push_back("EGL_KHR_create_context");
-#endif
 
     std::ostringstream stream;
     std::copy(extensions.begin(), extensions.end(), std::ostream_iterator<std::string>(stream, " "));
