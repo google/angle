@@ -81,6 +81,8 @@ typedef TestFixture<3, D3D11_FL11_0_WARP> ES3_D3D11_FL11_0_WARP;
 typedef TestFixture<3, D3D11_FL10_1_WARP> ES3_D3D11_FL10_1_WARP;
 typedef TestFixture<3, D3D11_FL10_0_WARP> ES3_D3D11_FL10_0_WARP;
 
-#define ANGLE_TYPED_TEST_CASE(testName, ...) TYPED_TEST_CASE(testName, ::testing::Types<__VA_ARGS__>);
+#define ANGLE_TYPED_TEST_CASE(testName, ...) \
+    typedef ::testing::Types<__VA_ARGS__> Helper##testName; \
+    TYPED_TEST_CASE(testName, Helper##testName);
 
 #endif // UTIL_TEST_FIXTURE_TYPES_H

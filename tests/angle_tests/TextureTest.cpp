@@ -128,8 +128,7 @@ class TextureTestES3 : public TextureTest<T>
         ASSERT_GL_NO_ERROR();
 
         const std::string vertexShaderSource = SHADER_SOURCE
-        (
-            #version 300 es\n
+        (   #version 300 es\n
             precision highp float;
             in vec4 position;
             out vec2 texcoord;
@@ -144,8 +143,7 @@ class TextureTestES3 : public TextureTest<T>
         );
 
         const std::string fragmentShaderSourceArray = SHADER_SOURCE
-        (
-            #version 300 es\n
+        (   #version 300 es\n
             precision highp float;
             uniform sampler2DArray tex;
             uniform int slice;
