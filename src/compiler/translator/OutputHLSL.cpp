@@ -112,21 +112,6 @@ OutputHLSL::OutputHLSL(TParseContext &context, TranslatorHLSL *parentTranslator)
     mUsesPointSize = false;
     mUsesFragDepth = false;
     mUsesXor = false;
-    mUsesMod1 = false;
-    mUsesMod2v = false;
-    mUsesMod2f = false;
-    mUsesMod3v = false;
-    mUsesMod3f = false;
-    mUsesMod4v = false;
-    mUsesMod4f = false;
-    mUsesFaceforward1 = false;
-    mUsesFaceforward2 = false;
-    mUsesFaceforward3 = false;
-    mUsesFaceforward4 = false;
-    mUsesAtan2_1 = false;
-    mUsesAtan2_2 = false;
-    mUsesAtan2_3 = false;
-    mUsesAtan2_4 = false;
     mUsesDiscardRewriting = false;
     mUsesNestedBreak = false;
 
@@ -188,14 +173,13 @@ void OutputHLSL::output()
     BuiltInFunctionEmulatorHLSL builtInFunctionEmulator;
     builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(mContext.treeRoot);
     mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header
-    header();
-    TInfoSinkBase& sink = mContext.infoSink().obj;
-    // Write emulated built-in functions if needed.
-    builtInFunctionEmulator.OutputEmulatedFunctionDefinition(sink, false);
-    builtInFunctionEmulator.Cleanup();
+    header(&builtInFunctionEmulator);
 
+    TInfoSinkBase& sink = mContext.infoSink().obj;
     sink << mHeader.c_str();
     sink << mBody.c_str();
+
+    builtInFunctionEmulator.Cleanup();
 }
 
 void OutputHLSL::makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flaggedStructs)
@@ -284,7 +268,7 @@ TString OutputHLSL::structInitializerString(int indent, const TStructure &struct
     return init;
 }
 
-void OutputHLSL::header()
+void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulator)
 {
     TInfoSinkBase &out = mHeader;
 
@@ -1219,174 +1203,7 @@ void OutputHLSL::header()
                "\n";
     }
 
-    if (mUsesMod1)
-    {
-        out << "float mod(float x, float y)\n"
-               "{\n"
-               "    return x - y * floor(x / y);\n"
-               "}\n"
-               "\n";
-    }
-
-    if (mUsesMod2v)
-    {
-        out << "float2 mod(float2 x, float2 y)\n"
-               "{\n"
-               "    return x - y * floor(x / y);\n"
-               "}\n"
-               "\n";
-    }
-
-    if (mUsesMod2f)
-    {
-        out << "float2 mod(float2 x, float y)\n"
-               "{\n"
-               "    return x - y * floor(x / y);\n"
-               "}\n"
-               "\n";
-    }
-
-    if (mUsesMod3v)
-    {
-        out << "float3 mod(float3 x, float3 y)\n"
-               "{\n"
-               "    return x - y * floor(x / y);\n"
-               "}\n"
-               "\n";
-    }
-
-    if (mUsesMod3f)
-    {
-        out << "float3 mod(float3 x, float y)\n"
-               "{\n"
-               "    return x - y * floor(x / y);\n"
-               "}\n"
-               "\n";
-    }
-
-    if (mUsesMod4v)
-    {
-        out << "float4 mod(float4 x, float4 y)\n"
-               "{\n"
-               "    return x - y * floor(x / y);\n"
-               "}\n"
-               "\n";
-    }
-
-    if (mUsesMod4f)
-    {
-        out << "float4 mod(float4 x, float y)\n"
-               "{\n"
-               "    return x - y * floor(x / y);\n"
-               "}\n"
-               "\n";
-    }
-
-    if (mUsesFaceforward1)
-    {
-        out << "float faceforward(float N, float I, float Nref)\n"
-               "{\n"
-               "    if(dot(Nref, I) >= 0)\n"
-               "    {\n"
-               "        return -N;\n"
-               "    }\n"
-               "    else\n"
-               "    {\n"
-               "        return N;\n"
-               "    }\n"
-               "}\n"
-               "\n";
-    }
-
-    if (mUsesFaceforward2)
-    {
-        out << "float2 faceforward(float2 N, float2 I, float2 Nref)\n"
-               "{\n"
-               "    if(dot(Nref, I) >= 0)\n"
-               "    {\n"
-               "        return -N;\n"
-               "    }\n"
-               "    else\n"
-               "    {\n"
-               "        return N;\n"
-               "    }\n"
-               "}\n"
-               "\n";
-    }
-
-    if (mUsesFaceforward3)
-    {
-        out << "float3 faceforward(float3 N, float3 I, float3 Nref)\n"
-               "{\n"
-               "    if(dot(Nref, I) >= 0)\n"
-               "    {\n"
-               "        return -N;\n"
-               "    }\n"
-               "    else\n"
-               "    {\n"
-               "        return N;\n"
-               "    }\n"
-               "}\n"
-               "\n";
-    }
-
-    if (mUsesFaceforward4)
-    {
-        out << "float4 faceforward(float4 N, float4 I, float4 Nref)\n"
-               "{\n"
-               "    if(dot(Nref, I) >= 0)\n"
-               "    {\n"
-               "        return -N;\n"
-               "    }\n"
-               "    else\n"
-               "    {\n"
-               "        return N;\n"
-               "    }\n"
-               "}\n"
-               "\n";
-    }
-
-    if (mUsesAtan2_1)
-    {
-        out << "float atanyx(float y, float x)\n"
-               "{\n"
-               "    if(x == 0 && y == 0) x = 1;\n"   // Avoid producing a NaN
-               "    return atan2(y, x);\n"
-               "}\n";
-    }
-
-    if (mUsesAtan2_2)
-    {
-        out << "float2 atanyx(float2 y, float2 x)\n"
-               "{\n"
-               "    if(x[0] == 0 && y[0] == 0) x[0] = 1;\n"
-               "    if(x[1] == 0 && y[1] == 0) x[1] = 1;\n"
-               "    return float2(atan2(y[0], x[0]), atan2(y[1], x[1]));\n"
-               "}\n";
-    }
-
-    if (mUsesAtan2_3)
-    {
-        out << "float3 atanyx(float3 y, float3 x)\n"
-               "{\n"
-               "    if(x[0] == 0 && y[0] == 0) x[0] = 1;\n"
-               "    if(x[1] == 0 && y[1] == 0) x[1] = 1;\n"
-               "    if(x[2] == 0 && y[2] == 0) x[2] = 1;\n"
-               "    return float3(atan2(y[0], x[0]), atan2(y[1], x[1]), atan2(y[2], x[2]));\n"
-               "}\n";
-    }
-
-    if (mUsesAtan2_4)
-    {
-        out << "float4 atanyx(float4 y, float4 x)\n"
-               "{\n"
-               "    if(x[0] == 0 && y[0] == 0) x[0] = 1;\n"
-               "    if(x[1] == 0 && y[1] == 0) x[1] = 1;\n"
-               "    if(x[2] == 0 && y[2] == 0) x[2] = 1;\n"
-               "    if(x[3] == 0 && y[3] == 0) x[3] = 1;\n"
-               "    return float4(atan2(y[0], x[0]), atan2(y[1], x[1]), atan2(y[2], x[2]), atan2(y[3], x[3]));\n"
-               "}\n";
-    }
+    builtInFunctionEmulator->OutputEmulatedFunctionDefinition(out, false);
 }
 
 void OutputHLSL::visitSymbol(TIntermSymbol *node)
@@ -2262,37 +2079,14 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpVectorEqual:      outputTriplet(visit, "(", " == ", ")");                break;
       case EOpVectorNotEqual:   outputTriplet(visit, "(", " != ", ")");                break;
       case EOpMod:
-        {
-            // We need to look at the number of components in both arguments
-            const int modValue = (*node->getSequence())[0]->getAsTyped()->getNominalSize() * 10 +
-                (*node->getSequence())[1]->getAsTyped()->getNominalSize();
-            switch (modValue)
-            {
-              case 11: mUsesMod1 = true; break;
-              case 22: mUsesMod2v = true; break;
-              case 21: mUsesMod2f = true; break;
-              case 33: mUsesMod3v = true; break;
-              case 31: mUsesMod3f = true; break;
-              case 44: mUsesMod4v = true; break;
-              case 41: mUsesMod4f = true; break;
-              default: UNREACHABLE();
-            }
-
-            outputTriplet(visit, "mod(", ", ", ")");
-        }
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "mod(");
         break;
       case EOpPow:              outputTriplet(visit, "pow(", ", ", ")");               break;
       case EOpAtan:
         ASSERT(node->getSequence()->size() == 2);   // atan(x) is a unary operator
-        switch ((*node->getSequence())[0]->getAsTyped()->getNominalSize())
-        {
-          case 1: mUsesAtan2_1 = true; break;
-          case 2: mUsesAtan2_2 = true; break;
-          case 3: mUsesAtan2_3 = true; break;
-          case 4: mUsesAtan2_4 = true; break;
-          default: UNREACHABLE();
-        }
-        outputTriplet(visit, "atanyx(", ", ", ")");
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "atan(");
         break;
       case EOpMin:           outputTriplet(visit, "min(", ", ", ")");           break;
       case EOpMax:           outputTriplet(visit, "max(", ", ", ")");           break;
@@ -2304,18 +2098,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpDot:           outputTriplet(visit, "dot(", ", ", ")");           break;
       case EOpCross:         outputTriplet(visit, "cross(", ", ", ")");         break;
       case EOpFaceForward:
-        {
-            switch ((*node->getSequence())[0]->getAsTyped()->getNominalSize())   // Number of components in the first argument
-            {
-            case 1: mUsesFaceforward1 = true; break;
-            case 2: mUsesFaceforward2 = true; break;
-            case 3: mUsesFaceforward3 = true; break;
-            case 4: mUsesFaceforward4 = true; break;
-            default: UNREACHABLE();
-            }
-
-            outputTriplet(visit, "faceforward(", ", ", ")");
-        }
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "faceforward(");
         break;
       case EOpReflect:       outputTriplet(visit, "reflect(", ", ", ")");       break;
       case EOpRefract:       outputTriplet(visit, "refract(", ", ", ")");       break;
