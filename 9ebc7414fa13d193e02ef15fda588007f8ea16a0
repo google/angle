@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "2e0529fe_5c06fd14",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-02T21:11:37Z",
+      "side": 1,
+      "message": "sorry, i don\u0027t quite understand. isDirty is called where? I was meaning to put this up in the initializer list just above where you do this assignment.",
+      "parentUuid": "418cf0b9_c9a464c1",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 25
+      },
+      "revId": "9ebc7414fa13d193e02ef15fda588007f8ea16a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6126549e_efd83187",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 1
