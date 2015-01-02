@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "418cf0b9_c9a464c1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-02T21:01:43Z",
+      "side": 1,
+      "message": "Nope, unfortunately not. Image11::isDirty() can be (and sometimes is) called before the Image is initialized. Since isDirty() needs a valid feature level, the renderer/feature level must be set before the initializer is called.",
+      "parentUuid": "c1db80ab_4b3f8ca8",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 25
+      },
+      "revId": "9ebc7414fa13d193e02ef15fda588007f8ea16a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6126549e_efd83187",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 1
