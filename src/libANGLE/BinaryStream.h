@@ -17,6 +17,17 @@
 #include <vector>
 #include <stdint.h>
 
+template <typename T>
+void StaticAssertIsFundamental()
+{
+#ifndef ANGLE_PLATFORM_APPLE
+    META_ASSERT(std::is_fundamental<T>::value);
+#else
+    union { T dummy; } dummy;
+    static_cast<void>(dummy);
+#endif
+}
+
 namespace gl
 {
 
@@ -131,7 +142,7 @@ class BinaryInputStream
     template <typename T>
     void read(T *v, size_t num)
     {
-        META_ASSERT(std::is_fundamental<T>::value);
+        StaticAssertIsFundamental<T>();
 
         size_t length = num * sizeof(T);
 
@@ -197,7 +208,7 @@ class BinaryOutputStream
     template <typename T>
     void write(const T *v, size_t num)
     {
-        META_ASSERT(std::is_fundamental<T>::value);
+        StaticAssertIsFundamental<T>();
         const char *asBytes = reinterpret_cast<const char*>(v);
         mData.insert(mData.end(), asBytes, asBytes + num * sizeof(T));
     }
