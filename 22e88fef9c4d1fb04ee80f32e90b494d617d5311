@@ -22,6 +22,30 @@
       "revId": "22e88fef9c4d1fb04ee80f32e90b494d617d5311",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e445558_2fc3091c",
+        "filename": "src/common/platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-05T21:38:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e445558_cf4ebd38",
+      "range": {
+        "startLine": 81,
+        "startChar": 1,
+        "endLine": 81,
+        "endChar": 22
+      },
+      "revId": "22e88fef9c4d1fb04ee80f32e90b494d617d5311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
