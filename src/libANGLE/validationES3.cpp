@@ -731,8 +731,8 @@ static bool IsValidES3CopyTexImageCombination(GLenum textureInternalFormat, GLen
             {
                 // Renderbuffers cannot be created with an unsized internal format, so this must be an unsized-format
                 // texture. We can use the same table we use when creating textures to get its effective sized format.
-                const FormatType &typeInfo = GetFormatTypeInfo(framebufferInternalFormatInfo.format, framebufferInternalFormatInfo.type);
-                sourceEffectiveFormat = &GetInternalFormatInfo(typeInfo.internalFormat);
+                GLenum sizedInternalFormat = GetSizedInternalFormat(framebufferInternalFormatInfo.format, framebufferInternalFormatInfo.type);
+                sourceEffectiveFormat = &GetInternalFormatInfo(sizedInternalFormat);
             }
         }
         else

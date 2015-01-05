@@ -10,7 +10,10 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_FORMATUTILS9_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_FORMATUTILS9_H_
 
-#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/formatutilsD3D.h"
+#include "libANGLE/angletypes.h"
+
+#include "common/platform.h"
 
 #include <map>
 

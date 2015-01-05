@@ -151,6 +151,8 @@
             'libANGLE/renderer/d3d/DisplayD3D.h',
             'libANGLE/renderer/d3d/DynamicHLSL.cpp',
             'libANGLE/renderer/d3d/DynamicHLSL.h',
+            'libANGLE/renderer/d3d/formatutilsD3D.cpp',
+            'libANGLE/renderer/d3d/formatutilsD3D.h',
             'libANGLE/renderer/d3d/FramebufferD3D.cpp',
             'libANGLE/renderer/d3d/FramebufferD3D.h',
             'libANGLE/renderer/d3d/generatemip.h',

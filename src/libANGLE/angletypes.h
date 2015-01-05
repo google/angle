@@ -260,14 +260,6 @@ struct VertexFormat
 namespace rx
 {
 
-enum VertexConversionType
-{
-    VERTEX_CONVERT_NONE = 0,
-    VERTEX_CONVERT_CPU  = 1,
-    VERTEX_CONVERT_GPU  = 2,
-    VERTEX_CONVERT_BOTH = 3
-};
-
 enum VendorID : uint32_t
 {
     VENDOR_ID_AMD = 0x1002,

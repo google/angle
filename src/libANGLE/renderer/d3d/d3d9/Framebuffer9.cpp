@@ -13,6 +13,7 @@
 #include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Texture.h"
@@ -185,8 +186,8 @@ gl::Error Framebuffer9::readPixels(const gl::Rectangle &area, GLenum format, GLe
         const d3d9::D3DFormat &sourceD3DFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
         ColorCopyFunction fastCopyFunc = sourceD3DFormatInfo.getFastCopyFunction(format, type);
 
-        const gl::FormatType &destFormatTypeInfo = gl::GetFormatTypeInfo(format, type);
-        const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(destFormatTypeInfo.internalFormat);
+        GLenum sizedDestInternalFormat = gl::GetSizedInternalFormat(format, type);
+        const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(sizedDestInternalFormat);
 
         if (fastCopyFunc)
         {
@@ -204,6 +205,9 @@ gl::Error Framebuffer9::readPixels(const gl::Rectangle &area, GLenum format, GLe
         }
         else
         {
+            ColorReadFunction colorReadFunction = sourceD3DFormatInfo.colorReadFunction;
+            ColorWriteFunction colorWriteFunction = GetColorWriteFunction(format, type);
+
             uint8_t temp[sizeof(gl::ColorF)];
             for (int y = 0; y < rect.bottom - rect.top; y++)
             {
@@ -214,8 +218,8 @@ gl::Error Framebuffer9::readPixels(const gl::Rectangle &area, GLenum format, GLe
 
                     // readFunc and writeFunc will be using the same type of color, CopyTexImage
                     // will not allow the copy otherwise.
-                    sourceD3DFormatInfo.colorReadFunction(src, temp);
-                    destFormatTypeInfo.colorWriteFunction(temp, dest);
+                    colorReadFunction(src, temp);
+                    colorWriteFunction(temp, dest);
                 }
             }
         }

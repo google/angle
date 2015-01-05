@@ -12,6 +12,7 @@
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/Workarounds.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Framebuffer.h"
 

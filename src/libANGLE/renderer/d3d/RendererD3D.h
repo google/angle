@@ -11,6 +11,7 @@
 
 #include "libANGLE/Data.h"
 #include "libANGLE/renderer/Renderer.h"
+#include "libANGLE/renderer/d3d/formatutilsD3D.h"
 #include "libANGLE/renderer/d3d/MemoryBuffer.h"
 #include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
 

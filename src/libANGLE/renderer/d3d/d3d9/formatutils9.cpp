@@ -7,10 +7,10 @@
 // formatutils9.cpp: Queries for GL image formats and their translations to D3D9
 // formats.
 
+#include "libANGLE/renderer/d3d/copyimage.h"
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
 #include "libANGLE/renderer/d3d/d3d9/vertexconversion.h"
-#include "libANGLE/renderer/d3d/copyimage.h"
 #include "libANGLE/renderer/d3d/generatemip.h"
 #include "libANGLE/renderer/d3d/loadimage.h"
 

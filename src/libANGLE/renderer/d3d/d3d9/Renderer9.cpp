@@ -20,6 +20,7 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/features.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"

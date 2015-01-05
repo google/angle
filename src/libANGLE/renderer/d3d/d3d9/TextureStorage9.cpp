@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/Texture.h"
 
 namespace rx

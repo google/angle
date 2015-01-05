@@ -8,11 +8,13 @@
 // formats.
 
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/renderer/d3d/d3d11/copyvertex.h"
+
+#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/renderer/d3d/copyimage.h"
 #include "libANGLE/renderer/d3d/generatemip.h"
 #include "libANGLE/renderer/d3d/loadimage.h"
-#include "libANGLE/renderer/Renderer.h"
+#include "libANGLE/renderer/d3d/d3d11/copyvertex.h"
 
 namespace rx
 {

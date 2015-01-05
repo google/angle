@@ -199,7 +199,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     // The SRV must be in the proper read format, which may be different from the destination format
     // EG: for half float data, we can load full precision floats with implicit conversion
     GLenum unsizedFormat = gl::GetInternalFormatInfo(destinationFormat).format;
-    GLenum sourceFormat = gl::GetFormatTypeInfo(unsizedFormat, sourcePixelsType).internalFormat;
+    GLenum sourceFormat = gl::GetSizedInternalFormat(unsizedFormat, sourcePixelsType);
 
     const d3d11::TextureFormat &sourceFormatInfo = d3d11::GetTextureFormatInfo(sourceFormat, mRenderer->getFeatureLevel());
     DXGI_FORMAT srvFormat = sourceFormatInfo.srvFormat;

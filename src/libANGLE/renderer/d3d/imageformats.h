@@ -10,6 +10,8 @@
 #ifndef LIBANGLE_RENDERER_D3D_IMAGEFORMATS_H_
 #define LIBANGLE_RENDERER_D3D_IMAGEFORMATS_H_
 
+#include "libANGLE/angletypes.h"
+
 #include "common/mathutil.h"
 
 namespace rx

@@ -11,6 +11,7 @@
 
 #include <tuple>
 
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/SwapChain11.h"

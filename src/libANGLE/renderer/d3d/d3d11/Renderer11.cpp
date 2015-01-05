@@ -17,6 +17,7 @@
 #include "libANGLE/Program.h"
 #include "libANGLE/State.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
@@ -2994,8 +2995,8 @@ gl::Error Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsP
         const d3d11::DXGIFormat &sourceDXGIFormatInfo = d3d11::GetDXGIFormatInfo(textureDesc.Format);
         ColorCopyFunction fastCopyFunc = sourceDXGIFormatInfo.getFastCopyFunction(params.format, params.type);
 
-        const gl::FormatType &destFormatTypeInfo = gl::GetFormatTypeInfo(params.format, params.type);
-        const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(destFormatTypeInfo.internalFormat);
+        GLenum sizedDestInternalFormat = gl::GetSizedInternalFormat(params.format, params.type);
+        const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(sizedDestInternalFormat);
 
         if (fastCopyFunc)
         {
@@ -3013,6 +3014,9 @@ gl::Error Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsP
         }
         else
         {
+            ColorReadFunction colorReadFunction = sourceDXGIFormatInfo.colorReadFunction;
+            ColorWriteFunction colorWriteFunction = GetColorWriteFunction(params.format, params.type);
+
             uint8_t temp[16]; // Maximum size of any Color<T> type used.
             META_ASSERT(sizeof(temp) >= sizeof(gl::ColorF)  &&
                         sizeof(temp) >= sizeof(gl::ColorUI) &&
@@ -3027,8 +3031,8 @@ gl::Error Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsP
 
                     // readFunc and writeFunc will be using the same type of color, CopyTexImage
                     // will not allow the copy otherwise.
-                    sourceDXGIFormatInfo.colorReadFunction(src, temp);
-                    destFormatTypeInfo.colorWriteFunction(temp, dest);
+                    colorReadFunction(src, temp);
+                    colorWriteFunction(temp, dest);
                 }
             }
         }

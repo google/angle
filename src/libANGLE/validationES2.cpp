@@ -94,7 +94,7 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
     {
         if (format != GL_NONE)
         {
-            if (gl::GetFormatTypeInfo(format, type).internalFormat != texture->getInternalFormat(target, level))
+            if (gl::GetSizedInternalFormat(format, type) != texture->getInternalFormat(target, level))
             {
                 context->recordError(Error(GL_INVALID_OPERATION));
                 return false;
