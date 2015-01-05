@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e0529fe_05b3780b",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T18:39:49Z",
+      "side": 1,
+      "message": "nit: can this be a switch?",
+      "range": {
+        "startLine": 389,
+        "startChar": 4,
+        "endLine": 397,
+        "endChar": 23
+      },
+      "revId": "83747a579cb5278720f5fe3c21c7d09a1bf784b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e0529fe_a5b964e9",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T18:39:49Z",
+      "side": 1,
+      "message": "This should be wrapped in the ANGLE_ENABLE_KEYEDMUTEX macro.",
+      "range": {
+        "startLine": 79,
+        "startChar": 6,
+        "endLine": 80,
+        "endChar": 14
+      },
+      "revId": "83747a579cb5278720f5fe3c21c7d09a1bf784b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
