@@ -15,7 +15,6 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/Renderer.h"
-#include "libANGLE/renderer/RenderTarget.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
 #include "libANGLE/renderer/Workarounds.h"
 

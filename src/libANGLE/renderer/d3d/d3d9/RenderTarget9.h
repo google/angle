@@ -10,20 +10,20 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_RENDERTARGET9_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_RENDERTARGET9_H_
 
-#include "libANGLE/renderer/RenderTarget.h"
+#include "libANGLE/renderer/D3D/RenderTargetD3D.h"
 
 namespace rx
 {
 class Renderer9;
 class SwapChain9;
 
-class RenderTarget9 : public RenderTarget
+class RenderTarget9 : public RenderTargetD3D
 {
   public:
     RenderTarget9() { }
     virtual ~RenderTarget9() { }
 
-    static RenderTarget9 *makeRenderTarget9(RenderTarget *renderTarget);
+    static RenderTarget9 *makeRenderTarget9(RenderTargetD3D *renderTarget);
 
     virtual IDirect3DSurface9 *getSurface() = 0;
 

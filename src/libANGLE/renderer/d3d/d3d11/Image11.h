@@ -46,7 +46,7 @@ class Image11 : public ImageD3D
     virtual gl::Error loadData(const gl::Box &area, GLint unpackAlignment, GLenum type, const void *input);
     virtual gl::Error loadCompressedData(const gl::Box &area, const void *input);
 
-    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTarget *source);
+    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTargetD3D *source);
     virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
                            const gl::ImageIndex &sourceIndex, TextureStorage *source);
 

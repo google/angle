@@ -176,7 +176,7 @@ static unsigned int getDSVSubresourceIndex(ID3D11Resource *resource, ID3D11Depth
     return D3D11CalcSubresource(mipSlice, arraySlice, mipLevels);
 }
 
-RenderTarget11 *RenderTarget11::makeRenderTarget11(RenderTarget *target)
+RenderTarget11 *RenderTarget11::makeRenderTarget11(RenderTargetD3D *target)
 {
     ASSERT(HAS_DYNAMIC_TYPE(RenderTarget11*, target));
     return static_cast<RenderTarget11*>(target);

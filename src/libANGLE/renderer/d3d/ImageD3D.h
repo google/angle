@@ -29,7 +29,7 @@ namespace rx
 {
 class TextureStorage;
 class RendererD3D;
-class RenderTarget;
+class RenderTargetD3D;
 
 class ImageD3D
 {
@@ -77,7 +77,7 @@ class ImageD3D
   private:
     DISALLOW_COPY_AND_ASSIGN(ImageD3D);
 
-    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTarget *source) = 0;
+    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTargetD3D *source) = 0;
 };
 
 }

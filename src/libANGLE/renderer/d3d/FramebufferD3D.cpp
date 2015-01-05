@@ -9,8 +9,8 @@
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
+#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"
-#include "libANGLE/renderer/RenderTarget.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
@@ -18,7 +18,7 @@
 namespace rx
 {
 
-DefaultAttachmentD3D::DefaultAttachmentD3D(RenderTarget *renderTarget)
+DefaultAttachmentD3D::DefaultAttachmentD3D(RenderTargetD3D *renderTarget)
     : mRenderTarget(renderTarget)
 {
     ASSERT(mRenderTarget);
@@ -55,7 +55,7 @@ GLsizei DefaultAttachmentD3D::getSamples() const
     return mRenderTarget->getSamples();
 }
 
-RenderTarget *DefaultAttachmentD3D::getRenderTarget() const
+RenderTargetD3D *DefaultAttachmentD3D::getRenderTarget() const
 {
     return mRenderTarget;
 }
@@ -217,7 +217,7 @@ GLenum FramebufferD3D::getImplementationColorReadFormat() const
         return GL_NONE;
     }
 
-    RenderTarget *attachmentRenderTarget = NULL;
+    RenderTargetD3D *attachmentRenderTarget = NULL;
     gl::Error error = GetAttachmentRenderTarget(mColorBuffers[0], &attachmentRenderTarget);
     if (error.isError())
     {
@@ -240,7 +240,7 @@ GLenum FramebufferD3D::getImplementationColorReadType() const
         return GL_NONE;
     }
 
-    RenderTarget *attachmentRenderTarget = NULL;
+    RenderTargetD3D *attachmentRenderTarget = NULL;
     gl::Error error = GetAttachmentRenderTarget(mColorBuffers[0], &attachmentRenderTarget);
     if (error.isError())
     {
@@ -327,7 +327,7 @@ GLenum FramebufferD3D::checkStatus() const
     return GL_FRAMEBUFFER_COMPLETE;
 }
 
-gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget **outRT)
+gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTargetD3D **outRT)
 {
     if (attachment->type() == GL_TEXTURE)
     {

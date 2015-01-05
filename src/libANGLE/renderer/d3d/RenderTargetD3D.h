@@ -1,25 +1,25 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2015 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 
-// RenderTarget.h: Defines an abstract wrapper class to manage IDirect3DSurface9
-// and ID3D11View objects belonging to renderbuffers.
+// RenderTargetD3D.h: Defines an abstract wrapper class to manage IDirect3DSurface9
+// and ID3D11View objects belonging to renderbuffers and renderable textures.
 
-#ifndef LIBANGLE_RENDERER_RENDERTARGET_H_
-#define LIBANGLE_RENDERER_RENDERTARGET_H_
+#ifndef LIBANGLE_RENDERER_D3D_RENDERTARGETD3D_H_
+#define LIBANGLE_RENDERER_D3D_RENDERTARGETD3D_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
 
 namespace rx
 {
-class RenderTarget
+class RenderTargetD3D
 {
   public:
-    RenderTarget();
-    virtual ~RenderTarget();
+    RenderTargetD3D();
+    virtual ~RenderTargetD3D();
 
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;
@@ -32,7 +32,7 @@ class RenderTarget
     static unsigned int issueSerials(unsigned int count);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(RenderTarget);
+    DISALLOW_COPY_AND_ASSIGN(RenderTargetD3D);
 
     const unsigned int mSerial;
     static unsigned int mCurrentSerial;
@@ -40,4 +40,4 @@ class RenderTarget
 
 }
 
-#endif // LIBANGLE_RENDERTARGET_H_
+#endif // LIBANGLE_RENDERER_D3D_RENDERTARGETD3D_H_

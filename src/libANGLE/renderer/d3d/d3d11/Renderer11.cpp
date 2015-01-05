@@ -2122,7 +2122,7 @@ gl::Error Renderer11::copyImage2D(const gl::Framebuffer *framebuffer, const gl::
     ASSERT(storage11);
 
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
-    RenderTarget *destRenderTarget = NULL;
+    RenderTargetD3D *destRenderTarget = NULL;
     error = storage11->getRenderTarget(index, &destRenderTarget);
     if (error.isError())
     {
@@ -2173,7 +2173,7 @@ gl::Error Renderer11::copyImageCube(const gl::Framebuffer *framebuffer, const gl
     ASSERT(storage11);
 
     gl::ImageIndex index = gl::ImageIndex::MakeCube(target, level);
-    RenderTarget *destRenderTarget = NULL;
+    RenderTargetD3D *destRenderTarget = NULL;
     error = storage11->getRenderTarget(index, &destRenderTarget);
     if (error.isError())
     {
@@ -2224,7 +2224,7 @@ gl::Error Renderer11::copyImage3D(const gl::Framebuffer *framebuffer, const gl::
     ASSERT(storage11);
 
     gl::ImageIndex index = gl::ImageIndex::Make3D(level, destOffset.z);
-    RenderTarget *destRenderTarget = NULL;
+    RenderTargetD3D *destRenderTarget = NULL;
     error = storage11->getRenderTarget(index, &destRenderTarget);
     if (error.isError())
     {
@@ -2275,7 +2275,7 @@ gl::Error Renderer11::copyImage2DArray(const gl::Framebuffer *framebuffer, const
     ASSERT(storage11);
 
     gl::ImageIndex index = gl::ImageIndex::Make2DArray(level, destOffset.z);
-    RenderTarget *destRenderTarget = NULL;
+    RenderTargetD3D *destRenderTarget = NULL;
     error = storage11->getRenderTarget(index, &destRenderTarget);
     if (error.isError())
     {
@@ -2326,7 +2326,7 @@ void Renderer11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView
     }
 }
 
-gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT)
+gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
 {
     const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(format, mFeatureLevel);
 
@@ -2760,7 +2760,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     return true;
 }
 
-gl::Error Renderer11::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
+gl::Error Renderer11::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
 {
     ASSERT(supportsFastCopyBufferToTexture(destinationFormat));
@@ -3013,8 +3013,8 @@ gl::Error Renderer11::packPixels(ID3D11Texture2D *readTexture, const PackPixelsP
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
-                                           RenderTarget *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
+gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTargetD3D *readRenderTarget,
+                                           RenderTargetD3D *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
                                            bool colorBlit, bool depthBlit, bool stencilBlit)
 {
     // Since blitRenderbufferRect is called for each render buffer that needs to be blitted,

@@ -550,7 +550,7 @@ void MakeValidSize(bool isImage, D3DFORMAT format, GLsizei *requestWidth, GLsize
 
 gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget9 **outRT)
 {
-    RenderTarget *renderTarget = NULL;
+    RenderTargetD3D *renderTarget = NULL;
     gl::Error error = rx::GetAttachmentRenderTarget(attachment, &renderTarget);
     if (error.isError())
     {

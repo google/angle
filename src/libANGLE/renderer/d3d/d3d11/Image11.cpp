@@ -311,7 +311,7 @@ gl::Error Image11::loadCompressedData(const gl::Box &area, const void *input)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Image11::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTarget *source)
+gl::Error Image11::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTargetD3D *source)
 {
     RenderTarget11 *sourceRenderTarget = RenderTarget11::makeRenderTarget11(source);
     ASSERT(sourceRenderTarget->getTexture());

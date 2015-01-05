@@ -12,9 +12,6 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
-#include "libANGLE/renderer/RenderTarget.h"
-#include "libANGLE/renderer/Renderer.h"
-#include "libANGLE/renderer/d3d/TextureStorage.h"
 
 #include "common/utilities.h"
 

@@ -549,7 +549,7 @@ gl::Error Image9::loadCompressedData(const gl::Box &area, const void *input)
 }
 
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
-gl::Error Image9::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTarget *source)
+gl::Error Image9::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTargetD3D *source)
 {
     ASSERT(source);
 

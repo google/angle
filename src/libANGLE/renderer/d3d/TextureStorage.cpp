@@ -8,7 +8,7 @@
 
 #include "libANGLE/renderer/d3d/TextureStorage.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
-#include "libANGLE/renderer/RenderTarget.h"
+#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Texture.h"
@@ -26,7 +26,7 @@ TextureStorage::TextureStorage()
 
 void TextureStorage::initializeSerials(unsigned int rtSerialsToReserve, unsigned int rtSerialsLayerStride)
 {
-    mFirstRenderTargetSerial = RenderTarget::issueSerials(rtSerialsToReserve);
+    mFirstRenderTargetSerial = RenderTargetD3D::issueSerials(rtSerialsToReserve);
     mRenderTargetSerialsLayerStride = rtSerialsLayerStride;
 }
 

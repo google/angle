@@ -179,7 +179,7 @@ gl::Error TextureStorage9_2D::getSurfaceLevel(int level, bool dirty, IDirect3DSu
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error TextureStorage9_2D::getRenderTarget(const gl::ImageIndex &/*index*/, RenderTarget **outRT)
+gl::Error TextureStorage9_2D::getRenderTarget(const gl::ImageIndex &/*index*/, RenderTargetD3D **outRT)
 {
     if (!mRenderTarget && isRenderTarget())
     {
@@ -355,7 +355,7 @@ gl::Error TextureStorage9_Cube::getCubeMapSurface(GLenum faceTarget, int level, 
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error TextureStorage9_Cube::getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT)
+gl::Error TextureStorage9_Cube::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
 {
     ASSERT(outRT);
     ASSERT(index.mipIndex == 0);

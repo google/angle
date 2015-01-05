@@ -10,20 +10,20 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_RENDERTARGET11_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_RENDERTARGET11_H_
 
-#include "libANGLE/renderer/RenderTarget.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 
 namespace rx
 {
 class SwapChain11;
+class Renderer11;
 
-class RenderTarget11 : public RenderTarget
+class RenderTarget11 : public RenderTargetD3D
 {
   public:
     RenderTarget11() { }
     virtual ~RenderTarget11() { }
 
-    static RenderTarget11 *makeRenderTarget11(RenderTarget *renderTarget);
+    static RenderTarget11 *makeRenderTarget11(RenderTargetD3D *renderTarget);
 
     virtual ID3D11Resource *getTexture() const = 0;
     virtual ID3D11RenderTargetView *getRenderTargetView() const = 0;

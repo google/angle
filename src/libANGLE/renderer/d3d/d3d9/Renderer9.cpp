@@ -701,7 +701,7 @@ bool Renderer9::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     return false;
 }
 
-gl::Error Renderer9::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
+gl::Error Renderer9::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
                                              GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
 {
     // Pixel buffer objects are not supported in D3D9, since D3D9 is ES2-only and PBOs are ES3.
@@ -1936,7 +1936,7 @@ gl::Error Renderer9::clear(const gl::ClearParameters &clearParams, const gl::Fra
     unsigned int stencilUnmasked = 0x0;
     if (clearParams.clearStencil && depthStencilBuffer->getStencilSize() > 0)
     {
-        RenderTarget *stencilRenderTarget = NULL;
+        RenderTargetD3D *stencilRenderTarget = NULL;
         gl::Error error = GetAttachmentRenderTarget(depthStencilBuffer, &stencilRenderTarget);
         if (error.isError())
         {
@@ -1957,7 +1957,7 @@ gl::Error Renderer9::clear(const gl::ClearParameters &clearParams, const gl::Fra
     D3DCOLOR color = D3DCOLOR_ARGB(255, 0, 0, 0);
     if (clearColor)
     {
-        RenderTarget *colorRenderTarget = NULL;
+        RenderTargetD3D *colorRenderTarget = NULL;
         gl::Error error = GetAttachmentRenderTarget(colorBuffer, &colorRenderTarget);
         if (error.isError())
         {
@@ -2513,7 +2513,7 @@ gl::Error Renderer9::copyImage2DArray(const gl::Framebuffer *framebuffer, const 
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT)
+gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
 {
     const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(format);
 

@@ -27,7 +27,7 @@ struct PixelUnpackState;
 namespace rx
 {
 class SwapChain;
-class RenderTarget;
+class RenderTargetD3D;
 class ImageD3D;
 
 class TextureStorage
@@ -41,7 +41,7 @@ class TextureStorage
     virtual bool isManaged() const = 0;
     virtual int getLevelCount() const = 0;
 
-    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT) = 0;
+    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) = 0;
     virtual gl::Error generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex) = 0;
 
     virtual gl::Error copyToStorage(TextureStorage *destStorage) = 0;

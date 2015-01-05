@@ -35,7 +35,7 @@ class Framebuffer11 : public FramebufferD3D
                    const gl::Framebuffer *sourceFramebuffer) override;
 
 
-    GLenum getRenderTargetImplementationFormat(RenderTarget *renderTarget) const override;
+    GLenum getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const override;
 
     Renderer11 *const mRenderer;
 };

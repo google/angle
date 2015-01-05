@@ -14,7 +14,7 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
-#include "libANGLE/renderer/RenderTarget.h"
+#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
 
 namespace gl

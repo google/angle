@@ -410,7 +410,7 @@ gl::Error Framebuffer9::blit(const gl::Rectangle &sourceArea, const gl::Rectangl
     return gl::Error(GL_NO_ERROR);
 }
 
-GLenum Framebuffer9::getRenderTargetImplementationFormat(RenderTarget *renderTarget) const
+GLenum Framebuffer9::getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const
 {
     RenderTarget9 *renderTarget9 = RenderTarget9::makeRenderTarget9(renderTarget);
     const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(renderTarget9->getD3DFormat());

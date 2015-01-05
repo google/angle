@@ -28,7 +28,7 @@ namespace rx
 {
 class ImageD3D;
 class IndexBuffer;
-class RenderTarget;
+class RenderTargetD3D;
 class ShaderExecutable;
 class SwapChain;
 class TextureStorage;
@@ -117,7 +117,7 @@ class RendererD3D : public Renderer
                                        const gl::Offset &destOffset, TextureStorage *storage, GLint level) = 0;
 
     // RenderTarget creation
-    virtual gl::Error createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTarget **outRT) = 0;
+    virtual gl::Error createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT) = 0;
 
     // Shader operations
     virtual gl::Error loadExecutable(const void *function, size_t length, ShaderType type,
@@ -140,7 +140,7 @@ class RendererD3D : public Renderer
 
     // Buffer-to-texture and Texture-to-buffer copies
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const = 0;
-    virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTarget *destRenderTarget,
+    virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
 
     virtual VertexConversionType getVertexConversionType(const gl::VertexFormat &vertexFormat) const = 0;

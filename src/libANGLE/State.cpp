@@ -15,7 +15,6 @@
 #include "libANGLE/Query.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
-#include "libANGLE/renderer/RenderTarget.h"
 
 namespace gl
 {

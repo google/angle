@@ -23,13 +23,13 @@ struct PixelPackState;
 
 namespace rx
 {
-class RenderTarget;
+class RenderTargetD3D;
 class RendererD3D;
 
 class DefaultAttachmentD3D : public DefaultAttachmentImpl
 {
   public:
-    DefaultAttachmentD3D(RenderTarget *renderTarget);
+    DefaultAttachmentD3D(RenderTargetD3D *renderTarget);
     virtual ~DefaultAttachmentD3D();
 
     static DefaultAttachmentD3D *makeDefaultAttachmentD3D(DefaultAttachmentImpl* impl);
@@ -39,10 +39,10 @@ class DefaultAttachmentD3D : public DefaultAttachmentImpl
     virtual GLenum getInternalFormat() const override;
     virtual GLsizei getSamples() const override;
 
-    RenderTarget *getRenderTarget() const;
+    RenderTargetD3D *getRenderTarget() const;
 
   private:
-    RenderTarget *mRenderTarget;
+    RenderTargetD3D *mRenderTarget;
 };
 
 class FramebufferD3D : public FramebufferImpl
@@ -97,10 +97,10 @@ class FramebufferD3D : public FramebufferImpl
                            bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter,
                            const gl::Framebuffer *sourceFramebuffer) = 0;
 
-    virtual GLenum getRenderTargetImplementationFormat(RenderTarget *renderTarget) const = 0;
+    virtual GLenum getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const = 0;
 };
 
-gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTarget **outRT);
+gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment, RenderTargetD3D **outRT);
 unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment);
 
 }

@@ -16,7 +16,7 @@
 namespace rx
 {
 
-RenderTarget9 *RenderTarget9::makeRenderTarget9(RenderTarget *target)
+RenderTarget9 *RenderTarget9::makeRenderTarget9(RenderTargetD3D *target)
 {
     ASSERT(HAS_DYNAMIC_TYPE(RenderTarget9*, target));
     return static_cast<RenderTarget9*>(target);

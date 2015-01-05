@@ -16,10 +16,10 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/BufferImpl.h"
-#include "libANGLE/renderer/RenderTarget.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/ImageD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
+#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/TextureStorage.h"
 
@@ -290,7 +290,7 @@ bool TextureD3D::isFastUnpackable(const gl::PixelUnpackState &unpack, GLenum siz
 }
 
 gl::Error TextureD3D::fastUnpackPixels(const gl::PixelUnpackState &unpack, const uint8_t *pixels, const gl::Box &destArea,
-                                       GLenum sizedInternalFormat, GLenum type, RenderTarget *destRenderTarget)
+                                       GLenum sizedInternalFormat, GLenum type, RenderTargetD3D *destRenderTarget)
 {
     // No-op
     if (destArea.width <= 0 && destArea.height <= 0 && destArea.depth <= 0)
@@ -620,7 +620,7 @@ gl::Error TextureD3D_2D::setImage(GLenum target, size_t level, GLenum internalFo
     if (isFastUnpackable(unpack, sizedInternalFormat) && isLevelComplete(level))
     {
         // Will try to create RT storage if it does not exist
-        RenderTarget *destRenderTarget = NULL;
+        RenderTargetD3D *destRenderTarget = NULL;
         gl::Error error = getRenderTarget(index, &destRenderTarget);
         if (error.isError())
         {
@@ -663,7 +663,7 @@ gl::Error TextureD3D_2D::setSubImage(GLenum target, size_t level, const gl::Box 
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
     if (isFastUnpackable(unpack, getInternalFormat(level)) && isLevelComplete(level))
     {
-        RenderTarget *renderTarget = NULL;
+        RenderTargetD3D *renderTarget = NULL;
         gl::Error error = getRenderTarget(index, &renderTarget);
         if (error.isError())
         {
@@ -896,7 +896,7 @@ unsigned int TextureD3D_2D::getRenderTargetSerial(const gl::ImageIndex &index)
     return (!ensureRenderTarget().isError() ? mTexStorage->getRenderTargetSerial(index) : 0);
 }
 
-gl::Error TextureD3D_2D::getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT)
+gl::Error TextureD3D_2D::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
 {
     ASSERT(!index.hasLayer());
 
@@ -1453,7 +1453,7 @@ unsigned int TextureD3D_Cube::getRenderTargetSerial(const gl::ImageIndex &index)
     return (!ensureRenderTarget().isError() ? mTexStorage->getRenderTargetSerial(index) : 0);
 }
 
-gl::Error TextureD3D_Cube::getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT)
+gl::Error TextureD3D_Cube::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
 {
     ASSERT(gl::IsCubeMapTextureTarget(index.type));
 
@@ -1792,7 +1792,7 @@ gl::Error TextureD3D_3D::setImage(GLenum target, size_t level, GLenum internalFo
     if (isFastUnpackable(unpack, sizedInternalFormat) && !size.empty())
     {
         // Will try to create RT storage if it does not exist
-        RenderTarget *destRenderTarget = NULL;
+        RenderTargetD3D *destRenderTarget = NULL;
         gl::Error error = getRenderTarget(index, &destRenderTarget);
         if (error.isError())
         {
@@ -1837,7 +1837,7 @@ gl::Error TextureD3D_3D::setSubImage(GLenum target, size_t level, const gl::Box 
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
     if (isFastUnpackable(unpack, getInternalFormat(level)))
     {
-        RenderTarget *destRenderTarget = NULL;
+        RenderTargetD3D *destRenderTarget = NULL;
         gl::Error error = getRenderTarget(index, &destRenderTarget);
         if (error.isError())
         {
@@ -2006,7 +2006,7 @@ unsigned int TextureD3D_3D::getRenderTargetSerial(const gl::ImageIndex &index)
     return (!ensureRenderTarget().isError() ? mTexStorage->getRenderTargetSerial(index) : 0);
 }
 
-gl::Error TextureD3D_3D::getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT)
+gl::Error TextureD3D_3D::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
 {
     // ensure the underlying texture is created
     gl::Error error = ensureRenderTarget();
@@ -2553,7 +2553,7 @@ unsigned int TextureD3D_2DArray::getRenderTargetSerial(const gl::ImageIndex &ind
     return (!ensureRenderTarget().isError() ? mTexStorage->getRenderTargetSerial(index) : 0);
 }
 
-gl::Error TextureD3D_2DArray::getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT)
+gl::Error TextureD3D_2DArray::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
 {
     // ensure the underlying texture is created
     gl::Error error = ensureRenderTarget();

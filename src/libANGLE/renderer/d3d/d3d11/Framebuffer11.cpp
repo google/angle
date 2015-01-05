@@ -156,7 +156,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
         const gl::FramebufferAttachment *readBuffer = sourceFramebuffer->getReadColorbuffer();
         ASSERT(readBuffer);
 
-        RenderTarget *readRenderTarget = NULL;
+        RenderTargetD3D *readRenderTarget = NULL;
         gl::Error error = GetAttachmentRenderTarget(readBuffer, &readRenderTarget);
         if (error.isError())
         {
@@ -170,7 +170,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
             {
                 const gl::FramebufferAttachment *drawBuffer = mColorBuffers[colorAttachment];
 
-                RenderTarget *drawRenderTarget = NULL;
+                RenderTargetD3D *drawRenderTarget = NULL;
                 error = GetAttachmentRenderTarget(drawBuffer, &drawRenderTarget);
                 if (error.isError())
                 {
@@ -193,7 +193,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
         gl::FramebufferAttachment *readBuffer = sourceFramebuffer->getDepthOrStencilbuffer();
         ASSERT(readBuffer);
 
-        RenderTarget *readRenderTarget = NULL;
+        RenderTargetD3D *readRenderTarget = NULL;
         gl::Error error = GetAttachmentRenderTarget(readBuffer, &readRenderTarget);
         if (error.isError())
         {
@@ -205,7 +205,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
                                                                                 : mStencilbuffer;
         ASSERT(drawBuffer);
 
-        RenderTarget *drawRenderTarget = NULL;
+        RenderTargetD3D *drawRenderTarget = NULL;
         error = GetAttachmentRenderTarget(drawBuffer, &drawRenderTarget);
         if (error.isError())
         {
@@ -226,7 +226,7 @@ gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectang
     return gl::Error(GL_NO_ERROR);
 }
 
-GLenum Framebuffer11::getRenderTargetImplementationFormat(RenderTarget *renderTarget) const
+GLenum Framebuffer11::getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const
 {
     RenderTarget11 *renderTarget11 = RenderTarget11::makeRenderTarget11(renderTarget);
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(renderTarget11->getDXGIFormat());

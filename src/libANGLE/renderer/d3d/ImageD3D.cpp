@@ -33,7 +33,7 @@ gl::Error ImageD3D::copy(const gl::Offset &destOffset, const gl::Rectangle &sour
     gl::FramebufferAttachment *colorbuffer = source->getReadColorbuffer();
     ASSERT(colorbuffer);
 
-    RenderTarget *renderTarget = NULL;
+    RenderTargetD3D *renderTarget = NULL;
     gl::Error error = GetAttachmentRenderTarget(colorbuffer, &renderTarget);
     if (error.isError())
     {

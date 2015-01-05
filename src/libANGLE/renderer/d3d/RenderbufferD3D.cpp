@@ -10,7 +10,7 @@
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"
 
 #include "libANGLE/renderer/d3d/RendererD3D.h"
-#include "libANGLE/renderer/RenderTarget.h"
+#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 
 namespace rx
 {
@@ -42,7 +42,7 @@ gl::Error RenderbufferD3D::setStorage(GLsizei width, GLsizei height, GLenum inte
         creationFormat = GL_DEPTH24_STENCIL8_OES;
     }
 
-    RenderTarget *newRT = NULL;
+    RenderTargetD3D *newRT = NULL;
     gl::Error error = mRenderer->createRenderTarget(width, height, creationFormat, samples, &newRT);
     if (error.isError())
     {
@@ -55,7 +55,7 @@ gl::Error RenderbufferD3D::setStorage(GLsizei width, GLsizei height, GLenum inte
     return gl::Error(GL_NO_ERROR);
 }
 
-RenderTarget *RenderbufferD3D::getRenderTarget()
+RenderTargetD3D *RenderbufferD3D::getRenderTarget()
 {
     return mRenderTarget;
 }

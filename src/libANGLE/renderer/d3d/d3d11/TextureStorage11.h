@@ -23,7 +23,7 @@ struct ImageIndex;
 
 namespace rx
 {
-class RenderTarget;
+class RenderTargetD3D;
 class RenderTarget11;
 class Renderer11;
 class SwapChain11;
@@ -42,7 +42,7 @@ class TextureStorage11 : public TextureStorage
 
     virtual gl::Error getResource(ID3D11Resource **outResource) = 0;
     virtual gl::Error getSRV(const gl::SamplerState &samplerState, ID3D11ShaderResourceView **outSRV);
-    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT) = 0;
+    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) = 0;
 
     virtual gl::Error generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex);
 
@@ -152,7 +152,7 @@ class TextureStorage11_2D : public TextureStorage11
 
     virtual gl::Error getResource(ID3D11Resource **outResource);
     virtual gl::Error getMippedResource(ID3D11Resource **outResource);
-    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
+    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
 
     virtual gl::Error copyToStorage(TextureStorage *destStorage);
 
@@ -207,7 +207,7 @@ class TextureStorage11_Cube : public TextureStorage11
     static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
 
     virtual gl::Error getResource(ID3D11Resource **outResource);
-    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
+    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
 
     virtual void associateImage(Image11* image, const gl::ImageIndex &index);
     virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage);
@@ -247,7 +247,7 @@ class TextureStorage11_3D : public TextureStorage11
     virtual gl::Error getResource(ID3D11Resource **outResource);
 
     // Handles both layer and non-layer RTs
-    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
+    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
 
     virtual void associateImage(Image11* image, const gl::ImageIndex &index);
     virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage);
@@ -287,7 +287,7 @@ class TextureStorage11_2DArray : public TextureStorage11
     static TextureStorage11_2DArray *makeTextureStorage11_2DArray(TextureStorage *storage);
 
     virtual gl::Error getResource(ID3D11Resource **outResource);
-    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT);
+    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
 
     virtual void associateImage(Image11* image, const gl::ImageIndex &index);
     virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage);
