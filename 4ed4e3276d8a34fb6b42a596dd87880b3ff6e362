@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e0529fe_22e9ca3d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 897,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T17:42:55Z",
+      "side": 1,
+      "message": "nit: tabs",
+      "range": {
+        "startLine": 883,
+        "startChar": 0,
+        "endLine": 897,
+        "endChar": 2
+      },
+      "revId": "4ed4e3276d8a34fb6b42a596dd87880b3ff6e362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6126549e_75b7b2f6",
+        "filename": "tests/angle_tests/ViewportTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T17:42:55Z",
+      "side": 1,
+      "message": "nit: indent",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 10
+      },
+      "revId": "4ed4e3276d8a34fb6b42a596dd87880b3ff6e362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
