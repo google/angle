@@ -146,7 +146,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
     // If slot 0 currently contains instanced data then we swap it with a non-instanced element.
     // Note that instancing is only available on 9_3 via ANGLE_instanced_arrays, since 9_3 doesn't support OpenGL ES 3.0.
     // As per the spec for ANGLE_instanced_arrays, not all attributes can be instanced simultaneously, so a non-instanced element must exist.
-    ASSERT(!(mFeatureLevel <= D3D_FEATURE_LEVEL_9_3 && firstInstancedElement == gl::MAX_VERTEX_ATTRIBS));
+    ASSERT(!(mFeatureLevel <= D3D_FEATURE_LEVEL_9_3 && firstIndexedElement == gl::MAX_VERTEX_ATTRIBS));
     bool moveFirstIndexedIntoSlotZero = mFeatureLevel <= D3D_FEATURE_LEVEL_9_3 && firstInstancedElement == 0 && firstIndexedElement != gl::MAX_VERTEX_ATTRIBS;
 
     if (moveFirstIndexedIntoSlotZero)
