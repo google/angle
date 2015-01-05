@@ -501,7 +501,7 @@ gl::Error TextureStorage11::copyToStorage(TextureStorage *destStorage)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error TextureStorage11::setData(const gl::ImageIndex &index, Image *image, const gl::Box *destBox, GLenum type,
+gl::Error TextureStorage11::setData(const gl::ImageIndex &index, ImageD3D *image, const gl::Box *destBox, GLenum type,
                                     const gl::PixelUnpackState &unpack, const uint8_t *pixelData)
 {
     ID3D11Resource *resource = NULL;

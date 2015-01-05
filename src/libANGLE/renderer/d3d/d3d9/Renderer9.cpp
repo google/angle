@@ -2808,12 +2808,12 @@ gl::Error Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurfac
     return gl::Error(GL_NO_ERROR);
 }
 
-Image *Renderer9::createImage()
+ImageD3D *Renderer9::createImage()
 {
     return new Image9(this);
 }
 
-gl::Error Renderer9::generateMipmap(Image *dest, Image *src)
+gl::Error Renderer9::generateMipmap(ImageD3D *dest, ImageD3D *src)
 {
     Image9 *src9 = Image9::makeImage9(src);
     Image9 *dst9 = Image9::makeImage9(dest);

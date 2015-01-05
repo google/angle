@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2015 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -18,13 +18,14 @@ namespace rx
 {
 
 ImageD3D::ImageD3D()
+    : mWidth(0),
+      mHeight(0),
+      mDepth(0),
+      mInternalFormat(GL_NONE),
+      mTarget(GL_NONE),
+      mRenderable(false),
+      mDirty(false)
 {
-}
-
-ImageD3D *ImageD3D::makeImageD3D(Image *img)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(ImageD3D*, img));
-    return static_cast<ImageD3D*>(img);
 }
 
 gl::Error ImageD3D::copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, const gl::Framebuffer *source)

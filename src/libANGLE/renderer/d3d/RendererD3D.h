@@ -26,7 +26,7 @@ class Texture;
 
 namespace rx
 {
-class Image;
+class ImageD3D;
 class IndexBuffer;
 class RenderTarget;
 class ShaderExecutable;
@@ -130,8 +130,8 @@ class RendererD3D : public Renderer
     virtual UniformStorage *createUniformStorage(size_t storageSize) = 0;
 
     // Image operations
-    virtual Image *createImage() = 0;
-    virtual gl::Error generateMipmap(Image *dest, Image *source) = 0;
+    virtual ImageD3D *createImage() = 0;
+    virtual gl::Error generateMipmap(ImageD3D *dest, ImageD3D *source) = 0;
     virtual TextureStorage *createTextureStorage2D(SwapChain *swapChain) = 0;
     virtual TextureStorage *createTextureStorage2D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels, bool hintLevelZeroOnly) = 0;
     virtual TextureStorage *createTextureStorageCube(GLenum internalformat, bool renderTarget, int size, int levels) = 0;

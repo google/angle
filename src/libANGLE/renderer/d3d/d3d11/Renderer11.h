@@ -151,8 +151,8 @@ class Renderer11 : public RendererD3D
     virtual UniformStorage *createUniformStorage(size_t storageSize);
 
     // Image operations
-    virtual Image *createImage();
-    gl::Error generateMipmap(Image *dest, Image *source) override;
+    virtual ImageD3D *createImage();
+    gl::Error generateMipmap(ImageD3D *dest, ImageD3D *source) override;
     virtual TextureStorage *createTextureStorage2D(SwapChain *swapChain);
     virtual TextureStorage *createTextureStorage2D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels, bool hintLevelZeroOnly);
     virtual TextureStorage *createTextureStorageCube(GLenum internalformat, bool renderTarget, int size, int levels);

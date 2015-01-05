@@ -113,8 +113,6 @@
             'libANGLE/renderer/DisplayImpl.h',
             'libANGLE/renderer/FenceImpl.h',
             'libANGLE/renderer/FramebufferImpl.h',
-            'libANGLE/renderer/Image.cpp',
-            'libANGLE/renderer/Image.h',
             'libANGLE/renderer/IndexRangeCache.cpp',
             'libANGLE/renderer/IndexRangeCache.h',
             'libANGLE/renderer/ProgramImpl.cpp',

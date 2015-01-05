@@ -42,7 +42,7 @@ Image11::~Image11()
     releaseStagingTexture();
 }
 
-Image11 *Image11::makeImage11(Image *img)
+Image11 *Image11::makeImage11(ImageD3D *img)
 {
     ASSERT(HAS_DYNAMIC_TYPE(Image11*, img));
     return static_cast<Image11*>(img);

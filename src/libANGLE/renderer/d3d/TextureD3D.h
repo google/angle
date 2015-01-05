@@ -21,7 +21,7 @@ class Framebuffer;
 namespace rx
 {
 
-class Image;
+class ImageD3D;
 class ImageD3D;
 class RendererD3D;
 class RenderTarget;
@@ -41,7 +41,7 @@ class TextureD3D : public TextureImpl
     bool hasDirtyImages() const { return mDirtyImages; }
     void resetDirty() { mDirtyImages = false; }
 
-    virtual Image *getImage(const gl::ImageIndex &index) const = 0;
+    virtual ImageD3D *getImage(const gl::ImageIndex &index) const = 0;
     virtual GLsizei getLayerCount(int level) const = 0;
 
     GLint getBaseLevelWidth() const;
@@ -64,7 +64,7 @@ class TextureD3D : public TextureImpl
 
     virtual gl::Error generateMipmaps();
     TextureStorage *getStorage();
-    Image *getBaseLevelImage() const;
+    ImageD3D *getBaseLevelImage() const;
 
   protected:
     gl::Error setImage(const gl::ImageIndex &index, GLenum type, const gl::PixelUnpackState &unpack, const uint8_t *pixels);
@@ -106,7 +106,7 @@ class TextureD3D : public TextureImpl
 
     virtual gl::Error updateStorage() = 0;
 
-    bool shouldUseSetData(const Image *image) const;
+    bool shouldUseSetData(const ImageD3D *image) const;
 };
 
 class TextureD3D_2D : public TextureD3D
@@ -115,8 +115,8 @@ class TextureD3D_2D : public TextureD3D
     TextureD3D_2D(RendererD3D *renderer);
     virtual ~TextureD3D_2D();
 
-    virtual Image *getImage(int level, int layer) const;
-    virtual Image *getImage(const gl::ImageIndex &index) const;
+    virtual ImageD3D *getImage(int level, int layer) const;
+    virtual ImageD3D *getImage(const gl::ImageIndex &index) const;
     virtual GLsizei getLayerCount(int level) const;
 
     GLsizei getWidth(GLint level) const;
@@ -178,8 +178,8 @@ class TextureD3D_Cube : public TextureD3D
     TextureD3D_Cube(RendererD3D *renderer);
     virtual ~TextureD3D_Cube();
 
-    virtual Image *getImage(int level, int layer) const;
-    virtual Image *getImage(const gl::ImageIndex &index) const;
+    virtual ImageD3D *getImage(int level, int layer) const;
+    virtual ImageD3D *getImage(const gl::ImageIndex &index) const;
     virtual GLsizei getLayerCount(int level) const;
 
     virtual bool hasDirtyImages() const { return mDirtyImages; }
@@ -243,8 +243,8 @@ class TextureD3D_3D : public TextureD3D
     TextureD3D_3D(RendererD3D *renderer);
     virtual ~TextureD3D_3D();
 
-    virtual Image *getImage(int level, int layer) const;
-    virtual Image *getImage(const gl::ImageIndex &index) const;
+    virtual ImageD3D *getImage(int level, int layer) const;
+    virtual ImageD3D *getImage(const gl::ImageIndex &index) const;
     virtual GLsizei getLayerCount(int level) const;
 
     GLsizei getWidth(GLint level) const;
@@ -306,8 +306,8 @@ class TextureD3D_2DArray : public TextureD3D
     TextureD3D_2DArray(RendererD3D *renderer);
     virtual ~TextureD3D_2DArray();
 
-    virtual Image *getImage(int level, int layer) const;
-    virtual Image *getImage(const gl::ImageIndex &index) const;
+    virtual ImageD3D *getImage(int level, int layer) const;
+    virtual ImageD3D *getImage(const gl::ImageIndex &index) const;
     virtual GLsizei getLayerCount(int level) const;
 
     GLsizei getWidth(GLint level) const;

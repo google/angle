@@ -28,7 +28,7 @@ class Image9 : public ImageD3D
     Image9(Renderer9 *renderer);
     ~Image9();
 
-    static Image9 *makeImage9(Image *img);
+    static Image9 *makeImage9(ImageD3D *img);
 
     static gl::Error generateMipmap(Image9 *dest, Image9 *source);
     static gl::Error generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface);

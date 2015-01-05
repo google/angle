@@ -2767,12 +2767,12 @@ gl::Error Renderer11::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack
     return mPixelTransfer->copyBufferToTexture(unpack, offset, destRenderTarget, destinationFormat, sourcePixelsType, destArea);
 }
 
-Image *Renderer11::createImage()
+ImageD3D *Renderer11::createImage()
 {
     return new Image11(this);
 }
 
-gl::Error Renderer11::generateMipmap(Image *dest, Image *src)
+gl::Error Renderer11::generateMipmap(ImageD3D *dest, ImageD3D *src)
 {
     Image11 *dest11 = Image11::makeImage11(dest);
     Image11 *src11 = Image11::makeImage11(src);

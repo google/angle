@@ -7,12 +7,8 @@
 // Texture.cpp: Implements the gl::Texture class. [OpenGL ES 2.0.24] section 3.7 page 63.
 
 #include "libANGLE/Texture.h"
-#include "libANGLE/Context.h"
+#include "libANGLE/Data.h"
 #include "libANGLE/formatutils.h"
-#include "libANGLE/ImageIndex.h"
-#include "libANGLE/Renderbuffer.h"
-#include "libANGLE/renderer/Image.h"
-#include "libANGLE/renderer/d3d/TextureStorage.h"
 
 #include "libANGLE/Surface.h"
 

@@ -28,7 +28,7 @@ namespace rx
 {
 class SwapChain;
 class RenderTarget;
-class Image;
+class ImageD3D;
 
 class TextureStorage
 {
@@ -45,7 +45,7 @@ class TextureStorage
     virtual gl::Error generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex) = 0;
 
     virtual gl::Error copyToStorage(TextureStorage *destStorage) = 0;
-    virtual gl::Error setData(const gl::ImageIndex &index, Image *image, const gl::Box *destBox, GLenum type,
+    virtual gl::Error setData(const gl::ImageIndex &index, ImageD3D *image, const gl::Box *destBox, GLenum type,
                               const gl::PixelUnpackState &unpack, const uint8_t *pixelData) = 0;
 
     unsigned int getRenderTargetSerial(const gl::ImageIndex &index) const;

@@ -93,7 +93,7 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
     return gl::Error(GL_NO_ERROR);
 }
 
-Image9 *Image9::makeImage9(Image *img)
+Image9 *Image9::makeImage9(ImageD3D *img)
 {
     ASSERT(HAS_DYNAMIC_TYPE(Image9*, img));
     return static_cast<Image9*>(img);
