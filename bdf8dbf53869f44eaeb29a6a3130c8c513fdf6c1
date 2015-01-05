@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e0529fe_e2576250",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T18:11:41Z",
+      "side": 1,
+      "message": "note: this doesn\u0027t need the actual format anymore since we\u0027re no longer faking all depth stencils with D24S8.",
+      "range": {
+        "startLine": 277,
+        "startChar": 12,
+        "endLine": 277,
+        "endChar": 71
+      },
+      "revId": "bdf8dbf53869f44eaeb29a6a3130c8c513fdf6c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

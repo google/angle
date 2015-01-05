@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee107140_3d2c5b36",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T18:11:41Z",
+      "side": 0,
+      "message": "Note: these are the only functional changes.  The bit sizes will now always match the number of bits in the format given to the API.  I tested on WebGL, DEQP and the ES CTS and none of them have issues with this.",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 66
+      },
+      "revId": "c4d7b811da92f21eb1f0a67b260935da6195ff72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
