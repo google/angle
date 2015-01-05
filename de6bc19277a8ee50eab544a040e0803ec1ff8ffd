@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6126549e_3a8609a7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T15:58:45Z",
+      "side": 1,
+      "message": "nit: put this on the previous line.",
+      "range": {
+        "startLine": 133,
+        "startChar": 16,
+        "endLine": 133,
+        "endChar": 19
+      },
+      "revId": "de6bc19277a8ee50eab544a040e0803ec1ff8ffd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e0529fe_02eecec5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T15:58:45Z",
+      "side": 1,
+      "message": "nit: same here.",
+      "range": {
+        "startLine": 138,
+        "startChar": 21,
+        "endLine": 138,
+        "endChar": 24
+      },
+      "revId": "de6bc19277a8ee50eab544a040e0803ec1ff8ffd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6126549e_5a83c595",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T15:58:45Z",
+      "side": 1,
+      "message": "Can you add an assertion for this case?",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 150,
+        "endChar": 141
+      },
+      "revId": "de6bc19277a8ee50eab544a040e0803ec1ff8ffd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
