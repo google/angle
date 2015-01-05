@@ -31,6 +31,7 @@
             '-Wwrite-strings',
             '-Wno-reorder',
             '-Wno-format-nonliteral',
+            '-Wno-deprecated-register',
         ],
     },
     'target_defaults':
@@ -129,6 +130,7 @@
                 },
                 'xcode_settings':
                 {
+                    'CLANG_CXX_LANGUAGE_STANDARD': 'c++11',
                     'COPY_PHASE_STRIP': 'NO',
                     'GCC_OPTIMIZATION_LEVEL': '0',
                 },
