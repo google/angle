@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6126549e_7a808188",
+        "filename": "src/libANGLE/renderer/Workarounds.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-05T16:27:56Z",
+      "side": 1,
+      "message": "nit: mipmapped",
+      "range": {
+        "startLine": 37,
+        "startChar": 49,
+        "endLine": 37,
+        "endChar": 57
+      },
+      "revId": "8dbef0297ce30d6b3e854f29f80a5b4f18fa149f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6126549e_fa00f175",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-05T16:27:56Z",
+      "side": 1,
+      "message": "nit: mipmapped again",
+      "range": {
+        "startLine": 354,
+        "startChar": 31,
+        "endLine": 354,
+        "endChar": 39
+      },
+      "revId": "8dbef0297ce30d6b3e854f29f80a5b4f18fa149f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e0529fe_02b92eba",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-05T16:27:56Z",
+      "side": 1,
+      "message": "nit: can you use a word for this variable name? for some reason in my font it looks like int 1 \u003d 1; also I\u0027m partial to a for loop in this case, it seems like it could read slightly more cleanly.",
+      "range": {
+        "startLine": 1038,
+        "startChar": 12,
+        "endLine": 1038,
+        "endChar": 13
+      },
+      "revId": "8dbef0297ce30d6b3e854f29f80a5b4f18fa149f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee107140_bd93cb63",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-05T16:27:56Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 719,
+        "startChar": 0,
+        "endLine": 719,
+        "endChar": 4
+      },
+      "revId": "8dbef0297ce30d6b3e854f29f80a5b4f18fa149f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e0529fe_228b0a04",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1046,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-05T16:27:56Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 1046,
+        "startChar": 0,
+        "endLine": 1046,
+        "endChar": 16
+      },
+      "revId": "8dbef0297ce30d6b3e854f29f80a5b4f18fa149f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6126549e_fae71166",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-05T16:27:56Z",
+      "side": 1,
+      "message": "nit: can you maybe use the verb \"use\" or \"enable\" rather than \"pick\"? For some reason I find \"pick\" unintuitive, it sounds like there are several level zero workaround textures.",
+      "range": {
+        "startLine": 164,
+        "startChar": 22,
+        "endLine": 164,
+        "endChar": 52
+      },
+      "revId": "8dbef0297ce30d6b3e854f29f80a5b4f18fa149f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6126549e_dae25559",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-05T16:27:56Z",
+      "side": 1,
+      "message": "nit: trailing space (and below)",
+      "range": {
+        "startLine": 182,
+        "startChar": 113,
+        "endLine": 182,
+        "endChar": 116
+      },
+      "revId": "8dbef0297ce30d6b3e854f29f80a5b4f18fa149f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6126549e_1addcd9b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-05T16:27:56Z",
+      "side": 1,
+      "message": "nit: should be right-aligned",
+      "range": {
+        "startLine": 191,
+        "startChar": 18,
+        "endLine": 191,
+        "endChar": 19
+      },
+      "revId": "8dbef0297ce30d6b3e854f29f80a5b4f18fa149f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
