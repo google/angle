@@ -15,6 +15,7 @@
 #include <limits>
 #include <algorithm>
 #include <string.h>
+#include <stdlib.h>
 
 namespace gl
 {
@@ -562,6 +563,21 @@ inline bool IsIntegerCastSafe(BigIntT bigValue)
 {
     return (static_cast<BigIntT>(static_cast<SmallIntT>(bigValue)) == bigValue);
 }
+
+#if defined(_MSC_VER)
+
+#define ANGLE_ROTL(x,y) _rotl(x,y)
+
+#else
+
+inline uint32_t RotL(uint32_t x, int8_t r)
+{
+    return (x << r) | (x >> (32 - r));
+}
+
+#define ANGLE_ROTL(x,y) RotL(x,y)
+
+#endif // namespace rx
 
 }
 

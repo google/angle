@@ -342,7 +342,7 @@ void LoadRGBA8ToBGRA8(size_t width, size_t height, size_t depth,
             for (size_t x = 0; x < width; x++)
             {
                 uint32_t rgba = source[x];
-                dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
+                dest[x] = (ANGLE_ROTL(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
             }
         }
     }

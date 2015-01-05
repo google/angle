@@ -88,7 +88,7 @@ void LoadRGBA8ToBGRA8_SSE2(size_t width, size_t height, size_t depth,
             for (; ((reinterpret_cast<intptr_t>(&dest[x]) & 15) != 0) && x < width; x++)
             {
                 uint32_t rgba = source[x];
-                dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
+                dest[x] = (ANGLE_ROTL(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
             }
 
             for (; x + 3 < width; x += 4)
@@ -108,7 +108,7 @@ void LoadRGBA8ToBGRA8_SSE2(size_t width, size_t height, size_t depth,
             for (; x < width; x++)
             {
                 uint32_t rgba = source[x];
-                dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
+                dest[x] = (ANGLE_ROTL(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
             }
         }
     }
