@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e445558_2fa0a9a8",
+        "filename": "src/libANGLE/renderer/loadimage.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T21:08:28Z",
+      "side": 1,
+      "message": "I\u0027m fine with this but you could also copy the rotl stuff from MurmurHash3.cpp",
+      "range": {
+        "startLine": 336,
+        "startChar": 0,
+        "endLine": 352,
+        "endChar": 6
+      },
+      "revId": "5fdfcf7da7c4af691c2048f765c3787731cb4450",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6126549e_40ad92a3",
+        "filename": "src/third_party/murmurhash/MurmurHash3.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T21:08:28Z",
+      "side": 1,
+      "message": "Should this be in the previous patch?",
+      "revId": "5fdfcf7da7c4af691c2048f765c3787731cb4450",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
