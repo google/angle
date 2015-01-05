@@ -76,4 +76,9 @@
 #   undef far
 #endif
 
+#ifdef ANGLE_PLATFORM_APPLE
+    // TODO(jmadill): other OSX-specific includes
+    #include <x86intrin.h>
+#endif
+
 #endif // COMMON_PLATFORM_H_
