@@ -363,7 +363,7 @@ void Context::deleteSampler(GLuint sampler)
 
 void Context::deleteTransformFeedback(GLuint transformFeedback)
 {
-    TransformFeedbackMap::const_iterator iter = mTransformFeedbackMap.find(transformFeedback);
+    auto iter = mTransformFeedbackMap.find(transformFeedback);
     if (iter != mTransformFeedbackMap.end())
     {
         detachTransformFeedback(transformFeedback);
