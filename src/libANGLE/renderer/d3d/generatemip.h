@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2015 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -7,8 +7,8 @@
 // generatemip.h: Defines the GenerateMip function, templated on the format
 // type of the image for which mip levels are being generated.
 
-#ifndef LIBANGLE_RENDERER_GENERATEMIP_H_
-#define LIBANGLE_RENDERER_GENERATEMIP_H_
+#ifndef LIBANGLE_RENDERER_D3D_GENERATEMIP_H_
+#define LIBANGLE_RENDERER_D3D_GENERATEMIP_H_
 
 #include "libANGLE/renderer/imageformats.h"
 #include "libANGLE/angletypes.h"
@@ -25,4 +25,4 @@ inline void GenerateMip(size_t sourceWidth, size_t sourceHeight, size_t sourceDe
 
 #include "generatemip.inl"
 
-#endif // LIBANGLE_RENDERER_GENERATEMIP_H_
+#endif // LIBANGLE_RENDERER_D3D_GENERATEMIP_H_
