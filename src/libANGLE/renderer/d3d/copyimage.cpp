@@ -6,7 +6,7 @@
 
 // copyimage.cpp: Defines image copying functions
 
-#include "libANGLE/renderer/copyimage.h"
+#include "libANGLE/renderer/d3d/copyimage.h"
 
 namespace rx
 {

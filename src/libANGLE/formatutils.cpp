@@ -12,7 +12,7 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/renderer/imageformats.h"
-#include "libANGLE/renderer/copyimage.h"
+#include "libANGLE/renderer/d3d/copyimage.h"
 
 namespace gl
 {
