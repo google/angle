@@ -22,6 +22,30 @@
       "revId": "65181d2b9cd1ab28f5b16b04de25132b3853392e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6126549e_c078a265",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 580,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-05T21:43:17Z",
+      "side": 1,
+      "message": "Certainly yes. I had left it as it because _rotl being an intrinsic (or seeing to be), for performance reasons it might be better to include in the loop itself, rather than calling a function that calls it.",
+      "parentUuid": "8e445558_0fc84534",
+      "range": {
+        "startLine": 567,
+        "startChar": 0,
+        "endLine": 580,
+        "endChar": 22
+      },
+      "revId": "65181d2b9cd1ab28f5b16b04de25132b3853392e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
