@@ -12,7 +12,7 @@
 #include "libANGLE/Constants.h"
 #include "libANGLE/RefCountObject.h"
 
-#include <cstdint>
+#include <stdint.h>
 
 namespace gl
 {

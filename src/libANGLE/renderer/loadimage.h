@@ -11,7 +11,7 @@
 
 #include "libANGLE/angletypes.h"
 
-#include <cstdint>
+#include <stdint.h>
 
 namespace rx
 {

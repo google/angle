@@ -17,7 +17,7 @@
 #include "libANGLE/renderer/Workarounds.h"
 #include "common/mathutil.h"
 
-#include <cstdint>
+#include <stdint.h>
 
 #include <EGL/egl.h>
 

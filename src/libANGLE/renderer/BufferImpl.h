@@ -12,7 +12,7 @@
 #include "common/angleutils.h"
 #include "libANGLE/Buffer.h"
 
-#include <cstdint>
+#include <stdint.h>
 
 namespace rx
 {

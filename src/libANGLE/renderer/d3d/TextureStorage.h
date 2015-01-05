@@ -15,7 +15,7 @@
 #include "libANGLE/Error.h"
 
 #include <GLES2/gl2.h>
-#include <cstdint>
+#include <stdint.h>
 
 namespace gl
 {

@@ -15,7 +15,7 @@
 #include "angle_gl.h"
 
 #include <cstddef>
-#include <cstdint>
+#include <stdint.h>
 
 typedef void (*MipGenerationFunction)(size_t sourceWidth, size_t sourceHeight, size_t sourceDepth,
                                       const uint8_t *sourceData, size_t sourceRowPitch, size_t sourceDepthPitch,
