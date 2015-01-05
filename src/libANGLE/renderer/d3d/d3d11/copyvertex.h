@@ -1,13 +1,13 @@
 //
-// Copyright (c) 2013-2014 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013-2015 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 
-// copyvertex.h: Defines vertex buffer copying and conversion functions
+// copyvertex.h: Defines D3D11 vertex buffer copying and conversion functions
 
-#ifndef LIBANGLE_RENDERER_COPYVERTEX_H_
-#define LIBANGLE_RENDERER_COPYVERTEX_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D11_COPYVERTEX_H_
+#define LIBANGLE_RENDERER_D3D_D3D11_COPYVERTEX_H_
 
 #include "common/mathutil.h"
 
@@ -37,4 +37,4 @@ inline void CopyXYZ10W2ToXYZW32FVertexData(const uint8_t *input, size_t stride, 
 
 #include "copyvertex.inl"
 
-#endif // LIBANGLE_RENDERER_COPYVERTEX_H_
+#endif // LIBANGLE_RENDERER_D3D_D3D11_COPYVERTEX_H_
