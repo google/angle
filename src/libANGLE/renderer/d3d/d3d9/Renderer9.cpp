@@ -594,7 +594,7 @@ gl::Error Renderer9::finish()
     return gl::Error(GL_NO_ERROR);
 }
 
-SwapChain *Renderer9::createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
+SwapChainD3D *Renderer9::createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
 {
     return new SwapChain9(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat);
 }
@@ -2820,7 +2820,7 @@ gl::Error Renderer9::generateMipmap(ImageD3D *dest, ImageD3D *src)
     return Image9::generateMipmap(dst9, src9);
 }
 
-TextureStorage *Renderer9::createTextureStorage2D(SwapChain *swapChain)
+TextureStorage *Renderer9::createTextureStorage2D(SwapChainD3D *swapChain)
 {
     SwapChain9 *swapChain9 = SwapChain9::makeSwapChain9(swapChain);
     return new TextureStorage9_2D(this, swapChain9);

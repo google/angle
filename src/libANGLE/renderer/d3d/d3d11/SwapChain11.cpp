@@ -24,7 +24,7 @@ namespace rx
 SwapChain11::SwapChain11(Renderer11 *renderer, NativeWindow nativeWindow, HANDLE shareHandle,
                          GLenum backBufferFormat, GLenum depthBufferFormat)
     : mRenderer(renderer),
-      SwapChain(nativeWindow, shareHandle, backBufferFormat, depthBufferFormat)
+      SwapChainD3D(nativeWindow, shareHandle, backBufferFormat, depthBufferFormat)
 {
     mSwapChain = NULL;
     mBackBufferTexture = NULL;
@@ -650,7 +650,7 @@ ID3D11Texture2D *SwapChain11::getDepthStencilTexture()
     return mDepthStencilTexture;
 }
 
-SwapChain11 *SwapChain11::makeSwapChain11(SwapChain *swapChain)
+SwapChain11 *SwapChain11::makeSwapChain11(SwapChainD3D *swapChain)
 {
     ASSERT(HAS_DYNAMIC_TYPE(SwapChain11*, swapChain));
     return static_cast<SwapChain11*>(swapChain);

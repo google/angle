@@ -18,7 +18,7 @@ namespace rx
 {
 class RendererD3D;
 class RenderTargetD3D;
-class SwapChain;
+class SwapChainD3D;
 
 class RenderbufferD3D : public RenderbufferImpl
 {

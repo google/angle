@@ -26,7 +26,7 @@ struct PixelUnpackState;
 
 namespace rx
 {
-class SwapChain;
+class SwapChainD3D;
 class RenderTargetD3D;
 class ImageD3D;
 

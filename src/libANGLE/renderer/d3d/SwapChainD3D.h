@@ -4,11 +4,11 @@
 // found in the LICENSE file.
 //
 
-// SwapChain.h: Defines a back-end specific class that hides the details of the
+// SwapChainD3D.h: Defines a back-end specific class that hides the details of the
 // implementation-specific swapchain.
 
-#ifndef LIBANGLE_RENDERER_SWAPCHAIN_H_
-#define LIBANGLE_RENDERER_SWAPCHAIN_H_
+#ifndef LIBANGLE_RENDERER_D3D_SWAPCHAIND3D_H_
+#define LIBANGLE_RENDERER_D3D_SWAPCHAIND3D_H_
 
 // TODO: move SwapChain to be d3d only
 #include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
@@ -26,15 +26,15 @@
 namespace rx
 {
 
-class SwapChain
+class SwapChainD3D
 {
   public:
-    SwapChain(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
+    SwapChainD3D(rx::NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
         : mNativeWindow(nativeWindow), mShareHandle(shareHandle), mBackBufferFormat(backBufferFormat), mDepthBufferFormat(depthBufferFormat)
     {
     }
 
-    virtual ~SwapChain() {};
+    virtual ~SwapChainD3D() {};
 
     virtual EGLint resize(EGLint backbufferWidth, EGLint backbufferSize) = 0;
     virtual EGLint reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLint swapInterval) = 0;
@@ -55,4 +55,4 @@ class SwapChain
 };
 
 }
-#endif // LIBANGLE_RENDERER_SWAPCHAIN_H_
+#endif // LIBANGLE_RENDERER_D3D_SWAPCHAIND3D_H_

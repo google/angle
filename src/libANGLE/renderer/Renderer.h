@@ -52,7 +52,6 @@ class FramebufferImpl;
 class CompilerImpl;
 struct TranslatedIndexData;
 struct Workarounds;
-class SwapChain;
 class DisplayImpl;
 
 struct ConfigDesc

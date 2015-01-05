@@ -9,9 +9,9 @@
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
 
 #include "libANGLE/Surface.h"
-#include "libANGLE/renderer/SwapChain.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
+#include "libANGLE/renderer/d3d/SwapChainD3D.h"
 
 namespace rx
 {

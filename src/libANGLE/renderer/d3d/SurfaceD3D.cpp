@@ -10,8 +10,8 @@
 
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
-#include "libANGLE/renderer/SwapChain.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
+#include "libANGLE/renderer/d3d/SwapChainD3D.h"
 
 #include <tchar.h>
 #include <EGL/eglext.h>
@@ -365,7 +365,7 @@ egl::Error SurfaceD3D::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint he
     return swapRect(x, y, width, height);
 }
 
-rx::SwapChain *SurfaceD3D::getSwapChain() const
+rx::SwapChainD3D *SurfaceD3D::getSwapChain() const
 {
     return mSwapChain;
 }

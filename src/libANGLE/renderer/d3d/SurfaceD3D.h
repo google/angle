@@ -19,7 +19,7 @@ class Surface;
 
 namespace rx
 {
-class SwapChain;
+class SwapChainD3D;
 class RendererD3D;
 
 class SurfaceD3D : public SurfaceImpl
@@ -46,7 +46,7 @@ class SurfaceD3D : public SurfaceImpl
     void setSwapInterval(EGLint interval) override;
 
     // D3D implementations (some virtual to hack across DLL boundaries)
-    virtual SwapChain *getSwapChain() const;
+    virtual SwapChainD3D *getSwapChain() const;
 
     egl::Error resetSwapChain();
 
@@ -70,7 +70,7 @@ class SurfaceD3D : public SurfaceImpl
 
     RendererD3D *mRenderer;
 
-    SwapChain *mSwapChain;
+    SwapChainD3D *mSwapChain;
     bool mSwapIntervalDirty;
     bool mWindowSubclassed;        // Indicates whether we successfully subclassed mWindow for WM_RESIZE hooking
 
