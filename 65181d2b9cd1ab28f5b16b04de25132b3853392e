@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e445558_0fc84534",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 580,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-05T21:38:55Z",
+      "side": 1,
+      "message": "Could we just define one function and inside do a macro selection between _rotl and our own implementation?",
+      "range": {
+        "startLine": 567,
+        "startChar": 0,
+        "endLine": 580,
+        "endChar": 22
+      },
+      "revId": "65181d2b9cd1ab28f5b16b04de25132b3853392e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
