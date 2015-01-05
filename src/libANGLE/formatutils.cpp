@@ -11,7 +11,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/renderer/Renderer.h"
-#include "libANGLE/renderer/imageformats.h"
+#include "libANGLE/renderer/d3d/imageformats.h"
 #include "libANGLE/renderer/d3d/copyimage.h"
 
 namespace gl

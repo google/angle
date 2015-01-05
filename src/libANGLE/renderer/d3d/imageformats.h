@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013-2015 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -7,8 +7,8 @@
 // imageformats.h: Defines image format types with functions for mip generation
 // and copying.
 
-#ifndef LIBANGLE_RENDERER_IMAGEFORMATS_H_
-#define LIBANGLE_RENDERER_IMAGEFORMATS_H_
+#ifndef LIBANGLE_RENDERER_D3D_IMAGEFORMATS_H_
+#define LIBANGLE_RENDERER_D3D_IMAGEFORMATS_H_
 
 #include "common/mathutil.h"
 
@@ -2026,4 +2026,4 @@ struct R11G11B10F
 
 }
 
-#endif // LIBANGLE_RENDERER_IMAGEFORMATS_H_
+#endif // LIBANGLE_RENDERER_D3D_IMAGEFORMATS_H_

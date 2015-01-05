@@ -10,7 +10,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_GENERATEMIP_H_
 #define LIBANGLE_RENDERER_D3D_GENERATEMIP_H_
 
-#include "libANGLE/renderer/imageformats.h"
+#include "libANGLE/renderer/d3d/imageformats.h"
 #include "libANGLE/angletypes.h"
 
 namespace rx
