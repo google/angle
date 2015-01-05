@@ -7,8 +7,8 @@
 // vertexconversion.h: A library of vertex conversion classes that can be used to build
 // the FormatConverter objects used by the buffer conversion system.
 
-#ifndef LIBANGLE_VERTEXCONVERSION_H_
-#define LIBANGLE_VERTEXCONVERSION_H_
+#ifndef LIBANGLE_RENDERER_D3D_D3D9_VERTEXCONVERSION_H_
+#define LIBANGLE_RENDERER_D3D_D3D9_VERTEXCONVERSION_H_
 
 #include <limits>
 #include <cstdint>
@@ -194,4 +194,4 @@ struct VertexDataConverter
 
 }
 
-#endif   // LIBANGLE_VERTEXCONVERSION_H_
+#endif   // LIBANGLE_RENDERER_D3D_D3D9_VERTEXCONVERSION_H_

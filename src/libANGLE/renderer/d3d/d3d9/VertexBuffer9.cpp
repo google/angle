@@ -9,7 +9,7 @@
 #include "libANGLE/renderer/d3d/d3d9/VertexBuffer9.h"
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
-#include "libANGLE/renderer/vertexconversion.h"
+#include "libANGLE/renderer/d3d/d3d9/vertexconversion.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/Buffer.h"

@@ -9,10 +9,10 @@
 
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
+#include "libANGLE/renderer/d3d/d3d9/vertexconversion.h"
 #include "libANGLE/renderer/generatemip.h"
 #include "libANGLE/renderer/loadimage.h"
 #include "libANGLE/renderer/copyimage.h"
-#include "libANGLE/renderer/vertexconversion.h"
 
 namespace rx
 {
