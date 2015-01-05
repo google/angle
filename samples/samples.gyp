@@ -133,6 +133,14 @@
                 },
 
                 {
+                    'target_name': 'tri_fan_microbench',
+                    'type': 'executable',
+                    'dependencies': [ 'sample_util' ],
+                    'includes': [ '../build/common_defines.gypi', ],
+                    'sources': [ '<!@(python <(angle_path)/enumerate_files.py angle/tri_fan_microbench -types *.cpp *.h *.glsl)' ],
+                },
+
+                {
                     'target_name': 'multiple_draw_buffers',
                     'type': 'executable',
                     'dependencies': [ 'sample_util' ],
