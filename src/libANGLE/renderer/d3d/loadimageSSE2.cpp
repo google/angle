@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2014 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2015 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -8,7 +8,7 @@
 // in a separated file for GCC, which can enable SSE usage only per-file,
 // not for code blocks that use SSE2 explicitly.
 
-#include "libANGLE/renderer/loadimage.h"
+#include "libANGLE/renderer/d3d/loadimage.h"
 
 #include "common/platform.h"
 

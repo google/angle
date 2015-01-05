@@ -12,7 +12,7 @@
 #include "libANGLE/renderer/d3d/d3d9/vertexconversion.h"
 #include "libANGLE/renderer/d3d/copyimage.h"
 #include "libANGLE/renderer/d3d/generatemip.h"
-#include "libANGLE/renderer/loadimage.h"
+#include "libANGLE/renderer/d3d/loadimage.h"
 
 namespace rx
 {

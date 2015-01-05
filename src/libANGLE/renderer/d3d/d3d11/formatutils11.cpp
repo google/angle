@@ -11,7 +11,7 @@
 #include "libANGLE/renderer/d3d/d3d11/copyvertex.h"
 #include "libANGLE/renderer/d3d/copyimage.h"
 #include "libANGLE/renderer/d3d/generatemip.h"
-#include "libANGLE/renderer/loadimage.h"
+#include "libANGLE/renderer/d3d/loadimage.h"
 #include "libANGLE/renderer/Renderer.h"
 
 namespace rx

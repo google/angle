@@ -1,12 +1,12 @@
 //
-// Copyright (c) 2013-2014 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013-2015 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 
 // loadimage.cpp: Defines image loading functions.
 
-#include "libANGLE/renderer/loadimage.h"
+#include "libANGLE/renderer/d3d/loadimage.h"
 
 namespace rx
 {
