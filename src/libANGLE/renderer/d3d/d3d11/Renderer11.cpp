@@ -1547,21 +1547,21 @@ gl::Error Renderer11::applyShaders(gl::Program *program, const gl::VertexFormat 
 {
     ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(program->getImplementation());
 
-    ShaderExecutable *vertexExe = NULL;
+    ShaderExecutableD3D *vertexExe = NULL;
     gl::Error error = programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr);
     if (error.isError())
     {
         return error;
     }
 
-    ShaderExecutable *pixelExe = NULL;
+    ShaderExecutableD3D *pixelExe = NULL;
     error = programD3D->getPixelExecutableForFramebuffer(framebuffer, &pixelExe);
     if (error.isError())
     {
         return error;
     }
 
-    ShaderExecutable *geometryExe = programD3D->getGeometryExecutable();
+    ShaderExecutableD3D *geometryExe = programD3D->getGeometryExecutable();
 
     ID3D11VertexShader *vertexShader = (vertexExe ? ShaderExecutable11::makeShaderExecutable11(vertexExe)->getVertexShader() : NULL);
 
@@ -2518,7 +2518,7 @@ ProgramImpl *Renderer11::createProgram()
 
 gl::Error Renderer11::loadExecutable(const void *function, size_t length, ShaderType type,
                                      const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                     bool separatedOutputBuffers, ShaderExecutable **outExecutable)
+                                     bool separatedOutputBuffers, ShaderExecutableD3D **outExecutable)
 {
     switch (type)
     {
@@ -2606,7 +2606,7 @@ gl::Error Renderer11::loadExecutable(const void *function, size_t length, Shader
 gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, ShaderType type,
                                           const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                           bool separatedOutputBuffers, D3DWorkaroundType workaround,
-                                          ShaderExecutable **outExectuable)
+                                          ShaderExecutableD3D **outExectuable)
 {
     const char *profileType = NULL;
     switch (type)
@@ -2680,7 +2680,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog, const std::strin
     return gl::Error(GL_NO_ERROR);
 }
 
-UniformStorage *Renderer11::createUniformStorage(size_t storageSize)
+UniformStorageD3D *Renderer11::createUniformStorage(size_t storageSize)
 {
     return new UniformStorage11(this, storageSize);
 }

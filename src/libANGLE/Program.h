@@ -29,7 +29,6 @@ namespace rx
 class Renderer;
 class Renderer;
 struct TranslatedAttribute;
-class UniformStorage;
 class ProgramImpl;
 }
 

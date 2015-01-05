@@ -10,14 +10,14 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_SHADEREXECUTABLE11_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_SHADEREXECUTABLE11_H_
 
-#include "libANGLE/renderer/ShaderExecutable.h"
+#include "libANGLE/renderer/d3d/ShaderExecutableD3D.h"
 
 namespace rx
 {
 class Renderer11;
 class UniformStorage11;
 
-class ShaderExecutable11 : public ShaderExecutable
+class ShaderExecutable11 : public ShaderExecutableD3D
 {
   public:
     ShaderExecutable11(const void *function, size_t length, ID3D11PixelShader *executable);
@@ -26,7 +26,7 @@ class ShaderExecutable11 : public ShaderExecutable
 
     virtual ~ShaderExecutable11();
 
-    static ShaderExecutable11 *makeShaderExecutable11(ShaderExecutable *executable);
+    static ShaderExecutable11 *makeShaderExecutable11(ShaderExecutableD3D *executable);
 
     ID3D11PixelShader *getPixelShader() const;
     ID3D11VertexShader *getVertexShader() const;
@@ -42,13 +42,13 @@ class ShaderExecutable11 : public ShaderExecutable
     ID3D11GeometryShader *mStreamOutExecutable;
 };
 
-class UniformStorage11 : public UniformStorage
+class UniformStorage11 : public UniformStorageD3D
 {
   public:
     UniformStorage11(Renderer11 *renderer, size_t initialSize);
     virtual ~UniformStorage11();
 
-    static const UniformStorage11 *makeUniformStorage11(const UniformStorage *uniformStorage);
+    static const UniformStorage11 *makeUniformStorage11(const UniformStorageD3D *uniformStorage);
 
     ID3D11Buffer *getConstantBuffer() const { return mConstantBuffer; }
 

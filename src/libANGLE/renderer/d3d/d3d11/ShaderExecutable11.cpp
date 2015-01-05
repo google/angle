@@ -14,7 +14,7 @@ namespace rx
 {
 
 ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11PixelShader *executable)
-    : ShaderExecutable(function, length)
+    : ShaderExecutableD3D(function, length)
 {
     mPixelExecutable = executable;
     mVertexExecutable = NULL;
@@ -23,7 +23,7 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
 }
 
 ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11VertexShader *executable, ID3D11GeometryShader *streamOut)
-    : ShaderExecutable(function, length)
+    : ShaderExecutableD3D(function, length)
 {
     mVertexExecutable = executable;
     mPixelExecutable = NULL;
@@ -32,7 +32,7 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
 }
 
 ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11GeometryShader *executable)
-    : ShaderExecutable(function, length)
+    : ShaderExecutableD3D(function, length)
 {
     mGeometryExecutable = executable;
     mVertexExecutable = NULL;
@@ -48,7 +48,7 @@ ShaderExecutable11::~ShaderExecutable11()
     SafeRelease(mStreamOutExecutable);
 }
 
-ShaderExecutable11 *ShaderExecutable11::makeShaderExecutable11(ShaderExecutable *executable)
+ShaderExecutable11 *ShaderExecutable11::makeShaderExecutable11(ShaderExecutableD3D *executable)
 {
     ASSERT(HAS_DYNAMIC_TYPE(ShaderExecutable11*, executable));
     return static_cast<ShaderExecutable11*>(executable);
@@ -75,7 +75,7 @@ ID3D11GeometryShader *ShaderExecutable11::getStreamOutShader() const
 }
 
 UniformStorage11::UniformStorage11(Renderer11 *renderer, size_t initialSize)
-    : UniformStorage(initialSize),
+    : UniformStorageD3D(initialSize),
       mConstantBuffer(NULL)
 {
     ID3D11Device *d3d11Device = renderer->getDevice();
@@ -101,7 +101,7 @@ UniformStorage11::~UniformStorage11()
     SafeRelease(mConstantBuffer);
 }
 
-const UniformStorage11 *UniformStorage11::makeUniformStorage11(const UniformStorage *uniformStorage)
+const UniformStorage11 *UniformStorage11::makeUniformStorage11(const UniformStorageD3D *uniformStorage)
 {
     ASSERT(HAS_DYNAMIC_TYPE(const UniformStorage11*, uniformStorage));
     return static_cast<const UniformStorage11*>(uniformStorage);

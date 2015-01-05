@@ -10,19 +10,19 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_SHADEREXECUTABLE9_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_SHADEREXECUTABLE9_H_
 
-#include "libANGLE/renderer/ShaderExecutable.h"
+#include "libANGLE/renderer/d3d/ShaderExecutableD3D.h"
 
 namespace rx
 {
 
-class ShaderExecutable9 : public ShaderExecutable
+class ShaderExecutable9 : public ShaderExecutableD3D
 {
   public:
     ShaderExecutable9(const void *function, size_t length, IDirect3DPixelShader9 *executable);
     ShaderExecutable9(const void *function, size_t length, IDirect3DVertexShader9 *executable);
     virtual ~ShaderExecutable9();
 
-    static ShaderExecutable9 *makeShaderExecutable9(ShaderExecutable *executable);
+    static ShaderExecutable9 *makeShaderExecutable9(ShaderExecutableD3D *executable);
 
     IDirect3DPixelShader9 *getPixelShader() const;
     IDirect3DVertexShader9 *getVertexShader() const;

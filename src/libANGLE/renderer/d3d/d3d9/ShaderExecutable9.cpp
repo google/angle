@@ -15,14 +15,14 @@ namespace rx
 {
 
 ShaderExecutable9::ShaderExecutable9(const void *function, size_t length, IDirect3DPixelShader9 *executable)
-    : ShaderExecutable(function, length)
+    : ShaderExecutableD3D(function, length)
 {
     mPixelExecutable = executable;
     mVertexExecutable = NULL;
 }
 
 ShaderExecutable9::ShaderExecutable9(const void *function, size_t length, IDirect3DVertexShader9 *executable)
-    : ShaderExecutable(function, length)
+    : ShaderExecutableD3D(function, length)
 {
     mVertexExecutable = executable;
     mPixelExecutable = NULL;
@@ -34,7 +34,7 @@ ShaderExecutable9::~ShaderExecutable9()
     SafeRelease(mPixelExecutable);
 }
 
-ShaderExecutable9 *ShaderExecutable9::makeShaderExecutable9(ShaderExecutable *executable)
+ShaderExecutable9 *ShaderExecutable9::makeShaderExecutable9(ShaderExecutableD3D *executable)
 {
     ASSERT(HAS_DYNAMIC_TYPE(ShaderExecutable9*, executable));
     return static_cast<ShaderExecutable9*>(executable);

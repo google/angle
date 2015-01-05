@@ -29,10 +29,10 @@ namespace rx
 class ImageD3D;
 class IndexBuffer;
 class RenderTargetD3D;
-class ShaderExecutable;
+class ShaderExecutableD3D;
 class SwapChainD3D;
 class TextureStorage;
-class UniformStorage;
+class UniformStorageD3D;
 class VertexBuffer;
 
 enum ShaderType
@@ -122,12 +122,12 @@ class RendererD3D : public Renderer
     // Shader operations
     virtual gl::Error loadExecutable(const void *function, size_t length, ShaderType type,
                                      const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                     bool separatedOutputBuffers, ShaderExecutable **outExecutable) = 0;
+                                     bool separatedOutputBuffers, ShaderExecutableD3D **outExecutable) = 0;
     virtual gl::Error compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, ShaderType type,
                                           const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                           bool separatedOutputBuffers, D3DWorkaroundType workaround,
-                                          ShaderExecutable **outExectuable) = 0;
-    virtual UniformStorage *createUniformStorage(size_t storageSize) = 0;
+                                          ShaderExecutableD3D **outExectuable) = 0;
+    virtual UniformStorageD3D *createUniformStorage(size_t storageSize) = 0;
 
     // Image operations
     virtual ImageD3D *createImage() = 0;

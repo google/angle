@@ -27,8 +27,8 @@ struct VertexFormat;
 namespace rx
 {
 class RendererD3D;
-class UniformStorage;
-class ShaderExecutable;
+class UniformStorageD3D;
+class ShaderExecutableD3D;
 
 #if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
 // WARNING: D3DCOMPILE_OPTIMIZATION_LEVEL3 may lead to a DX9 shader compiler hang.
@@ -63,10 +63,10 @@ class ProgramD3D : public ProgramImpl
     LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream);
     gl::Error save(gl::BinaryOutputStream *stream);
 
-    gl::Error getPixelExecutableForFramebuffer(const gl::Framebuffer *fbo, ShaderExecutable **outExectuable);
-    gl::Error getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputLayout, ShaderExecutable **outExectuable, gl::InfoLog *infoLog);
-    gl::Error getVertexExecutableForInputLayout(const gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS], ShaderExecutable **outExectuable, gl::InfoLog *infoLog);
-    ShaderExecutable *getGeometryExecutable() const { return mGeometryExecutable; }
+    gl::Error getPixelExecutableForFramebuffer(const gl::Framebuffer *fbo, ShaderExecutableD3D **outExectuable);
+    gl::Error getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputLayout, ShaderExecutableD3D **outExectuable, gl::InfoLog *infoLog);
+    gl::Error getVertexExecutableForInputLayout(const gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS], ShaderExecutableD3D **outExectuable, gl::InfoLog *infoLog);
+    ShaderExecutableD3D *getGeometryExecutable() const { return mGeometryExecutable; }
 
     LinkResult compileProgramExecutables(gl::InfoLog &infoLog, gl::Shader *fragmentShader, gl::Shader *vertexShader,
                                          int registers);
@@ -113,8 +113,8 @@ class ProgramD3D : public ProgramImpl
     void getUniformiv(GLint location, GLint *params);
     void getUniformuiv(GLint location, GLuint *params);
 
-    const UniformStorage &getVertexUniformStorage() const { return *mVertexUniformStorage; }
-    const UniformStorage &getFragmentUniformStorage() const { return *mFragmentUniformStorage; }
+    const UniformStorageD3D &getVertexUniformStorage() const { return *mVertexUniformStorage; }
+    const UniformStorageD3D &getFragmentUniformStorage() const { return *mFragmentUniformStorage; }
 
     bool linkUniforms(gl::InfoLog &infoLog, const gl::Shader &vertexShader, const gl::Shader &fragmentShader,
                       const gl::Caps &caps);
@@ -136,35 +136,35 @@ class ProgramD3D : public ProgramImpl
       public:
         VertexExecutable(const gl::VertexFormat inputLayout[gl::MAX_VERTEX_ATTRIBS],
                          const GLenum signature[gl::MAX_VERTEX_ATTRIBS],
-                         ShaderExecutable *shaderExecutable);
+                         ShaderExecutableD3D *shaderExecutable);
         ~VertexExecutable();
 
         bool matchesSignature(const GLenum convertedLayout[gl::MAX_VERTEX_ATTRIBS]) const;
 
         const gl::VertexFormat *inputs() const { return mInputs; }
         const GLenum *signature() const { return mSignature; }
-        ShaderExecutable *shaderExecutable() const { return mShaderExecutable; }
+        ShaderExecutableD3D *shaderExecutable() const { return mShaderExecutable; }
 
       private:
         gl::VertexFormat mInputs[gl::MAX_VERTEX_ATTRIBS];
         GLenum mSignature[gl::MAX_VERTEX_ATTRIBS];
-        ShaderExecutable *mShaderExecutable;
+        ShaderExecutableD3D *mShaderExecutable;
     };
 
     class PixelExecutable
     {
       public:
-        PixelExecutable(const std::vector<GLenum> &outputSignature, ShaderExecutable *shaderExecutable);
+        PixelExecutable(const std::vector<GLenum> &outputSignature, ShaderExecutableD3D *shaderExecutable);
         ~PixelExecutable();
 
         bool matchesSignature(const std::vector<GLenum> &signature) const { return mOutputSignature == signature; }
 
         const std::vector<GLenum> &outputSignature() const { return mOutputSignature; }
-        ShaderExecutable *shaderExecutable() const { return mShaderExecutable; }
+        ShaderExecutableD3D *shaderExecutable() const { return mShaderExecutable; }
 
       private:
         std::vector<GLenum> mOutputSignature;
-        ShaderExecutable *mShaderExecutable;
+        ShaderExecutableD3D *mShaderExecutable;
     };
 
     struct Sampler
@@ -203,7 +203,7 @@ class ProgramD3D : public ProgramImpl
 
     std::vector<VertexExecutable *> mVertexExecutables;
     std::vector<PixelExecutable *> mPixelExecutables;
-    ShaderExecutable *mGeometryExecutable;
+    ShaderExecutableD3D *mGeometryExecutable;
 
     std::string mVertexHLSL;
     D3DWorkaroundType mVertexWorkarounds;
@@ -215,8 +215,8 @@ class ProgramD3D : public ProgramImpl
 
     bool mUsesPointSize;
 
-    UniformStorage *mVertexUniformStorage;
-    UniformStorage *mFragmentUniformStorage;
+    UniformStorageD3D *mVertexUniformStorage;
+    UniformStorageD3D *mFragmentUniformStorage;
 
     GLenum mTransformFeedbackBufferMode;
 

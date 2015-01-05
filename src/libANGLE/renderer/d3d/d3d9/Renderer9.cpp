@@ -1765,14 +1765,14 @@ gl::Error Renderer9::applyShaders(gl::Program *program, const gl::VertexFormat i
 
     ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(program->getImplementation());
 
-    ShaderExecutable *vertexExe = NULL;
+    ShaderExecutableD3D *vertexExe = NULL;
     gl::Error error = programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr);
     if (error.isError())
     {
         return error;
     }
 
-    ShaderExecutable *pixelExe = NULL;
+    ShaderExecutableD3D *pixelExe = NULL;
     error = programD3D->getPixelExecutableForFramebuffer(framebuffer, &pixelExe);
     if (error.isError())
     {
@@ -2622,7 +2622,7 @@ ProgramImpl *Renderer9::createProgram()
 
 gl::Error Renderer9::loadExecutable(const void *function, size_t length, ShaderType type,
                                     const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
-                                    bool separatedOutputBuffers, ShaderExecutable **outExecutable)
+                                    bool separatedOutputBuffers, ShaderExecutableD3D **outExecutable)
 {
     // Transform feedback is not supported in ES2 or D3D9
     ASSERT(transformFeedbackVaryings.size() == 0);
@@ -2662,7 +2662,7 @@ gl::Error Renderer9::loadExecutable(const void *function, size_t length, ShaderT
 gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string &shaderHLSL, ShaderType type,
                                          const std::vector<gl::LinkedVarying> &transformFeedbackVaryings,
                                          bool separatedOutputBuffers, D3DWorkaroundType workaround,
-                                         ShaderExecutable **outExectuable)
+                                         ShaderExecutableD3D **outExectuable)
 {
     // Transform feedback is not supported in ES2 or D3D9
     ASSERT(transformFeedbackVaryings.size() == 0);
@@ -2745,9 +2745,9 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string
     return gl::Error(GL_NO_ERROR);
 }
 
-UniformStorage *Renderer9::createUniformStorage(size_t storageSize)
+UniformStorageD3D *Renderer9::createUniformStorage(size_t storageSize)
 {
-    return new UniformStorage(storageSize);
+    return new UniformStorageD3D(storageSize);
 }
 
 gl::Error Renderer9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)

@@ -169,14 +169,14 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
         GetInputLayout(attributes, shaderInputLayout);
         ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(program->getImplementation());
 
-        ShaderExecutable *shader = NULL;
+        ShaderExecutableD3D *shader = NULL;
         gl::Error error = programD3D->getVertexExecutableForInputLayout(shaderInputLayout, &shader, nullptr);
         if (error.isError())
         {
             return error;
         }
 
-        ShaderExecutable *shader11 = ShaderExecutable11::makeShaderExecutable11(shader);
+        ShaderExecutableD3D *shader11 = ShaderExecutable11::makeShaderExecutable11(shader);
 
         D3D11_INPUT_ELEMENT_DESC descs[gl::MAX_VERTEX_ATTRIBS];
         for (unsigned int j = 0; j < ilKey.elementCount; ++j)
