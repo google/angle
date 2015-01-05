@@ -12,8 +12,6 @@
 
 #include "common/debug.h"
 
-#include <tuple>
-
 namespace rx
 {
 
@@ -111,7 +109,9 @@ IndexRangeCache::IndexRange::IndexRange(GLenum typ, intptr_t off, GLsizei c)
 
 bool IndexRangeCache::IndexRange::operator<(const IndexRange& rhs) const
 {
-    return std::make_tuple(type, offset, count) < std::make_tuple(rhs.type, rhs.offset, rhs.count);
+    if (type != rhs.type) return type < rhs.type;
+    if (offset != rhs.offset) return offset < rhs.offset;
+    return count < rhs.count;
 }
 
 IndexRangeCache::IndexBounds::IndexBounds()
