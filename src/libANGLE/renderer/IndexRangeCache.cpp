@@ -71,7 +71,7 @@ void IndexRangeCache::invalidateRange(unsigned int offset, unsigned int size)
         }
         else
         {
-            i = mIndexRangeCache.erase(i);
+            mIndexRangeCache.erase(i++);
         }
     }
 }
