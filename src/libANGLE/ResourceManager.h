@@ -10,13 +10,12 @@
 #ifndef LIBANGLE_RESOURCEMANAGER_H_
 #define LIBANGLE_RESOURCEMANAGER_H_
 
+#include "angle_gl.h"
 #include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/HandleAllocator.h"
 
-#include "angle_gl.h"
-
-#include <unordered_map>
+#include <map>
 
 namespace rx
 {
@@ -82,30 +81,30 @@ class ResourceManager
     rx::Renderer *mRenderer;
     std::size_t mRefCount;
 
-    typedef std::unordered_map<GLuint, Buffer*> BufferMap;
+    typedef std::map<GLuint, Buffer*> BufferMap;
     BufferMap mBufferMap;
     HandleAllocator mBufferHandleAllocator;
 
-    typedef std::unordered_map<GLuint, Shader*> ShaderMap;
+    typedef std::map<GLuint, Shader*> ShaderMap;
     ShaderMap mShaderMap;
 
-    typedef std::unordered_map<GLuint, Program*> ProgramMap;
+    typedef std::map<GLuint, Program*> ProgramMap;
     ProgramMap mProgramMap;
     HandleAllocator mProgramShaderHandleAllocator;
 
-    typedef std::unordered_map<GLuint, Texture*> TextureMap;
+    typedef std::map<GLuint, Texture*> TextureMap;
     TextureMap mTextureMap;
     HandleAllocator mTextureHandleAllocator;
 
-    typedef std::unordered_map<GLuint, Renderbuffer*> RenderbufferMap;
+    typedef std::map<GLuint, Renderbuffer*> RenderbufferMap;
     RenderbufferMap mRenderbufferMap;
     HandleAllocator mRenderbufferHandleAllocator;
 
-    typedef std::unordered_map<GLuint, Sampler*> SamplerMap;
+    typedef std::map<GLuint, Sampler*> SamplerMap;
     SamplerMap mSamplerMap;
     HandleAllocator mSamplerHandleAllocator;
 
-    typedef std::unordered_map<GLuint, FenceSync*> FenceMap;
+    typedef std::map<GLuint, FenceSync*> FenceMap;
     FenceMap mFenceSyncMap;
     HandleAllocator mFenceSyncHandleAllocator;
 };

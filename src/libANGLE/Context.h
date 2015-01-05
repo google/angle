@@ -25,8 +25,6 @@
 #include <string>
 #include <set>
 #include <map>
-#include <unordered_map>
-#include <array>
 
 namespace rx
 {
@@ -237,24 +235,24 @@ class Context
 
     TextureMap mZeroTextures;
 
-    typedef std::unordered_map<GLuint, Framebuffer*> FramebufferMap;
+    typedef std::map<GLuint, Framebuffer*> FramebufferMap;
     FramebufferMap mFramebufferMap;
     HandleAllocator mFramebufferHandleAllocator;
 
-    typedef std::unordered_map<GLuint, FenceNV*> FenceNVMap;
+    typedef std::map<GLuint, FenceNV*> FenceNVMap;
     FenceNVMap mFenceNVMap;
     HandleAllocator mFenceNVHandleAllocator;
 
-    typedef std::unordered_map<GLuint, Query*> QueryMap;
+    typedef std::map<GLuint, Query*> QueryMap;
     QueryMap mQueryMap;
     HandleAllocator mQueryHandleAllocator;
 
-    typedef std::unordered_map<GLuint, VertexArray*> VertexArrayMap;
+    typedef std::map<GLuint, VertexArray*> VertexArrayMap;
     VertexArrayMap mVertexArrayMap;
     HandleAllocator mVertexArrayHandleAllocator;
 
     BindingPointer<TransformFeedback> mTransformFeedbackZero;
-    typedef std::unordered_map<GLuint, TransformFeedback*> TransformFeedbackMap;
+    typedef std::map<GLuint, TransformFeedback*> TransformFeedbackMap;
     TransformFeedbackMap mTransformFeedbackMap;
     HandleAllocator mTransformFeedbackAllocator;
 
