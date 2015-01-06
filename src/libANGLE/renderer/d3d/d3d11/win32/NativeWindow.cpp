@@ -32,6 +32,11 @@ bool NativeWindow::isIconic()
     return IsIconic(mWindow) == TRUE;
 }
 
+bool NativeWindow::isValidNativeWindow(EGLNativeWindowType window)
+{
+    return IsWindow(window) == TRUE;
+}
+
 HRESULT NativeWindow::createSwapChain(ID3D11Device* device, DXGIFactory* factory,
                                       DXGI_FORMAT format, unsigned int width, unsigned int height,
                                       DXGISwapChain** swapChain)

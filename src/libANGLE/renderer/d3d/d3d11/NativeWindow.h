@@ -54,6 +54,7 @@ class NativeWindow
     bool initialize();
     bool getClientRect(LPRECT rect);
     bool isIconic();
+    static bool isValidNativeWindow(EGLNativeWindowType window);
 
     HRESULT createSwapChain(ID3D11Device* device, DXGIFactory* factory,
                             DXGI_FORMAT format, UINT width, UINT height,

@@ -74,6 +74,11 @@ bool NativeWindow::isIconic()
     return false;
 }
 
+bool NativeWindow::isValidNativeWindow(EGLNativeWindowType window)
+{
+    return IsValidEGLNativeWindowType(window);
+}
+
 HRESULT NativeWindow::createSwapChain(ID3D11Device *device, DXGIFactory *factory, DXGI_FORMAT format, unsigned int width, unsigned int height, DXGISwapChain **swapChain)
 {
     if (mImpl)

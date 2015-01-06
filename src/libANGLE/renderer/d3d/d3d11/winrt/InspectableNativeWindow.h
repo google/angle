@@ -82,6 +82,7 @@ protected:
     EventRegistrationToken mSizeChangedEventToken;
 };
 
+bool IsValidEGLNativeWindowType(EGLNativeWindowType window);
 bool IsCoreWindow(EGLNativeWindowType window, ComPtr<ABI::Windows::UI::Core::ICoreWindow> *coreWindow = nullptr);
 bool IsSwapChainPanel(EGLNativeWindowType window, ComPtr<ABI::Windows::UI::Xaml::Controls::ISwapChainPanel> *swapChainPanel = nullptr);
 bool IsEGLConfiguredPropertySet(EGLNativeWindowType window, ABI::Windows::Foundation::Collections::IPropertySet **propertySet = nullptr, IInspectable **inspectable = nullptr);

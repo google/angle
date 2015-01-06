@@ -72,7 +72,7 @@ egl::Error DisplayD3D::restoreLostDevice()
 
 bool DisplayD3D::isValidNativeWindow(EGLNativeWindowType window) const
 {
-    return (IsWindow(window) == TRUE);
+    return NativeWindow::isValidNativeWindow(window);
 }
 
 }
