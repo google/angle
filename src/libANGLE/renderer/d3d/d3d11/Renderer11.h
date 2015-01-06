@@ -57,8 +57,7 @@ class Renderer11 : public RendererD3D
     virtual EGLint initialize();
     virtual bool resetDevice();
 
-    virtual int generateConfigs(ConfigDesc **configDescList);
-    virtual void deleteConfigs(ConfigDesc *configDescList);
+    std::vector<ConfigDesc> generateConfigs() const override;
 
     gl::Error flush() override;
     gl::Error finish() override;

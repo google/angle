@@ -204,11 +204,10 @@ Error Display::initialize()
     EGLint maxSwapInterval = mRenderer->getMaxSwapInterval();
     EGLint maxTextureSize = mRenderer->getRendererCaps().max2DTextureSize;
 
-    rx::ConfigDesc *descList;
-    int numConfigs = mRenderer->generateConfigs(&descList);
-    ConfigSet configSet;
+    std::vector<rx::ConfigDesc> descList = mImplementation->generateConfigs();
 
-    for (int i = 0; i < numConfigs; ++i)
+    ConfigSet configSet;
+    for (size_t i = 0; i < descList.size(); ++i)
     {
         configSet.add(descList[i], minSwapInterval, maxSwapInterval, maxTextureSize, maxTextureSize);
     }
@@ -223,9 +222,6 @@ Error Display::initialize()
 
         mConfigSet.mSet.insert(configuration);
     }
-
-    mRenderer->deleteConfigs(descList);
-    descList = NULL;
 
     if (!isInitialized())
     {

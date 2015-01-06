@@ -37,6 +37,11 @@ DisplayD3D::DisplayD3D(rx::RendererD3D *renderer)
 {
 }
 
+std::vector<ConfigDesc> DisplayD3D::generateConfigs() const
+{
+    return mRenderer->generateConfigs();
+}
+
 egl::Error DisplayD3D::restoreLostDevice()
 {
     // Release surface resources to make the Reset() succeed

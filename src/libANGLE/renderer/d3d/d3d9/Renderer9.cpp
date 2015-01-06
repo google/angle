@@ -432,15 +432,15 @@ D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
     return presentParameters;
 }
 
-int Renderer9::generateConfigs(ConfigDesc **configDescList)
+std::vector<ConfigDesc> Renderer9::generateConfigs() const
 {
+    std::vector<ConfigDesc> configs;
+
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
     unsigned int numRenderFormats = ArraySize(RenderTargetFormats);
     unsigned int numDepthFormats = ArraySize(DepthStencilFormats);
-    (*configDescList) = new ConfigDesc[numRenderFormats * numDepthFormats];
-    int numConfigs = 0;
 
     for (unsigned int formatIndex = 0; formatIndex < numRenderFormats; formatIndex++)
     {
@@ -462,18 +462,13 @@ int Renderer9::generateConfigs(ConfigDesc **configDescList)
                     newConfig.es2Conformant = true;
                     newConfig.es3Capable = false;
 
-                    (*configDescList)[numConfigs++] = newConfig;
+                    configs.push_back(newConfig);
                 }
             }
         }
     }
 
-    return numConfigs;
-}
-
-void Renderer9::deleteConfigs(ConfigDesc *configDescList)
-{
-    delete [] (configDescList);
+    return configs;
 }
 
 void Renderer9::startScene()

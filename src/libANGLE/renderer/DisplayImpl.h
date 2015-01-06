@@ -14,6 +14,7 @@
 #include "libANGLE/Error.h"
 
 #include <set>
+#include <vector>
 
 namespace egl
 {
@@ -25,6 +26,7 @@ class Surface;
 namespace rx
 {
 class SurfaceImpl;
+struct ConfigDesc;
 
 class DisplayImpl
 {
@@ -38,6 +40,9 @@ class DisplayImpl
     virtual SurfaceImpl *createOffscreenSurface(egl::Display *display, const egl::Config *config,
                                                 EGLClientBuffer shareHandle, EGLint width, EGLint height,
                                                 EGLenum textureFormat, EGLenum textureTarget) = 0;
+
+    virtual std::vector<ConfigDesc> generateConfigs() const = 0;
+
     virtual egl::Error restoreLostDevice() = 0;
 
     virtual bool isValidNativeWindow(EGLNativeWindowType window) const = 0;

@@ -462,12 +462,12 @@ void Renderer11::initializeDevice()
     markAllStateDirty();
 }
 
-int Renderer11::generateConfigs(ConfigDesc **configDescList)
+std::vector<ConfigDesc> Renderer11::generateConfigs() const
 {
+    std::vector<ConfigDesc> configs;
+
     unsigned int numRenderFormats = ArraySize(RenderTargetFormats);
     unsigned int numDepthFormats = ArraySize(DepthStencilFormats);
-    (*configDescList) = new ConfigDesc[numRenderFormats * numDepthFormats];
-    int numConfigs = 0;
 
     for (unsigned int formatIndex = 0; formatIndex < numRenderFormats; formatIndex++)
     {
@@ -492,18 +492,13 @@ int Renderer11::generateConfigs(ConfigDesc **configDescList)
                     newConfig.es2Conformant = (mFeatureLevel >= D3D_FEATURE_LEVEL_10_0);
                     newConfig.es3Capable = isES3Capable();
 
-                    (*configDescList)[numConfigs++] = newConfig;
+                    configs.push_back(newConfig);
                 }
             }
         }
     }
 
-    return numConfigs;
-}
-
-void Renderer11::deleteConfigs(ConfigDesc *configDescList)
-{
-    delete [] (configDescList);
+    return configs;
 }
 
 gl::Error Renderer11::flush()
