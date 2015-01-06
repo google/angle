@@ -25,6 +25,11 @@ class AttributeMap
     virtual bool contains(EGLint key) const;
     virtual EGLint get(EGLint key, EGLint defaultValue) const;
 
+    typedef std::map<EGLint, EGLint>::const_iterator const_iterator;
+
+    const_iterator begin() const;
+    const_iterator end() const;
+
   private:
     std::map<EGLint, EGLint> mAttributes;
 };

@@ -174,7 +174,7 @@ egl::ConfigSet DisplayD3D::generateConfigs() const
     egl::ConfigSet configSet;
     for (size_t i = 0; i < descList.size(); ++i)
     {
-        configSet.add(descList[i], minSwapInterval, maxSwapInterval, maxTextureSize, maxTextureSize);
+        configSet.add(egl::Config(descList[i], minSwapInterval, maxSwapInterval, maxTextureSize, maxTextureSize));
     }
 
     return configSet;

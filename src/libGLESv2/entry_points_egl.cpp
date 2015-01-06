@@ -26,7 +26,7 @@ namespace egl
 {
 
 // EGL object validation
-static bool ValidateDisplay(Display *display)
+static bool ValidateDisplay(const Display *display)
 {
     if (display == EGL_NO_DISPLAY)
     {
@@ -43,7 +43,7 @@ static bool ValidateDisplay(Display *display)
     return true;
 }
 
-static bool ValidateConfig(Display *display, EGLConfig config)
+static bool ValidateConfig(const Display *display, const Config *config)
 {
     if (!ValidateDisplay(display))
     {
@@ -59,7 +59,7 @@ static bool ValidateConfig(Display *display, EGLConfig config)
     return true;
 }
 
-static bool ValidateContext(Display *display, gl::Context *context)
+static bool ValidateContext(const Display *display, gl::Context *context)
 {
     if (!ValidateDisplay(display))
     {
@@ -220,13 +220,16 @@ EGLBoolean EGLAPIENTRY GetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint con
         return EGL_FALSE;
     }
 
-    const EGLint attribList[] =    {EGL_NONE};
-
-    if (!display->getConfigs(configs, attribList, config_size, num_config))
+    std::vector<const Config*> filteredConfigs = display->getConfigs(AttributeMap());
+    if (configs)
     {
-        SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
-        return EGL_FALSE;
+        filteredConfigs.resize(std::min<size_t>(filteredConfigs.size(), config_size));
+        for (size_t i = 0; i < filteredConfigs.size(); i++)
+        {
+            configs[i] = const_cast<Config*>(filteredConfigs[i]);
+        }
     }
+    *num_config = filteredConfigs.size();
 
     SetGlobalError(Error(EGL_SUCCESS));
     return EGL_TRUE;
@@ -251,14 +254,16 @@ EGLBoolean EGLAPIENTRY ChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, E
         return EGL_FALSE;
     }
 
-    const EGLint attribList[] =    {EGL_NONE};
-
-    if (!attrib_list)
+    std::vector<const Config*> filteredConfigs = display->getConfigs(AttributeMap(attrib_list));
+    if (configs)
     {
-        attrib_list = attribList;
+        filteredConfigs.resize(std::min<size_t>(filteredConfigs.size(), config_size));
+        for (size_t i = 0; i < filteredConfigs.size(); i++)
+        {
+            configs[i] = const_cast<Config*>(filteredConfigs[i]);
+        }
     }
-
-    display->getConfigs(configs, attrib_list, config_size, num_config);
+    *num_config = filteredConfigs.size();
 
     SetGlobalError(Error(EGL_SUCCESS));
     return EGL_TRUE;
@@ -270,13 +275,14 @@ EGLBoolean EGLAPIENTRY GetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint 
           dpy, config, attribute, value);
 
     Display *display = static_cast<Display*>(dpy);
+    Config *configuration = static_cast<Config*>(config);
 
-    if (!ValidateConfig(display, config))
+    if (!ValidateConfig(display, configuration))
     {
         return EGL_FALSE;
     }
 
-    if (!display->getConfigAttrib(config, attribute, value))
+    if (!display->getConfigAttrib(configuration, attribute, value))
     {
         SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
         return EGL_FALSE;
@@ -292,8 +298,9 @@ EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy, EGLConfig config, EGL
           "const EGLint *attrib_list = 0x%0.8p)", dpy, config, win, attrib_list);
 
     Display *display = static_cast<Display*>(dpy);
+    Config *configuration = static_cast<Config*>(config);
 
-    if (!ValidateConfig(display, config))
+    if (!ValidateConfig(display, configuration))
     {
         return EGL_NO_SURFACE;
     }
@@ -305,7 +312,7 @@ EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy, EGLConfig config, EGL
     }
 
     EGLSurface surface = EGL_NO_SURFACE;
-    Error error = display->createWindowSurface(win, config, attrib_list, &surface);
+    Error error = display->createWindowSurface(win, configuration, attrib_list, &surface);
     if (error.isError())
     {
         SetGlobalError(error);
@@ -321,14 +328,15 @@ EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy, EGLConfig config, co
           dpy, config, attrib_list);
 
     Display *display = static_cast<Display*>(dpy);
+    Config *configuration = static_cast<Config*>(config);
 
-    if (!ValidateConfig(display, config))
+    if (!ValidateConfig(display, configuration))
     {
         return EGL_NO_SURFACE;
     }
 
     EGLSurface surface = EGL_NO_SURFACE;
-    Error error = display->createOffscreenSurface(config, NULL, attrib_list, &surface);
+    Error error = display->createOffscreenSurface(configuration, NULL, attrib_list, &surface);
     if (error.isError())
     {
         SetGlobalError(error);
@@ -344,8 +352,9 @@ EGLSurface EGLAPIENTRY CreatePixmapSurface(EGLDisplay dpy, EGLConfig config, EGL
           "const EGLint *attrib_list = 0x%0.8p)", dpy, config, pixmap, attrib_list);
 
     Display *display = static_cast<Display*>(dpy);
+    Config *configuration = static_cast<Config*>(config);
 
-    if (!ValidateConfig(display, config))
+    if (!ValidateConfig(display, configuration))
     {
         return EGL_NO_SURFACE;
     }
@@ -608,13 +617,14 @@ EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy, EGLConfig config, EGLContex
         }
     }
 
-    if (!ValidateConfig(display, config))
+    Config *configuration = static_cast<Config*>(config);
+    if (!ValidateConfig(display, configuration))
     {
         return EGL_NO_CONTEXT;
     }
 
     EGLContext context = EGL_NO_CONTEXT;
-    Error error = display->createContext(config, share_context, egl::AttributeMap(attrib_list), &context);
+    Error error = display->createContext(configuration, share_context, egl::AttributeMap(attrib_list), &context);
     if (error.isError())
     {
         SetGlobalError(error);
@@ -1031,7 +1041,8 @@ EGLSurface EGLAPIENTRY CreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buf
 
     Display *display = static_cast<Display*>(dpy);
 
-    if (!ValidateConfig(display, config))
+    Config *configuration = static_cast<Config*>(config);
+    if (!ValidateConfig(display, configuration))
     {
         return EGL_NO_SURFACE;
     }
@@ -1043,7 +1054,7 @@ EGLSurface EGLAPIENTRY CreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buf
     }
 
     EGLSurface surface = EGL_NO_SURFACE;
-    Error error = display->createOffscreenSurface(config, buffer, attrib_list, &surface);
+    Error error = display->createOffscreenSurface(configuration, buffer, attrib_list, &surface);
     if (error.isError())
     {
         SetGlobalError(error);

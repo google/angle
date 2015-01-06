@@ -40,4 +40,14 @@ EGLint AttributeMap::get(EGLint key, EGLint defaultValue) const
     return (mAttributes.find(key) != mAttributes.end()) ? iter->second : defaultValue;
 }
 
+AttributeMap::const_iterator AttributeMap::begin() const
+{
+    return mAttributes.begin();
+}
+
+AttributeMap::const_iterator AttributeMap::end() const
+{
+    return mAttributes.end();
+}
+
 }

@@ -147,19 +147,7 @@ Error Display::initialize()
 
     mCaps = mImplementation->getCaps();
 
-    ConfigSet configSet = mImplementation->generateConfigs();
-
-    // Give the sorted configs a unique ID and store them internally
-    EGLint index = 1;
-    for (ConfigSet::Iterator config = configSet.mSet.begin(); config != configSet.mSet.end(); config++)
-    {
-        Config configuration = *config;
-        configuration.mConfigID = index;
-        index++;
-
-        mConfigSet.mSet.insert(configuration);
-    }
-
+    mConfigSet = mImplementation->generateConfigs();
     if (mConfigSet.size() == 0)
     {
         mImplementation->terminate();
@@ -180,21 +168,19 @@ void Display::terminate()
         destroyContext(*mContextSet.begin());
     }
 
-    mConfigSet.mSet.clear();
+    mConfigSet.clear();
 
     mImplementation->terminate();
     mInitialized = false;
 }
 
-bool Display::getConfigs(EGLConfig *configs, const EGLint *attribList, EGLint configSize, EGLint *numConfig)
+std::vector<const Config*> Display::getConfigs(const egl::AttributeMap &attribs) const
 {
-    return mConfigSet.getConfigs(configs, attribList, configSize, numConfig);
+    return mConfigSet.filter(attribs);
 }
 
-bool Display::getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value)
+bool Display::getConfigAttrib(const Config *configuration, EGLint attribute, EGLint *value)
 {
-    const egl::Config *configuration = mConfigSet.get(config);
-
     switch (attribute)
     {
       case EGL_BUFFER_SIZE:               *value = configuration->mBufferSize;             break;
@@ -236,11 +222,8 @@ bool Display::getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value)
     return true;
 }
 
-
-
-Error Display::createWindowSurface(EGLNativeWindowType window, EGLConfig config, const EGLint *attribList, EGLSurface *outSurface)
+Error Display::createWindowSurface(EGLNativeWindowType window, const Config *configuration, const EGLint *attribList, EGLSurface *outSurface)
 {
-    const Config *configuration = mConfigSet.get(config);
     EGLint postSubBufferSupported = EGL_FALSE;
 
     EGLint width = 0;
@@ -331,13 +314,12 @@ Error Display::createWindowSurface(EGLNativeWindowType window, EGLConfig config,
     return Error(EGL_SUCCESS);
 }
 
-Error Display::createOffscreenSurface(EGLConfig config, EGLClientBuffer shareHandle,
+Error Display::createOffscreenSurface(const Config *configuration, EGLClientBuffer shareHandle,
                                       const EGLint *attribList, EGLSurface *outSurface)
 {
     EGLint width = 0, height = 0;
     EGLenum textureFormat = EGL_NO_TEXTURE;
     EGLenum textureTarget = EGL_NO_TEXTURE;
-    const Config *configuration = mConfigSet.get(config);
 
     if (attribList)
     {
@@ -452,7 +434,7 @@ Error Display::createOffscreenSurface(EGLConfig config, EGLClientBuffer shareHan
     return Error(EGL_SUCCESS);
 }
 
-Error Display::createContext(EGLConfig configHandle, EGLContext shareContext, const egl::AttributeMap &attribs,
+Error Display::createContext(const Config *configuration, EGLContext shareContext, const egl::AttributeMap &attribs,
                              EGLContext *outContext)
 {
     ASSERT(isInitialized());
@@ -466,7 +448,6 @@ Error Display::createContext(EGLConfig configHandle, EGLContext shareContext, co
         }
     }
 
-    const Config *configuration = mConfigSet.get(configHandle);
     if (attribs.get(EGL_CONTEXT_CLIENT_VERSION, 1) == 3 && !(configuration->mConformant & EGL_OPENGL_ES3_BIT_KHR))
     {
         return Error(EGL_BAD_CONFIG);
@@ -542,22 +523,22 @@ bool Display::isInitialized() const
     return mInitialized;
 }
 
-bool Display::isValidConfig(EGLConfig config)
+bool Display::isValidConfig(const Config *config) const
 {
-    return mConfigSet.get(config) != NULL;
+    return mConfigSet.contains(config);
 }
 
-bool Display::isValidContext(gl::Context *context)
+bool Display::isValidContext(gl::Context *context) const
 {
     return mContextSet.find(context) != mContextSet.end();
 }
 
-bool Display::isValidSurface(Surface *surface)
+bool Display::isValidSurface(Surface *surface) const
 {
     return mImplementation->getSurfaceSet().find(surface) != mImplementation->getSurfaceSet().end();
 }
 
-bool Display::hasExistingWindowSurface(EGLNativeWindowType window)
+bool Display::hasExistingWindowSurface(EGLNativeWindowType window) const
 {
     for (const auto &surfaceIt : mImplementation->getSurfaceSet())
     {
