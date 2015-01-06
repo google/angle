@@ -107,10 +107,28 @@
                     {
                         'Optimization': '0',    # /Od
                         'BasicRuntimeChecks': '3',
+                        'conditions':
+                        [
+                            ['angle_build_winrt==1',
+                            {
+                                # Use the dynamic C runtime to match
+                                # Windows Application Store requirements
 
-                        # Use the static C runtime to match chromium and make sure we don't depend on
-                        # the dynamic runtime's shared heaps
-                        'RuntimeLibrary': '1',  # /MTd (debug static)
+                                # The C runtime for Windows Store applications
+                                # is a framework package that is managed by                                
+                                # the Windows deployment model and can be
+                                # shared by multiple packages.
+
+                                'RuntimeLibrary': '3', # /MDd (debug dll)
+                            },
+                            {
+                                # Use the static C runtime to 
+                                # match chromium and make sure
+                                # we don't depend on the dynamic
+                                # runtime's shared heaps
+                                'RuntimeLibrary': '1', # /MTd (debug static)
+                            }],
+                        ],
                     },
                     'VCLinkerTool':
                     {
@@ -148,10 +166,26 @@
                     'VCCLCompilerTool':
                     {
                         'Optimization': '2',    # /Os
+                        'conditions':
+                        [
+                            ['angle_build_winrt==1',
+                            {
+                                # Use the dynamic C runtime to match
+                                # Windows Application Store requirements
 
-                        # Use the static C runtime to match chromium and make sure we don't depend on
-                        # the dynamic runtime's shared heaps
-                        'RuntimeLibrary': '0', #  /MT (nondebug static)
+                                # The C runtime for Windows Store applications
+                                # is a framework package that is managed by                                
+                                # the Windows deployment model and can be
+                                # shared by multiple packages.
+                                'RuntimeLibrary': '2', # /MD (nondebug dll)
+                            },
+                            {
+                                # Use the static C runtime to 
+                                # match chromium and make sure
+                                # we don't depend on the dynamic
+                                'RuntimeLibrary': '0', # /MT (nondebug static)
+                            }],
+                        ],
                     },
                     'VCLinkerTool':
                     {
