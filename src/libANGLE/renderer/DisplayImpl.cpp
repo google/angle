@@ -14,7 +14,8 @@ namespace rx
 {
 
 DisplayImpl::DisplayImpl()
-    : mExtensionsInitialized(false)
+    : mExtensionsInitialized(false),
+      mCapsInitialized(false)
 {
 }
 
@@ -41,6 +42,17 @@ const egl::DisplayExtensions &DisplayImpl::getExtensions() const
     }
 
     return mExtensions;
+}
+
+const egl::Caps &DisplayImpl::getCaps() const
+{
+    if (!mCapsInitialized)
+    {
+        generateCaps(&mCaps);
+        mCapsInitialized = true;
+    }
+
+    return mCaps;
 }
 
 }

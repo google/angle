@@ -102,8 +102,6 @@ class ConfigSet
     const egl::Config *get(EGLConfig configHandle);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(ConfigSet);
-
     typedef std::set<Config, SortConfig> Set;
     typedef Set::iterator Iterator;
     Set mSet;

@@ -70,8 +70,6 @@ class Renderer
     Renderer();
     virtual ~Renderer();
 
-    virtual EGLint initialize() = 0;
-
     virtual gl::Error flush() = 0;
     virtual gl::Error finish() = 0;
 
@@ -132,8 +130,6 @@ class Renderer
     virtual int getMajorShaderModel() const = 0;
     virtual int getMinSwapInterval() const = 0;
     virtual int getMaxSwapInterval() const = 0;
-
-    virtual DisplayImpl *createDisplay() = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer);

@@ -18,9 +18,16 @@
 
 namespace egl
 {
+class AttributeMap;
 class Display;
 class Config;
+class ConfigSet;
 class Surface;
+}
+
+namespace gl
+{
+class Context;
 }
 
 namespace rx
@@ -34,18 +41,29 @@ class DisplayImpl
     DisplayImpl();
     virtual ~DisplayImpl();
 
+    virtual egl::Error initialize(egl::Display *display, EGLNativeDisplayType nativeDisplay, const egl::AttributeMap &attribMap) = 0;
+    virtual void terminate() = 0;
+
     virtual SurfaceImpl *createWindowSurface(egl::Display *display, const egl::Config *config,
                                              EGLNativeWindowType window, EGLint fixedSize,
                                              EGLint width, EGLint height, EGLint postSubBufferSupported) = 0;
     virtual SurfaceImpl *createOffscreenSurface(egl::Display *display, const egl::Config *config,
                                                 EGLClientBuffer shareHandle, EGLint width, EGLint height,
                                                 EGLenum textureFormat, EGLenum textureTarget) = 0;
+    virtual egl::Error createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
+                                     gl::Context **outContext) = 0;
 
-    virtual std::vector<ConfigDesc> generateConfigs() const = 0;
+    virtual egl::ConfigSet generateConfigs() const = 0;
 
+    virtual bool isDeviceLost() const = 0;
+    virtual bool testDeviceLost() = 0;
     virtual egl::Error restoreLostDevice() = 0;
 
     virtual bool isValidNativeWindow(EGLNativeWindowType window) const = 0;
+
+    const egl::Caps &getCaps() const;
+
+    virtual std::string getVendorString() const = 0;
 
     typedef std::set<egl::Surface*> SurfaceSet;
     const SurfaceSet &getSurfaceSet() const { return mSurfaceSet; }
@@ -64,9 +82,13 @@ class DisplayImpl
     DISALLOW_COPY_AND_ASSIGN(DisplayImpl);
 
     virtual void generateExtensions(egl::DisplayExtensions *outExtensions) const = 0;
+    virtual void generateCaps(egl::Caps *outCaps) const = 0;
 
     mutable bool mExtensionsInitialized;
     mutable egl::DisplayExtensions mExtensions;
+
+    mutable bool mCapsInitialized;
+    mutable egl::Caps mCaps;
 };
 
 }

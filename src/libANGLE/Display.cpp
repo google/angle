@@ -24,96 +24,12 @@
 
 #include <EGL/eglext.h>
 
-#if defined (ANGLE_ENABLE_D3D9)
-#   include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
-#endif // ANGLE_ENABLE_D3D9
-
-#if defined (ANGLE_ENABLE_D3D11)
-#   include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#endif // ANGLE_ENABLE_D3D11
-
-#if defined (ANGLE_TEST_CONFIG)
-#   define ANGLE_DEFAULT_D3D11 1
-#endif
-
-#if !defined(ANGLE_DEFAULT_D3D11)
-// Enables use of the Direct3D 11 API for a default display, when available
-#   define ANGLE_DEFAULT_D3D11 0
+#if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+#   include "libANGLE/renderer/d3d/DisplayD3D.h"
 #endif
 
 namespace egl
 {
-
-typedef rx::Renderer *(*CreateRendererFunction)(Display*, EGLNativeDisplayType, const AttributeMap &);
-
-template <typename RendererType>
-static rx::Renderer *CreateTypedRenderer(Display *display, EGLNativeDisplayType nativeDisplay, const AttributeMap &attributes)
-{
-    return new RendererType(display, nativeDisplay, attributes);
-}
-
-rx::Renderer *CreateRenderer(Display *display, EGLNativeDisplayType nativeDisplay, const AttributeMap &attribMap)
-{
-    std::vector<CreateRendererFunction> rendererCreationFunctions;
-
-    EGLint requestedDisplayType = attribMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
-
-#   if defined(ANGLE_ENABLE_D3D11)
-        if (nativeDisplay == EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE ||
-            nativeDisplay == EGL_D3D11_ONLY_DISPLAY_ANGLE ||
-            requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-        {
-            rendererCreationFunctions.push_back(CreateTypedRenderer<rx::Renderer11>);
-        }
-#   endif
-
-#   if defined(ANGLE_ENABLE_D3D9)
-        if (nativeDisplay == EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE ||
-            requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE)
-        {
-            rendererCreationFunctions.push_back(CreateTypedRenderer<rx::Renderer9>);
-        }
-#   endif
-
-    if (nativeDisplay != EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE &&
-        nativeDisplay != EGL_D3D11_ONLY_DISPLAY_ANGLE &&
-        requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE)
-    {
-        // The default display is requested, try the D3D9 and D3D11 renderers, order them using
-        // the definition of ANGLE_DEFAULT_D3D11
-#       if ANGLE_DEFAULT_D3D11
-#           if defined(ANGLE_ENABLE_D3D11)
-                rendererCreationFunctions.push_back(CreateTypedRenderer<rx::Renderer11>);
-#           endif
-#           if defined(ANGLE_ENABLE_D3D9)
-                rendererCreationFunctions.push_back(CreateTypedRenderer<rx::Renderer9>);
-#           endif
-#       else
-#           if defined(ANGLE_ENABLE_D3D9)
-                rendererCreationFunctions.push_back(CreateTypedRenderer<rx::Renderer9>);
-#           endif
-#           if defined(ANGLE_ENABLE_D3D11)
-                rendererCreationFunctions.push_back(CreateTypedRenderer<rx::Renderer11>);
-#           endif
-#       endif
-    }
-
-    for (size_t i = 0; i < rendererCreationFunctions.size(); i++)
-    {
-        rx::Renderer *renderer = rendererCreationFunctions[i](display, nativeDisplay, attribMap);
-        if (renderer->initialize() == EGL_SUCCESS)
-        {
-            return renderer;
-        }
-        else
-        {
-            // Failed to create the renderer, try the next
-            SafeDelete(renderer);
-        }
-    }
-
-    return NULL;
-}
 
 typedef std::map<EGLNativeDisplayType, Display*> DisplayMap;
 static DisplayMap *GetDisplayMap()
@@ -134,7 +50,39 @@ Display *Display::getDisplay(EGLNativeDisplayType displayId, const AttributeMap 
     }
     else
     {
-        display = new Display(displayId);
+        rx::DisplayImpl *impl = nullptr;
+
+        EGLint displayType = attribMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
+        switch (displayType)
+        {
+          case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
+#if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+            // Default to D3D displays
+            impl = new rx::DisplayD3D();
+#else
+            // No display available
+            UNREACHABLE();
+#endif
+            break;
+
+          case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
+          case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
+#if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+            impl = new rx::DisplayD3D();
+#else
+            // A D3D display was requested on a platform that doesn't support it
+            UNREACHABLE();
+#endif
+            break;
+
+          default:
+            UNREACHABLE();
+            break;
+        }
+
+        ASSERT(impl != nullptr);
+
+        display = new Display(impl, displayId);
 
         // Validate the native display
         if (!display->isValidNativeDisplay(displayId))
@@ -156,12 +104,13 @@ Display *Display::getDisplay(EGLNativeDisplayType displayId, const AttributeMap 
     return display;
 }
 
-Display::Display(EGLNativeDisplayType displayId)
-    : mImplementation(NULL),
+Display::Display(rx::DisplayImpl *impl, EGLNativeDisplayType displayId)
+    : mImplementation(impl),
       mDisplayId(displayId),
       mAttributeMap(),
-      mRenderer(NULL)
+      mInitialized(false)
 {
+    ASSERT(mImplementation != nullptr);
 }
 
 Display::~Display()
@@ -174,6 +123,8 @@ Display::~Display()
     {
         displays->erase(iter);
     }
+
+    SafeDelete(mImplementation);
 }
 
 void Display::setAttributes(const AttributeMap &attribMap)
@@ -188,29 +139,15 @@ Error Display::initialize()
         return Error(EGL_SUCCESS);
     }
 
-    mRenderer = CreateRenderer(this, mDisplayId, mAttributeMap);
-
-    if (!mRenderer)
+    Error error = mImplementation->initialize(this, mDisplayId, mAttributeMap);
+    if (error.isError())
     {
-        terminate();
-        return Error(EGL_NOT_INITIALIZED);
+        return error;
     }
 
-    mImplementation = mRenderer->createDisplay();
-    ASSERT(mImplementation);
+    mCaps = mImplementation->getCaps();
 
-    //TODO(jmadill): should be part of caps?
-    EGLint minSwapInterval = mRenderer->getMinSwapInterval();
-    EGLint maxSwapInterval = mRenderer->getMaxSwapInterval();
-    EGLint maxTextureSize = mRenderer->getRendererCaps().max2DTextureSize;
-
-    std::vector<rx::ConfigDesc> descList = mImplementation->generateConfigs();
-
-    ConfigSet configSet;
-    for (size_t i = 0; i < descList.size(); ++i)
-    {
-        configSet.add(descList[i], minSwapInterval, maxSwapInterval, maxTextureSize, maxTextureSize);
-    }
+    ConfigSet configSet = mImplementation->generateConfigs();
 
     // Give the sorted configs a unique ID and store them internally
     EGLint index = 1;
@@ -223,15 +160,16 @@ Error Display::initialize()
         mConfigSet.mSet.insert(configuration);
     }
 
-    if (!isInitialized())
+    if (mConfigSet.size() == 0)
     {
-        terminate();
+        mImplementation->terminate();
         return Error(EGL_NOT_INITIALIZED);
     }
 
     initDisplayExtensions();
     initVendorString();
 
+    mInitialized = true;
     return Error(EGL_SUCCESS);
 }
 
@@ -242,9 +180,10 @@ void Display::terminate()
         destroyContext(*mContextSet.begin());
     }
 
-    SafeDelete(mRenderer);
-
     mConfigSet.mSet.clear();
+
+    mImplementation->terminate();
+    mInitialized = false;
 }
 
 bool Display::getConfigs(EGLConfig *configs, const EGLint *attribList, EGLint configSize, EGLint *numConfig)
@@ -365,7 +304,7 @@ Error Display::createWindowSurface(EGLNativeWindowType window, EGLConfig config,
         return Error(EGL_BAD_ALLOC);
     }
 
-    if (mRenderer->testDeviceLost())
+    if (mImplementation->testDeviceLost())
     {
         Error error = restoreLostDevice();
         if (error.isError())
@@ -465,7 +404,7 @@ Error Display::createOffscreenSurface(EGLConfig config, EGLClientBuffer shareHan
         return Error(EGL_BAD_ATTRIBUTE);
     }
 
-    if (textureFormat != EGL_NO_TEXTURE && !mRenderer->getRendererExtensions().textureNPOT && (!gl::isPow2(width) || !gl::isPow2(height)))
+    if (textureFormat != EGL_NO_TEXTURE && !mCaps.textureNPOT && (!gl::isPow2(width) || !gl::isPow2(height)))
     {
         return Error(EGL_BAD_MATCH);
     }
@@ -487,7 +426,7 @@ Error Display::createOffscreenSurface(EGLConfig config, EGLClientBuffer shareHan
         return Error(EGL_BAD_ATTRIBUTE);
     }
 
-    if (mRenderer->testDeviceLost())
+    if (mImplementation->testDeviceLost())
     {
         Error error = restoreLostDevice();
         if (error.isError())
@@ -513,17 +452,12 @@ Error Display::createOffscreenSurface(EGLConfig config, EGLClientBuffer shareHan
     return Error(EGL_SUCCESS);
 }
 
-Error Display::createContext(EGLConfig configHandle, EGLint clientVersion, const gl::Context *shareContext, bool notifyResets,
-                             bool robustAccess, EGLContext *outContext)
+Error Display::createContext(EGLConfig configHandle, EGLContext shareContext, const egl::AttributeMap &attribs,
+                             EGLContext *outContext)
 {
-    const Config *configuration = mConfigSet.get(configHandle);
+    ASSERT(isInitialized());
 
-    if (!mRenderer)
-    {
-        *outContext = EGL_NO_CONTEXT;
-        return Error(EGL_SUCCESS);
-    }
-    else if (mRenderer->testDeviceLost())   // Lost device
+    if (mImplementation->testDeviceLost())
     {
         Error error = restoreLostDevice();
         if (error.isError())
@@ -532,12 +466,21 @@ Error Display::createContext(EGLConfig configHandle, EGLint clientVersion, const
         }
     }
 
-    if (clientVersion == 3 && !(configuration->mConformant & EGL_OPENGL_ES3_BIT_KHR))
+    const Config *configuration = mConfigSet.get(configHandle);
+    if (attribs.get(EGL_CONTEXT_CLIENT_VERSION, 1) == 3 && !(configuration->mConformant & EGL_OPENGL_ES3_BIT_KHR))
     {
         return Error(EGL_BAD_CONFIG);
     }
 
-    gl::Context *context = new gl::Context(clientVersion, shareContext, mRenderer, notifyResets, robustAccess);
+    gl::Context *context = nullptr;
+    Error error = mImplementation->createContext(configuration, reinterpret_cast<gl::Context*>(shareContext),
+                                                 attribs, &context);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    ASSERT(context != nullptr);
     mContextSet.insert(context);
 
     *outContext = context;
@@ -569,6 +512,18 @@ void Display::destroyContext(gl::Context *context)
     SafeDelete(context);
 }
 
+bool Display::isDeviceLost() const
+{
+    ASSERT(isInitialized());
+    return mImplementation->isDeviceLost();
+}
+
+bool Display::testDeviceLost()
+{
+    ASSERT(isInitialized());
+    return mImplementation->testDeviceLost();
+}
+
 void Display::notifyDeviceLost()
 {
     for (ContextSet::iterator context = mContextSet.begin(); context != mContextSet.end(); context++)
@@ -577,9 +532,14 @@ void Display::notifyDeviceLost()
     }
 }
 
+const Caps &Display::getCaps() const
+{
+    return mCaps;
+}
+
 bool Display::isInitialized() const
 {
-    return mRenderer != NULL && mConfigSet.size() > 0;
+    return mInitialized;
 }
 
 bool Display::isValidConfig(EGLConfig config)
@@ -685,13 +645,7 @@ bool Display::isValidNativeDisplay(EGLNativeDisplayType display) const
 
 void Display::initVendorString()
 {
-    mVendorString = "Google Inc.";
-
-    // TODO(jmadill): clean this up
-    if (mRenderer)
-    {
-        mVendorString += " " + mRenderer->getVendorString();
-    }
+    mVendorString = mImplementation->getVendorString();
 }
 
 const DisplayExtensions &Display::getExtensions() const

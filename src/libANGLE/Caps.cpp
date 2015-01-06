@@ -433,6 +433,11 @@ Caps::Caps()
 namespace egl
 {
 
+Caps::Caps()
+    : textureNPOT(false)
+{
+}
+
 DisplayExtensions::DisplayExtensions()
     : createContextRobustness(false),
       d3dShareHandleClientBuffer(false),

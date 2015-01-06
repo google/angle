@@ -283,6 +283,14 @@ struct Caps
 namespace egl
 {
 
+struct Caps
+{
+    Caps();
+
+    // Support for NPOT surfaces
+    bool textureNPOT;
+};
+
 struct DisplayExtensions
 {
     DisplayExtensions();

@@ -25,10 +25,10 @@ class RendererD3D;
 class SurfaceD3D : public SurfaceImpl
 {
   public:
-    static SurfaceD3D *createFromWindow(egl::Display *display, const egl::Config *config,
+    static SurfaceD3D *createFromWindow(RendererD3D *renderer, egl::Display *display, const egl::Config *config,
                                         EGLNativeWindowType window, EGLint fixedSize,
                                         EGLint width, EGLint height, EGLint postSubBufferSupported);
-    static SurfaceD3D *createOffscreen(egl::Display *display, const egl::Config *config,
+    static SurfaceD3D *createOffscreen(RendererD3D *renderer, egl::Display *display, const egl::Config *config,
                                        EGLClientBuffer shareHandle, EGLint width, EGLint height,
                                        EGLenum textureFormat, EGLenum textureTarget);
     ~SurfaceD3D() override;
@@ -55,7 +55,7 @@ class SurfaceD3D : public SurfaceImpl
   private:
     DISALLOW_COPY_AND_ASSIGN(SurfaceD3D);
 
-    SurfaceD3D(egl::Display *display, const egl::Config *config, EGLint width, EGLint height,
+    SurfaceD3D(RendererD3D *renderer, egl::Display *display, const egl::Config *config, EGLint width, EGLint height,
                EGLint fixedSize, EGLint postSubBufferSupported, EGLenum textureFormat,
                EGLenum textureType, EGLClientBuffer shareHandle, EGLNativeWindowType window);
     egl::Error swapRect(EGLint x, EGLint y, EGLint width, EGLint height);

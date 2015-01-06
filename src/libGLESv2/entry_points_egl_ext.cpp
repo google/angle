@@ -118,7 +118,7 @@ EGLBoolean EGLAPIENTRY PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLin
         return EGL_FALSE;
     }
 
-    if (display->getRenderer()->isDeviceLost())
+    if (display->isDeviceLost())
     {
         SetGlobalError(Error(EGL_CONTEXT_LOST));
         return EGL_FALSE;

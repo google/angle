@@ -50,8 +50,7 @@ class Display final
 
     Error createWindowSurface(EGLNativeWindowType window, EGLConfig config, const EGLint *attribList, EGLSurface *outSurface);
     Error createOffscreenSurface(EGLConfig config, EGLClientBuffer shareHandle, const EGLint *attribList, EGLSurface *outSurface);
-    Error createContext(EGLConfig configHandle, EGLint clientVersion, const gl::Context *shareContext, bool notifyResets,
-                        bool robustAccess, EGLContext *outContext);
+    Error createContext(EGLConfig configHandle, EGLContext shareContext, const egl::AttributeMap &attribs, EGLContext *outContext);
 
     void destroySurface(egl::Surface *surface);
     void destroyContext(gl::Context *context);
@@ -64,9 +63,11 @@ class Display final
     bool isValidNativeWindow(EGLNativeWindowType window) const;
     bool isValidNativeDisplay(EGLNativeDisplayType display) const;
 
-    rx::Renderer *getRenderer() { return mRenderer; };
-
+    bool isDeviceLost() const;
+    bool testDeviceLost();
     void notifyDeviceLost();
+
+    const Caps &getCaps() const;
 
     const DisplayExtensions &getExtensions() const;
     const std::string &getExtensionString() const;
@@ -75,7 +76,7 @@ class Display final
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
 
-    Display(EGLNativeDisplayType displayId);
+    Display(rx::DisplayImpl *impl, EGLNativeDisplayType displayId);
 
     void setAttributes(const AttributeMap &attribMap);
 
@@ -94,7 +95,9 @@ class Display final
     typedef std::set<gl::Context*> ContextSet;
     ContextSet mContextSet;
 
-    rx::Renderer *mRenderer;
+    bool mInitialized;
+
+    Caps mCaps;
 
     DisplayExtensions mDisplayExtensions;
     std::string mDisplayExtensionString;

@@ -18,7 +18,11 @@ class RendererD3D;
 class DisplayD3D : public DisplayImpl
 {
   public:
-    DisplayD3D(rx::RendererD3D *renderer);
+    DisplayD3D();
+
+    egl::Error initialize(egl::Display *display, EGLNativeDisplayType nativeDisplay, const egl::AttributeMap &attribMap) override;
+    virtual void terminate() override;
+
     SurfaceImpl *createWindowSurface(egl::Display *display, const egl::Config *config,
                                      EGLNativeWindowType window, EGLint fixedSize,
                                      EGLint width, EGLint height, EGLint postSubBufferSupported) override;
@@ -26,16 +30,24 @@ class DisplayD3D : public DisplayImpl
                                         EGLClientBuffer shareHandle, EGLint width, EGLint height,
                                         EGLenum textureFormat, EGLenum textureTarget) override;
 
-    std::vector<ConfigDesc> generateConfigs() const override;
+    egl::Error createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
+                             gl::Context **outContext) override;
 
+    egl::ConfigSet generateConfigs() const override;
+
+    bool isDeviceLost() const override;
+    bool testDeviceLost() override;
     egl::Error restoreLostDevice() override;
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
+
+    std::string getVendorString() const override;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(DisplayD3D);
 
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
+    void generateCaps(egl::Caps *outCaps) const override;
 
     rx::RendererD3D *mRenderer;
 };

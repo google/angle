@@ -627,11 +627,6 @@ std::string RendererD3D::getVendorString() const
     return std::string("");
 }
 
-DisplayImpl *RendererD3D::createDisplay()
-{
-    return new DisplayD3D(this);
-}
-
 gl::Error RendererD3D::getScratchMemoryBuffer(size_t requestedSize, MemoryBuffer **bufferOut)
 {
     if (mScratchMemoryBuffer.size() == requestedSize)
