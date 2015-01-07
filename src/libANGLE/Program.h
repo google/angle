@@ -269,7 +269,6 @@ class Program
     unsigned int mRefCount;
 
     ResourceManager *mResourceManager;
-    rx::Renderer *mRenderer;
     const GLuint mHandle;
 
     InfoLog mInfoLog;

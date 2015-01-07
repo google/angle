@@ -191,6 +191,8 @@ LinkedVarying::LinkedVarying(const std::string &name, GLenum type, GLsizei size,
 Program::Program(rx::ProgramImpl *impl, ResourceManager *manager, GLuint handle)
     : mProgram(impl),
       mValidated(false),
+      mTransformFeedbackVaryings(),
+      mTransformFeedbackBufferMode(GL_NONE),
       mFragmentShader(NULL),
       mVertexShader(NULL),
       mLinked(false),
