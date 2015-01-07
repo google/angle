@@ -182,7 +182,8 @@ enum DebugTraceOutputType
    DebugTraceOutputTypeBeginEvent
 };
 
-static void output(bool traceInDebugOnly, DebugTraceOutputType outputType, const char *format, va_list vararg)
+static void output(bool traceInDebugOnly, MessageType messageType, DebugTraceOutputType outputType,
+                   const char *format, va_list vararg)
 {
     if (perfActive())
     {
@@ -204,6 +205,20 @@ static void output(bool traceInDebugOnly, DebugTraceOutputType outputType, const
         }
     }
 
+    std::string formattedMessage;
+    UNUSED_TRACE_VARIABLE(formattedMessage);
+
+#if !defined(NDEBUG) && defined(_MSC_VER)
+    if (messageType == MESSAGE_ERR)
+    {
+        if (formattedMessage.empty())
+        {
+            formattedMessage = FormatString(format, vararg);
+        }
+        OutputDebugString(formattedMessage.c_str());
+    }
+#endif
+
 #if defined(ANGLE_ENABLE_DEBUG_TRACE)
 #if defined(NDEBUG)
     if (traceInDebugOnly)
@@ -211,7 +226,10 @@ static void output(bool traceInDebugOnly, DebugTraceOutputType outputType, const
         return;
     }
 #endif // NDEBUG
-    std::string formattedMessage = FormatString(format, vararg);
+    if (formattedMessage.empty())
+    {
+        formattedMessage = FormatString(format, vararg);
+    }
 
     static std::ofstream file(TRACE_OUTPUT_FILE, std::ofstream::app);
     if (file)
@@ -227,14 +245,14 @@ static void output(bool traceInDebugOnly, DebugTraceOutputType outputType, const
 #endif // ANGLE_ENABLE_DEBUG_TRACE
 }
 
-void trace(bool traceInDebugOnly, const char *format, ...)
+void trace(bool traceInDebugOnly, MessageType messageType, const char *format, ...)
 {
     va_list vararg;
     va_start(vararg, format);
 #if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
-    output(traceInDebugOnly, DebugTraceOutputTypeSetMarker, format, vararg);
+    output(traceInDebugOnly, messageType, DebugTraceOutputTypeSetMarker, format, vararg);
 #else
-    output(traceInDebugOnly, DebugTraceOutputTypeNone, format, vararg);
+    output(traceInDebugOnly, messageType, DebugTraceOutputTypeNone, format, vararg);
 #endif
     va_end(vararg);
 }
@@ -260,9 +278,9 @@ ScopedPerfEventHelper::ScopedPerfEventHelper(const char* format, ...)
     va_list vararg;
     va_start(vararg, format);
 #if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
-    output(true, DebugTraceOutputTypeBeginEvent, format, vararg);
+    output(true, MESSAGE_EVENT, DebugTraceOutputTypeBeginEvent, format, vararg);
 #else
-    output(true, DebugTraceOutputTypeNone, format, vararg);
+    output(true, MESSAGE_EVENT, DebugTraceOutputTypeNone, format, vararg);
 #endif // ANGLE_ENABLE_DEBUG_ANNOTATIONS
     va_end(vararg);
 }

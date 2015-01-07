@@ -20,8 +20,16 @@
 
 namespace gl
 {
+    enum MessageType
+    {
+        MESSAGE_TRACE,
+        MESSAGE_FIXME,
+        MESSAGE_ERR,
+        MESSAGE_EVENT,
+    };
+
     // Outputs text to the debugging log, or the debugging window
-    void trace(bool traceInDebugOnly, const char *format, ...);
+    void trace(bool traceInDebugOnly, MessageType messageType, const char *format, ...);
 
     // Returns whether D3DPERF is active.
     bool perfActive();
@@ -43,21 +51,21 @@ namespace gl
 
 // A macro to output a trace of a function call and its arguments to the debugging log
 #if defined(ANGLE_ENABLE_DEBUG_TRACE) || defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
-#define TRACE(message, ...) gl::trace(true, "trace: %s(%d): " message "\n", __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define TRACE(message, ...) gl::trace(true, gl::MESSAGE_TRACE, "trace: %s(%d): " message "\n", __FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
 #define TRACE(message, ...) (void(0))
 #endif
 
 // A macro to output a function call and its arguments to the debugging log, to denote an item in need of fixing.
 #if defined(ANGLE_ENABLE_DEBUG_TRACE) || defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
-#define FIXME(message, ...) gl::trace(false, "fixme: %s(%d): " message "\n", __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define FIXME(message, ...) gl::trace(false, gl::MESSAGE_FIXME, "fixme: %s(%d): " message "\n", __FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
 #define FIXME(message, ...) (void(0))
 #endif
 
 // A macro to output a function call and its arguments to the debugging log, in case of error.
 #if defined(ANGLE_ENABLE_DEBUG_TRACE) || defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
-#define ERR(message, ...) gl::trace(false, "err: %s(%d): " message "\n", __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define ERR(message, ...) gl::trace(false, gl::MESSAGE_ERR, "err: %s(%d): " message "\n", __FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
 #define ERR(message, ...) (void(0))
 #endif
