@@ -287,3 +287,38 @@ TYPED_TEST(DrawBuffersTest, FirstHalfNULL)
 
     glDeleteProgram(program);
 }
+
+TYPED_TEST(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
+{
+    // Bind two render targets but use a shader which writes only to the first one.
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+
+    glBindTexture(GL_TEXTURE_2D, mTextures[1]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[1], 0);
+
+    bool flags[8] = { true, false };
+
+    GLuint program;
+    setupMRTProgram(flags, &program);
+
+    const GLenum bufs[] =
+    {
+        GL_COLOR_ATTACHMENT0,
+        GL_COLOR_ATTACHMENT1,
+        GL_NONE,
+        GL_NONE,
+    };
+
+    glUseProgram(program);
+    glDrawBuffersEXT(4, bufs);
+
+    // This call should not crash when we dynamically generate the HLSL code.
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    verifyAttachment(0, mTextures[0]);
+
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
+}

@@ -72,19 +72,18 @@ std::string HLSLTypeString(GLenum type)
     return HLSLComponentTypeString(gl::VariableComponentType(type), gl::VariableComponentCount(type));
 }
 
-const PixelShaderOutputVariable &GetOutputAtLocation(const std::vector<PixelShaderOutputVariable> &outputVariables,
+const PixelShaderOutputVariable *FindOutputAtLocation(const std::vector<PixelShaderOutputVariable> &outputVariables,
                                                         unsigned int location)
 {
     for (size_t variableIndex = 0; variableIndex < outputVariables.size(); ++variableIndex)
     {
         if (outputVariables[variableIndex].outputIndex == location)
         {
-            return outputVariables[variableIndex];
+            return &outputVariables[variableIndex];
         }
     }
 
-    UNREACHABLE();
-    return outputVariables[0];
+    return NULL;
 }
 
 const std::string VERTEX_ATTRIBUTE_STUB_STRING = "@@ VERTEX ATTRIBUTES @@";
@@ -457,12 +456,18 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(const std::string
         {
             unsigned int location = (binding - GL_COLOR_ATTACHMENT0);
 
-            const PixelShaderOutputVariable &outputVariable = GetOutputAtLocation(outputVariables, location);
+            const PixelShaderOutputVariable *outputVariable = FindOutputAtLocation(outputVariables, location);
 
-            declarationHLSL += "    " + HLSLTypeString(outputVariable.type) + " " + outputVariable.name +
-                               " : " + targetSemantic + Str(layoutIndex) + ";\n";
+            // OpenGL ES 3.0 spec $4.2.1
+            // If [...] not all user-defined output variables are written, the values of fragment colors
+            // corresponding to unwritten variables are similarly undefined.
+            if (outputVariable)
+            {
+                declarationHLSL += "    " + HLSLTypeString(outputVariable->type) + " " + outputVariable->name +
+                                   " : " + targetSemantic + Str(layoutIndex) + ";\n";
 
-            copyHLSL += "    output." + outputVariable.name + " = " + outputVariable.source + ";\n";
+                copyHLSL += "    output." + outputVariable->name + " = " + outputVariable->source + ";\n";
+            }
         }
     }
 
