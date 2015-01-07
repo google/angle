@@ -339,7 +339,7 @@ bool ValidateRenderbufferStorageParametersBase(gl::Context *context, GLenum targ
 bool ValidateRenderbufferStorageParametersANGLE(gl::Context *context, GLenum target, GLsizei samples,
                                                 GLenum internalformat, GLsizei width, GLsizei height)
 {
-    ASSERT(context->getExtensions().framebufferMultisample);
+    ASSERT(samples == 0 || context->getExtensions().framebufferMultisample);
 
     // ANGLE_framebuffer_multisample states that the value of samples must be less than or equal
     // to MAX_SAMPLES_ANGLE (Context::getExtensions().maxSamples) otherwise GL_INVALID_VALUE is
