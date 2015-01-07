@@ -21,6 +21,7 @@
             '<(angle_path)/tests/angle_tests/BufferDataTest.cpp',
             '<(angle_path)/tests/angle_tests/ClearTest.cpp',
             '<(angle_path)/tests/angle_tests/CompressedTextureTest.cpp',
+            '<(angle_path)/tests/angle_tests/CubeMapTextureTest.cpp',
             '<(angle_path)/tests/angle_tests/DepthStencilFormatsTest.cpp',
             '<(angle_path)/tests/angle_tests/DrawBuffersTest.cpp',
             '<(angle_path)/tests/angle_tests/FramebufferFormatsTest.cpp',
