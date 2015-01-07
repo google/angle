@@ -372,6 +372,40 @@ static bool GetInstancingSupport(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+static bool GetFramebufferMultisampleSupport(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return true;
+
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return false;
+
+      default: UNREACHABLE();      return false;
+    }
+}
+
+static bool GetFramebufferBlitSupport(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return true;
+
+      case D3D_FEATURE_LEVEL_9_3:
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return false;
+
+      default: UNREACHABLE();      return false;
+    }
+}
+
 static bool GetDerivativeInstructionSupport(D3D_FEATURE_LEVEL featureLevel)
 {
     // http://msdn.microsoft.com/en-us/library/windows/desktop/bb509588.aspx states that shader model
@@ -387,6 +421,23 @@ static bool GetDerivativeInstructionSupport(D3D_FEATURE_LEVEL featureLevel)
       case D3D_FEATURE_LEVEL_10_1:
       case D3D_FEATURE_LEVEL_10_0:
       case D3D_FEATURE_LEVEL_9_3:  return true;
+      case D3D_FEATURE_LEVEL_9_2:
+      case D3D_FEATURE_LEVEL_9_1:  return false;
+
+      default: UNREACHABLE();      return false;
+    }
+}
+
+static bool GetShaderTextureLODSupport(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_1:
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return true;
+
+      case D3D_FEATURE_LEVEL_9_3:
       case D3D_FEATURE_LEVEL_9_2:
       case D3D_FEATURE_LEVEL_9_1:  return false;
 
@@ -979,13 +1030,13 @@ void GenerateCaps(ID3D11Device *device, gl::Caps *caps, gl::TextureCapsMap *text
     extensions->timerQuery = false; // Unimplemented
     extensions->robustness = true;
     extensions->blendMinMax = true;
-    extensions->framebufferBlit = true;
-    extensions->framebufferMultisample = true;
+    extensions->framebufferBlit = GetFramebufferBlitSupport(featureLevel);
+    extensions->framebufferMultisample = GetFramebufferMultisampleSupport(featureLevel);
     extensions->maxSamples = maxSamples;
     extensions->instancedArrays = GetInstancingSupport(featureLevel);
     extensions->packReverseRowOrder = true;
     extensions->standardDerivatives = GetDerivativeInstructionSupport(featureLevel);
-    extensions->shaderTextureLOD = true;
+    extensions->shaderTextureLOD = GetShaderTextureLODSupport(featureLevel);
     extensions->fragDepth = true;
     extensions->textureUsage = true; // This could be false since it has no effect in D3D11
     extensions->translatedShaderSource = true;
