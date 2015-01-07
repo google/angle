@@ -611,7 +611,8 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
                 colorbufferFormat != GL_RGBA4 &&
                 colorbufferFormat != GL_RGB5_A1 &&
                 colorbufferFormat != GL_BGRA8_EXT &&
-                colorbufferFormat != GL_RGBA8_OES)
+                colorbufferFormat != GL_RGBA8_OES &&
+                colorbufferFormat != GL_BGR5_A1_ANGLEX)
             {
                 context->recordError(Error(GL_INVALID_OPERATION));
                 return false;
@@ -625,7 +626,8 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
                   colorbufferFormat != GL_RGBA4 &&
                   colorbufferFormat != GL_RGB5_A1 &&
                   colorbufferFormat != GL_BGRA8_EXT &&
-                  colorbufferFormat != GL_RGBA8_OES)
+                  colorbufferFormat != GL_RGBA8_OES &&
+                  colorbufferFormat != GL_BGR5_A1_ANGLEX)
               {
                   context->recordError(Error(GL_INVALID_OPERATION));
                   return false;
@@ -639,7 +641,8 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
                   colorbufferFormat != GL_RGBA4 &&
                   colorbufferFormat != GL_RGB5_A1 &&
                   colorbufferFormat != GL_BGRA8_EXT &&
-                  colorbufferFormat != GL_RGBA8_OES)
+                  colorbufferFormat != GL_RGBA8_OES &&
+                  colorbufferFormat != GL_BGR5_A1_ANGLEX)
               {
                   context->recordError(Error(GL_INVALID_OPERATION));
                   return false;
@@ -652,7 +655,8 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
                   colorbufferFormat != GL_RGBA4 &&
                   colorbufferFormat != GL_RGB5_A1 &&
                   colorbufferFormat != GL_BGRA8_EXT &&
-                  colorbufferFormat != GL_RGBA8_OES)
+                  colorbufferFormat != GL_RGBA8_OES &&
+                  colorbufferFormat != GL_BGR5_A1_ANGLEX)
               {
                   context->recordError(Error(GL_INVALID_OPERATION));
                   return false;
@@ -664,7 +668,8 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
                 colorbufferFormat != GL_RGBA4 &&
                 colorbufferFormat != GL_RGB5_A1 &&
                 colorbufferFormat != GL_BGRA8_EXT &&
-                colorbufferFormat != GL_RGBA8_OES)
+                colorbufferFormat != GL_RGBA8_OES &&
+                colorbufferFormat != GL_BGR5_A1_ANGLEX)
             {
                 context->recordError(Error(GL_INVALID_OPERATION));
                 return false;
@@ -675,7 +680,8 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
             if (colorbufferFormat != GL_RGBA4 &&
                 colorbufferFormat != GL_RGB5_A1 &&
                 colorbufferFormat != GL_BGRA8_EXT &&
-                colorbufferFormat != GL_RGBA8_OES)
+                colorbufferFormat != GL_RGBA8_OES &&
+                colorbufferFormat != GL_BGR5_A1_ANGLEX)
             {
                 context->recordError(Error(GL_INVALID_OPERATION));
                 return false;
