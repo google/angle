@@ -237,8 +237,6 @@ class Renderer11 : public RendererD3D
 
     HLSLCompiler mCompiler;
 
-    bool mDeviceLost;
-
     void initializeDevice();
     void releaseDeviceResources();
     void release();

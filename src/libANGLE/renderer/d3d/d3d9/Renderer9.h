@@ -250,7 +250,6 @@ class Renderer9 : public RendererD3D
 
     HWND mDeviceWindow;
 
-    bool mDeviceLost;
     D3DCAPS9 mDeviceCaps;
     D3DADAPTER_IDENTIFIER9 mAdapterIdentifier;
 
