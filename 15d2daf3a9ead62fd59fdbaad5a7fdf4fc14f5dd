@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e6c8115_f9fd13c6",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-07T17:19:52Z",
+      "side": 1,
+      "message": "Nit: not needed (below too)",
+      "range": {
+        "startLine": 185,
+        "startChar": 42,
+        "endLine": 185,
+        "endChar": 46
+      },
+      "revId": "15d2daf3a9ead62fd59fdbaad5a7fdf4fc14f5dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e630529_53e9843c",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-07T17:19:52Z",
+      "side": 1,
+      "message": "Nit: not needed",
+      "range": {
+        "startLine": 32,
+        "startChar": 38,
+        "endLine": 32,
+        "endChar": 42
+      },
+      "revId": "15d2daf3a9ead62fd59fdbaad5a7fdf4fc14f5dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
