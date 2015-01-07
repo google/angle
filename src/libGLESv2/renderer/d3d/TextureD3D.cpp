@@ -1423,7 +1423,7 @@ void TextureD3D_Cube::initMipmapsImages()
 
 unsigned int TextureD3D_Cube::getRenderTargetSerial(const gl::ImageIndex &index)
 {
-    return (ensureRenderTarget().isError() ? mTexStorage->getRenderTargetSerial(index) : 0);
+    return (!ensureRenderTarget().isError() ? mTexStorage->getRenderTargetSerial(index) : 0);
 }
 
 gl::Error TextureD3D_Cube::getRenderTarget(const gl::ImageIndex &index, RenderTarget **outRT)
