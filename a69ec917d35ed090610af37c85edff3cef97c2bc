@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2ee9a9cf_e561ccf2",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-08T21:30:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ee6a5ff_04bebc30",
+      "range": {
+        "startLine": 171,
+        "startChar": 18,
+        "endLine": 171,
+        "endChar": 22
+      },
+      "revId": "a69ec917d35ed090610af37c85edff3cef97c2bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ee9a9cf_65777cc1",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 8
@@ -64,6 +88,54 @@
         "startChar": 67,
         "endLine": 2354,
         "endChar": 75
+      },
+      "revId": "a69ec917d35ed090610af37c85edff3cef97c2bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ee9a9cf_45060015",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2354,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-08T21:30:26Z",
+      "side": 1,
+      "message": "Done, I also updated some parameters to use uint8_t* instead of void*.",
+      "parentUuid": "2ee9a9cf_857c88a5",
+      "range": {
+        "startLine": 2354,
+        "startChar": 67,
+        "endLine": 2354,
+        "endChar": 75
+      },
+      "revId": "a69ec917d35ed090610af37c85edff3cef97c2bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ee6a5ff_8f2ae5a0",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2354,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-08T21:30:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ee9a9cf_65777cc1",
+      "range": {
+        "startLine": 2354,
+        "startChar": 14,
+        "endLine": 2354,
+        "endChar": 18
       },
       "revId": "a69ec917d35ed090610af37c85edff3cef97c2bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
