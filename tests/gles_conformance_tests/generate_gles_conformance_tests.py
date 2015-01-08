@@ -28,13 +28,19 @@ def GetTestName(testName):
 def GenerateTests(outFile, testNames):
     # Remove duplicate tests
     testNames = list(set(testNames))
+    testSuites = []
 
     outFile.write("#include \"gles_conformance_tests.h\"\n\n")
 
     for test in testNames:
-        outFile.write("TEST(" + GetSuiteName(test) + ", " + GetTestName(test) + ")\n")
+        testSuite = GetSuiteName(test)
+        if not testSuite in testSuites:
+            outFile.write("DEFINE_CONFORMANCE_TEST_CLASS(" + testSuite + ");\n\n")
+            testSuites.append(testSuite)
+
+        outFile.write("TYPED_TEST(" + testSuite + ", " + GetTestName(test) + ")\n")
         outFile.write("{\n")
-        outFile.write("    RunConformanceTest(\"" + test + "\", GetCurrentConfig());\n")
+        outFile.write("    run(\"" + test + "\");\n")
         outFile.write("}\n\n")
 
 def GenerateTestList(sourceFile, rootDir):

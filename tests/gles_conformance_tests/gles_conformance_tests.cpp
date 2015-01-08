@@ -7,18 +7,6 @@
 #include <sstream>
 #include <stdarg.h>
 
-static ConformanceConfig kCurrentConfig = { 64, 64, EGL_DEFAULT_DISPLAY };
-
-void SetCurrentConfig(const ConformanceConfig& config)
-{
-    kCurrentConfig = config;
-}
-
-const ConformanceConfig& GetCurrentConfig()
-{
-    return kCurrentConfig;
-}
-
 static std::vector<char> FormatArg(const char* fmt, ...)
 {
     va_list vararg;
@@ -58,20 +46,20 @@ static std::string GetExecutableDirectory()
     return executableLocation;
 }
 
-void RunConformanceTest(const std::string &testPath, const ConformanceConfig& config)
+void RunConformanceTest(const std::string &testPath, EGLNativeDisplayType nativeDisplay)
 {
     std::vector<char*> args;
 
     // Empty first argument for the program name
     args.push_back("");
 
-    std::vector<char> widthArg = FormatArg("-width=%u", config.width);
+    std::vector<char> widthArg = FormatArg("-width=%u", 64);
     args.push_back(widthArg.data());
 
-    std::vector<char> heightArg = FormatArg("-height=%u", config.height);
+    std::vector<char> heightArg = FormatArg("-height=%u", 64);
     args.push_back(heightArg.data());
 
-    std::vector<char> displayArg = FormatArg("-d=%u", config.displayType);
+    std::vector<char> displayArg = FormatArg("-d=%llu", nativeDisplay);
     args.push_back(displayArg.data());
 
     std::vector<char> runArg = FormatArg("-run=%s/conformance_tests/%s", GetExecutableDirectory().c_str(), testPath.c_str());
