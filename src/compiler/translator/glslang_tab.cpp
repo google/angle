@@ -2505,6 +2505,13 @@ yyreduce:
                         // Treat it like a built-in unary operator.
                         //
                         (yyval.interm.intermTypedNode) = context->intermediate.addUnaryMath(op, (yyvsp[0].interm).intermNode, (yylsp[0]));
+                        if ((yyval.interm.intermTypedNode) == 0)  {
+                            std::stringstream extraInfoStream;
+                            extraInfoStream << "built in unary operator function.  Type: " << static_cast<TIntermTyped*>((yyvsp[0].interm).intermNode)->getCompleteString();
+                            std::string extraInfo = extraInfoStream.str();
+                            context->error((yyvsp[0].interm).intermNode->getLine(), " wrong operand type", "Internal Error", extraInfo.c_str());
+                            YYERROR;
+                        }
                         const TType& returnType = fnCandidate->getReturnType();
                         if (returnType.getBasicType() == EbtBool) {
                             // Bool types should not have precision, so we'll override any precision
@@ -2513,13 +2520,6 @@ yyreduce:
                         } else {
                             // addUnaryMath has set the precision of the node based on the operand.
                             (yyval.interm.intermTypedNode)->setTypePreservePrecision(returnType);
-                        }
-                        if ((yyval.interm.intermTypedNode) == 0)  {
-                            std::stringstream extraInfoStream;
-                            extraInfoStream << "built in unary operator function.  Type: " << static_cast<TIntermTyped*>((yyvsp[0].interm).intermNode)->getCompleteString();
-                            std::string extraInfo = extraInfoStream.str();
-                            context->error((yyvsp[0].interm).intermNode->getLine(), " wrong operand type", "Internal Error", extraInfo.c_str());
-                            YYERROR;
                         }
                     } else {
                         TIntermAggregate *aggregate = context->intermediate.setAggregateOperator((yyvsp[0].interm).intermAggregate, op, (yylsp[0]));

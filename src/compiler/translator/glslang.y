@@ -353,6 +353,13 @@ function_call
                         // Treat it like a built-in unary operator.
                         //
                         $$ = context->intermediate.addUnaryMath(op, $1.intermNode, @1);
+                        if ($$ == 0)  {
+                            std::stringstream extraInfoStream;
+                            extraInfoStream << "built in unary operator function.  Type: " << static_cast<TIntermTyped*>($1.intermNode)->getCompleteString();
+                            std::string extraInfo = extraInfoStream.str();
+                            context->error($1.intermNode->getLine(), " wrong operand type", "Internal Error", extraInfo.c_str());
+                            YYERROR;
+                        }
                         const TType& returnType = fnCandidate->getReturnType();
                         if (returnType.getBasicType() == EbtBool) {
                             // Bool types should not have precision, so we'll override any precision
@@ -361,13 +368,6 @@ function_call
                         } else {
                             // addUnaryMath has set the precision of the node based on the operand.
                             $$->setTypePreservePrecision(returnType);
-                        }
-                        if ($$ == 0)  {
-                            std::stringstream extraInfoStream;
-                            extraInfoStream << "built in unary operator function.  Type: " << static_cast<TIntermTyped*>($1.intermNode)->getCompleteString();
-                            std::string extraInfo = extraInfoStream.str();
-                            context->error($1.intermNode->getLine(), " wrong operand type", "Internal Error", extraInfo.c_str());
-                            YYERROR;
                         }
                     } else {
                         TIntermAggregate *aggregate = context->intermediate.setAggregateOperator($1.intermAggregate, op, @1);
