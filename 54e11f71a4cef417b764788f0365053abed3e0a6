@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae7cb9f1_a84ebb36",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2015-01-08T19:29:55Z",
+      "side": 1,
+      "message": "There\u0027s several instances like this in the code where x/y/z offsets have been replaced with Extents, which is explicitly width/depth/height. This feels really awkward, unless the previous variable names were horrifically wrong.\n\nI suspect that Extents is being used because it provides a convenient 3-element value that approximates the needs of the functions, but I would much rather see an explicit \"Offset\" struct be created for this use to prevent confusion.",
+      "range": {
+        "startLine": 360,
+        "startChar": 24,
+        "endLine": 360,
+        "endChar": 29
+      },
+      "revId": "54e11f71a4cef417b764788f0365053abed3e0a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
