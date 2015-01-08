@@ -215,7 +215,7 @@ static void output(bool traceInDebugOnly, MessageType messageType, DebugTraceOut
         {
             formattedMessage = FormatString(format, vararg);
         }
-        OutputDebugString(formattedMessage.c_str());
+        OutputDebugStringA(formattedMessage.c_str());
     }
 #endif
 
