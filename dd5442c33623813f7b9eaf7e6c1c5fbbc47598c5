@@ -25,6 +25,53 @@
     },
     {
       "key": {
+        "uuid": "6e764114_26475681",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-08T20:00:15Z",
+      "side": 1,
+      "message": "The EGL_EXT_robust_initialization line was actually meant to mention EGL_ANGLE_create_context_robust_initialization. Victim of reading another extension and typing at the same time + the three times I changed the names of both of these extensions before putting them up.",
+      "parentUuid": "0ee6a5ff_61c9328a",
+      "range": {
+        "startLine": 32,
+        "startChar": 1,
+        "endLine": 32,
+        "endChar": 26
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae7cb9f1_c825af17",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-08T20:00:15Z",
+      "side": 1,
+      "message": "Should say EGL_ANGLE_create_context_robust_initialization (or whatever that extension is ultimately called).",
+      "range": {
+        "startLine": 37,
+        "startChar": 1,
+        "endLine": 37,
+        "endChar": 30
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ee6a5ff_e189c287",
         "filename": "extensions/ANGLE_robust_resource_initialization.txt",
         "patchSetId": 2
@@ -36,6 +83,30 @@
       "writtenOn": "2015-01-08T19:39:10Z",
       "side": 1,
       "message": "Same  here, just say this is the way it needs to be done?",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 45
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e764114_a67d06a0",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-08T20:00:15Z",
+      "side": 1,
+      "message": "I suspect these extensions have some chance of uptake by desktop GL \u0026 its window system binding APIs-- I think it would be advantageous for WebGL to be able to rely on native GL implementations for initialization behavior, like they were able to get put in place for robust buffer access.",
+      "parentUuid": "0ee6a5ff_e189c287",
       "range": {
         "startLine": 110,
         "startChar": 0,
@@ -71,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "ae7cb9f1_e8d43375",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-08T20:00:15Z",
+      "side": 1,
+      "message": "Picked up this wording from the other robustness extensions. It\u0027s basically a hedge against such functionality just being put into core implementations, and allowing this extension to be used to bootstrap the same behavior implemented in other extensions.",
+      "parentUuid": "0ee6a5ff_e164623c",
+      "range": {
+        "startLine": 36,
+        "startChar": 1,
+        "endLine": 36,
+        "endChar": 69
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e81b519_473c4ee5",
         "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
         "patchSetId": 2
@@ -82,6 +177,30 @@
       "writtenOn": "2015-01-08T19:39:10Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 66,
+        "startChar": 53,
+        "endLine": 67,
+        "endChar": 20
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce872d28_6cc85336",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-08T20:00:15Z",
+      "side": 1,
+      "message": "ditto above",
+      "parentUuid": "8e81b519_473c4ee5",
       "range": {
         "startLine": 66,
         "startChar": 53,
