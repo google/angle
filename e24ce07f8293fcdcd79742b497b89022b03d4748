@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ceb9edd9_1c545919",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-08T15:51:47Z",
+      "side": 1,
+      "message": "nit: very nit-picky but can you shorten the first line of the description to \u003c 65 chars, and include the full explanation in a second paragraph (clipped to 71 chars).",
+      "range": {
+        "startLine": 7,
+        "startChar": 54,
+        "endLine": 7,
+        "endChar": 90
+      },
+      "revId": "e24ce07f8293fcdcd79742b497b89022b03d4748",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ee9a9cf_bf643304",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-08T15:51:47Z",
+      "side": 1,
+      "message": "nit: gyp conditions should work such that you can go:\n\n  [\u0027angle_build_winrt\u003d\u003d0\u0027, {\n    # stuff\n  },{ # angle_build_winrt!\u003d0\n    # other stuff\n  }]",
+      "range": {
+        "startLine": 117,
+        "startChar": 27,
+        "endLine": 118,
+        "endChar": 30
+      },
+      "revId": "e24ce07f8293fcdcd79742b497b89022b03d4748",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ee6a5ff_fe879d37",
+        "filename": "build/common.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-08T15:51:47Z",
+      "side": 1,
+      "message": "nit: same deal here",
+      "range": {
+        "startLine": 168,
+        "startChar": 27,
+        "endLine": 169,
+        "endChar": 30
+      },
+      "revId": "e24ce07f8293fcdcd79742b497b89022b03d4748",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
