@@ -85,6 +85,35 @@ VertexDataManager::~VertexDataManager()
     }
 }
 
+void VertexDataManager::hintUnmapAllResources(const gl::State &state)
+{
+    mStreamingBuffer->getVertexBuffer()->hintUnmapResource();
+
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    {
+        const gl::VertexAttribute &attrib = state.getVertexAttribState(i);
+        if (attrib.enabled)
+        {
+            gl::Buffer *buffer = attrib.buffer.get();
+            BufferD3D *storage = buffer ? BufferD3D::makeBufferD3D(buffer->getImplementation()) : NULL;
+            StaticVertexBufferInterface *staticBuffer = storage ? storage->getStaticVertexBuffer() : NULL;
+
+            if (staticBuffer)
+            {
+                staticBuffer->getVertexBuffer()->hintUnmapResource();
+            }
+        }
+    }
+
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    {
+        if (mCurrentValueBuffer[i] != NULL)
+        {
+            mCurrentValueBuffer[i]->getVertexBuffer()->hintUnmapResource();
+        }
+    }
+}
+
 gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint start, GLsizei count,
                                                TranslatedAttribute *translated, GLsizei instances)
 {
@@ -132,6 +161,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
 
                 if (error.isError())
                 {
+                    hintUnmapAllResources(state);
                     return error;
                 }
             }
@@ -147,11 +177,15 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
                                                     mCurrentValueBuffer[i]);
                 if (error.isError())
                 {
+                    hintUnmapAllResources(state);
                     return error;
                 }
             }
         }
     }
+
+    // Hint to unmap all the resources
+    hintUnmapAllResources(state);
 
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {

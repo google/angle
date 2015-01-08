@@ -9,6 +9,8 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_VERTEXBUFFER11_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_VERTEXBUFFER11_H_
 
+#include <stdint.h>
+
 #include "libANGLE/renderer/d3d/VertexBuffer.h"
 
 namespace rx
@@ -35,16 +37,22 @@ class VertexBuffer11 : public VertexBuffer
     virtual gl::Error setBufferSize(unsigned int size);
     virtual gl::Error discard();
 
+    virtual void hintUnmapResource();
+
     ID3D11Buffer *getBuffer() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexBuffer11);
+
+    gl::Error mapResource();
 
     Renderer11 *const mRenderer;
 
     ID3D11Buffer *mBuffer;
     unsigned int mBufferSize;
     bool mDynamicUsage;
+
+    uint8_t *mMappedResourceData;
 };
 
 }

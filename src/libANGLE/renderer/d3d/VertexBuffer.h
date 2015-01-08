@@ -47,6 +47,9 @@ class VertexBuffer
 
     unsigned int getSerial() const;
 
+    // This may be overridden (e.g. by VertexBuffer11) if necessary.
+    virtual void hintUnmapResource() { };
+
   protected:
     void updateSerial();
 
