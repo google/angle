@@ -332,6 +332,8 @@ bool TIntermUnary::promote(TInfoSink &)
       case EOpAny:
       case EOpAll:
       case EOpVectorLogicalNot:
+      case EOpIntBitsToFloat:
+      case EOpUintBitsToFloat:
         return true;
 
       default:

@@ -197,6 +197,31 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float3, "smoothstep", float1, float1, float3);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, float4, "smoothstep", float1, float1, float4);
 
+    TType *uint1 = new TType(EbtUInt);
+    TType *uint2 = new TType(EbtUInt, 2);
+    TType *uint3 = new TType(EbtUInt, 3);
+    TType *uint4 = new TType(EbtUInt, 4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int1, "floatBitsToInt", float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "floatBitsToInt", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "floatBitsToInt", float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "floatBitsToInt", float4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint1, "floatBitsToUint", float1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint2, "floatBitsToUint", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint3, "floatBitsToUint", float3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "floatBitsToUint", float4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "intBitsToFloat", int1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "intBitsToFloat", int2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float3, "intBitsToFloat", int3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "intBitsToFloat", int4);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "uintBitsToFloat", uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "uintBitsToFloat", uint2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float3, "uintBitsToFloat", uint3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "uintBitsToFloat", uint4);
+
     //
     // Geometric Functions.
     //
@@ -692,6 +717,11 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     symbolTable.relateToOperator(COMMON_BUILTINS, "mix",          EOpMix);
     symbolTable.relateToOperator(COMMON_BUILTINS, "step",         EOpStep);
     symbolTable.relateToOperator(COMMON_BUILTINS, "smoothstep",   EOpSmoothStep);
+
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "floatBitsToInt",  EOpFloatBitsToInt);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "floatBitsToUint", EOpFloatBitsToUint);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "intBitsToFloat",  EOpIntBitsToFloat);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "uintBitsToFloat", EOpUintBitsToFloat);
 
     symbolTable.relateToOperator(COMMON_BUILTINS, "length",       EOpLength);
     symbolTable.relateToOperator(COMMON_BUILTINS, "distance",     EOpDistance);

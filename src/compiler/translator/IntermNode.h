@@ -123,6 +123,11 @@ enum TOperator
     EOpStep,
     EOpSmoothStep,
 
+    EOpFloatBitsToInt,
+    EOpFloatBitsToUint,
+    EOpIntBitsToFloat,
+    EOpUintBitsToFloat,
+
     EOpLength,
     EOpDistance,
     EOpDot,
