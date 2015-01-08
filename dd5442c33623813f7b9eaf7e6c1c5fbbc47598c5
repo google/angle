@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ee6a5ff_61c9328a",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-01-08T19:39:10Z",
+      "side": 1,
+      "message": "Mention the need for EGL_ANGLE_create_context_robust_initialization? Or is there a current use case for a non-EGL windowing system? It seems to me that could be a separate extension if/when we need it. It would making this extension more clear about its interactions.",
+      "range": {
+        "startLine": 32,
+        "startChar": 1,
+        "endLine": 32,
+        "endChar": 26
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ee6a5ff_e189c287",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-01-08T19:39:10Z",
+      "side": 1,
+      "message": "Same  here, just say this is the way it needs to be done?",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 45
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ee6a5ff_e164623c",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-01-08T19:39:10Z",
+      "side": 1,
+      "message": "Same here, this seems vague and any equivalent functionality most likely needs an extension of its own.",
+      "range": {
+        "startLine": 36,
+        "startChar": 1,
+        "endLine": 36,
+        "endChar": 69
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e81b519_473c4ee5",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-01-08T19:39:10Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 66,
+        "startChar": 53,
+        "endLine": 67,
+        "endChar": 20
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
