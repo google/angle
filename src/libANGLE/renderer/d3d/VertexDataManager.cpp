@@ -247,10 +247,13 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribute &attrib,
     unsigned int streamOffset = 0;
     unsigned int outputElementSize = 0;
 
+    // Instanced vertices do not apply the 'start' offset
+    GLint firstVertexIndex = (instances > 0 && attrib.divisor > 0 ? 0 : start);
+
     if (directStorage)
     {
         outputElementSize = ComputeVertexAttributeStride(attrib);
-        streamOffset = attrib.offset + outputElementSize * start;
+        streamOffset = attrib.offset + outputElementSize * firstVertexIndex;
     }
     else if (staticBuffer)
     {
@@ -275,7 +278,7 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribute &attrib,
         }
 
         unsigned int firstElementOffset = (attrib.offset / ComputeVertexAttributeStride(attrib)) * outputElementSize;
-        unsigned int startOffset = (instances == 0 || attrib.divisor == 0) ? start * outputElementSize : 0;
+        unsigned int startOffset = (instances == 0 || attrib.divisor == 0) ? firstVertexIndex * outputElementSize : 0;
         if (streamOffset + firstElementOffset + startOffset < streamOffset)
         {
             return gl::Error(GL_OUT_OF_MEMORY);
@@ -292,7 +295,8 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribute &attrib,
             return error;
         }
 
-        error = mStreamingBuffer->storeVertexAttributes(attrib, currentValue, start, totalCount, instances, &streamOffset);
+        error = mStreamingBuffer->storeVertexAttributes(attrib, currentValue, firstVertexIndex,
+                                                        totalCount, instances, &streamOffset);
         if (error.isError())
         {
             return error;

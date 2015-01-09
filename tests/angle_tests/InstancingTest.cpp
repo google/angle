@@ -2,7 +2,10 @@
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // We test on D3D9 and D3D11 9_3 because they use special codepaths when attribute zero is instanced, unlike D3D11.
-ANGLE_TYPED_TEST_CASE(InstancingTest, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3);
+ANGLE_TYPED_TEST_CASE(InstancingTestAllConfigs, ES2_D3D9, ES2_D3D11, ES2_D3D11_FL9_3);
+
+// TODO(jmadill): Figure out the situation with DrawInstanced on FL 9_3
+ANGLE_TYPED_TEST_CASE(InstancingTestNo9_3, ES2_D3D9, ES2_D3D11);
 
 template<typename T>
 class InstancingTest : public ANGLETest
@@ -39,14 +42,14 @@ class InstancingTest : public ANGLETest
         ASSERT_TRUE(mDrawElementsInstancedANGLE != NULL);
 
         // Initialize the vertex and index vectors
-        GLfloat vertex1[3] = {-quadRadius,  quadRadius, 0.0f};
-        GLfloat vertex2[3] = {-quadRadius, -quadRadius, 0.0f};
-        GLfloat vertex3[3] = { quadRadius, -quadRadius, 0.0f};
-        GLfloat vertex4[3] = { quadRadius,  quadRadius, 0.0f};
-        mVertices.insert(mVertices.end(), vertex1, vertex1 + 3);
-        mVertices.insert(mVertices.end(), vertex2, vertex2 + 3);
-        mVertices.insert(mVertices.end(), vertex3, vertex3 + 3);
-        mVertices.insert(mVertices.end(), vertex4, vertex4 + 3);
+        GLfloat qvertex1[3] = {-quadRadius,  quadRadius, 0.0f};
+        GLfloat qvertex2[3] = {-quadRadius, -quadRadius, 0.0f};
+        GLfloat qvertex3[3] = { quadRadius, -quadRadius, 0.0f};
+        GLfloat qvertex4[3] = { quadRadius,  quadRadius, 0.0f};
+        mQuadVertices.insert(mQuadVertices.end(), qvertex1, qvertex1 + 3);
+        mQuadVertices.insert(mQuadVertices.end(), qvertex2, qvertex2 + 3);
+        mQuadVertices.insert(mQuadVertices.end(), qvertex3, qvertex3 + 3);
+        mQuadVertices.insert(mQuadVertices.end(), qvertex4, qvertex4 + 3);
 
         GLfloat coord1[2] = {0.0f, 0.0f};
         GLfloat coord2[2] = {0.0f, 1.0f};
@@ -64,7 +67,21 @@ class InstancingTest : public ANGLETest
         mIndices.push_back(2);
         mIndices.push_back(3);
 
-        // Tile a 3x3 grid of the tiles
+        for (size_t vertexIndex = 0; vertexIndex < 6; ++vertexIndex)
+        {
+            mNonIndexedVertices.insert(mNonIndexedVertices.end(),
+                                       mQuadVertices.begin() + mIndices[vertexIndex] * 3,
+                                       mQuadVertices.begin() + mIndices[vertexIndex] * 3 + 3);
+        }
+
+        for (size_t vertexIndex = 0; vertexIndex < 6; ++vertexIndex)
+        {
+            mNonIndexedVertices.insert(mNonIndexedVertices.end(),
+                                       mQuadVertices.begin() + mIndices[vertexIndex] * 3,
+                                       mQuadVertices.begin() + mIndices[vertexIndex] * 3 + 3);
+        }
+
+        // Tile a 2x2 grid of the tiles
         for (float y = -1.0f + quadRadius; y < 1.0f - quadRadius; y += quadRadius * 3)
         {
             for (float x = -1.0f + quadRadius; x < 1.0f - quadRadius; x += quadRadius * 3)
@@ -79,7 +96,75 @@ class InstancingTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void runTest(std::string vs, bool shouldAttribZeroBeInstanced)
+    GLuint setupDrawArraysTest(const std::string &vs)
+    {
+        const std::string fs = SHADER_SOURCE
+        (
+            precision mediump float;
+            void main()
+            {
+                gl_FragColor = vec4(1.0, 0, 0, 1.0);
+            }
+        );
+
+        GLuint program = CompileProgram(vs, fs);
+        if (program == 0)
+        {
+            return 0;
+        }
+
+        // Set the viewport
+        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+
+        // Clear the color buffer
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Use the program object
+        glUseProgram(program);
+
+        return program;
+    }
+
+    void runDrawArraysTest(GLuint program, GLint first, GLsizei count, GLsizei instanceCount, float *offset)
+    {
+        GLuint vertexBuffer;
+        glGenBuffers(1, &vertexBuffer);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, mInstances.size() * sizeof(mInstances[0]), &mInstances[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        // Get the attribute locations
+        GLint positionLoc = glGetAttribLocation(program, "a_position");
+        GLint instancePosLoc = glGetAttribLocation(program, "a_instancePos");
+
+        // Load the vertex position
+        glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, mNonIndexedVertices.data());
+        glEnableVertexAttribArray(positionLoc);
+
+        // Load the instance position
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        glVertexAttribPointer(instancePosLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glEnableVertexAttribArray(instancePosLoc);
+
+        // Enable instancing
+        mVertexAttribDivisorANGLE(instancePosLoc, 1);
+
+        // Offset
+        GLint uniformLoc = glGetUniformLocation(program, "u_offset");
+        ASSERT_NE(uniformLoc, -1);
+        glUniform3fv(uniformLoc, 1, offset);
+
+        // Do the instanced draw
+        mDrawArraysInstancedANGLE(GL_TRIANGLES, first, count, instanceCount);
+
+        ASSERT_GL_NO_ERROR();
+
+        swapBuffers();
+    }
+
+    virtual void runDrawElementsTest(std::string vs, bool shouldAttribZeroBeInstanced)
     {
         const std::string fs = SHADER_SOURCE
         (
@@ -110,7 +195,7 @@ class InstancingTest : public ANGLETest
         glUseProgram(program);
 
         // Load the vertex position
-        glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, mVertices.data());
+        glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, mQuadVertices.data());
         glEnableVertexAttribArray(positionLoc);
 
         // Load the instance position
@@ -121,16 +206,26 @@ class InstancingTest : public ANGLETest
         mVertexAttribDivisorANGLE(instancePosLoc, 1);
 
         // Do the instanced draw
-        mDrawElementsInstancedANGLE(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_SHORT, mIndices.data(), mInstances.size());
+        mDrawElementsInstancedANGLE(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_SHORT, mIndices.data(), mInstances.size() / 3);
 
+        swapBuffers();
         ASSERT_GL_NO_ERROR();
 
-        // Check that various pixels are the expected color.
-        EXPECT_PIXEL_EQ(quadRadius * getWindowWidth(),            quadRadius * getWindowHeight(),           255, 0, 0, 255);
-        EXPECT_PIXEL_EQ((1 - quadRadius) * getWindowWidth(),      (1 - quadRadius) * getWindowHeight(),     255, 0, 0, 255);
+        checkQuads();
+    }
 
-        EXPECT_PIXEL_EQ((quadRadius / 2) * getWindowWidth(),      (quadRadius / 2) * getWindowHeight(),     0,   0, 0, 255);
-        EXPECT_PIXEL_EQ((1 - quadRadius / 2) * getWindowWidth(),  (1 - quadRadius / 2) * getWindowHeight(), 0,   0, 0, 255);
+    void checkQuads()
+    {
+        // Check that various pixels are the expected color.
+        for (unsigned int quadIndex = 0; quadIndex < 4; ++quadIndex)
+        {
+            unsigned int baseOffset = quadIndex * 3;
+
+            float quadx = ((mInstances[baseOffset + 0]) * 0.5f + 0.5f) * getWindowWidth();
+            float quady = ((mInstances[baseOffset + 1]) * 0.5f + 0.5f) * getWindowHeight();
+
+            EXPECT_PIXEL_EQ(quadx, quady, 255, 0, 0, 255);
+        }
     }
 
     // Loaded entry points
@@ -139,18 +234,33 @@ class InstancingTest : public ANGLETest
     PFNGLDRAWELEMENTSINSTANCEDANGLEPROC mDrawElementsInstancedANGLE;
 
     // Vertex data
-    std::vector<GLfloat> mVertices;
+    std::vector<GLfloat> mQuadVertices;
+    std::vector<GLfloat> mNonIndexedVertices;
     std::vector<GLfloat> mTexcoords;
     std::vector<GLfloat> mInstances;
     std::vector<GLushort> mIndices;
 
-    const GLfloat quadRadius = 0.2f;
+    const GLfloat quadRadius = 0.30f;
+};
+
+template<typename T>
+class InstancingTestAllConfigs : public InstancingTest<T>
+{
+  protected:
+    InstancingTestAllConfigs() {}
+};
+
+template<typename T>
+class InstancingTestNo9_3 : public InstancingTest<T>
+{
+  protected:
+    InstancingTestNo9_3() {}
 };
 
 // This test uses a vertex shader with the first attribute (attribute zero) instanced.
 // On D3D9 and D3D11 FL9_3, this triggers a special codepath that rearranges the input layout sent to D3D,
 // to ensure that slot/stream zero of the input layout doesn't contain per-instance data.
-TYPED_TEST(InstancingTest, AttributeZeroInstanced)
+TYPED_TEST(InstancingTestAllConfigs, AttributeZeroInstanced)
 {
     const std::string vs = SHADER_SOURCE
     (
@@ -162,12 +272,12 @@ TYPED_TEST(InstancingTest, AttributeZeroInstanced)
         }
     );
 
-    runTest(vs, true);
+    runDrawElementsTest(vs, true);
 }
 
 // Same as AttributeZeroInstanced, but attribute zero is not instanced.
 // This ensures the general instancing codepath (i.e. without rearranging the input layout) works as expected.
-TYPED_TEST(InstancingTest, AttributeZeroNotInstanced)
+TYPED_TEST(InstancingTestAllConfigs, AttributeZeroNotInstanced)
 {
     const std::string vs = SHADER_SOURCE
     (
@@ -179,5 +289,34 @@ TYPED_TEST(InstancingTest, AttributeZeroNotInstanced)
         }
     );
 
-    runTest(vs, false);
+    runDrawElementsTest(vs, false);
+}
+
+// Tests that the "first" parameter to glDrawArraysInstancedANGLE is only an offset into
+// the non-instanced vertex attributes.
+TYPED_TEST(InstancingTestNo9_3, DrawArraysWithOffset)
+{
+    const std::string vs = SHADER_SOURCE
+    (
+        attribute vec3 a_position;
+        attribute vec3 a_instancePos;
+        uniform vec3 u_offset;
+        void main()
+        {
+            gl_Position = vec4(a_position.xyz + a_instancePos.xyz + u_offset, 1.0);
+        }
+    );
+
+    GLuint program = setupDrawArraysTest(vs);
+    ASSERT_NE(program, 0u);
+
+    float offset1[3] = { 0, 0, 0 };
+    runDrawArraysTest(program, 0, 6, 2, offset1);
+
+    float offset2[3] = { 0.0f, 1.0f, 0 };
+    runDrawArraysTest(program, 6, 6, 2, offset2);
+
+    checkQuads();
+
+    glDeleteProgram(program);
 }
