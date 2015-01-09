@@ -65,29 +65,6 @@
 
 namespace rx
 {
-static const D3DFORMAT RenderTargetFormats[] =
-    {
-        D3DFMT_A1R5G5B5,
-    //  D3DFMT_A2R10G10B10,   // The color_ramp conformance test uses ReadPixels with UNSIGNED_BYTE causing it to think that rendering skipped a colour value.
-        D3DFMT_A8R8G8B8,
-        D3DFMT_R5G6B5,
-    //  D3DFMT_X1R5G5B5,      // Has no compatible OpenGL ES renderbuffer format
-        D3DFMT_X8R8G8B8
-    };
-
-static const D3DFORMAT DepthStencilFormats[] =
-    {
-        D3DFMT_UNKNOWN,
-    //  D3DFMT_D16_LOCKABLE,
-        D3DFMT_D32,
-    //  D3DFMT_D15S1,
-        D3DFMT_D24S8,
-        D3DFMT_D24X8,
-    //  D3DFMT_D24X4S4,
-        D3DFMT_D16,
-    //  D3DFMT_D32F_LOCKABLE,
-    //  D3DFMT_D24FS8
-    };
 
 enum
 {
@@ -432,42 +409,93 @@ D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
     return presentParameters;
 }
 
-std::vector<ConfigDesc> Renderer9::generateConfigs() const
+egl::ConfigSet Renderer9::generateConfigs() const
 {
-    std::vector<ConfigDesc> configs;
+    static const GLenum colorBufferFormats[] =
+    {
+        GL_BGR5_A1_ANGLEX,
+        GL_BGRA8_EXT,
+        GL_RGB565,
+
+    };
+
+    static const GLenum depthStencilBufferFormats[] =
+    {
+        GL_NONE,
+        GL_DEPTH_COMPONENT32_OES,
+        GL_DEPTH24_STENCIL8_OES,
+        GL_DEPTH_COMPONENT24_OES,
+        GL_DEPTH_COMPONENT16,
+    };
+
+    const gl::Caps &rendererCaps = getRendererCaps();
+    const gl::TextureCapsMap &rendererTextureCaps = getRendererTextureCaps();
 
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
-    unsigned int numRenderFormats = ArraySize(RenderTargetFormats);
-    unsigned int numDepthFormats = ArraySize(DepthStencilFormats);
-
-    for (unsigned int formatIndex = 0; formatIndex < numRenderFormats; formatIndex++)
+    egl::ConfigSet configs;
+    for (size_t formatIndex = 0; formatIndex < ArraySize(colorBufferFormats); formatIndex++)
     {
-        const d3d9::D3DFormat &renderTargetFormatInfo = d3d9::GetD3DFormatInfo(RenderTargetFormats[formatIndex]);
-        const gl::TextureCaps &renderTargetFormatCaps = getRendererTextureCaps().get(renderTargetFormatInfo.internalFormat);
-        if (renderTargetFormatCaps.renderable)
+        GLenum colorBufferInternalFormat = colorBufferFormats[formatIndex];
+        const gl::TextureCaps &colorBufferFormatCaps = rendererTextureCaps.get(colorBufferInternalFormat);
+        if (colorBufferFormatCaps.renderable)
         {
-            for (unsigned int depthStencilIndex = 0; depthStencilIndex < numDepthFormats; depthStencilIndex++)
+            for (size_t depthStencilIndex = 0; depthStencilIndex < ArraySize(depthStencilBufferFormats); depthStencilIndex++)
             {
-                const d3d9::D3DFormat &depthStencilFormatInfo = d3d9::GetD3DFormatInfo(DepthStencilFormats[depthStencilIndex]);
-                const gl::TextureCaps &depthStencilFormatCaps = getRendererTextureCaps().get(depthStencilFormatInfo.internalFormat);
-                if (depthStencilFormatCaps.renderable || DepthStencilFormats[depthStencilIndex] == D3DFMT_UNKNOWN)
+                GLenum depthStencilBufferInternalFormat = depthStencilBufferFormats[depthStencilIndex];
+                const gl::TextureCaps &depthStencilBufferFormatCaps = rendererTextureCaps.get(depthStencilBufferInternalFormat);
+                if (depthStencilBufferFormatCaps.renderable || depthStencilBufferInternalFormat == GL_NONE)
                 {
-                    ConfigDesc newConfig;
-                    newConfig.renderTargetFormat = renderTargetFormatInfo.internalFormat;
-                    newConfig.depthStencilFormat = depthStencilFormatInfo.internalFormat;
-                    newConfig.multiSample = 0; // FIXME: enumerate multi-sampling
-                    newConfig.fastConfig = (currentDisplayMode.Format == RenderTargetFormats[formatIndex]);
-                    newConfig.es2Conformant = true;
-                    newConfig.es3Capable = false;
+                    const gl::InternalFormat &colorBufferFormatInfo = gl::GetInternalFormatInfo(colorBufferInternalFormat);
+                    const gl::InternalFormat &depthStencilBufferFormatInfo = gl::GetInternalFormatInfo(depthStencilBufferInternalFormat);
+                    const d3d9::TextureFormat &d3d9ColorBufferFormatInfo = d3d9::GetTextureFormatInfo(colorBufferInternalFormat);
 
-                    configs.push_back(newConfig);
+                    egl::Config config;
+                    config.renderTargetFormat = colorBufferInternalFormat;
+                    config.depthStencilFormat = depthStencilBufferInternalFormat;
+                    config.bufferSize = colorBufferFormatInfo.pixelBytes * 8;
+                    config.redSize = colorBufferFormatInfo.redBits;
+                    config.greenSize = colorBufferFormatInfo.greenBits;
+                    config.blueSize = colorBufferFormatInfo.blueBits;
+                    config.luminanceSize = colorBufferFormatInfo.luminanceBits;
+                    config.alphaSize = colorBufferFormatInfo.alphaBits;
+                    config.alphaMaskSize = 0;
+                    config.bindToTextureRGB = (colorBufferFormatInfo.format == GL_RGB);
+                    config.bindToTextureRGBA = (colorBufferFormatInfo.format == GL_RGBA || colorBufferFormatInfo.format == GL_BGRA_EXT);
+                    config.colorBufferType = EGL_RGB_BUFFER;
+                    // Mark as slow if blits to the back-buffer won't be straight forward
+                    config.configCaveat = (currentDisplayMode.Format == d3d9ColorBufferFormatInfo.renderFormat) ? EGL_NONE : EGL_SLOW_CONFIG;
+                    config.configID = static_cast<EGLint>(configs.size() + 1);
+                    config.conformant = EGL_OPENGL_ES2_BIT;
+                    config.depthSize = depthStencilBufferFormatInfo.depthBits;
+                    config.level = 0;
+                    config.matchNativePixmap = EGL_NONE;
+                    config.maxPBufferWidth = rendererCaps.max2DTextureSize;
+                    config.maxPBufferHeight = rendererCaps.max2DTextureSize;
+                    config.maxPBufferPixels = rendererCaps.max2DTextureSize * rendererCaps.max2DTextureSize;
+                    config.maxSwapInterval = mMaxSwapInterval;
+                    config.minSwapInterval = mMinSwapInterval;
+                    config.nativeRenderable = EGL_FALSE;
+                    config.nativeVisualID = 0;
+                    config.nativeVisualType = EGL_NONE;
+                    config.renderableType = EGL_OPENGL_ES2_BIT;
+                    config.sampleBuffers = 0; // FIXME: enumerate multi-sampling
+                    config.samples = 0;
+                    config.stencilSize = depthStencilBufferFormatInfo.stencilBits;
+                    config.surfaceType = EGL_PBUFFER_BIT | EGL_WINDOW_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT;
+                    config.transparentType = EGL_NONE;
+                    config.transparentRedValue = 0;
+                    config.transparentGreenValue = 0;
+                    config.transparentBlueValue = 0;
+
+                    configs.add(config);
                 }
             }
         }
     }
 
+    ASSERT(configs.size() > 0);
     return configs;
 }
 

@@ -18,6 +18,11 @@
 //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
 #include <array>
 
+namespace egl
+{
+class ConfigSet;
+}
+
 namespace gl
 {
 class InfoLog;
@@ -53,7 +58,7 @@ class RendererD3D : public Renderer
 
     virtual EGLint initialize() = 0;
 
-    virtual std::vector<ConfigDesc> generateConfigs() const = 0;
+    virtual egl::ConfigSet generateConfigs() const = 0;
 
     gl::Error drawArrays(const gl::Data &data,
                          GLenum mode, GLint first,

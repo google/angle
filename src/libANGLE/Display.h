@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "libANGLE/Error.h"
+#include "libANGLE/Caps.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/AttributeMap.h"
 

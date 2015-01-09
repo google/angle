@@ -165,19 +165,7 @@ void DisplayD3D::terminate()
 egl::ConfigSet DisplayD3D::generateConfigs() const
 {
     ASSERT(mRenderer != nullptr);
-    EGLint minSwapInterval = mRenderer->getMinSwapInterval();
-    EGLint maxSwapInterval = mRenderer->getMaxSwapInterval();
-    EGLint maxTextureSize = mRenderer->getRendererCaps().max2DTextureSize;
-
-    std::vector<ConfigDesc> descList = mRenderer->generateConfigs();
-
-    egl::ConfigSet configSet;
-    for (size_t i = 0; i < descList.size(); ++i)
-    {
-        configSet.add(egl::Config(descList[i], minSwapInterval, maxSwapInterval, maxTextureSize, maxTextureSize));
-    }
-
-    return configSet;
+    return mRenderer->generateConfigs();
 }
 
 bool DisplayD3D::isDeviceLost() const

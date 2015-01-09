@@ -54,16 +54,6 @@ struct TranslatedIndexData;
 struct Workarounds;
 class DisplayImpl;
 
-struct ConfigDesc
-{
-    GLenum  renderTargetFormat;
-    GLenum  depthStencilFormat;
-    GLint   multiSample;
-    bool    fastConfig;
-    bool    es2Conformant;
-    bool    es3Capable;
-};
-
 class Renderer
 {
   public:

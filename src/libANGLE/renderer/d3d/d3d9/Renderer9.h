@@ -47,7 +47,7 @@ class Renderer9 : public RendererD3D
     virtual EGLint initialize();
     virtual bool resetDevice();
 
-    std::vector<ConfigDesc> generateConfigs() const override;
+    egl::ConfigSet generateConfigs() const override;
 
     void startScene();
     void endScene();

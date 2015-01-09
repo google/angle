@@ -11,11 +11,12 @@
 #ifndef INCLUDE_CONFIG_H_
 #define INCLUDE_CONFIG_H_
 
-#include "libANGLE/renderer/Renderer.h"
+#include "libANGLE/AttributeMap.h"
 
 #include "common/angleutils.h"
 
 #include <EGL/egl.h>
+#include <GLES2/gl2.h>
 
 #include <map>
 #include <vector>
@@ -26,11 +27,9 @@ namespace egl
 struct Config
 {
     Config();
-    Config(rx::ConfigDesc desc, EGLint minSwapInterval, EGLint maxSwapInterval, EGLint texWidth, EGLint texHeight);
 
     GLenum renderTargetFormat;      // TODO(geofflang): remove this
     GLenum depthStencilFormat;      // TODO(geofflang): remove this
-    GLint multiSample;              // TODO(geofflang): remove this
 
     EGLint bufferSize;              // Depth of the color buffer
     EGLint redSize;                 // Bits of Red in the color buffer

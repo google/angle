@@ -23,127 +23,42 @@ namespace egl
 {
 
 Config::Config()
+    : renderTargetFormat(GL_NONE),
+      depthStencilFormat(GL_NONE),
+      bufferSize(0),
+      redSize(0),
+      greenSize(0),
+      blueSize(0),
+      luminanceSize(0),
+      alphaSize(0),
+      alphaMaskSize(0),
+      bindToTextureRGB(EGL_FALSE),
+      bindToTextureRGBA(EGL_FALSE),
+      colorBufferType(EGL_NONE),
+      configCaveat(EGL_NONE),
+      configID(0),
+      conformant(0),
+      depthSize(0),
+      level(0),
+      matchNativePixmap(EGL_FALSE),
+      maxPBufferWidth(0),
+      maxPBufferHeight(0),
+      maxPBufferPixels(0),
+      maxSwapInterval(0),
+      minSwapInterval(0),
+      nativeRenderable(EGL_FALSE),
+      nativeVisualID(0),
+      nativeVisualType(0),
+      renderableType(0),
+      sampleBuffers(0),
+      samples(0),
+      stencilSize(0),
+      surfaceType(0),
+      transparentType(EGL_NONE),
+      transparentRedValue(0),
+      transparentGreenValue(0),
+      transparentBlueValue(0)
 {
-}
-
-Config::Config(rx::ConfigDesc desc, EGLint minInterval, EGLint maxInterval, EGLint texWidth, EGLint texHeight)
-    : renderTargetFormat(desc.renderTargetFormat), depthStencilFormat(desc.depthStencilFormat), multiSample(desc.multiSample)
-{
-    bindToTextureRGB = EGL_FALSE;
-    bindToTextureRGBA = EGL_FALSE;
-    switch (desc.renderTargetFormat)
-    {
-      case GL_RGB5_A1:
-        bufferSize = 16;
-        redSize = 5;
-        greenSize = 5;
-        blueSize = 5;
-        alphaSize = 1;
-        break;
-      case GL_BGR5_A1_ANGLEX:
-        bufferSize = 16;
-        redSize = 5;
-        greenSize = 5;
-        blueSize = 5;
-        alphaSize = 1;
-        break;
-      case GL_RGBA8_OES:
-        bufferSize = 32;
-        redSize = 8;
-        greenSize = 8;
-        blueSize = 8;
-        alphaSize = 8;
-        bindToTextureRGBA = true;
-        break;
-      case GL_RGB565:
-        bufferSize = 16;
-        redSize = 5;
-        greenSize = 6;
-        blueSize = 5;
-        alphaSize = 0;
-        break;
-      case GL_RGB8_OES:
-        bufferSize = 32;
-        redSize = 8;
-        greenSize = 8;
-        blueSize = 8;
-        alphaSize = 0;
-        bindToTextureRGB = true;
-        break;
-      case GL_BGRA8_EXT:
-        bufferSize = 32;
-        redSize = 8;
-        greenSize = 8;
-        blueSize = 8;
-        alphaSize = 8;
-        bindToTextureRGBA = true;
-        break;
-      default:
-        UNREACHABLE();   // Other formats should not be valid
-    }
-
-    luminanceSize = 0;
-    alphaMaskSize = 0;
-    colorBufferType = EGL_RGB_BUFFER;
-    configCaveat = (desc.fastConfig) ? EGL_NONE : EGL_SLOW_CONFIG;
-    configID = 0;
-    conformant = 0;
-
-    switch (desc.depthStencilFormat)
-    {
-      case GL_NONE:
-        depthSize = 0;
-        stencilSize = 0;
-        break;
-      case GL_DEPTH_COMPONENT32_OES:
-        depthSize = 32;
-        stencilSize = 0;
-        break;
-      case GL_DEPTH24_STENCIL8_OES:
-        depthSize = 24;
-        stencilSize = 8;
-        break;
-      case GL_DEPTH_COMPONENT24_OES:
-        depthSize = 24;
-        stencilSize = 0;
-        break;
-      case GL_DEPTH_COMPONENT16:
-        depthSize = 16;
-        stencilSize = 0;
-        break;
-      default:
-        UNREACHABLE();
-    }
-
-    level = 0;
-    matchNativePixmap = EGL_NONE;
-    maxPBufferWidth = texWidth;
-    maxPBufferHeight = texHeight;
-    maxPBufferPixels = texWidth*texHeight;
-    maxSwapInterval = maxInterval;
-    minSwapInterval = minInterval;
-    nativeRenderable = EGL_FALSE;
-    nativeVisualID = 0;
-    nativeVisualType = 0;
-    renderableType = EGL_OPENGL_ES2_BIT;
-    sampleBuffers = desc.multiSample ? 1 : 0;
-    samples = desc.multiSample;
-    surfaceType = EGL_PBUFFER_BIT | EGL_WINDOW_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT;
-    transparentType = EGL_NONE;
-    transparentRedValue = 0;
-    transparentGreenValue = 0;
-    transparentBlueValue = 0;
-
-    if (desc.es2Conformant)
-    {
-        conformant = EGL_OPENGL_ES2_BIT;
-    }
-
-    if (desc.es3Capable)
-    {
-        renderableType |= EGL_OPENGL_ES3_BIT_KHR;
-        conformant |= EGL_OPENGL_ES3_BIT_KHR;
-    }
 }
 
 EGLint ConfigSet::add(const Config &config)
