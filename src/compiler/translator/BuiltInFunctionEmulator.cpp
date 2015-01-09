@@ -62,15 +62,32 @@ public:
                     return true;
             };
             const TIntermSequence& sequence = *(node->getSequence());
-            // Right now we only handle built-in functions with two parameters.
-            if (sequence.size() != 2)
+            bool needToEmulate = false;
+            // Right now we only handle built-in functions with two or three parameters.
+            if (sequence.size() == 2)
+            {
+                TIntermTyped* param1 = sequence[0]->getAsTyped();
+                TIntermTyped* param2 = sequence[1]->getAsTyped();
+                if (!param1 || !param2)
+                    return true;
+                needToEmulate = mEmulator.SetFunctionCalled(
+                    node->getOp(), param1->getType(), param2->getType());
+            }
+            else if (sequence.size() == 3)
+            {
+                TIntermTyped* param1 = sequence[0]->getAsTyped();
+                TIntermTyped* param2 = sequence[1]->getAsTyped();
+                TIntermTyped* param3 = sequence[2]->getAsTyped();
+                if (!param1 || !param2 || !param3)
+                    return true;
+                needToEmulate = mEmulator.SetFunctionCalled(
+                    node->getOp(), param1->getType(), param2->getType(), param3->getType());
+            }
+            else
+            {
                 return true;
-            TIntermTyped* param1 = sequence[0]->getAsTyped();
-            TIntermTyped* param2 = sequence[1]->getAsTyped();
-            if (!param1 || !param2)
-                return true;
-            bool needToEmulate = mEmulator.SetFunctionCalled(
-                node->getOp(), param1->getType(), param2->getType());
+            }
+
             if (needToEmulate)
                 node->setUseEmulatedFunction();
         }
@@ -86,30 +103,28 @@ private:
 BuiltInFunctionEmulator::BuiltInFunctionEmulator()
 {}
 
-bool BuiltInFunctionEmulator::SetFunctionCalled(
-    TOperator op, const TType& param)
+void BuiltInFunctionEmulator::AddEmulatedFunction(
+    TOperator op, const TType& param,
+    const char* emulatedFunctionDefinition)
 {
-    TBuiltInFunction function = IdentifyFunction(op, param);
-    return SetFunctionCalled(function);
+    mEmulatedFunctions[FunctionId(op, param)] =
+        std::string(emulatedFunctionDefinition);
 }
 
-bool BuiltInFunctionEmulator::SetFunctionCalled(
-    TOperator op, const TType& param1, const TType& param2)
+void BuiltInFunctionEmulator::AddEmulatedFunction(
+    TOperator op, const TType& param1, const TType& param2,
+    const char* emulatedFunctionDefinition)
 {
-    TBuiltInFunction function = IdentifyFunction(op, param1, param2);
-    return SetFunctionCalled(function);
+    mEmulatedFunctions[FunctionId(op, param1, param2)] =
+        std::string(emulatedFunctionDefinition);
 }
 
-bool BuiltInFunctionEmulator::SetFunctionCalled(
-    BuiltInFunctionEmulator::TBuiltInFunction function) {
-    if (function == TFunctionUnknown || mFunctionMask[function] == false)
-        return false;
-    for (size_t i = 0; i < mFunctions.size(); ++i) {
-        if (mFunctions[i] == function)
-            return true;
-    }
-    mFunctions.push_back(function);
-    return true;
+void BuiltInFunctionEmulator::AddEmulatedFunction(
+    TOperator op, const TType& param1, const TType& param2, const TType& param3,
+    const char* emulatedFunctionDefinition)
+{
+    mEmulatedFunctions[FunctionId(op, param1, param2, param3)] =
+        std::string(emulatedFunctionDefinition);
 }
 
 void BuiltInFunctionEmulator::OutputEmulatedFunctionDefinition(
@@ -120,77 +135,41 @@ void BuiltInFunctionEmulator::OutputEmulatedFunctionDefinition(
     out << "// BEGIN: Generated code for built-in function emulation\n\n";
     OutputEmulatedFunctionHeader(out, withPrecision);
     for (size_t i = 0; i < mFunctions.size(); ++i) {
-        out << mFunctionSource[mFunctions[i]] << "\n\n";
+        out << mEmulatedFunctions.find(mFunctions[i])->second << "\n\n";
     }
     out << "// END: Generated code for built-in function emulation\n\n";
 }
 
-BuiltInFunctionEmulator::TBuiltInFunction
-BuiltInFunctionEmulator::IdentifyFunction(
+bool BuiltInFunctionEmulator::SetFunctionCalled(
     TOperator op, const TType& param)
 {
-    if (param.getNominalSize() > 4 || param.getSecondarySize() > 4)
-        return TFunctionUnknown;
-    unsigned int function = TFunctionUnknown;
-    switch (op) {
-        case EOpCos:
-            function = TFunctionCos1;
-            break;
-        case EOpLength:
-            function = TFunctionLength1;
-            break;
-        case EOpNormalize:
-            function = TFunctionNormalize1;
-            break;
-        case EOpAsinh:
-            function = TFunctionAsinh1;
-            break;
-        case EOpAcosh:
-            function = TFunctionAcosh1;
-            break;
-        case EOpAtanh:
-            function = TFunctionAtanh1;
-            break;
-        default:
-            break;
-    }
-    if (function == TFunctionUnknown)
-        return TFunctionUnknown;
-    if (param.isVector())
-        function += param.getNominalSize() - 1;
-    return static_cast<TBuiltInFunction>(function);
+    return SetFunctionCalled(FunctionId(op, param));
 }
 
-BuiltInFunctionEmulator::TBuiltInFunction
-BuiltInFunctionEmulator::IdentifyFunction(
+bool BuiltInFunctionEmulator::SetFunctionCalled(
     TOperator op, const TType& param1, const TType& param2)
 {
-    // Right now for all the emulated functions with two parameters, the two
-    // parameters have the same type.
-    if (param1.getNominalSize()     != param2.getNominalSize()   ||
-        param1.getSecondarySize()   != param2.getSecondarySize() ||
-        param1.getNominalSize() > 4 || param1.getSecondarySize() > 4)
-        return TFunctionUnknown;
+    return SetFunctionCalled(FunctionId(op, param1, param2));
+}
 
-    unsigned int function = TFunctionUnknown;
-    switch (op) {
-        case EOpDistance:
-            function = TFunctionDistance1_1;
-            break;
-        case EOpDot:
-            function = TFunctionDot1_1;
-            break;
-        case EOpReflect:
-            function = TFunctionReflect1_1;
-            break;
-        default:
-            break;
+bool BuiltInFunctionEmulator::SetFunctionCalled(
+    TOperator op, const TType& param1, const TType& param2, const TType& param3)
+{
+    return SetFunctionCalled(FunctionId(op, param1, param2, param3));
+}
+
+bool BuiltInFunctionEmulator::SetFunctionCalled(
+    const FunctionId& functionId) {
+    if (mEmulatedFunctions.find(functionId) != mEmulatedFunctions.end())
+    {
+        for (size_t i = 0; i < mFunctions.size(); ++i) {
+            if (mFunctions[i] == functionId)
+                return true;
+        }
+        mFunctions.push_back(functionId);
+        return true;
     }
-    if (function == TFunctionUnknown)
-        return TFunctionUnknown;
-    if (param1.isVector())
-        function += param1.getNominalSize() - 1;
-    return static_cast<TBuiltInFunction>(function);
+    return false;
 }
 
 void BuiltInFunctionEmulator::MarkBuiltInFunctionsForEmulation(
@@ -213,4 +192,54 @@ TString BuiltInFunctionEmulator::GetEmulatedFunctionName(
 {
     ASSERT(name[name.length() - 1] == '(');
     return "webgl_" + name.substr(0, name.length() - 1) + "_emu(";
+}
+
+BuiltInFunctionEmulator::FunctionId::FunctionId
+    (TOperator op, const TType& param)
+    : mOp(op),
+      mParam1(param),
+      mParam2(EbtVoid),
+      mParam3(EbtVoid)
+{
+}
+
+BuiltInFunctionEmulator::FunctionId::FunctionId
+    (TOperator op, const TType& param1, const TType& param2)
+    : mOp(op),
+      mParam1(param1),
+      mParam2(param2),
+      mParam3(EbtVoid)
+{
+}
+
+BuiltInFunctionEmulator::FunctionId::FunctionId
+    (TOperator op, const TType& param1, const TType& param2, const TType& param3)
+    : mOp(op),
+      mParam1(param1),
+      mParam2(param2),
+      mParam3(param3)
+{
+}
+
+bool BuiltInFunctionEmulator::FunctionId::operator==
+    (const BuiltInFunctionEmulator::FunctionId& other) const
+{
+    return (mOp == other.mOp &&
+        mParam1 == other.mParam1 &&
+        mParam2 == other.mParam2 &&
+        mParam3 == other.mParam3);
+}
+
+bool BuiltInFunctionEmulator::FunctionId::operator<
+    (const BuiltInFunctionEmulator::FunctionId& other) const
+{
+    if (mOp != other.mOp)
+        return mOp < other.mOp;
+    if (mParam1 != other.mParam1)
+        return mParam1 < other.mParam1;
+    if (mParam2 != other.mParam2)
+        return mParam2 < other.mParam2;
+    if (mParam3 != other.mParam3)
+       return mParam3 < other.mParam3;
+    return false; // all fields are equal
 }
