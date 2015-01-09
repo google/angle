@@ -15,39 +15,39 @@ static egl::Config GenerateGenericConfig()
 {
     egl::Config config;
 
-    config.mBufferSize = 24;
-    config.mRedSize = 8;
-    config.mGreenSize = 8;
-    config.mBlueSize = 8;
-    config.mLuminanceSize = 0;
-    config.mAlphaSize = 8;
-    config.mAlphaMaskSize = 0;
-    config.mBindToTextureRGB = EGL_TRUE;
-    config.mBindToTextureRGBA = EGL_TRUE;
-    config.mColorBufferType = EGL_RGB_BUFFER;
-    config.mConfigCaveat = EGL_NONE;
-    config.mConfigID = 0;
-    config.mConformant = EGL_OPENGL_ES2_BIT;
-    config.mDepthSize = 24;
-    config.mLevel = 0;
-    config.mMatchNativePixmap = EGL_NONE;
-    config.mMaxPBufferWidth = 1024;
-    config.mMaxPBufferHeight = 1024;
-    config.mMaxPBufferPixels = config.mMaxPBufferWidth * config.mMaxPBufferWidth;
-    config.mMaxSwapInterval = 0;
-    config.mMinSwapInterval = 4;
-    config.mNativeRenderable = EGL_OPENGL_ES2_BIT;
-    config.mNativeVisualID = 0;
-    config.mNativeVisualType = 0;
-    config.mRenderableType = EGL_FALSE;
-    config.mSampleBuffers = 0;
-    config.mSamples = 0;
-    config.mStencilSize = 8;
-    config.mSurfaceType = EGL_PBUFFER_BIT | EGL_WINDOW_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT;
-    config.mTransparentType = EGL_NONE;
-    config.mTransparentRedValue = 0;
-    config.mTransparentGreenValue = 0;
-    config.mTransparentBlueValue = 0;
+    config.bufferSize = 24;
+    config.redSize = 8;
+    config.greenSize = 8;
+    config.blueSize = 8;
+    config.luminanceSize = 0;
+    config.alphaSize = 8;
+    config.alphaMaskSize = 0;
+    config.bindToTextureRGB = EGL_TRUE;
+    config.bindToTextureRGBA = EGL_TRUE;
+    config.colorBufferType = EGL_RGB_BUFFER;
+    config.configCaveat = EGL_NONE;
+    config.configID = 0;
+    config.conformant = EGL_OPENGL_ES2_BIT;
+    config.depthSize = 24;
+    config.level = 0;
+    config.matchNativePixmap = EGL_NONE;
+    config.maxPBufferWidth = 1024;
+    config.maxPBufferHeight = 1024;
+    config.maxPBufferPixels = config.maxPBufferWidth * config.maxPBufferWidth;
+    config.maxSwapInterval = 0;
+    config.minSwapInterval = 4;
+    config.nativeRenderable = EGL_OPENGL_ES2_BIT;
+    config.nativeVisualID = 0;
+    config.nativeVisualType = 0;
+    config.renderableType = EGL_FALSE;
+    config.sampleBuffers = 0;
+    config.samples = 0;
+    config.stencilSize = 8;
+    config.surfaceType = EGL_PBUFFER_BIT | EGL_WINDOW_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT;
+    config.transparentType = EGL_NONE;
+    config.transparentRedValue = 0;
+    config.transparentGreenValue = 0;
+    config.transparentBlueValue = 0;
 
     return config;
 }
@@ -59,7 +59,7 @@ static std::vector<egl::Config> GenerateUniqueConfigs(size_t count)
     for (size_t i = 0; i < count; i++)
     {
         egl::Config config = GenerateGenericConfig();
-        config.mSamples = i;
+        config.samples = i;
         configs.push_back(config);
     }
 
@@ -98,7 +98,7 @@ TEST(ConfigSetTest, IDs)
 
         // Check that the config that was inserted has the ID that was returned
         // by ConfigSet::add
-        EXPECT_EQ(id, set.get(id).mConfigID);
+        EXPECT_EQ(id, set.get(id).configID);
 
         ids.insert(id);
     }
@@ -121,14 +121,14 @@ TEST(ConfigSetTest, Filtering_BitSizes)
         EGLint(egl::Config::*ConfigMember);
     };
 
-    VariableConfigBitSize testMembers[] =
+    VariableConfigBitSize testMembers[] = 
     {
-        { EGL_RED_SIZE,     &egl::Config::mRedSize     },
-        { EGL_GREEN_SIZE,   &egl::Config::mGreenSize   },
-        { EGL_BLUE_SIZE,    &egl::Config::mBlueSize    },
-        { EGL_ALPHA_SIZE,   &egl::Config::mAlphaSize   },
-        { EGL_DEPTH_SIZE,   &egl::Config::mDepthSize   },
-        { EGL_STENCIL_SIZE, &egl::Config::mStencilSize },
+        { EGL_RED_SIZE,     &egl::Config::redSize     },
+        { EGL_GREEN_SIZE,   &egl::Config::greenSize   },
+        { EGL_BLUE_SIZE,    &egl::Config::blueSize    },
+        { EGL_ALPHA_SIZE,   &egl::Config::alphaSize   },
+        { EGL_DEPTH_SIZE,   &egl::Config::depthSize   },
+        { EGL_STENCIL_SIZE, &egl::Config::stencilSize },
     };
 
     // Generate configsPerType configs with varying bit sizes of each type
@@ -186,10 +186,10 @@ TEST(ConfigSetTest, Sorting_BitSizes)
         egl::Config config = GenerateGenericConfig();
 
         // Give random-ish bit sizes to the config
-        config.mRedSize =   (i *  2) %  3;
-        config.mGreenSize = (i +  5) %  7;
-        config.mBlueSize =  (i +  7) % 11;
-        config.mAlphaSize = (i + 13) % 17;
+        config.redSize =   (i *  2) %  3;
+        config.greenSize = (i +  5) %  7;
+        config.blueSize =  (i +  7) % 11;
+        config.alphaSize = (i + 13) % 17;
 
         set.add(config);
     }
@@ -204,16 +204,16 @@ TEST(ConfigSetTest, Sorting_BitSizes)
     for (size_t i = 1; i < filteredConfigs.size(); i++)
     {
         const egl::Config &prevConfig = *filteredConfigs[i - 1];
-        size_t prevBitCount = prevConfig.mRedSize +
-                              prevConfig.mGreenSize +
-                              prevConfig.mBlueSize +
-                              prevConfig.mAlphaSize;
+        size_t prevBitCount = prevConfig.redSize +
+                              prevConfig.greenSize +
+                              prevConfig.blueSize +
+                              prevConfig.alphaSize;
 
         const egl::Config &curConfig = *filteredConfigs[i];
-        size_t curBitCount = curConfig.mRedSize +
-                             curConfig.mGreenSize +
-                             curConfig.mBlueSize +
-                             curConfig.mAlphaSize;
+        size_t curBitCount = curConfig.redSize +
+                             curConfig.greenSize +
+                             curConfig.blueSize +
+                             curConfig.alphaSize;
 
         EXPECT_GE(prevBitCount, curBitCount);
     }

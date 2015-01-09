@@ -114,8 +114,8 @@ egl::Error SurfaceD3D::resetSwapChain()
     }
 
     mSwapChain = mRenderer->createSwapChain(mNativeWindow, static_cast<HANDLE>(mShareHandle),
-                                            mConfig->mRenderTargetFormat,
-                                            mConfig->mDepthStencilFormat);
+                                            mConfig->renderTargetFormat,
+                                            mConfig->depthStencilFormat);
     if (!mSwapChain)
     {
         return egl::Error(EGL_BAD_ALLOC);

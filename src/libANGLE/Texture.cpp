@@ -416,7 +416,7 @@ void Texture::bindTexImage(egl::Surface *surface)
     // Set the image info to the size and format of the surface
     ASSERT(mTarget == GL_TEXTURE_2D);
     Extents size(surface->getWidth(), surface->getHeight(), 1);
-    ImageDesc desc(size, surface->getConfig()->mRenderTargetFormat);
+    ImageDesc desc(size, surface->getConfig()->renderTargetFormat);
     setImageDesc(ImageIndex::MakeGeneric(mTarget, 0), desc);
 }
 

@@ -15,7 +15,7 @@
 namespace egl
 {
 class Display;
-class Config;
+struct Config;
 }
 
 namespace rx

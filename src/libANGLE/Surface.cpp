@@ -80,7 +80,7 @@ void Surface::setSwapInterval(EGLint interval)
 
 EGLint Surface::getConfigID() const
 {
-    return mImplementation->getConfig()->mConfigID;
+    return mImplementation->getConfig()->configID;
 }
 
 const Config *Surface::getConfig() const

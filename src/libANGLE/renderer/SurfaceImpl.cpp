@@ -35,7 +35,7 @@ SurfaceImpl::~SurfaceImpl()
 
 EGLenum SurfaceImpl::getFormat() const
 {
-    return mConfig->mRenderTargetFormat;
+    return mConfig->renderTargetFormat;
 }
 
 }

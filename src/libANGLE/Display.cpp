@@ -183,38 +183,38 @@ bool Display::getConfigAttrib(const Config *configuration, EGLint attribute, EGL
 {
     switch (attribute)
     {
-      case EGL_BUFFER_SIZE:               *value = configuration->mBufferSize;             break;
-      case EGL_ALPHA_SIZE:                *value = configuration->mAlphaSize;              break;
-      case EGL_BLUE_SIZE:                 *value = configuration->mBlueSize;               break;
-      case EGL_GREEN_SIZE:                *value = configuration->mGreenSize;              break;
-      case EGL_RED_SIZE:                  *value = configuration->mRedSize;                break;
-      case EGL_DEPTH_SIZE:                *value = configuration->mDepthSize;              break;
-      case EGL_STENCIL_SIZE:              *value = configuration->mStencilSize;            break;
-      case EGL_CONFIG_CAVEAT:             *value = configuration->mConfigCaveat;           break;
-      case EGL_CONFIG_ID:                 *value = configuration->mConfigID;               break;
-      case EGL_LEVEL:                     *value = configuration->mLevel;                  break;
-      case EGL_NATIVE_RENDERABLE:         *value = configuration->mNativeRenderable;       break;
-      case EGL_NATIVE_VISUAL_TYPE:        *value = configuration->mNativeVisualType;       break;
-      case EGL_SAMPLES:                   *value = configuration->mSamples;                break;
-      case EGL_SAMPLE_BUFFERS:            *value = configuration->mSampleBuffers;          break;
-      case EGL_SURFACE_TYPE:              *value = configuration->mSurfaceType;            break;
-      case EGL_TRANSPARENT_TYPE:          *value = configuration->mTransparentType;        break;
-      case EGL_TRANSPARENT_BLUE_VALUE:    *value = configuration->mTransparentBlueValue;   break;
-      case EGL_TRANSPARENT_GREEN_VALUE:   *value = configuration->mTransparentGreenValue;  break;
-      case EGL_TRANSPARENT_RED_VALUE:     *value = configuration->mTransparentRedValue;    break;
-      case EGL_BIND_TO_TEXTURE_RGB:       *value = configuration->mBindToTextureRGB;       break;
-      case EGL_BIND_TO_TEXTURE_RGBA:      *value = configuration->mBindToTextureRGBA;      break;
-      case EGL_MIN_SWAP_INTERVAL:         *value = configuration->mMinSwapInterval;        break;
-      case EGL_MAX_SWAP_INTERVAL:         *value = configuration->mMaxSwapInterval;        break;
-      case EGL_LUMINANCE_SIZE:            *value = configuration->mLuminanceSize;          break;
-      case EGL_ALPHA_MASK_SIZE:           *value = configuration->mAlphaMaskSize;          break;
-      case EGL_COLOR_BUFFER_TYPE:         *value = configuration->mColorBufferType;        break;
-      case EGL_RENDERABLE_TYPE:           *value = configuration->mRenderableType;         break;
-      case EGL_MATCH_NATIVE_PIXMAP:       *value = false; UNIMPLEMENTED();                 break;
-      case EGL_CONFORMANT:                *value = configuration->mConformant;             break;
-      case EGL_MAX_PBUFFER_WIDTH:         *value = configuration->mMaxPBufferWidth;        break;
-      case EGL_MAX_PBUFFER_HEIGHT:        *value = configuration->mMaxPBufferHeight;       break;
-      case EGL_MAX_PBUFFER_PIXELS:        *value = configuration->mMaxPBufferPixels;       break;
+      case EGL_BUFFER_SIZE:               *value = configuration->bufferSize;             break;
+      case EGL_ALPHA_SIZE:                *value = configuration->alphaSize;              break;
+      case EGL_BLUE_SIZE:                 *value = configuration->blueSize;               break;
+      case EGL_GREEN_SIZE:                *value = configuration->greenSize;              break;
+      case EGL_RED_SIZE:                  *value = configuration->redSize;                break;
+      case EGL_DEPTH_SIZE:                *value = configuration->depthSize;              break;
+      case EGL_STENCIL_SIZE:              *value = configuration->stencilSize;            break;
+      case EGL_CONFIG_CAVEAT:             *value = configuration->configCaveat;           break;
+      case EGL_CONFIG_ID:                 *value = configuration->configID;               break;
+      case EGL_LEVEL:                     *value = configuration->level;                  break;
+      case EGL_NATIVE_RENDERABLE:         *value = configuration->nativeRenderable;       break;
+      case EGL_NATIVE_VISUAL_TYPE:        *value = configuration->nativeVisualType;       break;
+      case EGL_SAMPLES:                   *value = configuration->samples;                break;
+      case EGL_SAMPLE_BUFFERS:            *value = configuration->sampleBuffers;          break;
+      case EGL_SURFACE_TYPE:              *value = configuration->surfaceType;            break;
+      case EGL_TRANSPARENT_TYPE:          *value = configuration->transparentType;        break;
+      case EGL_TRANSPARENT_BLUE_VALUE:    *value = configuration->transparentBlueValue;   break;
+      case EGL_TRANSPARENT_GREEN_VALUE:   *value = configuration->transparentGreenValue;  break;
+      case EGL_TRANSPARENT_RED_VALUE:     *value = configuration->transparentRedValue;    break;
+      case EGL_BIND_TO_TEXTURE_RGB:       *value = configuration->bindToTextureRGB;       break;
+      case EGL_BIND_TO_TEXTURE_RGBA:      *value = configuration->bindToTextureRGBA;      break;
+      case EGL_MIN_SWAP_INTERVAL:         *value = configuration->minSwapInterval;        break;
+      case EGL_MAX_SWAP_INTERVAL:         *value = configuration->maxSwapInterval;        break;
+      case EGL_LUMINANCE_SIZE:            *value = configuration->luminanceSize;          break;
+      case EGL_ALPHA_MASK_SIZE:           *value = configuration->alphaMaskSize;          break;
+      case EGL_COLOR_BUFFER_TYPE:         *value = configuration->colorBufferType;        break;
+      case EGL_RENDERABLE_TYPE:           *value = configuration->renderableType;         break;
+      case EGL_MATCH_NATIVE_PIXMAP:       *value = false; UNIMPLEMENTED();                break;
+      case EGL_CONFORMANT:                *value = configuration->conformant;             break;
+      case EGL_MAX_PBUFFER_WIDTH:         *value = configuration->maxPBufferWidth;        break;
+      case EGL_MAX_PBUFFER_HEIGHT:        *value = configuration->maxPBufferHeight;       break;
+      case EGL_MAX_PBUFFER_PIXELS:        *value = configuration->maxPBufferPixels;       break;
       default:
         return false;
     }
@@ -397,13 +397,13 @@ Error Display::createOffscreenSurface(const Config *configuration, EGLClientBuff
         return Error(EGL_BAD_MATCH);
     }
 
-    if (!(configuration->mSurfaceType & EGL_PBUFFER_BIT))
+    if (!(configuration->surfaceType & EGL_PBUFFER_BIT))
     {
         return Error(EGL_BAD_MATCH);
     }
 
-    if ((textureFormat == EGL_TEXTURE_RGB && configuration->mBindToTextureRGB != EGL_TRUE) ||
-        (textureFormat == EGL_TEXTURE_RGBA && configuration->mBindToTextureRGBA != EGL_TRUE))
+    if ((textureFormat == EGL_TEXTURE_RGB && configuration->bindToTextureRGB != EGL_TRUE) ||
+        (textureFormat == EGL_TEXTURE_RGBA && configuration->bindToTextureRGBA != EGL_TRUE))
     {
         return Error(EGL_BAD_ATTRIBUTE);
     }
@@ -448,7 +448,7 @@ Error Display::createContext(const Config *configuration, EGLContext shareContex
         }
     }
 
-    if (attribs.get(EGL_CONTEXT_CLIENT_VERSION, 1) == 3 && !(configuration->mConformant & EGL_OPENGL_ES3_BIT_KHR))
+    if (attribs.get(EGL_CONTEXT_CLIENT_VERSION, 1) == 3 && !(configuration->conformant & EGL_OPENGL_ES3_BIT_KHR))
     {
         return Error(EGL_BAD_CONFIG);
     }

@@ -29,7 +29,7 @@ class SurfaceImpl;
 namespace egl
 {
 class Display;
-class Config;
+struct Config;
 
 class Surface final
 {

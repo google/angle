@@ -20,7 +20,7 @@ namespace egl
 {
 class AttributeMap;
 class Display;
-class Config;
+struct Config;
 class ConfigSet;
 class Surface;
 }
