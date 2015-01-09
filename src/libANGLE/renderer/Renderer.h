@@ -116,9 +116,6 @@ class Renderer
 
     virtual std::string getVendorString() const = 0;
 
-    // TODO(jmadill): needed by egl::Display, probably should be removed
-    virtual int getMajorShaderModel() const = 0;
-
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer);
 
