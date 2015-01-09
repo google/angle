@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ef945d6_e317d2b4",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-09T19:47:02Z",
+      "side": 1,
+      "message": "it seems to me like this would create confusion with ImageIndex... are they really different enough to warrant a new class? One note is that you shouldn\u0027t need to use a member \"operator\u003c\" for std::map with ImageIndex, you can make a comparator and pass that to the map constructor.",
+      "range": {
+        "startLine": 111,
+        "startChar": 11,
+        "endLine": 111,
+        "endChar": 26
+      },
+      "revId": "2d0c32ea29187f71a4cd79086da7557d1fbfed77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
