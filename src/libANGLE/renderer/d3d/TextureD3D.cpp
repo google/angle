@@ -800,7 +800,7 @@ gl::Error TextureD3D_2D::setStorage(GLenum target, size_t levels, GLenum interna
 {
     ASSERT(GL_TEXTURE_2D && size.depth == 1);
 
-    for (int level = 0; level < levels; level++)
+    for (size_t level = 0; level < levels; level++)
     {
         gl::Extents levelSize(std::max(1, size.width >> level),
                               std::max(1, size.height >> level),
@@ -1334,7 +1334,7 @@ gl::Error TextureD3D_Cube::setStorage(GLenum target, size_t levels, GLenum inter
     ASSERT(size.width == size.height);
     ASSERT(size.depth == 1);
 
-    for (int level = 0; level < levels; level++)
+    for (size_t level = 0; level < levels; level++)
     {
         GLsizei mipSize = std::max(1, size.width >> level);
         for (int faceIndex = 0; faceIndex < 6; faceIndex++)
@@ -1920,7 +1920,7 @@ gl::Error TextureD3D_3D::setStorage(GLenum target, size_t levels, GLenum interna
 {
     ASSERT(target == GL_TEXTURE_3D);
 
-    for (int level = 0; level < levels; level++)
+    for (size_t level = 0; level < levels; level++)
     {
         gl::Extents levelSize(std::max(1, size.width >> level),
                               std::max(1, size.height >> level),
@@ -2454,7 +2454,7 @@ gl::Error TextureD3D_2DArray::setStorage(GLenum target, size_t levels, GLenum in
 
     deleteImages();
 
-    for (int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
+    for (size_t level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
         gl::Extents levelLayerSize(std::max(1, size.width >> level),
                                    std::max(1, size.height >> level),
