@@ -365,8 +365,8 @@ void SurfaceD3D::setSwapInterval(EGLint interval)
     }
 
     mSwapInterval = interval;
-    mSwapInterval = std::max(mSwapInterval, mRenderer->getMinSwapInterval());
-    mSwapInterval = std::min(mSwapInterval, mRenderer->getMaxSwapInterval());
+    mSwapInterval = std::max(mSwapInterval, mConfig->minSwapInterval);
+    mSwapInterval = std::min(mSwapInterval, mConfig->maxSwapInterval);
 
     mSwapIntervalDirty = true;
 }

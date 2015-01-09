@@ -2157,16 +2157,6 @@ std::string Renderer11::getShaderModelSuffix() const
     }
 }
 
-int Renderer11::getMinSwapInterval() const
-{
-    return 0;
-}
-
-int Renderer11::getMaxSwapInterval() const
-{
-    return 4;
-}
-
 gl::Error Renderer11::copyImage2D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                                   const gl::Offset &destOffset, TextureStorage *storage, GLint level)
 {

@@ -123,8 +123,6 @@ class Renderer9 : public RendererD3D
     std::string getShaderModelSuffix() const override;
 
     DWORD getCapsDeclTypes() const;
-    virtual int getMinSwapInterval() const;
-    virtual int getMaxSwapInterval() const;
 
     // Pixel operations
     virtual gl::Error copyImage2D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
@@ -258,8 +256,6 @@ class Renderer9 : public RendererD3D
     GLsizei mRepeatDraw;
 
     bool mSceneStarted;
-    int mMinSwapInterval;
-    int mMaxSwapInterval;
 
     bool mVertexTextureSupport;
 

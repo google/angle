@@ -256,35 +256,6 @@ EGLint Renderer9::initialize()
         mD3d9->GetAdapterIdentifier(mAdapter, 0, &mAdapterIdentifier);
     }
 
-    mMinSwapInterval = 4;
-    mMaxSwapInterval = 0;
-
-    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE)
-    {
-        mMinSwapInterval = std::min(mMinSwapInterval, 0);
-        mMaxSwapInterval = std::max(mMaxSwapInterval, 0);
-    }
-    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)
-    {
-        mMinSwapInterval = std::min(mMinSwapInterval, 1);
-        mMaxSwapInterval = std::max(mMaxSwapInterval, 1);
-    }
-    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)
-    {
-        mMinSwapInterval = std::min(mMinSwapInterval, 2);
-        mMaxSwapInterval = std::max(mMaxSwapInterval, 2);
-    }
-    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)
-    {
-        mMinSwapInterval = std::min(mMinSwapInterval, 3);
-        mMaxSwapInterval = std::max(mMaxSwapInterval, 3);
-    }
-    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)
-    {
-        mMinSwapInterval = std::min(mMinSwapInterval, 4);
-        mMaxSwapInterval = std::max(mMaxSwapInterval, 4);
-    }
-
     static const TCHAR windowName[] = TEXT("AngleHiddenWindow");
     static const TCHAR className[] = TEXT("STATIC");
 
@@ -434,6 +405,36 @@ egl::ConfigSet Renderer9::generateConfigs() const
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
+    // Determine the min and max swap intervals
+    int minSwapInterval = 4;
+    int maxSwapInterval = 0;
+
+    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE)
+    {
+        minSwapInterval = std::min(minSwapInterval, 0);
+        maxSwapInterval = std::max(maxSwapInterval, 0);
+    }
+    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)
+    {
+        minSwapInterval = std::min(minSwapInterval, 1);
+        maxSwapInterval = std::max(maxSwapInterval, 1);
+    }
+    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)
+    {
+        minSwapInterval = std::min(minSwapInterval, 2);
+        maxSwapInterval = std::max(maxSwapInterval, 2);
+    }
+    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)
+    {
+        minSwapInterval = std::min(minSwapInterval, 3);
+        maxSwapInterval = std::max(maxSwapInterval, 3);
+    }
+    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)
+    {
+        minSwapInterval = std::min(minSwapInterval, 4);
+        maxSwapInterval = std::max(maxSwapInterval, 4);
+    }
+
     egl::ConfigSet configs;
     for (size_t formatIndex = 0; formatIndex < ArraySize(colorBufferFormats); formatIndex++)
     {
@@ -474,8 +475,8 @@ egl::ConfigSet Renderer9::generateConfigs() const
                     config.maxPBufferWidth = rendererCaps.max2DTextureSize;
                     config.maxPBufferHeight = rendererCaps.max2DTextureSize;
                     config.maxPBufferPixels = rendererCaps.max2DTextureSize * rendererCaps.max2DTextureSize;
-                    config.maxSwapInterval = mMaxSwapInterval;
-                    config.minSwapInterval = mMinSwapInterval;
+                    config.maxSwapInterval = maxSwapInterval;
+                    config.minSwapInterval = minSwapInterval;
                     config.nativeRenderable = EGL_FALSE;
                     config.nativeVisualID = 0;
                     config.nativeVisualType = EGL_NONE;
@@ -2468,16 +2469,6 @@ std::string Renderer9::getShaderModelSuffix() const
 DWORD Renderer9::getCapsDeclTypes() const
 {
     return mDeviceCaps.DeclTypes;
-}
-
-int Renderer9::getMinSwapInterval() const
-{
-    return mMinSwapInterval;
-}
-
-int Renderer9::getMaxSwapInterval() const
-{
-    return mMaxSwapInterval;
 }
 
 D3DPOOL Renderer9::getBufferPool(DWORD usage) const

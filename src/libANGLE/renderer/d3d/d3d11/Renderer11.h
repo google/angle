@@ -114,8 +114,6 @@ class Renderer11 : public RendererD3D
     virtual int getMajorShaderModel() const;
     int getMinorShaderModel() const override;
     std::string getShaderModelSuffix() const override;
-    virtual int getMinSwapInterval() const;
-    virtual int getMaxSwapInterval() const;
 
     // Pixel operations
     virtual gl::Error copyImage2D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
