@@ -60,7 +60,8 @@ class Renderer11 : public RendererD3D
     virtual int generateConfigs(ConfigDesc **configDescList);
     virtual void deleteConfigs(ConfigDesc *configDescList);
 
-    virtual gl::Error sync(bool block);
+    gl::Error flush() override;
+    gl::Error finish() override;
 
     virtual SwapChain *createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
 

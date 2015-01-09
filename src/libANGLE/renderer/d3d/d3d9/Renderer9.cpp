@@ -499,7 +499,7 @@ void Renderer9::endScene()
     }
 }
 
-gl::Error Renderer9::sync(bool block)
+gl::Error Renderer9::flush()
 {
     IDirect3DQuery9* query = NULL;
     gl::Error error = allocateEventQuery(&query);
@@ -515,7 +515,39 @@ gl::Error Renderer9::sync(bool block)
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to issue event query, result: 0x%X.", result);
     }
 
-    // Grab the query data once in blocking and non-blocking case
+    // Grab the query data once
+    result = query->GetData(NULL, 0, D3DGETDATA_FLUSH);
+    freeEventQuery(query);
+    if (FAILED(result))
+    {
+        if (d3d9::isDeviceLostError(result))
+        {
+            notifyDeviceLost();
+        }
+
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.", result);
+    }
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error Renderer9::finish()
+{
+    IDirect3DQuery9* query = NULL;
+    gl::Error error = allocateEventQuery(&query);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    HRESULT result = query->Issue(D3DISSUE_END);
+    if (FAILED(result))
+    {
+        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to issue event query, result: 0x%X.", result);
+    }
+
+    // Grab the query data once
     result = query->GetData(NULL, 0, D3DGETDATA_FLUSH);
     if (FAILED(result))
     {
@@ -528,8 +560,8 @@ gl::Error Renderer9::sync(bool block)
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.", result);
     }
 
-    // If blocking, loop until the query completes
-    while (block && result == S_FALSE)
+    // Loop until the query completes
+    while (result == S_FALSE)
     {
         // Keep polling, but allow other threads to do something useful first
         Sleep(0);

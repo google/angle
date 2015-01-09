@@ -177,7 +177,8 @@ class Context
     Error drawElements(GLenum mode, GLsizei count, GLenum type,
                        const GLvoid *indices, GLsizei instances,
                        const rx::RangeUI &indexRange);
-    Error sync(bool block);   // flush/finish
+    Error flush();
+    Error finish();
 
     void recordError(const Error &error);
 

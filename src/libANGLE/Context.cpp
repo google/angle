@@ -1232,10 +1232,14 @@ Error Context::drawElements(GLenum mode, GLsizei count, GLenum type,
     return mRenderer->drawElements(getData(), mode, count, type, indices, instances, indexRange);
 }
 
-// Implements glFlush when block is false, glFinish when block is true
-Error Context::sync(bool block)
+Error Context::flush()
 {
-    return mRenderer->sync(block);
+    return mRenderer->flush();
+}
+
+Error Context::finish()
+{
+    return mRenderer->finish();
 }
 
 void Context::recordError(const Error &error)

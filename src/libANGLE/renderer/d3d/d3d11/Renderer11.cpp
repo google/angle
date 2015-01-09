@@ -506,52 +506,51 @@ void Renderer11::deleteConfigs(ConfigDesc *configDescList)
     delete [] (configDescList);
 }
 
-gl::Error Renderer11::sync(bool block)
+gl::Error Renderer11::flush()
 {
-    if (block)
+    mDeviceContext->Flush();
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error Renderer11::finish()
+{
+    HRESULT result;
+
+    if (!mSyncQuery)
     {
-        HRESULT result;
+        D3D11_QUERY_DESC queryDesc;
+        queryDesc.Query = D3D11_QUERY_EVENT;
+        queryDesc.MiscFlags = 0;
 
-        if (!mSyncQuery)
+        result = mDevice->CreateQuery(&queryDesc, &mSyncQuery);
+        ASSERT(SUCCEEDED(result));
+        if (FAILED(result))
         {
-            D3D11_QUERY_DESC queryDesc;
-            queryDesc.Query = D3D11_QUERY_EVENT;
-            queryDesc.MiscFlags = 0;
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create event query, result: 0x%X.", result);
+        }
+    }
 
-            result = mDevice->CreateQuery(&queryDesc, &mSyncQuery);
-            ASSERT(SUCCEEDED(result));
-            if (FAILED(result))
-            {
-                return gl::Error(GL_OUT_OF_MEMORY, "Failed to create event query, result: 0x%X.", result);
-            }
+    mDeviceContext->End(mSyncQuery);
+    mDeviceContext->Flush();
+
+    do
+    {
+        result = mDeviceContext->GetData(mSyncQuery, NULL, 0, D3D11_ASYNC_GETDATA_DONOTFLUSH);
+        if (FAILED(result))
+        {
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.", result);
         }
 
-        mDeviceContext->End(mSyncQuery);
-        mDeviceContext->Flush();
+        // Keep polling, but allow other threads to do something useful first
+        ScheduleYield();
 
-        do
+        if (testDeviceLost())
         {
-            result = mDeviceContext->GetData(mSyncQuery, NULL, 0, D3D11_ASYNC_GETDATA_DONOTFLUSH);
-            if (FAILED(result))
-            {
-                return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.", result);
-            }
-
-            // Keep polling, but allow other threads to do something useful first
-            ScheduleYield();
-
-            if (testDeviceLost())
-            {
-                mDisplay->notifyDeviceLost();
-                return gl::Error(GL_OUT_OF_MEMORY, "Device was lost while waiting for sync.");
-            }
+            mDisplay->notifyDeviceLost();
+            return gl::Error(GL_OUT_OF_MEMORY, "Device was lost while waiting for sync.");
         }
-        while (result == S_FALSE);
     }
-    else
-    {
-        mDeviceContext->Flush();
-    }
+    while (result == S_FALSE);
 
     return gl::Error(GL_NO_ERROR);
 }

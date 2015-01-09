@@ -1292,7 +1292,7 @@ void GL_APIENTRY Finish(void)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Error error = context->sync(true);
+        Error error = context->finish();
         if (error.isError())
         {
             context->recordError(error);
@@ -1308,7 +1308,7 @@ void GL_APIENTRY Flush(void)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Error error = context->sync(false);
+        Error error = context->flush();
         if (error.isError())
         {
             context->recordError(error);

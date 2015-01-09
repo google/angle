@@ -53,7 +53,8 @@ class Renderer9 : public RendererD3D
     void startScene();
     void endScene();
 
-    virtual gl::Error sync(bool block);
+    gl::Error flush() override;
+    gl::Error finish() override;
 
     virtual SwapChain *createSwapChain(NativeWindow nativeWindow, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat);
 
