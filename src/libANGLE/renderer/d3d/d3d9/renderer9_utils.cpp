@@ -565,6 +565,7 @@ Workarounds GenerateWorkarounds()
     Workarounds workarounds;
     workarounds.mrtPerfWorkaround = true;
     workarounds.setDataFasterThanImageUpload = false;
+    workarounds.useInstancedPointSpriteEmulation = false;
     return workarounds;
 }
 

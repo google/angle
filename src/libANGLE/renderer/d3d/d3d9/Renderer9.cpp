@@ -1146,7 +1146,7 @@ void Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
     mForceSetViewport = false;
 }
 
-bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count)
+bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize)
 {
     switch (mode)
     {
@@ -1389,7 +1389,7 @@ void Renderer9::applyTransformFeedbackBuffers(const gl::State& state)
     UNREACHABLE();
 }
 
-gl::Error Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive)
+gl::Error Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive, bool usesPointSize)
 {
     ASSERT(!transformFeedbackActive);
 

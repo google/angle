@@ -420,6 +420,22 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
         }
     }
 
+    // If gl_PointSize is used in the shader then pointsprites rendering is expected.
+    // If the renderer does not support Geometry shaders then Instanced PointSprite emulation
+    // may must be used.
+    bool usesPointSize = sourceShader.find("GL_USES_POINT_SIZE") != std::string::npos;
+    bool useInstancedPointSpriteEmulation = usesPointSize && mRenderer->getWorkarounds().useInstancedPointSpriteEmulation;
+
+    // Instanced PointSprite emulation requires additional entries in the
+    // VS_INPUT structure to support the vertices that make up the quad vertices.
+    // These values must be in sync with the cooresponding values added during inputlayout creation
+    // in InputLayoutCache::applyVertexBuffers().
+    if (useInstancedPointSpriteEmulation)
+    {
+        structHLSL += "    float3 spriteVertexPos : SPRITEPOSITION0;\n";
+        structHLSL += "    float2 spriteTexCoord : SPRITETEXCOORD0;\n";
+    }
+
     std::string replacementHLSL = "struct VS_INPUT\n"
                                   "{\n" +
                                   structHLSL +
@@ -694,6 +710,7 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog,
     bool usesFragCoord = fragmentShader->mUsesFragCoord;
     bool usesPointCoord = fragmentShader->mUsesPointCoord;
     bool usesPointSize = vertexShader->mUsesPointSize;
+    bool useInstancedPointSpriteEmulation = usesPointSize && mRenderer->getWorkarounds().useInstancedPointSpriteEmulation;
 
     if (usesFragColor && usesFragData)
     {
@@ -720,11 +737,26 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog,
     }
 
     const std::string &varyingHLSL = generateVaryingHLSL(vertexShader);
+
+    // Instanced PointSprite emulation requires that gl_PointCoord is present in the vertex shader VS_OUTPUT
+    // structure to ensure compatibility with the generated PS_INPUT of the pixel shader.
+    // GeometryShader PointSprite emulation does not require this additional entry because the
+    // GS_OUTPUT of the Geometry shader contains the pointCoord value and already matches the PS_INPUT of the
+    // generated pixel shader.
     const SemanticInfo &vertexSemantics = getSemanticInfo(registers, usesFragCoord,
-                                                          false, usesPointSize, false);
+                                                          (useInstancedPointSpriteEmulation && usesPointCoord),
+                                                          usesPointSize, false);
 
     storeUserLinkedVaryings(vertexShader, linkedVaryings);
     storeBuiltinLinkedVaryings(vertexSemantics, linkedVaryings);
+
+    // Instanced PointSprite emulation requires additional entries originally generated in the
+    // GeometryShader HLSL.  These include pointsize clamp values.
+    if (useInstancedPointSpriteEmulation)
+    {
+        vertexHLSL += "static float minPointSize = " + Str((int)mRenderer->getRendererCaps().minAliasedPointSize) + ".0f;\n"
+                      "static float maxPointSize = " + Str((int)mRenderer->getRendererCaps().maxAliasedPointSize) + ".0f;\n";
+    }
 
     // Add stub string to be replaced when shader is dynamically defined by its layout
     vertexHLSL += "\n" + VERTEX_ATTRIBUTE_STUB_STRING + "\n"
@@ -799,6 +831,22 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog,
                     vertexHLSL += ";\n";
                 }
             }
+        }
+    }
+
+    // Instanced PointSprite emulation requires additional entries to calculate
+    // the final output vertex positions of the quad that represents each sprite.
+    if (useInstancedPointSpriteEmulation)
+    {
+        vertexHLSL += "\n"
+                      "    gl_PointSize = clamp(gl_PointSize, minPointSize, maxPointSize);\n"
+                      "    output.dx_Position.xyz += float3(input.spriteVertexPos.x * gl_PointSize / (dx_ViewCoords.x*2), input.spriteVertexPos.y * gl_PointSize / (dx_ViewCoords.y*2), input.spriteVertexPos.z) * output.dx_Position.w;\n"
+                      "    output.gl_PointSize = gl_PointSize;\n";
+
+        if (usesPointCoord)
+        {
+            vertexHLSL += "\n"
+                          "    output.gl_PointCoord = input.spriteTexCoord;\n";
         }
     }
 

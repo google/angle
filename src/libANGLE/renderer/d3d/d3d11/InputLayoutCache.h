@@ -77,6 +77,9 @@ class InputLayoutCache
     UINT mCurrentVertexStrides[gl::MAX_VERTEX_ATTRIBS];
     UINT mCurrentVertexOffsets[gl::MAX_VERTEX_ATTRIBS];
 
+    ID3D11Buffer *mPointSpriteVertexBuffer;
+    ID3D11Buffer *mPointSpriteIndexBuffer;
+
     static std::size_t hashInputLayout(const InputLayoutKey &inputLayout);
     static bool compareInputLayouts(const InputLayoutKey &a, const InputLayoutKey &b);
 

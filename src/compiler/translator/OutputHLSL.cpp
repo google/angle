@@ -140,8 +140,8 @@ OutputHLSL::OutputHLSL(TParseContext &context, TranslatorHLSL *parentTranslator)
         }
         else
         {
-            // Reserve registers for dx_DepthRange and dx_ViewAdjust
-            mUniformHLSL->reserveUniformRegisters(2);
+            // Reserve registers for dx_DepthRange, dx_ViewAdjust and dx_ViewCoords
+            mUniformHLSL->reserveUniformRegisters(3);
         }
     }
 
@@ -510,10 +510,11 @@ void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulat
                 out << "    float3 dx_DepthRange : packoffset(c0);\n";
             }
 
-            // dx_ViewAdjust will only be used in Feature Level 9 shaders.
+            // dx_ViewAdjust and dx_ViewCoords will only be used in Feature Level 9 shaders.
             // However, we declare it for all shaders (including Feature Level 10+).
             // The bytecode is the same whether we declare it or not, since D3DCompiler removes it if it's unused.
             out << "    float4 dx_ViewAdjust : packoffset(c1);\n";
+            out << "    float2 dx_ViewCoords : packoffset(c2);\n";
 
             out << "};\n"
                    "\n";
@@ -525,7 +526,8 @@ void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulat
                 out << "uniform float3 dx_DepthRange : register(c0);\n";
             }
 
-            out << "uniform float4 dx_ViewAdjust : register(c1);\n"
+            out << "uniform float4 dx_ViewAdjust : register(c1);\n";
+            out << "uniform float2 dx_ViewCoords : register(c2);\n"
                    "\n";
         }
 

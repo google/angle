@@ -76,7 +76,7 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
         return error;
     }
 
-    if (!applyPrimitiveType(mode, count))
+    if (!applyPrimitiveType(mode, count, program->usesPointSize()))
     {
         return gl::Error(GL_NO_ERROR);
     }
@@ -159,7 +159,7 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
         return error;
     }
 
-    if (!applyPrimitiveType(mode, count))
+    if (!applyPrimitiveType(mode, count, program->usesPointSize()))
     {
         return gl::Error(GL_NO_ERROR);
     }
@@ -204,7 +204,7 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
 
     if (!skipDraw(data, mode))
     {
-        error = drawArrays(mode, count, instances, transformFeedbackActive);
+        error = drawArrays(mode, count, instances, transformFeedbackActive, program->usesPointSize());
         if (error.isError())
         {
             return error;

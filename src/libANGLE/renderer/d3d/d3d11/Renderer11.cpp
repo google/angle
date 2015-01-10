@@ -928,6 +928,13 @@ void Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
         mPixelConstants.viewCoords[2] = actualViewport.x + (actualViewport.width  * 0.5f);
         mPixelConstants.viewCoords[3] = actualViewport.y + (actualViewport.height * 0.5f);
 
+        // Instanced pointsprite emulation requires ViewCoords to be defined in the
+        // the vertex shader.
+        mVertexConstants.viewCoords[0] = mPixelConstants.viewCoords[0];
+        mVertexConstants.viewCoords[1] = mPixelConstants.viewCoords[1];
+        mVertexConstants.viewCoords[2] = mPixelConstants.viewCoords[2];
+        mVertexConstants.viewCoords[3] = mPixelConstants.viewCoords[3];
+
         mPixelConstants.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
         mPixelConstants.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
 
@@ -943,7 +950,7 @@ void Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
     mForceSetViewport = false;
 }
 
-bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
+bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize)
 {
     D3D11_PRIMITIVE_TOPOLOGY primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
@@ -962,6 +969,14 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
       default:
         UNREACHABLE();
         return false;
+    }
+
+    // If instanced pointsprite emulation is being used and  If gl_PointSize is used in the shader,
+    // GL_POINTS mode is expected to render pointsprites.
+    // Instanced PointSprite emulation requires that the topology to be D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST.
+    if (mode == GL_POINTS && usesPointSize && getWorkarounds().useInstancedPointSpriteEmulation)
+    {
+        primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
     }
 
     if (primitiveTopology != mCurrentPrimitiveTopology)
@@ -1226,8 +1241,9 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State& state)
     }
 }
 
-gl::Error Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive)
+gl::Error Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive, bool usesPointSize)
 {
+    bool useInstancedPointSpriteEmulation = usesPointSize && getWorkarounds().useInstancedPointSpriteEmulation;
     if (mode == GL_POINTS && transformFeedbackActive)
     {
         // Since point sprites are generated with a geometry shader, too many vertices will
@@ -1277,7 +1293,17 @@ gl::Error Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances, 
     }
     else
     {
-        mDeviceContext->Draw(count, 0);
+        // If gl_PointSize is used and GL_POINTS is specified, then it is expected to render pointsprites.
+        // If instanced pointsprite emulation is being used the topology is expexted to be 
+        // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced must be used.
+        if (mode == GL_POINTS && useInstancedPointSpriteEmulation)
+        {
+            mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
+        }
+        else
+        {
+            mDeviceContext->Draw(count, 0);
+        }
         return gl::Error(GL_NO_ERROR);
     }
 }

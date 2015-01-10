@@ -28,7 +28,8 @@ struct Workarounds
     Workarounds()
         : mrtPerfWorkaround(false),
           setDataFasterThanImageUpload(false),
-          zeroMaxLodWorkaround(false)
+          zeroMaxLodWorkaround(false),
+          useInstancedPointSpriteEmulation(false)
     {}
 
     bool mrtPerfWorkaround;
@@ -40,6 +41,12 @@ struct Workarounds
     // This causes problems when (for example) an application creates a mipmapped texture2D, but sets GL_TEXTURE_MIN_FILTER to GL_NEAREST (i.e disables mipmaps).
     // To work around this, D3D11 FL9_3 has to create two copies of the texture. The textures' level zeros are identical, but only one texture has mips.
     bool zeroMaxLodWorkaround;
+
+    // Some renderers do not support Geometry Shaders so the Geometry Shader-based
+    // PointSprite emulation will not work.
+    // To work around this, D3D11 FL9_3 has to use a different pointsprite
+    // emulation that is implemented using instanced quads.
+    bool useInstancedPointSpriteEmulation;
 };
 
 }

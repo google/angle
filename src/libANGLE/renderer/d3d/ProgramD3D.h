@@ -58,6 +58,7 @@ class ProgramD3D : public ProgramImpl
     bool usesPointSize() const { return mUsesPointSize; }
     bool usesPointSpriteEmulation() const;
     bool usesGeometryShader() const;
+    bool usesInstancedPointSpriteEmulation() const;
 
     GLenum getBinaryFormat() { return GL_PROGRAM_BINARY_ANGLE; }
     LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream);

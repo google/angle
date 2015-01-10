@@ -213,7 +213,12 @@ bool ProgramD3D::usesPointSpriteEmulation() const
 
 bool ProgramD3D::usesGeometryShader() const
 {
-    return usesPointSpriteEmulation();
+    return usesPointSpriteEmulation() && !usesInstancedPointSpriteEmulation();
+}
+
+bool ProgramD3D::usesInstancedPointSpriteEmulation() const
+{
+    return mRenderer->getWorkarounds().useInstancedPointSpriteEmulation;
 }
 
 GLint ProgramD3D::getSamplerMapping(gl::SamplerType type, unsigned int samplerIndex, const gl::Caps &caps) const
