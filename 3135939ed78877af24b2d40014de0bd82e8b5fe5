@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4ef09d0f_3d6b6f8f",
+        "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-01-11T18:30:35Z",
+      "side": 1,
+      "message": "It\u0027s already a long sentence with a lot of comma\u0027s. This one seems unnecessary.",
+      "range": {
+        "startLine": 31,
+        "startChar": 36,
+        "endLine": 31,
+        "endChar": 37
+      },
+      "revId": "3135939ed78877af24b2d40014de0bd82e8b5fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0efa25f3_5baac30f",
+        "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-01-11T18:30:35Z",
+      "side": 1,
+      "message": "Perhaps turn these into a loop (below also)?",
+      "range": {
+        "startLine": 114,
+        "startChar": 8,
+        "endLine": 122,
+        "endChar": 94
+      },
+      "revId": "3135939ed78877af24b2d40014de0bd82e8b5fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ef09d0f_1d68338f",
+        "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-01-11T18:30:35Z",
+      "side": 1,
+      "message": "Is this essential to the benchmark results?",
+      "range": {
+        "startLine": 124,
+        "startChar": 8,
+        "endLine": 126,
+        "endChar": 74
+      },
+      "revId": "3135939ed78877af24b2d40014de0bd82e8b5fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ef09d0f_5d72bb7c",
+        "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-01-11T18:30:35Z",
+      "side": 1,
+      "message": "mPixelsResize?",
+      "range": {
+        "startLine": 281,
+        "startChar": 13,
+        "endLine": 281,
+        "endChar": 21
+      },
+      "revId": "3135939ed78877af24b2d40014de0bd82e8b5fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ef09d0f_bd5dbff0",
+        "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2015-01-11T18:30:35Z",
+      "side": 1,
+      "message": "mPixelsNewTex",
+      "range": {
+        "startLine": 282,
+        "startChar": 13,
+        "endLine": 282,
+        "endChar": 21
+      },
+      "revId": "3135939ed78877af24b2d40014de0bd82e8b5fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
