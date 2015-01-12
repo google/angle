@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "cee48d53_559a8c7c",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-12T21:05:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2efd29e9_6206f2be",
+      "range": {
+        "startLine": 138,
+        "startChar": 9,
+        "endLine": 138,
+        "endChar": 24
+      },
+      "revId": "203bc1130f98e33ce751e257e75aa018f76a763b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2efd29e9_a27bda5d",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 13
@@ -59,6 +83,30 @@
       "writtenOn": "2015-01-12T20:09:49Z",
       "side": 1,
       "message": "nit: maybe initializeImageInfoChain? or Desc.. I think some usage of the verb init/initialize might convey more",
+      "range": {
+        "startLine": 139,
+        "startChar": 9,
+        "endLine": 139,
+        "endChar": 30
+      },
+      "revId": "203bc1130f98e33ce751e257e75aa018f76a763b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2efd29e9_82269e20",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-12T21:05:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2efd29e9_a27bda5d",
       "range": {
         "startLine": 139,
         "startChar": 9,
