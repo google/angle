@@ -14,11 +14,11 @@
 #elif defined(__APPLE__)
 #   define ANGLE_PLATFORM_APPLE 1
 #   define ANGLE_PLATFORM_POSIX 1
-#elif defined(__linux__) || defined(EMSCRIPTEN)
-#   define ANGLE_PLATFORM_LINUX 1
-#   define ANGLE_PLATFORM_POSIX 1
 #elif defined(ANDROID)
 #   define ANGLE_PLATFORM_ANDROID 1
+#   define ANGLE_PLATFORM_POSIX 1
+#elif defined(__linux__) || defined(EMSCRIPTEN)
+#   define ANGLE_PLATFORM_LINUX 1
 #   define ANGLE_PLATFORM_POSIX 1
 #elif defined(__FreeBSD__) || \
       defined(__OpenBSD__) || \
@@ -78,7 +78,11 @@
 
 #ifdef ANGLE_PLATFORM_APPLE
     // TODO(jmadill): other OSX-specific includes
-    #include <x86intrin.h>
+#   include <x86intrin.h>
+#endif
+
+#if !defined(ANGLE_PLATFORM_WINDOWS_STORE) && !defined(ANGLE_PLATFORM_ANDROID)
+#   define ANGLE_USE_SSE
 #endif
 
 #endif // COMMON_PLATFORM_H_
