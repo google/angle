@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0efa25f3_aaaa8f8a",
+        "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-12T20:54:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ef09d0f_3d6b6f8f",
+      "range": {
+        "startLine": 31,
+        "startChar": 36,
+        "endLine": 31,
+        "endChar": 37
+      },
+      "revId": "3135939ed78877af24b2d40014de0bd82e8b5fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0efa25f3_5baac30f",
         "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-01-11T18:30:35Z",
       "side": 1,
       "message": "Perhaps turn these into a loop (below also)?",
+      "range": {
+        "startLine": 114,
+        "startChar": 8,
+        "endLine": 122,
+        "endChar": 94
+      },
+      "revId": "3135939ed78877af24b2d40014de0bd82e8b5fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0efa25f3_0aa0e3a8",
+        "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-12T20:54:16Z",
+      "side": 1,
+      "message": "Done. This also made more obvious a bug-- I was defining only level 0 of the subsequent textures, which did have an effect on the benchmark, which I\u0027d found confusing. Draw times are now very similar for both resized \u0026 newly created textures, and only the definition shows a difference. (NB-- benchmark data quoted in the article was on an HD4000, while today I\u0027m working on my Q600 system.)",
+      "parentUuid": "0efa25f3_5baac30f",
       "range": {
         "startLine": 114,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0efa25f3_2a979f52",
+        "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-12T20:54:16Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "4ef09d0f_1d68338f",
+      "range": {
+        "startLine": 124,
+        "startChar": 8,
+        "endLine": 126,
+        "endChar": 74
+      },
+      "revId": "3135939ed78877af24b2d40014de0bd82e8b5fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ef09d0f_5d72bb7c",
         "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
         "patchSetId": 1
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "0efa25f3_8a94f34c",
+        "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-12T20:54:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ef09d0f_5d72bb7c",
+      "range": {
+        "startLine": 281,
+        "startChar": 13,
+        "endLine": 281,
+        "endChar": 21
+      },
+      "revId": "3135939ed78877af24b2d40014de0bd82e8b5fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ef09d0f_bd5dbff0",
         "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
         "patchSetId": 1
@@ -105,6 +201,30 @@
       "writtenOn": "2015-01-11T18:30:35Z",
       "side": 1,
       "message": "mPixelsNewTex",
+      "range": {
+        "startLine": 282,
+        "startChar": 13,
+        "endLine": 282,
+        "endChar": 21
+      },
+      "revId": "3135939ed78877af24b2d40014de0bd82e8b5fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0efa25f3_6a91a75a",
+        "filename": "samples/angle/tex_redef_microbench/TexRedefMicroBench.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-12T20:54:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ef09d0f_bd5dbff0",
       "range": {
         "startLine": 282,
         "startChar": 13,
