@@ -1,0 +1,112 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2eab69f1_000bb61c",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-12T22:15:46Z",
+      "side": 1,
+      "message": "wrong order",
+      "range": {
+        "startLine": 12,
+        "startChar": 19,
+        "endLine": 12,
+        "endChar": 29
+      },
+      "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ef09d0f_d10a34c9",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-12T22:15:46Z",
+      "side": 1,
+      "message": "wrong order.  See http://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Names_and_Order_of_Includes",
+      "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2eab69f1_00dd7624",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-12T22:15:46Z",
+      "side": 1,
+      "message": "wrong order",
+      "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ef09d0f_9109ccd1",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-12T22:15:46Z",
+      "side": 1,
+      "message": "wrong order",
+      "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ef09d0f_f16bf05c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-12T22:15:46Z",
+      "side": 1,
+      "message": "\u003calgorithm\u003e should be after \"Program.h\"",
+      "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0efa25f3_5558ccca",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-12T22:15:46Z",
+      "side": 1,
+      "message": "since you are moving includes, maybe you can put the above three in the right order also?",
+      "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
