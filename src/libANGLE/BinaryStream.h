@@ -20,7 +20,8 @@
 template <typename T>
 void StaticAssertIsFundamental()
 {
-#ifndef ANGLE_PLATFORM_APPLE
+    // c++11 STL is not available on OSX or Android
+#if !defined(ANGLE_PLATFORM_APPLE) && !defined(ANGLE_PLATFORM_ANDROID)
     META_ASSERT(std::is_fundamental<T>::value);
 #else
     union { T dummy; } dummy;
