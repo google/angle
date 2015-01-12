@@ -1203,7 +1203,7 @@ void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulat
                "\n";
     }
 
-    builtInFunctionEmulator->OutputEmulatedFunctionDefinition(out, false);
+    builtInFunctionEmulator->OutputEmulatedFunctionDefinition(out);
 }
 
 void OutputHLSL::visitSymbol(TIntermSymbol *node)

@@ -17,9 +17,7 @@ class BuiltInFunctionEmulatorGLSL : public BuiltInFunctionEmulator
   public:
     BuiltInFunctionEmulatorGLSL(sh::GLenum shaderType);
 
-  protected:
-    // Output function emulation definition header.
-    virtual void OutputEmulatedFunctionHeader(TInfoSinkBase& out, bool withPrecision) const override;
+    void OutputEmulatedFunctionDefinition(TInfoSinkBase& out, bool withPrecision) const;
 };
 
 #endif  // COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATORGLSL_H_

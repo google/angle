@@ -19,20 +19,6 @@
 class BuiltInFunctionEmulator
 {
   public:
-    // Records that a function is called by the shader and might need to be
-    // emulated. If the function is not in mEmulatedFunctions, this becomes a
-    // no-op. Returns true if the function call needs to be replaced with an
-    // emulated one.
-    bool SetFunctionCalled(TOperator op, const TType& param);
-    bool SetFunctionCalled(
-        TOperator op, const TType& param1, const TType& param2);
-    bool SetFunctionCalled(
-        TOperator op, const TType& param1, const TType& param2, const TType& param3);
-
-    // Output function emulation definition. This should be before any other
-    // shader source.
-    void OutputEmulatedFunctionDefinition(TInfoSinkBase& out, bool withPrecision) const;
-
     void MarkBuiltInFunctionsForEmulation(TIntermNode* root);
 
     void Cleanup();
@@ -43,14 +29,30 @@ class BuiltInFunctionEmulator
   protected:
     BuiltInFunctionEmulator();
 
+    bool IsOutputEmpty() const;
+
+    // Output function emulation definition. This should be before any other
+    // shader source.
+    void OutputEmulatedFunctions(TInfoSinkBase& out) const;
+
+    // Add functions that need to be emulated.
     void AddEmulatedFunction(TOperator op, const TType& param, const char* emulatedFunctionDefinition);
     void AddEmulatedFunction(TOperator op, const TType& param1, const TType& param2, const char* emulatedFunctionDefinition);
     void AddEmulatedFunction(TOperator op, const TType& param1, const TType& param2, const TType& param3, const char* emulatedFunctionDefinition);
 
-    // Override this to add source before emulated function definitions.
-    virtual void OutputEmulatedFunctionHeader(TInfoSinkBase& out, bool withPrecision) const {}
-
   private:
+    class BuiltInFunctionEmulationMarker;
+
+    // Records that a function is called by the shader and might need to be
+    // emulated. If the function is not in mEmulatedFunctions, this becomes a
+    // no-op. Returns true if the function call needs to be replaced with an
+    // emulated one.
+    bool SetFunctionCalled(TOperator op, const TType& param);
+    bool SetFunctionCalled(
+        TOperator op, const TType& param1, const TType& param2);
+    bool SetFunctionCalled(
+        TOperator op, const TType& param1, const TType& param2, const TType& param3);
+
     class FunctionId {
       public:
         FunctionId(TOperator op, const TType& param);

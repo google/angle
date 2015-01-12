@@ -16,6 +16,8 @@ class BuiltInFunctionEmulatorHLSL : public BuiltInFunctionEmulator
 {
   public:
     BuiltInFunctionEmulatorHLSL();
+
+    void OutputEmulatedFunctionDefinition(TInfoSinkBase& out) const;
 };
 
 #endif  // COMPILER_TRANSLATOR_BUILTINFUNCTIONEMULATORHLSL_H_

@@ -38,9 +38,13 @@ BuiltInFunctionEmulatorGLSL::BuiltInFunctionEmulatorGLSL(sh::GLenum shaderType)
 #endif
 }
 
-void BuiltInFunctionEmulatorGLSL::OutputEmulatedFunctionHeader(
+void BuiltInFunctionEmulatorGLSL::OutputEmulatedFunctionDefinition(
     TInfoSinkBase& out, bool withPrecision) const
 {
+    if (IsOutputEmpty())
+        return;
+
+    out << "// BEGIN: Generated code for built-in function emulation\n\n";
     if (withPrecision) {
         out << "#if defined(GL_FRAGMENT_PRECISION_HIGH)\n"
             << "#define webgl_emu_precision highp\n"
@@ -50,4 +54,6 @@ void BuiltInFunctionEmulatorGLSL::OutputEmulatedFunctionHeader(
     } else {
         out << "#define webgl_emu_precision\n\n";
     }
+    OutputEmulatedFunctions(out);
+    out << "// END: Generated code for built-in function emulation\n\n";
 }

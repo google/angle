@@ -242,3 +242,8 @@ BuiltInFunctionEmulatorHLSL::BuiltInFunctionEmulatorHLSL()
         "}\n");
 }
 
+void BuiltInFunctionEmulatorHLSL::OutputEmulatedFunctionDefinition(
+    TInfoSinkBase& out) const
+{
+    OutputEmulatedFunctions(out);
+}

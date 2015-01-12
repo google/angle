@@ -8,11 +8,9 @@
 #include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/SymbolTable.h"
 
-namespace
+class BuiltInFunctionEmulator::BuiltInFunctionEmulationMarker : public TIntermTraverser
 {
-
-class BuiltInFunctionEmulationMarker : public TIntermTraverser {
-public:
+  public:
     BuiltInFunctionEmulationMarker(BuiltInFunctionEmulator& emulator)
         : mEmulator(emulator)
     {
@@ -95,11 +93,9 @@ public:
         return true;
     }
 
-private:
+  private:
     BuiltInFunctionEmulator& mEmulator;
 };
-
-}  // anonymous namepsace
 
 BuiltInFunctionEmulator::BuiltInFunctionEmulator()
 {}
@@ -128,17 +124,17 @@ void BuiltInFunctionEmulator::AddEmulatedFunction(
         std::string(emulatedFunctionDefinition);
 }
 
-void BuiltInFunctionEmulator::OutputEmulatedFunctionDefinition(
-    TInfoSinkBase& out, bool withPrecision) const
+bool BuiltInFunctionEmulator::IsOutputEmpty() const
 {
-    if (mFunctions.size() == 0)
-        return;
-    out << "// BEGIN: Generated code for built-in function emulation\n\n";
-    OutputEmulatedFunctionHeader(out, withPrecision);
+    return (mFunctions.size() == 0);
+}
+
+void BuiltInFunctionEmulator::OutputEmulatedFunctions(
+    TInfoSinkBase& out) const
+{
     for (size_t i = 0; i < mFunctions.size(); ++i) {
         out << mEmulatedFunctions.find(mFunctions[i])->second << "\n\n";
     }
-    out << "// END: Generated code for built-in function emulation\n\n";
 }
 
 bool BuiltInFunctionEmulator::SetFunctionCalled(
