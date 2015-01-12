@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cee48d53_1522c492",
+        "filename": "src/libANGLE/renderer/loadimageSSE2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-12T21:16:46Z",
+      "side": 1,
+      "message": "nit: include after the load image header",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 28
+      },
+      "revId": "18f23759c85e3fd34e24c280396b2d3d1fa83f3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cee48d53_b52cb888",
+        "filename": "src/libANGLE/renderer/loadimageSSE2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-12T21:16:46Z",
+      "side": 1,
+      "message": "nit: might be worth flipping the cases here for readability.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 27
+      },
+      "revId": "18f23759c85e3fd34e24c280396b2d3d1fa83f3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
