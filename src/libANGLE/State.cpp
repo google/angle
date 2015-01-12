@@ -618,12 +618,16 @@ void State::setSamplerTexture(GLenum type, Texture *texture)
 
 Texture *State::getSamplerTexture(unsigned int sampler, GLenum type) const
 {
-    return mSamplerTextures.at(type)[sampler].get();
+    const auto it = mSamplerTextures.find(type);
+    ASSERT(it != mSamplerTextures.end());
+    return it->second[sampler].get();
 }
 
 GLuint State::getSamplerTextureId(unsigned int sampler, GLenum type) const
 {
-    return mSamplerTextures.at(type)[sampler].id();
+    const auto it = mSamplerTextures.find(type);
+    ASSERT(it != mSamplerTextures.end());
+    return it->second[sampler].id();
 }
 
 void State::detachTexture(const TextureMap &zeroTextures, GLuint texture)
@@ -646,8 +650,10 @@ void State::detachTexture(const TextureMap &zeroTextures, GLuint texture)
             BindingPointer<Texture> &binding = textureVector[textureIdx];
             if (binding.id() == texture)
             {
+                auto it = zeroTextures.find(textureType);
+                ASSERT(it != zeroTextures.end());
                 // Zero textures are the "default" textures instead of NULL
-                binding.set(zeroTextures.at(textureType).get());
+                binding.set(it->second.get());
             }
         }
     }
@@ -918,10 +924,12 @@ GLuint State::getActiveQueryId(GLenum target) const
 
 Query *State::getActiveQuery(GLenum target) const
 {
-    // All query types should already exist in the activeQueries map
-    ASSERT(mActiveQueries.find(target) != mActiveQueries.end());
+    const auto it = mActiveQueries.find(target);
 
-    return mActiveQueries.at(target).get();
+    // All query types should already exist in the activeQueries map
+    ASSERT(it != mActiveQueries.end());
+
+    return it->second.get();
 }
 
 void State::setArrayBufferBinding(Buffer *buffer)
@@ -1345,19 +1353,19 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_2D:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
-        *params = mSamplerTextures.at(GL_TEXTURE_2D)[mActiveSampler].id();
+        *params = getSamplerTextureId(mActiveSampler, GL_TEXTURE_2D) ;
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
-        *params = mSamplerTextures.at(GL_TEXTURE_CUBE_MAP)[mActiveSampler].id();
+        *params = getSamplerTextureId(mActiveSampler, GL_TEXTURE_CUBE_MAP);
         break;
       case GL_TEXTURE_BINDING_3D:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
-        *params = mSamplerTextures.at(GL_TEXTURE_3D)[mActiveSampler].id();
+        *params = getSamplerTextureId(mActiveSampler, GL_TEXTURE_3D);
         break;
       case GL_TEXTURE_BINDING_2D_ARRAY:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
-        *params = mSamplerTextures.at(GL_TEXTURE_2D_ARRAY)[mActiveSampler].id();
+        *params = getSamplerTextureId(mActiveSampler, GL_TEXTURE_2D_ARRAY);
         break;
       case GL_UNIFORM_BUFFER_BINDING:
         *params = mGenericUniformBuffer.id();
