@@ -104,16 +104,6 @@ class Texture final : public RefCountObject
 
     GLenum mTarget;
 
-    struct ImageIdentifier
-    {
-        GLenum target;
-        size_t level;
-
-        ImageIdentifier();
-        ImageIdentifier(GLenum target, size_t level);
-
-        bool operator<(const ImageIdentifier &other) const;
-    };
 
     struct ImageDesc
     {
@@ -133,12 +123,12 @@ class Texture final : public RefCountObject
     bool isMipmapComplete() const;
     bool isLevelComplete(GLenum target, size_t level) const;
 
-    const ImageDesc &getImageDesc(const ImageIdentifier& index) const;
-    void setImageDesc(const ImageIdentifier& index, const ImageDesc &desc);
+    const ImageDesc &getImageDesc(const ImageIndex &index) const;
+    void setImageDesc(const ImageIndex &index, const ImageDesc &desc);
     void setImageDescChain(size_t levels, Extents baseSize, GLenum sizedInternalFormat);
     void clearImageDescs();
 
-    typedef std::map<ImageIdentifier, ImageDesc> ImageDescMap;
+    typedef std::map<ImageIndex, ImageDesc> ImageDescMap;
     ImageDescMap mImageDescs;
 
     egl::Surface *mBoundSurface;

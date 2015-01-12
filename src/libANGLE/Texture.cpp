@@ -86,25 +86,25 @@ GLenum Texture::getUsage() const
 size_t Texture::getWidth(GLenum target, size_t level) const
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
-    return getImageDesc(ImageIdentifier(target, level)).size.width;
+    return getImageDesc(ImageIndex::MakeGeneric(target, level)).size.width;
 }
 
 size_t Texture::getHeight(GLenum target, size_t level) const
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
-    return getImageDesc(ImageIdentifier(target, level)).size.height;
+    return getImageDesc(ImageIndex::MakeGeneric(target, level)).size.height;
 }
 
 size_t Texture::getDepth(GLenum target, size_t level) const
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
-    return getImageDesc(ImageIdentifier(target, level)).size.depth;
+    return getImageDesc(ImageIndex::MakeGeneric(target, level)).size.depth;
 }
 
 GLenum Texture::getInternalFormat(GLenum target, size_t level) const
 {
     ASSERT(target == mTarget || (mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
-    return getImageDesc(ImageIdentifier(target, level)).internalFormat;
+    return getImageDesc(ImageIndex::MakeGeneric(target, level)).internalFormat;
 }
 
 bool Texture::isSamplerComplete(const SamplerState &samplerState, const Data &data) const
@@ -244,7 +244,7 @@ Error Texture::setImage(GLenum target, size_t level, GLenum internalFormat, cons
 
     releaseTexImage();
 
-    setImageDesc(ImageIdentifier(target, level), ImageDesc(size, GetSizedInternalFormat(internalFormat, type)));
+    setImageDesc(ImageIndex::MakeGeneric(target, level), ImageDesc(size, GetSizedInternalFormat(internalFormat, type)));
 
     return Error(GL_NO_ERROR);
 }
@@ -270,7 +270,7 @@ Error Texture::setCompressedImage(GLenum target, size_t level, GLenum internalFo
 
     releaseTexImage();
 
-    setImageDesc(ImageIdentifier(target, level), ImageDesc(size, GetSizedInternalFormat(internalFormat, GL_UNSIGNED_BYTE)));
+    setImageDesc(ImageIndex::MakeGeneric(target, level), ImageDesc(size, GetSizedInternalFormat(internalFormat, GL_UNSIGNED_BYTE)));
 
     return Error(GL_NO_ERROR);
 }
@@ -296,7 +296,7 @@ Error Texture::copyImage(GLenum target, size_t level, const Rectangle &sourceAre
 
     releaseTexImage();
 
-    setImageDesc(ImageIdentifier(target, level), ImageDesc(Extents(sourceArea.width, sourceArea.height, 1),
+    setImageDesc(ImageIndex::MakeGeneric(target, level), ImageDesc(Extents(sourceArea.width, sourceArea.height, 1),
                                                                    GetSizedInternalFormat(internalFormat, GL_UNSIGNED_BYTE)));
 
     return Error(GL_NO_ERROR);
@@ -340,7 +340,7 @@ Error Texture::generateMipmaps()
 
     releaseTexImage();
 
-    ImageIdentifier baseLevel(getBaseImageTarget(), 0);
+    ImageIndex baseLevel = ImageIndex::MakeGeneric(getBaseImageTarget(), 0);
     const ImageDesc &baseImageInfo = getImageDesc(baseLevel);
     size_t mipLevels = log2(std::max(std::max(baseImageInfo.size.width, baseImageInfo.size.height), baseImageInfo.size.depth)) + 1;
     setImageDescChain(mipLevels, baseImageInfo.size, baseImageInfo.internalFormat);
@@ -361,30 +361,14 @@ void Texture::setImageDescChain(size_t levels, Extents baseSize, GLenum sizedInt
         {
             for (size_t face = FirstCubeMapTextureTarget; face <= LastCubeMapTextureTarget; face++)
             {
-                setImageDesc(ImageIdentifier(face, level), levelInfo);
+                setImageDesc(ImageIndex::MakeGeneric(face, level), levelInfo);
             }
         }
         else
         {
-            setImageDesc(ImageIdentifier(mTarget, level), levelInfo);
+            setImageDesc(ImageIndex::MakeGeneric(mTarget, level), levelInfo);
         }
     }
-}
-
-Texture::ImageIdentifier::ImageIdentifier()
-    : ImageIdentifier(GL_TEXTURE_2D, 0)
-{
-}
-
-Texture::ImageIdentifier::ImageIdentifier(GLenum target, size_t level)
-    : target(target),
-      level(level)
-{
-}
-
-bool Texture::ImageIdentifier::operator<(const ImageIdentifier &other) const
-{
-    return (target != other.target) ? target < other.target : level < other.level;
 }
 
 Texture::ImageDesc::ImageDesc()
@@ -398,14 +382,14 @@ Texture::ImageDesc::ImageDesc(const Extents &size, GLenum internalFormat)
 {
 }
 
-const Texture::ImageDesc &Texture::getImageDesc(const ImageIdentifier& index) const
+const Texture::ImageDesc &Texture::getImageDesc(const ImageIndex &index) const
 {
     static const Texture::ImageDesc defaultDesc;
     ImageDescMap::const_iterator iter = mImageDescs.find(index);
     return (iter != mImageDescs.end()) ? iter->second : defaultDesc;
 }
 
-void Texture::setImageDesc(const ImageIdentifier& index, const ImageDesc &desc)
+void Texture::setImageDesc(const ImageIndex &index, const ImageDesc &desc)
 {
     mImageDescs[index] = desc;
 }

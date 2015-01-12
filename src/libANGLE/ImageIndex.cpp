@@ -48,9 +48,31 @@ ImageIndex ImageIndex::Make3D(GLint mipIndex, GLint layerIndex)
     return ImageIndex(GL_TEXTURE_3D, mipIndex, layerIndex);
 }
 
+ImageIndex ImageIndex::MakeGeneric(GLenum target, GLint mipIndex)
+{
+    GLint layerIndex = IsCubeMapTextureTarget(target) ? CubeMapTextureTargetToLayerIndex(target) : ENTIRE_LEVEL;
+    return ImageIndex(target, mipIndex, layerIndex);
+}
+
 ImageIndex ImageIndex::MakeInvalid()
 {
     return ImageIndex(GL_NONE, -1, -1);
+}
+
+bool ImageIndex::operator<(const ImageIndex &other) const
+{
+    if (type != other.type)
+    {
+        return type < other.type;
+    }
+    else if (mipIndex != other.mipIndex)
+    {
+        return mipIndex < other.mipIndex;
+    }
+    else
+    {
+        return layerIndex < other.layerIndex;
+    }
 }
 
 ImageIndex::ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn)
