@@ -3243,8 +3243,8 @@ void GL_APIENTRY ReleaseShaderCompiler(void)
 
 void GL_APIENTRY RenderbufferStorage(GLenum target, GLenum internalformat, GLsizei width, GLsizei height)
 {
-    EVENT("(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
-          target, samples, internalformat, width, height);
+    EVENT("(GLenum target = 0x%X, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
+          target, internalformat, width, height);
 
     Context *context = GetValidGlobalContext();
     if (context)
