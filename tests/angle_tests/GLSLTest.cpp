@@ -258,6 +258,14 @@ protected:
     std::string mSimpleVSSource;
 };
 
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_TYPED_TEST_CASE(GLSLTest_ES3, ES3_D3D11);
+
+template<typename T>
+class GLSLTest_ES3 : public GLSLTest<T>
+{
+};
+
 TYPED_TEST(GLSLTest, NamelessScopedStructs)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
@@ -904,4 +912,62 @@ TYPED_TEST(GLSLTest, GlobalStaticAndVarying)
 
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+}
+
+// Tests that using a global static initialized from gl_InstanceID works as expected.
+TYPED_TEST(GLSLTest_ES3, GlobalStaticAndInstanceID)
+{
+    const std::string &vertexShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "in vec4 a_position;\n"
+        "out vec4 vColour;"
+        "int x = gl_InstanceID;"
+        "int global_v = x;"
+        "void main() {\n"
+        "  gl_Position = a_position;\n"
+        "  vColour = vec4(float(global_v)/255., 0.0, 0.0, 1.0);\n"
+        "}\n";
+
+    const std::string &fragmentShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "in vec4 vColour;"
+        "out vec4 colour;"
+        "void main() {\n"
+        "  colour = vColour;\n"
+        "}\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    ASSERT_NE(0u, program);
+
+    GLint positionLocation = glGetAttribLocation(program, "a_position");
+
+    glUseProgram(program);
+
+    const GLfloat vertices[] =
+    {
+        -1.0f,  1.0f, 0.5f,
+        -1.0f, -1.0f, 0.5f,
+         1.0f, -1.0f, 0.5f,
+
+        -1.0f,  1.0f, 0.5f,
+         1.0f, -1.0f, 0.5f,
+         1.0f,  1.0f, 0.5f,
+    };
+
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glEnableVertexAttribArray(positionLocation);
+
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 7);
+
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+
+    glUseProgram(0);
+
+    swapBuffers();
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(0, 0, 6, 0, 0, 255);
 }

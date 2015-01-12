@@ -392,11 +392,31 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(const std::string &s
             else
             {
                 GLenum componentType = mRenderer->getVertexComponentType(vertexFormat);
-                structHLSL += "    " + HLSLComponentTypeString(componentType, VariableComponentCount(shaderAttribute.type));
+
+                if (shaderAttribute.name == "gl_InstanceID")
+                {
+                    // The input type of the instance ID in HLSL (uint) differs from the one in ESSL (int).
+                    structHLSL += " uint";
+                }
+                else
+                {
+                    structHLSL += "    " + HLSLComponentTypeString(componentType, VariableComponentCount(shaderAttribute.type));
+                }
             }
 
-            structHLSL += " " + decorateVariable(shaderAttribute.name) + " : TEXCOORD" + Str(semanticIndex) + ";\n";
-            semanticIndex += VariableRegisterCount(shaderAttribute.type);
+            structHLSL += " " + decorateVariable(shaderAttribute.name) + " : ";
+
+            if (shaderAttribute.name == "gl_InstanceID")
+            {
+                structHLSL += "SV_InstanceID";
+            }
+            else
+            {
+                structHLSL += "TEXCOORD" + Str(semanticIndex);
+                semanticIndex += VariableRegisterCount(shaderAttribute.type);
+            }
+
+            structHLSL += ";\n";
 
             // HLSL code for initialization
             initHLSL += "    " + decorateVariable(shaderAttribute.name) + " = ";

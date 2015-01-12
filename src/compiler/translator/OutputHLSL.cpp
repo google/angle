@@ -110,6 +110,7 @@ OutputHLSL::OutputHLSL(TParseContext &context, TranslatorHLSL *parentTranslator)
     mUsesPointCoord = false;
     mUsesFrontFacing = false;
     mUsesPointSize = false;
+    mUsesInstanceID = false;
     mUsesFragDepth = false;
     mUsesXor = false;
     mUsesDiscardRewriting = false;
@@ -496,6 +497,11 @@ void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulat
         if (mUsesPointSize)
         {
             out << "static float gl_PointSize = float(1);\n";
+        }
+
+        if (mUsesInstanceID)
+        {
+            out << "static int gl_InstanceID;";
         }
 
         out << "\n"
@@ -1303,6 +1309,11 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         else if (qualifier == EvqPointSize)
         {
             mUsesPointSize = true;
+            out << name;
+        }
+        else if (qualifier == EvqInstanceID)
+        {
+            mUsesInstanceID = true;
             out << name;
         }
         else if (name == "gl_FragDepthEXT")

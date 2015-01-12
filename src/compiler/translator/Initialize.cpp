@@ -745,6 +745,7 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     case GL_VERTEX_SHADER:
         symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_Position"), TType(EbtFloat, EbpHigh, EvqPosition,    4)));
         symbolTable.insert(COMMON_BUILTINS, new TVariable(NewPoolTString("gl_PointSize"), TType(EbtFloat, EbpMedium, EvqPointSize,   1)));
+        symbolTable.insert(ESSL3_BUILTINS, new TVariable(NewPoolTString("gl_InstanceID"), TType(EbtInt, EbpHigh, EvqInstanceID,   1)));
         break;
 
     default: assert(false && "Language not supported");
