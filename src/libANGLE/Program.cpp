@@ -9,19 +9,18 @@
 
 #include "libANGLE/Program.h"
 
+#include <algorithm>
+
+#include "common/debug.h"
+#include "common/platform.h"
+#include "common/utilities.h"
+#include "common/version.h"
+#include "compiler/translator/blocklayout.h"
 #include "libANGLE/Data.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/features.h"
 #include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/renderer/ProgramImpl.h"
-
-#include "common/debug.h"
-#include "common/version.h"
-#include "common/utilities.h"
-#include "common/platform.h"
-#include "common/blocklayout.h"
-
-#include <algorithm>
 
 namespace gl
 {

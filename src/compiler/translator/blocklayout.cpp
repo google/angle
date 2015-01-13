@@ -7,7 +7,8 @@
 //   Implementation for block layout classes and methods.
 //
 
-#include "common/blocklayout.h"
+#include "compiler/translator/blocklayout.h"
+
 #include "common/mathutil.h"
 #include "common/utilities.h"
 

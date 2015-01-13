@@ -7,14 +7,14 @@
 //   Methods for GLSL to HLSL translation for uniforms and interface blocks.
 //
 
-#include "OutputHLSL.h"
-#include "common/blocklayout.h"
-#include "common/utilities.h"
 #include "compiler/translator/UniformHLSL.h"
+
+#include "common/utilities.h"
 #include "compiler/translator/StructureHLSL.h"
-#include "compiler/translator/util.h"
-#include "compiler/translator/UtilsHLSL.h"
 #include "compiler/translator/TranslatorHLSL.h"
+#include "compiler/translator/UtilsHLSL.h"
+#include "compiler/translator/blocklayout.h"
+#include "compiler/translator/util.h"
 
 namespace sh
 {

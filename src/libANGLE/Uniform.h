@@ -7,15 +7,13 @@
 #ifndef LIBANGLE_UNIFORM_H_
 #define LIBANGLE_UNIFORM_H_
 
-#include "common/debug.h"
-#include "libANGLE/angletypes.h"
-
-#include "common/blocklayout.h"
-
-#include "angle_gl.h"
-
 #include <string>
 #include <vector>
+
+#include "angle_gl.h"
+#include "common/debug.h"
+#include "compiler/translator/blocklayout.h"
+#include "libANGLE/angletypes.h"
 
 namespace gl
 {

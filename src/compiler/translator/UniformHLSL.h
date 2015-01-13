@@ -10,7 +10,7 @@
 #ifndef COMPILER_TRANSLATOR_UNIFORMHLSL_H_
 #define COMPILER_TRANSLATOR_UNIFORMHLSL_H_
 
-#include "compiler/translator/Types.h"
+#include "compiler/translator/OutputHLSL.h"
 
 namespace sh
 {

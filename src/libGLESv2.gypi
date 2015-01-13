@@ -10,8 +10,6 @@
         [
             'common/angleutils.cpp',
             'common/angleutils.h',
-            'common/blocklayout.cpp',
-            'common/blocklayout.h',
             'common/debug.cpp',
             'common/debug.h',
             'common/mathutil.cpp',

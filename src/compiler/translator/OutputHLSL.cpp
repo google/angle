@@ -6,27 +6,27 @@
 
 #include "compiler/translator/OutputHLSL.h"
 
-#include "common/angleutils.h"
-#include "common/utilities.h"
-#include "common/blocklayout.h"
-#include "compiler/translator/BuiltInFunctionEmulatorHLSL.h"
-#include "compiler/translator/compilerdebug.h"
-#include "compiler/translator/InfoSink.h"
-#include "compiler/translator/DetectDiscontinuity.h"
-#include "compiler/translator/SearchSymbol.h"
-#include "compiler/translator/UnfoldShortCircuit.h"
-#include "compiler/translator/FlagStd140Structs.h"
-#include "compiler/translator/NodeSearch.h"
-#include "compiler/translator/RewriteElseBlocks.h"
-#include "compiler/translator/UtilsHLSL.h"
-#include "compiler/translator/util.h"
-#include "compiler/translator/UniformHLSL.h"
-#include "compiler/translator/StructureHLSL.h"
-#include "compiler/translator/TranslatorHLSL.h"
-
 #include <algorithm>
 #include <cfloat>
 #include <stdio.h>
+
+#include "common/angleutils.h"
+#include "common/utilities.h"
+#include "compiler/translator/BuiltInFunctionEmulatorHLSL.h"
+#include "compiler/translator/DetectDiscontinuity.h"
+#include "compiler/translator/FlagStd140Structs.h"
+#include "compiler/translator/InfoSink.h"
+#include "compiler/translator/NodeSearch.h"
+#include "compiler/translator/RewriteElseBlocks.h"
+#include "compiler/translator/SearchSymbol.h"
+#include "compiler/translator/StructureHLSL.h"
+#include "compiler/translator/TranslatorHLSL.h"
+#include "compiler/translator/UnfoldShortCircuit.h"
+#include "compiler/translator/UniformHLSL.h"
+#include "compiler/translator/UtilsHLSL.h"
+#include "compiler/translator/blocklayout.h"
+#include "compiler/translator/compilerdebug.h"
+#include "compiler/translator/util.h"
 
 namespace sh
 {

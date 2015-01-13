@@ -24,7 +24,7 @@ struct Uniform;
 struct Varying;
 struct InterfaceBlock;
 
-struct BlockMemberInfo
+struct COMPILER_EXPORT BlockMemberInfo
 {
     BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
         : offset(offset),
@@ -44,7 +44,7 @@ struct BlockMemberInfo
     bool isRowMajorMatrix;
 };
 
-class BlockLayoutEncoder
+class COMPILER_EXPORT BlockLayoutEncoder
 {
   public:
     BlockLayoutEncoder();
@@ -73,7 +73,7 @@ class BlockLayoutEncoder
 // Block layout according to the std140 block layout
 // See "Standard Uniform Block Layout" in Section 2.11.6 of the OpenGL ES 3.0 specification
 
-class Std140BlockEncoder : public BlockLayoutEncoder
+class COMPILER_EXPORT Std140BlockEncoder : public BlockLayoutEncoder
 {
   public:
     Std140BlockEncoder();
@@ -91,7 +91,7 @@ class Std140BlockEncoder : public BlockLayoutEncoder
 // The strategy should be ENCODE_LOOSE for D3D9 constant blocks, and ENCODE_PACKED
 // for everything else (D3D10+ constant blocks and all attributes/varyings).
 
-class HLSLBlockEncoder : public BlockLayoutEncoder
+class COMPILER_EXPORT HLSLBlockEncoder : public BlockLayoutEncoder
 {
   public:
     enum HLSLBlockEncoderStrategy
@@ -119,8 +119,8 @@ class HLSLBlockEncoder : public BlockLayoutEncoder
 
 // This method returns the number of used registers for a ShaderVariable. It is dependent on the HLSLBlockEncoder
 // class to count the number of used registers in a struct (which are individually packed according to the same rules).
-unsigned int HLSLVariableRegisterCount(const Varying &variable);
-unsigned int HLSLVariableRegisterCount(const Uniform &variable, ShShaderOutput outputType);
+COMPILER_EXPORT unsigned int HLSLVariableRegisterCount(const Varying &variable);
+COMPILER_EXPORT unsigned int HLSLVariableRegisterCount(const Uniform &variable, ShShaderOutput outputType);
 
 }
 

@@ -7,14 +7,14 @@
 //
 
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
+
+#include "common/utilities.h"
+#include "compiler/translator/blocklayout.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/formatutils.h"
-
-#include "common/utilities.h"
-#include "common/blocklayout.h"
 
 // For use with ArrayString, see angleutils.h
 META_ASSERT(GL_INVALID_INDEX == UINT_MAX);

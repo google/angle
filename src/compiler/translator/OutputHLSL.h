@@ -12,7 +12,6 @@
 #include <map>
 
 #include "angle_gl.h"
-
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/ParseContext.h"
 
