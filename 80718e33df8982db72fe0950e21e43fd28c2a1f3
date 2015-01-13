@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6ecac1df_ef3bf1eb",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T16:19:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2eab69f1_000bb61c",
+      "range": {
+        "startLine": 12,
+        "startChar": 19,
+        "endLine": 12,
+        "endChar": 29
+      },
+      "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ef09d0f_d10a34c9",
         "filename": "src/compiler/translator/OutputHLSL.h",
         "patchSetId": 2
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "0e6f85ad_93953cd0",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T16:19:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ef09d0f_d10a34c9",
+      "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2eab69f1_00dd7624",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 2
@@ -53,6 +95,24 @@
       "writtenOn": "2015-01-12T22:15:46Z",
       "side": 1,
       "message": "wrong order",
+      "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec449d1_4a231712",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T16:19:50Z",
+      "side": 1,
+      "message": "This seems correct... lower case should be sorted lexicographicaly after upper case, as in our .gyp files?",
+      "parentUuid": "2eab69f1_00dd7624",
       "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -93,6 +153,24 @@
     },
     {
       "key": {
+        "uuid": "2ec449d1_aac28bc6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T16:19:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ef09d0f_f16bf05c",
+      "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0efa25f3_5558ccca",
         "filename": "src/libANGLE/Uniform.h",
         "patchSetId": 2
@@ -104,6 +182,24 @@
       "writtenOn": "2015-01-12T22:15:46Z",
       "side": 1,
       "message": "since you are moving includes, maybe you can put the above three in the right order also?",
+      "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ecac1df_0f33ed12",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T16:19:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0efa25f3_5558ccca",
       "revId": "80718e33df8982db72fe0950e21e43fd28c2a1f3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
