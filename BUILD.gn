@@ -2,17 +2,20 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-gles_gypi = exec_script(
-  "//build/gypi_to_gn.py",
-  [ rebase_path("src/libGLESv2.gypi") ],
-  "scope",
-  [ "src/libGLESv2.gypi" ])
+if (is_win) {
+  # Only needed on Windows.
+  gles_gypi = exec_script(
+      "//build/gypi_to_gn.py",
+      [ rebase_path("src/libGLESv2.gypi") ],
+      "scope",
+      [ "src/libGLESv2.gypi" ])
+}
 
 compiler_gypi = exec_script(
-  "//build/gypi_to_gn.py",
-  [ rebase_path("src/compiler.gypi") ],
-  "scope",
-  [ "src/compiler.gypi" ])
+    "//build/gypi_to_gn.py",
+    [ rebase_path("src/compiler.gypi") ],
+    "scope",
+    [ "src/compiler.gypi" ])
 
 # This config is exported to dependent targets (and also applied to internal
 # ones).
@@ -80,14 +83,6 @@ config("translator_static_config") {
   defines = [ "ANGLE_TRANSLATOR_STATIC" ]
 }
 
-static_library("angle_common") {
-  sources = rebase_path(gles_gypi.libangle_common_sources, ".", "src")
-  configs -= [ "//build/config/compiler:chromium_code" ]
-  configs += [
-    ":internal_config",
-  ]
-}
-
 static_library("translator_lib") {
   sources = rebase_path(compiler_gypi.angle_translator_lib_sources, ".", "src")
 
@@ -142,9 +137,6 @@ action("commit_id") {
   public_configs = [ ":commit_id_config" ]
 }
 
-angle_enable_d3d9 = false
-angle_enable_d3d11 = false
-
 if (is_win) {
   angle_enable_d3d9 = true
   angle_enable_d3d11 = true
@@ -155,127 +147,119 @@ if (is_win) {
     outputs = [ "$root_build_dir/d3dcompiler_47.dll" ]
   }
 
-}  # is_win
-
-config("libANGLE_config") {
-  defines = []
-  if (angle_enable_d3d9) {
-    defines += [ "ANGLE_ENABLE_D3D9" ]
+  config("libANGLE_config") {
+    defines = []
+    if (angle_enable_d3d9) {
+      defines += [ "ANGLE_ENABLE_D3D9" ]
+    }
+    if (angle_enable_d3d11) {
+      defines += [ "ANGLE_ENABLE_D3D11" ]
+    }
+    defines += [
+      "GL_APICALL=",
+      "GL_GLEXT_PROTOTYPES=",
+      "EGLAPI=",
+    ]
   }
-  if (angle_enable_d3d11) {
-    defines += [ "ANGLE_ENABLE_D3D11" ]
-  }
-  defines += [
-    "GL_APICALL=",
-    "GL_GLEXT_PROTOTYPES=",
-    "EGLAPI=",
-  ]
-}
 
-static_library("libANGLE") {
-  sources = rebase_path(gles_gypi.libangle_sources, ".", "src")
+  static_library("libANGLE") {
+    sources = rebase_path(gles_gypi.libangle_sources, ".", "src")
+    sources += rebase_path(gles_gypi.libangle_common_sources, ".", "src")
 
-  libs = []
-  defines = [
-    "LIBANGLE_IMPLEMENTATION",
-  ]
+    libs = []
+    defines = []
 
-  # Shared D3dD sources.
-  if (angle_enable_d3d9 || angle_enable_d3d11) {
-    sources += rebase_path(gles_gypi.libangle_d3d_shared_sources, ".", "src")
+    # Shared D3dD sources.
+    if (angle_enable_d3d9 || angle_enable_d3d11) {
+      sources += rebase_path(gles_gypi.libangle_d3d_shared_sources, ".", "src")
+    }
+
+    if (angle_enable_d3d9) {
+      sources += rebase_path(gles_gypi.libangle_d3d9_sources, ".", "src")
+      libs += [ "d3d9.lib" ]
+    }
+
+    if (angle_enable_d3d11) {
+      sources += rebase_path(gles_gypi.libangle_d3d11_sources, ".", "src")
+      sources += rebase_path(gles_gypi.libangle_d3d11_win32_sources, ".", "src")
+      libs += [ "dxguid.lib" ]
+    }
+
+    if (is_debug) {
+      defines += [
+        "ANGLE_GENERATE_SHADER_DEBUG_INFO",
+        "ANGLE_ENABLE_DEBUG_ANNOTATIONS",
+      ]
+      libs += [ "d3d9.lib" ]
+    }
 
     defines += [
+      "LIBANGLE_IMPLEMENTATION",
       "ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ " +
         "\"d3dcompiler_47.dll\", \"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }",
     ]
-  }
 
-  if (angle_enable_d3d9) {
-    sources += rebase_path(gles_gypi.libangle_d3d9_sources, ".", "src")
-    libs += [ "d3d9.lib" ]
-  }
+    configs -= [ "//build/config/compiler:chromium_code" ]
+    configs += [
+      ":commit_id_config",
+      ":libANGLE_config",
+      ":internal_config",
+      "//build/config/compiler:no_chromium_code",
+    ]
 
-  if (angle_enable_d3d11) {
-    sources += rebase_path(gles_gypi.libangle_d3d11_sources, ".", "src")
-    sources += rebase_path(gles_gypi.libangle_d3d11_win32_sources, ".", "src")
-    libs += [ "dxguid.lib" ]
-  }
-
-  if (is_debug) {
-    defines += [
-      "ANGLE_GENERATE_SHADER_DEBUG_INFO",
-      "ANGLE_ENABLE_DEBUG_ANNOTATIONS",
+    deps = [
+      ":commit_id",
+      ":includes",
+      ":translator",
+      ":copy_compiler_dll",
     ]
   }
 
-  configs -= [ "//build/config/compiler:chromium_code" ]
-  configs += [
-    ":commit_id_config",
-    ":libANGLE_config",
-    ":internal_config",
-    "//build/config/compiler:no_chromium_code",
-  ]
+  shared_library("libGLESv2") {
+    sources = rebase_path(gles_gypi.libglesv2_sources, ".", "src")
 
-  deps = [
-    ":commit_id",
-    ":includes",
-    ":translator",
-    ":angle_common",
-  ]
-
-  if (is_win) {
-    deps += [ ":copy_compiler_dll" ]
-  }
-}
-
-shared_library("libGLESv2") {
-  sources = rebase_path(gles_gypi.libglesv2_sources, ".", "src")
-
-  if (is_win) {
     ldflags = [ "/DEF:" +
-                rebase_path("src/libGLESv2/libGLESv2.def", root_build_dir) ]
+               rebase_path("src/libGLESv2/libGLESv2.def", root_build_dir) ]
+
+    configs -= [ "//build/config/compiler:chromium_code" ]
+    configs += [
+      ":internal_config",
+      ":commit_id_config",
+      ":libANGLE_config",
+      "//build/config/compiler:no_chromium_code",
+    ]
+
+    defines = [
+      "LIBGLESV2_IMPLEMENTATION",
+    ]
+
+    deps = [
+      ":includes",
+      ":libANGLE",
+    ]
   }
 
-  configs -= [ "//build/config/compiler:chromium_code" ]
-  configs += [
-    ":internal_config",
-    ":commit_id_config",
-    ":libANGLE_config",
-    "//build/config/compiler:no_chromium_code",
-  ]
+  shared_library("libEGL") {
+    sources = rebase_path(gles_gypi.libegl_sources, ".", "src")
 
-  defines = [
-    "LIBGLESV2_IMPLEMENTATION",
-  ]
-
-  deps = [
-    ":includes",
-    ":libANGLE",
-  ]
-}
-
-shared_library("libEGL") {
-  sources = rebase_path(gles_gypi.libegl_sources, ".", "src")
-
-  if (is_win) {
     ldflags = [ "/DEF:" +
-                rebase_path("src/libEGL/libEGL.def", root_build_dir) ]
+               rebase_path("src/libEGL/libEGL.def", root_build_dir) ]
+
+    configs -= [ "//build/config/compiler:chromium_code" ]
+    configs += [
+      ":internal_config",
+      ":commit_id_config",
+      ":libANGLE_config",
+      "//build/config/compiler:no_chromium_code",
+    ]
+
+    defines = [
+      "LIBEGL_IMPLEMENTATION",
+    ]
+
+    deps = [
+      ":includes",
+      ":libGLESv2",
+    ]
   }
-
-  configs -= [ "//build/config/compiler:chromium_code" ]
-  configs += [
-    ":internal_config",
-    ":commit_id_config",
-    ":libANGLE_config",
-    "//build/config/compiler:no_chromium_code",
-  ]
-
-  defines = [
-    "LIBEGL_IMPLEMENTATION",
-  ]
-
-  deps = [
-    ":includes",
-    ":libGLESv2",
-  ]
-}
+}  # is_win

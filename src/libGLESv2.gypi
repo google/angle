@@ -15,8 +15,6 @@
             'common/mathutil.cpp',
             'common/mathutil.h',
             'common/platform.h',
-            'common/tls.cpp',
-            'common/tls.h',
             'common/utilities.cpp',
             'common/utilities.h',
             'common/version.h',
@@ -358,6 +356,8 @@
         [
             'common/angleutils.h',
             'common/debug.h',
+            'common/tls.cpp',
+            'common/tls.h',
             'libGLESv2/entry_points_egl.cpp',
             'libGLESv2/entry_points_egl.h',
             'libGLESv2/entry_points_egl_ext.cpp',
@@ -393,12 +393,7 @@
         {
             'target_name': 'libANGLE',
             'type': 'static_library',
-            'dependencies':
-            [
-                'translator_static',
-                'commit_id',
-                'angle_common',
-            ],
+            'dependencies': [ 'translator_static', 'commit_id', ],
             'includes': [ '../build/common_defines.gypi', ],
             'include_dirs':
             [
@@ -408,6 +403,7 @@
             'sources':
             [
                 '<@(libangle_sources)',
+                '<@(libangle_common_sources)',
                 '<@(libangle_includes)',
             ],
             'defines':

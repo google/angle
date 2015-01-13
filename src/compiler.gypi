@@ -21,6 +21,19 @@
             '../include/GLSLANG/ShaderVars.h',
             '../include/KHR/khrplatform.h',
             '../include/angle_gl.h',
+            'common/angleutils.h',
+            'common/angleutils.cpp',
+            'common/debug.cpp',
+            'common/debug.h',
+            'common/event_tracer.cpp',
+            'common/event_tracer.h',
+            'common/mathutil.cpp',
+            'common/mathutil.h',
+            'common/platform.h',
+            'common/tls.cpp',
+            'common/tls.h',
+            'common/utilities.cpp',
+            'common/utilities.h',
             'compiler/translator/BaseTypes.h',
             'compiler/translator/BuiltInFunctionEmulator.cpp',
             'compiler/translator/BuiltInFunctionEmulator.h',
@@ -208,7 +221,7 @@
         {
             'target_name': 'translator_lib',
             'type': 'static_library',
-            'dependencies': [ 'preprocessor', 'angle_common' ],
+            'dependencies': [ 'preprocessor' ],
             'includes': [ '../build/common_defines.gypi', ],
             'include_dirs':
             [
@@ -248,7 +261,7 @@
         {
             'target_name': 'translator',
             'type': '<(component)',
-            'dependencies': [ 'translator_lib', 'angle_common' ],
+            'dependencies': [ 'translator_lib' ],
             'includes': [ '../build/common_defines.gypi', ],
             'include_dirs':
             [
