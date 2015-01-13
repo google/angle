@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e6f85ad_364ff635",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexBuffer11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T19:58:04Z",
+      "side": 1,
+      "message": "suggestion: store a uint8_t * that is nullptr when the resource in unmapped? since we don\u0027t use any other fields in MAPPED_SUBRESOURCE",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 28
+      },
+      "revId": "618846b707f5d5ff1a9e06e64a5c8e896e88c6d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
