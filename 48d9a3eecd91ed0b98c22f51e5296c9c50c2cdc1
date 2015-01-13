@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e6f85ad_761deefe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T20:19:36Z",
+      "side": 1,
+      "message": "nit: right-aligned * for ANGLE style",
+      "range": {
+        "startLine": 1121,
+        "startChar": 18,
+        "endLine": 1121,
+        "endChar": 19
+      },
+      "revId": "48d9a3eecd91ed0b98c22f51e5296c9c50c2cdc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
