@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ecac1df_2c42378d",
+        "filename": "src/libANGLE/renderer/d3d/TextureStorage.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T16:02:06Z",
+      "side": 1,
+      "message": "nit: no need for trailing semicolon",
+      "range": {
+        "startLine": 55,
+        "startChar": 112,
+        "endLine": 55,
+        "endChar": 113
+      },
+      "revId": "e9216208bc7a522d00342dee87b3c4a6216abf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec449d1_4a4f9702",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T16:02:06Z",
+      "side": 1,
+      "message": "nit: can you use a new variable instead of modifying the parameter to the function? this prevents some types of errors",
+      "range": {
+        "startLine": 1137,
+        "startChar": 12,
+        "endLine": 1137,
+        "endChar": 19
+      },
+      "revId": "e9216208bc7a522d00342dee87b3c4a6216abf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e6f85ad_13cdac44",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T16:02:06Z",
+      "side": 1,
+      "message": "nit: no need for trailing ;",
+      "range": {
+        "startLine": 81,
+        "startChar": 105,
+        "endLine": 81,
+        "endChar": 107
+      },
+      "revId": "e9216208bc7a522d00342dee87b3c4a6216abf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ecac1df_ac4d87c2",
+        "filename": "tests/angle_tests/MipmapTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T16:02:06Z",
+      "side": 1,
+      "message": "request: can you move TextureTest.MipmapsForTextureArray and TextureTest.MipmapsTwice into here? you might need to make an ES3-only permutation, not sure.",
+      "range": {
+        "startLine": 3,
+        "startChar": 15,
+        "endLine": 3,
+        "endChar": 21
+      },
+      "revId": "e9216208bc7a522d00342dee87b3c4a6216abf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec449d1_ca4267dd",
+        "filename": "tests/angle_tests/MipmapTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T16:02:06Z",
+      "side": 1,
+      "message": "nit: indent 2 spaces",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 9
+      },
+      "revId": "e9216208bc7a522d00342dee87b3c4a6216abf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
