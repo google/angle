@@ -1,0 +1,130 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e75fd75_b8fe9574",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-13T17:26:44Z",
+      "side": 1,
+      "message": "These files are also not in good order.  Can you clean it up?",
+      "revId": "89304b9b60f28242ca1912d68183ee90c0bcfc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e99a9f9_e214e2e9",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-13T17:26:44Z",
+      "side": 1,
+      "message": "Not to be a pain, but since you are cleaning it up, maybe also sort the includes in this list? this one and the below are out of order.",
+      "range": {
+        "startLine": 27,
+        "startChar": 1,
+        "endLine": 27,
+        "endChar": 8
+      },
+      "revId": "89304b9b60f28242ca1912d68183ee90c0bcfc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e99a9f9_42fcb641",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-13T17:26:44Z",
+      "side": 1,
+      "message": "Same here, this one is out of order",
+      "range": {
+        "startLine": 16,
+        "startChar": 19,
+        "endLine": 16,
+        "endChar": 29
+      },
+      "revId": "89304b9b60f28242ca1912d68183ee90c0bcfc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e99a9f9_a231fa8f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-13T17:26:44Z",
+      "side": 1,
+      "message": "This one is out of order",
+      "revId": "89304b9b60f28242ca1912d68183ee90c0bcfc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e8c1dba_51b004fd",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-13T17:26:44Z",
+      "side": 1,
+      "message": "This one is out of order",
+      "range": {
+        "startLine": 14,
+        "startChar": 31,
+        "endLine": 14,
+        "endChar": 32
+      },
+      "revId": "89304b9b60f28242ca1912d68183ee90c0bcfc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e99a9f9_e22b021e",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2015-01-13T17:26:44Z",
+      "side": 1,
+      "message": "and this one",
+      "range": {
+        "startLine": 17,
+        "startChar": 19,
+        "endLine": 17,
+        "endChar": 30
+      },
+      "revId": "89304b9b60f28242ca1912d68183ee90c0bcfc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
