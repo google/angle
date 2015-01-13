@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ec449d1_b3a4c298",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T21:25:27Z",
+      "side": 1,
+      "message": "we can\u0027t use mutex here, as it\u0027s c++11, we\u0027ll need to encapsulate the thread code in Windows-only land.",
+      "range": {
+        "startLine": 13,
+        "startChar": 10,
+        "endLine": 13,
+        "endChar": 15
+      },
+      "revId": "1aa48ac6a8e68217549c64049c185d47e855bd0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec449d1_33b9f2bb",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 974,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-13T21:25:27Z",
+      "side": 1,
+      "message": "can we make a separate encapsulated routine to spin off a shader compile? and use a separate one for vertex/pixel/geometry if needed?",
+      "range": {
+        "startLine": 974,
+        "startChar": 4,
+        "endLine": 974,
+        "endChar": 8
+      },
+      "revId": "1aa48ac6a8e68217549c64049c185d47e855bd0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
