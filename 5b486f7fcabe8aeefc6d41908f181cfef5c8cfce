@@ -1,0 +1,228 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e44e539_f452ce2a",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T19:32:13Z",
+      "side": 1,
+      "message": "I\u0027d prefer that this doesn\u0027t have a default value.",
+      "range": {
+        "startLine": 136,
+        "startChar": 135,
+        "endLine": 136,
+        "endChar": 166
+      },
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee3231d2_70b0a84b",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1037,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T19:32:13Z",
+      "side": 1,
+      "message": "There is a redundant paren here.",
+      "range": {
+        "startLine": 1037,
+        "startChar": 33,
+        "endLine": 1037,
+        "endChar": 35
+      },
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e44e539_f4a48ebe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T19:32:13Z",
+      "side": 1,
+      "message": "Are these floating point comparisons safe? Should it be a \u003e\u003d ?",
+      "range": {
+        "startLine": 429,
+        "startChar": 19,
+        "endLine": 429,
+        "endChar": 83
+      },
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee3231d2_508ac47c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T19:32:13Z",
+      "side": 1,
+      "message": "Default argument again (also, default arguments should not be re-written for derived functions)",
+      "range": {
+        "startLine": 156,
+        "startChar": 136,
+        "endLine": 156,
+        "endChar": 166
+      },
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e233d8e_a50f3ed7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T19:32:13Z",
+      "side": 1,
+      "message": "nit: don\u0027t use the assignment operator\n\n  gl::Error error(GL_NO_ERROR);",
+      "range": {
+        "startLine": 347,
+        "startChar": 19,
+        "endLine": 347,
+        "endChar": 31
+      },
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e44e539_d40a3217",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T19:32:13Z",
+      "side": 1,
+      "message": "nit: same as above.",
+      "range": {
+        "startLine": 405,
+        "startChar": 19,
+        "endLine": 405,
+        "endChar": 31
+      },
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e44e539_9427caa3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1008,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T19:32:13Z",
+      "side": 1,
+      "message": "nit: stray newline",
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e44e539_d421528f",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T19:32:13Z",
+      "side": 1,
+      "message": "final nit on default arguments.",
+      "range": {
+        "startLine": 165,
+        "startChar": 136,
+        "endLine": 165,
+        "endChar": 166
+      },
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e233d8e_0571f249",
+        "filename": "tests/angle_tests/MipmapTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T19:32:13Z",
+      "side": 1,
+      "message": "nit: pointer alignment.",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 101,
+        "endChar": 56
+      },
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee3231d2_10420c8d",
+        "filename": "tests/angle_tests/MipmapTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T19:32:13Z",
+      "side": 1,
+      "message": "Looks like the formatting got messed up here.",
+      "range": {
+        "startLine": 190,
+        "startChar": 8,
+        "endLine": 217,
+        "endChar": 10
+      },
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
