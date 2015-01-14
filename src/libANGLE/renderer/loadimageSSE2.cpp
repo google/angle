@@ -12,6 +12,10 @@
 
 #include "common/platform.h"
 
+#ifdef ANGLE_USE_SSE
+#include <emmintrin.h>
+#endif
+
 namespace rx
 {
 

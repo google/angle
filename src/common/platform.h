@@ -48,7 +48,6 @@
 #   endif
 
 #   include <windows.h>
-#   include <intrin.h>
 
 #   if defined(ANGLE_ENABLE_D3D9)
 #       include <d3d9.h>
@@ -74,11 +73,6 @@
 
 #   undef near
 #   undef far
-#endif
-
-#ifdef ANGLE_PLATFORM_APPLE
-    // TODO(jmadill): other OSX-specific includes
-#   include <x86intrin.h>
 #endif
 
 #if !defined(_M_ARM) && !defined(ANGLE_PLATFORM_ANDROID)
