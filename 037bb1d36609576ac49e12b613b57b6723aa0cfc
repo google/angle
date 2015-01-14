@@ -46,6 +46,30 @@
       "revId": "037bb1d36609576ac49e12b613b57b6723aa0cfc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee3231d2_70d5086e",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 993,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-14T19:10:31Z",
+      "side": 1,
+      "message": "Hm, yes, I didn\u0027t immediately consider that. The tricky part seems to be the list of compiled executables.\n\nThinking about it, it might make sense to bring up the idea about making all shader compiles async by default (if selected at compile time); essentially a wrapper around compileToExecutable that will make a task, and we can block the task when we try to retrieve the executable. Keeping with current design, we could block after we compile the default executables. Does this make sense?\n\nSomething like:\n\n compileVSForLayout() {\n   // allocate shader, trigger task, add to mVertexExecutables\n }\n\n compileVSForLayout() // appends to mVertexExecutables\n compilePSForLayout() // appends to mPixelExecutables\n\n // do similar work for the GS\n\n mVertexExecutables.getAll()\n mPixelExecutables.getAll()",
+      "parentUuid": "ee64f1c9_fdc72323",
+      "range": {
+        "startLine": 990,
+        "startChar": 8,
+        "endLine": 993,
+        "endChar": 101
+      },
+      "revId": "037bb1d36609576ac49e12b613b57b6723aa0cfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
