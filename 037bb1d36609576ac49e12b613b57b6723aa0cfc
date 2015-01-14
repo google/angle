@@ -22,6 +22,30 @@
       "revId": "037bb1d36609576ac49e12b613b57b6723aa0cfc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee64f1c9_fdc72323",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 993,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-14T18:53:49Z",
+      "side": 1,
+      "message": "Hmm. The task has to be do more than just \u0027AsyncCompileTask\u0027, since there are additional things to be done after compilation but *before* the shader can be used (e.g. like \"mVertexExecutables.push_back() below). These things are unique to each type of shader (pixel/vertex/geometry).\nThese additional things could be done with a continuation task, but that still turns getVertexExecutableForInputLayout/compileVertexExecutableForInputLayout/related methods into async methods. At this point I think we may as well just have one task for each type of shader, wrapping both the compilation *and* the additional things. Does that make sense?\n \nI can definitely refactor this to make it easier to enable/disable the async behavior via a #define, though.",
+      "parentUuid": "0e44e539_71eb5083",
+      "range": {
+        "startLine": 990,
+        "startChar": 8,
+        "endLine": 993,
+        "endChar": 101
+      },
+      "revId": "037bb1d36609576ac49e12b613b57b6723aa0cfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
