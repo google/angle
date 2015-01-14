@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0e44e539_14a3da3d",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T21:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e44e539_f1bd8058",
+      "range": {
+        "startLine": 357,
+        "startChar": 7,
+        "endLine": 357,
+        "endChar": 31
+      },
+      "revId": "5caa271c5100f14d6419ec7ef0bd2d18e255f06b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e44e539_11a3ec3d",
         "filename": "src/common/utilities.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2015-01-14T17:53:14Z",
       "side": 1,
       "message": "nit: might as well add static_cast here",
+      "range": {
+        "startLine": 370,
+        "startChar": 11,
+        "endLine": 370,
+        "endChar": 47
+      },
+      "revId": "5caa271c5100f14d6419ec7ef0bd2d18e255f06b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee3231d2_136bf68e",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T21:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e44e539_11a3ec3d",
       "range": {
         "startLine": 370,
         "startChar": 11,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0e44e539_34a0d62e",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T21:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee3231d2_705fc830",
+      "range": {
+        "startLine": 376,
+        "startChar": 11,
+        "endLine": 376,
+        "endChar": 46
+      },
+      "revId": "5caa271c5100f14d6419ec7ef0bd2d18e255f06b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e44e539_91951cd0",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 10
@@ -82,6 +154,30 @@
       "writtenOn": "2015-01-14T17:53:14Z",
       "side": 1,
       "message": "these could be cleaned up by taking the target from the impl object",
+      "range": {
+        "startLine": 67,
+        "startChar": 85,
+        "endLine": 67,
+        "endChar": 98
+      },
+      "revId": "5caa271c5100f14d6419ec7ef0bd2d18e255f06b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e233d8e_c89fef6b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T21:02:14Z",
+      "side": 1,
+      "message": "I prefer to keep a separate copy in the Texture object for now.  I like it because the texture object is entirely self-contained now and the data transfer is only one way.",
+      "parentUuid": "0e44e539_91951cd0",
       "range": {
         "startLine": 67,
         "startChar": 85,
@@ -163,6 +259,30 @@
     },
     {
       "key": {
+        "uuid": "ee3231d2_53756e62",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T21:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee3231d2_509ac44a",
+      "range": {
+        "startLine": 143,
+        "startChar": 9,
+        "endLine": 143,
+        "endChar": 19
+      },
+      "revId": "5caa271c5100f14d6419ec7ef0bd2d18e255f06b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee3231d2_9076fc74",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 10
@@ -186,6 +306,30 @@
     },
     {
       "key": {
+        "uuid": "ee3231d2_f35ca2f1",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T21:02:14Z",
+      "side": 1,
+      "message": "Yep, going to leave that as a future exercise.  It\u0027ll be messy right now with boxing and unboxing the ImageIndex\u0027s until more of the API uses them.",
+      "parentUuid": "ee3231d2_9076fc74",
+      "range": {
+        "startLine": 484,
+        "startChar": 5,
+        "endLine": 484,
+        "endChar": 58
+      },
+      "revId": "5caa271c5100f14d6419ec7ef0bd2d18e255f06b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e233d8e_a51f3e85",
         "filename": "tests/angle_implementation_unit_tests/ImageIndexIterator_unittest.cpp",
         "patchSetId": 10
@@ -197,6 +341,30 @@
       "writtenOn": "2015-01-14T17:53:14Z",
       "side": 1,
       "message": "nit: include order (common \u003c libANGLE)",
+      "range": {
+        "startLine": 12,
+        "startChar": 17,
+        "endLine": 12,
+        "endChar": 26
+      },
+      "revId": "5caa271c5100f14d6419ec7ef0bd2d18e255f06b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e44e539_f4bd6e58",
+        "filename": "tests/angle_implementation_unit_tests/ImageIndexIterator_unittest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-14T21:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4e233d8e_a51f3e85",
       "range": {
         "startLine": 12,
         "startChar": 17,
