@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e44e539_71eb5083",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 993,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-14T15:34:13Z",
+      "side": 1,
+      "message": "my thought was the encapsulate the task creation in a single place, like here, maybe by returning some sort of abstraction that allows us to enable/disable the async nature of the task via a #define. does this make sense? maybe with a helper struct like AsyncCompileTask which does not actually async anything if the #define isn\u0027t enabled.",
+      "range": {
+        "startLine": 990,
+        "startChar": 8,
+        "endLine": 993,
+        "endChar": 101
+      },
+      "revId": "037bb1d36609576ac49e12b613b57b6723aa0cfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
