@@ -81,7 +81,7 @@
 #   include <x86intrin.h>
 #endif
 
-#if !defined(ANGLE_PLATFORM_WINDOWS_STORE) && !defined(ANGLE_PLATFORM_ANDROID)
+#if !defined(_M_ARM) && !defined(ANGLE_PLATFORM_ANDROID)
 #   define ANGLE_USE_SSE
 #endif
 
