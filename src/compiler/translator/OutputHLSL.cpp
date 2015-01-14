@@ -1669,6 +1669,10 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
         break;
       case EOpTranspose:        outputTriplet(visit, "transpose(", "", ")");   break;
       case EOpDeterminant:      outputTriplet(visit, "determinant(transpose(", "", "))"); break;
+      case EOpInverse:
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "inverse(");
+        break;
 
       case EOpAny:              outputTriplet(visit, "any(", "", ")");       break;
       case EOpAll:              outputTriplet(visit, "all(", "", ")");       break;

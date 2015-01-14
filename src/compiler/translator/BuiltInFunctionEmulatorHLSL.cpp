@@ -149,7 +149,7 @@ BuiltInFunctionEmulatorHLSL::BuiltInFunctionEmulatorHLSL()
         "}\n");
     AddEmulatedFunction(EOpAsinh, float2,
         "float2 webgl_asinh_emu(in float2 x) {\n"
-        "    return log(x + sqrt(pow(x, 2.0) + 1.0));"
+        "    return log(x + sqrt(pow(x, 2.0) + 1.0));\n"
         "}\n");
     AddEmulatedFunction(EOpAsinh, float3,
         "float3 webgl_asinh_emu(in float3 x) {\n"
@@ -239,6 +239,87 @@ BuiltInFunctionEmulatorHLSL::BuiltInFunctionEmulatorHLSL()
     AddEmulatedFunction(EOpOuterProduct, float3, float4,
         "float4x3 webgl_outerProduct_emu(in float3 c, in float4 r) {\n"
         "    return mul(float4x1(r), float1x3(c));\n"
+        "}\n");
+
+    TType mat2(EbtFloat, 2, 2);
+    TType mat3(EbtFloat, 3, 3);
+    TType mat4(EbtFloat, 4, 4);
+
+    // Remember here that the parameter matrix is actually the transpose
+    // of the matrix that we're trying to invert, and the resulting matrix
+    // should also be the transpose of the inverse.
+
+    // When accessing the parameter matrix with m[a][b] it can be thought of so
+    // that a is the column and b is the row of the matrix that we're inverting.
+
+    // We calculate the inverse as the adjugate matrix divided by the
+    // determinant of the matrix being inverted. However, as the result needs
+    // to be transposed, we actually use of the transpose of the adjugate matrix
+    // which happens to be the cofactor matrix. That's stored in "cof".
+
+    // We don't need to care about divide-by-zero since results are undefined
+    // for singular or poorly-conditioned matrices.
+
+    AddEmulatedFunction(EOpInverse, mat2,
+        "float2x2 webgl_inverse_emu(in float2x2 m) {\n"
+        "    float2x2 cof = { m[1][1], -m[0][1], -m[1][0], m[0][0] };\n"
+        "    return cof / determinant(transpose(m));\n"
+        "}\n");
+
+    // cofAB is the cofactor for column A and row B.
+
+    AddEmulatedFunction(EOpInverse, mat3,
+        "float3x3 webgl_inverse_emu(in float3x3 m) {\n"
+        "    float cof00 = m[1][1] * m[2][2] - m[2][1] * m[1][2];\n"
+        "    float cof01 = -(m[1][0] * m[2][2] - m[2][0] * m[1][2]);\n"
+        "    float cof02 = m[1][0] * m[2][1] - m[2][0] * m[1][1];\n"
+        "    float cof10 = -(m[0][1] * m[2][2] - m[2][1] * m[0][2]);\n"
+        "    float cof11 = m[0][0] * m[2][2] - m[2][0] * m[0][2];\n"
+        "    float cof12 = -(m[0][0] * m[2][1] - m[2][0] * m[0][1]);\n"
+        "    float cof20 = m[0][1] * m[1][2] - m[1][1] * m[0][2];\n"
+        "    float cof21 = -(m[0][0] * m[1][2] - m[1][0] * m[0][2]);\n"
+        "    float cof22 = m[0][0] * m[1][1] - m[1][0] * m[0][1];\n"
+        "    float3x3 cof = { cof00, cof10, cof20, cof01, cof11, cof21, cof02, cof12, cof22 };\n"
+        "    return cof / determinant(transpose(m));\n"
+        "}\n");
+
+    AddEmulatedFunction(EOpInverse, mat4,
+        "float4x4 webgl_inverse_emu(in float4x4 m) {\n"
+        "    float cof00 = m[1][1] * m[2][2] * m[3][3] + m[2][1] * m[3][2] * m[1][3] + m[3][1] * m[1][2] * m[2][3]"
+                       " - m[1][1] * m[3][2] * m[2][3] - m[2][1] * m[1][2] * m[3][3] - m[3][1] * m[2][2] * m[1][3];\n"
+        "    float cof01 = -(m[1][0] * m[2][2] * m[3][3] + m[2][0] * m[3][2] * m[1][3] + m[3][0] * m[1][2] * m[2][3]"
+                       " - m[1][0] * m[3][2] * m[2][3] - m[2][0] * m[1][2] * m[3][3] - m[3][0] * m[2][2] * m[1][3]);\n"
+        "    float cof02 = m[1][0] * m[2][1] * m[3][3] + m[2][0] * m[3][1] * m[1][3] + m[3][0] * m[1][1] * m[2][3]"
+                       " - m[1][0] * m[3][1] * m[2][3] - m[2][0] * m[1][1] * m[3][3] - m[3][0] * m[2][1] * m[1][3];\n"
+        "    float cof03 = -(m[1][0] * m[2][1] * m[3][2] + m[2][0] * m[3][1] * m[1][2] + m[3][0] * m[1][1] * m[2][2]"
+                       " - m[1][0] * m[3][1] * m[2][2] - m[2][0] * m[1][1] * m[3][2] - m[3][0] * m[2][1] * m[1][2]);\n"
+        "    float cof10 = -(m[0][1] * m[2][2] * m[3][3] + m[2][1] * m[3][2] * m[0][3] + m[3][1] * m[0][2] * m[2][3]"
+                       " - m[0][1] * m[3][2] * m[2][3] - m[2][1] * m[0][2] * m[3][3] - m[3][1] * m[2][2] * m[0][3]);\n"
+        "    float cof11 = m[0][0] * m[2][2] * m[3][3] + m[2][0] * m[3][2] * m[0][3] + m[3][0] * m[0][2] * m[2][3]"
+                       " - m[0][0] * m[3][2] * m[2][3] - m[2][0] * m[0][2] * m[3][3] - m[3][0] * m[2][2] * m[0][3];\n"
+        "    float cof12 = -(m[0][0] * m[2][1] * m[3][3] + m[2][0] * m[3][1] * m[0][3] + m[3][0] * m[0][1] * m[2][3]"
+                       " - m[0][0] * m[3][1] * m[2][3] - m[2][0] * m[0][1] * m[3][3] - m[3][0] * m[2][1] * m[0][3]);\n"
+        "    float cof13 = m[0][0] * m[2][1] * m[3][2] + m[2][0] * m[3][1] * m[0][2] + m[3][0] * m[0][1] * m[2][2]"
+                       " - m[0][0] * m[3][1] * m[2][2] - m[2][0] * m[0][1] * m[3][2] - m[3][0] * m[2][1] * m[0][2];\n"
+        "    float cof20 = m[0][1] * m[1][2] * m[3][3] + m[1][1] * m[3][2] * m[0][3] + m[3][1] * m[0][2] * m[1][3]"
+                       " - m[0][1] * m[3][2] * m[1][3] - m[1][1] * m[0][2] * m[3][3] - m[3][1] * m[1][2] * m[0][3];\n"
+        "    float cof21 = -(m[0][0] * m[1][2] * m[3][3] + m[1][0] * m[3][2] * m[0][3] + m[3][0] * m[0][2] * m[1][3]"
+                       " - m[0][0] * m[3][2] * m[1][3] - m[1][0] * m[0][2] * m[3][3] - m[3][0] * m[1][2] * m[0][3]);\n"
+        "    float cof22 = m[0][0] * m[1][1] * m[3][3] + m[1][0] * m[3][1] * m[0][3] + m[3][0] * m[0][1] * m[1][3]"
+                       " - m[0][0] * m[3][1] * m[1][3] - m[1][0] * m[0][1] * m[3][3] - m[3][0] * m[1][1] * m[0][3];\n"
+        "    float cof23 = -(m[0][0] * m[1][1] * m[3][2] + m[1][0] * m[3][1] * m[0][2] + m[3][0] * m[0][1] * m[1][2]"
+                       " - m[0][0] * m[3][1] * m[1][2] - m[1][0] * m[0][1] * m[3][2] - m[3][0] * m[1][1] * m[0][2]);\n"
+        "    float cof30 = -(m[0][1] * m[1][2] * m[2][3] + m[1][1] * m[2][2] * m[0][3] + m[2][1] * m[0][2] * m[1][3]"
+                       " - m[0][1] * m[2][2] * m[1][3] - m[1][1] * m[0][2] * m[2][3] - m[2][1] * m[1][2] * m[0][3]);\n"
+        "    float cof31 = m[0][0] * m[1][2] * m[2][3] + m[1][0] * m[2][2] * m[0][3] + m[2][0] * m[0][2] * m[1][3]"
+                       " - m[0][0] * m[2][2] * m[1][3] - m[1][0] * m[0][2] * m[2][3] - m[2][0] * m[1][2] * m[0][3];\n"
+        "    float cof32 = -(m[0][0] * m[1][1] * m[2][3] + m[1][0] * m[2][1] * m[0][3] + m[2][0] * m[0][1] * m[1][3]"
+                       " - m[0][0] * m[2][1] * m[1][3] - m[1][0] * m[0][1] * m[2][3] - m[2][0] * m[1][1] * m[0][3]);\n"
+        "    float cof33 = m[0][0] * m[1][1] * m[2][2] + m[1][0] * m[2][1] * m[0][2] + m[2][0] * m[0][1] * m[1][2]"
+                       " - m[0][0] * m[2][1] * m[1][2] - m[1][0] * m[0][1] * m[2][2] - m[2][0] * m[1][1] * m[0][2];\n"
+        "    float4x4 cof = { cof00, cof10, cof20, cof30, cof01, cof11, cof21, cof31,"
+                            " cof02, cof12, cof22, cof32, cof03, cof13, cof23, cof33 };\n"
+        "    return cof / determinant(transpose(m));\n"
         "}\n");
 }
 

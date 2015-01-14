@@ -522,6 +522,9 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
       case EOpDeterminant:
         preString = "determinant(";
         break;
+      case EOpInverse:
+        preString = "inverse(";
+        break;
 
       case EOpAny:
         preString = "any(";

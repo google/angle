@@ -310,6 +310,7 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
 
       case EOpDeterminant:    out << "determinant";          break;
       case EOpTranspose:      out << "transpose";            break;
+      case EOpInverse:        out << "inverse";              break;
 
       case EOpAny:            out << "any";                  break;
       case EOpAll:            out << "all";                  break;

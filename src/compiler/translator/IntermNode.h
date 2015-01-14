@@ -153,6 +153,7 @@ enum TOperator
     EOpOuterProduct,
     EOpTranspose,
     EOpDeterminant,
+    EOpInverse,
 
     EOpAny,
     EOpAll,

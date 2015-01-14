@@ -338,6 +338,10 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "determinant", mat3);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "determinant", mat4);
 
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat2, "inverse", mat2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat3, "inverse", mat3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, mat4, "inverse", mat4);
+
     TType *bool1 = new TType(EbtBool);
     TType *bool2 = new TType(EbtBool, 2);
     TType *bool3 = new TType(EbtBool, 3);
@@ -809,6 +813,7 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     symbolTable.relateToOperator(ESSL3_BUILTINS, "outerProduct",  EOpOuterProduct);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "transpose",     EOpTranspose);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "determinant",   EOpDeterminant);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "inverse",       EOpInverse);
 
     symbolTable.relateToOperator(COMMON_BUILTINS, "any",          EOpAny);
     symbolTable.relateToOperator(COMMON_BUILTINS, "all",          EOpAll);
