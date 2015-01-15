@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b2473a4_59acc7a6",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3348,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-15T16:51:06Z",
+      "side": 1,
+      "message": "This looks ok to me, the other option is:\n   \n   auto first \u003d formatCaps.sampleCounts.rbegin();\n   auto last \u003d formatCaps.sampleCounts.rbegin();\n   std::advance(last, std::min\u003csize_t\u003e(bufSize, formatCaps.sampleCounts.size()));\n   std::copy(first, last, params);\n\nbut that may be more complicated.",
+      "range": {
+        "startLine": 3343,
+        "startChar": 16,
+        "endLine": 3348,
+        "endChar": 17
+      },
+      "revId": "e6e4c45bb85e3db6ce12d3ce8d4aece79b9f8295",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
