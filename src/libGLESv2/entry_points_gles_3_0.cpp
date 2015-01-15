@@ -3339,7 +3339,14 @@ void GL_APIENTRY GetInternalformativ(GLenum target, GLenum internalformat, GLenu
             break;
 
           case GL_SAMPLES:
-            std::copy_n(formatCaps.sampleCounts.rbegin(), std::min<size_t>(bufSize, formatCaps.sampleCounts.size()), params);
+            {
+                size_t returnCount = std::min<size_t>(bufSize, formatCaps.sampleCounts.size());
+                auto sampleReverseIt = formatCaps.sampleCounts.rbegin();
+                for (size_t sampleIndex = 0; sampleIndex < returnCount; ++sampleIndex)
+                {
+                    params[sampleIndex] = *sampleReverseIt++;;
+                }
+            }
             break;
 
           default:
