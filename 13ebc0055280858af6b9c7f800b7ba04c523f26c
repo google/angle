@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b4faf7e_65436676",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-15T15:28:33Z",
+      "side": 1,
+      "message": "same as below",
+      "range": {
+        "startLine": 12,
+        "startChar": 19,
+        "endLine": 12,
+        "endChar": 27
+      },
+      "revId": "13ebc0055280858af6b9c7f800b7ba04c523f26c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb35c3d2_55d7fe06",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/formatutils9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-15T15:28:33Z",
+      "side": 1,
+      "message": "nit: if you want, you can clean these up to lexicographical order (with fu9 at top)",
+      "range": {
+        "startLine": 13,
+        "startChar": 32,
+        "endLine": 13,
+        "endChar": 41
+      },
+      "revId": "13ebc0055280858af6b9c7f800b7ba04c523f26c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
