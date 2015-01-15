@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb88ffe4_caa81717",
+        "filename": "src/libANGLE/renderer/d3d/formatutilsD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2015-01-15T21:43:41Z",
+      "side": 1,
+      "message": "Please kill the extra whitespace.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 4
+      },
+      "revId": "a30374e5cce18ffc453ece6f7ed373ee937a709c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
