@@ -18,31 +18,66 @@ namespace gl
 
 Error::Error(GLenum errorCode)
     : mCode(errorCode),
-      mMessage()
+      mMessage(NULL)
 {
 }
 
 Error::Error(GLenum errorCode, const char *msg, ...)
     : mCode(errorCode),
-      mMessage()
+      mMessage(NULL)
 {
     va_list vararg;
     va_start(vararg, msg);
-    mMessage = FormatString(msg, vararg);
+    createMessageString();
+    *mMessage = FormatString(msg, vararg);
     va_end(vararg);
 }
 
 Error::Error(const Error &other)
     : mCode(other.mCode),
-      mMessage(other.mMessage)
+      mMessage(NULL)
 {
+    if (other.mMessage != NULL)
+    {
+        createMessageString();
+        *mMessage = *(other.mMessage);
+    }
+}
+
+Error::~Error()
+{
+    SafeDelete(mMessage);
 }
 
 Error &Error::operator=(const Error &other)
 {
     mCode = other.mCode;
-    mMessage = other.mMessage;
+
+    if (other.mMessage != NULL)
+    {
+        createMessageString();
+        *mMessage = *(other.mMessage);
+    }
+    else
+    {
+        SafeDelete(mMessage);
+    }
+
     return *this;
+}
+
+void Error::createMessageString() const
+{
+    if (mMessage != NULL)
+    {
+        mMessage = new std::string();
+    }
+}
+
+const std::string &Error::getMessage() const
+{
+    createMessageString();
+    return *mMessage;
 }
 
 }
@@ -52,31 +87,66 @@ namespace egl
 
 Error::Error(EGLint errorCode)
     : mCode(errorCode),
-      mMessage()
+      mMessage(NULL)
 {
 }
 
 Error::Error(EGLint errorCode, const char *msg, ...)
     : mCode(errorCode),
-    mMessage()
+      mMessage(NULL)
 {
     va_list vararg;
     va_start(vararg, msg);
-    mMessage = FormatString(msg, vararg);
+    createMessageString();
+    *mMessage = FormatString(msg, vararg);
     va_end(vararg);
 }
 
 Error::Error(const Error &other)
     : mCode(other.mCode),
-    mMessage(other.mMessage)
+      mMessage(NULL)
 {
+    if (other.mMessage != NULL)
+    {
+        createMessageString();
+        *mMessage = *(other.mMessage);
+    }
+}
+
+Error::~Error()
+{
+    SafeDelete(mMessage);
 }
 
 Error &Error::operator=(const Error &other)
 {
     mCode = other.mCode;
-    mMessage = other.mMessage;
+
+    if (other.mMessage != NULL)
+    {
+        createMessageString();
+        *mMessage = *(other.mMessage);
+    }
+    else
+    {
+        SafeDelete(mMessage);
+    }
+
     return *this;
+}
+
+void Error::createMessageString() const
+{
+    if (mMessage != NULL)
+    {
+        mMessage = new std::string();
+    }
+}
+
+const std::string &Error::getMessage() const
+{
+    createMessageString();
+    return *mMessage;
 }
 
 }
