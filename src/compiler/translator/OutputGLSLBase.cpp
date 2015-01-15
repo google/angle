@@ -499,6 +499,25 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
         preString = "uintBitsToFloat(";
         break;
 
+      case EOpPackSnorm2x16:
+        preString = "packSnorm2x16(";
+        break;
+      case EOpPackUnorm2x16:
+        preString = "packUnorm2x16(";
+        break;
+      case EOpPackHalf2x16:
+        preString = "packHalf2x16(";
+        break;
+      case EOpUnpackSnorm2x16:
+        preString = "unpackSnorm2x16(";
+        break;
+      case EOpUnpackUnorm2x16:
+        preString = "unpackUnorm2x16(";
+        break;
+      case EOpUnpackHalf2x16:
+        preString = "unpackHalf2x16(";
+        break;
+
       case EOpLength:
         preString = "length(";
         break;

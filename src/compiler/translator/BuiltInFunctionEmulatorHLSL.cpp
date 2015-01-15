@@ -194,6 +194,63 @@ BuiltInFunctionEmulatorHLSL::BuiltInFunctionEmulatorHLSL()
         "    return 0.5 * log((1.0 + x) / (1.0 - x));\n"
         "}\n");
 
+    AddEmulatedFunction(EOpPackSnorm2x16, float2,
+        "int webgl_toSnorm(in float x) {\n"
+        "    return int(round(clamp(x, -1.0, 1.0) * 32767.0));\n"
+        "}\n"
+        "\n"
+        "uint webgl_packSnorm2x16_emu(in float2 v) {\n"
+        "    int x = webgl_toSnorm(v.x);\n"
+        "    int y = webgl_toSnorm(v.y);\n"
+        "    return (asuint(y) << 16) | (asuint(x) & 0xffffu);\n"
+        "}\n");
+    AddEmulatedFunction(EOpPackUnorm2x16, float2,
+        "uint webgl_toUnorm(in float x) {\n"
+        "    return uint(round(clamp(x, 0.0, 1.0) * 65535.0));\n"
+        "}\n"
+        "\n"
+        "uint webgl_packUnorm2x16_emu(in float2 v) {\n"
+        "    uint x = webgl_toUnorm(v.x);\n"
+        "    uint y = webgl_toUnorm(v.y);\n"
+        "    return (y << 16) | x;\n"
+        "}\n");
+    AddEmulatedFunction(EOpPackHalf2x16, float2,
+        "uint webgl_packHalf2x16_emu(in float2 v) {\n"
+        "    uint x = f32tof16(v.x);\n"
+        "    uint y = f32tof16(v.y);\n"
+        "    return (y << 16) | x;\n"
+        "}\n");
+
+    TType uint1(EbtUInt);
+
+    AddEmulatedFunction(EOpUnpackSnorm2x16, uint1,
+        "float webgl_fromSnorm(in uint x) {\n"
+        "    int xi = asint(x & 0x7fffu) - asint(x & 0x8000u);\n"
+        "    return clamp(float(xi) / 32767.0, -1.0, 1.0);\n"
+        "}\n"
+        "\n"
+        "float2 webgl_unpackSnorm2x16_emu(in uint u) {\n"
+        "    uint y = (u >> 16);\n"
+        "    uint x = u;\n"
+        "    return float2(webgl_fromSnorm(x), webgl_fromSnorm(y));\n"
+        "}\n");
+    AddEmulatedFunction(EOpUnpackUnorm2x16, uint1,
+        "float webgl_fromUnorm(in uint x) {\n"
+        "    return float(x) / 65535.0;\n"
+        "}\n"
+        "\n"
+        "float2 webgl_unpackUnorm2x16_emu(in uint u) {\n"
+        "    uint y = (u >> 16);\n"
+        "    uint x = u & 0xffffu;\n"
+        "    return float2(webgl_fromUnorm(x), webgl_fromUnorm(y));\n"
+        "}\n");
+    AddEmulatedFunction(EOpUnpackHalf2x16, uint1,
+        "float2 webgl_unpackHalf2x16_emu(in uint u) {\n"
+        "    uint y = (u >> 16);\n"
+        "    uint x = u & 0xffffu;\n"
+        "    return float2(f16tof32(x), f16tof32(y));\n"
+        "}\n");
+
     // The matrix resulting from outer product needs to be transposed
     // (matrices are stored as transposed to simplify element access in HLSL).
     // So the function should return transpose(c * r) where c is a column vector

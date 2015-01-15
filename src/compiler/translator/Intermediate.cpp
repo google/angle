@@ -231,6 +231,22 @@ TIntermTyped *TIntermediate::addUnaryMath(
     if (!node->promote(mInfoSink))
         return 0;
 
+    switch (op)
+    {
+      case EOpPackSnorm2x16:
+      case EOpPackUnorm2x16:
+      case EOpPackHalf2x16:
+      case EOpUnpackSnorm2x16:
+      case EOpUnpackUnorm2x16:
+        node->getTypePointer()->setPrecision(EbpHigh);
+        break;
+      case EOpUnpackHalf2x16:
+        node->getTypePointer()->setPrecision(EbpMedium);
+        break;
+      default:
+        break;
+    }
+
     if (childTempConstant)
     {
         TIntermTyped *newChild = childTempConstant->fold(op, 0, mInfoSink);

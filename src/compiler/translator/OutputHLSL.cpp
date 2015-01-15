@@ -1635,6 +1635,30 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
       case EOpFloatBitsToUint:  outputTriplet(visit, "asuint(", "", ")");    break;
       case EOpIntBitsToFloat:   outputTriplet(visit, "asfloat(", "", ")");   break;
       case EOpUintBitsToFloat:  outputTriplet(visit, "asfloat(", "", ")");   break;
+      case EOpPackSnorm2x16:
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "packSnorm2x16(");
+        break;
+      case EOpPackUnorm2x16:
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "packUnorm2x16(");
+        break;
+      case EOpPackHalf2x16:
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "packHalf2x16(");
+        break;
+      case EOpUnpackSnorm2x16:
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "unpackSnorm2x16(");
+        break;
+      case EOpUnpackUnorm2x16:
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "unpackUnorm2x16(");
+        break;
+      case EOpUnpackHalf2x16:
+        ASSERT(node->getUseEmulatedFunction());
+        writeEmulatedFunctionTriplet(visit, "unpackHalf2x16(");
+        break;
       case EOpLength:           outputTriplet(visit, "length(", "", ")");    break;
       case EOpNormalize:        outputTriplet(visit, "normalize(", "", ")"); break;
       case EOpDFdx:

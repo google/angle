@@ -302,6 +302,14 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
       case EOpIntBitsToFloat: out << "int bits to float";    break;
       case EOpUintBitsToFloat: out << "uint bits to float";  break;
 
+      case EOpPackSnorm2x16:  out << "pack Snorm 2x16";      break;
+      case EOpPackUnorm2x16:  out << "pack Unorm 2x16";      break;
+      case EOpPackHalf2x16:   out << "pack half 2x16";       break;
+
+      case EOpUnpackSnorm2x16: out << "unpack Snorm 2x16";   break;
+      case EOpUnpackUnorm2x16: out << "unpack Unorm 2x16";   break;
+      case EOpUnpackHalf2x16:  out << "unpack half 2x16";    break;
+
       case EOpLength:         out << "length";               break;
       case EOpNormalize:      out << "normalize";            break;
       // case EOpDPdx:           out << "dPdx";                 break;

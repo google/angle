@@ -23,6 +23,7 @@ class TypeTrackingTest : public testing::Test
     {
         ShBuiltInResources resources;
         ShInitBuiltInResources(&resources);
+        resources.FragmentPrecisionHigh = 1;
 
         mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES3_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
@@ -262,4 +263,76 @@ TEST_F(TypeTrackingTest, StructConstructorResultNoPrecision)
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Construct structure (structure)"));
+};
+
+TEST_F(TypeTrackingTest, PackResultTypeAndPrecision)
+{
+    // ESSL 3.0 spec section 8.4: pack functions have predefined precision highp
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "precision mediump uint;\n"
+        "uniform vec2 uv;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   uint u0 = packSnorm2x16(uv);\n"
+        "   uint u1 = packUnorm2x16(uv);\n"
+        "   uint u2 = packHalf2x16(uv);\n"
+        "   if (u0 + u1 + u2 > 100u) {\n"
+        "       my_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
+        "   } else {\n"
+        "       my_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "   }\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("pack Snorm 2x16 (highp uint)"));
+    ASSERT_TRUE(foundInIntermediateTree("pack Unorm 2x16 (highp uint)"));
+    ASSERT_TRUE(foundInIntermediateTree("pack half 2x16 (highp uint)"));
+};
+
+TEST_F(TypeTrackingTest, UnpackNormResultTypeAndPrecision)
+{
+    // ESSL 3.0 spec section 8.4: unpack(S/U)norm2x16 has predefined precision highp
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "precision mediump uint;\n"
+        "uniform uint uu;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   vec2 v0 = unpackSnorm2x16(uu);\n"
+        "   vec2 v1 = unpackUnorm2x16(uu);\n"
+        "   if (v0.x * v1.x > 1.0) {\n"
+        "       my_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
+        "   } else {\n"
+        "       my_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "   }\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("unpack Snorm 2x16 (highp 2-component vector of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("unpack Unorm 2x16 (highp 2-component vector of float)"));
+};
+
+TEST_F(TypeTrackingTest, UnpackHalfResultTypeAndPrecision)
+{
+    // ESSL 3.0 spec section 8.4: unpackHalf2x16 has predefined precision mediump
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "precision highp uint;\n"
+        "uniform uint uu;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   vec2 v = unpackHalf2x16(uu);\n"
+        "   if (v.x > 1.0) {\n"
+        "       my_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
+        "   } else {\n"
+        "       my_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "   }\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("unpack half 2x16 (mediump 2-component vector of float)"));
 };

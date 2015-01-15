@@ -252,6 +252,13 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float3, "uintBitsToFloat", uint3);
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "uintBitsToFloat", uint4);
 
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint1, "packSnorm2x16", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint1, "packUnorm2x16", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint1, "packHalf2x16", float2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "unpackSnorm2x16", uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "unpackUnorm2x16", uint1);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float2, "unpackHalf2x16", uint1);
+
     //
     // Geometric Functions.
     //
@@ -800,6 +807,14 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
     symbolTable.relateToOperator(ESSL3_BUILTINS, "floatBitsToUint", EOpFloatBitsToUint);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "intBitsToFloat",  EOpIntBitsToFloat);
     symbolTable.relateToOperator(ESSL3_BUILTINS, "uintBitsToFloat", EOpUintBitsToFloat);
+
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "packSnorm2x16", EOpPackSnorm2x16);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "packUnorm2x16", EOpPackUnorm2x16);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "packHalf2x16",  EOpPackHalf2x16);
+
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "unpackSnorm2x16", EOpUnpackSnorm2x16);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "unpackUnorm2x16", EOpUnpackUnorm2x16);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "unpackHalf2x16",  EOpUnpackHalf2x16);
 
     symbolTable.relateToOperator(COMMON_BUILTINS, "length",       EOpLength);
     symbolTable.relateToOperator(COMMON_BUILTINS, "distance",     EOpDistance);
