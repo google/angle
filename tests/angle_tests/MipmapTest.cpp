@@ -258,7 +258,7 @@ protected:
 // This test uses init data for the first three levels of the texture. It passes the level 0 data in, then renders, then level 1, then renders, etc.
 // This ensures that renderers using the zero LOD workaround (e.g. D3D11 FL9_3) correctly pass init data to the mipmapped texture,
 // even if the the zero-LOD texture is currently in use.
-TYPED_TEST(MipmapTest, ThreelevelsInitData)
+TYPED_TEST(MipmapTest, DISABLED_ThreeLevelsInitData)
 {
     // Pass in level zero init data.
     glBindTexture(GL_TEXTURE_2D, mOffscreenTexture);
