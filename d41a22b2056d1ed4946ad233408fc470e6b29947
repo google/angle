@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b49377c_09e16ddd",
+        "filename": "src/libANGLE/renderer/d3d/generatemip.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2015-01-15T19:54:35Z",
+      "side": 1,
+      "message": "ENERATEMIP missing a \"G\", here and below",
+      "range": {
+        "startLine": 10,
+        "startChar": 8,
+        "endLine": 10,
+        "endChar": 43
+      },
+      "revId": "d41a22b2056d1ed4946ad233408fc470e6b29947",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
