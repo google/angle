@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b4faf7e_0542726e",
+        "filename": "tests/angle_tests/PointSpritesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-15T15:34:03Z",
+      "side": 1,
+      "message": "nit: you can omit \u0027void\u0027",
+      "range": {
+        "startLine": 190,
+        "startChar": 18,
+        "endLine": 190,
+        "endChar": 22
+      },
+      "revId": "f916b91a5bd58b477c8032e7698190854fc37563",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b051bfe_707b185e",
+        "filename": "tests/angle_tests/PointSpritesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-15T15:34:03Z",
+      "side": 1,
+      "message": "nit: you can omit \u0027void\u0027",
+      "range": {
+        "startLine": 209,
+        "startChar": 18,
+        "endLine": 209,
+        "endChar": 22
+      },
+      "revId": "f916b91a5bd58b477c8032e7698190854fc37563",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b051bfe_b0976020",
+        "filename": "tests/angle_tests/PointSpritesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-15T15:34:03Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 209,
+        "startChar": 23,
+        "endLine": 209,
+        "endChar": 24
+      },
+      "revId": "f916b91a5bd58b477c8032e7698190854fc37563",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
