@@ -46,6 +46,17 @@
                 '.',
                 '../include',
             ],
+            'conditions':
+            [
+                ['angle_build_winrt==1',
+                {
+                    'msvs_enable_winrt' : '1',
+                }],
+                ['angle_build_winphone==1',
+                {
+                    'msvs_enable_winphone' : '1',
+                }],
+            ],
         },
 
         {
