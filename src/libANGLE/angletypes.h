@@ -75,6 +75,8 @@ struct Extents
 
     Extents() : width(0), height(0), depth(0) { }
     Extents(int width_, int height_, int depth_) : width(width_), height(height_), depth(depth_) { }
+
+    bool empty() const { return (width * height * depth) == 0; }
 };
 
 struct Box

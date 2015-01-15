@@ -1790,7 +1790,7 @@ gl::Error TextureD3D_3D::setImage(GLenum target, size_t level, GLenum internalFo
     gl::ImageIndex index = gl::ImageIndex::Make3D(level);
 
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
-    if (isFastUnpackable(unpack, sizedInternalFormat))
+    if (isFastUnpackable(unpack, sizedInternalFormat) && !size.empty())
     {
         // Will try to create RT storage if it does not exist
         RenderTarget *destRenderTarget = NULL;
