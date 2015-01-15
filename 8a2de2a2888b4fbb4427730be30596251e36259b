@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb88ffe4_07983a7f",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1111944
+      },
+      "writtenOn": "2015-01-15T20:03:00Z",
+      "side": 1,
+      "message": "Hm... is a depth of zero really always empty? Is it implied that you will always set a depth of 1, even for 2D cases? If that\u0027s the case it might be good to have a 2D constructor that initialized depth to 1.",
+      "range": {
+        "startLine": 79,
+        "startChar": 41,
+        "endLine": 79,
+        "endChar": 47
+      },
+      "revId": "8a2de2a2888b4fbb4427730be30596251e36259b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
