@@ -22,6 +22,30 @@
       "revId": "8a2de2a2888b4fbb4427730be30596251e36259b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b4c3b8a_58cdedc5",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-15T20:13:20Z",
+      "side": 1,
+      "message": "Yes, it is expected to have a depth of 1 for a 2d square slice. I think we\u0027re consistent with that in the code. If you would reconsider, I think it\u0027s worth keeping a single non-default constructor to keep the constructor count minimal, but I see your point.",
+      "parentUuid": "cb88ffe4_07983a7f",
+      "range": {
+        "startLine": 79,
+        "startChar": 41,
+        "endLine": 79,
+        "endChar": 47
+      },
+      "revId": "8a2de2a2888b4fbb4427730be30596251e36259b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
