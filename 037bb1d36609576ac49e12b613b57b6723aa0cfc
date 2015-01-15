@@ -70,6 +70,30 @@
       "revId": "037bb1d36609576ac49e12b613b57b6723aa0cfc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae2cb97b_9766ee46",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 993,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-15T01:16:06Z",
+      "side": 1,
+      "message": "I think that\u0027s very similar to my current implementation (iteration 2)! Or am I misunderstanding?",
+      "parentUuid": "ee3231d2_70d5086e",
+      "range": {
+        "startLine": 990,
+        "startChar": 8,
+        "endLine": 993,
+        "endChar": 101
+      },
+      "revId": "037bb1d36609576ac49e12b613b57b6723aa0cfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
