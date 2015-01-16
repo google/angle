@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b928710_68f0f73a",
+        "filename": "tests/perf_tests/angle_perf_test_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-16T19:51:34Z",
+      "side": 1,
+      "message": "Can this become the default constructor which sets valid to false?\n\nLooking at std::optional (http://en.cppreference.com/w/cpp/experimental/optional) it looks like the main member functions are value and value_or, maybe those could be helpful too.",
+      "range": {
+        "startLine": 25,
+        "startChar": 13,
+        "endLine": 25,
+        "endChar": 36
+      },
+      "revId": "6e4c3254dc7070dbb76366b3c7ce076305498370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b971303_b294284e",
+        "filename": "tests/perf_tests/angle_perf_test_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-16T19:51:34Z",
+      "side": 1,
+      "message": "std::string could be more useful here for the \u003d\u003d operator in all the comparisons below.",
+      "range": {
+        "startLine": 41,
+        "startChar": 9,
+        "endLine": 41,
+        "endChar": 21
+      },
+      "revId": "6e4c3254dc7070dbb76366b3c7ce076305498370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b928710_a826ff21",
+        "filename": "tests/perf_tests/angle_perf_test_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-16T19:51:34Z",
+      "side": 1,
+      "message": "Maybe build a map of test name to ParseAndRun\u003cT\u003e so it\u0027s easier to add new ones later?",
+      "range": {
+        "startLine": 294,
+        "startChar": 4,
+        "endLine": 310,
+        "endChar": 5
+      },
+      "revId": "6e4c3254dc7070dbb76366b3c7ce076305498370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
