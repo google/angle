@@ -34,9 +34,6 @@
 #endif
 
 #ifdef ANGLE_PLATFORM_WINDOWS
-#   if defined(WINAPI_FAMILY) && WINAPI_FAMILY == WINAPI_FAMILY_PC_APP
-#       define ANGLE_ENABLE_WINDOWS_STORE 1
-#   endif
 #   ifndef STRICT
 #       define STRICT 1
 #   endif
@@ -48,6 +45,10 @@
 #   endif
 
 #   include <windows.h>
+
+#   if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
+#       define ANGLE_ENABLE_WINDOWS_STORE 1
+#   endif
 
 #   if defined(ANGLE_ENABLE_D3D9)
 #       include <d3d9.h>

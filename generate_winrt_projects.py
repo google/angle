@@ -36,4 +36,5 @@ def generateProjects(generation_dir, build_winphone):
 
 if __name__ == '__main__':
     # Generate Windows 8.1 projects
-    generateProjects("winrt/windows", False);
+    generateProjects("winrt/8.1/windows", False);
+    generateProjects("winrt/8.1/windowsphone", True);
