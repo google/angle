@@ -9,6 +9,9 @@ deps = {
 
   "tests/third_party/googlemock":
       "http://googlemock.googlecode.com/svn/trunk@410",
+
+  "tests/third_party/rapidjson":
+      "https://github.com/miloyip/rapidjson.git@24dd7ef839b79941d129e833368e913aa9c045da",
 }
 
 hooks = [

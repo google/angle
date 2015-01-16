@@ -9,6 +9,35 @@
         'angle_build_deqp_tests%': '0',
         # build/gyp_angle sets this to 1.
         'angle_standalone%': 0,
+
+        'rapidjson_include_dir': 'third_party/rapidjson/include',
+        'rapidjson_headers':
+        [
+            'third_party/rapidjson/include/rapidjson/allocators.h',
+            'third_party/rapidjson/include/rapidjson/document.h',
+            'third_party/rapidjson/include/rapidjson/encodedstream.h',
+            'third_party/rapidjson/include/rapidjson/encodings.h',
+            'third_party/rapidjson/include/rapidjson/filereadstream.h',
+            'third_party/rapidjson/include/rapidjson/filestream.h',
+            'third_party/rapidjson/include/rapidjson/filewritestream.h',
+            'third_party/rapidjson/include/rapidjson/memorybuffer.h',
+            'third_party/rapidjson/include/rapidjson/memorystream.h',
+            'third_party/rapidjson/include/rapidjson/prettywriter.h',
+            'third_party/rapidjson/include/rapidjson/rapidjson.h',
+            'third_party/rapidjson/include/rapidjson/reader.h',
+            'third_party/rapidjson/include/rapidjson/stringbuffer.h',
+            'third_party/rapidjson/include/rapidjson/writer.h',
+            'third_party/rapidjson/include/rapidjson/error/en.h',
+            'third_party/rapidjson/include/rapidjson/error/error.h',
+            'third_party/rapidjson/include/rapidjson/internal/dtoa.h',
+            'third_party/rapidjson/include/rapidjson/internal/itoa.h',
+            'third_party/rapidjson/include/rapidjson/internal/meta.h',
+            'third_party/rapidjson/include/rapidjson/internal/pow10.h',
+            'third_party/rapidjson/include/rapidjson/internal/stack.h',
+            'third_party/rapidjson/include/rapidjson/internal/strfunc.h',
+            'third_party/rapidjson/include/rapidjson/msinttypes/inttypes.h',
+            'third_party/rapidjson/include/rapidjson/msinttypes/stdint.h',
+        ],
     },
     'targets':
     [
@@ -185,6 +214,7 @@
                     'include_dirs':
                     [
                         '../include',
+                        '<(rapidjson_include_dir)',
                     ],
                     'sources':
                     [
@@ -199,6 +229,7 @@
                         'perf_tests/TexSubImage.h',
                         'perf_tests/third_party/perf/perf_test.cc',
                         'perf_tests/third_party/perf/perf_test.h',
+                        '<@(rapidjson_headers)',
                     ],
                 },
 
