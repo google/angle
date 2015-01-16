@@ -81,6 +81,7 @@ TIntermTyped *TIntermediate::addBinaryMath(
         }
         break;
       case EOpMod:
+        // Note that this is only for the % operator, not for mod()
         if (left->getBasicType() == EbtStruct || left->getBasicType() == EbtBool || left->getBasicType() == EbtFloat)
         {
             return NULL;

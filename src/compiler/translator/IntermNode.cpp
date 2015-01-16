@@ -584,7 +584,8 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
             if (!mRight->isScalar() &&
                 (mOp == EOpAddAssign ||
                 mOp == EOpSubAssign ||
-                mOp == EOpDivAssign))
+                mOp == EOpDivAssign ||
+                mOp == EOpModAssign))
                 return false;
 
             // Operator cannot be of type pure assignment.

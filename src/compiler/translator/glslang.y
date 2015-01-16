@@ -556,6 +556,7 @@ multiplicative_expression
         }
     }
     | multiplicative_expression PERCENT unary_expression {
+        ES3_ONLY("%", @2, "integer modulus operator");
         $$ = context->intermediate.addBinaryMath(EOpMod, $1, $3, @2);
         if ($$ == 0) {
             context->binaryOpError(@2, "%", $1->getCompleteString(), $3->getCompleteString());
@@ -747,7 +748,10 @@ assignment_operator
     : EQUAL        { $$.op = EOpAssign; }
     | MUL_ASSIGN   { $$.op = EOpMulAssign; }
     | DIV_ASSIGN   { $$.op = EOpDivAssign; }
-    | MOD_ASSIGN   { $$.op = EOpModAssign; }
+    | MOD_ASSIGN   {
+        ES3_ONLY("%=", @$, "integer modulus operator");
+        $$.op = EOpModAssign;
+    }
     | ADD_ASSIGN   { $$.op = EOpAddAssign; }
     | SUB_ASSIGN   { $$.op = EOpSubAssign; }
     ;
