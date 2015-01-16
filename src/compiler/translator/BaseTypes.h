@@ -258,6 +258,11 @@ inline bool IsShadowSampler(TBasicType type)
     return false;
 }
 
+inline bool IsInteger(TBasicType type)
+{
+    return type == EbtInt || type == EbtUInt;
+}
+
 inline bool SupportsPrecision(TBasicType type)
 {
     return type == EbtFloat || type == EbtInt || type == EbtUInt || IsSampler(type);

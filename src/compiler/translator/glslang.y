@@ -515,10 +515,11 @@ unary_expression
             if ($$ == 0) {
                 const char* errorOp = "";
                 switch($1.op) {
-                case EOpNegative:   errorOp = "-"; break;
-                case EOpPositive:   errorOp = "+"; break;
-                case EOpLogicalNot: errorOp = "!"; break;
-                default: break;
+                  case EOpNegative:   errorOp = "-"; break;
+                  case EOpPositive:   errorOp = "+"; break;
+                  case EOpLogicalNot: errorOp = "!"; break;
+                  case EOpBitwiseNot: errorOp = "~"; break;
+                  default: break;
                 }
                 context->unaryOpError(@1, errorOp, $2->getCompleteString());
                 context->recover();
@@ -534,6 +535,10 @@ unary_operator
     : PLUS  { $$.op = EOpPositive; }
     | DASH  { $$.op = EOpNegative; }
     | BANG  { $$.op = EOpLogicalNot; }
+    | TILDE {
+        ES3_ONLY("~", @$, "bit-wise operator");
+        $$.op = EOpBitwiseNot;
+    }
     ;
 // Grammar Note:  No '*' or '&' unary ops.  Pointers are not supported.
 
@@ -588,6 +593,24 @@ additive_expression
 
 shift_expression
     : additive_expression { $$ = $1; }
+    | shift_expression LEFT_OP additive_expression {
+        ES3_ONLY("<<", @2, "bit-wise operator");
+        $$ = context->intermediate.addBinaryMath(EOpBitShiftLeft, $1, $3, @2);
+        if ($$ == 0) {
+            context->binaryOpError(@2, "<<", $1->getCompleteString(), $3->getCompleteString());
+            context->recover();
+            $$ = $1;
+        }
+    }
+    | shift_expression RIGHT_OP additive_expression {
+        ES3_ONLY(">>", @2, "bit-wise operator");
+        $$ = context->intermediate.addBinaryMath(EOpBitShiftRight, $1, $3, @2);
+        if ($$ == 0) {
+            context->binaryOpError(@2, ">>", $1->getCompleteString(), $3->getCompleteString());
+            context->recover();
+            $$ = $1;
+        }
+    }
     ;
 
 relational_expression
@@ -660,14 +683,41 @@ equality_expression
 
 and_expression
     : equality_expression { $$ = $1; }
+    | and_expression AMPERSAND equality_expression {
+        ES3_ONLY("&", @2, "bit-wise operator");
+        $$ = context->intermediate.addBinaryMath(EOpBitwiseAnd, $1, $3, @2);
+        if ($$ == 0) {
+            context->binaryOpError(@2, "&", $1->getCompleteString(), $3->getCompleteString());
+            context->recover();
+            $$ = $1;
+        }
+    }
     ;
 
 exclusive_or_expression
     : and_expression { $$ = $1; }
+    | exclusive_or_expression CARET and_expression {
+        ES3_ONLY("^", @2, "bit-wise operator");
+        $$ = context->intermediate.addBinaryMath(EOpBitwiseXor, $1, $3, @2);
+        if ($$ == 0) {
+            context->binaryOpError(@2, "^", $1->getCompleteString(), $3->getCompleteString());
+            context->recover();
+            $$ = $1;
+        }
+    }
     ;
 
 inclusive_or_expression
     : exclusive_or_expression { $$ = $1; }
+    | inclusive_or_expression VERTICAL_BAR exclusive_or_expression {
+        ES3_ONLY("|", @2, "bit-wise operator");
+        $$ = context->intermediate.addBinaryMath(EOpBitwiseOr, $1, $3, @2);
+        if ($$ == 0) {
+            context->binaryOpError(@2, "|", $1->getCompleteString(), $3->getCompleteString());
+            context->recover();
+            $$ = $1;
+        }
+    }
     ;
 
 logical_and_expression
@@ -754,6 +804,26 @@ assignment_operator
     }
     | ADD_ASSIGN   { $$.op = EOpAddAssign; }
     | SUB_ASSIGN   { $$.op = EOpSubAssign; }
+    | LEFT_ASSIGN {
+        ES3_ONLY("<<=", @$, "bit-wise operator");
+        $$.op = EOpBitShiftLeftAssign;
+    }
+    | RIGHT_ASSIGN {
+        ES3_ONLY(">>=", @$, "bit-wise operator");
+        $$.op = EOpBitShiftRightAssign;
+    }
+    | AND_ASSIGN {
+        ES3_ONLY("&=", @$, "bit-wise operator");
+        $$.op = EOpBitwiseAndAssign;
+    }
+    | XOR_ASSIGN {
+        ES3_ONLY("^=", @$, "bit-wise operator");
+        $$.op = EOpBitwiseXorAssign;
+    }
+    | OR_ASSIGN {
+        ES3_ONLY("|=", @$, "bit-wise operator");
+        $$.op = EOpBitwiseOrAssign;
+    }
     ;
 
 expression

@@ -87,11 +87,14 @@ TIntermTyped *TIntermediate::addBinaryMath(
             return NULL;
         }
         break;
+      // Note that for bitwise ops, type checking is done in promote() to
+      // share code between ops and compound assignment
       default:
         break;
     }
 
-    if (left->getBasicType() != right->getBasicType())
+    // This check is duplicated between here and node->promote() as an optimization.
+    if (left->getBasicType() != right->getBasicType() && op != EOpBitShiftLeft && op != EOpBitShiftRight)
     {
         return NULL;
     }
@@ -193,23 +196,30 @@ TIntermTyped *TIntermediate::addUnaryMath(
     switch (op)
     {
       case EOpLogicalNot:
-        if (child->getType().getBasicType() != EbtBool ||
-            child->getType().isMatrix() ||
-            child->getType().isArray() ||
-            child->getType().isVector())
+        if (child->getBasicType() != EbtBool ||
+            child->isMatrix() ||
+            child->isArray() ||
+            child->isVector())
         {
             return NULL;
         }
         break;
-
+      case EOpBitwiseNot:
+        if ((child->getBasicType() != EbtInt && child->getBasicType() != EbtUInt) ||
+            child->isMatrix() ||
+            child->isArray())
+        {
+            return NULL;
+        }
+        break;
       case EOpPostIncrement:
       case EOpPreIncrement:
       case EOpPostDecrement:
       case EOpPreDecrement:
       case EOpNegative:
       case EOpPositive:
-        if (child->getType().getBasicType() == EbtStruct ||
-            child->getType().isArray())
+        if (child->getBasicType() == EbtStruct ||
+            child->isArray())
         {
             return NULL;
         }

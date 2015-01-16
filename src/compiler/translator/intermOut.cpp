@@ -134,6 +134,22 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
       case EOpModAssign:
         out << "modulo second child into first child";
         break;
+      case EOpBitShiftLeftAssign:
+        out << "bit-wise shift first child left by second child";
+        break;
+      case EOpBitShiftRightAssign:
+        out << "bit-wise shift first child right by second child";
+        break;
+      case EOpBitwiseAndAssign:
+        out << "bit-wise and second child into first child";
+        break;
+      case EOpBitwiseXorAssign:
+        out << "bit-wise xor second child into first child";
+        break;
+      case EOpBitwiseOrAssign:
+        out << "bit-wise or second child into first child";
+        break;
+
       case EOpIndexDirect:
         out << "direct index";
         break;
@@ -165,6 +181,22 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
       case EOpMod:
         out << "modulo";
         break;
+      case EOpBitShiftLeft:
+        out << "bit-wise shift left";
+        break;
+      case EOpBitShiftRight:
+        out << "bit-wise shift right";
+        break;
+      case EOpBitwiseAnd:
+        out << "bit-wise and";
+        break;
+      case EOpBitwiseXor:
+        out << "bit-wise xor";
+        break;
+      case EOpBitwiseOr:
+        out << "bit-wise or";
+        break;
+
       case EOpEqual:
         out << "Compare Equal";
         break;
@@ -262,6 +294,7 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
       case EOpPositive:       out << "Positive sign";        break;
       case EOpVectorLogicalNot:
       case EOpLogicalNot:     out << "Negate conditional";   break;
+      case EOpBitwiseNot:     out << "bit-wise not";         break;
 
       case EOpPostIncrement:  out << "Post-Increment";       break;
       case EOpPostDecrement:  out << "Post-Decrement";       break;

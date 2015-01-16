@@ -234,6 +234,21 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
       case EOpMatrixTimesMatrixAssign:
         writeTriplet(visit, "(", " *= ", ")");
         break;
+      case EOpBitShiftLeftAssign:
+        writeTriplet(visit, "(", " <<= ", ")");
+        break;
+      case EOpBitShiftRightAssign:
+        writeTriplet(visit, "(", " >>= ", ")");
+        break;
+      case EOpBitwiseAndAssign:
+        writeTriplet(visit, "(", " &= ", ")");
+        break;
+      case EOpBitwiseXorAssign:
+        writeTriplet(visit, "(", " ^= ", ")");
+        break;
+      case EOpBitwiseOrAssign:
+        writeTriplet(visit, "(", " |= ", ")");
+        break;
 
       case EOpIndexDirect:
         writeTriplet(visit, NULL, "[", "]");
@@ -346,6 +361,22 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
       case EOpMod:
         writeTriplet(visit, "(", " % ", ")");
         break;
+      case EOpBitShiftLeft:
+        writeTriplet(visit, "(", " << ", ")");
+        break;
+      case EOpBitShiftRight:
+        writeTriplet(visit, "(", " >> ", ")");
+        break;
+      case EOpBitwiseAnd:
+        writeTriplet(visit, "(", " & ", ")");
+        break;
+      case EOpBitwiseXor:
+        writeTriplet(visit, "(", " ^ ", ")");
+        break;
+      case EOpBitwiseOr:
+        writeTriplet(visit, "(", " | ", ")");
+        break;
+
       case EOpEqual:
         writeTriplet(visit, "(", " == ", ")");
         break;
@@ -401,6 +432,7 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
       case EOpPositive: preString = "(+"; break;
       case EOpVectorLogicalNot: preString = "not("; break;
       case EOpLogicalNot: preString = "(!"; break;
+      case EOpBitwiseNot: preString = "(~"; break;
 
       case EOpPostIncrement: preString = "("; postString = "++)"; break;
       case EOpPostDecrement: preString = "("; postString = "--)"; break;

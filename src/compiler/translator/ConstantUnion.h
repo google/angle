@@ -254,7 +254,10 @@ public:
     ConstantUnion operator<<(const ConstantUnion& constant) const
     { 
         ConstantUnion returnValue;
-        assert(type == constant.type);
+        // The signedness of the second parameter might be different, but we
+        // don't care, since the result is undefined if the second parameter is
+        // negative, and aliasing should not be a problem with unions.
+        assert(constant.type == EbtInt || constant.type == EbtUInt);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst << constant.iConst); break;
         case EbtUInt: returnValue.setUConst(uConst << constant.uConst); break;
@@ -267,7 +270,7 @@ public:
     ConstantUnion operator&(const ConstantUnion& constant) const
     { 
         ConstantUnion returnValue;
-        assert(type == constant.type);
+        assert(constant.type == EbtInt || constant.type == EbtUInt);
         switch (type) {
         case EbtInt:  returnValue.setIConst(iConst & constant.iConst); break;
         case EbtUInt:  returnValue.setUConst(uConst & constant.uConst); break;

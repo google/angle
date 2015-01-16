@@ -1396,6 +1396,11 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         break;
       case EOpDivAssign:               outputTriplet(visit, "(", " /= ", ")");          break;
       case EOpModAssign:               outputTriplet(visit, "(", " %= ", ")");          break;
+      case EOpBitShiftLeftAssign:      outputTriplet(visit, "(", " <<= ", ")");         break;
+      case EOpBitShiftRightAssign:     outputTriplet(visit, "(", " >>= ", ")");         break;
+      case EOpBitwiseAndAssign:        outputTriplet(visit, "(", " &= ", ")");          break;
+      case EOpBitwiseXorAssign:        outputTriplet(visit, "(", " ^= ", ")");          break;
+      case EOpBitwiseOrAssign:         outputTriplet(visit, "(", " |= ", ")");          break;
       case EOpIndexDirect:
         {
             const TType& leftType = node->getLeft()->getType();
@@ -1484,6 +1489,11 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpMul:               outputTriplet(visit, "(", " * ", ")"); break;
       case EOpDiv:               outputTriplet(visit, "(", " / ", ")"); break;
       case EOpMod:               outputTriplet(visit, "(", " % ", ")"); break;
+      case EOpBitShiftLeft:      outputTriplet(visit, "(", " << ", ")"); break;
+      case EOpBitShiftRight:     outputTriplet(visit, "(", " >> ", ")"); break;
+      case EOpBitwiseAnd:        outputTriplet(visit, "(", " & ", ")"); break;
+      case EOpBitwiseXor:        outputTriplet(visit, "(", " ^ ", ")"); break;
+      case EOpBitwiseOr:         outputTriplet(visit, "(", " | ", ")"); break;
       case EOpEqual:
       case EOpNotEqual:
         if (node->getLeft()->isScalar())
@@ -1593,6 +1603,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
       case EOpPositive:         outputTriplet(visit, "(+", "", ")");         break;
       case EOpVectorLogicalNot: outputTriplet(visit, "(!", "", ")");         break;
       case EOpLogicalNot:       outputTriplet(visit, "(!", "", ")");         break;
+      case EOpBitwiseNot:       outputTriplet(visit, "(~", "", ")");         break;
       case EOpPostIncrement:    outputTriplet(visit, "(", "", "++)");        break;
       case EOpPostDecrement:    outputTriplet(visit, "(", "", "--)");        break;
       case EOpPreIncrement:     outputTriplet(visit, "(++", "", ")");        break;
