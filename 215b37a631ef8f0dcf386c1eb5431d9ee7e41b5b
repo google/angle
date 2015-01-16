@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6bc55323_74a9c06d",
+        "filename": "tests/angle_tests/MipmapTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-01-16T01:17:59Z",
+      "side": 1,
+      "message": "Please put this back on the previous line like it was in the other file. See https://chromium.googlesource.com/angle/angle/+/ce8bb2fa5827323fbf3107d81907dcbcbbdbd93f for why. (Maybe also add a comment, so the next person undoes that yet again.) As is, this causes:\n\n..\\..\\third_party\\angle\\tests\\angle_tests\\MipmapTest.cpp(192,14) :  error(clang): invalid preprocessing directive\n            #version 300 es\\n\n             ^\n..\\..\\third_party\\angle\\tests\\angle_tests\\MipmapTest.cpp(208,14) :  error(clang): invalid preprocessing directive\n            #version 300 es\\n\n             ^\n2 errors generated.",
+      "revId": "215b37a631ef8f0dcf386c1eb5431d9ee7e41b5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
