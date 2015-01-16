@@ -187,9 +187,11 @@ protected:
 
         ASSERT_GL_NO_ERROR();
 
+        // Don't put "#version ..." on its own line. See [cpp]p1:
+        // "If there are sequences of preprocessing tokens within the list of arguments that
+        //  would otherwise act as preprocessing directives, the behavior is undefined"
         const std::string vertexShaderSource = SHADER_SOURCE
-        (
-            #version 300 es\n
+        (   #version 300 es\n
             precision highp float;
             in vec4 position;
             out vec2 texcoord;
@@ -204,8 +206,7 @@ protected:
         );
 
         const std::string fragmentShaderSourceArray = SHADER_SOURCE
-        (
-            #version 300 es\n
+        (   #version 300 es\n
             precision highp float;
             uniform sampler2DArray tex;
             uniform int slice;
