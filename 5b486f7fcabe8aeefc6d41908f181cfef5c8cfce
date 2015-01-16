@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "6bae3367_e64f3e32",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-16T22:06:00Z",
+      "side": 1,
+      "message": "Good to know, thanks Shannon.",
+      "parentUuid": "6bc55323_03a59c0f",
+      "range": {
+        "startLine": 136,
+        "startChar": 135,
+        "endLine": 136,
+        "endChar": 166
+      },
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee3231d2_70b0a84b",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 10
