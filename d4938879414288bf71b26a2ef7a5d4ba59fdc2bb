@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b971303_4719641d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-16T18:16:36Z",
+      "side": 1,
+      "message": "is this a separate bug?",
+      "range": {
+        "startLine": 167,
+        "startChar": 42,
+        "endLine": 167,
+        "endChar": 64
+      },
+      "revId": "d4938879414288bf71b26a2ef7a5d4ba59fdc2bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
