@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b928710_48ead332",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 747,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-16T20:21:03Z",
+      "side": 1,
+      "message": "nit: no need for the ternary here.",
+      "range": {
+        "startLine": 747,
+        "startChar": 58,
+        "endLine": 747,
+        "endChar": 125
+      },
+      "revId": "6a0d06167e0370fc7bc0ef5e935a9e5610d8eb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ba19b5e_82f51e2c",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-16T20:21:03Z",
+      "side": 1,
+      "message": "Can you cast these to int before calling Str? If Str ever had an overload taking a float, there would be problems. Also, are there potential problems with this rounding?",
+      "range": {
+        "startLine": 757,
+        "startChar": 55,
+        "endLine": 757,
+        "endChar": 109
+      },
+      "revId": "6a0d06167e0370fc7bc0ef5e935a9e5610d8eb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b971303_b2c18830",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-16T20:21:03Z",
+      "side": 1,
+      "message": "We\u0027ve tried to avoid using the helper classes for the DESCs, could you use the regular DESC?",
+      "range": {
+        "startLine": 335,
+        "startChar": 8,
+        "endLine": 335,
+        "endChar": 26
+      },
+      "revId": "6a0d06167e0370fc7bc0ef5e935a9e5610d8eb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b928710_08a5ab0f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-16T20:21:03Z",
+      "side": 1,
+      "message": "It would be worth caching these buffers, creating and destroying a buffer in each draw call will be costly.  Since the data doesn\u0027t change, the buffer can be marked as D3D11_USAGE_IMMUTABLE too.",
+      "range": {
+        "startLine": 336,
+        "startChar": 8,
+        "endLine": 336,
+        "endChar": 103
+      },
+      "revId": "6a0d06167e0370fc7bc0ef5e935a9e5610d8eb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
