@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6bc55323_03a59c0f",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-16T21:50:02Z",
+      "side": 1,
+      "message": "Just for future reference, default values are explicitly forbidden in the ANGLE \u0026 Google style guides, so it\u0027s not just preference.",
+      "parentUuid": "0e44e539_f452ce2a",
+      "range": {
+        "startLine": 136,
+        "startChar": 135,
+        "endLine": 136,
+        "endChar": 166
+      },
+      "revId": "5b486f7fcabe8aeefc6d41908f181cfef5c8cfce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee3231d2_70b0a84b",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 10
