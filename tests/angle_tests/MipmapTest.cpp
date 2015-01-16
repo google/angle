@@ -50,43 +50,90 @@ class MipmapTest : public ANGLETest
             }
         );
 
-        mProgram = CompileProgram(vs, fs);
-        if (mProgram == 0)
+        m2DProgram = CompileProgram(vs, fs);
+        if (m2DProgram == 0)
         {
             FAIL() << "shader compilation failed.";
         }
 
-        mTextureUniformPosition = glGetUniformLocation(mProgram, "uTexture");
-        mPositionAttributePosition = glGetAttribLocation(mProgram, "aPosition");
-        mTexCoordAttributePosition = glGetAttribLocation(mProgram, "aTexCoord");
+        // A simple vertex shader for the texture cube
+        const std::string cubeVS = SHADER_SOURCE
+        (
+            attribute vec4 aPosition;
+            varying vec4 vPosition;
+            void main()
+            {
+                gl_Position = aPosition;
+                vPosition = aPosition;
+            }
+        );
+
+        // A very simple fragment shader to sample from the negative-Y face of a texture cube.
+        const std::string cubeFS = SHADER_SOURCE
+        (
+            precision mediump float;
+            uniform samplerCube uTexture;
+            varying vec4 vPosition;
+
+            void main()
+            {
+                gl_FragColor = textureCube(uTexture, vec3(vPosition.x, -1, vPosition.y));
+            }
+        );
+
+        mCubeProgram = CompileProgram(cubeVS, cubeFS);
+        if (mCubeProgram == 0)
+        {
+            FAIL() << "shader compilation failed.";
+        }
+
+        m2DTextureUniformPosition = glGetUniformLocation(m2DProgram, "uTexture");
+        m2DPositionAttributePosition = glGetAttribLocation(m2DProgram, "aPosition");
+        m2DTexCoordAttributePosition = glGetAttribLocation(m2DProgram, "aTexCoord");
+
+        mLevelZeroBlueInitData = createRGBInitData(getWindowWidth(), getWindowHeight(), 0, 0, 255); // Blue
+        mLevelZeroWhiteInitData = createRGBInitData(getWindowWidth(), getWindowHeight(), 255, 255, 255); // White
+        mLevelOneInitData = createRGBInitData((getWindowWidth() / 2), (getWindowHeight() / 2), 0, 255, 0);   // Green
+        mLevelTwoInitData = createRGBInitData((getWindowWidth() / 4), (getWindowHeight() / 4), 255, 0, 0);   // Red
 
         glGenFramebuffers(1, &mOffscreenFramebuffer);
-        glGenTextures(1, &mOffscreenTexture);
+        glGenTextures(1, &mOffscreenTexture2D);
 
-        // Initialize the texture to be empty, and don't use mips.
-        glBindTexture(GL_TEXTURE_2D, mOffscreenTexture);
+        // Initialize the texture2D to be empty, and don't use mips.
+        glBindTexture(GL_TEXTURE_2D, mOffscreenTexture2D);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-        ASSERT_GL_NO_ERROR();
-
-        // Bind the texture to the offscreen framebuffer's color buffer.
+        // Bind the texture2D to the offscreen framebuffer's color buffer.
         glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffer);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mOffscreenTexture, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mOffscreenTexture2D, 0);
         ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
 
-        mLevelZeroBlueInitData =  createRGBInitData(getWindowWidth(),       getWindowHeight(),       0,   0,   255); // Blue
-        mLevelZeroWhiteInitData = createRGBInitData(getWindowWidth(),       getWindowHeight(),       255, 255, 255); // White
-        mLevelOneInitData =       createRGBInitData((getWindowWidth() / 2), (getWindowHeight() / 2), 0,   255, 0);   // Green
-        mLevelTwoInitData =       createRGBInitData((getWindowWidth() / 4), (getWindowHeight() / 4), 255, 0,   0);   // Red
+        // Create a non-mipped texture cube. Set the negative-Y face to be blue.
+        glGenTextures(1, &mOffscreenTextureCube);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, mOffscreenTextureCube);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, mLevelZeroBlueInitData);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+        // Complete the texture cube without mipmaps to start with.
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+        ASSERT_GL_NO_ERROR();
     }
 
     virtual void TearDown()
     {
-        glDeleteProgram(mProgram);
+        glDeleteProgram(m2DProgram);
+        glDeleteProgram(mCubeProgram);
         glDeleteFramebuffers(1, &mOffscreenFramebuffer);
-        glDeleteFramebuffers(1, &mOffscreenTexture);
+        glDeleteTextures(1, &mOffscreenTexture2D);
+        glDeleteTextures(1, &mOffscreenTextureCube);
 
         delete mLevelZeroBlueInitData;
         delete mLevelZeroWhiteInitData;
@@ -135,28 +182,30 @@ class MipmapTest : public ANGLETest
             1.0f, 0.0f,
         };
 
-        glUseProgram(mProgram);
+        glUseProgram(m2DProgram);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
-        glUniform1i(mTextureUniformPosition, 0);
+        glUniform1i(m2DTextureUniformPosition, 0);
 
-        glVertexAttribPointer(mPositionAttributePosition, 3, GL_FLOAT, GL_FALSE, 0, vertexLocations);
-        glEnableVertexAttribArray(mPositionAttributePosition);
+        glVertexAttribPointer(m2DPositionAttributePosition, 3, GL_FLOAT, GL_FALSE, 0, vertexLocations);
+        glEnableVertexAttribArray(m2DPositionAttributePosition);
 
-        glVertexAttribPointer(mTexCoordAttributePosition, 2, GL_FLOAT, GL_FALSE, 0, vertexTexCoords);
-        glEnableVertexAttribArray(mTexCoordAttributePosition);
+        glVertexAttribPointer(m2DTexCoordAttributePosition, 2, GL_FLOAT, GL_FALSE, 0, vertexTexCoords);
+        glEnableVertexAttribArray(m2DTexCoordAttributePosition);
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 
-    GLuint mProgram;
+    GLuint m2DProgram;
+    GLuint mCubeProgram;
     GLuint mOffscreenFramebuffer;
-    GLuint mOffscreenTexture;
+    GLuint mOffscreenTexture2D;
+    GLuint mOffscreenTextureCube;
 
-    GLint mTextureUniformPosition;
-    GLint mPositionAttributePosition;
-    GLint mTexCoordAttributePosition;
+    GLint m2DTextureUniformPosition;
+    GLint m2DPositionAttributePosition;
+    GLint m2DTexCoordAttributePosition;
 
     GLubyte* mLevelZeroBlueInitData;
     GLubyte* mLevelZeroWhiteInitData;
@@ -262,7 +311,7 @@ protected:
 TYPED_TEST(MipmapTest, DISABLED_ThreeLevelsInitData)
 {
     // Pass in level zero init data.
-    glBindTexture(GL_TEXTURE_2D, mOffscreenTexture);
+    glBindTexture(GL_TEXTURE_2D, mOffscreenTexture2D);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, mLevelZeroBlueInitData);
     ASSERT_GL_NO_ERROR();
 
@@ -270,15 +319,15 @@ TYPED_TEST(MipmapTest, DISABLED_ThreeLevelsInitData)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     // Draw a full-sized quad, and check it's blue.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 
     // Draw a half-sized quad, and check it's blue.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 2, getWindowHeight() / 2);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 0, 0, 255, 255);
 
     // Draw a quarter-sized quad, and check it's blue.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 0, 0, 255, 255);
 
     // Complete the texture by initializing the remaining levels.
@@ -295,22 +344,22 @@ TYPED_TEST(MipmapTest, DISABLED_ThreeLevelsInitData)
     ASSERT_GL_NO_ERROR();
 
     // Draw a full-sized quad, and check it's blue.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 
     // Draw a half-sized quad, and check it's blue. We've not enabled mipmaps yet, so our init data for level one shouldn't be used.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 2, getWindowHeight() / 2);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 0, 0, 255, 255);
 
     // Enable mipmaps.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 
     // Draw a half-sized quad, and check it's green.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 2, getWindowHeight() / 2);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 0, 255, 0, 255);
 
     // Draw a quarter-sized quad, and check it's black, since we've not passed any init data for level two.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 0, 0, 0, 255);
 
     // Pass in level two init data.
@@ -318,45 +367,45 @@ TYPED_TEST(MipmapTest, DISABLED_ThreeLevelsInitData)
     ASSERT_GL_NO_ERROR();
 
     // Draw a full-sized quad, and check it's blue.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 
     // Draw a half-sized quad, and check it's green.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 2, getWindowHeight() / 2);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 0, 255, 0, 255);
 
     // Draw a quarter-sized quad, and check it's red.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 255, 0, 0, 255);
 
     // Now disable mipmaps again, and render multiple sized quads. They should all be blue, since level 0 is blue.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 2, getWindowHeight() / 2);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 0, 0, 255, 255);
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 0, 0, 255, 255);
 
     // Now reset level 0 to white, keeping mipmaps disabled. Then, render various sized quads. They should be white.
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, mLevelZeroWhiteInitData);
     ASSERT_GL_NO_ERROR();
 
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255, 255, 255, 255);
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 2, getWindowHeight() / 2);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 255, 255, 255);
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 255, 255, 255, 255);
 
     // Then enable mipmaps again. The quads should be white, green, red respectively.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255, 255, 255, 255);
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 2, getWindowHeight() / 2);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 0, 255, 0, 255);
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 255, 0, 0, 255);
 }
 
@@ -378,22 +427,22 @@ TYPED_TEST(MipmapTest, GenerateMipmapFromInitDataThenRender)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 
     // Now draw the texture to various different sized areas.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 
     // Use mip level 1
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 2, getWindowHeight() / 2);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 0, 0, 255, 255);
 
     // Use mip level 2
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 0, 0, 255, 255);
 
     ASSERT_GL_NO_ERROR();
 
     // Disable mips. Render a quad using the texture and ensure it's blue.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 
     // Clear level 0 of the texture.
@@ -405,15 +454,15 @@ TYPED_TEST(MipmapTest, GenerateMipmapFromInitDataThenRender)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 
     // Level 0 is now red, so this should render red.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255, 0, 0, 255);
 
     // Use mip level 1, blue.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 2, getWindowHeight() / 2);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 0, 0, 255, 255);
 
     // Use mip level 2, blue.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 0, 0, 255, 255);
 }
 
@@ -437,15 +486,15 @@ TYPED_TEST(MipmapTest, GenerateMipmapFromRenderedImage)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 
     // Now draw the texture to various different sized areas.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 
     // Use mip level 1
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 2, getWindowHeight() / 2);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 0, 0, 255, 255);
 
     // Use mip level 2
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 0, 0, 255, 255);
 }
 
@@ -465,7 +514,7 @@ TYPED_TEST(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 
     // Now, draw the texture to a quad that's the same size as the texture. This draws to the default framebuffer.
     // The quad should be blue.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 
     // Now go back to the texture, and generate mips on it.
@@ -474,7 +523,7 @@ TYPED_TEST(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 
     // Now try rendering the textured quad again. Note: we've not told GL to use the generated mips.
     // The quad should be blue.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 
     // Now tell GL to use the generated mips.
@@ -482,11 +531,11 @@ TYPED_TEST(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
     EXPECT_EQ(glGetError(), GL_NONE);
 
     // Now render the textured quad again. It should be still be blue.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 
     // Now render the textured quad to an area smaller than the texture (i.e. to force minification). This should be blue.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 0, 0, 255, 255);
 
     // Now clear the texture to green. This just clears the top level. The lower mips should remain blue.
@@ -498,11 +547,11 @@ TYPED_TEST(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     // Render a textured quad equal in size to the texture. This should be green, since we just cleared level 0.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 255, 0, 255);
 
     // Render a small textured quad. This forces minification, so should render blue (the color of levels 1+).
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 0, 0, 255, 255);
 
     // Disable mipmaps again
@@ -510,12 +559,142 @@ TYPED_TEST(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
     ASSERT_GL_NO_ERROR();
 
     // Render a textured quad equal in size to the texture. This should be green, the color of level 0 in the texture.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth(), getWindowHeight());
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 255, 0, 255);
 
     // Render a small textured quad. This would force minification if mips were enabled, but they're not. Therefore, this should be green.
-    ClearAndDrawTexturedQuad(mOffscreenTexture, getWindowWidth() / 4, getWindowHeight() / 4);
+    ClearAndDrawTexturedQuad(mOffscreenTexture2D, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_EQ(getWindowWidth() / 8, getWindowHeight() / 8, 0, 255, 0, 255);
+}
+
+// This test ensures that the level-zero workaround for TextureCubes (on D3D11 Feature Level 9_3)
+// works as expected. It tests enabling/disabling mipmaps, generating mipmaps, and rendering to level zero.
+TYPED_TEST(MipmapTest, TextureCubeGeneralLevelZero)
+{
+    GLfloat vertexLocations[] =
+    {
+        -1.0f, 1.0f, 0.0f,
+        -1.0f, -1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+    };
+
+    // Set up the viewport, program, attributes, sampler and texture for the cube
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glUseProgram(mCubeProgram);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertexLocations);
+    glEnableVertexAttribArray(0);
+    glUniform1i(0, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mOffscreenTextureCube);
+
+    // Draw. Since the negative-Y face's is blue, this should be blue.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 255, 255);
+
+    // Generate mipmaps, and render. This should be blue.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 255, 255);
+
+    // Draw using a smaller viewport (to force a lower LOD of the texture). This should still be blue.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glViewport(0, 0, getWindowWidth() / 4, getWindowHeight() / 4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 255, 255);
+
+    // Now clear the negative-Y face of the cube to red.
+    GLuint mOffscreenFramebuffer;
+    glGenFramebuffers(0, &mOffscreenFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, mOffscreenTextureCube, 0);
+    ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Switch back to the default framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mOffscreenTextureCube);
+
+    // Draw using a full-size viewport. This should be red.
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+
+    // Draw using a quarter-size viewport, to force a lower LOD. This should be *BLUE*, since we only cleared level zero
+    // of the negative-Y face to red, and left its mipmaps blue.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glViewport(0, 0, getWindowWidth() / 4, getWindowHeight() / 4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 255, 255);
+
+    // Disable mipmaps again, and draw a to a quarter-size viewport.
+    // Since this should use level zero of the texture, this should be *RED*.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glViewport(0, 0, getWindowWidth() / 4, getWindowHeight() / 4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+// This test ensures that rendering to level-zero of a TextureCube works as expected.
+TYPED_TEST(MipmapTest, TextureCubeRenderToLevelZero)
+{
+    GLfloat vertexLocations[] =
+    {
+        -1.0f,  1.0f, 0.0f,
+        -1.0f, -1.0f, 0.0f,
+         1.0f,  1.0f, 0.0f,
+         1.0f, -1.0f, 0.0f,
+    };
+
+    // Set up the viewport, program, attributes, sampler and texture for the cube
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glUseProgram(mCubeProgram);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertexLocations);
+    glEnableVertexAttribArray(0);
+    glUniform1i(0, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mOffscreenTextureCube);
+
+    // Draw. Since the negative-Y face's is blue, this should be blue.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 255, 255);
+
+    // Now clear the negative-Y face of the cube to red.
+    GLuint mOffscreenFramebuffer;
+    glGenFramebuffers(0, &mOffscreenFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, mOffscreenTextureCube, 0);
+    ASSERT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER), GL_FRAMEBUFFER_COMPLETE);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Switch back to the default framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mOffscreenTextureCube);
+
+    // Draw using a full-size viewport. This should be red.
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+
+    // Draw a to a quarter-size viewport. This should also be red.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glViewport(0, 0, getWindowWidth() / 4, getWindowHeight() / 4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
 }
 
 // Creates a mipmapped 2D array texture with three layers, and calls ANGLE's GenerateMipmap.

@@ -50,7 +50,7 @@ class TextureStorage11 : public TextureStorage
     virtual bool isRenderTarget() const;
     virtual bool isManaged() const;
     virtual int getLevelCount() const;
-    UINT getSubresourceIndex(const gl::ImageIndex &index) const;
+    virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
 
     gl::Error generateSwizzles(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
     void invalidateSwizzleCacheLevel(int mipLevel);
@@ -201,22 +201,31 @@ class TextureStorage11_2D : public TextureStorage11
 class TextureStorage11_Cube : public TextureStorage11
 {
   public:
-    TextureStorage11_Cube(Renderer11 *renderer, GLenum internalformat, bool renderTarget, int size, int levels);
+    TextureStorage11_Cube(Renderer11 *renderer, GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly);
     virtual ~TextureStorage11_Cube();
 
     static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
 
+    virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
+
     virtual gl::Error getResource(ID3D11Resource **outResource);
+    virtual gl::Error getMippedResource(ID3D11Resource **outResource);
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
+
+    virtual gl::Error copyToStorage(TextureStorage *destStorage);
 
     virtual void associateImage(Image11* image, const gl::ImageIndex &index);
     virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage);
     virtual bool isAssociatedImageValid(const gl::ImageIndex &index, Image11* expectedImage);
     virtual gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
 
+    virtual gl::Error useLevelZeroWorkaroundTexture(bool useLevelZeroTexture);
+
   protected:
     virtual gl::Error getSwizzleTexture(ID3D11Resource **outTexture);
     virtual gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV);
+
+    gl::Error ensureTextureExists(int mipLevels);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_Cube);
@@ -228,6 +237,11 @@ class TextureStorage11_Cube : public TextureStorage11
 
     ID3D11Texture2D *mTexture;
     RenderTarget11 *mRenderTarget[CUBE_FACE_COUNT][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+
+    // Level-zero workaround members. See TextureStorage11_2D's workaround members for a description.
+    ID3D11Texture2D *mLevelZeroTexture;
+    RenderTarget11 *mLevelZeroRenderTarget[CUBE_FACE_COUNT];
+    bool mUseLevelZeroTexture;
 
     ID3D11Texture2D *mSwizzleTexture;
     ID3D11RenderTargetView *mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];

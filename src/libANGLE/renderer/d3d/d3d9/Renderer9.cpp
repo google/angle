@@ -2832,9 +2832,9 @@ TextureStorage *Renderer9::createTextureStorage2D(GLenum internalformat, bool re
     return new TextureStorage9_2D(this, internalformat, renderTarget, width, height, levels);
 }
 
-TextureStorage *Renderer9::createTextureStorageCube(GLenum internalformat, bool renderTarget, int size, int levels)
+TextureStorage *Renderer9::createTextureStorageCube(GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly)
 {
-    return new TextureStorage9_Cube(this, internalformat, renderTarget, size, levels);
+    return new TextureStorage9_Cube(this, internalformat, renderTarget, size, levels, hintLevelZeroOnly);
 }
 
 TextureStorage *Renderer9::createTextureStorage3D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels)

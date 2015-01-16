@@ -88,7 +88,7 @@ class TextureStorage9_2D : public TextureStorage9
 class TextureStorage9_Cube : public TextureStorage9
 {
   public:
-    TextureStorage9_Cube(Renderer9 *renderer, GLenum internalformat, bool renderTarget, int size, int levels);
+    TextureStorage9_Cube(Renderer9 *renderer, GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly);
     virtual ~TextureStorage9_Cube();
 
     static TextureStorage9_Cube *makeTextureStorage9_Cube(TextureStorage *storage);

@@ -426,8 +426,28 @@ gl::Error TextureStorage11::copySubresourceLevel(ID3D11Resource* dstTexture, uns
     unsigned int srcSubresource = getSubresourceIndex(index);
 
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+    // D3D11 can't perform partial CopySubresourceRegion on depth/stencil textures, so pSrcBox should be NULL.
+    D3D11_BOX srcBox;
+    D3D11_BOX *pSrcBox = NULL;
+    if (mRenderer->getFeatureLevel() <= D3D_FEATURE_LEVEL_9_3)
+    {
+        // However, D3D10Level9 doesn't always perform CopySubresourceRegion correctly unless the source box
+        // is specified. This is okay, since we don't perform CopySubresourceRegion on depth/stencil
+        // textures on 9_3.
+        ASSERT(d3d11::GetDXGIFormatInfo(mTextureFormat).depthBits == 0);
+        ASSERT(d3d11::GetDXGIFormatInfo(mTextureFormat).stencilBits == 0);
+        srcBox.left = region.x;
+        srcBox.right = region.x + region.width;
+        srcBox.top = region.y;
+        srcBox.bottom = region.y + region.height;
+        srcBox.front = region.z;
+        srcBox.back = region.z + region.depth;
+        pSrcBox = &srcBox;
+    }
+
     context->CopySubresourceRegion(dstTexture, dstSubresource, region.x, region.y, region.z,
-                                   srcTexture, srcSubresource, NULL);
+                                   srcTexture, srcSubresource, pSrcBox);
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -662,7 +682,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, GLenum internalfo
     mTextureHeight = height;
     mTextureDepth = 1;
 
-    if (hintLevelZeroOnly)
+    if (hintLevelZeroOnly && levels > 1)
     {
         //The LevelZeroOnly hint should only be true if the zero max LOD workaround is active.
         ASSERT(mRenderer->getWorkarounds().zeroMaxLodWorkaround);
@@ -787,7 +807,7 @@ gl::Error TextureStorage11_2D::copyToStorage(TextureStorage *destStorage)
 
 gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTexture)
 {
-    if (useLevelZeroTexture)
+    if (useLevelZeroTexture && mMipLevels > 1)
     {
         if (!mUseLevelZeroTexture && mTexture)
         {
@@ -798,8 +818,8 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTe
             }
 
             // Pull data back from the mipped texture if necessary.
-            ASSERT(mTexture);
-            ID3D11DeviceContext* context = mRenderer->getDeviceContext();
+            ASSERT(mLevelZeroTexture);
+            ID3D11DeviceContext *context = mRenderer->getDeviceContext();
             context->CopySubresourceRegion(mLevelZeroTexture, 0, 0, 0, 0, mTexture, 0, NULL);
         }
 
@@ -817,7 +837,7 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTe
 
             // Pull data back from the level zero texture if necessary.
             ASSERT(mTexture);
-            ID3D11DeviceContext* context = mRenderer->getDeviceContext();
+            ID3D11DeviceContext *context = mRenderer->getDeviceContext();
             context->CopySubresourceRegion(mTexture, 0, 0, 0, 0, mLevelZeroTexture, 0, NULL);
         }
 
@@ -906,7 +926,7 @@ gl::Error TextureStorage11_2D::releaseAssociatedImage(const gl::ImageIndex &inde
 
 gl::Error TextureStorage11_2D::getResource(ID3D11Resource **outResource)
 {
-    if (mUseLevelZeroTexture)
+    if (mUseLevelZeroTexture && mMipLevels > 1)
     {
         gl::Error error = ensureTextureExists(1);
         if (error.isError())
@@ -947,7 +967,9 @@ gl::Error TextureStorage11_2D::getMippedResource(ID3D11Resource **outResource)
 
 gl::Error TextureStorage11_2D::ensureTextureExists(int mipLevels)
 {
-    ID3D11Texture2D** outputTexture = (mipLevels == 1 && mRenderer->getWorkarounds().zeroMaxLodWorkaround) ? &mLevelZeroTexture : &mTexture;
+    // If mMipLevels = 1 then always use mTexture rather than mLevelZeroTexture.
+    bool useLevelZeroTexture = mRenderer->getWorkarounds().zeroMaxLodWorkaround ? (mipLevels == 1) && (mMipLevels > 1) : false;
+    ID3D11Texture2D **outputTexture = useLevelZeroTexture ? &mLevelZeroTexture : &mTexture;
 
     // if the width or height is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
@@ -1126,7 +1148,7 @@ gl::Error TextureStorage11_2D::createSRV(int baseLevel, int mipLevels, DXGI_FORM
         ASSERT(baseLevel == 0);
         // This code also assumes that the incoming texture equals either mLevelZeroTexture or mTexture.
 
-        if (mipLevels == 1)
+        if (mipLevels == 1 && mMipLevels > 1)
         {
             // We must use a SRV on the level-zero-only texture.
             ASSERT(mLevelZeroTexture != NULL && texture == mLevelZeroTexture);
@@ -1220,7 +1242,7 @@ gl::Error TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel, ID3D11Render
     return gl::Error(GL_NO_ERROR);
 }
 
-TextureStorage11_Cube::TextureStorage11_Cube(Renderer11 *renderer, GLenum internalformat, bool renderTarget, int size, int levels)
+TextureStorage11_Cube::TextureStorage11_Cube(Renderer11 *renderer, GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly)
     : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getFeatureLevel(), renderTarget))
 {
     mTexture = NULL;
@@ -1234,6 +1256,14 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer11 *renderer, GLenum intern
             mAssociatedImages[face][level] = NULL;
             mRenderTarget[face][level] = NULL;
         }
+    }
+
+    mLevelZeroTexture = NULL;
+    mUseLevelZeroTexture = false;
+
+    for (unsigned int face = 0; face < CUBE_FACE_COUNT; face++)
+    {
+        mLevelZeroRenderTarget[face] = NULL;
     }
 
     mInternalFormat = internalformat;
@@ -1255,6 +1285,13 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer11 *renderer, GLenum intern
     mTextureWidth = size;
     mTextureHeight = size;
     mTextureDepth = 1;
+
+    if (hintLevelZeroOnly && levels > 1)
+    {
+        //The LevelZeroOnly hint should only be true if the zero max LOD workaround is active.
+        ASSERT(mRenderer->getWorkarounds().zeroMaxLodWorkaround);
+        mUseLevelZeroTexture = true;
+    }
 
     initializeSerials(getLevelCount() * CUBE_FACE_COUNT, CUBE_FACE_COUNT);
 }
@@ -1281,6 +1318,12 @@ TextureStorage11_Cube::~TextureStorage11_Cube()
 
     SafeRelease(mTexture);
     SafeRelease(mSwizzleTexture);
+    SafeRelease(mLevelZeroTexture);
+
+    for (unsigned int face = 0; face < CUBE_FACE_COUNT; face++)
+    {
+        SafeDelete(mLevelZeroRenderTarget[face]);
+    }
 
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
@@ -1296,6 +1339,147 @@ TextureStorage11_Cube *TextureStorage11_Cube::makeTextureStorage11_Cube(TextureS
 {
     ASSERT(HAS_DYNAMIC_TYPE(TextureStorage11_Cube*, storage));
     return static_cast<TextureStorage11_Cube*>(storage);
+}
+
+UINT TextureStorage11_Cube::getSubresourceIndex(const gl::ImageIndex &index) const
+{
+    if (mRenderer->getWorkarounds().zeroMaxLodWorkaround && mUseLevelZeroTexture && index.mipIndex == 0)
+    {
+        UINT arraySlice = static_cast<UINT>(index.hasLayer() ? index.layerIndex : 0);
+        UINT subresource = D3D11CalcSubresource(0, arraySlice, 1);
+        ASSERT(subresource != std::numeric_limits<UINT>::max());
+        return subresource;
+    }
+    else
+    {
+        UINT mipSlice = static_cast<UINT>(index.mipIndex + mTopLevel);
+        UINT arraySlice = static_cast<UINT>(index.hasLayer() ? index.layerIndex : 0);
+        UINT subresource = D3D11CalcSubresource(mipSlice, arraySlice, mMipLevels);
+        ASSERT(subresource != std::numeric_limits<UINT>::max());
+        return subresource;
+    }
+}
+
+gl::Error TextureStorage11_Cube::copyToStorage(TextureStorage *destStorage)
+{
+    ASSERT(destStorage);
+
+    TextureStorage11_Cube *dest11 = TextureStorage11_Cube::makeTextureStorage11_Cube(destStorage);
+
+    if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
+    {
+        ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
+
+        // If either mTexture or mLevelZeroTexture exist, then we need to copy them into the corresponding textures in destStorage.
+        if (mTexture)
+        {
+            gl::Error error = dest11->useLevelZeroWorkaroundTexture(false);
+            if (error.isError())
+            {
+                return error;
+            }
+
+            ID3D11Resource *destResource = NULL;
+            error = dest11->getResource(&destResource);
+            if (error.isError())
+            {
+                return error;
+            }
+
+            immediateContext->CopyResource(destResource, mTexture);
+        }
+
+        if (mLevelZeroTexture)
+        {
+            gl::Error error = dest11->useLevelZeroWorkaroundTexture(true);
+            if (error.isError())
+            {
+                return error;
+            }
+
+            ID3D11Resource *destResource = NULL;
+            error = dest11->getResource(&destResource);
+            if (error.isError())
+            {
+                return error;
+            }
+
+            immediateContext->CopyResource(destResource, mLevelZeroTexture);
+        }
+    }
+    else
+    {
+        ID3D11Resource *sourceResouce = NULL;
+        gl::Error error = getResource(&sourceResouce);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        ID3D11Resource *destResource = NULL;
+        error = dest11->getResource(&destResource);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
+        immediateContext->CopyResource(destResource, sourceResouce);
+    }
+
+    dest11->invalidateSwizzleCache();
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error TextureStorage11_Cube::useLevelZeroWorkaroundTexture(bool useLevelZeroTexture)
+{
+    if (useLevelZeroTexture && mMipLevels > 1)
+    {
+        if (!mUseLevelZeroTexture && mTexture)
+        {
+            gl::Error error = ensureTextureExists(1);
+            if (error.isError())
+            {
+                return error;
+            }
+
+            // Pull data back from the mipped texture if necessary.
+            ASSERT(mLevelZeroTexture);
+            ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+            for (int face = 0; face < 6; face++)
+            {
+                context->CopySubresourceRegion(mLevelZeroTexture, D3D11CalcSubresource(0, face, 1), 0, 0, 0, mTexture, face * mMipLevels, NULL);
+            }
+        }
+
+        mUseLevelZeroTexture = true;
+    }
+    else
+    {
+        if (mUseLevelZeroTexture && mLevelZeroTexture)
+        {
+            gl::Error error = ensureTextureExists(mMipLevels);
+            if (error.isError())
+            {
+                return error;
+            }
+
+            // Pull data back from the level zero texture if necessary.
+            ASSERT(mTexture);
+            ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+            for (int face = 0; face < 6; face++)
+            {
+                context->CopySubresourceRegion(mTexture, D3D11CalcSubresource(0, face, mMipLevels), 0, 0, 0, mLevelZeroTexture, face, NULL);
+            }
+        }
+
+        mUseLevelZeroTexture = false;
+    }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 void TextureStorage11_Cube::associateImage(Image11* image, const gl::ImageIndex &index)
@@ -1396,9 +1580,54 @@ gl::Error TextureStorage11_Cube::releaseAssociatedImage(const gl::ImageIndex &in
 
 gl::Error TextureStorage11_Cube::getResource(ID3D11Resource **outResource)
 {
+    if (mUseLevelZeroTexture && mMipLevels > 1)
+    {
+        gl::Error error = ensureTextureExists(1);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        *outResource = mLevelZeroTexture;
+        return gl::Error(GL_NO_ERROR);
+    }
+    else
+    {
+        gl::Error error = ensureTextureExists(mMipLevels);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        *outResource = mTexture;
+        return gl::Error(GL_NO_ERROR);
+    }
+}
+
+gl::Error TextureStorage11_Cube::getMippedResource(ID3D11Resource **outResource)
+{
+    // This shouldn't be called unless the zero max LOD workaround is active.
+    ASSERT(mRenderer->getWorkarounds().zeroMaxLodWorkaround);
+
+    gl::Error error = ensureTextureExists(mMipLevels);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    *outResource = mTexture;
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error TextureStorage11_Cube::ensureTextureExists(int mipLevels)
+{
+    // If mMipLevels = 1 then always use mTexture rather than mLevelZeroTexture.
+    bool useLevelZeroTexture = mRenderer->getWorkarounds().zeroMaxLodWorkaround ? (mipLevels == 1) && (mMipLevels > 1) : false;
+    ID3D11Texture2D **outputTexture = useLevelZeroTexture ? &mLevelZeroTexture : &mTexture;
+
     // if the size is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
-    if (mTexture == NULL && mTextureWidth > 0 && mTextureHeight > 0)
+    if (*outputTexture == NULL && mTextureWidth > 0 && mTextureHeight > 0)
     {
         ASSERT(mMipLevels > 0);
 
@@ -1407,7 +1636,7 @@ gl::Error TextureStorage11_Cube::getResource(ID3D11Resource **outResource)
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = mTextureWidth;
         desc.Height = mTextureHeight;
-        desc.MipLevels = mMipLevels;
+        desc.MipLevels = mipLevels;
         desc.ArraySize = CUBE_FACE_COUNT;
         desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;
@@ -1417,7 +1646,7 @@ gl::Error TextureStorage11_Cube::getResource(ID3D11Resource **outResource)
         desc.CPUAccessFlags = 0;
         desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-        HRESULT result = device->CreateTexture2D(&desc, NULL, &mTexture);
+        HRESULT result = device->CreateTexture2D(&desc, NULL, outputTexture);
 
         // this can happen from windows TDR
         if (d3d11::isDeviceLostError(result))
@@ -1432,7 +1661,6 @@ gl::Error TextureStorage11_Cube::getResource(ID3D11Resource **outResource)
         }
     }
 
-    *outResource = mTexture;
     return gl::Error(GL_NO_ERROR);
 }
 
@@ -1456,13 +1684,52 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index, Re
             return error;
         }
 
+        if (mUseLevelZeroTexture)
+        {
+            if (!mLevelZeroRenderTarget[faceIndex])
+            {
+                D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+                rtvDesc.Format = mRenderTargetFormat;
+                rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+                rtvDesc.Texture2DArray.MipSlice = mTopLevel + level;
+                rtvDesc.Texture2DArray.FirstArraySlice = faceIndex;
+                rtvDesc.Texture2DArray.ArraySize = 1;
+
+                ID3D11RenderTargetView *rtv;
+                result = device->CreateRenderTargetView(mLevelZeroTexture, &rtvDesc, &rtv);
+
+                if (result == E_OUTOFMEMORY)
+                {
+                    return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal render target view for texture storage, result: 0x%X.", result);
+                }
+                ASSERT(SUCCEEDED(result));
+
+                mLevelZeroRenderTarget[faceIndex] = new TextureRenderTarget11(rtv, mLevelZeroTexture, NULL, mInternalFormat, getLevelWidth(level), getLevelHeight(level), 1, 0);
+
+                // RenderTarget will take ownership of these resources
+                SafeRelease(rtv);
+            }
+
+            ASSERT(outRT);
+            *outRT = mLevelZeroRenderTarget[faceIndex];
+            return gl::Error(GL_NO_ERROR);
+        }
+
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
         srvDesc.Format = mShaderResourceFormat;
-        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY; // Will be used with Texture2D sampler, not TextureCube
         srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + level;
         srvDesc.Texture2DArray.MipLevels = 1;
         srvDesc.Texture2DArray.FirstArraySlice = faceIndex;
         srvDesc.Texture2DArray.ArraySize = 1;
+
+        if (mRenderer->getFeatureLevel() <= D3D_FEATURE_LEVEL_9_3)
+        {
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+        }
+        else
+        {
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY; // Will be used with Texture2D sampler, not TextureCube
+        }
 
         ID3D11ShaderResourceView *srv;
         result = device->CreateShaderResourceView(texture, &srvDesc, &srv);
@@ -1560,8 +1827,30 @@ gl::Error TextureStorage11_Cube::createSRV(int baseLevel, int mipLevels, DXGI_FO
         srvDesc.TextureCube.MostDetailedMip = mTopLevel + baseLevel;
     }
 
+    ID3D11Resource *srvTexture = texture;
+
+    if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
+    {
+        ASSERT(mTopLevel == 0);
+        ASSERT(baseLevel == 0);
+        // This code also assumes that the incoming texture equals either mLevelZeroTexture or mTexture.
+
+        if (mipLevels == 1 && mMipLevels > 1)
+        {
+            // We must use a SRV on the level-zero-only texture.
+            ASSERT(mLevelZeroTexture != NULL && texture == mLevelZeroTexture);
+            srvTexture = mLevelZeroTexture;
+        }
+        else
+        {
+            ASSERT(mipLevels == static_cast<int>(mMipLevels));
+            ASSERT(mTexture != NULL && texture == mTexture);
+            srvTexture = mTexture;
+        }
+    }
+
     ID3D11Device *device = mRenderer->getDevice();
-    HRESULT result = device->CreateShaderResourceView(texture, &srvDesc, outSRV);
+    HRESULT result = device->CreateShaderResourceView(srvTexture, &srvDesc, outSRV);
 
     ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
     if (FAILED(result))

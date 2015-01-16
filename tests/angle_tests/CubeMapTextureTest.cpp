@@ -1,7 +1,7 @@
 #include "ANGLETest.h"
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_TYPED_TEST_CASE(CubeMapTextureTest, ES2_D3D11);
+ANGLE_TYPED_TEST_CASE(CubeMapTextureTest, ES2_D3D11, ES2_D3D11_FL9_3);
 
 template<typename T>
 class CubeMapTextureTest : public ANGLETest
