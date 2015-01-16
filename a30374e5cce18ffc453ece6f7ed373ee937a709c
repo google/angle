@@ -22,6 +22,30 @@
       "revId": "a30374e5cce18ffc453ece6f7ed373ee937a709c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b971303_f2263055",
+        "filename": "src/libANGLE/renderer/d3d/formatutilsD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-16T21:02:39Z",
+      "side": 1,
+      "message": "Killed.",
+      "parentUuid": "cb88ffe4_caa81717",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 4
+      },
+      "revId": "a30374e5cce18ffc453ece6f7ed373ee937a709c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
