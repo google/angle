@@ -26,6 +26,7 @@ cbuffer BufferCopyParams : register(b0)
     float2 PositionScale;
     int2 TexLocationOffset;
     int2 TexLocationScale;
+    uint FirstSlice;
 }
 
 void ComputePositionAndIndex(uint vertexID, out VS_OUTPUT outVertex)
@@ -42,7 +43,7 @@ void ComputePositionAndIndex(uint vertexID, out VS_OUTPUT outVertex)
 
     outVertex.position  = float4(PositionOffset + PositionScale * coords, 0.0f, 1.0f);
     outVertex.index     = FirstPixelOffset + slice * SliceStride + row * RowStride + col;
-    outVertex.slice     = slice;
+    outVertex.slice     = FirstSlice + slice;
 }
 
 void VS_BufferToTexture(in uint vertexID : SV_VertexID, out VS_OUTPUT outVertex)

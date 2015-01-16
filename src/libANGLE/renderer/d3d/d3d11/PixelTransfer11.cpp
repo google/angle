@@ -164,7 +164,7 @@ void PixelTransfer11::setBufferToTextureCopyParams(const gl::Box &destArea, cons
     unsigned int alignmentBytes = static_cast<unsigned int>(unpack.alignment);
     unsigned int alignmentPixels = (alignmentBytes <= bytesPerPixel ? 1 : alignmentBytes / bytesPerPixel);
 
-    parametersOut->FirstPixelOffset     = offset;
+    parametersOut->FirstPixelOffset     = offset / bytesPerPixel;
     parametersOut->PixelsPerRow         = static_cast<unsigned int>(destArea.width);
     parametersOut->RowStride            = roundUp(parametersOut->PixelsPerRow, alignmentPixels);
     parametersOut->RowsPerSlice         = static_cast<unsigned int>(destArea.height);
@@ -172,6 +172,7 @@ void PixelTransfer11::setBufferToTextureCopyParams(const gl::Box &destArea, cons
     parametersOut->PositionOffset[1]    = texelCenterY + ((destSize.height - destArea.y - 1) / float(destSize.height)) * 2.0f - 1.0f;
     parametersOut->PositionScale[0]     = 2.0f / static_cast<float>(destSize.width);
     parametersOut->PositionScale[1]     = -2.0f / static_cast<float>(destSize.height);
+    parametersOut->FirstSlice           = destArea.z;
 }
 
 gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,

@@ -60,6 +60,7 @@ class PixelTransfer11
         float PositionScale[2];
         int TexLocationOffset[2];
         int TexLocationScale[2];
+        unsigned int FirstSlice;
     };
 
     static void setBufferToTextureCopyParams(const gl::Box &destArea, const gl::Extents &destSize, GLenum internalFormat,
