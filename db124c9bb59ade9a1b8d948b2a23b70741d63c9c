@@ -46,6 +46,30 @@
       "revId": "db124c9bb59ade9a1b8d948b2a23b70741d63c9c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ba19b5e_3fa30310",
+        "filename": "src/libANGLE/ImageIndex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-16T15:21:37Z",
+      "side": 1,
+      "message": "Hm, yes that\u0027s true. still LGTM.",
+      "parentUuid": "6b2473a4_f90dd35c",
+      "range": {
+        "startLine": 36,
+        "startChar": 22,
+        "endLine": 36,
+        "endChar": 33
+      },
+      "revId": "db124c9bb59ade9a1b8d948b2a23b70741d63c9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
