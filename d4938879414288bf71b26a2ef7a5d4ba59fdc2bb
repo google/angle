@@ -46,6 +46,30 @@
       "revId": "d4938879414288bf71b26a2ef7a5d4ba59fdc2bb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ba19b5e_6219f2e8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-16T20:17:20Z",
+      "side": 1,
+      "message": "Can you add a note about this bug in the patch description in a second line? EG \u0027Also fixes a bug...\u0027 Thanks.",
+      "parentUuid": "cbd63fdb_f13f08f4",
+      "range": {
+        "startLine": 167,
+        "startChar": 42,
+        "endLine": 167,
+        "endChar": 64
+      },
+      "revId": "d4938879414288bf71b26a2ef7a5d4ba59fdc2bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
