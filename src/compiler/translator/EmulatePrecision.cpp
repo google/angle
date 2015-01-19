@@ -228,6 +228,28 @@ TIntermAggregate *createCompoundAssignmentFunctionCallNode(TIntermTyped *left, T
     return callNode;
 }
 
+bool parentUsesResult(TIntermNode* parent, TIntermNode* node)
+{
+    if (!parent)
+    {
+        return false;
+    }
+
+    TIntermAggregate *aggParent = parent->getAsAggregate();
+    // If the parent's op is EOpSequence, the result is not assigned anywhere,
+    // so rounding it is not needed. In particular, this can avoid a lot of
+    // unnecessary rounding of unused return values of assignment.
+    if (aggParent && aggParent->getOp() == EOpSequence)
+    {
+        return false;
+    }
+    if (aggParent && aggParent->getOp() == EOpComma && (aggParent->getSequence()->back() != node))
+    {
+        return false;
+    }
+    return true;
+}
+
 }  // namespace anonymous
 
 EmulatePrecision::EmulatePrecision()
@@ -293,6 +315,10 @@ bool EmulatePrecision::visitBinary(Visit visit, TIntermBinary *node)
           case EOpMatrixTimesMatrix:
           {
             TIntermNode *parent = getParentNode();
+            if (!parentUsesResult(parent, node))
+            {
+                break;
+            }
             TIntermNode *replacement = createRoundingFunctionCallNode(node);
             mReplacements.push_back(NodeUpdateEntry(parent, node, replacement, true));
             break;
@@ -395,8 +421,11 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
         bool inFunctionMap = (mFunctionMap.find(node->getName()) != mFunctionMap.end());
         if (visit == PreVisit)
         {
-            if (canRoundFloat(node->getType()) && !inFunctionMap) {
-                TIntermNode *parent = getParentNode();
+            // User-defined function return values are not rounded, this relies on that
+            // calculations producing the value were rounded.
+            TIntermNode *parent = getParentNode();
+            if (canRoundFloat(node->getType()) && !inFunctionMap && parentUsesResult(parent, node))
+            {
                 TIntermNode *replacement = createRoundingFunctionCallNode(node);
                 mReplacements.push_back(NodeUpdateEntry(parent, node, replacement, true));
             }
@@ -437,9 +466,9 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
         break;
       }
       default:
-        if (canRoundFloat(node->getType()) && visit == PreVisit)
+        TIntermNode *parent = getParentNode();
+        if (canRoundFloat(node->getType()) && visit == PreVisit && parentUsesResult(parent, node))
         {
-            TIntermNode *parent = getParentNode();
             TIntermNode *replacement = createRoundingFunctionCallNode(node);
             mReplacements.push_back(NodeUpdateEntry(parent, node, replacement, true));
         }
