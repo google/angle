@@ -242,3 +242,95 @@ TYPED_TEST(TextureTest, CubeMapFBO)
 
     EXPECT_GL_NO_ERROR();
 }
+
+// Test that glTexSubImage2D works properly when glTexStorage2DEXT has initialized the image with a default color.
+TYPED_TEST(TextureTest, TexStorage)
+{
+    int width = getWindowWidth();
+    int height = getWindowHeight();
+
+    GLuint tex2D;
+    glGenTextures(1, &tex2D);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex2D);
+
+    // Fill with red
+    std::vector<GLubyte> pixels(3 * 16 * 16);
+    for (size_t pixelId = 0; pixelId < 16 * 16; ++pixelId)
+    {
+        pixels[pixelId * 3 + 0] = 255;
+        pixels[pixelId * 3 + 1] = 0;
+        pixels[pixelId * 3 + 2] = 0;
+    }
+
+    // ANGLE internally uses RGBA as the DirectX format for RGB images
+    // therefore glTexStorage2DEXT initializes the image to a default color to get a consistent alpha color.
+    // The data is kept in a CPU-side image and the image is marked as dirty.
+    glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGB8, 16, 16);
+
+    // Initializes the color of the upper-left 8x8 pixels, leaves the other pixels untouched.
+    // glTexSubImage2D should take into account that the image is dirty.
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 8, 8, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glUseProgram(m2DProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    glUniform2f(mTextureScaleUniformLocation, 1.f, 1.f);
+    drawQuad(m2DProgram, "position", 0.5f);
+    glDeleteTextures(1, &tex2D);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(3*width/4, 3*height/4, 0, 0, 0, 255);
+    EXPECT_PIXEL_EQ(width / 4, height / 4, 255, 0, 0, 255);
+}
+
+// Test that glTexSubImage2D combined with a PBO works properly when glTexStorage2DEXT has initialized the image with a default color.
+TYPED_TEST(TextureTest, TexStorageWithPBO)
+{
+    if (extensionEnabled("NV_pixel_buffer_object"))
+    {
+        int width = getWindowWidth();
+        int height = getWindowHeight();
+
+        GLuint tex2D;
+        glGenTextures(1, &tex2D);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, tex2D);
+
+        // Fill with red
+        std::vector<GLubyte> pixels(3 * 16 * 16);
+        for (size_t pixelId = 0; pixelId < 16 * 16; ++pixelId)
+        {
+            pixels[pixelId * 3 + 0] = 255;
+            pixels[pixelId * 3 + 1] = 0;
+            pixels[pixelId * 3 + 2] = 0;
+        }
+
+        // Read 16x16 region from red backbuffer to PBO
+        GLuint pbo;
+        glGenBuffers(1, &pbo);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, 3 * 16 * 16, pixels.data(), GL_STATIC_DRAW);
+
+        // ANGLE internally uses RGBA as the DirectX format for RGB images
+        // therefore glTexStorage2DEXT initializes the image to a default color to get a consistent alpha color.
+        // The data is kept in a CPU-side image and the image is marked as dirty.
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGB8, 16, 16);
+
+        // Initializes the color of the upper-left 8x8 pixels, leaves the other pixels untouched.
+        // glTexSubImage2D should take into account that the image is dirty.
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 8, 8, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glUseProgram(m2DProgram);
+        glUniform1i(mTexture2DUniformLocation, 0);
+        glUniform2f(mTextureScaleUniformLocation, 1.f, 1.f);
+        drawQuad(m2DProgram, "position", 0.5f);
+        glDeleteTextures(1, &tex2D);
+        glDeleteTextures(1, &pbo);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_EQ(3 * width / 4, 3 * height / 4, 0, 0, 0, 255);
+        EXPECT_PIXEL_EQ(width / 4, height / 4, 255, 0, 0, 255);
+    }
+}

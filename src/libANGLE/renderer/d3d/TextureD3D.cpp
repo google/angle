@@ -435,6 +435,11 @@ gl::Error TextureD3D::generateMipmaps()
         }
     }
 
+    if (mTexStorage)
+    {
+        updateStorage();
+    }
+
     return gl::Error(GL_NO_ERROR);
 }
 
@@ -656,8 +661,6 @@ gl::Error TextureD3D_2D::setSubImage(GLenum target, size_t level, const gl::Box 
 {
     ASSERT(target == GL_TEXTURE_2D && area.depth == 1 && area.z == 0);
 
-    bool fastUnpacked = false;
-
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
     if (isFastUnpackable(unpack, getInternalFormat(level)) && isLevelComplete(level))
     {
@@ -668,24 +671,14 @@ gl::Error TextureD3D_2D::setSubImage(GLenum target, size_t level, const gl::Box 
             return error;
         }
 
-        error = fastUnpackPixels(unpack, pixels, area, getInternalFormat(level), type, renderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
+        ASSERT(!mImageArray[level]->isDirty());
 
-        // Ensure we don't overwrite our newly initialized data
-        mImageArray[level]->markClean();
-
-        fastUnpacked = true;
+        return fastUnpackPixels(unpack, pixels, area, getInternalFormat(level), type, renderTarget);
     }
-
-    if (!fastUnpacked)
+    else
     {
         return TextureD3D::subImage(index, area, format, type, unpack, pixels);
     }
-
-    return gl::Error(GL_NO_ERROR);
 }
 
 
@@ -837,6 +830,13 @@ gl::Error TextureD3D_2D::setStorage(GLenum target, size_t levels, GLenum interna
     if (error.isError())
     {
         SafeDelete(storage);
+        return error;
+    }
+
+    error = updateStorage();
+
+    if (error.isError())
+    {
         return error;
     }
 
@@ -1391,6 +1391,13 @@ gl::Error TextureD3D_Cube::setStorage(GLenum target, size_t levels, GLenum inter
         return error;
     }
 
+    error = updateStorage();
+
+    if (error.isError())
+    {
+        return error;
+    }
+
     mImmutable = true;
 
     return gl::Error(GL_NO_ERROR);
@@ -1846,8 +1853,6 @@ gl::Error TextureD3D_3D::setSubImage(GLenum target, size_t level, const gl::Box 
 {
     ASSERT(target == GL_TEXTURE_3D);
 
-    bool fastUnpacked = false;
-
     gl::ImageIndex index = gl::ImageIndex::Make3D(level);
 
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
@@ -1860,24 +1865,14 @@ gl::Error TextureD3D_3D::setSubImage(GLenum target, size_t level, const gl::Box 
             return error;
         }
 
-        error = fastUnpackPixels(unpack, pixels, area, getInternalFormat(level), type, destRenderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
+        ASSERT(!mImageArray[level]->isDirty());
 
-        // Ensure we don't overwrite our newly initialized data
-        mImageArray[level]->markClean();
-
-        fastUnpacked = true;
+        return fastUnpackPixels(unpack, pixels, area, getInternalFormat(level), type, destRenderTarget);
     }
-
-    if (!fastUnpacked)
+    else
     {
         return TextureD3D::subImage(index, area, format, type, unpack, pixels);
     }
-
-    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error TextureD3D_3D::setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
@@ -1988,6 +1983,13 @@ gl::Error TextureD3D_3D::setStorage(GLenum target, size_t levels, GLenum interna
         return error;
     }
 
+    error = updateStorage();
+
+    if (error.isError())
+    {
+        return error;
+    }
+
     mImmutable = true;
 
     return gl::Error(GL_NO_ERROR);
@@ -2065,7 +2067,7 @@ gl::Error TextureD3D_3D::initializeStorage(bool renderTarget)
         return gl::Error(GL_NO_ERROR);
     }
 
-    bool createRenderTarget = (renderTarget || mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mUsage));
 
     TextureStorage *storage = NULL;
     gl::Error error = createCompleteStorage(createRenderTarget, &storage);
@@ -2530,6 +2532,13 @@ gl::Error TextureD3D_2DArray::setStorage(GLenum target, size_t levels, GLenum in
         return error;
     }
 
+    error = updateStorage();
+
+    if (error.isError())
+    {
+        return error;
+    }
+
     mImmutable = true;
 
     return gl::Error(GL_NO_ERROR);
@@ -2601,7 +2610,7 @@ gl::Error TextureD3D_2DArray::initializeStorage(bool renderTarget)
         return gl::Error(GL_NO_ERROR);
     }
 
-    bool createRenderTarget = (renderTarget || mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mUsage));
 
     TextureStorage *storage = NULL;
     gl::Error error = createCompleteStorage(createRenderTarget, &storage);
