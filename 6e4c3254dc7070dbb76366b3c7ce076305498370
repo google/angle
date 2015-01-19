@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0b4a1799_1b827b68",
+        "filename": "tests/perf_tests/angle_perf_test_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-19T16:24:04Z",
+      "side": 1,
+      "message": "Cleaned it up a bit. If we ever want to integrate this class with the rest of ANGLE, feel free to flesh it out with the methods, and changing to a class, etc.",
+      "parentUuid": "8b928710_68f0f73a",
+      "range": {
+        "startLine": 25,
+        "startChar": 13,
+        "endLine": 25,
+        "endChar": 36
+      },
+      "revId": "6e4c3254dc7070dbb76366b3c7ce076305498370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b971303_b294284e",
         "filename": "tests/perf_tests/angle_perf_test_main.cpp",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "cb5d5f61_79a107ae",
+        "filename": "tests/perf_tests/angle_perf_test_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-19T16:24:04Z",
+      "side": 1,
+      "message": "Done, cleaned up this a bit.",
+      "parentUuid": "6b971303_b294284e",
+      "range": {
+        "startLine": 41,
+        "startChar": 9,
+        "endLine": 41,
+        "endChar": 21
+      },
+      "revId": "6e4c3254dc7070dbb76366b3c7ce076305498370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8b928710_a826ff21",
         "filename": "tests/perf_tests/angle_perf_test_main.cpp",
         "patchSetId": 6
@@ -59,6 +107,30 @@
       "writtenOn": "2015-01-16T19:51:34Z",
       "side": 1,
       "message": "Maybe build a map of test name to ParseAndRun\u003cT\u003e so it\u0027s easier to add new ones later?",
+      "range": {
+        "startLine": 294,
+        "startChar": 4,
+        "endLine": 310,
+        "endChar": 5
+      },
+      "revId": "6e4c3254dc7070dbb76366b3c7ce076305498370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb5d5f61_59a6c3c7",
+        "filename": "tests/perf_tests/angle_perf_test_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-19T16:24:04Z",
+      "side": 1,
+      "message": "If I understand the idea correctly I\u0027d need to make a generic class like \"TestRunner { virtual RunTest(); }\" and inherit from that. Or make lambda methods. (Because the type of the map can\u0027t contain the T parameter)",
+      "parentUuid": "8b928710_a826ff21",
       "range": {
         "startLine": 294,
         "startChar": 4,
