@@ -265,99 +265,13 @@ Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowT
     return Error(EGL_SUCCESS);
 }
 
-Error Display::createOffscreenSurface(const Config *configuration, EGLClientBuffer shareHandle,
-                                      const EGLint *attribList, EGLSurface *outSurface)
+Error Display::createOffscreenSurface(const Config *configuration, EGLClientBuffer shareHandle, const AttributeMap &attribs,
+                                      Surface **outSurface)
 {
-    EGLint width = 0, height = 0;
-    EGLenum textureFormat = EGL_NO_TEXTURE;
-    EGLenum textureTarget = EGL_NO_TEXTURE;
-
-    if (attribList)
-    {
-        while (*attribList != EGL_NONE)
-        {
-            switch (attribList[0])
-            {
-              case EGL_WIDTH:
-                width = attribList[1];
-                break;
-              case EGL_HEIGHT:
-                height = attribList[1];
-                break;
-              case EGL_LARGEST_PBUFFER:
-                if (attribList[1] != EGL_FALSE)
-                  UNIMPLEMENTED(); // FIXME
-                break;
-              case EGL_TEXTURE_FORMAT:
-                switch (attribList[1])
-                {
-                  case EGL_NO_TEXTURE:
-                  case EGL_TEXTURE_RGB:
-                  case EGL_TEXTURE_RGBA:
-                    textureFormat = attribList[1];
-                    break;
-                  default:
-                    return Error(EGL_BAD_ATTRIBUTE);
-                }
-                break;
-              case EGL_TEXTURE_TARGET:
-                switch (attribList[1])
-                {
-                  case EGL_NO_TEXTURE:
-                  case EGL_TEXTURE_2D:
-                    textureTarget = attribList[1];
-                    break;
-                  default:
-                    return Error(EGL_BAD_ATTRIBUTE);
-                }
-                break;
-              case EGL_MIPMAP_TEXTURE:
-                if (attribList[1] != EGL_FALSE)
-                  return Error(EGL_BAD_ATTRIBUTE);
-                break;
-              case EGL_VG_COLORSPACE:
-                return Error(EGL_BAD_MATCH);
-              case EGL_VG_ALPHA_FORMAT:
-                return Error(EGL_BAD_MATCH);
-              default:
-                return Error(EGL_BAD_ATTRIBUTE);
-            }
-
-            attribList += 2;
-        }
-    }
-
-    if (width < 0 || height < 0)
-    {
-        return Error(EGL_BAD_PARAMETER);
-    }
-
-    if (width == 0 || height == 0)
-    {
-        return Error(EGL_BAD_ATTRIBUTE);
-    }
-
-    if (textureFormat != EGL_NO_TEXTURE && !mCaps.textureNPOT && (!gl::isPow2(width) || !gl::isPow2(height)))
-    {
-        return Error(EGL_BAD_MATCH);
-    }
-
-    if ((textureFormat != EGL_NO_TEXTURE && textureTarget == EGL_NO_TEXTURE) ||
-        (textureFormat == EGL_NO_TEXTURE && textureTarget != EGL_NO_TEXTURE))
-    {
-        return Error(EGL_BAD_MATCH);
-    }
-
-    if (!(configuration->surfaceType & EGL_PBUFFER_BIT))
-    {
-        return Error(EGL_BAD_MATCH);
-    }
-
-    if ((textureFormat == EGL_TEXTURE_RGB && configuration->bindToTextureRGB != EGL_TRUE) ||
-        (textureFormat == EGL_TEXTURE_RGBA && configuration->bindToTextureRGBA != EGL_TRUE))
-    {
-        return Error(EGL_BAD_ATTRIBUTE);
-    }
+    EGLint width = attribs.get(EGL_WIDTH, 0);
+    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    EGLenum textureFormat = attribs.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
+    EGLenum textureTarget = attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
 
     if (mImplementation->testDeviceLost())
     {

@@ -39,6 +39,11 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
 Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWindowType window,
                                   const AttributeMap& attributes);
 
+Error ValidateCreatePbufferSurface(Display *display, Config *config, const AttributeMap& attributes);
+Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, EGLClientBuffer buffer,
+                                            Config *config, const AttributeMap& attributes);
+
+
 }
 
 #endif // LIBANGLE_VALIDATIONEGL_H_

@@ -272,23 +272,24 @@ EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy, EGLConfig config, co
 
     Display *display = static_cast<Display*>(dpy);
     Config *configuration = static_cast<Config*>(config);
+    AttributeMap attributes(attrib_list);
 
-    Error error = ValidateConfig(display, configuration);
+    Error error = ValidateCreatePbufferSurface(display, configuration, attributes);
     if (error.isError())
     {
         SetGlobalError(error);
         return EGL_NO_SURFACE;
     }
 
-    EGLSurface surface = EGL_NO_SURFACE;
-    error = display->createOffscreenSurface(configuration, NULL, attrib_list, &surface);
+    egl::Surface *surface = nullptr;
+    error = display->createOffscreenSurface(configuration, NULL, attributes, &surface);
     if (error.isError())
     {
         SetGlobalError(error);
         return EGL_NO_SURFACE;
     }
 
-    return surface;
+    return static_cast<EGLSurface>(surface);
 }
 
 EGLSurface EGLAPIENTRY CreatePixmapSurface(EGLDisplay dpy, EGLConfig config, EGLNativePixmapType pixmap, const EGLint *attrib_list)
@@ -904,29 +905,24 @@ EGLSurface EGLAPIENTRY CreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buf
 
     Display *display = static_cast<Display*>(dpy);
     Config *configuration = static_cast<Config*>(config);
+    AttributeMap attributes(attrib_list);
 
-    Error error = ValidateConfig(display, configuration);
+    Error error = ValidateCreatePbufferFromClientBuffer(display, buftype, buffer, configuration, attributes);
     if (error.isError())
     {
         SetGlobalError(error);
         return EGL_NO_SURFACE;
     }
 
-    if (buftype != EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE || !buffer)
-    {
-        SetGlobalError(Error(EGL_BAD_PARAMETER));
-        return EGL_NO_SURFACE;
-    }
-
-    EGLSurface surface = EGL_NO_SURFACE;
-    error = display->createOffscreenSurface(configuration, buffer, attrib_list, &surface);
+    egl::Surface *surface = nullptr;
+    error = display->createOffscreenSurface(configuration, buffer, attributes, &surface);
     if (error.isError())
     {
         SetGlobalError(error);
         return EGL_NO_SURFACE;
     }
 
-    return surface;
+    return static_cast<EGLSurface>(surface);
 }
 
 EGLBoolean EGLAPIENTRY ReleaseThread(void)

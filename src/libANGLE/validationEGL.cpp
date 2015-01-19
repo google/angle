@@ -286,4 +286,216 @@ Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWin
     return Error(EGL_SUCCESS);
 }
 
+Error ValidateCreatePbufferSurface(Display *display, Config *config, const AttributeMap& attributes)
+{
+    Error error = ValidateConfig(display, config);
+    if (error.isError())
+    {
+        return error;
+    }
+    
+    for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
+    {
+        EGLint attribute = attributeIter->first;
+        EGLint value = attributeIter->second;
+
+        switch (attribute)
+        {
+          case EGL_WIDTH:
+          case EGL_HEIGHT:
+            if (value < 0)
+            {
+                return Error(EGL_BAD_PARAMETER);
+            }
+            break;
+
+          case EGL_LARGEST_PBUFFER:
+            break;
+
+          case EGL_TEXTURE_FORMAT:
+            switch (value)
+            {
+              case EGL_NO_TEXTURE:
+              case EGL_TEXTURE_RGB:
+              case EGL_TEXTURE_RGBA:
+                break;
+              default:
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            break;
+
+          case EGL_TEXTURE_TARGET:
+            switch (value)
+            {
+              case EGL_NO_TEXTURE:
+              case EGL_TEXTURE_2D:
+                break;
+              default:
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            break;
+
+          case EGL_MIPMAP_TEXTURE:
+            break;
+
+          case EGL_VG_COLORSPACE:
+            break;
+
+          case EGL_VG_ALPHA_FORMAT:
+            break;
+
+          default:
+            return Error(EGL_BAD_ATTRIBUTE);
+        }
+    }
+
+    if (!(config->surfaceType & EGL_PBUFFER_BIT))
+    {
+        return Error(EGL_BAD_MATCH);
+    }
+
+    const Caps &caps = display->getCaps();
+
+    EGLenum textureFormat = attributes.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
+    EGLenum textureTarget = attributes.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
+
+    if ((textureFormat != EGL_NO_TEXTURE && textureTarget == EGL_NO_TEXTURE) ||
+        (textureFormat == EGL_NO_TEXTURE && textureTarget != EGL_NO_TEXTURE))
+    {
+        return Error(EGL_BAD_MATCH);
+    }
+
+    if ((textureFormat == EGL_TEXTURE_RGB  && config->bindToTextureRGB != EGL_TRUE) ||
+        (textureFormat == EGL_TEXTURE_RGBA && config->bindToTextureRGBA != EGL_TRUE))
+    {
+        return Error(EGL_BAD_ATTRIBUTE);
+    }
+
+    EGLint width = attributes.get(EGL_WIDTH, 0);
+    EGLint height = attributes.get(EGL_HEIGHT, 0);
+    if (textureFormat != EGL_NO_TEXTURE && !caps.textureNPOT && (!gl::isPow2(width) || !gl::isPow2(height)))
+    {
+        return Error(EGL_BAD_MATCH);
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
+Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, EGLClientBuffer buffer,
+                                            Config *config, const AttributeMap& attributes)
+{
+    Error error = ValidateConfig(display, config);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+
+    switch (buftype)
+    {
+      case EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE:
+        if (!displayExtensions.d3dShareHandleClientBuffer)
+        {
+            return Error(EGL_BAD_PARAMETER);
+        }
+        if (buffer == nullptr)
+        {
+            return Error(EGL_BAD_PARAMETER);
+        }
+        break;
+
+      default:
+        return Error(EGL_BAD_PARAMETER);
+    }
+
+    for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
+    {
+        EGLint attribute = attributeIter->first;
+        EGLint value = attributeIter->second;
+
+        switch (attribute)
+        {
+          case EGL_WIDTH:
+          case EGL_HEIGHT:
+            if (!displayExtensions.d3dShareHandleClientBuffer)
+            {
+                return Error(EGL_BAD_PARAMETER);
+            }
+            if (value < 0)
+            {
+                return Error(EGL_BAD_PARAMETER);
+            }
+            break;
+
+          case EGL_TEXTURE_FORMAT:
+            switch (value)
+            {
+              case EGL_NO_TEXTURE:
+              case EGL_TEXTURE_RGB:
+              case EGL_TEXTURE_RGBA:
+                break;
+              default:
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            break;
+
+          case EGL_TEXTURE_TARGET:
+            switch (value)
+            {
+              case EGL_NO_TEXTURE:
+              case EGL_TEXTURE_2D:
+                break;
+              default:
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            break;
+
+          case EGL_MIPMAP_TEXTURE:
+            break;
+
+          default:
+            return Error(EGL_BAD_ATTRIBUTE);
+        }
+    }
+
+    if (!(config->surfaceType & EGL_PBUFFER_BIT))
+    {
+        return Error(EGL_BAD_MATCH);
+    }
+
+    EGLenum textureFormat = attributes.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
+    EGLenum textureTarget = attributes.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
+    if ((textureFormat != EGL_NO_TEXTURE && textureTarget == EGL_NO_TEXTURE) ||
+        (textureFormat == EGL_NO_TEXTURE && textureTarget != EGL_NO_TEXTURE))
+    {
+        return Error(EGL_BAD_MATCH);
+    }
+
+    if ((textureFormat == EGL_TEXTURE_RGB  && config->bindToTextureRGB  != EGL_TRUE) ||
+        (textureFormat == EGL_TEXTURE_RGBA && config->bindToTextureRGBA != EGL_TRUE))
+    {
+        return Error(EGL_BAD_ATTRIBUTE);
+    }
+
+    if (buftype == EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE)
+    {
+        EGLint width = attributes.get(EGL_WIDTH, 0);
+        EGLint height = attributes.get(EGL_HEIGHT, 0);
+
+        if (width == 0 || height == 0)
+        {
+            return Error(EGL_BAD_ATTRIBUTE);
+        }
+
+        const Caps &caps = display->getCaps();
+        if (textureFormat != EGL_NO_TEXTURE && !caps.textureNPOT && (!gl::isPow2(width) || !gl::isPow2(height)))
+        {
+            return Error(EGL_BAD_MATCH);
+        }
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
 }
