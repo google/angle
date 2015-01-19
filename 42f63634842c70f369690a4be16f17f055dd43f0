@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b6c7315_56fa1480",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-19T19:05:03Z",
+      "side": 1,
+      "message": "you can probably remove the programD3D parameter and retrieve the program from the Data struct.",
+      "range": {
+        "startLine": 160,
+        "startChar": 130,
+        "endLine": 160,
+        "endChar": 154
+      },
+      "revId": "42f63634842c70f369690a4be16f17f055dd43f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
