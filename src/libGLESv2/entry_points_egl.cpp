@@ -245,29 +245,24 @@ EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy, EGLConfig config, EGL
 
     Display *display = static_cast<Display*>(dpy);
     Config *configuration = static_cast<Config*>(config);
+    AttributeMap attributes(attrib_list);
 
-    Error error = ValidateConfig(display, configuration);
+    Error error = ValidateCreateWindowSurface(display, configuration, win, attributes);
     if (error.isError())
     {
         SetGlobalError(error);
         return EGL_NO_SURFACE;
     }
 
-    if (!display->isValidNativeWindow(win))
-    {
-        SetGlobalError(Error(EGL_BAD_NATIVE_WINDOW));
-        return EGL_NO_SURFACE;
-    }
-
-    EGLSurface surface = EGL_NO_SURFACE;
-    error = display->createWindowSurface(win, configuration, attrib_list, &surface);
+    egl::Surface *surface = nullptr;
+    error = display->createWindowSurface(configuration, win, attributes, &surface);
     if (error.isError())
     {
         SetGlobalError(error);
         return EGL_NO_SURFACE;
     }
 
-    return surface;
+    return static_cast<EGLSurface>(surface);
 }
 
 EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy, EGLConfig config, const EGLint *attrib_list)

@@ -224,69 +224,18 @@ bool Display::getConfigAttrib(const Config *configuration, EGLint attribute, EGL
     return true;
 }
 
-Error Display::createWindowSurface(EGLNativeWindowType window, const Config *configuration, const EGLint *attribList, EGLSurface *outSurface)
+Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowType window, const AttributeMap &attribs,
+                                   Surface **outSurface)
 {
-    EGLint postSubBufferSupported = EGL_FALSE;
-
-    EGLint width = 0;
-    EGLint height = 0;
-    EGLint fixedSize = EGL_FALSE;
-
-    if (attribList)
-    {
-        while (*attribList != EGL_NONE)
-        {
-            switch (attribList[0])
-            {
-              case EGL_RENDER_BUFFER:
-                switch (attribList[1])
-                {
-                  case EGL_BACK_BUFFER:
-                    break;
-                  case EGL_SINGLE_BUFFER:
-                    return Error(EGL_BAD_MATCH);   // Rendering directly to front buffer not supported
-                  default:
-                    return Error(EGL_BAD_ATTRIBUTE);
-                }
-                break;
-              case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
-                postSubBufferSupported = attribList[1];
-                break;
-              case EGL_WIDTH:
-                width = attribList[1];
-                break;
-              case EGL_HEIGHT:
-                height = attribList[1];
-                break;
-              case EGL_FIXED_SIZE_ANGLE:
-                fixedSize = attribList[1];
-                break;
-              case EGL_VG_COLORSPACE:
-                return Error(EGL_BAD_MATCH);
-              case EGL_VG_ALPHA_FORMAT:
-                return Error(EGL_BAD_MATCH);
-              default:
-                return Error(EGL_BAD_ATTRIBUTE);
-            }
-
-            attribList += 2;
-        }
-    }
-
-    if (width < 0 || height < 0)
-    {
-        return Error(EGL_BAD_PARAMETER);
-    }
+    EGLint postSubBufferSupported = attribs.get(EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_FALSE);
+    EGLint width = attribs.get(EGL_WIDTH, 0);
+    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    EGLint fixedSize = attribs.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE);
 
     if (!fixedSize)
     {
         width = -1;
         height = -1;
-    }
-
-    if (hasExistingWindowSurface(window))
-    {
-        return Error(EGL_BAD_ALLOC);
     }
 
     if (mImplementation->testDeviceLost())

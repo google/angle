@@ -36,6 +36,9 @@ Error ValidateContext(const Display *display, gl::Context *context);
 Error ValidateCreateContext(Display *display, Config *configuration, gl::Context *shareContext,
                             const AttributeMap& attributes);
 
+Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWindowType window,
+                                  const AttributeMap& attributes);
+
 }
 
 #endif // LIBANGLE_VALIDATIONEGL_H_

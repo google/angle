@@ -206,4 +206,84 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
     return Error(EGL_SUCCESS);
 }
 
+Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWindowType window,
+                                  const AttributeMap& attributes)
+{
+    Error error = ValidateConfig(display, config);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    if (!display->isValidNativeWindow(window))
+    {
+        return Error(EGL_BAD_NATIVE_WINDOW);
+    }
+
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+
+    for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
+    {
+        EGLint attribute = attributeIter->first;
+        EGLint value = attributeIter->second;
+
+        switch (attribute)
+        {
+          case EGL_RENDER_BUFFER:
+            switch (value)
+            {
+              case EGL_BACK_BUFFER:
+                break;
+              case EGL_SINGLE_BUFFER:
+                return Error(EGL_BAD_MATCH);   // Rendering directly to front buffer not supported
+              default:
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            break;
+
+          case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
+            if (!displayExtensions.postSubBuffer)
+            {
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            break;
+
+          case EGL_WIDTH:
+          case EGL_HEIGHT:
+            if (!displayExtensions.windowFixedSize)
+            {
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            if (value < 0)
+            {
+                return Error(EGL_BAD_PARAMETER);
+            }
+            break;
+
+          case EGL_FIXED_SIZE_ANGLE:
+            if (!displayExtensions.windowFixedSize)
+            {
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            break;
+
+          case EGL_VG_COLORSPACE:
+            return Error(EGL_BAD_MATCH);
+
+          case EGL_VG_ALPHA_FORMAT:
+            return Error(EGL_BAD_MATCH);
+
+          default:
+            return Error(EGL_BAD_ATTRIBUTE);
+        }
+    }
+
+    if (display->hasExistingWindowSurface(window))
+    {
+        return Error(EGL_BAD_ALLOC);
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
 }
