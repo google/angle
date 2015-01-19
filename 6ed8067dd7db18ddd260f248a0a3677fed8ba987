@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b4a1799_9ec2f942",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-19T18:37:15Z",
+      "side": 1,
+      "message": "I find this logic a bit hard to understand, can it have an explanation comment or be reorganized?",
+      "range": {
+        "startLine": 387,
+        "startChar": 8,
+        "endLine": 387,
+        "endChar": 82
+      },
+      "revId": "6ed8067dd7db18ddd260f248a0a3677fed8ba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b4a1799_de1ac15e",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-19T18:37:15Z",
+      "side": 1,
+      "message": "nit: put braces around this (and the one below) please",
+      "range": {
+        "startLine": 388,
+        "startChar": 12,
+        "endLine": 388,
+        "endChar": 25
+      },
+      "revId": "6ed8067dd7db18ddd260f248a0a3677fed8ba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb5d5f61_197bab5e",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-19T18:37:15Z",
+      "side": 1,
+      "message": "nit: no need for the default here.",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 400,
+        "endChar": 14
+      },
+      "revId": "6ed8067dd7db18ddd260f248a0a3677fed8ba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b4a1799_decc8177",
+        "filename": "src/compiler/translator/intermOut.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-19T18:37:15Z",
+      "side": 1,
+      "message": "nit: move the break over a bit.",
+      "revId": "6ed8067dd7db18ddd260f248a0a3677fed8ba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
