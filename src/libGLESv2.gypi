@@ -129,6 +129,8 @@
             'libANGLE/renderer/TransformFeedbackImpl.h',
             'libANGLE/renderer/VertexArrayImpl.h',
             'libANGLE/renderer/Workarounds.h',
+            'libANGLE/validationEGL.cpp',
+            'libANGLE/validationEGL.h',
             'libANGLE/validationES.cpp',
             'libANGLE/validationES.h',
             'libANGLE/validationES2.cpp',

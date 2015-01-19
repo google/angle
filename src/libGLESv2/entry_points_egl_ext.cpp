@@ -11,45 +11,12 @@
 
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/validationEGL.h"
 
 #include "common/debug.h"
 
 namespace egl
 {
-
-// EGL object validation
-static bool ValidateDisplay(Display *display)
-{
-    if (display == EGL_NO_DISPLAY)
-    {
-        SetGlobalError(Error(EGL_BAD_DISPLAY));
-        return false;
-    }
-
-    if (!display->isInitialized())
-    {
-        SetGlobalError(Error(EGL_NOT_INITIALIZED));
-        return false;
-    }
-
-    return true;
-}
-
-static bool ValidateSurface(Display *display, Surface *surface)
-{
-    if (!ValidateDisplay(display))
-    {
-        return false;
-    }
-
-    if (!display->isValidSurface(surface))
-    {
-        SetGlobalError(Error(EGL_BAD_SURFACE));
-        return false;
-    }
-
-    return true;
-}
 
 // EGL_ANGLE_query_surface_pointer
 EGLBoolean EGLAPIENTRY QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surface, EGLint attribute, void **value)
@@ -58,10 +25,12 @@ EGLBoolean EGLAPIENTRY QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surfa
           dpy, surface, attribute, value);
 
     Display *display = static_cast<Display*>(dpy);
-    Surface *eglSurface = (Surface*)surface;
+    Surface *eglSurface = static_cast<Surface*>(surface);
 
-    if (!ValidateSurface(display, eglSurface))
+    Error error = ValidateSurface(display, eglSurface);
+    if (error.isError())
     {
+        SetGlobalError(error);
         return EGL_FALSE;
     }
 
@@ -93,7 +62,7 @@ EGLBoolean EGLAPIENTRY QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surfa
         return EGL_FALSE;
     }
 
-    Error error = eglSurface->querySurfacePointerANGLE(attribute, value);
+    error = eglSurface->querySurfacePointerANGLE(attribute, value);
     SetGlobalError(error);
     return (error.isError() ? EGL_FALSE : EGL_TRUE);
 }
@@ -113,8 +82,10 @@ EGLBoolean EGLAPIENTRY PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLin
     Display *display = static_cast<Display*>(dpy);
     Surface *eglSurface = static_cast<Surface*>(surface);
 
-    if (!ValidateSurface(display, eglSurface))
+    Error error = ValidateSurface(display, eglSurface);
+    if (error.isError())
     {
+        SetGlobalError(error);
         return EGL_FALSE;
     }
 
@@ -137,7 +108,7 @@ EGLBoolean EGLAPIENTRY PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLin
         return EGL_TRUE;
     }
 
-    Error error = eglSurface->postSubBuffer(x, y, width, height);
+    error = eglSurface->postSubBuffer(x, y, width, height);
     if (error.isError())
     {
         SetGlobalError(error);
