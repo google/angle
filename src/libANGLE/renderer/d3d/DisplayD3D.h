@@ -33,6 +33,8 @@ class DisplayD3D : public DisplayImpl
     egl::Error createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
                              gl::Context **outContext) override;
 
+    egl::Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context) override;
+
     egl::ConfigSet generateConfigs() const override;
 
     bool isDeviceLost() const override;

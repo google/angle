@@ -163,6 +163,8 @@ Error Display::initialize()
 
 void Display::terminate()
 {
+    makeCurrent(nullptr, nullptr, nullptr);
+
     while (!mContextSet.empty())
     {
         destroyContext(*mContextSet.begin());
@@ -466,6 +468,22 @@ Error Display::createContext(const Config *configuration, EGLContext shareContex
 
     *outContext = context;
     return Error(EGL_SUCCESS);
+}
+
+Error Display::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)
+{
+    Error error = mImplementation->makeCurrent(drawSurface, readSurface, context);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    if (context && drawSurface)
+    {
+        context->makeCurrent(drawSurface);
+    }
+
+    return egl::Error(EGL_SUCCESS);
 }
 
 Error Display::restoreLostDevice()

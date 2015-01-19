@@ -151,6 +151,11 @@ egl::Error DisplayD3D::createContext(const egl::Config *config, const gl::Contex
     return egl::Error(EGL_SUCCESS);
 }
 
+egl::Error DisplayD3D::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)
+{
+    return egl::Error(EGL_SUCCESS);
+}
+
 egl::Error DisplayD3D::initialize(egl::Display *display, EGLNativeDisplayType nativeDisplay, const egl::AttributeMap &attribMap)
 {
     ASSERT(mRenderer == nullptr);

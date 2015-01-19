@@ -721,7 +721,7 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
 
     if (context != nullptr && display != nullptr && drawSurface != nullptr)
     {
-        context->makeCurrent(drawSurface);
+        display->makeCurrent(drawSurface, readSurface, context);
     }
 
     SetGlobalError(Error(EGL_SUCCESS));

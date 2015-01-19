@@ -53,6 +53,8 @@ class Display final
     Error createOffscreenSurface(const Config *configuration, EGLClientBuffer shareHandle, const EGLint *attribList, EGLSurface *outSurface);
     Error createContext(const Config *configuration, EGLContext shareContext, const egl::AttributeMap &attribs, EGLContext *outContext);
 
+    Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context);
+
     void destroySurface(egl::Surface *surface);
     void destroyContext(gl::Context *context);
 
