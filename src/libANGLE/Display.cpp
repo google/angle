@@ -436,8 +436,8 @@ Error Display::createOffscreenSurface(const Config *configuration, EGLClientBuff
     return Error(EGL_SUCCESS);
 }
 
-Error Display::createContext(const Config *configuration, EGLContext shareContext, const egl::AttributeMap &attribs,
-                             EGLContext *outContext)
+Error Display::createContext(const Config *configuration, gl::Context *shareContext, const AttributeMap &attribs,
+                             gl::Context **outContext)
 {
     ASSERT(isInitialized());
 
@@ -450,14 +450,8 @@ Error Display::createContext(const Config *configuration, EGLContext shareContex
         }
     }
 
-    if (attribs.get(EGL_CONTEXT_CLIENT_VERSION, 1) == 3 && !(configuration->conformant & EGL_OPENGL_ES3_BIT_KHR))
-    {
-        return Error(EGL_BAD_CONFIG);
-    }
-
     gl::Context *context = nullptr;
-    Error error = mImplementation->createContext(configuration, reinterpret_cast<gl::Context*>(shareContext),
-                                                 attribs, &context);
+    Error error = mImplementation->createContext(configuration, shareContext, attribs, &context);
     if (error.isError())
     {
         return error;

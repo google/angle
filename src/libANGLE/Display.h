@@ -51,7 +51,8 @@ class Display final
 
     Error createWindowSurface(EGLNativeWindowType window, const Config *configuration, const EGLint *attribList, EGLSurface *outSurface);
     Error createOffscreenSurface(const Config *configuration, EGLClientBuffer shareHandle, const EGLint *attribList, EGLSurface *outSurface);
-    Error createContext(const Config *configuration, EGLContext shareContext, const egl::AttributeMap &attribs, EGLContext *outContext);
+    Error createContext(const Config *configuration, gl::Context *shareContext, const AttributeMap &attribs,
+                        gl::Context **outContext);
 
     Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context);
 

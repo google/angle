@@ -11,6 +11,8 @@
 
 #include "libANGLE/Error.h"
 
+#include <EGL/egl.h>
+
 namespace gl
 {
 class Context;
@@ -19,6 +21,7 @@ class Context;
 namespace egl
 {
 
+class AttributeMap;
 struct Config;
 class Display;
 class Surface;
@@ -28,6 +31,10 @@ Error ValidateDisplay(const Display *display);
 Error ValidateSurface(const Display *display, Surface *surface);
 Error ValidateConfig(const Display *display, const Config *config);
 Error ValidateContext(const Display *display, gl::Context *context);
+
+// Entry point validation
+Error ValidateCreateContext(Display *display, Config *configuration, gl::Context *shareContext,
+                            const AttributeMap& attributes);
 
 }
 

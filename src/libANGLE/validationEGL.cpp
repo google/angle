@@ -13,6 +13,8 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
 
+#include <EGL/eglext.h>
+
 namespace egl
 {
 
@@ -74,6 +76,131 @@ Error ValidateContext(const Display *display, gl::Context *context)
     if (!display->isValidContext(context))
     {
         return Error(EGL_BAD_CONTEXT);
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
+Error ValidateCreateContext(Display *display, Config *configuration, gl::Context *shareContext,
+                            const AttributeMap& attributes)
+{
+    Error error = ValidateConfig(display, configuration);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    // Get the requested client version (default is 1) and check it is 2 or 3.
+    EGLint clientMajorVersion = 1;
+    EGLint clientMinorVersion = 0;
+    EGLint contextFlags = 0;
+    bool resetNotification = false;
+    bool robustAccess = false;
+    for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
+    {
+        EGLint attribute = attributeIter->first;
+        EGLint value = attributeIter->second;
+
+        switch (attribute)
+        {
+          case EGL_CONTEXT_CLIENT_VERSION:
+            clientMajorVersion = value;
+            break;
+
+          case EGL_CONTEXT_MINOR_VERSION:
+            clientMinorVersion = value;
+            break;
+
+          case EGL_CONTEXT_FLAGS_KHR:
+            contextFlags = value;
+            break;
+
+          case EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR:
+            // Only valid for OpenGL (non-ES) contexts
+            return Error(EGL_BAD_ATTRIBUTE);
+
+          case EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT:
+            if (!display->getExtensions().createContextRobustness)
+            {
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            robustAccess = (value == EGL_TRUE);
+            break;
+
+          case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR:
+            META_ASSERT(EGL_LOSE_CONTEXT_ON_RESET_EXT == EGL_LOSE_CONTEXT_ON_RESET_KHR);
+            META_ASSERT(EGL_NO_RESET_NOTIFICATION_EXT == EGL_NO_RESET_NOTIFICATION_KHR);
+            // same as EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT, fall through
+          case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT:
+            if (!display->getExtensions().createContextRobustness)
+            {
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            if (value == EGL_LOSE_CONTEXT_ON_RESET_EXT)
+            {
+                resetNotification = true;
+            }
+            else if (value != EGL_NO_RESET_NOTIFICATION_EXT)
+            {
+                return Error(EGL_BAD_ATTRIBUTE);
+            }
+            break;
+
+          default:
+            return Error(EGL_BAD_ATTRIBUTE);
+        }
+    }
+
+    if ((clientMajorVersion != 2 && clientMajorVersion != 3) || clientMinorVersion != 0)
+    {
+        return Error(EGL_BAD_CONFIG);
+    }
+
+    if (clientMajorVersion == 3 && !(configuration->conformant & EGL_OPENGL_ES3_BIT_KHR))
+    {
+        return Error(EGL_BAD_CONFIG);
+    }
+
+    // Note: EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR does not apply to ES
+    const EGLint validContextFlags = (EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR |
+                                      EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR);
+    if ((contextFlags & ~validContextFlags) != 0)
+    {
+        return Error(EGL_BAD_ATTRIBUTE);
+    }
+
+    if ((contextFlags & EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR) > 0)
+    {
+        robustAccess = true;
+    }
+
+    if (robustAccess)
+    {
+        // Unimplemented
+        return Error(EGL_BAD_CONFIG);
+    }
+
+    if (shareContext)
+    {
+        // Shared context is invalid or is owned by another display
+        if (!display->isValidContext(shareContext))
+        {
+            return Error(EGL_BAD_MATCH);
+        }
+
+        if (shareContext->isResetNotificationEnabled() != resetNotification)
+        {
+            return Error(EGL_BAD_MATCH);
+        }
+
+        if (shareContext->getClientVersion() != clientMajorVersion)
+        {
+            return Error(EGL_BAD_CONTEXT);
+        }
     }
 
     return Error(EGL_SUCCESS);
