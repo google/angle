@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb5d5f61_999dfb43",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1250,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-19T18:29:35Z",
+      "side": 1,
+      "message": "nit: can we ASSERT(geometryShader) here?",
+      "range": {
+        "startLine": 1250,
+        "startChar": 30,
+        "endLine": 1250,
+        "endChar": 44
+      },
+      "revId": "4e885d4b2372cf5c8c2f0f03a0ce2e5179a8ab08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb5d5f61_7980e7d6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-19T18:29:35Z",
+      "side": 1,
+      "message": "sorry to keep iterating here. I notice we\u0027re still using casting mAppliedPixelShader back to a pointer. Can you pass in the gl::Data struct as the first parameter to drawArrays here from RendererD3D::drawArrays? Then you can retrieve the current pixel shader from the current FBO and the ProgramD3D (getPixelExecutableForFramebuffer)?\n\nI\u0027m not about the output stream, maybe Geoff could answer. I know we had some tough restrictions on StreamOut from targeting feature level 10_0.\n\nAlso an aside, the design with using all the applyThis and applyThat is not ideal; we could be doing most of the work in drawArrays/drawElements, but there\u0027s some technical debt.",
+      "range": {
+        "startLine": 1254,
+        "startChar": 8,
+        "endLine": 1254,
+        "endChar": 104
+      },
+      "revId": "4e885d4b2372cf5c8c2f0f03a0ce2e5179a8ab08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
