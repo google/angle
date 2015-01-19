@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb5d5f61_398dcf18",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-19T18:11:31Z",
+      "side": 1,
+      "message": "I\u0027d like this to be a const method still because Error objects are passed around as const references in some places.  mMessage would have to be mutable then but I\u0027m ok with that (or we return a static empty std::string from getMessage when mMessage is NULL).",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 36
+      },
+      "revId": "4a37da6020d27e5ee691a2b34b9133446351c850",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
