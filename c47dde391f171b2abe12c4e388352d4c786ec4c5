@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b4a1799_7ec8cd85",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-19T18:14:21Z",
+      "side": 1,
+      "message": "nit: would prefer the sampler state to go after the target and level parameters to be consistent.",
+      "range": {
+        "startLine": 134,
+        "startChar": 25,
+        "endLine": 134,
+        "endChar": 61
+      },
+      "revId": "c47dde391f171b2abe12c4e388352d4c786ec4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
