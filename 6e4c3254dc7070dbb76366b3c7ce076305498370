@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "cb5d5f61_79ae2778",
+        "filename": "tests/perf_tests/angle_perf_test_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-19T18:05:51Z",
+      "side": 1,
+      "message": "Sure.",
+      "parentUuid": "0b4a1799_1b827b68",
+      "range": {
+        "startLine": 25,
+        "startChar": 13,
+        "endLine": 25,
+        "endChar": 36
+      },
+      "revId": "6e4c3254dc7070dbb76366b3c7ce076305498370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b971303_b294284e",
         "filename": "tests/perf_tests/angle_perf_test_main.cpp",
         "patchSetId": 6
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "If I understand the idea correctly I\u0027d need to make a generic class like \"TestRunner { virtual RunTest(); }\" and inherit from that. Or make lambda methods. (Because the type of the map can\u0027t contain the T parameter)",
       "parentUuid": "8b928710_a826ff21",
+      "range": {
+        "startLine": 294,
+        "startChar": 4,
+        "endLine": 310,
+        "endChar": 5
+      },
+      "revId": "6e4c3254dc7070dbb76366b3c7ce076305498370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb5d5f61_19a9eb6e",
+        "filename": "tests/perf_tests/angle_perf_test_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-19T18:05:51Z",
+      "side": 1,
+      "message": "It would just have to typedef the functions.\n\n   typedef void (*RunTestFunction)(EGLint, rapidjson::Document);\n   std::map\u003cstd::string, RunTestFunction\u003e benchmarks;\n   benchmarks[\"BufferSubData\"] \u003d ParseAndRunBenchmark\u003cBufferSubDataBenchmark\u003e;\n   ...",
+      "parentUuid": "cb5d5f61_59a6c3c7",
       "range": {
         "startLine": 294,
         "startChar": 4,
