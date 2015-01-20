@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b6c7315_39766b78",
+        "filename": "tests/angle_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-20T15:01:53Z",
+      "side": 1,
+      "message": "nit: uncomment or remove.",
+      "range": {
+        "startLine": 287,
+        "startChar": 3,
+        "endLine": 287,
+        "endChar": 36
+      },
+      "revId": "e34f195bc70b1cb6be6d0ba3f28685e59325e6fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
