@@ -132,7 +132,9 @@ TYPED_TEST(BufferDataTest, NULLResolvedData)
     drawQuad(mProgram, "position", 0.5f);
 }
 
-TYPED_TEST(BufferDataTest, HugeSetDataShouldNotCrash)
+// Tests that a huge allocation returns GL_OUT_OF_MEMORY
+// TODO(jmadill): Figure out how to test this reliably on the Chromium bots
+TYPED_TEST(BufferDataTest, DISABLED_HugeSetDataShouldNotCrash)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     EXPECT_GL_NO_ERROR();
