@@ -26,7 +26,7 @@ class SurfaceImpl
   public:
     SurfaceImpl(egl::Display *display, const egl::Config *config,
                 EGLint fixedSize, EGLint postSubBufferSupported, EGLenum textureFormat,
-                EGLenum textureType, EGLClientBuffer shareHandle);
+                EGLenum textureType);
     virtual ~SurfaceImpl();
 
     virtual egl::Error initialize() = 0;
@@ -59,8 +59,7 @@ class SurfaceImpl
           mFixedSize(0),
           mPostSubBufferSupported(0),
           mTextureFormat(EGL_NONE),
-          mTextureTarget(EGL_NONE),
-          mShareHandle(static_cast<EGLClientBuffer>(0))
+          mTextureTarget(EGL_NONE)
     {}
 
     egl::Display *const mDisplay;
@@ -78,7 +77,6 @@ class SurfaceImpl
     EGLenum mTextureTarget;        // Type of texture: 2D or no texture
 //  EGLenum vgAlphaFormat;         // Alpha format for OpenVG
 //  EGLenum vgColorSpace;          // Color space for OpenVG
-    EGLClientBuffer mShareHandle;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(SurfaceImpl);

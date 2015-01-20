@@ -37,7 +37,7 @@ SurfaceD3D *SurfaceD3D::createFromWindow(RendererD3D *renderer, egl::Display *di
 SurfaceD3D::SurfaceD3D(RendererD3D *renderer, egl::Display *display, const egl::Config *config, EGLint width, EGLint height,
                        EGLint fixedSize, EGLint postSubBufferSupported, EGLenum textureFormat,
                        EGLenum textureType, EGLClientBuffer shareHandle, EGLNativeWindowType window)
-    : SurfaceImpl(display, config, fixedSize, postSubBufferSupported, textureFormat, textureType, shareHandle),
+    : SurfaceImpl(display, config, fixedSize, postSubBufferSupported, textureFormat, textureType),
       mRenderer(renderer),
       mSwapChain(NULL),
       mSwapIntervalDirty(true),
@@ -45,7 +45,8 @@ SurfaceD3D::SurfaceD3D(RendererD3D *renderer, egl::Display *display, const egl::
       mNativeWindow(window),
       mWidth(width),
       mHeight(height),
-      mSwapInterval(1)
+      mSwapInterval(1),
+      mShareHandle(reinterpret_cast<HANDLE*>(shareHandle))
 {
     subclassWindow();
 }
@@ -117,7 +118,7 @@ egl::Error SurfaceD3D::resetSwapChain()
         height = mHeight;
     }
 
-    mSwapChain = mRenderer->createSwapChain(mNativeWindow, static_cast<HANDLE>(mShareHandle),
+    mSwapChain = mRenderer->createSwapChain(mNativeWindow, mShareHandle,
                                             mConfig->renderTargetFormat,
                                             mConfig->depthStencilFormat);
     if (!mSwapChain)
