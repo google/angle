@@ -11,8 +11,19 @@
             'dependencies':
             [
                 '../src/angle.gyp:*',
-                '../samples/samples.gyp:*',
-                '../tests/tests.gyp:*',
+            ],
+            'conditions':
+            [
+                # Generate tests and sample projects for classic desktop
+                # builds only.
+                ['angle_build_winrt==0',
+                {
+                    'dependencies':
+                    [
+                        '../samples/samples.gyp:*',
+                        '../tests/tests.gyp:*',
+                    ],
+                }],
             ],
         },
     ],
