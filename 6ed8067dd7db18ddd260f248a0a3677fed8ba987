@@ -214,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "0b4a1799_6185d2e5",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 5
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-20T14:13:32Z",
+      "side": 1,
+      "message": "Yes, having non-trivial logic in the .y file at all is kind of a legacy thing. I was incrementally moving code from the grammar into ParseContext as I was working on ES3. I think you could do the same here, or use a new class if it makes sense. Sounds fine to do at a later time.",
+      "parentUuid": "4bc24f1f_966232f6",
+      "range": {
+        "startLine": 713,
+        "startChar": 0,
+        "endLine": 719,
+        "endChar": 9
+      },
+      "revId": "6ed8067dd7db18ddd260f248a0a3677fed8ba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b4a1799_decc8177",
         "filename": "src/compiler/translator/intermOut.cpp",
         "patchSetId": 5
