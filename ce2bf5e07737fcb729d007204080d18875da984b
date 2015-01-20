@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb2b9fc1_8c2927f5",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-20T21:53:16Z",
+      "side": 1,
+      "message": "nit: the style is a bit inconsistent in this file, but new style should conform to ANGLE\u0027s style guide (brace on newline)",
+      "range": {
+        "startLine": 231,
+        "startChar": 62,
+        "endLine": 231,
+        "endChar": 63
+      },
+      "revId": "ce2bf5e07737fcb729d007204080d18875da984b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bf85789_8e6c7b74",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-20T21:53:16Z",
+      "side": 1,
+      "message": "nit: might as well fully brace the if/else",
+      "range": {
+        "startLine": 239,
+        "startChar": 54,
+        "endLine": 239,
+        "endChar": 55
+      },
+      "revId": "ce2bf5e07737fcb729d007204080d18875da984b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
