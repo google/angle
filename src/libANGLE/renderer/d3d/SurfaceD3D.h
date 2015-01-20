@@ -43,6 +43,9 @@ class SurfaceD3D : public SurfaceImpl
     egl::Error releaseTexImage(EGLint buffer) override;
     void setSwapInterval(EGLint interval) override;
 
+    EGLint getWidth() const override;
+    EGLint getHeight() const override;
+
     // D3D implementations (some virtual to hack across DLL boundaries)
     virtual SwapChainD3D *getSwapChain() const;
 
@@ -73,6 +76,10 @@ class SurfaceD3D : public SurfaceImpl
     bool mWindowSubclassed;        // Indicates whether we successfully subclassed mWindow for WM_RESIZE hooking
 
     NativeWindow mNativeWindow;   // Handler for the Window that the surface is created for.
+    EGLint mWidth;
+    EGLint mHeight;
+
+    EGLint mSwapInterval;
 };
 
 

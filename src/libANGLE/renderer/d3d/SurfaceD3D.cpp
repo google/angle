@@ -37,12 +37,15 @@ SurfaceD3D *SurfaceD3D::createFromWindow(RendererD3D *renderer, egl::Display *di
 SurfaceD3D::SurfaceD3D(RendererD3D *renderer, egl::Display *display, const egl::Config *config, EGLint width, EGLint height,
                        EGLint fixedSize, EGLint postSubBufferSupported, EGLenum textureFormat,
                        EGLenum textureType, EGLClientBuffer shareHandle, EGLNativeWindowType window)
-    : SurfaceImpl(display, config, width, height, fixedSize, postSubBufferSupported, textureFormat, textureType, shareHandle),
+    : SurfaceImpl(display, config, fixedSize, postSubBufferSupported, textureFormat, textureType, shareHandle),
       mRenderer(renderer),
       mSwapChain(NULL),
       mSwapIntervalDirty(true),
       mWindowSubclassed(false),
-      mNativeWindow(window)
+      mNativeWindow(window),
+      mWidth(width),
+      mHeight(height),
+      mSwapInterval(1)
 {
     subclassWindow();
 }
@@ -370,6 +373,16 @@ void SurfaceD3D::setSwapInterval(EGLint interval)
     mSwapInterval = std::min(mSwapInterval, mConfig->maxSwapInterval);
 
     mSwapIntervalDirty = true;
+}
+
+EGLint SurfaceD3D::getWidth() const
+{
+    return mWidth;
+}
+
+EGLint SurfaceD3D::getHeight() const
+{
+    return mHeight;
 }
 
 egl::Error SurfaceD3D::querySurfacePointerANGLE(EGLint attribute, void **value)
