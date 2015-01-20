@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "4b408f75_207bc45e",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-01-20T09:55:51Z",
+      "side": 1,
+      "message": "I\u0027ll make this clearer.",
+      "parentUuid": "cb5d5f61_39330f99",
+      "range": {
+        "startLine": 387,
+        "startChar": 8,
+        "endLine": 387,
+        "endChar": 82
+      },
+      "revId": "6ed8067dd7db18ddd260f248a0a3677fed8ba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b4a1799_de1ac15e",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 5
@@ -60,6 +84,30 @@
       "writtenOn": "2015-01-19T18:37:15Z",
       "side": 1,
       "message": "nit: put braces around this (and the one below) please",
+      "range": {
+        "startLine": 388,
+        "startChar": 12,
+        "endLine": 388,
+        "endChar": 25
+      },
+      "revId": "6ed8067dd7db18ddd260f248a0a3677fed8ba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbd63fdb_179e3cc9",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-01-20T09:55:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b4a1799_de1ac15e",
       "range": {
         "startLine": 388,
         "startChar": 12,
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "4b408f75_4076d078",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-01-20T09:55:51Z",
+      "side": 1,
+      "message": "Compilation with the Chromium toolchain fails at least on Linux if this is removed.",
+      "parentUuid": "cb5d5f61_197bab5e",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 400,
+        "endChar": 14
+      },
+      "revId": "6ed8067dd7db18ddd260f248a0a3677fed8ba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b4a1799_1e6429b7",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 5
@@ -118,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "4bc24f1f_966232f6",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 5
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-01-20T09:55:51Z",
+      "side": 1,
+      "message": "I didn\u0027t put this in a helper function originally since it didn\u0027t seem to be the convention in the parser. There\u0027s a bunch of duplicate code, and the few helpers used here are macros and not functions. Is that just a legacy thing? I think that addressing this would be a good idea, but I feel like it would be better to do it in a separate patch: define a ParseContextHelper class, and put all of the recurring functionality that\u0027s in this file there.",
+      "parentUuid": "0b4a1799_1e6429b7",
+      "range": {
+        "startLine": 713,
+        "startChar": 0,
+        "endLine": 719,
+        "endChar": 9
+      },
+      "revId": "6ed8067dd7db18ddd260f248a0a3677fed8ba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b4a1799_decc8177",
         "filename": "src/compiler/translator/intermOut.cpp",
         "patchSetId": 5
@@ -129,6 +225,24 @@
       "writtenOn": "2015-01-19T18:37:15Z",
       "side": 1,
       "message": "nit: move the break over a bit.",
+      "revId": "6ed8067dd7db18ddd260f248a0a3677fed8ba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbd63fdb_37a34010",
+        "filename": "src/compiler/translator/intermOut.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1001641
+      },
+      "writtenOn": "2015-01-20T09:55:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b4a1799_decc8177",
       "revId": "6ed8067dd7db18ddd260f248a0a3677fed8ba987",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
