@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b4a1799_0174ce67",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-20T14:28:02Z",
+      "side": 1,
+      "message": "ah I see. because basicTypesMustMatch \u003d\u003d true, checking the LHS is sufficient here. a comment wouldn\u0027t hurt to that effect.",
+      "range": {
+        "startLine": 403,
+        "startChar": 8,
+        "endLine": 406,
+        "endChar": 9
+      },
+      "revId": "46dc1a02f38733248d779acf24c15d68b0fcbb10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
