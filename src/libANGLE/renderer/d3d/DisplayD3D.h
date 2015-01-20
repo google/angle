@@ -23,12 +23,12 @@ class DisplayD3D : public DisplayImpl
     egl::Error initialize(egl::Display *display) override;
     virtual void terminate() override;
 
-    SurfaceImpl *createWindowSurface(egl::Display *display, const egl::Config *config,
-                                     EGLNativeWindowType window, EGLint fixedSize,
-                                     EGLint width, EGLint height, EGLint postSubBufferSupported) override;
-    SurfaceImpl *createOffscreenSurface(egl::Display *display, const egl::Config *config,
-                                        EGLClientBuffer shareHandle, EGLint width, EGLint height,
-                                        EGLenum textureFormat, EGLenum textureTarget) override;
+    egl::Error createWindowSurface(const egl::Config *configuration, EGLNativeWindowType window, const egl::AttributeMap &attribs,
+                                   SurfaceImpl **outSurface) override;
+    egl::Error createPbufferSurface(const egl::Config *configuration, const egl::AttributeMap &attribs,
+                                    SurfaceImpl **outSurface) override;
+    egl::Error createPbufferFromClientBuffer(const egl::Config *configuration, EGLClientBuffer shareHandle,
+                                             const egl::AttributeMap &attribs, SurfaceImpl **outSurface) override;
 
     egl::Error createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
                              gl::Context **outContext) override;
@@ -50,6 +50,8 @@ class DisplayD3D : public DisplayImpl
 
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
+
+    egl::Display *mDisplay;
 
     rx::RendererD3D *mRenderer;
 };

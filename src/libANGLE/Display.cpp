@@ -227,17 +227,6 @@ bool Display::getConfigAttrib(const Config *configuration, EGLint attribute, EGL
 Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowType window, const AttributeMap &attribs,
                                    Surface **outSurface)
 {
-    EGLint postSubBufferSupported = attribs.get(EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_FALSE);
-    EGLint width = attribs.get(EGL_WIDTH, 0);
-    EGLint height = attribs.get(EGL_HEIGHT, 0);
-    EGLint fixedSize = attribs.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE);
-
-    if (!fixedSize)
-    {
-        width = -1;
-        height = -1;
-    }
-
     if (mImplementation->testDeviceLost())
     {
         Error error = restoreLostDevice();
@@ -247,31 +236,25 @@ Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowT
         }
     }
 
-    rx::SurfaceImpl *surfaceImpl = mImplementation->createWindowSurface(this, configuration, window,
-                                                                        fixedSize, width, height,
-                                                                        postSubBufferSupported);
-
-    Surface *surface = new Surface(surfaceImpl);
-    Error error = surface->initialize();
+    rx::SurfaceImpl *surfaceImpl = nullptr;
+    Error error = mImplementation->createWindowSurface(configuration, window, attribs, &surfaceImpl);
     if (error.isError())
     {
-        SafeDelete(surface);
         return error;
     }
 
+    ASSERT(surfaceImpl != nullptr);
+    Surface *surface = new Surface(surfaceImpl);
     mImplementation->getSurfaceSet().insert(surface);
 
+    ASSERT(outSurface != nullptr);
     *outSurface = surface;
     return Error(EGL_SUCCESS);
 }
 
-Error Display::createOffscreenSurface(const Config *configuration, EGLClientBuffer shareHandle, const AttributeMap &attribs,
-                                      Surface **outSurface)
+Error Display::createPbufferSurface(const Config *configuration, const AttributeMap &attribs, Surface **outSurface)
 {
-    EGLint width = attribs.get(EGL_WIDTH, 0);
-    EGLint height = attribs.get(EGL_HEIGHT, 0);
-    EGLenum textureFormat = attribs.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
-    EGLenum textureTarget = attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
+    ASSERT(isInitialized());
 
     if (mImplementation->testDeviceLost())
     {
@@ -282,19 +265,48 @@ Error Display::createOffscreenSurface(const Config *configuration, EGLClientBuff
         }
     }
 
-    rx::SurfaceImpl *surfaceImpl = mImplementation->createOffscreenSurface(this, configuration, shareHandle,
-                                                                           width, height, textureFormat, textureTarget);
-
-    Surface *surface = new Surface(surfaceImpl);
-    Error error = surface->initialize();
+    rx::SurfaceImpl *surfaceImpl = nullptr;
+    Error error = mImplementation->createPbufferSurface(configuration, attribs, &surfaceImpl);
     if (error.isError())
     {
-        SafeDelete(surface);
         return error;
     }
 
+    ASSERT(surfaceImpl != nullptr);
+    Surface *surface = new Surface(surfaceImpl);
     mImplementation->getSurfaceSet().insert(surface);
 
+    ASSERT(outSurface != nullptr);
+    *outSurface = surface;
+    return Error(EGL_SUCCESS);
+}
+
+Error Display::createPbufferFromClientBuffer(const Config *configuration, EGLClientBuffer shareHandle,
+                                             const AttributeMap &attribs, Surface **outSurface)
+{
+    ASSERT(isInitialized());
+
+    if (mImplementation->testDeviceLost())
+    {
+        Error error = restoreLostDevice();
+        if (error.isError())
+        {
+            return error;
+        }
+    }
+
+    rx::SurfaceImpl *surfaceImpl = nullptr;
+    Error error = mImplementation->createPbufferFromClientBuffer(configuration, shareHandle, attribs, &surfaceImpl);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    ASSERT(surfaceImpl != nullptr);
+    Surface *surface = new Surface(surfaceImpl);
+    mImplementation->getSurfaceSet().insert(surface);
+
+    ASSERT(outSurface != nullptr);
     *outSurface = surface;
     return Error(EGL_SUCCESS);
 }
@@ -323,6 +335,7 @@ Error Display::createContext(const Config *configuration, gl::Context *shareCont
     ASSERT(context != nullptr);
     mContextSet.insert(context);
 
+    ASSERT(outContext != nullptr);
     *outContext = context;
     return Error(EGL_SUCCESS);
 }

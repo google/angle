@@ -282,7 +282,7 @@ EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy, EGLConfig config, co
     }
 
     egl::Surface *surface = nullptr;
-    error = display->createOffscreenSurface(configuration, NULL, attributes, &surface);
+    error = display->createPbufferSurface(configuration, attributes, &surface);
     if (error.isError())
     {
         SetGlobalError(error);
@@ -932,7 +932,7 @@ EGLSurface EGLAPIENTRY CreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buf
     }
 
     egl::Surface *surface = nullptr;
-    error = display->createOffscreenSurface(configuration, buffer, attributes, &surface);
+    error = display->createPbufferFromClientBuffer(configuration, buffer, attributes, &surface);
     if (error.isError())
     {
         SetGlobalError(error);

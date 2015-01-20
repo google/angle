@@ -21,7 +21,7 @@ SurfaceImpl::SurfaceImpl(egl::Display *display, const egl::Config *config, EGLin
       mWidth(width),
       mHeight(height),
       mFixedSize(fixedSize),
-      mSwapInterval(-1),
+      mSwapInterval(1),
       mPostSubBufferSupported(postSubBufferSupported),
       mTextureFormat(textureFormat),
       mTextureTarget(textureType),

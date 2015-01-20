@@ -122,24 +122,79 @@ DisplayD3D::DisplayD3D()
 {
 }
 
-SurfaceImpl *DisplayD3D::createWindowSurface(egl::Display *display, const egl::Config *config,
-                                             EGLNativeWindowType window, EGLint fixedSize,
-                                             EGLint width, EGLint height, EGLint postSubBufferSupported)
+egl::Error DisplayD3D::createWindowSurface(const egl::Config *configuration, EGLNativeWindowType window,
+                                           const egl::AttributeMap &attribs, SurfaceImpl **outSurface)
 {
     ASSERT(mRenderer != nullptr);
 
-    return SurfaceD3D::createFromWindow(mRenderer, display, config, window, fixedSize,
-                                        width, height, postSubBufferSupported);
+    EGLint postSubBufferSupported = attribs.get(EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_FALSE);
+    EGLint width = attribs.get(EGL_WIDTH, 0);
+    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    EGLint fixedSize = attribs.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE);
+
+    if (!fixedSize)
+    {
+        width = -1;
+        height = -1;
+    }
+
+    SurfaceD3D *surface = SurfaceD3D::createFromWindow(mRenderer, mDisplay, configuration, window, fixedSize,
+                                                       width, height, postSubBufferSupported);
+    egl::Error error = surface->initialize();
+    if (error.isError())
+    {
+        SafeDelete(surface);
+        return error;
+    }
+
+    *outSurface = surface;
+    return egl::Error(EGL_SUCCESS);
 }
 
-SurfaceImpl *DisplayD3D::createOffscreenSurface(egl::Display *display, const egl::Config *config,
-                                                EGLClientBuffer shareHandle, EGLint width, EGLint height,
-                                                EGLenum textureFormat, EGLenum textureTarget)
+egl::Error DisplayD3D::createPbufferSurface(const egl::Config *configuration, const egl::AttributeMap &attribs,
+                                            SurfaceImpl **outSurface)
 {
     ASSERT(mRenderer != nullptr);
 
-    return SurfaceD3D::createOffscreen(mRenderer, display, config, shareHandle,
-                                       width, height, textureFormat, textureTarget);
+    EGLint width = attribs.get(EGL_WIDTH, 0);
+    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    EGLenum textureFormat = attribs.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
+    EGLenum textureTarget = attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
+    
+    SurfaceD3D *surface = SurfaceD3D::createOffscreen(mRenderer, mDisplay, configuration, NULL,
+                                                      width, height, textureFormat, textureTarget);
+    egl::Error error = surface->initialize();
+    if (error.isError())
+    {
+        SafeDelete(surface);
+        return error;
+    }
+
+    *outSurface = surface;
+    return egl::Error(EGL_SUCCESS);
+}
+
+egl::Error DisplayD3D::createPbufferFromClientBuffer(const egl::Config *configuration, EGLClientBuffer shareHandle,
+                                                     const egl::AttributeMap &attribs, SurfaceImpl **outSurface)
+{
+    ASSERT(mRenderer != nullptr);
+
+    EGLint width = attribs.get(EGL_WIDTH, 0);
+    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    EGLenum textureFormat = attribs.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
+    EGLenum textureTarget = attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
+
+    SurfaceD3D *surface = SurfaceD3D::createOffscreen(mRenderer, mDisplay, configuration, shareHandle,
+                                                      width, height, textureFormat, textureTarget);
+    egl::Error error = surface->initialize();
+    if (error.isError())
+    {
+        SafeDelete(surface);
+        return error;
+    }
+
+    *outSurface = surface;
+    return egl::Error(EGL_SUCCESS);
 }
 
 egl::Error DisplayD3D::createContext(const egl::Config *config, const gl::Context *shareContext, const egl::AttributeMap &attribs,
@@ -163,6 +218,7 @@ egl::Error DisplayD3D::makeCurrent(egl::Surface *drawSurface, egl::Surface *read
 egl::Error DisplayD3D::initialize(egl::Display *display)
 {
     ASSERT(mRenderer == nullptr && display != nullptr);
+    mDisplay = display;
     return CreateRendererD3D(display, &mRenderer);
 }
 

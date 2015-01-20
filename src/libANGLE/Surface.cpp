@@ -25,7 +25,6 @@ Surface::Surface(rx::SurfaceImpl *impl)
       mSwapBehavior(EGL_BUFFER_PRESERVED),
       mTexture(NULL)
 {
-    setSwapInterval(1);
 }
 
 Surface::~Surface()
@@ -41,11 +40,6 @@ Surface::~Surface()
     }
 
     SafeDelete(mImplementation);
-}
-
-Error Surface::initialize()
-{
-    return mImplementation->initialize();
 }
 
 EGLNativeWindowType Surface::getWindowHandle() const

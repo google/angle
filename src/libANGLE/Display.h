@@ -51,8 +51,10 @@ class Display final
 
     Error createWindowSurface(const Config *configuration, EGLNativeWindowType window, const AttributeMap &attribs,
                               Surface **outSurface);
-    Error createOffscreenSurface(const Config *configuration, EGLClientBuffer shareHandle, const AttributeMap &attribs,
-                                 Surface **outSurface);
+    Error createPbufferSurface(const Config *configuration, const AttributeMap &attribs, Surface **outSurface);
+    Error createPbufferFromClientBuffer(const Config *configuration, EGLClientBuffer shareHandle, const AttributeMap &attribs,
+                                        Surface **outSurface);
+
     Error createContext(const Config *configuration, gl::Context *shareContext, const AttributeMap &attribs,
                         gl::Context **outContext);
 
