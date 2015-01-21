@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "8bda8731_02d30ce5",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-21T01:59:12Z",
+      "side": 1,
+      "message": "Several whitespace issues; please convert tabs to spaces throughout.",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 1
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ee6a5ff_61c9328a",
         "filename": "extensions/ANGLE_robust_resource_initialization.txt",
         "patchSetId": 2
@@ -65,6 +88,98 @@
         "startChar": 1,
         "endLine": 37,
         "endChar": 30
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bda8731_02506c9e",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-21T01:59:12Z",
+      "side": 1,
+      "message": "I think it\u0027s worth specifying that the implementation-dependent value is zero. It would make this extension\u0027s specification stronger and more testable. Do you agree?\n\nAlso, is it worth eliding this paragraph, and instead modifying the BufferData documentation in section 6.2? Something like:\n\n\"If data is NULL, then if robust resource initialization is enabled, the contents of the buffer object\u0027s data store are set to zero. Otherwise, the contents of the buffer object\u0027s data store are undefined.\"",
+      "range": {
+        "startLine": 83,
+        "startChar": 1,
+        "endLine": 83,
+        "endChar": 10
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abd58b01_e6b1da51",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-21T01:59:12Z",
+      "side": 1,
+      "message": "Should this text move to the last paragraph of section 8.5.3, \"Texture Image Structure\", which defines the behavior when the data argument to TexImage2D or TexImage3D is NULL?",
+      "range": {
+        "startLine": 90,
+        "startChar": 1,
+        "endLine": 90,
+        "endChar": 6
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bdf1324_245c96c9",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-21T01:59:12Z",
+      "side": 1,
+      "message": "Great. This is not well explained in the current spec.",
+      "range": {
+        "startLine": 108,
+        "startChar": 5,
+        "endLine": 108,
+        "endChar": 13
+      },
+      "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bda8731_e2d8e8a9",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-21T01:59:12Z",
+      "side": 1,
+      "message": "Need to define the interactions with RenderbufferStorageMultisample (section 9.2.4).",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 1
       },
       "revId": "dd5442c33623813f7b9eaf7e6c1c5fbbc47598c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
