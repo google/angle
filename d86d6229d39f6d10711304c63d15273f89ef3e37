@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6bc8f375_5624f4d6",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T15:24:41Z",
+      "side": 1,
+      "message": "can insert an updateStorage() call here",
+      "revId": "d86d6229d39f6d10711304c63d15273f89ef3e37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bc5ef5b_35cdb0c7",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T15:24:41Z",
+      "side": 1,
+      "message": "can insert an updateStorage() call here",
+      "revId": "d86d6229d39f6d10711304c63d15273f89ef3e37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bc8f375_f6e2602d",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T15:24:41Z",
+      "side": 1,
+      "message": "and here",
+      "revId": "d86d6229d39f6d10711304c63d15273f89ef3e37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
