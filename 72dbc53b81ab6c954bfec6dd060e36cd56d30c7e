@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "4bc5ef5b_7bd71755",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T18:39:26Z",
+      "side": 1,
+      "message": "See the comments on Renderer11.cpp line 3172, or TextureStorage11.cpp line 372. Apparently D3D11 FL 10_0+ (possibly other FLs) cannot copy partial depth/stencil surfaces, and require the box parameter to be nullptr.",
+      "parentUuid": "ab074b51_a566b4c2",
+      "range": {
+        "startLine": 432,
+        "startChar": 62,
+        "endLine": 432,
+        "endChar": 70
+      },
+      "revId": "72dbc53b81ab6c954bfec6dd060e36cd56d30c7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4bc5ef5b_950da45e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 3
