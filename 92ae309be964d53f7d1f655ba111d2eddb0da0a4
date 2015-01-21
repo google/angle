@@ -90,6 +90,30 @@
     },
     {
       "key": {
+        "uuid": "4bc24f1f_bc238d11",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-01-21T17:11:53Z",
+      "side": 1,
+      "message": "I agree. I can evolve the patch to that direction if that’s okay? The only thing needed would be to updateStorage at the end of glGenerateMipmaps and at the end of setCompleteTexStorage.",
+      "parentUuid": "0bbf77c3_33cdc8c7",
+      "range": {
+        "startLine": 395,
+        "startChar": 15,
+        "endLine": 395,
+        "endChar": 38
+      },
+      "revId": "92ae309be964d53f7d1f655ba111d2eddb0da0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4bc5ef5b_b57c60a2",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 4
