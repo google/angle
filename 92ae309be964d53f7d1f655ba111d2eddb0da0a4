@@ -66,6 +66,30 @@
     },
     {
       "key": {
+        "uuid": "0bbf77c3_33cdc8c7",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T16:47:46Z",
+      "side": 1,
+      "message": "I think I like the idea of giving ourselves the guarantee of \u0027if we\u0027re using the setData workaround, and mTexStorage is not null, the images should never be dirty\u0027. That was my original intention in any case. Maybe we could flush the images after we create the TexStorage and that would avoid all the other complications.",
+      "parentUuid": "8b0c4779_d249022e",
+      "range": {
+        "startLine": 395,
+        "startChar": 15,
+        "endLine": 395,
+        "endChar": 38
+      },
+      "revId": "92ae309be964d53f7d1f655ba111d2eddb0da0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4bc5ef5b_b57c60a2",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 4
