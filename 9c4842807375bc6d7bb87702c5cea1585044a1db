@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bc5ef5b_9b0dd35e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T18:48:25Z",
+      "side": 1,
+      "message": "nit: can you fix up the order on these while you\u0027re in this file?",
+      "range": {
+        "startLine": 10,
+        "startChar": 19,
+        "endLine": 10,
+        "endChar": 30
+      },
+      "revId": "9c4842807375bc6d7bb87702c5cea1585044a1db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bbf77c3_593d03df",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T18:48:25Z",
+      "side": 1,
+      "message": "nit: formatutils11.h should be first",
+      "range": {
+        "startLine": 16,
+        "startChar": 38,
+        "endLine": 16,
+        "endChar": 51
+      },
+      "revId": "9c4842807375bc6d7bb87702c5cea1585044a1db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2bc27b57_774e4abb",
+        "filename": "src/libANGLE/renderer/d3d/formatutilsD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T18:48:25Z",
+      "side": 1,
+      "message": "nit: chromium include order\n\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 14
+      },
+      "revId": "9c4842807375bc6d7bb87702c5cea1585044a1db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
