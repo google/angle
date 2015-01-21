@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "8b0c4779_d249022e",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-01-21T15:58:51Z",
+      "side": 1,
+      "message": "Well if it is allowed to have dirty images around and a storage at the same time, we need to avoid replacing the new content in the image with the old content contained in the storage.\n\nOf course, if we guarantee that images should never be dirty when the storage exists, then we don’t need this line.",
+      "parentUuid": "4bc5ef5b_d589dc4e",
+      "range": {
+        "startLine": 395,
+        "startChar": 15,
+        "endLine": 395,
+        "endChar": 38
+      },
+      "revId": "92ae309be964d53f7d1f655ba111d2eddb0da0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4bc5ef5b_b57c60a2",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 4
@@ -53,6 +77,24 @@
       "writtenOn": "2015-01-21T15:48:42Z",
       "side": 1,
       "message": "nit: since we aren\u0027t changing this function, can leave the whitespace unchanged to simplify the diff",
+      "revId": "92ae309be964d53f7d1f655ba111d2eddb0da0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b408f75_11953c49",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-01-21T15:58:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4bc5ef5b_b57c60a2",
       "revId": "92ae309be964d53f7d1f655ba111d2eddb0da0a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
