@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "2b70bb17_04b89698",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-21T22:09:13Z",
+      "side": 1,
+      "message": "Gotcha. Fixed.",
+      "parentUuid": "4bc5ef5b_7bd71755",
+      "range": {
+        "startLine": 432,
+        "startChar": 62,
+        "endLine": 432,
+        "endChar": 70
+      },
+      "revId": "72dbc53b81ab6c954bfec6dd060e36cd56d30c7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4bc5ef5b_950da45e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 3
