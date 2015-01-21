@@ -144,6 +144,24 @@
     },
     {
       "key": {
+        "uuid": "4bc24f1f_9c0d71ac",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-01-21T17:02:49Z",
+      "side": 1,
+      "message": "I think generateMipmaps followed by texSubimage would be a good example since generateMipmaps does not upload the data back to the GPU. I think that this is a rare corner case.\n\nIf we guarantee of \u0027if we\u0027re using the setData workaround, and mTexStorage is not null, the images should never be dirty\u0027, the problem would go away.",
+      "parentUuid": "4bc5ef5b_75e008a2",
+      "revId": "d86d6229d39f6d10711304c63d15273f89ef3e37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6bc8f375_f6e2602d",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 3
