@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6bc8f375_563dd4de",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1542,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T15:40:11Z",
+      "side": 1,
+      "message": "nit: for loop?",
+      "range": {
+        "startLine": 1542,
+        "startChar": 12,
+        "endLine": 1542,
+        "endChar": 17
+      },
+      "revId": "72dbc53b81ab6c954bfec6dd060e36cd56d30c7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2bc27b57_d4e55c38",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T15:40:11Z",
+      "side": 1,
+      "message": "I\u0027m not sure we want this for depth stencil textures! Can you verify?",
+      "range": {
+        "startLine": 432,
+        "startChar": 62,
+        "endLine": 432,
+        "endChar": 70
+      },
+      "revId": "72dbc53b81ab6c954bfec6dd060e36cd56d30c7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bc5ef5b_950da45e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 953,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T15:40:11Z",
+      "side": 1,
+      "message": "nit: can you put the bool test in a variable first for readability",
+      "range": {
+        "startLine": 953,
+        "startChar": 60,
+        "endLine": 953,
+        "endChar": 70
+      },
+      "revId": "72dbc53b81ab6c954bfec6dd060e36cd56d30c7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
