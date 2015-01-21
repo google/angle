@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bc5ef5b_357130ce",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T15:48:42Z",
+      "side": 1,
+      "message": "I think I would still place the updateStorage here. That saves us from updating the TexStorage, then updating the images, when we aren\u0027t using setData. Also, you won\u0027t need the null check, since shouldUseSetData does that.",
+      "revId": "92ae309be964d53f7d1f655ba111d2eddb0da0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bc5ef5b_d589dc4e",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T15:48:42Z",
+      "side": 1,
+      "message": "I don\u0027t quite understand this line. Shouldn\u0027t the code be the same, but update the storage after the mipmaps are finished?",
+      "range": {
+        "startLine": 395,
+        "startChar": 15,
+        "endLine": 395,
+        "endChar": 38
+      },
+      "revId": "92ae309be964d53f7d1f655ba111d2eddb0da0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bc5ef5b_b57c60a2",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T15:48:42Z",
+      "side": 1,
+      "message": "nit: since we aren\u0027t changing this function, can leave the whitespace unchanged to simplify the diff",
+      "revId": "92ae309be964d53f7d1f655ba111d2eddb0da0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
