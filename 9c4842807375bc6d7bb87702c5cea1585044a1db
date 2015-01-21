@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2bc27b57_7a5e31e9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-21T19:14:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4bc5ef5b_9b0dd35e",
+      "range": {
+        "startLine": 10,
+        "startChar": 19,
+        "endLine": 10,
+        "endChar": 30
+      },
+      "revId": "9c4842807375bc6d7bb87702c5cea1585044a1db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bbf77c3_593d03df",
         "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "4bc5ef5b_bbc8cf33",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-21T19:14:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bbf77c3_593d03df",
+      "range": {
+        "startLine": 16,
+        "startChar": 38,
+        "endLine": 16,
+        "endChar": 51
+      },
+      "revId": "9c4842807375bc6d7bb87702c5cea1585044a1db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2bc27b57_774e4abb",
         "filename": "src/libANGLE/renderer/d3d/formatutilsD3D.cpp",
         "patchSetId": 8
@@ -59,6 +107,30 @@
       "writtenOn": "2015-01-21T18:48:25Z",
       "side": 1,
       "message": "nit: chromium include order\n\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 14
+      },
+      "revId": "9c4842807375bc6d7bb87702c5cea1585044a1db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2bc27b57_5a5975fe",
+        "filename": "src/libANGLE/renderer/d3d/formatutilsD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-21T19:14:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bc27b57_774e4abb",
       "range": {
         "startLine": 10,
         "startChar": 0,
