@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "ab074b51_a566b4c2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-21T17:03:16Z",
+      "side": 1,
+      "message": "Hmm, I\u0027m missing something here. What harm would this be for depth stencil textures?",
+      "parentUuid": "2bc27b57_d4e55c38",
+      "range": {
+        "startLine": 432,
+        "startChar": 62,
+        "endLine": 432,
+        "endChar": 70
+      },
+      "revId": "72dbc53b81ab6c954bfec6dd060e36cd56d30c7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4bc5ef5b_950da45e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 3
