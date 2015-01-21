@@ -114,6 +114,30 @@
     },
     {
       "key": {
+        "uuid": "0bbf77c3_d3e814b8",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-21T17:24:44Z",
+      "side": 1,
+      "message": "Sure, sounds good to me! Thanks for digging in to this.",
+      "parentUuid": "4bc24f1f_bc238d11",
+      "range": {
+        "startLine": 395,
+        "startChar": 15,
+        "endLine": 395,
+        "endChar": 38
+      },
+      "revId": "92ae309be964d53f7d1f655ba111d2eddb0da0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4bc5ef5b_b57c60a2",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 4
