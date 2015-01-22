@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebc0636a_1aec7d97",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1118395
+      },
+      "writtenOn": "2015-01-22T17:23:26Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this variable also be changed? If \u0027root\u0027 was shadowing in the previous function then logically it must be shadowing in this one, mustn\u0027t it?",
+      "range": {
+        "startLine": 452,
+        "startChar": 43,
+        "endLine": 452,
+        "endChar": 44
+      },
+      "revId": "94d27710a0f89f0f33cb48370ed4273d501cdf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbc55f7a_cdeac902",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1118395
+      },
+      "writtenOn": "2015-01-22T17:23:26Z",
+      "side": 1,
+      "message": "This would be better fixed by getting rid of the outer declaration of topName. There is no reason for it\u0027s scope to extend outside of this scope.",
+      "revId": "94d27710a0f89f0f33cb48370ed4273d501cdf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bb21712_2487183c",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1118395
+      },
+      "writtenOn": "2015-01-22T17:23:26Z",
+      "side": 1,
+      "message": "This assert is tautological -- size_t is unsigned and is therefore always \u003e\u003d 0.",
+      "revId": "94d27710a0f89f0f33cb48370ed4273d501cdf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbc55f7a_ad41d56b",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1118395
+      },
+      "writtenOn": "2015-01-22T17:23:26Z",
+      "side": 1,
+      "message": "I can\u0027t tell if this is correct. Detecting integer overflow is certainly very tricky.",
+      "revId": "94d27710a0f89f0f33cb48370ed4273d501cdf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
