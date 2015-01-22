@@ -22,6 +22,30 @@
       "revId": "804ad6d555787a752cce6ce237313119a38be623",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb871f28_69a3e50e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1862,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-01-22T15:28:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbc55f7a_1fafcbee",
+      "range": {
+        "startLine": 1862,
+        "startChar": 20,
+        "endLine": 1862,
+        "endChar": 32
+      },
+      "revId": "804ad6d555787a752cce6ce237313119a38be623",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
