@@ -118,6 +118,30 @@
       "revId": "e4dadd5b454dab9827b1cc6a36a31763f2158ed7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aba3cbb1_e48aa279",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1118395
+      },
+      "writtenOn": "2015-01-22T20:41:20Z",
+      "side": 1,
+      "message": "Safest change would be to go back to the original functionality but rename the \u0027arraySize\u0027 local variable to something different.\n\nIt is a bit strange that the arraySize member variable is an int and the arraySize local variable is a size_t, so maybe fixing that or verifying its correctness can be done separately.",
+      "parentUuid": "4b732f24_59d27366",
+      "range": {
+        "startLine": 181,
+        "startChar": 8,
+        "endLine": 181,
+        "endChar": 37
+      },
+      "revId": "e4dadd5b454dab9827b1cc6a36a31763f2158ed7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
