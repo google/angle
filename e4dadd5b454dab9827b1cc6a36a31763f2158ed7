@@ -94,6 +94,30 @@
       "revId": "e4dadd5b454dab9827b1cc6a36a31763f2158ed7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bf447d2_effa2182",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-22T20:40:27Z",
+      "side": 1,
+      "message": "Ack. I\u0027m good with either leaving this file unchanged, or as you propose casting both sides to size_t.",
+      "parentUuid": "4b732f24_59d27366",
+      "range": {
+        "startLine": 181,
+        "startChar": 8,
+        "endLine": 181,
+        "endChar": 37
+      },
+      "revId": "e4dadd5b454dab9827b1cc6a36a31763f2158ed7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
