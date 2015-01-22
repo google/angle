@@ -22,6 +22,30 @@
       "revId": "e4dadd5b454dab9827b1cc6a36a31763f2158ed7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b70bb17_be9d0943",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-22T20:03:11Z",
+      "side": 1,
+      "message": "Oh yes, sorry, I forgot that ASSERTs don\u0027t do anything in release.\n\n\nI don\u0027t mind what we do here. I\u0027d just like to get this change off my plate.\n\n\nWould this work for you?\n\n\"if (static_cast\u003csize_t\u003e(arraySize) \u003e INT_MAX / totalSize)\"",
+      "parentUuid": "4bd16f3e_5888c1b2",
+      "range": {
+        "startLine": 181,
+        "startChar": 8,
+        "endLine": 181,
+        "endChar": 37
+      },
+      "revId": "e4dadd5b454dab9827b1cc6a36a31763f2158ed7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
