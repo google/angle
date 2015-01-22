@@ -57,8 +57,8 @@ h_file_template = """//
 
 // $TypedImpl.h: Defines the class interface for $TypedImpl.
 
-#ifndef LIBANGLE_RENDERER_${RendererNameCaps}_${TypedImplCaps}_H
-#define LIBANGLE_RENDERER_${RendererNameCaps}_${TypedImplCaps}_H
+#ifndef LIBANGLE_RENDERER_${RendererNameCaps}_${TypedImplCaps}_H_
+#define LIBANGLE_RENDERER_${RendererNameCaps}_${TypedImplCaps}_H_
 
 #include "libANGLE/renderer/$BaseImpl.h"
 
@@ -77,7 +77,7 @@ $PrivateImplMethodDeclarations};
 
 }
 
-#endif // LIBANGLE_RENDERER_${RendererNameCaps}_${TypedImplCaps}_H
+#endif // LIBANGLE_RENDERER_${RendererNameCaps}_${TypedImplCaps}_H_
 """
 
 cpp_file_template = """//

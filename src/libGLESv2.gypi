@@ -359,6 +359,48 @@
             'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp',
             'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h',
         ],
+        'libangle_gl_sources':
+        [
+            'libANGLE/renderer/gl/BufferGL.cpp',
+            'libANGLE/renderer/gl/BufferGL.h',
+            'libANGLE/renderer/gl/CompilerGL.cpp',
+            'libANGLE/renderer/gl/CompilerGL.h',
+            'libANGLE/renderer/gl/DefaultAttachmentGL.cpp',
+            'libANGLE/renderer/gl/DefaultAttachmentGL.h',
+            'libANGLE/renderer/gl/DisplayGL.cpp',
+            'libANGLE/renderer/gl/DisplayGL.h',
+            'libANGLE/renderer/gl/FenceNVGL.cpp',
+            'libANGLE/renderer/gl/FenceNVGL.h',
+            'libANGLE/renderer/gl/FenceSyncGL.cpp',
+            'libANGLE/renderer/gl/FenceSyncGL.h',
+            'libANGLE/renderer/gl/FramebufferGL.cpp',
+            'libANGLE/renderer/gl/FramebufferGL.h',
+            'libANGLE/renderer/gl/ProgramGL.cpp',
+            'libANGLE/renderer/gl/ProgramGL.h',
+            'libANGLE/renderer/gl/QueryGL.cpp',
+            'libANGLE/renderer/gl/QueryGL.h',
+            'libANGLE/renderer/gl/RenderbufferGL.cpp',
+            'libANGLE/renderer/gl/RenderbufferGL.h',
+            'libANGLE/renderer/gl/RendererGL.cpp',
+            'libANGLE/renderer/gl/RendererGL.h',
+            'libANGLE/renderer/gl/ShaderGL.cpp',
+            'libANGLE/renderer/gl/ShaderGL.h',
+            'libANGLE/renderer/gl/SurfaceGL.cpp',
+            'libANGLE/renderer/gl/SurfaceGL.h',
+            'libANGLE/renderer/gl/TextureGL.cpp',
+            'libANGLE/renderer/gl/TextureGL.h',
+            'libANGLE/renderer/gl/TransformFeedbackGL.cpp',
+            'libANGLE/renderer/gl/TransformFeedbackGL.h',
+            'libANGLE/renderer/gl/VertexArrayGL.cpp',
+            'libANGLE/renderer/gl/VertexArrayGL.h',
+        ],
+        'libangle_gl_wgl_sources':
+        [
+            'libANGLE/renderer/gl/wgl/DisplayWGL.cpp',
+            'libANGLE/renderer/gl/wgl/DisplayWGL.h',
+            'libANGLE/renderer/gl/wgl/SurfaceWGL.cpp',
+            'libANGLE/renderer/gl/wgl/SurfaceWGL.h',
+        ],
         'libglesv2_sources':
         [
             'common/angleutils.h',
@@ -453,6 +495,13 @@
                             'ANGLE_ENABLE_D3D11',
                         ],
                     }],
+                    ['angle_enable_gl==1',
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_OPENGL',
+                        ],
+                    }],
                 ],
             },
             'conditions':
@@ -539,6 +588,40 @@
                             'sources':
                             [
                                 '<@(libangle_d3d11_win32_sources)',
+                            ],
+                        }],
+                    ],
+                }],
+                ['angle_enable_gl==1',
+                {
+                    'sources':
+                    [
+                        '<@(libangle_gl_sources)',
+                    ],
+                    'defines':
+                    [
+                        'ANGLE_ENABLE_OPENGL',
+                    ],
+                    'link_settings':
+                    {
+                        'msvs_settings':
+                        {
+                            'VCLinkerTool':
+                            {
+                                'AdditionalDependencies':
+                                [
+                                    'OpenGL32.lib',
+                                ],
+                            },
+                        },
+                    },
+                    'conditions':
+                    [
+                        ['OS=="win"',
+                        {
+                            'sources':
+                            [
+                                '<@(libangle_gl_wgl_sources)',
                             ],
                         }],
                     ],

@@ -15,6 +15,7 @@
         'angle_use_commit_id%': '<!(python <(angle_id_script_base) check ..)',
         'angle_enable_d3d9%': 0,
         'angle_enable_d3d11%': 0,
+        'angle_enable_gl%': 0,
         'conditions':
         [
             ['OS=="win"',

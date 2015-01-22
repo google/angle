@@ -12,6 +12,7 @@
 
 #include "common/debug.h"
 #include "common/mathutil.h"
+#include "common/platform.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/DisplayImpl.h"
@@ -26,6 +27,14 @@
 
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
 #   include "libANGLE/renderer/d3d/DisplayD3D.h"
+#endif
+
+#if defined(ANGLE_ENABLE_OPENGL)
+#   if defined(ANGLE_PLATFORM_WINDOWS)
+#       include "libANGLE/renderer/gl/wgl/DisplayWGL.h"
+#   else
+#       error Unsupported OpenGL platform.
+#   endif
 #endif
 
 namespace egl
@@ -71,6 +80,18 @@ Display *Display::getDisplay(EGLNativeDisplayType displayId, const AttributeMap 
             impl = new rx::DisplayD3D();
 #else
             // A D3D display was requested on a platform that doesn't support it
+            UNREACHABLE();
+#endif
+            break;
+
+          case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
+#if defined(ANGLE_ENABLE_OPENGL)
+#if defined(ANGLE_PLATFORM_WINDOWS)
+            impl = new rx::DisplayWGL();
+#else
+#error Unsupported OpenGL platform.
+#endif
+#else
             UNREACHABLE();
 #endif
             break;
