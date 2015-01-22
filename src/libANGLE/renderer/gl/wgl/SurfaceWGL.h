@@ -11,6 +11,8 @@
 
 #include "libANGLE/renderer/gl/SurfaceGL.h"
 
+#include <GL/wglext.h>
+
 namespace rx
 {
 
@@ -18,9 +20,15 @@ class SurfaceWGL : public SurfaceGL
 {
   public:
     SurfaceWGL(egl::Display *display, const egl::Config *config, EGLint fixedSize, EGLint postSubBufferSupported,
-               EGLenum textureFormat, EGLenum textureType);
+               EGLenum textureFormat, EGLenum textureType, EGLNativeWindowType window, ATOM windowClass, int pixelFormat,
+               HGLRC wglContext, PFNWGLSWAPINTERVALEXTPROC swapIntervalExt);
 
     ~SurfaceWGL() override;
+
+    static SurfaceWGL *makeSurfaceWGL(SurfaceImpl *impl);
+
+    egl::Error initialize();
+    egl::Error makeCurrent();
 
     egl::Error swap() override;
     egl::Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height) override;
@@ -36,6 +44,17 @@ class SurfaceWGL : public SurfaceGL
 
   private:
     DISALLOW_COPY_AND_ASSIGN(SurfaceWGL);
+
+    ATOM mWindowClass;
+    int mPixelFormat;
+
+    HGLRC mShareWGLContext;
+
+    HWND mParentWindow;
+    HWND mChildWindow;
+    HDC mChildDeviceContext;
+
+    PFNWGLSWAPINTERVALEXTPROC mSwapIntervalEXT;
 };
 
 }
