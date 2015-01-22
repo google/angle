@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2bfc3bc4_87d6e856",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1388,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-22T22:12:30Z",
+      "side": 1,
+      "message": "The Texture2D version passes false here, why the difference?",
+      "range": {
+        "startLine": 1388,
+        "startChar": 116,
+        "endLine": 1388,
+        "endChar": 120
+      },
+      "revId": "3df32626a8306ba5209bb0224c02dd650574b3c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bf937d6_e354721c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1475,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-22T22:12:30Z",
+      "side": 1,
+      "message": "The D3D11CalcSubresource macro would be useful here (and above)",
+      "range": {
+        "startLine": 1475,
+        "startChar": 57,
+        "endLine": 1475,
+        "endChar": 74
+      },
+      "revId": "3df32626a8306ba5209bb0224c02dd650574b3c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
