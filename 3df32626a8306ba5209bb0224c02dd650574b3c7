@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4b732f24_f9b87fe4",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1388,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-22T22:27:49Z",
+      "side": 1,
+      "message": "It doesn\u0027t really matter. This was based on a guess (backed by a little data) that TextureCubes are less likely to have mips than Texture2Ds.\n\nI plan to spend some time tweaking things like this in the future, once we have more data.",
+      "parentUuid": "2bfc3bc4_87d6e856",
+      "range": {
+        "startLine": 1388,
+        "startChar": 116,
+        "endLine": 1388,
+        "endChar": 120
+      },
+      "revId": "3df32626a8306ba5209bb0224c02dd650574b3c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bf937d6_e354721c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 8
