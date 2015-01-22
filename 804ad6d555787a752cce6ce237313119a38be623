@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cbc55f7a_1fafcbee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1862,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-22T15:19:39Z",
+      "side": 1,
+      "message": "nit: can you add a comment here explaining what the purpose of dirty pointer is ? (a value that will make the applied shader check always return false, and force a re-apply)",
+      "range": {
+        "startLine": 1862,
+        "startChar": 20,
+        "endLine": 1862,
+        "endChar": 32
+      },
+      "revId": "804ad6d555787a752cce6ce237313119a38be623",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
