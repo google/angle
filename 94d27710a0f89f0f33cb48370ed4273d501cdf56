@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2b70bb17_33bdd289",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-22T18:44:21Z",
+      "side": 1,
+      "message": "It was infoSink that was the problem in the previous function. I just renamed root -\u003e infoRoot at the same time for consistency.",
+      "parentUuid": "ebc0636a_1aec7d97",
+      "range": {
+        "startLine": 452,
+        "startChar": 43,
+        "endLine": 452,
+        "endChar": 44
+      },
+      "revId": "94d27710a0f89f0f33cb48370ed4273d501cdf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cbc55f7a_cdeac902",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 2
