@@ -46,6 +46,30 @@
       "revId": "e4dadd5b454dab9827b1cc6a36a31763f2158ed7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bd9d36e_ce7083cc",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-22T20:12:31Z",
+      "side": 1,
+      "message": "Can you try including \"common/mathutil.h\" and using IsUnsignedMultiplicationSafe? I think if we have at least a single point of hard-to-analyze code failure we\u0027d be a bit better off. Heh.",
+      "parentUuid": "2b70bb17_be9d0943",
+      "range": {
+        "startLine": 181,
+        "startChar": 8,
+        "endLine": 181,
+        "endChar": 37
+      },
+      "revId": "e4dadd5b454dab9827b1cc6a36a31763f2158ed7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
