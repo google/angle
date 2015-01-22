@@ -64,9 +64,9 @@ struct InternalFormat
     SupportCheckFunction renderSupport;
     SupportCheckFunction filterSupport;
 
-    GLuint computeRowPitch(GLenum type, GLsizei width, GLint alignment) const;
-    GLuint computeDepthPitch(GLenum type, GLsizei width, GLsizei height, GLint alignment) const;
-    GLuint computeBlockSize(GLenum type, GLsizei width, GLsizei height) const;
+    GLuint computeRowPitch(GLenum formatType, GLsizei width, GLint alignment) const;
+    GLuint computeDepthPitch(GLenum formatType, GLsizei width, GLsizei height, GLint alignment) const;
+    GLuint computeBlockSize(GLenum formatType, GLsizei width, GLsizei height) const;
 };
 const InternalFormat &GetInternalFormatInfo(GLenum internalFormat);
 

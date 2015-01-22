@@ -99,7 +99,7 @@ gl::Error VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib
         {
             BufferD3D *storage = BufferD3D::makeFromBuffer(buffer);
             ASSERT(storage);
-            gl::Error error = storage->getData(&input);
+            error = storage->getData(&input);
             if (error.isError())
             {
                 return error;
