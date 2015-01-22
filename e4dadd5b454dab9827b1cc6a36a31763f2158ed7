@@ -70,6 +70,30 @@
       "revId": "e4dadd5b454dab9827b1cc6a36a31763f2158ed7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b732f24_59d27366",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-22T20:37:03Z",
+      "side": 1,
+      "message": "That brings in common/debug.h, and its macros clash with compilerdebug.h. I\u0027d rather not spend time solving that issue now.\n\n\nIf this is a problem then I can revert the changes in this file, and log an item in the ANGLE issue tracker for someone to look at in the future.",
+      "parentUuid": "6bd9d36e_ce7083cc",
+      "range": {
+        "startLine": 181,
+        "startChar": 8,
+        "endLine": 181,
+        "endChar": 37
+      },
+      "revId": "e4dadd5b454dab9827b1cc6a36a31763f2158ed7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
