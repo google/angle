@@ -59,6 +59,24 @@
     },
     {
       "key": {
+        "uuid": "0bb21712_a427a8a1",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-22T17:37:02Z",
+      "side": 1,
+      "message": "Good catch.",
+      "parentUuid": "0bb21712_2487183c",
+      "revId": "94d27710a0f89f0f33cb48370ed4273d501cdf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cbc55f7a_ad41d56b",
         "filename": "src/compiler/translator/Types.cpp",
         "patchSetId": 2
@@ -70,6 +88,24 @@
       "writtenOn": "2015-01-22T17:23:26Z",
       "side": 1,
       "message": "I can\u0027t tell if this is correct. Detecting integer overflow is certainly very tricky.",
+      "revId": "94d27710a0f89f0f33cb48370ed4273d501cdf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bbfe7dd_171e94fb",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-22T17:37:02Z",
+      "side": 1,
+      "message": "We have a method IsUnsignedMultiplicationSafe in mathutil.h that you could look at.",
+      "parentUuid": "cbc55f7a_ad41d56b",
       "revId": "94d27710a0f89f0f33cb48370ed4273d501cdf56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
