@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b4713ed_a1c77876",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-23T01:46:25Z",
+      "side": 1,
+      "message": "Nit: consider just having the caller pass in the pointer to the egl::DisplayExtensions? Would avoid using \"mutable\", and the duplicate copies of this object in different classes.",
+      "range": {
+        "startLine": 51,
+        "startChar": 15,
+        "endLine": 51,
+        "endChar": 32
+      },
+      "revId": "053fd74d68073ea9f2b64bb037a4283def42e382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
