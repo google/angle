@@ -22,6 +22,30 @@
       "revId": "053fd74d68073ea9f2b64bb037a4283def42e382",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b1b6706_f7e540b4",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-23T15:43:51Z",
+      "side": 1,
+      "message": "In this case, we need two copies of the egl::DisplayExtensions.  The extensions in the Impl represent what extensions can be supported but the egl::Display may modify its copy of them.  gl::Context modifies some of the extensions and caps from the Renderer to disable some features for work arounds.\n\nAs for the mutable, I could have getExtensions return by value (but risk extra copies), use a const_cast or use mutable.",
+      "parentUuid": "6b4713ed_a1c77876",
+      "range": {
+        "startLine": 51,
+        "startChar": 15,
+        "endLine": 51,
+        "endChar": 32
+      },
+      "revId": "053fd74d68073ea9f2b64bb037a4283def42e382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
