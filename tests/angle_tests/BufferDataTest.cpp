@@ -331,3 +331,75 @@ TYPED_TEST(IndexedBufferCopyTest, IndexRangeBug)
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
 }
+
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+ANGLE_TYPED_TEST_CASE(BufferDataTestES3, ES3_D3D11);
+
+template<typename T>
+class BufferDataTestES3 : public BufferDataTest<T>
+{
+};
+
+// The following test covers an ANGLE bug where the buffer storage
+// is not resized by Buffer11::getLatestBufferStorage when needed.
+// https://code.google.com/p/angleproject/issues/detail?id=897
+TYPED_TEST(BufferDataTestES3, BufferResizing)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    ASSERT_GL_NO_ERROR();
+
+    // Allocate a buffer with one byte
+    uint8_t singleByte[] = { 0xaa };
+    glBufferData(GL_ARRAY_BUFFER, 1, singleByte, GL_STATIC_DRAW);
+
+    // Resize the buffer
+    // To trigger the bug, the buffer need to be big enough because some hardware copy buffers
+    // by chunks of pages instead of the minimum number of bytes neeeded.
+    const size_t numBytes = 4096*4;
+    glBufferData(GL_ARRAY_BUFFER, numBytes, NULL, GL_STATIC_DRAW);
+
+    // Copy the original data to the buffer
+    uint8_t srcBytes[numBytes];
+    for (size_t i = 0; i < numBytes; ++i)
+    {
+        srcBytes[i] = i;
+    }
+
+    void *dest = glMapBufferRange(GL_ARRAY_BUFFER, 0, numBytes, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+
+    ASSERT_GL_NO_ERROR();
+
+    memcpy(dest, srcBytes, numBytes);
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Create a new buffer and copy the data to it
+    GLuint readBuffer;
+    glGenBuffers(1, &readBuffer);
+    glBindBuffer(GL_COPY_WRITE_BUFFER, readBuffer);
+    uint8_t zeros[numBytes];
+    for (size_t i = 0; i < numBytes; ++i)
+    {
+        zeros[i] = 0;
+    }
+    glBufferData(GL_COPY_WRITE_BUFFER, numBytes, zeros, GL_STATIC_DRAW);
+    glCopyBufferSubData(GL_ARRAY_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, numBytes);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Read back the data and compare it to the original
+    uint8_t *data = reinterpret_cast<uint8_t*>(glMapBufferRange(GL_COPY_WRITE_BUFFER, 0, numBytes, GL_MAP_READ_BIT));
+
+    ASSERT_GL_NO_ERROR();
+
+    for (size_t i = 0; i < numBytes; ++i)
+    {
+        EXPECT_EQ(srcBytes[i], data[i]);
+    }
+    glUnmapBuffer(GL_COPY_WRITE_BUFFER);
+
+    glDeleteBuffers(1, &readBuffer);
+
+    EXPECT_GL_NO_ERROR();
+}

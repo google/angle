@@ -579,6 +579,16 @@ Buffer11::BufferStorage11 *Buffer11::getLatestBufferStorage() const
         }
     }
 
+    // resize buffer
+    if (latestStorage && latestStorage->getSize() < mSize)
+    {
+        if (latestStorage->resize(mSize, true).isError())
+        {
+            // Out of memory error
+            return NULL;
+        }
+    }
+
     return latestStorage;
 }
 
