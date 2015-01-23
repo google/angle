@@ -33,7 +33,7 @@ int DetectCallDepth::FunctionNode::detectCallDepth(DetectCallDepth* detectCallDe
     ASSERT(visit == PreVisit);
     ASSERT(detectCallDepth);
 
-    int retMaxDepth = depth;
+    int maxDepth = depth;
     visit = InVisit;
     for (size_t i = 0; i < callees.size(); ++i) {
         switch (callees[i]->visit) {
@@ -52,7 +52,7 @@ int DetectCallDepth::FunctionNode::detectCallDepth(DetectCallDepth* detectCallDe
                     detectCallDepth->getInfoSink().info << "<-" << callees[i]->getName();
                     return callDepth;
                 }
-                retMaxDepth = std::max(callDepth, retMaxDepth);
+                maxDepth = std::max(callDepth, maxDepth);
                 break;
             }
             default:
@@ -61,7 +61,7 @@ int DetectCallDepth::FunctionNode::detectCallDepth(DetectCallDepth* detectCallDe
         }
     }
     visit = PostVisit;
-    return retMaxDepth;
+    return maxDepth;
 }
 
 void DetectCallDepth::FunctionNode::reset()

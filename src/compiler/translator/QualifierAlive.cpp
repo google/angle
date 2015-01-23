@@ -49,7 +49,7 @@ void TAliveTraverser::visitSymbol(TIntermSymbol* node)
         found = true;
 }
 
-bool TAliveTraverser::visitSelection(Visit, TIntermSelection*)
+bool TAliveTraverser::visitSelection(Visit preVisit, TIntermSelection* node)
 {
     if (wasFound())
         return false;

@@ -64,9 +64,9 @@ void TranslatorGLSL::writeVersion(TIntermNode *root)
 
 void TranslatorGLSL::writeExtensionBehavior() {
     TInfoSinkBase& sink = getInfoSink().obj;
-    const TExtensionBehavior& extBehavior = getExtensionBehavior();
-    for (TExtensionBehavior::const_iterator iter = extBehavior.begin();
-         iter != extBehavior.end(); ++iter) {
+    const TExtensionBehavior& extensionBehavior = getExtensionBehavior();
+    for (TExtensionBehavior::const_iterator iter = extensionBehavior.begin();
+         iter != extensionBehavior.end(); ++iter) {
         if (iter->second == EBhUndefined)
             continue;
 

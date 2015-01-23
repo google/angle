@@ -229,9 +229,9 @@ void ShaderD3D::compileToHLSL(ShHandle compiler, const std::string &source)
             if (uniform.staticUse)
             {
                 unsigned int index = -1;
-                bool getUniformRegisterResult = ShGetUniformRegister(compiler, uniform.name, &index);
-                UNUSED_ASSERTION_VARIABLE(getUniformRegisterResult);
-                ASSERT(getUniformRegisterResult);
+                bool result = ShGetUniformRegister(compiler, uniform.name, &index);
+                UNUSED_ASSERTION_VARIABLE(result);
+                ASSERT(result);
 
                 mUniformRegisterMap[uniform.name] = index;
             }
@@ -246,9 +246,9 @@ void ShaderD3D::compileToHLSL(ShHandle compiler, const std::string &source)
             if (interfaceBlock.staticUse)
             {
                 unsigned int index = -1;
-                bool blockRegisterResult = ShGetInterfaceBlockRegister(compiler, interfaceBlock.name, &index);
-                UNUSED_ASSERTION_VARIABLE(blockRegisterResult);
-                ASSERT(blockRegisterResult);
+                bool result = ShGetInterfaceBlockRegister(compiler, interfaceBlock.name, &index);
+                UNUSED_ASSERTION_VARIABLE(result);
+                ASSERT(result);
 
                 mInterfaceBlockRegisterMap[interfaceBlock.name] = index;
             }

@@ -560,18 +560,18 @@ const InternalFormat &GetInternalFormatInfo(GLenum internalFormat)
     }
 }
 
-GLuint InternalFormat::computeRowPitch(GLenum formatType, GLsizei width, GLint alignment) const
+GLuint InternalFormat::computeRowPitch(GLenum type, GLsizei width, GLint alignment) const
 {
     ASSERT(alignment > 0 && isPow2(alignment));
-    return rx::roundUp(computeBlockSize(formatType, width, 1), static_cast<GLuint>(alignment));
+    return rx::roundUp(computeBlockSize(type, width, 1), static_cast<GLuint>(alignment));
 }
 
-GLuint InternalFormat::computeDepthPitch(GLenum formatType, GLsizei width, GLsizei height, GLint alignment) const
+GLuint InternalFormat::computeDepthPitch(GLenum type, GLsizei width, GLsizei height, GLint alignment) const
 {
-    return computeRowPitch(formatType, width, alignment) * height;
+    return computeRowPitch(type, width, alignment) * height;
 }
 
-GLuint InternalFormat::computeBlockSize(GLenum formatType, GLsizei width, GLsizei height) const
+GLuint InternalFormat::computeBlockSize(GLenum type, GLsizei width, GLsizei height) const
 {
     if (compressed)
     {
@@ -581,7 +581,7 @@ GLuint InternalFormat::computeBlockSize(GLenum formatType, GLsizei width, GLsize
     }
     else
     {
-        const Type &typeInfo = GetTypeInfo(formatType);
+        const Type &typeInfo = GetTypeInfo(type);
         if (typeInfo.specialInterpretation)
         {
             return typeInfo.bytes * width * height;

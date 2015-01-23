@@ -423,25 +423,25 @@ void TCompiler::clearResults()
     nameMap.clear();
 }
 
-bool TCompiler::detectCallDepth(TIntermNode* inputRoot, TInfoSink& inputInfoSink, bool limitCallStackDepth)
+bool TCompiler::detectCallDepth(TIntermNode* root, TInfoSink& infoSink, bool limitCallStackDepth)
 {
-    DetectCallDepth detect(inputInfoSink, limitCallStackDepth, maxCallStackDepth);
-    inputRoot->traverse(&detect);
+    DetectCallDepth detect(infoSink, limitCallStackDepth, maxCallStackDepth);
+    root->traverse(&detect);
     switch (detect.detectCallDepth())
     {
       case DetectCallDepth::kErrorNone:
         return true;
       case DetectCallDepth::kErrorMissingMain:
-        inputInfoSink.info.prefix(EPrefixError);
-        inputInfoSink.info << "Missing main()";
+        infoSink.info.prefix(EPrefixError);
+        infoSink.info << "Missing main()";
         return false;
       case DetectCallDepth::kErrorRecursion:
-        inputInfoSink.info.prefix(EPrefixError);
-        inputInfoSink.info << "Function recursion detected";
+        infoSink.info.prefix(EPrefixError);
+        infoSink.info << "Function recursion detected";
         return false;
       case DetectCallDepth::kErrorMaxDepthExceeded:
-        inputInfoSink.info.prefix(EPrefixError);
-        inputInfoSink.info << "Function call stack too deep";
+        infoSink.info.prefix(EPrefixError);
+        infoSink.info << "Function call stack too deep";
         return false;
       default:
         UNREACHABLE();

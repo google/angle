@@ -305,8 +305,8 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribute &attrib,
             int totalCount = ElementsInBuffer(attrib, storage->getSize());
             int startIndex = attrib.offset / ComputeVertexAttributeStride(attrib);
 
-            error = staticBuffer->storeVertexAttributes(attrib, currentValue, -startIndex, totalCount,
-                                                        0, &streamOffset);
+            gl::Error error = staticBuffer->storeVertexAttributes(attrib, currentValue, -startIndex, totalCount,
+                                                                  0, &streamOffset);
             if (error.isError())
             {
                 return error;

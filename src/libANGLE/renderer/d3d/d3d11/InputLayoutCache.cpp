@@ -216,6 +216,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
     {
         gl::VertexFormat shaderInputLayout[gl::MAX_VERTEX_ATTRIBS];
         GetInputLayout(attributes, shaderInputLayout);
+        ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(program->getImplementation());
 
         ShaderExecutableD3D *shader = NULL;
         gl::Error error = programD3D->getVertexExecutableForInputLayout(shaderInputLayout, &shader, nullptr);

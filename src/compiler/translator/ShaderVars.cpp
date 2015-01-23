@@ -86,6 +86,7 @@ bool ShaderVariable::findInfoByMappedName(
     // 2) the top variable is an array;
     // 3) otherwise.
     size_t pos = mappedFullName.find_first_of(".[");
+    std::string topName;
 
     if (pos == std::string::npos)
     {

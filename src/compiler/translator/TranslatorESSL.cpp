@@ -46,9 +46,9 @@ void TranslatorESSL::translate(TIntermNode* root) {
 
 void TranslatorESSL::writeExtensionBehavior() {
     TInfoSinkBase& sink = getInfoSink().obj;
-    const TExtensionBehavior& extBehavior = getExtensionBehavior();
-    for (TExtensionBehavior::const_iterator iter = extBehavior.begin();
-         iter != extBehavior.end(); ++iter) {
+    const TExtensionBehavior& extensionBehavior = getExtensionBehavior();
+    for (TExtensionBehavior::const_iterator iter = extensionBehavior.begin();
+         iter != extensionBehavior.end(); ++iter) {
         if (iter->second != EBhUndefined) {
             if (getResources().NV_shader_framebuffer_fetch && iter->first == "GL_EXT_shader_framebuffer_fetch") {
                 sink << "#extension GL_NV_shader_framebuffer_fetch : "

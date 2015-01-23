@@ -179,7 +179,7 @@ gl::Error FenceSync11::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *ou
     while (currentCounter.QuadPart < endCounter && !result)
     {
         ScheduleYield();
-        success = QueryPerformanceCounter(&currentCounter);
+        BOOL success = QueryPerformanceCounter(&currentCounter);
         UNUSED_ASSERTION_VARIABLE(success);
         ASSERT(success);
 

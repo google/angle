@@ -274,9 +274,9 @@ void StructureHLSL::addConstructor(const TType &type, const TString &name, const
 
     for (unsigned int parameter = 0; parameter < ctorParameters.size(); parameter++)
     {
-        const TType &paramType = ctorParameters[parameter];
+        const TType &type = ctorParameters[parameter];
 
-        constructor += TypeString(paramType) + " x" + str(parameter) + ArrayString(paramType);
+        constructor += TypeString(type) + " x" + str(parameter) + ArrayString(type);
 
         if (parameter < ctorParameters.size() - 1)
         {

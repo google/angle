@@ -178,12 +178,11 @@ size_t TType::getObjectSize() const
 
     if (isArray())
     {
-        // TODO: getArraySize() returns an int, not a size_t
-        size_t currentArraySize = getArraySize();
-        if (currentArraySize > INT_MAX / totalSize)
+        size_t arraySize = getArraySize();
+        if (arraySize > INT_MAX / totalSize)
             totalSize = INT_MAX;
         else
-            totalSize *= currentArraySize;
+            totalSize *= arraySize;
     }
 
     return totalSize;

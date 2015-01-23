@@ -379,6 +379,8 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, u
     }
     else
     {
+        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mTextureFormat);
+
         D3D11_BOX srcBox;
         srcBox.left = copyArea.x;
         srcBox.top = copyArea.y;
@@ -786,6 +788,7 @@ gl::Error TextureStorage11_2D::copyToStorage(TextureStorage *destStorage)
             return error;
         }
 
+        TextureStorage11 *dest11 = TextureStorage11::makeTextureStorage11(destStorage);
         ID3D11Resource *destResource = NULL;
         error = dest11->getResource(&destResource);
         if (error.isError())
