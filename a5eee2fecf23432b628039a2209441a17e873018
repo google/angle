@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb64e3c9_9d4e27bb",
+        "filename": "src/libANGLE/Config.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-24T02:46:07Z",
+      "side": 1,
+      "message": "Note that this operation will invalidate any EGLConfigs that might have been returned from this set -- mConfigs\u0027 storage might be reallocated and that will invalidate any pointers (and references) to the Configs the set contains. Is there any way that could be an issue? I don\u0027t think so -- it looks like DisplayD3D does all of the adding in one shot and then returns the ConfigSet which is later only queried -- but I think some safety checks are warranted (add a freeze() method to ConfigSet so it\u0027s illegal to call add(), and make assertions about that here).",
+      "range": {
+        "startLine": 156,
+        "startChar": 4,
+        "endLine": 156,
+        "endChar": 12
+      },
+      "revId": "a5eee2fecf23432b628039a2209441a17e873018",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb64e3c9_5d0e4fa7",
+        "filename": "src/libANGLE/Config.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-24T02:46:07Z",
+      "side": 1,
+      "message": "This seems to have moved in EGL 1.5? Seems to be section 3.4.1.2 \"Sorting of EGLConfigs\" p. 28?",
+      "range": {
+        "startLine": 188,
+        "startChar": 39,
+        "endLine": 188,
+        "endChar": 47
+      },
+      "revId": "a5eee2fecf23432b628039a2209441a17e873018",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b6367c3_370b7849",
+        "filename": "src/libANGLE/Config.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-24T02:46:07Z",
+      "side": 1,
+      "message": "Are there any unit tests for this code? If not, even a couple would go a long way toward building confidence in the config sorting and maintenance code.",
+      "range": {
+        "startLine": 282,
+        "startChar": 27,
+        "endLine": 282,
+        "endChar": 36
+      },
+      "revId": "a5eee2fecf23432b628039a2209441a17e873018",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
