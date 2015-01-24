@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb64e3c9_ddf41f97",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-24T01:55:18Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this code path then return an error?",
+      "range": {
+        "startLine": 165,
+        "startChar": 8,
+        "endLine": 165,
+        "endChar": 23
+      },
+      "revId": "2941ccd2bc2d8cb22dc227cab146e262df470f2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb64e3c9_1db857b5",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-24T01:55:18Z",
+      "side": 1,
+      "message": "Is this always guaranteed to be true or should this instead generate EGL_NOT_INITIALIZED? (Also, what about checking for a NULL EGLDisplay on the way down here?)",
+      "range": {
+        "startLine": 457,
+        "startChar": 4,
+        "endLine": 457,
+        "endChar": 10
+      },
+      "revId": "2941ccd2bc2d8cb22dc227cab146e262df470f2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab5e6bfb_9842b570",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-24T01:55:18Z",
+      "side": 1,
+      "message": "One suggestion would be to just put the enums in the vector above rather than a renderer creation function, and just have a simple if-test here deciding which constructor to call. I think it would be less code.",
+      "range": {
+        "startLine": 99,
+        "startChar": 21,
+        "endLine": 99,
+        "endChar": 29
+      },
+      "revId": "2941ccd2bc2d8cb22dc227cab146e262df470f2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
