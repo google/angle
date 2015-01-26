@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2bab5bf1_efeadd01",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-26T15:36:28Z",
+      "side": 1,
+      "message": "Yes, thanks, fixed.",
+      "parentUuid": "eb64e3c9_ddf41f97",
+      "range": {
+        "startLine": 165,
+        "startChar": 8,
+        "endLine": 165,
+        "endChar": 23
+      },
+      "revId": "2941ccd2bc2d8cb22dc227cab146e262df470f2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb64e3c9_1db857b5",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "abd02b89_8b2d1185",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-26T15:36:28Z",
+      "side": 1,
+      "message": "This is covered by the validation layer (ValidateDisplay checks if the display is initialized and returns EGL_NOT_INITIALIZED) so if we end up in this function without an initialized display, it would be a programmer error.",
+      "parentUuid": "eb64e3c9_1db857b5",
+      "range": {
+        "startLine": 457,
+        "startChar": 4,
+        "endLine": 457,
+        "endChar": 10
+      },
+      "revId": "2941ccd2bc2d8cb22dc227cab146e262df470f2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ab5e6bfb_9842b570",
         "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
         "patchSetId": 8
@@ -59,6 +107,30 @@
       "writtenOn": "2015-01-24T01:55:18Z",
       "side": 1,
       "message": "One suggestion would be to just put the enums in the vector above rather than a renderer creation function, and just have a simple if-test here deciding which constructor to call. I think it would be less code.",
+      "range": {
+        "startLine": 99,
+        "startChar": 21,
+        "endLine": 99,
+        "endChar": 29
+      },
+      "revId": "2941ccd2bc2d8cb22dc227cab146e262df470f2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2bab5bf1_cfef2110",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-26T15:36:28Z",
+      "side": 1,
+      "message": "This is a bit complicated because there are two extensions at play here and macros that determine the orders which to try initializing the renderers in.\n\nIt\u0027s been in my queue for a while to remove the EGL_ANGLE_direct3d_display extension and get chrome using the EGL_ANGLE_platform_angle to select the renderer.  This will let us remove a lot of these fallbacks.",
+      "parentUuid": "ab5e6bfb_9842b570",
       "range": {
         "startLine": 99,
         "startChar": 21,
