@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "b7ec137b_2181ce62",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-26T22:58:55Z",
+      "side": 1,
+      "message": "Forgive my naive question, but where do these abstract Configs get lowered down to concrete DXGI formats? I mostly understood the previous mapping, which mapped from the DXGI render target format to the OpenGL format -- but don\u0027t see how the reverse is done any more. In particular, I\u0027m concerned about the case where for some reason ANGLE\u0027s EGL implementation incorrectly advertises a config that the underlying D3D driver doesn\u0027t really support. I can\u0027t see any querying of real D3D formats down any of the code paths here (getRendererCaps(), getRendererTextureCaps(), etc.).",
+      "range": {
+        "startLine": 485,
+        "startChar": 26,
+        "endLine": 485,
+        "endChar": 28
+      },
+      "revId": "fd7245646ed216d6e4c6a671a30dc9a1d2e48126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2bab5bf1_cf6a8159",
         "filename": "tests/angle_tests/BlitFramebufferANGLETest.cpp",
         "patchSetId": 8
@@ -13,6 +36,30 @@
       "writtenOn": "2015-01-26T16:18:24Z",
       "side": 1,
       "message": "This change is slightly unrelated.  I found that this test depends on 8 stencil bits when tinkering with the available configs.",
+      "range": {
+        "startLine": 19,
+        "startChar": 8,
+        "endLine": 19,
+        "endChar": 32
+      },
+      "revId": "fd7245646ed216d6e4c6a671a30dc9a1d2e48126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7e7c792_2239ce71",
+        "filename": "tests/angle_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-26T22:58:55Z",
+      "side": 1,
+      "message": "Thanks for the info.",
+      "parentUuid": "2bab5bf1_cf6a8159",
       "range": {
         "startLine": 19,
         "startChar": 8,
