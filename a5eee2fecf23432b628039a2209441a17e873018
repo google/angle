@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2bab5bf1_4ffcd1c6",
+        "filename": "src/libANGLE/Config.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-26T15:36:17Z",
+      "side": 1,
+      "message": "std::map makes the guarantee that on insertion all iterators and references are still valid.",
+      "parentUuid": "eb64e3c9_9d4e27bb",
+      "range": {
+        "startLine": 156,
+        "startChar": 4,
+        "endLine": 156,
+        "endChar": 12
+      },
+      "revId": "a5eee2fecf23432b628039a2209441a17e873018",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb64e3c9_5d0e4fa7",
         "filename": "src/libANGLE/Config.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "cb69dfa3_39a52f10",
+        "filename": "src/libANGLE/Config.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-26T15:36:17Z",
+      "side": 1,
+      "message": "Done, updated the spec references about configs.",
+      "parentUuid": "eb64e3c9_5d0e4fa7",
+      "range": {
+        "startLine": 188,
+        "startChar": 39,
+        "endLine": 188,
+        "endChar": 47
+      },
+      "revId": "a5eee2fecf23432b628039a2209441a17e873018",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8b6367c3_370b7849",
         "filename": "src/libANGLE/Config.cpp",
         "patchSetId": 8
@@ -59,6 +107,30 @@
       "writtenOn": "2015-01-24T02:46:07Z",
       "side": 1,
       "message": "Are there any unit tests for this code? If not, even a couple would go a long way toward building confidence in the config sorting and maintenance code.",
+      "range": {
+        "startLine": 282,
+        "startChar": 27,
+        "endLine": 282,
+        "endChar": 36
+      },
+      "revId": "a5eee2fecf23432b628039a2209441a17e873018",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb69dfa3_7cb955e6",
+        "filename": "src/libANGLE/Config.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-26T15:36:17Z",
+      "side": 1,
+      "message": "Added some to test the ConfigSet class.",
+      "parentUuid": "8b6367c3_370b7849",
       "range": {
         "startLine": 282,
         "startChar": 27,
