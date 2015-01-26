@@ -651,11 +651,11 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         for (TIntermSequence::const_iterator iter = node->getSequence()->begin();
              iter != node->getSequence()->end(); ++iter)
         {
-            TIntermNode *node = *iter;
-            ASSERT(node != NULL);
-            node->traverse(this);
+            TIntermNode *curNode = *iter;
+            ASSERT(curNode != NULL);
+            curNode->traverse(this);
 
-            if (isSingleStatement(node))
+            if (isSingleStatement(curNode))
                 out << ";\n";
         }
         decrementDepth();

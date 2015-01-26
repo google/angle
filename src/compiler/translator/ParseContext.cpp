@@ -1077,14 +1077,14 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
 //
 // Return the function symbol if found, otherwise 0.
 //
-const TFunction* TParseContext::findFunction(const TSourceLoc& line, TFunction* call, int shaderVersion, bool *builtIn)
+const TFunction* TParseContext::findFunction(const TSourceLoc& line, TFunction* call, int inputShaderVersion, bool *builtIn)
 {
     // First find by unmangled name to check whether the function name has been
     // hidden by a variable name or struct typename.
     // If a function is found, check for one with a matching argument list.
-    const TSymbol* symbol = symbolTable.find(call->getName(), shaderVersion, builtIn);
+    const TSymbol* symbol = symbolTable.find(call->getName(), inputShaderVersion, builtIn);
     if (symbol == 0 || symbol->isFunction()) {
-        symbol = symbolTable.find(call->getMangledName(), shaderVersion, builtIn);
+        symbol = symbolTable.find(call->getMangledName(), inputShaderVersion, builtIn);
     }
 
     if (symbol == 0) {

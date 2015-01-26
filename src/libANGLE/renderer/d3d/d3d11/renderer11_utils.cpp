@@ -237,8 +237,8 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat, ID3D11De
     UINT formatSupport;
     if (SUCCEEDED(device->CheckFormatSupport(formatInfo.texFormat, &formatSupport)))
     {
-        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
-        if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0)
+        const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
+        if (internalFormatInfo.depthBits > 0 || internalFormatInfo.stencilBits > 0)
         {
             textureCaps.texturable = ((formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) != 0);
         }

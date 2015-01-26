@@ -534,13 +534,13 @@ ID3D11BlendState *Clear11::getBlendState(const std::vector<MaskedRenderTarget>& 
         blendDesc.AlphaToCoverageEnable = FALSE;
         blendDesc.IndependentBlendEnable = (rts.size() > 1) ? TRUE : FALSE;
 
-        for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
+        for (unsigned int j = 0; j < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; j++)
         {
-            blendDesc.RenderTarget[i].BlendEnable = FALSE;
-            blendDesc.RenderTarget[i].RenderTargetWriteMask = gl_d3d11::ConvertColorMask(blendKey.maskChannels[i][0],
-                                                                                         blendKey.maskChannels[i][1],
-                                                                                         blendKey.maskChannels[i][2],
-                                                                                         blendKey.maskChannels[i][3]);
+            blendDesc.RenderTarget[j].BlendEnable = FALSE;
+            blendDesc.RenderTarget[j].RenderTargetWriteMask = gl_d3d11::ConvertColorMask(blendKey.maskChannels[j][0],
+                                                                                         blendKey.maskChannels[j][1],
+                                                                                         blendKey.maskChannels[j][2],
+                                                                                         blendKey.maskChannels[j][3]);
         }
 
         ID3D11Device *device = mRenderer->getDevice();
