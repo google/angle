@@ -550,8 +550,8 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index, ImageD3D *image
     int width = destBox ? destBox->width : static_cast<int>(image->getWidth());
     int height = destBox ? destBox->height : static_cast<int>(image->getHeight());
     int depth = destBox ? destBox->depth : static_cast<int>(image->getDepth());
-    UINT srcRowPitch = internalFormatInfo.computeRowPitch(type, width, unpack.alignment);
-    UINT srcDepthPitch = internalFormatInfo.computeDepthPitch(type, width, height, unpack.alignment);
+    UINT srcRowPitch = internalFormatInfo.computeRowPitch(type, width, unpack.alignment, unpack.rowLength);
+    UINT srcDepthPitch = internalFormatInfo.computeDepthPitch(type, width, height, unpack.alignment, unpack.rowLength);
 
     const d3d11::TextureFormat &d3d11Format = d3d11::GetTextureFormatInfo(image->getInternalFormat(), mRenderer->getFeatureLevel());
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(d3d11Format.texFormat);

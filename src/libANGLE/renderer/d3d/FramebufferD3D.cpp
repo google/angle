@@ -257,7 +257,7 @@ gl::Error FramebufferD3D::readPixels(const gl::State &state, const gl::Rectangle
 {
     GLenum sizedInternalFormat = gl::GetSizedInternalFormat(format, type);
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(sizedInternalFormat);
-    GLuint outputPitch = sizedFormatInfo.computeRowPitch(type, area.width, state.getPackAlignment());
+    GLuint outputPitch = sizedFormatInfo.computeRowPitch(type, area.width, state.getPackAlignment(), 0);
 
     return readPixels(area, format, type, outputPitch, state.getPackState(), reinterpret_cast<uint8_t*>(pixels));
 }

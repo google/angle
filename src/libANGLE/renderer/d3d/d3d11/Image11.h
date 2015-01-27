@@ -43,7 +43,7 @@ class Image11 : public ImageD3D
 
     DXGI_FORMAT getDXGIFormat() const;
 
-    virtual gl::Error loadData(const gl::Box &area, GLint unpackAlignment, GLenum type, const void *input);
+    virtual gl::Error loadData(const gl::Box &area, const gl::PixelUnpackState &unpack, GLenum type, const void *input);
     virtual gl::Error loadCompressedData(const gl::Box &area, const void *input);
 
     virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTargetD3D *source);

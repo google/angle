@@ -560,15 +560,25 @@ const InternalFormat &GetInternalFormatInfo(GLenum internalFormat)
     }
 }
 
-GLuint InternalFormat::computeRowPitch(GLenum formatType, GLsizei width, GLint alignment) const
+GLuint InternalFormat::computeRowPitch(GLenum formatType, GLsizei width, GLint alignment, GLint rowLength) const
 {
     ASSERT(alignment > 0 && isPow2(alignment));
-    return rx::roundUp(computeBlockSize(formatType, width, 1), static_cast<GLuint>(alignment));
+    GLuint rowBytes;
+    if (rowLength > 0)
+    {
+        ASSERT(!compressed);
+        rowBytes = pixelBytes * rowLength;
+    }
+    else
+    {
+        rowBytes = computeBlockSize(formatType, width, 1);
+    }
+    return rx::roundUp(rowBytes, static_cast<GLuint>(alignment));
 }
 
-GLuint InternalFormat::computeDepthPitch(GLenum formatType, GLsizei width, GLsizei height, GLint alignment) const
+GLuint InternalFormat::computeDepthPitch(GLenum formatType, GLsizei width, GLsizei height, GLint alignment, GLint rowLength) const
 {
-    return computeRowPitch(formatType, width, alignment) * height;
+    return computeRowPitch(formatType, width, alignment, rowLength) * height;
 }
 
 GLuint InternalFormat::computeBlockSize(GLenum formatType, GLsizei width, GLsizei height) const

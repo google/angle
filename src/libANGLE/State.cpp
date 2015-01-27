@@ -1128,6 +1128,16 @@ GLint State::getUnpackAlignment() const
     return mUnpack.alignment;
 }
 
+void State::setUnpackRowLength(GLint rowLength)
+{
+    mUnpack.rowLength = rowLength;
+}
+
+GLint State::getUnpackRowLength() const
+{
+    return mUnpack.rowLength;
+}
+
 const PixelUnpackState &State::getUnpackState() const
 {
     return mUnpack;
@@ -1226,6 +1236,7 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
       case GL_PACK_ALIGNMENT:                           *params = mPack.alignment;                                break;
       case GL_PACK_REVERSE_ROW_ORDER_ANGLE:             *params = mPack.reverseRowOrder;                          break;
       case GL_UNPACK_ALIGNMENT:                         *params = mUnpack.alignment;                              break;
+      case GL_UNPACK_ROW_LENGTH:                        *params = mUnpack.rowLength;                              break;
       case GL_GENERATE_MIPMAP_HINT:                     *params = mGenerateMipmapHint;                            break;
       case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:      *params = mFragmentShaderDerivativeHint;                  break;
       case GL_ACTIVE_TEXTURE:                           *params = (mActiveSampler + GL_TEXTURE0);                 break;

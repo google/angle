@@ -165,7 +165,7 @@ void PixelTransfer11::setBufferToTextureCopyParams(const gl::Box &destArea, cons
     unsigned int alignmentPixels = (alignmentBytes <= bytesPerPixel ? 1 : alignmentBytes / bytesPerPixel);
 
     parametersOut->FirstPixelOffset     = offset / bytesPerPixel;
-    parametersOut->PixelsPerRow         = static_cast<unsigned int>(destArea.width);
+    parametersOut->PixelsPerRow         = static_cast<unsigned int>((unpack.rowLength > 0) ? unpack.rowLength : destArea.width);
     parametersOut->RowStride            = roundUp(parametersOut->PixelsPerRow, alignmentPixels);
     parametersOut->RowsPerSlice         = static_cast<unsigned int>(destArea.height);
     parametersOut->PositionOffset[0]    = texelCenterX + (destArea.x / float(destSize.width)) * 2.0f - 1.0f;

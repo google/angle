@@ -176,7 +176,7 @@ gl::Error TextureD3D::setImage(const gl::ImageIndex &index, GLenum type,
         else
         {
             gl::Box fullImageArea(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
-            error = image->loadData(fullImageArea, unpack.alignment, type, pixelData);
+            error = image->loadData(fullImageArea, unpack, type, pixelData);
         }
 
         if (error.isError())
@@ -211,7 +211,7 @@ gl::Error TextureD3D::subImage(const gl::ImageIndex &index, const gl::Box &area,
             return mTexStorage->setData(index, image, &area, type, unpack, pixelData);
         }
 
-        error = image->loadData(area, unpack.alignment, type, pixelData);
+        error = image->loadData(area, unpack, type, pixelData);
         if (error.isError())
         {
             return error;
@@ -2347,7 +2347,7 @@ gl::Error TextureD3D_2DArray::setImage(GLenum target, size_t level, GLenum inter
     redefineImage(level, sizedInternalFormat, size);
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(sizedInternalFormat);
-    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(type, size.width, size.height, unpack.alignment);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(type, size.width, size.height, unpack.alignment, unpack.rowLength);
 
     for (int i = 0; i < size.depth; i++)
     {
@@ -2369,7 +2369,7 @@ gl::Error TextureD3D_2DArray::setSubImage(GLenum target, size_t level, const gl:
     ASSERT(target == GL_TEXTURE_2D_ARRAY);
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(getInternalFormat(level));
-    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(type, area.width, area.height, unpack.alignment);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(type, area.width, area.height, unpack.alignment, unpack.rowLength);
 
     for (int i = 0; i < area.depth; i++)
     {
@@ -2398,7 +2398,7 @@ gl::Error TextureD3D_2DArray::setCompressedImage(GLenum target, size_t level, GL
     redefineImage(level, internalFormat, size);
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
-    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, size.width, size.height, 1);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, size.width, size.height, 1, 0);
 
     for (int i = 0; i < size.depth; i++)
     {
@@ -2421,7 +2421,7 @@ gl::Error TextureD3D_2DArray::setCompressedSubImage(GLenum target, size_t level,
     ASSERT(target == GL_TEXTURE_2D_ARRAY);
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format);
-    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, area.width, area.height, 1);
+    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, area.width, area.height, 1, 0);
 
     for (int i = 0; i < area.depth; i++)
     {

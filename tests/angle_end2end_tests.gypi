@@ -46,6 +46,7 @@
             '<(angle_path)/tests/angle_tests/TransformFeedbackTest.cpp',
             '<(angle_path)/tests/angle_tests/UniformTest.cpp',
             '<(angle_path)/tests/angle_tests/UnpackAlignmentTest.cpp',
+            '<(angle_path)/tests/angle_tests/UnpackRowLength.cpp',
             '<(angle_path)/tests/angle_tests/VertexAttributeTest.cpp',
             '<(angle_path)/tests/angle_tests/ViewportTest.cpp',
             '<(angle_path)/tests/standalone_tests/EGLThreadTest.cpp',

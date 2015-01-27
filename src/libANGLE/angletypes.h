@@ -207,13 +207,16 @@ struct PixelUnpackState
 {
     BindingPointer<Buffer> pixelBuffer;
     GLint alignment;
+    GLint rowLength;
 
     PixelUnpackState()
-        : alignment(4)
+        : alignment(4),
+          rowLength(0)
     {}
 
-    explicit PixelUnpackState(GLint alignmentIn)
-        : alignment(alignmentIn)
+    PixelUnpackState(GLint alignmentIn, GLint rowLengthIn)
+        : alignment(alignmentIn),
+          rowLength(rowLengthIn)
     {}
 };
 
