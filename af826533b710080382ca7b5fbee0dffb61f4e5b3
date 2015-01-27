@@ -22,6 +22,30 @@
       "revId": "af826533b710080382ca7b5fbee0dffb61f4e5b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb69dfa3_8d71917a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-01-27T17:49:52Z",
+      "side": 1,
+      "message": "I can do it for this specific function however there is dozen of other places where this resize method is called in a similar way.",
+      "parentUuid": "f7012bf4_db7333ce",
+      "range": {
+        "startLine": 566,
+        "startChar": 0,
+        "endLine": 566,
+        "endChar": 67
+      },
+      "revId": "af826533b710080382ca7b5fbee0dffb61f4e5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
