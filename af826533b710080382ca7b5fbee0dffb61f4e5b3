@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7012bf4_db7333ce",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-27T17:41:41Z",
+      "side": 1,
+      "message": "We should if we can pipe the error down through the chain after resize(). Unfortunately I think we\u0027ll have to refactor this method to return a gl::Error and take the pointer as an output parameter.",
+      "range": {
+        "startLine": 566,
+        "startChar": 0,
+        "endLine": 566,
+        "endChar": 67
+      },
+      "revId": "af826533b710080382ca7b5fbee0dffb61f4e5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
