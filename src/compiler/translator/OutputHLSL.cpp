@@ -172,8 +172,15 @@ void OutputHLSL::output()
 
     BuiltInFunctionEmulatorHLSL builtInFunctionEmulator;
     builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(mContext.treeRoot);
-    mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header
+
+    // Output the body first to determine what has to go in the header
+    mInfoSinkStack.push(&mBody);
+    mContext.treeRoot->traverse(this);
+    mInfoSinkStack.pop();
+
+    mInfoSinkStack.push(&mHeader);
     header(&builtInFunctionEmulator);
+    mInfoSinkStack.pop();
 
     TInfoSinkBase& sink = mContext.infoSink().obj;
     sink << mHeader.c_str();
@@ -188,10 +195,14 @@ void OutputHLSL::makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flagge
     {
         TIntermTyped *flaggedNode = flaggedStructs[structIndex];
 
+        TInfoSinkBase structInfoSink;
+        mInfoSinkStack.push(&structInfoSink);
+
         // This will mark the necessary block elements as referenced
         flaggedNode->traverse(this);
-        TString structName(mBody.c_str());
-        mBody.erase();
+
+        TString structName(structInfoSink.c_str());
+        mInfoSinkStack.pop();
 
         mFlaggedStructOriginalNames[flaggedNode] = structName;
 
@@ -202,11 +213,6 @@ void OutputHLSL::makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flagge
 
         mFlaggedStructMappedNames[flaggedNode] = "map" + structName;
     }
-}
-
-TInfoSinkBase &OutputHLSL::getBodyStream()
-{
-    return mBody;
 }
 
 const std::map<std::string, unsigned int> &OutputHLSL::getInterfaceBlockRegisterMap() const
@@ -270,7 +276,7 @@ TString OutputHLSL::structInitializerString(int indent, const TStructure &struct
 
 void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulator)
 {
-    TInfoSinkBase &out = mHeader;
+    TInfoSinkBase &out = getInfoSink();
 
     TString varyings;
     TString attributes;
@@ -1210,7 +1216,7 @@ void OutputHLSL::header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulat
 
 void OutputHLSL::visitSymbol(TIntermSymbol *node)
 {
-    TInfoSinkBase &out = mBody;
+    TInfoSinkBase &out = getInfoSink();
 
     // Handle accessing std140 structs by value
     if (mFlaggedStructMappedNames.count(node) > 0)
@@ -1309,12 +1315,12 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
 void OutputHLSL::visitRaw(TIntermRaw *node)
 {
-    mBody << node->getRawText();
+    getInfoSink() << node->getRawText();
 }
 
 bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 {
-    TInfoSinkBase &out = mBody;
+    TInfoSinkBase &out = getInfoSink();
 
     // Handle accessing std140 structs by value
     if (mFlaggedStructMappedNames.count(node) > 0)
@@ -1721,7 +1727,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
 
 bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 {
-    TInfoSinkBase &out = mBody;
+    TInfoSinkBase &out = getInfoSink();
 
     switch (node->getOp())
     {
@@ -2160,7 +2166,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
 bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
 {
-    TInfoSinkBase &out = mBody;
+    TInfoSinkBase &out = getInfoSink();
 
     if (node->usesTernaryOperator())
     {
@@ -2255,7 +2261,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
         }
     }
 
-    TInfoSinkBase &out = mBody;
+    TInfoSinkBase &out = getInfoSink();
 
     if (node->getType() == ELoopDoWhile)
     {
@@ -2321,7 +2327,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
 bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
 {
-    TInfoSinkBase &out = mBody;
+    TInfoSinkBase &out = getInfoSink();
 
     switch (node->getFlowOp())
     {
@@ -2423,7 +2429,7 @@ bool OutputHLSL::isSingleStatement(TIntermNode *node)
 bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 {
     const int MAX_LOOP_ITERATIONS = 254;
-    TInfoSinkBase &out = mBody;
+    TInfoSinkBase &out = getInfoSink();
 
     // Parse loops of the form:
     // for(int index = initial; index [comparator] limit; index += increment)
@@ -2625,7 +2631,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 
 void OutputHLSL::outputTriplet(Visit visit, const TString &preString, const TString &inString, const TString &postString)
 {
-    TInfoSinkBase &out = mBody;
+    TInfoSinkBase &out = getInfoSink();
 
     if (visit == PreVisit)
     {
@@ -2645,15 +2651,17 @@ void OutputHLSL::outputLineDirective(int line)
 {
     if ((mContext.compileOptions & SH_LINE_DIRECTIVES) && (line > 0))
     {
-        mBody << "\n";
-        mBody << "#line " << line;
+        TInfoSinkBase &out = getInfoSink();
+
+        out << "\n";
+        out << "#line " << line;
 
         if (mContext.sourcePath)
         {
-            mBody << " \"" << mContext.sourcePath << "\"";
+            out << " \"" << mContext.sourcePath << "\"";
         }
 
-        mBody << "\n";
+        out << "\n";
     }
 }
 
@@ -2701,7 +2709,7 @@ TString OutputHLSL::initializer(const TType &type)
 
 void OutputHLSL::outputConstructor(Visit visit, const TType &type, const TString &name, const TIntermSequence *parameters)
 {
-    TInfoSinkBase &out = mBody;
+    TInfoSinkBase &out = getInfoSink();
 
     if (visit == PreVisit)
     {
@@ -2721,7 +2729,7 @@ void OutputHLSL::outputConstructor(Visit visit, const TType &type, const TString
 
 const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const ConstantUnion *constUnion)
 {
-    TInfoSinkBase &out = mBody;
+    TInfoSinkBase &out = getInfoSink();
 
     const TStructure* structure = type.getStruct();
     if (structure)

@@ -30,7 +30,7 @@ void UnfoldShortCircuit::traverse(TIntermNode *node)
 
 bool UnfoldShortCircuit::visitBinary(Visit visit, TIntermBinary *node)
 {
-    TInfoSinkBase &out = mOutputHLSL->getBodyStream();
+    TInfoSinkBase &out = mOutputHLSL->getInfoSink();
 
     // If our right node doesn't have side effects, we know we don't need to unfold this
     // expression: there will be no short-circuiting side effects to avoid
@@ -111,7 +111,7 @@ bool UnfoldShortCircuit::visitBinary(Visit visit, TIntermBinary *node)
 
 bool UnfoldShortCircuit::visitSelection(Visit visit, TIntermSelection *node)
 {
-    TInfoSinkBase &out = mOutputHLSL->getBodyStream();
+    TInfoSinkBase &out = mOutputHLSL->getInfoSink();
 
     // Unfold "b ? x : y" into "type s; if(b) s = x; else s = y;"
     if (node->usesTernaryOperator())

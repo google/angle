@@ -10,6 +10,7 @@
 #include <list>
 #include <set>
 #include <map>
+#include <stack>
 
 #include "angle_gl.h"
 #include "compiler/translator/IntermNode.h"
@@ -33,12 +34,12 @@ class OutputHLSL : public TIntermTraverser
 
     void output();
 
-    TInfoSinkBase &getBodyStream();
-
     const std::map<std::string, unsigned int> &getInterfaceBlockRegisterMap() const;
     const std::map<std::string, unsigned int> &getUniformRegisterMap() const;
 
     static TString initializer(const TType &type);
+
+    TInfoSinkBase &getInfoSink() { ASSERT(!mInfoSinkStack.empty()); return *mInfoSinkStack.top(); }
 
   protected:
     void header(const BuiltInFunctionEmulatorHLSL *builtInFunctionEmulator);
@@ -76,6 +77,10 @@ class OutputHLSL : public TIntermTraverser
     TInfoSinkBase mHeader;
     TInfoSinkBase mBody;
     TInfoSinkBase mFooter;
+
+    // A stack is useful when we want to traverse in the header, or in helper functions, but not always
+    // write to the body. Instead use an InfoSink stack to keep our current state intact.
+    std::stack<TInfoSinkBase *> mInfoSinkStack;
 
     ReferencedSymbols mReferencedUniforms;
     ReferencedSymbols mReferencedInterfaceBlocks;
