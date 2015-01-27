@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1705dffd_82989e8d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2662,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-27T21:18:59Z",
+      "side": 1,
+      "message": "I\u0027m not sure why these are reconstructed before every compilation. I\u0027ll look into making another change to create them once during renderer initialisation.",
+      "range": {
+        "startLine": 2662,
+        "startChar": 4,
+        "endLine": 2662,
+        "endChar": 48
+      },
+      "revId": "224c36ad764536a0435299656d8010e948184722",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
