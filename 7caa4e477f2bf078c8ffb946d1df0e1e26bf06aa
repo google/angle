@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b47db3f_2c5093d1",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1685,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-27T00:54:24Z",
+      "side": 1,
+      "message": "FWIW, the problem was here.",
+      "range": {
+        "startLine": 1685,
+        "startChar": 55,
+        "endLine": 1685,
+        "endChar": 63
+      },
+      "revId": "7caa4e477f2bf078c8ffb946d1df0e1e26bf06aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
