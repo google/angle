@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "cb69dfa3_cdbc698f",
+        "filename": "tests/angle_tests/BufferDataTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-01-27T18:12:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7012bf4_bbf1879f",
+      "range": {
+        "startLine": 349,
+        "startChar": 4,
+        "endLine": 349,
+        "endChar": 22
+      },
+      "revId": "af826533b710080382ca7b5fbee0dffb61f4e5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57fbd733_27aaf8ec",
         "filename": "tests/angle_tests/BufferDataTest.cpp",
         "patchSetId": 2
@@ -83,6 +107,30 @@
       "writtenOn": "2015-01-27T17:56:09Z",
       "side": 1,
       "message": "nit: possibly also here",
+      "range": {
+        "startLine": 386,
+        "startChar": 4,
+        "endLine": 386,
+        "endChar": 22
+      },
+      "revId": "af826533b710080382ca7b5fbee0dffb61f4e5b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2bab5bf1_553a9e04",
+        "filename": "tests/angle_tests/BufferDataTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-01-27T18:12:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57fbd733_27aaf8ec",
       "range": {
         "startLine": 386,
         "startChar": 4,
