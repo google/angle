@@ -2678,7 +2678,7 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog, const std::string
     }
     unsigned int profileMajorVersion = (getMajorShaderModel() >= 3) ? 3 : 2;
     unsigned int profileMinorVersion = 0;
-    std::string profile = FormatString("%s_%u_%u", profileType, profileMajorVersion, profileMinorVersion);
+    std::string profile = FormatStringThreadSafe("%s_%u_%u", profileType, profileMajorVersion, profileMinorVersion);
 
     UINT flags = ANGLE_COMPILE_OPTIMIZATION_LEVEL;
 

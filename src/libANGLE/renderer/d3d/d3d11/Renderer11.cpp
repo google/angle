@@ -2659,7 +2659,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog, const std::strin
         return gl::Error(GL_INVALID_OPERATION);
     }
 
-    std::string profile = FormatString("%s_%d_%d%s", profileType, getMajorShaderModel(), getMinorShaderModel(), getShaderModelSuffix().c_str());
+    std::string profile = FormatStringThreadSafe("%s_%d_%d%s", profileType, getMajorShaderModel(), getMinorShaderModel(), getShaderModelSuffix().c_str());
 
     UINT flags = D3DCOMPILE_OPTIMIZATION_LEVEL2;
 

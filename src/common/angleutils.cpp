@@ -43,3 +43,22 @@ std::string FormatString(const char *fmt, ...)
     va_end(vararg);
     return result;
 }
+
+// The D3D11 renderer compiles the pixel and vertex shaders on different threads.
+// That code needs to format strings, so we need thread-safe helpers.
+std::string FormatStringThreadSafe(const char *fmt, va_list vararg)
+{
+    std::vector<char> buffer(512);
+
+    size_t len = FormatStringIntoVector(fmt, vararg, buffer);
+    return std::string(&buffer[0], len);
+}
+
+std::string FormatStringThreadSafe(const char *fmt, ...)
+{
+    va_list vararg;
+    va_start(vararg, fmt);
+    std::string result = FormatStringThreadSafe(fmt, vararg);
+    va_end(vararg);
+    return result;
+}

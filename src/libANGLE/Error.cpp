@@ -29,7 +29,9 @@ Error::Error(GLenum errorCode, const char *msg, ...)
     va_list vararg;
     va_start(vararg, msg);
     createMessageString();
-    *mMessage = FormatString(msg, vararg);
+
+    // gl::Errors can be created across multiple threads, so we must make sure they're thread safe.
+    *mMessage = FormatStringThreadSafe(msg, vararg);
     va_end(vararg);
 }
 
@@ -98,7 +100,7 @@ Error::Error(EGLint errorCode, const char *msg, ...)
     va_list vararg;
     va_start(vararg, msg);
     createMessageString();
-    *mMessage = FormatString(msg, vararg);
+    *mMessage = FormatStringThreadSafe(msg, vararg);
     va_end(vararg);
 }
 
