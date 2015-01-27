@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b715f330_3f820f99",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-27T20:02:25Z",
+      "side": 1,
+      "message": "performant?",
+      "range": {
+        "startLine": 94,
+        "startChar": 67,
+        "endLine": 95,
+        "endChar": 15
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "770ffb24_57d24c8c",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-27T20:02:25Z",
+      "side": 1,
+      "message": "conformant?",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 97,
+        "endChar": 28
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
