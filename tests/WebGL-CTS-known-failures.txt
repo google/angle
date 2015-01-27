@@ -9,6 +9,7 @@ failing:
 
 conformance/context/user-defined-properties-on-context.html: 1 tests failed
 conformance/glsl/bugs/pow-of-small-constant-in-user-defined-function.html: 1 tests failed
+conformance/glsl/bugs/sampler-struct-function-arg.html: 1 tests failed
 conformance/glsl/misc/const-variable-initialization.html: 207 tests failed
 conformance/glsl/misc/struct-equals.html: 3 tests failed
 conformance/glsl/misc/struct-specifiers-in-uniforms.html: 12 tests failed
