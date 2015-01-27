@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "abd02b89_4ebde731",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-27T11:48:23Z",
+      "side": 1,
+      "message": "It\u0027s a good question, the whole texture format system is very convoluted.\n\nThe conversion from GL formats to DXGI formats happens when the back buffer is being created (in SwapChain11) by using functions in formatutils11.h.  The TextureCaps object is populated with information about the GL internal format such as renderability (GenerateTextureFormatCaps in renderer11_utils.cpp) which was determined by querying information about it\u0027s associated DXGI_FORMAT so we won\u0027t advertise any configs for formats that can\u0027t be rendered to.\n\nThere is a lot of format conversion going on before and after this change but this will help us with eliminating one of the conversions:\n\nPreviously:\nBack buffer DXGI_FORMAT from list -\u003e GLenum format for config generation and framebuffer queries -\u003e DXGI_FORMAT to use when creating RenderTargets\n\nNow:\nGLenum format from list, used for config generation and framebuffer queries -\u003e DXGI_FORMAT to use when creating RenderTargets",
+      "parentUuid": "b7ec137b_2181ce62",
+      "range": {
+        "startLine": 485,
+        "startChar": 26,
+        "endLine": 485,
+        "endChar": 28
+      },
+      "revId": "fd7245646ed216d6e4c6a671a30dc9a1d2e48126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2bab5bf1_cf6a8159",
         "filename": "tests/angle_tests/BlitFramebufferANGLETest.cpp",
         "patchSetId": 8
