@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "578037c4_f6a2a088",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1783,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-28T13:44:57Z",
+      "side": 1,
+      "message": "Yep, the allowed features can be found here: https://chromium-cpp.appspot.com/",
+      "parentUuid": "770ffb24_7add351c",
+      "range": {
+        "startLine": 1783,
+        "startChar": 31,
+        "endLine": 1783,
+        "endChar": 35
+      },
+      "revId": "b3f1aa902cce093a7114abab3f0284b7867cd3e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "970aaf12_fb126bcf",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 2
