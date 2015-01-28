@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f79dab26_5b794363",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-28T13:14:10Z",
+      "side": 1,
+      "message": "nit: can this go into an else block now? It makes the flow more obvious (other setSubImage functions too please).",
+      "range": {
+        "startLine": 681,
+        "startChar": 4,
+        "endLine": 681,
+        "endChar": 75
+      },
+      "revId": "6ea8a9212aa8ac9c5e728dd04de66f785200d294",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f79dab26_dba55393",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-28T13:14:10Z",
+      "side": 1,
+      "message": "None of the calls above here will delete the storage if it doesn\u0027t match the new size supplied by setStorage.  initializeStorage will not create a new storage if one already exists which will cause the current storage to have an incorrect size.  The same issue exists for the other texture types too.",
+      "range": {
+        "startLine": 821,
+        "startChar": 4,
+        "endLine": 821,
+        "endChar": 47
+      },
+      "revId": "6ea8a9212aa8ac9c5e728dd04de66f785200d294",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
