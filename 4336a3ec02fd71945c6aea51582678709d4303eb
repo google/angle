@@ -65,6 +65,24 @@
     },
     {
       "key": {
+        "uuid": "3794a3fe_c60fb853",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T19:06:04Z",
+      "side": 1,
+      "message": "Didn\u0027t notice this, but explicit only applies to single-parameter constructors. (Since the C++ implicit conversion rule only works for single-argument constructors)",
+      "parentUuid": "37c2e31e_adeefdba",
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97db8f05_f663787b",
         "filename": "src/libANGLE/angletypes.h",
         "patchSetId": 1
