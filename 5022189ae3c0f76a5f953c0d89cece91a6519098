@@ -69,6 +69,30 @@
       "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f79dab26_3bba37bf",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-28T12:26:02Z",
+      "side": 1,
+      "message": "Yea, I chose these names to be sure that we weren\u0027t implying that the other devices types were not conformant.\n\nI chose the names to be generic since they don\u0027t even line up between D3D9 and D3D11.  D3D9 has D3DDEVTYPE_REF and D3DDEVTYPE_SW while D3D11 has D3D_DRIVER_TYPE_REFERENCE and  D3D_DRIVER_TYPE_WARP.  I didn\u0027t take SwiftShader into account here, it will not be exposed under the platform_angle_d3d extension if we do expose it.",
+      "parentUuid": "1705dffd_82b1be15",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 97,
+        "endChar": 28
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
