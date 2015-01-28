@@ -25,6 +25,46 @@
     },
     {
       "key": {
+        "uuid": "17cf9f48_4ccd1fea",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-01-28T18:46:19Z",
+      "side": 1,
+      "message": "nit: initializers need to be aligned.  rowLength(0) should be placed directly under alignment(4).",
+      "range": {
+        "startLine": 213,
+        "startChar": 22,
+        "endLine": 213,
+        "endChar": 36
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37c2e31e_adeefdba",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-01-28T18:46:19Z",
+      "side": 1,
+      "message": "Why was explicit removed from the constructor?",
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97db8f05_f663787b",
         "filename": "src/libANGLE/angletypes.h",
         "patchSetId": 1
@@ -39,6 +79,29 @@
       "range": {
         "startLine": 217,
         "startChar": 33,
+        "endLine": 217,
+        "endChar": 56
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37c2e31e_0db5d1cd",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1115159
+      },
+      "writtenOn": "2015-01-28T18:46:19Z",
+      "side": 1,
+      "message": "nit: Same as above comment about alignment.",
+      "range": {
+        "startLine": 217,
+        "startChar": 34,
         "endLine": 217,
         "endChar": 56
       },
