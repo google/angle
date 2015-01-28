@@ -45,6 +45,30 @@
       "revId": "6ea8a9212aa8ac9c5e728dd04de66f785200d294",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f79dab26_7be3dfa9",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-01-28T14:09:17Z",
+      "side": 1,
+      "message": "Would it be enough to call SafeDelete if the storage already exist?",
+      "parentUuid": "f79dab26_dba55393",
+      "range": {
+        "startLine": 821,
+        "startChar": 4,
+        "endLine": 821,
+        "endChar": 47
+      },
+      "revId": "6ea8a9212aa8ac9c5e728dd04de66f785200d294",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
