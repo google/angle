@@ -173,9 +173,16 @@ void OutputHLSL::output()
     BuiltInFunctionEmulatorHLSL builtInFunctionEmulator;
     builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(mContext.treeRoot);
 
-    // Output the body first to determine what has to go in the header
+    // Output the body and footer first to determine what has to go in the header
     mInfoSinkStack.push(&mBody);
     mContext.treeRoot->traverse(this);
+    mInfoSinkStack.pop();
+
+    mInfoSinkStack.push(&mFooter);
+    if (!mDeferredGlobalInitializers.empty())
+    {
+        writeDeferredGlobalInitializers(mFooter);
+    }
     mInfoSinkStack.pop();
 
     mInfoSinkStack.push(&mHeader);
@@ -185,6 +192,7 @@ void OutputHLSL::output()
     TInfoSinkBase& sink = mContext.infoSink().obj;
     sink << mHeader.c_str();
     sink << mBody.c_str();
+    sink << mFooter.c_str();
 
     builtInFunctionEmulator.Cleanup();
 }
@@ -1341,22 +1349,21 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             // this to "float t = x, x = t;".
 
             TIntermSymbol *symbolNode = node->getLeft()->getAsSymbolNode();
+            ASSERT(symbolNode);
             TIntermTyped *expression = node->getRight();
 
-            sh::SearchSymbol searchSymbol(symbolNode->getSymbol());
-            expression->traverse(&searchSymbol);
-            bool sameSymbol = searchSymbol.foundMatch();
-
-            if (sameSymbol)
+            // TODO (jmadill): do a 'deep' scan to know if an expression is statically const
+            if (symbolNode->getQualifier() == EvqGlobal && expression->getQualifier() != EvqConst)
             {
-                // Type already printed
-                out << "t" + str(mUniqueIndex) + " = ";
-                expression->traverse(this);
-                out << ", ";
-                symbolNode->traverse(this);
-                out << " = t" + str(mUniqueIndex);
-
-                mUniqueIndex++;
+                // For variables which are not constant, defer their real initialization until
+                // after we initialize other globals: uniforms, attributes and varyings.
+                mDeferredGlobalInitializers.push_back(std::make_pair(symbolNode, expression));
+                const TString &initString = initializer(node->getType());
+                node->setRight(new TIntermRaw(node->getType(), initString));
+            }
+            else if (writeSameSymbolInitializer(out, symbolNode, expression))
+            {
+                // Skip initializing the rest of the expression
                 return false;
             }
         }
@@ -1773,11 +1780,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                 if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
                 {
-                    for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); sit++)
+                    for (const auto &seqElement : *sequence)
                     {
-                        if (isSingleStatement(*sit))
+                        if (isSingleStatement(seqElement))
                         {
-                            mUnfoldShortCircuit->traverse(*sit);
+                            mUnfoldShortCircuit->traverse(seqElement);
                         }
 
                         if (!mInsideFunction)
@@ -1787,7 +1794,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                         out << TypeString(variable->getType()) + " ";
 
-                        TIntermSymbol *symbol = (*sit)->getAsSymbolNode();
+                        TIntermSymbol *symbol = seqElement->getAsSymbolNode();
 
                         if (symbol)
                         {
@@ -1797,10 +1804,10 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         }
                         else
                         {
-                            (*sit)->traverse(this);
+                            seqElement->traverse(this);
                         }
 
-                        if (*sit != sequence->back())
+                        if (seqElement != sequence->back())
                         {
                             out << ";\n";
                         }
@@ -2791,6 +2798,56 @@ void OutputHLSL::writeEmulatedFunctionTriplet(Visit visit, const char *preStr)
 {
     TString preString = BuiltInFunctionEmulator::GetEmulatedFunctionName(preStr);
     outputTriplet(visit, preString.c_str(), ", ", ")");
+}
+
+bool OutputHLSL::writeSameSymbolInitializer(TInfoSinkBase &out, TIntermSymbol *symbolNode, TIntermTyped *expression)
+{
+    sh::SearchSymbol searchSymbol(symbolNode->getSymbol());
+    expression->traverse(&searchSymbol);
+
+    if (searchSymbol.foundMatch())
+    {
+        // Type already printed
+        out << "t" + str(mUniqueIndex) + " = ";
+        expression->traverse(this);
+        out << ", ";
+        symbolNode->traverse(this);
+        out << " = t" + str(mUniqueIndex);
+
+        mUniqueIndex++;
+        return true;
+    }
+
+    return false;
+}
+
+void OutputHLSL::writeDeferredGlobalInitializers(TInfoSinkBase &out)
+{
+    out << "#define ANGLE_USES_DEFERRED_INIT\n"
+        << "\n"
+        << "void initializeDeferredGlobals()\n"
+        << "{\n";
+
+    for (const auto &deferredGlobal : mDeferredGlobalInitializers)
+    {
+        TIntermSymbol *symbol = deferredGlobal.first;
+        TIntermTyped *expression = deferredGlobal.second;
+        ASSERT(symbol);
+        ASSERT(symbol->getQualifier() == EvqGlobal && expression->getQualifier() != EvqConst);
+
+        out << "    " << Decorate(symbol->getSymbol()) << " = ";
+
+        if (!writeSameSymbolInitializer(out, symbol, expression))
+        {
+            ASSERT(mInfoSinkStack.top() == &out);
+            expression->traverse(this);
+        }
+
+        out << ";\n";
+    }
+
+    out << "}\n"
+        << "\n";
 }
 
 }

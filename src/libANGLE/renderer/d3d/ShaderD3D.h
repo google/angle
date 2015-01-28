@@ -47,6 +47,7 @@ class ShaderD3D : public ShaderImpl
     int getShaderVersion() const { return mShaderVersion; }
     bool usesDepthRange() const { return mUsesDepthRange; }
     bool usesPointSize() const { return mUsesPointSize; }
+    bool usesDeferredInit() const { return mUsesDeferredInit; }
 
     GLenum getShaderType() const;
     ShShaderOutput getCompilerOutputType() const;
@@ -78,6 +79,7 @@ class ShaderD3D : public ShaderImpl
     bool mUsesFragDepth;
     bool mUsesDiscardRewriting;
     bool mUsesNestedBreak;
+    bool mUsesDeferredInit;
 
     ShShaderOutput mCompilerOutputType;
     std::string mHlsl;

@@ -874,3 +874,34 @@ TYPED_TEST(GLSLTest, BadIndexBug)
         glDeleteShader(shader);
     }
 }
+
+// Tests that using a global static initialized from a varying works as expected.
+// See: https://code.google.com/p/angleproject/issues/detail?id=878
+TYPED_TEST(GLSLTest, GlobalStaticAndVarying)
+{
+    const std::string &vertexShaderSource =
+        "attribute vec4 a_position;\n"
+        "varying float v;\n"
+        "void main() {\n"
+        "  gl_Position = a_position;\n"
+        "  v = 1.0;\n"
+        "}\n";
+
+    const std::string &fragmentShaderSource =
+        "precision highp float;\n"
+        "varying float v;\n"
+        "float x = v;"
+        "float global_v = x;"
+        "void main() {\n"
+        "  gl_FragColor = vec4(global_v, 0.0, 0.0, 1.0);\n"
+        "}\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    ASSERT_NE(0u, program);
+
+    drawQuad(program, "a_position", 0.5f);
+    swapBuffers();
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+}

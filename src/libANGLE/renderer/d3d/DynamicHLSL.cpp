@@ -765,27 +765,29 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog,
                   "{\n"
                   "    initAttributes(input);\n";
 
+    if (vertexShader->usesDeferredInit())
+    {
+        vertexHLSL += "\n"
+                      "    initializeDeferredGlobals();\n";
+    }
+
+    vertexHLSL += "\n"
+                  "    gl_main();\n"
+                  "\n"
+                  "    VS_OUTPUT output;\n"
+                  "    output.gl_Position = gl_Position;\n";
+
     // On D3D9 or D3D11 Feature Level 9, we need to emulate large viewports using dx_ViewAdjust.
     if (shaderModel >= 4  && mRenderer->getShaderModelSuffix() == "")
     {
-        vertexHLSL += "\n"
-                      "    gl_main();\n"
-                      "\n"
-                      "    VS_OUTPUT output;\n"
-                      "    output.gl_Position = gl_Position;\n"
-                      "    output.dx_Position.x = gl_Position.x;\n"
+        vertexHLSL += "    output.dx_Position.x = gl_Position.x;\n"
                       "    output.dx_Position.y = -gl_Position.y;\n"
                       "    output.dx_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
                       "    output.dx_Position.w = gl_Position.w;\n";
     }
     else
     {
-        vertexHLSL += "\n"
-                      "    gl_main();\n"
-                      "\n"
-                      "    VS_OUTPUT output;\n"
-                      "    output.gl_Position = gl_Position;\n"
-                      "    output.dx_Position.x = gl_Position.x * dx_ViewAdjust.z + dx_ViewAdjust.x * gl_Position.w;\n"
+        vertexHLSL += "    output.dx_Position.x = gl_Position.x * dx_ViewAdjust.z + dx_ViewAdjust.x * gl_Position.w;\n"
                       "    output.dx_Position.y = -(gl_Position.y * dx_ViewAdjust.w + dx_ViewAdjust.y * gl_Position.w);\n"
                       "    output.dx_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
                       "    output.dx_Position.w = gl_Position.w;\n";
@@ -1016,6 +1018,12 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data, InfoLog &infoLog,
         }
     }
 
+    if (fragmentShader->usesDeferredInit())
+    {
+        pixelHLSL += "\n"
+                     "    initializeDeferredGlobals();\n";
+    }
+
     pixelHLSL += "\n"
                  "    gl_main();\n"
                  "\n"
@@ -1083,31 +1091,31 @@ std::string DynamicHLSL::generatePointSpriteHLSL(int registers, ShaderD3D *fragm
                 "struct GS_INPUT\n" + inLinkHLSL + "\n" +
                 "struct GS_OUTPUT\n" + outLinkHLSL + "\n" +
                 "\n"
-                  "static float2 pointSpriteCorners[] = \n"
-                  "{\n"
-                  "    float2( 0.5f, -0.5f),\n"
-                  "    float2( 0.5f,  0.5f),\n"
-                  "    float2(-0.5f, -0.5f),\n"
-                  "    float2(-0.5f,  0.5f)\n"
-                  "};\n"
-                  "\n"
-                  "static float2 pointSpriteTexcoords[] = \n"
-                  "{\n"
-                  "    float2(1.0f, 1.0f),\n"
-                  "    float2(1.0f, 0.0f),\n"
-                  "    float2(0.0f, 1.0f),\n"
-                  "    float2(0.0f, 0.0f)\n"
-                  "};\n"
-                  "\n"
-                  "static float minPointSize = " + Str(mRenderer->getRendererCaps().minAliasedPointSize) + ".0f;\n"
-                  "static float maxPointSize = " + Str(mRenderer->getRendererCaps().maxAliasedPointSize) + ".0f;\n"
-                  "\n"
-                  "[maxvertexcount(4)]\n"
-                  "void main(point GS_INPUT input[1], inout TriangleStream<GS_OUTPUT> outStream)\n"
-                  "{\n"
-                  "    GS_OUTPUT output = (GS_OUTPUT)0;\n"
-                  "    output.gl_Position = input[0].gl_Position;\n"
-                  "    output.gl_PointSize = input[0].gl_PointSize;\n";
+                "static float2 pointSpriteCorners[] = \n"
+                "{\n"
+                "    float2( 0.5f, -0.5f),\n"
+                "    float2( 0.5f,  0.5f),\n"
+                "    float2(-0.5f, -0.5f),\n"
+                "    float2(-0.5f,  0.5f)\n"
+                "};\n"
+                "\n"
+                "static float2 pointSpriteTexcoords[] = \n"
+                "{\n"
+                "    float2(1.0f, 1.0f),\n"
+                "    float2(1.0f, 0.0f),\n"
+                "    float2(0.0f, 1.0f),\n"
+                "    float2(0.0f, 0.0f)\n"
+                "};\n"
+                "\n"
+                "static float minPointSize = " + Str(mRenderer->getRendererCaps().minAliasedPointSize) + ".0f;\n"
+                "static float maxPointSize = " + Str(mRenderer->getRendererCaps().maxAliasedPointSize) + ".0f;\n"
+                "\n"
+                "[maxvertexcount(4)]\n"
+                "void main(point GS_INPUT input[1], inout TriangleStream<GS_OUTPUT> outStream)\n"
+                "{\n"
+                "    GS_OUTPUT output = (GS_OUTPUT)0;\n"
+                "    output.gl_Position = input[0].gl_Position;\n"
+                "    output.gl_PointSize = input[0].gl_PointSize;\n";
 
     for (int r = 0; r < registers; r++)
     {
