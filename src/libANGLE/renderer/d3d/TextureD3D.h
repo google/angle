@@ -33,7 +33,7 @@ class TextureD3D : public TextureImpl
     TextureD3D(RendererD3D *renderer);
     virtual ~TextureD3D();
 
-    TextureStorage *getNativeTexture();
+    gl::Error getNativeTexture(TextureStorage **outStorage);
 
     virtual void setUsage(GLenum usage) { mUsage = usage; }
     bool hasDirtyImages() const { return mDirtyImages; }

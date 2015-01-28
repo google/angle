@@ -85,17 +85,28 @@ TextureD3D::~TextureD3D()
 {
 }
 
-TextureStorage *TextureD3D::getNativeTexture()
+gl::Error TextureD3D::getNativeTexture(TextureStorage **outStorage)
 {
     // ensure the underlying texture is created
-    initializeStorage(false);
+    gl::Error error = initializeStorage(false);
+    if (error.isError())
+    {
+        return error;
+    }
 
     if (mTexStorage)
     {
-        updateStorage();
+        error = updateStorage();
+        if (error.isError())
+        {
+            return error;
+        }
     }
 
-    return mTexStorage;
+    ASSERT(outStorage);
+
+    *outStorage = mTexStorage;
+    return gl::Error(GL_NO_ERROR);
 }
 
 GLint TextureD3D::getBaseLevelWidth() const
@@ -358,7 +369,14 @@ gl::Error TextureD3D::generateMipmaps()
     if (mTexStorage && mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         // Switch to using the mipmapped texture.
-        gl::Error error = getNativeTexture()->useLevelZeroWorkaroundTexture(false);
+        TextureStorage *textureStorage = NULL;
+        gl::Error error = getNativeTexture(&textureStorage);
+        if (error.isError())
+        {
+            return error;
+        }
+
+        error = textureStorage->useLevelZeroWorkaroundTexture(false);
         if (error.isError())
         {
             return error;
