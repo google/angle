@@ -475,7 +475,7 @@ bool Texture::isLevelComplete(GLenum target, size_t level,
 
     size_t width = getWidth(target, samplerState.baseLevel);
     size_t height = getHeight(target, samplerState.baseLevel);
-    size_t depth = getHeight(target, samplerState.baseLevel);
+    size_t depth = getDepth(target, samplerState.baseLevel);
     if (width == 0 || height == 0 || depth == 0)
     {
         return false;
