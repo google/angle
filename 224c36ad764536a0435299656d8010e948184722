@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f79dab26_7bbc3f9c",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 976,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-28T13:55:22Z",
+      "side": 1,
+      "message": "nit: Don\u0027t need to call the gl::Error constructor here. Just GL_NO_ERROR should be fine.",
+      "range": {
+        "startLine": 976,
+        "startChar": 84,
+        "endLine": 976,
+        "endChar": 106
+      },
+      "revId": "224c36ad764536a0435299656d8010e948184722",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1705dffd_82989e8d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
