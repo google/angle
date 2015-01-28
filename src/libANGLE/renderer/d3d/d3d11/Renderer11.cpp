@@ -73,6 +73,9 @@ enum
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM4 = 16
 };
 
+// dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
+static const uintptr_t DirtyPointer = -1;
+
 static bool ImageIndexConflictsWithSRV(const gl::ImageIndex *index, D3D11_SHADER_RESOURCE_VIEW_DESC desc)
 {
     unsigned mipLevel = index->mipIndex;
@@ -131,11 +134,11 @@ static bool ImageIndexConflictsWithSRV(const gl::ImageIndex *index, D3D11_SHADER
 }
 
 // Does *not* increment the resource ref count!!
-ID3D11Resource *GetSRVResource(ID3D11ShaderResourceView *srv)
+ID3D11Resource *GetViewResource(ID3D11View *view)
 {
     ID3D11Resource *resource = NULL;
-    ASSERT(srv);
-    srv->GetResource(&resource);
+    ASSERT(view);
+    view->GetResource(&resource);
     resource->Release();
     return resource;
 }
@@ -1015,7 +1018,7 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSi
     return count >= minCount;
 }
 
-void Renderer11::unsetConflictingSRVs(gl::SamplerType samplerType, const ID3D11Resource *resource, const gl::ImageIndex* index)
+void Renderer11::unsetConflictingSRVs(gl::SamplerType samplerType, uintptr_t resource, const gl::ImageIndex *index)
 {
     auto &currentSRVs = (samplerType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
 
@@ -1037,7 +1040,6 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
     unsigned int renderTargetWidth = 0;
     unsigned int renderTargetHeight = 0;
     DXGI_FORMAT renderTargetFormat = DXGI_FORMAT_UNKNOWN;
-    unsigned int renderTargetSerials[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {0};
     ID3D11RenderTargetView* framebufferRTVs[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {NULL};
     bool missingColorRenderTarget = true;
 
@@ -1058,8 +1060,6 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
             {
                 return gl::Error(GL_NO_ERROR);
             }
-
-            renderTargetSerials[colorAttachment] = GetAttachmentSerial(colorbuffer);
 
             // Extract the render target dimensions and view
             RenderTarget11 *renderTarget = NULL;
@@ -1084,33 +1084,20 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
             // Unbind render target SRVs from the shader here to prevent D3D11 warnings.
             if (colorbuffer->type() == GL_TEXTURE)
             {
-                ID3D11Resource *renderTargetResource = renderTarget->getTexture();
+                uintptr_t rtResource = reinterpret_cast<uintptr_t>(GetViewResource(framebufferRTVs[colorAttachment]));
                 const gl::ImageIndex *index = colorbuffer->getTextureImageIndex();
                 ASSERT(index);
                 // The index doesn't need to be corrected for the small compressed texture workaround
                 // because a rendertarget is never compressed.
-                unsetConflictingSRVs(gl::SAMPLER_VERTEX, renderTargetResource, index);
-                unsetConflictingSRVs(gl::SAMPLER_PIXEL, renderTargetResource, index);
+                unsetConflictingSRVs(gl::SAMPLER_VERTEX, rtResource, index);
+                unsetConflictingSRVs(gl::SAMPLER_PIXEL, rtResource, index);
             }
-
         }
     }
 
-    // Get the depth stencil render buffter and serials
-    gl::FramebufferAttachment *depthStencil = framebuffer->getDepthbuffer();
-    unsigned int depthbufferSerial = 0;
-    unsigned int stencilbufferSerial = 0;
-    if (depthStencil)
-    {
-        depthbufferSerial = GetAttachmentSerial(depthStencil);
-    }
-    else if (framebuffer->getStencilbuffer())
-    {
-        depthStencil = framebuffer->getStencilbuffer();
-        stencilbufferSerial = GetAttachmentSerial(depthStencil);
-    }
-
+    // Get the depth stencil buffers
     ID3D11DepthStencilView* framebufferDSV = NULL;
+    gl::FramebufferAttachment *depthStencil = framebuffer->getDepthOrStencilbuffer();
     if (depthStencil)
     {
         RenderTarget11 *depthStencilRenderTarget = NULL;
@@ -1133,13 +1120,24 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
             renderTargetHeight = depthStencilRenderTarget->getHeight();
             renderTargetFormat = depthStencilRenderTarget->getDXGIFormat();
         }
+
+        // Unbind render target SRVs from the shader here to prevent D3D11 warnings.
+        if (depthStencil->type() == GL_TEXTURE)
+        {
+            uintptr_t depthStencilResource = reinterpret_cast<uintptr_t>(GetViewResource(framebufferDSV));
+            const gl::ImageIndex *index = depthStencil->getTextureImageIndex();
+            ASSERT(index);
+            // The index doesn't need to be corrected for the small compressed texture workaround
+            // because a rendertarget is never compressed.
+            unsetConflictingSRVs(gl::SAMPLER_VERTEX, depthStencilResource, index);
+            unsetConflictingSRVs(gl::SAMPLER_PIXEL, depthStencilResource, index);
+        }
     }
 
     // Apply the render target and depth stencil
     if (!mRenderTargetDescInitialized || !mDepthStencilInitialized ||
-        memcmp(renderTargetSerials, mAppliedRenderTargetSerials, sizeof(renderTargetSerials)) != 0 ||
-        depthbufferSerial != mAppliedDepthbufferSerial ||
-        stencilbufferSerial != mAppliedStencilbufferSerial)
+        memcmp(framebufferRTVs, mAppliedRTVs, sizeof(framebufferRTVs)) != 0 ||
+        reinterpret_cast<uintptr_t>(framebufferDSV) != mAppliedDSV)
     {
         mDeviceContext->OMSetRenderTargets(getRendererCaps().maxDrawBuffers, framebufferRTVs, framebufferDSV);
 
@@ -1157,10 +1155,9 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
 
         for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)
         {
-            mAppliedRenderTargetSerials[rtIndex] = renderTargetSerials[rtIndex];
+            mAppliedRTVs[rtIndex] = reinterpret_cast<uintptr_t>(framebufferRTVs[rtIndex]);
         }
-        mAppliedDepthbufferSerial = depthbufferSerial;
-        mAppliedStencilbufferSerial = stencilbufferSerial;
+        mAppliedDSV = reinterpret_cast<uintptr_t>(framebufferDSV);
         mRenderTargetDescInitialized = true;
         mDepthStencilInitialized = true;
     }
@@ -1850,10 +1847,9 @@ void Renderer11::markAllStateDirty()
 {
     for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)
     {
-        mAppliedRenderTargetSerials[rtIndex] = 0;
+        mAppliedRTVs[rtIndex] = DirtyPointer;
     }
-    mAppliedDepthbufferSerial = 0;
-    mAppliedStencilbufferSerial = 0;
+    mAppliedDSV = DirtyPointer;
     mDepthStencilInitialized = false;
     mRenderTargetDescInitialized = false;
 
@@ -1885,13 +1881,9 @@ void Renderer11::markAllStateDirty()
     mAppliedIBFormat = DXGI_FORMAT_UNKNOWN;
     mAppliedIBOffset = 0;
 
-
-    // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
-    const uintptr_t dirtyPointer = -1;
-
-    mAppliedVertexShader = dirtyPointer;
-    mAppliedGeometryShader = dirtyPointer;
-    mAppliedPixelShader = dirtyPointer;
+    mAppliedVertexShader = DirtyPointer;
+    mAppliedGeometryShader = DirtyPointer;
+    mAppliedPixelShader = DirtyPointer;
 
     for (size_t i = 0; i < gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
     {
@@ -2378,8 +2370,9 @@ void Renderer11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView
     // Do not preserve the serial for this one-time-use render target
     for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)
     {
-        mAppliedRenderTargetSerials[rtIndex] = 0;
+        mAppliedRTVs[rtIndex] = DirtyPointer;
     }
+    mAppliedDSV = DirtyPointer;
 }
 
 gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
@@ -3375,7 +3368,7 @@ void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot
     ASSERT(static_cast<size_t>(resourceSlot) < currentSRVs.size());
     auto &record = currentSRVs[resourceSlot];
 
-    if (record.srv != srv)
+    if (record.srv != reinterpret_cast<uintptr_t>(srv))
     {
         if (shaderType == gl::SAMPLER_VERTEX)
         {
@@ -3386,11 +3379,15 @@ void Renderer11::setShaderResource(gl::SamplerType shaderType, UINT resourceSlot
             mDeviceContext->PSSetShaderResources(resourceSlot, 1, &srv);
         }
 
-        record.srv = srv;
+        record.srv = reinterpret_cast<uintptr_t>(srv);
         if (srv)
         {
-            record.resource = GetSRVResource(srv);
+            record.resource = reinterpret_cast<uintptr_t>(GetViewResource(srv));
             srv->GetDesc(&record.desc);
+        }
+        else
+        {
+            record.resource = 0;
         }
     }
 }

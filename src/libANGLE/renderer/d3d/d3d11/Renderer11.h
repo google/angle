@@ -222,7 +222,7 @@ class Renderer11 : public RendererD3D
     gl::Error drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);
 
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
-    void unsetConflictingSRVs(gl::SamplerType shaderType, const ID3D11Resource *resource, const gl::ImageIndex *index);
+    void unsetConflictingSRVs(gl::SamplerType shaderType, uintptr_t resource, const gl::ImageIndex *index);
 
     static void invalidateFBOAttachmentSwizzles(gl::FramebufferAttachment *attachment, int mipLevel);
     static void invalidateFramebufferSwizzles(const gl::Framebuffer *framebuffer);
@@ -242,9 +242,8 @@ class Renderer11 : public RendererD3D
     RenderStateCache mStateCache;
 
     // current render target states
-    unsigned int mAppliedRenderTargetSerials[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
-    unsigned int mAppliedDepthbufferSerial;
-    unsigned int mAppliedStencilbufferSerial;
+    uintptr_t mAppliedRTVs[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
+    uintptr_t mAppliedDSV;
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
 
@@ -266,8 +265,8 @@ class Renderer11 : public RendererD3D
     // Currently applied textures
     struct SRVRecord
     {
-        ID3D11ShaderResourceView *srv;
-        ID3D11Resource *resource;
+        uintptr_t srv;
+        uintptr_t resource;
         D3D11_SHADER_RESOURCE_VIEW_DESC desc;
     };
     std::vector<SRVRecord> mCurVertexSRVs;
