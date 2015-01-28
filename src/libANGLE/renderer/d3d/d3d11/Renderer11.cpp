@@ -1220,7 +1220,7 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State& state)
                 Buffer11 *storage = Buffer11::makeBuffer11(curXFBBuffer->getImplementation());
                 ID3D11Buffer *d3dBuffer = storage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
 
-                mCurrentD3DOffsets[i] = (mAppliedTFBuffers[i] != d3dBuffer && mAppliedTFOffsets[i] != curXFBOffset) ?
+                mCurrentD3DOffsets[i] = (mAppliedTFBuffers[i] != d3dBuffer || mAppliedTFOffsets[i] != curXFBOffset) ?
                                         static_cast<UINT>(curXFBOffset) : -1;
                 mAppliedTFBuffers[i] = d3dBuffer;
             }

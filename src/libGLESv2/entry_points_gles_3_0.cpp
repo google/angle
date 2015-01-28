@@ -1096,18 +1096,27 @@ void GL_APIENTRY BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
 
         switch (target)
         {
-          case GL_TRANSFORM_FEEDBACK_BUFFER:
-
-            // size and offset must be a multiple of 4
-            if (buffer != 0 && ((offset % 4) != 0 || (size % 4) != 0))
+        case GL_TRANSFORM_FEEDBACK_BUFFER:
             {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
+                // size and offset must be a multiple of 4
+                if (buffer != 0 && ((offset % 4) != 0 || (size % 4) != 0))
+                {
+                    context->recordError(Error(GL_INVALID_VALUE));
+                    return;
+                }
 
-            context->bindIndexedTransformFeedbackBuffer(buffer, index, offset, size);
-            context->bindGenericTransformFeedbackBuffer(buffer);
-            break;
+                // Cannot bind a transform feedback buffer if the current transform feedback is active (3.0.4 pg 91 section 2.15.2)
+                TransformFeedback *curTransformFeedback = context->getState().getCurrentTransformFeedback();
+                if (curTransformFeedback && curTransformFeedback->isStarted())
+                {
+                    context->recordError(Error(GL_INVALID_OPERATION));
+                    return;
+                }
+
+                context->bindIndexedTransformFeedbackBuffer(buffer, index, offset, size);
+                context->bindGenericTransformFeedbackBuffer(buffer);
+                break;
+            }
 
           case GL_UNIFORM_BUFFER:
 
@@ -1168,11 +1177,20 @@ void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer)
 
         switch (target)
         {
-          case GL_TRANSFORM_FEEDBACK_BUFFER:
-            context->bindIndexedTransformFeedbackBuffer(buffer, index, 0, 0);
-            context->bindGenericTransformFeedbackBuffer(buffer);
-            break;
+        case GL_TRANSFORM_FEEDBACK_BUFFER:
+            {
+                // Cannot bind a transform feedback buffer if the current transform feedback is active (3.0.4 pg 91 section 2.15.2)
+                TransformFeedback *curTransformFeedback = context->getState().getCurrentTransformFeedback();
+                if (curTransformFeedback && curTransformFeedback->isStarted())
+                {
+                    context->recordError(Error(GL_INVALID_OPERATION));
+                    return;
+                }
 
+                context->bindIndexedTransformFeedbackBuffer(buffer, index, 0, 0);
+                context->bindGenericTransformFeedbackBuffer(buffer);
+                break;
+            }
           case GL_UNIFORM_BUFFER:
             context->bindIndexedUniformBuffer(buffer, index, 0, 0);
             context->bindGenericUniformBuffer(buffer);
