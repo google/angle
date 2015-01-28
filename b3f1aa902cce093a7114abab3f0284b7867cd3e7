@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "57c59722_ae0fd753",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2807,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T15:54:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "970aaf12_fb126bcf",
+      "range": {
+        "startLine": 2807,
+        "startChar": 9,
+        "endLine": 2807,
+        "endChar": 19
+      },
+      "revId": "b3f1aa902cce093a7114abab3f0284b7867cd3e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "970aaf12_9b192ff4",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 2
