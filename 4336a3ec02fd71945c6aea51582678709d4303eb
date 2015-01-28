@@ -1,0 +1,320 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57c59722_719d527b",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: this goes on a new line for Chromium style",
+      "range": {
+        "startLine": 213,
+        "startChar": 23,
+        "endLine": 213,
+        "endChar": 36
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97db8f05_f663787b",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: ditto",
+      "range": {
+        "startLine": 217,
+        "startChar": 33,
+        "endLine": 217,
+        "endChar": 56
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57c59722_d18be631",
+        "filename": "src/libANGLE/renderer/d3d/ImageD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "see comment",
+      "range": {
+        "startLine": 53,
+        "startChar": 52,
+        "endLine": 53,
+        "endChar": 96
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3794a3fe_a3805e24",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: see comment",
+      "range": {
+        "startLine": 176,
+        "startChar": 51,
+        "endLine": 176,
+        "endChar": 85
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97db8f05_96754c1c",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: see comment",
+      "range": {
+        "startLine": 211,
+        "startChar": 38,
+        "endLine": 211,
+        "endChar": 72
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3794a3fe_834f627a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: see comment",
+      "range": {
+        "startLine": 249,
+        "startChar": 49,
+        "endLine": 249,
+        "endChar": 93
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3794a3fe_23444e5b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: see comment",
+      "range": {
+        "startLine": 46,
+        "startChar": 52,
+        "endLine": 46,
+        "endChar": 96
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97db8f05_b61970f3",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: see comment",
+      "range": {
+        "startLine": 481,
+        "startChar": 48,
+        "endLine": 481,
+        "endChar": 92
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97db8f05_16207c12",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Image9.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: see comment",
+      "range": {
+        "startLine": 47,
+        "startChar": 52,
+        "endLine": 47,
+        "endChar": 96
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57c59722_31ecaacf",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: for readability purposes, at a very tiny cost in speed, I suggest moving all of the ES3 checks outside this switch. EG: make a second switch, before this switch, where you case all of the ES3 enums, and check once for context-\u003egetClientVersion() \u003c 3 and then you can assume from that point on (with optional ASSERTs) that the context version is correct.",
+      "range": {
+        "startLine": 3157,
+        "startChar": 9,
+        "endLine": 3180,
+        "endChar": 13
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97db8f05_d6e75461",
+        "filename": "tests/angle_tests/UnpackRowLength.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: indent 2 spaces",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 9
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57c59722_b1d73af5",
+        "filename": "tests/angle_tests/UnpackRowLength.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: you can use override here (we should migrate to it)",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 11
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3794a3fe_a385be1d",
+        "filename": "tests/angle_tests/UnpackRowLength.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: please add a comment here explaining the nature and purpose of this text (one line is enough)",
+      "range": {
+        "startLine": 64,
+        "startChar": 9,
+        "endLine": 64,
+        "endChar": 22
+      },
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3794a3fe_03891239",
+        "filename": "tests/angle_tests/UnpackRowLength.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T18:31:42Z",
+      "side": 1,
+      "message": "nit: extra space",
+      "revId": "4336a3ec02fd71945c6aea51582678709d4303eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
