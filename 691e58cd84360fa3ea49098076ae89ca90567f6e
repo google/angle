@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7ba679b_90023cab",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T19:47:26Z",
+      "side": 1,
+      "message": "should get \"getDepth\"",
+      "range": {
+        "startLine": 494,
+        "startChar": 19,
+        "endLine": 494,
+        "endChar": 28
+      },
+      "revId": "691e58cd84360fa3ea49098076ae89ca90567f6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
