@@ -93,6 +93,30 @@
       "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97db8f05_1083a4e5",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-28T15:26:32Z",
+      "side": 1,
+      "message": "Doesn\u0027t speed-oriented vs correctness-oriented already imply the speed-oriented renderer might be incorrect?",
+      "parentUuid": "f79dab26_3bba37bf",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 97,
+        "endChar": 28
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
