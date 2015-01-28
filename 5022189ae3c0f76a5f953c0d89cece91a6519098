@@ -117,6 +117,30 @@
       "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17cf9f48_2caa13ed",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-28T18:25:24Z",
+      "side": 1,
+      "message": "Re: implying incorrectness of speed-oriented renderer-- yes, but I think the implication is less so than if it were stated as \"conformant\" vs. \"performant\". Conformance is a binary state, where as \"correctness-oriented\" sounds a little more wishy-washy.\n\nI\u0027d suggest \"the reference rasterizer\" and \"a performant software rasterizer\" or \"an optimized software rasterizer\", which would remove the implication entirely.",
+      "parentUuid": "97db8f05_1083a4e5",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 97,
+        "endChar": 28
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
