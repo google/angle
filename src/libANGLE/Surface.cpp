@@ -83,6 +83,11 @@ EGLint Surface::getConfigID() const
     return mImplementation->getConfig()->mConfigID;
 }
 
+const Config *Surface::getConfig() const
+{
+    return mImplementation->getConfig();
+}
+
 EGLint Surface::getPixelAspectRatio() const
 {
     return mPixelAspectRatio;

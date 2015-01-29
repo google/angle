@@ -16,6 +16,7 @@
         [
             '<(angle_path)/tests/angle_tests/ANGLETest.cpp',
             '<(angle_path)/tests/angle_tests/ANGLETest.h',
+            '<(angle_path)/tests/angle_tests/BindTexImageTest.cpp',
             '<(angle_path)/tests/angle_tests/BlendMinMaxTest.cpp',
             '<(angle_path)/tests/angle_tests/BlitFramebufferANGLETest.cpp',
             '<(angle_path)/tests/angle_tests/BufferDataTest.cpp',

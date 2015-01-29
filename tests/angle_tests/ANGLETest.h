@@ -83,6 +83,8 @@ class ANGLETest : public testing::Test
     void setMultisampleEnabled(bool enabled);
 
     int getClientVersion() const;
+
+    EGLWindow *getEGLWindow() const;
     int getWindowWidth() const;
     int getWindowHeight() const;
     bool isMultisampleEnabled() const;

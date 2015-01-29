@@ -165,6 +165,11 @@ int ANGLETest::getClientVersion() const
     return mEGLWindow->getClientVersion();
 }
 
+EGLWindow *ANGLETest::getEGLWindow() const
+{
+    return mEGLWindow;
+}
+
 int ANGLETest::getWindowWidth() const
 {
     return mEGLWindow->getWidth();

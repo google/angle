@@ -53,6 +53,7 @@ class Surface final
     void setSwapInterval(EGLint interval);
 
     EGLint getConfigID() const;
+    const Config *getConfig() const;
 
     // width and height can change with client window resizing
     EGLint getWidth() const;
