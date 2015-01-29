@@ -293,7 +293,7 @@ gl::Error StaticVertexBufferInterface::storeVertexAttributes(const gl::VertexAtt
     }
 
     size_t attributeOffset = static_cast<size_t>(attrib.offset) % ComputeVertexAttributeStride(attrib);
-    VertexElement element = { attrib.type, attrib.size, ComputeVertexAttributeStride(attrib), attrib.normalized, attrib.pureInteger, attributeOffset, streamOffset };
+    VertexElement element = { attrib.type, attrib.size, static_cast<GLuint>(ComputeVertexAttributeStride(attrib)), attrib.normalized, attrib.pureInteger, attributeOffset, streamOffset };
     mCache.push_back(element);
 
     if (outStreamOffset)

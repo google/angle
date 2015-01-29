@@ -230,7 +230,7 @@ GLsync Context::createFenceSync()
 {
     GLuint handle = mResourceManager->createFenceSync();
 
-    return reinterpret_cast<GLsync>(handle);
+    return reinterpret_cast<GLsync>(static_cast<uintptr_t>(handle));
 }
 
 GLuint Context::createVertexArray()
