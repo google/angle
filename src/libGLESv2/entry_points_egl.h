@@ -63,6 +63,8 @@ ANGLE_EXPORT EGLSync EGLAPIENTRY CreateSync(EGLDisplay dpy, EGLenum type, const 
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY DestroySync(EGLDisplay dpy, EGLSync sync);
 ANGLE_EXPORT EGLint EGLAPIENTRY ClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags, EGLTime timeout);
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY GetSyncAttrib(EGLDisplay dpy, EGLSync sync, EGLint attribute, EGLAttrib *value);
+ANGLE_EXPORT EGLImage EGLAPIENTRY CreateImage(EGLDisplay dpy, EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLAttrib *attrib_list);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY DestroyImage(EGLDisplay dpy, EGLImage image);
 ANGLE_EXPORT EGLDisplay EGLAPIENTRY GetPlatformDisplay(EGLenum platform, void *native_display, const EGLAttrib *attrib_list);
 ANGLE_EXPORT EGLSurface EGLAPIENTRY CreatePlatformWindowSurface(EGLDisplay dpy, EGLConfig config, void *native_window, const EGLAttrib *attrib_list);
 ANGLE_EXPORT EGLSurface EGLAPIENTRY CreatePlatformPixmapSurface(EGLDisplay dpy, EGLConfig config, void *native_pixmap, const EGLAttrib *attrib_list);

@@ -1118,6 +1118,24 @@ EGLBoolean EGLAPIENTRY GetSyncAttrib(EGLDisplay dpy, EGLSync sync, EGLint attrib
     return EGL_FALSE;
 }
 
+EGLImage EGLAPIENTRY CreateImage(EGLDisplay dpy, EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLAttrib *attrib_list)
+{
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLContext ctx = 0x%0.8p, EGLenum target = 0x%X, "
+          "EGLClientBuffer buffer = 0x%0.8p, const EGLAttrib *attrib_list = 0x%0.8p)",
+          dpy, ctx, target, buffer, attrib_list);
+
+    UNIMPLEMENTED();
+    return EGL_NO_IMAGE;
+}
+
+EGLBoolean EGLAPIENTRY DestroyImage(EGLDisplay dpy, EGLImage image)
+{
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLImage image = 0x%0.8p)", dpy, image);
+
+    UNIMPLEMENTED();
+    return EGL_FALSE;
+}
+
 EGLDisplay EGLAPIENTRY GetPlatformDisplay(EGLenum platform, void *native_display, const EGLAttrib *attrib_list)
 {
     EVENT("(EGLenum platform = %d, void* native_display = 0x%0.8p, const EGLint* attrib_list = 0x%0.8p)",

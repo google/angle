@@ -197,6 +197,16 @@ EGLBoolean EGLAPIENTRY eglGetSyncAttrib(EGLDisplay dpy, EGLSync sync, EGLint att
     return egl::GetSyncAttrib(dpy, sync, attribute, value);
 }
 
+EGLImage EGLAPIENTRY eglCreateImage(EGLDisplay dpy, EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLAttrib *attrib_list)
+{
+    return egl::CreateImage(dpy, ctx, target, buffer, attrib_list);
+}
+
+EGLBoolean EGLAPIENTRY eglDestroyImage(EGLDisplay dpy, EGLImage image)
+{
+    return egl::DestroyImage(dpy, image);
+}
+
 EGLDisplay EGLAPIENTRY eglGetPlatformDisplay(EGLenum platform, void *native_display, const EGLAttrib *attrib_list)
 {
     return egl::GetPlatformDisplay(platform, native_display, attrib_list);
