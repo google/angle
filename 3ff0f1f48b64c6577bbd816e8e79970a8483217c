@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b928710_487bb3ab",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-29T20:06:44Z",
+      "side": 1,
+      "message": "this one should be out of the ]",
+      "range": {
+        "startLine": 456,
+        "startChar": 54,
+        "endLine": 456,
+        "endChar": 59
+      },
+      "revId": "3ff0f1f48b64c6577bbd816e8e79970a8483217c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
