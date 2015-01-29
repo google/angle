@@ -6,7 +6,7 @@ ANGLE_TYPED_TEST_CASE(TextureTest, ES2_D3D9, ES2_D3D11);
 template<typename T>
 class TextureTest : public ANGLETest
 {
-protected:
+  protected:
     TextureTest() : ANGLETest(T::GetGlesMajorVersion(), T::GetPlatform())
     {
         setWindowWidth(128);
@@ -101,6 +101,114 @@ protected:
         glDeleteProgram(mCubeProgram);
 
         ANGLETest::TearDown();
+    }
+
+    // Tests CopyTexSubImage with floating point textures of various formats.
+    void testFloatCopySubImage(int sourceImageChannels, int destImageChannels)
+    {
+        GLfloat sourceImageData[4][16] =
+        {
+            { // R
+                1.0f,
+                0.0f,
+                0.0f,
+                1.0f
+            },
+            { // RG
+                1.0f, 0.0f,
+                0.0f, 1.0f,
+                0.0f, 0.0f,
+                1.0f, 1.0f
+            },
+            { // RGB
+                1.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f,
+                0.0f, 0.0f, 1.0f,
+                1.0f, 1.0f, 0.0f
+            },
+            { // RGBA
+                1.0f, 0.0f, 0.0f, 1.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f,
+                1.0f, 1.0f, 0.0f, 1.0f
+            },
+        };
+
+        GLenum imageFormats[] =
+        {
+            GL_R32F,
+            GL_RG32F,
+            GL_RGB32F,
+            GL_RGBA32F,
+        };
+
+        GLenum sourceUnsizedFormats[] =
+        {
+            GL_RED,
+            GL_RG,
+            GL_RGB,
+            GL_RGBA,
+        };
+
+        GLuint textures[2];
+
+        glGenTextures(2, textures);
+
+        GLfloat *imageData = sourceImageData[sourceImageChannels - 1];
+        GLenum sourceImageFormat = imageFormats[sourceImageChannels - 1];
+        GLenum sourceUnsizedFormat = sourceUnsizedFormats[sourceImageChannels - 1];
+        GLenum destImageFormat = imageFormats[destImageChannels - 1];
+
+        glBindTexture(GL_TEXTURE_2D, textures[0]);
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, sourceImageFormat, 2, 2);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, sourceUnsizedFormat, GL_FLOAT, imageData);
+
+        if (sourceImageChannels < 4 && !extensionEnabled("GL_EXT_texture_rg"))
+        {
+            // This is not supported
+            ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+        }
+        else
+        {
+            ASSERT_GL_NO_ERROR();
+        }
+
+        GLuint fbo;
+        glGenFramebuffers(1, &fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
+
+        glBindTexture(GL_TEXTURE_2D, textures[1]);
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, destImageFormat, 2, 2);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 2, 2);
+        ASSERT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        drawQuad(m2DProgram, "position", 0.5f);
+        swapBuffers();
+
+        int testImageChannels = std::min(sourceImageChannels, destImageChannels);
+
+        EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+        if (testImageChannels > 1)
+        {
+            EXPECT_PIXEL_EQ(getWindowHeight() - 1, 0, 0, 255, 0, 255);
+            EXPECT_PIXEL_EQ(getWindowHeight() - 1, getWindowWidth() - 1, 255, 255, 0, 255);
+            if (testImageChannels > 2)
+            {
+                EXPECT_PIXEL_EQ(0, getWindowWidth() - 1, 0, 0, 255, 255);
+            }
+        }
+
+        glDeleteFramebuffers(1, &fbo);
+        glDeleteTextures(2, textures);
+
+        ASSERT_GL_NO_ERROR();
     }
 
     GLuint mTexture2D;
@@ -333,4 +441,62 @@ TYPED_TEST(TextureTest, TexStorageWithPBO)
         EXPECT_PIXEL_EQ(3 * width / 4, 3 * height / 4, 0, 0, 0, 255);
         EXPECT_PIXEL_EQ(width / 4, height / 4, 255, 0, 0, 255);
     }
+}
+
+// See description on testFloatCopySubImage
+// TODO(jmadill): Fix sampling from unused channels on D3D9
+TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_R_R)
+{
+    testFloatCopySubImage(1, 1);
+}
+
+// TODO(jmadill): Fix sampling from unused channels on D3D9
+TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RG_R)
+{
+    testFloatCopySubImage(2, 1);
+}
+
+// TODO(jmadill): Fix sampling from unused channels on D3D9
+TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RG_RG)
+{
+    testFloatCopySubImage(2, 2);
+}
+
+// TODO(jmadill): Fix sampling from unused channels on D3D9
+TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RGB_R)
+{
+    testFloatCopySubImage(3, 1);
+}
+
+// TODO(jmadill): Fix sampling from unused channels on D3D9
+TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RGB_RG)
+{
+    testFloatCopySubImage(3, 2);
+}
+
+TYPED_TEST(TextureTest, CopySubImageFloat_RGB_RGB)
+{
+    testFloatCopySubImage(3, 3);
+}
+
+// TODO(jmadill): Fix sampling from unused channels on D3D9
+TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RGBA_R)
+{
+    testFloatCopySubImage(4, 1);
+}
+
+// TODO(jmadill): Fix sampling from unused channels on D3D9
+TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RGBA_RG)
+{
+    testFloatCopySubImage(4, 2);
+}
+
+TYPED_TEST(TextureTest, CopySubImageFloat_RGBA_RGB)
+{
+    testFloatCopySubImage(4, 3);
+}
+
+TYPED_TEST(TextureTest, CopySubImageFloat_RGBA_RGBA)
+{
+    testFloatCopySubImage(4, 4);
 }

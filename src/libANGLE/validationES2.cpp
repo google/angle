@@ -411,7 +411,8 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
 
     gl::Framebuffer *framebuffer = context->getState().getReadFramebuffer();
     GLenum colorbufferFormat = framebuffer->getReadColorbuffer()->getInternalFormat();
-    GLenum textureFormat = gl::GetInternalFormatInfo(textureInternalFormat).format;
+    const auto &internalFormatInfo = gl::GetInternalFormatInfo(textureInternalFormat);
+    GLenum textureFormat = internalFormatInfo.format;
 
     // [OpenGL ES 2.0.24] table 3.9
     if (isSubImage)
@@ -448,7 +449,11 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
                   colorbufferFormat != GL_RGB8_OES &&
                   colorbufferFormat != GL_RGBA4 &&
                   colorbufferFormat != GL_RGB5_A1 &&
-                  colorbufferFormat != GL_RGBA8_OES)
+                  colorbufferFormat != GL_RGBA8_OES &&
+                  colorbufferFormat != GL_R32F &&
+                  colorbufferFormat != GL_RG32F &&
+                  colorbufferFormat != GL_RGB32F &&
+                  colorbufferFormat != GL_RGBA32F)
               {
                   context->recordError(Error(GL_INVALID_OPERATION));
                   return false;
@@ -460,7 +465,10 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
                   colorbufferFormat != GL_RGB8_OES &&
                   colorbufferFormat != GL_RGBA4 &&
                   colorbufferFormat != GL_RGB5_A1 &&
-                  colorbufferFormat != GL_RGBA8_OES)
+                  colorbufferFormat != GL_RGBA8_OES &&
+                  colorbufferFormat != GL_RG32F &&
+                  colorbufferFormat != GL_RGB32F &&
+                  colorbufferFormat != GL_RGBA32F)
               {
                   context->recordError(Error(GL_INVALID_OPERATION));
                   return false;
@@ -471,7 +479,9 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
                 colorbufferFormat != GL_RGB8_OES &&
                 colorbufferFormat != GL_RGBA4 &&
                 colorbufferFormat != GL_RGB5_A1 &&
-                colorbufferFormat != GL_RGBA8_OES)
+                colorbufferFormat != GL_RGBA8_OES &&
+                colorbufferFormat != GL_RGB32F &&
+                colorbufferFormat != GL_RGBA32F)
             {
                 context->recordError(Error(GL_INVALID_OPERATION));
                 return false;
@@ -481,7 +491,8 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
           case GL_RGBA:
             if (colorbufferFormat != GL_RGBA4 &&
                 colorbufferFormat != GL_RGB5_A1 &&
-                colorbufferFormat != GL_RGBA8_OES)
+                colorbufferFormat != GL_RGBA8_OES &&
+                colorbufferFormat != GL_RGBA32F)
             {
                 context->recordError(Error(GL_INVALID_OPERATION));
                 return false;
@@ -498,6 +509,13 @@ bool ValidateES2CopyTexImageParameters(Context* context, GLenum target, GLint le
             context->recordError(Error(GL_INVALID_OPERATION));
             return false;
           default:
+            context->recordError(Error(GL_INVALID_OPERATION));
+            return false;
+        }
+
+        if (internalFormatInfo.type == GL_FLOAT &&
+            !context->getExtensions().textureFloat)
+        {
             context->recordError(Error(GL_INVALID_OPERATION));
             return false;
         }
