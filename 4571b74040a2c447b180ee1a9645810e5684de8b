@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9720efdf_68194376",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 976,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-29T19:45:10Z",
+      "side": 1,
+      "message": "I have to be honest, I\u0027m not an expert with c++11 async stuff. Does this need to be a shared_ptr? I notice tempVertexShaderInfoLog below is not using a shared_ptr, so was confused.",
+      "range": {
+        "startLine": 976,
+        "startChar": 4,
+        "endLine": 976,
+        "endChar": 30
+      },
+      "revId": "4571b74040a2c447b180ee1a9645810e5684de8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7025340_77264862",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 992,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-29T19:45:10Z",
+      "side": 1,
+      "message": "nit: * placement",
+      "range": {
+        "startLine": 992,
+        "startChar": 23,
+        "endLine": 992,
+        "endChar": 24
+      },
+      "revId": "4571b74040a2c447b180ee1a9645810e5684de8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
