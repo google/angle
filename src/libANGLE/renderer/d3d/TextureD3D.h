@@ -67,12 +67,15 @@ class TextureD3D : public TextureImpl
     ImageD3D *getBaseLevelImage() const;
 
   protected:
-    gl::Error setImage(const gl::ImageIndex &index, GLenum type, const gl::PixelUnpackState &unpack, const uint8_t *pixels);
+    gl::Error setImage(const gl::ImageIndex &index, GLenum type,
+                       const gl::PixelUnpackState &unpack, const uint8_t *pixels,
+                       ptrdiff_t layerOffset);
     gl::Error subImage(const gl::ImageIndex &index, const gl::Box &area, GLenum format, GLenum type,
-                       const gl::PixelUnpackState &unpack, const uint8_t *pixels);
-    gl::Error setCompressedImage(const gl::ImageIndex &index, const gl::PixelUnpackState &unpack, const uint8_t *pixels);
+                       const gl::PixelUnpackState &unpack, const uint8_t *pixels, ptrdiff_t layerOffset);
+    gl::Error setCompressedImage(const gl::ImageIndex &index, const gl::PixelUnpackState &unpack,
+                                 const uint8_t *pixels, ptrdiff_t layerOffset);
     gl::Error subImageCompressed(const gl::ImageIndex &index, const gl::Box &area, GLenum format,
-                                 const gl::PixelUnpackState &unpack, const uint8_t *pixels);
+                                 const gl::PixelUnpackState &unpack, const uint8_t *pixels, ptrdiff_t layerOffset);
     bool isFastUnpackable(const gl::PixelUnpackState &unpack, GLenum sizedInternalFormat);
     gl::Error fastUnpackPixels(const gl::PixelUnpackState &unpack, const uint8_t *pixels, const gl::Box &destArea,
                                GLenum sizedInternalFormat, GLenum type, RenderTargetD3D *destRenderTarget);
