@@ -535,7 +535,8 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index, ImageD3D *image
 
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(image->getInternalFormat());
 
-    bool fullUpdate = (destBox == NULL || *destBox == gl::Box(0, 0, 0, mTextureWidth, mTextureHeight, mTextureDepth));
+    gl::Box levelBox(0, 0, 0, getLevelWidth(index.mipIndex), getLevelHeight(index.mipIndex), getLevelDepth(index.mipIndex));
+    bool fullUpdate = (destBox == NULL || *destBox == levelBox);
     ASSERT(internalFormatInfo.depthBits == 0 || fullUpdate);
 
     // TODO(jmadill): Handle compressed formats
@@ -583,8 +584,8 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index, ImageD3D *image
         destD3DBox.right = destBox->x + destBox->width;
         destD3DBox.top = destBox->y;
         destD3DBox.bottom = destBox->y + destBox->height;
-        destD3DBox.front = 0;
-        destD3DBox.back = 1;
+        destD3DBox.front = destBox->z;
+        destD3DBox.back = destBox->z + destBox->depth;
 
         immediateContext->UpdateSubresource(resource, destSubresource,
                                             &destD3DBox, conversionBuffer->data(),
