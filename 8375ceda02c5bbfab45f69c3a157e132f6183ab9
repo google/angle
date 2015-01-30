@@ -93,6 +93,30 @@
       "revId": "8375ceda02c5bbfab45f69c3a157e132f6183ab9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17cebfa3_9434e4d9",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-30T16:00:26Z",
+      "side": 1,
+      "message": "Aha. I get it. Two suggestions:\n\n * remove ImageIndex::operator\u003c, add a new comparator class to the ImageDesc map which ignores the layerDesc (since it\u0027s meaningless for this class)\n * add a helper method isCubeMap() to ImageIndex. We check this all over the place anyway so it\u0027s generally helpful.\n\nThen, take a look at:\n\nhttp://pastebin.com/yzk6w6ez",
+      "parentUuid": "97baafec_18736537",
+      "range": {
+        "startLine": 106,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 1
+      },
+      "revId": "8375ceda02c5bbfab45f69c3a157e132f6183ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
