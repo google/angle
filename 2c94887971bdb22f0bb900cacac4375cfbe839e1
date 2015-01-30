@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "37d10340_f539d875",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3350,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-30T16:26:31Z",
+      "side": 1,
+      "message": "Hm, I still think two uses is enough to justify re-use.",
+      "parentUuid": "97baafec_18c805d3",
+      "range": {
+        "startLine": 3350,
+        "startChar": 22,
+        "endLine": 3350,
+        "endChar": 54
+      },
+      "revId": "2c94887971bdb22f0bb900cacac4375cfbe839e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "17cebfa3_14ac54b2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
