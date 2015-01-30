@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37d10340_b525a055",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3265,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-30T16:22:52Z",
+      "side": 0,
+      "message": "nice to clean up these redundant functions",
+      "range": {
+        "startLine": 3265,
+        "startChar": 17,
+        "endLine": 3265,
+        "endChar": 48
+      },
+      "revId": "7e51ef0099f9613a1bd8122721552666778b27cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

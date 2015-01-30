@@ -22,6 +22,76 @@
       "revId": "610238b1d64d6607f682484bcfdde826087dec3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17cebfa3_b48240df",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-30T16:22:52Z",
+      "side": 1,
+      "message": "We have trended to use the \"return error, parameters as output\" pattern so far.",
+      "parentUuid": "d7fd0774_3582fa6a",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 67
+      },
+      "revId": "610238b1d64d6607f682484bcfdde826087dec3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7ca0b90_33ec0894",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-30T16:22:52Z",
+      "side": 1,
+      "message": "nit: nullptr?",
+      "range": {
+        "startLine": 728,
+        "startChar": 34,
+        "endLine": 728,
+        "endChar": 38
+      },
+      "revId": "610238b1d64d6607f682484bcfdde826087dec3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7ca0b90_53ef848a",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-30T16:22:52Z",
+      "side": 1,
+      "message": "nit: nullptr?",
+      "range": {
+        "startLine": 775,
+        "startChar": 37,
+        "endLine": 775,
+        "endChar": 41
+      },
+      "revId": "610238b1d64d6607f682484bcfdde826087dec3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
