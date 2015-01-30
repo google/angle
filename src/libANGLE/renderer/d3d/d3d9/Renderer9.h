@@ -260,8 +260,8 @@ class Renderer9 : public RendererD3D
     bool mVertexTextureSupport;
 
     // current render target states
-    unsigned int mAppliedRenderTargetSerial;
-    unsigned int mAppliedDepthStencilSerial;
+    uintptr_t mAppliedRenderTarget;
+    uintptr_t mAppliedDepthStencil;
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
     unsigned int mCurStencilSize;
