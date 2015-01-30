@@ -252,7 +252,8 @@ bool ANGLETest::isNVidia() const
 
 EGLint ANGLETest::getPlatformRenderer() const
 {
-    return mEGLWindow && mEGLWindow->getPlatform().renderer;
+    assert(mEGLWindow);
+    return mEGLWindow->getPlatform().renderer;
 }
 
 OSWindow *ANGLETest::mOSWindow = NULL;
