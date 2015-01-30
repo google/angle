@@ -303,8 +303,6 @@ protected:
 
     GLuint mBGRAMultisampledRenderbuffer;
     GLuint mBGRAMultisampledFBO;
-
-    T mFixtureType;
 };
 
 // Draw to user-created framebuffer, blit whole-buffer color to original framebuffer.
@@ -695,10 +693,9 @@ TYPED_TEST(BlitFramebufferANGLETest, BlitStencil)
 {
     // TODO(jmadill): Figure out if we can fix this on D3D9.
     // https://code.google.com/p/angleproject/issues/detail?id=809
-    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
-    if (rendererString.find("Intel") != std::string::npos &&
-        mFixtureType.GetPlatform().renderer == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE)
+    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE)
     {
+        std::cout << "Test skipped on Intel D3D9." << std::endl;
         return;
     }
 

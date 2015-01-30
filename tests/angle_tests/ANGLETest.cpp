@@ -231,6 +231,30 @@ void ANGLETest::SetWindowVisible(bool isVisible)
     mOSWindow->setVisible(isVisible);
 }
 
+bool ANGLETest::isIntel() const
+{
+    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    return (rendererString.find("Intel") != std::string::npos);
+}
+
+bool ANGLETest::isAMD() const
+{
+    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    return (rendererString.find("AMD") != std::string::npos) ||
+           (rendererString.find("ATI") != std::string::npos);
+}
+
+bool ANGLETest::isNVidia() const
+{
+    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    return (rendererString.find("NVIDIA") != std::string::npos);
+}
+
+EGLint ANGLETest::getPlatformRenderer() const
+{
+    return mEGLWindow && mEGLWindow->getPlatform().renderer;
+}
+
 OSWindow *ANGLETest::mOSWindow = NULL;
 
 void ANGLETestEnvironment::SetUp()

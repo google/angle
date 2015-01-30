@@ -89,6 +89,11 @@ class ANGLETest : public testing::Test
     int getWindowHeight() const;
     bool isMultisampleEnabled() const;
 
+    bool isIntel() const;
+    bool isAMD() const;
+    bool isNVidia() const;
+    EGLint getPlatformRenderer() const;
+
   private:
     bool createEGLContext();
     bool destroyEGLContext();

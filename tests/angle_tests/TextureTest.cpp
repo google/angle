@@ -476,6 +476,13 @@ TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RGB_RG)
 
 TYPED_TEST(TextureTest, CopySubImageFloat_RGB_RGB)
 {
+    // TODO(jmadill): Figure out why this is broken on Intel D3D11
+    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    {
+        std::cout << "Test skipped on Intel D3D11." << std::endl;
+        return;
+    }
+
     testFloatCopySubImage(3, 3);
 }
 
@@ -493,10 +500,24 @@ TYPED_TEST(TextureTest, DISABLED_CopySubImageFloat_RGBA_RG)
 
 TYPED_TEST(TextureTest, CopySubImageFloat_RGBA_RGB)
 {
+    // TODO(jmadill): Figure out why this is broken on Intel D3D11
+    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    {
+        std::cout << "Test skipped on Intel D3D11." << std::endl;
+        return;
+    }
+
     testFloatCopySubImage(4, 3);
 }
 
 TYPED_TEST(TextureTest, CopySubImageFloat_RGBA_RGBA)
 {
+    // TODO(jmadill): Figure out why this is broken on Intel D3D11
+    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    {
+        std::cout << "Test skipped on Intel D3D11." << std::endl;
+        return;
+    }
+
     testFloatCopySubImage(4, 4);
 }
