@@ -6,6 +6,13 @@
 
 // ProgramD3D.cpp: Defines the rx::ProgramD3D class which implements rx::ProgramImpl.
 
+// <future> requires _HAS_EXCEPTIONS to be defined
+#ifdef _HAS_EXCEPTIONS
+#undef _HAS_EXCEPTIONS
+#endif // _HAS_EXCEPTIONS
+#define _HAS_EXCEPTIONS 1
+#include <future> // For std::async
+
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 
 #include "common/utilities.h"
@@ -955,6 +962,7 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::VertexFormat i
     }
     else if (!infoLog)
     {
+        // This isn't thread-safe, so we should ensure that we always pass in an infoLog if using multiple threads.
         std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
         tempInfoLog.getLog(tempInfoLog.getLength(), NULL, &tempCharBuffer[0]);
         ERR("Error compiling dynamic vertex executable:\n%s\n", &tempCharBuffer[0]);
@@ -970,18 +978,41 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shade
     ShaderD3D *vertexShaderD3D = ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
     ShaderD3D *fragmentShaderD3D = ShaderD3D::makeShaderD3D(fragmentShader->getImplementation());
 
-    gl::VertexFormat defaultInputLayout[gl::MAX_VERTEX_ATTRIBS];
-    GetDefaultInputLayoutFromShader(vertexShader->getActiveAttributes(), defaultInputLayout);
-    ShaderExecutableD3D *defaultVertexExecutable = NULL;
-    gl::Error error = getVertexExecutableForInputLayout(defaultInputLayout, &defaultVertexExecutable, &infoLog);
-    if (error.isError())
-    {
-        return LinkResult(false, error);
-    }
+    gl::Error vertexShaderTaskResult(GL_NO_ERROR);
+    gl::InfoLog tempVertexShaderInfoLog;
 
+    // Use an async task to begin compiling the vertex shader asynchronously on its own task.
+    std::future<ShaderExecutableD3D*> vertexShaderTask = std::async([this, vertexShader, &tempVertexShaderInfoLog, &vertexShaderTaskResult]()
+    {
+        gl::VertexFormat defaultInputLayout[gl::MAX_VERTEX_ATTRIBS];
+        GetDefaultInputLayoutFromShader(vertexShader->getActiveAttributes(), defaultInputLayout);
+        ShaderExecutableD3D *defaultVertexExecutable = NULL;
+        vertexShaderTaskResult = getVertexExecutableForInputLayout(defaultInputLayout, &defaultVertexExecutable, &tempVertexShaderInfoLog);
+        return defaultVertexExecutable;
+    });
+
+    // Continue to compile the pixel shader on the main thread
     std::vector<GLenum> defaultPixelOutput = GetDefaultOutputLayoutFromShader(getPixelShaderKey());
     ShaderExecutableD3D *defaultPixelExecutable = NULL;
-    error = getPixelExecutableForOutputLayout(defaultPixelOutput, &defaultPixelExecutable, &infoLog);
+    gl::Error error = getPixelExecutableForOutputLayout(defaultPixelOutput, &defaultPixelExecutable, &infoLog);
+
+    // Call .get() on the vertex shader compilation. This waits until the task is complete before returning
+    ShaderExecutableD3D *defaultVertexExecutable = vertexShaderTask.get();
+
+    // Combine the temporary infoLog with the real one
+    if (tempVertexShaderInfoLog.getLength() > 0)
+    {
+        std::vector<char> tempCharBuffer(tempVertexShaderInfoLog.getLength() + 3);
+        tempVertexShaderInfoLog.getLog(tempVertexShaderInfoLog.getLength(), NULL, &tempCharBuffer[0]);
+        infoLog.append(&tempCharBuffer[0]);
+    }
+
+    if (vertexShaderTaskResult.isError())
+    {
+        return LinkResult(false, vertexShaderTaskResult);
+    }
+
+    // If the pixel shader compilation failed, then return error
     if (error.isError())
     {
         return LinkResult(false, error);
