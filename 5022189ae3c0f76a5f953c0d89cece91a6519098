@@ -283,6 +283,30 @@
       "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17cebfa3_74bf08ae",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-30T16:11:56Z",
+      "side": 1,
+      "message": "Aren\u0027t enums cheap enough that we could add both a TYPE_SOFTWARE and TYPE_WARP? If there\u0027s a real danger to adding enums, that would change things, but if it makes it clearer it could be nice to have the specific enum.",
+      "parentUuid": "77bffbde_77a5d0c8",
+      "range": {
+        "startLine": 229,
+        "startChar": 6,
+        "endLine": 230,
+        "endChar": 43
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
