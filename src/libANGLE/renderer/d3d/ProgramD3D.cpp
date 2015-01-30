@@ -19,8 +19,6 @@
 #include "libANGLE/renderer/d3d/ShaderExecutableD3D.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 
-#include <future> // For std::async
-
 namespace rx
 {
 
@@ -957,7 +955,6 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::VertexFormat i
     }
     else if (!infoLog)
     {
-        // This isn't thread-safe, so we should ensure that we always pass in an infoLog if using multiple threads.
         std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
         tempInfoLog.getLog(tempInfoLog.getLength(), NULL, &tempCharBuffer[0]);
         ERR("Error compiling dynamic vertex executable:\n%s\n", &tempCharBuffer[0]);
@@ -973,38 +970,18 @@ LinkResult ProgramD3D::compileProgramExecutables(gl::InfoLog &infoLog, gl::Shade
     ShaderD3D *vertexShaderD3D = ShaderD3D::makeShaderD3D(vertexShader->getImplementation());
     ShaderD3D *fragmentShaderD3D = ShaderD3D::makeShaderD3D(fragmentShader->getImplementation());
 
-    gl::Error vertexShaderTaskResult(GL_NO_ERROR);
-    gl::InfoLog tempVertexShaderInfoLog;
-
-    std::future<ShaderExecutableD3D*> vertexShaderTask = std::async([this, vertexShader, &tempVertexShaderInfoLog, &vertexShaderTaskResult]()
+    gl::VertexFormat defaultInputLayout[gl::MAX_VERTEX_ATTRIBS];
+    GetDefaultInputLayoutFromShader(vertexShader->getActiveAttributes(), defaultInputLayout);
+    ShaderExecutableD3D *defaultVertexExecutable = NULL;
+    gl::Error error = getVertexExecutableForInputLayout(defaultInputLayout, &defaultVertexExecutable, &infoLog);
+    if (error.isError())
     {
-        gl::VertexFormat defaultInputLayout[gl::MAX_VERTEX_ATTRIBS];
-        GetDefaultInputLayoutFromShader(vertexShader->getActiveAttributes(), defaultInputLayout);
-        ShaderExecutableD3D *defaultVertexExecutable = NULL;
-        vertexShaderTaskResult = getVertexExecutableForInputLayout(defaultInputLayout, &defaultVertexExecutable, &tempVertexShaderInfoLog);
-        return defaultVertexExecutable;
-    });
+        return LinkResult(false, error);
+    }
 
     std::vector<GLenum> defaultPixelOutput = GetDefaultOutputLayoutFromShader(getPixelShaderKey());
     ShaderExecutableD3D *defaultPixelExecutable = NULL;
-    gl::Error error = getPixelExecutableForOutputLayout(defaultPixelOutput, &defaultPixelExecutable, &infoLog);
-
-    ShaderExecutableD3D *defaultVertexExecutable = vertexShaderTask.get();
-
-    // Combine the temporary infoLog with the real one
-    if (tempVertexShaderInfoLog.getLength() > 0)
-    {
-        std::vector<char> tempCharBuffer(tempVertexShaderInfoLog.getLength() + 3);
-        tempVertexShaderInfoLog.getLog(tempVertexShaderInfoLog.getLength(), NULL, &tempCharBuffer[0]);
-        infoLog.append(&tempCharBuffer[0]);
-    }
-
-    if (vertexShaderTaskResult.isError())
-    {
-        return LinkResult(false, vertexShaderTaskResult);
-    }
-
-    // If the pixel shader compilation failed, then return error
+    error = getPixelExecutableForOutputLayout(defaultPixelOutput, &defaultPixelExecutable, &infoLog);
     if (error.isError())
     {
         return LinkResult(false, error);
