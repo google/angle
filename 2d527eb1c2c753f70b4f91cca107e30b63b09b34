@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "172a3f14_57774ebc",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-30T21:40:11Z",
+      "side": 1,
+      "message": "todo: remove this",
+      "range": {
+        "startLine": 21,
+        "startChar": 8,
+        "endLine": 21,
+        "endChar": 32
+      },
+      "revId": "2d527eb1c2c753f70b4f91cca107e30b63b09b34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
