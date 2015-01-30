@@ -523,7 +523,7 @@ gl::Error Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &s
     BlitParameters parameters = { 0 };
     parameters.mDestinationFormat = destFormat;
     parameters.mSignedInteger = (internalFormatInfo.componentType == GL_INT);
-    parameters.m3DBlit = sourceArea.depth > 1;
+    parameters.m3DBlit = sourceSRVDesc.ViewDimension == D3D11_SRV_DIMENSION_TEXTURE3D;
 
     BlitShaderMap::const_iterator i = mBlitShaderMap.find(parameters);
     if (i == mBlitShaderMap.end())

@@ -55,7 +55,7 @@ class Image
     virtual gl::Error loadCompressedData(const gl::Box &area, const void *input) = 0;
 
     virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, const gl::Framebuffer *source) = 0;
-    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
+    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Box &sourceArea,
                            const gl::ImageIndex &sourceIndex, TextureStorage *source) = 0;
 
   protected:

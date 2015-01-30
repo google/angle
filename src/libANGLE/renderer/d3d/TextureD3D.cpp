@@ -402,7 +402,7 @@ gl::Error TextureD3D::generateMipmaps()
                 gl::ImageIndex srcIndex = getImageIndex(0, layer);
 
                 ImageD3D *image = getImage(srcIndex);
-                gl::Rectangle area(0, 0, image->getWidth(), image->getHeight());
+                gl::Box area(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
                 gl::Offset offset(0, 0, 0);
                 gl::Error error = image->copy(offset, area, srcIndex, mTexStorage);
                 if (error.isError())

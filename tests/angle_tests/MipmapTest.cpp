@@ -287,6 +287,49 @@ protected:
         glUniform2f(mTextureArrayScaleUniformLocation, 1.0f, 1.0f);
         glUseProgram(0);
         ASSERT_GL_NO_ERROR();
+
+        glGenTextures(1, &mTexture3D);
+
+        ASSERT_GL_NO_ERROR();
+
+        const std::string fragmentShaderSource3D = SHADER_SOURCE
+        (   #version 300 es\n
+            precision highp float;
+            uniform sampler3D tex;
+            uniform float slice;
+            uniform float lod;
+            in vec2 texcoord;
+            out vec4 out_FragColor;
+
+            void main()
+            {
+                out_FragColor = textureLod(tex, vec3(texcoord, slice), lod);
+            }
+        );
+
+        m3DProgram = CompileProgram(vertexShaderSource, fragmentShaderSource3D);
+        if (m3DProgram == 0)
+        {
+            FAIL() << "shader compilation failed.";
+        }
+
+        mTexture3DUniformLocation = glGetUniformLocation(m3DProgram, "tex");
+        ASSERT_NE(-1, mTexture3DUniformLocation);
+
+        mTexture3DScaleUniformLocation = glGetUniformLocation(m3DProgram, "textureScale");
+        ASSERT_NE(-1, mTexture3DScaleUniformLocation);
+
+        mTexture3DSliceUniformLocation = glGetUniformLocation(m3DProgram, "slice");
+        ASSERT_NE(-1, mTexture3DSliceUniformLocation);
+
+        mTexture3DLODUniformLocation = glGetUniformLocation(m3DProgram, "lod");
+        ASSERT_NE(-1, mTexture3DLODUniformLocation);
+
+        glUseProgram(m3DProgram);
+        glUniform2f(mTexture3DScaleUniformLocation, 1.0f, 1.0f);
+        glUniform1f(mTexture3DLODUniformLocation, 0);
+        glUseProgram(0);
+        ASSERT_GL_NO_ERROR();
     }
 
     virtual void TearDown()
@@ -294,15 +337,25 @@ protected:
         glDeleteTextures(1, &mTextureArray);
         glDeleteProgram(mArrayProgram);
 
+        glDeleteTextures(1, &mTexture3D);
+        glDeleteProgram(m3DProgram);
+
         ANGLETest::TearDown();
     }
 
     GLuint mTextureArray;
+    GLuint mTexture3D;
 
     GLuint mArrayProgram;
     GLint mTextureArrayUniformLocation;
     GLint mTextureArrayScaleUniformLocation;
     GLint mTextureArraySliceUniformLocation;
+
+    GLuint m3DProgram;
+    GLint mTexture3DUniformLocation;
+    GLint mTexture3DScaleUniformLocation;
+    GLint mTexture3DSliceUniformLocation;
+    GLint mTexture3DLODUniformLocation;
 };
 
 // This test uses init data for the first three levels of the texture. It passes the level 0 data in, then renders, then level 1, then renders, etc.
@@ -777,4 +830,85 @@ TYPED_TEST(MipmapTestES3, DISABLED_MipmapsForTextureArray)
     drawQuad(mArrayProgram, "position", 0.5f);
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(px, py, 0, 0, 255, 255);
+}
+
+// Creates a mipmapped 3D texture with two layers, and calls ANGLE's GenerateMipmap.
+// Then tests if the mipmaps are rendered correctly for all two layers.
+TYPED_TEST(MipmapTestES3, MipmapsForTexture3D)
+{
+    int px = getWindowWidth() / 2;
+    int py = getWindowHeight() / 2;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_3D, mTexture3D);
+
+    glTexStorage3D(GL_TEXTURE_3D, 5, GL_RGBA8, 16, 16, 2);
+
+    // Fill the first layer with red
+    std::vector<GLubyte> pixels(4 * 16 * 16);
+    for (size_t pixelId = 0; pixelId < 16 * 16; ++pixelId)
+    {
+        pixels[pixelId * 4 + 0] = 255;
+        pixels[pixelId * 4 + 1] = 0;
+        pixels[pixelId * 4 + 2] = 0;
+        pixels[pixelId * 4 + 3] = 255;
+    }
+
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 16, 16, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+
+    // Fill the second layer with green
+    for (size_t pixelId = 0; pixelId < 16 * 16; ++pixelId)
+    {
+        pixels[pixelId * 4 + 0] = 0;
+        pixels[pixelId * 4 + 1] = 255;
+        pixels[pixelId * 4 + 2] = 0;
+        pixels[pixelId * 4 + 3] = 255;
+    }
+
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 1, 16, 16, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    EXPECT_GL_NO_ERROR();
+
+    glGenerateMipmap(GL_TEXTURE_3D);
+
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(m3DProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Mipmap level 0
+    // Draw the first slice
+    glUseProgram(m3DProgram);
+    glUniform1f(mTexture3DLODUniformLocation, 0.);
+    glUniform1f(mTexture3DSliceUniformLocation, 0.25f);
+    drawQuad(m3DProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(px, py, 255, 0, 0, 255);
+
+    // Draw the second slice
+    glUseProgram(m3DProgram);
+    glUniform1f(mTexture3DSliceUniformLocation, 0.75f);
+    drawQuad(m3DProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(px, py, 0, 255, 0, 255);
+
+    // Mipmap level 1
+    // The second mipmap should only have one slice.
+
+    glUseProgram(m3DProgram);
+    glUniform1f(mTexture3DLODUniformLocation, 1.);
+    drawQuad(m3DProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(px, py, 127, 127, 0, 255);
+
+    glUseProgram(m3DProgram);
+    glUniform1f(mTexture3DSliceUniformLocation, 0.75f);
+    drawQuad(m3DProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(px, py, 127, 127, 0, 255);
 }

@@ -47,7 +47,7 @@ class Image11 : public ImageD3D
     virtual gl::Error loadCompressedData(const gl::Box &area, const void *input);
 
     virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, RenderTargetD3D *source);
-    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
+    virtual gl::Error copy(const gl::Offset &destOffset, const gl::Box &sourceArea,
                            const gl::ImageIndex &sourceIndex, TextureStorage *source);
 
     gl::Error recoverFromAssociatedStorage();
@@ -62,7 +62,7 @@ class Image11 : public ImageD3D
     DISALLOW_COPY_AND_ASSIGN(Image11);
 
     gl::Error copyToStorageImpl(TextureStorage11 *storage11, const gl::ImageIndex &index, const gl::Box &region);
-    gl::Error copy(const gl::Offset &destOffset, const gl::Rectangle &sourceArea, ID3D11Texture2D *source, UINT sourceSubResource);
+    gl::Error copy(const gl::Offset &destOffset, const gl::Box &sourceArea, ID3D11Resource *source, UINT sourceSubResource);
 
     gl::Error getStagingTexture(ID3D11Resource **outStagingTexture, unsigned int *outSubresourceIndex);
     gl::Error createStagingTexture();

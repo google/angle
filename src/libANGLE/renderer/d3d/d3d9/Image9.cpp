@@ -778,7 +778,7 @@ gl::Error Image9::copy(const gl::Offset &destOffset, const gl::Rectangle &source
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Image9::copy(const gl::Offset &destOffset, const gl::Rectangle &area, const gl::ImageIndex &srcIndex, TextureStorage *srcStorage)
+gl::Error Image9::copy(const gl::Offset &destOffset, const gl::Box &area, const gl::ImageIndex &srcIndex, TextureStorage *srcStorage)
 {
     // Currently unreachable, due to only being used in a D3D11-only workaround
     UNIMPLEMENTED();
