@@ -69,6 +69,30 @@
       "revId": "8375ceda02c5bbfab45f69c3a157e132f6183ab9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97baafec_18736537",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T15:44:27Z",
+      "side": 1,
+      "message": "That wont work because all the ImageIndex values stored in the texutre have the no layer information (it\u0027s ENTIRE_LEVEL) and the incoming index can have a layer associated with it.  It\u0027s also possible that the ImageDesc exists but has a size of 0 so width and height need to be checked.  ImageIndex::hasLayer() returns true for cube maps so it will try to compare depth when it shouldn\u0027t.",
+      "parentUuid": "17cebfa3_147e9496",
+      "range": {
+        "startLine": 106,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 1
+      },
+      "revId": "8375ceda02c5bbfab45f69c3a157e132f6183ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
