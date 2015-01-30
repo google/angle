@@ -307,6 +307,30 @@
       "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57d4b72d_76af10fc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T16:27:05Z",
+      "side": 1,
+      "message": "Agreed, enums aren\u0027t particularly expensive to add but I wanted to avoid adding ones that were specific to the renderer types since WARP is a D3D11-specific term.  I could go either way.",
+      "parentUuid": "17cebfa3_74bf08ae",
+      "range": {
+        "startLine": 229,
+        "startChar": 6,
+        "endLine": 230,
+        "endChar": 43
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
