@@ -22,6 +22,30 @@
       "revId": "8f2322329b86310575ba70336756f443c32270ab",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37d10340_758ca84a",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-01-30T15:12:22Z",
+      "side": 1,
+      "message": "Let\u0027s keep this file free of non-allowed c++11 constructs, since it\u0027s compiled on all platforms.",
+      "parentUuid": "77bffbde_172a1479",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 41
+      },
+      "revId": "8f2322329b86310575ba70336756f443c32270ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
