@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "97baafec_9896555c",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T11:07:23Z",
+      "side": 1,
+      "message": "Yea, for this I went with the description of D3D_DRIVER_TYPE_HARDWARE which mentions that it will use as much hardware as is available.",
+      "parentUuid": "f7cbeb3a_eb9151eb",
+      "range": {
+        "startLine": 92,
+        "startChar": 8,
+        "endLine": 93,
+        "endChar": 27
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b715f330_3f820f99",
         "filename": "extensions/ANGLE_platform_angle_d3d.txt",
         "patchSetId": 4
@@ -191,6 +215,30 @@
     },
     {
       "key": {
+        "uuid": "97baafec_b8911968",
+        "filename": "extensions/ANGLE_platform_angle_d3d.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T11:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97db8f05_b9f883d2",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 97,
+        "endChar": 28
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77b9bba9_874d262f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -202,6 +250,30 @@
       "writtenOn": "2015-01-28T21:13:14Z",
       "side": 1,
       "message": "This is confusing!\n\nAre you aware of D3D_DRIVER_TYPE_SOFTWARE? If I were trying to use this API, then I\u0027d expect DEVICE_TYPE_SOFTWARE to map to D3D_DRIVER_TYPE_SOFTWARE rather than DRIVER_TYPE_WARP.\n\nI think SOFTWARE should map to SOFTWARE (if anything), and WARP should get its own flag.",
+      "range": {
+        "startLine": 229,
+        "startChar": 6,
+        "endLine": 230,
+        "endChar": 43
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77bffbde_77a5d0c8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T11:07:23Z",
+      "side": 1,
+      "message": "Yea, I kind of merged the terminology here.  The problem is that I don\u0027t want extra enums that only work for one renderer type and the description in the extension says that it is an optimized software device.\n\nAnyone else have thoughts on this?",
+      "parentUuid": "77b9bba9_874d262f",
       "range": {
         "startLine": 229,
         "startChar": 6,
