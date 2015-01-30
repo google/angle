@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "378ae32f_ed9c454c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-01-30T01:38:57Z",
+      "side": 1,
+      "message": "We shouldn\u0027t use Windows type definitions outside of the D3D-specific backends. I\u0027d suggest uintptr_t or khronos_uintptr_t.",
+      "range": {
+        "startLine": 233,
+        "startChar": 48,
+        "endLine": 233,
+        "endChar": 56
+      },
+      "revId": "26141681cf40fb7af061e387922eca318948eefc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
