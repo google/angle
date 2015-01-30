@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57d4b72d_b62fe884",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T10:50:43Z",
+      "side": 1,
+      "message": "I modified this to check for the width and height of the texture from the index explicitly.  I feel it\u0027s a bit more contained since it only uses public methods of Texture but requires the knowledge that the width and height return zero for unspecified images.",
+      "range": {
+        "startLine": 247,
+        "startChar": 0,
+        "endLine": 269,
+        "endChar": 1
+      },
+      "revId": "8375ceda02c5bbfab45f69c3a157e132f6183ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57d4b72d_9634ecd9",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T10:50:43Z",
+      "side": 1,
+      "message": "Here is a ImageIndex validator contained within the texture class.  I feel this function has a lot of special cases that are handled by the getters.  It has to deal with both missing indices and ones that are set to zero and handle the layer index only for specific types of texture.",
+      "range": {
+        "startLine": 106,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 1
+      },
+      "revId": "8375ceda02c5bbfab45f69c3a157e132f6183ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
