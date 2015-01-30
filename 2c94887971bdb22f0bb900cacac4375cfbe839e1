@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "97baafec_58be7d41",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1093,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T16:24:14Z",
+      "side": 1,
+      "message": "It fixes the warnings listed in the bug but there are still lots of others;\n\n   D3D11 WARNING: ID3D11Device::CreateInputLayout: The provided input signature expects to read an element with SemanticName/Index: \u0027TEXCOORD\u0027/0 and component(s) of the type \u0027uint32\u0027.  However, the matching entry in the Input Layout declaration, element[0], specifies mismatched format: \u0027R8G8B8A8_SINT\u0027.  This is not an error, since behavior is well defined: The element format determines what data conversion algorithm gets applied before it shows up in a shader register. Independently, the shader input signature defines how the shader will interpret the data that has been placed in its input registers, with no change in the bits stored.  It is valid for the application to reinterpret data as a different type once it is in the vertex shader, so this warning is issued just in case reinterpretation was not intended by the author. [ STATE_CREATION WARNING #391: CREATEINPUTLAYOUT_TYPE_MISMATCH]\n   D3D11 WARNING: ID3D11DeviceContext::Draw: The Pixel Shader expects a Render Target View bound to slot 1, but none is bound. This is OK, as writes of an unbound Render Target View are discarded. It is also possible the developer knows the data will not be used anyway. This is only a problem if the developer actually intended to bind a Render Target View here. [ EXECUTION WARNING #3146081: DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET]\n   D3D11 WARNING: ID3D11DeviceContext::DrawInstanced: Vertex Buffer at the input vertex slot 1 is not big enough for what the Draw*() call expects to traverse. This is OK, as reading off the end of the Buffer is defined to return 0. However the developer probably did not intend to make use of this behavior.  [ EXECUTION WARNING #356: DEVICE_DRAW_VERTEX_BUFFER_TOO_SMALL]\n   D3D11 WARNING: ID3D11DeviceContext::DrawIndexedInstanced: Vertex Buffer at the input vertex slot 1 is not big enough for what the Draw*() call expects to traverse. This is OK, as reading off the end of the Buffer is defined to return 0. However the developer probably did not intend to make use of this behavior.  [ EXECUTION WARNING #356: DEVICE_DRAW_VERTEX_BUFFER_TOO_SMALL]",
+      "parentUuid": "37d10340_9502a4e6",
+      "range": {
+        "startLine": 1089,
+        "startChar": 8,
+        "endLine": 1093,
+        "endChar": 76
+      },
+      "revId": "2c94887971bdb22f0bb900cacac4375cfbe839e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37d10340_35dbd025",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-01-30T15:50:35Z",
       "side": 1,
       "message": "nit: place this in a commonly accessible location and use it in place of explicit -1",
+      "range": {
+        "startLine": 1851,
+        "startChar": 4,
+        "endLine": 1851,
+        "endChar": 38
+      },
+      "revId": "2c94887971bdb22f0bb900cacac4375cfbe839e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57d4b72d_96a98cfa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1851,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T16:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37d10340_35dbd025",
       "range": {
         "startLine": 1851,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "97baafec_38cbc9d3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2354,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T16:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17cebfa3_74a5c8c8",
+      "range": {
+        "startLine": 2354,
+        "startChar": 18,
+        "endLine": 2354,
+        "endChar": 20
+      },
+      "revId": "2c94887971bdb22f0bb900cacac4375cfbe839e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7ca0b90_d396f42e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2015-01-30T15:50:35Z",
       "side": 1,
       "message": "suggestion: store this in a temporary above",
+      "range": {
+        "startLine": 3350,
+        "startChar": 22,
+        "endLine": 3350,
+        "endChar": 54
+      },
+      "revId": "2c94887971bdb22f0bb900cacac4375cfbe839e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97baafec_18c805d3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3350,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T16:24:14Z",
+      "side": 1,
+      "message": "I opted to skip this, I think it ends up looking slightly worse having another variable that has the exact same value  and it\u0027s only used in two places.",
+      "parentUuid": "f7ca0b90_d396f42e",
       "range": {
         "startLine": 3350,
         "startChar": 22,
