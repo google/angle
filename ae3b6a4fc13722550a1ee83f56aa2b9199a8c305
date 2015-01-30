@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b7217333_9933db92",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-30T23:15:14Z",
+      "side": 1,
+      "message": "Chrome clears colors to (0, 0, 0, 0); stencil to 0; and depth to 1.0. See GLES2DecoderImpl::ClearLevel, src/gpu/command_buffer/service/gles2_cmd_decoder.cc .",
+      "parentUuid": "1705dffd_d029ccad",
+      "range": {
+        "startLine": 85,
+        "startChar": 31,
+        "endLine": 85,
+        "endChar": 69
+      },
+      "revId": "ae3b6a4fc13722550a1ee83f56aa2b9199a8c305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "17331ff6_4c9d3f7b",
         "filename": "extensions/ANGLE_robust_resource_initialization.txt",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-01-28T01:35:40Z",
       "side": 1,
       "message": "This is not necessarily true, depending on how the default value is specified.",
+      "range": {
+        "startLine": 88,
+        "startChar": 24,
+        "endLine": 88,
+        "endChar": 56
+      },
+      "revId": "ae3b6a4fc13722550a1ee83f56aa2b9199a8c305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17515fa8_fc67690b",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-01-30T23:15:14Z",
+      "side": 1,
+      "message": "That\u0027s fine. Let\u0027s just adjust the language to handle the case where some pixel processing is done.",
+      "parentUuid": "17331ff6_4c9d3f7b",
       "range": {
         "startLine": 88,
         "startChar": 24,
