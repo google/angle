@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77bffbde_172a1479",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-01-30T11:22:59Z",
+      "side": 1,
+      "message": "Could we mark this as a thread_local and use it in both cases?\n\n   thread_local static std::vector\u003cchar\u003e buffer(512);",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 41
+      },
+      "revId": "8f2322329b86310575ba70336756f443c32270ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
