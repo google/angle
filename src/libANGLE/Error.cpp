@@ -68,7 +68,7 @@ Error &Error::operator=(const Error &other)
 
 void Error::createMessageString() const
 {
-    if (mMessage != NULL)
+    if (mMessage == nullptr)
     {
         mMessage = new std::string();
     }
