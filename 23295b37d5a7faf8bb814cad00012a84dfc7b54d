@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57d4b72d_1641fc26",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1223,
+      "author": {
+        "id": 1121969
+      },
+      "writtenOn": "2015-01-30T10:58:02Z",
+      "side": 1,
+      "message": "The use of \u0026\u0026 instead of || is the only problem which prevents dEQP from passing. I think that I will put that in a separate CL.",
+      "revId": "23295b37d5a7faf8bb814cad00012a84dfc7b54d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
