@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "17515fa8_fc6449b2",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-01-31T02:15:09Z",
+      "side": 1,
+      "message": "I mean, can\u0027t you just put \"buffer\" on the stack? Then you don\u0027t need a mutex or anything.",
+      "parentUuid": "b7217333_1ffc8bc5",
+      "revId": "658bfc790eb9d9633f0109b9a0c175f90d00c9b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7790db99_4f8cad4a",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
