@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "b7217333_1ffc8bc5",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-31T02:13:56Z",
+      "side": 1,
+      "message": "We had a discussion about this in the original code-review. I originally planned to put a mutex here, but we settled on this implementation so that C++11 features weren\u0027t in shared code.\n\nI\u0027d be fine if we always used the non-static version.",
+      "parentUuid": "f74dab10_db0393ed",
+      "revId": "658bfc790eb9d9633f0109b9a0c175f90d00c9b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7790db99_4f8cad4a",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -102,6 +120,24 @@
       "side": 1,
       "message": "No, having a per-OS policy is confusing and makes it difficult to move code around. So the policy applies to all platforms.\n\nAlso, the asyn / atomic stuff in particular needs to be reviewed for XP compat before we\u0027ll use it.",
       "parentUuid": "b7217333_bc61ed78",
+      "revId": "658bfc790eb9d9633f0109b9a0c175f90d00c9b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f74dab10_9bb42bd3",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-31T02:13:56Z",
+      "side": 1,
+      "message": "I think we\u0027ll need Jamie or Geoff\u0027s input here. That\u0027s different to what I\u0027ve been told previously.",
+      "parentUuid": "17515fa8_dc786d63",
       "revId": "658bfc790eb9d9633f0109b9a0c175f90d00c9b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
