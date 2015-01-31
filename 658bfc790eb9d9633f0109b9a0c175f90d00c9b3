@@ -177,6 +177,24 @@
       "revId": "658bfc790eb9d9633f0109b9a0c175f90d00c9b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17515fa8_dcddcde5",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-01-31T02:45:35Z",
+      "side": 1,
+      "message": "Regarding XP compat: I believe that Chrome doesn\u0027t use D3D to render WebGL on XP (or Vista IIRC), and this change is isolated deep within D3D-specific code.",
+      "parentUuid": "f74dab10_9bb42bd3",
+      "revId": "658bfc790eb9d9633f0109b9a0c175f90d00c9b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
