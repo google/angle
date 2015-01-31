@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "f74dab10_db0393ed",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-01-31T01:35:42Z",
+      "side": 1,
+      "message": "Can it just be made non-static? Having thread-safe and thread-unsafe functions seems strange to me api-wise.",
+      "parentUuid": "f74dab10_5b2303a7",
+      "revId": "658bfc790eb9d9633f0109b9a0c175f90d00c9b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7790db99_4f8cad4a",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "This is limited to D3D-only code, which is compiled solely on Windows. My understanding from the previous review is that more C++11 features are permissible here.",
       "parentUuid": "7790db99_4f8cad4a",
+      "revId": "658bfc790eb9d9633f0109b9a0c175f90d00c9b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17515fa8_dc786d63",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-01-31T01:35:42Z",
+      "side": 1,
+      "message": "No, having a per-OS policy is confusing and makes it difficult to move code around. So the policy applies to all platforms.\n\nAlso, the asyn / atomic stuff in particular needs to be reviewed for XP compat before we\u0027ll use it.",
+      "parentUuid": "b7217333_bc61ed78",
       "revId": "658bfc790eb9d9633f0109b9a0c175f90d00c9b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
