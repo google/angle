@@ -16,6 +16,47 @@
       "revId": "76d2968bd6df0b292dbf96669df42a803cd4e6d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7120b0d_b3edf818",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-02T18:11:32Z",
+      "side": 1,
+      "message": "Indeed. There should be a CRLF ending every file, or GCC (I think) gives a warning.",
+      "parentUuid": "1716bf00_b414c070",
+      "revId": "76d2968bd6df0b292dbf96669df42a803cd4e6d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97e9cf2d_86486eee",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-02T18:11:32Z",
+      "side": 1,
+      "message": "can you add comments here and below explaining how we\u0027re using threading to compile two shaders at once? and that .get forces a sync.",
+      "range": {
+        "startLine": 984,
+        "startChar": 62,
+        "endLine": 984,
+        "endChar": 67
+      },
+      "revId": "76d2968bd6df0b292dbf96669df42a803cd4e6d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
