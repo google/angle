@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17c4ffd0_c4d53e42",
+        "filename": "src/compiler/translator/Initialize.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-02T23:29:52Z",
+      "side": 1,
+      "message": "nit: others -\u003e other",
+      "range": {
+        "startLine": 25,
+        "startChar": 65,
+        "endLine": 25,
+        "endChar": 71
+      },
+      "revId": "8387732c18a4f1e95d11f5de72b3408feef4d728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
