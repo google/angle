@@ -1096,7 +1096,7 @@ void GL_APIENTRY BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
 
         switch (target)
         {
-        case GL_TRANSFORM_FEEDBACK_BUFFER:
+          case GL_TRANSFORM_FEEDBACK_BUFFER:
             {
                 // size and offset must be a multiple of 4
                 if (buffer != 0 && ((offset % 4) != 0 || (size % 4) != 0))
@@ -1177,7 +1177,7 @@ void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer)
 
         switch (target)
         {
-        case GL_TRANSFORM_FEEDBACK_BUFFER:
+          case GL_TRANSFORM_FEEDBACK_BUFFER:
             {
                 // Cannot bind a transform feedback buffer if the current transform feedback is active (3.0.4 pg 91 section 2.15.2)
                 TransformFeedback *curTransformFeedback = context->getState().getCurrentTransformFeedback();
