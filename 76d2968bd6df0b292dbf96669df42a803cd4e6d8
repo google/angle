@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "37190331_b55fa0dc",
+        "filename": "src/common/angleutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2015-02-02T18:58:03Z",
+      "side": 1,
+      "message": "\u003e\u003e Huh? All line endings should be just \\n, no?\n\u003e Yes. CRLF is the Windows line ending?\n\nWell, but the code in the repo should have \\n. Folks who like to have CRLF line endings locally can then configure their VCS to do that on checkout, but all code editors and compilers work fine with just \\n on windows too (assuming you don\u0027t count notepad as code editor :-) ) as far as I know.",
+      "parentUuid": "f7120b0d_b3edf818",
+      "revId": "76d2968bd6df0b292dbf96669df42a803cd4e6d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97e9cf2d_86486eee",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 3
