@@ -94,7 +94,7 @@ void InputLayoutCache::markDirty()
 gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
                                                gl::Program *program)
 {
-    ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(program->getImplementation());
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
 
     int sortedSemanticIndices[gl::MAX_VERTEX_ATTRIBS];
     programD3D->sortAttributesByLayout(attributes, sortedSemanticIndices);

@@ -20,19 +20,6 @@
 namespace rx
 {
 
-//static
-SurfaceD3D *SurfaceD3D::makeSurfaceD3D(SurfaceImpl *impl)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(SurfaceD3D*, impl));
-    return static_cast<SurfaceD3D*>(impl);
-}
-
-//static
-SurfaceD3D *SurfaceD3D::makeSurfaceD3D(egl::Surface *surface)
-{
-    return makeSurfaceD3D(surface->getImplementation());
-}
-
 SurfaceD3D *SurfaceD3D::createOffscreen(egl::Display *display, const egl::Config *config, EGLClientBuffer shareHandle,
                                         EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureType)
 {

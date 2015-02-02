@@ -333,7 +333,7 @@ gl::Error GetAttachmentRenderTarget(const gl::FramebufferAttachment *attachment,
     {
         gl::Texture *texture = attachment->getTexture();
         ASSERT(texture);
-        TextureD3D *textureD3D = TextureD3D::makeTextureD3D(texture->getImplementation());
+        TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
         const gl::ImageIndex *index = attachment->getTextureImageIndex();
         ASSERT(index);
         return textureD3D->getRenderTarget(*index, outRT);
@@ -369,7 +369,7 @@ unsigned int GetAttachmentSerial(const gl::FramebufferAttachment *attachment)
     {
         gl::Texture *texture = attachment->getTexture();
         ASSERT(texture);
-        TextureD3D *textureD3D = TextureD3D::makeTextureD3D(texture->getImplementation());
+        TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
         const gl::ImageIndex *index = attachment->getTextureImageIndex();
         ASSERT(index);
         return textureD3D->getRenderTargetSerial(*index);

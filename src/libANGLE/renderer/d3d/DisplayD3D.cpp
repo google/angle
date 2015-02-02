@@ -51,7 +51,7 @@ egl::Error DisplayD3D::restoreLostDevice()
         {
             surface->releaseTexImage(EGL_BACK_BUFFER);
         }
-        SurfaceD3D *surfaceD3D = SurfaceD3D::makeSurfaceD3D(surface);
+        SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
         surfaceD3D->releaseSwapChain();
     }
 
@@ -63,7 +63,7 @@ egl::Error DisplayD3D::restoreLostDevice()
     // Restore any surfaces that may have been lost
     for (const auto &surface : mSurfaceSet)
     {
-        SurfaceD3D *surfaceD3D = SurfaceD3D::makeSurfaceD3D(surface);
+        SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
 
         egl::Error error = surfaceD3D->resetSwapChain();
         if (error.isError())

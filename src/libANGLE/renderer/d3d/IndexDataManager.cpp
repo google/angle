@@ -84,7 +84,7 @@ gl::Error IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buf
     {
         offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
 
-        storage = BufferD3D::makeBufferD3D(buffer->getImplementation());
+        storage = GetImplAs<BufferD3D>(buffer);
 
         switch (type)
         {

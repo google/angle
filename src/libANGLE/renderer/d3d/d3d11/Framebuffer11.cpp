@@ -39,7 +39,7 @@ static void InvalidateAttachmentSwizzles(const gl::FramebufferAttachment *attach
     {
         gl::Texture *texture = attachment->getTexture();
 
-        TextureD3D *textureD3D = TextureD3D::makeTextureD3D(texture->getImplementation());
+        TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
         TextureStorage *texStorage = textureD3D->getNativeTexture();
         if (texStorage)
         {

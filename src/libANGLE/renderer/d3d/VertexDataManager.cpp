@@ -95,7 +95,7 @@ void VertexDataManager::hintUnmapAllResources(const gl::State &state)
         if (attrib.enabled)
         {
             gl::Buffer *buffer = attrib.buffer.get();
-            BufferD3D *storage = buffer ? BufferD3D::makeBufferD3D(buffer->getImplementation()) : NULL;
+            BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : NULL;
             StaticVertexBufferInterface *staticBuffer = storage ? storage->getStaticVertexBuffer() : NULL;
 
             if (staticBuffer)
@@ -196,7 +196,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state, GLint sta
 
             if (buffer)
             {
-                BufferD3D *bufferImpl = BufferD3D::makeBufferD3D(buffer->getImplementation());
+                BufferD3D *bufferImpl = GetImplAs<BufferD3D>(buffer);
                 bufferImpl->promoteStaticUsage(count * ComputeVertexAttributeTypeSize(curAttrib));
             }
         }
@@ -212,7 +212,7 @@ void VertexDataManager::invalidateMatchingStaticData(const gl::VertexAttribute &
 
     if (buffer)
     {
-        BufferD3D *bufferImpl = BufferD3D::makeBufferD3D(buffer->getImplementation());
+        BufferD3D *bufferImpl = GetImplAs<BufferD3D>(buffer);
         StaticVertexBufferInterface *staticBuffer = bufferImpl->getStaticVertexBuffer();
 
         if (staticBuffer &&
@@ -231,7 +231,7 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const gl::VertexAttribute &at
                                                    GLsizei instances) const
 {
     gl::Buffer *buffer = attrib.buffer.get();
-    BufferD3D *bufferImpl = buffer ? BufferD3D::makeBufferD3D(buffer->getImplementation()) : NULL;
+    BufferD3D *bufferImpl = buffer ? GetImplAs<BufferD3D>(buffer) : NULL;
     StaticVertexBufferInterface *staticBuffer = bufferImpl ? bufferImpl->getStaticVertexBuffer() : NULL;
     VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
@@ -275,7 +275,7 @@ gl::Error VertexDataManager::storeAttribute(const gl::VertexAttribute &attrib,
     gl::Buffer *buffer = attrib.buffer.get();
     ASSERT(buffer || attrib.pointer);
 
-    BufferD3D *storage = buffer ? BufferD3D::makeBufferD3D(buffer->getImplementation()) : NULL;
+    BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : NULL;
     StaticVertexBufferInterface *staticBuffer = storage ? storage->getStaticVertexBuffer() : NULL;
     VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
     bool directStorage = vertexBuffer->directStoragePossible(attrib, currentValue);

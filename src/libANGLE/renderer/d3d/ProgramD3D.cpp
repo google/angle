@@ -201,18 +201,6 @@ ProgramD3D::~ProgramD3D()
     SafeDelete(mDynamicHLSL);
 }
 
-ProgramD3D *ProgramD3D::makeProgramD3D(ProgramImpl *impl)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(ProgramD3D*, impl));
-    return static_cast<ProgramD3D*>(impl);
-}
-
-const ProgramD3D *ProgramD3D::makeProgramD3D(const ProgramImpl *impl)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(const ProgramD3D*, impl));
-    return static_cast<const ProgramD3D*>(impl);
-}
-
 bool ProgramD3D::usesPointSpriteEmulation() const
 {
     return mUsesPointSize && mRenderer->getMajorShaderModel() >= 4;

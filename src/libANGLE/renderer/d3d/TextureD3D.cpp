@@ -40,7 +40,7 @@ gl::Error GetUnpackPointer(const gl::PixelUnpackState &unpack, const uint8_t *pi
 
         // TODO: this is the only place outside of renderer that asks for a buffers raw data.
         // This functionality should be moved into renderer and the getData method of BufferImpl removed.
-        BufferD3D *bufferD3D = BufferD3D::makeBufferD3D(pixelBuffer->getImplementation());
+        BufferD3D *bufferD3D = GetImplAs<BufferD3D>(pixelBuffer);
         ASSERT(bufferD3D);
         const uint8_t *bufferData = NULL;
         gl::Error error = bufferD3D->getData(&bufferData);
@@ -83,12 +83,6 @@ TextureD3D::TextureD3D(RendererD3D *renderer)
 
 TextureD3D::~TextureD3D()
 {
-}
-
-TextureD3D *TextureD3D::makeTextureD3D(TextureImpl *texture)
-{
-    ASSERT(HAS_DYNAMIC_TYPE(TextureD3D*, texture));
-    return static_cast<TextureD3D*>(texture);
 }
 
 TextureStorage *TextureD3D::getNativeTexture()
@@ -868,7 +862,7 @@ void TextureD3D_2D::bindTexImage(egl::Surface *surface)
         SafeDelete(mTexStorage);
     }
 
-    SurfaceD3D *surfaceD3D = SurfaceD3D::makeSurfaceD3D(surface);
+    SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
     ASSERT(surfaceD3D);
 
     mTexStorage = mRenderer->createTextureStorage2D(surfaceD3D->getSwapChain());

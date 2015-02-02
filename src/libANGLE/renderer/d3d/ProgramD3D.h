@@ -42,9 +42,6 @@ class ProgramD3D : public ProgramImpl
     ProgramD3D(RendererD3D *renderer);
     virtual ~ProgramD3D();
 
-    static ProgramD3D *makeProgramD3D(ProgramImpl *impl);
-    static const ProgramD3D *makeProgramD3D(const ProgramImpl *impl);
-
     const std::vector<PixelShaderOutputVariable> &getPixelShaderKey() { return mPixelShaderKey; }
     int getShaderVersion() const { return mShaderVersion; }
     GLenum getTransformFeedbackBufferMode() const { return mTransformFeedbackBufferMode; }

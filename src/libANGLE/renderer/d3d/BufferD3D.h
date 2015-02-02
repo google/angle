@@ -26,9 +26,6 @@ class BufferD3D : public BufferImpl
     BufferD3D();
     virtual ~BufferD3D();
 
-    static BufferD3D *makeBufferD3D(BufferImpl *buffer);
-    static BufferD3D *makeFromBuffer(gl::Buffer *buffer);
-
     unsigned int getSerial() const { return mSerial; }
 
     virtual size_t getSize() const = 0;

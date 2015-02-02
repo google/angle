@@ -723,7 +723,7 @@ gl::Error Renderer9::setSamplerState(gl::SamplerType type, int index, gl::Textur
         int d3dSampler = index + d3dSamplerOffset;
 
         // Make sure to add the level offset for our tiny compressed texture workaround
-        TextureD3D *textureD3D = TextureD3D::makeTextureD3D(texture->getImplementation());
+        TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
         DWORD baseLevel = samplerState.baseLevel + textureD3D->getNativeTexture()->getTopLevel();
 
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, gl_d3d9::ConvertTextureWrap(samplerState.wrapS));
@@ -759,7 +759,7 @@ gl::Error Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *te
 
     if (texture)
     {
-        TextureD3D* textureImpl = TextureD3D::makeTextureD3D(texture->getImplementation());
+        TextureD3D *textureImpl = GetImplAs<TextureD3D>(texture);
 
         TextureStorage *texStorage = textureImpl->getNativeTexture();
         if (texStorage)
@@ -1457,7 +1457,7 @@ gl::Error Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indi
     // Get the raw indices for an indexed draw
     if (type != GL_NONE && elementArrayBuffer)
     {
-        BufferD3D *storage = BufferD3D::makeFromBuffer(elementArrayBuffer);
+        BufferD3D *storage = GetImplAs<BufferD3D>(elementArrayBuffer);
         intptr_t offset = reinterpret_cast<intptr_t>(indices);
         const uint8_t *bufferData = NULL;
         gl::Error error = storage->getData(&bufferData);
@@ -1659,7 +1659,7 @@ gl::Error Renderer9::drawIndexedPoints(GLsizei count, GLenum type, const GLvoid 
 
     if (elementArrayBuffer)
     {
-        BufferD3D *storage = BufferD3D::makeFromBuffer(elementArrayBuffer);
+        BufferD3D *storage = GetImplAs<BufferD3D>(elementArrayBuffer);
         intptr_t offset = reinterpret_cast<intptr_t>(indices);
 
         const uint8_t *bufferData = NULL;
@@ -1759,7 +1759,7 @@ gl::Error Renderer9::applyShaders(gl::Program *program, const gl::VertexFormat i
     ASSERT(!transformFeedbackActive);
     ASSERT(!rasterizerDiscard);
 
-    ProgramD3D *programD3D = ProgramD3D::makeProgramD3D(program->getImplementation());
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
 
     ShaderExecutableD3D *vertexExe = NULL;
     gl::Error error = programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr);
@@ -2562,7 +2562,7 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
 
 DefaultAttachmentImpl *Renderer9::createDefaultAttachment(GLenum type, egl::Surface *surface)
 {
-    SurfaceD3D *surfaceD3D = SurfaceD3D::makeSurfaceD3D(surface);
+    SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
     SwapChain9 *swapChain = SwapChain9::makeSwapChain9(surfaceD3D->getSwapChain());
 
     switch (type)
