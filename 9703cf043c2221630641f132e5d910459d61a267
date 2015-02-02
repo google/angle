@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77d53b78_47830e18",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-02T22:03:20Z",
+      "side": 1,
+      "message": "Can we add a const version for this, even if it\u0027s unused right now?",
+      "range": {
+        "startLine": 286,
+        "startChar": 0,
+        "endLine": 290,
+        "endChar": 1
+      },
+      "revId": "9703cf043c2221630641f132e5d910459d61a267",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
