@@ -42,6 +42,8 @@ class DefaultAttachmentD3D : public DefaultAttachmentImpl
     RenderTargetD3D *getRenderTarget() const;
 
   private:
+    DISALLOW_COPY_AND_ASSIGN(DefaultAttachmentD3D);
+
     RenderTargetD3D *mRenderTarget;
 };
 
@@ -86,6 +88,8 @@ class FramebufferD3D : public FramebufferImpl
     GLenum mReadBuffer;
 
   private:
+    DISALLOW_COPY_AND_ASSIGN(FramebufferD3D);
+
     RendererD3D *const mRenderer;
 
     virtual gl::Error clear(const gl::State &state, const gl::ClearParameters &clearParams) = 0;

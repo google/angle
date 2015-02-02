@@ -35,6 +35,8 @@ class CompilerD3D : public CompilerImpl
     ShHandle getCompilerHandle(GLenum type);
 
   private:
+    DISALLOW_COPY_AND_ASSIGN(CompilerD3D);
+
     ShShaderSpec mSpec;
     ShShaderOutput mOutputType;
     ShBuiltInResources mResources;

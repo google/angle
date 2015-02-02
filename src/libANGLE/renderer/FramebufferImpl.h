@@ -9,9 +9,9 @@
 #ifndef LIBANGLE_RENDERER_FRAMBUFFERIMPL_H_
 #define LIBANGLE_RENDERER_FRAMBUFFERIMPL_H_
 
-#include "libANGLE/Error.h"
-
 #include "angle_gl.h"
+#include "common/angleutils.h"
+#include "libANGLE/Error.h"
 
 namespace gl
 {
@@ -27,17 +27,22 @@ namespace rx
 class DefaultAttachmentImpl
 {
   public:
+    DefaultAttachmentImpl() {}
     virtual ~DefaultAttachmentImpl() {};
 
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;
     virtual GLenum getInternalFormat() const = 0;
     virtual GLsizei getSamples() const = 0;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(DefaultAttachmentImpl);
 };
 
 class FramebufferImpl
 {
   public:
+    FramebufferImpl() {}
     virtual ~FramebufferImpl() {};
 
     virtual void setColorAttachment(size_t index, const gl::FramebufferAttachment *attachment) = 0;
@@ -65,6 +70,9 @@ class FramebufferImpl
                            GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer) = 0;
 
     virtual GLenum checkStatus() const = 0;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(FramebufferImpl);
 };
 
 }

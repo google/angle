@@ -7,6 +7,7 @@
 // CompilerImpl.h: Defines the rx::CompilerImpl class, an implementation interface
 //                 for the gl::Compiler object.
 
+#include "common/angleutils.h"
 #include "libANGLE/Error.h"
 
 #ifndef LIBANGLE_RENDERER_COMPILERIMPL_H_
@@ -22,6 +23,9 @@ class CompilerImpl
     virtual ~CompilerImpl() {}
 
     virtual gl::Error release() = 0;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(CompilerImpl);
 };
 
 }
