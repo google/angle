@@ -20,4 +20,10 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
 void InitExtensionBehavior(const ShBuiltInResources& resources,
                            TExtensionBehavior& extensionBehavior);
 
+// Resets the behavior of the extensions listed in |extensionBehavior| to the
+// undefined state. These extensions will only be those initially supported in
+// the ShBuiltInResources object for this compiler instance. All other
+// extensions will remain unsupported.
+void ResetExtensionBehavior(TExtensionBehavior &extensionBehavior);
+
 #endif // COMPILER_TRANSLATOR_INITIALIZE_H_

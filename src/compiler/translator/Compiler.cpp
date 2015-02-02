@@ -168,6 +168,9 @@ bool TCompiler::compile(const char* const shaderStrings[],
     if (numStrings == 0)
         return true;
 
+    // Reset the extension behavior for each compilation unit.
+    ResetExtensionBehavior(extensionBehavior);
+
     // If compiling for WebGL, validate loop and indexing as well.
     if (IsWebGLBasedSpec(shaderSpec))
         compileOptions |= SH_VALIDATE_LOOP_INDEXING;

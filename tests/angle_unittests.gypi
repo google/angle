@@ -19,6 +19,7 @@
             '<(angle_path)/tests/compiler_tests/CollectVariables_test.cpp',
             '<(angle_path)/tests/compiler_tests/DebugShaderPrecision_test.cpp',
             '<(angle_path)/tests/compiler_tests/ExpressionLimit_test.cpp',
+            '<(angle_path)/tests/compiler_tests/ShaderExtension_test.cpp',
             '<(angle_path)/tests/compiler_tests/NV_draw_buffers_test.cpp',
             '<(angle_path)/tests/compiler_tests/ShaderVariable_test.cpp',
             '<(angle_path)/tests/compiler_tests/TypeTracking_test.cpp',

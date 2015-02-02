@@ -930,3 +930,13 @@ void InitExtensionBehavior(const ShBuiltInResources& resources,
     if (resources.ARM_shader_framebuffer_fetch)
         extBehavior["GL_ARM_shader_framebuffer_fetch"] = EBhUndefined;
 }
+
+void ResetExtensionBehavior(TExtensionBehavior &extBehavior)
+{
+    for (auto ext_iter = extBehavior.begin();
+         ext_iter != extBehavior.end();
+         ++ext_iter)
+    {
+        ext_iter->second = EBhUndefined;
+    }
+}
