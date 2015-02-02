@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7db33ac_8986b97b",
+        "filename": "src/compiler/translator/Initialize.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-02T22:22:24Z",
+      "side": 1,
+      "message": "Please document this. Perhaps something like:\n\n\"\"\"Resets the behavior of the extensions listed in |extensionBehavior| to the undefined state. These extensions will only be those initially supported in the ShBuiltInResources for this compiler instance. All others remain unsupported.\"\"\"",
+      "revId": "97453769b76a78732b9560a64e41c080b2ed1286",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77d53b78_e75cc2c0",
+        "filename": "tests/compiler_tests/Extension_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-02T22:22:24Z",
+      "side": 1,
+      "message": "Could you add a comment \"// first string of shader\" above here?",
+      "range": {
+        "startLine": 101,
+        "startChar": 2,
+        "endLine": 101,
+        "endChar": 4
+      },
+      "revId": "97453769b76a78732b9560a64e41c080b2ed1286",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77d53b78_2767fa8b",
+        "filename": "tests/compiler_tests/Extension_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-02T22:22:24Z",
+      "side": 1,
+      "message": "And \"// second string of shader\" here?",
+      "range": {
+        "startLine": 103,
+        "startChar": 3,
+        "endLine": 103,
+        "endChar": 12
+      },
+      "revId": "97453769b76a78732b9560a64e41c080b2ed1286",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97d0ef89_e81f73d1",
+        "filename": "tests/compiler_tests/Extension_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2015-02-02T22:22:24Z",
+      "side": 1,
+      "message": "Same comments in this shader as above.",
+      "range": {
+        "startLine": 145,
+        "startChar": 14,
+        "endLine": 145,
+        "endChar": 39
+      },
+      "revId": "97453769b76a78732b9560a64e41c080b2ed1286",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
