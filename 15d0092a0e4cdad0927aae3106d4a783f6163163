@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17fddfe8_1c37955c",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-02T14:37:41Z",
+      "side": 1,
+      "message": "my reading of the spec suggests because \"When transform feedback operations are paused, transform feedback\nis still considered active and changing most transform feedback state related to the\nobject results in an error\", we shouldn\u0027t allow BindBuffer* when the transform feedback buffer is active.",
+      "range": {
+        "startLine": 1110,
+        "startChar": 81,
+        "endLine": 1110,
+        "endChar": 114
+      },
+      "revId": "15d0092a0e4cdad0927aae3106d4a783f6163163",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97e9cf2d_634b9c19",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1184,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-02T14:37:41Z",
+      "side": 1,
+      "message": "ditto here",
+      "range": {
+        "startLine": 1184,
+        "startChar": 81,
+        "endLine": 1184,
+        "endChar": 114
+      },
+      "revId": "15d0092a0e4cdad0927aae3106d4a783f6163163",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
