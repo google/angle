@@ -195,6 +195,24 @@
       "revId": "658bfc790eb9d9633f0109b9a0c175f90d00c9b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97e9cf2d_e3c5ec0f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-02T14:44:26Z",
+      "side": 1,
+      "message": "Hey Nico \u0026 Austin,\n\nTL,DR; I\u0027d be fine with any threading lib.\n\nThe need for using threading of some kind is very high, as this has potential to significantly improve Chrome\u0027s startup shader compile times on Windows. Using a solution that\u0027s already included in Windows is also preferable.\n\nOur two options that I know of are the c++11 thread library, and the windows threading library Austin was using in an earlier patch. I don\u0027t see a reason why we can\u0027t use the windows-specific one, unless it requires shipping some unusual DLL dependency (Austin do you know if it\u0027s safe here?)\n\nNico, regarding c++11 and what\u0027s allowed in Chrome, Austin is correct. ANGLE doesn\u0027t follow Chromium rules to the letter, see https://code.google.com/p/angleproject/wiki/CodingStandard\n\nWe do allow additional c++11 use on the D3D back-end, since it\u0027ll always be compiled with MSVS. Austin is also correct in that the D3D back-end is never used on Windows XP. We do not allow c++11 STL on the cross-platform code or on other back-ends.",
+      "parentUuid": "17515fa8_dcddcde5",
+      "revId": "658bfc790eb9d9633f0109b9a0c175f90d00c9b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
