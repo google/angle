@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "975e2ffc_5803bdb0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-02-03T17:44:35Z",
+      "side": 1,
+      "message": "Why did you move this onto its own line?",
+      "range": {
+        "startLine": 96,
+        "startChar": 47,
+        "endLine": 96,
+        "endChar": 67
+      },
+      "revId": "58edf0ab11d05ad33004832ad3aa5de8bf35a9dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "378ca3b9_714ee02a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2015-02-03T17:44:35Z",
+      "side": 1,
+      "message": "Ditto",
+      "range": {
+        "startLine": 43,
+        "startChar": 33,
+        "endLine": 43,
+        "endChar": 53
+      },
+      "revId": "58edf0ab11d05ad33004832ad3aa5de8bf35a9dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
