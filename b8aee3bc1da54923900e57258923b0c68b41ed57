@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97854f8c_e925ad54",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-03T14:53:54Z",
+      "side": 1,
+      "message": "for future reference, you can associate any pack and unpack parameter work (if you take it on) with ANGLE issue 512, by adding BUG\u003dangle:512 in the patch description",
+      "revId": "b8aee3bc1da54923900e57258923b0c68b41ed57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d76427ca_ba86917b",
+        "filename": "tests/angle_tests/UnpackRowLength.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-03T14:53:54Z",
+      "side": 1,
+      "message": "for future reference: don\u0027t need the first virtual keyword once we\u0027re specifying override (see style guide)",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 11
+      },
+      "revId": "b8aee3bc1da54923900e57258923b0c68b41ed57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
