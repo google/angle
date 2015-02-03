@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "17479f3f_8f817968",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1124064
+      },
+      "writtenOn": "2015-02-03T19:06:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17479f3f_2fcec562",
+      "range": {
+        "startLine": 17,
+        "startChar": 3,
+        "endLine": 17,
+        "endChar": 10
+      },
+      "revId": "f5f0c8ed646ca06f0d4ec818cc98851c95db7423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "17479f3f_0f4ae947",
         "filename": "tests/compiler_tests/ShaderExtension_test.cpp",
         "patchSetId": 5
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "b737b3c2_2c897b3a",
+        "filename": "tests/compiler_tests/ShaderExtension_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1124064
+      },
+      "writtenOn": "2015-02-03T19:06:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17479f3f_0f4ae947",
+      "revId": "f5f0c8ed646ca06f0d4ec818cc98851c95db7423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b737b3c2_69736536",
         "filename": "tests/compiler_tests/ShaderExtension_test.cpp",
         "patchSetId": 5
@@ -53,6 +95,30 @@
       "writtenOn": "2015-02-03T18:47:03Z",
       "side": 1,
       "message": "nit: * should be right-aligned. we also place local variables at the top of the file, with a capital first character",
+      "range": {
+        "startLine": 103,
+        "startChar": 17,
+        "endLine": 103,
+        "endChar": 18
+      },
+      "revId": "f5f0c8ed646ca06f0d4ec818cc98851c95db7423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b737b3c2_4c86af29",
+        "filename": "tests/compiler_tests/ShaderExtension_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1124064
+      },
+      "writtenOn": "2015-02-03T19:06:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b737b3c2_69736536",
       "range": {
         "startLine": 103,
         "startChar": 17,
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "17479f3f_6fdfed86",
+        "filename": "tests/compiler_tests/ShaderExtension_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1124064
+      },
+      "writtenOn": "2015-02-03T19:06:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17479f3f_2f89653a",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 2
+      },
+      "revId": "f5f0c8ed646ca06f0d4ec818cc98851c95db7423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b737b3c2_e924b528",
         "filename": "tests/compiler_tests/ShaderExtension_test.cpp",
         "patchSetId": 5
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "17479f3f_efa91df9",
+        "filename": "tests/compiler_tests/ShaderExtension_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1124064
+      },
+      "writtenOn": "2015-02-03T19:06:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b737b3c2_e924b528",
+      "range": {
+        "startLine": 149,
+        "startChar": 19,
+        "endLine": 149,
+        "endChar": 33
+      },
+      "revId": "f5f0c8ed646ca06f0d4ec818cc98851c95db7423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b737b3c2_4976a127",
         "filename": "tests/compiler_tests/ShaderExtension_test.cpp",
         "patchSetId": 5
@@ -122,6 +236,30 @@
       "writtenOn": "2015-02-03T18:47:03Z",
       "side": 1,
       "message": "style nit: { above should be on a newline, and use a 4 space indent for the strings here",
+      "range": {
+        "startLine": 157,
+        "startChar": 0,
+        "endLine": 157,
+        "endChar": 2
+      },
+      "revId": "f5f0c8ed646ca06f0d4ec818cc98851c95db7423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17479f3f_0faf49fc",
+        "filename": "tests/compiler_tests/ShaderExtension_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1124064
+      },
+      "writtenOn": "2015-02-03T19:06:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b737b3c2_4976a127",
       "range": {
         "startLine": 157,
         "startChar": 0,
