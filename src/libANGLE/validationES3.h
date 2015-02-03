@@ -42,6 +42,8 @@ bool ValidateClearBuffer(Context *context);
 
 bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLuint* params);
 
+bool ValidateReadBuffer(Context *context, GLenum mode);
+
 }
 
 #endif // LIBANGLE_VALIDATION_ES3_H_

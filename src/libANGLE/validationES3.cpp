@@ -1228,4 +1228,55 @@ bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLu
     return ValidateGetUniformBase(context, program, location);
 }
 
+bool ValidateReadBuffer(Context *context, GLenum src)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    Framebuffer *readFBO = context->getState().getReadFramebuffer();
+
+    if (readFBO == nullptr)
+    {
+        context->recordError(gl::Error(GL_INVALID_OPERATION, "No active read framebuffer."));
+        return false;
+    }
+
+    if (src == GL_NONE)
+    {
+        return true;
+    }
+
+    if (src != GL_BACK && (src < GL_COLOR_ATTACHMENT0 || src > GL_COLOR_ATTACHMENT15))
+    {
+        context->recordError(gl::Error(GL_INVALID_ENUM, "Unknown enum for 'src' in ReadBuffer"));
+        return false;
+    }
+
+    if (readFBO->id() == 0)
+    {
+        if (src != GL_BACK)
+        {
+            const char *errorMsg = "'src' must be GL_NONE or GL_BACK when reading from the default framebuffer.";
+            context->recordError(gl::Error(GL_INVALID_OPERATION, errorMsg));
+            return false;
+        }
+    }
+    else
+    {
+        GLuint drawBuffer = static_cast<GLuint>(src - GL_COLOR_ATTACHMENT0);
+
+        if (drawBuffer >= context->getCaps().maxDrawBuffers)
+        {
+            const char *errorMsg = "'src' is greater than MAX_DRAW_BUFFERS.";
+            context->recordError(gl::Error(GL_INVALID_OPERATION, errorMsg));
+            return false;
+        }
+    }
+
+    return true;
+}
+
 }

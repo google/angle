@@ -108,7 +108,7 @@ gl::Error Framebuffer11::readPixels(const gl::Rectangle &area, GLenum format, GL
     ID3D11Texture2D *colorBufferTexture = NULL;
     unsigned int subresourceIndex = 0;
 
-    const gl::FramebufferAttachment *colorbuffer = mColorBuffers[0];
+    const gl::FramebufferAttachment *colorbuffer = getReadAttachment();
     ASSERT(colorbuffer);
 
     gl::Error error = getRenderTargetResource(colorbuffer, &subresourceIndex, &colorBufferTexture);

@@ -132,14 +132,15 @@ FramebufferAttachment *Framebuffer::getDepthOrStencilbuffer() const
 
 FramebufferAttachment *Framebuffer::getReadColorbuffer() const
 {
-    // Will require more logic if glReadBuffers is supported
-    return mColorbuffers[0];
+    size_t readIndex = (mReadBufferState == GL_BACK ? 0 : static_cast<size_t>(mReadBufferState - GL_COLOR_ATTACHMENT0));
+    ASSERT(readIndex < IMPLEMENTATION_MAX_DRAW_BUFFERS);
+    return mColorbuffers[readIndex];
 }
 
 GLenum Framebuffer::getReadColorbufferType() const
 {
-    // Will require more logic if glReadBuffers is supported
-    return (mColorbuffers[0] ? mColorbuffers[0]->type() : GL_NONE);
+    FramebufferAttachment *readAttachment = getReadColorbuffer();
+    return (readAttachment ? readAttachment->type() : GL_NONE);
 }
 
 FramebufferAttachment *Framebuffer::getFirstColorbuffer() const
@@ -204,6 +205,9 @@ GLenum Framebuffer::getReadBufferState() const
 
 void Framebuffer::setReadBuffer(GLenum buffer)
 {
+    ASSERT(buffer == GL_BACK || buffer == GL_NONE ||
+           (buffer >= GL_COLOR_ATTACHMENT0 &&
+            (buffer - GL_COLOR_ATTACHMENT0) < IMPLEMENTATION_MAX_DRAW_BUFFERS));
     mReadBufferState = buffer;
     mImpl->setReadBuffer(buffer);
 }

@@ -35,14 +35,13 @@ void GL_APIENTRY ReadBuffer(GLenum mode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!ValidateReadBuffer(context, mode))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
-        // glReadBuffer
-        UNIMPLEMENTED();
+        Framebuffer *readFBO = context->getState().getReadFramebuffer();
+        readFBO->setReadBuffer(mode);
     }
 }
 

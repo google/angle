@@ -207,18 +207,25 @@ gl::Error FramebufferD3D::clearBufferfi(const gl::State &state, GLenum buffer, G
     return clear(state, clearParams);
 }
 
+const gl::FramebufferAttachment *FramebufferD3D::getReadAttachment() const
+{
+    ASSERT(mReadBuffer == GL_BACK || (mReadBuffer >= GL_COLOR_ATTACHMENT0 && mReadBuffer <= GL_COLOR_ATTACHMENT15));
+    size_t readIndex = (mReadBuffer == GL_BACK ? 0 : static_cast<size_t>(mReadBuffer - GL_COLOR_ATTACHMENT0));
+    ASSERT(readIndex < mColorBuffers.size());
+    return mColorBuffers[readIndex];
+}
+
 GLenum FramebufferD3D::getImplementationColorReadFormat() const
 {
-    // Will require more logic if glReadBuffers is supported
-    ASSERT(mReadBuffer == GL_COLOR_ATTACHMENT0 || mReadBuffer == GL_BACK);
+    const gl::FramebufferAttachment *readAttachment = getReadAttachment();
 
-    if (mColorBuffers[0] == nullptr)
+    if (readAttachment == nullptr)
     {
         return GL_NONE;
     }
 
     RenderTargetD3D *attachmentRenderTarget = NULL;
-    gl::Error error = GetAttachmentRenderTarget(mColorBuffers[0], &attachmentRenderTarget);
+    gl::Error error = GetAttachmentRenderTarget(readAttachment, &attachmentRenderTarget);
     if (error.isError())
     {
         return GL_NONE;
@@ -232,16 +239,15 @@ GLenum FramebufferD3D::getImplementationColorReadFormat() const
 
 GLenum FramebufferD3D::getImplementationColorReadType() const
 {
-    // Will require more logic if glReadBuffers is supported
-    ASSERT(mReadBuffer == GL_COLOR_ATTACHMENT0 || mReadBuffer == GL_BACK);
+    const gl::FramebufferAttachment *readAttachment = getReadAttachment();
 
-    if (mColorBuffers[0] == nullptr)
+    if (readAttachment == nullptr)
     {
         return GL_NONE;
     }
 
     RenderTargetD3D *attachmentRenderTarget = NULL;
-    gl::Error error = GetAttachmentRenderTarget(mColorBuffers[0], &attachmentRenderTarget);
+    gl::Error error = GetAttachmentRenderTarget(readAttachment, &attachmentRenderTarget);
     if (error.isError())
     {
         return GL_NONE;
