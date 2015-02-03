@@ -93,6 +93,30 @@
       "revId": "fd7245646ed216d6e4c6a671a30dc9a1d2e48126",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc10cc40_e0d6364c",
+        "filename": "tests/angle_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-03T22:00:56Z",
+      "side": 1,
+      "message": "Note to self (or anyone): re-test on Intel with this change. should probably go in a split patch, as it might fix the unit test we disable.",
+      "parentUuid": "d7e7c792_2239ce71",
+      "range": {
+        "startLine": 19,
+        "startChar": 8,
+        "endLine": 19,
+        "endChar": 32
+      },
+      "revId": "fd7245646ed216d6e4c6a671a30dc9a1d2e48126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
