@@ -65,6 +65,12 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
                                     const GLvoid *indices, GLsizei instances,
                                     const RangeUI &indexRange)
 {
+    if (data.state->isPrimitiveRestartEnabled())
+    {
+        UNIMPLEMENTED();
+        return gl::Error(GL_INVALID_OPERATION, "Primitive restart not implemented");
+    }
+
     gl::Program *program = data.state->getProgram();
     ASSERT(program != NULL);
 

@@ -141,6 +141,8 @@ void State::initialize(const Caps& caps, GLuint clientVersion)
 
     mReadFramebuffer = NULL;
     mDrawFramebuffer = NULL;
+
+    mPrimitiveRestart = false;
 }
 
 void State::reset()
@@ -531,6 +533,16 @@ void State::setDither(bool enabled)
     mBlend.dither = enabled;
 }
 
+bool State::isPrimitiveRestartEnabled() const
+{
+    return mPrimitiveRestart;
+}
+
+void State::setPrimitiveRestart(bool enabled)
+{
+    mPrimitiveRestart = enabled;
+}
+
 void State::setEnableFeature(GLenum feature, bool enabled)
 {
     switch (feature)
@@ -544,7 +556,7 @@ void State::setEnableFeature(GLenum feature, bool enabled)
       case GL_DEPTH_TEST:                    setDepthTest(enabled);             break;
       case GL_BLEND:                         setBlend(enabled);                 break;
       case GL_DITHER:                        setDither(enabled);                break;
-      case GL_PRIMITIVE_RESTART_FIXED_INDEX: UNIMPLEMENTED();                   break;
+      case GL_PRIMITIVE_RESTART_FIXED_INDEX: setPrimitiveRestart(enabled);      break;
       case GL_RASTERIZER_DISCARD:            setRasterizerDiscard(enabled);     break;
       default:                               UNREACHABLE();
     }
@@ -563,7 +575,7 @@ bool State::getEnableFeature(GLenum feature)
       case GL_DEPTH_TEST:                    return isDepthTestEnabled();
       case GL_BLEND:                         return isBlendEnabled();
       case GL_DITHER:                        return isDitherEnabled();
-      case GL_PRIMITIVE_RESTART_FIXED_INDEX: UNIMPLEMENTED(); return false;
+      case GL_PRIMITIVE_RESTART_FIXED_INDEX: return isPrimitiveRestartEnabled();
       case GL_RASTERIZER_DISCARD:            return isRasterizerDiscardEnabled();
       default:                               UNREACHABLE(); return false;
     }

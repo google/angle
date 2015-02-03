@@ -57,6 +57,10 @@ class State
     bool isRasterizerDiscardEnabled() const;
     void setRasterizerDiscard(bool enabled);
 
+    // Primitive restart
+    bool isPrimitiveRestartEnabled() const;
+    void setPrimitiveRestart(bool enabled);
+
     // Face culling state manipulation
     bool isCullFaceEnabled() const;
     void setCullFace(bool enabled);
@@ -316,6 +320,8 @@ class State
 
     PixelUnpackState mUnpack;
     PixelPackState mPack;
+
+    bool mPrimitiveRestart;
 };
 
 }
