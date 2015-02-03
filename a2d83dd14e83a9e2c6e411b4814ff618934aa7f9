@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cf1f452_6367dc0f",
+        "filename": "tests/compiler_tests/ShaderExtension_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2015-02-03T20:20:32Z",
+      "side": 1,
+      "message": "I\u0027m getting a failed compilation due to warnings on this line \n\n   warning C4800: \u0027ShHandle\u0027 : forcing value to bool \u0027true\u0027 or \u0027false\u0027 (performance warning)",
+      "range": {
+        "startLine": 77,
+        "startChar": 8,
+        "endLine": 77,
+        "endChar": 30
+      },
+      "revId": "a2d83dd14e83a9e2c6e411b4814ff618934aa7f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
