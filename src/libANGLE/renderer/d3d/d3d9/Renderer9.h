@@ -87,7 +87,7 @@ class Renderer9 : public RendererD3D
                                    bool rasterizerDiscard, bool transformFeedbackActive);
     virtual gl::Error applyUniforms(const ProgramImpl &program, const std::vector<gl::LinkedUniform*> &uniformArray);
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
-    virtual gl::Error applyVertexBuffer(const gl::State &state, GLint first, GLsizei count, GLsizei instances);
+    virtual gl::Error applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances);
     virtual gl::Error applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
 
     virtual void applyTransformFeedbackBuffers(const gl::State& state);

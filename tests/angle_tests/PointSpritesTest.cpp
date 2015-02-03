@@ -388,3 +388,39 @@ TYPED_TEST(PointSpritesTest, PointSizeEnabledCompliance)
 
     glDeleteBuffers(1, &vertexObject);
 }
+
+// Verify that rendering works correctly when gl_PointSize is declared in a shader but isn't used
+TYPED_TEST(PointSpritesTest, PointSizeDeclaredButUnused)
+{
+    const std::string vs = SHADER_SOURCE
+    (
+        attribute highp vec4 position;
+
+        void main(void)
+        {
+            gl_PointSize = 1.0;
+            gl_Position = position;
+        }
+    );
+
+    const std::string fs = SHADER_SOURCE
+    (
+        void main(void)
+        {
+            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        }
+    );
+
+    GLuint program = CompileProgram(vs, fs);
+    ASSERT_NE(program, 0u);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    drawQuad(program, "position", 0.5f, 1.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // expect the center pixel to be red
+    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255, 0, 0, 255);
+
+    glDeleteProgram(program);
+}

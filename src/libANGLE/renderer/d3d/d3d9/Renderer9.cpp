@@ -1377,7 +1377,7 @@ gl::Error Renderer9::applyRenderTarget(const gl::Framebuffer *framebuffer)
     return applyRenderTarget(framebuffer->getColorbuffer(0), framebuffer->getDepthOrStencilbuffer());
 }
 
-gl::Error Renderer9::applyVertexBuffer(const gl::State &state, GLint first, GLsizei count, GLsizei instances)
+gl::Error Renderer9::applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances)
 {
     TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS];
     gl::Error error = mVertexDataManager->prepareVertexData(state, first, count, attributes, instances);

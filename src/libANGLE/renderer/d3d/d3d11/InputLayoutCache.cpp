@@ -92,13 +92,14 @@ void InputLayoutCache::markDirty()
 }
 
 gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
-                                               gl::Program *program)
+                                               GLenum mode, gl::Program *program)
 {
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
 
     int sortedSemanticIndices[gl::MAX_VERTEX_ATTRIBS];
     programD3D->sortAttributesByLayout(attributes, sortedSemanticIndices);
-    bool usesInstancedPointSpriteEmulation = programD3D->usesPointSize() && programD3D->usesInstancedPointSpriteEmulation();
+    bool programUsesInstancedPointSprites = programD3D->usesPointSize() && programD3D->usesInstancedPointSpriteEmulation();
+    bool instancedPointSpritesActive = programUsesInstancedPointSprites && (mode == GL_POINTS);
 
     if (!mDevice || !mDeviceContext)
     {
@@ -118,8 +119,8 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
         if (attributes[i].active)
         {
             D3D11_INPUT_CLASSIFICATION inputClass = attributes[i].divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
-            // If instanced pointsprite emulation is being used, the inputClass is required to be configured as per instance data
-            inputClass = usesInstancedPointSpriteEmulation ? D3D11_INPUT_PER_INSTANCE_DATA : inputClass;
+            // If rendering points and instanced pointsprite emulation is being used, the inputClass is required to be configured as per instance data
+            inputClass = instancedPointSpritesActive ? D3D11_INPUT_PER_INSTANCE_DATA : inputClass;
 
             gl::VertexFormat vertexFormat(*attributes[i].attribute, attributes[i].currentValueType);
             const d3d11::VertexFormat &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormat, mFeatureLevel);
@@ -135,7 +136,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
             ilKey.elements[ilKey.elementCount].desc.InputSlot = i;
             ilKey.elements[ilKey.elementCount].desc.AlignedByteOffset = 0;
             ilKey.elements[ilKey.elementCount].desc.InputSlotClass = inputClass;
-            ilKey.elements[ilKey.elementCount].desc.InstanceDataStepRate = usesInstancedPointSpriteEmulation ? 1 : attributes[i].divisor;
+            ilKey.elements[ilKey.elementCount].desc.InstanceDataStepRate = instancedPointSpritesActive ? 1 : attributes[i].divisor;
 
             if (inputClass == D3D11_INPUT_PER_VERTEX_DATA && firstIndexedElement == gl::MAX_VERTEX_ATTRIBS)
             {
@@ -153,7 +154,8 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
 
     // Instanced PointSprite emulation requires additional entries in the
     // inputlayout to support the vertices that make up the pointsprite quad.
-    if (usesInstancedPointSpriteEmulation)
+    // We do this even if mode != GL_POINTS, since the shader signature has these inputs, and the input layout must match the shader
+    if (programUsesInstancedPointSprites)
     {
         ilKey.elements[ilKey.elementCount].desc.SemanticName = "SPRITEPOSITION";
         ilKey.elements[ilKey.elementCount].desc.SemanticIndex = 0;
@@ -198,7 +200,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
 
         // Instanced PointSprite emulation uses multiple layout entries across a single vertex buffer.
         // If an index swap is performed, we need to ensure that all elements get the proper InputSlot.
-        if (usesInstancedPointSpriteEmulation)
+        if (programUsesInstancedPointSprites)
         {
             ilKey.elements[firstIndexedElement + 1].desc.InputSlot = 0;
         }
@@ -316,7 +318,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl
     // PointSprite quad.
     // An index buffer also needs to be created and applied because rendering instanced
     // data on D3D11 FL9_3 requires DrawIndexedInstanced() to be used.
-    if (usesInstancedPointSpriteEmulation)
+    if (instancedPointSpritesActive)
     {
         HRESULT result = S_OK;
         const UINT pointSpriteVertexStride = sizeof(float) * 5;

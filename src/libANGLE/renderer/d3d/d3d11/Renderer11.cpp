@@ -1167,7 +1167,7 @@ gl::Error Renderer11::applyRenderTarget(const gl::Framebuffer *framebuffer)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer11::applyVertexBuffer(const gl::State &state, GLint first, GLsizei count, GLsizei instances)
+gl::Error Renderer11::applyVertexBuffer(const gl::State &state, GLenum mode, GLint first, GLsizei count, GLsizei instances)
 {
     TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS];
     gl::Error error = mVertexDataManager->prepareVertexData(state, first, count, attributes, instances);
@@ -1176,7 +1176,7 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state, GLint first, GLs
         return error;
     }
 
-    return mInputLayoutCache.applyVertexBuffers(attributes, state.getProgram());
+    return mInputLayoutCache.applyVertexBuffers(attributes, mode, state.getProgram());
 }
 
 gl::Error Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
