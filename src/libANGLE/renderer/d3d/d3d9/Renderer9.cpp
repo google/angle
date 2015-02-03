@@ -317,7 +317,7 @@ EGLint Renderer9::initialize()
     }
 
     D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
-    DWORD behaviorFlags = D3DCREATE_FPU_PRESERVE | D3DCREATE_NOWINDOWCHANGES;
+    DWORD behaviorFlags = D3DCREATE_FPU_PRESERVE | D3DCREATE_NOWINDOWCHANGES | D3DCREATE_MULTITHREADED;
 
     {
         TRACE_EVENT0("gpu", "D3d9_CreateDevice");
