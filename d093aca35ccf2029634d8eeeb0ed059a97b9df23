@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5cfbfc33_1eebcdb8",
+        "filename": "tests/deqp_support/tcuWin32EGLNativeDisplayFactory.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-03T20:40:31Z",
+      "side": 1,
+      "message": "should be EGL_NATIVE_DISPLAY",
+      "range": {
+        "startLine": 143,
+        "startChar": 20,
+        "endLine": 143,
+        "endChar": 58
+      },
+      "revId": "d093aca35ccf2029634d8eeeb0ed059a97b9df23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cf1f452_e3ef6c88",
+        "filename": "tests/deqp_support/tcuWin32EGLNativeDisplayFactory.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-03T20:40:31Z",
+      "side": 1,
+      "message": "should be EGL_NO_DISPLAY",
+      "range": {
+        "startLine": 206,
+        "startChar": 25,
+        "endLine": 206,
+        "endChar": 47
+      },
+      "revId": "d093aca35ccf2029634d8eeeb0ed059a97b9df23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
