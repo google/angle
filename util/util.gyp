@@ -33,6 +33,7 @@
                         'shader_utils.cpp',
                         'shader_utils.h',
                         'shared_utils.h',
+                        'testfixturetypes.h',
                         'EGLWindow.cpp',
                         'EGLWindow.h',
                         'Event.h',
