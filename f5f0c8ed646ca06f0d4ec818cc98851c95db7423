@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "17479f3f_2fcec562",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-03T18:47:35Z",
+      "side": 1,
+      "message": "also, this should be BUG\u003d to get parsed properly",
+      "range": {
+        "startLine": 17,
+        "startChar": 3,
+        "endLine": 17,
+        "endChar": 10
+      },
+      "revId": "f5f0c8ed646ca06f0d4ec818cc98851c95db7423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "17479f3f_0f4ae947",
         "filename": "tests/compiler_tests/ShaderExtension_test.cpp",
         "patchSetId": 5
