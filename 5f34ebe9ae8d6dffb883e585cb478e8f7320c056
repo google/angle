@@ -1,0 +1,228 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3cc2c81e_70f46ee4",
+        "filename": "src/libANGLE/Config.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-04T20:14:19Z",
+      "side": 1,
+      "message": "nit: include order",
+      "range": {
+        "startLine": 18,
+        "startChar": 10,
+        "endLine": 18,
+        "endChar": 15
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ce0c0af_f2f5c68c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-04T20:14:19Z",
+      "side": 1,
+      "message": "nit: static_cast",
+      "range": {
+        "startLine": 501,
+        "startChar": 46,
+        "endLine": 501,
+        "endChar": 50
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cc2c81e_8d3ea105",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-04T20:14:19Z",
+      "side": 1,
+      "message": "can you slap down a quick comment here",
+      "range": {
+        "startLine": 502,
+        "startChar": 27,
+        "endLine": 502,
+        "endChar": 37
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ccfc448_ec796b17",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-04T20:14:19Z",
+      "side": 1,
+      "message": "quick comment here?",
+      "range": {
+        "startLine": 514,
+        "startChar": 27,
+        "endLine": 514,
+        "endChar": 41
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cc2c81e_50c612a1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-04T20:14:19Z",
+      "side": 1,
+      "message": "same questions as for d3d9",
+      "range": {
+        "startLine": 515,
+        "startChar": 27,
+        "endLine": 515,
+        "endChar": 40
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cc2c81e_6dd1f586",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-04T20:14:19Z",
+      "side": 1,
+      "message": "this advertises fewer color buffer formats? (EG no 565 or RGB8)\n\nis this an unrelated simplification or a related requirement due to other changes?",
+      "range": {
+        "startLine": 414,
+        "startChar": 4,
+        "endLine": 418,
+        "endChar": 6
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cc2c81e_2d820d69",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-04T20:14:19Z",
+      "side": 1,
+      "message": "comment here could help explain what\u0027s up",
+      "range": {
+        "startLine": 465,
+        "startChar": 27,
+        "endLine": 465,
+        "endChar": 39
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ccfc448_2c3a1366",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-04T20:14:19Z",
+      "side": 1,
+      "message": "nit: static_cast for size_t",
+      "range": {
+        "startLine": 466,
+        "startChar": 46,
+        "endLine": 466,
+        "endChar": 50
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ccfc448_2caf732d",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-04T20:14:19Z",
+      "side": 1,
+      "message": "what side effects does this have? does it disable back-buffer multisampling?",
+      "range": {
+        "startLine": 480,
+        "startChar": 20,
+        "endLine": 480,
+        "endChar": 46
+      },
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cc2c81e_2df44d11",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-04T20:14:19Z",
+      "side": 1,
+      "message": "maybe add an assert down here that the result is not empty (if there isn\u0027t one in a higher level of code)",
+      "revId": "5f34ebe9ae8d6dffb883e585cb478e8f7320c056",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
