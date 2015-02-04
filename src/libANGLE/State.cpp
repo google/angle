@@ -900,6 +900,12 @@ TransformFeedback *State::getCurrentTransformFeedback() const
     return mTransformFeedback.get();
 }
 
+bool State::isTransformFeedbackActiveUnpaused() const
+{
+    gl::TransformFeedback *curTransformFeedback = getCurrentTransformFeedback();
+    return curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused();
+}
+
 void State::detachTransformFeedback(GLuint transformFeedback)
 {
     if (mTransformFeedback.id() == transformFeedback)

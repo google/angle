@@ -180,6 +180,8 @@ Renderer11::Renderer11(egl::Display *display)
     mAppliedGeometryShader = NULL;
     mAppliedPixelShader = NULL;
 
+    mAppliedNumXFBBindings = -1;
+
     const auto &attributes = mDisplay->getAttributeMap();
 
     EGLint requestedMajorVersion = attributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE);
@@ -1238,31 +1240,36 @@ gl::Error Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elemen
     return gl::Error(GL_NO_ERROR);
 }
 
-void Renderer11::applyTransformFeedbackBuffers(const gl::State& state)
+void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
 {
-    size_t numXFBBindings = state.getTransformFeedbackBufferIndexRange();
-    ASSERT(numXFBBindings <= gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS);
-
+    size_t numXFBBindings = 0;
     bool requiresUpdate = false;
-    for (size_t i = 0; i < numXFBBindings; i++)
-    {
-        gl::Buffer *curXFBBuffer = state.getIndexedTransformFeedbackBuffer(i);
-        GLintptr curXFBOffset = state.getIndexedTransformFeedbackBufferOffset(i);
-        ID3D11Buffer *d3dBuffer = NULL;
-        if (curXFBBuffer)
-        {
-            Buffer11 *storage = Buffer11::makeBuffer11(curXFBBuffer->getImplementation());
-            d3dBuffer = storage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
-        }
 
-        // TODO: mAppliedTFBuffers and friends should also be kept in a vector.
-        if (d3dBuffer != mAppliedTFBuffers[i] || curXFBOffset != mAppliedTFOffsets[i])
+    if (state.isTransformFeedbackActiveUnpaused())
+    {
+        numXFBBindings = state.getTransformFeedbackBufferIndexRange();
+        ASSERT(numXFBBindings <= gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS);
+
+        for (size_t i = 0; i < numXFBBindings; i++)
         {
-            requiresUpdate = true;
+            gl::Buffer *curXFBBuffer = state.getIndexedTransformFeedbackBuffer(i);
+            GLintptr curXFBOffset = state.getIndexedTransformFeedbackBufferOffset(i);
+            ID3D11Buffer *d3dBuffer = NULL;
+            if (curXFBBuffer)
+            {
+                Buffer11 *storage = Buffer11::makeBuffer11(curXFBBuffer->getImplementation());
+                d3dBuffer = storage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
+            }
+
+            // TODO: mAppliedTFBuffers and friends should also be kept in a vector.
+            if (d3dBuffer != mAppliedTFBuffers[i] || curXFBOffset != mAppliedTFOffsets[i])
+            {
+                requiresUpdate = true;
+            }
         }
     }
 
-    if (requiresUpdate)
+    if (requiresUpdate || numXFBBindings != mAppliedNumXFBBindings)
     {
         for (size_t i = 0; i < numXFBBindings; ++i)
         {
@@ -1286,14 +1293,16 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State& state)
             mAppliedTFOffsets[i] = curXFBOffset;
         }
 
+        mAppliedNumXFBBindings = numXFBBindings;
+
         mDeviceContext->SOSetTargets(numXFBBindings, mAppliedTFBuffers, mCurrentD3DOffsets);
     }
 }
 
-gl::Error Renderer11::drawArrays(const gl::Data &data, GLenum mode, GLsizei count, GLsizei instances, bool transformFeedbackActive, bool usesPointSize)
+gl::Error Renderer11::drawArrays(const gl::Data &data, GLenum mode, GLsizei count, GLsizei instances, bool usesPointSize)
 {
     bool useInstancedPointSpriteEmulation = usesPointSize && getWorkarounds().useInstancedPointSpriteEmulation;
-    if (mode == GL_POINTS && transformFeedbackActive)
+    if (mode == GL_POINTS && data.state->isTransformFeedbackActiveUnpaused())
     {
         // Since point sprites are generated with a geometry shader, too many vertices will
         // be written if transform feedback is active.  To work around this, draw only the points
@@ -1321,7 +1330,7 @@ gl::Error Renderer11::drawArrays(const gl::Data &data, GLenum mode, GLsizei coun
         }
 
         // Skip this step if we're doing rasterizer discard.
-        if (pixelExe && !data.state->getRasterizerState().rasterizerDiscard)
+        if (pixelExe && !data.state->getRasterizerState().rasterizerDiscard && usesPointSize)
         {
             ID3D11PixelShader *pixelShader = ShaderExecutable11::makeShaderExecutable11(pixelExe)->getPixelShader();
             ASSERT(reinterpret_cast<uintptr_t>(pixelShader) == mAppliedPixelShader);
@@ -1909,6 +1918,8 @@ void Renderer11::markAllStateDirty()
     mAppliedVertexShader = DirtyPointer;
     mAppliedGeometryShader = DirtyPointer;
     mAppliedPixelShader = DirtyPointer;
+
+    mAppliedNumXFBBindings = -1;
 
     for (size_t i = 0; i < gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
     {

@@ -108,6 +108,11 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
         return error;
     }
 
+    applyTransformFeedbackBuffers(*data.state);
+    // Transform feedback is not allowed for DrawElements, this error should have been caught at the API validation
+    // layer.
+    ASSERT(!data.state->isTransformFeedbackActiveUnpaused());
+
     GLsizei vertexCount = indexInfo.indexRange.length() + 1;
     error = applyVertexBuffer(*data.state, mode, indexInfo.indexRange.start, vertexCount, instances);
     if (error.isError())
@@ -115,12 +120,7 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
         return error;
     }
 
-    bool transformFeedbackActive = applyTransformFeedbackBuffers(data);
-    // Transform feedback is not allowed for DrawElements, this error should have been caught at the API validation
-    // layer.
-    ASSERT(!transformFeedbackActive);
-
-    error = applyShaders(data, transformFeedbackActive);
+    error = applyShaders(data);
     if (error.isError())
     {
         return error;
@@ -182,15 +182,15 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
         return error;
     }
 
+    applyTransformFeedbackBuffers(*data.state);
+
     error = applyVertexBuffer(*data.state, mode, first, count, instances);
     if (error.isError())
     {
         return error;
     }
 
-    bool transformFeedbackActive = applyTransformFeedbackBuffers(data);
-
-    error = applyShaders(data, transformFeedbackActive);
+    error = applyShaders(data);
     if (error.isError())
     {
         return error;
@@ -210,13 +210,13 @@ gl::Error RendererD3D::drawArrays(const gl::Data &data,
 
     if (!skipDraw(data, mode))
     {
-        error = drawArrays(data, mode, count, instances, transformFeedbackActive, program->usesPointSize());
+        error = drawArrays(data, mode, count, instances, program->usesPointSize());
         if (error.isError())
         {
             return error;
         }
 
-        if (transformFeedbackActive)
+        if (data.state->isTransformFeedbackActiveUnpaused())
         {
             markTransformFeedbackUsage(data);
         }
@@ -356,22 +356,8 @@ gl::Error RendererD3D::applyState(const gl::Data &data, GLenum drawMode)
     return gl::Error(GL_NO_ERROR);
 }
 
-bool RendererD3D::applyTransformFeedbackBuffers(const gl::Data &data)
-{
-    gl::TransformFeedback *curTransformFeedback = data.state->getCurrentTransformFeedback();
-    if (curTransformFeedback && curTransformFeedback->isStarted() && !curTransformFeedback->isPaused())
-    {
-        applyTransformFeedbackBuffers(*data.state);
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
 // Applies the shaders and shader constants to the Direct3D device
-gl::Error RendererD3D::applyShaders(const gl::Data &data, bool transformFeedbackActive)
+gl::Error RendererD3D::applyShaders(const gl::Data &data)
 {
     gl::Program *program = data.state->getProgram();
 
@@ -380,7 +366,7 @@ gl::Error RendererD3D::applyShaders(const gl::Data &data, bool transformFeedback
 
     const gl::Framebuffer *fbo = data.state->getDrawFramebuffer();
 
-    gl::Error error = applyShaders(program, inputLayout, fbo, data.state->getRasterizerState().rasterizerDiscard, transformFeedbackActive);
+    gl::Error error = applyShaders(program, inputLayout, fbo, data.state->getRasterizerState().rasterizerDiscard, data.state->isTransformFeedbackActiveUnpaused());
     if (error.isError())
     {
         return error;
@@ -520,7 +506,7 @@ bool RendererD3D::skipDraw(const gl::Data &data, GLenum drawMode)
         // ProgramBinary assumes non-point rendering if gl_PointSize isn't written,
         // which affects varying interpolation. Since the value of gl_PointSize is
         // undefined when not written, just skip drawing to avoid unexpected results.
-        if (!data.state->getProgram()->usesPointSize())
+        if (!data.state->getProgram()->usesPointSize() && !data.state->isTransformFeedbackActiveUnpaused())
         {
             // This is stictly speaking not an error, but developers should be
             // notified of risking undefined behavior.

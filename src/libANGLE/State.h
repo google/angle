@@ -177,6 +177,7 @@ class State
     // Transform feedback object (not buffer) binding manipulation
     void setTransformFeedbackBinding(TransformFeedback *transformFeedback);
     TransformFeedback *getCurrentTransformFeedback() const;
+    bool isTransformFeedbackActiveUnpaused() const;
     void detachTransformFeedback(GLuint transformFeedback);
 
     // Query binding manipulation
