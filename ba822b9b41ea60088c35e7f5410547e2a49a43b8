@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c293c84_91e9fe84",
+        "filename": "extensions/ANGLE_platform_angle.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-02-04T00:47:30Z",
+      "side": 1,
+      "message": "Sorry for not catching this before, but this enum is already used in the window fixed size extension...",
+      "range": {
+        "startLine": 65,
+        "startChar": 58,
+        "endLine": 65,
+        "endChar": 65
+      },
+      "revId": "ba822b9b41ea60088c35e7f5410547e2a49a43b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
