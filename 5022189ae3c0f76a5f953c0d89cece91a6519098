@@ -331,6 +331,30 @@
       "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c5d2031_67dc9220",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105219
+      },
+      "writtenOn": "2015-02-04T00:46:41Z",
+      "side": 1,
+      "message": "We\u0027re already taking a parameter to request a d3d9 or d3d11 renderer as part of the same API call-- we could just specify in the extension that WARP is only a valid attrib when the d3d11 renderer is requested?",
+      "parentUuid": "57d4b72d_76af10fc",
+      "range": {
+        "startLine": 229,
+        "startChar": 6,
+        "endLine": 230,
+        "endChar": 43
+      },
+      "revId": "5022189ae3c0f76a5f953c0d89cece91a6519098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
