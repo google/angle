@@ -117,6 +117,30 @@
       "revId": "fd7245646ed216d6e4c6a671a30dc9a1d2e48126",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ce0c0af_f2a066bb",
+        "filename": "tests/angle_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2015-02-04T19:58:25Z",
+      "side": 1,
+      "message": "Tested this with the Intel bug, did not affect anything.",
+      "parentUuid": "dc10cc40_e0d6364c",
+      "range": {
+        "startLine": 19,
+        "startChar": 8,
+        "endLine": 19,
+        "endChar": 32
+      },
+      "revId": "fd7245646ed216d6e4c6a671a30dc9a1d2e48126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
