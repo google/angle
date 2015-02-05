@@ -16,6 +16,7 @@ protected:
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
+        setConfigStencilBits(8);
 
         mCheckerProgram = 0;
         mBlueProgram = 0;
